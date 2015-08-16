@@ -106,7 +106,7 @@ public:
         return AkStandardDirs::saveDir("data")
                + QDir::separator()
                + name
-               + QString::fromLatin1(".error");
+               + QLatin1String(".error");
     }
 
     QDebug stream(QtMsgType type)
@@ -157,7 +157,7 @@ void akInit(const QString &appName)
     AkonadiCrash::init();
     sInstance()->setName(appName);
 
-    QFileInfo infoOld(sInstance()->errorLogFileName() + QString::fromLatin1(".old"));
+    QFileInfo infoOld(sInstance()->errorLogFileName() + QLatin1String(".old"));
     if (infoOld.exists()) {
         QFile fileOld(infoOld.absoluteFilePath());
         const bool success = fileOld.remove();
@@ -168,7 +168,7 @@ void akInit(const QString &appName)
     QFileInfo info(sInstance()->errorLogFileName());
     if (info.exists()) {
         QFile file(info.absoluteFilePath());
-        const bool success = file.rename(sInstance()->errorLogFileName() + QString::fromLatin1(".old"));
+        const bool success = file.rename(sInstance()->errorLogFileName() + QLatin1String(".old"));
         if (!success) {
             qFatal("Cannot rename log file - running on a readonly filesystem maybe?");
         }

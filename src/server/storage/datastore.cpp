@@ -1204,7 +1204,7 @@ void DataStore::debugLastDbError(const char *actionDescription) const
     akError() << "  Last database error:" << m_database.lastError().databaseText();
 
     Tracer::self()->error("DataStore (Database Error)",
-                          QString::fromLatin1("%1\nDriver said: %2\nDatabase said:%3")
+                          QStringLiteral("%1\nDriver said: %2\nDatabase said:%3")
                           .arg(QString::fromLatin1(actionDescription))
                           .arg(m_database.lastError().driverText())
                           .arg(m_database.lastError().databaseText()));
@@ -1218,7 +1218,7 @@ void DataStore::debugLastQueryError(const QSqlQuery &query, const char *actionDe
     akError() << "  Last database error:" << m_database.lastError().databaseText();
 
     Tracer::self()->error("DataStore (Database Query Error)",
-                          QString::fromLatin1("%1: %2")
+                          QStringLiteral("%1: %2")
                           .arg(QString::fromLatin1(actionDescription))
                           .arg(query.lastError().text()));
 }

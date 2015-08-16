@@ -152,7 +152,7 @@ void PreprocessorManager::registerInstance(const QString &id)
     if (!instance->init()) {
         Tracer::self()->warning(
             QStringLiteral("PreprocessorManager"),
-            QString::fromLatin1("Could not initialize preprocessor instance '%1'")
+            QStringLiteral("Could not initialize preprocessor instance '%1'")
             .arg(id));
         delete instance;
         return;
@@ -411,7 +411,7 @@ void PreprocessorManager::lockedEndHandleItem(qint64 itemId)
     if (!DataStore::self()->unhidePimItem(item)) {
         Tracer::self()->warning(
             QStringLiteral("PreprocessorManager"),
-            QString::fromLatin1("Failed to unhide the PIM item '%1': data is not lost but a server restart is required in order to unhide it")
+            QStringLiteral("Failed to unhide the PIM item '%1': data is not lost but a server restart is required in order to unhide it")
             .arg(itemId));
     }
 }
@@ -451,7 +451,7 @@ void PreprocessorManager::heartbeat()
 
             Tracer::self()->warning(
                 QStringLiteral("PreprocessorManager"),
-                QString::fromLatin1("Preprocessor '%1' seems to be stuck... trying to abort its job.")
+                QStringLiteral("Preprocessor '%1' seems to be stuck... trying to abort its job.")
                 .arg(instance->id()));
 
             if (instance->abortProcessing()) {
@@ -465,7 +465,7 @@ void PreprocessorManager::heartbeat()
 
             Tracer::self()->warning(
                 QStringLiteral("PreprocessorManager"),
-                QString::fromLatin1("Preprocessor '%1' is stuck... trying to restart it")
+                QStringLiteral("Preprocessor '%1' is stuck... trying to restart it")
                 .arg(instance->id()));
 
             if (instance->invokeRestart()) {
@@ -476,7 +476,7 @@ void PreprocessorManager::heartbeat()
 
         Tracer::self()->warning(
             QStringLiteral("PreprocessorManager"),
-            QString::fromLatin1("Preprocessor '%1' is broken... ignoring it from now on")
+            QStringLiteral("Preprocessor '%1' is broken... ignoring it from now on")
             .arg(instance->id()));
 
         // You're fired! Go Away!

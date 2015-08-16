@@ -125,7 +125,8 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     qb.addValueCondition(PimItem::dirtyFullColumnName(), Query::Equals, false);
 
     QStringList localParts;
-    Q_FOREACH (QString partName, collection.cachePolicyLocalParts().split(QLatin1String(" "))) {
+    QStringList partNames = collection.cachePolicyLocalParts().split(QStringLiteral(" "));
+    Q_FOREACH (QString partName, partNames) {
         if (partName.startsWith(QLatin1String(AKONADI_PARAM_PLD))) {
             partName = partName.mid(4);
         }

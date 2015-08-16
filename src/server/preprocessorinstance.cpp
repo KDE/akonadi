@@ -67,7 +67,7 @@ bool PreprocessorInstance::init()
     if (!mInterface || !mInterface->isValid()) {
         Tracer::self()->warning(
             QStringLiteral("PreprocessorInstance"),
-            QString::fromLatin1("Could not connect to pre-processor instance '%1': %2")
+            QStringLiteral("Could not connect to pre-processor instance '%1': %2")
             .arg(mId)
             .arg(mInterface ? mInterface->lastError().message() : QString()));
         delete mInterface;
@@ -164,7 +164,7 @@ bool PreprocessorInstance::abortProcessing()
     if (!iface.isValid()) {
         Tracer::self()->warning(
             QStringLiteral("PreprocessorInstance"),
-            QString::fromLatin1("Could not connect to pre-processor instance '%1': %2")
+            QStringLiteral("Could not connect to pre-processor instance '%1': %2")
             .arg(mId)
             .arg(iface.lastError().message()));
         return false;
@@ -191,7 +191,7 @@ bool PreprocessorInstance::invokeRestart()
     if (!iface.isValid()) {
         Tracer::self()->warning(
             QStringLiteral("PreprocessorInstance"),
-            QString::fromLatin1("Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2")
+            QStringLiteral("Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2")
             .arg(mId)
             .arg(iface.lastError().message()));
         return false;
@@ -210,7 +210,7 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
     if (mItemQueue.empty()) {
         Tracer::self()->warning(
             QStringLiteral("PreprocessorInstance"),
-            QString::fromLatin1("Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue")
+            QStringLiteral("Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue")
             .arg(mId)
             .arg(id));
         mBusy = false;
@@ -225,7 +225,7 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
     if (itemId != id) {
         Tracer::self()->warning(
             QStringLiteral("PreprocessorInstance"),
-            QString::fromLatin1("Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3")
+            QStringLiteral("Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3")
             .arg(mId)
             .arg(id)
             .arg(itemId));

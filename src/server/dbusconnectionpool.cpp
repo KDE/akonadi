@@ -31,7 +31,7 @@ public:
     DBusConnectionPoolPrivate()
         : m_connection(QDBusConnection::connectToBus(
                            QDBusConnection::SessionBus,
-                           QString::fromLatin1("AkonadiServer-%1").arg(newNumber())))
+                           QStringLiteral("AkonadiServer-%1").arg(newNumber())))
     {
     }
     ~DBusConnectionPoolPrivate() {

@@ -149,7 +149,7 @@ static bool checkSocketDirectory(const QString &path)
 
 static bool createSocketDirectory(const QString &link, const QString &tmpl)
 {
-    QString directory = QString::fromLatin1("%1%2%3").arg(QDir::tempPath()).arg(QDir::separator()).arg(tmpl);
+    QString directory = QStringLiteral("%1%2%3").arg(QDir::tempPath()).arg(QDir::separator()).arg(tmpl);
 
     QByteArray directoryString = directory.toLocal8Bit().data();
 

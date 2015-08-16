@@ -128,7 +128,7 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     // load instance count if needed
     if (!capabilities.contains(CapabilityUnique)) {
         QSettings agentrc(AkStandardDirs::agentConfigFile(XdgBaseDirs::ReadOnly), QSettings::IniFormat);
-        instanceCounter = agentrc.value(QString::fromLatin1("InstanceCounters/%1/InstanceCounter")
+        instanceCounter = agentrc.value(QStringLiteral("InstanceCounters/%1/InstanceCounter")
                                         .arg(identifier), 0).toInt();
     }
 
@@ -139,6 +139,6 @@ void AgentType::save(QSettings *config) const
 {
     Q_ASSERT(config);
     if (!capabilities.contains(CapabilityUnique)) {
-        config->setValue(QString::fromLatin1("InstanceCounters/%1/InstanceCounter").arg(identifier), instanceCounter);
+        config->setValue(QStringLiteral("InstanceCounters/%1/InstanceCounter").arg(identifier), instanceCounter);
     }
 }

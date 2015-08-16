@@ -47,7 +47,7 @@ QString DbInitializerMySql::buildCreateTableStatement(const TableDescription &ta
         columns.append(buildColumnStatement(columnDescription, tableDescription));
 
         if (!columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty()) {
-            references << QString::fromLatin1("FOREIGN KEY (%1) REFERENCES %2Table(%3) ")
+            references << QStringLiteral("FOREIGN KEY (%1) REFERENCES %2Table(%3) ")
                        .arg(columnDescription.name)
                        .arg(columnDescription.refTable)
                        .arg(columnDescription.refColumn)
@@ -62,7 +62,7 @@ QString DbInitializerMySql::buildCreateTableStatement(const TableDescription &ta
 
     const QString tableProperties = QStringLiteral(" COLLATE=utf8_general_ci DEFAULT CHARSET=utf8");
 
-    return QString::fromLatin1("CREATE TABLE %1 (%2) %3").arg(tableDescription.name, columns.join(QStringLiteral(", ")), tableProperties);
+    return QStringLiteral("CREATE TABLE %1 (%2) %3").arg(tableDescription.name, columns.join(QStringLiteral(", ")), tableProperties);
 }
 
 QString DbInitializerMySql::buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const
@@ -91,7 +91,7 @@ QString DbInitializerMySql::buildColumnStatement(const ColumnDescription &column
         const QString defaultValue = sqlValue(columnDescription.type, columnDescription.defaultValue);
 
         if (!defaultValue.isEmpty()) {
-            column += QString::fromLatin1(" DEFAULT %1").arg(defaultValue);
+            column += QStringLiteral(" DEFAULT %1").arg(defaultValue);
         }
     }
 
@@ -107,7 +107,7 @@ QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &t
         it.value().replace(QLatin1String("\\"), QLatin1String("\\\\"));
     }
 
-    return QString::fromLatin1("INSERT INTO %1 (%2) VALUES (%3)")
+    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name)
            .arg(QStringList(data.keys()).join(QStringLiteral(",")))
            .arg(QStringList(data.values()).join(QStringLiteral(",")));
@@ -146,7 +146,7 @@ QString DbInitializerSqlite::buildCreateTableStatement(const TableDescription &t
         columns.push_back(buildPrimaryKeyStatement(tableDescription));
     }
 
-    return QString::fromLatin1("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QStringLiteral(", ")));
+    return QStringLiteral("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QStringLiteral(", ")));
 }
 
 QString DbInitializerSqlite::buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const
@@ -177,7 +177,7 @@ QString DbInitializerSqlite::buildColumnStatement(const ColumnDescription &colum
         const QString defaultValue = sqlValue(columnDescription.type, columnDescription.defaultValue);
 
         if (!defaultValue.isEmpty()) {
-            column += QString::fromLatin1(" DEFAULT %1").arg(defaultValue);
+            column += QStringLiteral(" DEFAULT %1").arg(defaultValue);
         }
     }
 
@@ -194,7 +194,7 @@ QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &
         it.value().replace(QLatin1String("false"), QLatin1String("0"));
     }
 
-    return QString::fromLatin1("INSERT INTO %1 (%2) VALUES (%3)")
+    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name)
            .arg(QStringList(data.keys()).join(QStringLiteral(",")))
            .arg(QStringList(data.values()).join(QStringLiteral(",")));
@@ -251,7 +251,7 @@ QString DbInitializerPostgreSql::buildCreateTableStatement(const TableDescriptio
         columns.push_back(buildPrimaryKeyStatement(tableDescription));
     }
 
-    return QString::fromLatin1("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QStringLiteral(", ")));
+    return QStringLiteral("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QStringLiteral(", ")));
 }
 
 QString DbInitializerPostgreSql::buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const
@@ -278,7 +278,7 @@ QString DbInitializerPostgreSql::buildColumnStatement(const ColumnDescription &c
         const QString defaultValue = sqlValue(columnDescription.type, columnDescription.defaultValue);
 
         if (!defaultValue.isEmpty()) {
-            column += QString::fromLatin1(" DEFAULT %1").arg(defaultValue);
+            column += QStringLiteral(" DEFAULT %1").arg(defaultValue);
         }
     }
 
@@ -289,7 +289,7 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescripti
 {
     QMap<QString, QString> data = dataDescription.data;
 
-    return QString::fromLatin1("INSERT INTO %1 (%2) VALUES (%3)")
+    return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name)
            .arg(QStringList(data.keys()).join(QStringLiteral(",")))
            .arg(QStringList(data.values()).join(QStringLiteral(",")));

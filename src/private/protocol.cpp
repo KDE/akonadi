@@ -169,11 +169,11 @@ public:
         mDbg << "\n";
         if (!name.isNull()) {
             mBlocks.push(name.size() + 4);
-            mDbg << QString::fromLatin1(" ").repeated(mIndent) << name << ": { ";
+            mDbg << QStringLiteral(" ").repeated(mIndent) << name << ": { ";
             mIndent += mBlocks.top();
         } else {
             mBlocks.push(2);
-            mDbg << QString::fromLatin1(" ").repeated(mIndent) << "{ ";
+            mDbg << QStringLiteral(" ").repeated(mIndent) << "{ ";
         }
         mBlockInit.push(false);
     }
@@ -190,7 +190,7 @@ public:
     {
         if (mBlockInit.top()) {
             mDbg.noquote() << QByteArray("\n");
-            mDbg << QString::fromLatin1(" ").repeated(mIndent);
+            mDbg << QStringLiteral(" ").repeated(mIndent);
         } else {
             mBlockInit.top() = true;
         }

@@ -83,7 +83,7 @@ bool DbUpdater::run()
         bool success = false;
         bool hasTransaction = false;
         if (it.value().complex) {   // complex update
-            const QString methodName = QString::fromLatin1("complexUpdate_%1()").arg(it.value().version);
+            const QString methodName = QStringLiteral("complexUpdate_%1()").arg(it.value().version);
             const int index = metaObject()->indexOfMethod(methodName.toLatin1().constData());
             if (index == -1) {
                 success = false;

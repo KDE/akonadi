@@ -36,7 +36,7 @@ DbIntrospectorMySql::DbIntrospectorMySql(const QSqlDatabase &database)
 
 QString DbIntrospectorMySql::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
-    return QString::fromLatin1("SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'")
+    return QStringLiteral("SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'")
            .arg(tableName).arg(indexName);
 }
 
@@ -86,7 +86,7 @@ DbIntrospectorSqlite::DbIntrospectorSqlite(const QSqlDatabase &database)
 
 QString DbIntrospectorSqlite::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
-    return QString::fromLatin1("SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';")
+    return QStringLiteral("SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';")
            .arg(tableName).arg(indexName);
 }
 
@@ -172,10 +172,10 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
 QString DbIntrospectorPostgreSql::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
     QString query = QStringLiteral("SELECT indexname FROM pg_catalog.pg_indexes");
-    query += QString::fromLatin1(" WHERE tablename ilike '%1'").arg(tableName);
-    query += QString::fromLatin1(" AND  indexname ilike '%1'").arg(indexName);
-    query += QString::fromLatin1(" UNION SELECT conname FROM pg_catalog.pg_constraint ");
-    query += QString::fromLatin1(" WHERE conname ilike '%1'").arg(indexName);
+    query += QStringLiteral(" WHERE tablename ilike '%1'").arg(tableName);
+    query += QStringLiteral(" AND  indexname ilike '%1'").arg(indexName);
+    query += QLatin1String(" UNION SELECT conname FROM pg_catalog.pg_constraint ");
+    query += QStringLiteral(" WHERE conname ilike '%1'").arg(indexName);
     return query;
 }
 

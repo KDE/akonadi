@@ -370,7 +370,7 @@ void AkonadiServer::createDatabase()
         if (db.open()) {
             {
                 QSqlQuery query(db);
-                if (!query.exec(QString::fromLatin1("CREATE DATABASE %1").arg(DbConfig::configuredDatabase()->databaseName()))) {
+                if (!query.exec(QStringLiteral("CREATE DATABASE %1").arg(DbConfig::configuredDatabase()->databaseName()))) {
                     akError() << "Failed to create database";
                     akError() << "Query error:" << query.lastError().text();
                     akFatal() << "Database error:" << db.lastError().text();

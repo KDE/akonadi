@@ -115,7 +115,7 @@ static bool checkSearchSupportStatus()
     }
 
     // There's always at least server-search available
-    fprintf(stderr, "Akonadi Server Search Support: available (%s)\n", qPrintable(searchMethods.join(QLatin1String(", "))));
+    fprintf(stderr, "Akonadi Server Search Support: available (%s)\n", qPrintable(searchMethods.join(QStringLiteral(", "))));
     return true;
 }
 
@@ -141,7 +141,7 @@ static bool checkAvailableAgentTypes()
     if (types.isEmpty()) {
         fprintf(stderr, "No agent types found! \n");
     } else {
-        fprintf(stderr, "%s\n", qPrintable(types.join(QLatin1String(", "))));
+        fprintf(stderr, "%s\n", qPrintable(types.join(QStringLiteral(", "))));
     }
 
     return true;

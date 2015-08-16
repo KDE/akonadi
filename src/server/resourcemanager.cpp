@@ -43,7 +43,7 @@ void ResourceManager::addResourceInstance(const QString &name, const QStringList
     Transaction transaction(DataStore::self());
     Resource resource = Resource::retrieveByName(name);
     if (resource.isValid()) {
-        Tracer::self()->error("ResourceManager", QString::fromLatin1("Resource '%1' already exists.").arg(name));
+        Tracer::self()->error("ResourceManager", QStringLiteral("Resource '%1' already exists.").arg(name));
         return; // resource already exists
     }
 
@@ -51,7 +51,7 @@ void ResourceManager::addResourceInstance(const QString &name, const QStringList
     resource.setName(name);
     resource.setIsVirtual(capabilities.contains(QStringLiteral(AKONADI_AGENT_CAPABILITY_VIRTUAL)));
     if (!resource.insert()) {
-        Tracer::self()->error("ResourceManager", QString::fromLatin1("Could not create resource '%1'.").arg(name));
+        Tracer::self()->error("ResourceManager", QStringLiteral("Could not create resource '%1'.").arg(name));
     }
     transaction.commit();
 }

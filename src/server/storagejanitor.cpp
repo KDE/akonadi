@@ -194,12 +194,12 @@ void StorageJanitor::findOrphanedResources()
         QDBusConnection::sessionBus(),
         this);
     if (!iface.isValid()) {
-        inform(QString::fromLatin1("ERROR: Couldn't talk to %1").arg(AkDBus::Control));
+        inform(QStringLiteral("ERROR: Couldn't talk to %1").arg(AkDBus::Control));
         return;
     }
     const QStringList knownResources = iface.agentInstances();
     if (knownResources.isEmpty()) {
-        inform(QString::fromLatin1("ERROR: no known resources. This must be a mistake?"));
+        inform(QStringLiteral("ERROR: no known resources. This must be a mistake?"));
         return;
     }
     akDebug() << "Known resources:" << knownResources;
@@ -213,9 +213,9 @@ void StorageJanitor::findOrphanedResources()
         Q_FOREACH (const Resource &resource, orphanResources) {
             resourceNames.append(resource.name());
         }
-        inform(QString::fromLatin1("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QStringLiteral(","))));
+        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QStringLiteral(","))));
         Q_FOREACH (const QString &resourceName, resourceNames) {
-            inform(QString::fromLatin1("Removing resource %1").arg(resourceName));
+            inform(QStringLiteral("Removing resource %1").arg(resourceName));
             ResourceManager::self()->removeResourceInstance(resourceName);
         }
     }
@@ -407,7 +407,7 @@ void StorageJanitor::verifyExternalParts()
             const QFileInfo f(file);
             QFile::rename(file, lfDir + QDir::separator() + f.fileName());
         }
-        inform(QString::fromLatin1("Moved %1 unreferenced files to lost+found.").arg(unreferencedFiles.size()));
+        inform(QStringLiteral("Moved %1 unreferenced files to lost+found.").arg(unreferencedFiles.size()));
     } else {
         inform("Found no unreferenced external files.");
     }
@@ -456,7 +456,7 @@ void StorageJanitor::vacuum()
     if (dbType == DbType::MySQL || dbType == DbType::PostgreSQL) {
         inform("vacuuming database, that'll take some time and require a lot of temporary disk space...");
         Q_FOREACH (const QString &table, allDatabaseTables()) {
-            inform(QString::fromLatin1("optimizing table %1...").arg(table));
+            inform(QStringLiteral("optimizing table %1...").arg(table));
 
             QString queryStr;
             if (dbType == DbType::MySQL) {
@@ -487,7 +487,7 @@ void StorageJanitor::checkSizeTreshold()
         qb.exec();
 
         QSqlQuery query = qb.query();
-        inform(QString::fromLatin1("Found %1 parts to be moved to external files").arg(query.size()));
+        inform(QStringLiteral("Found %1 parts to be moved to external files").arg(query.size()));
 
         while (query.next()) {
             Transaction transaction(DataStore::self());
@@ -518,7 +518,7 @@ void StorageJanitor::checkSizeTreshold()
                 continue;
             }
 
-            inform(QString::fromLatin1("Moved part %1 from database into external file %2").arg(part.id()).arg(QString::fromLatin1(name)));
+            inform(QStringLiteral("Moved part %1 from database into external file %2").arg(part.id()).arg(QString::fromLatin1(name)));
         }
     }
 
@@ -530,7 +530,7 @@ void StorageJanitor::checkSizeTreshold()
         qb.exec();
 
         QSqlQuery query = qb.query();
-        inform(QString::fromLatin1("Found %1 parts to be moved to database").arg(query.size()));
+        inform(QStringLiteral("Found %1 parts to be moved to database").arg(query.size()));
 
         while (query.next()) {
             Transaction transaction(DataStore::self());
@@ -559,7 +559,7 @@ void StorageJanitor::checkSizeTreshold()
 
             f.close();
             f.remove();
-            inform(QString::fromLatin1("Moved part %1 from external file into database").arg(part.id()));
+            inform(QStringLiteral("Moved part %1 from external file into database").arg(part.id()));
         }
     }
 }

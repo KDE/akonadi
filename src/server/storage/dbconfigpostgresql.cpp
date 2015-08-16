@@ -176,7 +176,7 @@ void DbConfigPostgresql::startInternalServer()
     // because normally we shouldn't be able to get this far if Akonadi is already
     // running. If postgres is not running, then the pidfile was left after a system
     // crash or something similar and we can remove it (otherwise pg_ctl won't start)
-    QFile postmaster(QString::fromLatin1("%1/postmaster.pid").arg(mPgData));
+    QFile postmaster(QStringLiteral("%1/postmaster.pid").arg(mPgData));
     if (postmaster.exists() && postmaster.open(QIODevice::ReadOnly)) {
         qCDebug(AKONADISERVER_LOG) << "Found a postmaster.pid pidfile, checking whether the server is still running...";
         QByteArray pid = postmaster.readLine();
@@ -208,7 +208,7 @@ void DbConfigPostgresql::startInternalServer()
 #endif
 
     // postgres data directory not initialized yet, so call initdb on it
-    if (!QFile::exists(QString::fromLatin1("%1/PG_VERSION").arg(mPgData))) {
+    if (!QFile::exists(QStringLiteral("%1/PG_VERSION").arg(mPgData))) {
 #ifdef Q_OS_LINUX
         // It is recommended to disable CoW feature when running on Btrfs to improve
         // database performance. This only has effect when done on empty directory,
@@ -219,24 +219,24 @@ void DbConfigPostgresql::startInternalServer()
 #endif
 
         // call 'initdb --pgdata=/home/user/.local/share/akonadi/data_db'
-        const QString command = QString::fromLatin1("%1").arg(mInitDbPath);
+        const QString command = QStringLiteral("%1").arg(mInitDbPath);
         QStringList arguments;
-        arguments << QString::fromLatin1("--pgdata=%2").arg(mPgData)
+        arguments << QStringLiteral("--pgdata=%2").arg(mPgData)
                   // TODO check locale
-                  << QString::fromLatin1("--locale=en_US.UTF-8");
+                  << QStringLiteral("--locale=en_US.UTF-8");
         QProcess::execute(command, arguments);
     }
 
     // synthesize the postgres command
     QStringList arguments;
-    arguments << QString::fromLatin1("start")
-              << QString::fromLatin1("-w")
-              << QString::fromLatin1("--timeout=10")   // default is 60 seconds.
-              << QString::fromLatin1("--pgdata=%1").arg(mPgData)
+    arguments << QStringLiteral("start")
+              << QStringLiteral("-w")
+              << QStringLiteral("--timeout=10")   // default is 60 seconds.
+              << QStringLiteral("--pgdata=%1").arg(mPgData)
               // These options are passed to postgres
               //  -k - directory for unix domain socket communication
               //  -h - disable listening for TCP/IP
-              << QString::fromLatin1("-o \"-k%1\" -h ''").arg(socketDir);
+              << QStringLiteral("-o \"-k%1\" -h ''").arg(socketDir);
 
     QProcess pgCtl;
     pgCtl.start(mServerPath, arguments);
@@ -282,11 +282,11 @@ void DbConfigPostgresql::startInternalServer()
                 QSqlQuery query(db);
 
                 // check if the 'akonadi' database already exists
-                query.exec(QString::fromLatin1("SELECT 1 FROM pg_catalog.pg_database WHERE datname = '%1'").arg(mDatabaseName));
+                query.exec(QStringLiteral("SELECT 1 FROM pg_catalog.pg_database WHERE datname = '%1'").arg(mDatabaseName));
 
                 // if not, create it
                 if (!query.first()) {
-                    if (!query.exec(QString::fromLatin1("CREATE DATABASE %1").arg(mDatabaseName))) {
+                    if (!query.exec(QStringLiteral("CREATE DATABASE %1").arg(mDatabaseName))) {
                         akError() << "Failed to create database";
                         akError() << "Query error:" << query.lastError().text();
                         akFatal() << "Database error:" << db.lastError().text();
@@ -307,13 +307,13 @@ void DbConfigPostgresql::stopInternalServer()
         return;
     }
 
-    const QString command = QString::fromLatin1("%1").arg(mServerPath);
+    const QString command = QStringLiteral("%1").arg(mServerPath);
 
     // first, try a FAST shutdown
     QStringList arguments;
-    arguments << QString::fromLatin1("stop")
-              << QString::fromLatin1("--pgdata=%1").arg(mPgData)
-              << QString::fromLatin1("--mode=fast");
+    arguments << QStringLiteral("stop")
+              << QStringLiteral("--pgdata=%1").arg(mPgData)
+              << QStringLiteral("--mode=fast");
     QProcess::execute(command, arguments);
     if (!checkServerIsRunning()) {
         return;
@@ -321,9 +321,9 @@ void DbConfigPostgresql::stopInternalServer()
 
     // second, try an IMMEDIATE shutdown
     arguments.clear();
-    arguments << QString::fromLatin1("stop")
-              << QString::fromLatin1("--pgdata=%1").arg(mPgData)
-              << QString::fromLatin1("--mode=immediate");
+    arguments << QStringLiteral("stop")
+              << QStringLiteral("--pgdata=%1").arg(mPgData)
+              << QStringLiteral("--mode=immediate");
     QProcess::execute(command, arguments);
     if (!checkServerIsRunning()) {
         return;
@@ -333,26 +333,26 @@ void DbConfigPostgresql::stopInternalServer()
     // kill the master one. We don't want to do that, but we've passed the last
     // call. pg_ctl is used to send the kill signal (safe when kill is not
     // supported by OS)
-    const QString pidFileName = QString::fromLatin1("%1/postmaster.pid").arg(mPgData);
+    const QString pidFileName = QStringLiteral("%1/postmaster.pid").arg(mPgData);
     QFile pidFile(pidFileName);
     if (pidFile.open(QIODevice::ReadOnly)) {
         QString postmasterPid = QString::fromUtf8(pidFile.readLine(0).trimmed());
         akError() << "The postmaster is still running. Killing it.";
 
         arguments.clear();
-        arguments << QString::fromLatin1("kill")
-                  << QString::fromLatin1("ABRT")
-                  << QString::fromLatin1("%1").arg(postmasterPid);
+        arguments << QStringLiteral("kill")
+                  << QStringLiteral("ABRT")
+                  << QStringLiteral("%1").arg(postmasterPid);
         QProcess::execute(command, arguments);
     }
 }
 
 bool DbConfigPostgresql::checkServerIsRunning()
 {
-    const QString command = QString::fromLatin1("%1").arg(mServerPath);
+    const QString command = QStringLiteral("%1").arg(mServerPath);
     QStringList arguments;
-    arguments << QString::fromLatin1("status")
-              << QString::fromLatin1("--pgdata=%1").arg(mPgData);
+    arguments << QStringLiteral("status")
+              << QStringLiteral("--pgdata=%1").arg(mPgData);
 
     QProcess pgCtl;
     pgCtl.start(command, arguments, QIODevice::ReadOnly);

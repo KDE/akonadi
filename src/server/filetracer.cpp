@@ -36,41 +36,41 @@ FileTracer::~FileTracer()
 
 void FileTracer::beginConnection(const QString &identifier, const QString &msg)
 {
-    output(identifier, QString::fromLatin1("begin_connection: %1").arg(msg));
+    output(identifier, QStringLiteral("begin_connection: %1").arg(msg));
 }
 
 void FileTracer::endConnection(const QString &identifier, const QString &msg)
 {
-    output(identifier, QString::fromLatin1("end_connection: %1").arg(msg));
+    output(identifier, QStringLiteral("end_connection: %1").arg(msg));
 }
 
 void FileTracer::connectionInput(const QString &identifier, const QByteArray &msg)
 {
-    output(identifier, QString::fromLatin1("input: %1").arg(QString::fromUtf8(msg)));
+    output(identifier, QStringLiteral("input: %1").arg(QString::fromUtf8(msg)));
 }
 
 void FileTracer::connectionOutput(const QString &identifier, const QByteArray &msg)
 {
-    output(identifier, QString::fromLatin1("output: %1").arg(QString::fromUtf8(msg)));
+    output(identifier, QStringLiteral("output: %1").arg(QString::fromUtf8(msg)));
 }
 
 void FileTracer::signal(const QString &signalName, const QString &msg)
 {
-    output(QStringLiteral("signal"), QString::fromLatin1("<%1> %2").arg(signalName, msg));
+    output(QStringLiteral("signal"), QStringLiteral("<%1> %2").arg(signalName, msg));
 }
 
 void FileTracer::warning(const QString &componentName, const QString &msg)
 {
-    output(QStringLiteral("warning"), QString::fromLatin1("<%1> %2").arg(componentName, msg));
+    output(QStringLiteral("warning"), QStringLiteral("<%1> %2").arg(componentName, msg));
 }
 
 void FileTracer::error(const QString &componentName, const QString &msg)
 {
-    output(QStringLiteral("error"), QString::fromLatin1("<%1> %2").arg(componentName, msg));
+    output(QStringLiteral("error"), QStringLiteral("<%1> %2").arg(componentName, msg));
 }
 
 void FileTracer::output(const QString &id, const QString &msg)
 {
-    QString output = QString::fromLatin1("%1: %2: %3\r\n").arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")), id, msg.left(msg.indexOf(QLatin1String("\n"))));
+    QString output = QStringLiteral("%1: %2: %3\r\n").arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")), id, msg.left(msg.indexOf(QLatin1String("\n"))));
     m_file->write(output.toUtf8());
 }

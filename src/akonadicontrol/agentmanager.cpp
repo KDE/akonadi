@@ -263,7 +263,7 @@ QString AgentManager::createAgentInstance(const QString &identifier)
     if (agentInfo.capabilities.contains(AgentType::CapabilityUnique)) {
         instance->setIdentifier(identifier);
     } else {
-        instance->setIdentifier(QString::fromLatin1("%1_%2").arg(identifier, QString::number(agentInfo.instanceCounter)));
+        instance->setIdentifier(QStringLiteral("%1_%2").arg(identifier, QString::number(agentInfo.instanceCounter)));
     }
 
     if (mAgentInstances.contains(instance->identifier())) {

@@ -320,12 +320,12 @@ bool FetchHelper::fetchItems()
         retriever.setChangedSince(mFetchScope.changedSince());
         if (!retriever.exec() && !mFetchScope.ignoreErrors()) {   // There we go, retrieve the missing parts from the resource.
             if (mConnection->context()->resource().isValid()) {
-                throw HandlerException(QString::fromLatin1("Unable to fetch item from backend (collection %1, resource %2) : %3")
+                throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1, resource %2) : %3")
                                        .arg(mConnection->context()->collectionId())
                                        .arg(mConnection->context()->resource().id())
                                        .arg(QString::fromLatin1(retriever.lastError())));
             } else {
-                throw HandlerException(QString::fromLatin1("Unable to fetch item from backend (collection %1) : %2")
+                throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1) : %2")
                                        .arg(mConnection->context()->collectionId())
                                        .arg(QString::fromLatin1(retriever.lastError())));
             }

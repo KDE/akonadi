@@ -82,11 +82,11 @@ void PartHelper::update(Part *part, const QByteArray &data, qint64 dataSize)
                 part->setData(fileName.toLocal8Bit());
                 part->setExternal(true);
             } else {
-                throw PartHelperException(QString::fromLatin1("Failed to write into '%1', error was '%2'").arg(file.fileName()).arg(file.errorString()));
+                throw PartHelperException(QStringLiteral("Failed to write into '%1', error was '%2'").arg(file.fileName()).arg(file.errorString()));
             }
             file.close();
         } else {
-            throw PartHelperException(QString::fromLatin1("Could not open '%1' for writing, error was '%2'").arg(file.fileName()).arg(file.errorString()));
+            throw PartHelperException(QStringLiteral("Could not open '%1' for writing, error was '%2'").arg(file.fileName()).arg(file.errorString()));
         }
 
         // internal storage
@@ -271,15 +271,15 @@ QString PartHelper::resolveAbsolutePath(const QByteArray &data)
 QString PartHelper::updateFileNameRevision(const QString &fileName)
 {
     QString fn = fileName;
-    QString rev = QString::fromLatin1("_r0");
-    if (fileName.contains(QString::fromLatin1("_r"))) {
-        int revIndex = fileName.indexOf(QString::fromLatin1("_r"));
+    QString rev = QStringLiteral("_r0");
+    if (fileName.contains(QStringLiteral("_r"))) {
+        int revIndex = fileName.indexOf(QLatin1String("_r"));
         rev = fileName.mid(revIndex + 2);
         int r = rev.toInt();
         r++;
         rev = QString::number(r);
         fn = fileName.left(revIndex);
-        rev.prepend(QString::fromLatin1("_r"));
+        rev.prepend(QLatin1String("_r"));
     }
 
     return fn + rev;
