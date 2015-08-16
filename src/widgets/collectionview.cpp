@@ -182,7 +182,7 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
 
         const Collection collection = Collection::fromUrl(url);
         if (collection.isValid()) {
-            if (!supportedContentTypes.contains(QString::fromLatin1("inode/directory"))) {
+            if (!supportedContentTypes.contains(QStringLiteral("inode/directory"))) {
                 break;
             }
 
@@ -193,7 +193,7 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
         } else {
             QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
             for (int i = 0; i < query.count(); ++i) {
-                if (query.at(i).first == QString::fromLatin1("type")) {
+                if (query.at(i).first == QLatin1String("type")) {
                     const QString type = query.at(i).second;
                     if (!supportedContentTypes.contains(type)) {
                         break;

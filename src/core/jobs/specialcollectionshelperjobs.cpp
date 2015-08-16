@@ -65,7 +65,7 @@ static QString defaultResourceId(KCoreConfigSkeleton *settings)
 
 static QString dbusServiceName()
 {
-    QString service = QString::fromLatin1("org.kde.pim.SpecialCollections");
+    QString service = QStringLiteral("org.kde.pim.SpecialCollections");
     if (ServerManager::hasInstanceIdentifier()) {
         return service + ServerManager::instanceIdentifier();
     }
@@ -329,8 +329,8 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
     {
         agent.setName(mDefaultResourceOptions.value(QStringLiteral("Name")).toString());
 
-        QDBusInterface conf(QString::fromLatin1("org.freedesktop.Akonadi.Resource.") + defaultId,
-                            QString::fromLatin1("/Settings"), QString());
+        QDBusInterface conf(QLatin1String("org.freedesktop.Akonadi.Resource.") + defaultId,
+                            QStringLiteral("/Settings"), QString());
 
         if (!conf.isValid()) {
             q->setError(-1);
@@ -347,7 +347,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
                 continue;
             }
 
-            const QString methodName = QString::fromLatin1("set%1").arg(it.key());
+            const QString methodName = QStringLiteral("set%1").arg(it.key());
             const QVariant::Type argType = argumentType(conf.metaObject(), methodName);
             if (argType == QVariant::Invalid) {
                 q->setError(Job::Unknown);

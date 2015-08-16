@@ -33,31 +33,31 @@ namespace Tag
 
 inline QString root()
 {
-    return QString::fromLatin1("knut");
+    return QStringLiteral("knut");
 }
 inline QString collection()
 {
-    return QString::fromLatin1("collection");
+    return QStringLiteral("collection");
 }
 inline QString item()
 {
-    return QString::fromLatin1("item");
+    return QStringLiteral("item");
 }
 inline QString attribute()
 {
-    return QString::fromLatin1("attribute");
+    return QStringLiteral("attribute");
 }
 inline QString flag()
 {
-    return QString::fromLatin1("flag");
+    return QStringLiteral("flag");
 }
 inline QString tag()
 {
-    return QString::fromLatin1("tag");
+    return QStringLiteral("tag");
 }
 inline QString payload()
 {
-    return QString::fromLatin1("payload");
+    return QStringLiteral("payload");
 }
 
 }
@@ -67,35 +67,35 @@ namespace Attr
 
 inline QString remoteId()
 {
-    return QString::fromLatin1("rid");
+    return QStringLiteral("rid");
 }
 inline QString attributeType()
 {
-    return QString::fromLatin1("type");
+    return QStringLiteral("type");
 }
 inline QString collectionName()
 {
-    return QString::fromLatin1("name");
+    return QStringLiteral("name");
 }
 inline QString collectionContentTypes()
 {
-    return QString::fromLatin1("content");
+    return QStringLiteral("content");
 }
 inline QString itemMimeType()
 {
-    return QString::fromLatin1("mimetype");
+    return QStringLiteral("mimetype");
 }
 inline QString name()
 {
-    return QString::fromLatin1("name");
+    return QStringLiteral("name");
 }
 inline QString gid()
 {
-    return QString::fromLatin1("gid");
+    return QStringLiteral("gid");
 }
 inline QString type()
 {
-    return QString::fromLatin1("type");
+    return QStringLiteral("type");
 }
 
 }

@@ -56,7 +56,7 @@ using namespace Akonadi;
 
 static QString makeLink(const QString &file)
 {
-    return QString::fromLatin1("<a href=\"%1\">%2</a>").arg(file, file);
+    return QStringLiteral("<a href=\"%1\">%2</a>").arg(file, file);
 }
 
 enum SelfTestRole {
@@ -84,9 +84,9 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelfTestDialog::reject);
     mainLayout->addWidget(buttonBox);
     user1Button->setText(i18n("Save Report..."));
-    user1Button->setIcon(QIcon::fromTheme(QString::fromLatin1("document-save")));
+    user1Button->setIcon(QIcon::fromTheme(QStringLiteral("document-save")));
     user2Button->setText(i18n("Copy Report to Clipboard"));
-    user2Button->setIcon(QIcon::fromTheme(QString::fromLatin1("edit-copy")));
+    user2Button->setIcon(QIcon::fromTheme(QStringLiteral("edit-copy")));
     ui.setupUi(mainWidget);
 
     mTestModel = new QStandardItemModel(this);
@@ -112,17 +112,17 @@ QStandardItem *SelfTestDialog::report(ResultType type, const KLocalizedString &s
     QStandardItem *item = new QStandardItem(summary.toString());
     switch (type) {
     case Skip:
-        item->setIcon(QIcon::fromTheme(QString::fromLatin1("dialog-ok")));
+        item->setIcon(QIcon::fromTheme(QStringLiteral("dialog-ok")));
         break;
     case Success:
-        item->setIcon(QIcon::fromTheme(QString::fromLatin1("dialog-ok-apply")));
+        item->setIcon(QIcon::fromTheme(QStringLiteral("dialog-ok-apply")));
         break;
     case Warning:
-        item->setIcon(QIcon::fromTheme(QString::fromLatin1("dialog-warning")));
+        item->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
         break;
     case Error:
     default:
-        item->setIcon(QIcon::fromTheme(QString::fromLatin1("dialog-error")));
+        item->setIcon(QIcon::fromTheme(QStringLiteral("dialog-error")));
     }
     item->setEditable(false);
     item->setWhatsThis(details.toString());
@@ -270,7 +270,7 @@ void SelfTestDialog::testMySQLServerLog()
     }
 
     const QString logFileName = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi/db_data"))
-                                + QDir::separator() + QString::fromLatin1("mysql.err");
+                                + QDir::separator() + QLatin1String("mysql.err");
     const QFileInfo logFileInfo(logFileName);
     if (!logFileInfo.exists() || logFileInfo.size() == 0) {
         report(Success, ki18n("No current MySQL error log found."),
@@ -493,7 +493,7 @@ void SelfTestDialog::testResources()
 void SelfTestDialog::testServerLog()
 {
     QString serverLog = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"))
-                        + QDir::separator() + QString::fromLatin1("akonadiserver.error");
+                        + QDir::separator() + QLatin1String("akonadiserver.error");
     QFileInfo info(serverLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No current Akonadi server error log found."),
@@ -519,7 +519,7 @@ void SelfTestDialog::testServerLog()
 void SelfTestDialog::testControlLog()
 {
     QString controlLog = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"))
-                         + QDir::separator() + QString::fromLatin1("akonadi_control.error");
+                         + QDir::separator() + QLatin1String("akonadi_control.error");
     QFileInfo info(controlLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No current Akonadi control error log found."),

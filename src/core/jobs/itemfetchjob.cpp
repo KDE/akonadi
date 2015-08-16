@@ -84,7 +84,7 @@ public:
         if (mRequestedItems.isEmpty()) {
             QString str = QStringLiteral("All items from collection %1").arg(mCollection.id());
             if (mFetchScope.fetchChangedSince().isValid()) {
-                str += QString::fromLatin1(" changed since %1").arg(mFetchScope.fetchChangedSince().toString());
+                str += QStringLiteral(" changed since %1").arg(mFetchScope.fetchChangedSince().toString());
             }
             return str;
 

@@ -200,12 +200,12 @@ bool ServerManager::start()
 bool ServerManager::stop()
 {
     QDBusInterface iface(ServerManager::serviceName(ServerManager::Control),
-                         QString::fromLatin1("/ControlManager"),
-                         QString::fromLatin1("org.freedesktop.Akonadi.ControlManager"));
+                         QStringLiteral("/ControlManager"),
+                         QStringLiteral("org.freedesktop.Akonadi.ControlManager"));
     if (!iface.isValid()) {
         return false;
     }
-    iface.call(QDBus::NoBlock, QString::fromLatin1("shutdown"));
+    iface.call(QDBus::NoBlock, QStringLiteral("shutdown"));
     sInstance->setState(Stopping);
     return true;
 }
@@ -322,11 +322,11 @@ QString ServerManager::agentServiceName(ServiceAgentType agentType, const QStrin
 {
     switch (agentType) {
     case Agent:
-        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QString::fromLatin1(".Agent.%1").arg(identifier));
+        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QStringLiteral(".Agent.%1").arg(identifier));
     case Resource:
-        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QString::fromLatin1(".Resource.%1").arg(identifier));
+        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QStringLiteral(".Resource.%1").arg(identifier));
     case Preprocessor:
-        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QString::fromLatin1(".Preprocessor.%1").arg(identifier));
+        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QStringLiteral(".Preprocessor.%1").arg(identifier));
     }
     Q_ASSERT(!"WTF?");
     return QString();

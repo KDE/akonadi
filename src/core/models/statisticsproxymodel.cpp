@@ -79,11 +79,11 @@ public:
         QString bckColor = QApplication::palette().color(QPalette::ToolTipBase).name();
         QString txtColor = QApplication::palette().color(QPalette::ToolTipText).name();
 
-        QString tip = QString::fromLatin1(
+        QString tip = QStringLiteral(
                           "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n"
                       );
         const QString textDirection = (QApplication::layoutDirection() == Qt::LeftToRight) ? QStringLiteral("left") : QStringLiteral("right");
-        tip += QString::fromLatin1(
+        tip += QStringLiteral(
                    "  <tr>\n"
                    "    <td bgcolor=\"%1\" colspan=\"2\" align=\"%4\" valign=\"middle\">\n"
                    "      <div style=\"color: %2; font-weight: bold;\">\n"
@@ -93,13 +93,13 @@ public:
                    "  </tr>\n"
                ).arg(txtColor).arg(bckColor).arg(index.data(Qt::DisplayRole).toString()).arg(textDirection);
 
-        tip += QString::fromLatin1(
+        tip += QStringLiteral(
                    "  <tr>\n"
                    "    <td align=\"%1\" valign=\"top\">\n"
                ).arg(textDirection);
 
         QString tipInfo;
-        tipInfo += QString::fromLatin1(
+        tipInfo += QStringLiteral(
                        "      <strong>%1</strong>: %2<br>\n"
                        "      <strong>%3</strong>: %4<br><br>\n"
                    ).arg(i18n("Total Messages")).arg(collection.statistics().count())
@@ -112,7 +112,7 @@ public:
 
                 if (qAbs(percentage) >= 0.01) {
                     QString percentStr = QString::number(percentage, 'f', 2);
-                    tipInfo += QString::fromLatin1(
+                    tipInfo += QStringLiteral(
                                    "      <strong>%1</strong>: %2%<br>\n"
                                ).arg(i18n("Quota")).arg(percentStr);
                 }
@@ -121,7 +121,7 @@ public:
 
 	KFormat formatter;
         qint64 currentFolderSize(collection.statistics().size());
-        tipInfo += QString::fromLatin1(
+        tipInfo += QStringLiteral(
                        "      <strong>%1</strong>: %2<br>\n"
                    ).arg(i18n("Storage Size")).arg(formatter.formatByteSize(currentFolderSize));
 
@@ -129,7 +129,7 @@ public:
         getCountRecursive(index, totalSize);
         totalSize -= currentFolderSize;
         if (totalSize > 0) {
-            tipInfo += QString::fromLatin1(
+            tipInfo += QStringLiteral(
                            "<strong>%1</strong>: %2<br>"
                        ).arg(i18n("Subfolder Storage Size")).arg(formatter.formatByteSize(totalSize));
         }
@@ -161,7 +161,7 @@ public:
             iconPath = KIconLoader::global()->iconPath(QStringLiteral("folder"), -32, false);
         }
 
-        QString tipIcon = QString::fromLatin1(
+        QString tipIcon = QStringLiteral(
                               "      <table border=\"0\"><tr><td width=\"32\" height=\"32\" align=\"center\" valign=\"middle\">\n"
                               "      <img src=\"%1\" width=\"%2\" height=\"32\">\n"
                               "      </td></tr></table>\n"
@@ -169,12 +169,12 @@ public:
                           ).arg(iconPath).arg(icon_size_found) ;
 
         if (QApplication::layoutDirection() == Qt::LeftToRight) {
-            tip += tipInfo + QString::fromLatin1("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipIcon;
+            tip += tipInfo + QStringLiteral("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipIcon;
         } else {
-            tip += tipIcon + QString::fromLatin1("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipInfo;
+            tip += tipIcon + QStringLiteral("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipInfo;
         }
 
-        tip += QString::fromLatin1(
+        tip += QLatin1String(
                    "  </tr>" \
                    "</table>"
                );

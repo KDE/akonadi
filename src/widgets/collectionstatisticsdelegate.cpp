@@ -263,12 +263,12 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         QString unread;
 //     qCDebug(AKONADIWIDGETS_LOG) << expanded << unreadCount << unreadRecursiveCount;
         if (expanded && unreadCount > 0) {
-            unread = QString::fromLatin1(" (%1)").arg(unreadCount);
+            unread = QStringLiteral(" (%1)").arg(unreadCount);
         } else if (!expanded) {
             if (unreadCount != unreadRecursiveCount) {
-                unread = QString::fromLatin1(" (%1 + %2)").arg(unreadCount).arg(unreadRecursiveCount - unreadCount);
+                unread = QStringLiteral(" (%1 + %2)").arg(unreadCount).arg(unreadRecursiveCount - unreadCount);
             } else if (unreadCount > 0) {
-                unread = QString::fromLatin1(" (%1)").arg(unreadCount);
+                unread = QStringLiteral(" (%1)").arg(unreadCount);
             }
         }
 

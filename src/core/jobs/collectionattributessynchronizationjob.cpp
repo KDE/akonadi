@@ -105,7 +105,7 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
     connect(interface, SIGNAL(attributesSynchronized(qlonglong)), q, SLOT(slotSynchronized(qlonglong)));
 
     if (interface->isValid()) {
-        const QDBusMessage reply = interface->call(QString::fromUtf8("synchronizeCollectionAttributes"), collection.id());
+        const QDBusMessage reply = interface->call(QStringLiteral("synchronizeCollectionAttributes"), collection.id());
         if (reply.type() == QDBusMessage::ErrorMessage) {
             // This means that the resource doesn't provide a synchronizeCollectionAttributes method, so we just finish the job
             q->emitResult();
@@ -145,7 +145,7 @@ void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
     if (instance.status() == AgentInstance::Idle) {
         // try again, we might have lost the synchronized() signal
         qDebug() << "trying again to sync collection attributes" << collection.id() << instance.identifier();
-        interface->call(QString::fromUtf8("synchronizeCollectionAttributes"), collection.id());
+        interface->call(QStringLiteral("synchronizeCollectionAttributes"), collection.id());
     }
 }
 

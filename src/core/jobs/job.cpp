@@ -316,7 +316,7 @@ QString Job::errorString() const
         break;
     }
     if (!errorText().isEmpty()) {
-        str += QString::fromLatin1(" (%1)").arg(errorText());
+        str += QStringLiteral(" (%1)").arg(errorText());
     }
     return str;
 }

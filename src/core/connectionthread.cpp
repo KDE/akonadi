@@ -47,7 +47,7 @@ ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
 
     const QByteArray sessionLogFile = qgetenv("AKONADI_SESSION_LOGFILE");
     if (!sessionLogFile.isEmpty()) {
-        mLogFile = new QFile(QString::fromLatin1("%1.%2.%3").arg(QString::fromLatin1(sessionLogFile))
+        mLogFile = new QFile(QStringLiteral("%1.%2.%3").arg(QString::fromLatin1(sessionLogFile))
                              .arg(QString::number(QApplication::applicationPid()))
                              .arg(QString::fromLatin1(mSessionId.replace('/', '_'))),
                              this);

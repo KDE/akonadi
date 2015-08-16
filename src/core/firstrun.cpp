@@ -167,7 +167,7 @@ void Firstrun::instanceCreated(KJob *job)
 
     foreach (const QString &setting, settings.keyList()) {
         qDebug() << "Setting up " << setting << " for agent " << instance.identifier();
-        const QString methodName = QString::fromLatin1("set%1").arg(setting);
+        const QString methodName = QStringLiteral("set%1").arg(setting);
         const QVariant::Type argType = argumentType(iface->metaObject(), methodName);
         if (argType == QVariant::Invalid) {
             qCritical() << "Setting " << setting << " not found in agent configuration interface of " << instance.identifier();

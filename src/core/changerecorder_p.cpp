@@ -260,13 +260,13 @@ static QString join(const QList<qint64> &set)
 QString ChangeRecorderPrivate::dumpNotificationListToString() const
 {
     if (!settings) {
-        return QString::fromLatin1("No settings set in ChangeRecorder yet.");
+        return QStringLiteral("No settings set in ChangeRecorder yet.");
     }
     const QString changesFileName = notificationsFileName();
     QFile file(changesFileName);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        return QString::fromLatin1("Error reading ") + changesFileName;
+        return QLatin1String("Error reading ") + changesFileName;
     }
 
     QString result;
@@ -330,7 +330,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
         const QString addedTags = join(n.addedTags().toList());
         const QString removedTags = join(n.removedTags().toList());
 
-        const QString entry = QString::fromLatin1("session=%1 type=%2 operation=%3 items=%4 resource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11 addedTags=%12 removedTags=%13")
+        const QString entry = QStringLiteral("session=%1 type=%2 operation=%3 items=%4 resource=%5 destResource=%6 parentCollection=%7 parentDestCollection=%8 itemParts=%9 addedFlags=%10 removedFlags=%11 addedTags=%12 removedTags=%13")
                               .arg(QString::fromLatin1(n.sessionId()))
                               .arg(typeString)
                               .arg(operationString)

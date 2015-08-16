@@ -1421,7 +1421,7 @@ public:
                 // new level
                 QMenu *popup = new QMenu(menu);
                 const bool moveAction = (type == MoveCollectionToMenu || type == MoveItemToMenu);
-                popup->setObjectName(QString::fromUtf8("subMenu"));
+                popup->setObjectName(QStringLiteral("subMenu"));
                 popup->setTitle(label);
                 popup->setIcon(icon);
 
