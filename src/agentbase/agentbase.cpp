@@ -948,7 +948,6 @@ QString AgentBase::parseArguments(int argc, char **argv)
 
 int AgentBase::init(AgentBase *r)
 {
-    QApplication::setQuitOnLastWindowClosed(false);
     KLocalizedString::setApplicationDomain("libakonadi5");
     int rv = qApp->exec();
     delete r;
@@ -1112,6 +1111,7 @@ void AgentBase::quit()
     }
 
     delete d->mEventLoopLocker;
+    d->mEventLoopLocker = Q_NULLPTR;
 }
 
 void AgentBase::aboutToQuit()
@@ -1153,6 +1153,7 @@ void AgentBase::cleanup()
     QFile::remove(configFile);
 
     delete d->mEventLoopLocker;
+    d->mEventLoopLocker = Q_NULLPTR;
 }
 
 void AgentBase::registerObserver(Observer *observer)
