@@ -56,14 +56,21 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     qDBusRegisterMetaType<Akonadi::Protocol::ChangeNotification::Type>();
 }
 
+MonitorPrivate::~MonitorPrivate()
+{
+    delete dependenciesFactory;
+    delete collectionCache;
+    delete itemCache;
+    delete tagCache;
+}
+
 void MonitorPrivate::init()
 {
     // needs to be at least 3x pipeline size for the collection move case
     collectionCache = dependenciesFactory->createCollectionCache(3 * PipelineSize, session);
     // needs to be at least 1x pipeline size
     itemCache = dependenciesFactory->createItemListCache(PipelineSize, session);
-
-    // 20 tags looks like a reasonable mount to keep around
+    // 20 tags looks like a reasonable amount to keep around
     tagCache = dependenciesFactory->createTagListCache(20, session);
 
     QObject::connect(collectionCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()));
