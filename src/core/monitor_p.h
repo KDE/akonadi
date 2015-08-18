@@ -54,12 +54,7 @@ class AKONADICORE_EXPORT MonitorPrivate
 {
 public:
     MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent);
-    virtual ~MonitorPrivate()
-    {
-        delete dependenciesFactory;
-        delete collectionCache;
-        delete itemCache;
-    }
+    virtual ~MonitorPrivate();
     void init();
 
     Monitor *q_ptr;
