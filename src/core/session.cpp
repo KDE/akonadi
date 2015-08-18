@@ -287,6 +287,7 @@ SessionPrivate::~SessionPrivate()
     if (connThread) {
         connThread->quit();
         connThread->disconnect();
+        connThread->deleteLater();
     }
 
     if (thread) {
@@ -294,7 +295,6 @@ SessionPrivate::~SessionPrivate()
         thread->wait();
     }
     delete thread;
-    delete connThread;
 }
 
 void SessionPrivate::init(const QByteArray &id)
