@@ -186,6 +186,7 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
         if (hello.isError()) {
             qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
             socket->close();
+            socket->readAll();
             QTimer::singleShot(1000, mParent, SLOT(reconnect()));
             return false;
         }
@@ -207,6 +208,7 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
         if (login.isError()) {
             qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
             socket->close();
+            socket->readAll();
             QTimer::singleShot(1000, mParent, SLOT(reconnect()));
             return false;
         }
@@ -238,6 +240,7 @@ void SessionPrivate::dataReceived()
         if (cmd.type() == Protocol::Command::Invalid) {
             qWarning() << "Invalid command, the world is going to end!";
             socket->close();
+            socket->readAll();
             reconnect();
             return;
         }
