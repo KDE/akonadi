@@ -186,6 +186,7 @@ void ConnectionThread::doDisconnect()
 
     if (mSocket) {
         mSocket->close();
+        mSocket->readAll();
     }
 }
 
@@ -206,6 +207,7 @@ void ConnectionThread::dataReceived()
         if (cmd.type() == Protocol::Command::Invalid) {
             qWarning() << "Invalid command, the world is going to end!";
             mSocket->close();
+            mSocket->readAll();
             reconnect();
             return;
         }
@@ -269,6 +271,7 @@ void ConnectionThread::doSendCommand(qint64 tag, const Protocol::Command &cmd)
         } catch (const Akonadi::ProtocolException &e) {
             qWarning() << "Protocol Exception:" << QString::fromUtf8(e.what());
             mSocket->close();
+            mSocket->readAll();
             reconnect();
         }
     } else {
