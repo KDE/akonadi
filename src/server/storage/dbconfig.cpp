@@ -23,10 +23,10 @@
 #include "dbconfigpostgresql.h"
 #include "dbconfigsqlite.h"
 
-#include <shared/akapplication.h>
 #include <shared/akdebug.h>
 #include <shared/akstandarddirs.h>
 #include <private/xdgbasedirs_p.h>
+#include <private/instance_p.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QStringBuilder>
@@ -116,11 +116,11 @@ qint64 DbConfig::sizeThreshold() const
 
 QString DbConfig::defaultDatabaseName()
 {
-    if (!AkApplication::hasInstanceIdentifier()) {
+    if (!Instance::hasIdentifier()) {
         return QStringLiteral("akonadi");
     }
     // dash is not allowed in PSQL
-    return QLatin1Literal("akonadi_") % AkApplication::instanceIdentifier().replace(QLatin1Char('-'), QLatin1Char('_'));
+    return QLatin1Literal("akonadi_") % Instance::identifier().replace(QLatin1Char('-'), QLatin1Char('_'));
 }
 
 void DbConfig::initSession(const QSqlDatabase &database)

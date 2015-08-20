@@ -22,6 +22,8 @@
 #define AKTEST_H
 
 #include "akapplication.h"
+#include <private/instance_p.h>
+
 #include <QDebug>
 #include <QBuffer>
 #include <QTest>
@@ -62,7 +64,7 @@ do {\
 
 inline void akTestSetInstanceIdentifier(const QString &instanceId)
 {
-    AkApplication::setInstanceIdentifier(instanceId);
+    Akonadi::Instance::setIdentifier(instanceId);
 }
 
 #include <private/protocol_p.h>

@@ -19,6 +19,7 @@
 
 #include "akapplication.h"
 #include "akdebug.h"
+#include <private/instance_p.h>
 #include <akonadi_version.h>
 
 #include <QDBusConnection>
@@ -82,9 +83,8 @@ void AkApplication::parseCommandLine()
 
     mCmdLineParser.process(QCoreApplication::arguments());
 
-    mInstanceId = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
     if (mCmdLineParser.isSet(instanceOption)) {
-        mInstanceId = mCmdLineParser.value(instanceOption);
+        Akonadi::Instance::setIdentifier(mCmdLineParser.value(instanceOption));
     }
 }
 
@@ -111,24 +111,7 @@ void AkApplication::printUsage() const
     std::cout << qPrintable(mCmdLineParser.helpText()) << std::endl;
 }
 
-QString AkApplication::instanceIdentifier()
-{
-    Q_ASSERT(sInstance);
-    return sInstance->mInstanceId;
-}
-
-bool AkApplication::hasInstanceIdentifier()
-{
-    return !instanceIdentifier().isEmpty();
-}
-
 int AkApplication::exec()
 {
     return mApp->exec();
-}
-
-void AkApplication::setInstanceIdentifier(const QString &instanceId)
-{
-    Q_ASSERT(sInstance);
-    sInstance->mInstanceId = instanceId;
 }

@@ -19,7 +19,8 @@
 
 #include "processcontrol.h"
 
-#include <shared/akapplication.h>
+#include <private/instance_p.h>
+
 #include <shared/akdebug.h>
 
 #include <QtCore/QDebug>
@@ -49,12 +50,12 @@ ProcessControl::ProcessControl(QObject *parent)
             this, SLOT(slotFinished(int,QProcess::ExitStatus)));
     mProcess.setProcessChannelMode(QProcess::ForwardedChannels);
 
-    if (AkApplication::hasInstanceIdentifier()) {
+    if (Akonadi::Instance::hasIdentifier()) {
         QProcessEnvironment env = mProcess.processEnvironment();
         if (env.isEmpty()) {
             env = QProcessEnvironment::systemEnvironment();
         }
-        env.insert(QStringLiteral("AKONADI_INSTANCE"), AkApplication::instanceIdentifier());
+        env.insert(QStringLiteral("AKONADI_INSTANCE"), Akonadi::Instance::identifier());
         mProcess.setProcessEnvironment(env);
     }
 }

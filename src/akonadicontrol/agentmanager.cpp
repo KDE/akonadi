@@ -32,9 +32,9 @@
 
 #include <private/protocol_p.h>
 #include <private/xdgbasedirs_p.h>
+#include <private/instance_p.h>
 
 #include <shared/akdebug.h>
-#include <shared/akapplication.h>
 #include <shared/akdbus.h>
 #include <shared/akstandarddirs.h>
 
@@ -75,8 +75,8 @@ AgentManager::AgentManager(QObject *parent)
     mAgentServerEnabled = settings.value(QStringLiteral("AgentServer/Enabled"), enableAgentServerDefault).toBool();
 
     QStringList serviceArgs;
-    if (AkApplication::hasInstanceIdentifier()) {
-        serviceArgs << QStringLiteral("--instance") << AkApplication::instanceIdentifier();
+    if (Akonadi::Instance::hasIdentifier()) {
+        serviceArgs << QStringLiteral("--instance") << Akonadi::Instance::identifier();
     }
 
     mStorageController = new Akonadi::ProcessControl;

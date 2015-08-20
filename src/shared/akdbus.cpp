@@ -18,9 +18,9 @@
 */
 
 #include "akdbus.h"
-#include "akapplication.h"
 
 #include <private/protocol_p.h>
+#include <private/instance_p.h>
 
 #include <QString>
 #include <QStringBuilder>
@@ -28,10 +28,10 @@
 
 static QString makeServiceName(const char *base)
 {
-    if (!AkApplication::hasInstanceIdentifier()) {
+    if (!Akonadi::Instance::hasIdentifier()) {
         return QLatin1String(base);
     }
-    return QLatin1String(base) % QLatin1Literal(".") % AkApplication::instanceIdentifier();
+    return QLatin1String(base) % QLatin1Literal(".") % Akonadi::Instance::identifier();
 }
 
 QString AkDBus::serviceName(AkDBus::ServiceType serviceType)
@@ -61,8 +61,8 @@ QString AkDBus::parseAgentServiceName(const QString &serviceName, AkDBus::AgentT
         return QString();
     }
     const QStringList parts = serviceName.mid(24).split(QLatin1Char('.'));
-    if ((parts.size() == 2 && !AkApplication::hasInstanceIdentifier())
-        || (parts.size() == 3 && AkApplication::hasInstanceIdentifier() && AkApplication::instanceIdentifier() == parts.at(2))) {
+    if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
+        || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
         // switch on parts.at( 0 )
         if (parts.first() == QLatin1String("Agent")) {
             agentType = Agent;
@@ -98,8 +98,8 @@ QString AkDBus::agentServiceName(const QString &agentIdentifier, AkDBus::AgentTy
         Q_ASSERT(!"WTF?");
     }
     serviceName += agentIdentifier;
-    if (AkApplication::hasInstanceIdentifier()) {
-        serviceName += QLatin1Char('.') % AkApplication::instanceIdentifier();
+    if (Akonadi::Instance::hasIdentifier()) {
+        serviceName += QLatin1Char('.') % Akonadi::Instance::identifier();
     }
     return serviceName;
 }

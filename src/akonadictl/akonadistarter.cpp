@@ -23,6 +23,8 @@
 #include <akdbus.h>
 #include <akdebug.h>
 
+#include <private/instance_p.h>
+
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
 #include <QtCore/QProcess>
@@ -47,8 +49,8 @@ bool AkonadiStarter::start()
     akDebug() << "Starting Akonadi Server...";
 
     QStringList serverArgs;
-    if (AkApplication::hasInstanceIdentifier()) {
-        serverArgs << QStringLiteral("--instance") << AkApplication::instanceIdentifier();
+    if (Akonadi::Instance::hasIdentifier()) {
+        serverArgs << QStringLiteral("--instance") << Akonadi::Instance::identifier();
     }
 
     const bool ok = QProcess::startDetached(QStringLiteral("akonadi_control"), serverArgs);

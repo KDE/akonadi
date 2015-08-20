@@ -46,12 +46,6 @@ public:
 
     void printUsage() const;
 
-    /** Returns the instance identifier when running in multi-instance mode, empty string otherwise. */
-    static QString instanceIdentifier();
-
-    /** Returns @c true if we run in multi-instance mode. */
-    static bool hasInstanceIdentifier();
-
     /** Returns the AkApplication instance */
     static AkApplication *instance();
 
@@ -62,11 +56,6 @@ protected:
     AkApplication(int &argc, char **argv);
     void init();
     QScopedPointer<QCoreApplication> mApp;
-
-private:
-    /** Change instane identifier, for unit tests only. */
-    static void setInstanceIdentifier(const QString &instanceId);
-    friend void akTestSetInstanceIdentifier(const QString &instanceId);
 
 private Q_SLOTS:
     void pollSessionBus() const;
