@@ -34,7 +34,7 @@
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>
 #include <private/scope_p.h>
-#include <shared/akstandarddirs.h>
+#include <private/standarddirs_p.h>
 #include <shared/akapplication.h>
 
 #include "storage/dbconfig.h"
@@ -166,7 +166,7 @@ bool FakeAkonadiServer::init()
     qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
     qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1String("/config"))));
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
-    QSettings settings(AkStandardDirs::serverConfigFile(XdgBaseDirs::WriteOnly), QSettings::IniFormat);
+    QSettings settings(StandardDirs::serverConfigFile(XdgBaseDirs::WriteOnly), QSettings::IniFormat);
     settings.beginGroup(QLatin1String("General"));
     settings.setValue(QLatin1String("Driver"), QLatin1String("QSQLITE3"));
     settings.endGroup();

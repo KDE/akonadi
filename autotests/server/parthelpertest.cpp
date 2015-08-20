@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-#include <akstandarddirs.h>
 #include <aktest.h>
 #include "entities.h"
 #include "storage/parthelper.h"

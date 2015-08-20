@@ -22,7 +22,7 @@
 #include <QSettings>
 
 #include <aktest.h>
-#include <akstandarddirs.h>
+#include <private/standarddirs_p.h>
 
 #include <storage/dbconfig.h>
 
@@ -45,7 +45,7 @@ private Q_SLOTS:
         akTestSetInstanceIdentifier(QL1S("unit-test"));
 
         {
-            QSettings s(AkStandardDirs::serverConfigFile(XdgBaseDirs::WriteOnly));
+            QSettings s(StandardDirs::serverConfigFile(XdgBaseDirs::WriteOnly));
             s.setValue(QL1S("General/Driver"), driverName);
         }
 

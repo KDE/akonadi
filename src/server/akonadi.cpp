@@ -23,7 +23,6 @@
 
 #include <shared/akdbus.h>
 #include <shared/akdebug.h>
-#include <shared/akstandarddirs.h>
 
 #include "cachecleaner.h"
 #include "intervalcheck.h"
@@ -44,6 +43,7 @@
 #include "collectionreferencemanager.h"
 
 #include <private/xdgbasedirs_p.h>
+#include <private/standarddirs_p.h>
 #include <private/protocol_p.h>
 
 #include <QtSql/QSqlQuery>
@@ -92,7 +92,7 @@ AkonadiServer::AkonadiServer(QObject *parent)
 
 bool AkonadiServer::init()
 {
-    const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+    const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
     // Restrict permission to 600, as the file might contain database password in plaintext
     QFile::setPermissions(serverConfigFile, QFile::ReadOwner | QFile::WriteOwner);
@@ -107,7 +107,7 @@ bool AkonadiServer::init()
 
     s_instance = this;
 
-    const QString connectionSettingsFile = AkStandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
+    const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
     QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
 
 #ifdef Q_OS_WIN
@@ -152,7 +152,7 @@ bool AkonadiServer::init()
     connectionSettings.setValue(QLatin1String("Data/Method"), QLatin1String("NamedPipe"));
     connectionSettings.setValue(QLatin1String("Data/NamedPipe"), namedPipe);
 #else
-    const QString socketDir = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data"));
+    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"));
     const QString socketFile = socketDir + QLatin1String("/akonadiserver.socket");
     unlink(socketFile.toUtf8().constData());
     if (!listen(socketFile)) {
@@ -292,11 +292,11 @@ bool AkonadiServer::quit()
     akDebug() << "stopping db process";
     stopDatabaseProcess();
 
-    QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
-    const QString connectionSettingsFile = AkStandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
+    QSettings settings(StandardDirs::serverConfigFile(), QSettings::IniFormat);
+    const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
 
 #ifndef Q_OS_WIN
-    const QString socketDir = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data"));
+    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"));
 
     if (!QDir::home().remove(socketDir + QLatin1String("/akonadiserver.socket"))) {
         akError() << "Failed to remove Unix socket";
@@ -342,8 +342,8 @@ void AkonadiServer::startDatabaseProcess()
     }
 
     // create the database directories if they don't exists
-    AkStandardDirs::saveDir("data");
-    AkStandardDirs::saveDir("data", QStringLiteral("file_db_data"));
+    StandardDirs::saveDir("data");
+    StandardDirs::saveDir("data", QStringLiteral("file_db_data"));
 
     DbConfig::configuredDatabase()->startInternalServer();
 }

@@ -32,11 +32,10 @@
 
 #include <shared/akdbus.h>
 #include <shared/akdebug.h>
-#include <shared/akstandarddirs.h>
 
 #include <private/imapset_p.h>
 #include <private/protocol_p.h>
-#include <private/xdgbasedirs_p.h>
+#include <private/standarddirs_p.h>
 
 
 #include <QStringBuilder>
@@ -49,6 +48,7 @@
 
 #include <algorithm>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 StorageJanitorThread::StorageJanitorThread(QObject *parent)
@@ -361,7 +361,7 @@ void StorageJanitor::verifyExternalParts()
     QSet<QString> usedFiles;
 
     // list all files
-    const QString dataDir = AkStandardDirs::saveDir("data", QStringLiteral("file_db_data"));
+    const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("file_db_data"));
     QDirIterator it(dataDir);
     while (it.hasNext()) {
         existingFiles.insert(it.next());
@@ -401,7 +401,7 @@ void StorageJanitor::verifyExternalParts()
     // see what's left and move it to lost+found
     const QSet<QString> unreferencedFiles = existingFiles - usedFiles;
     if (!unreferencedFiles.isEmpty()) {
-        const QString lfDir = AkStandardDirs::saveDir("data", QStringLiteral("file_lost+found"));
+        const QString lfDir = StandardDirs::saveDir("data", QStringLiteral("file_lost+found"));
         Q_FOREACH (const QString &file, unreferencedFiles) {
             inform(QLatin1Literal("Found unreferenced external file: ") + file);
             const QFileInfo f(file);

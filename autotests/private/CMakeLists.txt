@@ -20,5 +20,6 @@ macro(add_unit_test _source)
     )
 endmacro()
 
+add_unit_test(akstandarddirstest.cpp)
 add_unit_test(notificationmessagetest.cpp)
 add_unit_test(protocoltest.cpp)

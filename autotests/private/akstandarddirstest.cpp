@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <akstandarddirs.h>
+#include <private/standarddirs_p.h>
 #include <aktest.h>
 
 #include <QObject>
@@ -26,6 +26,8 @@
 
 #define QL1S(x) QStringLiteral(x)
 
+using namespace Akonadi;
+
 class AkStandardDirsTest : public QObject
 {
     Q_OBJECT
@@ -33,23 +35,23 @@ private Q_SLOTS:
     void testCondigFile()
     {
         akTestSetInstanceIdentifier(QString());
-        QVERIFY(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly).endsWith(QL1S("agentsrc")));
-        QVERIFY(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadWrite).endsWith(QL1S("agentsrc")));
-        QVERIFY(!AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadWrite).endsWith(QL1S("foo/agentsrc")));
+        QVERIFY(StandardDirs::agentConfigFile(XdgBaseDirs::ReadOnly).endsWith(QL1S("agentsrc")));
+        QVERIFY(StandardDirs::agentConfigFile(XdgBaseDirs::ReadWrite).endsWith(QL1S("agentsrc")));
+        QVERIFY(!StandardDirs::agentConfigFile(XdgBaseDirs::ReadWrite).endsWith(QL1S("foo/agentsrc")));
 
         akTestSetInstanceIdentifier(QL1S("foo"));
-        QVERIFY(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly).endsWith(QL1S("agentsrc")));
-        QVERIFY(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadWrite).endsWith(QL1S("instance/foo/agentsrc")));
+        QVERIFY(StandardDirs::agentConfigFile(XdgBaseDirs::ReadOnly).endsWith(QL1S("agentsrc")));
+        QVERIFY(StandardDirs::agentConfigFile(XdgBaseDirs::ReadWrite).endsWith(QL1S("instance/foo/agentsrc")));
     }
 
     void testSaveDir()
     {
         akTestSetInstanceIdentifier(QString());
-        QVERIFY(AkStandardDirs::saveDir("data").endsWith(QL1S("/akonadi")));
-        QVERIFY(!AkStandardDirs::saveDir("data").endsWith(QL1S("foo/akonadi")));
+        QVERIFY(StandardDirs::saveDir("data").endsWith(QL1S("/akonadi")));
+        QVERIFY(!StandardDirs::saveDir("data").endsWith(QL1S("foo/akonadi")));
 
         akTestSetInstanceIdentifier(QL1S("foo"));
-        QVERIFY(AkStandardDirs::saveDir("data").endsWith(QL1S("/akonadi/instance/foo")));
+        QVERIFY(StandardDirs::saveDir("data").endsWith(QL1S("/akonadi/instance/foo")));
     }
 };
 

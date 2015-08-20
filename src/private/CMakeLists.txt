@@ -1,11 +1,13 @@
 set(akonadiprivate_SRCS
     imapparser.cpp
     imapset.cpp
+    instance.cpp
     datastream_p.cpp
     protocol.cpp
     scope.cpp
     tristate.cpp
     xdgbasedirs.cpp
+    standarddirs.cpp
 )
 
 
@@ -32,8 +34,10 @@ install(TARGETS
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h
+    standarddirs_p.h
     imapparser_p.h
     imapset_p.h
+    instance_p.h
     protocol_p.h
     protocol_exception_p.h
     xdgbasedirs_p.h

@@ -21,10 +21,11 @@
 
 #include "fakeakonadiserver.h"
 #include "fakeconnection.h"
-#include "akstandarddirs.h"
 #include "akdebug.h"
 #include "aktest.h"
 #include "entities.h"
+
+#include <private/standarddirs_p.h>
 
 #include "storage/partstreamer.h"
 #include <storage/parthelper.h>
@@ -47,7 +48,7 @@ public:
     PartStreamerTest()
     {
         // Set a very small treshold for easier testing
-        const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+        const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
         QSettings settings(serverConfigFile, QSettings::IniFormat);
         settings.setValue(QLatin1String("General/SizeThreshold"), 5);
 

@@ -22,8 +22,8 @@
 #include "akonadiserver_debug.h"
 
 #include <private/xdgbasedirs_p.h>
+#include <private/standarddirs_p.h>
 #include <shared/akdebug.h>
-#include <shared/akstandarddirs.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QProcess>
@@ -88,8 +88,8 @@ bool DbConfigPostgresql::init(QSettings &settings)
 
         defaultServerPath = XdgBaseDirs::findExecutableFile(QStringLiteral("pg_ctl"), postgresSearchPath);
         defaultInitDbPath = XdgBaseDirs::findExecutableFile(QStringLiteral("initdb"), postgresSearchPath);
-        defaultHostName = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QStringLiteral("db_misc")));
-        defaultPgData = AkStandardDirs::saveDir("data", QStringLiteral("db_data"));
+        defaultHostName = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
+        defaultPgData = StandardDirs::saveDir("data", QStringLiteral("db_data"));
     }
 
     // read settings for current driver

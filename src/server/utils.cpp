@@ -23,7 +23,7 @@
 #include "akonadiserver_debug.h"
 
 #include <shared/akdebug.h>
-#include <shared/akstandarddirs.h>
+#include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 
 #include <QtCore/QDebug>
@@ -56,7 +56,7 @@ using namespace Akonadi::Server;
 
 QString Utils::preferredSocketDirectory(const QString &defaultDirectory)
 {
-    const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+    const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
     const QSettings serverSettings(serverConfigFile, QSettings::IniFormat);
 
 #if defined(Q_OS_WIN)
@@ -109,7 +109,7 @@ QString akonadiSocketDirectory()
         return QString();
     }
 
-    const QString link = AkStandardDirs::saveDir("data") + QLatin1Char('/') + QLatin1String("socket-") + hostname;
+    const QString link = StandardDirs::saveDir("data") + QLatin1Char('/') + QLatin1String("socket-") + hostname;
     const QString tmpl = QLatin1String("akonadi-") + QLatin1String(pw_ent->pw_name) + QLatin1String(".XXXXXX");
 
     if (checkSocketDirectory(link)) {

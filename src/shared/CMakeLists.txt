@@ -3,7 +3,6 @@ set(akonadi_shared_srcs
     akcrash.cpp
     akdbus.cpp
     akdebug.cpp
-    akstandarddirs.cpp
 )
 
 add_library(akonadi_shared STATIC ${akonadi_shared_srcs})

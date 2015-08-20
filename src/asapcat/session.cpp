@@ -19,7 +19,7 @@
 
 #include "session.h"
 
-#include <shared/akstandarddirs.h>
+#include <private/standarddirs_p.h>
 #include <shared/akdebug.h>
 
 #include <QCoreApplication>
@@ -67,7 +67,7 @@ Session::~Session()
 
 void Session::connectToHost()
 {
-    const QSettings connectionSettings(AkStandardDirs::connectionConfigFile(), QSettings::IniFormat);
+    const QSettings connectionSettings(Akonadi::StandardDirs::connectionConfigFile(), QSettings::IniFormat);
 
     QString serverAddress;
 #ifdef Q_OS_WIN

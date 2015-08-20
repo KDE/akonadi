@@ -27,8 +27,7 @@
 #include "filetracer.h"
 #include "nulltracer.h"
 
-#include <private/xdgbasedirs_p.h>
-#include <shared/akstandarddirs.h>
+#include <private/standarddirs_p.h>
 
 // #define DEFAULT_TRACER QLatin1String( "dbus" )
 #define DEFAULT_TRACER QStringLiteral( "null" )
@@ -39,7 +38,7 @@ Tracer *Tracer::mSelf = 0;
 
 Tracer::Tracer()
     : mTracerBackend(0)
-    , mSettings(new QSettings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat))
+    , mSettings(new QSettings(Akonadi::StandardDirs::serverConfigFile(), QSettings::IniFormat))
 {
     activateTracer(currentTracer());
 

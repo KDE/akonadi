@@ -26,7 +26,7 @@
 #include "connection.h"
 
 #include <shared/akdebug.h>
-#include <shared/akstandarddirs.h>
+#include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 
 #include <QtCore/QDebug>
@@ -58,7 +58,7 @@ NotificationManager::NotificationManager()
                                                  this, QDBusConnection::ExportScriptableSlots |
                                                        QDBusConnection::ExportScriptableSignals);
 
-    const QString serverConfigFile = AkStandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+    const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
 
     mTimer.setInterval(settings.value(QStringLiteral("NotificationManager/Interval"), 50).toInt());

@@ -33,10 +33,10 @@
 #include <private/protocol_p.h>
 #include <private/xdgbasedirs_p.h>
 #include <private/instance_p.h>
+#include <private/standarddirs_p.h>
 
 #include <shared/akdebug.h>
 #include <shared/akdbus.h>
-#include <shared/akstandarddirs.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -71,7 +71,7 @@ AgentManager::AgentManager(QObject *parent)
         akFatal() << "akonadiserver already running!";
     }
 
-    const QSettings settings(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
+    const QSettings settings(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
     mAgentServerEnabled = settings.value(QStringLiteral("AgentServer/Enabled"), enableAgentServerDefault).toBool();
 
     QStringList serviceArgs;
@@ -565,7 +565,7 @@ void AgentManager::load()
     org::freedesktop::Akonadi::ResourceManager resmanager(AkDBus::serviceName(AkDBus::Server), QStringLiteral("/ResourceManager"), QDBusConnection::sessionBus(), this);
     const QStringList knownResources = resmanager.resourceInstances();
 
-    QSettings file(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
+    QSettings file(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
     file.beginGroup(QStringLiteral("Instances"));
     const QStringList entries = file.childGroups();
     for (int i = 0; i < entries.count(); ++i) {
@@ -606,7 +606,7 @@ void AgentManager::load()
 
 void AgentManager::save()
 {
-    QSettings file(AkStandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::WriteOnly), QSettings::IniFormat);
+    QSettings file(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::WriteOnly), QSettings::IniFormat);
 
     Q_FOREACH (const AgentType &info, mAgents) {
         info.save(&file);

@@ -17,26 +17,26 @@
     02110-1301, USA.
 */
 
-#include "akstandarddirs.h"
-#include "akapplication.h"
+#include "standarddirs_p.h"
+#include "xdgbasedirs_p.h"
+#include "instance_p.h"
 
-#include <private/xdgbasedirs_p.h>
 
 #include <QFile>
 
 using namespace Akonadi;
 
-QString AkStandardDirs::configFile(const QString &configFile, Akonadi::XdgBaseDirs::FileAccessMode openMode)
+QString StandardDirs::configFile(const QString &configFile, Akonadi::XdgBaseDirs::FileAccessMode openMode)
 {
-    const QString savePath = AkStandardDirs::saveDir("config") + QLatin1Char('/') + configFile;
+    const QString savePath = StandardDirs::saveDir("config") + QLatin1Char('/') + configFile;
 
     if (openMode == XdgBaseDirs::WriteOnly) {
         return savePath;
     }
 
-    QString path = XdgBaseDirs::findResourceFile("config", QLatin1String("akonadi/") + configFile);
+    QString path = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/") + configFile);
     // HACK: when using instance namespaces, ignore the non-namespaced file
-    if (AkApplication::hasInstanceIdentifier() && path.startsWith(XdgBaseDirs::homePath("config"))) {
+    if (Akonadi::Instance::hasIdentifier() && path.startsWith(XdgBaseDirs::homePath("config"))) {
         path.clear();
     }
 
@@ -55,26 +55,26 @@ QString AkStandardDirs::configFile(const QString &configFile, Akonadi::XdgBaseDi
     return savePath;
 }
 
-QString AkStandardDirs::serverConfigFile(XdgBaseDirs::FileAccessMode openMode)
+QString StandardDirs::serverConfigFile(XdgBaseDirs::FileAccessMode openMode)
 {
     return configFile(QStringLiteral("akonadiserverrc"), openMode);
 }
 
-QString AkStandardDirs::connectionConfigFile(XdgBaseDirs::FileAccessMode openMode)
+QString StandardDirs::connectionConfigFile(XdgBaseDirs::FileAccessMode openMode)
 {
     return configFile(QStringLiteral("akonadiconnectionrc"), openMode);
 }
 
-QString AkStandardDirs::agentConfigFile(XdgBaseDirs::FileAccessMode openMode)
+QString StandardDirs::agentConfigFile(XdgBaseDirs::FileAccessMode openMode)
 {
     return configFile(QStringLiteral("agentsrc"), openMode);
 }
 
-QString AkStandardDirs::saveDir(const char *resource, const QString &relPath)
+QString StandardDirs::saveDir(const char *resource, const QString &relPath)
 {
     QString fullRelPath = QStringLiteral("akonadi");
-    if (AkApplication::hasInstanceIdentifier()) {
-        fullRelPath += QLatin1String("/instance/") + AkApplication::instanceIdentifier();
+    if (Akonadi::Instance::hasIdentifier()) {
+        fullRelPath += QStringLiteral("/instance/") + Akonadi::Instance::identifier();
     }
     if (!relPath.isEmpty()) {
         fullRelPath += QLatin1Char('/') + relPath;

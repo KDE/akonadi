@@ -34,12 +34,12 @@
 
 #include <shared/akdebug.h>
 #include <shared/akcrash.h>
-#include <shared/akstandarddirs.h>
 
 #include <assert.h>
 
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
+#include <private/standarddirs_p.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -64,7 +64,7 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     m_socketDescriptor = socketDescriptor;
     m_identifier.sprintf("%p", static_cast<void *>(this));
 
-    const QSettings settings(AkStandardDirs::serverConfigFile(), QSettings::IniFormat);
+    const QSettings settings(Akonadi::StandardDirs::serverConfigFile(), QSettings::IniFormat);
     m_verifyCacheOnRetrieval = settings.value(QStringLiteral("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
 
     QLocalSocket *socket = new QLocalSocket();

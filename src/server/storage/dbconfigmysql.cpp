@@ -21,8 +21,8 @@
 #include "utils.h"
 
 #include <shared/akdebug.h>
-#include <shared/akstandarddirs.h>
 
+#include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 
 #include <QtCore/QDateTime>
@@ -64,7 +64,7 @@ bool DbConfigMysql::init(QSettings &settings)
     QString defaultCleanShutdownCommand;
 
 #ifndef Q_OS_WIN
-    const QString socketDirectory = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QStringLiteral("db_misc")));
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
 #endif
 
     const bool defaultInternalServer = true;
@@ -89,7 +89,7 @@ bool DbConfigMysql::init(QSettings &settings)
     if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
         defaultCleanShutdownCommand = QStringLiteral("%2 --defaults-file=%1/mysql.conf --socket=%3/mysql.socket shutdown")
-                                      .arg(AkStandardDirs::saveDir("data"))
+                                      .arg(StandardDirs::saveDir("data"))
                                       .arg(mysqladminPath)
                                       .arg(socketDirectory);
 #else
@@ -183,16 +183,16 @@ void DbConfigMysql::startInternalServer()
 {
     const QString mysqldPath = mServerPath;
 
-    const QString akDir   = AkStandardDirs::saveDir("data");
-    const QString dataDir = AkStandardDirs::saveDir("data", QStringLiteral("db_data"));
+    const QString akDir   = StandardDirs::saveDir("data");
+    const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("db_data"));
 #ifndef Q_OS_WIN
-    const QString socketDirectory = Utils::preferredSocketDirectory(AkStandardDirs::saveDir("data", QStringLiteral("db_misc")));
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
 #endif
 
     // generate config file
     const QString globalConfig = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
     const QString localConfig  = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-local.conf"));
-    const QString actualConfig = AkStandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
+    const QString actualConfig = StandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
     if (globalConfig.isEmpty()) {
         akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
     }

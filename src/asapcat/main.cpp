@@ -20,7 +20,6 @@
 #include "session.h"
 
 #include <shared/akapplication.h>
-#include <shared/akstandarddirs.h>
 
 #include <QCoreApplication>
 #include <QDebug>

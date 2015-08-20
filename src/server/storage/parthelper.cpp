@@ -25,7 +25,7 @@
 #include "parttypehelper.h"
 
 #include <shared/akdebug.h>
-#include <shared/akstandarddirs.h>
+#include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>
 
@@ -237,7 +237,7 @@ bool PartHelper::truncate(Part &part)
 
 QString PartHelper::storagePath()
 {
-    const QString dataDir = AkStandardDirs::saveDir("data", QStringLiteral("file_db_data")) + QDir::separator();
+    const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("file_db_data")) + QDir::separator();
     Q_ASSERT(dataDir != QDir::separator());
     return dataDir;
 }

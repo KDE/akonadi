@@ -26,7 +26,7 @@
 #include "capabilities_p.h"
 
 #include <private/protocol_p.h>
-#include <shared/akstandarddirs.h>
+#include <private/standarddirs_p.h>
 
 #include <config-akonadi.h>
 #ifdef HAVE_UNISTD_H
@@ -46,7 +46,7 @@ PartStreamer::PartStreamer(Connection *connection,
     , mItem(pimItem)
 {
     // Make sure the file_db_data path exists
-    AkStandardDirs::saveDir("data", QStringLiteral("file_db_data"));
+    StandardDirs::saveDir("data", QStringLiteral("file_db_data"));
 }
 
 PartStreamer::~PartStreamer()

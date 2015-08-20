@@ -21,8 +21,8 @@
 #include "utils.h"
 
 #include <private/xdgbasedirs_p.h>
+#include <private/standarddirs_p.h>
 #include <shared/akdebug.h>
-#include <shared/akstandarddirs.h>
 
 #include <QtCore/QDir>
 #include <QtSql/QSqlDriver>
@@ -34,7 +34,7 @@ using namespace Akonadi::Server;
 
 static QString dataDir()
 {
-    QString akonadiHomeDir = AkStandardDirs::saveDir("data");
+    QString akonadiHomeDir = StandardDirs::saveDir("data");
     if (akonadiHomeDir.isEmpty()) {
         akFatal() << "Unable to create directory 'akonadi' in " << XdgBaseDirs::homePath("data")
                   << "during database initialization";
