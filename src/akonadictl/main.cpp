@@ -29,8 +29,8 @@
 #include <QtDBus/QDBusReply>
 
 #include <shared/akapplication.h>
-#include <shared/akdbus.h>
 #include <shared/akdebug.h>
+
 
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"
@@ -38,6 +38,7 @@
 
 #include <private/protocol_p.h>
 #include <private/xdgbasedirs_p.h>
+#include <private/dbus_p.h>
 
 #if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
 #include <unistd.h>
@@ -48,8 +49,8 @@
 
 static bool startServer()
 {
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::Control))
-        || QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::Server))) {
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control))
+        || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
         qWarning() << "Akonadi is already running.";
         return false;
     }
@@ -59,7 +60,7 @@ static bool startServer()
 
 static bool stopServer()
 {
-    org::freedesktop::Akonadi::ControlManager iface(AkDBus::serviceName(AkDBus::Control),
+    org::freedesktop::Akonadi::ControlManager iface(Akonadi::DBus::serviceName(Akonadi::DBus::Control),
                                                     QStringLiteral("/ControlManager"),
                                                     QDBusConnection::sessionBus(), 0);
     if (!iface.isValid()) {
@@ -74,14 +75,14 @@ static bool stopServer()
 
 static bool checkAkonadiControlStatus()
 {
-    const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::Control));
+    const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control));
     fprintf(stderr, "Akonadi Control: %s\n", registered ? "running" : "stopped");
     return registered;
 }
 
 static bool checkAkonadiServerStatus()
 {
-    const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::Server));
+    const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server));
     fprintf(stderr, "Akonadi Server: %s\n", registered ? "running" : "stopped");
     return registered;
 }
@@ -206,16 +207,16 @@ int main(int argc, char **argv)
 #else
                 Sleep(100000);
 #endif
-            } while (QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::Control)));
+            } while (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control)));
             if (!startServer()) {
                 return 3;
             }
         }
     } else if (command == QLatin1String("vacuum")) {
-        QDBusInterface iface(AkDBus::serviceName(AkDBus::StorageJanitor), QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH));
+        QDBusInterface iface(Akonadi::DBus::serviceName(Akonadi::DBus::StorageJanitor), QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH));
         iface.call(QDBus::NoBlock, QStringLiteral("vacuum"));
     } else if (command == QLatin1String("fsck")) {
-        QDBusInterface iface(AkDBus::serviceName(AkDBus::StorageJanitor), QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH));
+        QDBusInterface iface(Akonadi::DBus::serviceName(Akonadi::DBus::StorageJanitor), QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH));
         iface.call(QDBus::NoBlock, QStringLiteral("check"));
     }
     return 0;

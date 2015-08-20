@@ -25,7 +25,7 @@
 
 using namespace Akonadi;
 
-QString Instance::sIdentifier;
+QString Instance::sIdentifier = QString();
 
 void Instance::loadIdentifier()
 {

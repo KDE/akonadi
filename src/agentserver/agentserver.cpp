@@ -22,7 +22,7 @@
 #include "agentthread.h"
 
 #include <private/xdgbasedirs_p.h>
-#include <private/protocol_p.h>
+#include <private/dbus_p.h>
 #include <shared/akdebug.h>
 
 #include <QtCore/QCoreApplication>

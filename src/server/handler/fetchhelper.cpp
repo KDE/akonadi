@@ -38,9 +38,9 @@
 #include "relationfetch.h"
 
 #include <private/scope_p.h>
+#include <private/dbus_p.h>
 
 #include <shared/akdebug.h>
-#include <shared/akdbus.h>
 
 #include <QtCore/QLocale>
 #include <QtCore/QStringList>
@@ -290,7 +290,7 @@ bool FetchHelper::isScopeLocal(const Scope &scope)
     query.next();
     const QString resourceName = query.value(0).toString();
 
-    org::freedesktop::Akonadi::AgentManager manager(AkDBus::serviceName(AkDBus::Control),
+    org::freedesktop::Akonadi::AgentManager manager(DBus::serviceName(DBus::Control),
                                                     QStringLiteral("/AgentManager"),
                                                     DBusConnectionPool::threadConnection());
     const QString typeIdentifier = manager.agentInstanceType(resourceName);

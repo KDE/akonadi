@@ -17,24 +17,31 @@
     02110-1301, USA.
 */
 
-#include "akdbus.h"
+#include "dbus_p.h"
+#include "instance_p.h"
 
-#include <private/protocol_p.h>
-#include <private/instance_p.h>
+#include <QtCore/QString>
+#include <QtCore/QStringBuilder>
+#include <QtCore/QStringList>
 
-#include <QString>
-#include <QStringBuilder>
-#include <QStringList>
+using namespace Akonadi;
+
+#define AKONADI_DBUS_SERVER_SERVICE           "org.freedesktop.Akonadi"
+#define AKONADI_DBUS_CONTROL_SERVICE          "org.freedesktop.Akonadi.Control"
+#define AKONADI_DBUS_CONTROL_SERVICE_LOCK     "org.freedesktop.Akonadi.Control.lock"
+#define AKONADI_DBUS_AGENTSERVER_SERVICE      "org.freedesktop.Akonadi.AgentServer"
+#define AKONADI_DBUS_STORAGEJANITOR_SERVICE   "org.freedesktop.Akonadi.Janitor"
+#define AKONADI_DBUS_SERVER_SERVICE_UPGRADING "org.freedesktop.Akonadi.upgrading"
 
 static QString makeServiceName(const char *base)
 {
-    if (!Akonadi::Instance::hasIdentifier()) {
+    if (!Instance::hasIdentifier()) {
         return QLatin1String(base);
     }
-    return QLatin1String(base) % QLatin1Literal(".") % Akonadi::Instance::identifier();
+    return QLatin1String(base) % QLatin1Literal(".") % Instance::identifier();
 }
 
-QString AkDBus::serviceName(AkDBus::ServiceType serviceType)
+QString DBus::serviceName(DBus::ServiceType serviceType)
 {
     switch (serviceType) {
     case Server:
@@ -54,7 +61,7 @@ QString AkDBus::serviceName(AkDBus::ServiceType serviceType)
     return QString();
 }
 
-QString AkDBus::parseAgentServiceName(const QString &serviceName, AkDBus::AgentType &agentType)
+QString DBus::parseAgentServiceName(const QString &serviceName, DBus::AgentType &agentType)
 {
     agentType = Unknown;
     if (!serviceName.startsWith(QLatin1String("org.freedesktop.Akonadi."))) {
@@ -79,7 +86,7 @@ QString AkDBus::parseAgentServiceName(const QString &serviceName, AkDBus::AgentT
     return QString();
 }
 
-QString AkDBus::agentServiceName(const QString &agentIdentifier, AkDBus::AgentType agentType)
+QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType agentType)
 {
     Q_ASSERT(!agentIdentifier.isEmpty());
     Q_ASSERT(agentType != Unknown);

@@ -19,6 +19,7 @@
 
 #include "akapplication.h"
 #include "akdebug.h"
+
 #include <private/instance_p.h>
 #include <akonadi_version.h>
 

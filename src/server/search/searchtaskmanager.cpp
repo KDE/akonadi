@@ -25,12 +25,14 @@
 #include "entities.h"
 
 #include <shared/akdebug.h>
-#include <shared/akdbus.h>
+
+#include <private/dbus_p.h>
 
 #include <QSqlError>
 #include <QTimer>
 #include <QTime>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 SearchTaskManager *SearchTaskManager::sInstance = 0;
@@ -126,7 +128,7 @@ void SearchTaskManager::addTask(SearchTask *task)
 
     mInstancesLock.lock();
 
-    org::freedesktop::Akonadi::AgentManager agentManager(AkDBus::serviceName(AkDBus::Control), QStringLiteral("/AgentManager"),
+    org::freedesktop::Akonadi::AgentManager agentManager(DBus::serviceName(DBus::Control), QStringLiteral("/AgentManager"),
                                                          DBusConnectionPool::threadConnection());
     do {
         const QString resourceId = query.value(1).toString();

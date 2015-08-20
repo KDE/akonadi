@@ -24,8 +24,9 @@
 
 #include "resourceinterface.h"
 
-#include <shared/akdbus.h>
 #include <shared/akdebug.h>
+
+#include <private/dbus_p.h>
 
 #include <QCoreApplication>
 #include <QReadWriteLock>
@@ -34,6 +35,7 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 ItemRetrievalManager *ItemRetrievalManager::sInstance = 0;
@@ -76,9 +78,9 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const
     if (oldOwner.isEmpty()) {
         return;
     }
-    AkDBus::AgentType type = AkDBus::Unknown;
-    const QString resourceId = AkDBus::parseAgentServiceName(serviceName, type);
-    if (resourceId.isEmpty() || type != AkDBus::Resource) {
+    DBus::AgentType type = DBus::Unknown;
+    const QString resourceId = DBus::parseAgentServiceName(serviceName, type);
+    if (resourceId.isEmpty() || type != DBus::Resource) {
         return;
     }
     akDebug() << "Lost connection to resource" << serviceName << ", discarding cached interface";
@@ -98,7 +100,7 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
     }
 
     delete iface;
-    iface = new org::freedesktop::Akonadi::Resource(AkDBus::agentServiceName(id, AkDBus::Resource),
+    iface = new org::freedesktop::Akonadi::Resource(DBus::agentServiceName(id, DBus::Resource),
                                                     QStringLiteral("/"), mDBusConnection, this);
     if (!iface || !iface->isValid()) {
         akError() << QStringLiteral("Cannot connect to agent instance with identifier '%1', error message: '%2'")

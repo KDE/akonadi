@@ -30,9 +30,9 @@
 #include "dbusconnectionpool.h"
 #include "agentmanagerinterface.h"
 
-#include <shared/akdbus.h>
 #include <shared/akdebug.h>
 
+#include <private/dbus_p.h>
 #include <private/imapset_p.h>
 #include <private/protocol_p.h>
 #include <private/standarddirs_p.h>
@@ -69,14 +69,14 @@ StorageJanitor::StorageJanitor(QObject *parent)
     , m_lostFoundCollectionId(-1)
 {
     DataStore::self();
-    m_connection.registerService(AkDBus::serviceName(AkDBus::StorageJanitor));
+    m_connection.registerService(DBus::serviceName(DBus::StorageJanitor));
     m_connection.registerObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
 }
 
 StorageJanitor::~StorageJanitor()
 {
     m_connection.unregisterObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), QDBusConnection::UnregisterTree);
-    m_connection.unregisterService(AkDBus::serviceName(AkDBus::StorageJanitor));
+    m_connection.unregisterService(DBus::serviceName(DBus::StorageJanitor));
     m_connection.disconnectFromBus(m_connection.name());
 
     DataStore::self()->close();
@@ -189,12 +189,12 @@ void StorageJanitor::findOrphanedResources()
 {
     SelectQueryBuilder<Resource> qbres;
     OrgFreedesktopAkonadiAgentManagerInterface iface(
-        AkDBus::serviceName(AkDBus::Control),
+        DBus::serviceName(DBus::Control),
         QStringLiteral("/AgentManager"),
         QDBusConnection::sessionBus(),
         this);
     if (!iface.isValid()) {
-        inform(QStringLiteral("ERROR: Couldn't talk to %1").arg(AkDBus::Control));
+        inform(QStringLiteral("ERROR: Couldn't talk to %1").arg(DBus::Control));
         return;
     }
     const QStringList knownResources = iface.agentInstances();

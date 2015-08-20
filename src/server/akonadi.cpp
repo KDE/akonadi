@@ -21,7 +21,6 @@
 #include "connectionthread.h"
 #include "serveradaptor.h"
 
-#include <shared/akdbus.h>
 #include <shared/akdebug.h>
 
 #include "cachecleaner.h"
@@ -45,6 +44,7 @@
 #include <private/xdgbasedirs_p.h>
 #include <private/standarddirs_p.h>
 #include <private/protocol_p.h>
+#include <private/dbus_p.h>
 
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
@@ -218,7 +218,7 @@ bool AkonadiServer::init()
         connectionSettings.setValue(QStringLiteral("DBUS/Address"), QLatin1String(dbusAddress));
     }
 
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(AkDBus::serviceName(AkDBus::Control),
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(DBus::serviceName(DBus::Control),
                                                            QDBusConnection::sessionBus(),
                                                            QDBusServiceWatcher::WatchForOwnerChange, this);
 
@@ -237,7 +237,7 @@ bool AkonadiServer::init()
 
     // We are ready, now register org.freedesktop.Akonadi service to DBus and
     // the fun can begin
-    if (!QDBusConnection::sessionBus().registerService(AkDBus::serviceName(AkDBus::Server))) {
+    if (!QDBusConnection::sessionBus().registerService(DBus::serviceName(DBus::Server))) {
         akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
     }
 

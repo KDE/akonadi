@@ -20,9 +20,9 @@
 #include "agentsearchengine.h"
 #include "entities.h"
 
-#include <shared/akdbus.h>
 #include <shared/akdebug.h>
-#include <private/protocol_p.h>
+
+#include <private/dbus_p.h>
 
 #include <QDBusInterface>
 #include <QDBusError>
@@ -32,7 +32,7 @@ using namespace Akonadi::Server;
 
 void AgentSearchEngine::addSearch(const Collection &collection)
 {
-    QDBusInterface agentMgr(AkDBus::serviceName(AkDBus::Control),
+    QDBusInterface agentMgr(DBus::serviceName(DBus::Control),
                             QStringLiteral(AKONADI_DBUS_AGENTMANAGER_PATH),
                             QStringLiteral("org.freedesktop.Akonadi.AgentManagerInternal"));
     if (agentMgr.isValid()) {
@@ -49,7 +49,7 @@ void AgentSearchEngine::addSearch(const Collection &collection)
 
 void AgentSearchEngine::removeSearch(qint64 id)
 {
-    QDBusInterface agentMgr(AkDBus::serviceName(AkDBus::Control),
+    QDBusInterface agentMgr(DBus::serviceName(DBus::Control),
                             QStringLiteral(AKONADI_DBUS_AGENTMANAGER_PATH),
                             QStringLiteral("org.freedesktop.Akonadi.AgentManagerInternal"));
     if (agentMgr.isValid()) {

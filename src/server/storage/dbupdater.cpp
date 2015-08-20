@@ -29,7 +29,8 @@
 #include "dbinitializer_p.h"
 
 #include <shared/akdebug.h>
-#include <shared/akdbus.h>
+
+#include <private/dbus_p.h>
 
 #include <QCoreApplication>
 #include <QMetaMethod>
@@ -44,6 +45,7 @@
 #include <QTime>
 #include <QtSql/qsqlresult.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 DbUpdater::DbUpdater(const QSqlDatabase &database, const QString &filename)
@@ -71,7 +73,7 @@ bool DbUpdater::run()
 
     // indicate clients this might take a while
     // we can ignore unregistration in error cases, that'll kill the server anyway
-    if (!QDBusConnection::sessionBus().registerService(AkDBus::serviceName(AkDBus::UpgradeIndicator))) {
+    if (!QDBusConnection::sessionBus().registerService(DBus::serviceName(DBus::UpgradeIndicator))) {
         akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
     }
 
@@ -128,7 +130,7 @@ bool DbUpdater::run()
         }
     }
 
-    QDBusConnection::sessionBus().unregisterService(AkDBus::serviceName(AkDBus::UpgradeIndicator));
+    QDBusConnection::sessionBus().unregisterService(DBus::serviceName(DBus::UpgradeIndicator));
     return true;
 }
 

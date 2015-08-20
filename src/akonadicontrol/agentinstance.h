@@ -26,7 +26,7 @@
 #include "preprocessorinterface.h"
 #include "searchinterface.h"
 
-#include <shared/akdbus.h>
+#include <private/dbus_p.h>
 
 #include <QDBusError>
 #include <QSharedPointer>
@@ -163,7 +163,7 @@ protected Q_SLOTS:
     void errorHandler(const QDBusError &error);
 
 private:
-    template <typename T> T *findInterface(AkDBus::AgentType agentType, const char *path = 0);
+    template <typename T> T *findInterface(Akonadi::DBus::AgentType agentType, const char *path = 0);
 
 protected:
     void setAgentType(const QString &agentType)

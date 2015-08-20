@@ -46,22 +46,7 @@ class Scope;
 /**
   @file protocol_p.h Shared constants used in the communication protocol between
   the Akonadi server and its clients.
-
-  @todo Fill this file with command names, item/collection property names
-  item part names, etc. and replace the usages accordingly.
 */
-
-// D-Bus service names
-#define AKONADI_DBUS_SERVER_SERVICE           "org.freedesktop.Akonadi"
-#define AKONADI_DBUS_CONTROL_SERVICE          "org.freedesktop.Akonadi.Control"
-#define AKONADI_DBUS_CONTROL_SERVICE_LOCK     "org.freedesktop.Akonadi.Control.lock"
-#define AKONADI_DBUS_AGENTSERVER_SERVICE      "org.freedesktop.Akonadi.AgentServer"
-#define AKONADI_DBUS_STORAGEJANITOR_SERVICE   "org.freedesktop.Akonadi.Janitor"
-#define AKONADI_DBUS_SERVER_SERVICE_UPGRADING "org.freedesktop.Akonadi.upgrading"
-
-#define AKONADI_DBUS_AGENTMANAGER_PATH   "/AgentManager"
-#define AKONADI_DBUS_AGENTSERVER_PATH    "/AgentServer"
-#define AKONADI_DBUS_STORAGEJANITOR_PATH "/Janitor"
 
 namespace Akonadi
 {

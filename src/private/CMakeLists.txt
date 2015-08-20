@@ -8,6 +8,7 @@ set(akonadiprivate_SRCS
     tristate.cpp
     xdgbasedirs.cpp
     standarddirs.cpp
+    dbus.cpp
 )
 
 
@@ -35,6 +36,7 @@ install(TARGETS
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h
     standarddirs_p.h
+    dbus_p.h
     imapparser_p.h
     imapset_p.h
     instance_p.h

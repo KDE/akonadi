@@ -17,8 +17,10 @@
     02110-1301, USA.
 */
 
-#ifndef AKDBUS_H
-#define AKDBUS_H
+#ifndef AKONADI_DBUS_H
+#define AKONADI_DBUS_H
+
+#include "akonadiprivate_export.h"
 
 class QString;
 
@@ -27,7 +29,17 @@ class QString;
  * This should be used instead of hardcoded identifiers or constants to support multi-instance namespacing
  * @since 1.7
  */
-namespace AkDBus {
+
+
+
+#define AKONADI_DBUS_AGENTMANAGER_PATH   "/AgentManager"
+#define AKONADI_DBUS_AGENTSERVER_PATH    "/AgentServer"
+#define AKONADI_DBUS_STORAGEJANITOR_PATH "/Janitor"
+
+namespace Akonadi {
+
+namespace DBus {
+
 /** D-Bus service types used by the Akonadi server processes. */
 enum ServiceType {
     Server,
@@ -41,7 +53,7 @@ enum ServiceType {
 /**
  * Returns the service name for the given @p serviceType.
  */
-QString serviceName(ServiceType serviceType);
+AKONADIPRIVATE_EXPORT QString serviceName(ServiceType serviceType);
 
 /** Known D-Bus service name types for agents. */
 enum AgentType {
@@ -57,12 +69,15 @@ enum AgentType {
  * @param agentType Output parameter containing the agent type.
  * @return The identifier of the agent, empty string if that's not an agent (or an agent of a different Akonadi instance)
  */
-QString parseAgentServiceName(const QString &serviceName, AkDBus::AgentType &agentType);
+AKONADIPRIVATE_EXPORT  QString parseAgentServiceName(const QString &serviceName, DBus::AgentType &agentType);
 
 /**
  * Returns the D-Bus service name of the agent @p agentIdentifier for type @p agentType.
  */
-QString agentServiceName(const QString &agentIdentifier, AkDBus::AgentType agentType);
+AKONADIPRIVATE_EXPORT  QString agentServiceName(const QString &agentIdentifier, DBus::AgentType agentType);
+
+}
+
 }
 
 #endif

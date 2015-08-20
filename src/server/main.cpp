@@ -20,11 +20,10 @@
 #include "akonadi.h"
 
 #include <shared/akapplication.h>
-#include <shared/akdbus.h>
 #include <shared/akdebug.h>
 #include <shared/akcrash.h>
 
-#include <private/protocol_p.h>
+#include <private/dbus_p.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtDBus/QDBusConnection>
@@ -66,7 +65,7 @@ int main(int argc, char **argv)
     app.parseCommandLine();
 
     if (!app.commandLineArguments().isSet(QStringLiteral("start-without-control")) &&
-        !QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::ControlLock))) {
+        !QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock))) {
         akError() << "Akonadi control process not found - aborting.";
         akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
     }

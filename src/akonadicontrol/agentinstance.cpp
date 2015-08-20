@@ -62,9 +62,9 @@ bool AgentInstance::obtainAgentInterface()
     delete mAgentStatusInterface;
 
     mAgentControlInterface =
-        findInterface<org::freedesktop::Akonadi::Agent::Control>(AkDBus::Agent, "/");
+        findInterface<org::freedesktop::Akonadi::Agent::Control>(Akonadi::DBus::Agent, "/");
     mAgentStatusInterface =
-        findInterface<org::freedesktop::Akonadi::Agent::Status>(AkDBus::Agent, "/");
+        findInterface<org::freedesktop::Akonadi::Agent::Status>(Akonadi::DBus::Agent, "/");
 
     if (mPendingQuit && mAgentControlInterface && mAgentControlInterface->isValid()) {
         mAgentControlInterface->quit();
@@ -76,7 +76,7 @@ bool AgentInstance::obtainAgentInterface()
     }
 
     mSearchInterface =
-        findInterface<org::freedesktop::Akonadi::Agent::Search>(AkDBus::Agent, "/Search");
+        findInterface<org::freedesktop::Akonadi::Agent::Search>(Akonadi::DBus::Agent, "/Search");
 
     connect(mAgentStatusInterface, SIGNAL(status(int,QString)), SLOT(statusChanged(int,QString)));
     connect(mAgentStatusInterface, SIGNAL(advancedStatus(QVariantMap)), SLOT(advancedStatusChanged(QVariantMap)));
@@ -93,7 +93,7 @@ bool AgentInstance::obtainResourceInterface()
 {
     delete mResourceInterface;
     mResourceInterface =
-        findInterface<org::freedesktop::Akonadi::Resource>(AkDBus::Resource, "/");
+        findInterface<org::freedesktop::Akonadi::Resource>(Akonadi::DBus::Resource, "/");
 
     if (!mResourceInterface) {
         return false;
@@ -108,7 +108,7 @@ bool AgentInstance::obtainPreprocessorInterface()
 {
     delete mPreprocessorInterface;
     mPreprocessorInterface =
-        findInterface<org::freedesktop::Akonadi::Preprocessor>(AkDBus::Preprocessor, "/");
+        findInterface<org::freedesktop::Akonadi::Preprocessor>(Akonadi::DBus::Preprocessor, "/");
     return mPreprocessorInterface;
 }
 
@@ -215,9 +215,9 @@ void AgentInstance::errorHandler(const QDBusError &error)
 }
 
 template <typename T>
-T *AgentInstance::findInterface(AkDBus::AgentType agentType, const char *path)
+T *AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *path)
 {
-    T *iface = new T(AkDBus::agentServiceName(mIdentifier, agentType),
+    T *iface = new T(Akonadi::DBus::agentServiceName(mIdentifier, agentType),
                      QLatin1String(path), QDBusConnection::sessionBus(), this);
 
     if (!iface || !iface->isValid()) {

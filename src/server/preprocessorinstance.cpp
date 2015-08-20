@@ -34,10 +34,12 @@
 #include "tracer.h"
 
 #include <shared/akdebug.h>
-#include <shared/akdbus.h>
+
+#include <private/dbus_p.h>
 
 #include <QtCore/QTimer>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 PreprocessorInstance::PreprocessorInstance(const QString &id)
@@ -59,7 +61,7 @@ bool PreprocessorInstance::init()
     Q_ASSERT(!mInterface);
 
     mInterface = new OrgFreedesktopAkonadiPreprocessorInterface(
-        AkDBus::agentServiceName(mId, AkDBus::Preprocessor),
+        DBus::agentServiceName(mId, DBus::Preprocessor),
         QStringLiteral("/Preprocessor"),
         QDBusConnection::sessionBus(),
         this);
@@ -156,7 +158,7 @@ bool PreprocessorInstance::abortProcessing()
     Q_ASSERT_X(mBusy, "PreprocessorInstance::abortProcessing()", "You shouldn't call this method when isBusy() returns false");
 
     OrgFreedesktopAkonadiAgentControlInterface iface(
-        AkDBus::agentServiceName(mId, AkDBus::Agent),
+        DBus::agentServiceName(mId, DBus::Agent),
         QStringLiteral("/"),
         QDBusConnection::sessionBus(),
         this);
@@ -183,7 +185,7 @@ bool PreprocessorInstance::invokeRestart()
     Q_ASSERT_X(mBusy, "PreprocessorInstance::invokeRestart()", "You shouldn't call this method when isBusy() returns false");
 
     OrgFreedesktopAkonadiAgentManagerInterface iface(
-        AkDBus::serviceName(AkDBus::Control),
+        DBus::serviceName(DBus::Control),
         QStringLiteral("/AgentManager"),
         QDBusConnection::sessionBus(),
         this);

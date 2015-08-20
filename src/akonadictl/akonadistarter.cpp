@@ -19,10 +19,10 @@
 
 #include "akonadistarter.h"
 
-#include <akapplication.h>
-#include <akdbus.h>
-#include <akdebug.h>
+#include <shared/akapplication.h>
+#include <shared/akdebug.h>
 
+#include <private/dbus_p.h>
 #include <private/instance_p.h>
 
 #include <QtCore/QCoreApplication>
@@ -36,7 +36,7 @@ AkonadiStarter::AkonadiStarter(QObject *parent)
     : QObject(parent)
     , mRegistered(false)
 {
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(AkDBus::serviceName(AkDBus::ControlLock),
+    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock),
                                                            QDBusConnection::sessionBus(),
                                                            QDBusServiceWatcher::WatchForOwnerChange, this);
 

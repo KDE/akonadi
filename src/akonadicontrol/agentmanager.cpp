@@ -34,9 +34,9 @@
 #include <private/xdgbasedirs_p.h>
 #include <private/instance_p.h>
 #include <private/standarddirs_p.h>
+#include <private/dbus_p.h>
 
 #include <shared/akdebug.h>
-#include <shared/akdbus.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -67,7 +67,7 @@ AgentManager::AgentManager(QObject *parent)
     connect(QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
             this, SLOT(serviceOwnerChanged(QString,QString,QString)));
 
-    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::Server))) {
+    if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
         akFatal() << "akonadiserver already running!";
     }
 
@@ -128,9 +128,9 @@ void AgentManager::continueStartup()
     }
 
     // register the real service name once everything is up an running
-    if (!QDBusConnection::sessionBus().registerService(AkDBus::serviceName(AkDBus::Control))) {
+    if (!QDBusConnection::sessionBus().registerService(Akonadi::DBus::serviceName(Akonadi::DBus::Control))) {
         // besides a race with an older Akonadi server I have no idea how we could possibly get here...
-        akFatal() << "Unable to register service as" << AkDBus::serviceName(AkDBus::Control)
+        akFatal() << "Unable to register service as" << Akonadi::DBus::serviceName(Akonadi::DBus::Control)
                   << "despite having the lock. Error was:" << QDBusConnection::sessionBus().lastError().message();
     }
     akDebug() << "Akonadi server is now operational.";
@@ -151,14 +151,14 @@ void AgentManager::cleanup()
 
     mStorageController->setCrashPolicy(ProcessControl::StopOnCrash);
     org::freedesktop::Akonadi::Server *serverIface =
-        new org::freedesktop::Akonadi::Server(AkDBus::serviceName(AkDBus::Server), QStringLiteral("/Server"),
+        new org::freedesktop::Akonadi::Server(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/Server"),
                                               QDBusConnection::sessionBus(), this);
     serverIface->quit();
 
     if (mAgentServer) {
         mAgentServer->setCrashPolicy(ProcessControl::StopOnCrash);
         org::freedesktop::Akonadi::AgentServer *agentServerIface =
-            new org::freedesktop::Akonadi::AgentServer(AkDBus::serviceName(AkDBus::AgentServer),
+            new org::freedesktop::Akonadi::AgentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
                                                        QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
         agentServerIface->quit();
     }
@@ -306,12 +306,12 @@ void AgentManager::removeAgentInstance(const QString &identifier)
 
     save();
 
-    org::freedesktop::Akonadi::ResourceManager resmanager(AkDBus::serviceName(AkDBus::Server), QStringLiteral("/ResourceManager"), QDBusConnection::sessionBus(), this);
+    org::freedesktop::Akonadi::ResourceManager resmanager(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/ResourceManager"), QDBusConnection::sessionBus(), this);
     resmanager.removeResourceInstance(instance->identifier());
 
     // Kill the preprocessor instance, if any.
     org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
-        AkDBus::serviceName(AkDBus::Server),
+        Akonadi::DBus::serviceName(Akonadi::DBus::Server),
         QStringLiteral("/PreprocessorManager"),
         QDBusConnection::sessionBus(),
         this);
@@ -562,7 +562,7 @@ QStringList AgentManager::pluginInfoPathList()
 
 void AgentManager::load()
 {
-    org::freedesktop::Akonadi::ResourceManager resmanager(AkDBus::serviceName(AkDBus::Server), QStringLiteral("/ResourceManager"), QDBusConnection::sessionBus(), this);
+    org::freedesktop::Akonadi::ResourceManager resmanager(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/ResourceManager"), QDBusConnection::sessionBus(), this);
     const QStringList knownResources = resmanager.resourceInstances();
 
     QSettings file(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
@@ -631,18 +631,18 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 
     //akDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
 
-    if ((name == AkDBus::serviceName(AkDBus::Server) || name == AkDBus::serviceName(AkDBus::AgentServer)) && !newOwner.isEmpty()) {
-        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::Server))
-            && (!mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered(AkDBus::serviceName(AkDBus::AgentServer)))) {
+    if ((name == Akonadi::DBus::serviceName(Akonadi::DBus::Server) || name == Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)) && !newOwner.isEmpty()) {
+        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))
+            && (!mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)))) {
             // server is operational, start agents
             continueStartup();
         }
     }
 
-    AkDBus::AgentType agentType = AkDBus::Unknown;
-    const QString agentIdentifier = AkDBus::parseAgentServiceName(name, agentType);
+    Akonadi::DBus::AgentType agentType = Akonadi::DBus::Unknown;
+    const QString agentIdentifier = Akonadi::DBus::parseAgentServiceName(name, agentType);
     switch (agentType) {
-    case AkDBus::Agent: {
+    case Akonadi::DBus::Agent: {
         // An agent service went up or down
         if (newOwner.isEmpty()) {
             return; // It went down: we don't care here.
@@ -664,7 +664,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 
         break;
     }
-    case AkDBus::Resource: {
+    case Akonadi::DBus::Resource: {
         // A resource service went up or down
         if (newOwner.isEmpty()) {
             return; // It went down: we don't care here.
@@ -678,7 +678,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 
         break;
     }
-    case AkDBus::Preprocessor: {
+    case Akonadi::DBus::Preprocessor: {
        // A preprocessor service went up or down
 
        // If the preprocessor is going up then the org.freedesktop.Akonadi.Agent.* interface
@@ -700,7 +700,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
        }
 
        org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
-           AkDBus::serviceName(AkDBus::Server),
+           Akonadi::DBus::serviceName(Akonadi::DBus::Server),
            QStringLiteral("/PreprocessorManager"),
            QDBusConnection::sessionBus(),
            this);
@@ -799,7 +799,7 @@ void AgentManager::ensureAutoStart(const AgentType &info)
         return; // no an autostart agent
     }
 
-    org::freedesktop::Akonadi::AgentServer agentServer(AkDBus::serviceName(AkDBus::AgentServer),
+    org::freedesktop::Akonadi::AgentServer agentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
                                                        QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
 
     if (mAgentInstances.contains(info.identifier) ||
@@ -837,7 +837,7 @@ void AgentManager::registerAgentAtServer(const QString &agentIdentifier, const A
 {
     if (type.capabilities.contains(AgentType::CapabilityResource)) {
         QScopedPointer<org::freedesktop::Akonadi::ResourceManager> resmanager(
-            new org::freedesktop::Akonadi::ResourceManager(AkDBus::serviceName(AkDBus::Server),
+            new org::freedesktop::Akonadi::ResourceManager(Akonadi::DBus::serviceName(Akonadi::DBus::Server),
                                                            QStringLiteral("/ResourceManager"),
                                                            QDBusConnection::sessionBus(), this));
         resmanager->addResourceInstance(agentIdentifier, type.capabilities);
