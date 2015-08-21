@@ -385,7 +385,7 @@ void StorageJanitor::verifyExternalParts()
 
     // list all files
     const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("file_db_data"));
-    QDirIterator it(dataDir);
+    QDirIterator it(dataDir, QDir::Files, QDirIterator::Subdirectories);
     while (it.hasNext()) {
         existingFiles.insert(it.next());
     }
