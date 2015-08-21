@@ -54,7 +54,9 @@ private:
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().fetchAllAttributes();
         fetch->fetchScope().setCacheOnly(true);   // resources are switched off anyway
-        Q_ASSERT(fetch->exec());
+        if (!fetch->exec()) {
+            []() { QFAIL("Failed to fetch items!"); }();
+        }
         return fetch->items();
     }
 
