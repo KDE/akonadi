@@ -51,8 +51,26 @@
 #include <QtSql/QSqlError>
 #include <QtSql/QSqlQuery>
 
+#include <QtCore/QElapsedTimer>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
+
+#define ENABLE_FETCH_PROFILING 0
+#if ENABLE_FETCH_PROFILING
+    #define BEGIN_TIMER(name) \
+        QElapsedTimer name##Timer; \
+        name##Timer.start();
+
+    #define END_TIMER(name) \
+        const double name##Elapsed = name##Timer.nsecsElapsed() / 1000000.0;
+    #define PROF_INC(name) \
+        ++name;
+#else
+    #define BEGIN_TIMER(name)
+    #define END_TIMER(name)
+    #define PROF_INC(name)
+#endif
 
 FetchHelper::FetchHelper(Connection *connection, const Scope &scope,
                          const Protocol::FetchScope &fetchScope)
@@ -300,6 +318,8 @@ bool FetchHelper::isScopeLocal(const Scope &scope)
 
 bool FetchHelper::fetchItems()
 {
+    BEGIN_TIMER(fetch)
+
     // retrieve missing parts
     // HACK: isScopeLocal() is a workaround for resources that have cache expiration
     // because when the cache expires, Baloo is not able to content of the items. So
@@ -307,7 +327,16 @@ bool FetchHelper::fetchItems()
     // cacheOnly and retrieve missing parts from the resource. However ItemRetriever
     // is painfully slow with many items and is generally designed to fetch a few
     // messages, not all of them. In the long term, we need a better way to do this.
+    BEGIN_TIMER(itemRetriever)
+    BEGIN_TIMER(scopeLocal)
+    #if ENABLE_FETCH_PROFILING
+    double scopeLocalElapsed = 0;
+    #endif
     if (!mFetchScope.cacheOnly() || isScopeLocal(mScope)) {
+        #if ENABLE_FETCH_PROFILING
+        scopeLocalElapsed = scopeLocalTimer.elapsed();
+        #endif
+
         // trigger a collection sync if configured to do so
         triggerOnDemandFetch();
 
@@ -331,8 +360,11 @@ bool FetchHelper::fetchItems()
             }
         }
     }
+    END_TIMER(itemRetriever)
 
+    BEGIN_TIMER(items)
     QSqlQuery itemQuery = buildItemQuery();
+    END_TIMER(items)
 
     // error if query did not find any item and scope is not listing items but
     // a request for a specific item
@@ -352,29 +384,48 @@ bool FetchHelper::fetchItems()
         }
     }
     // build part query if needed
+    BEGIN_TIMER(parts)
     QSqlQuery partQuery;
     if (!mFetchScope.requestedParts().isEmpty() || mFetchScope.fullPayload() || mFetchScope.allAttributes()) {
         partQuery = buildPartQuery(mFetchScope.requestedParts(), mFetchScope.fullPayload(), mFetchScope.allAttributes());
     }
+    END_TIMER(parts)
 
     // build flag query if needed
+    BEGIN_TIMER(flags)
     QSqlQuery flagQuery;
     if (mFetchScope.fetchFlags()) {
         flagQuery = buildFlagQuery();
     }
+    END_TIMER(flags)
 
     // build tag query if needed
+    BEGIN_TIMER(tags)
     QSqlQuery tagQuery;
     if (mFetchScope.fetchTags()) {
         tagQuery = buildTagQuery();
     }
+    END_TIMER(tags)
 
+    BEGIN_TIMER(vRefs)
     QSqlQuery vRefQuery;
     if (mFetchScope.fetchVirtualReferences()) {
         vRefQuery = buildVRefQuery();
     }
+    END_TIMER(vRefs)
 
+    #if ENABLE_FETCH_PROFILING
+    int itemsCount = 0;
+    int flagsCount = 0;
+    int partsCount = 0;
+    int tagsCount = 0;
+    int vRefsCount = 0;
+    #endif
+
+    BEGIN_TIMER(processing)
     while (itemQuery.isValid()) {
+        PROF_INC(itemsCount)
+
         const qint64 pimItemId = extractQueryResult(itemQuery, ItemQueryPimItemIdColumn).toLongLong();
         const int pimItemRev = extractQueryResult(itemQuery, ItemQueryRevColumn).toInt();
 
@@ -421,6 +472,7 @@ bool FetchHelper::fetchItems()
             //We don't take the fetch scope into account yet. It's either id only or the full tag.
             const bool fullTagsRequested = !mFetchScope.tagFetchScope().isEmpty();
             while (tagQuery.isValid()) {
+                PROF_INC(tagsCount)
                 const qint64 id = tagQuery.value(TagQueryItemIdColumn).toLongLong();
                 if (id > pimItemId) {
                     tagQuery.next();
@@ -447,6 +499,7 @@ bool FetchHelper::fetchItems()
         if (mFetchScope.fetchVirtualReferences()) {
             QVector<qint64> vRefs;
             while (vRefQuery.isValid()) {
+                PROF_INC(vRefsCount)
                 const qint64 id = vRefQuery.value(VRefQueryItemIdColumn).toLongLong();
                 if (id > pimItemId) {
                     vRefQuery.next();
@@ -487,6 +540,7 @@ bool FetchHelper::fetchItems()
         QVector<QByteArray> cachedParts;
         QVector<Protocol::StreamPayloadResponse> parts;
         while (partQuery.isValid()) {
+            PROF_INC(partsCount)
             const qint64 id = partQuery.value(PartQueryPimIdColumn).toLongLong();
             if (id > pimItemId) {
                 partQuery.next();
@@ -550,11 +604,33 @@ bool FetchHelper::fetchItems()
 
         itemQuery.next();
     }
+    END_TIMER(processing)
 
     // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
+    BEGIN_TIMER(aTime)
     if (needsAccessTimeUpdate(mFetchScope.requestedParts()) || mFetchScope.fullPayload()) {
         updateItemAccessTime();
     }
+    END_TIMER(aTime)
+
+    END_TIMER(fetch)
+    #if ENABLE_FETCH_PROFILING
+    qCDebug(AKONADISERVER_LOG) << "FetchHelper execution stats:";
+    qCDebug(AKONADISERVER_LOG) << "\tItems query:" << itemsElapsed << "ms," << itemsCount << " items in total";
+    qCDebug(AKONADISERVER_LOG) << "\tFlags query:" << flagsElapsed << "ms, " << flagsCount << " flags in total";
+    qCDebug(AKONADISERVER_LOG) << "\tParts query:" << partsElapsed << "ms, " << partsCount << " parts in total";
+    qCDebug(AKONADISERVER_LOG) << "\tTags query: " << tagsElapsed << "ms, " << tagsCount << " tags in total";
+    qCDebug(AKONADISERVER_LOG) << "\tVRefs query:" << vRefsElapsed << "ms, " << vRefsCount << " vRefs in total";
+    qCDebug(AKONADISERVER_LOG) << "\t------------";
+    qCDebug(AKONADISERVER_LOG) << "\tItem retriever:" << itemRetrieverElapsed << "ms (scope local:" << scopeLocalElapsed << "ms)";
+    qCDebug(AKONADISERVER_LOG) << "\tTotal query:" << (itemsElapsed + flagsElapsed + partsElapsed + tagsElapsed + vRefsElapsed) << "ms";
+    qCDebug(AKONADISERVER_LOG) << "\tTotal processing: " << processingElapsed << "ms";
+    qCDebug(AKONADISERVER_LOG) << "\tATime update:" << aTimeElapsed << "ms";
+    qCDebug(AKONADISERVER_LOG) << "\t============";
+    qCDebug(AKONADISERVER_LOG) << "\tTotal FETCH:" << fetchElapsed << "ms";
+    qCDebug(AKONADISERVER_LOG);
+    qCDebug(AKONADISERVER_LOG);
+    #endif
 
     return true;
 }
