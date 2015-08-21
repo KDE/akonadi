@@ -148,7 +148,10 @@ qint64 StorageJanitor::lostAndFoundCollection()
     SelectQueryBuilder<Collection> qb;
     qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, lfRes.id());
     qb.addValueCondition(Collection::parentIdFullColumnName(), Query::Is, QVariant());
-    qb.exec();
+    if (!qb.exec()) {
+        akError() << "Failed to query top level collections";
+        return -1;
+    }
     const Collection::List cols = qb.result();
     if (cols.size() > 1) {
         akFatal() << "More than one top-level lost+found collection!?";
@@ -205,7 +208,10 @@ void StorageJanitor::findOrphanedResources()
     akDebug() << "Known resources:" << knownResources;
     qbres.addValueCondition(Resource::nameFullColumnName(), Query::NotIn, QVariant(knownResources));
     qbres.addValueCondition(Resource::idFullColumnName(), Query::NotEquals, 1);   // skip akonadi_search_resource
-    qbres.exec();
+    if (!qbres.exec()) {
+        inform("Failed to query known resources, skipping test");
+        return;
+    }
     //akDebug() << "SQL:" << qbres.query().lastQuery();
     const Resource::List orphanResources = qbres.result();
     if (orphanResources.size() > 0) {
@@ -227,7 +233,10 @@ void StorageJanitor::findOrphanedCollections()
     qb.addJoin(QueryBuilder::LeftJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName());
     qb.addValueCondition(Resource::idFullColumnName(), Query::Is, QVariant());
 
-    qb.exec();
+    if (!qb.exec()) {
+        inform("Failed to query orphaned collections, skipping test");
+        return;
+    }
     const Collection::List orphans = qb.result();
     if (!orphans.isEmpty()) {
         inform(QLatin1Literal("Found ") + QString::number(orphans.size()) + QLatin1Literal(" orphan collections."));
@@ -262,7 +271,10 @@ void StorageJanitor::findOrphanedItems()
     SelectQueryBuilder<PimItem> qb;
     qb.addJoin(QueryBuilder::LeftJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
     qb.addValueCondition(Collection::idFullColumnName(), Query::Is, QVariant());
-    qb.exec();
+    if (!qb.exec()) {
+        inform("Failed to query orphaned items, skipping test");
+        return;
+    }
     const PimItem::List orphans = qb.result();
     if (orphans.size() > 0) {
         inform(QLatin1Literal("Found ") + QString::number(orphans.size()) + QLatin1Literal(" orphan items."));
@@ -270,6 +282,9 @@ void StorageJanitor::findOrphanedItems()
         Transaction transaction(DataStore::self());
         QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
         qint64 col = lostAndFoundCollection();
+        if (col == -1) {
+            return;
+        }
         qb.setColumnValue(PimItem::collectionIdFullColumnName(), col);
         QVector<ImapSet::Id> imapIds;
         imapIds.reserve(orphans.count());
@@ -292,8 +307,10 @@ void StorageJanitor::findOrphanedParts()
     SelectQueryBuilder<Part> qb;
     qb.addJoin(QueryBuilder::LeftJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName());
     qb.addValueCondition(PimItem::idFullColumnName(), Query::Is, QVariant());
-
-    qb.exec();
+    if (!qb.exec()) {
+        inform("Failed to query orphaned parts, skipping test");
+        return;
+    }
     const Part::List orphans = qb.result();
     if (orphans.size() > 0) {
         inform(QLatin1Literal("Found ") + QString::number(orphans.size()) + QLatin1Literal(" orphan parts."));
@@ -308,7 +325,7 @@ void StorageJanitor::findOrphanedPimItemFlags()
     sqb.addJoin(QueryBuilder::LeftJoin, PimItem::tableName(), PimItemFlagRelation::leftFullColumnName(), PimItem::idFullColumnName());
     sqb.addValueCondition(PimItem::idFullColumnName(), Query::Is, QVariant());
     if (!sqb.exec()) {
-        akError() << "Error:" << sqb.query().lastError().text();
+        inform("Failed to query orphaned item flags, skipping test");
         return;
     }
     QVector<ImapSet::Id> imapIds;
@@ -341,7 +358,10 @@ void StorageJanitor::findOverlappingParts()
     qb.addValueCondition(Part::dataColumn(), Query::IsNot, QVariant());
     qb.addGroupColumn(Part::dataColumn());
     qb.addValueCondition(QLatin1Literal("count(") + Part::idColumn() + QLatin1Literal(")"), Query::Greater, 1, QueryBuilder::HavingCondition);
-    qb.exec();
+    if (!qb.exec()) {
+        inform("Failed to query overlapping parts, skipping test");
+        return;
+    }
 
     int count = 0;
     while (qb.query().next()) {
@@ -377,7 +397,10 @@ void StorageJanitor::verifyExternalParts()
     qb.addColumn(Part::idColumn());
     qb.addValueCondition(Part::externalColumn(), Query::Equals, true);
     qb.addValueCondition(Part::dataColumn(), Query::IsNot, QVariant());
-    qb.exec();
+    if (!qb.exec()) {
+        inform("Failed to query existing parts, skipping test");
+        return;
+    }
     while (qb.query().next()) {
         QString partPath = PartHelper::resolveAbsolutePath(qb.query().value(0).toByteArray());
         const Entity::Id pimItemId = qb.query().value(1).value<Entity::Id>();
@@ -419,7 +442,10 @@ void StorageJanitor::findDirtyObjects()
     cqb.setSubQueryMode(Query::Or);
     cqb.addValueCondition(Collection::remoteIdColumn(), Query::Is, QVariant());
     cqb.addValueCondition(Collection::remoteIdColumn(), Query::Equals, QString());
-    cqb.exec();
+    if (!cqb.exec()) {
+        inform("Failed to query collections without RID, skipping test");
+        return;
+    }
     const Collection::List ridLessCols = cqb.result();
     Q_FOREACH (const Collection &col, ridLessCols) {
         inform(QLatin1Literal("Collection \"") + col.name() + QLatin1Literal("\" (id: ") + QString::number(col.id())
@@ -431,7 +457,10 @@ void StorageJanitor::findDirtyObjects()
     iqb1.setSubQueryMode(Query::Or);
     iqb1.addValueCondition(PimItem::remoteIdColumn(), Query::Is, QVariant());
     iqb1.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, QString());
-    iqb1.exec();
+    if (!iqb1.exec()) {
+        inform("Failed to query items without RID, skipping test");
+        return;
+    }
     const PimItem::List ridLessItems = iqb1.result();
     Q_FOREACH (const PimItem &item, ridLessItems) {
         inform(QLatin1Literal("Item \"") + QString::number(item.id()) + QLatin1Literal("\" has no RID."));
@@ -442,7 +471,10 @@ void StorageJanitor::findDirtyObjects()
     iqb2.addValueCondition(PimItem::dirtyColumn(), Query::Equals, true);
     iqb2.addValueCondition(PimItem::remoteIdColumn(), Query::IsNot, QVariant());
     iqb2.addSortColumn(PimItem::idFullColumnName());
-    iqb2.exec();
+    if (!iqb2.exec()) {
+        inform("Failed to query dirty items, skipping test");
+        return;
+    }
     const PimItem::List dirtyItems = iqb2.result();
     Q_FOREACH (const PimItem &item, dirtyItems) {
         inform(QLatin1Literal("Item \"") + QString::number(item.id()) + QLatin1Literal("\" has RID and is dirty."));
@@ -484,7 +516,10 @@ void StorageJanitor::checkSizeTreshold()
         qb.addColumn(Part::idFullColumnName());
         qb.addValueCondition(Part::externalFullColumnName(), Query::Equals, false);
         qb.addValueCondition(Part::datasizeFullColumnName(), Query::Greater, DbConfig::configuredDatabase()->sizeThreshold());
-        qb.exec();
+        if (!qb.exec()) {
+            inform("Failed to query parts larger than treshold, skipping test");
+            return;
+        }
 
         QSqlQuery query = qb.query();
         inform(QStringLiteral("Found %1 parts to be moved to external files").arg(query.size()));
@@ -527,7 +562,10 @@ void StorageJanitor::checkSizeTreshold()
         qb.addColumn(Part::idFullColumnName());
         qb.addValueCondition(Part::externalFullColumnName(), Query::Equals, true);
         qb.addValueCondition(Part::datasizeFullColumnName(), Query::Less, DbConfig::configuredDatabase()->sizeThreshold());
-        qb.exec();
+        if (!qb.exec()) {
+            inform("Failed to query parts smaller than treshold, skipping test");
+            return;
+        }
 
         QSqlQuery query = qb.query();
         inform(QStringLiteral("Found %1 parts to be moved to database").arg(query.size()));
