@@ -31,7 +31,9 @@
 #include <QDebug>
 
 #include <akonadi/private/protocol_p.h>
-#include <akonadi/private/xdgbasedirs_p.h>
+#include <akonadi/private/standarddirs_p.h>
+#include <akonadi/private/dbus_p.h>
+#include <akonadi/private/instance_p.h>
 
 #include <QtDBus>
 #include <QTimer>
@@ -281,38 +283,24 @@ ServerManager::State ServerManager::state()
 
 QString ServerManager::instanceIdentifier()
 {
-    return QLatin1String(qgetenv("AKONADI_INSTANCE"));
+    return Instance::identifier();
 }
 
 bool ServerManager::hasInstanceIdentifier()
 {
-    return !instanceIdentifier().isEmpty();
+    return Instance::hasIdentifier();
 }
-
-static QString makeServiceName(const char *base, const QString &name = QString())
-{
-    if (ServerManager::instanceIdentifier().isEmpty()) {
-        return QLatin1String(base) % name;
-    }
-    return QLatin1String(base) % name % QLatin1Literal(".") % ServerManager::instanceIdentifier();
-}
-
-// remove once we require Akonadi 1.9
-#ifndef AKONADI_DBUS_SERVER_SERVICE_UPGRADING
-#define AKONADI_DBUS_SERVER_SERVICE_UPGRADING "org.freedesktop.Akonadi.upgrading"
-#endif
-
 QString ServerManager::serviceName(ServerManager::ServiceType serviceType)
 {
     switch (serviceType) {
     case Server:
-        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE);
+        return DBus::serviceName(DBus::Server);
     case Control:
-        return makeServiceName(AKONADI_DBUS_CONTROL_SERVICE);
+        return DBus::serviceName(DBus::Control);
     case ControlLock:
-        return makeServiceName(AKONADI_DBUS_CONTROL_SERVICE_LOCK);
+        return DBus::serviceName(DBus::ControlLock);
     case UpgradeIndicator:
-        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE_UPGRADING);
+        return DBus::serviceName(DBus::UpgradeIndicator);
     }
     Q_ASSERT(!"WTF?");
     return QString();
@@ -322,11 +310,11 @@ QString ServerManager::agentServiceName(ServiceAgentType agentType, const QStrin
 {
     switch (agentType) {
     case Agent:
-        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QStringLiteral(".Agent.%1").arg(identifier));
+        return DBus::agentServiceName(identifier, DBus::Agent);
     case Resource:
-        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QStringLiteral(".Resource.%1").arg(identifier));
+        return DBus::agentServiceName(identifier, DBus::Resource);
     case Preprocessor:
-        return makeServiceName(AKONADI_DBUS_SERVER_SERVICE, QStringLiteral(".Preprocessor.%1").arg(identifier));
+        return DBus::agentServiceName(identifier, DBus::Preprocessor);
     }
     Q_ASSERT(!"WTF?");
     return QString();
@@ -334,8 +322,8 @@ QString ServerManager::agentServiceName(ServiceAgentType agentType, const QStrin
 
 QString ServerManager::addNamespace(const QString &string)
 {
-    if (ServerManager::hasInstanceIdentifier()) {
-        return string % QLatin1Char('_') % ServerManager::instanceIdentifier();
+    if (Instance::hasIdentifier()) {
+        return string % QLatin1Char('_') % Instance::identifier();
     }
     return string;
 }
@@ -365,14 +353,7 @@ void Internal::setClientType(ClientType type)
 
 QString Internal::xdgSaveDir(const char *resource, const QString &relPath)
 {
-    QString fullRelPath = QStringLiteral("akonadi");
-    if (!ServerManager::instanceIdentifier().isEmpty()) {
-        fullRelPath += QStringLiteral("/instance/") + ServerManager::instanceIdentifier();
-    }
-    if (!relPath.isEmpty()) {
-        fullRelPath += QLatin1Char('/') + relPath;
-    }
-    return XdgBaseDirs::saveDir(resource, fullRelPath);
+    return StandardDirs::saveDir(resource, relPath);
 }
 
 #include "moc_servermanager.cpp"
