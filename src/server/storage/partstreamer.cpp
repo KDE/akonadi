@@ -27,6 +27,7 @@
 
 #include <private/protocol_p.h>
 #include <private/standarddirs_p.h>
+#include <private/externalpartstorage_p.h>
 
 #include <config-akonadi.h>
 #ifdef HAVE_UNISTD_H
@@ -100,9 +101,9 @@ bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
 bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart)
 {
     // If the part WAS external previously, remove data file
-    QString origFilename;
     if (part.external()) {
-        origFilename = PartHelper::resolveAbsolutePath(part.data());
+        ExternalPartStorage::self()->removePartFile(
+            ExternalPartStorage::resolveAbsolutePath(part.data()));
     }
 
     // Request the actual data
@@ -134,10 +135,6 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
         }
     }
 
-    if (!origFilename.isEmpty()) {
-        PartHelper::removeFile(origFilename);
-    }
-
     return true;
 }
 
@@ -148,28 +145,28 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         origData = PartHelper::translateData(part);
     }
 
-    QString filename;
-    QString origFilename;
+    QByteArray filename;
     if (part.isValid()) {
         if (part.external()) {
             // Part was external and is still external
-            filename = QString::fromLatin1(part.data());
-            origFilename = PartHelper::resolveAbsolutePath(filename.toUtf8());
+            filename = part.data();
+            ExternalPartStorage::self()->removePartFile(
+                ExternalPartStorage::resolveAbsolutePath(filename));
+            filename = ExternalPartStorage::updateFileNameRevision(filename);
         } else {
             // Part wasn't external, but is now
-            filename = PartHelper::fileNameForPart(&part);
+            filename = ExternalPartStorage::nameForPartId(part.id());
         }
-        filename = PartHelper::updateFileNameRevision(filename);
-    }
 
-    QFileInfo finfo(filename);
-    if (finfo.isAbsolute()) {
-        filename = finfo.fileName();
+        QFileInfo finfo(QString::fromUtf8(filename));
+        if (finfo.isAbsolute()) {
+            filename = finfo.fileName().toUtf8();
+        }
     }
 
     part.setExternal(true);
     part.setDatasize(metaPart.size());
-    part.setData(filename.toLatin1());
+    part.setData(filename);
 
     if (part.isValid()) {
         if (!part.update()) {
@@ -182,8 +179,8 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
             return false;
         }
 
-        filename = PartHelper::updateFileNameRevision(PartHelper::fileNameForPart(&part));
-        part.setData(filename.toLatin1());
+        filename = ExternalPartStorage::nameForPartId(part.id());
+        part.setData(filename);
         if (!part.update()) {
             mError = QStringLiteral("Failed to update part in database");
             return false;
@@ -191,7 +188,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
     }
 
     Protocol::StreamPayloadCommand cmd(metaPart.name(), Protocol::StreamPayloadCommand::Data);
-    cmd.setDestination(filename);
+    cmd.setDestination(QString::fromUtf8(filename));
     Q_EMIT responseAvailable(cmd);
 
     Protocol::StreamPayloadResponse response = mConnection->readCommand();
@@ -201,7 +198,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         return false;
     }
 
-    QFile file(PartHelper::resolveAbsolutePath(filename.toLatin1()), this);
+    QFile file(ExternalPartStorage::resolveAbsolutePath(filename), this);
     if (!file.exists()) {
         mError = QStringLiteral("External payload file does not exist");
         akError() << mError;
@@ -212,11 +209,6 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         mError = QStringLiteral("Payload size mismatch");
         akDebug() << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
         return false;
-    }
-
-    // Remove the old part file (if there was any)
-    if (!origFilename.isEmpty()) {
-        PartHelper::removeFile(origFilename);
     }
 
     if (mCheckChanged && !mDataChanged) {

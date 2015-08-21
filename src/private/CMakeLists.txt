@@ -3,6 +3,7 @@ set(akonadiprivate_SRCS
     imapset.cpp
     instance.cpp
     datastream_p.cpp
+    externalpartstorage.cpp
     protocol.cpp
     scope.cpp
     tristate.cpp
@@ -40,6 +41,7 @@ install(FILES
     imapparser_p.h
     imapset_p.h
     instance_p.h
+    externalpartstorage_p.h
     protocol_p.h
     protocol_exception_p.h
     xdgbasedirs_p.h

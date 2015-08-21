@@ -119,6 +119,12 @@ private:
      */
     void checkSizeTreshold();
 
+    /**
+     * Check if all external payload files are migrated to the levelled folder
+     * hierarchy and migrates them if necessary
+     */
+    void migrateToLevelledCacheHierarchy();
+
 private:
     QDBusConnection m_connection;
     qint64 m_lostFoundCollectionId;

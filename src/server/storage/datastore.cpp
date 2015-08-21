@@ -39,8 +39,7 @@
 #include <utils.h>
 
 #include <shared/akdebug.h>
-#include <private/xdgbasedirs_p.h>
-#include <private/protocol_p.h>
+#include <private/externalpartstorage_p.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -59,6 +58,7 @@
 #include <QtSql/QSqlField>
 #include <QtSql/QSqlQuery>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 static QMutex sTransactionMutex;
@@ -754,7 +754,8 @@ bool DataStore::cleanupCollection(Collection &collection)
 
     try {
         while (qb.query().next()) {
-            PartHelper::removeFile(PartHelper::resolveAbsolutePath(qb.query().value(0).toByteArray()));
+            ExternalPartStorage::self()->removePartFile(
+                ExternalPartStorage::resolveAbsolutePath(qb.query().value(0).toByteArray()));
         }
     } catch (const PartHelperException &e) {
         akDebug() << e.what();

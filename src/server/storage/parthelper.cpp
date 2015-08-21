@@ -25,9 +25,7 @@
 #include "parttypehelper.h"
 
 #include <shared/akdebug.h>
-#include <private/standarddirs_p.h>
-#include <private/xdgbasedirs_p.h>
-#include <private/protocol_p.h>
+#include <private/externalpartstorage_p.h>
 
 #include <QDir>
 #include <QFile>
@@ -39,57 +37,26 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-QString PartHelper::fileNameForPart(Part *part)
-{
-    Q_ASSERT(part->id() >= 0);
-    return QString::number(part->id());
-}
-
 void PartHelper::update(Part *part, const QByteArray &data, qint64 dataSize)
 {
     if (!part) {
         throw PartHelperException("Invalid part");
     }
 
-    QString origFileName;
-    QString origFilePath;
-
-    // currently external, so recover the filename to delete it after the update succeeded
-    if (part->external()) {
-        origFileName = QString::fromUtf8(part->data());
-        QFileInfo fi(origFileName);
-        if (fi.isAbsolute()) {
-            origFilePath = origFileName;
-            origFileName = fi.fileName();
-        } else if (!origFileName.isEmpty()) {
-            origFilePath = storagePath() + origFileName;
-        }
-    }
-
     const bool storeExternal = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
 
-    if (storeExternal) {
-        QString fileName = origFileName;
-        if (fileName.isEmpty()) {
-            fileName = fileNameForPart(part);
+    QByteArray newFile;
+    if (part->external() && storeExternal) {
+        if (!ExternalPartStorage::self()->updatePartFile(data, part->data(), newFile)) {
+            throw PartHelperException(QStringLiteral("Failed to update external payload part"));
         }
-
-        fileName = updateFileNameRevision(fileName);
-
-        QFile file(storagePath() + fileName);
-        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-            if (file.write(data) == data.size()) {
-                part->setData(fileName.toLocal8Bit());
-                part->setExternal(true);
-            } else {
-                throw PartHelperException(QStringLiteral("Failed to write into '%1', error was '%2'").arg(file.fileName()).arg(file.errorString()));
-            }
-            file.close();
-        } else {
-            throw PartHelperException(QStringLiteral("Could not open '%1' for writing, error was '%2'").arg(file.fileName()).arg(file.errorString()));
+        part->setData(newFile);
+    } if (!part->external() && storeExternal) {
+        if (!ExternalPartStorage::self()->createPartFile(data, part->id(), newFile)) {
+            throw PartHelperException(QStringLiteral("Failed to create external payload part"));
         }
-
-        // internal storage
+        part->setData(newFile);
+        part->setExternal(true);
     } else {
         part->setData(data);
         part->setExternal(false);
@@ -99,10 +66,6 @@ void PartHelper::update(Part *part, const QByteArray &data, qint64 dataSize)
     const bool result = part->update();
     if (!result) {
         throw PartHelperException("Failed to update database record");
-    }
-    // everything worked, remove the old file
-    if (!origFilePath.isEmpty()) {
-        removeFile(origFilePath);
     }
 }
 
@@ -128,27 +91,14 @@ bool PartHelper::insert(Part *part, qint64 *insertId)
     bool result = part->insert(insertId);
 
     if (storeInFile && result) {
-        QString fileName = fileNameForPart(part);
-        fileName += QStringLiteral("_r0");
-        const QString filePath = storagePath() + QDir::separator() + fileName;
-
-        QFile file(filePath);
-        if (file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-            if (file.write(data) == data.size()) {
-                part->setData(fileName.toLocal8Bit());
-                result = part->update();
-            } else {
-                akError() << "Insert: payload file " << filePath << " could not be written to!";
-                akError() << "Error: " << file.errorString();
-                return false;
-            }
-            file.close();
-        } else {
-            akError() << "Insert: payload file " << filePath << " could not be open for writing!";
-            akError() << "Error: " << file.errorString();
-            return false;
+        QByteArray filename;
+        if (!ExternalPartStorage::self()->createPartFile(data, part->id(), filename)) {
+            throw PartHelperException("Failed to create external payload part");
         }
+        part->setData(filename);
+        result = part->update();
     }
+
     return result;
 }
 
@@ -159,9 +109,7 @@ bool PartHelper::remove(Part *part)
     }
 
     if (part->external()) {
-        // akDebug() << "remove part file " << part->data();
-        const QString fileName = resolveAbsolutePath(part->data());
-        removeFile(fileName);
+        ExternalPartStorage::self()->removePartFile(ExternalPartStorage::resolveAbsolutePath(part->data()));
     }
     return part->remove();
 }
@@ -181,25 +129,15 @@ bool PartHelper::remove(const QString &column, const QVariant &value)
     Part::List::ConstIterator it = parts.constBegin();
     Part::List::ConstIterator end = parts.constEnd();
     for (; it != end; ++it) {
-        const QString fileName = resolveAbsolutePath((*it).data());
-        // akDebug() << "remove part file " << fileName;
-        removeFile(fileName);
+        ExternalPartStorage::self()->removePartFile(ExternalPartStorage::resolveAbsolutePath((*it).data()));
     }
     return Part::remove(column, value);
-}
-
-void PartHelper::removeFile(const QString &fileName)
-{
-    if (!fileName.startsWith(storagePath())) {
-        throw PartHelperException("Attempting to delete a file not in our prefix.");
-    }
-    QFile::remove(fileName);
 }
 
 QByteArray PartHelper::translateData(const QByteArray &data, bool isExternal)
 {
     if (isExternal) {
-        const QString fileName = resolveAbsolutePath(data);
+        const QString fileName = ExternalPartStorage::resolveAbsolutePath(data);
 
         QFile file(fileName);
         if (file.open(QIODevice::ReadOnly)) {
@@ -225,8 +163,7 @@ QByteArray PartHelper::translateData(const Part &part)
 bool PartHelper::truncate(Part &part)
 {
     if (part.external()) {
-        const QString fileName = resolveAbsolutePath(part.data());
-        removeFile(fileName);
+        ExternalPartStorage::self()->removePartFile(ExternalPartStorage::resolveAbsolutePath(part.data()));
     }
 
     part.setData(QByteArray());
@@ -235,17 +172,13 @@ bool PartHelper::truncate(Part &part)
     return part.update();
 }
 
-QString PartHelper::storagePath()
-{
-    const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("file_db_data")) + QDir::separator();
-    Q_ASSERT(dataDir != QDir::separator());
-    return dataDir;
-}
-
 bool PartHelper::verify(Part &part)
 {
-    const QString fileName = resolveAbsolutePath(part.data());
+    if (!part.external()) {
+        return true;
+    }
 
+    const QString fileName = ExternalPartStorage::resolveAbsolutePath(part.data());
     if (!QFile::exists(fileName)) {
         akError() << "Payload file" << fileName << "is missing, trying to recover.";
         part.setData(QByteArray());
@@ -255,32 +188,4 @@ bool PartHelper::verify(Part &part)
     }
 
     return true;
-}
-
-QString PartHelper::resolveAbsolutePath(const QByteArray &data)
-{
-    QString fileName = QString::fromUtf8(data);
-    QFileInfo fi(fileName);
-    if (!fi.isAbsolute()) {
-        fileName = storagePath() + fileName;
-    }
-
-    return fileName;
-}
-
-QString PartHelper::updateFileNameRevision(const QString &fileName)
-{
-    QString fn = fileName;
-    QString rev = QStringLiteral("_r0");
-    if (fileName.contains(QStringLiteral("_r"))) {
-        int revIndex = fileName.indexOf(QLatin1String("_r"));
-        rev = fileName.mid(revIndex + 2);
-        int r = rev.toInt();
-        r++;
-        rev = QString::number(r);
-        fn = fileName.left(revIndex);
-        rev.prepend(QLatin1String("_r"));
-    }
-
-    return fn + rev;
 }

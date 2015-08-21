@@ -62,15 +62,11 @@ bool remove(Part *part);
 /** Deletes all parts which match the given constraint, including all corresponding filesystem data. */
 bool remove(const QString &column, const QVariant &value);
 
-/** Deletes @p fileName, after verifying it's actually one of ours.
- * @throws PartHelperException if this file is not in our data directory.
- */
-void removeFile(const QString &fileName);
-
 /** Returns the payload data. */
 QByteArray translateData(const QByteArray &data, bool isExternal);
 /** Convenience overload of the above. */
 QByteArray translateData(const Part &part);
+
 /** Truncate the payload of @p part and update filesystem/database accordingly.
  *  This is more efficient than using update since it does not require the data to be loaded.
  */
@@ -78,26 +74,6 @@ bool truncate(Part &part);
 
 /** Verifies and if necessary fixes the external reference of this part. */
 bool verify(Part &part);
-
-// private: for unit testing only
-
-/**
-  * Returns a file base name for storing the given item part.
-  * This does not yet include the revision part.
-  */
-QString fileNameForPart(Part *part);
-
-/**
-  * Retruns the base path for storing external payloads.
-  */
-QString storagePath();
-
-/**
-  * Read filename from @p data and returns absolute filepath
-  */
-QString resolveAbsolutePath(const QByteArray &data);
-
-QString updateFileNameRevision(const QString &fileName);
 
 } // namespace PartHelper
 

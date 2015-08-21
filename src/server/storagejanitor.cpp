@@ -36,7 +36,7 @@
 #include <private/imapset_p.h>
 #include <private/protocol_p.h>
 #include <private/standarddirs_p.h>
-
+#include <private/externalpartstorage_p.h>
 
 #include <QStringBuilder>
 #include <QtDBus/QDBusConnection>
@@ -116,6 +116,9 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
     inform("Looking for dirty objects...");
     findDirtyObjects();
+
+    inform("Migrating parts to new cache hierarchy...");
+    migrateToLevelledCacheHierarchy();
 
     /* TODO some ideas for further checks:
      * the collection tree is non-cyclic
@@ -318,7 +321,7 @@ void StorageJanitor::findOrphanedParts()
     }
 }
 
-void StorageJanitor::findOrphanedPimItemFlags()
+void StorageJanitor:: findOrphanedPimItemFlags()
 {
     QueryBuilder sqb(PimItemFlagRelation::tableName(), QueryBuilder::Select);
     sqb.addColumn(PimItemFlagRelation::leftFullColumnName());
@@ -402,7 +405,7 @@ void StorageJanitor::verifyExternalParts()
         return;
     }
     while (qb.query().next()) {
-        QString partPath = PartHelper::resolveAbsolutePath(qb.query().value(0).toByteArray());
+        QString partPath = ExternalPartStorage::resolveAbsolutePath(qb.query().value(0).toByteArray());
         const Entity::Id pimItemId = qb.query().value(1).value<Entity::Id>();
         const Entity::Id id = qb.query().value(2).value<Entity::Id>();
         if (existingFiles.contains(partPath)) {
@@ -527,8 +530,8 @@ void StorageJanitor::checkSizeTreshold()
         while (query.next()) {
             Transaction transaction(DataStore::self());
             Part part = Part::retrieveById(query.value(0).toLongLong());
-            const QByteArray name = PartHelper::fileNameForPart(&part).toUtf8() + "_r" + QByteArray::number(part.version());
-            const QString partPath = PartHelper::resolveAbsolutePath(name);
+            const QByteArray name = ExternalPartStorage::nameForPartId(part.id());
+            const QString partPath = ExternalPartStorage::resolveAbsolutePath(name);
             QFile f(partPath);
             if (f.exists()) {
                 akDebug() << "External payload file" << name << "already exists";
@@ -573,7 +576,7 @@ void StorageJanitor::checkSizeTreshold()
         while (query.next()) {
             Transaction transaction(DataStore::self());
             Part part = Part::retrieveById(query.value(0).toLongLong());
-            const QString partPath = PartHelper::resolveAbsolutePath(part.data());
+            const QString partPath = ExternalPartStorage::resolveAbsolutePath(part.data());
             QFile f(partPath);
             if (!f.exists()) {
                 akError() << "Part file" << part.data() << "does not exist";
@@ -601,6 +604,49 @@ void StorageJanitor::checkSizeTreshold()
         }
     }
 }
+
+void StorageJanitor::migrateToLevelledCacheHierarchy()
+{
+    QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
+    qb.addColumn(Part::idColumn());
+    qb.addColumn(Part::dataColumn());
+    qb.addValueCondition(Part::externalColumn(), Query::Equals, true);
+    if (!qb.exec()) {
+        inform("Failed to query external payload parts, skipping test");
+        return;
+    }
+
+    QSqlQuery query = qb.query();
+    while (query.next()) {
+        const qint64 id = query.value(0).toLongLong();
+        const QByteArray data = query.value(1).toByteArray();
+        const QString fileName = QString::fromUtf8(data);
+        bool oldExists = false, newExists = false;
+        // Resolve the current path
+        const QString currentPath = ExternalPartStorage::resolveAbsolutePath(fileName, &oldExists);
+        // Resolve the new path with legacy fallback disabled, so that it always
+        // returns the new levelled-cache path, even when the old one exists
+        const QString newPath = ExternalPartStorage::resolveAbsolutePath(fileName, &newExists, false);
+        if (!oldExists) {
+            akError() << "Old payload part does not exist, skipping part" << fileName;
+            continue;
+        }
+        if (currentPath != newPath) {
+            if (newExists) {
+                akError() << "Part is in legacy location, but the destination file already exists, skipping part" << fileName;
+                continue;
+            }
+
+            QFile f(currentPath);
+            if (!f.rename(newPath)) {
+                akError() << "Failed to move part from" << currentPath << " to " << newPath << ":" << f.errorString();
+                continue;
+            }
+            inform(QStringLiteral("Migrated part %1 to new levelled cache").arg(id));
+        }
+    }
+}
+
 
 void StorageJanitor::inform(const char *msg)
 {

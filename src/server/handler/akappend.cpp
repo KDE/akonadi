@@ -30,6 +30,7 @@
 #include "storage/partstreamer.h"
 #include "storage/parthelper.h"
 #include "storage/selectquerybuilder.h"
+#include <private/externalpartstorage_p.h>
 
 #include <numeric> //std::accumulate
 
@@ -349,6 +350,7 @@ bool AkAppend::parseStream()
     // it's not a problem as it can be re-fetched at any time, except for attributes.
     DataStore *db = DataStore::self();
     Transaction transaction(db);
+    ExternalPartStorageTransaction storageTrx;
 
     PimItem item;
     Collection parentCol;
@@ -363,6 +365,7 @@ bool AkAppend::parseStream()
         if (!transaction.commit()) {
             return failureResponse("Failed to commit transaction");
         }
+        storageTrx.commit();
     } else {
         // Merging is always restricted to the same collection and mimetype
         SelectQueryBuilder<PimItem> qb;
@@ -389,6 +392,8 @@ bool AkAppend::parseStream()
             if (!transaction.commit()) {
                 return failureResponse("Failed to commit transaction");
             }
+            storageTrx.commit();
+
         } else if (result.count() == 1) {
             // Item with matching GID/RID combination exists, so merge this item into it
             // and send itemChanged()
@@ -400,6 +405,7 @@ bool AkAppend::parseStream()
             if (!transaction.commit()) {
                 return failureResponse("Failed to commit transaction");
             }
+            storageTrx.commit();
         } else {
             akDebug() << "Multiple merge candidates:";
             Q_FOREACH (const PimItem &item, result) {

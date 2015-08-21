@@ -30,6 +30,7 @@
 #include "storage/itemretriever.h"
 #include "storage/parttypehelper.h"
 #include "storage/partstreamer.h"
+#include <private/externalpartstorage_p.h>
 
 #include <QLocale>
 #include <QFile>
@@ -138,6 +139,7 @@ bool Store::parseStream()
 
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store);
+    ExternalPartStorageTransaction storageTrx;
     // Set the same modification time for each item.
     const QDateTime modificationtime = QDateTime::currentDateTimeUtc();
 
@@ -362,6 +364,8 @@ bool Store::parseStream()
         if (!transaction.commit()) {
             return failureResponse("Cannot commit transaction.");
         }
+        // Always commit storage changes (deletion) after DB transaction
+        storageTrx.commit();
 
         datetime = modificationtime;
     } else {

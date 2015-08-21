@@ -26,6 +26,7 @@
 #include "entities.h"
 
 #include <private/standarddirs_p.h>
+#include <private/externalpartstorage_p.h>
 
 #include "storage/partstreamer.h"
 #include <storage/parthelper.h>
@@ -192,7 +193,7 @@ private Q_SLOTS:
         if (isExternal) {
             // Create the payload file now, since don't have means to react
             // directly to the streaming command
-            QFile file(PartHelper::resolveAbsolutePath(expectedPartData));
+            QFile file(ExternalPartStorage::resolveAbsolutePath(expectedPartData));
             file.open(QIODevice::WriteOnly);
             file.write(expectedFileData);
             file.close();
@@ -211,7 +212,7 @@ private Q_SLOTS:
 
         if (isExternal) {
             QCOMPARE(data, expectedPartData);
-            QFile file(PartHelper::resolveAbsolutePath(data));
+            QFile file(ExternalPartStorage::resolveAbsolutePath(data));
             QVERIFY(file.exists());
             QCOMPARE(file.size(), expectedPartSize);
             QVERIFY(file.open(QIODevice::ReadOnly));
@@ -222,7 +223,7 @@ private Q_SLOTS:
             // Make sure no previous versions are left behind in file_db_data
             for (int i = 0; i < part.version(); ++i) {
                 const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(part.version());
-                const QString filePath = PartHelper::resolveAbsolutePath(fileName);
+                const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
                 QVERIFY(!QFile::exists(filePath));
             }
         } else {
@@ -231,7 +232,7 @@ private Q_SLOTS:
             // Make sure nothing is left behind in file_db_data
             for (int i = 0; i <= part.version(); ++i) {
                 const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(part.version());
-                const QString filePath = PartHelper::resolveAbsolutePath(fileName);
+                const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
                 QVERIFY(!QFile::exists(filePath));
             }
         }
