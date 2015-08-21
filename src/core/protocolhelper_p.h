@@ -221,9 +221,6 @@ public:
     static Tag parseTagFetchResult(const Protocol::FetchTagsResponse &data);
     static Relation parseRelationFetchResult(const Protocol::FetchRelationsResponse &data);
 
-    static QString akonadiStoragePath();
-    static QString absolutePayloadFilePath(const QString &fileName);
-
     static bool streamPayloadToFile(const QString &file, const QByteArray &data, QByteArray &error);
 
     static Akonadi::Tristate listPreference(const Collection::ListPreference pref);

@@ -24,6 +24,8 @@
 #include "typepluginloader_p.h"
 #include "protocolhelper_p.h"
 
+#include <akonadi/private/externalpartstorage_p.h>
+
 // Qt
 #include <QtCore/QBuffer>
 #include <QtCore/QFile>
@@ -87,7 +89,7 @@ void StdStringItemSerializerPlugin::serialize(const Item &item, const QByteArray
 void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version, bool external)
 {
     if (external) {
-        const QString fileName = ProtocolHelper::absolutePayloadFilePath(QString::fromUtf8(data));
+        const QString fileName = ExternalPartStorage::resolveAbsolutePath(data);
         QFile file(fileName);
         if (file.open(QIODevice::ReadOnly)) {
             deserialize(item, label, file, version);
@@ -151,7 +153,7 @@ void ItemSerializer::apply(Item &item, const Item &other)
     }
 
     // Old-school merge:
-    foreach (const QByteArray &part, other.loadedPayloadParts()) {
+    Q_FOREACH (const QByteArray &part, other.loadedPayloadParts()) {
         QByteArray partData;
         QBuffer buffer;
         buffer.setBuffer(&partData);

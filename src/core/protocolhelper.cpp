@@ -31,6 +31,7 @@
 
 #include <akonadi/private/protocol_p.h>
 #include <akonadi/private/xdgbasedirs_p.h>
+#include <akonadi/private/externalpartstorage_p.h>
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
@@ -441,7 +442,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
             Attribute *attr = AttributeFactory::createAttribute(plainKey);
             Q_ASSERT(attr);
             if (part.metaData().isExternal()) {
-                const QString filename = ProtocolHelper::absolutePayloadFilePath(QString::fromUtf8(part.data()));
+                const QString filename = ExternalPartStorage::resolveAbsolutePath(part.data());
                 QFile file(filename);
                 if (file.open(QFile::ReadOnly)) {
                     attr->deserialize(file.readAll());
@@ -490,29 +491,11 @@ Relation ProtocolHelper::parseRelationFetchResult(const Protocol::FetchRelations
     return relation;
 }
 
-QString ProtocolHelper::akonadiStoragePath()
-{
-    QString fullRelPath = QStringLiteral("akonadi");
-    if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-        fullRelPath += QDir::separator() + QLatin1String("instance") + QDir::separator() + Akonadi::ServerManager::instanceIdentifier();
-    }
-    return XdgBaseDirs::saveDir("data", fullRelPath);
-}
-
-QString ProtocolHelper::absolutePayloadFilePath(const QString &fileName)
-{
-    QFileInfo fi(fileName);
-    if (!fi.isAbsolute()) {
-        return akonadiStoragePath() + QDir::separator() + QLatin1String("file_db_data") + QDir::separator() + fileName;
-    }
-
-    return fileName;
-}
-
 bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArray &data, QByteArray &error)
 {
-    const QString filePath = ProtocolHelper::absolutePayloadFilePath(fileName);
-    if (!filePath.startsWith(akonadiStoragePath())) {
+    const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
+    qDebug() << filePath << fileName;
+    if (!filePath.startsWith(ExternalPartStorage::akonadiStoragePath())) {
         qWarning() << "Invalid file path" << fileName;
         error = "Invalid file path";
         return false;
