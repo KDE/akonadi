@@ -351,18 +351,18 @@ EmailSearchTerm::EmailSearchField EmailSearchTerm::fromKey(const QString &key)
     return emailSearchFieldMapping().key(key);
 }
 
-QMap<ContactSearchTerm::ContactSearchField, QString> initializeContactMapping()
+static QMap<ContactSearchTerm::ContactSearchField, QString> contactSearchFieldMapping()
 {
-    QMap<ContactSearchTerm::ContactSearchField, QString> mapping;
-    mapping.insert(ContactSearchTerm::Name, QStringLiteral("name"));
-    mapping.insert(ContactSearchTerm::Nickname, QStringLiteral("nickname"));
-    mapping.insert(ContactSearchTerm::Email, QStringLiteral("email"));
-    mapping.insert(ContactSearchTerm::Uid, QStringLiteral("uid"));
-    mapping.insert(ContactSearchTerm::All, QStringLiteral("all"));
+    static QMap<ContactSearchTerm::ContactSearchField, QString> mapping;
+    if (mapping.isEmpty()) {
+        mapping.insert(ContactSearchTerm::Name, QStringLiteral("name"));
+        mapping.insert(ContactSearchTerm::Nickname, QStringLiteral("nickname"));
+        mapping.insert(ContactSearchTerm::Email, QStringLiteral("email"));
+        mapping.insert(ContactSearchTerm::Uid, QStringLiteral("uid"));
+        mapping.insert(ContactSearchTerm::All, QStringLiteral("all"));
+    }
     return mapping;
 }
-
-static QMap<ContactSearchTerm::ContactSearchField, QString> contactSearchFieldMapping = initializeContactMapping();
 
 ContactSearchTerm::ContactSearchTerm(ContactSearchTerm::ContactSearchField field, const QVariant &value, SearchTerm::Condition condition)
     : SearchTerm(toKey(field), value, condition)
@@ -372,12 +372,12 @@ ContactSearchTerm::ContactSearchTerm(ContactSearchTerm::ContactSearchField field
 
 QString ContactSearchTerm::toKey(ContactSearchTerm::ContactSearchField field)
 {
-    return contactSearchFieldMapping.value(field);
+    return contactSearchFieldMapping().value(field);
 }
 
 ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey(const QString &key)
 {
-    return contactSearchFieldMapping.key(key);
+    return contactSearchFieldMapping().key(key);
 }
 
 QMap<IncidenceSearchTerm::IncidenceSearchField, QString> initializeIncidenceMapping()
