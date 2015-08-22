@@ -305,34 +305,35 @@ SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
     return query;
 }
 
-QMap<EmailSearchTerm::EmailSearchField, QString> initializeMapping()
+static QMap<EmailSearchTerm::EmailSearchField, QString> emailSearchFieldMapping()
 {
-    QMap<EmailSearchTerm::EmailSearchField, QString> mapping;
-    mapping.insert(EmailSearchTerm::Body, QStringLiteral("body"));
-    mapping.insert(EmailSearchTerm::Headers, QStringLiteral("headers"));
-    mapping.insert(EmailSearchTerm::Subject, QStringLiteral("subject"));
-    mapping.insert(EmailSearchTerm::Message, QStringLiteral("message"));
-    mapping.insert(EmailSearchTerm::HeaderFrom, QStringLiteral("from"));
-    mapping.insert(EmailSearchTerm::HeaderTo, QStringLiteral("to"));
-    mapping.insert(EmailSearchTerm::HeaderCC, QStringLiteral("cc"));
-    mapping.insert(EmailSearchTerm::HeaderBCC, QStringLiteral("bcc"));
-    mapping.insert(EmailSearchTerm::HeaderReplyTo, QStringLiteral("replyto"));
-    mapping.insert(EmailSearchTerm::HeaderOrganization, QStringLiteral("organization"));
-    mapping.insert(EmailSearchTerm::HeaderListId, QStringLiteral("listid"));
-    mapping.insert(EmailSearchTerm::HeaderResentFrom, QStringLiteral("resentfrom"));
-    mapping.insert(EmailSearchTerm::HeaderXLoop, QStringLiteral("xloop"));
-    mapping.insert(EmailSearchTerm::HeaderXMailingList, QStringLiteral("xmailinglist"));
-    mapping.insert(EmailSearchTerm::HeaderXSpamFlag, QStringLiteral("xspamflag"));
-    mapping.insert(EmailSearchTerm::HeaderDate, QStringLiteral("date"));
-    mapping.insert(EmailSearchTerm::HeaderOnlyDate, QStringLiteral("onlydate"));
-    mapping.insert(EmailSearchTerm::MessageStatus, QStringLiteral("messagestatus"));
-    mapping.insert(EmailSearchTerm::MessageTag, QStringLiteral("messagetag"));
-    mapping.insert(EmailSearchTerm::ByteSize, QStringLiteral("size"));
-    mapping.insert(EmailSearchTerm::Attachment, QStringLiteral("attachment"));
+    static QMap<EmailSearchTerm::EmailSearchField, QString> mapping;
+    if (mapping.isEmpty()) {
+        mapping.insert(EmailSearchTerm::Body, QStringLiteral("body"));
+        mapping.insert(EmailSearchTerm::Headers, QStringLiteral("headers"));
+        mapping.insert(EmailSearchTerm::Subject, QStringLiteral("subject"));
+        mapping.insert(EmailSearchTerm::Message, QStringLiteral("message"));
+        mapping.insert(EmailSearchTerm::HeaderFrom, QStringLiteral("from"));
+        mapping.insert(EmailSearchTerm::HeaderTo, QStringLiteral("to"));
+        mapping.insert(EmailSearchTerm::HeaderCC, QStringLiteral("cc"));
+        mapping.insert(EmailSearchTerm::HeaderBCC, QStringLiteral("bcc"));
+        mapping.insert(EmailSearchTerm::HeaderReplyTo, QStringLiteral("replyto"));
+        mapping.insert(EmailSearchTerm::HeaderOrganization, QStringLiteral("organization"));
+        mapping.insert(EmailSearchTerm::HeaderListId, QStringLiteral("listid"));
+        mapping.insert(EmailSearchTerm::HeaderResentFrom, QStringLiteral("resentfrom"));
+        mapping.insert(EmailSearchTerm::HeaderXLoop, QStringLiteral("xloop"));
+        mapping.insert(EmailSearchTerm::HeaderXMailingList, QStringLiteral("xmailinglist"));
+        mapping.insert(EmailSearchTerm::HeaderXSpamFlag, QStringLiteral("xspamflag"));
+        mapping.insert(EmailSearchTerm::HeaderDate, QStringLiteral("date"));
+        mapping.insert(EmailSearchTerm::HeaderOnlyDate, QStringLiteral("onlydate"));
+        mapping.insert(EmailSearchTerm::MessageStatus, QStringLiteral("messagestatus"));
+        mapping.insert(EmailSearchTerm::MessageTag, QStringLiteral("messagetag"));
+        mapping.insert(EmailSearchTerm::ByteSize, QStringLiteral("size"));
+        mapping.insert(EmailSearchTerm::Attachment, QStringLiteral("attachment"));
+    }
+
     return mapping;
 }
-
-static QMap<EmailSearchTerm::EmailSearchField, QString> emailSearchFieldMapping = initializeMapping();
 
 EmailSearchTerm::EmailSearchTerm(EmailSearchTerm::EmailSearchField field, const QVariant &value, SearchTerm::Condition condition)
     : SearchTerm(toKey(field), value, condition)
@@ -342,12 +343,12 @@ EmailSearchTerm::EmailSearchTerm(EmailSearchTerm::EmailSearchField field, const 
 
 QString EmailSearchTerm::toKey(EmailSearchTerm::EmailSearchField field)
 {
-    return emailSearchFieldMapping.value(field);
+    return emailSearchFieldMapping().value(field);
 }
 
 EmailSearchTerm::EmailSearchField EmailSearchTerm::fromKey(const QString &key)
 {
-    return emailSearchFieldMapping.key(key);
+    return emailSearchFieldMapping().key(key);
 }
 
 QMap<ContactSearchTerm::ContactSearchField, QString> initializeContactMapping()

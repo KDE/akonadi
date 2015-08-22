@@ -371,29 +371,29 @@ QByteArray Session::sessionId() const
     return d->sessionId;
 }
 
-static QThreadStorage<Session *> instances;
+Q_GLOBAL_STATIC(QThreadStorage<Session *>, instances)
 
 void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
 {
     Q_ASSERT_X(!sessionId.isEmpty(), "SessionPrivate::createDefaultSession",
                "You tried to create a default session with empty session id!");
-    Q_ASSERT_X(!instances.hasLocalData(), "SessionPrivate::createDefaultSession",
+    Q_ASSERT_X(!instances()->hasLocalData(), "SessionPrivate::createDefaultSession",
                "You tried to create a default session twice!");
 
-    instances.setLocalData(new Session(sessionId));
+    instances()->setLocalData(new Session(sessionId));
 }
 
 void SessionPrivate::setDefaultSession(Session *session)
 {
-    instances.setLocalData(session);
+    instances()->setLocalData(session);
 }
 
 Session *Session::defaultSession()
 {
-    if (!instances.hasLocalData()) {
-        instances.setLocalData(new Session());
+    if (!instances()->hasLocalData()) {
+        instances()->setLocalData(new Session());
     }
-    return instances.localData();
+    return instances()->localData();
 }
 
 void Session::clear()
