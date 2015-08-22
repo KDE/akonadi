@@ -380,18 +380,18 @@ ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey(const QString &
     return contactSearchFieldMapping().key(key);
 }
 
-QMap<IncidenceSearchTerm::IncidenceSearchField, QString> initializeIncidenceMapping()
+QMap<IncidenceSearchTerm::IncidenceSearchField, QString> incidenceSearchFieldMapping()
 {
     QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
-    mapping.insert(IncidenceSearchTerm::All, QStringLiteral("all"));
-    mapping.insert(IncidenceSearchTerm::PartStatus, QStringLiteral("partstatus"));
-    mapping.insert(IncidenceSearchTerm::Organizer, QStringLiteral("organizer"));
-    mapping.insert(IncidenceSearchTerm::Summary, QStringLiteral("summary"));
-    mapping.insert(IncidenceSearchTerm::Location, QStringLiteral("location"));
+    if (mapping.isEmpty()) {
+        mapping.insert(IncidenceSearchTerm::All, QStringLiteral("all"));
+        mapping.insert(IncidenceSearchTerm::PartStatus, QStringLiteral("partstatus"));
+        mapping.insert(IncidenceSearchTerm::Organizer, QStringLiteral("organizer"));
+        mapping.insert(IncidenceSearchTerm::Summary, QStringLiteral("summary"));
+        mapping.insert(IncidenceSearchTerm::Location, QStringLiteral("location"));
+    }
     return mapping;
 }
-
-static QMap<IncidenceSearchTerm::IncidenceSearchField, QString> incidenceSearchFieldMapping = initializeIncidenceMapping();
 
 IncidenceSearchTerm::IncidenceSearchTerm(IncidenceSearchTerm::IncidenceSearchField field, const QVariant &value, SearchTerm::Condition condition)
     : SearchTerm(toKey(field), value, condition)
@@ -401,10 +401,10 @@ IncidenceSearchTerm::IncidenceSearchTerm(IncidenceSearchTerm::IncidenceSearchFie
 
 QString IncidenceSearchTerm::toKey(IncidenceSearchTerm::IncidenceSearchField field)
 {
-    return incidenceSearchFieldMapping.value(field);
+    return incidenceSearchFieldMapping().value(field);
 }
 
 IncidenceSearchTerm::IncidenceSearchField IncidenceSearchTerm::fromKey(const QString &key)
 {
-    return incidenceSearchFieldMapping.key(key);
+    return incidenceSearchFieldMapping().key(key);
 }
