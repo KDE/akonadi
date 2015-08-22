@@ -847,7 +847,7 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ChangeNotification &m
         colDest = Collection(msg.parentDestCollection());
         // HACK: destination resource is delivered in the parts field...
         if (!msg.itemParts().isEmpty()) {
-            colDest.setResource(QString::fromLatin1(*(msg.itemParts().begin())));
+            colDest.setResource(QString::fromLatin1(*(msg.itemParts().cbegin())));
         }
     }
 

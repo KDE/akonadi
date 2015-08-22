@@ -52,8 +52,8 @@ static inline bool canContainItems(const Collection &collection)
     }
 
     if ((collection.contentMimeTypes().count() == 1) &&
-            ((collection.contentMimeTypes().first() == Collection::mimeType()) ||
-             (collection.contentMimeTypes().first() == Collection::virtualMimeType()))) {
+            ((collection.contentMimeTypes().at(0) == Collection::mimeType()) ||
+             (collection.contentMimeTypes().at(0) == Collection::virtualMimeType()))) {
         return false;
     }
 
