@@ -913,6 +913,7 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ChangeNotification &m
         }
     }
 
+    its.reserve(its.size() + msgEntities.size());
     // Now reconstruct any items there were left in msgItems
     Q_FOREACH (const Protocol::ChangeNotification::Entity &msgItem, msgEntities) {
         Item it(msgItem.id);

@@ -285,6 +285,7 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchSco
 {
     Protocol::FetchScope fs;
     QVector<QByteArray> parts;
+    parts.reserve(fetchScope.payloadParts().size() + fetchScope.attributes().size());
     Q_FOREACH (const QByteArray &part, fetchScope.payloadParts()) {
         parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part);
     }

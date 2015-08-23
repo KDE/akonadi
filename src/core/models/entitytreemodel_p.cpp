@@ -1776,6 +1776,7 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem(const Item &item) const
 
     const Collection::List collections = getParentCollections(item);
 
+    indexes.reserve(collections.size());
     foreach (const Collection &collection, collections) {
         const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
         Q_ASSERT(row >= 0);
@@ -1864,6 +1865,7 @@ void EntityTreeModelPrivate::fillModel()
         emit q_ptr->collectionTreeFetched(collections);     // there are no collections to fetch
 
         Item::List items;
+        items.reserve(m_monitor->itemsMonitoredEx().size());
         foreach (Entity::Id id, m_monitor->itemsMonitoredEx()) {
             items.append(Item(id));
         }
