@@ -120,11 +120,9 @@ void EntityDeletedAttribute::deserialize(const QByteArray &data)
         }
         QList<int> components;
         bool ok;
-        for (int i = 0; i < 1; ++i) {
-            components << componentData.at(i).toInt(&ok);
-            if (!ok) {
-                return;
-            }
+        components << componentData.at(0).toInt(&ok);
+        if (!ok) {
+            return;
         }
         d->restoreCollection = Collection(components.at(0));
     }
