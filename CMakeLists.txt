@@ -3,7 +3,7 @@ project(Akonadi)
 cmake_minimum_required(VERSION 2.8.12)
 
 # ECM setup
-find_package(ECM 5.12.0 CONFIG REQUIRED)
+find_package(ECM 5.14.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 include(GenerateExportHeader)
@@ -15,6 +15,7 @@ include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
 include(CheckIncludeFiles)
+include(ECMQtDeclareLoggingCategory)
 
 include(AkonadiMacros)
 

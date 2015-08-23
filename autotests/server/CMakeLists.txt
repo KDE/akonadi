@@ -31,9 +31,9 @@ set(common_SRCS
     fakeakonadiserver.cpp
     fakesearchmanager.cpp
     dbinitializer.cpp
-    ${Akonadi_SOURCE_DIR}/src/server/akonadiserver_debug.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
 )
+ecm_qt_declare_logging_category(common_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME log_akonadiserver)
 
 add_library(akonadi_unittest_common STATIC ${common_SRCS})
 target_link_libraries(akonadi_unittest_common
