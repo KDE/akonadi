@@ -24,7 +24,7 @@
 #include "servermanager.h"
 #include "servermanager_p.h"
 
-#include <akonadi/private/akstandarddirs_p.h>
+#include <akonadi/private/standarddirs_p.h>
 #include <akonadi/private/protocol_p.h>
 
 #include <QUrl>
