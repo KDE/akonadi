@@ -35,7 +35,7 @@
 #include "session_p.h"
 #include "statusadaptor.h"
 
-#include <akonadi/private/akstandarddirs_p.h>
+#include <akonadi/private/standarddirs_p.h>
 
 #include "akonadiagentbase_debug.h"
 
