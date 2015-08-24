@@ -15,6 +15,7 @@ include(FeatureSummary)
 include(KDEInstallDirs)
 include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings)
+include(ECMQtDeclareLoggingCategory)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "5.12.0")
