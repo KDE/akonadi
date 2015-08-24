@@ -50,7 +50,7 @@
 #include <QMessageBox>
 #include <QtGui/QIcon>
 
-QMap<KJob *, QTime> jobTimeTracker;
+QHash<KJob *, QTime> jobTimeTracker;
 
 Q_LOGGING_CATEGORY(DebugETM, "org.kde.akonadi.ETM")
 
