@@ -24,7 +24,7 @@
 #include "servermanager.h"
 #include "servermanager_p.h"
 
-#include <akonadi/private/xdgbasedirs_p.h>
+#include <akonadi/private/akstandarddirs_p.h>
 #include <akonadi/private/protocol_p.h>
 
 #include <QUrl>
@@ -170,7 +170,7 @@ void SelfTestDialog::runTests()
 
 QVariant SelfTestDialog::serverSetting(const QString &group, const char *key, const QVariant &def) const
 {
-    const QString serverConfigFile = XdgBaseDirs::akonadiServerConfigFile(XdgBaseDirs::ReadWrite);
+    const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadOnly);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
     settings.beginGroup(group);
     return settings.value(QString::fromLatin1(key), def);
@@ -217,7 +217,7 @@ void SelfTestDialog::testSQLDriver()
     } else {
         item = report(Error, ki18n("Database driver not found."), detailsFail);
     }
-    item->setData(XdgBaseDirs::akonadiServerConfigFile(XdgBaseDirs::ReadWrite), FileIncludeRole);
+    item->setData(StandardDirs::serverConfigFile(XdgBaseDirs::ReadOnly), FileIncludeRole);
 }
 
 void SelfTestDialog::testMySQLServer()
@@ -269,8 +269,8 @@ void SelfTestDialog::testMySQLServerLog()
         return;
     }
 
-    const QString logFileName = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi/db_data"))
-                                + QDir::separator() + QLatin1String("mysql.err");
+    const QString logFileName = StandardDirs::saveDir("data", QStringLiteral("db_data"))
+                                    + QDir::separator() + QLatin1String("mysql.err");
     const QFileInfo logFileInfo(logFileName);
     if (!logFileInfo.exists() || logFileInfo.size() == 0) {
         report(Success, ki18n("No current MySQL error log found."),
@@ -348,7 +348,7 @@ void SelfTestDialog::testMySQLServerConfig()
                      "Check your access rights.").subs(makeLink(localConfig)));
     }
 
-    const QString actualConfig = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi")) + QStringLiteral("/mysql.conf");
+    const QString actualConfig = StandardDirs::saveDir("data") + QStringLiteral("/mysql.conf");
     const QFileInfo actualConfigInfo(actualConfig);
     if (actualConfig.isEmpty() || !actualConfigInfo.exists() || !actualConfigInfo.isReadable()) {
         report(Error, ki18n("MySQL server configuration not found or not readable."),
@@ -492,8 +492,7 @@ void SelfTestDialog::testResources()
 
 void SelfTestDialog::testServerLog()
 {
-    QString serverLog = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"))
-                        + QDir::separator() + QLatin1String("akonadiserver.error");
+    QString serverLog = StandardDirs::saveDir("data") + QDir::separator() + QLatin1String("akonadiserver.error");
     QFileInfo info(serverLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No current Akonadi server error log found."),
@@ -518,8 +517,7 @@ void SelfTestDialog::testServerLog()
 
 void SelfTestDialog::testControlLog()
 {
-    QString controlLog = XdgBaseDirs::saveDir("data", QStringLiteral("akonadi"))
-                         + QDir::separator() + QLatin1String("akonadi_control.error");
+    QString controlLog = StandardDirs::saveDir("data") + QDir::separator() + QLatin1String("akonadi_control.error");
     QFileInfo info(controlLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No current Akonadi control error log found."),

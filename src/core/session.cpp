@@ -26,7 +26,7 @@
 #include "servermanager_p.h"
 #include "protocolhelper_p.h"
 #include "connectionthread_p.h"
-#include <akonadi/private/xdgbasedirs_p.h>
+#include <akonadi/private/standarddirs_p.h>
 #include <akonadi/private/protocol_p.h>
 
 #include <QDebug>
@@ -67,7 +67,7 @@ void SessionPrivate::reconnect()
 
 QString SessionPrivate::connectionFile()
 {
-    return Internal::xdgSaveDir("config") + QStringLiteral("/akonadiconnectionrc");
+    return StandardDirs::saveDir("config") + QStringLiteral("/akonadiconnectionrc");
 }
 
 void SessionPrivate::socketError(const QString &error)

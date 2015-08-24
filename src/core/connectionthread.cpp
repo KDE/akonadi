@@ -34,6 +34,7 @@
 
 #include <akonadi/private/xdgbasedirs_p.h>
 #include <akonadi/private/protocol_exception_p.h>
+#include <akonadi/private/standarddirs_p.h>
 
 using namespace Akonadi;
 
@@ -129,7 +130,7 @@ void ConnectionThread::doReconnect()
         }
         const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
 
-        const QString defaultSocketDir = Internal::xdgSaveDir("data");
+        const QString defaultSocketDir = StandardDirs::saveDir("data");
         serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), QString(defaultSocketDir + QStringLiteral("/akonadiserver.socket"))).toString();
     }
 

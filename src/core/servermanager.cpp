@@ -351,9 +351,4 @@ void Internal::setClientType(ClientType type)
     ServerManagerPrivate::clientType = type;
 }
 
-QString Internal::xdgSaveDir(const char *resource, const QString &relPath)
-{
-    return StandardDirs::saveDir(resource, relPath);
-}
-
 #include "moc_servermanager.cpp"

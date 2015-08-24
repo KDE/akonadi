@@ -41,11 +41,6 @@ enum ClientType {
 AKONADICORE_EXPORT ClientType clientType();
 AKONADICORE_EXPORT void setClientType(ClientType type);
 
-/** Multi-instance aware wrapper around XdgBaseDirs::saveDir.
-* @note: Does not need to include the "akonadi/" in @p relPath.
-*/
-AKONADICORE_EXPORT QString xdgSaveDir(const char *resource, const QString &relPath = QString());
-
 }
 
 }
