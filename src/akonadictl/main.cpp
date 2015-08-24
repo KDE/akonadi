@@ -25,12 +25,9 @@
 #include <QtCore/QSettings>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusReply>
 
 #include <shared/akapplication.h>
 #include <shared/akdebug.h>
-
 
 #include "controlmanagerinterface.h"
 #include "akonadistarter.h"
@@ -47,11 +44,13 @@
 #include <Windows.h>
 #endif
 
+#include <iostream>
+
 static bool startServer()
 {
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control))
         || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
-        qWarning() << "Akonadi is already running.";
+        std::cerr << "Akonadi is already running." << std::endl;
         return false;
     }
     AkonadiStarter starter;
@@ -64,7 +63,7 @@ static bool stopServer()
                                                     QStringLiteral("/ControlManager"),
                                                     QDBusConnection::sessionBus(), 0);
     if (!iface.isValid()) {
-        qWarning() << "Akonadi is not running.";
+        std::cerr << "Akonadi is not running." << std::endl;
         return false;
     }
 
@@ -76,14 +75,14 @@ static bool stopServer()
 static bool checkAkonadiControlStatus()
 {
     const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control));
-    fprintf(stderr, "Akonadi Control: %s\n", registered ? "running" : "stopped");
+    std::cerr << "Akonadi Control: " << (registered ? "running" : "stopped") << std::endl;
     return registered;
 }
 
 static bool checkAkonadiServerStatus()
 {
     const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server));
-    fprintf(stderr, "Akonadi Server: %s\n", registered ? "running" : "stopped");
+    std::cerr << "Akonadi Server: " << (registered ? "running" : "stopped") << std::endl;
     return registered;
 }
 
@@ -116,7 +115,7 @@ static bool checkSearchSupportStatus()
     }
 
     // There's always at least server-search available
-    fprintf(stderr, "Akonadi Server Search Support: available (%s)\n", qPrintable(searchMethods.join(QStringLiteral(", "))));
+    std::cerr << "Akonadi Server Search Support: available (" << searchMethods.join(QStringLiteral(", ")).toStdString() << ")" << std::endl;
     return true;
 }
 
@@ -138,11 +137,11 @@ static bool checkAvailableAgentTypes()
     types.removeDuplicates();
     types.sort();
 
-    fprintf(stderr, "Available Agent Types: ");
+    std::cerr << "Available Agent Types: ";
     if (types.isEmpty()) {
-        fprintf(stderr, "No agent types found! \n");
+        std::cerr << "No agent types found!" << std::endl;
     } else {
-        fprintf(stderr, "%s\n", qPrintable(types.join(QStringLiteral(", "))));
+        std::cerr << types.join(QStringLiteral(", ")).toStdString() << std::endl;
     }
 
     return true;
