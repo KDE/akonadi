@@ -35,7 +35,7 @@ class StorageJanitorThread : public QThread
 public:
     explicit StorageJanitorThread(QObject *parent = 0);
 protected:
-    virtual void run();
+    void run();
 };
 
 /**

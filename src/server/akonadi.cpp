@@ -72,8 +72,8 @@ AkonadiServer *AkonadiServer::s_instance = 0;
 
 AkonadiServer::AkonadiServer(QObject *parent)
     : QLocalServer(parent)
-    , mCacheCleaner(0)
-    , mIntervalChecker(0)
+    , mCacheCleanerThread(0)
+    , mIntervalCheckerThread(0)
     , mStorageJanitor(0)
     , mItemRetrievalThread(0)
     , mAgentSearchManagerThread(0)
@@ -188,12 +188,12 @@ bool AkonadiServer::init()
     }
 
     if (settings.value(QStringLiteral("Cache/EnableCleaner"), true).toBool()) {
-        mCacheCleaner = new CacheCleaner(this);
-        mCacheCleaner->start(QThread::IdlePriority);
+        mCacheCleanerThread = new CollectionSchedulerThread<CacheCleaner>(this);
+        mCacheCleanerThread->start(QThread::IdlePriority);
     }
 
-    mIntervalChecker = new IntervalCheck(this);
-    mIntervalChecker->start(QThread::IdlePriority);
+    mIntervalCheckerThread = new CollectionSchedulerThread<IntervalCheck>(this);
+    mIntervalCheckerThread->start(QThread::IdlePriority);
 
     mStorageJanitor = new StorageJanitorThread;
     mStorageJanitor->start(QThread::IdlePriority);
@@ -267,8 +267,8 @@ bool AkonadiServer::quit()
     mAlreadyShutdown = true;
 
     akDebug() << "terminating service threads";
-    quitThread(mCacheCleaner);
-    quitThread(mIntervalChecker);
+    quitThread(mCacheCleanerThread);
+    quitThread(mIntervalCheckerThread);
     quitThread(mStorageJanitor);
     quitThread(mItemRetrievalThread);
     mAgentSearchManagerThread->stop();
@@ -403,10 +403,10 @@ void AkonadiServer::serviceOwnerChanged(const QString &name, const QString &oldO
 
 CacheCleaner *AkonadiServer::cacheCleaner()
 {
-    return mCacheCleaner;
+    return mCacheCleanerThread->scheduler();
 }
 
 IntervalCheck *AkonadiServer::intervalChecker()
 {
-    return mIntervalChecker;
+    return mIntervalCheckerThread->scheduler();
 }

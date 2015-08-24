@@ -33,7 +33,33 @@ namespace Server {
 class Collection;
 class PauseableTimer;
 
-class CollectionScheduler : public QThread
+template<typename T>
+class CollectionSchedulerThread : public QThread
+{
+public:
+    explicit CollectionSchedulerThread(QObject *parent = Q_NULLPTR)
+        : QThread(parent)
+    {
+        mScheduler = new T();
+        mScheduler->moveToThread(this);
+    }
+
+    ~CollectionSchedulerThread()
+    {
+        delete mScheduler;
+    }
+
+    T *scheduler() const
+    {
+        return mScheduler;
+    }
+
+private:
+    T *mScheduler;
+};
+
+
+class CollectionScheduler : public QObject
 {
     Q_OBJECT
 
@@ -56,8 +82,6 @@ public:
     int minimumInterval() const;
 
 protected:
-    virtual void run();
-
     virtual bool shouldScheduleCollection(const Collection &collection) = 0;
     virtual bool hasChanged(const Collection &collection, const Collection &changed) = 0;
     /**

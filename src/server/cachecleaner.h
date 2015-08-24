@@ -55,8 +55,8 @@ private:
 };
 
 /**
-  Cache cleaner thread.
-*/
+  Cache cleaner.
+ */
 class CacheCleaner : public CollectionScheduler
 {
     Q_OBJECT

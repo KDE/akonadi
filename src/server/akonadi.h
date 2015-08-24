@@ -31,12 +31,14 @@ namespace Akonadi {
 namespace Server {
 
 class ConnectionThread;
-class CacheCleaner;
 class SearchManagerThread;
 class ItemRetrievalThread;
 class SearchTaskManagerThread;
 class StorageJanitorThread;
+class CacheCleaner;
 class IntervalCheck;
+template<typename T>
+class CollectionSchedulerThread;
 
 class AkonadiServer : public QLocalServer
 {
@@ -80,8 +82,8 @@ private:
 protected:
     AkonadiServer(QObject *parent = 0);
 
-    CacheCleaner *mCacheCleaner;
-    IntervalCheck *mIntervalChecker;
+    CollectionSchedulerThread<CacheCleaner> *mCacheCleanerThread;
+    CollectionSchedulerThread<IntervalCheck> *mIntervalCheckerThread;
     StorageJanitorThread *mStorageJanitor;
     ItemRetrievalThread *mItemRetrievalThread;
     SearchTaskManagerThread *mAgentSearchManagerThread;

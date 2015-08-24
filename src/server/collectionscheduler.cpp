@@ -109,30 +109,18 @@ private:
 using namespace Akonadi::Server;
 
 CollectionScheduler::CollectionScheduler(QObject *parent)
-    : QThread(parent)
+    : QObject(parent)
     , mMinInterval(5)
 {
     // make sure we are created from the main thread, ie. before all other threads start to potentially use us
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 
-    mScheduler = new PauseableTimer(this);
-    mScheduler->setSingleShot(true);
-    connect(mScheduler, SIGNAL(timeout()),
-            this, SLOT(schedulerTimeout()));
+    QMetaObject::invokeMethod(this, "initScheduler", Qt::QueuedConnection);
 }
 
 CollectionScheduler::~CollectionScheduler()
 {
-}
-
-void CollectionScheduler::run()
-{
-    DataStore::self();
-
-    QTimer::singleShot(0, this, SLOT(initScheduler()));
-    exec();
-
-    DataStore::self()->close();
+    delete mScheduler;
 }
 
 void CollectionScheduler::inhibit(bool inhibit)
@@ -140,9 +128,11 @@ void CollectionScheduler::inhibit(bool inhibit)
     if (inhibit && mScheduler->isActive() && !mScheduler->isPaused()) {
         const bool success = QMetaObject::invokeMethod(mScheduler, "pause", Qt::QueuedConnection);
         Q_ASSERT(success);
+        Q_UNUSED(success);
     } else if (!inhibit && mScheduler->isPaused()) {
         const bool success = QMetaObject::invokeMethod(mScheduler, "resume", Qt::QueuedConnection);
         Q_ASSERT(success);
+        Q_UNUSED(success);
     }
 }
 
@@ -276,6 +266,11 @@ void CollectionScheduler::scheduleCollection(Collection collection, bool shouldS
 
 void CollectionScheduler::initScheduler()
 {
+    mScheduler = new PauseableTimer();
+    mScheduler->setSingleShot(true);
+    connect(mScheduler, SIGNAL(timeout()),
+            this, SLOT(schedulerTimeout()));
+
     // Only retrieve enabled collections and referenced collections, we don't care
     // about anything else
     SelectQueryBuilder<Collection> qb;
