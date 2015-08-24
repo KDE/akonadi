@@ -21,7 +21,7 @@
 #define STORAGEJANITOR_H
 
 #include <QThread>
-#include <qdbusmacros.h>
+
 #include <QtDBus/QDBusConnection>
 
 namespace Akonadi {
@@ -45,6 +45,7 @@ class StorageJanitor : public QObject
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.Janitor")
+
 public:
     explicit StorageJanitor(QObject *parent = 0);
     ~StorageJanitor();
@@ -58,6 +59,7 @@ public Q_SLOTS:
 Q_SIGNALS:
     /** Sends informational messages to a possible UI for this. */
     Q_SCRIPTABLE void information(const QString &msg);
+    Q_SCRIPTABLE void done();
 
 private:
     void inform(const char *msg);

@@ -30,6 +30,7 @@
 #include <shared/akdebug.h>
 
 #include "controlmanagerinterface.h"
+#include "janitorinterface.h"
 #include "akonadistarter.h"
 #include <QSettings>
 
@@ -156,6 +157,23 @@ static bool statusServer()
     return true;
 }
 
+static void runJanitor(const QString &operation)
+{
+    org::freedesktop::Akonadi::Janitor janitor(Akonadi::DBus::serviceName(Akonadi::DBus::StorageJanitor),
+                                               QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH),
+                                               QDBusConnection::sessionBus());
+    QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::information,
+                        [](const QString &msg) {
+                            std::cerr << msg.toStdString() << std::endl;
+                        });
+    QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::done,
+                     []() {
+                         qApp->exit();
+                     });
+    janitor.asyncCall(operation);
+    qApp->exec();
+}
+
 int main(int argc, char **argv)
 {
     AkCoreApplication app(argc, argv);
@@ -212,11 +230,9 @@ int main(int argc, char **argv)
             }
         }
     } else if (command == QLatin1String("vacuum")) {
-        QDBusInterface iface(Akonadi::DBus::serviceName(Akonadi::DBus::StorageJanitor), QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH));
-        iface.call(QDBus::NoBlock, QStringLiteral("vacuum"));
+        runJanitor(QStringLiteral("vacuum"));
     } else if (command == QLatin1String("fsck")) {
-        QDBusInterface iface(Akonadi::DBus::serviceName(Akonadi::DBus::StorageJanitor), QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH));
-        iface.call(QDBus::NoBlock, QStringLiteral("check"));
+        runJanitor(QStringLiteral("check"));
     }
     return 0;
 }

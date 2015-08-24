@@ -1,0 +1,15 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.Akonadi.Janitor">
+    <method name="check">
+    </method>
+    <method name="vacuum">
+    </method>
+
+    <signal name="information">
+        <arg name="msg" type="s" direction="out" />
+    </signal>
+    <signal name="done">
+    </signal>
+  </interface>
+</node>

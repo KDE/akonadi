@@ -9,6 +9,7 @@ set(akonadictl_SRCS
 
 qt5_add_dbus_interfaces(akonadictl_SRCS
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml
+    ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Janitor.xml
 )
 
 add_executable(akonadictl ${akonadictl_SRCS})

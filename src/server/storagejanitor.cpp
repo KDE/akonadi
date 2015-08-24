@@ -130,6 +130,8 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
      */
 
     inform("Consistency check done.");
+
+    Q_EMIT done();
 }
 
 qint64 StorageJanitor::lostAndFoundCollection()
@@ -510,6 +512,8 @@ void StorageJanitor::vacuum()
     } else {
         inform("Vacuum not supported for this database backend.");
     }
+
+    Q_EMIT done();
 }
 
 void StorageJanitor::checkSizeTreshold()
