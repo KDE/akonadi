@@ -1,5 +1,4 @@
 set(akonadiagentbase_SRCS
-    akonadiagentbase_debug.cpp
     agentbase.cpp
     agentsearchinterface.cpp
     preprocessorbase.cpp
@@ -10,6 +9,8 @@ set(akonadiagentbase_SRCS
     resourcesettings.cpp
     transportresourcebase.cpp
 )
+
+ecm_qt_declare_logging_category(akonadiagentbase_SRCS HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME akonadiagentbase_log)
 
 ecm_generate_headers(AkonadiAgentBase_HEADERS
     HEADER_NAMES

@@ -1,5 +1,4 @@
 set(akonadiwidgets_SRCS
-    akonadiwidgets_debug.cpp
     actionstatemanager.cpp
     agentactionmanager.cpp
     agentinstancewidget.cpp
@@ -34,6 +33,8 @@ set(akonadiwidgets_SRCS
     tagwidget.cpp
     tagselectwidget.cpp
 )
+
+ecm_qt_declare_logging_category(akonadiwidgets_SRCS HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME akonadiwidgets_log)
 
 set(akonadiwidgets_UI
     cachepolicypage.ui
