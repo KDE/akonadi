@@ -347,6 +347,7 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mPowerInterface(0)
     , mTemporaryOfflineTimer(0)
     , mEventLoopLocker(0)
+    , mNetworkManager(Q_NULLPTR)
 {
     Internal::setClientType(Internal::Agent);
 }
