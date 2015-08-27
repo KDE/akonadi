@@ -253,9 +253,10 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
         statusMessage.append(QStringLiteral(" (%1%)").arg(progress));
     }
 
+    const QPixmap iconPixmap = icon.pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop));
     QRect innerRect = option.rect.adjusted(s_delegatePaddingSize, s_delegatePaddingSize, -s_delegatePaddingSize, -s_delegatePaddingSize);   //add some padding round entire delegate
 
-    const QSize decorationSize(KIconLoader::global()->currentSize(KIconLoader::Desktop), KIconLoader::global()->currentSize(KIconLoader::Desktop));
+    const QSize decorationSize = iconPixmap.size();
     const QSize statusIconSize = QSize(16, 16); //= KIconLoader::global()->currentSize(KIconLoader::Small);
 
     QFont nameFont = option.font;
@@ -266,7 +267,6 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     const QRect nameTextRect(decorationRect.topRight() + QPoint(4, 0), innerRect.topRight() + QPoint(0, innerRect.height() / 2));
     const QRect statusTextRect(decorationRect.bottomRight() + QPoint(4, - innerRect.height() / 2), innerRect.bottomRight());
 
-    const QPixmap iconPixmap = icon.pixmap(decorationSize);
 
     QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
     if (cg == QPalette::Normal && !(option.state & QStyle::State_Active)) {
