@@ -403,10 +403,18 @@ void AkonadiServer::serviceOwnerChanged(const QString &name, const QString &oldO
 
 CacheCleaner *AkonadiServer::cacheCleaner()
 {
-    return mCacheCleanerThread->scheduler();
+    if (mCacheCleanerThread) {
+        return mCacheCleanerThread->scheduler();
+    }
+
+    return Q_NULLPTR;
 }
 
 IntervalCheck *AkonadiServer::intervalChecker()
 {
-    return mIntervalCheckerThread->scheduler();
+    if (mIntervalCheckerThread) {
+        return mIntervalCheckerThread->scheduler();
+    }
+
+    return Q_NULLPTR;
 }
