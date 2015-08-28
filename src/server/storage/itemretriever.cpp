@@ -132,9 +132,9 @@ enum QueryColumns {
     PimItemIdColumn,
     PimItemRidColumn,
 
-    MimeTypeColumn,
+    MimeTypeIdColumn,
 
-    ResourceColumn,
+    ResourceIdColumn,
 
     PartTypeNameColumn,
     PartDatasizeColumn
@@ -145,11 +145,7 @@ QSqlQuery ItemRetriever::buildQuery() const
 {
     QueryBuilder qb(PimItem::tableName());
 
-    qb.addJoin(QueryBuilder::InnerJoin, MimeType::tableName(), PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName());
-
     qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
-
-    qb.addJoin(QueryBuilder::InnerJoin, Resource::tableName(), Collection::resourceIdFullColumnName(), Resource::idFullColumnName());
 
     qb.addJoin(QueryBuilder::LeftJoin, Part::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName());
 
@@ -163,8 +159,8 @@ QSqlQuery ItemRetriever::buildQuery() const
 
     qb.addColumn(PimItem::idFullColumnName());
     qb.addColumn(PimItem::remoteIdFullColumnName());
-    qb.addColumn(MimeType::nameFullColumnName());
-    qb.addColumn(Resource::nameFullColumnName());
+    qb.addColumn(PimItem::mimeTypeIdFullColumnName());
+    qb.addColumn(Collection::resourceIdFullColumnName());
     qb.addColumn(PartType::nameFullColumnName());
     qb.addColumn(Part::datasizeFullColumnName());
 
@@ -176,8 +172,10 @@ QSqlQuery ItemRetriever::buildQuery() const
 
     // prevent a resource to trigger item retrieval from itself
     if (mConnection) {
-        qb.addValueCondition(Resource::nameFullColumnName(), Query::NotEquals,
-                             QString::fromLatin1(mConnection->sessionId()));
+        const Resource res = Resource::retrieveByName(QString::fromUtf8(mConnection->sessionId()));
+        if (res.isValid()) {
+            qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::NotEquals, res.id());
+        }
     }
 
     if (mChangedSince.isValid()) {
@@ -216,14 +214,26 @@ bool ItemRetriever::exec()
         }
     }
 
+    QHash<qint64, QString> mimeTypeIdNameCache;
+    QHash<qint64, QString> resourceIdNameCache;
     while (query.isValid()) {
         const qint64 pimItemId = query.value(PimItemIdColumn).toLongLong();
         if (!lastRequest || lastRequest->id != pimItemId) {
             lastRequest = new ItemRetrievalRequest();
             lastRequest->id = pimItemId;
             lastRequest->remoteId = Utils::variantToString(query.value(PimItemRidColumn));
-            lastRequest->mimeType = Utils::variantToString(query.value(MimeTypeColumn));
-            lastRequest->resourceId = Utils::variantToString(query.value(ResourceColumn));
+            const qint64 mtId = query.value(MimeTypeIdColumn).toLongLong();
+            auto mtIter = mimeTypeIdNameCache.find(mtId);
+            if (mtIter == mimeTypeIdNameCache.end()) {
+                mtIter = mimeTypeIdNameCache.insert(mtId, MimeType::retrieveById(mtId).name());
+            }
+            lastRequest->mimeType = *mtIter;
+            const qint64 resourceId = query.value(ResourceIdColumn).toLongLong();
+            auto resIter = resourceIdNameCache.find(resourceId);
+            if (resIter == resourceIdNameCache.end()) {
+                resIter = resourceIdNameCache.insert(resourceId, Resource::retrieveById(resourceId).name());
+            }
+            lastRequest->resourceId = *resIter;
             lastRequest->parts = parts;
             requests << lastRequest;
         }
