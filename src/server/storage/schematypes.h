@@ -112,6 +112,16 @@ public:
     QString firstColumn;
     QString secondTable;
     QString secondColumn;
+    QVector<IndexDescription> indexes;
+};
+
+/**
+ * @short TableDescription constructed based on RelationDescription
+ */
+class RelationTableDescription : public TableDescription
+{
+public:
+    RelationTableDescription(const RelationDescription &relation);
 };
 
 } // namespace Server

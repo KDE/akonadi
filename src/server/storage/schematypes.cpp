@@ -60,3 +60,28 @@ int TableDescription::primaryKeyColumnCount() const
 RelationDescription::RelationDescription()
 {
 }
+
+RelationTableDescription::RelationTableDescription(const RelationDescription &relation)
+    : TableDescription()
+{
+    name = relation.firstTable + relation.secondTable + QStringLiteral("Relation");
+
+    columns.reserve(2);
+    ColumnDescription column;
+    column.type = QStringLiteral("qint64");
+    column.allowNull = false;
+    column.isPrimaryKey = true;
+    column.onUpdate = ColumnDescription::Cascade;
+    column.onDelete = ColumnDescription::Cascade;
+    column.name = relation.firstTable + QLatin1Char('_') + relation.firstColumn;
+    column.refTable = relation.firstTable;
+    column.refColumn = relation.firstColumn;
+    columns.push_back(column);
+
+    column.name = relation.secondTable + QLatin1Char('_') + relation.secondColumn;
+    column.refTable = relation.secondTable;
+    column.refColumn = relation.secondColumn;
+    columns.push_back(column);
+
+    indexes = relation.indexes;
+}

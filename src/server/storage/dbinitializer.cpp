@@ -216,31 +216,7 @@ void DbInitializer::checkIndexes(const TableDescription &tableDescription)
 
 bool DbInitializer::checkRelation(const RelationDescription &relationDescription)
 {
-    const QString relationTableName = relationDescription.firstTable +
-                                      relationDescription.secondTable +
-                                      QLatin1String("Relation");
-
-    // translate into a regular table and let checkTable() handle it
-    TableDescription table;
-    table.name = relationTableName;
-
-    ColumnDescription column;
-    column.type = QStringLiteral("qint64");
-    column.allowNull = false;
-    column.isPrimaryKey = true;
-    column.onUpdate = ColumnDescription::Cascade;
-    column.onDelete = ColumnDescription::Cascade;
-    column.name = relationDescription.firstTable + QLatin1Char('_') + relationDescription.firstColumn;
-    column.refTable = relationDescription.firstTable;
-    column.refColumn = relationDescription.firstColumn;
-    table.columns.push_back(column);
-
-    column.name = relationDescription.secondTable + QLatin1Char('_') + relationDescription.secondColumn;
-    column.refTable = relationDescription.secondTable;
-    column.refColumn = relationDescription.secondColumn;
-    table.columns.push_back(column);
-
-    return checkTable(table);
+    return checkTable(RelationTableDescription(relationDescription));
 }
 
 QString DbInitializer::errorMsg() const
@@ -259,6 +235,11 @@ bool DbInitializer::updateIndexesAndConstraints()
         // Make sure the foreign key constraints are all there
         checkForeignKeys(table);
         checkIndexes(table);
+    }
+    Q_FOREACH (const RelationDescription &relation, mSchema->relations()) {
+        RelationTableDescription relTable(relation);
+        checkForeignKeys(relTable);
+        checkIndexes(relTable);
     }
 
     try {

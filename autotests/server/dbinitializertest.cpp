@@ -117,9 +117,9 @@ void DbInitializerTest::testRun_data()
     fk.onDelete = QL1S("CASCADE");
     fks.push_back(fk);
 
-    QTest::newRow("mysql") << "QMYSQL" << ":dbinit_mysql_incremental" << true << fks << true;
-    QTest::newRow("sqlite") << "QSQLITE" << ":dbinit_sqlite_incremental" << true << fks << false;
-    QTest::newRow("psql") << "QPSQL" << ":dbinit_psql_incremental" << true << fks << true;
+    QTest::newRow("mysql (incremental)") << "QMYSQL" << ":dbinit_mysql_incremental" << true << fks << true;
+    QTest::newRow("sqlite (incremental)") << "QSQLITE" << ":dbinit_sqlite_incremental" << true << fks << false;
+    QTest::newRow("psql (incremental)") << "QPSQL" << ":dbinit_psql_incremental" << true << fks << true;
 }
 
 void DbInitializerTest::testRun()
