@@ -97,7 +97,6 @@ Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_T
 #include &lt;utils.h&gt;
 
 #include &lt;qsqldatabase.h&gt;
-#include &lt;QLatin1String&gt;
 #include &lt;qsqlquery.h&gt;
 #include &lt;qsqlerror.h&gt;
 #include &lt;qsqldriver.h&gt;
@@ -125,10 +124,10 @@ QVector&lt;QString&gt; Akonadi::Server::allDatabaseTables()
 {
   static const QVector&lt;QString&gt; allTables = QVector&lt;QString&gt;()
   <xsl:for-each select="database/table">
-    &lt;&lt; QLatin1String( "<xsl:value-of select="@name"/>Table" )
+    &lt;&lt; QStringLiteral( "<xsl:value-of select="@name"/>Table" )
   </xsl:for-each>
   <xsl:for-each select="database/relation">
-    &lt;&lt; QLatin1String( "<xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation" )
+    &lt;&lt; QStringLiteral( "<xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation" )
   </xsl:for-each>
   ;
   return allTables;

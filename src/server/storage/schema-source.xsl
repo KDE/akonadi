@@ -33,14 +33,14 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
   <xsl:for-each select="database/table">
   {
     TableDescription t;
-    t.name = QLatin1String("<xsl:value-of select="@name"/>Table");
+    t.name = QStringLiteral("<xsl:value-of select="@name"/>Table");
 
     t.columns.reserve(<xsl:value-of select="count(column)"/>);
     <xsl:for-each select="column">
     {
       ColumnDescription c;
-      c.name = QLatin1String("<xsl:value-of select="@name"/>");
-      c.type = QLatin1String("<xsl:value-of select="@type"/>");
+      c.name = QStringLiteral("<xsl:value-of select="@name"/>");
+      c.type = QStringLiteral("<xsl:value-of select="@type"/>");
       <xsl:if test="@size">
       c.size = <xsl:value-of select="@size"/>;
       </xsl:if>
@@ -57,13 +57,13 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
       c.isUnique = <xsl:value-of select="@isUnique"/>;
       </xsl:if>
       <xsl:if test="@refTable">
-      c.refTable = QLatin1String("<xsl:value-of select="@refTable"/>");
+      c.refTable = QStringLiteral("<xsl:value-of select="@refTable"/>");
       </xsl:if>
       <xsl:if test="@refColumn">
-      c.refColumn = QLatin1String("<xsl:value-of select="@refColumn"/>");
+      c.refColumn = QStringLiteral("<xsl:value-of select="@refColumn"/>");
       </xsl:if>
       <xsl:if test="@default">
-      c.defaultValue = QLatin1String("<xsl:value-of select="@default"/>");
+      c.defaultValue = QStringLiteral("<xsl:value-of select="@default"/>");
       </xsl:if>
       <xsl:if test="@onUpdate">
       c.onUpdate = ColumnDescription::<xsl:value-of select="@onUpdate"/>;
@@ -91,8 +91,8 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
       t.data.reserve(<xsl:value-of select="count(data)"/>);
       <xsl:for-each select="data">
       {
-        const QStringList columns = QString::fromLatin1("<xsl:value-of select="@columns"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
-        const QStringList values = QString::fromLatin1("<xsl:value-of select="@values"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+        const QStringList columns = QStringLiteral("<xsl:value-of select="@columns"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+        const QStringList values = QStringLiteral("<xsl:value-of select="@values"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
 
         Q_ASSERT( columns.count() == values.count() );
 
@@ -118,10 +118,10 @@ QVector&lt;RelationDescription&gt; <xsl:value-of select="$className"/>::relation
   <xsl:for-each select="database/relation">
   {
     RelationDescription r;
-    r.firstTable = QLatin1String("<xsl:value-of select="@table1"/>");
-    r.firstColumn = QLatin1String("<xsl:value-of select="@column1"/>");
-    r.secondTable = QLatin1String("<xsl:value-of select="@table2"/>");
-    r.secondColumn = QLatin1String("<xsl:value-of select="@column2"/>");
+    r.firstTable = QStringLiteral("<xsl:value-of select="@table1"/>");
+    r.firstColumn = QStringLiteral("<xsl:value-of select="@column1"/>");
+    r.secondTable = QStringLiteral("<xsl:value-of select="@table2"/>");
+    r.secondColumn = QStringLiteral("<xsl:value-of select="@column2"/>");
 
     <xsl:if test="count(index) > 0">
       <xsl:call-template name="indexes">

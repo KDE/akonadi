@@ -224,7 +224,7 @@ void <xsl:value-of select="$className"/>::<xsl:call-template name="setter-signat
 // SQL table information
 <xsl:text>QString </xsl:text><xsl:value-of select="$className"/>::tableName()
 {
-  static const QString tableName = QLatin1String( "<xsl:value-of select="$tableName"/>" );
+  static const QString tableName = QStringLiteral( "<xsl:value-of select="$tableName"/>" );
   return tableName;
 }
 
@@ -251,13 +251,13 @@ QStringList <xsl:value-of select="$className"/>::fullColumnNames()
 <xsl:for-each select="column">
 QString <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>Column()
 {
-  static const QString column = QLatin1String( "<xsl:value-of select="@name"/>" );
+  static const QString column = QStringLiteral( "<xsl:value-of select="@name"/>" );
   return column;
 }
 
 QString <xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>FullColumnName()
 {
-  static const QString column = QLatin1String( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@name"/>" );
+  static const QString column = QStringLiteral( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@name"/>" );
   return column;
 }
 </xsl:for-each>
@@ -679,31 +679,31 @@ void <xsl:value-of select="$className"/>::enableCache( bool enable )
 // SQL table information
 QString <xsl:value-of select="$className"/>::tableName()
 {
-  static const QString table = QLatin1String( "<xsl:value-of select="$tableName"/>" );
+  static const QString table = QStringLiteral( "<xsl:value-of select="$tableName"/>" );
   return table;
 }
 
 QString <xsl:value-of select="$className"/>::leftColumn()
 {
-  static const QString column = QLatin1String( "<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>" );
+  static const QString column = QStringLiteral( "<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>" );
   return column;
 }
 
 QString <xsl:value-of select="$className"/>::leftFullColumnName()
 {
-  static const QString column = QLatin1String( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>" );
+  static const QString column = QStringLiteral( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@table1"/>_<xsl:value-of select="@column1"/>" );
   return column;
 }
 
 QString <xsl:value-of select="$className"/>::rightColumn()
 {
-  static const QString column = QLatin1String( "<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>" );
+  static const QString column = QStringLiteral( "<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>" );
   return column;
 }
 
 QString <xsl:value-of select="$className"/>::rightFullColumnName()
 {
-  static const QString column = QLatin1String( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>" );
+  static const QString column = QStringLiteral( "<xsl:value-of select="$tableName"/>.<xsl:value-of select="@table2"/>_<xsl:value-of select="@column2"/>" );
   return column;
 }
 </xsl:template>
