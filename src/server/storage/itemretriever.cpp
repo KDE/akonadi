@@ -140,6 +140,7 @@ enum QueryColumns {
     PartDatasizeColumn
 };
 
+
 QSqlQuery ItemRetriever::buildQuery() const
 {
     QueryBuilder qb(PimItem::tableName());

@@ -333,11 +333,23 @@ QString DbInitializer::buildAddColumnStatement(const TableDescription &tableDesc
 QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDescription, const IndexDescription &indexDescription) const
 {
     const QString indexName = QStringLiteral("%1_%2").arg(tableDescription.name).arg(indexDescription.name);
+    QStringList columns;
+    if (indexDescription.sort.isEmpty()) {
+        columns = indexDescription.columns;
+    } else {
+        columns.reserve(indexDescription.columns.count());
+        std::transform(indexDescription.columns.cbegin(), indexDescription.columns.cend(),
+                       std::back_insert_iterator<QStringList>(columns),
+                       [&indexDescription](const QString &column) {
+                            return QStringLiteral("%1 %2").arg(column, indexDescription.sort);
+                       });
+    }
+
     return QStringLiteral("CREATE %1 INDEX %2 ON %3 (%4)")
            .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString())
            .arg(indexName)
            .arg(tableDescription.name)
-           .arg(indexDescription.columns.join(QStringLiteral(",")));
+           .arg(columns.join(QStringLiteral(",")));
 }
 
 QString DbInitializer::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const

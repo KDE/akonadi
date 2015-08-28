@@ -66,7 +66,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
-    <data columns="version" values="30"/>
+    <data columns="version" values="31"/>
   </table>
 
   <table name="Resource">
@@ -136,6 +136,7 @@
     <index name="collectionIndex" columns="collectionId" unique="false"/>
     <index name="gidIndex" columns="gid" unique="false"/>
     <index name="ridIndex" columns="remoteId" unique="false"/>
+    <index name="idSortIndex" columns="id" unique="false" sort="DESC"/>
     <reference name="parts" table="Part" key="pimItemId"/>
   </table>
 
@@ -166,6 +167,7 @@
     <column name="version" type="int" default="0"/>
     <column name="external" type="bool" default="false" />
     <index name="pimItemIdTypeIndex" columns="pimItemId,partTypeId" unique="true"/>
+    <index name="pimItemIdSortIndex" columns="pimItemId" unique="false" sort="DESC"/>
   </table>
 
   <table name="CollectionAttribute">
@@ -218,7 +220,9 @@
     <index name="RelationIndex" columns="leftId,rightId,typeId" unique="true"/>
   </table>
 
-  <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
+  <relation table1="PimItem" column1="id" table2="Flag" column2="id">
+    <index name="pimItemIdSortIndex" columns="pimitem_id" unique="false" sort="DESC"/>
+  </relation>
 
   <relation table1="PimItem" column1="id" table2="Tag" column2="id"/>
 

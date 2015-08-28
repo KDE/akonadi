@@ -69,6 +69,7 @@ public:
     QString name;
     QStringList columns;
     bool isUnique;
+    QString sort;
 };
 
 /**

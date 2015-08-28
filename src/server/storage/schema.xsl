@@ -31,6 +31,28 @@
 <!-- name of the generated file -->
 <xsl:param name="fileName">schema</xsl:param>
 
+<xsl:template name="indexes">
+  <xsl:param name="var"/>
+  <xsl:value-of select="$var"></xsl:value-of>.indexes.reserve(<xsl:value-of select="count(index)"/>);
+  <xsl:for-each select="index">
+    {
+      IndexDescription idx;
+      idx.name = QLatin1String("<xsl:value-of select="@name"/>");
+      idx.columns = QString::fromLatin1("<xsl:value-of select="@columns"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+      <xsl:if test="@unique">
+      idx.isUnique = <xsl:value-of select="@unique"/>;
+      </xsl:if>
+      <xsl:if test="@sort">
+      idx.sort = QStringLiteral("<xsl:value-of select="@sort"/>");
+      </xsl:if>
+
+      <xsl:value-of select="$var"></xsl:value-of>.indexes.push_back(idx);
+    }
+  </xsl:for-each>
+</xsl:template>
+
+
+
 <xsl:template match="/">
 /*
  * This is an auto-generated file.

@@ -80,19 +80,11 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
     </xsl:for-each>
 
     <xsl:if test="count(index) > 0">
-      t.indexes.reserve(<xsl:value-of select="count(index)"/>);
-      <xsl:for-each select="index">
-      {
-        IndexDescription idx;
-        idx.name = QLatin1String("<xsl:value-of select="@name"/>");
-        idx.columns = QString::fromLatin1("<xsl:value-of select="@columns"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
-        <xsl:if test="@unique">
-        idx.isUnique = <xsl:value-of select="@unique"/>;
-        </xsl:if>
-
-        t.indexes.push_back(idx);
-      }
-      </xsl:for-each>
+      <xsl:if test="count(index) > 0">
+        <xsl:call-template name="indexes">
+          <xsl:with-param name="var">t</xsl:with-param>
+        </xsl:call-template>
+      </xsl:if>
     </xsl:if>
 
     <xsl:if test="count(data) > 0">
@@ -130,7 +122,14 @@ QVector&lt;RelationDescription&gt; <xsl:value-of select="$className"/>::relation
     r.firstColumn = QLatin1String("<xsl:value-of select="@column1"/>");
     r.secondTable = QLatin1String("<xsl:value-of select="@table2"/>");
     r.secondColumn = QLatin1String("<xsl:value-of select="@column2"/>");
+
+    <xsl:if test="count(index) > 0">
+      <xsl:call-template name="indexes">
+        <xsl:with-param name="var">r</xsl:with-param>
+      </xsl:call-template>
+    </xsl:if>
     rels.push_back(r);
+
   }
   </xsl:for-each>
   return rels;
