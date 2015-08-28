@@ -83,8 +83,7 @@ FetchHelper::FetchHelper(Connection *connection, const Scope &scope,
 
 enum PartQueryColumns {
     PartQueryPimIdColumn,
-    PartQueryTypeNamespaceColumn,
-    PartQueryTypeNameColumn,
+    PartQueryTypeIdColumn,
     PartQueryDataColumn,
     PartQueryExternalColumn,
     PartQueryVersionColumn,
@@ -98,10 +97,8 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
 
     if (!partList.isEmpty() || allPayload || allAttrs) {
         partQuery.addJoin(QueryBuilder::InnerJoin, Part::tableName(), PimItem::idFullColumnName(), Part::pimItemIdFullColumnName());
-        partQuery.addJoin(QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName());
         partQuery.addColumn(PimItem::idFullColumnName());
-        partQuery.addColumn(PartType::nsFullColumnName());
-        partQuery.addColumn(PartType::nameFullColumnName());
+        partQuery.addColumn(Part::partTypeIdFullColumnName());
         partQuery.addColumn(Part::dataFullColumnName());
         partQuery.addColumn(Part::externalFullColumnName());
         partQuery.addColumn(Part::versionFullColumnName());
@@ -109,27 +106,23 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
 
         partQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
 
-        Query::Condition cond(Query::Or);
-        if (!partList.isEmpty()) {
-            QStringList partNameList;
+        if (!partList.isEmpty() || allPayload || allAttrs) {
+            Query::Condition cond(Query::Or);
             Q_FOREACH (const QByteArray &b, partList) {
                 if (b.startsWith("PLD") || b.startsWith("ATR")) {
-                    partNameList.push_back(QString::fromLatin1(b));
+                    cond.addValueCondition(Part::partTypeIdFullColumnName(), Query::Equals, PartTypeHelper::fromFqName(b).id());
                 }
             }
-            if (!partNameList.isEmpty()) {
-                cond.addCondition(PartTypeHelper::conditionFromFqNames(partNameList));
+            if (allPayload || allAttrs) {
+                partQuery.addJoin(QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName());
+                if (allPayload) {
+                    cond.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QStringLiteral("PLD"));
+                }
+                if (allAttrs) {
+                    cond.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QStringLiteral("ATR"));
+                }
             }
-        }
 
-        if (allPayload) {
-            cond.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QStringLiteral("PLD"));
-        }
-        if (allAttrs) {
-            cond.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QStringLiteral("ATR"));
-        }
-
-        if (!cond.isEmpty()) {
             partQuery.addCondition(cond);
         }
 
@@ -148,16 +141,13 @@ QSqlQuery FetchHelper::buildItemQuery()
 {
     QueryBuilder itemQuery(PimItem::tableName());
 
-    itemQuery.addJoin(QueryBuilder::InnerJoin, MimeType::tableName(),
-                      PimItem::mimeTypeIdFullColumnName(), MimeType::idFullColumnName());
-
     int column = 0;
 #define ADD_COLUMN(colName, colId) { itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = column++; }
     ADD_COLUMN(PimItem::idFullColumnName(), ItemQueryPimItemIdColumn);
     if (mFetchScope.fetchRemoteId()) {
         ADD_COLUMN(PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn)
     }
-    ADD_COLUMN(MimeType::nameFullColumnName(), ItemQueryMimeTypeColumn)
+    ADD_COLUMN(PimItem::mimeTypeIdFullColumnName(), ItemQueryMimeTypeIdColumn)
     ADD_COLUMN(PimItem::revFullColumnName(), ItemQueryRevColumn)
     if (mFetchScope.fetchRemoteRevision()) {
         ADD_COLUMN(PimItem::remoteRevisionFullColumnName(), ItemQueryRemoteRevisionColumn)
@@ -192,8 +182,8 @@ QSqlQuery FetchHelper::buildItemQuery()
 }
 
 enum FlagQueryColumns {
-    FlagQueryIdColumn,
-    FlagQueryNameColumn
+    FlagQueryPimItemIdColumn,
+    FlagQueryFlagIdColumn
 };
 
 QSqlQuery FetchHelper::buildFlagQuery()
@@ -201,10 +191,8 @@ QSqlQuery FetchHelper::buildFlagQuery()
     QueryBuilder flagQuery(PimItem::tableName());
     flagQuery.addJoin(QueryBuilder::InnerJoin, PimItemFlagRelation::tableName(),
                       PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName());
-    flagQuery.addJoin(QueryBuilder::InnerJoin, Flag::tableName(),
-                      Flag::idFullColumnName(), PimItemFlagRelation::rightFullColumnName());
     flagQuery.addColumn(PimItem::idFullColumnName());
-    flagQuery.addColumn(Flag::nameFullColumnName());
+    flagQuery.addColumn(PimItemFlagRelation::rightFullColumnName());
 
     ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), flagQuery);
     flagQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
@@ -423,6 +411,9 @@ bool FetchHelper::fetchItems()
     #endif
 
     BEGIN_TIMER(processing)
+    QHash<qint64, QByteArray> flagIdNameCache;
+    QHash<qint64, QString> mimeTypeIdNameCache;
+    QHash<qint64, QByteArray> partTypeIdNameCache;
     while (itemQuery.isValid()) {
         PROF_INC(itemsCount)
 
@@ -431,7 +422,12 @@ bool FetchHelper::fetchItems()
 
         Protocol::FetchItemsResponse response(pimItemId);
         response.setRevision(pimItemRev);
-        response.setMimeType(extractQueryResult(itemQuery, ItemQueryMimeTypeColumn).toString());
+        const qint64 mimeTypeId = extractQueryResult(itemQuery, ItemQueryMimeTypeIdColumn).toLongLong();
+        auto mtIter = mimeTypeIdNameCache.find(mimeTypeId);
+        if (mtIter == mimeTypeIdNameCache.end()) {
+            mtIter = mimeTypeIdNameCache.insert(mimeTypeId, MimeType::retrieveById(mimeTypeId).name());
+        }
+        response.setMimeType(mtIter.value());
         if (mFetchScope.fetchRemoteId()) {
             response.setRemoteId(extractQueryResult(itemQuery, ItemQueryPimItemRidColumn).toString());
         }
@@ -453,14 +449,19 @@ bool FetchHelper::fetchItems()
         if (mFetchScope.fetchFlags()) {
             QVector<QByteArray> flags;
             while (flagQuery.isValid()) {
-                const qint64 id = flagQuery.value(FlagQueryIdColumn).toLongLong();
+                const qint64 id = flagQuery.value(FlagQueryPimItemIdColumn).toLongLong();
                 if (id > pimItemId) {
                     flagQuery.next();
                     continue;
                 } else if (id < pimItemId) {
                     break;
                 }
-                flags << flagQuery.value(FlagQueryNameColumn).toByteArray();
+                const qint64 flagId = flagQuery.value(FlagQueryFlagIdColumn).toLongLong();
+                auto flagNameIter = flagIdNameCache.find(flagId);
+                if (flagNameIter == flagIdNameCache.end()) {
+                    flagNameIter = flagIdNameCache.insert(flagId, Flag::retrieveById(flagId).name().toUtf8());
+                }
+                flags << flagNameIter.value();
                 flagQuery.next();
             }
             response.setFlags(flags);
@@ -549,21 +550,22 @@ bool FetchHelper::fetchItems()
                 break;
             }
 
-            const QByteArray partName
-                = Utils::variantToByteArray(partQuery.value(PartQueryTypeNamespaceColumn))
-                    + ":"+ Utils::variantToByteArray(partQuery.value(PartQueryTypeNameColumn));
-
+            const qint64 partTypeId = partQuery.value(PartQueryTypeIdColumn).toLongLong();
+            auto ptIter = partTypeIdNameCache.find(partTypeId);
+            if (ptIter == partTypeIdNameCache.end()) {
+                ptIter = partTypeIdNameCache.insert(partTypeId, PartTypeHelper::fullName(PartType::retrieveById(partTypeId)).toUtf8());
+            }
             Protocol::PartMetaData metaPart;
             Protocol::StreamPayloadResponse partData;
-            partData.setPayloadName(partName);
-            metaPart.setName(partName);
+            partData.setPayloadName(ptIter.value());
+            metaPart.setName(ptIter.value());
             metaPart.setVersion(partQuery.value(PartQueryVersionColumn).toInt());
             metaPart.setSize(partQuery.value(PartQueryDataSizeColumn).toLongLong());
 
             const QByteArray data = Utils::variantToByteArray(partQuery.value(PartQueryDataColumn));
             if (mFetchScope.checkCachedPayloadPartsOnly()) {
                 if (!data.isEmpty()) {
-                    cachedParts << partName;
+                    cachedParts << ptIter.value();
                 }
                 partQuery.next();
             } else {
@@ -582,7 +584,7 @@ bool FetchHelper::fetchItems()
                 }
                 partData.setMetaData(metaPart);
 
-                if (mFetchScope.requestedParts().contains(partName) || mFetchScope.fullPayload() || mFetchScope.allAttributes()) {
+                if (mFetchScope.requestedParts().contains(ptIter.value()) || mFetchScope.fullPayload() || mFetchScope.allAttributes()) {
                     parts.append(partData);
                 }
 

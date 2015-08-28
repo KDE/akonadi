@@ -52,7 +52,7 @@ private:
     enum ItemQueryColumns {
         ItemQueryPimItemIdColumn,
         ItemQueryPimItemRidColumn,
-        ItemQueryMimeTypeColumn,
+        ItemQueryMimeTypeIdColumn,
         ItemQueryRevColumn,
         ItemQueryRemoteRevisionColumn,
         ItemQuerySizeColumn,
