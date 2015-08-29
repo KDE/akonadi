@@ -247,6 +247,7 @@ Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Rel
 Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)
 {
     Flag::List flagList;
+    flagList.reserve(flagNames.size());
     Q_FOREACH (const QByteArray &flagName, flagNames) {
         Flag flag = Flag::retrieveByName(QString::fromUtf8(flagName));
         if (!flag.isValid()) {

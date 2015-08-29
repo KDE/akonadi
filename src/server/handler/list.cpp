@@ -104,6 +104,7 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
     QStack<CollectionAttribute::List> ancestorAttributes;
     //backwards compatibilty, collectionToByteArray will automatically fall-back to id + remoteid
     if (!mAncestorAttributes.isEmpty()) {
+        ancestorAttributes.reserve(ancestors.size());
         Q_FOREACH (const Collection &col, ancestors) {
             ancestorAttributes.push(getAttributes(col, mAncestorAttributes));
         }
@@ -171,6 +172,7 @@ static QSqlQuery getAttributeQuery(const QVariantList &ids, const QSet<QByteArra
 
     if (!requestedAttributes.isEmpty()) {
         QVariantList attributes;
+        attributes.reserve(requestedAttributes.size());
         Q_FOREACH (const QByteArray &type, requestedAttributes) {
             attributes << type;
         }
@@ -280,6 +282,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             if (!mMimeTypes.isEmpty()) {
                 qb.addJoin(QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftColumn(), Collection::idFullColumnName());
                 QVariantList mimeTypeFilter;
+                mimeTypeFilter.reserve(mMimeTypes.size());
                 Q_FOREACH(MimeType::Id mtId, mMimeTypes) {
                     mimeTypeFilter << mtId;
                 }

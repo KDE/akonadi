@@ -76,7 +76,9 @@ void ResourceManager::removeResourceInstance(const QString &name)
 QStringList ResourceManager::resourceInstances() const
 {
     QStringList result;
-    Q_FOREACH (const Resource &res, Resource::retrieveAll()) {
+    const auto resources = Resource::retrieveAll();
+    result.reserve(resources.size());
+    Q_FOREACH (const Resource &res, resources) {
         result.append(res.name());
     }
     return result;

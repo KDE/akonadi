@@ -242,6 +242,7 @@ QString DbInitializerPostgreSql::sqlType(const QString &type, int size) const
 QString DbInitializerPostgreSql::buildCreateTableStatement(const TableDescription &tableDescription) const
 {
     QStringList columns;
+    columns.reserve(tableDescription.columns.size() + 1);
 
     Q_FOREACH (const ColumnDescription &columnDescription, tableDescription.columns) {
         columns.append(buildColumnStatement(columnDescription, tableDescription));

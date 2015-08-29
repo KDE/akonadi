@@ -221,6 +221,7 @@ void StorageJanitor::findOrphanedResources()
     const Resource::List orphanResources = qbres.result();
     if (orphanResources.size() > 0) {
         QStringList resourceNames;
+        resourceNames.reserve(orphanResources.size());
         Q_FOREACH (const Resource &resource, orphanResources) {
             resourceNames.append(resource.name());
         }

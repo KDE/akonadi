@@ -96,7 +96,9 @@ void StorageDebugger::queryExecuted(const QSqlQuery &query, int duration)
     if (q.first()) {
         const QSqlRecord record = q.record();
         QVariantList row;
-        for (int i = 0; i < record.count(); ++i) {
+        const int numRecords = record.count();
+        row.reserve(numRecords);
+        for (int i = 0; i < numRecords; ++i) {
             row << record.fieldName(i);
         }
         result << row;
@@ -105,7 +107,9 @@ void StorageDebugger::queryExecuted(const QSqlQuery &query, int duration)
         do {
             const QSqlRecord record = q.record();
             QVariantList row;
-            for (int i = 0; i < record.count(); ++i) {
+            const int numRecords = record.count();
+            row.reserve(numRecords);
+            for (int i = 0; i < numRecords; ++i) {
                 row << record.value(i);
             }
             result << row;

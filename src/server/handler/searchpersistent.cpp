@@ -59,6 +59,7 @@ bool SearchPersistent::parseStream()
     QStringList queryCollections;
     QVector<qint64> queryColIds = cmd.queryCollections();
     qSort(queryColIds);
+    queryCollections.reserve(queryColIds.size());
     Q_FOREACH (qint64 col, queryColIds) {
         queryCollections.append(QString::number(col));
     }

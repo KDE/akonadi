@@ -78,7 +78,9 @@ bool DbIntrospector::hasColumn(const QString &tableName, const QString &columnNa
 
     if (columns.isEmpty()) {
         const QSqlRecord table = m_database.record(tableName);
-        for (int i = 0; i < table.count(); ++i) {
+        const int numTables = table.count();
+        columns.reserve(numTables);
+        for (int i = 0; i < numTables; ++i) {
             const QSqlField column = table.field(i);
             columns.push_back(column.name().toLower());
         }

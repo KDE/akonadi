@@ -484,12 +484,13 @@ bool FetchHelper::fetchItems()
                 tagIds << tagQuery.value(TagQueryTagIdColumn).toLongLong();
                 tagQuery.next();
             }
+
+            tags.reserve(tagIds.count());
             if (!fullTagsRequested) {
                 Q_FOREACH (qint64 tagId, tagIds) {
                     tags << Protocol::FetchTagsResponse(tagId);
                 }
             } else {
-                tags.reserve(tagIds.count());
                 Q_FOREACH (qint64 tagId, tagIds) {
                     tags << HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId));
                 }
@@ -526,7 +527,9 @@ bool FetchHelper::fetchItems()
                 throw HandlerException("Unable to list item relations");
             }
             QVector<Protocol::FetchRelationsResponse> relations;
-            Q_FOREACH (const Relation &rel, qb.result()) {
+            const auto result = qb.result();
+            relations.reserve(result.size());
+            Q_FOREACH (const Relation &rel, result) {
                 relations << HandlerHelper::fetchRelationsResponse(rel);
             }
             response.setRelations(relations);
