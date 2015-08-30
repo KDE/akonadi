@@ -218,7 +218,11 @@ void TagModelPrivate::tagsFetchDone(KJob *job)
     }
 
     if (!mPendingTags.isEmpty()) {
-        qWarning() << "Fetched all tags from server, but there are still" << mPendingTags.count() << "orphan tags";
+        qWarning() << "Fetched all tags from server, but there are still" << mPendingTags.count() << "orphan tags:";
+        for (auto it = mPendingTags.cbegin(), e = mPendingTags.cend(); it != e; ++it) {
+            qWarning() << "tagId = " << it.key() << "; with list count =" << it.value().count();
+        }
+
         return;
     }
 
