@@ -257,7 +257,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     QRect innerRect = option.rect.adjusted(s_delegatePaddingSize, s_delegatePaddingSize, -s_delegatePaddingSize, -s_delegatePaddingSize);   //add some padding round entire delegate
 
     const QSize decorationSize = iconPixmap.size();
-    const QSize statusIconSize = QSize(16, 16); //= KIconLoader::global()->currentSize(KIconLoader::Small);
+    const QSize statusIconSize = statusPixmap.size();//= KIconLoader::global()->currentSize(KIconLoader::Small);
 
     QFont nameFont = option.font;
     nameFont.setBold(true);
