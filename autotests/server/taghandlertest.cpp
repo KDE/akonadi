@@ -35,8 +35,11 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+typedef QPair<Tag, TagAttribute::List> TagTagAttributeListPair;
+
 Q_DECLARE_METATYPE(Akonadi::Server::Tag::List)
 Q_DECLARE_METATYPE(Akonadi::Server::Tag)
+Q_DECLARE_METATYPE(QVector<TagTagAttributeListPair>)
 
 static Protocol::ChangeNotification::List extractNotifications(QSignalSpy *notificationSpy)
 {
@@ -100,8 +103,15 @@ private Q_SLOTS:
         initializer.reset(new DbInitializer);
         Resource res = initializer->createResource("testresource");
 
+        // Make sure the type exists
+        TagType type = type.retrieveByName(QStringLiteral("PLAIN"));
+        if (!type.isValid()) {
+            type.setName(QStringLiteral("PLAIN"));
+            type.insert();
+        }
+
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<Tag::List>("expectedTags");
+        QTest::addColumn<QVector<QPair<Tag, TagAttribute::List>>>("expectedTags");
         QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
 
         {
@@ -125,9 +135,13 @@ private Q_SLOTS:
 
             Tag tag;
             tag.setId(1);
-            TagType type;
-            type.setName(QStringLiteral("PLAIN"));
             tag.setTagType(type);
+            tag.setParentId(0);
+
+            TagAttribute attribute;
+            attribute.setTagId(1);
+            attribute.setType("TAG");
+            attribute.setValue("(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")");
 
             Akonadi::Protocol::ChangeNotification notification;
             notification.setType(Protocol::ChangeNotification::Tags);
@@ -135,14 +149,56 @@ private Q_SLOTS:
             notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             notification.addEntity(1);
 
-            QTest::newRow("uid create relation") << scenarios << (Tag::List() << tag) << (Protocol::ChangeNotification::List() << notification);
+            QTest::newRow("uid create relation") << scenarios
+                                                 << QVector<TagTagAttributeListPair>{ { tag, { attribute } } }
+                                                 << Protocol::ChangeNotification::List{ notification };
+        }
+
+        {
+            Protocol::CreateTagCommand cmd;
+            cmd.setGid("tag2");
+            cmd.setParentId(1);
+            cmd.setType("PLAIN");
+            cmd.setAttributes({ { "TAG", "(\\\"tag3\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
+
+            Protocol::FetchTagsResponse resp(2);
+            resp.setGid(cmd.gid());
+            resp.setParentId(cmd.parentId());
+            resp.setType(cmd.type());
+            resp.setAttributes(cmd.attributes());
+
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, cmd)
+                      << TestScenario::create(5, TestScenario::ServerCmd, resp)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateTagResponse());
+
+            Tag tag;
+            tag.setId(2);
+            tag.setTagType(type);
+            tag.setParentId(1);
+
+            TagAttribute attribute;
+            attribute.setTagId(2);
+            attribute.setType("TAG");
+            attribute.setValue("(\\\"tag3\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")");
+
+            Akonadi::Protocol::ChangeNotification notification;
+            notification.setType(Protocol::ChangeNotification::Tags);
+            notification.setOperation(Protocol::ChangeNotification::Add);
+            notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            notification.addEntity(2);
+
+            QTest::newRow("create child tag") << scenarios
+                                              << QVector<TagTagAttributeListPair>{ { tag, { attribute } } }
+                                              << Protocol::ChangeNotification::List{ notification };
         }
     }
 
     void testStoreTag()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(Tag::List, expectedTags);
+        QFETCH(QVector<TagTagAttributeListPair>, expectedTags);
         QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
@@ -150,16 +206,40 @@ private Q_SLOTS:
 
         const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
 
+        QVariantList ids;
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
             QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+            Q_FOREACH (qint64 id, receivedNotifications.at(i).entities().keys()) {
+                ids << id;
+            }
         }
 
-        const Tag::List tags = Tag::retrieveAll();
+        SelectQueryBuilder<Tag> qb;
+        qb.addValueCondition(Tag::idColumn(), Query::In, ids);
+        QVERIFY(qb.exec());
+        const Tag::List tags = qb.result();
         QCOMPARE(tags.size(), expectedTags.size());
         for (int i = 0; i < tags.size(); i++) {
-            QCOMPARE(tags.at(i).id(), expectedTags.at(i).id());
-            QCOMPARE(tags.at(i).tagType().name(), QString::fromLatin1("PLAIN")/* expectedTags.at(i).tagType().name() */);
+            const Tag actual = tags.at(i);
+            const Tag expected = expectedTags.at(i).first;
+            const TagAttribute::List expectedAttrs = expectedTags.at(i).second;
+
+            QCOMPARE(actual.id(), expected.id());
+            QCOMPARE(actual.typeId(), expected.typeId());
+            QCOMPARE(actual.parentId(), expected.parentId());
+
+            TagAttribute::List attributes = TagAttribute::retrieveFiltered(
+                TagAttribute::tagIdColumn(), tags.at(i).id());
+            QCOMPARE(attributes.size(), expectedAttrs.size());
+            for (int j = 0; j < attributes.size(); ++j) {
+                const TagAttribute actualAttr = attributes.at(i);
+                const TagAttribute expectedAttr = expectedAttrs.at(i);
+
+                QCOMPARE(actualAttr.tagId(), expectedAttr.tagId());
+                QCOMPARE(actualAttr.type(), expectedAttr.type());
+                QCOMPARE(actualAttr.value(), expectedAttr.value());
+            }
         }
     }
 
