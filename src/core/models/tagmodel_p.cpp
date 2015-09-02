@@ -35,7 +35,7 @@ TagModelPrivate::TagModelPrivate(TagModel *parent)
     , q_ptr(parent)
 {
     // Root tag
-    mTags.insert(0, Tag(0));
+    mTags.insert(-1, Tag());
 }
 
 TagModelPrivate::~TagModelPrivate()

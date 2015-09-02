@@ -60,7 +60,7 @@ int TagModel::rowCount(const QModelIndex &parent) const
 {
     Q_D(const TagModel);
 
-    Tag::Id parentTagId = 0;
+    Tag::Id parentTagId = -1;
     if (parent.isValid()) {
         parentTagId = d->mChildTags[parent.internalId()].at(parent.row()).id();
     }
@@ -122,7 +122,7 @@ QModelIndex TagModel::index(int row, int column, const QModelIndex &parent) cons
 {
     Q_D(const TagModel);
 
-    qint64 parentId = 0;
+    qint64 parentId = -1;
     if (parent.isValid()) {
         const Tag parentTag = d->tagForIndex(parent);
         parentId = parentTag.id();
