@@ -154,14 +154,21 @@ void TagModelPrivate::monitoredTagRemoved(const Tag &tag)
 {
     Q_Q(TagModel);
 
+    if (!tag.isValid()) {
+        qWarning() << "Attempting to remove root tag?";
+        return;
+    }
+
     // Better lookup parent in our cache
-    qint64 parentId = mTags.value(tag.id()).parent().id();
-    if (parentId == -1) {
+    auto iter = mTags.constFind(tag.id());
+    if (iter == mTags.cend()) {
         qWarning() << "Got removal notification for unknown tag" << tag.id();
         return;
     }
 
-    Tag::List &siblings = mChildTags[parentId];
+    const qint64 parentId = iter->parent().id();
+
+    const Tag::List &siblings = mChildTags[parentId];
     const int pos = siblings.indexOf(tag);
     Q_ASSERT(pos != -1);
 
