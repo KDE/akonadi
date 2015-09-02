@@ -29,6 +29,7 @@ namespace Akonadi
 
 class Monitor;
 class TagModel;
+class Session;
 
 class TagModelPrivate
 {
@@ -37,6 +38,7 @@ public:
     virtual ~TagModelPrivate();
 
     void init(Monitor *recorder);
+    void fillModel();
 
     void tagsFetchDone(KJob *job);
     void tagsFetched(const Akonadi::Tag::List &tags);
@@ -50,6 +52,7 @@ public:
     void removeTagsRecursively(qint64 parentTag);
 
     Monitor *mMonitor;
+    Session *mSession;
 
     QHash<Tag::Id /* parent */, Tag::List > mChildTags;
     QHash<Tag::Id /* tag ID */, Tag> mTags;

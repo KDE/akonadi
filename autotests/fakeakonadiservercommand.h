@@ -24,6 +24,8 @@
 #include "collection.h"
 #include "entitytreemodel.h"
 #include "item.h"
+#include "tagmodel.h"
+#include "tag.h"
 #include "akonaditestfake_export.h"
 
 class FakeServerData;
@@ -35,7 +37,8 @@ public:
     enum Type {
         Notification,
         RespondToCollectionFetch,
-        RespondToItemFetch
+        RespondToItemFetch,
+        RespondToTagFetch
     };
 
     FakeAkonadiServerCommand(Type type, FakeServerData *serverData);
@@ -60,6 +63,7 @@ public:
 Q_SIGNALS:
     void emit_itemsFetched(const Akonadi::Item::List &list);
     void emit_collectionsFetched(const Akonadi::Collection::List &list);
+    void emit_tagsFetched(const Akonadi::Tag::List &tags);
 
     void emit_monitoredCollectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &target);
     void emit_monitoredCollectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
@@ -74,17 +78,27 @@ Q_SIGNALS:
     void emit_monitoredItemLinked(const Akonadi::Item &item, const Akonadi::Collection &collection);
     void emit_monitoredItemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
+    void emit_monitoredTagAdded(const Akonadi::Tag &tag);
+    void emit_monitoredTagChanged(const Akonadi::Tag &tag);
+    void emit_monitoredTagRemoved(const Akonadi::Tag &tag);
 protected:
     Akonadi::Collection getCollectionByDisplayName(const QString &displayName) const;
     Akonadi::Item getItemByDisplayName(const QString &displayName) const;
+    Akonadi::Tag getTagByDisplayName(const QString &displayName) const;
+
+    bool isItemSignal(const QByteArray &signature) const;
+    bool isCollectionSignal(const QByteArray &signature) const;
+    bool isTagSignal(const QByteArray &signature) const;
 
 protected:
     FakeServerData *m_serverData;
-    Akonadi::EntityTreeModel *m_model;
+    QAbstractItemModel *m_model;
     Akonadi::Collection m_parentCollection;
+    Akonadi::Tag m_parentTag;
     QHash<Akonadi::Collection::Id, Akonadi::Collection> m_collections;
     QHash<Akonadi::Item::Id, Akonadi::Item> m_items;
     QHash<Akonadi::Item::Id, QList<Akonadi::Entity::Id> > m_childElements;
+    QHash<Akonadi::Tag::Id, Akonadi::Tag> m_tags;
 
 private:
     void connectForwardingSignals();
@@ -282,6 +296,92 @@ private:
     QString m_parentName;
 };
 
+class AKONADITESTFAKE_EXPORT FakeTagAddedCommand : public FakeMonitorCommand
+{
+public:
+    FakeTagAddedCommand(const QString &tag, const QString &parent, FakeServerData *serverData)
+        : FakeMonitorCommand(serverData)
+        , m_tagName(tag)
+        , m_parentName(parent)
+    {
+    }
+
+    virtual ~FakeTagAddedCommand()
+    {
+    }
+
+    void doCommand() Q_DECL_OVERRIDE;
+
+private:
+    QString m_tagName;
+    QString m_parentName;
+};
+
+class AKONADITESTFAKE_EXPORT FakeTagChangedCommand : public FakeMonitorCommand
+{
+public:
+    FakeTagChangedCommand(const QString &tag, const QString &parent, FakeServerData *serverData)
+        : FakeMonitorCommand(serverData)
+        , m_tagName(tag)
+        , m_parentName(parent)
+    {
+    }
+
+    virtual ~FakeTagChangedCommand()
+    {
+    }
+
+    void doCommand() Q_DECL_OVERRIDE;
+
+private:
+    QString m_tagName;
+    QString m_parentName;
+};
+
+class AKONADITESTFAKE_EXPORT FakeTagMovedCommand : public FakeMonitorCommand
+{
+public:
+    FakeTagMovedCommand(const QString &tag, const QString &oldParent, const QString &newParent, FakeServerData *serverData)
+        : FakeMonitorCommand(serverData)
+        , m_tagName(tag)
+        , m_oldParent(oldParent)
+        , m_newParent(newParent)
+    {
+    }
+
+    virtual ~FakeTagMovedCommand()
+    {
+    }
+
+    void doCommand() Q_DECL_OVERRIDE;
+
+private:
+    QString m_tagName;
+    QString m_oldParent;
+    QString m_newParent;
+};
+
+class AKONADITESTFAKE_EXPORT FakeTagRemovedCommand : public FakeMonitorCommand
+{
+public:
+    FakeTagRemovedCommand(const QString &tag, const QString &parent, FakeServerData *serverData)
+        : FakeMonitorCommand(serverData)
+        , m_tagName(tag)
+        , m_parentName(parent)
+    {
+    }
+
+    virtual ~FakeTagRemovedCommand()
+    {
+    }
+
+    void doCommand() Q_DECL_OVERRIDE;
+
+private:
+    QString m_tagName;
+    QString m_parentName;
+};
+
 class AKONADITESTFAKE_EXPORT FakeJobResponse : public FakeAkonadiServerCommand
 {
     struct Token {
@@ -293,11 +393,18 @@ class AKONADITESTFAKE_EXPORT FakeJobResponse : public FakeAkonadiServerCommand
         QString content;
     };
 public:
-    FakeJobResponse(Akonadi::Collection parentCollection, Type respondTo, FakeServerData *serverData)
+    FakeJobResponse(const Akonadi::Collection &parentCollection, Type respondTo, FakeServerData *serverData)
         : FakeAkonadiServerCommand(respondTo, serverData)
     {
         m_parentCollection = parentCollection;
     }
+
+    FakeJobResponse(const Akonadi::Tag &parentTag, Type respondTo, FakeServerData *serverData)
+        : FakeAkonadiServerCommand(respondTo, serverData)
+    {
+        m_parentTag = parentTag;
+    }
+
     virtual ~FakeJobResponse()
     {
     }
@@ -312,6 +419,11 @@ public:
         m_items.insert(item.id(), item);
     }
 
+    void appendTag(const Akonadi::Tag &tag)
+    {
+        m_tags.insert(tag.id(), tag);
+    }
+
     void doCommand() Q_DECL_OVERRIDE;
 
     static QList<FakeAkonadiServerCommand *> interpret(FakeServerData *fakeServerData, const QString &input);
@@ -319,7 +431,14 @@ public:
 private:
     static QList<FakeJobResponse *> parseTreeString(FakeServerData *fakeServerData, const QString &treeString);
     static QList<FakeJobResponse::Token> tokenize(const QString &treeString);
-    static void parseEntityString(QList<FakeJobResponse *> &list, QHash<Akonadi::Collection::Id, FakeJobResponse *> &itemResponseMap, Akonadi::Collection::List &recentCollections, FakeServerData *fakeServerData, const QString &entityString, int depth);
+    static void parseEntityString(QList<FakeJobResponse *> &collectionResponseList,
+                                  QHash<Akonadi::Collection::Id, FakeJobResponse *> &itemResponseMap,
+                                  QList<FakeJobResponse *> &tagResponseList,
+                                  Akonadi::Collection::List &recentCollections,
+                                  Akonadi::Tag::List &recentTags,
+                                  FakeServerData *fakeServerData,
+                                  const QString &entityString,
+                                  int depth);
 };
 
 #endif

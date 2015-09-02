@@ -23,30 +23,57 @@
 
 #include "fakeserverdata.h"
 #include "entitydisplayattribute.h"
+#include "tagattribute.h"
 #include "vectorhelper.h"
 
 using namespace Akonadi;
 
 FakeAkonadiServerCommand::FakeAkonadiServerCommand(FakeAkonadiServerCommand::Type type, FakeServerData *serverData)
-    : m_type(type), m_serverData(serverData), m_model(serverData->model())
+    : m_type(type)
+    , m_serverData(serverData)
+    , m_model(serverData->model())
 {
     connectForwardingSignals();
+}
+
+bool FakeAkonadiServerCommand::isTagSignal(const QByteArray &signal) const
+{
+    return signal.startsWith("emit_tag")
+            || signal.startsWith("emit_monitoredTag");
+}
+
+bool FakeAkonadiServerCommand::isItemSignal(const QByteArray &signal) const
+{
+    return signal.startsWith("emit_item")
+            || signal.startsWith("emit_monitoredItem");
+}
+
+bool FakeAkonadiServerCommand::isCollectionSignal(const QByteArray &signal) const
+{
+    return signal.startsWith("emit_collection")
+            || signal.startsWith("emit_monitoredCollection");
 }
 
 void FakeAkonadiServerCommand::connectForwardingSignals()
 {
     for (int methodIndex = 0; methodIndex < metaObject()->methodCount(); ++methodIndex) {
-        QMetaMethod mm = metaObject()->method(methodIndex);
-        if (mm.methodType() == QMetaMethod::Signal && QString::fromLatin1(mm.methodSignature()).startsWith(QLatin1String("emit_"))) {
-            int modelSlotIndex = m_model->metaObject()->indexOfSlot(QString::fromLatin1(mm.methodSignature()).remove(0, 5).toLatin1().data());
-            Q_ASSERT(modelSlotIndex >= 0);
-            metaObject()->connect(this, methodIndex, m_model, modelSlotIndex);
+        const QMetaMethod mm = metaObject()->method(methodIndex);
+        QByteArray signature = mm.methodSignature();
+        if (mm.methodType() == QMetaMethod::Signal) {
+            if ((qobject_cast<TagModel*>(m_model) && isTagSignal(signature)) ||
+                (qobject_cast<EntityTreeModel*>(m_model) && (isCollectionSignal(signature) || isItemSignal(signature))))
+            {
+                const int modelSlotIndex = m_model->metaObject()->indexOfSlot(signature.remove(0, 5).constData());
+                Q_ASSERT(modelSlotIndex >= 0);
+                metaObject()->connect(this, methodIndex, m_model, modelSlotIndex);
+            }
         }
     }
 }
 
 Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString &displayName) const
 {
+    Q_ASSERT(qobject_cast<EntityTreeModel*>(m_model));
     QModelIndexList list = m_model->match(m_model->index(0, 0), Qt::DisplayRole, displayName, 1, Qt::MatchRecursive);
     if (list.isEmpty()) {
         return Collection();
@@ -56,11 +83,23 @@ Collection FakeAkonadiServerCommand::getCollectionByDisplayName(const QString &d
 
 Item FakeAkonadiServerCommand::getItemByDisplayName(const QString &displayName) const
 {
+    Q_ASSERT(qobject_cast<EntityTreeModel*>(m_model));
     QModelIndexList list = m_model->match(m_model->index(0, 0), Qt::DisplayRole, displayName, 1, Qt::MatchRecursive);
     if (list.isEmpty()) {
         return Item();
     }
     return list.first().data(EntityTreeModel::ItemRole).value<Item>();
+}
+
+Tag FakeAkonadiServerCommand::getTagByDisplayName(const QString &displayName) const
+{
+    Q_ASSERT(qobject_cast<TagModel*>(m_model));
+    QModelIndexList list = m_model->match(m_model->index(0, 0), Qt::DisplayRole, displayName, 1, Qt::MatchRecursive);
+    if (list.isEmpty()) {
+        return Tag();
+    }
+
+    return list.first().data(TagModel::TagRole).value<Tag>();
 }
 
 void FakeJobResponse::doCommand()
@@ -70,6 +109,8 @@ void FakeJobResponse::doCommand()
     } else if (m_type == RespondToItemFetch) {
         setProperty("FetchCollectionId", m_parentCollection.id());
         emit_itemsFetched(Akonadi::valuesToVector(m_items));
+    } else if (m_type == RespondToTagFetch) {
+        emit_tagsFetched(m_tags.values());
     }
 }
 
@@ -113,10 +154,13 @@ QList<FakeJobResponse *> FakeJobResponse::parseTreeString(FakeServerData *fakeSe
 
     QList<FakeJobResponse *> collectionResponseList;
     QHash<Collection::Id, FakeJobResponse *> itemResponseMap;
+    QList<FakeJobResponse *> tagResponseList;
 
     Collection::List recentCollections;
+    Tag::List recentTags;
 
     recentCollections.append(Collection::root());
+    recentTags.append(Tag());
 
     QList<Token> tokens = tokenize(treeString);
     while (!tokens.isEmpty()) {
@@ -127,14 +171,23 @@ QList<FakeJobResponse *> FakeJobResponse::parseTreeString(FakeServerData *fakeSe
             continue;
         }
         Q_ASSERT(token.type == Token::Leaf);
-        parseEntityString(collectionResponseList, itemResponseMap, recentCollections, fakeServerData, token.content, depth);
+        parseEntityString(collectionResponseList, itemResponseMap, tagResponseList,
+                          recentCollections, recentTags, fakeServerData,
+                          token.content, depth);
 
         depth = 0;
     }
-    return collectionResponseList;
+    return collectionResponseList + tagResponseList;
 }
 
-void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResponseList, QHash<Collection::Id, FakeJobResponse *> &itemResponseMap, Collection::List &recentCollections, FakeServerData *fakeServerData, const QString &_entityString, int depth)
+void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResponseList,
+                                        QHash<Collection::Id, FakeJobResponse *> &itemResponseMap,
+                                        QList<FakeJobResponse *> &tagResponseList,
+                                        Collection::List &recentCollections,
+                                        Tag::List &recentTags,
+                                        FakeServerData *fakeServerData,
+                                        const QString &_entityString,
+                                        int depth)
 {
     QString entityString = _entityString;
     if (entityString.startsWith(QLatin1Char('C'))) {
@@ -242,6 +295,59 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
             collectionResponseList.append(newResponse);
         }
         itemResponseMap[ colId ]->appendItem(item);
+    }
+    if (entityString.startsWith(QLatin1Char('T'))) {
+        Tag tag;
+        int order = 0;
+        entityString.remove(0, 2);
+        entityString = entityString.trimmed();
+        int iFirstSpace = entityString.indexOf(QLatin1Char(' '));
+        QString type = entityString.left(iFirstSpace);
+        entityString = entityString.remove(0, iFirstSpace + 1).trimmed();
+        tag.setType(type.toLatin1());
+
+        if (iFirstSpace > 0 && !entityString.isEmpty()) {
+            QString displayName;
+            QString optionalSection = entityString;
+            if (optionalSection.startsWith(QLatin1Char('\''))) {
+                optionalSection.remove(0, 1);
+                QStringList optionalParts = optionalSection.split(QLatin1Char('\''));
+                displayName = optionalParts.takeFirst();
+                TagAttribute *ta = new TagAttribute();
+                ta->setDisplayName(displayName);
+                tag.addAttribute(ta);
+                optionalSection = optionalParts.first();
+            }
+            QString orderString = optionalSection.trimmed();
+            if (!orderString.isEmpty()) {
+                bool ok;
+                order = orderString.toInt(&ok);
+                Q_ASSERT(ok);
+            }
+        } else {
+            type = entityString;
+        }
+
+        tag.setId(fakeServerData->nextTagId());
+        tag.setRemoteId("RID_" + QByteArray::number(tag.id()) + " " + type.toLatin1());
+        tag.setType(type.toLatin1());
+
+        if (depth == 0) {
+            tag.setParent(Tag());
+        } else {
+            tag.setParent(recentTags.at(depth));
+        }
+
+        if (recentTags.size() == (depth + 1)) {
+            recentTags.append(tag);
+        } else {
+            recentTags[ depth + 1 ] = tag;
+        }
+
+        while (tagResponseList.size() < order) {
+            tagResponseList.append(new FakeJobResponse(recentTags[depth], FakeJobResponse::RespondToTagFetch, fakeServerData));
+        }
+        tagResponseList[order - 1]->appendTag(tag);
     }
 }
 
@@ -353,4 +459,47 @@ void FakeItemChangedCommand::doCommand()
     Q_ASSERT(parent.isValid());
 
     emit_monitoredItemChanged(item, QSet<QByteArray>());
+}
+
+void FakeTagAddedCommand::doCommand()
+{
+    const Tag parent = getTagByDisplayName(m_parentName);
+
+    Tag tag;
+    tag.setId(m_serverData->nextTagId());
+    tag.setName(m_tagName);
+    tag.setRemoteId("remoteId " + QByteArray::number(tag.id()));
+    tag.setParent(parent);
+
+    emit_monitoredTagAdded(tag);
+}
+
+void FakeTagChangedCommand::doCommand()
+{
+    const Tag tag = getTagByDisplayName(m_tagName);
+
+    Q_ASSERT(tag.isValid());
+
+    emit_monitoredTagChanged(tag);
+}
+
+void FakeTagMovedCommand::doCommand()
+{
+    Tag tag = getTagByDisplayName(m_tagName);
+    Tag newParent = getTagByDisplayName(m_newParent);
+
+    Q_ASSERT(tag.isValid());
+
+    tag.setParent(newParent);
+
+    emit_monitoredTagChanged(tag);
+}
+
+void FakeTagRemovedCommand::doCommand()
+{
+    const Tag tag = getTagByDisplayName(m_tagName);
+
+    Q_ASSERT(tag.isValid());
+
+    emit_monitoredTagRemoved(tag);
 }

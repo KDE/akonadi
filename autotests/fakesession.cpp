@@ -35,10 +35,10 @@ public:
     }
 
     /* reimp */
-    void init(const QByteArray &id) Q_DECL_OVERRIDE {
+    void init(const QByteArray &id) Q_DECL_OVERRIDE
+    {
         // trimmed down version of the real SessionPrivate::init(), without any server access
-        if (!id.isEmpty())
-        {
+        if (!id.isEmpty()) {
             sessionId = id;
         } else {
             sessionId = QCoreApplication::instance()->applicationName().toUtf8()
@@ -53,9 +53,9 @@ public:
     }
 
     /* reimp */
-    void reconnect() Q_DECL_OVERRIDE {
-        if (m_mode == FakeSession::EndJobsImmediately)
-        {
+    void reconnect() Q_DECL_OVERRIDE
+    {
+        if (m_mode == FakeSession::EndJobsImmediately) {
             return;
         }
 
@@ -65,16 +65,18 @@ public:
     }
 
     /* reimp */
-    void addJob(Job *job) Q_DECL_OVERRIDE {
+    void addJob(Job *job) Q_DECL_OVERRIDE
+    {
         emit q_ptr->jobAdded(job);
         // Return immediately so that no actual communication happens with the server and
         // the started jobs are completed.
-        if (m_mode == FakeSession::EndJobsImmediately)
-        {
+        if (m_mode == FakeSession::EndJobsImmediately) {
             endJob(job);
-        } else
-        { SessionPrivate::addJob(job); }
+        } else {
+            SessionPrivate::addJob(job);
+        }
     }
+
     FakeSession *q_ptr;
     FakeSession::Mode m_mode;
 };

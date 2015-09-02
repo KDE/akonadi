@@ -21,17 +21,21 @@
 #include "tagmodel.h"
 
 #include "monitor.h"
+#include "session.h"
 #include "tagfetchjob.h"
+
 #include <QDebug>
+#include <QTimer>
 
 using namespace Akonadi;
 
 TagModelPrivate::TagModelPrivate(TagModel *parent)
     : mMonitor(0)
+    , mSession(0)
     , q_ptr(parent)
 {
     // Root tag
-    mTags.insert(0, Tag(0));
+    mTags.insert(-1, Tag());
 }
 
 TagModelPrivate::~TagModelPrivate()
@@ -43,6 +47,7 @@ void TagModelPrivate::init(Monitor *monitor)
     Q_Q(TagModel);
 
     mMonitor = monitor;
+    mSession = mMonitor->session();
 
     q->connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)),
                q, SLOT(monitoredTagAdded(Akonadi::Tag)));
@@ -51,7 +56,15 @@ void TagModelPrivate::init(Monitor *monitor)
     q->connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)),
                q, SLOT(monitoredTagRemoved(Akonadi::Tag)));
 
-    TagFetchJob *fetchJob = new TagFetchJob(q);
+    // Delay starting the job to allow unit-tests to set up fake stuff
+    QTimer::singleShot(0, q, SLOT(fillModel()));
+}
+
+void TagModelPrivate::fillModel()
+{
+    Q_Q(TagModel);
+
+    TagFetchJob *fetchJob = new TagFetchJob(mSession);
     fetchJob->setFetchScope(mMonitor->tagFetchScope());
     q->connect(fetchJob, SIGNAL(tagsReceived(Akonadi::Tag::List)),
                q, SLOT(tagsFetched(Akonadi::Tag::List)));
@@ -115,13 +128,9 @@ void TagModelPrivate::monitoredTagAdded(const Tag &tag)
     // If there are any child tags waiting for this parent, insert them
     if (mPendingTags.contains(tag.id())) {
         const Tag::List pendingChildren = mPendingTags.take(tag.id());
-        Tag::List &children = mChildTags[tag.id()];
-        q->beginInsertRows(indexForTag(tag.id()), 0, pendingChildren.count() - 1);
-        Q_FOREACH (const Tag &child, pendingChildren) {
-            mTags.insert(child.id(), child);
-            children.append(child);
+        Q_FOREACH (const Tag &pendingTag, pendingChildren) {
+            monitoredTagAdded(pendingTag);
         }
-        q->endInsertRows();
     }
 }
 
@@ -145,14 +154,21 @@ void TagModelPrivate::monitoredTagRemoved(const Tag &tag)
 {
     Q_Q(TagModel);
 
+    if (!tag.isValid()) {
+        qWarning() << "Attempting to remove root tag?";
+        return;
+    }
+
     // Better lookup parent in our cache
-    qint64 parentId = mTags.value(tag.id()).parent().id();
-    if (parentId == -1) {
+    auto iter = mTags.constFind(tag.id());
+    if (iter == mTags.cend()) {
         qWarning() << "Got removal notification for unknown tag" << tag.id();
         return;
     }
 
-    Tag::List &siblings = mChildTags[parentId];
+    const qint64 parentId = iter->parent().id();
+
+    const Tag::List &siblings = mChildTags[parentId];
     const int pos = siblings.indexOf(tag);
     Q_ASSERT(pos != -1);
 

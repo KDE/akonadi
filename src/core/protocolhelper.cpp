@@ -477,6 +477,7 @@ Tag ProtocolHelper::parseTagFetchResult(const Protocol::FetchTagsResponse &data)
     tag.setGid(data.gid());
     tag.setRemoteId(data.remoteId());
     tag.setType(data.type());
+    tag.setParent(data.parentId() > 0 ? Tag(data.parentId()) : Tag());
 
     parseAttributes(data.attributes(), &tag);
     return tag;

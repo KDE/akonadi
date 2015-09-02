@@ -47,6 +47,7 @@ class TagTest : public QObject
 private Q_SLOTS:
     void initTestCase();
 
+    void testTag();
     void testCreateFetch();
     void testRID();
     void testDelete();
@@ -81,6 +82,40 @@ void TagTest::initTestCase()
     QCOMPARE(fetchJob->tags().size(), 1);
     TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
     AKVERIFYEXEC(deleteJob);
+}
+
+void TagTest::testTag()
+{
+    Tag tag1;
+    Tag tag2;
+
+    // Invalid tags are equal
+    QVERIFY(tag1 == tag2);
+
+    // Invalid tags with different GIDs are not equal
+    tag1.setGid("GID1");
+    QVERIFY(tag1 != tag2);
+    tag2.setGid("GID2");
+    QVERIFY(tag1 != tag2);
+
+    // Invalid tags with equal GIDs are equal
+    tag1.setGid("GID2");
+    QVERIFY(tag1 == tag2);
+
+    // Valid tags with different IDs are not equal
+    tag1 = Tag(1);
+    tag2 = Tag(2);
+    QVERIFY(tag1 != tag2);
+
+    // Valid tags with different IDs and equal GIDs are still not equal
+    tag1.setGid("GID1");
+    tag2.setGid("GID1");
+    QVERIFY(tag1 != tag2);
+
+    // Valid tags with equal ID are equal regardless of GIDs
+    tag2 = Tag(1);
+    tag2.setGid("GID2");
+    QVERIFY(tag1 == tag2);
 }
 
 void TagTest::testCreateFetch()

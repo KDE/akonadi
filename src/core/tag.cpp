@@ -97,10 +97,23 @@ AttributeEntity &Tag::operator=(const AttributeEntity &other)
 
 bool Tag::operator==(const Tag &other) const
 {
+    // Valid tags are equal if their IDs are equal
     if (isValid() && other.isValid()) {
         return d->id == other.d->id;
     }
-    return d->gid == other.d->gid;
+
+    // Invalid tags are equal if their GIDs are non empty but equal
+    if (!d->gid.isEmpty() || !other.d->gid.isEmpty()) {
+        return d->gid == other.d->gid;
+    }
+
+    // Invalid tags are equal if both are invalid
+    return !isValid() && !other.isValid();
+}
+
+bool Tag::operator!=(const Tag &other) const
+{
+    return !operator==(other);
 }
 
 Tag Tag::fromUrl(const QUrl &url)
@@ -177,9 +190,7 @@ QString Tag::name() const
 
 void Tag::setParent(const Tag &parent)
 {
-    if (parent.isValid()) {
-        d->parent.reset(new Tag(parent));
-    }
+    d->parent.reset(new Tag(parent));
 }
 
 Tag Tag::parent() const
