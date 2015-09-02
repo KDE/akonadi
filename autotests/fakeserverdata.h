@@ -37,6 +37,7 @@ class AKONADITESTFAKE_EXPORT FakeServerData : public QObject
     Q_OBJECT
 public:
     FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = Q_NULLPTR);
+    FakeServerData(TagModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = Q_NULLPTR);
 
     void setCommands(QList<FakeAkonadiServerCommand *> list);
 
@@ -48,8 +49,12 @@ public:
     {
         return m_nextItemId++;
     };
+    Tag::Id nextTagId() const
+    {
+        return m_nextTagId++;
+    }
 
-    Akonadi::EntityTreeModel *model() const
+    QAbstractItemModel *model() const
     {
         return m_model;
     };
@@ -58,14 +63,16 @@ public:
 
 private Q_SLOTS:
     void jobAdded(qint64 fetchCollectionId);
+    void jobAdded();
 
 private:
     bool returnCollections(Entity::Id fetchColId);
     void returnItems(Entity::Id fetchColId);
     void returnEntities(Entity::Id fetchColId);
+    void returnTags();
 
 private:
-    EntityTreeModel *m_model;
+    QAbstractItemModel *m_model;
     FakeSession *m_session;
     FakeMonitor *m_monitor;
 
@@ -74,6 +81,7 @@ private:
 
     mutable Entity::Id m_nextCollectionId;
     mutable Entity::Id m_nextItemId;
+    mutable Tag::Id m_nextTagId;
 };
 
 #endif

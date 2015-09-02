@@ -65,8 +65,8 @@ void ModelSpy::verifySignal(SignalType type, const QModelIndex &parent, int star
 {
     ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
     QCOMPARE(int(type), int(expectedSignal.signalType));
-    QCOMPARE(expectedSignal.startRow, start);
-    QCOMPARE(expectedSignal.endRow, end);
+    QCOMPARE(start, expectedSignal.startRow);
+    QCOMPARE(end, expectedSignal.endRow);
     QCOMPARE(parent.data(), expectedSignal.sourceParentData);
     QCOMPARE(destParent.data(), expectedSignal.parentData);
     QCOMPARE(destStart, expectedSignal.destRow);

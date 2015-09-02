@@ -30,18 +30,37 @@ FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, Fak
       m_session(session),
       m_monitor(monitor),
       m_nextCollectionId(1),
-      m_nextItemId(0)
+      m_nextItemId(0),
+      m_nextTagId(1)
 {
     // can't use QueuedConnection here, because the Job might self-deleted before
     // the slot gets called
     connect(session, &FakeSession::jobAdded,
-    [this](Akonadi::Job * job) {
-        Entity::Id fetchColId = job->property("FetchCollectionId").toULongLong();
-        QTimer::singleShot(0, [this, fetchColId]() {
-            jobAdded(fetchColId);
-        });
-    });
+            [this](Akonadi::Job * job) {
+                Entity::Id fetchColId = job->property("FetchCollectionId").toULongLong();
+                QTimer::singleShot(0, [this, fetchColId]() {
+                    jobAdded(fetchColId);
+                });
+            });
 }
+
+FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)
+    : QObject(parent),
+      m_model(model),
+      m_session(session),
+      m_monitor(monitor),
+      m_nextCollectionId(1),
+      m_nextItemId(0),
+      m_nextTagId(1)
+{
+    connect(session, &FakeSession::jobAdded,
+            [this](Akonadi::Job *) {
+                QTimer::singleShot(0, [this]() {
+                    jobAdded();
+                });
+            });
+}
+
 
 void FakeServerData::setCommands(QList< FakeAkonadiServerCommand * > list)
 {
@@ -69,12 +88,22 @@ void FakeServerData::jobAdded(qint64 fetchColId)
     returnEntities(fetchColId);
 }
 
+void FakeServerData::jobAdded()
+{
+    while (!m_communicationQueue.isEmpty() && m_communicationQueue.head()->respondTo() == FakeAkonadiServerCommand::RespondToTagFetch) {
+        returnTags();
+    }
+
+    processNotifications();
+}
+
 void FakeServerData::returnEntities(Entity::Id fetchColId)
 {
-    if (!returnCollections(fetchColId))
+    if (!returnCollections(fetchColId)) {
         while (!m_communicationQueue.isEmpty() && m_communicationQueue.head()->respondTo() == FakeAkonadiServerCommand::RespondToItemFetch) {
             returnItems(fetchColId);
         }
+    }
 
     processNotifications();
 }
@@ -113,3 +142,12 @@ void FakeServerData::returnItems(Entity::Id fetchColId)
     }
 }
 
+void FakeServerData::returnTags()
+{
+    FakeAkonadiServerCommand::Type commType = m_communicationQueue.head()->respondTo();
+
+    if (commType == FakeAkonadiServerCommand::RespondToTagFetch) {
+        FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
+        command->doCommand();
+    }
+}

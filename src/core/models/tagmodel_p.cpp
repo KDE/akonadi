@@ -21,13 +21,17 @@
 #include "tagmodel.h"
 
 #include "monitor.h"
+#include "session.h"
 #include "tagfetchjob.h"
+
 #include <QDebug>
+#include <QTimer>
 
 using namespace Akonadi;
 
 TagModelPrivate::TagModelPrivate(TagModel *parent)
     : mMonitor(0)
+    , mSession(0)
     , q_ptr(parent)
 {
     // Root tag
@@ -43,6 +47,7 @@ void TagModelPrivate::init(Monitor *monitor)
     Q_Q(TagModel);
 
     mMonitor = monitor;
+    mSession = mMonitor->session();
 
     q->connect(mMonitor, SIGNAL(tagAdded(Akonadi::Tag)),
                q, SLOT(monitoredTagAdded(Akonadi::Tag)));
@@ -51,7 +56,15 @@ void TagModelPrivate::init(Monitor *monitor)
     q->connect(mMonitor, SIGNAL(tagRemoved(Akonadi::Tag)),
                q, SLOT(monitoredTagRemoved(Akonadi::Tag)));
 
-    TagFetchJob *fetchJob = new TagFetchJob(q);
+    // Delay starting the job to allow unit-tests to set up fake stuff
+    QTimer::singleShot(0, q, SLOT(fillModel()));
+}
+
+void TagModelPrivate::fillModel()
+{
+    Q_Q(TagModel);
+
+    TagFetchJob *fetchJob = new TagFetchJob(mSession);
     fetchJob->setFetchScope(mMonitor->tagFetchScope());
     q->connect(fetchJob, SIGNAL(tagsReceived(Akonadi::Tag::List)),
                q, SLOT(tagsFetched(Akonadi::Tag::List)));

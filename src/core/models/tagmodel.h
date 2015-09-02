@@ -83,6 +83,7 @@ private:
     bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
     bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
 
+    Q_PRIVATE_SLOT(d_func(), void fillModel())
     Q_PRIVATE_SLOT(d_func(), void tagsFetched(const Akonadi::Tag::List &tags))
     Q_PRIVATE_SLOT(d_func(), void tagsFetchDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void monitoredTagAdded(const Akonadi::Tag &tag))
