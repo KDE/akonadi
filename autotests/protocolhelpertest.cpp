@@ -26,6 +26,7 @@ Q_DECLARE_METATYPE(Scope)
 Q_DECLARE_METATYPE(QVector<Protocol::Ancestor>)
 Q_DECLARE_METATYPE(Protocol::FetchCollectionsResponse)
 Q_DECLARE_METATYPE(Protocol::FetchScope)
+Q_DECLARE_METATYPE(Protocol::FetchTagsResponse)
 
 class ProtocolHelperTest : public QObject
 {
@@ -276,6 +277,54 @@ private Q_SLOTS:
         QFETCH(ItemFetchScope, scope);
         QFETCH(Protocol::FetchScope, result);
         QCOMPARE(ProtocolHelper::itemFetchScopeToProtocol(scope), result);
+    }
+
+    void testTagParsing_data()
+    {
+        QTest::addColumn<Protocol::FetchTagsResponse>("input");
+        QTest::addColumn<Tag>("expected");
+
+        QTest::newRow("invalid") << Protocol::FetchTagsResponse(-1) << Tag();
+
+        Protocol::FetchTagsResponse response(15);
+        response.setGid("TAG13GID");
+        response.setRemoteId("TAG13RID");
+        response.setParentId(-1);
+        response.setType("PLAIN");
+        response.setAttributes({ { "TAGAttribute", "MyAttribute" } });
+
+        Tag tag(15);
+        tag.setGid("TAG13GID");
+        tag.setRemoteId("TAG13RID");
+        tag.setType("PLAIN");
+        auto attr = AttributeFactory::createAttribute("TAGAttribute");
+        attr->deserialize("MyAttribute");
+        tag.addAttribute(attr);
+        QTest::newRow("valid with invalid parent") << response << tag;
+
+        response.setParentId(15);
+        tag.setParent(Tag(15));
+        QTest::newRow("valid with valid parent") << response << tag;
+    }
+
+    void testTagParsing()
+    {
+        QFETCH(Protocol::FetchTagsResponse, input);
+        QFETCH(Tag, expected);
+
+        const Tag tag = ProtocolHelper::parseTagFetchResult(input);
+        QCOMPARE(tag.id(), expected.id());
+        QCOMPARE(tag.gid(), expected.gid());
+        QCOMPARE(tag.remoteId(), expected.remoteId());
+        QCOMPARE(tag.type(), expected.type());
+        QCOMPARE(tag.parent(), expected.parent());
+        QCOMPARE(tag.attributes().size(), expected.attributes().size());
+        for (int i = 0; i < tag.attributes().size(); ++i) {
+            Attribute *attr = tag.attributes().at(i);
+            Attribute *expectedAttr = expected.attributes().at(i);
+            QCOMPARE(attr->type(), expectedAttr->type());
+            QCOMPARE(attr->serialized(), expectedAttr->serialized());
+        }
     }
 };
 
