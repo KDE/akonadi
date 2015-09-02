@@ -186,9 +186,7 @@ QString Tag::name() const
 
 void Tag::setParent(const Tag &parent)
 {
-    if (parent.isValid()) {
-        d->parent.reset(new Tag(parent));
-    }
+    d->parent.reset(new Tag(parent));
 }
 
 Tag Tag::parent() const
