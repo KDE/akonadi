@@ -128,13 +128,9 @@ void TagModelPrivate::monitoredTagAdded(const Tag &tag)
     // If there are any child tags waiting for this parent, insert them
     if (mPendingTags.contains(tag.id())) {
         const Tag::List pendingChildren = mPendingTags.take(tag.id());
-        Tag::List &children = mChildTags[tag.id()];
-        q->beginInsertRows(indexForTag(tag.id()), 0, pendingChildren.count() - 1);
-        Q_FOREACH (const Tag &child, pendingChildren) {
-            mTags.insert(child.id(), child);
-            children.append(child);
+        Q_FOREACH (const Tag &pendingTag, pendingChildren) {
+            monitoredTagAdded(pendingTag);
         }
-        q->endInsertRows();
     }
 }
 
