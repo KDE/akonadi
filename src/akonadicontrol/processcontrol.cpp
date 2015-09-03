@@ -154,6 +154,7 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
                 start();
             } else {
                 qWarning("Application '%s' exited normally...", qPrintable(mApplication));
+                Q_EMIT unableToStart();
             }
         }
     }

@@ -179,8 +179,9 @@ bool DbConfigMysql::useInternalServer() const
     return mInternalServer;
 }
 
-void DbConfigMysql::startInternalServer()
+bool DbConfigMysql::startInternalServer()
 {
+    bool success = true;
     const QString mysqldPath = mServerPath;
 
     const QString akDir   = StandardDirs::saveDir("data");
@@ -194,7 +195,8 @@ void DbConfigMysql::startInternalServer()
     const QString localConfig  = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-local.conf"));
     const QString actualConfig = StandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
     if (globalConfig.isEmpty()) {
-        akFatal() << "Did not find MySQL server default configuration (mysql-global.conf)";
+        akError() << "Did not find MySQL server default configuration (mysql-global.conf)";
+        return false;
     }
 
 #ifdef Q_OS_LINUX
@@ -230,7 +232,8 @@ void DbConfigMysql::startInternalServer()
         } else {
             akError() << "Unable to create MySQL server configuration file.";
             akError() << "This means that either the default configuration file (mysql-global.conf) was not readable";
-            akFatal() << "or the target file (mysql.conf) could not be written.";
+            akError() << "or the target file (mysql.conf) could not be written.";
+            return false;
         }
     }
 
@@ -244,21 +247,25 @@ void DbConfigMysql::startInternalServer()
     }
 
     if (dataDir.isEmpty()) {
-        akFatal() << "Akonadi server was not able to create database data directory";
+        akError() << "Akonadi server was not able to create database data directory";
+        return false;
     }
 
     if (akDir.isEmpty()) {
-        akFatal() << "Akonadi server was not able to create database log directory";
+        akError() << "Akonadi server was not able to create database log directory";
+        return false;
     }
 
 #ifndef Q_OS_WIN
     if (socketDirectory.isEmpty()) {
-        akFatal() << "Akonadi server was not able to create database misc directory";
+        akError() << "Akonadi server was not able to create database misc directory";
+        return false;
     }
 
     // the socket path must not exceed 103 characters, so check for max dir length right away
     if (socketDirectory.length() >= 90) {
-        akFatal() << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
+        akError() << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
+        return false;
     }
 #endif
 
@@ -302,7 +309,7 @@ void DbConfigMysql::startInternalServer()
 
     if (mysqldPath.isEmpty()) {
         akError() << "mysqld not found. Please verify your installation";
-        return;
+        return false;
     }
     mDatabaseProcess = new QProcess;
     mDatabaseProcess->start(mysqldPath, arguments);
@@ -310,7 +317,8 @@ void DbConfigMysql::startInternalServer()
         akError() << "Could not start database server!";
         akError() << "executable:" << mysqldPath;
         akError() << "arguments:" << arguments;
-        akFatal() << "process error:" << mDatabaseProcess->errorString();
+        akError() << "process error:" << mDatabaseProcess->errorString();
+        return false;
     }
 
 #ifndef Q_OS_WIN
@@ -329,7 +337,8 @@ void DbConfigMysql::startInternalServer()
 
         db.setDatabaseName(QString());   // might not exist yet, then connecting to the actual db will fail
         if (!db.isValid()) {
-            akFatal() << "Invalid database object during database server startup";
+            akError() << "Invalid database object during database server startup";
+            return false;
         }
 
         bool opened = false;
@@ -345,7 +354,8 @@ void DbConfigMysql::startInternalServer()
                 akError() << "stdout:" << mDatabaseProcess->readAllStandardOutput();
                 akError() << "stderr:" << mDatabaseProcess->readAllStandardError();
                 akError() << "exit code:" << mDatabaseProcess->exitCode();
-                akFatal() << "process error:" << mDatabaseProcess->errorString();
+                akError() << "process error:" << mDatabaseProcess->errorString();
+                return false;
             }
         }
 
@@ -368,20 +378,23 @@ void DbConfigMysql::startInternalServer()
                 if (!query.exec(QStringLiteral("SELECT VERSION()")) || !query.first()) {
                     akError() << "Failed to verify database server version";
                     akError() << "Query error:" << query.lastError().text();
-                    akFatal() << "Database error:" << db.lastError().text();
+                    akError() << "Database error:" << db.lastError().text();
+                    return false;
                 }
 
                 const QString version = query.value(0).toString();
                 const QStringList versions = version.split(QLatin1Char('.'), QString::SkipEmptyParts);
                 if (versions.count() < 3) {
-                    akFatal() << "Invalid database server version: " << version;
+                    akError() << "Invalid database server version: " << version;
+                    return false;
                 }
 
                 if (versions[0].toInt() < MYSQL_MIN_MAJOR || (versions[0].toInt() == MYSQL_MIN_MAJOR && versions[1].toInt() < MYSQL_MIN_MINOR)) {
                     akError() << "Unsupported MySQL version:";
                     akError() << "Current version:" << QStringLiteral("%1.%2").arg(versions[0], versions[1]);
                     akError() << "Minimum required version:" << QStringLiteral("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR);
-                    akFatal() << "Please update your MySQL database server";
+                    akError() << "Please update your MySQL database server";
+                    return false;
                 } else {
                     akDebug() << "MySQL version OK"
                               << "(required" << QStringLiteral("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR)
@@ -399,15 +412,21 @@ void DbConfigMysql::startInternalServer()
                     if (!query.exec(QStringLiteral("CREATE DATABASE akonadi"))) {
                         akError() << "Failed to create database";
                         akError() << "Query error:" << query.lastError().text();
-                        akFatal() << "Database error:" << db.lastError().text();
+                        akError() << "Database error:" << db.lastError().text();
+                        success = false;
                     }
                 }
             } // make sure query is destroyed before we close the db
             db.close();
+        } else {
+            akError() << "Failed to connect to database!";
+            akError() << "Database error:" << db.lastError().text();
+            success = false;
         }
     }
 
     QSqlDatabase::removeDatabase(initCon);
+    return success;
 }
 
 void DbConfigMysql::stopInternalServer()

@@ -209,6 +209,11 @@ DataStore *DataStore::self()
     return sInstances.localData();
 }
 
+bool DataStore::hasDataStore()
+{
+    return sInstances.hasLocalData();
+}
+
 /* --- ItemFlags ----------------------------------------------------- */
 
 bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,

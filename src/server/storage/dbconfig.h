@@ -37,6 +37,11 @@ public:
     virtual ~DbConfig();
 
     /**
+     * Returns whether database have been configured.
+     */
+    static bool isConfigured();
+
+    /**
      * Returns the DbConfig instance for the database the user has
      * configured.
      */
@@ -82,7 +87,7 @@ public:
     /**
      * This method is called to start an external server.
      */
-    virtual void startInternalServer();
+    virtual bool startInternalServer();
 
     /**
      * This method is called to stop the external server.

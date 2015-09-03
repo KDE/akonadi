@@ -97,10 +97,21 @@ bool AkonadiServer::init()
     // Restrict permission to 600, as the file might contain database password in plaintext
     QFile::setPermissions(serverConfigFile, QFile::ReadOwner | QFile::WriteOwner);
 
+    if (!DbConfig::configuredDatabase()) {
+        quit();
+        return false;
+    }
+
     if (DbConfig::configuredDatabase()->useInternalServer()) {
-        startDatabaseProcess();
+        if (!startDatabaseProcess()) {
+            quit();
+            return false;
+        }
     } else {
-        createDatabase();
+        if (!createDatabase()) {
+            quit();
+            return false;
+        }
     }
 
     DbConfig::configuredDatabase()->setup();
@@ -146,7 +157,9 @@ bool AkonadiServer::init()
 
     QString namedPipe = settings.value(QLatin1String("Connection/NamedPipe"), defaultPipe).toString();
     if (!listen(namedPipe)) {
-        akFatal() << "Unable to listen on Named Pipe" << namedPipe;
+        akError() << "Unable to listen on Named Pipe" << namedPipe;
+        quit();
+        return false;
     }
 
     connectionSettings.setValue(QLatin1String("Data/Method"), QLatin1String("NamedPipe"));
@@ -156,7 +169,9 @@ bool AkonadiServer::init()
     const QString socketFile = socketDir + QLatin1String("/akonadiserver.socket");
     QFile::remove(socketFile);
     if (!listen(socketFile)) {
-        akFatal() << "Unable to listen on Unix socket" << socketFile;
+        akError() << "Unable to listen on Unix socket" << socketFile;
+        quit();
+        return false;
     }
 
     connectionSettings.setValue(QStringLiteral("Data/Method"), QLatin1String("UnixPath"));
@@ -166,10 +181,14 @@ bool AkonadiServer::init()
     // initialize the database
     DataStore *db = DataStore::self();
     if (!db->database().isOpen()) {
-        akFatal() << "Unable to open database" << db->database().lastError().text();
+        akError() << "Unable to open database" << db->database().lastError().text();
+        quit();
+        return false;
     }
     if (!db->init()) {
-        akFatal() << "Unable to initialize database.";
+        akError() << "Unable to initialize database.";
+        quit();
+        return false;
     }
 
     NotificationManager::self();
@@ -238,7 +257,9 @@ bool AkonadiServer::init()
     // We are ready, now register org.freedesktop.Akonadi service to DBus and
     // the fun can begin
     if (!QDBusConnection::sessionBus().registerService(DBus::serviceName(DBus::Server))) {
-        akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+        akError() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+        quit();
+        return false;
     }
 
     return true;
@@ -287,10 +308,13 @@ bool AkonadiServer::quit()
     // Terminate the preprocessor manager before the database but after all connections are gone
     PreprocessorManager::done();
 
-    DataStore::self()->close();
-
-    akDebug() << "stopping db process";
-    stopDatabaseProcess();
+    if (DbConfig::isConfigured()) {
+        if (DataStore::hasDataStore()) {
+            DataStore::self()->close();
+        }
+        akDebug() << "stopping db process";
+        stopDatabaseProcess();
+    }
 
     QSettings settings(StandardDirs::serverConfigFile(), QSettings::IniFormat);
     const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
@@ -335,34 +359,36 @@ AkonadiServer *AkonadiServer::instance()
     return s_instance;
 }
 
-void AkonadiServer::startDatabaseProcess()
+bool AkonadiServer::startDatabaseProcess()
 {
     if (!DbConfig::configuredDatabase()->useInternalServer()) {
-        return;
+        akFatal() << "Trying to start external database!";
     }
 
     // create the database directories if they don't exists
     StandardDirs::saveDir("data");
     StandardDirs::saveDir("data", QStringLiteral("file_db_data"));
 
-    DbConfig::configuredDatabase()->startInternalServer();
+    return DbConfig::configuredDatabase()->startInternalServer();
 }
 
-void AkonadiServer::createDatabase()
+bool AkonadiServer::createDatabase()
 {
+    bool success = true;
     const QLatin1String initCon("initConnection");
     QSqlDatabase db = QSqlDatabase::addDatabase(DbConfig::configuredDatabase()->driverName(), initCon);
     DbConfig::configuredDatabase()->apply(db);
     db.setDatabaseName(DbConfig::configuredDatabase()->databaseName());
     if (!db.isValid()) {
-        akFatal() << "Invalid database object during initial database connection";
+        akError() << "Invalid database object during initial database connection";
+        return false;
     }
 
     if (db.open()) {
         db.close();
     } else {
-        akDebug() << "Failed to use database" << DbConfig::configuredDatabase()->databaseName();
-        akDebug() << "Database error:" << db.lastError().text();
+        akError() << "Failed to use database" << DbConfig::configuredDatabase()->databaseName();
+        akError() << "Database error:" << db.lastError().text();
         akDebug() << "Trying to create database now...";
 
         db.close();
@@ -373,13 +399,19 @@ void AkonadiServer::createDatabase()
                 if (!query.exec(QStringLiteral("CREATE DATABASE %1").arg(DbConfig::configuredDatabase()->databaseName()))) {
                     akError() << "Failed to create database";
                     akError() << "Query error:" << query.lastError().text();
-                    akFatal() << "Database error:" << db.lastError().text();
+                    akError() << "Database error:" << db.lastError().text();
+                    success = false;
                 }
             } // make sure query is destroyed before we close the db
             db.close();
+        } else {
+            akError() << "Failed to connect to database!";
+            akError() << "Database error:" << db.lastError().text();
+            success = false;
         }
     }
     QSqlDatabase::removeDatabase(initCon);
+    return success;
 }
 
 void AkonadiServer::stopDatabaseProcess()

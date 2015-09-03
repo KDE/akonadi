@@ -118,6 +118,11 @@ public:
     */
     static DataStore *self();
 
+    /**
+     * Returns whether per thread DataStore has been created.
+     */
+    static bool hasDataStore();
+
     /* --- ItemFlags ----------------------------------------------------- */
     virtual bool setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
                                bool *flagsChanged = 0, const Collection &col = Collection(), bool silent = false);

@@ -36,8 +36,9 @@ static QString dataDir()
 {
     QString akonadiHomeDir = StandardDirs::saveDir("data");
     if (akonadiHomeDir.isEmpty()) {
-        akFatal() << "Unable to create directory 'akonadi' in " << XdgBaseDirs::homePath("data")
+        akError() << "Unable to create directory 'akonadi' in " << XdgBaseDirs::homePath("data")
                   << "during database initialization";
+        return QString();
     }
 
     akonadiHomeDir += QDir::separator();
@@ -47,11 +48,16 @@ static QString dataDir()
 
 static QString sqliteDataFile()
 {
-    const QString akonadiPath = dataDir() + QLatin1String("akonadi.db");
+    const QString dir = dataDir();
+    if (dir.isEmpty()) {
+        return QString();
+    }
+    const QString akonadiPath = dir + QLatin1String("akonadi.db");
     if (!QFile::exists(akonadiPath)) {
         QFile file(akonadiPath);
         if (!file.open(QIODevice::WriteOnly)) {
-            akFatal() << "Unable to create file" << akonadiPath << "during database initialization.";
+            akError() << "Unable to create file" << akonadiPath << "during database initialization.";
+            return QString();
         }
         file.close();
     }
@@ -82,6 +88,9 @@ bool DbConfigSqlite::init(QSettings &settings)
 {
     // determine default settings depending on the driver
     const QString defaultDbName = sqliteDataFile();
+    if (defaultDbName.isEmpty()) {
+        return false;
+    }
 
     // read settings for current driver
     settings.beginGroup(driverName());

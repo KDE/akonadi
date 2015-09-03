@@ -75,8 +75,8 @@ protected:
     virtual void incomingConnection(quintptr socketDescriptor);
 
 private:
-    void startDatabaseProcess();
-    void createDatabase();
+    bool startDatabaseProcess();
+    bool createDatabase();
     void stopDatabaseProcess();
 
 protected:

@@ -39,5 +39,8 @@ void SearchTaskManagerThread::run()
 
 void SearchTaskManagerThread::stop()
 {
+    if (!SearchTaskManager::sInstance) {
+        return;
+    }
     SearchTaskManager::instance()->stop();
 }

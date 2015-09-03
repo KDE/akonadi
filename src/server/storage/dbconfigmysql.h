@@ -65,7 +65,7 @@ public:
     /**
      * This method is called to start an external server.
      */
-    virtual void startInternalServer();
+    virtual bool startInternalServer();
 
     /**
      * This method is called to stop the external server.

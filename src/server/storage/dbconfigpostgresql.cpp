@@ -160,10 +160,11 @@ bool DbConfigPostgresql::useInternalServer() const
     return mInternalServer;
 }
 
-void DbConfigPostgresql::startInternalServer()
+bool DbConfigPostgresql::startInternalServer()
 {
     // We defined the mHostName to the socket directory, during init
     const QString socketDir = mHostName;
+    bool success = true;
 
     // Make sure the path exists, otherwise pg_ctl fails
     if (!QFile::exists(socketDir)) {
@@ -195,7 +196,7 @@ void DbConfigPostgresql::startInternalServer()
                     // Yup, our PostgreSQL is actually running, so pretend we started the server
                     // and try to connect to it
                     qCWarning(AKONADISERVER_LOG) << "PostgreSQL for Akonadi is already running, trying to connect to it.";
-                    return;
+                    return true;
                 }
             }
             proc.close();
@@ -244,7 +245,8 @@ void DbConfigPostgresql::startInternalServer()
         akError() << "Could not start database server!";
         akError() << "executable:" << mServerPath;
         akError() << "arguments:" << arguments;
-        akFatal() << "process error:" << pgCtl.errorString();
+        akError() << "process error:" << pgCtl.errorString();
+        return false;
     }
 
     const QLatin1String initCon("initConnection");
@@ -256,7 +258,8 @@ void DbConfigPostgresql::startInternalServer()
         db.setDatabaseName(QStringLiteral("postgres"));
 
         if (!db.isValid()) {
-            akFatal() << "Invalid database object during database server startup";
+            akError() << "Invalid database object during database server startup";
+            return false;
         }
 
         bool opened = false;
@@ -273,7 +276,8 @@ void DbConfigPostgresql::startInternalServer()
                 akError() << "stdout:" << pgCtl.readAllStandardOutput();
                 akError() << "stderr:" << pgCtl.readAllStandardError();
                 akError() << "exit code:" << pgCtl.exitCode();
-                akFatal() << "process error:" << pgCtl.errorString();
+                akError() << "process error:" << pgCtl.errorString();
+                return false;
             }
         }
 
@@ -289,7 +293,8 @@ void DbConfigPostgresql::startInternalServer()
                     if (!query.exec(QStringLiteral("CREATE DATABASE %1").arg(mDatabaseName))) {
                         akError() << "Failed to create database";
                         akError() << "Query error:" << query.lastError().text();
-                        akFatal() << "Database error:" << db.lastError().text();
+                        akError() << "Database error:" << db.lastError().text();
+                        success = false;
                     }
                 }
             } // make sure query is destroyed before we close the db
@@ -298,6 +303,7 @@ void DbConfigPostgresql::startInternalServer()
     }
 
     QSqlDatabase::removeDatabase(initCon);
+    return success;
 }
 
 void DbConfigPostgresql::stopInternalServer()
