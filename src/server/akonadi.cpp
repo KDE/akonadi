@@ -154,7 +154,7 @@ bool AkonadiServer::init()
 #else
     const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"));
     const QString socketFile = socketDir + QLatin1String("/akonadiserver.socket");
-    unlink(socketFile.toUtf8().constData());
+    QFile::remove(socketFile);
     if (!listen(socketFile)) {
         akFatal() << "Unable to listen on Unix socket" << socketFile;
     }

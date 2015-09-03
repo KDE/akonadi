@@ -110,7 +110,11 @@ QString akonadiSocketDirectory()
     }
 
     const QString link = StandardDirs::saveDir("data") + QLatin1Char('/') + QLatin1String("socket-") + hostname;
-    const QString tmpl = QLatin1String("akonadi-") + QLatin1String(pw_ent->pw_name) + QLatin1String(".XXXXXX");
+    QString tmpl = QLatin1String("akonadi-") + QString::fromLocal8Bit(pw_ent->pw_name) + QLatin1String(".XXXXXX");
+
+    // Workaround for QLocalServer encoding bug
+    // basically replace non-latin characters
+    tmpl = QString::fromLatin1(tmpl.toLatin1());
 
     if (checkSocketDirectory(link)) {
         return QFileInfo(link).symLinkTarget();
