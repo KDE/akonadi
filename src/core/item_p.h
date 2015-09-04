@@ -102,7 +102,7 @@ private:
     struct _save_bool {
         void f()
         {
-        };
+        }
     };
     typedef void (_save_bool::*save_bool)();
 public:

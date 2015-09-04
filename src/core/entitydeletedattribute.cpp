@@ -29,7 +29,7 @@ using namespace Akonadi;
 class EntityDeletedAttribute::EntityDeletedAttributePrivate
 {
 public:
-    EntityDeletedAttributePrivate() {};
+    EntityDeletedAttributePrivate() {}
 
     Collection restoreCollection;
     QString restoreResource;

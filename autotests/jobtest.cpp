@@ -31,13 +31,13 @@ class FakeJob : public Job
 {
     Q_OBJECT
 public:
-    explicit FakeJob(QObject *parent = 0) : Job(parent) {};
+    explicit FakeJob(QObject *parent = 0) : Job(parent) {}
     void done()
     {
         emitResult();
     }
 protected:
-    void doStart() Q_DECL_OVERRIDE { emitWriteFinished(); };
+    void doStart() Q_DECL_OVERRIDE { emitWriteFinished(); }
 };
 
 class JobTest : public QObject

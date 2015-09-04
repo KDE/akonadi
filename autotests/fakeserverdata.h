@@ -44,11 +44,11 @@ public:
     Entity::Id nextCollectionId() const
     {
         return m_nextCollectionId++;
-    };
+    }
     Entity::Id nextItemId() const
     {
         return m_nextItemId++;
-    };
+    }
     Tag::Id nextTagId() const
     {
         return m_nextTagId++;
@@ -57,7 +57,7 @@ public:
     QAbstractItemModel *model() const
     {
         return m_model;
-    };
+    }
 
     void processNotifications();
 
