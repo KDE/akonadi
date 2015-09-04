@@ -28,6 +28,7 @@
 #include "notificationmanagerinterface.h"
 #include "session.h"
 #include "changemediator_p.h"
+#include "vectorhelper.h"
 
 #include <qdebug.h>
 
@@ -996,7 +997,7 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ChangeNotification &m
         return handled;
     case Protocol::ChangeNotification::ModifyTags:
         if (q_ptr->receivers(SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>))) > 0) {
-            emit q_ptr->itemsTagsChanged(its, addedTags.toSet(), removedTags.toSet());
+            emit q_ptr->itemsTagsChanged(its, Akonadi::vectorToSet(addedTags), Akonadi::vectorToSet(removedTags));
             return true;
         }
         return false;

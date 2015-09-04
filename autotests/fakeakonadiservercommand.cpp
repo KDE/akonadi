@@ -110,7 +110,7 @@ void FakeJobResponse::doCommand()
         setProperty("FetchCollectionId", m_parentCollection.id());
         emit_itemsFetched(Akonadi::valuesToVector(m_items));
     } else if (m_type == RespondToTagFetch) {
-        emit_tagsFetched(m_tags.values());
+        emit_tagsFetched(Akonadi::valuesToVector(m_tags));
     }
 }
 

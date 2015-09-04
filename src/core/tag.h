@@ -44,7 +44,7 @@ namespace Akonadi
 class AKONADICORE_EXPORT Tag : public AttributeEntity
 {
 public:
-    typedef QList<Tag> List;
+    typedef QVector<Tag> List;
     typedef qint64 Id;
 
     /**

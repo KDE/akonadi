@@ -19,7 +19,9 @@
 
 #ifndef VECTORHELPER_H
 #define VECTORHELPER_H
+
 #include <QVector>
+#include <QSet>
 
 namespace Akonadi {
 template<typename Key, typename Value, template<typename, typename> class Container>
@@ -27,10 +29,21 @@ QVector<Value> valuesToVector(const Container<Key, Value> &container)
 {
     QVector<Value> values;
     values.reserve(container.size());
-    foreach (const Value &value, container) {
+    Q_FOREACH (const Value &value, container) {
         values << value;
     }
     return values;
+}
+
+template<typename T>
+QSet<T> vectorToSet(const QVector<T> &container)
+{
+    QSet<T> set;
+    set.reserve(container.size());
+    Q_FOREACH (const T &value, container) {
+        set.insert(value);
+    }
+    return set;
 }
 
 }
