@@ -43,8 +43,8 @@ NotificationCollector::NotificationCollector(DataStore *db)
     : QObject(db)
     , mDb(db)
 {
-    connect(db, SIGNAL(transactionCommitted()), SLOT(transactionCommitted()));
-    connect(db, SIGNAL(transactionRolledBack()), SLOT(transactionRolledBack()));
+    connect(db, &DataStore::transactionCommitted, this, &NotificationCollector::transactionCommitted);
+    connect(db, &DataStore::transactionRolledBack, this, &NotificationCollector::transactionRolledBack);
 }
 
 NotificationCollector::~NotificationCollector()

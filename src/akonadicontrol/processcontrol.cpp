@@ -141,7 +141,7 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
                     return;
                 }
                 ++mCrashCount;
-                QTimer::singleShot(60000, this, SLOT(resetCrashCount()));
+                QTimer::singleShot(60000, this, &ProcessControl::resetCrashCount);
                 if (!mFailedToStart) {   // don't try to start an unstartable application
                     start();
                     Q_EMIT restarted();

@@ -40,8 +40,8 @@ AkonadiStarter::AkonadiStarter(QObject *parent)
                                                            QDBusConnection::sessionBus(),
                                                            QDBusServiceWatcher::WatchForOwnerChange, this);
 
-    connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
+    connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged,
+            this, &AkonadiStarter::serviceOwnerChanged);
 }
 
 bool AkonadiStarter::start()
@@ -60,7 +60,7 @@ bool AkonadiStarter::start()
     }
 
     // safety timeout
-    QTimer::singleShot(5000, QCoreApplication::instance(), SLOT(quit()));
+    QTimer::singleShot(5000, QCoreApplication::instance(), &QCoreApplication::quit);
     // wait for the server to register with D-Bus
     QCoreApplication::instance()->exec();
 

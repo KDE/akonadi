@@ -77,7 +77,7 @@ bool PreprocessorInstance::init()
         return false;
     }
 
-    QObject::connect(mInterface, SIGNAL(itemProcessed(qlonglong)), this, SLOT(itemProcessed(qlonglong)));
+    QObject::connect(mInterface, &OrgFreedesktopAkonadiPreprocessorInterface::itemProcessed, this, &PreprocessorInstance::itemProcessed);
 
     return true;
 }

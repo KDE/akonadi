@@ -88,10 +88,10 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
      * outgoing data transfers in a streaming manner, without having to
      * hold them in memory 'en gros'. */
 
-    connect(socket, SIGNAL(readyRead()),
-            this, SLOT(slotNewData()));
-    connect(socket, SIGNAL(disconnected()),
-            this, SIGNAL(disconnected()));
+    connect(socket, &QIODevice::readyRead,
+            this, &Connection::slotNewData);
+    connect(socket, &QLocalSocket::disconnected,
+            this, &Connection::disconnected);
 
     // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
     // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
@@ -183,8 +183,8 @@ void Connection::slotNewData()
         if (m_reportTime) {
             startTime();
         }
-        connect(m_currentHandler, SIGNAL(connectionStateChange(ConnectionState)),
-                this, SLOT(slotConnectionStateChange(ConnectionState)),
+        connect(m_currentHandler, &Handler::connectionStateChange,
+                this, &Connection::slotConnectionStateChange,
                 Qt::DirectConnection);
 
         m_currentHandler->setConnection(this);

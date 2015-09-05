@@ -75,7 +75,7 @@ PreprocessorManager::PreprocessorManager()
 
     mHeartbeatTimer = new QTimer(this);
 
-    QObject::connect(mHeartbeatTimer, SIGNAL(timeout()), this, SLOT(heartbeat()));
+    QObject::connect(mHeartbeatTimer, &QTimer::timeout, this, &PreprocessorManager::heartbeat);
 
     mHeartbeatTimer->start(gHeartbeatTimeoutInMSecs);
 }
@@ -252,9 +252,9 @@ void PreprocessorManager::beginHandleItem(const PimItem &item, const DataStore *
             mTransactionWaitQueueHash.insert(dataStore, waitQueue);
 
             // This will usually end up being a queued connection.
-            QObject::connect(dataStore, SIGNAL(destroyed()), this, SLOT(dataStoreDestroyed()));
-            QObject::connect(dataStore, SIGNAL(transactionCommitted()), this, SLOT(dataStoreTransactionCommitted()));
-            QObject::connect(dataStore, SIGNAL(transactionRolledBack()), this, SLOT(dataStoreTransactionRolledBack()));
+            QObject::connect(dataStore, &QObject::destroyed, this, &PreprocessorManager::dataStoreDestroyed);
+            QObject::connect(dataStore, &DataStore::transactionCommitted, this, &PreprocessorManager::dataStoreTransactionCommitted);
+            QObject::connect(dataStore, &DataStore::transactionRolledBack, this, &PreprocessorManager::dataStoreTransactionRolledBack);
         }
 
         waitQueue->push_back(item.id());
@@ -298,9 +298,9 @@ void PreprocessorManager::lockedKillWaitQueue(const DataStore *dataStore, bool d
         return;
     }
 
-    QObject::disconnect(dataStore, SIGNAL(destroyed()), this, SLOT(dataStoreDestroyed()));
-    QObject::disconnect(dataStore, SIGNAL(transactionCommitted()), this, SLOT(dataStoreTransactionCommitted()));
-    QObject::disconnect(dataStore, SIGNAL(transactionRolledBack()), this, SLOT(dataStoreTransactionRolledBack()));
+    QObject::disconnect(dataStore, &QObject::destroyed, this, &PreprocessorManager::dataStoreDestroyed);
+    QObject::disconnect(dataStore, &DataStore::transactionCommitted, this, &PreprocessorManager::dataStoreTransactionCommitted);
+    QObject::disconnect(dataStore, &DataStore::transactionRolledBack, this, &PreprocessorManager::dataStoreTransactionRolledBack);
 
 }
 

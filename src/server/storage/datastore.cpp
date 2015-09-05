@@ -95,8 +95,8 @@ DataStore::DataStore()
         // without properly reporting the error
         m_keepAliveTimer = new QTimer(this);
         m_keepAliveTimer->setInterval(3600 * 1000);
-        QObject::connect(m_keepAliveTimer, SIGNAL(timeout()),
-                         this, SLOT(sendKeepAliveQuery()));
+        QObject::connect(m_keepAliveTimer, &QTimer::timeout,
+                         this, &DataStore::sendKeepAliveQuery);
         m_keepAliveTimer->start();
     }
 }

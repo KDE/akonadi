@@ -38,7 +38,7 @@ public:
 
     Cache()
     {
-        connect(&m_cleanupTimer, SIGNAL(timeout()), SLOT(cleanup()));
+        connect(&m_cleanupTimer, &QTimer::timeout, this, &Cache::cleanup);
         m_cleanupTimer.setSingleShot(true);
     }
 

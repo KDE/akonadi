@@ -161,8 +161,8 @@ void FakeClient::run()
 {
     mSocket = new QLocalSocket();
     mSocket->connectToServer(FakeAkonadiServer::socketFile());
-    connect(mSocket, SIGNAL(readyRead()), this, SLOT(dataAvailable()));
-    connect(mSocket, SIGNAL(disconnected()), this, SLOT(connectionLost()));
+    connect(mSocket, &QIODevice::readyRead, this, &FakeClient::dataAvailable);
+    connect(mSocket, &QLocalSocket::disconnected, this, &FakeClient::connectionLost);
     if (!mSocket->waitForConnected()) {
         akFatal() << "Failed to connect to FakeAkonadiServer";
     }

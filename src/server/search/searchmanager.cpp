@@ -170,8 +170,8 @@ void SearchManager::init(const QStringList &searchEngines, const QList<QPluginLo
     mSearchUpdateTimer = new QTimer(this);
     mSearchUpdateTimer->setInterval(15 * 1000);
     mSearchUpdateTimer->setSingleShot(true);
-    connect(mSearchUpdateTimer, SIGNAL(timeout()),
-            this, SLOT(searchUpdateTimeout()));
+    connect(mSearchUpdateTimer, &QTimer::timeout,
+            this, &SearchManager::searchUpdateTimeout);
 }
 
 SearchManager::~SearchManager()
@@ -339,8 +339,8 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     request.setRemoteSearch(remoteSearch);
     request.setStoreResults(true);
     request.setProperty("SearchCollection", QVariant::fromValue(collection));
-    connect(&request, SIGNAL(resultsAvailable(QSet<qint64>)),
-            this, SLOT(searchUpdateResultsAvailable(QSet<qint64>)));
+    connect(&request, &SearchRequest::resultsAvailable,
+            this, &SearchManager::searchUpdateResultsAvailable);
     request.exec(); // blocks until all searches are done
 
     const QSet<qint64> results = request.results();

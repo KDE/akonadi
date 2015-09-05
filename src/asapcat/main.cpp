@@ -41,7 +41,7 @@ int main(int argc, char **argv)
     }
 
     Session session(args[0]);
-    QObject::connect(&session, SIGNAL(disconnected()), QCoreApplication::instance(), SLOT(quit()));
+    QObject::connect(&session, &Session::disconnected, QCoreApplication::instance(), &QCoreApplication::quit);
     QMetaObject::invokeMethod(&session, "connectToHost", Qt::QueuedConnection);
 
     const int result = app.exec();

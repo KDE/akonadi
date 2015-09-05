@@ -56,7 +56,7 @@ Session::Session(const QString &input, QObject *parent)
             akFatal() << "Failed to open stdin!";
         }
         m_notifier = new QSocketNotifier(0, QSocketNotifier::Read, this);
-        connect(m_notifier, SIGNAL(activated(int)), SLOT(inputAvailable()));
+        connect(m_notifier, &QSocketNotifier::activated, this, &Session::inputAvailable);
     }
     m_input = file;
 }
@@ -81,9 +81,9 @@ void Session::connectToHost()
 
     QLocalSocket *socket = new QLocalSocket(this);
     connect(socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(serverError(QLocalSocket::LocalSocketError)));
-    connect(socket, SIGNAL(disconnected()), SLOT(serverDisconnected()));
-    connect(socket, SIGNAL(readyRead()), SLOT(serverRead()));
-    connect(socket, SIGNAL(connected()), SLOT(inputAvailable()));
+    connect(socket, &QLocalSocket::disconnected, this, &Session::serverDisconnected);
+    connect(socket, &QIODevice::readyRead, this, &Session::serverRead);
+    connect(socket, &QLocalSocket::connected, this, &Session::inputAvailable);
 
     m_session = socket;
     socket->connectToServer(serverAddress);

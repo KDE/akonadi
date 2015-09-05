@@ -63,7 +63,7 @@ NotificationManager::NotificationManager()
 
     mTimer.setInterval(settings.value(QStringLiteral("NotificationManager/Interval"), 50).toInt());
     mTimer.setSingleShot(true);
-    connect(&mTimer, SIGNAL(timeout()), SLOT(emitPendingNotifications()));
+    connect(&mTimer, &QTimer::timeout, this, &NotificationManager::emitPendingNotifications);
 }
 
 NotificationManager::~NotificationManager()
@@ -81,8 +81,8 @@ NotificationManager *NotificationManager::self()
 
 void NotificationManager::connectNotificationCollector(NotificationCollector *collector)
 {
-    connect(collector, SIGNAL(notify(Akonadi::Protocol::ChangeNotification::List)),
-            SLOT(slotNotify(Akonadi::Protocol::ChangeNotification::List)));
+    connect(collector, &NotificationCollector::notify,
+            this, &NotificationManager::slotNotify);
 }
 
 void NotificationManager::registerConnection(Connection *connection)

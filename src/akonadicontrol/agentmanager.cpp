@@ -64,8 +64,8 @@ AgentManager::AgentManager(QObject *parent)
     new AgentManagerInternalAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/AgentManager"), this);
 
-    connect(QDBusConnection::sessionBus().interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
+    connect(QDBusConnection::sessionBus().interface(), &QDBusConnectionInterface::serviceOwnerChanged,
+            this, &AgentManager::serviceOwnerChanged);
 
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
         akFatal() << "akonadiserver already running!";
@@ -81,12 +81,12 @@ AgentManager::AgentManager(QObject *parent)
 
     mStorageController = new Akonadi::ProcessControl;
     mStorageController->setShutdownTimeout(15 * 1000);   // the server needs more time for shutdown if we are using an internal mysqld
-    connect(mStorageController, SIGNAL(unableToStart()), SLOT(serverFailure()));
+    connect(mStorageController, &Akonadi::ProcessControl::unableToStart, this, &AgentManager::serverFailure);
     mStorageController->start(QStringLiteral("akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
 
     if (mAgentServerEnabled) {
         mAgentServer = new Akonadi::ProcessControl;
-        connect(mAgentServer, SIGNAL(unableToStart()), SLOT(agentServerFailure()));
+        connect(mAgentServer, &Akonadi::ProcessControl::unableToStart, this, &AgentManager::agentServerFailure);
         mAgentServer->start(QStringLiteral("akonadi_agent_server"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
     }
 

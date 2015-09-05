@@ -69,8 +69,8 @@ bool Search::parseStream()
     request.setMimeTypes(cmd.mimeTypes());
     request.setQuery(cmd.query());
     request.setRemoteSearch(cmd.remote());
-    connect(&request, SIGNAL(resultsAvailable(QSet<qint64>)),
-            this, SLOT(slotResultsAvailable(QSet<qint64>)));
+    connect(&request, &SearchRequest::resultsAvailable,
+            this, &Search::slotResultsAvailable);
     request.exec();
 
     //akDebug() << "\tResult:" << uids;

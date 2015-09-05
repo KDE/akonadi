@@ -65,7 +65,7 @@ NotificationSource::NotificationSource(const QString &identifier, const QString 
         QDBusConnection::ExportAdaptors);
 
     mClientWatcher = new QDBusServiceWatcher(clientServiceName, QDBusConnection::sessionBus(), QDBusServiceWatcher::WatchForUnregistration, this);
-    connect(mClientWatcher, SIGNAL(serviceUnregistered(QString)), SLOT(serviceUnregistered(QString)));
+    connect(mClientWatcher, &QDBusServiceWatcher::serviceUnregistered, this, &NotificationSource::serviceUnregistered);
 }
 
 NotificationSource::~NotificationSource()

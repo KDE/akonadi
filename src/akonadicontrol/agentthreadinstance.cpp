@@ -35,8 +35,8 @@ AgentThreadInstance::AgentThreadInstance(AgentManager *manager)
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
                                                            QDBusConnection::sessionBus(),
                                                            QDBusServiceWatcher::WatchForRegistration, this);
-    connect(watcher, SIGNAL(serviceRegistered(QString)),
-            this, SLOT(agentServerRegistered()));
+    connect(watcher, &QDBusServiceWatcher::serviceRegistered,
+            this, &AgentThreadInstance::agentServerRegistered);
 }
 
 bool AgentThreadInstance::start(const AgentType &agentInfo)

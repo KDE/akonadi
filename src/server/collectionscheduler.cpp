@@ -268,8 +268,8 @@ void CollectionScheduler::initScheduler()
 {
     mScheduler = new PauseableTimer();
     mScheduler->setSingleShot(true);
-    connect(mScheduler, SIGNAL(timeout()),
-            this, SLOT(schedulerTimeout()));
+    connect(mScheduler, &QTimer::timeout,
+            this, &CollectionScheduler::schedulerTimeout);
 
     // Only retrieve enabled collections and referenced collections, we don't care
     // about anything else

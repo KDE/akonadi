@@ -54,7 +54,7 @@ void AgentServer::agentInstanceConfigure(const QString &identifier, qlonglong wi
 {
     m_configureQueue.enqueue(ConfigureInfo(identifier, windowId));
     if (!m_processingConfigureRequests) {   // Start processing the requests if needed.
-        QTimer::singleShot(0, this, SLOT(processConfigureRequest()));
+        QTimer::singleShot(0, this, &AgentServer::processConfigureRequest);
     }
 }
 

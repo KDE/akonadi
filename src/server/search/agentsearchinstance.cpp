@@ -58,8 +58,8 @@ bool AgentSearchInstance::init()
                                               DBusConnectionPool::threadConnection(),
                                               QDBusServiceWatcher::WatchForOwnerChange,
                                               this);
-    connect(mServiceWatcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
+    connect(mServiceWatcher, &QDBusServiceWatcher::serviceOwnerChanged,
+            this, &AgentSearchInstance::serviceOwnerChanged);
 
     return true;
 }

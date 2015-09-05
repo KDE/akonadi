@@ -54,9 +54,9 @@ ItemRetrievalManager::ItemRetrievalManager(QObject *parent)
     mLock = new QReadWriteLock();
     mWaitCondition = new QWaitCondition();
 
-    connect(mDBusConnection.interface(), SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
-    connect(this, SIGNAL(requestAdded()), this, SLOT(processRequest()),Qt::QueuedConnection);
+    connect(mDBusConnection.interface(), &QDBusConnectionInterface::serviceOwnerChanged,
+            this, &ItemRetrievalManager::serviceOwnerChanged);
+    connect(this, &ItemRetrievalManager::requestAdded, this, &ItemRetrievalManager::processRequest,Qt::QueuedConnection);
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()
@@ -181,7 +181,7 @@ void ItemRetrievalManager::processRequest()
             ItemRetrievalRequest *req = it.value().takeFirst();
             Q_ASSERT(req->resourceId == it.key());
             ItemRetrievalJob *job = new ItemRetrievalJob(req, this);
-            connect(job, SIGNAL(requestCompleted(ItemRetrievalRequest*,QString)), SLOT(retrievalJobFinished(ItemRetrievalRequest*,QString)));
+            connect(job, &ItemRetrievalJob::requestCompleted, this, &ItemRetrievalManager::retrievalJobFinished);
             mCurrentJobs.insert(req->resourceId, job);
             // delay job execution until after we unlocked the mutex, since the job can emit the finished signal immediately in some cases
             newJobs.append(qMakePair(job, req->resourceId));

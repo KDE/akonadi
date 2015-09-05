@@ -66,7 +66,7 @@ void AkApplication::init()
 
     // there doesn't seem to be a signal to indicate that the session bus went down, so lets use polling for now
     QTimer *timer = new QTimer(this);
-    connect(timer, SIGNAL(timeout()), SLOT(pollSessionBus()));
+    connect(timer, &QTimer::timeout, this, &AkApplication::pollSessionBus);
     timer->start(10 * 1000);
 }
 

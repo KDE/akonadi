@@ -79,11 +79,11 @@ bool AgentInstance::obtainAgentInterface()
         findInterface<org::freedesktop::Akonadi::Agent::Search>(Akonadi::DBus::Agent, "/Search");
 
     connect(mAgentStatusInterface, SIGNAL(status(int,QString)), SLOT(statusChanged(int,QString)));
-    connect(mAgentStatusInterface, SIGNAL(advancedStatus(QVariantMap)), SLOT(advancedStatusChanged(QVariantMap)));
-    connect(mAgentStatusInterface, SIGNAL(percent(int)), SLOT(percentChanged(int)));
-    connect(mAgentStatusInterface, SIGNAL(warning(QString)), SLOT(warning(QString)));
-    connect(mAgentStatusInterface, SIGNAL(error(QString)), SLOT(error(QString)));
-    connect(mAgentStatusInterface, SIGNAL(onlineChanged(bool)), SLOT(onlineChanged(bool)));
+    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::advancedStatus, this, &AgentInstance::advancedStatusChanged);
+    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::percent, this, &AgentInstance::percentChanged);
+    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::warning, this, &AgentInstance::warning);
+    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::error, this, &AgentInstance::error);
+    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::onlineChanged, this, &AgentInstance::onlineChanged);
 
     refreshAgentStatus();
     return true;
@@ -99,7 +99,7 @@ bool AgentInstance::obtainResourceInterface()
         return false;
     }
 
-    connect(mResourceInterface, SIGNAL(nameChanged(QString)), SLOT(resourceNameChanged(QString)));
+    connect(mResourceInterface, &OrgFreedesktopAkonadiResourceInterface::nameChanged, this, &AgentInstance::resourceNameChanged);
     refreshResourceStatus();
     return true;
 }

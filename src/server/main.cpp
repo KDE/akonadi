@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 
     // Make sure we do initialization from eventloop, otherwise
     // org.freedesktop.Akonadi.upgrading service won't be registered to DBus at all
-    QTimer::singleShot(0, Akonadi::Server::AkonadiServer::instance(), SLOT(init()));
+    QTimer::singleShot(0, Akonadi::Server::AkonadiServer::instance(), &Akonadi::Server::AkonadiServer::init);
     AkonadiCrash::setShutdownMethod(shutdownHandler);
 
     const int result = app.exec();

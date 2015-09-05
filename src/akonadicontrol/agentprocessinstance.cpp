@@ -54,7 +54,7 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
     }
 
     mController = new Akonadi::ProcessControl(this);
-    connect(mController, SIGNAL(unableToStart()), SLOT(failedToStart()));
+    connect(mController, &ProcessControl::unableToStart, this, &AgentProcessInstance::failedToStart);
 
     if (agentInfo.launchMethod == AgentType::Process) {
         QStringList arguments;

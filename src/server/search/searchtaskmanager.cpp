@@ -43,7 +43,7 @@ SearchTaskManager::SearchTaskManager()
 {
     sInstance = this;
 
-    QTimer::singleShot(0, this, SLOT(searchLoop()));
+    QTimer::singleShot(0, this, &SearchTaskManager::searchLoop);
 }
 
 SearchTaskManager::~SearchTaskManager()

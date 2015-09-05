@@ -38,8 +38,8 @@ void ConnectionThread::run()
     DataStore::self();
 
     Connection *connection = new Connection(mSocketDescriptor);
-    connect(connection, SIGNAL(disconnected()),
-            this, SLOT(quit()));
+    connect(connection, &Connection::disconnected,
+            this, &QThread::quit);
 
     exec();
 

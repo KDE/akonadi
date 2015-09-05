@@ -275,9 +275,9 @@ void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
     FakeConnection *connection = new FakeConnection(socketDescriptor, thread);
     thread->start();
 
-    connect(connection, SIGNAL(disconnected()), thread, SLOT(quit()));
-    connect(thread, SIGNAL(finished()), thread, SLOT(deleteLater()));
-    connect(thread, SIGNAL(finished()), connection, SLOT(deleteLater()));
+    connect(connection, &Connection::disconnected, thread, &QThread::quit);
+    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    connect(thread, &QThread::finished, connection, &QObject::deleteLater);
 
     mNotificationSpy = new QSignalSpy(connection->notificationCollector(),
                                       SIGNAL(notify(Akonadi::Protocol::ChangeNotification::List)));
@@ -289,7 +289,7 @@ void FakeAkonadiServer::runTest()
     QVERIFY(listen(socketFile()));
 
     mServerLoop = new QEventLoop(this);
-    connect(mClient, SIGNAL(finished()), mServerLoop, SLOT(quit()));
+    connect(mClient, &QThread::finished, mServerLoop, &QEventLoop::quit);
 
     // Start the client: the client will connect to the server and will
     // start playing the scenario
