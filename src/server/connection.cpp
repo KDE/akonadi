@@ -183,7 +183,7 @@ void Connection::slotNewData()
         if (m_reportTime) {
             startTime();
         }
-        connect(m_currentHandler, &Handler::connectionStateChange,
+        connect(m_currentHandler.data(), &Handler::connectionStateChange,
                 this, &Connection::slotConnectionStateChange,
                 Qt::DirectConnection);
 

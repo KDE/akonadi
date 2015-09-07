@@ -322,7 +322,7 @@ void AkonadiServer::incomingConnection(quintptr socketDescriptor)
         return;
     }
     QPointer<ConnectionThread> thread = new ConnectionThread(socketDescriptor, this);
-    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
+    connect(thread.data(), &QThread::finished, thread.data(), &QObject::deleteLater);
     mConnections.append(thread);
     thread->start();
 }
