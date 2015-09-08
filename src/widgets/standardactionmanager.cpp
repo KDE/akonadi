@@ -90,7 +90,7 @@ static const struct {
     { "akonadi_collection_properties", I18N_NOOP("Folder &Properties"), I18N_NOOP("Properties"), "configure", 0, SLOT(slotCollectionProperties()), NormalAction },
     { "akonadi_item_copy", 0, 0, "edit-copy", 0, SLOT(slotCopyItems()), NormalAction },
     { "akonadi_paste", I18N_NOOP("&Paste"), I18N_NOOP("Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()), NormalAction },
-    { "akonadi_item_delete", 0, 0, "edit-delete", Qt::Key_Delete, SLOT(slotDeleteItems()), NormalAction },
+    { "akonadi_item_delete", 0, 0, "edit-delete", 0, SLOT(slotDeleteItems()), NormalAction },
     { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), I18N_NOOP("Manage Local Subscriptions"), "folder-bookmarks", 0, SLOT(slotLocalSubscription()), NormalAction },
     { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), I18N_NOOP("Add to Favorite"), "bookmark-new", 0, SLOT(slotAddToFavorites()), NormalAction },
     { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), I18N_NOOP("Remove from Favorite"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), NormalAction },
