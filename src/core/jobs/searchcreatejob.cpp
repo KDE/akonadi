@@ -138,7 +138,7 @@ Akonadi::Collection SearchCreateJob::createdCollection() const
 bool SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
     Q_D(SearchCreateJob);
-    if (response.isResponse() && response.type() == Protocol::Command::CreateCollection) {
+    if (response.isResponse() && response.type() == Protocol::Command::FetchCollections) {
         d->mCreatedCollection = ProtocolHelper::parseCollection(response);
         return false;
     }
