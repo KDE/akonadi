@@ -28,6 +28,7 @@
 #include "itemserializerplugin.h"
 #include "servermanager.h"
 #include "tagfetchscope.h"
+#include "persistentsearchattribute.h"
 
 #include <akonadi/private/protocol_p.h>
 #include <akonadi/private/xdgbasedirs_p.h>
@@ -198,6 +199,18 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
     collection.setLocalListPreference(Collection::ListIndex, parsePreference(data.indexPref()));
     collection.setLocalListPreference(Collection::ListSync, parsePreference(data.syncPref()));
     collection.setReferenced(data.referenced());
+
+    if (!data.searchQuery().isEmpty()) {
+        auto attr = collection.attribute<PersistentSearchAttribute>(Entity::AddIfMissing);
+        attr->setQueryString(data.searchQuery());
+
+        QVector<Collection> cols;
+        cols.reserve(data.searchCollections().size());
+        foreach (auto id, data.searchCollections()) {
+            cols.push_back(Collection(id));
+        }
+        attr->setQueryCollections(cols);
+    }
 
     parseAttributes(data.attributes(), &collection);
 
