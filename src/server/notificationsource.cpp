@@ -347,8 +347,10 @@ bool NotificationSource::acceptsNotification(const Protocol::ChangeNotification 
             return false;
         }
     } else if (notification.type() == Protocol::ChangeNotification::Items) {
+        //We always want notifications that affect the parent resource (like an item added to a referenced collection)
+        const bool notificationForParentResource = (mSession == notification.resource());
         if (CollectionReferenceManager::instance()->isReferenced(notification.parentCollection())) {
-            return (mExclusive || isCollectionMonitored(notification.parentCollection()) || isMoveDestinationResourceMonitored(notification));
+            return (mExclusive || isCollectionMonitored(notification.parentCollection()) || isMoveDestinationResourceMonitored(notification) || notificationForParentResource);
         }
     } else if (notification.type() == Protocol::ChangeNotification::Tags) {
         // Special handling for Tag removal notifications: When a Tag is removed,
