@@ -88,9 +88,9 @@ bool DbConfigMysql::init(QSettings &settings)
     const QString mysqladminPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysqladmin"), mysqldSearchPath);
     if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
-        defaultCleanShutdownCommand = QStringLiteral("%2 --defaults-file=%1/mysql.conf --socket=%3/mysql.socket shutdown")
-                                      .arg(StandardDirs::saveDir("data"))
+        defaultCleanShutdownCommand = QStringLiteral("%1 --defaults-file=%2/mysql.conf --socket=%3/mysql.socket shutdown")
                                       .arg(mysqladminPath)
+                                      .arg(StandardDirs::saveDir("data"))
                                       .arg(socketDirectory);
 #else
         defaultCleanShutdownCommand = QString::fromLatin1("%1 shutdown --shared-memory").arg(mysqladminPath);
