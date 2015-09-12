@@ -141,8 +141,8 @@ void AgentBase::ObserverV2::itemLinked(const Akonadi::Item &item, const Akonadi:
     Q_UNUSED(collection);
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
-                            sAgentBase->d_ptr, SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemLinked,
+                            sAgentBase->d_ptr, &AgentBasePrivate::itemLinked);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -153,8 +153,8 @@ void AgentBase::ObserverV2::itemUnlinked(const Akonadi::Item &item, const Akonad
     Q_UNUSED(collection);
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
-                            sAgentBase->d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemUnlinked,
+                            sAgentBase->d_ptr, &AgentBasePrivate::itemUnlinked);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -183,8 +183,8 @@ void AgentBase::ObserverV3::itemsFlagsChanged(const Akonadi::Item::List &items, 
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
-                            sAgentBase->d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsFlagsChanged,
+                            sAgentBase->d_ptr, &AgentBasePrivate::itemsFlagsChanged);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -197,8 +197,8 @@ void AgentBase::ObserverV3::itemsMoved(const Akonadi::Item::List &items, const C
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
-                            sAgentBase->d_ptr, SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsMoved,
+                            sAgentBase->d_ptr, &AgentBasePrivate::itemsMoved);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -209,8 +209,8 @@ void AgentBase::ObserverV3::itemsRemoved(const Akonadi::Item::List &items)
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemsRemoved(Akonadi::Item::List)),
-                            sAgentBase->d_ptr, SLOT(itemsRemoved(Akonadi::Item::List)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsRemoved,
+                            sAgentBase->d_ptr, &AgentBasePrivate::itemsRemoved);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -222,8 +222,8 @@ void AgentBase::ObserverV3::itemsLinked(const Akonadi::Item::List &items, const 
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
-                            sAgentBase->d_ptr, SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsLinked,
+                            sAgentBase->d_ptr, &AgentBasePrivate::itemsLinked);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -235,8 +235,8 @@ void AgentBase::ObserverV3::itemsUnlinked(const Akonadi::Item::List &items, cons
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
-                            sAgentBase->d_ptr, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsUnlinked,
+                            sAgentBase->d_ptr, &AgentBasePrivate::itemsUnlinked);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -247,8 +247,8 @@ void AgentBase::ObserverV4::tagAdded(const Tag &tag)
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(tagAdded(Akonadi::Tag)),
-                            sAgentBase->d_ptr, SLOT(tagAdded(Akonadi::Tag)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagAdded,
+                            sAgentBase->d_ptr, &AgentBasePrivate::tagAdded);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -259,8 +259,8 @@ void AgentBase::ObserverV4::tagChanged(const Tag &tag)
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(tagChanged(Akonadi::Tag)),
-                            sAgentBase->d_ptr, SLOT(tagChanged(Akonadi::Tag)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagChanged,
+                            sAgentBase->d_ptr, &AgentBasePrivate::tagChanged);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -271,8 +271,8 @@ void AgentBase::ObserverV4::tagRemoved(const Tag &tag)
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(tagRemoved(Akonadi::Tag)),
-                            sAgentBase->d_ptr, SLOT(tagRemoved(Akonadi::Tag)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagRemoved,
+                            sAgentBase->d_ptr, &AgentBasePrivate::tagRemoved);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -285,8 +285,8 @@ void AgentBase::ObserverV4::itemsTagsChanged(const Item::List &items, const QSet
 
     if (sAgentBase != 0) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)),
-                            sAgentBase->d_ptr, SLOT(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsTagsChanged,
+                            sAgentBase->d_ptr, &AgentBasePrivate::itemsTagsChanged);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -297,8 +297,8 @@ void AgentBase::ObserverV4::relationAdded(const Akonadi::Relation &relation)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(relationAdded(Akonadi::Relation)),
-                            sAgentBase->d_ptr, SLOT(relationAdded(Akonadi::Relation)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::relationAdded,
+                            sAgentBase->d_ptr, &AgentBasePrivate::relationAdded);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -309,8 +309,8 @@ void AgentBase::ObserverV4::relationRemoved(const Akonadi::Relation &relation)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
-        QObject::disconnect(sAgentBase->changeRecorder(), SIGNAL(relationRemoved(Akonadi::Relation)),
-                            sAgentBase->d_ptr, SLOT(relationRemoved(Akonadi::Relation)));
+        QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::relationRemoved,
+                            sAgentBase->d_ptr, &AgentBasePrivate::relationRemoved);
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -403,24 +403,24 @@ void AgentBasePrivate::init()
         }
     }
 
-    connect(mChangeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
-            SLOT(itemAdded(Akonadi::Item,Akonadi::Collection)));
-    connect(mChangeRecorder, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
-            SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)));
-    connect(mChangeRecorder, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)),
-            SLOT(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
+    connect(mChangeRecorder, &Monitor::itemAdded,
+            this, &AgentBasePrivate::itemAdded);
+    connect(mChangeRecorder, &Monitor::itemChanged,
+            this, &AgentBasePrivate::itemChanged);
+    connect(mChangeRecorder, &Monitor::collectionAdded,
+            this, &AgentBasePrivate::collectionAdded);
     connect(mChangeRecorder, SIGNAL(collectionChanged(Akonadi::Collection)),
             SLOT(collectionChanged(Akonadi::Collection)));
     connect(mChangeRecorder, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)),
             SLOT(collectionChanged(Akonadi::Collection,QSet<QByteArray>)));
-    connect(mChangeRecorder, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)),
-            SLOT(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
-    connect(mChangeRecorder, SIGNAL(collectionRemoved(Akonadi::Collection)),
-            SLOT(collectionRemoved(Akonadi::Collection)));
-    connect(mChangeRecorder, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)),
-            SLOT(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)));
-    connect(mChangeRecorder, SIGNAL(collectionUnsubscribed(Akonadi::Collection)),
-            SLOT(collectionUnsubscribed(Akonadi::Collection)));
+    connect(mChangeRecorder, &Monitor::collectionMoved,
+            this, &AgentBasePrivate::collectionMoved);
+    connect(mChangeRecorder, &Monitor::collectionRemoved,
+            this, &AgentBasePrivate::collectionRemoved);
+    connect(mChangeRecorder, &Monitor::collectionSubscribed,
+            this, &AgentBasePrivate::collectionSubscribed);
+    connect(mChangeRecorder, &Monitor::collectionUnsubscribed,
+            this, &AgentBasePrivate::collectionUnsubscribed);
 
     connect(q, SIGNAL(status(int,QString)), q, SLOT(slotStatus(int,QString)));
     connect(q, SIGNAL(percent(int)), q, SLOT(slotPercent(int)));
@@ -769,7 +769,7 @@ void AgentBasePrivate::collectionUnsubscribed(const Akonadi::Collection &collect
 void AgentBasePrivate::changeProcessed()
 {
     mChangeRecorder->changeProcessed();
-    QTimer::singleShot(0, mChangeRecorder, SLOT(replayNext()));
+    QTimer::singleShot(0, mChangeRecorder, &ChangeRecorder::replayNext);
 }
 
 void AgentBasePrivate::slotStatus(int status, const QString &message)
@@ -1167,65 +1167,65 @@ void AgentBase::registerObserver(Observer *observer)
     const bool hasObserverV3 = (dynamic_cast<AgentBase::ObserverV3 *>(d_ptr->mObserver) != 0);
     const bool hasObserverV4 = (dynamic_cast<AgentBase::ObserverV4 *>(d_ptr->mObserver) != 0);
 
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(tagAdded(Akonadi::Tag)),
-               d_ptr, SLOT(tagAdded(Akonadi::Tag)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(tagChanged(Akonadi::Tag)),
-               d_ptr, SLOT(tagChanged(Akonadi::Tag)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(tagRemoved(Akonadi::Tag)),
-               d_ptr, SLOT(tagRemoved(Akonadi::Tag)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)),
-               d_ptr, SLOT(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
-               d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
-               d_ptr, SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemsRemoved(Akonadi::Item::List)),
-               d_ptr, SLOT(itemsRemoved(Akonadi::Item::List)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
-               d_ptr, SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
-               d_ptr, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-               d_ptr, SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
-               d_ptr, SLOT(itemRemoved(Akonadi::Item)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
-               d_ptr, SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)));
-    disconnect(d_ptr->mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
-               d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)));
+    disconnect(d_ptr->mChangeRecorder, &Monitor::tagAdded,
+               d_ptr, &AgentBasePrivate::tagAdded);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::tagChanged,
+               d_ptr, &AgentBasePrivate::tagChanged);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::tagRemoved,
+               d_ptr, &AgentBasePrivate::tagRemoved);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemsTagsChanged,
+               d_ptr, &AgentBasePrivate::itemsTagsChanged);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemsFlagsChanged,
+               d_ptr, &AgentBasePrivate::itemsFlagsChanged);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemsMoved,
+               d_ptr, &AgentBasePrivate::itemsMoved);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemsRemoved,
+               d_ptr, &AgentBasePrivate::itemsRemoved);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemsLinked,
+               d_ptr, &AgentBasePrivate::itemsLinked);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemsUnlinked,
+               d_ptr, &AgentBasePrivate::itemsUnlinked);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemMoved,
+               d_ptr, &AgentBasePrivate::itemMoved);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemRemoved,
+               d_ptr, &AgentBasePrivate::itemRemoved);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemLinked,
+               d_ptr, &AgentBasePrivate::itemLinked);
+    disconnect(d_ptr->mChangeRecorder, &Monitor::itemUnlinked,
+               d_ptr, &AgentBasePrivate::itemUnlinked);
 
     if (hasObserverV4) {
-        connect(d_ptr->mChangeRecorder, SIGNAL(tagAdded(Akonadi::Tag)),
-                d_ptr, SLOT(tagAdded(Akonadi::Tag)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(tagChanged(Akonadi::Tag)),
-                d_ptr, SLOT(tagChanged(Akonadi::Tag)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(tagRemoved(Akonadi::Tag)),
-                d_ptr, SLOT(tagRemoved(Akonadi::Tag)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)),
-                d_ptr, SLOT(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)));
+        connect(d_ptr->mChangeRecorder, &Monitor::tagAdded,
+                d_ptr, &AgentBasePrivate::tagAdded);
+        connect(d_ptr->mChangeRecorder, &Monitor::tagChanged,
+                d_ptr, &AgentBasePrivate::tagChanged);
+        connect(d_ptr->mChangeRecorder, &Monitor::tagRemoved,
+                d_ptr, &AgentBasePrivate::tagRemoved);
+        connect(d_ptr->mChangeRecorder, &Monitor::itemsTagsChanged,
+                d_ptr, &AgentBasePrivate::itemsTagsChanged);
     }
 
     if (hasObserverV3) {
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)),
-                d_ptr, SLOT(itemsFlagsChanged(Akonadi::Item::List,QSet<QByteArray>,QSet<QByteArray>)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)),
-                d_ptr, SLOT(itemsMoved(Akonadi::Item::List,Akonadi::Collection,Akonadi::Collection)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemsRemoved(Akonadi::Item::List)),
-                d_ptr, SLOT(itemsRemoved(Akonadi::Item::List)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemsLinked(Akonadi::Item::List,Akonadi::Collection)),
-                d_ptr, SLOT(itemsLinked(Akonadi::Item::List,Akonadi::Collection)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)),
-                d_ptr, SLOT(itemsUnlinked(Akonadi::Item::List,Akonadi::Collection)));
+        connect(d_ptr->mChangeRecorder, &Monitor::itemsFlagsChanged,
+                d_ptr, &AgentBasePrivate::itemsFlagsChanged);
+        connect(d_ptr->mChangeRecorder, &Monitor::itemsMoved,
+                d_ptr, &AgentBasePrivate::itemsMoved);
+        connect(d_ptr->mChangeRecorder, &Monitor::itemsRemoved,
+                d_ptr, &AgentBasePrivate::itemsRemoved);
+        connect(d_ptr->mChangeRecorder, &Monitor::itemsLinked,
+                d_ptr, &AgentBasePrivate::itemsLinked);
+        connect(d_ptr->mChangeRecorder, &Monitor::itemsUnlinked,
+                d_ptr, &AgentBasePrivate::itemsUnlinked);
     } else {
         // V2 - don't connect these if we have V3
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
-                d_ptr, SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemRemoved(Akonadi::Item)),
-                d_ptr, SLOT(itemRemoved(Akonadi::Item)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
-                d_ptr, SLOT(itemLinked(Akonadi::Item,Akonadi::Collection)));
-        connect(d_ptr->mChangeRecorder, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
-                d_ptr, SLOT(itemUnlinked(Akonadi::Item,Akonadi::Collection)));
+        connect(d_ptr->mChangeRecorder, &Monitor::itemMoved,
+                d_ptr, &AgentBasePrivate::itemMoved);
+        connect(d_ptr->mChangeRecorder, &Monitor::itemRemoved,
+                d_ptr, &AgentBasePrivate::itemRemoved);
+        connect(d_ptr->mChangeRecorder, &Monitor::itemLinked,
+                d_ptr, &AgentBasePrivate::itemLinked);
+        connect(d_ptr->mChangeRecorder, &Monitor::itemUnlinked,
+                d_ptr, &AgentBasePrivate::itemUnlinked);
     }
 }
 

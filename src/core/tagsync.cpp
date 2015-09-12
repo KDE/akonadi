@@ -79,7 +79,7 @@ void TagSync::doStart()
     // qDebug();
     //This should include all tags, including the ones that don't have a remote id
     Akonadi::TagFetchJob *fetch = new Akonadi::TagFetchJob(this);
-    connect(fetch, SIGNAL(result(KJob*)), this, SLOT(onLocalTagFetchDone(KJob*)));
+    connect(fetch, &KJob::result, this, &TagSync::onLocalTagFetchDone);
 }
 
 void TagSync::onLocalTagFetchDone(KJob *job)
@@ -116,8 +116,8 @@ void TagSync::diffTags()
             itemFetch->setProperty("tag", QVariant::fromValue(tag));
             itemFetch->setProperty("merge", false);
             itemFetch->fetchScope().setFetchGid(true);
-            connect(itemFetch, SIGNAL(result(KJob*)), this, SLOT(onTagItemsFetchDone(KJob*)));
-            connect(itemFetch, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
+            connect(itemFetch, &KJob::result, this, &TagSync::onTagItemsFetchDone);
+            connect(itemFetch, &KJob::result, this, &TagSync::onJobDone);
             tagById.remove(tagByRid.value(remoteTag.remoteId()).id());
         } else if (tagByGid.contains(remoteTag.gid())) {
             //Tag exists but has no rid
@@ -128,22 +128,22 @@ void TagSync::diffTags()
             itemFetch->setProperty("tag", QVariant::fromValue(tag));
             itemFetch->setProperty("merge", true);
             itemFetch->fetchScope().setFetchGid(true);
-            connect(itemFetch, SIGNAL(result(KJob*)), this, SLOT(onTagItemsFetchDone(KJob*)));
-            connect(itemFetch, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
+            connect(itemFetch, &KJob::result, this, &TagSync::onTagItemsFetchDone);
+            connect(itemFetch, &KJob::result, this, &TagSync::onJobDone);
             tagById.remove(tagByGid.value(remoteTag.gid()).id());
         } else {
             //New tag, create
             TagCreateJob *createJob = new TagCreateJob(remoteTag, this);
             createJob->setMergeIfExisting(true);
-            connect(createJob, SIGNAL(result(KJob*)), this, SLOT(onCreateTagDone(KJob*)));
-            connect(createJob, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
+            connect(createJob, &KJob::result, this, &TagSync::onCreateTagDone);
+            connect(createJob, &KJob::result, this, &TagSync::onJobDone);
         }
     }
     Q_FOREACH (const Tag &tag, tagById) {
         //Removed remotely, unset rid
         tag.setRemoteId(QByteArray(""));
         TagModifyJob *modJob = new TagModifyJob(tag, this);
-        connect(modJob, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
+        connect(modJob, &KJob::result, this, &TagSync::onJobDone);
     }
     checkDone();
 }
@@ -160,7 +160,7 @@ void TagSync::onCreateTagDone(KJob *job)
     Q_FOREACH (Item item, remoteMembers) {
         item.setTag(tag);
         ItemModifyJob *modJob = new ItemModifyJob(item, this);
-        connect(modJob, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
+        connect(modJob, &KJob::result, this, &TagSync::onJobDone);
         qDebug() << "setting tag " << item.remoteId();
     }
 }
@@ -214,14 +214,14 @@ void TagSync::onTagItemsFetchDone(KJob *job)
         Q_FOREACH (Item item, toRemove) {
             item.clearTag(tag);
             ItemModifyJob *modJob = new ItemModifyJob(item, this);
-            connect(modJob, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
+            connect(modJob, &KJob::result, this, &TagSync::onJobDone);
             qDebug() << "removing tag " << item.remoteId();
         }
     }
     Q_FOREACH (Item item, toAdd) {
         item.setTag(tag);
         ItemModifyJob *modJob = new ItemModifyJob(item, this);
-        connect(modJob, SIGNAL(result(KJob*)), this, SLOT(onJobDone(KJob*)));
+        connect(modJob, &KJob::result, this, &TagSync::onJobDone);
         qDebug() << "setting tag " << item.remoteId();
     }
 }

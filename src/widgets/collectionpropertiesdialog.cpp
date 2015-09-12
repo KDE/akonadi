@@ -126,8 +126,8 @@ void CollectionPropertiesDialog::Private::init()
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
     okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    q->connect(buttonBox, SIGNAL(accepted()), q, SLOT(accept()));
-    q->connect(buttonBox, SIGNAL(rejected()), q, SLOT(reject()));
+    q->connect(buttonBox, &QDialogButtonBox::accepted, q, &QDialog::accept);
+    q->connect(buttonBox, &QDialogButtonBox::rejected, q, &QDialog::reject);
     mainLayout->addWidget(buttonBox);
 
     if (mPageNames.isEmpty()) {   // default loading
@@ -164,7 +164,7 @@ void CollectionPropertiesDialog::Private::init()
     }
 
     q->connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(save()));
-    q->connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(deleteLater()));
+    q->connect(buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked, q, &QObject::deleteLater);
 
     KConfigGroup group(KSharedConfig::openConfig(), "CollectionPropertiesDialog");
     const QSize size = group.readEntry("Size", QSize());

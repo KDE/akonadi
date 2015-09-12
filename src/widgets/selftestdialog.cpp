@@ -91,8 +91,8 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
 
     mTestModel = new QStandardItemModel(this);
     ui.testView->setModel(mTestModel);
-    connect(ui.testView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            SLOT(selectionChanged(QModelIndex)));
+    connect(ui.testView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, &SelfTestDialog::selectionChanged);
     connect(ui.detailsLabel, &QLabel::linkActivated, this, &SelfTestDialog::linkActivated);
 
     connect(user1Button, &QPushButton::clicked, this, &SelfTestDialog::saveReport);

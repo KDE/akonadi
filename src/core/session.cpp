@@ -92,7 +92,7 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
         if (hello.isError()) {
             qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
             connThread->disconnect();
-            QTimer::singleShot(1000, connThread, SLOT(reconnect()));
+            QTimer::singleShot(1000, connThread, &ConnectionThread::reconnect);
             return false;
         }
 
@@ -313,7 +313,7 @@ void SessionPrivate::init(const QByteArray &id)
 
     thread = new QThread(mParent);
     connThread = new ConnectionThread(sessionId);
-    mParent->connect(connThread, SIGNAL(reconnected()), mParent, SIGNAL(reconnected()),
+    mParent->connect(connThread, &ConnectionThread::reconnected, mParent, &Session::reconnected,
                      Qt::QueuedConnection);
     mParent->connect(connThread, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
                      mParent, SLOT(handleCommand(qint64, Akonadi::Protocol::Command)),

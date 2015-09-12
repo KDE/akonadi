@@ -197,7 +197,7 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     d->m_checkableProxy = new KCheckableProxyModel(this);
     d->m_checkableProxy->setSourceModel(d->m_model);
     d->m_checkableProxy->setSelectionModel(selectionModel);
-    connect(d->m_model, SIGNAL(rowsInserted(QModelIndex,int,int)), d.data(), SLOT(onRowsInserted(QModelIndex,int,int)));
+    connect(d->m_model, &QAbstractItemModel::rowsInserted, d.data(), &Private::onRowsInserted);
 
     d->m_tagsView = new QListView(this);
     d->m_tagsView->setMouseTracking(true);
@@ -208,20 +208,20 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     } else {
         d->m_tagsView->setModel(d->m_model);
     }
-    connect(d->m_tagsView, SIGNAL(entered(QModelIndex)),
-            d.data(), SLOT(slotItemEntered(QModelIndex)));
+    connect(d->m_tagsView, &QAbstractItemView::entered,
+            d.data(), &Private::slotItemEntered);
 
     d->m_newTagEdit = new QLineEdit(this);
     d->m_newTagEdit->setClearButtonEnabled(true);
-    connect(d->m_newTagEdit, SIGNAL(textEdited(QString)),
-            d.data(), SLOT(slotTextEdited(QString)));
-    connect(d->m_newTagEdit, SIGNAL(returnPressed()),
-            d.data(), SLOT(slotCreateTag()));
+    connect(d->m_newTagEdit, &QLineEdit::textEdited,
+            d.data(), &Private::slotTextEdited);
+    connect(d->m_newTagEdit, &QLineEdit::returnPressed,
+            d.data(), &Private::slotCreateTag);
 
     d->m_newTagButton = new QPushButton(i18nc("@label", "Create new tag"));
     d->m_newTagButton->setEnabled(false);
-    connect(d->m_newTagButton, SIGNAL(clicked(bool)),
-            d.data(), SLOT(slotCreateTag()));
+    connect(d->m_newTagButton, &QAbstractButton::clicked,
+            d.data(), &Private::slotCreateTag);
 
     QHBoxLayout *newTagLayout = new QHBoxLayout();
     newTagLayout->addWidget(d->m_newTagEdit, 1);
@@ -244,12 +244,12 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     d->m_deleteButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     d->m_deleteButton->setToolTip(i18nc("@info", "Delete tag"));
     d->m_deleteButton->hide();
-    connect(d->m_deleteButton, SIGNAL(clicked()), d.data(), SLOT(deleteTag()));
+    connect(d->m_deleteButton, &QAbstractButton::clicked, d.data(), &Private::deleteTag);
 
     d->m_deleteButtonTimer = new QTimer(this);
     d->m_deleteButtonTimer->setSingleShot(true);
     d->m_deleteButtonTimer->setInterval(500);
-    connect(d->m_deleteButtonTimer, SIGNAL(timeout()), d.data(), SLOT(showDeleteButton()));
+    connect(d->m_deleteButtonTimer, &QTimer::timeout, d.data(), &Private::showDeleteButton);
 }
 
 TagEditWidget::~TagEditWidget()

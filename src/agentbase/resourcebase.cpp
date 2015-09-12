@@ -123,7 +123,7 @@ public:
         if (m_recursiveMover)
         {
             m_recursiveMover->changeProcessed();
-            QTimer::singleShot(0, m_recursiveMover, SLOT(replayNext()));
+            QTimer::singleShot(0, m_recursiveMover, &RecursiveMover::replayNext);
             return;
         }
 
@@ -194,7 +194,7 @@ public:
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
             connect(mItemSyncer, SIGNAL(percent(KJob*,ulong)), q, SLOT(slotPercent(KJob*,ulong)));
             connect(mItemSyncer, SIGNAL(result(KJob*)), q, SLOT(slotItemSyncDone(KJob*)));
-            connect(mItemSyncer, SIGNAL(readyForNextBatch(int)), q, SIGNAL(retrieveNextItemSyncBatch(int)));
+            connect(mItemSyncer, &ItemSync::readyForNextBatch, q, &ResourceBase::retrieveNextItemSyncBatch);
         }
         Q_ASSERT(mItemSyncer);
     }
@@ -483,16 +483,16 @@ ResourceBase::ResourceBase(const QString &id)
 
     d->mChangeRecorder->setChangeRecordingEnabled(true);
     d->mChangeRecorder->setCollectionMoveTranslationEnabled(false);   // we deal with this ourselves
-    connect(d->mChangeRecorder, SIGNAL(changesAdded()),
-            d->scheduler, SLOT(scheduleChangeReplay()));
+    connect(d->mChangeRecorder, &ChangeRecorder::changesAdded,
+            d->scheduler, &ResourceScheduler::scheduleChangeReplay);
 
     d->mChangeRecorder->setResourceMonitored(d->mId.toLatin1());
     d->mChangeRecorder->fetchCollection(true);
 
-    connect(d->scheduler, SIGNAL(executeFullSync()),
-            SLOT(retrieveCollections()));
-    connect(d->scheduler, SIGNAL(executeCollectionTreeSync()),
-            SLOT(retrieveCollections()));
+    connect(d->scheduler, &ResourceScheduler::executeFullSync,
+            this, &ResourceBase::retrieveCollections);
+    connect(d->scheduler, &ResourceScheduler::executeCollectionTreeSync,
+            this, &ResourceBase::retrieveCollections);
     connect(d->scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)),
             SLOT(slotSynchronizeCollection(Akonadi::Collection)));
     connect(d->scheduler, SIGNAL(executeCollectionAttributesSync(Akonadi::Collection)),
@@ -509,20 +509,20 @@ ResourceBase::ResourceBase(const QString &id)
             SLOT(slotInvalidateCache(Akonadi::Collection)));
     connect(d->scheduler, SIGNAL(status(int,QString)),
             SIGNAL(status(int,QString)));
-    connect(d->scheduler, SIGNAL(executeChangeReplay()),
-            d->mChangeRecorder, SLOT(replayNext()));
+    connect(d->scheduler, &ResourceScheduler::executeChangeReplay,
+            d->mChangeRecorder, &ChangeRecorder::replayNext);
     connect(d->scheduler, SIGNAL(executeRecursiveMoveReplay(RecursiveMover*)),
             SLOT(slotRecursiveMoveReplay(RecursiveMover*)));
-    connect(d->scheduler, SIGNAL(fullSyncComplete()), SIGNAL(synchronized()));
-    connect(d->scheduler, SIGNAL(collectionTreeSyncComplete()), SIGNAL(collectionTreeSynchronized()));
-    connect(d->mChangeRecorder, SIGNAL(nothingToReplay()), d->scheduler, SLOT(taskDone()));
-    connect(d->mChangeRecorder, SIGNAL(collectionRemoved(Akonadi::Collection)),
-            d->scheduler, SLOT(collectionRemoved(Akonadi::Collection)));
+    connect(d->scheduler, &ResourceScheduler::fullSyncComplete, this, &ResourceBase::synchronized);
+    connect(d->scheduler, &ResourceScheduler::collectionTreeSyncComplete, this, &ResourceBase::collectionTreeSynchronized);
+    connect(d->mChangeRecorder, &ChangeRecorder::nothingToReplay, d->scheduler, &ResourceScheduler::taskDone);
+    connect(d->mChangeRecorder, &Monitor::collectionRemoved,
+            d->scheduler, &ResourceScheduler::collectionRemoved);
     connect(this, SIGNAL(abortRequested()), this, SLOT(slotAbortRequested()));
-    connect(this, SIGNAL(synchronized()), d->scheduler, SLOT(taskDone()));
-    connect(this, SIGNAL(collectionTreeSynchronized()), d->scheduler, SLOT(taskDone()));
-    connect(this, SIGNAL(agentNameChanged(QString)),
-            this, SIGNAL(nameChanged(QString)));
+    connect(this, &ResourceBase::synchronized, d->scheduler, &ResourceScheduler::taskDone);
+    connect(this, &ResourceBase::collectionTreeSynchronized, d->scheduler, &ResourceScheduler::taskDone);
+    connect(this, &AgentBase::agentNameChanged,
+            this, &ResourceBase::nameChanged);
 
     connect(&d->mProgressEmissionCompressor, SIGNAL(timeout()),
             this, SLOT(slotDelayedEmitProgress()));
@@ -716,7 +716,7 @@ void ResourceBasePrivate::slotInvalidateCache(const Akonadi::Collection &collect
 {
     Q_Q(ResourceBase);
     InvalidateCacheJob *job = new InvalidateCacheJob(collection, q);
-    connect(job, SIGNAL(result(KJob*)), scheduler, SLOT(taskDone()));
+    connect(job, &KJob::result, scheduler, &ResourceScheduler::taskDone);
 }
 
 void ResourceBase::changeCommitted(const Item &item)

@@ -41,10 +41,10 @@ public:
         , mParent(parent)
         , mMonitor(new Monitor())
     {
-        connect(mMonitor, SIGNAL(itemChanged(Akonadi::Item, QSet<QByteArray>)),
-                SLOT(slotItemChanged(Akonadi::Item, QSet<QByteArray>)));
-        connect(mMonitor, SIGNAL(itemRemoved(Akonadi::Item)),
-                SLOT(slotItemRemoved(Akonadi::Item)));
+        connect(mMonitor, &Monitor::itemChanged,
+                this, &Private::slotItemChanged);
+        connect(mMonitor, &Monitor::itemRemoved,
+                this, &Private::slotItemRemoved);
     }
 
     ~Private()

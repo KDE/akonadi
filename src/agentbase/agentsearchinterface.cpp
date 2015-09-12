@@ -39,7 +39,7 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate(AgentSearchInterface *q
     KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Search"),
             this, QDBusConnection::ExportAdaptors);
 
-    QTimer::singleShot(0, this, SLOT(delayedInit()));
+    QTimer::singleShot(0, this, &AgentSearchInterfacePrivate::delayedInit);
 }
 
 void AgentSearchInterfacePrivate::delayedInit()

@@ -57,7 +57,7 @@ void RelationSync::setRemoteRelations(const Akonadi::Relation::List &relations)
 void RelationSync::doStart()
 {
     Akonadi::RelationFetchJob *fetch = new Akonadi::RelationFetchJob({ Akonadi::Relation::GENERIC }, this);
-    connect(fetch, SIGNAL(result(KJob*)), this, SLOT(onLocalFetchDone(KJob*)));
+    connect(fetch, &KJob::result, this, &RelationSync::onLocalFetchDone);
 }
 
 void RelationSync::onLocalFetchDone(KJob *job)
@@ -90,14 +90,14 @@ void RelationSync::diffRelations()
         } else {
             //New relation or had its GID updated, so create one now
             RelationCreateJob *createJob = new RelationCreateJob(remoteRelation, this);
-            connect(createJob, SIGNAL(result(KJob*)), this, SLOT(checkDone()));
+            connect(createJob, &KJob::result, this, &RelationSync::checkDone);
         }
     }
 
     Q_FOREACH (const Akonadi::Relation &removedRelation, relationByRid) {
         //Removed remotely, remove locally
         RelationDeleteJob *removeJob = new RelationDeleteJob(removedRelation, this);
-        connect(removeJob, SIGNAL(result(KJob*)), this, SLOT(checkDone()));
+        connect(removeJob, &KJob::result, this, &RelationSync::checkDone);
     }
     checkDone();
 }

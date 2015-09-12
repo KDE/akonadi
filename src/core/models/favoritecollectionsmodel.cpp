@@ -274,8 +274,8 @@ FavoriteCollectionsModel::FavoriteCollectionsModel(QAbstractItemModel *source, c
     //React to various changes in the source model
     connect(source, SIGNAL(modelReset()), this, SLOT(reload()));
     connect(source, SIGNAL(layoutChanged()), this, SLOT(reload()));
-    connect(source, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(rowsInserted(QModelIndex,int,int)));
-    connect(source, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(dataChanged(QModelIndex,QModelIndex)));
+    connect(source, &QAbstractItemModel::rowsInserted, this, &QAbstractItemModel::rowsInserted);
+    connect(source, &QAbstractItemModel::dataChanged, this, &QAbstractItemModel::dataChanged);
 }
 
 FavoriteCollectionsModel::~FavoriteCollectionsModel()
@@ -419,7 +419,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
                     if (!job) {
                         return false;
                     }
-                    connect(job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)));
+                    connect(job, &KJob::result, this, &FavoriteCollectionsModel::pasteJobDone);
                     // Accept the event so that it doesn't propagate.
                     return true;
 

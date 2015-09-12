@@ -107,8 +107,8 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         CollectionFetchJob *fetch = new CollectionFetchJob(dragSourceCollection,
                 CollectionFetchJob::Base,
                 this);
-        QObject::connect(fetch, SIGNAL(finished(KJob*)),
-                         this, SLOT(onDragSourceCollectionFetched(KJob*)));
+        QObject::connect(fetch, &KJob::finished,
+                         this, &PasteHelperJob::onDragSourceCollectionFetched);
     } else {
         runActions();
     }

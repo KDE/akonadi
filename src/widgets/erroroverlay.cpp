@@ -93,7 +93,7 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     }
     sInstanceOverlay->baseWidgets.append(qMakePair(mBaseWidget, QPointer<QWidget>(this)));
 
-    connect(baseWidget, SIGNAL(destroyed()), SLOT(deleteLater()));
+    connect(baseWidget, &QObject::destroyed, this, &QObject::deleteLater);
     mPreviousState = mBaseWidget->isEnabled();
 
     ui->setupUi(this);
@@ -106,10 +106,10 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     ui->quitButton->hide();
     ui->detailsQuitButton->hide();
 
-    connect(ui->startButton, SIGNAL(clicked()), SLOT(startClicked()));
-    connect(ui->quitButton, SIGNAL(clicked()), SLOT(quitClicked()));
-    connect(ui->detailsQuitButton, SIGNAL(clicked()), SLOT(quitClicked()));
-    connect(ui->selfTestButton, SIGNAL(clicked()), SLOT(selfTestClicked()));
+    connect(ui->startButton, &QAbstractButton::clicked, this, &ErrorOverlay::startClicked);
+    connect(ui->quitButton, &QAbstractButton::clicked, this, &ErrorOverlay::quitClicked);
+    connect(ui->detailsQuitButton, &QAbstractButton::clicked, this, &ErrorOverlay::quitClicked);
+    connect(ui->selfTestButton, &QAbstractButton::clicked, this, &ErrorOverlay::selfTestClicked);
 
     const ServerManager::State state = ServerManager::state();
     mOverlayActive = (state == ServerManager::Running);
