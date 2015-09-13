@@ -130,10 +130,10 @@ void ItemSyncPrivate::createOrMerge(const Item &item)
     mPendingJobs++;
     ItemCreateJob *create = new ItemCreateJob(item, mSyncCollection, subjobParent());
     ItemCreateJob::MergeOptions merge = ItemCreateJob::Silent;
-    if (mMergeMode == ItemSync::RIDMerge) {
-        merge |= ItemCreateJob::RID;
-    } else if (mMergeMode == ItemSync::GIDMerge && !item.gid().isEmpty()) {
+    if (mMergeMode == ItemSync::GIDMerge && !item.gid().isEmpty()) {
         merge |= ItemCreateJob::GID;
+    } else {
+        merge |= ItemCreateJob::RID;
     }
     create->setMerge(merge);
     q->connect(create, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)));
