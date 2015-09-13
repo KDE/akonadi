@@ -61,6 +61,7 @@ public:
         , mProcessingBatch(false)
         , mDisableAutomaticDeliveryDone(false)
         , mBatchSize(10)
+        , mMergeMode(Akonadi::ItemSync::RIDMerge)
     {
         // we want to fetch all data by default
         mFetchScope.fetchFullPayload();
@@ -116,6 +117,7 @@ public:
     bool mDisableAutomaticDeliveryDone;
 
     int mBatchSize;
+    Akonadi::ItemSync::MergeMode mMergeMode;
 };
 
 void ItemSyncPrivate::createOrMerge(const Item &item)
@@ -127,11 +129,13 @@ void ItemSyncPrivate::createOrMerge(const Item &item)
     }
     mPendingJobs++;
     ItemCreateJob *create = new ItemCreateJob(item, mSyncCollection, subjobParent());
-    if (!item.gid().isEmpty()) {
-        create->setMerge(ItemCreateJob::GID | ItemCreateJob::Silent);
+    ItemCreateJob::MergeOptions merge = ItemCreateJob::Silent;
+    if (mMergeMode == ItemSync::GIDMerge && !item.gid().isEmpty()) {
+        merge |= ItemCreateJob::GID;
     } else {
-        create->setMerge(ItemCreateJob::RID | ItemCreateJob::Silent);
+        merge |= ItemCreateJob::RID;
     }
+    create->setMerge(merge);
     q->connect(create, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)));
 }
 
@@ -533,6 +537,18 @@ void ItemSync::setBatchSize(int size)
 {
     Q_D(ItemSync);
     d->mBatchSize = size;
+}
+
+ItemSync::MergeMode ItemSync::mergeMode() const
+{
+    Q_D(const ItemSync);
+    return d->mMergeMode;
+}
+
+void ItemSync::setMergeMode(MergeMode mergeMode)
+{
+    Q_D(ItemSync);
+    d->mMergeMode = mergeMode;
 }
 
 #include "moc_itemsync.cpp"

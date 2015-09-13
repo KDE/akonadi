@@ -56,6 +56,12 @@ class AKONADICORE_EXPORT ItemSync : public Job
     Q_OBJECT
 
 public:
+    enum MergeMode
+    {
+        RIDMerge,
+        GIDMerge
+    };
+
     /**
      * Creates a new item synchronizer.
      *
@@ -208,6 +214,27 @@ public:
      * @since 4.14
      */
     void setDisableAutomaticDeliveryDone(bool disable);
+
+    /**
+     * Returns current merge mode
+     *
+     * @see setMergeMode()
+     * @since 5.1
+     */
+    MergeMode mergeMode() const;
+
+    /**
+     * Set what merge method should be used for next ItemSync run
+     *
+     * By default ItemSync uses RIDMerge method.
+     *
+     * See ItemCreateJob for details on Item merging.
+     *
+     * @note You must call this method before starting the sync, changes afterwards lead to undefined results.
+     * @see mergeMode
+     * @since 4.14.11
+     */
+    void setMergeMode(MergeMode mergeMode);
 
 Q_SIGNALS:
     /**

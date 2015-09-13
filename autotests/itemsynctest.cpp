@@ -451,14 +451,18 @@ private Q_SLOTS:
         AKVERIFYEXEC(syncer);
 
         Item::List resultItems = fetchItems(col);
-        QCOMPARE(resultItems.count(), 2);
+        QCOMPARE(resultItems.count(), 3);
 
-        ItemFetchJob *fetchJob = new ItemFetchJob(modifiedItem);
+        Item item;
+        item.setGid(QStringLiteral("gid2"));
+        ItemFetchJob *fetchJob = new ItemFetchJob(item);
         fetchJob->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(fetchJob);
-        QCOMPARE(fetchJob->items().size(), 1);
+        QCOMPARE(fetchJob->items().size(), 2);
         QCOMPARE(fetchJob->items().first().payload<QByteArray>(), QByteArray("payload2"));
         QCOMPARE(fetchJob->items().first().remoteId(), QString::fromLatin1("rid3"));
+        QCOMPARE(fetchJob->items().at(1).payload<QByteArray>(), QByteArray("payload1"));
+        QCOMPARE(fetchJob->items().at(1).remoteId(), QStringLiteral("rid2"));
     }
 
     /*
