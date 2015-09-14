@@ -124,7 +124,7 @@ public:
         if (m_recursiveMover)
         {
             m_recursiveMover->changeProcessed();
-            QTimer::singleShot(0, m_recursiveMover, &RecursiveMover::replayNext);
+            QTimer::singleShot(0, m_recursiveMover.data(), &RecursiveMover::replayNext);
             return;
         }
 
