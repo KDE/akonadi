@@ -306,7 +306,7 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
         queryMimeTypes << mt.name();
     }
 
-    QVector<qint64> queryCollections, queryAncestors;
+    QVector<qint64> queryAncestors;
     if (collection.queryCollections().isEmpty()) {
         queryAncestors << 0;
         recursive = true;
@@ -318,10 +318,12 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
         }
     }
 
+    // Always query the given collections
+    QVector<qint64> queryCollections = queryAncestors;
+
     if (recursive) {
-        queryCollections = SearchHelper::matchSubcollectionsByMimeType(queryAncestors, queryMimeTypes);
-    } else {
-        queryCollections = queryAncestors;
+        // Resolve subcollections if necessary
+        queryCollections += SearchHelper::matchSubcollectionsByMimeType(queryAncestors, queryMimeTypes);
     }
 
     //This happens if we try to search a virtual collection in recursive mode (because virtual collections are excluded from listCollectionsRecursive)

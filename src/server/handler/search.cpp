@@ -37,7 +37,7 @@ bool Search::parseStream()
         return failureResponse("No query specified");
     }
 
-    QVector<qint64> collectionIds, collections;
+    QVector<qint64> collectionIds;
     bool recursive = cmd.recursive();
 
     if (cmd.collections().isEmpty() || cmd.collections() == QVector<qint64>{ 0ll }) {
@@ -45,10 +45,9 @@ bool Search::parseStream()
         recursive = true;
     }
 
+    QVector<qint64> collections = collectionIds;
     if (recursive) {
-        collections << SearchHelper::matchSubcollectionsByMimeType(collectionIds, cmd.mimeTypes());
-    } else {
-        collections = collectionIds;
+        collections += SearchHelper::matchSubcollectionsByMimeType(collectionIds, cmd.mimeTypes());
     }
 
     akDebug() << "SEARCH:";
