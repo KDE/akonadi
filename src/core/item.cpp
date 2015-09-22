@@ -118,20 +118,20 @@ private:
 };
 }
 
-static std::shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QString &mimeType,
-                                                                       Internal::PayloadBase *p)
+static std::shared_ptr<const std::pair<int, int>> lookupLegacyMapping(const QString &mimeType,
+                                                                      Internal::PayloadBase *p)
 {
     MyReadLocker locker(legacyMapLock());
     const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind(mimeType);
     if (hit == typeInfoToMetaTypeIdMap()->constEnd()) {
-        return std::shared_ptr<const std::pair<int, int> >();
+        return std::shared_ptr<const std::pair<int, int>>();
     }
     const std::shared_ptr<Internal::PayloadBase> sp(p, [=](Internal::PayloadBase *) {
         /*noop*/
     });
     const LegacyMap::mapped_type::const_iterator it = hit->find(sp);
     if (it == hit->end()) {
-        return std::shared_ptr<const std::pair<int, int> >();
+        return std::shared_ptr<const std::pair<int, int>>();
     }
 
     return locker.makeUnlockingPointer(&it->second);
@@ -667,7 +667,7 @@ void Item::setPayloadBase(Internal::PayloadBase *p)
 
 void ItemPrivate::setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase> p)
 {
-    if (const std::shared_ptr<const std::pair<int, int> > pair = lookupLegacyMapping(mMimeType, p.get())) {
+    if (const std::shared_ptr<const std::pair<int, int>> pair = lookupLegacyMapping(mMimeType, p.get())) {
         std::unique_ptr<Internal::PayloadBase> clone;
         if (p.get()) {
             clone.reset(p->clone());
@@ -696,7 +696,7 @@ QSet<QByteArray> Item::cachedPayloadParts() const
     return d->mCachedPayloadParts;
 }
 
-void Item::setCachedPayloadParts(const QSet< QByteArray > &cachedParts)
+void Item::setCachedPayloadParts(const QSet<QByteArray> &cachedParts)
 {
     Q_D(Item);
     d->mCachedPayloadParts = cachedParts;

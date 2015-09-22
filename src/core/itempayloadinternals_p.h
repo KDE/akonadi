@@ -57,23 +57,31 @@ namespace Internal
 {
 
 template <typename T>
-struct has_clone_method {
+struct has_clone_method
+{
 private:
-    template <typename S, S * (S::*)() const> struct sfinae {
+    template <typename S, S * (S::*)() const>
+    struct sfinae
+    {
     };
-    struct No {
+    struct No
+    {
     };
-    struct Yes {
+    struct Yes
+    {
         No no[2];
     };
-    template <typename S> static No  test(...);
-    template <typename S> static Yes test(sfinae<S, &S::clone> *);
+    template <typename S>
+    static No  test(...);
+    template <typename S>
+    static Yes test(sfinae<S, &S::clone> *);
 public:
     static const bool value = sizeof(test<T>(0)) == sizeof(Yes) ;
 };
 
 template <typename T, bool b>
-struct clone_traits_helper {
+struct clone_traits_helper
+{
     // runtime error (commented in) or compiletime error (commented out)?
     // ### runtime error, until we check has_clone_method in the
     // ### Item::payload<T> impl directly...
@@ -85,7 +93,8 @@ struct clone_traits_helper {
 };
 
 template <typename T>
-struct clone_traits_helper<T, true> {
+struct clone_traits_helper<T, true>
+{
     static T *clone(T *t)
     {
         return t ? t->clone() : 0 ;
@@ -93,54 +102,68 @@ struct clone_traits_helper<T, true> {
 };
 
 template <typename T>
-struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value> {
+struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value>
+{
 };
 
 template <typename T>
-struct shared_pointer_traits {
+struct shared_pointer_traits
+{
     static const bool defined = false;
 };
 
 template <typename T>
-struct shared_pointer_traits< boost::shared_ptr<T> > {
+struct shared_pointer_traits<boost::shared_ptr<T>>
+{
     static const bool defined = true;
     typedef T element_type;
+
     template <typename S>
-    struct make {
+    struct make
+    {
         typedef boost::shared_ptr<S> type;
     };
+
     typedef QSharedPointer<T> next_shared_ptr;
 };
 
 template <typename T>
-struct shared_pointer_traits< QSharedPointer<T> > {
+struct shared_pointer_traits<QSharedPointer<T>>
+{
     static const bool defined = true;
     typedef T element_type;
+
     template <typename S>
     struct make {
         typedef QSharedPointer<S> type;
     };
+
     typedef std::shared_ptr<T> next_shared_ptr;
 };
 
 template <typename T>
-struct shared_pointer_traits< std::shared_ptr<T> > {
+struct shared_pointer_traits<std::shared_ptr<T>>
+{
     static const bool defined = true;
     typedef T element_type;
+
     template <typename S>
     struct make {
         typedef std::shared_ptr<S> type;
     };
+
     typedef boost::shared_ptr<T> next_shared_ptr;
 };
 
 template <typename T>
-struct is_shared_pointer {
+struct is_shared_pointer
+{
     static const bool value = shared_pointer_traits<T>::defined;
 };
 
 template <typename T>
-struct identity {
+struct identity
+{
     typedef T type;
 };
 
@@ -148,33 +171,36 @@ template <typename T>
 struct get_hierarchy_root;
 
 template <typename T, typename S>
-struct get_hierarchy_root_recurse
-        : get_hierarchy_root<S> {
+struct get_hierarchy_root_recurse : get_hierarchy_root<S>
+{
 };
 
 template <typename T>
-struct get_hierarchy_root_recurse<T, T>
-        : identity<T> {
+struct get_hierarchy_root_recurse<T, T> : identity<T>
+{
 };
 
 template <typename T>
-struct get_hierarchy_root
-        : get_hierarchy_root_recurse< T, typename Akonadi::SuperClass<T>::Type > {
+struct get_hierarchy_root : get_hierarchy_root_recurse<T, typename Akonadi::SuperClass<T>::Type>
+{
 };
 
 template <typename T>
-struct get_hierarchy_root< boost::shared_ptr<T> > {
-    typedef boost::shared_ptr< typename get_hierarchy_root<T>::type > type;
+struct get_hierarchy_root<boost::shared_ptr<T>>
+{
+    typedef boost::shared_ptr<typename get_hierarchy_root<T>::type> type;
 };
 
 template <typename T>
-struct get_hierarchy_root< QSharedPointer<T> > {
-    typedef QSharedPointer< typename get_hierarchy_root<T>::type > type;
+struct get_hierarchy_root<QSharedPointer<T>>
+{
+    typedef QSharedPointer<typename get_hierarchy_root<T>::type> type;
 };
 
 template <typename T>
-struct get_hierarchy_root< std::shared_ptr<T> > {
-    typedef std::shared_ptr< typename get_hierarchy_root<T>::type > type;
+struct get_hierarchy_root<std::shared_ptr<T>>
+{
+    typedef std::shared_ptr<typename get_hierarchy_root<T>::type> type;
 };
 
 /**
@@ -183,7 +209,9 @@ struct get_hierarchy_root< std::shared_ptr<T> > {
   The default one is never used (as isPolymorphic is always false) and only contains safe dummy
   implementations to make the compiler happy (in practice it will always optimized away anyway).
 */
-template <typename T> struct PayloadTrait {
+template <typename T>
+struct PayloadTrait
+{
     /// type of the payload object contained inside a shared pointer
     typedef T ElementType;
     // the metatype id for the element type, or for pointer-to-element
@@ -212,21 +240,25 @@ template <typename T> struct PayloadTrait {
     }
     /// casts to Type from @c U
     /// throws a PayloadException if casting failed
-    template <typename U> static inline Type castFrom(const U &)
+    template <typename U>
+    static inline Type castFrom(const U &)
     {
         throw PayloadException("you should never get here");
     }
     /// tests if casting from @c U to Type is possible
-    template <typename U> static inline bool canCastFrom(const U &)
+    template <typename U>
+    static inline bool canCastFrom(const U &)
     {
         return false;
     }
     /// cast to @c U from Type
-    template <typename U> static inline U castTo(const Type &)
+    template <typename U>
+    static inline U castTo(const Type &)
     {
         throw PayloadException("you should never get here");
     }
-    template <typename U> static T clone(const U &)
+    template <typename U>
+    static T clone(const U &)
     {
         throw PayloadException("clone: you should never get here");
     }
@@ -239,7 +271,9 @@ template <typename T> struct PayloadTrait {
   Payload type trait specialization for boost::shared_ptr
   for documentation of the various members, see above
 */
-template <typename T> struct PayloadTrait<boost::shared_ptr<T> > {
+template <typename T>
+struct PayloadTrait<boost::shared_ptr<T>>
+{
     typedef T ElementType;
     static int elementMetaTypeId()
     {
@@ -253,7 +287,8 @@ template <typename T> struct PayloadTrait<boost::shared_ptr<T> > {
     {
         return p.get() == 0;
     }
-    template <typename U> static inline Type castFrom(const boost::shared_ptr<U> &p)
+    template <typename U>
+    static inline Type castFrom(const boost::shared_ptr<U> &p)
     {
         const Type sp = boost::dynamic_pointer_cast<T, U>(p);
         if (sp.get() != 0 || p.get() == 0) {
@@ -261,12 +296,14 @@ template <typename T> struct PayloadTrait<boost::shared_ptr<T> > {
         }
         throw PayloadException("boost::dynamic_pointer_cast failed");
     }
-    template <typename U> static inline bool canCastFrom(const boost::shared_ptr<U> &p)
+    template <typename U>
+    static inline bool canCastFrom(const boost::shared_ptr<U> &p)
     {
         const Type sp = boost::dynamic_pointer_cast<T, U>(p);
         return sp.get() != 0 || p.get() == 0;
     }
-    template <typename U> static inline boost::shared_ptr<U> castTo(const Type &p)
+    template <typename U>
+    static inline boost::shared_ptr<U> castTo(const Type &p)
     {
         const boost::shared_ptr<U> sp = boost::dynamic_pointer_cast<U>(p);
         return sp;
@@ -295,7 +332,9 @@ template <typename T> struct PayloadTrait<boost::shared_ptr<T> > {
   Payload type trait specialization for QSharedPointer
   for documentation of the various members, see above
 */
-template <typename T> struct PayloadTrait<QSharedPointer<T> > {
+template <typename T>
+struct PayloadTrait<QSharedPointer<T>>
+{
     typedef T ElementType;
     static int elementMetaTypeId()
     {
@@ -309,7 +348,8 @@ template <typename T> struct PayloadTrait<QSharedPointer<T> > {
     {
         return p.isNull();
     }
-    template <typename U> static inline Type castFrom(const QSharedPointer<U> &p)
+    template <typename U>
+    static inline Type castFrom(const QSharedPointer<U> &p)
     {
         const Type sp = qSharedPointerDynamicCast<T, U>(p);
         if (!sp.isNull() || p.isNull()) {
@@ -317,12 +357,14 @@ template <typename T> struct PayloadTrait<QSharedPointer<T> > {
         }
         throw PayloadException("qSharedPointerDynamicCast failed");
     }
-    template <typename U> static inline bool canCastFrom(const QSharedPointer<U> &p)
+    template <typename U>
+    static inline bool canCastFrom(const QSharedPointer<U> &p)
     {
         const Type sp = qSharedPointerDynamicCast<T, U>(p);
         return !sp.isNull() || p.isNull();
     }
-    template <typename U> static inline QSharedPointer<U> castTo(const Type &p)
+    template <typename U>
+    static inline QSharedPointer<U> castTo(const Type &p)
     {
         const QSharedPointer<U> sp = qSharedPointerDynamicCast<U, T>(p);
         return sp;
@@ -351,7 +393,9 @@ template <typename T> struct PayloadTrait<QSharedPointer<T> > {
   Payload type trait specialization for std::shared_ptr
   for documentation of the various members, see above
 */
-template <typename T> struct PayloadTrait<std::shared_ptr<T> > {
+template <typename T>
+struct PayloadTrait<std::shared_ptr<T>>
+{
     typedef T ElementType;
     static int elementMetaTypeId()
     {
@@ -365,7 +409,8 @@ template <typename T> struct PayloadTrait<std::shared_ptr<T> > {
     {
         return p.get() == 0;
     }
-    template <typename U> static inline Type castFrom(const std::shared_ptr<U> &p)
+    template <typename U>
+    static inline Type castFrom(const std::shared_ptr<U> &p)
     {
         const Type sp = std::dynamic_pointer_cast<T, U>(p);
         if (sp.get() != 0 || p.get() == 0) {
@@ -373,12 +418,14 @@ template <typename T> struct PayloadTrait<std::shared_ptr<T> > {
         }
         throw PayloadException("std::dynamic_pointer_cast failed");
     }
-    template <typename U> static inline bool canCastFrom(const std::shared_ptr<U> &p)
+    template <typename U>
+    static inline bool canCastFrom(const std::shared_ptr<U> &p)
     {
         const Type sp = std::dynamic_pointer_cast<T, U>(p);
         return sp.get() != 0 || p.get() == 0;
     }
-    template <typename U> static inline std::shared_ptr<U> castTo(const Type &p)
+    template <typename U>
+    static inline std::shared_ptr<U> castTo(const Type &p)
     {
         const std::shared_ptr<U> sp = std::dynamic_pointer_cast<U, T>(p);
         return sp;
@@ -407,7 +454,8 @@ template <typename T> struct PayloadTrait<std::shared_ptr<T> > {
  * @internal
  * Non-template base class for the payload container.
  */
-struct PayloadBase {
+struct PayloadBase
+{
     virtual ~PayloadBase()
     {
     }
@@ -418,10 +466,10 @@ struct PayloadBase {
 /**
  * @internal
  * Container for the actual payload object.
- * @note Move to Internal namespace for KDE5
  */
 template <typename T>
-struct Payload : public PayloadBase {
+struct Payload : public PayloadBase
+{
     Payload()
     {
     }
