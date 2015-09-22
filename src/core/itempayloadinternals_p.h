@@ -402,12 +402,10 @@ template <typename T> struct PayloadTrait<std::shared_ptr<T> > {
     static const unsigned int sharedPointerId = 3;
 };
 
-}
 
 /**
  * @internal
  * Non-template base class for the payload container.
- * @note Move to Internal namespace for KDE5
  */
 struct PayloadBase {
     virtual ~PayloadBase()
@@ -450,11 +448,9 @@ struct Payload : public PayloadBase {
  * abstract, will therefore always fail to compile for pointer payloads
  */
 template <typename T>
-struct Payload<T *> : public PayloadBase {
-};
-
-namespace Internal
+struct Payload<T *> : public PayloadBase
 {
+};
 
 /**
   @internal
@@ -470,9 +466,10 @@ template <typename T> inline Payload<T> *payload_cast(PayloadBase *payloadBase)
     return p;
 }
 
-}
+} // namespace Internal
 
-}
+} // namespace Akonadi
+
 //@endcond
 
 #endif

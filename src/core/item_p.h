@@ -223,7 +223,7 @@ public:
 };
 
 struct TypedPayload {
-    clone_ptr<PayloadBase> payload;
+    clone_ptr<Internal::PayloadBase> payload;
     int sharedPointerId;
     int metaTypeId;
 };
@@ -360,7 +360,7 @@ public:
                != mPayloads.end();
     }
 
-    PayloadBase *payloadBaseImpl(int spid, int mtid) const
+    Internal::PayloadBase *payloadBaseImpl(int spid, int mtid) const
     {
         const PayloadContainer::const_iterator it
             = std::find_if(mPayloads.begin(), mPayloads.end(),
@@ -404,7 +404,7 @@ public:
     }
 #endif
 
-    void setPayloadBaseImpl(int spid, int mtid, std::unique_ptr<PayloadBase> &p, bool add) const   /*sic!*/
+    void setPayloadBaseImpl(int spid, int mtid, std::unique_ptr<Internal::PayloadBase> &p, bool add) const   /*sic!*/
     {
 
         if (!add) {
@@ -427,7 +427,7 @@ public:
         tp.metaTypeId = mtid;
     }
 
-    void setLegacyPayloadBaseImpl(std::unique_ptr<PayloadBase> p);
+    void setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase> p);
     void tryEnsureLegacyPayload() const;
 
     // Utilise the 4-bytes padding from QSharedData
@@ -438,7 +438,7 @@ public:
     QHash<QByteArray, Attribute *> mAttributes;
     QSet<QByteArray> mDeletedAttributes;
     mutable Collection *mParent;
-    mutable _detail::clone_ptr<PayloadBase> mLegacyPayload;
+    mutable _detail::clone_ptr<Internal::PayloadBase> mLegacyPayload;
     mutable PayloadContainer mPayloads;
     Item::Flags mFlags;
     Tag::List mTags;

@@ -669,13 +669,16 @@ private:
     friend class ItemModifyJobPrivate;
     friend class ItemSync;
     friend class ProtocolHelper;
-    PayloadBase *payloadBase() const;
-    void setPayloadBase(PayloadBase *p);
-    PayloadBase *payloadBaseV2(int sharedPointerId, int metaTypeId) const;
+    Internal::PayloadBase *payloadBase() const;
+    void setPayloadBase(Internal::PayloadBase *p);
+    Internal::PayloadBase *payloadBaseV2(int sharedPointerId, int metaTypeId) const;
     //std::auto_ptr<PayloadBase> takePayloadBase( int sharedPointerId, int metaTypeId );
-    void setPayloadBaseV2(int sharedPointerId, int metaTypeId, std::unique_ptr<PayloadBase> &p);
-    void addPayloadBaseVariant(int sharedPointerId, int metaTypeId, std::unique_ptr<PayloadBase> &p) const;
-    static void addToLegacyMappingImpl(const QString &mimeType, int sharedPointerId, int metaTypeId, std::unique_ptr<PayloadBase> &p);
+    void setPayloadBaseV2(int sharedPointerId, int metaTypeId,
+                          std::unique_ptr<Internal::PayloadBase> &p);
+    void addPayloadBaseVariant(int sharedPointerId, int metaTypeId,
+                               std::unique_ptr<Internal::PayloadBase> &p) const;
+    static void addToLegacyMappingImpl(const QString &mimeType, int sharedPointerId, int metaTypeId,
+                                       std::unique_ptr<Internal::PayloadBase> &p);
 
     /**
      * Try to ensure that we have a variant of the payload for metatype id @a mtid.
@@ -850,7 +853,7 @@ Item::payloadImpl() const
 
     // Check whether we have the exact payload
     // (metatype id and shared pointer type match)
-    if (const Payload<T> *const p = Internal::payload_cast<T>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
+    if (const Internal::Payload<T> *const p = Internal::payload_cast<T>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
         return p->payload;
     }
 
@@ -869,13 +872,13 @@ Item::tryToCloneImpl(T *ret, const int *) const
     typedef Internal::PayloadTrait<NewT> NewPayloadType;
 
     const int metaTypeId = PayloadType::elementMetaTypeId();
-    Akonadi::PayloadBase *payloadBase = payloadBaseV2(NewPayloadType::sharedPointerId, metaTypeId);
-    if (const Payload<NewT> *const p = Internal::payload_cast<NewT>(payloadBase)) {
+    Internal::PayloadBase *payloadBase = payloadBaseV2(NewPayloadType::sharedPointerId, metaTypeId);
+    if (const Internal::Payload<NewT> *const p = Internal::payload_cast<NewT>(payloadBase)) {
         // If found, attempt to make a clone (required the payload to provide virtual T * T::clone() const)
         const T nt = PayloadType::clone(p->payload);
         if (!PayloadType::isNull(nt)) {
             // if clone succeeded, add the clone to the Item:
-            std::unique_ptr<PayloadBase> npb(new Payload<T>(nt));
+            std::unique_ptr<Internal::PayloadBase> npb(new Internal::Payload<T>(nt));
             addPayloadBaseVariant(PayloadType::sharedPointerId, metaTypeId, npb);
             // and return it
             if (ret) {
@@ -964,7 +967,7 @@ Item::hasPayloadImpl() const
 
     // Check whether we have the exact payload
     // (metatype id and shared pointer type match)
-    if (const Payload<T> *const p = Internal::payload_cast<T>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
+    if (const Internal::Payload<T> *const p = Internal::payload_cast<T>(payloadBaseV2(PayloadType::sharedPointerId, metaTypeId))) {
         return true;
     }
 
@@ -999,7 +1002,7 @@ typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic >::type
 Item::setPayloadImpl(const T &p)
 {
     typedef Internal::PayloadTrait<T> PayloadType;
-    std::unique_ptr<PayloadBase> pb(new Payload<T>(p));
+    std::unique_ptr<Internal::PayloadBase> pb(new Internal::Payload<T>(p));
     setPayloadBaseV2(PayloadType::sharedPointerId,
                      PayloadType::elementMetaTypeId(),
                      pb);
@@ -1044,7 +1047,7 @@ void Item::addToLegacyMapping(const QString &mimeType)
 {
     typedef Internal::PayloadTrait<T> PayloadType;
     static_assert(!PayloadType::isPolymorphic, "Payload type must not be polymorphic");
-    std::unique_ptr<PayloadBase> p(new Payload<T>);
+    std::unique_ptr<Internal::PayloadBase> p(new Internal::Payload<T>);
     addToLegacyMappingImpl(mimeType, PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), p);
 }
 

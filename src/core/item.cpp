@@ -47,7 +47,8 @@ namespace
 
 struct ByTypeId {
     typedef bool result_type;
-    bool operator()(const std::shared_ptr<PayloadBase> &lhs, const std::shared_ptr<PayloadBase> &rhs) const
+    bool operator()(const std::shared_ptr<Internal::PayloadBase> &lhs,
+                    const std::shared_ptr<Internal::PayloadBase> &rhs) const
     {
         return strcmp(lhs->typeName(), rhs->typeName()) < 0 ;
     }
@@ -55,16 +56,17 @@ struct ByTypeId {
 
 } // anon namespace
 
-typedef QHash< QString, std::map< std::shared_ptr<PayloadBase>, std::pair<int, int>, ByTypeId > > LegacyMap;
+typedef QHash<QString, std::map<std::shared_ptr<Internal::PayloadBase>, std::pair<int, int>, ByTypeId>> LegacyMap;
 Q_GLOBAL_STATIC(LegacyMap, typeInfoToMetaTypeIdMap)
 Q_GLOBAL_STATIC_WITH_ARGS(QReadWriteLock, legacyMapLock, (QReadWriteLock::Recursive))
 
-void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid, std::unique_ptr<PayloadBase> &p)
+void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid,
+                                  std::unique_ptr<Internal::PayloadBase> &p)
 {
     if (!p.get()) {
         return;
     }
-    const std::shared_ptr<PayloadBase> sp(p.release());
+    const std::shared_ptr<Internal::PayloadBase> sp(p.release());
     const QWriteLocker locker(legacyMapLock());
     std::pair<int, int> &item = (*typeInfoToMetaTypeIdMap())[mimeType][sp];
     item.first = spid;
@@ -116,14 +118,15 @@ private:
 };
 }
 
-static std::shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QString &mimeType, PayloadBase *p)
+static std::shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QString &mimeType,
+                                                                       Internal::PayloadBase *p)
 {
     MyReadLocker locker(legacyMapLock());
     const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind(mimeType);
     if (hit == typeInfoToMetaTypeIdMap()->constEnd()) {
         return std::shared_ptr<const std::pair<int, int> >();
     }
-    const std::shared_ptr<PayloadBase> sp(p, [ = ](PayloadBase *) {
+    const std::shared_ptr<Internal::PayloadBase> sp(p, [=](Internal::PayloadBase *) {
         /*noop*/
     });
     const LegacyMap::mapped_type::const_iterator it = hit->find(sp);
@@ -535,9 +538,9 @@ class Dummy
 };
 }
 
-Q_GLOBAL_STATIC(Payload<Dummy>, dummyPayload)
+Q_GLOBAL_STATIC(Internal::Payload<Dummy>, dummyPayload)
 
-PayloadBase *Item::payloadBase() const
+Internal::PayloadBase *Item::payloadBase() const
 {
     Q_D(const Item);
     d->tryEnsureLegacyPayload();
@@ -559,7 +562,7 @@ void ItemPrivate::tryEnsureLegacyPayload() const
     }
 }
 
-PayloadBase *Item::payloadBaseV2(int spid, int mtid) const
+Internal::PayloadBase *Item::payloadBaseV2(int spid, int mtid) const
 {
     return d_func()->payloadBaseImpl(spid, mtid);
 }
@@ -657,15 +660,15 @@ void Item::throwPayloadException(int spid, int mtid) const
 }
 #endif
 
-void Item::setPayloadBase(PayloadBase *p)
+void Item::setPayloadBase(Internal::PayloadBase *p)
 {
-    d_func()->setLegacyPayloadBaseImpl(std::unique_ptr<PayloadBase>(p));
+    d_func()->setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase>(p));
 }
 
-void ItemPrivate::setLegacyPayloadBaseImpl(std::unique_ptr<PayloadBase> p)
+void ItemPrivate::setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase> p)
 {
     if (const std::shared_ptr<const std::pair<int, int> > pair = lookupLegacyMapping(mMimeType, p.get())) {
-        std::unique_ptr<PayloadBase> clone;
+        std::unique_ptr<Internal::PayloadBase> clone;
         if (p.get()) {
             clone.reset(p->clone());
         }
@@ -677,12 +680,12 @@ void ItemPrivate::setLegacyPayloadBaseImpl(std::unique_ptr<PayloadBase> p)
     }
 }
 
-void Item::setPayloadBaseV2(int spid, int mtid, std::unique_ptr<PayloadBase> &p)
+void Item::setPayloadBaseV2(int spid, int mtid, std::unique_ptr<Internal::PayloadBase> &p)
 {
     d_func()->setPayloadBaseImpl(spid, mtid, p, false);
 }
 
-void Item::addPayloadBaseVariant(int spid, int mtid, std::unique_ptr<PayloadBase> &p) const
+void Item::addPayloadBaseVariant(int spid, int mtid, std::unique_ptr<Internal::PayloadBase> &p) const
 {
     d_func()->setPayloadBaseImpl(spid, mtid, p, true);
 }
