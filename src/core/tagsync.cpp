@@ -141,8 +141,9 @@ void TagSync::diffTags()
     }
     Q_FOREACH (const Tag &tag, tagById) {
         //Removed remotely, unset rid
-        tag.setRemoteId(QByteArray(""));
-        TagModifyJob *modJob = new TagModifyJob(tag, this);
+        Tag copy(tag);
+        copy.setRemoteId(QByteArray(""));
+        TagModifyJob *modJob = new TagModifyJob(copy, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);
     }
     checkDone();

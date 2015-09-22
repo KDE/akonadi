@@ -41,11 +41,11 @@ public:
 
     void setCommands(QList<FakeAkonadiServerCommand *> list);
 
-    Entity::Id nextCollectionId() const
+    Collection::Id nextCollectionId() const
     {
         return m_nextCollectionId++;
     }
-    Entity::Id nextItemId() const
+    Item::Id nextItemId() const
     {
         return m_nextItemId++;
     }
@@ -66,9 +66,9 @@ private Q_SLOTS:
     void jobAdded();
 
 private:
-    bool returnCollections(Entity::Id fetchColId);
-    void returnItems(Entity::Id fetchColId);
-    void returnEntities(Entity::Id fetchColId);
+    bool returnCollections(Collection::Id fetchColId);
+    void returnItems(Item::Id fetchColId);
+    void returnEntities(Collection::Id fetchColId);
     void returnTags();
 
 private:
@@ -79,8 +79,8 @@ private:
     QList<FakeAkonadiServerCommand *> m_commandList;
     QQueue<FakeAkonadiServerCommand *> m_communicationQueue;
 
-    mutable Entity::Id m_nextCollectionId;
-    mutable Entity::Id m_nextItemId;
+    mutable Collection::Id m_nextCollectionId;
+    mutable Item::Id m_nextItemId;
     mutable Tag::Id m_nextTagId;
 };
 

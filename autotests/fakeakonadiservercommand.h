@@ -97,7 +97,7 @@ protected:
     Akonadi::Tag m_parentTag;
     QHash<Akonadi::Collection::Id, Akonadi::Collection> m_collections;
     QHash<Akonadi::Item::Id, Akonadi::Item> m_items;
-    QHash<Akonadi::Item::Id, QList<Akonadi::Entity::Id> > m_childElements;
+    QHash<Akonadi::Collection::Id, QList<Akonadi::Collection::Id> > m_childElements;
     QHash<Akonadi::Tag::Id, Akonadi::Tag> m_tags;
 
 private:

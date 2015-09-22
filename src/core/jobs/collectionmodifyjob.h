@@ -55,7 +55,7 @@ class CollectionModifyJobPrivate;
  *
  * // Update the 'MyAttribute' attribute of 'collection'.
  * Akonadi::Collection c( collection.id() );
- * MyAttribute *attribute = c.attribute<MyAttribute>( Entity::AddIfMissing );
+ * MyAttribute *attribute = c.attribute<MyAttribute>( Collection::AddIfMissing );
  * if ( collection.hasAttribute<MyAttribute>() ) {
  *     *attribute = *collection.attribute<MyAttribute>();
  * }

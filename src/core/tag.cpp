@@ -18,7 +18,9 @@
 */
 
 #include "tag.h"
+#include "tag_p.h"
 #include "tagattribute.h"
+#include "entity_p.h"
 #include <QUuid>
 #include <QUrlQuery>
 
@@ -27,50 +29,34 @@ using namespace Akonadi;
 const char Akonadi::Tag::PLAIN[] = "PLAIN";
 const char Akonadi::Tag::GENERIC[] = "GENERIC";
 
-struct Akonadi::Tag::Private {
-    Private()
-        : id(-1)
-    {
-    }
+uint Akonadi::qHash(const Tag &tag)
+{
+    return ::qHash(tag.id());
+}
 
-    ~Private()
-    {
-    }
-
-    Id id;
-    QByteArray gid;
-    QByteArray remoteId;
-    QScopedPointer<Tag> parent;
-    QByteArray type;
-};
 
 Tag::Tag()
-    : AttributeEntity()
-    , d(new Private)
+    : d_ptr(new TagPrivate)
 {
 
 }
 
 Tag::Tag(Tag::Id id)
-    : AttributeEntity()
-    , d(new Private)
+    : d_ptr(new TagPrivate)
 {
-    d->id = id;
+    d_ptr->id = id;
 }
 
 Tag::Tag(const QString &name)
-    : AttributeEntity()
-    , d(new Private)
+    : d_ptr(new TagPrivate)
 {
-    d->gid = name.toUtf8();
-    d->type = PLAIN;
+    d_ptr->gid = name.toUtf8();
+    d_ptr->type = PLAIN;
 }
 
 Tag::Tag(const Tag &other)
-    : AttributeEntity()
-    , d(new Private)
+    : d_ptr(other.d_ptr)
 {
-    operator=(other);
 }
 
 Tag::~Tag()
@@ -79,32 +65,23 @@ Tag::~Tag()
 
 Tag &Tag::operator=(const Tag &other)
 {
-    d->id = other.d->id;
-    d->gid = other.d->gid;
-    d->remoteId = other.d->remoteId;
-    d->type = other.d->type;
-    if (other.d->parent) {
-        d->parent.reset(new Tag(*other.d->parent));
+    if (this != &other) {
+        d_ptr = other.d_ptr;
     }
-    AttributeEntity::operator=(other);
-    return *this;
-}
 
-AttributeEntity &Tag::operator=(const AttributeEntity &other)
-{
-    return operator=(*static_cast<const Tag *>(&other));
+    return *this;
 }
 
 bool Tag::operator==(const Tag &other) const
 {
     // Valid tags are equal if their IDs are equal
     if (isValid() && other.isValid()) {
-        return d->id == other.d->id;
+        return d_ptr->id == other.d_ptr->id;
     }
 
     // Invalid tags are equal if their GIDs are non empty but equal
-    if (!d->gid.isEmpty() || !other.d->gid.isEmpty()) {
-        return d->gid == other.d->gid;
+    if (!d_ptr->gid.isEmpty() || !other.d_ptr->gid.isEmpty()) {
+        return d_ptr->gid == other.d_ptr->gid;
     }
 
     // Invalid tags are equal if both are invalid
@@ -143,40 +120,87 @@ QUrl Tag::url() const
     return url;
 }
 
+void Tag::addAttribute(Attribute *attr)
+{
+    if (d_ptr->mAttributes.contains(attr->type())) {
+        Attribute *existing = d_ptr->mAttributes.value(attr->type());
+        if (attr == existing) {
+            return;
+        }
+        d_ptr->mAttributes.remove(attr->type());
+        delete existing;
+    }
+    d_ptr->mAttributes.insert(attr->type(), attr);
+    d_ptr->mDeletedAttributes.remove(attr->type());
+}
+
+void Tag::removeAttribute(const QByteArray &type)
+{
+    d_ptr->mDeletedAttributes.insert(type);
+    delete d_ptr->mAttributes.take(type);
+}
+
+bool Tag::hasAttribute(const QByteArray &type) const
+{
+    return d_ptr->mAttributes.contains(type);
+}
+
+Attribute::List Tag::attributes() const
+{
+    return d_ptr->mAttributes.values();
+}
+
+void Tag::clearAttributes()
+{
+    Q_FOREACH (Attribute *attr, d_ptr->mAttributes) {
+        d_ptr->mDeletedAttributes.insert(attr->type());
+        delete attr;
+    }
+    d_ptr->mAttributes.clear();
+}
+
+Attribute *Tag::attribute(const QByteArray &type) const
+{
+    if (d_ptr->mAttributes.contains(type)) {
+        return d_ptr->mAttributes.value(type);
+    }
+    return 0;
+}
+
 void Tag::setId(Tag::Id identifier)
 {
-    d->id = identifier;
+    d_ptr->id = identifier;
 }
 
 Tag::Id Tag::id() const
 {
-    return d->id;
+    return d_ptr->id;
 }
 
-void Tag::setGid(const QByteArray &gid) const
+void Tag::setGid(const QByteArray &gid)
 {
-    d->gid = gid;
+    d_ptr->gid = gid;
 }
 
 QByteArray Tag::gid() const
 {
-    return d->gid;
+    return d_ptr->gid;
 }
 
-void Tag::setRemoteId(const QByteArray &remoteId) const
+void Tag::setRemoteId(const QByteArray &remoteId)
 {
-    d->remoteId = remoteId;
+    d_ptr->remoteId = remoteId;
 }
 
 QByteArray Tag::remoteId() const
 {
-    return d->remoteId;
+    return d_ptr->remoteId;
 }
 
 void Tag::setName(const QString &name)
 {
     if (!name.isEmpty()) {
-        TagAttribute *const attr = attribute<TagAttribute>(AttributeEntity::AddIfMissing);
+        TagAttribute *const attr = attribute<TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(name);
     }
 }
@@ -185,45 +209,40 @@ QString Tag::name() const
 {
     const TagAttribute *const attr = attribute<TagAttribute>();
     const QString displayName = attr ? attr->displayName() : QString();
-    return !displayName.isEmpty() ? displayName : QString::fromUtf8(d->gid);
+    return !displayName.isEmpty() ? displayName : QString::fromUtf8(d_ptr->gid);
 }
 
 void Tag::setParent(const Tag &parent)
 {
-    d->parent.reset(new Tag(parent));
+    d_ptr->parent.reset(new Tag(parent));
 }
 
 Tag Tag::parent() const
 {
-    if (!d->parent) {
+    if (!d_ptr->parent) {
         return Tag();
     }
-    return *d->parent;
+    return *d_ptr->parent;
 }
 
-void Tag::setType(const QByteArray &type) const
+void Tag::setType(const QByteArray &type)
 {
-    d->type = type;
+    d_ptr->type = type;
 }
 
 QByteArray Tag::type() const
 {
-    return d->type;
+    return d_ptr->type;
 }
 
 bool Tag::isValid() const
 {
-    return d->id >= 0;
+    return d_ptr->id >= 0;
 }
 
 bool Tag::isImmutable() const
 {
-    return (d->type.isEmpty() || d->type == PLAIN);
-}
-
-uint qHash(const Tag &tag)
-{
-    return qHash(tag.id());
+    return (d_ptr->type.isEmpty() || d_ptr->type == PLAIN);
 }
 
 QDebug &operator<<(QDebug &debug, const Tag &tag)
@@ -235,9 +254,10 @@ QDebug &operator<<(QDebug &debug, const Tag &tag)
 Tag Tag::genericTag(const QString &name)
 {
     Tag tag;
-    tag.d->type = GENERIC;
-    tag.d->gid = QUuid::createUuid().toByteArray().mid(1, 36);
+    tag.d_ptr->type = GENERIC;
+    tag.d_ptr->gid = QUuid::createUuid().toByteArray().mid(1, 36);
     tag.setName(name);
     return tag;
 }
 
+AKONADI_DEFINE_PRIVATE(Tag)

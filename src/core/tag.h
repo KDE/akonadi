@@ -21,27 +21,22 @@
 #define AKONADI_TAG_H
 
 #include "akonadicore_export.h"
+#include "attribute.h"
+
 #include <QString>
-
-namespace Akonadi
-{
-class Tag;
-}
-
-AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
-
-#include "attributeentity.h"
 #include <QSharedPointer>
 #include <QUrl>
 #include <QDebug>
 
 namespace Akonadi
 {
+class TagModifyJob;
+class TagPrivate;
 
 /**
  * An Akonadi Tag.
  */
-class AKONADICORE_EXPORT Tag : public AttributeEntity
+class AKONADICORE_EXPORT Tag
 {
 public:
     typedef QVector<Tag> List;
@@ -80,11 +75,83 @@ public:
 
     Tag &operator=(const Tag &);
     //Avoid slicing
-    AttributeEntity &operator=(const AttributeEntity &) Q_DECL_OVERRIDE;
     bool operator==(const Tag &) const;
     bool operator!=(const Tag &) const;
 
     static Tag fromUrl(const QUrl &url);
+
+    /**
+     * Adds an attribute to the entity.
+     *
+     * If an attribute of the same type name already exists, it is deleted and
+     * replaced with the new one.
+     *
+     * @param attribute The new attribute.
+     *
+     * @note The entity takes the ownership of the attribute.
+     */
+    void addAttribute(Attribute *attribute);
+
+    /**
+     * Removes and deletes the attribute of the given type @p name.
+     */
+    void removeAttribute(const QByteArray &name);
+
+    /**
+     * Returns @c true if the entity has an attribute of the given type @p name,
+     * false otherwise.
+     */
+    bool hasAttribute(const QByteArray &name) const;
+
+    /**
+     * Returns a list of all attributes of the entity.
+     */
+    Attribute::List attributes() const;
+
+    /**
+     * Removes and deletes all attributes of the entity.
+     */
+    void clearAttributes();
+
+    /**
+     * Returns the attribute of the given type @p name if available, 0 otherwise.
+     */
+    Attribute *attribute(const QByteArray &name) const;
+
+    /**
+     * Describes the options that can be passed to access attributes.
+     */
+    enum CreateOption {
+        AddIfMissing    ///< Creates the attribute if it is missing
+    };
+
+    /**
+     * Returns the attribute of the requested type.
+     * If the entity has no attribute of that type yet, a new one
+     * is created and added to the entity.
+     *
+     * @param option The create options.
+     */
+    template <typename T>
+    inline T *attribute(CreateOption option);
+
+    /**
+     * Returns the attribute of the requested type or 0 if it is not available.
+     */
+    template <typename T>
+    inline T *attribute() const;
+
+    /**
+     * Removes and deletes the attribute of the requested type.
+     */
+    template <typename T>
+    inline void removeAttribute();
+
+    /**
+     * Returns whether the entity has an attribute of the requested type.
+     */
+    template <typename T>
+    inline bool hasAttribute() const;
 
     /**
      * Returns the url of the tag.
@@ -101,13 +168,13 @@ public:
      */
     Id id() const;
 
-    void setGid(const QByteArray &gid) const;
+    void setGid(const QByteArray &gid);
     QByteArray gid() const;
 
-    void setRemoteId(const QByteArray &remoteId) const;
+    void setRemoteId(const QByteArray &remoteId);
     QByteArray remoteId() const;
 
-    void setType(const QByteArray &type) const;
+    void setType(const QByteArray &type);
     QByteArray type() const;
 
     void setName(const QString &name);
@@ -128,12 +195,75 @@ public:
      * Returns a GENERIC tag with the given name and a valid gid
      */
     static Tag genericTag(const QString &name);
+
 private:
-    class Private;
-    QSharedPointer<Private> d;
+    //@cond PRIVATE
+    friend class TagModifyJob;
+
+    QSharedDataPointer<TagPrivate> d_ptr;
+    const TagPrivate *d_func() const;
+    TagPrivate *d_func();
+    //@endcond
 };
 
+
+AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
+
+
+template <typename T>
+inline T *Tag::attribute(CreateOption option)
+{
+    Q_UNUSED(option);
+
+    const T dummy;
+    if (hasAttribute(dummy.type())) {
+        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+        if (attr) {
+            return attr;
+        }
+        //reuse 5250
+        qWarning() << "Found attribute of unknown type" << dummy.type()
+                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    }
+
+    T *attr = new T();
+    addAttribute(attr);
+    return attr;
 }
+
+template <typename T>
+inline T *Tag::attribute() const
+{
+    const T dummy;
+    if (hasAttribute(dummy.type())) {
+        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+        if (attr) {
+            return attr;
+        }
+        //Reuse 5250
+        qWarning() << "Found attribute of unknown type" << dummy.type()
+                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    }
+
+    return 0;
+}
+
+template <typename T>
+inline void Tag::removeAttribute()
+{
+    const T dummy;
+    removeAttribute(dummy.type());
+}
+
+template <typename T>
+inline bool Tag::hasAttribute() const
+{
+    const T dummy;
+    return hasAttribute(dummy.type());
+}
+
+
+} // namespace Akonadi
 
 AKONADICORE_EXPORT QDebug &operator<<(QDebug &debug, const Akonadi::Tag &tag);
 
@@ -141,4 +271,5 @@ Q_DECLARE_METATYPE(Akonadi::Tag)
 Q_DECLARE_METATYPE(Akonadi::Tag::List)
 Q_DECLARE_METATYPE(QSet<Akonadi::Tag>)
 Q_DECLARE_TYPEINFO(Akonadi::Tag, Q_MOVABLE_TYPE);
+
 #endif

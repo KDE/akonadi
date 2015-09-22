@@ -369,7 +369,7 @@ private Q_SLOTS:
         QFETCH(bool, keepLocalChanges);
         const QString resource(QStringLiteral("akonadi_knut_resource_0"));
         Collection col = fetchCollections(resource).first();
-        col.attribute<EntityDisplayAttribute>(Akonadi::Entity::AddIfMissing)->setDisplayName(QStringLiteral("foo"));
+        col.attribute<EntityDisplayAttribute>(Akonadi::Collection::AddIfMissing)->setDisplayName(QStringLiteral("foo"));
         col.setContentMimeTypes(QStringList() << Akonadi::Collection::mimeType() << QStringLiteral("foo"));
         {
             CollectionModifyJob *job = new CollectionModifyJob(col);

@@ -20,12 +20,9 @@
 #ifndef ENTITY_P_H
 #define ENTITY_P_H
 
-#include "entity.h"
 #include "collection.h"
 
-#include <QtCore/QSet>
-#include <QtCore/QSharedData>
-#include <QtCore/QString>
+Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection)
 
 #define AKONADI_DEFINE_PRIVATE( Class ) \
     Class##Private *Class ::d_func() \
@@ -36,72 +33,5 @@
     {\
         return reinterpret_cast<const Class##Private *>( d_ptr.data() );\
     }
-
-namespace Akonadi
-{
-
-/**
- * @internal
- */
-class EntityPrivate : public QSharedData
-{
-public:
-    explicit EntityPrivate(Entity::Id id = -1)
-        : mId(id)
-        , mParent(0)
-    {
-    }
-
-    virtual ~EntityPrivate()
-    {
-        qDeleteAll(mAttributes);
-        delete mParent;
-    }
-
-    EntityPrivate(const EntityPrivate &other)
-        : QSharedData(other)
-        , mParent(0)
-    {
-        mId = other.mId;
-        mRemoteId = other.mRemoteId;
-        mRemoteRevision = other.mRemoteRevision;
-        foreach (Attribute *attr, other.mAttributes) {
-            mAttributes.insert(attr->type(), attr->clone());
-        }
-        mDeletedAttributes = other.mDeletedAttributes;
-        if (other.mParent) {
-            mParent = new Collection(*(other.mParent));
-        }
-    }
-
-    virtual void resetChangeLog()
-    {
-        mDeletedAttributes.clear();
-    }
-
-    virtual EntityPrivate *clone() const = 0;
-
-    Entity::Id mId;
-    QString mRemoteId;
-    QString mRemoteRevision;
-    QHash<QByteArray, Attribute *> mAttributes;
-    QSet<QByteArray> mDeletedAttributes;
-    mutable Collection *mParent;
-};
-
-}
-
-/**
- * @internal
- *
- * This template specialization is used to change the detach
- * behaviour of QSharedDataPointer to allow 'virtual copy constructors',
- * so Akonadi::ItemPrivate and Akonadi::CollectionPrivate are copied correctly.
- */
-template <>
-Q_INLINE_TEMPLATE Akonadi::EntityPrivate *QSharedDataPointer<Akonadi::EntityPrivate>::clone()
-{
-    return d->clone();
-}
 
 #endif

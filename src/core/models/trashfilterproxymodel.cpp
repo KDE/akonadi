@@ -18,7 +18,6 @@
 */
 #include "trashfilterproxymodel.h"
 
-#include "entity.h"
 #include "entitydeletedattribute.h"
 #include "item.h"
 #include "entitytreemodel.h"
@@ -32,20 +31,8 @@ public:
         : mTrashIsShown(false)
     {
     };
-    bool showEntity(const Entity &) const;
     bool mTrashIsShown;
 };
-
-bool TrashFilterProxyModel::TrashFilterProxyModelPrivate::showEntity(const Akonadi::Entity &entity) const
-{
-    if (entity.hasAttribute<EntityDeletedAttribute>()) {
-        return true;
-    }
-    if (entity.id() == Collection::root().id()) {
-        return false;
-    }
-    return showEntity(entity.parentCollection());
-}
 
 TrashFilterProxyModel::TrashFilterProxyModel(QObject *parent)
     : KRecursiveFilterProxyModel(parent)
@@ -79,13 +66,13 @@ bool TrashFilterProxyModel::acceptRow(int sourceRow, const QModelIndex &sourcePa
     const Item &item = index.data(EntityTreeModel::ItemRole).value<Item>();
     //qDebug() << item.id();
     if (item.isValid()) {
-        if (item.hasAttribute<EntityDeletedAttribute>()/* d->showEntity(item)*/) {
+        if (item.hasAttribute<EntityDeletedAttribute>()) {
             return d->mTrashIsShown;
         }
     }
     const Collection &collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
-        if (collection.hasAttribute<EntityDeletedAttribute>()/*d->showEntity(collection) */) {
+        if (collection.hasAttribute<EntityDeletedAttribute>()) {
             return d->mTrashIsShown;
         }
     }

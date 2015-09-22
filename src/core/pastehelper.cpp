@@ -91,7 +91,9 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         // Check if all items have the same parent collection ID
         const Collection parent = items.first().parentCollection();
         if (std::find_if(items.constBegin(), items.constEnd(),
-                         std::bind(&Entity::operator!=, std::bind(static_cast<Collection(Item::*)() const>(&Item::parentCollection), _1), parent))
+                         [parent](const Item &item) -> bool {
+                             return item.parentCollection() != parent;
+                         })
                 == items.constEnd()) {
             dragSourceCollection = parent;
         }

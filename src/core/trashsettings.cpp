@@ -31,7 +31,7 @@ Akonadi::Collection TrashSettings::getTrashCollection(const QString &resource)
 {
     KConfig config(QStringLiteral("akonaditrashrc"));
     KConfigGroup group(&config, resource);
-    const Akonadi::Entity::Id colId = group.readEntry<Akonadi::Entity::Id> ("TrashCollection", -1);
+    const Akonadi::Collection::Id colId = group.readEntry<Akonadi::Collection::Id> ("TrashCollection", -1);
     qWarning() << resource << colId;
     return Collection(colId);
 }

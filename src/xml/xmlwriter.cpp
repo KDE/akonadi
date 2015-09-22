@@ -41,17 +41,29 @@ QDomElement XmlWriter::attributeToElement(Attribute *attr, QDomDocument &documen
     return top;
 }
 
-void XmlWriter::writeAttributes(const Entity &entity, QDomElement &parentElem)
+template<typename T>
+static void writeAttributesImpl(const T &entity, QDomElement &parentElem)
 {
     if (parentElem.isNull()) {
         return;
     }
 
     QDomDocument doc = parentElem.ownerDocument();
-    foreach (Attribute *attr, entity.attributes()) {
-        parentElem.appendChild(attributeToElement(attr, doc));
+    Q_FOREACH (Attribute *attr, entity.attributes()) {
+        parentElem.appendChild(XmlWriter::attributeToElement(attr, doc));
     }
 }
+
+void XmlWriter::writeAttributes(const Item &item, QDomElement &parentElem)
+{
+    writeAttributesImpl(item, parentElem);
+}
+
+void XmlWriter::writeAttributes(const Collection &collection, QDomElement &parentElem)
+{
+    writeAttributesImpl(collection, parentElem);
+}
+
 
 QDomElement XmlWriter::collectionToElement(const Akonadi::Collection &collection, QDomDocument &document)
 {
@@ -99,7 +111,7 @@ QDomElement XmlWriter::itemToElement(const Akonadi::Item &item, QDomDocument &do
 
     writeAttributes(item, top);
 
-    foreach (const Item::Flag &flag, item.flags()) {
+    Q_FOREACH (const Item::Flag &flag, item.flags()) {
         QDomElement flagElem = document.createElement(Format::Tag::flag());
         QDomText flagText = document.createTextNode(QString::fromUtf8(flag));
         flagElem.appendChild(flagText);

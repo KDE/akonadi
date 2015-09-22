@@ -159,6 +159,7 @@ private Q_SLOTS:
             const Collection p2(collection.parentCollection());
             parsedCollection = p1;
             collection = p2;
+            qDebug() << p1.isValid() << p2.isValid();
         }
     }
 

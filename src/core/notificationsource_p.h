@@ -24,8 +24,9 @@
 
 #include "akonadiprivate_export.h"
 
-#include "entity.h"
 #include "tag.h"
+#include "collection.h"
+#include "item.h"
 
 #include <akonadi/private/protocol_p.h>
 
@@ -44,8 +45,8 @@ public:
 
     void setAllMonitored(bool allMonitored);
     void setExclusive(bool exclusive);
-    void setMonitoredCollection(Entity::Id id, bool monitored);
-    void setMonitoredItem(Entity::Id id, bool monitored);
+    void setMonitoredCollection(Collection::Id id, bool monitored);
+    void setMonitoredItem(Item::Id id, bool monitored);
     void setMonitoredResource(const QByteArray &resource, bool monitored);
     void setMonitoredMimeType(const QString &mimeType, bool monitored);
     void setMonitoredTag(Tag::Id id, bool monitored);

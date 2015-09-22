@@ -21,7 +21,7 @@
 
 #include "job_p.h"
 #include "protocolhelper_p.h"
-#include "entity_p.h"
+#include "collection_p.h"
 #include "collectionfetchscope.h"
 #include "collectionutils.h"
 #include "protocolhelper_p.h"

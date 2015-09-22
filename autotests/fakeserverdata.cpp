@@ -37,7 +37,7 @@ FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, Fak
     // the slot gets called
     connect(session, &FakeSession::jobAdded,
             [this](Akonadi::Job * job) {
-                Entity::Id fetchColId = job->property("FetchCollectionId").toULongLong();
+                Collection::Id fetchColId = job->property("FetchCollectionId").toULongLong();
                 QTimer::singleShot(0, [this, fetchColId]() {
                     jobAdded(fetchColId);
                 });
@@ -65,7 +65,7 @@ FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonito
 void FakeServerData::setCommands(QList< FakeAkonadiServerCommand * > list)
 {
     m_communicationQueue.clear();
-    foreach (FakeAkonadiServerCommand *command, list) {
+    Q_FOREACH (FakeAkonadiServerCommand *command, list) {
         m_communicationQueue << command;
     }
 }
@@ -97,7 +97,7 @@ void FakeServerData::jobAdded()
     processNotifications();
 }
 
-void FakeServerData::returnEntities(Entity::Id fetchColId)
+void FakeServerData::returnEntities(Collection::Id fetchColId)
 {
     if (!returnCollections(fetchColId)) {
         while (!m_communicationQueue.isEmpty() && m_communicationQueue.head()->respondTo() == FakeAkonadiServerCommand::RespondToItemFetch) {
@@ -108,7 +108,7 @@ void FakeServerData::returnEntities(Entity::Id fetchColId)
     processNotifications();
 }
 
-bool FakeServerData::returnCollections(Entity::Id fetchColId)
+bool FakeServerData::returnCollections(Collection::Id fetchColId)
 {
     if (m_communicationQueue.isEmpty()) {
         return true;
@@ -129,7 +129,7 @@ bool FakeServerData::returnCollections(Entity::Id fetchColId)
     return false;
 }
 
-void FakeServerData::returnItems(Entity::Id fetchColId)
+void FakeServerData::returnItems(Item::Id fetchColId)
 {
     FakeAkonadiServerCommand::Type commType = m_communicationQueue.head()->respondTo();
 

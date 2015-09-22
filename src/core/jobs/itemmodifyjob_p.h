@@ -53,7 +53,7 @@ public:
     void conflictResolved();
     void conflictResolveError(const QString &message);
 
-    void doUpdateItemRevision(Entity::Id, int oldRevision, int newRevision) Q_DECL_OVERRIDE;
+    void doUpdateItemRevision(Item::Id id, int oldRevision, int newRevision) Q_DECL_OVERRIDE;
 
     QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/;
     Protocol::Command fullCommand() const;

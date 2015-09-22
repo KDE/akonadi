@@ -268,25 +268,11 @@ void EntityTreeModelPrivate::fetchCollections(const Collection &collection, Coll
     fetchCollections(job);
 }
 
-// Specialization needs to be in the same namespace as the definition
 namespace Akonadi
 {
 
-template<>
-bool EntityTreeModelPrivate::isHidden<Akonadi::Collection>(const Akonadi::Collection &entity) const
-{
-    return isHidden(entity, Node::Collection);
-}
-
-template<>
-bool EntityTreeModelPrivate::isHidden<Akonadi::Item>(const Akonadi::Item &entity) const
-{
-    return isHidden(entity, Node::Item);
-}
-
-}
-
-bool EntityTreeModelPrivate::isHidden(const Entity &entity, Node::Type type) const
+template<typename T>
+inline bool EntityTreeModelPrivate::isHiddenImpl(const T &entity, Node::Type type) const
 {
     if (m_showSystemEntities) {
         return false;
@@ -297,16 +283,30 @@ bool EntityTreeModelPrivate::isHidden(const Entity &entity, Node::Type type) con
         return false;
     }
 
-    if (entity.hasAttribute<EntityHiddenAttribute>()) {
+    // entity.hasAttribute<EntityHiddenAttribute>() does not compile w/ GCC for
+    // some reason
+    if (entity.hasAttribute(EntityHiddenAttribute().type())) {
         return true;
     }
 
     const Collection parent = entity.parentCollection();
     if (parent.isValid()) {
-        return isHidden(parent, Node::Collection);
+        return isHiddenImpl(parent, Node::Collection);
     }
 
     return false;
+}
+
+}
+
+bool EntityTreeModelPrivate::isHidden(const Akonadi::Collection &collection) const
+{
+    return isHiddenImpl(collection, Node::Collection);
+}
+
+bool EntityTreeModelPrivate::isHidden(const Akonadi::Item &item) const
+{
+    return isHiddenImpl(item, Node::Item);
 }
 
 void EntityTreeModelPrivate::collectionListFetched(const Akonadi::Collection::List &collections)
@@ -1732,8 +1732,8 @@ QModelIndex EntityTreeModelPrivate::indexForCollection(const Collection &collect
     } else if (collection.parentCollection().isValid()) {
         parentId = collection.parentCollection().id();
     } else {
-        QHash<Entity::Id, QList<Node *> >::const_iterator it = m_childEntities.constBegin();
-        const QHash<Entity::Id, QList<Node *> >::const_iterator end = m_childEntities.constEnd();
+        QHash<Node::Id, QList<Node *> >::const_iterator it = m_childEntities.constBegin();
+        const QHash<Node::Id, QList<Node *> >::const_iterator end = m_childEntities.constEnd();
         for (; it != end; ++it) {
             const int row = indexOf<Node::Collection>(it.value(), collection.id());
             if (row < 0) {
@@ -1866,7 +1866,7 @@ void EntityTreeModelPrivate::fillModel()
 
         Item::List items;
         items.reserve(m_monitor->itemsMonitoredEx().size());
-        foreach (Entity::Id id, m_monitor->itemsMonitoredEx()) {
+        Q_FOREACH (Item::Id id, m_monitor->itemsMonitoredEx()) {
             items.append(Item(id));
         }
         ItemFetchJob *itemFetch = new ItemFetchJob(items, m_session);

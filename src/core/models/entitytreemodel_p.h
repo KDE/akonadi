@@ -43,8 +43,10 @@ class AgentInstance;
 }
 
 struct Node {
-    Akonadi::Entity::Id id;
-    Akonadi::Entity::Id parent;
+    typedef qint64 Id;
+
+    Id id;
+    Akonadi::Collection::Id parent;
 
     enum Type {
         Item,
@@ -133,13 +135,13 @@ public:
     QIcon iconForName(const QString &name) const;
 
     QHash<Collection::Id, Collection> m_collections;
-    QHash<Entity::Id, Item> m_items;
+    QHash<Item::Id, Item> m_items;
     QHash<Collection::Id, QList<Node *> > m_childEntities;
     QSet<Collection::Id> m_populatedCols;
     QSet<Collection::Id> m_collectionsWithoutItems;
 
-    QVector<Entity::Id> m_pendingCutItems;
-    QVector<Entity::Id> m_pendingCutCollections;
+    QVector<Item::Id> m_pendingCutItems;
+    QVector<Item::Id> m_pendingCutCollections;
     mutable QSet<Collection::Id> m_pendingCollectionRetrieveJobs;
     mutable QSet<KJob *> m_pendingCollectionFetchJobs;
 
@@ -185,10 +187,10 @@ public:
      * Returns the index of the node in @p list with the id @p id. Returns -1 if not found.
      */
     template<Node::Type Type>
-    int indexOf(const QList<Node *> &nodes, Entity::Id id) const
+    int indexOf(const QList<Node *> &nodes, Node::Id id) const
     {
         int i = 0;
-        foreach (const Node *node, nodes) {
+        Q_FOREACH (const Node *node, nodes) {
             if (node->id == id && node->type == Type) {
                 return i;
             }
@@ -215,12 +217,13 @@ public:
     void topLevelCollectionsFetched(const Akonadi::Collection::List &collectionList);
 
     /**
-      @returns True if @p entity or one of its descemdants is hidden.
+      @returns True if @p item or one of its descemdants is hidden.
     */
-    bool isHidden(const Entity &entity, Node::Type type) const;
+    bool isHidden(const Item &item) const;
+    bool isHidden(const Collection &collection) const;
 
     template<typename T>
-    bool isHidden(const T &entity) const;
+    bool isHiddenImpl(const T &entity, Node::Type type) const;
 
     bool m_showSystemEntities;
 

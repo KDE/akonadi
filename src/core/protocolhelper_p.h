@@ -26,7 +26,6 @@
 #include "item.h"
 #include "itemfetchscope.h"
 #include "sharedvaluepool_p.h"
-#include "attributeentity.h"
 #include "tag.h"
 
 #include <akonadi/private/imapparser_p.h>
@@ -84,21 +83,36 @@ public:
     static Protocol::CachePolicy cachePolicyToProtocol(const CachePolicy &policy);
 
     /**
-      Convert a ancestor chain from its protocol representation into an Entity object.
+      Convert a ancestor chain from its protocol representation into an Item object.
     */
-    static void parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Entity *entity);
+    static void parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Item *item);
 
     /**
-      Convert a ancestor chain from its protocol representation into an Entity object.
+      Convert a ancestor chain from its protocol representation into a Collection object.
+    */
+    static void parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Collection *collection);
+
+    /**
+      Convert a ancestor chain from its protocol representation into an Item object.
 
       This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
       same @p parentCollection don't have to be parsed twice.
     */
     static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
-                                     Entity *entity,
+                                     Item *item,
                                      Collection::Id parentCollection,
                                      ProtocolHelperValuePool *valuePool = 0);
 
+    /**
+      Convert a ancestor chain from its protocol representation into an Collection object.
+
+      This method allows to pass a @p valuePool which acts as cache, so ancestor paths for the
+      same @p parentCollection don't have to be parsed twice.
+    */
+    static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
+                                     Collection *collection,
+                                     Collection::Id parentCollection,
+                                     ProtocolHelperValuePool *valuePool = 0);
     /**
       Parse a collection description.
       @param data The input data.
@@ -107,16 +121,18 @@ public:
     */
     static Collection parseCollection(const Protocol::FetchCollectionsResponse &data, bool requireParent = true);
 
-    static void parseAttributes(const Protocol::Attributes &attributes, Entity *entity);
-    static void parseAttributes(const Protocol::Attributes &attributes, AttributeEntity *entity);
+    static void parseAttributes(const Protocol::Attributes &attributes, Item *item);
+    static void parseAttributes(const Protocol::Attributes &attributes, Collection *collection);
+    static void parseAttributes(const Protocol::Attributes &attributes, Tag *entity);
 
     static CollectionStatistics parseCollectionStatistics(const Protocol::FetchCollectionStatsResponse &stats);
 
     /**
       Convert attributes to their protocol representation.
     */
-    static Protocol::Attributes attributesToProtocol(const Entity &entity, bool ns = false);
-    static Protocol::Attributes attributesToProtocol(const AttributeEntity &entity, bool ns = false);
+    static Protocol::Attributes attributesToProtocol(const Item &item, bool ns = false);
+    static Protocol::Attributes attributesToProtocol(const Collection &collection, bool ns = false);
+    static Protocol::Attributes attributesToProtocol(const Tag &entity, bool ns = false);
 
     /**
       Encodes part label and namespace.

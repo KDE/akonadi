@@ -22,12 +22,13 @@
 #define AKONADI_ITEM_H
 
 #include "akonadicore_export.h"
-#include "entity.h"
+#include "attribute.h"
 #include "exception.h"
 #include "tag.h"
 #include "collection.h"
 #include "relation.h"
 #include "itempayloadinternals_p.h"
+#include "job.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QMetaType>
@@ -112,9 +113,14 @@ class ItemPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>, Till Adam <adam@kde.org>, Marc Mutz <mutz@kde.org>
  */
-class AKONADICORE_EXPORT Item : public Entity
+class AKONADICORE_EXPORT Item
 {
 public:
+    /**
+     * Describes the unique id type.
+     */
+    typedef qint64 Id;
+
     /**
      * Describes a list of items.
      */
@@ -167,6 +173,173 @@ public:
      * Creates an item from the given @p url.
      */
     static Item fromUrl(const QUrl &url);
+
+    /**
+     * Sets the unique @p identifier of the item.
+     */
+    void setId(Id identifier);
+
+    /**
+     * Returns the unique identifier of the item.
+     */
+    Id id() const;
+
+    /**
+     * Sets the remote @p id of the item.
+     */
+    void setRemoteId(const QString &id);
+
+    /**
+     * Returns the remote id of the item.
+     */
+    QString remoteId() const;
+
+    /**
+     * Sets the remote @p revision of the item.
+     * @param revision the item's remote revision
+     * The remote revision can be used by resources to store some
+     * revision information of the backend to detect changes there.
+     *
+     * @note This method is supposed to be used by resources only.
+     * @since 4.5
+     */
+    void setRemoteRevision(const QString &revision);
+
+    /**
+     * Returns the remote revision of the item.
+     *
+     * @note This method is supposed to be used by resources only.
+     * @since 4.5
+     */
+    QString remoteRevision() const;
+
+    /**
+     * Returns whether the item is valid.
+     */
+    bool isValid() const;
+
+    /**
+     * Returns whether this item's id equals the id of the @p other item.
+     */
+    bool operator==(const Item &other) const;
+
+    /**
+     * Returns whether the item's id does not equal the id of the @p other item.
+     */
+    bool operator!=(const Item &other) const;
+
+    /**
+     * Assigns the @p other to this item and returns a reference to this item.
+     * @param other the item to assign
+     */
+    Item &operator=(const Item &other);
+
+    /**
+     * @internal For use with containers only.
+     *
+     * @since 4.8
+     */
+    bool operator<(const Item &other) const;
+
+    /**
+     * Returns the parent collection of this object.
+     * @note This will of course only return a useful value if it was explictly retrieved
+     *       from the Akonadi server.
+     * @since 4.4
+     */
+    Collection parentCollection() const;
+
+    /**
+     * Returns a reference to the parent collection of this object.
+     * @note This will of course only return a useful value if it was explictly retrieved
+     *       from the Akonadi server.
+     * @since 4.4
+     */
+    Collection &parentCollection();
+
+    /**
+     * Set the parent collection of this object.
+     * @note Calling this method has no immediate effect for the object itself,
+     *       such as being moved to another collection.
+     *       It is mainly relevant to provide a context for RID-based operations
+     *       inside resources.
+     * @param parent The parent collection.
+     * @since 4.4
+     */
+    void setParentCollection(const Collection &parent);
+
+    /**
+     * Adds an attribute to the item.
+     *
+     * If an attribute of the same type name already exists, it is deleted and
+     * replaced with the new one.
+     *
+     * @param attribute The new attribute.
+     *
+     * @note The collection takes the ownership of the attribute.
+     */
+    void addAttribute(Attribute *attribute);
+
+    /**
+     * Removes and deletes the attribute of the given type @p name.
+     */
+    void removeAttribute(const QByteArray &name);
+
+    /**
+     * Returns @c true if the item has an attribute of the given type @p name,
+     * false otherwise.
+     */
+    bool hasAttribute(const QByteArray &name) const;
+
+    /**
+     * Returns a list of all attributes of the item.
+     */
+    Attribute::List attributes() const;
+
+    /**
+     * Removes and deletes all attributes of the item.
+     */
+    void clearAttributes();
+
+    /**
+     * Returns the attribute of the given type @p name if available, 0 otherwise.
+     */
+    Attribute *attribute(const QByteArray &name) const;
+
+    /**
+     * Describes the options that can be passed to access attributes.
+     */
+    enum CreateOption {
+        AddIfMissing    ///< Creates the attribute if it is missing
+    };
+
+    /**
+     * Returns the attribute of the requested type.
+     * If the item has no attribute of that type yet, a new one
+     * is created and added to the entity.
+     *
+     * @param option The create options.
+     */
+    template <typename T>
+    inline T *attribute(CreateOption option);
+
+    /**
+     * Returns the attribute of the requested type or 0 if it is not available.
+     */
+    template <typename T>
+    inline T *attribute() const;
+
+    /**
+     * Removes and deletes the attribute of the requested type.
+     */
+    template <typename T>
+    inline void removeAttribute();
+
+    /**
+     * Returns whether the item has an attribute of the requested type.
+     */
+    template <typename T>
+    inline bool hasAttribute() const;
 
     /**
      * Returns all flags of this item.
@@ -288,7 +461,7 @@ public:
      * @returns the collection ID if it is known, -1 otherwise.
      * @since 4.3
      */
-    Entity::Id storageCollectionId() const;
+    Collection::Id storageCollectionId() const;
 
     /**
      * Set the size of the item in bytes.
@@ -550,7 +723,7 @@ private:
      * @param collectionId the unique identifier of the collection where this item is stored in.
      * @since 4.3
      */
-    void setStorageCollectionId(Entity::Id collectionId);
+    void setStorageCollectionId(Collection::Id collectionId);
 
 #if 0
     /**
@@ -570,10 +743,67 @@ private:
 #else
     void throwPayloadException(int spid, int mtid) const;
 #endif
-    //@endcond
 
-    AKONADI_DECLARE_PRIVATE(Item)
+    QSharedDataPointer<ItemPrivate> d_ptr;
+    const ItemPrivate *d_func() const;
+    ItemPrivate *d_func();
+    friend class ItemPrivate;
+    //@endcond
 };
+
+AKONADICORE_EXPORT uint qHash(const Akonadi::Item &item);
+
+template <typename T>
+inline T *Item::attribute(Item::CreateOption option)
+{
+    Q_UNUSED(option);
+
+    const T dummy;
+    if (hasAttribute(dummy.type())) {
+        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+        if (attr) {
+            return attr;
+        }
+        //Reuse 5250
+        qWarning() << "Found attribute of unknown type" << dummy.type()
+                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    }
+
+    T *attr = new T();
+    addAttribute(attr);
+    return attr;
+}
+
+template <typename T>
+inline T *Item::attribute() const
+{
+    const T dummy;
+    if (hasAttribute(dummy.type())) {
+        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+        if (attr) {
+            return attr;
+        }
+        //reuse 5250
+        qWarning() << "Found attribute of unknown type" << dummy.type()
+                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    }
+
+    return 0;
+}
+
+template <typename T>
+inline void Item::removeAttribute()
+{
+    const T dummy;
+    removeAttribute(dummy.type());
+}
+
+template <typename T>
+inline bool Item::hasAttribute() const
+{
+    const T dummy;
+    return hasAttribute(dummy.type());
+}
 
 template <typename T>
 T Item::payload() const
@@ -818,7 +1048,7 @@ void Item::addToLegacyMapping(const QString &mimeType)
     addToLegacyMappingImpl(mimeType, PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), p);
 }
 
-}
+} // namespace Akonadi
 
 Q_DECLARE_METATYPE(Akonadi::Item)
 Q_DECLARE_METATYPE(Akonadi::Item::List)

@@ -24,7 +24,6 @@
 #include <QtCore/QMap>
 #include <QtCore/QVarLengthArray>
 
-#include "entity_p.h"
 #include "itempayloadinternals_p.h"
 #include "tag.h"
 
@@ -277,15 +276,16 @@ namespace Akonadi
 /**
  * @internal
  */
-class ItemPrivate : public EntityPrivate
+class ItemPrivate : public QSharedData
 {
 public:
     explicit ItemPrivate(Item::Id id = -1)
-        : EntityPrivate(id)
+        : QSharedData()
+        , mRevision(-1)
+        , mId(id)
+        , mParent(Q_NULLPTR)
         , mLegacyPayload()
         , mPayloads()
-        , mConversionInProgress(false)
-        , mRevision(-1)
         , mCollectionId(-1)
         , mSize(0)
         , mModificationTime()
@@ -293,35 +293,56 @@ public:
         , mTagsOverwritten(false)
         , mSizeChanged(false)
         , mClearPayload(false)
+        , mConversionInProgress(false)
     {
     }
 
-#if 0
     ItemPrivate(const ItemPrivate &other)
-        : EntityPrivate(other)
+        : QSharedData(other)
+        , mParent(Q_NULLPTR)
     {
+        mId = other.mId;
+        mRemoteId = other.mRemoteId;
+        mRemoteRevision = other.mRemoteRevision;
+        Q_FOREACH (Attribute *attr, other.mAttributes) {
+            mAttributes.insert(attr->type(), attr->clone());
+        }
+        mDeletedAttributes = other.mDeletedAttributes;
+        if (other.mParent) {
+            mParent = new Collection(*(other.mParent));
+        }
         mFlags = other.mFlags;
         mRevision = other.mRevision;
+        mTags = other.mTags;
+        mRelations = other.mRelations;
         mSize = other.mSize;
         mModificationTime = other.mModificationTime;
         mMimeType = other.mMimeType;
         mLegacyPayload = other.mLegacyPayload;
         mPayloads = other.mPayloads;
-        mConversionInProgress = false;
         mAddedFlags = other.mAddedFlags;
         mDeletedFlags = other.mDeletedFlags;
         mFlagsOverwritten = other.mFlagsOverwritten;
         mSizeChanged = other.mSizeChanged;
         mCollectionId = other.mCollectionId;
         mClearPayload = other.mClearPayload;
+        mVirtualReferences = other.mVirtualReferences;
+        mGid = other.mGid;
+        mAddedTags = other.mAddedTags;
+        mDeletedTags = other.mDeletedTags;
+        mCachedPayloadParts = other.mCachedPayloadParts;
+        mTagsOverwritten = other.mTagsOverwritten;
+        mConversionInProgress = false;
     }
-#endif
 
     ~ItemPrivate()
     {
+        qDeleteAll(mAttributes);
+        delete mParent;
     }
 
-    void resetChangeLog() Q_DECL_OVERRIDE {
+    void resetChangeLog()
+    {
         mFlagsOverwritten = false;
         mAddedFlags.clear();
         mDeletedFlags.clear();
@@ -329,11 +350,7 @@ public:
         mTagsOverwritten = false;
         mAddedTags.clear();
         mDeletedTags.clear();
-    }
-
-    EntityPrivate *clone() const Q_DECL_OVERRIDE
-    {
-        return new ItemPrivate(*this);
+        mDeletedAttributes.clear();
     }
 
     bool hasMetaTypeId(int mtid) const
@@ -413,15 +430,22 @@ public:
     void setLegacyPayloadBaseImpl(std::unique_ptr<PayloadBase> p);
     void tryEnsureLegacyPayload() const;
 
+    // Utilise the 4-bytes padding from QSharedData
+    int mRevision;
+    Item::Id mId;
+    QString mRemoteId;
+    QString mRemoteRevision;
+    QHash<QByteArray, Attribute *> mAttributes;
+    QSet<QByteArray> mDeletedAttributes;
+    mutable Collection *mParent;
     mutable _detail::clone_ptr<PayloadBase> mLegacyPayload;
     mutable PayloadContainer mPayloads;
-    mutable bool mConversionInProgress;
-    int mRevision;
     Item::Flags mFlags;
     Tag::List mTags;
     Relation::List mRelations;
-    Entity::Id mCollectionId;
+    Item::Id mCollectionId;
     Collection::List mVirtualReferences;
+    // TODO: Maybe just use uint? Would save us another 8 bytes after reordering
     qint64 mSize;
     QDateTime mModificationTime;
     QString mMimeType;
@@ -435,6 +459,8 @@ public:
     bool mTagsOverwritten : 1;
     bool mSizeChanged : 1;
     bool mClearPayload : 1;
+    mutable bool mConversionInProgress;
+    // 6 bytes padding here
 };
 
 }

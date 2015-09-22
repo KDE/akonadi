@@ -847,7 +847,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
                     return false;
                 }
 
-                EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>(Entity::AddIfMissing);
+                EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
                 eda->setBackgroundColor(color);
             }
 
@@ -870,7 +870,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
 
             if (Qt::EditRole == role) {
                 if (item.hasAttribute<EntityDisplayAttribute>()) {
-                    EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>(Entity::AddIfMissing);
+                    EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>(Item::AddIfMissing);
                     displayAttribute->setDisplayName(value.toString());
                 }
             }
@@ -882,7 +882,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
                     return false;
                 }
 
-                EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>(Entity::AddIfMissing);
+                EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>(Item::AddIfMissing);
                 eda->setBackgroundColor(color);
             }
 

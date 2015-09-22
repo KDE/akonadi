@@ -19,6 +19,8 @@
 
 #include "item.h"
 #include "item_p.h"
+#include "entity_p.h"
+
 #include "itemserializer_p.h"
 #include <akonadi/private/protocol_p.h>
 
@@ -34,6 +36,11 @@
 #include <utility>
 
 using namespace Akonadi;
+
+uint Akonadi::qHash(const Akonadi::Item &item)
+{
+    return ::qHash(item.id());
+}
 
 namespace
 {
@@ -131,28 +138,156 @@ static std::shared_ptr<const std::pair<int, int> > lookupLegacyMapping(const QSt
 const char Item::FullPayload[] = "RFC822";
 
 Item::Item()
-    : Entity(new ItemPrivate)
+    : d_ptr(new ItemPrivate)
 {
 }
 
 Item::Item(Id id)
-    : Entity(new ItemPrivate(id))
+    : d_ptr(new ItemPrivate(id))
 {
 }
 
 Item::Item(const QString &mimeType)
-    : Entity(new ItemPrivate)
+    : d_ptr(new ItemPrivate)
 {
     d_func()->mMimeType = mimeType;
 }
 
 Item::Item(const Item &other)
-    : Entity(other)
+    : d_ptr(other.d_ptr)
 {
 }
 
 Item::~Item()
 {
+}
+
+void Item::setId(Item::Id identifier)
+{
+    d_ptr->mId = identifier;
+}
+
+Item::Id Item::id() const
+{
+    return d_func()->mId;
+}
+
+void Item::setRemoteId(const QString &id)
+{
+    d_ptr->mRemoteId = id;
+}
+
+QString Item::remoteId() const
+{
+    return d_ptr->mRemoteId;
+}
+
+void Item::setRemoteRevision(const QString &revision)
+{
+    d_ptr->mRemoteRevision = revision;
+}
+
+QString Item::remoteRevision() const
+{
+    return d_ptr->mRemoteRevision;
+}
+
+bool Item::isValid() const
+{
+    return (d_ptr->mId >= 0);
+}
+
+bool Item::operator==(const Item &other) const
+{
+    // Invalid collections are the same, no matter what their internal ID is
+    return (!isValid() && !other.isValid()) || (d_ptr->mId == other.d_ptr->mId);
+}
+
+bool Akonadi::Item::operator!=(const Item &other) const
+{
+    return (isValid() || other.isValid()) && (d_ptr->mId != other.d_ptr->mId);
+}
+
+Item &Item ::operator=(const Item &other)
+{
+    if (this != &other) {
+        d_ptr = other.d_ptr;
+    }
+
+    return *this;
+}
+
+bool Akonadi::Item::operator<(const Item &other) const
+{
+    return d_ptr->mId < other.d_ptr->mId;
+}
+
+void Item::addAttribute(Attribute *attr)
+{
+    Q_ASSERT(attr);
+    Attribute *existing = d_ptr->mAttributes.value(attr->type());
+    if (existing) {
+        if (attr == existing) {
+            return;
+        }
+        d_ptr->mAttributes.remove(attr->type());
+        delete existing;
+    }
+    d_ptr->mAttributes.insert(attr->type(), attr);
+    d_ptr->mDeletedAttributes.remove(attr->type());
+}
+
+void Item::removeAttribute(const QByteArray &type)
+{
+    d_ptr->mDeletedAttributes.insert(type);
+    delete d_ptr->mAttributes.take(type);
+}
+
+bool Item::hasAttribute(const QByteArray &type) const
+{
+    return d_ptr->mAttributes.contains(type);
+}
+
+Attribute::List Item::attributes() const
+{
+    return d_ptr->mAttributes.values();
+}
+
+void Akonadi::Item::clearAttributes()
+{
+    Q_FOREACH (Attribute *attr, d_ptr->mAttributes) {
+        d_ptr->mDeletedAttributes.insert(attr->type());
+        delete attr;
+    }
+    d_ptr->mAttributes.clear();
+}
+
+Attribute *Item::attribute(const QByteArray &type) const
+{
+    return d_ptr->mAttributes.value(type);
+}
+
+Collection &Item::parentCollection()
+{
+    if (!d_ptr->mParent) {
+        d_ptr->mParent = new Collection();
+    }
+    return *(d_ptr->mParent);
+}
+
+Collection Item::parentCollection() const
+{
+    if (!d_ptr->mParent) {
+        return *(s_defaultParentCollection);
+    } else {
+        return *(d_ptr->mParent);
+    }
+}
+
+void Item::setParentCollection(const Collection &parent)
+{
+    delete d_ptr->mParent;
+    d_ptr->mParent = new Collection(parent);
 }
 
 Item::Flags Item::flags() const
@@ -306,12 +441,12 @@ void Item::setRevision(int rev)
     d_func()->mRevision = rev;
 }
 
-Entity::Id Item::storageCollectionId() const
+Collection::Id Item::storageCollectionId() const
 {
     return d_func()->mCollectionId;
 }
 
-void Item::setStorageCollectionId(Entity::Id collectionId)
+void Item::setStorageCollectionId(Collection::Id collectionId)
 {
     d_func()->mCollectionId = collectionId;
 }
@@ -601,7 +736,7 @@ void Item::apply(const Item &other)
 
     QList<QByteArray> attrs;
     attrs.reserve(other.attributes().count());
-    foreach (Attribute *attribute, other.attributes()) {
+    Q_FOREACH (Attribute *attribute, other.attributes()) {
         addAttribute(attribute->clone());
         attrs.append(attribute->type());
     }

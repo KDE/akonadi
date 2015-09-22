@@ -5,7 +5,6 @@ set(akonadicore_base_SRCS
     agenttype.cpp
     asyncselectionhandler.cpp
     attribute.cpp
-    attributeentity.cpp
     attributefactory.cpp
     cachepolicy.cpp
     changemediator_p.cpp
@@ -24,7 +23,6 @@ set(akonadicore_base_SRCS
     conflicthandler.cpp
     collectionidentificationattribute.cpp
     control.cpp
-    entity.cpp
     entityannotationsattribute.cpp
     entitycache.cpp
     entitydeletedattribute.cpp
@@ -76,7 +74,6 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     AgentManager
     AgentType
     Attribute
-    AttributeEntity
     AttributeFactory
     CachePolicy
     ChangeRecorder
@@ -88,7 +85,6 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     CollectionIdentificationAttribute
     Control
     DifferencesAlgorithmInterface
-    Entity
     EntityAnnotationsAttribute
     EntityDeletedAttribute
     EntityDisplayAttribute

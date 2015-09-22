@@ -81,7 +81,7 @@ public:
     bool mSetRestoreCollection; //only set restore collection when moved to trash collection (not in place)
     bool mDeleteIfInTrash;
     QHash<Collection, Item::List> mCollectionItems; //list of trashed items sorted according to parent collection
-    QHash<Entity::Id, Collection> mParentCollections; //fetched parent collcetion of items (containing the resource name)
+    QHash<Item::Id, Collection> mParentCollections; //fetched parent collection of items (containing the resource name)
 
 };
 

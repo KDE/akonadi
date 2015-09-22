@@ -23,37 +23,51 @@
 #include "collection.h"
 #include "cachepolicy.h"
 #include "collectionstatistics.h"
-#include "entity_p.h"
 
 #include "qstringlist.h"
+
+#include <QSharedData>
 
 using namespace Akonadi;
 
 /**
  * @internal
  */
-class Akonadi::CollectionPrivate : public EntityPrivate
+class Akonadi::CollectionPrivate : public QSharedData
 {
 public:
     CollectionPrivate(Collection::Id id = -1)
-        : EntityPrivate(id)
-        , contentTypesChanged(false)
-        , cachePolicyChanged(false)
-        , isVirtual(false)
-        , enabled(true)
-        , enabledChanged(false)
-        , listPreferenceChanged(false)
-        , referenced(false)
-        , referencedChanged(false)
+        : QSharedData()
         , displayPreference(Collection::ListDefault)
         , syncPreference(Collection::ListDefault)
         , indexPreference(Collection::ListDefault)
+        , listPreferenceChanged(false)
+        , enabled(true)
+        , enabledChanged(false)
+        , referenced(false)
+        , referencedChanged(false)
+        , contentTypesChanged(false)
+        , cachePolicyChanged(false)
+        , isVirtual(false)
+        , mId(id)
+        , mParent(Q_NULLPTR)
     {
     }
 
     CollectionPrivate(const CollectionPrivate &other)
-        : EntityPrivate(other)
+        : QSharedData(other)
+        , mParent(Q_NULLPTR)
     {
+        mId = other.mId;
+        mRemoteId = other.mRemoteId;
+        mRemoteRevision = other.mRemoteRevision;
+        Q_FOREACH (Attribute *attr, other.mAttributes) {
+            mAttributes.insert(attr->type(), attr->clone());
+        }
+        mDeletedAttributes = other.mDeletedAttributes;
+        if (other.mParent) {
+            mParent = new Collection(*(other.mParent));
+        }
         name = other.name;
         resource = other.resource;
         statistics = other.statistics;
@@ -75,49 +89,55 @@ public:
 
     ~CollectionPrivate()
     {
+        qDeleteAll(mAttributes);
+        delete mParent;
     }
 
-    CollectionPrivate *clone() const Q_DECL_OVERRIDE
+    void resetChangeLog()
     {
-        return new CollectionPrivate(*this);
-    }
-
-    void resetChangeLog() Q_DECL_OVERRIDE {
         contentTypesChanged = false;
         cachePolicyChanged = false;
         enabledChanged = false;
         listPreferenceChanged = false;
         referencedChanged = false;
-        EntityPrivate::resetChangeLog();
+        mDeletedAttributes.clear();
     }
 
     static Collection newRoot()
     {
         Collection rootCollection(0);
-        QStringList types;
-        types << Collection::mimeType();
-        rootCollection.setContentMimeTypes(types);
+        rootCollection.setContentMimeTypes({ Collection::mimeType() });
         return rootCollection;
     }
 
+    // Make use of the 4-bytes padding from QSharedData
+    Collection::ListPreference displayPreference: 2;
+    Collection::ListPreference syncPreference: 2;
+    Collection::ListPreference indexPreference: 2;
+    bool listPreferenceChanged: 1;
+    bool enabled: 1;
+    bool enabledChanged: 1;
+    bool referenced: 1;
+    bool referencedChanged: 1;
+    bool contentTypesChanged: 1;
+    bool cachePolicyChanged: 1;
+    bool isVirtual: 1;
+    // 2 bytes padding here
+
+    Collection::Id mId;
+    QString mRemoteId;
+    QString mRemoteRevision;
+    QHash<QByteArray, Attribute *> mAttributes;
+    QSet<QByteArray> mDeletedAttributes;
+    mutable Collection *mParent;
     QString name;
     QString resource;
     CollectionStatistics statistics;
     QStringList contentTypes;
     static const Collection root;
     CachePolicy cachePolicy;
-    bool contentTypesChanged: 1;
-    bool cachePolicyChanged: 1;
-    bool isVirtual: 1;
-    bool enabled: 1;
-    bool enabledChanged: 1;
-    bool listPreferenceChanged: 1;
-    bool referenced: 1;
-    bool referencedChanged: 1;
-    Collection::ListPreference displayPreference: 2;
-    Collection::ListPreference syncPreference: 2;
-    Collection::ListPreference indexPreference: 2;
     QSet<QByteArray> keepLocalChanges;
+
 };
 
 #endif

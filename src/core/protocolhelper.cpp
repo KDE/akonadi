@@ -21,8 +21,8 @@
 
 #include "attributefactory.h"
 #include "collectionstatistics.h"
-#include "entity_p.h"
 #include "item_p.h"
+#include "collection_p.h"
 #include "exception.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
@@ -67,13 +67,29 @@ Protocol::CachePolicy ProtocolHelper::cachePolicyToProtocol(const CachePolicy &p
     return proto;
 }
 
-void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors, Entity *entity,
-        Collection::Id parentCollection,
-        ProtocolHelperValuePool *pool)
+
+template<typename T>
+inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T *entity)
+{
+    for (auto iter = attributes.cbegin(), end = attributes.cend(); iter != end; ++iter) {
+        Attribute *attribute = AttributeFactory::createAttribute(iter.key());
+        if (!attribute) {
+            qWarning() << "Warning: unknown attribute" << iter.key();
+            continue;
+        }
+        attribute->deserialize(iter.value());
+        entity->addAttribute(attribute);
+    }
+}
+
+template<typename T>
+inline static void parseAncestorsCachedImpl(const QVector<Protocol::Ancestor> &ancestors, T *entity,
+                                            Collection::Id parentCollection,
+                                            ProtocolHelperValuePool *pool)
 {
     if (!pool || parentCollection == -1) {
         // if no pool or parent collection id is provided we can't cache anything, so continue as usual
-        parseAncestors(ancestors, entity);
+        ProtocolHelper::parseAncestors(ancestors, entity);
         return;
     }
 
@@ -82,17 +98,50 @@ void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &anc
         entity->setParentCollection(pool->ancestorCollections.value(parentCollection));
     } else {
         // not cached yet, parse the chain
-        parseAncestors(ancestors, entity);
+        ProtocolHelper::parseAncestors(ancestors, entity);
         pool->ancestorCollections.insert(parentCollection, entity->parentCollection());
     }
 }
 
-void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Entity *entity)
+template<typename T>
+inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
+{
+    Protocol::Attributes attributes;
+    Q_FOREACH (const Attribute *attr, entity.attributes()) {
+        attributes.insert(ProtocolHelper::encodePartIdentifier(ns ? ProtocolHelper::PartAttribute : ProtocolHelper::PartGlobal, attr->type()),
+                          attr->serialized());
+    }
+    return attributes;
+}
+
+void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
+                                          Item *item, Collection::Id parentCollection,
+                                          ProtocolHelperValuePool *pool)
+{
+    parseAncestorsCachedImpl(ancestors, item, parentCollection, pool);
+}
+
+void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
+                                          Collection *collection, Collection::Id parentCollection,
+                                          ProtocolHelperValuePool *pool)
+{
+    parseAncestorsCachedImpl(ancestors, collection, parentCollection, pool);
+}
+
+void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Item *item)
+{
+    Collection fakeCollection;
+    parseAncestors(ancestors, &fakeCollection);
+
+    item->setParentCollection(fakeCollection.parentCollection());
+}
+
+void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Collection *collection)
 {
     static const Collection::Id rootCollectionId = Collection::root().id();
     QList<QByteArray> parentIds;
 
-    Entity *current = entity;
+    Collection *current = collection;
     Q_FOREACH (const Protocol::Ancestor &ancestor, ancestors) {
         if (ancestor.id() == rootCollectionId) {
             current->setParentCollection(Collection::root());
@@ -102,7 +151,7 @@ void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors
         Akonadi::Collection parentCollection(ancestor.id());
         parentCollection.setName(ancestor.name());
         parentCollection.setRemoteId(ancestor.remoteId());
-        parseAttributes(ancestor.attributes(), &parentCollection);
+        parseAttributesImpl(ancestor.attributes(), &parentCollection);
         current->setParentCollection(parentCollection);
         current = &current->parentCollection();
     }
@@ -132,49 +181,34 @@ CollectionStatistics ProtocolHelper::parseCollectionStatistics(const Protocol::F
     return cs;
 }
 
-template<typename T>
-inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T *entity)
+void ProtocolHelper::parseAttributes(const Protocol::Attributes &attributes, Item *item)
 {
-    for (auto iter = attributes.cbegin(), end = attributes.cend(); iter != end; ++iter) {
-        Attribute *attribute = AttributeFactory::createAttribute(iter.key());
-        if (!attribute) {
-            qWarning() << "Warning: unknown attribute" << iter.key();
-            continue;
-        }
-        attribute->deserialize(iter.value());
-        entity->addAttribute(attribute);
-    }
+    parseAttributesImpl(attributes, item);
 }
 
-void ProtocolHelper::parseAttributes(const Protocol::Attributes &attributes, Entity *entity)
+void ProtocolHelper::parseAttributes(const Protocol::Attributes &attributes, Collection *collection)
 {
-    parseAttributesImpl(attributes, entity);
+    parseAttributesImpl(attributes, collection);
 }
 
-void ProtocolHelper::parseAttributes(const Protocol::Attributes &attributes, AttributeEntity *entity)
+void ProtocolHelper::parseAttributes(const Protocol::Attributes &attributes, Tag *tag)
 {
-    parseAttributesImpl(attributes, entity);
+    parseAttributesImpl(attributes, tag);
 }
 
-template<typename T>
-inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
+Protocol::Attributes ProtocolHelper::attributesToProtocol(const Item &item, bool ns)
 {
-    Protocol::Attributes attributes;
-    Q_FOREACH (const Attribute *attr, entity.attributes()) {
-        attributes.insert(ProtocolHelper::encodePartIdentifier(ns ? ProtocolHelper::PartAttribute : ProtocolHelper::PartGlobal, attr->type()),
-                          attr->serialized());
-    }
-    return attributes;
+    return attributesToProtocolImpl(item, ns);
 }
 
-Protocol::Attributes ProtocolHelper::attributesToProtocol(const Entity &entity, bool ns)
+Protocol::Attributes ProtocolHelper::attributesToProtocol(const Collection &collection, bool ns)
 {
-    return attributesToProtocolImpl(entity, ns);
+    return attributesToProtocolImpl(collection, ns);
 }
 
-Protocol::Attributes ProtocolHelper::attributesToProtocol(const AttributeEntity &entity, bool ns)
+Protocol::Attributes ProtocolHelper::attributesToProtocol(const Tag &tag, bool ns)
 {
-    return attributesToProtocolImpl(entity, ns);
+    return attributesToProtocolImpl(tag, ns);
 }
 
 Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsResponse &data, bool requireParent)
@@ -201,7 +235,7 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
     collection.setReferenced(data.referenced());
 
     if (!data.searchQuery().isEmpty()) {
-        auto attr = collection.attribute<PersistentSearchAttribute>(Entity::AddIfMissing);
+        auto attr = collection.attribute<PersistentSearchAttribute>(Collection::AddIfMissing);
         attr->setQueryString(data.searchQuery());
 
         QVector<Collection> cols;
@@ -214,7 +248,7 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
 
     parseAttributes(data.attributes(), &collection);
 
-    collection.d_ptr->resetChangeLog();;
+    collection.d_ptr->resetChangeLog();
     return collection;
 }
 

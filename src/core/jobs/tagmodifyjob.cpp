@@ -20,6 +20,7 @@
 #include "tagmodifyjob.h"
 #include "job_p.h"
 #include "tag.h"
+#include "tag_p.h"
 #include "protocolhelper_p.h"
 #include "changemediator_p.h"
 
@@ -55,8 +56,8 @@ void TagModifyJob::doStart()
     if (d->mTag.parent().isValid() && !d->mTag.isImmutable()) {
         cmd.setParentId(d->mTag.parent().id());
     }
-    if (!d->mTag.removedAttributes().isEmpty()) {
-        cmd.setRemovedAttributes(d->mTag.removedAttributes());
+    if (!d->mTag.d_ptr->mDeletedAttributes.isEmpty()) {
+        cmd.setRemovedAttributes(d->mTag.d_ptr->mDeletedAttributes);
     }
 
     cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));

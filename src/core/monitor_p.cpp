@@ -123,7 +123,7 @@ void MonitorPrivate::serverStateChanged(ServerManager::State state)
             Q_FOREACH (const Collection &col, collections) {
                 notificationSource->setMonitoredCollection(col.id(), true);
             }
-            Q_FOREACH (const Entity::Id id, items) {
+            Q_FOREACH (const Item::Id id, items) {
                 notificationSource->setMonitoredItem(id, true);
             }
             Q_FOREACH (const QByteArray &resource, resources) {
@@ -153,7 +153,7 @@ void MonitorPrivate::invalidateCollectionCache(qint64 id)
 
 void MonitorPrivate::invalidateItemCache(qint64 id)
 {
-    itemCache->update(QList<Entity::Id>() << id, mItemFetchScope);
+    itemCache->update(QList<Item::Id>() << id, mItemFetchScope);
 }
 
 void MonitorPrivate::invalidateTagCache(qint64 id)
@@ -1264,7 +1264,7 @@ int MonitorPrivate::PurgeBuffer::buffersize()
     return MAXBUFFERSIZE;
 }
 
-bool MonitorPrivate::isMonitored(Entity::Id colId) const
+bool MonitorPrivate::isMonitored(Collection::Id colId) const
 {
     if (!useRefCounting) {
         return true;
@@ -1272,7 +1272,7 @@ bool MonitorPrivate::isMonitored(Entity::Id colId) const
     return refCountMap.contains(colId) || m_buffer.isBuffered(colId);
 }
 
-void MonitorPrivate::notifyCollectionStatisticsWatchers(Entity::Id collection, const QByteArray &resource)
+void MonitorPrivate::notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource)
 {
     if (collection > 0 && (monitorAll || isCollectionMonitored(collection) || resources.contains(resource))) {
         recentlyChangedCollections.insert(collection);

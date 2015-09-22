@@ -55,7 +55,7 @@ void NotificationSource::setExclusive(bool exclusive)
     Q_UNUSED(ok);
 }
 
-void NotificationSource::setMonitoredCollection(Entity::Id id, bool monitored)
+void NotificationSource::setMonitoredCollection(Collection::Id id, bool monitored)
 {
     const bool ok = QMetaObject::invokeMethod(parent(), "setMonitoredCollection",
                     Q_ARG(qlonglong, id),
@@ -64,7 +64,7 @@ void NotificationSource::setMonitoredCollection(Entity::Id id, bool monitored)
     Q_UNUSED(ok);
 }
 
-void NotificationSource::setMonitoredItem(Entity::Id id, bool monitored)
+void NotificationSource::setMonitoredItem(Item::Id id, bool monitored)
 {
     const bool ok = QMetaObject::invokeMethod(parent(), "setMonitoredItem",
                     Q_ARG(qlonglong, id),

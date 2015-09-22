@@ -46,9 +46,15 @@ AKONADI_XML_EXPORT Attribute *elementToAttribute(const QDomElement &elem);
 
 /**
   Reads all attributes that are immediate children of @p elem and adds them
-  to @p entity.
+  to @p item.
 */
-AKONADI_XML_EXPORT void readAttributes(const QDomElement &elem, Entity &entity);
+AKONADI_XML_EXPORT void readAttributes(const QDomElement &elem, Item &item);
+
+/**
+  Reads all attributes that are immediate children of @p elem and adds them
+  to @p collection.
+*/
+AKONADI_XML_EXPORT void readAttributes(const QDomElement &elem, Collection &collection);
 
 /**
   Converts a collection element.

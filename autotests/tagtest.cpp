@@ -349,7 +349,7 @@ void TagTest::testModify()
 
     //We can add an attribute
     {
-        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
+        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("display name"));
         tag.addAttribute(attr);
         tag.setParent(Tag(0));
@@ -365,7 +365,7 @@ void TagTest::testModify()
     }
     //We can update an attribute
     {
-        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(AttributeEntity::AddIfMissing);
+        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("display name2"));
         TagModifyJob *modJob = new TagModifyJob(tag, this);
         AKVERIFYEXEC(modJob);
@@ -451,7 +451,7 @@ void TagTest::testAttributes()
     Tag tag;
     {
         tag.setGid("gid2");
-        TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
+        TagAttribute *attr = tag.attribute<TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("name"));
         attr->setInToolbar(true);
         tag.addAttribute(attr);
@@ -478,7 +478,7 @@ void TagTest::testAttributes()
     Tag tag2;
     {
         tag2.setGid("gid22");
-        TagAttribute *attr = tag.attribute<TagAttribute>(AttributeEntity::AddIfMissing);
+        TagAttribute *attr = tag.attribute<TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("name2"));
         attr->setInToolbar(true);
         tag2.addAttribute(attr);

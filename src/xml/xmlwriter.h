@@ -30,7 +30,6 @@ namespace Akonadi
 
 class Attribute;
 class Collection;
-class Entity;
 class Item;
 
 /**
@@ -47,7 +46,12 @@ AKONADI_XML_EXPORT QDomElement attributeToElement(Attribute *attr, QDomDocument 
 /**
   Serializes all attributes of the given Akonadi object into the given parent element.
 */
-AKONADI_XML_EXPORT void writeAttributes(const Entity &entity, QDomElement &parentElem);
+AKONADI_XML_EXPORT void writeAttributes(const Item &entity, QDomElement &parentElem);
+
+/**
+  Serializes all attributes of the given Akonadi object into the given parent element.
+*/
+AKONADI_XML_EXPORT void writeAttributes(const Collection &entity, QDomElement &parentElem);
 
 /**
   Creates a collection element for the given document, not yet attached to the DOM tree.
@@ -67,7 +71,7 @@ AKONADI_XML_EXPORT QDomElement itemToElement(const Item &item, QDomDocument &doc
 /**
   Serializes the given item into a DOM element and attaches it to the given item.
 */
-AKONADI_XML_EXPORT QDomElement writeItem(const Akonadi::Item &item, QDomElement &parentElem);
+AKONADI_XML_EXPORT QDomElement writeItem(const Item &item, QDomElement &parentElem);
 }
 
 }

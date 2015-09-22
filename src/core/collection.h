@@ -21,10 +21,11 @@
 #define AKONADI_COLLECTION_H
 
 #include "akonadicore_export.h"
-#include "entity.h"
+#include "attribute.h"
 
 #include <QtCore/QMetaType>
 #include <QtCore/QSharedDataPointer>
+#include <QtCore/QDebug>
 
 class QUrl;
 
@@ -72,9 +73,14 @@ class CollectionStatistics;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADICORE_EXPORT Collection : public Entity
+class AKONADICORE_EXPORT Collection
 {
 public:
+    /**
+     * Describes the unique id type.
+     */
+    typedef qint64 Id;
+
     /**
      * Describes a list of collections.
      */
@@ -124,6 +130,176 @@ public:
      * Creates a collection from the given @p url.
      */
     static Collection fromUrl(const QUrl &url);
+
+    /**
+     * Sets the unique @p identifier of the collection.
+     */
+    void setId(Id identifier);
+
+    /**
+     * Returns the unique identifier of the collection.
+     */
+    Id id() const;
+
+    /**
+     * Sets the remote @p id of the collection.
+     */
+    void setRemoteId(const QString &id);
+
+    /**
+     * Returns the remote id of the collection.
+     */
+    QString remoteId() const;
+
+    /**
+     * Sets the remote @p revision of the collection.
+     * @param revision the collections's remote revision
+     * The remote revision can be used by resources to store some
+     * revision information of the backend to detect changes there.
+     *
+     * @note This method is supposed to be used by resources only.
+     * @since 4.5
+     */
+    void setRemoteRevision(const QString &revision);
+
+    /**
+     * Returns the remote revision of the collection.
+     *
+     * @note This method is supposed to be used by resources only.
+     * @since 4.5
+     */
+    QString remoteRevision() const;
+
+    /**
+     * Returns whether the collection is valid.
+     */
+    bool isValid() const;
+
+    /**
+     * Returns whether this collections's id equals the
+     * id of the @p other collection.
+     */
+    bool operator==(const Collection &other) const;
+
+    /**
+     * Returns whether the collection's id does not equal the id
+     * of the @p other collection.
+     */
+    bool operator!=(const Collection &other) const;
+
+    /**
+     * Assigns the @p other to this collection and returns a reference to this
+     * collection.
+     * @param other the collection to assign
+     */
+    Collection &operator=(const Collection &other);
+
+    /**
+     * @internal For use with containers only.
+     *
+     * @since 4.8
+     */
+    bool operator<(const Collection &other) const;
+
+    /**
+     * Returns the parent collection of this object.
+     * @note This will of course only return a useful value if it was explictly retrieved
+     *       from the Akonadi server.
+     * @since 4.4
+     */
+    Collection parentCollection() const;
+
+    /**
+     * Returns a reference to the parent collection of this object.
+     * @note This will of course only return a useful value if it was explictly retrieved
+     *       from the Akonadi server.
+     * @since 4.4
+     */
+    Collection &parentCollection();
+
+    /**
+     * Set the parent collection of this object.
+     * @note Calling this method has no immediate effect for the object itself,
+     *       such as being moved to another collection.
+     *       It is mainly relevant to provide a context for RID-based operations
+     *       inside resources.
+     * @param parent The parent collection.
+     * @since 4.4
+     */
+    void setParentCollection(const Collection &parent);
+
+    /**
+     * Adds an attribute to the collection.
+     *
+     * If an attribute of the same type name already exists, it is deleted and
+     * replaced with the new one.
+     *
+     * @param attribute The new attribute.
+     *
+     * @note The collection takes the ownership of the attribute.
+     */
+    void addAttribute(Attribute *attribute);
+
+    /**
+     * Removes and deletes the attribute of the given type @p name.
+     */
+    void removeAttribute(const QByteArray &name);
+
+    /**
+     * Returns @c true if the collection has an attribute of the given type @p name,
+     * false otherwise.
+     */
+    bool hasAttribute(const QByteArray &name) const;
+
+    /**
+     * Returns a list of all attributes of the collection.
+     */
+    Attribute::List attributes() const;
+
+    /**
+     * Removes and deletes all attributes of the collection.
+     */
+    void clearAttributes();
+
+    /**
+     * Returns the attribute of the given type @p name if available, 0 otherwise.
+     */
+    Attribute *attribute(const QByteArray &name) const;
+
+    /**
+     * Describes the options that can be passed to access attributes.
+     */
+    enum CreateOption {
+        AddIfMissing    ///< Creates the attribute if it is missing
+    };
+
+    /**
+     * Returns the attribute of the requested type.
+     * If the collection has no attribute of that type yet, a new one
+     * is created and added to the entity.
+     *
+     * @param option The create options.
+     */
+    template <typename T>
+    inline T *attribute(CreateOption option);
+
+    /**
+     * Returns the attribute of the requested type or 0 if it is not available.
+     */
+    template <typename T>
+    inline T *attribute() const;
+
+    /**
+     * Removes and deletes the attribute of the requested type.
+     */
+    template <typename T>
+    inline void removeAttribute();
+
+    /**
+     * Returns whether the collection has an attribute of the requested type.
+     */
+    template <typename T>
+    inline bool hasAttribute() const;
 
     /**
      * Returns the i18n'ed name of the collection.
@@ -368,16 +544,75 @@ public:
     QSet<QByteArray> keepLocalChanges() const;
 
 private:
-    AKONADI_DECLARE_PRIVATE(Collection)
     friend class CollectionCreateJob;
     friend class CollectionFetchJob;
     friend class CollectionModifyJob;
     friend class ProtocolHelper;
+
+    //@cond PRIVATE
+    QSharedDataPointer<CollectionPrivate> d_ptr;
+    CollectionPrivate *d_func();
+    const CollectionPrivate *d_func() const;
+    friend class CollectionPrivate;
+    //@endcond
 };
 
+AKONADICORE_EXPORT uint qHash(const Akonadi::Collection &collection);
+
+template <typename T>
+inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
+{
+    Q_UNUSED(option);
+
+    const T dummy;
+    if (hasAttribute(dummy.type())) {
+        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+        if (attr) {
+            return attr;
+        }
+        //Reuse 5250
+        qWarning() << "Found attribute of unknown type" << dummy.type()
+                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    }
+
+    T *attr = new T();
+    addAttribute(attr);
+    return attr;
 }
 
-AKONADICORE_EXPORT uint qHash(const Akonadi::Collection &collection);
+template <typename T>
+inline T *Akonadi::Collection::attribute() const
+{
+    const T dummy;
+    if (hasAttribute(dummy.type())) {
+        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+        if (attr) {
+            return attr;
+        }
+        //reuse 5250
+        qWarning() << "Found attribute of unknown type" << dummy.type()
+                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    }
+
+    return 0;
+}
+
+template <typename T>
+inline void Akonadi::Collection::removeAttribute()
+{
+    const T dummy;
+    removeAttribute(dummy.type());
+}
+
+template <typename T>
+inline bool Akonadi::Collection::hasAttribute() const
+{
+    const T dummy;
+    return hasAttribute(dummy.type());
+}
+
+} // namespace Akonadi
+
 /**
  * Allows to output a collection for debugging purposes.
  */

@@ -156,13 +156,13 @@ private Q_SLOTS:
         QSignalSpy spy(&cache, SIGNAL(dataAvailable()));
         QVERIFY(spy.isValid());
 
-        cache.request(QList<Entity::Id>() << 1 << 2 << 3, scope);
+        cache.request(QList<Item::Id>() << 1 << 2 << 3, scope);
         QTRY_COMPARE(spy.count(), 1);
-        QVERIFY(cache.isCached(QList<Entity::Id>() << 1 << 2 << 3));
+        QVERIFY(cache.isCached(QList<Item::Id>() << 1 << 2 << 3));
 
-        cache.ensureCached(QList<Entity::Id>() << 1 << 2 << 3 << 4, scope);
+        cache.ensureCached(QList<Item::Id>() << 1 << 2 << 3 << 4, scope);
         QTRY_COMPARE(spy.count(), 2);
-        QVERIFY(cache.isCached(QList<Entity::Id>() << 1 << 2 << 3 << 4));
+        QVERIFY(cache.isCached(QList<Item::Id>() << 1 << 2 << 3 << 4));
     }
 };
 

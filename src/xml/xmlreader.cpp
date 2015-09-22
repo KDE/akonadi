@@ -37,7 +37,8 @@ Attribute *XmlReader::elementToAttribute(const QDomElement &elem)
     return attr;
 }
 
-void XmlReader::readAttributes(const QDomElement &elem, Entity &entity)
+template<typename T>
+static void readAttributesImpl(const QDomElement &elem, T &entity)
 {
     if (elem.isNull()) {
         return;
@@ -45,11 +46,21 @@ void XmlReader::readAttributes(const QDomElement &elem, Entity &entity)
     const QDomNodeList children = elem.childNodes();
     for (int i = 0; i < children.count(); ++i) {
         const QDomElement attrElem = children.at(i).toElement();
-        Attribute *attr = elementToAttribute(attrElem);
+        Attribute *attr = XmlReader::elementToAttribute(attrElem);
         if (attr) {
             entity.addAttribute(attr);
         }
     }
+}
+
+void XmlReader::readAttributes(const QDomElement &elem, Item &item)
+{
+    readAttributesImpl(elem, item);
+}
+
+void XmlReader::readAttributes(const QDomElement &elem, Collection &collection)
+{
+    readAttributesImpl(elem, collection);
 }
 
 Collection XmlReader::elementToCollection(const QDomElement &elem)

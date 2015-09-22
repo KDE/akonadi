@@ -23,6 +23,7 @@
 #include "tag.h"
 
 class QModelIndex;
+class KJob;
 
 namespace Akonadi
 {
