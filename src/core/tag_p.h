@@ -40,7 +40,9 @@ public:
         id = other.id;
         gid = other.gid;
         remoteId = other.remoteId;
-        parent.reset(new Tag(*other.parent));
+        if (other.parent) {
+            parent.reset(new Tag(*other.parent));
+        }
         type = other.type;
         Q_FOREACH (Attribute *attr, other.mAttributes) {
             mAttributes.insert(attr->type(), attr->clone());
