@@ -524,7 +524,7 @@ bool List::parseStream()
     mCollectionsToIndex = cmd.indexPref();
     mIncludeStatistics = cmd.fetchStats();
 
-    int depth;
+    int depth = 0;
     switch (cmd.depth()) {
     case Protocol::FetchCollectionsCommand::BaseCollection:
         depth = 0;
