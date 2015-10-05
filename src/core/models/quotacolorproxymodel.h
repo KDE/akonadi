@@ -46,7 +46,7 @@ namespace Akonadi
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-class AKONADIWIDGETS_EXPORT QuotaColorProxyModel : public QIdentityProxyModel
+class AKONADICORE_EXPORT QuotaColorProxyModel : public QIdentityProxyModel
 {
     Q_OBJECT
 

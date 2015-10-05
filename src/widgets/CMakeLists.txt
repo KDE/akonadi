@@ -23,7 +23,6 @@ set(akonadiwidgets_SRCS
     itemview.cpp
     manageaccountwidget.cpp
     progressspinnerdelegate.cpp
-    quotacolorproxymodel.cpp
     recentcollectionaction.cpp
     renamefavoritedialog.cpp
     standardactionmanager.cpp
@@ -66,7 +65,6 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     ETMViewStateSaver
     ItemView
     ManageAccountWidget
-    QuotaColorProxyModel
     RenameFavoriteDialog
     StandardActionManager
     SubscriptionDialog
