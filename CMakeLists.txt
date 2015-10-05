@@ -19,7 +19,7 @@ include(ECMQtDeclareLoggingCategory)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "5.14.0")
-set(KDEPIMLIBS_VERSION "5.0.44")
+set(KDEPIMLIBS_VERSION "5.0.45")
 set(QT_REQUIRED_VERSION "5.2.0")
 
 # Remove it when we split it
@@ -53,6 +53,8 @@ find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5ItemModels ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5GuiAddons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
 
 set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
 configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")

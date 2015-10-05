@@ -21,6 +21,7 @@ set(akonadiwidgets_SRCS
     erroroverlay.cpp
     etmviewstatesaver.cpp
     itemview.cpp
+    manageaccountwidget.cpp
     progressspinnerdelegate.cpp
     recentcollectionaction.cpp
     renamefavoritedialog.cpp
@@ -40,6 +41,7 @@ set(akonadiwidgets_UI
     cachepolicypage.ui
     controlprogressindicator.ui
     erroroverlay.ui
+    manageaccountwidget.ui
     selftestdialog.ui 
 )
 
@@ -62,6 +64,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     EntityTreeView
     ETMViewStateSaver
     ItemView
+    ManageAccountWidget
     RenameFavoriteDialog
     StandardActionManager
     SubscriptionDialog
@@ -101,6 +104,8 @@ PRIVATE
     KF5::DBusAddons
     Qt5::Sql
     KF5::AkonadiPrivate
+    KF5::WindowSystem
+    KF5::Completion
 )
 
 set_target_properties(KF5AkonadiWidgets PROPERTIES
