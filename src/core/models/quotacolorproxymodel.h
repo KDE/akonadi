@@ -22,7 +22,7 @@
 
 #include <qidentityproxymodel.h>
 
-#include "akonadiwidgets_export.h"
+#include "akonadicore_export.h"
 
 namespace Akonadi
 {
