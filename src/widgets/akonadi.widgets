@@ -22,4 +22,9 @@ IncludeFile=tagselectwidget.h
 ConstructorArgs=(parent)
 Group=Input (KDE-PIM)
 
+[Akonadi::ManageAccountWidget]
+ToolTip=A Widget to Manage Akonadi Account (KDE-PIM)
+WhatsThis=A Widget to Manage Akonadi Account
+IncludeFile=manageaccountwidget.h
+Group=Input (KDE-PIM)
 
