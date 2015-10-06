@@ -19,12 +19,11 @@
 
 #include "manageaccountwidget.h"
 
-#include <AkonadiCore/agentinstance.h>
-#include <AkonadiCore/agentinstancecreatejob.h>
-//#include "agenttypedialog.h"
-#include "AkonadiWidgets/AgentTypeDialog"
-#include <AkonadiCore/agentfilterproxymodel.h>
-#include <AkonadiCore/agentmanager.h>
+#include "agentinstance.h"
+#include "agentinstancecreatejob.h"
+#include "agenttypedialog.h"
+#include "agentfilterproxymodel.h"
+#include "agentmanager.h"
 #include "ui_manageaccountwidget.h"
 
 #include <KMessageBox>
