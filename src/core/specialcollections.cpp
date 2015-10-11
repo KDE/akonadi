@@ -163,9 +163,7 @@ void SpecialCollectionsPrivate::endBatchRegister()
 void SpecialCollectionsPrivate::forgetFoldersForResource(const QString &resourceId)
 {
     if (mFoldersForResource.contains(resourceId)) {
-        const QList<Collection> folders = mFoldersForResource[resourceId].values();
-
-        foreach (const Collection &collection, folders) {
+        foreach (const Collection &collection, mFoldersForResource[resourceId]) {
             mMonitor->setCollectionMonitored(collection, false);
         }
 
