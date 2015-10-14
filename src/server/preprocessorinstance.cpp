@@ -70,8 +70,8 @@ bool PreprocessorInstance::init()
         Tracer::self()->warning(
             QStringLiteral("PreprocessorInstance"),
             QStringLiteral("Could not connect to pre-processor instance '%1': %2")
-            .arg(mId)
-            .arg(mInterface ? mInterface->lastError().message() : QString()));
+            .arg(mId,
+                 mInterface ? mInterface->lastError().message() : QString()));
         delete mInterface;
         mInterface = 0;
         return false;
@@ -167,8 +167,7 @@ bool PreprocessorInstance::abortProcessing()
         Tracer::self()->warning(
             QStringLiteral("PreprocessorInstance"),
             QStringLiteral("Could not connect to pre-processor instance '%1': %2")
-            .arg(mId)
-            .arg(iface.lastError().message()));
+            .arg(mId, iface.lastError().message()));
         return false;
     }
 
@@ -194,8 +193,7 @@ bool PreprocessorInstance::invokeRestart()
         Tracer::self()->warning(
             QStringLiteral("PreprocessorInstance"),
             QStringLiteral("Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2")
-            .arg(mId)
-            .arg(iface.lastError().message()));
+            .arg(mId, iface.lastError().message()));
         return false;
     }
 

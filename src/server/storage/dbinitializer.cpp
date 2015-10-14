@@ -206,7 +206,7 @@ void DbInitializer::checkIndexes(const TableDescription &tableDescription)
     // Add indices
     Q_FOREACH (const IndexDescription &indexDescription, tableDescription.indexes) {
         // sqlite3 needs unique index identifiers per db
-        const QString indexName = QStringLiteral("%1_%2").arg(tableDescription.name).arg(indexDescription.name);
+        const QString indexName = QStringLiteral("%1_%2").arg(tableDescription.name, indexDescription.name);
         if (!m_introspector->hasIndex(tableDescription.name, indexName)) {
             // Get the CREATE INDEX statement for the specific SQL dialect
             m_pendingIndexes << buildCreateIndexStatement(tableDescription, indexDescription);
@@ -332,7 +332,7 @@ QString DbInitializer::buildAddColumnStatement(const TableDescription &tableDesc
 
 QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDescription, const IndexDescription &indexDescription) const
 {
-    const QString indexName = QStringLiteral("%1_%2").arg(tableDescription.name).arg(indexDescription.name);
+    const QString indexName = QStringLiteral("%1_%2").arg(tableDescription.name, indexDescription.name);
     QStringList columns;
     if (indexDescription.sort.isEmpty()) {
         columns = indexDescription.columns;
@@ -346,10 +346,7 @@ QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDe
     }
 
     return QStringLiteral("CREATE %1 INDEX %2 ON %3 (%4)")
-           .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString())
-           .arg(indexName)
-           .arg(tableDescription.name)
-           .arg(columns.join(QStringLiteral(",")));
+           .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString(), indexName, tableDescription.name, columns.join(QStringLiteral(",")));
 }
 
 QString DbInitializer::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const

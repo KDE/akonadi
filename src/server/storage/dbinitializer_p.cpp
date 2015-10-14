@@ -48,9 +48,7 @@ QString DbInitializerMySql::buildCreateTableStatement(const TableDescription &ta
 
         if (!columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty()) {
             references << QStringLiteral("FOREIGN KEY (%1) REFERENCES %2Table(%3) ")
-                       .arg(columnDescription.name)
-                       .arg(columnDescription.refTable)
-                       .arg(columnDescription.refColumn)
+                       .arg(columnDescription.name, columnDescription.refTable, columnDescription.refColumn)
                        + buildReferentialAction(columnDescription.onUpdate, columnDescription.onDelete);
         }
     }
@@ -108,9 +106,9 @@ QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &t
     }
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
-           .arg(tableDescription.name)
-           .arg(QStringList(data.keys()).join(QStringLiteral(",")))
-           .arg(QStringList(data.values()).join(QStringLiteral(",")));
+           .arg(tableDescription.name,
+                QStringList(data.keys()).join(QStringLiteral(",")),
+                QStringList(data.values()).join(QStringLiteral(",")));
 }
 
 QString DbInitializerMySql::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const
@@ -195,9 +193,9 @@ QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &
     }
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
-           .arg(tableDescription.name)
-           .arg(QStringList(data.keys()).join(QStringLiteral(",")))
-           .arg(QStringList(data.values()).join(QStringLiteral(",")));
+           .arg(tableDescription.name,
+                QStringList(data.keys()).join(QStringLiteral(",")),
+                QStringList(data.values()).join(QStringLiteral(",")));
 }
 
 QString DbInitializerSqlite::sqlValue(const QString &type, const QString &value) const
@@ -291,9 +289,9 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescripti
     QMap<QString, QString> data = dataDescription.data;
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
-           .arg(tableDescription.name)
-           .arg(QStringList(data.keys()).join(QStringLiteral(",")))
-           .arg(QStringList(data.values()).join(QStringLiteral(",")));
+           .arg(tableDescription.name,
+                QStringList(data.keys()).join(QStringLiteral(",")),
+                QStringList(data.values()).join(QStringLiteral(",")));
 }
 
 QString DbInitializerPostgreSql::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const

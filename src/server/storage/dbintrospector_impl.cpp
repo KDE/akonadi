@@ -37,7 +37,7 @@ DbIntrospectorMySql::DbIntrospectorMySql(const QSqlDatabase &database)
 QString DbIntrospectorMySql::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
     return QStringLiteral("SHOW INDEXES FROM %1 WHERE `Key_name` = '%2'")
-           .arg(tableName).arg(indexName);
+           .arg(tableName, indexName);
 }
 
 QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints(const QString &tableName)
@@ -87,7 +87,7 @@ DbIntrospectorSqlite::DbIntrospectorSqlite(const QSqlDatabase &database)
 QString DbIntrospectorSqlite::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
     return QStringLiteral("SELECT * FROM sqlite_master WHERE type='index' AND tbl_name='%1' AND name='%2';")
-           .arg(tableName).arg(indexName);
+           .arg(tableName, indexName);
 }
 
 //END Sqlite
