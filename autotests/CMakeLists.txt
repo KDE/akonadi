@@ -101,6 +101,7 @@ add_akonadi_test(tagmodeltest.cpp)
 
 add_akonadi_test(sharedvaluepooltest.cpp)
 add_akonadi_test(jobtest.cpp)
+add_akonadi_test(tagtest_simple.cpp)
 # PORT FROM QJSON add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from 
