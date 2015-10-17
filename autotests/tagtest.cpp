@@ -478,7 +478,7 @@ void TagTest::testAttributes()
     Tag tag2;
     {
         tag2.setGid("gid22");
-        TagAttribute *attr = tag.attribute<TagAttribute>(Tag::AddIfMissing);
+        TagAttribute *attr = tag.attribute<TagAttribute>(Tag::AddIfMissing)->clone();
         attr->setDisplayName(QStringLiteral("name2"));
         attr->setInToolbar(true);
         tag2.addAttribute(attr);
