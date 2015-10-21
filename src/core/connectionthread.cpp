@@ -202,7 +202,12 @@ void ConnectionThread::dataReceived()
         // TODO: Verify the tag matches the last tag we sent
         stream >> tag;
 
-        Protocol::Command cmd = Protocol::deserialize(mSocket);
+        Protocol::Command cmd;
+        try {
+            cmd = Protocol::deserialize(mSocket);
+        } catch (const Akonadi::ProtocolException &) {
+            // cmd's type will be Invalid by default.
+        }
         if (cmd.type() == Protocol::Command::Invalid) {
             qWarning() << "Invalid command, the world is going to end!";
             mSocket->close();
