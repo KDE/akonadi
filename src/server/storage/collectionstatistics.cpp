@@ -57,11 +57,18 @@ const CollectionStatistics::Statistics &CollectionStatistics::statistics(const C
 
 CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(const Collection &col)
 {
+    static const QString SeenFlagsTableName = QStringLiteral("SeenFlags");
+    static const QString IgnoredFlagsTableName = QStringLiteral("IgnoredFlags");
+
+#define FLAGS_COLUMN(table, column) \
+    QStringLiteral("%1.%2").arg(table##TableName, PimItemFlagRelation::column())
+
     // COUNT(DISTINCT PimItemTable.id)
     CountQueryBuilder qb(PimItem::tableName(), PimItem::idFullColumnName(), CountQueryBuilder::Distinct);
     // SUM(PimItemTable.size)
-    qb.addAggregation(PimItem::sizeFullColumnName(), QLatin1String("sum"));
-    // SUM(CASE WHEN FlagTable.name IN ('\SEEN', '$IGNORED') THEN 1 ELSE 0 END)
+    qb.addAggregation(PimItem::sizeFullColumnName(), QStringLiteral("sum"));
+
+    // SUM(CASE WHEN SeenFlags.flag_id IS NOT NULL OR IgnoredFlags.flag_id IS NOT NULL THEN 1 ELSE 0 END)
     // This allows us to get read messages count in a single query with the other
     // statistics. It is much than doing two queries, because the database
     // only has to calculate the JOINs once.
@@ -69,17 +76,36 @@ CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(c
     // Flag::retrieveByName() will hit the Entity cache, which allows us to avoid
     // a second JOIN with FlagTable, which PostgreSQL seems to struggle to optimize.
     Query::Condition cond(Query::Or);
-    cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(),
-                           Query::Equals,
-                           Flag::retrieveByName(QLatin1String(AKONADI_FLAG_SEEN)).id());
-    cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(),
-                           Query::Equals,
-                           Flag::retrieveByName(QLatin1String(AKONADI_FLAG_IGNORED)).id());
-    Query::Case caseStmt(cond, QLatin1String("1"), QLatin1String("0"));
-    qb.addAggregation(caseStmt, QLatin1String("sum"));
+    cond.addValueCondition(FLAGS_COLUMN(SeenFlags, rightColumn), Query::IsNot, QVariant());
+    cond.addValueCondition(FLAGS_COLUMN(IgnoredFlags, rightColumn), Query::IsNot, QVariant());
 
-    qb.addJoin(QueryBuilder::LeftJoin, PimItemFlagRelation::tableName(),
-               PimItem::idFullColumnName(), PimItemFlagRelation::leftFullColumnName());
+    Query::Case caseStmt(cond, QStringLiteral("1"), QStringLiteral("0"));
+    qb.addAggregation(caseStmt, QStringLiteral("sum"));
+
+    // We need to join PimItemFlagRelation table twice - once for \SEEN flag and once
+    // for $IGNORED flag, otherwise entries from PimItemTable get duplicated when an
+    // item has both flags and the SUM(CASE ...) above returns bogus values
+    {
+        Query::Condition seenCondition(Query::And);
+        seenCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, FLAGS_COLUMN(SeenFlags, leftColumn));
+        seenCondition.addValueCondition(FLAGS_COLUMN(SeenFlags, rightColumn), Query::Equals,
+                                        Flag::retrieveByName(QStringLiteral(AKONADI_FLAG_SEEN)).id());
+        qb.addJoin(QueryBuilder::LeftJoin,
+                   QStringLiteral("%1 AS %2").arg(PimItemFlagRelation::tableName(), SeenFlagsTableName),
+                   seenCondition);
+    }
+    {
+        Query::Condition ignoredCondition(Query::And);
+        ignoredCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, FLAGS_COLUMN(IgnoredFlags, leftColumn));
+        ignoredCondition.addValueCondition(FLAGS_COLUMN(IgnoredFlags, rightColumn), Query::Equals,
+                                           Flag::retrieveByName(QStringLiteral(AKONADI_FLAG_IGNORED)).id());
+        qb.addJoin(QueryBuilder::LeftJoin,
+                   QStringLiteral("%1 AS %2").arg(PimItemFlagRelation::tableName(), IgnoredFlagsTableName),
+                   ignoredCondition);
+    }
+
+#undef FLAGS_COLUMN
+
     if (col.isVirtual()) {
         qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
                    CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
