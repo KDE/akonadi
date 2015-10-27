@@ -1340,12 +1340,8 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
         return;
     }
     ItemFetchJob *iJob = static_cast<ItemFetchJob *>(job);
-
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
-    qCDebug(DebugETM) << "was item fetch job: items:" << iJob->items().size();
-    if (!iJob->items().isEmpty()) {
-        qCDebug(DebugETM) << "first item collection:" << iJob->items().at(0).parentCollection().name();
-    }
+    qCDebug(DebugETM) << "was item fetch job: items:" << iJob->count();
 
     if (!iJob->count()) {
         m_collectionsWithoutItems.insert(collectionId);
