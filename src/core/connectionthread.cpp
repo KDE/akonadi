@@ -44,12 +44,15 @@ ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
 {
     qRegisterMetaType<Protocol::Command>();
 
+    QThread *thread = new QThread();
+    moveToThread(thread);
+    thread->start();
+
     const QByteArray sessionLogFile = qgetenv("AKONADI_SESSION_LOGFILE");
     if (!sessionLogFile.isEmpty()) {
         mLogFile = new QFile(QStringLiteral("%1.%2.%3").arg(QString::fromLatin1(sessionLogFile))
                              .arg(QString::number(QApplication::applicationPid()))
-                             .arg(QString::fromLatin1(mSessionId.replace('/', '_'))),
-                             this);
+                             .arg(QString::fromLatin1(mSessionId.replace('/', '_'))));
         if (!mLogFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             qWarning() << "Failed to open Akonadi Session log file" << mLogFile->fileName();
             delete mLogFile;
@@ -60,18 +63,25 @@ ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
 
 ConnectionThread::~ConnectionThread()
 {
+    QMetaObject::invokeMethod(this, "doThreadQuit");
+    if (!thread()->wait(10 * 1000)) {
+        thread()->terminate();
+        // Make sure to wait until it's done, otherwise it can crash when the pthread callback is called
+        thread()->wait();
+    }
+    delete thread();
+}
+
+void ConnectionThread::doThreadQuit()
+{
+    Q_ASSERT(QThread::currentThread() == thread());
     if (mSocket) {
         mSocket->disconnect(this);
         mSocket->close();
+        delete mSocket;
     }
+    thread()->quit();
     delete mLogFile;
-}
-
-void ConnectionThread::quit()
-{
-    if (mSocket) {
-        mSocket->disconnect(this);
-    }
 }
 
 void ConnectionThread::reconnect()
@@ -83,7 +93,7 @@ void ConnectionThread::reconnect()
 
 void ConnectionThread::doReconnect()
 {
-    Q_ASSERT(QThread::currentThread() != qApp->thread());
+    Q_ASSERT(QThread::currentThread() == thread());
 
     if (mSocket && (mSocket->state() == QLocalSocket::ConnectedState
                         || mSocket->state() == QLocalSocket::ConnectingState)) {
@@ -162,7 +172,7 @@ void ConnectionThread::forceReconnect()
 
 void ConnectionThread::doForceReconnect()
 {
-    Q_ASSERT(QThread::currentThread() != qApp->thread());
+    Q_ASSERT(QThread::currentThread() == thread());
 
     if (mSocket) {
         mSocket->disconnect(this, SIGNAL(socketDisconnected()));
@@ -181,7 +191,7 @@ void ConnectionThread::disconnect()
 
 void ConnectionThread::doDisconnect()
 {
-    Q_ASSERT(QThread::currentThread() != qApp->thread());
+    Q_ASSERT(QThread::currentThread() == thread());
 
     if (mSocket) {
         mSocket->close();
@@ -191,7 +201,7 @@ void ConnectionThread::doDisconnect()
 
 void ConnectionThread::dataReceived()
 {
-    Q_ASSERT(QThread::currentThread() != qApp->thread());
+    Q_ASSERT(QThread::currentThread() == thread());
 
     QElapsedTimer timer;
     timer.start();
@@ -259,7 +269,7 @@ void ConnectionThread::sendCommand(qint64 tag, const Protocol::Command &cmd)
 
 void ConnectionThread::doSendCommand(qint64 tag, const Protocol::Command &cmd)
 {
-    Q_ASSERT(QThread::currentThread() != qApp->thread());
+    Q_ASSERT(QThread::currentThread() == thread());
 
     if (mLogFile) {
         mLogFile->write("C: " + cmd.debugString().toUtf8());

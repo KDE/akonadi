@@ -46,8 +46,6 @@ public:
     void disconnect();
     void sendCommand(qint64 tag, const Protocol::Command &command);
 
-    void quit();
-
 Q_SIGNALS:
     void connected();
     void reconnected();
@@ -56,6 +54,7 @@ Q_SIGNALS:
     void socketError(const QString &message);
 
 private Q_SLOTS:
+    void doThreadQuit();
     void doReconnect();
     void doForceReconnect();
     void doDisconnect();
@@ -64,6 +63,7 @@ private Q_SLOTS:
     void dataReceived();
 
 private:
+
     bool handleCommand(qint64 tag, const Protocol::Command &cmd);
 
     QLocalSocket *mSocket;

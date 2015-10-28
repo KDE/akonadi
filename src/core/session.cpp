@@ -284,17 +284,7 @@ SessionPrivate::SessionPrivate(Session *parent)
 
 SessionPrivate::~SessionPrivate()
 {
-    if (connThread) {
-        connThread->quit();
-        connThread->disconnect();
-        connThread->deleteLater();
-    }
-
-    if (thread) {
-        thread->quit();
-        thread->wait();
-    }
-    delete thread;
+    delete connThread;
 }
 
 void SessionPrivate::init(const QByteArray &id)
@@ -311,7 +301,6 @@ void SessionPrivate::init(const QByteArray &id)
     theNextTag = 2;
     jobRunning = false;
 
-    thread = new QThread(mParent);
     connThread = new ConnectionThread(sessionId);
     mParent->connect(connThread, &ConnectionThread::reconnected, mParent, &Session::reconnected,
                      Qt::QueuedConnection);
@@ -322,8 +311,6 @@ void SessionPrivate::init(const QByteArray &id)
                      Qt::QueuedConnection);
     mParent->connect(connThread, SIGNAL(socketError(QString)), mParent, SLOT(socketError(QString)),
                      Qt::QueuedConnection);
-    connThread->moveToThread(thread);
-    thread->start();
 
 
     if (ServerManager::state() == ServerManager::NotRunning) {
