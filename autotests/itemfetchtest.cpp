@@ -43,7 +43,7 @@ void ItemFetchTest::initTestCase()
 
 void ItemFetchTest::testFetch()
 {
-    CollectionPathResolver *resolver = new CollectionPathResolver(QLatin1String("res1"), this);
+    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1"), this);
     AKVERIFYEXEC(resolver);
     int colId = resolver->collection();
 
@@ -52,7 +52,7 @@ void ItemFetchTest::testFetch()
     AKVERIFYEXEC(job);
     QVERIFY(job->items().isEmpty());
 
-    resolver = new CollectionPathResolver(QLatin1String("res1/foo"), this);
+    resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
     AKVERIFYEXEC(resolver);
     int colId2 = resolver->collection();
 
@@ -186,12 +186,12 @@ void ItemFetchTest::testMultipartFetch()
     QFETCH(bool, fetchSinglePayload);
     QFETCH(bool, fetchSingleAttr);
 
-    CollectionPathResolver *resolver = new CollectionPathResolver(QLatin1String("res1/foo"), this);
+    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
     AKVERIFYEXEC(resolver);
     int colId = resolver->collection();
 
     Item item;
-    item.setMimeType(QLatin1String("application/octet-stream"));
+    item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setPayload<QByteArray>("body data");
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra data";
     ItemCreateJob *job = new ItemCreateJob(item, Collection(colId), this);
@@ -242,11 +242,11 @@ void ItemFetchTest::testMultipartFetch()
 void ItemFetchTest::testRidFetch()
 {
     Item item;
-    item.setRemoteId(QLatin1String("A"));
+    item.setRemoteId(QStringLiteral("A"));
     Collection col;
-    col.setRemoteId(QLatin1String("10"));
+    col.setRemoteId(QStringLiteral("10"));
 
-    ResourceSelectJob *select = new ResourceSelectJob(QLatin1String("akonadi_knut_resource_0"), this);
+    ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
     AKVERIFYEXEC(select);
 
     ItemFetchJob *job = new ItemFetchJob(item, this);

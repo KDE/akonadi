@@ -44,11 +44,11 @@ private Q_SLOTS:
         QSignalSpy spyRemoveInstance(AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)));
         QVERIFY(spyRemoveInstance.isValid());
 
-        AgentType type = AgentManager::self()->type(QLatin1String("akonadi_knut_resource"));
+        AgentType type = AgentManager::self()->type(QStringLiteral("akonadi_knut_resource"));
         QVERIFY(type.isValid());
 
         QStringList lst;
-        lst << QLatin1String("Resource");
+        lst << QStringLiteral("Resource");
         QCOMPARE(type.capabilities(), lst);
 
         AgentInstanceCreateJob *job = new AgentInstanceCreateJob(type);
@@ -76,7 +76,7 @@ private Q_SLOTS:
 
     void testIllegalResourceManagement()
     {
-        AgentInstanceCreateJob *job = new AgentInstanceCreateJob(AgentManager::self()->type(QLatin1String("non_existing_resource")));
+        AgentInstanceCreateJob *job = new AgentInstanceCreateJob(AgentManager::self()->type(QStringLiteral("non_existing_resource")));
         QVERIFY(!job->exec());
 
         // unique agent

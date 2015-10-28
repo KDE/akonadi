@@ -93,7 +93,7 @@ void LazyPopulationTest::initTestCase()
     AkonadiTest::checkTestIsIsolated();
     AkonadiTest::setAllResourcesOffline();
 
-    res3 = Collection(collectionIdFromPath(QLatin1String("res3")));
+    res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
 
     //Set up a bunch of collections that we can select to purge a collection from the buffer
 
@@ -150,7 +150,7 @@ void referenceCollections(EntityTreeModel *model, int count)
 void LazyPopulationTest::testItemAdded()
 {
     const int bufferSize = MonitorPrivate::PurgeBuffer::buffersize();
-    const QString mainCollectionName(QLatin1String("main"));
+    const QString mainCollectionName(QStringLiteral("main"));
     Collection monitorCol;
     {
         monitorCol.setParentCollection(res3);
@@ -162,7 +162,7 @@ void LazyPopulationTest::testItemAdded()
 
     Item item1;
     {
-        item1.setMimeType(QLatin1String("application/octet-stream"));
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, monitorCol, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
@@ -176,7 +176,7 @@ void LazyPopulationTest::testItemAdded()
     //Wait for initial listing to complete
     QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
 
-    const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
+    const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
     QVERIFY(waitForPopulation(res3Index, model, bufferSize + 1));
 
     QModelIndex monitorIndex = getIndex(mainCollectionName, model);
@@ -213,7 +213,7 @@ void LazyPopulationTest::testItemAdded()
     //---ensure item2 added to unbuffered and unreferenced collection is not added to the model
     Item item2;
     {
-        item2.setMimeType(QLatin1String("application/octet-stream"));
+        item2.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item2, monitorCol, this);
         AKVERIFYEXEC(append);
         item2 = append->item();
@@ -243,7 +243,7 @@ void LazyPopulationTest::testItemAdded()
 
 void LazyPopulationTest::testItemAddedBeforeFetch()
 {
-    const QString mainCollectionName(QLatin1String("main2"));
+    const QString mainCollectionName(QStringLiteral("main2"));
     Collection monitorCol;
     {
         monitorCol.setParentCollection(res3);
@@ -261,7 +261,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
     //Wait for initial listing to complete
     QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
 
-    const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
+    const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
     QVERIFY(waitForPopulation(res3Index, model, bufferSize + 1));
 
     QModelIndex monitorIndex = getIndex(mainCollectionName, model);
@@ -270,7 +270,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
     //Create a first item before referencing, it should not show up in the ETM
     {
         Item item1;
-        item1.setMimeType(QLatin1String("application/octet-stream"));
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, monitorCol, this);
         AKVERIFYEXEC(append);
     }
@@ -289,7 +289,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
         QSignalSpy addedSpy(changeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
         QVERIFY(addedSpy.isValid());
         Item item2;
-        item2.setMimeType(QLatin1String("application/octet-stream"));
+        item2.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item2, monitorCol, this);
         AKVERIFYEXEC(append);
         QTRY_VERIFY(addedSpy.count() >= 1);
@@ -304,7 +304,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
 
 void LazyPopulationTest::testPurgeEmptyCollection()
 {
-    const QString mainCollectionName(QLatin1String("main3"));
+    const QString mainCollectionName(QStringLiteral("main3"));
     Collection monitorCol;
     {
         monitorCol.setParentCollection(res3);
@@ -325,7 +325,7 @@ void LazyPopulationTest::testPurgeEmptyCollection()
     //Wait for initial listing to complete
     QVERIFY(waitForPopulation(QModelIndex(), model, numberOfRootCollections));
 
-    const QModelIndex res3Index = getIndex(QLatin1String("res3"), model);
+    const QModelIndex res3Index = getIndex(QStringLiteral("res3"), model);
     QVERIFY(waitForPopulation(res3Index, model, bufferSize + 1));
 
     QModelIndex monitorIndex = getIndex(mainCollectionName, model);
@@ -347,7 +347,7 @@ void LazyPopulationTest::testPurgeEmptyCollection()
         QSignalSpy addedSpy(monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
         QVERIFY(addedSpy.isValid());
         Item item1;
-        item1.setMimeType(QLatin1String("application/octet-stream"));
+        item1.setMimeType(QStringLiteral("application/octet-stream"));
         ItemCreateJob *append = new ItemCreateJob(item1, monitorCol, this);
         AKVERIFYEXEC(append);
         QTRY_VERIFY(addedSpy.count() >= 1);

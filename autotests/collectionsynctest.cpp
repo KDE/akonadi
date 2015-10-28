@@ -83,7 +83,7 @@ private:
 
     Collection::List prepareBenchmark()
     {
-        Collection::List collections = fetchCollections(QLatin1String("akonadi_knut_resource_0"));
+        Collection::List collections = fetchCollections(QStringLiteral("akonadi_knut_resource_0"));
 
         ResourceSelectJob *resJob = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         Q_ASSERT(resJob->exec());
@@ -105,7 +105,7 @@ private:
         }
         collections += baseCollections;
 
-        const Collection shared = createCollection(QLatin1String("Shared collections"), QLatin1String("/shared"), root);
+        const Collection shared = createCollection(QStringLiteral("Shared collections"), QStringLiteral("/shared"), root);
         baseCollections << shared;
         collections << shared;
         for (int i = 0; i < 10000; ++i) {

@@ -57,9 +57,9 @@ void sigHandler(int signal)
 
 int main(int argc, char **argv)
 {
-    KAboutData aboutdata(QLatin1String("akonadi-TES"),
+    KAboutData aboutdata(QStringLiteral("akonadi-TES"),
                          i18n("Akonadi Testing Environment Setup"),
-                         QLatin1String("1.0"),
+                         QStringLiteral("1.0"),
                          i18n("Setup Environmnet"),
                          KAboutLicense::GPL,
                          i18n("(c) 2008 Igor Trindade Oliveira"));
@@ -70,9 +70,9 @@ int main(int argc, char **argv)
     KAboutData::setApplicationData(aboutdata);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("c") << QLatin1String("config"), i18n("Configuration file to open"), QLatin1String("configfile"), QLatin1String("config.xml")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("!+[test]"), i18n("Test to run automatically, interactive if none specified")));
-    parser.addOption(QCommandLineOption(QStringList() << QLatin1String("testenv"), i18n("Path where testenvironment would be saved"), QLatin1String("path")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("c") << QStringLiteral("config"), i18n("Configuration file to open"), QStringLiteral("configfile"), QStringLiteral("config.xml")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("!+[test]"), i18n("Test to run automatically, interactive if none specified")));
+    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("testenv"), i18n("Path where testenvironment would be saved"), QStringLiteral("path")));
 
     aboutdata.setupCommandLine(&parser);
     parser.process(app);
@@ -80,8 +80,8 @@ int main(int argc, char **argv)
 
     //QT5 app.disableSessionManagement();
 
-    if (parser.isSet(QLatin1String("config"))) {
-        Config::instance(parser.value(QLatin1String("config")));
+    if (parser.isSet(QStringLiteral("config"))) {
+        Config::instance(parser.value(QStringLiteral("config")));
     }
 
 #ifdef Q_OS_UNIX
@@ -100,8 +100,8 @@ int main(int argc, char **argv)
     ShellScript sh;
     sh.setEnvironmentVariables(setup->environmentVariables());
 
-    if (parser.isSet(QLatin1String("testenv"))) {
-        sh.makeShellScript(parser.value(QLatin1String("testenv")));
+    if (parser.isSet(QStringLiteral("testenv"))) {
+        sh.makeShellScript(parser.value(QStringLiteral("testenv")));
     } else {
         sh.makeShellScript(setup->basePath() + QLatin1String("testenvironment.sh"));
     }

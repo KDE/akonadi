@@ -44,13 +44,13 @@ private Q_SLOTS:
     void testSubscribe()
     {
         Collection::List l;
-        l << Collection(collectionIdFromPath(QLatin1String("res2/foo2")));
+        l << Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
         QVERIFY(l.first().isValid());
         SubscriptionJob *sjob = new SubscriptionJob(this);
         sjob->unsubscribe(l);
         AKVERIFYEXEC(sjob);
 
-        const Collection res2Col = Collection(collectionIdFromPath(QLatin1String("res2")));
+        const Collection res2Col = Collection(collectionIdFromPath(QStringLiteral("res2")));
         QVERIFY(res2Col.isValid());
         CollectionFetchJob *ljob = new CollectionFetchJob(res2Col, CollectionFetchJob::FirstLevel, this);
         AKVERIFYEXEC(ljob);

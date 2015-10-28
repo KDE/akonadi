@@ -52,7 +52,7 @@ void ItemSerializerTest::testDefaultSerializer()
 {
     QFETCH(QByteArray, serialized);
     Item item;
-    item.setMimeType(QLatin1String("application/octet-stream"));
+    item.setMimeType(QStringLiteral("application/octet-stream"));
     ItemSerializer::deserialize(item, Item::FullPayload, serialized, 0, false);
 
     QVERIFY(item.hasPayload<QByteArray>());

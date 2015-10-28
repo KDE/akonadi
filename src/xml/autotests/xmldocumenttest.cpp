@@ -31,19 +31,19 @@ class XmlDocumentTest : public QObject
 private Q_SLOTS:
     void testDocumentLoad()
     {
-        XmlDocument doc(QLatin1String(KDESRCDIR "/knutdemo.xml"));
+        XmlDocument doc(QStringLiteral(KDESRCDIR "/knutdemo.xml"));
         QVERIFY(doc.isValid());
         QVERIFY(doc.lastError().isEmpty());
         QCOMPARE(doc.collections().count(), 9);
 
-        Collection col = doc.collectionByRemoteId(QLatin1String("c11"));
+        Collection col = doc.collectionByRemoteId(QStringLiteral("c11"));
         QCOMPARE(col.name(), QStringLiteral("Inbox"));
         QCOMPARE(col.attributes().count(), 1);
         QCOMPARE(col.parentCollection().remoteId(), QStringLiteral("c1"));
 
         QCOMPARE(doc.childCollections(col).count(), 2);
 
-        Item item = doc.itemByRemoteId(QLatin1String("contact1"));
+        Item item = doc.itemByRemoteId(QStringLiteral("contact1"));
         QCOMPARE(item.mimeType(), QStringLiteral("text/directory"));
         QVERIFY(item.hasPayload());
 

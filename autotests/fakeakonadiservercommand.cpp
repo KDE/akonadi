@@ -201,7 +201,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
             QString typesString = parts.takeFirst();
 
             QStringList types = typesString.split(QLatin1Char(','));
-            types.replaceInStrings(QLatin1String(" "), QLatin1String(""));
+            types.replaceInStrings(QStringLiteral(" "), QLatin1String(""));
             collection.setContentMimeTypes(types);
         } else {
             parts.removeFirst();

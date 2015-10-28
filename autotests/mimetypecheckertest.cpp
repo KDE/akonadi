@@ -38,8 +38,8 @@ using namespace Akonadi;
 MimeTypeCheckerTest::MimeTypeCheckerTest(QObject *parent)
     : QObject(parent)
 {
-    mCalendarSubTypes << QLatin1String("application/x-vnd.akonadi.calendar.event")
-                      << QLatin1String("application/x-vnd.akonadi.calendar.todo");
+    mCalendarSubTypes << QStringLiteral("application/x-vnd.akonadi.calendar.event")
+                      << QStringLiteral("application/x-vnd.akonadi.calendar.todo");
 }
 
 void MimeTypeCheckerTest::initTestCase()
@@ -101,10 +101,10 @@ void MimeTypeCheckerTest::testCollectionCheck()
     calendarCollection.setContentMimeTypes(QStringList() <<  textCalendar);
     const QLatin1String akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
     eventCollection.setContentMimeTypes(QStringList() << akonadiEvent);
-    journalCollection.setContentMimeTypes(QStringList() << QLatin1String("application/x-vnd.akonadi.calendar.journal"));
+    journalCollection.setContentMimeTypes(QStringList() << QStringLiteral("application/x-vnd.akonadi.calendar.journal"));
     const QLatin1String textDirectory = QLatin1String("text/directory");
     vcardCollection.setContentMimeTypes(QStringList() << textDirectory);
-    aliasCollection.setContentMimeTypes(QStringList() << QLatin1String("text/x-vcard"));
+    aliasCollection.setContentMimeTypes(QStringList() << QStringLiteral("text/x-vcard"));
 
     Collection::List voidCollections;
     voidCollections << invalidCollection << emptyCollection;
@@ -183,10 +183,10 @@ void MimeTypeCheckerTest::testItemCheck()
     calendarItem.setMimeType(textCalendar);
     const QLatin1String akonadiEvent = QLatin1String("application/x-vnd.akonadi.calendar.event");
     eventItem.setMimeType(akonadiEvent);
-    journalItem.setMimeType(QLatin1String("application/x-vnd.akonadi.calendar.journal"));
+    journalItem.setMimeType(QStringLiteral("application/x-vnd.akonadi.calendar.journal"));
     const QLatin1String textDirectory = QLatin1String("text/directory");
     vcardItem.setMimeType(textDirectory);
-    aliasItem.setMimeType(QLatin1String("text/x-vcard"));
+    aliasItem.setMimeType(QStringLiteral("text/x-vcard"));
 
     Item::List voidItems;
     voidItems << invalidItem << emptyItem;

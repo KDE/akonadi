@@ -56,8 +56,8 @@ void TransactionTest::testTransaction()
 
     Collection testCollection;
     testCollection.setParentCollection(basisCollection);
-    testCollection.setName(QLatin1String("transactionTest"));
-    testCollection.setRemoteId(QLatin1String("transactionTestRemoteId"));
+    testCollection.setName(QStringLiteral("transactionTest"));
+    testCollection.setRemoteId(QStringLiteral("transactionTestRemoteId"));
     CollectionCreateJob *job = new CollectionCreateJob(testCollection, Session::defaultSession());
 
     AKVERIFYEXEC(job);
@@ -83,7 +83,7 @@ void TransactionTest::testTransaction()
     AKVERIFYEXEC(beginTransaction3);
 
     Item item;
-    item.setMimeType(QLatin1String("application/octet-stream"));
+    item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setPayload<QByteArray>("body data");
     ItemCreateJob *appendJob = new ItemCreateJob(item, testCollection, Session::defaultSession());
     AKVERIFYEXEC(appendJob);
