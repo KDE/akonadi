@@ -55,8 +55,8 @@ private Q_SLOTS:
         QTest::newRow("multi rid") << (Item::List() << r1 << r2) << Scope(Scope::Rid, { QStringLiteral("A"), QStringLiteral("B") }) << false;
         QTest::newRow("invalid") << (Item::List() << Item()) << Scope() << true;
         QTest::newRow("mixed") << (Item::List() << u1 << r1) << Scope() << true;
-        QTest::newRow("single hrid") << (Item::List() << h1) << Scope({ Scope::HRID(-1, QStringLiteralQStringLiteral("H1")), Scope::HRID(0) }) << false;
-        QTest::newRow("single hrid 2") << (Item::List() << h2) << Scope({ Scope::HRID(-1, QStringLiteralQStringLiteral("H2a")), Scope::HRID(-2, QStringLiteralQStringLiteral("H2b")), Scope::HRID(0) }) << false;
+        QTest::newRow("single hrid") << (Item::List() << h1) << Scope({ Scope::HRID(-1, QStringLiteral("H1")), Scope::HRID(0) }) << false;
+        QTest::newRow("single hrid 2") << (Item::List() << h2) << Scope({ Scope::HRID(-1, QStringLiteral("H2a")), Scope::HRID(-2, QStringLiteral("H2b")), Scope::HRID(0) }) << false;
         QTest::newRow("mixed hrid/rid") << (Item::List() << h1 << r1) << Scope(Scope::Rid, { QStringLiteral("H1"), QStringLiteral("A") }) << false;
         QTest::newRow("unterminated hrid") << (Item::List() << h3) << Scope(Scope::Rid, { QStringLiteral("H3a") }) << false;
     }
@@ -129,7 +129,7 @@ private Q_SLOTS:
             Protocol::FetchCollectionsResponse resp(3);
             resp.setParentId(2);
             resp.setRemoteId(QStringLiteral("r3"));
-            resp.setAncestors({ Protocol::Ancestor(2, QStringLiteralQStringLiteral("r2")), Protocol::Ancestor(1, QStringLiteralQStringLiteral("r1")), Protocol::Ancestor(0) });
+            resp.setAncestors({ Protocol::Ancestor(2, QStringLiteral("r2")), Protocol::Ancestor(1, QStringLiteral("r1")), Protocol::Ancestor(0) });
 
             Collection c2;
             c2.setId(3);
@@ -203,7 +203,7 @@ private Q_SLOTS:
         c.setRemoteId(QStringLiteral("r1"));
         {
             Scope scope;
-            scope.setHRidChain({ Scope::HRID(1, QStringLiteralQStringLiteral("r1")), Scope::HRID(0) });
+            scope.setHRidChain({ Scope::HRID(1, QStringLiteral("r1")), Scope::HRID(0) });
             QTest::newRow("one level") << c << scope;
         }
 
@@ -214,7 +214,7 @@ private Q_SLOTS:
             c2.setRemoteId(QStringLiteral("r2"));
 
             Scope scope;
-            scope.setHRidChain({ Scope::HRID(2, QStringLiteralQStringLiteral("r2")), Scope::HRID(1, QStringLiteralQStringLiteral("r1")), Scope::HRID(0) });
+            scope.setHRidChain({ Scope::HRID(2, QStringLiteral("r2")), Scope::HRID(1, QStringLiteral("r1")), Scope::HRID(0) });
             QTest::newRow("two level ok") << c2 << scope;
         }
     }
