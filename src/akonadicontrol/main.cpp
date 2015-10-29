@@ -27,7 +27,8 @@
 
 #include <private/dbus_p.h>
 
-#include <QtCore/QCoreApplication>
+#include <QtGui/QGuiApplication>
+#include <QtGui/QSessionManager>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
 
@@ -49,7 +50,9 @@ void crashHandler(int)
 
 int main(int argc, char **argv)
 {
-    AkCoreApplication app(argc, argv);
+    // TODO: use proper AkXXXApplication here
+    // QGuiApplication is used to make akonadi_control managed by session so it ends on logout.
+    AkApplicationImpl<QGuiApplication> app(argc, argv);
     app.setDescription(QStringLiteral("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
     app.parseCommandLine();
 
@@ -76,6 +79,13 @@ int main(int argc, char **argv)
 
     sAgentManager = new AgentManager;
     AkonadiCrash::setEmergencyMethod(crashHandler);
+
+    // akonadi_control is started on-demand, no need to auto restart by session.
+    auto disableSessionManagement = [](QSessionManager &sm) {
+        sm.setRestartHint(QSessionManager::RestartNever);
+    };
+    QObject::connect(qApp, &QGuiApplication::commitDataRequest, disableSessionManagement);
+    QObject::connect(qApp, &QGuiApplication::saveStateRequest, disableSessionManagement);
 
     int retval = app.exec();
 

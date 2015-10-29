@@ -41,6 +41,7 @@ target_link_libraries(akonadi_control
     KF5AkonadiPrivate
     Qt5::Core
     Qt5::DBus
+    Qt5::Gui
 )
 
 install(TARGETS akonadi_control
