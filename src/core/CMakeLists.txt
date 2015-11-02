@@ -13,6 +13,7 @@ set(akonadicore_base_SRCS
     changerecorder_p.cpp
     connectionthread.cpp
     collection.cpp
+    collectioncolorattribute.cpp
     collectionfetchscope.cpp
     collectionpathresolver.cpp
     collectionquotaattribute.cpp
@@ -79,6 +80,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     CachePolicy
     ChangeRecorder
     Collection
+    CollectionColorAttribute
     CollectionFetchScope
     CollectionQuotaAttribute
     CollectionStatistics
