@@ -944,7 +944,13 @@ void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
         return;
     }
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
-    q->retrieveItems(fetchJob->collections().at(0));
+    const Collection::List collections = fetchJob->collections();
+    if (collections.isEmpty()) {
+        qCWarning(AKONADIAGENTBASE_LOG) << "The fetch job returned empty collection set. This is unexpected.";
+        q->cancelTask(i18n("Failed to retrieve collection for sync."));
+        return;
+    }
+    q->retrieveItems(collections.at(0));
 }
 
 int ResourceBase::itemSyncBatchSize() const
