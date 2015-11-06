@@ -98,6 +98,12 @@ public:
     /* reimpl */
     void start() Q_DECL_OVERRIDE;
 
+    /*
+     * @since 5.1
+     */
+    void setTimeoutCountLimit(int count);
+    int timeoutCountLimit() const;
+
 private:
     //@cond PRIVATE
     ResourceSynchronizationJobPrivate *const d;

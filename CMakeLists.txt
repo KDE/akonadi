@@ -19,7 +19,7 @@ include(ECMQtDeclareLoggingCategory)
 
 # FIXME: Do we want the same versions in kdepimlibs and kf5?
 set(KF5_VERSION "5.14.0")
-set(KDEPIMLIBS_VERSION "5.0.47")
+set(KDEPIMLIBS_VERSION "5.0.48")
 set(QT_REQUIRED_VERSION "5.4.0")
 
 # Remove it when we split it

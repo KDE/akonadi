@@ -38,7 +38,7 @@ public:
         : q(parent)
         , interface(0)
         , safetyTimer(0)
-        , timeoutCount(0)
+        , timeoutCount(60)
         , collectionTreeOnly(false)
     {
     }
@@ -51,13 +51,11 @@ public:
     QTimer *safetyTimer;
     int timeoutCount;
     bool collectionTreeOnly;
-    static const int timeoutCountLimit;
+    int timeoutCountLimit;
 
     void slotSynchronized();
     void slotTimeout();
 };
-
-const int ResourceSynchronizationJobPrivate::timeoutCountLimit = 60;
 
 ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance &instance, QObject *parent)
     : KJob(parent)
@@ -79,6 +77,18 @@ void ResourceSynchronizationJob::start()
 {
     d->start();
 }
+
+void ResourceSynchronizationJob::setTimeoutCountLimit(int count)
+{
+    d->timeoutCountLimit = count;
+}
+
+int ResourceSynchronizationJob::timeoutCountLimit() const
+{
+    return d->timeoutCountLimit;
+}
+
+
 
 bool ResourceSynchronizationJob::collectionTreeOnly() const
 {
