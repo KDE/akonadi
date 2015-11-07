@@ -23,6 +23,10 @@
 
 using namespace Akonadi;
 
+AgentPluginLoader::AgentPluginLoader()
+{
+}
+
 AgentPluginLoader::~AgentPluginLoader()
 {
     qDeleteAll(m_pluginLoaders);

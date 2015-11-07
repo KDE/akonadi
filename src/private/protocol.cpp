@@ -199,6 +199,7 @@ public:
     }
 
 private:
+    Q_DISABLE_COPY(DebugBlock);
     QStack<int> mBlocks;
     QStack<bool> mBlockInit;
     int mIndent;

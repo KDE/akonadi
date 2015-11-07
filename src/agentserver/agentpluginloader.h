@@ -25,6 +25,8 @@
 class AgentPluginLoader
 {
 public:
+    AgentPluginLoader();
+
     /**
       Deletes all instantiated QPluginLoaders.
      */
@@ -40,6 +42,7 @@ public:
     QPluginLoader *load(const QString &pluginName);
 
 private:
+    Q_DISABLE_COPY(AgentPluginLoader)
     QHash<QString, QPluginLoader *> m_pluginLoaders;
 };
 
