@@ -124,6 +124,7 @@ public:
     Item::List items(const Collection &collection, bool includePayload = true) const;
 
 private:
+    Q_DISABLE_COPY(XmlDocument)
     XmlDocumentPrivate *const d;
 };
 

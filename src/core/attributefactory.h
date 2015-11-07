@@ -76,6 +76,7 @@ protected:
     AttributeFactory();
 
 private:
+    Q_DISABLE_COPY(AttributeFactory)
     static AttributeFactory *self();
     void registerAttribute(Attribute *attribute);
 
