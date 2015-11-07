@@ -47,10 +47,6 @@ ItemRetriever::ItemRetriever(Connection *connection)
 {
 }
 
-ItemRetriever::~ItemRetriever()
-{
-}
-
 Connection *ItemRetriever::connection() const
 {
     return mConnection;

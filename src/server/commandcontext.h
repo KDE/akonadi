@@ -36,7 +36,6 @@ class CommandContext
 {
 public:
     CommandContext();
-    ~CommandContext();
 
     void setResource(const Resource &resource);
     Resource resource() const;

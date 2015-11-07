@@ -47,7 +47,6 @@ class ItemRetriever
 {
 public:
     ItemRetriever(Connection *connection);
-    ~ItemRetriever();
 
     Connection *connection() const;
 

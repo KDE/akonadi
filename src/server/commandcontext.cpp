@@ -30,10 +30,6 @@ CommandContext::CommandContext()
 {
 }
 
-CommandContext::~CommandContext()
-{
-}
-
 void CommandContext::setResource(const Resource &resource)
 {
     mResource = resource;
