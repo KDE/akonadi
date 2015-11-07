@@ -40,6 +40,8 @@ public:
 
     bool commit();
     bool rollback();
+private:
+    Q_DISABLE_COPY(ExternalPartStorageTransaction)
 };
 
 /**

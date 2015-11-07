@@ -49,6 +49,7 @@ public:
     void uninhibit();
 
 private:
+    Q_DISABLE_COPY(CacheCleanerInhibitor)
     static QMutex sLock;
     static int sInhibitCount;
     bool mInhibited;
