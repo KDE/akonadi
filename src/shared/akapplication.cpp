@@ -30,9 +30,9 @@
 
 #include <iostream>
 
-AkApplication *AkApplication::sInstance = 0;
+AkApplicationBase *AkApplicationBase::sInstance = 0;
 
-AkApplication::AkApplication(int &argc, char **argv)
+AkApplicationBase::AkApplicationBase(int &argc, char **argv)
     : QObject(0)
     , mArgc(argc)
     , mArgv(argv)
@@ -46,17 +46,17 @@ AkApplication::AkApplication(int &argc, char **argv)
     mCmdLineParser.addVersionOption();
 }
 
-AkApplication::~AkApplication()
+AkApplicationBase::~AkApplicationBase()
 {
 }
 
-AkApplication *AkApplication::instance()
+AkApplicationBase *AkApplicationBase::instance()
 {
     Q_ASSERT(sInstance);
     return sInstance;
 }
 
-void AkApplication::init()
+void AkApplicationBase::init()
 {
     akInit(QString::fromLatin1(mArgv[0]));
 
@@ -66,16 +66,16 @@ void AkApplication::init()
 
     // there doesn't seem to be a signal to indicate that the session bus went down, so lets use polling for now
     QTimer *timer = new QTimer(this);
-    connect(timer, &QTimer::timeout, this, &AkApplication::pollSessionBus);
+    connect(timer, &QTimer::timeout, this, &AkApplicationBase::pollSessionBus);
     timer->start(10 * 1000);
 }
 
-void AkApplication::setDescription(const QString &desc)
+void AkApplicationBase::setDescription(const QString &desc)
 {
     mCmdLineParser.setApplicationDescription(desc);
 }
 
-void AkApplication::parseCommandLine()
+void AkApplicationBase::parseCommandLine()
 {
     const QCommandLineOption instanceOption(QStringList() << QStringLiteral("instance"),
                                             QStringLiteral("Namespace for starting multiple Akonadi instances in the same user session"),
@@ -89,7 +89,7 @@ void AkApplication::parseCommandLine()
     }
 }
 
-void AkApplication::pollSessionBus() const
+void AkApplicationBase::pollSessionBus() const
 {
     if (!QDBusConnection::sessionBus().isConnected()) {
         akError() << "D-Bus session bus went down - quitting";
@@ -97,22 +97,22 @@ void AkApplication::pollSessionBus() const
     }
 }
 
-void AkApplication::addCommandLineOptions(const QCommandLineOption &option)
+void AkApplicationBase::addCommandLineOptions(const QCommandLineOption &option)
 {
     mCmdLineParser.addOption(option);
 }
 
-void AkApplication::addPositionalCommandLineOption(const QString &name, const QString &description, const QString &syntax)
+void AkApplicationBase::addPositionalCommandLineOption(const QString &name, const QString &description, const QString &syntax)
 {
     mCmdLineParser.addPositionalArgument(name, description, syntax);
 }
 
-void AkApplication::printUsage() const
+void AkApplicationBase::printUsage() const
 {
     std::cout << qPrintable(mCmdLineParser.helpText()) << std::endl;
 }
 
-int AkApplication::exec()
+int AkApplicationBase::exec()
 {
     return mApp->exec();
 }

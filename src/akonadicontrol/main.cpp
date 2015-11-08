@@ -50,9 +50,7 @@ void crashHandler(int)
 
 int main(int argc, char **argv)
 {
-    // TODO: use proper AkXXXApplication here
-    // QGuiApplication is used to make akonadi_control managed by session so it ends on logout.
-    AkApplicationImpl<QGuiApplication> app(argc, argv);
+    AkGuiApplication app(argc, argv);
     app.setDescription(QStringLiteral("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
     app.parseCommandLine();
 

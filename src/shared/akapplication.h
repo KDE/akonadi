@@ -25,15 +25,16 @@
 
 class QCoreApplication;
 class QApplication;
+class QGuiApplication;
 
 /**
  * D-Bus session bus monitoring and command line handling.
  */
-class AkApplication : public QObject
+class AkApplicationBase : public QObject
 {
     Q_OBJECT
 public:
-    ~AkApplication();
+    ~AkApplicationBase();
     void parseCommandLine();
     void setDescription(const QString &desc);
 
@@ -47,13 +48,13 @@ public:
     void printUsage() const;
 
     /** Returns the AkApplication instance */
-    static AkApplication *instance();
+    static AkApplicationBase *instance();
 
     /** Forward to Q[Core]Application for convenience. */
     int exec();
 
 protected:
-    AkApplication(int &argc, char **argv);
+    AkApplicationBase(int &argc, char **argv);
     void init();
     QScopedPointer<QCoreApplication> mApp;
 
@@ -64,17 +65,17 @@ private:
     int mArgc;
     char **mArgv;
     QString mInstanceId;
-    static AkApplication *sInstance;
+    static AkApplicationBase *sInstance;
 
     QCommandLineParser mCmdLineParser;
 };
 
 template <typename T>
-class AkApplicationImpl : public AkApplication
+class AkApplicationImpl : public AkApplicationBase
 {
 public:
     AkApplicationImpl(int &argc, char **argv)
-        : AkApplication(argc, argv)
+        : AkApplicationBase(argc, argv)
     {
         mApp.reset(new T(argc, argv));
         init();
@@ -82,6 +83,7 @@ public:
 };
 
 typedef AkApplicationImpl<QCoreApplication> AkCoreApplication;
-typedef AkApplicationImpl<QApplication> AkGuiApplication;
+typedef AkApplicationImpl<QApplication> AkApplication;
+typedef AkApplicationImpl<QGuiApplication> AkGuiApplication;
 
 #endif

@@ -245,7 +245,7 @@ bool FakeAkonadiServer::quit()
     // Stop listening for connections
     close();
 
-    const QCommandLineParser &args = AkApplication::instance()->commandLineArguments();
+    const QCommandLineParser &args = AkApplicationBase::instance()->commandLineArguments();
     if (!args.isSet(QLatin1String("no-cleanup"))) {
         deleteDirectory(basePath());
         qDebug() << "Cleaned up" << basePath();
