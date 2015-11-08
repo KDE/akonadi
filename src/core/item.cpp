@@ -113,6 +113,7 @@ public:
         }
     }
 private:
+    Q_DISABLE_COPY(MyReadLocker)
     QReadWriteLock *const rwl;
     bool locked;
 };
@@ -584,6 +585,8 @@ public:
     {
         b = old;
     }
+private:
+    Q_DISABLE_COPY(ConversionGuard)
 };
 }
 

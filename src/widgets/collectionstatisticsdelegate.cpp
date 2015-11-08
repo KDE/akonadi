@@ -190,6 +190,7 @@ public:
     }
 
 private:
+    Q_DISABLE_COPY(PainterStateSaver)
     QPainter *mPainter;
 };
 

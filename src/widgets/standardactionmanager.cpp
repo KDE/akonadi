@@ -554,6 +554,7 @@ public:
             _p->insideSelectionSlot = false;
         }
     private:
+        Q_DISABLE_COPY(InsideSelectionSlotBlocker)
         Private *_p;
     };
 

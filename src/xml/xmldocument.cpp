@@ -57,6 +57,7 @@ public:
     }
 
 private:
+    Q_DISABLE_COPY(XmlPtr)
     T p;
 };
 

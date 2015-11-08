@@ -60,6 +60,7 @@ public:
     void scan();
 
 private:
+    Q_DISABLE_COPY(PluginLoader)
     PluginLoader();
 
     static PluginLoader *mSelf;
