@@ -27,11 +27,7 @@ class Exception : Ex
 {
 public:
     explicit Exception(const QString &message)
-#ifdef QT_NO_STL
-        : Ex(std::string(qPrintable(message)))
-#else
         : Ex(message.toStdString())
-#endif
     {
     }
 
