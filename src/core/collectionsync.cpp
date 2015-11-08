@@ -59,10 +59,6 @@ public:
         ridChain.append(rid);
     }
 
-    inline ~RemoteId()
-    {
-    }
-
     inline bool isAbsolute() const
     {
         return ridChain.last() == QString::fromLatin1(ROOTPARENTRID);
