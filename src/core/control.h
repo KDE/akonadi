@@ -94,15 +94,6 @@ public:
      */
     static bool restart();
 
-    /**
-     * Disable the given widget when Akonadi is not operational and show
-     * an error overlay (given enough space). Cascading use is automatically
-     * detected and resolved.
-     * @param widget The widget depending on Akonadi being operational.
-     * @since 4.2
-     */
-    static void widgetNeedsAkonadi(QWidget *widget);
-
 protected:
     /**
      * Creates the control object.
