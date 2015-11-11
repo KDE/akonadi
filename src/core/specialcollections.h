@@ -96,7 +96,7 @@ public:
     bool registerCollection(const QByteArray &type, const Akonadi::Collection &collection);
 
     /**
-     * Unregisters the given @p collection as a spec ial collection.
+     * Unregisters the given @p collection as a special collection.
      * @param type the special type of @c collection
      * @since 4.12
      */
