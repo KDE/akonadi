@@ -229,8 +229,6 @@ void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOp
 {
     mAllowToCreateNewChildCollection = (options & AllowToCreateNewChildCollection);
     if (mAllowToCreateNewChildCollection) {
-        mButtonBox->addButton(QDialogButtonBox::Ok);
-        mButtonBox->addButton(QDialogButtonBox::Cancel);
         mNewSubfolderButton = mButtonBox->addButton(i18n("&New Subfolder..."), QDialogButtonBox::NoRole);
         mNewSubfolderButton->setIcon(QIcon::fromTheme(QStringLiteral("folder-new")));
         mNewSubfolderButton->setToolTip(i18n("Create a new subfolder under the currently selected folder"));
