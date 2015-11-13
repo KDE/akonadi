@@ -117,7 +117,7 @@ void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem *option, cons
     }
 }
 
-uint Akonadi::qHash(Akonadi::DelegateAnimator::Animation anim)
+uint Akonadi::qHash(const Akonadi::DelegateAnimator::Animation &anim)
 {
     return qHash(anim.index);
 }
