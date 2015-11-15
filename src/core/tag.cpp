@@ -20,7 +20,6 @@
 #include "tag.h"
 #include "tag_p.h"
 #include "tagattribute.h"
-#include "entity_p.h"
 #include <QUuid>
 #include <QUrlQuery>
 
@@ -259,5 +258,3 @@ Tag Tag::genericTag(const QString &name)
     tag.setName(name);
     return tag;
 }
-
-AKONADI_DEFINE_PRIVATE(Tag)

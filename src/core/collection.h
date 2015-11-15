@@ -551,8 +551,6 @@ private:
 
     //@cond PRIVATE
     QSharedDataPointer<CollectionPrivate> d_ptr;
-    CollectionPrivate *d_func();
-    const CollectionPrivate *d_func() const;
     friend class CollectionPrivate;
     //@endcond
 };

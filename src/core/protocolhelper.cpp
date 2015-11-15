@@ -454,7 +454,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         Q_FOREACH (const Protocol::FetchRelationsResponse &rel, data.relations()) {
             relations.append(parseRelationFetchResult(rel));
         }
-        item.d_func()->mRelations = relations;
+        item.d_ptr->mRelations = relations;
     }
 
     if (!data.virtualReferences().isEmpty()) {

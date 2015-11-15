@@ -201,8 +201,6 @@ private:
     friend class TagModifyJob;
 
     QSharedDataPointer<TagPrivate> d_ptr;
-    const TagPrivate *d_func() const;
-    TagPrivate *d_func();
     //@endcond
 };
 

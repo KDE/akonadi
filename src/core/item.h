@@ -748,8 +748,6 @@ private:
 #endif
 
     QSharedDataPointer<ItemPrivate> d_ptr;
-    const ItemPrivate *d_func() const;
-    ItemPrivate *d_func();
     friend class ItemPrivate;
     //@endcond
 };

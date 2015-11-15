@@ -19,7 +19,6 @@
 
 #include "collection.h"
 #include "collection_p.h"
-#include "entity_p.h"
 
 #include "attributefactory.h"
 #include "cachepolicy.h"
@@ -111,7 +110,7 @@ void Collection::setId(Collection::Id identifier)
 
 Collection::Id Collection::id() const
 {
-    return d_func()->mId;
+    return d_ptr->mId;
 }
 
 void Collection::setRemoteId(const QString &id)
@@ -234,20 +233,19 @@ void Collection::setParentCollection(const Collection &parent)
 
 QString Collection::name() const
 {
-    return d_func()->name;
+    return d_ptr->name;
 }
 
 QString Collection::displayName() const
 {
     const EntityDisplayAttribute *const attr = attribute<EntityDisplayAttribute>();
     const QString displayName = attr ? attr->displayName() : QString();
-    return !displayName.isEmpty() ? displayName : d_func()->name;
+    return !displayName.isEmpty() ? displayName : d_ptr->name;
 }
 
 void Collection::setName(const QString &name)
 {
-    Q_D(Collection);
-    d->name = name;
+    d_ptr->name = name;
 }
 
 Collection::Rights Collection::rights() const
@@ -268,15 +266,14 @@ void Collection::setRights(Rights rights)
 
 QStringList Collection::contentMimeTypes() const
 {
-    return d_func()->contentTypes;
+    return d_ptr->contentTypes;
 }
 
 void Collection::setContentMimeTypes(const QStringList &types)
 {
-    Q_D(Collection);
-    if (d->contentTypes != types) {
-        d->contentTypes = types;
-        d->contentTypesChanged = true;
+    if (d_ptr->contentTypes != types) {
+        d_ptr->contentTypes = types;
+        d_ptr->contentTypesChanged = true;
     }
 }
 
@@ -331,13 +328,12 @@ QString Akonadi::Collection::virtualMimeType()
 
 QString Collection::resource() const
 {
-    return d_func()->resource;
+    return d_ptr->resource;
 }
 
 void Collection::setResource(const QString &resource)
 {
-    Q_D(Collection);
-    d->resource = resource;
+    d_ptr->resource = resource;
 }
 
 QDebug operator <<(QDebug d, const Akonadi::Collection &collection)
@@ -357,83 +353,71 @@ QDebug operator <<(QDebug d, const Akonadi::Collection &collection)
 
 CollectionStatistics Collection::statistics() const
 {
-    return d_func()->statistics;
+    return d_ptr->statistics;
 }
 
 void Collection::setStatistics(const CollectionStatistics &statistics)
 {
-    Q_D(Collection);
-    d->statistics = statistics;
+    d_ptr->statistics = statistics;
 }
 
 CachePolicy Collection::cachePolicy() const
 {
-    return d_func()->cachePolicy;
+    return d_ptr->cachePolicy;
 }
 
 void Collection::setCachePolicy(const CachePolicy &cachePolicy)
 {
-    Q_D(Collection);
-    d->cachePolicy = cachePolicy;
-    d->cachePolicyChanged = true;
+    d_ptr->cachePolicy = cachePolicy;
+    d_ptr->cachePolicyChanged = true;
 }
 
 bool Collection::isVirtual() const
 {
-    return d_func()->isVirtual;
+    return d_ptr->isVirtual;
 }
 
 void Akonadi::Collection::setVirtual(bool isVirtual)
 {
-    Q_D(Collection);
-
-    d->isVirtual = isVirtual;
+    d_ptr->isVirtual = isVirtual;
 }
 
 void Collection::setEnabled(bool enabled)
 {
-    Q_D(Collection);
-
-    d->enabledChanged = true;
-    d->enabled = enabled;
+    d_ptr->enabledChanged = true;
+    d_ptr->enabled = enabled;
 }
 
 bool Collection::enabled() const
 {
-    Q_D(const Collection);
-
-    return d->enabled;
+    return d_ptr->enabled;
 }
 
 void Collection::setLocalListPreference(Collection::ListPurpose purpose, Collection::ListPreference preference)
 {
-    Q_D(Collection);
-
     switch (purpose) {
     case ListDisplay:
-        d->displayPreference = preference;
+        d_ptr->displayPreference = preference;
         break;
     case ListSync:
-        d->syncPreference = preference;
+        d_ptr->syncPreference = preference;
         break;
     case ListIndex:
-        d->indexPreference = preference;
+        d_ptr->indexPreference = preference;
         break;
     }
-    d->listPreferenceChanged = true;
+    d_ptr->listPreferenceChanged = true;
 }
 
 Collection::ListPreference Collection::localListPreference(Collection::ListPurpose purpose) const
 {
-    Q_D(const Collection);
-
     switch (purpose) {
     case ListDisplay:
-        return d->displayPreference;
+        return d_ptr->displayPreference;
     case ListSync:
-        return d->syncPreference;
+        return d_ptr->syncPreference;
     case ListIndex:
-        return d->indexPreference;
+        return d_ptr->indexPreference;
     }
     return ListDefault;
 }
@@ -457,31 +441,21 @@ void Collection::setShouldList(ListPurpose purpose, bool list)
 
 void Collection::setReferenced(bool referenced)
 {
-    Q_D(Collection);
-
-    d->referencedChanged = true;
-    d->referenced = referenced;
+    d_ptr->referencedChanged = true;
+    d_ptr->referenced = referenced;
 }
 
 bool Collection::referenced() const
 {
-    Q_D(const Collection);
-
-    return d->referenced;
+    return d_ptr->referenced;
 }
 
 void Collection::setKeepLocalChanges(const QSet<QByteArray> &parts)
 {
-    Q_D(Collection);
-
-    d->keepLocalChanges = parts;
+    d_ptr->keepLocalChanges = parts;
 }
 
 QSet<QByteArray> Collection::keepLocalChanges() const
 {
-    Q_D(const Collection);
-
-    return d->keepLocalChanges;
+    return d_ptr->keepLocalChanges;
 }
-
-AKONADI_DEFINE_PRIVATE(Akonadi::Collection)

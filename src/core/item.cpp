@@ -19,7 +19,6 @@
 
 #include "item.h"
 #include "item_p.h"
-#include "entity_p.h"
 
 #include "itemserializer_p.h"
 #include <akonadi/private/protocol_p.h>
@@ -156,7 +155,7 @@ Item::Item(Id id)
 Item::Item(const QString &mimeType)
     : d_ptr(new ItemPrivate)
 {
-    d_func()->mMimeType = mimeType;
+    d_ptr->mMimeType = mimeType;
 }
 
 Item::Item(const Item &other)
@@ -175,7 +174,7 @@ void Item::setId(Item::Id identifier)
 
 Item::Id Item::id() const
 {
-    return d_func()->mId;
+    return d_ptr->mId;
 }
 
 void Item::setRemoteId(const QString &id)
@@ -298,120 +297,109 @@ void Item::setParentCollection(const Collection &parent)
 
 Item::Flags Item::flags() const
 {
-    return d_func()->mFlags;
+    return d_ptr->mFlags;
 }
 
 void Item::setFlag(const QByteArray &name)
 {
-    Q_D(Item);
-    d->mFlags.insert(name);
-    if (!d->mFlagsOverwritten) {
-        if (d->mDeletedFlags.contains(name)) {
-            d->mDeletedFlags.remove(name);
+    d_ptr->mFlags.insert(name);
+    if (!d_ptr->mFlagsOverwritten) {
+        if (d_ptr->mDeletedFlags.contains(name)) {
+            d_ptr->mDeletedFlags.remove(name);
         } else {
-            d->mAddedFlags.insert(name);
+            d_ptr->mAddedFlags.insert(name);
         }
     }
 }
 
 void Item::clearFlag(const QByteArray &name)
 {
-    Q_D(Item);
-    d->mFlags.remove(name);
-    if (!d->mFlagsOverwritten) {
-        if (d->mAddedFlags.contains(name)) {
-            d->mAddedFlags.remove(name);
+    d_ptr->mFlags.remove(name);
+    if (!d_ptr->mFlagsOverwritten) {
+        if (d_ptr->mAddedFlags.contains(name)) {
+            d_ptr->mAddedFlags.remove(name);
         } else {
-            d->mDeletedFlags.insert(name);
+            d_ptr->mDeletedFlags.insert(name);
         }
     }
 }
 
 void Item::setFlags(const Flags &flags)
 {
-    Q_D(Item);
-    d->mFlags = flags;
-    d->mFlagsOverwritten = true;
+    d_ptr->mFlags = flags;
+    d_ptr->mFlagsOverwritten = true;
 }
 
 void Item::clearFlags()
 {
-    Q_D(Item);
-    d->mFlags.clear();
-    d->mFlagsOverwritten = true;
+    d_ptr->mFlags.clear();
+    d_ptr->mFlagsOverwritten = true;
 }
 
 QDateTime Item::modificationTime() const
 {
-    return d_func()->mModificationTime;
+    return d_ptr->mModificationTime;
 }
 
 void Item::setModificationTime(const QDateTime &datetime)
 {
-    d_func()->mModificationTime = datetime;
+    d_ptr->mModificationTime = datetime;
 }
 
 bool Item::hasFlag(const QByteArray &name) const
 {
-    return d_func()->mFlags.contains(name);
+    return d_ptr->mFlags.contains(name);
 }
 
 void Item::setTags(const Tag::List &list)
 {
-    Q_D(Item);
-    d->mTags = list;
-    d->mTagsOverwritten = true;
+    d_ptr->mTags = list;
+    d_ptr->mTagsOverwritten = true;
 }
 
 void Item::setTag(const Tag &tag)
 {
-    Q_D(Item);
-    d->mTags << tag;
-    if (!d->mTagsOverwritten) {
-        if (d->mDeletedTags.contains(tag)) {
-            d->mDeletedTags.removeOne(tag);
+    d_ptr->mTags << tag;
+    if (!d_ptr->mTagsOverwritten) {
+        if (d_ptr->mDeletedTags.contains(tag)) {
+            d_ptr->mDeletedTags.removeOne(tag);
         } else {
-            d->mAddedTags << tag ;
+            d_ptr->mAddedTags << tag ;
         }
     }
 }
 
 void Item::clearTags()
 {
-    Q_D(Item);
-    d->mTags.clear();
-    d->mTagsOverwritten = true;
+    d_ptr->mTags.clear();
+    d_ptr->mTagsOverwritten = true;
 }
 
 void Item::clearTag(const Tag &tag)
 {
-    Q_D(Item);
-    d->mTags.removeOne(tag);
-    if (!d->mTagsOverwritten) {
-        if (d->mAddedTags.contains(tag)) {
-            d->mAddedTags.removeOne(tag);
+    d_ptr->mTags.removeOne(tag);
+    if (!d_ptr->mTagsOverwritten) {
+        if (d_ptr->mAddedTags.contains(tag)) {
+            d_ptr->mAddedTags.removeOne(tag);
         } else {
-            d->mDeletedTags << tag;
+            d_ptr->mDeletedTags << tag;
         }
     }
 }
 
 bool Item::hasTag(const Tag &tag) const
 {
-    Q_D(const Item);
-    return d->mTags.contains(tag);
+    return d_ptr->mTags.contains(tag);
 }
 
 Tag::List Item::tags() const
 {
-    Q_D(const Item);
-    return d->mTags;
+    return d_ptr->mTags;
 }
 
 Relation::List Item::relations() const
 {
-    Q_D(const Item);
-    return d->mRelations;
+    return d_ptr->mRelations;
 }
 
 QSet<QByteArray> Item::loadedPayloadParts() const
@@ -434,74 +422,73 @@ void Item::setPayloadFromData(const QByteArray &data)
 
 void Item::clearPayload()
 {
-    d_func()->mClearPayload = true;
+    d_ptr->mClearPayload = true;
 }
 
 int Item::revision() const
 {
-    return d_func()->mRevision;
+    return d_ptr->mRevision;
 }
 
 void Item::setRevision(int rev)
 {
-    d_func()->mRevision = rev;
+    d_ptr->mRevision = rev;
 }
 
 Collection::Id Item::storageCollectionId() const
 {
-    return d_func()->mCollectionId;
+    return d_ptr->mCollectionId;
 }
 
 void Item::setStorageCollectionId(Collection::Id collectionId)
 {
-    d_func()->mCollectionId = collectionId;
+    d_ptr->mCollectionId = collectionId;
 }
 
 QString Item::mimeType() const
 {
-    return d_func()->mMimeType;
+    return d_ptr->mMimeType;
 }
 
 void Item::setSize(qint64 size)
 {
-    Q_D(Item);
-    d->mSize = size;
-    d->mSizeChanged = true;
+    d_ptr->mSize = size;
+    d_ptr->mSizeChanged = true;
 }
 
 qint64 Item::size() const
 {
-    return d_func()->mSize;
+    return d_ptr->mSize;
 }
 
 void Item::setMimeType(const QString &mimeType)
 {
-    d_func()->mMimeType = mimeType;
+    d_ptr->mMimeType = mimeType;
 }
 
 void Item::setGid(const QString &id)
 {
-    d_func()->mGid = id;
+    d_ptr->mGid = id;
 }
 
 QString Item::gid() const
 {
-    return d_func()->mGid;
+    return d_ptr->mGid;
 }
 
 void Item::setVirtualReferences(const Collection::List &collections)
 {
-    d_func()->mVirtualReferences = collections;
+    d_ptr->mVirtualReferences = collections;
 }
 
 Collection::List Item::virtualReferences() const
 {
-    return d_func()->mVirtualReferences;
+    return d_ptr->mVirtualReferences;
 }
 
 bool Item::hasPayload() const
 {
-    return d_func()->hasMetaTypeId(-1);
+    return d_ptr->hasMetaTypeId(-1);
 }
 
 QUrl Item::url(UrlType type) const
@@ -545,10 +532,9 @@ Q_GLOBAL_STATIC(Internal::Payload<Dummy>, dummyPayload)
 
 Internal::PayloadBase *Item::payloadBase() const
 {
-    Q_D(const Item);
-    d->tryEnsureLegacyPayload();
-    if (d->mLegacyPayload) {
-        return d->mLegacyPayload.get();
+    d_ptr->tryEnsureLegacyPayload();
+    if (d_ptr->mLegacyPayload) {
+        return d_ptr->mLegacyPayload.get();
     } else {
         return dummyPayload();
     }
@@ -567,7 +553,7 @@ void ItemPrivate::tryEnsureLegacyPayload() const
 
 Internal::PayloadBase *Item::payloadBaseV2(int spid, int mtid) const
 {
-    return d_func()->payloadBaseImpl(spid, mtid);
+    return d_ptr->payloadBaseImpl(spid, mtid);
 }
 
 namespace
@@ -594,28 +580,27 @@ private:
 
 bool Item::ensureMetaTypeId(int mtid) const
 {
-    Q_D(const Item);
     // 0. Nothing there - nothing to convert from, either
-    if (d->mPayloads.empty()) {
+    if (d_ptr->mPayloads.empty()) {
         return false;
     }
 
     // 1. Look whether we already have one:
-    if (d->hasMetaTypeId(mtid)) {
+    if (d_ptr->hasMetaTypeId(mtid)) {
         return true;
     }
 
     // recursion detection (shouldn't trigger, but does if the
     // serialiser plugins are acting funky):
-    if (d->mConversionInProgress) {
+    if (d_ptr->mConversionInProgress) {
         return false;
     }
 
     // 2. Try to create one by conversion from a different representation:
     try {
-        const ConversionGuard guard(d->mConversionInProgress);
+        const ConversionGuard guard(d_ptr->mConversionInProgress);
         Item converted = ItemSerializer::convert(*this, mtid);
-        return d->movePayloadFrom(converted.d_func(), mtid);
+        return d_ptr->movePayloadFrom(converted.d_ptr, mtid);
     } catch (const std::exception &e) {
         qDebug() << "conversion threw:" << e.what();
         return false;
@@ -644,30 +629,28 @@ static QString format_types(const PayloadContainer &c)
 #if 0
 QString Item::payloadExceptionText(int spid, int mtid) const
 {
-    Q_D(const Item);
-    if (d->mPayloads.empty()) {
+    if (d_ptr->mPayloads.empty()) {
         return QStringLiteral("No payload set");
     } else {
         return QStringLiteral("Wrong payload type (requested: %1; present: %2")
-               .arg(format_type(spid, mtid), format_types(d->mPayloads));
+               .arg(format_type(spid, mtid), format_types(d_ptr->mPayloads));
     }
 }
 #else
 void Item::throwPayloadException(int spid, int mtid) const
 {
-    Q_D(const Item);
-    if (d->mPayloads.empty()) {
+    if (d_ptr->mPayloads.empty()) {
         throw PayloadException("No payload set");
     } else {
         throw PayloadException(QStringLiteral("Wrong payload type (requested: %1; present: %2")
-                               .arg(format_type(spid, mtid), format_types(d->mPayloads)));
+                               .arg(format_type(spid, mtid), format_types(d_ptr->mPayloads)));
     }
 }
 #endif
 
 void Item::setPayloadBase(Internal::PayloadBase *p)
 {
-    d_func()->setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase>(p));
+    d_ptr->setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase>(p));
 }
 
 void ItemPrivate::setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase> p)
@@ -687,24 +670,22 @@ void ItemPrivate::setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase
 
 void Item::setPayloadBaseV2(int spid, int mtid, std::unique_ptr<Internal::PayloadBase> &p)
 {
-    d_func()->setPayloadBaseImpl(spid, mtid, p, false);
+    d_ptr->setPayloadBaseImpl(spid, mtid, p, false);
 }
 
 void Item::addPayloadBaseVariant(int spid, int mtid, std::unique_ptr<Internal::PayloadBase> &p) const
 {
-    d_func()->setPayloadBaseImpl(spid, mtid, p, true);
+    d_ptr->setPayloadBaseImpl(spid, mtid, p, true);
 }
 
 QSet<QByteArray> Item::cachedPayloadParts() const
 {
-    Q_D(const Item);
-    return d->mCachedPayloadParts;
+    return d_ptr->mCachedPayloadParts;
 }
 
 void Item::setCachedPayloadParts(const QSet<QByteArray> &cachedParts)
 {
-    Q_D(Item);
-    d->mCachedPayloadParts = cachedParts;
+    d_ptr->mCachedPayloadParts = cachedParts;
 }
 
 QSet<QByteArray> Item::availablePayloadParts() const
@@ -715,10 +696,9 @@ QSet<QByteArray> Item::availablePayloadParts() const
 QVector<int> Item::availablePayloadMetaTypeIds() const
 {
     QVector<int> result;
-    Q_D(const Item);
-    result.reserve(d->mPayloads.size());
+    result.reserve(d_ptr->mPayloads.size());
     // Stable Insertion Sort - N is typically _very_ low (1 or 2).
-    for (PayloadContainer::const_iterator it = d->mPayloads.begin(), end = d->mPayloads.end() ; it != end ; ++it) {
+    for (PayloadContainer::const_iterator it = d_ptr->mPayloads.begin(), end = d_ptr->mPayloads.end() ; it != end ; ++it) {
         result.insert(std::upper_bound(result.begin(), result.end(), it->metaTypeId), it->metaTypeId);
     }
     return result;
@@ -759,7 +739,5 @@ void Item::apply(const Item &other)
     }
 
     ItemSerializer::apply(*this, other);
-    d_func()->resetChangeLog();
+    d_ptr->resetChangeLog();
 }
-
-AKONADI_DEFINE_PRIVATE(Item)

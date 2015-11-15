@@ -70,7 +70,7 @@ void CollectionModifyJob::doStart()
         return;
     }
 
-    if (d->mCollection.d_func()->contentTypesChanged) {
+    if (d->mCollection.d_ptr->contentTypesChanged) {
         cmd.setMimeTypes(d->mCollection.contentMimeTypes());
     }
     if (d->mCollection.parentCollection().id() >= 0) {
@@ -85,25 +85,25 @@ void CollectionModifyJob::doStart()
     if (!d->mCollection.remoteRevision().isNull()) {
         cmd.setRemoteRevision(d->mCollection.remoteRevision());
     }
-    if (d->mCollection.d_func()->cachePolicyChanged) {
+    if (d->mCollection.d_ptr->cachePolicyChanged) {
         cmd.setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
     }
-    if (d->mCollection.d_func()->enabledChanged) {
+    if (d->mCollection.d_ptr->enabledChanged) {
         cmd.setEnabled(d->mCollection.enabled());
     }
-    if (d->mCollection.d_func()->listPreferenceChanged) {
+    if (d->mCollection.d_ptr->listPreferenceChanged) {
         cmd.setDisplayPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
         cmd.setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListSync)));
         cmd.setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
     }
-    if (d->mCollection.d_func()->referencedChanged) {
+    if (d->mCollection.d_ptr->referencedChanged) {
         cmd.setReferenced(d->mCollection.referenced());
     }
     if (!d->mCollection.attributes().isEmpty()) {
         cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
     }
-    if (!d->mCollection.d_func()->mDeletedAttributes.isEmpty()) {
-        cmd.setRemovedAttributes(d->mCollection.d_func()->mDeletedAttributes);
+    if (!d->mCollection.d_ptr->mDeletedAttributes.isEmpty()) {
+        cmd.setRemovedAttributes(d->mCollection.d_ptr->mDeletedAttributes);
     }
 
     if (cmd.modifiedParts() == Protocol::ModifyCollectionCommand::None) {
@@ -124,7 +124,7 @@ bool CollectionModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &
         return Job::doHandleResponse(tag, response);
     }
 
-    d->mCollection.d_func()->resetChangeLog();
+    d->mCollection.d_ptr->resetChangeLog();
     return true;
 }
 

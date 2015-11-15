@@ -170,32 +170,32 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
         }
     }
 
-    if (item.d_func()->mClearPayload) {
+    if (item.d_ptr->mClearPayload) {
         cmd.setInvalidateCache(true);
     }
     if (mSilent) {
         cmd.setNotify(true);
     }
 
-    if (item.d_func()->mFlagsOverwritten) {
+    if (item.d_ptr->mFlagsOverwritten) {
         cmd.setFlags(item.flags());
     } else {
-        if (!item.d_func()->mAddedFlags.isEmpty()) {
-            cmd.setAddedFlags(item.d_func()->mAddedFlags);
+        if (!item.d_ptr->mAddedFlags.isEmpty()) {
+            cmd.setAddedFlags(item.d_ptr->mAddedFlags);
         }
-        if (!item.d_func()->mDeletedFlags.isEmpty()) {
-            cmd.setRemovedFlags(item.d_func()->mDeletedFlags);
+        if (!item.d_ptr->mDeletedFlags.isEmpty()) {
+            cmd.setRemovedFlags(item.d_ptr->mDeletedFlags);
         }
     }
 
-    if (item.d_func()->mTagsOverwritten) {
+    if (item.d_ptr->mTagsOverwritten) {
         cmd.setTags(ProtocolHelper::entitySetToScope(item.tags()));
     } else {
-        if (!item.d_func()->mAddedTags.isEmpty()) {
-            cmd.setAddedTags(ProtocolHelper::entitySetToScope(item.d_func()->mAddedTags));
+        if (!item.d_ptr->mAddedTags.isEmpty()) {
+            cmd.setAddedTags(ProtocolHelper::entitySetToScope(item.d_ptr->mAddedTags));
         }
-        if (!item.d_func()->mDeletedTags.isEmpty()) {
-            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(item.d_func()->mDeletedTags));
+        if (!item.d_ptr->mDeletedTags.isEmpty()) {
+            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(item.d_ptr->mDeletedTags));
         }
     }
 
@@ -208,10 +208,10 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
         cmd.setParts(parts);
     }
 
-    if (!item.d_func()->mDeletedAttributes.isEmpty()) {
+    if (!item.d_ptr->mDeletedAttributes.isEmpty()) {
         QSet<QByteArray> removedParts;
-        removedParts.reserve(item.d_func()->mDeletedAttributes.size());
-        Q_FOREACH (const QByteArray &part, item.d_func()->mDeletedAttributes) {
+        removedParts.reserve(item.d_ptr->mDeletedAttributes.size());
+        Q_FOREACH (const QByteArray &part, item.d_ptr->mDeletedAttributes) {
             removedParts.insert("ATR:" + part);
         }
         cmd.setRemovedParts(removedParts);
@@ -227,7 +227,7 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
         cmd.setOldRevision(item.revision());
     }
 
-    if (item.d_func()->mSizeChanged) {
+    if (item.d_ptr->mSizeChanged) {
         cmd.setItemSize(item.size());
     }
 

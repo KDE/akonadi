@@ -122,21 +122,21 @@ void ItemCreateJob::doStart()
                        || (mergeModes & Protocol::CreateItemCommand::RemoteID);
     cmd.setMergeModes(mergeModes);
 
-    if (d->mItem.d_func()->mFlagsOverwritten || !merge) {
+    if (d->mItem.d_ptr->mFlagsOverwritten || !merge) {
         cmd.setFlags(d->mItem.flags());
     } else {
-        cmd.setAddedFlags(d->mItem.d_func()->mAddedFlags);
-        cmd.setRemovedFlags(d->mItem.d_func()->mDeletedFlags);
+        cmd.setAddedFlags(d->mItem.d_ptr->mAddedFlags);
+        cmd.setRemovedFlags(d->mItem.d_ptr->mDeletedFlags);
     }
-    if (!d->mItem.d_func()->mAddedTags.isEmpty() && (d->mItem.d_func()->mTagsOverwritten || !merge)) {
+    if (!d->mItem.d_ptr->mAddedTags.isEmpty() && (d->mItem.d_ptr->mTagsOverwritten || !merge)) {
 
-        cmd.setTags(ProtocolHelper::entitySetToScope(d->mItem.d_func()->mAddedTags));
+        cmd.setTags(ProtocolHelper::entitySetToScope(d->mItem.d_ptr->mAddedTags));
     } else {
-        if (!d->mItem.d_func()->mAddedTags.isEmpty()) {
-            cmd.setAddedTags(ProtocolHelper::entitySetToScope(d->mItem.d_func()->mAddedTags));
+        if (!d->mItem.d_ptr->mAddedTags.isEmpty()) {
+            cmd.setAddedTags(ProtocolHelper::entitySetToScope(d->mItem.d_ptr->mAddedTags));
         }
-        if (!d->mItem.d_func()->mDeletedTags.isEmpty()) {
-            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(d->mItem.d_func()->mDeletedTags));
+        if (!d->mItem.d_ptr->mDeletedTags.isEmpty()) {
+            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(d->mItem.d_ptr->mDeletedTags));
         }
     }
 
