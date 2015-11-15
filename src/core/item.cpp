@@ -37,6 +37,8 @@
 
 using namespace Akonadi;
 
+Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection)
+
 uint Akonadi::qHash(const Akonadi::Item &item)
 {
     return ::qHash(item.id());

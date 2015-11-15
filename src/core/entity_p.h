@@ -20,10 +20,6 @@
 #ifndef ENTITY_P_H
 #define ENTITY_P_H
 
-#include "collection.h"
-
-Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection)
-
 #define AKONADI_DEFINE_PRIVATE( Class ) \
     Class##Private *Class ::d_func() \
     {\
