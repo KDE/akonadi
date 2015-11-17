@@ -62,7 +62,7 @@ PartType fromFqName(const QString &ns, const QString &typeName);
 Query::Condition conditionFromFqName(const QString &fqName);
 
 /**
- * Returns a query condition that mathes the given part type list.
+ * Returns a query condition that matches the given part type list.
  * @param fqNames fully qualified part type name list
  * @throws PartTypeException
  */

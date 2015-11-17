@@ -160,7 +160,7 @@ public:
     /**
       Notify about a moved collection.
       Provide as many parameters as you have at hand currently, everything
-      missing will be lookeded up on demand in the database later.
+      missing will be looked up on demand in the database later.
     */
     void collectionMoved(const Collection &collection,
                          const Collection &source,

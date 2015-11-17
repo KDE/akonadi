@@ -102,7 +102,7 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
     const bool resourceIsSynchronizing = root.referenced() && mCollectionsToSynchronize && connection()->context()->resource().isValid();
 
     QStack<CollectionAttribute::List> ancestorAttributes;
-    //backwards compatibilty, collectionToByteArray will automatically fall-back to id + remoteid
+    //backwards compatibility, collectionToByteArray will automatically fall-back to id + remoteid
     if (!mAncestorAttributes.isEmpty()) {
         ancestorAttributes.reserve(ancestors.size());
         Q_FOREACH (const Collection &col, ancestors) {
@@ -326,7 +326,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 }
             }
 
-            //If we matched referenced collecions we need to ensure the collection was referenced from this session
+            //If we matched referenced collections we need to ensure the collection was referenced from this session
             const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(it->id(), connection()->sessionId());
             //The collection is referenced, but not from this session. We need to reevaluate the filter condition
             if (it->referenced() && !isReferencedFromSession) {

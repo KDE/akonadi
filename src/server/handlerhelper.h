@@ -103,13 +103,13 @@ public:
 
     /**
       Converts a bytearray list of flag names into flag records.
-      @throws HandlerException on errors during datbase operations
+      @throws HandlerException on errors during database operations
     */
     static Flag::List resolveFlags(const QSet<QByteArray> &flagNames);
 
     /**
       Converts a imap set of tags into tag records.
-      @throws HandlerException on errors during datbase operations
+      @throws HandlerException on errors during database operations
     */
     static Tag::List resolveTagsByUID(const ImapSet &tags);
 

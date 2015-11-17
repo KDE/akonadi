@@ -76,7 +76,7 @@ public:
 };
 
 /**
- * A fake server used for testing. Losely based on KIMAP::FakeServer
+ * A fake server used for testing. Loosely based on KIMAP::FakeServer
  */
 class FakeAkonadiServer : public AkonadiServer
 {

@@ -75,7 +75,7 @@ public:
 
     /**
      * Check whether table @p tableName has a column named @p columnName.
-     * The default implemention should work with all backends.
+     * The default implementation should work with all backends.
      */
     virtual bool hasColumn(const QString &tableName, const QString &columnName);
 
@@ -89,7 +89,7 @@ public:
     /**
      * Returns the foreign key constraints on table @p tableName.
      * The default implementation returns an empty list, so any backend supporting
-     * referential integrity should reimplment this.
+     * referential integrity should reimplement this.
      */
     virtual QVector<ForeignKey> foreignKeyConstraints(const QString &tableName);
 

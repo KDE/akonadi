@@ -44,7 +44,7 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(PartHelperException);
 namespace PartHelper {
 /**
  * Update payload of an existing part @p part to @p data and size @p dataSize.
- * Automatically decides whether or not the data should be stored in the databse
+ * Automatically decides whether or not the data should be stored in the database
  * or the file system.
  * @throw PartHelperException if file operations failed
  */

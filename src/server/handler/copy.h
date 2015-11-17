@@ -43,7 +43,7 @@ namespace Server {
 
   Request:
   @verbatim
-  request = tag " COPY " seqeunce-set " " collection-id
+  request = tag " COPY " sequence-set " " collection-id
   @endverbatim
 
   There is only the usual status response indicating success or failure of the

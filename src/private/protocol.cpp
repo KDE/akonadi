@@ -6986,7 +6986,7 @@ public:
         blck.write("Merge", merge);
         blck.write("GID", gid);
         blck.write("Remote ID", remoteId);
-        blck.write("Parnet ID", parentId);
+        blck.write("Parent ID", parentId);
         blck.write("Type", type);
         blck.write("Attributes", attributes);
     }
@@ -8320,7 +8320,7 @@ public:
 
     // For internal use only: Akonadi server can add some additional information
     // that might be useful when evaluating the notification for example, but
-    // it is never transfered to clients
+    // it is never transferred to clients
     QVector<QByteArray> metadata;
 
     qint64 parentCollection;

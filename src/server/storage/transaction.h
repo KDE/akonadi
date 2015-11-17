@@ -42,7 +42,7 @@ public:
       instead of creating a new one.
       @param db The corresponding DataStore. You must not delete @p db during
       the lifetime of a Transaction object.
-      @param beginTransaction if false, the transaction won't be started, until begin is eplicitely called. The default is to begin the transaction right away.
+      @param beginTransaction if false, the transaction won't be started, until begin is explicitly called. The default is to begin the transaction right away.
     */
     explicit Transaction(DataStore *db, bool beginTransaction = true);
 

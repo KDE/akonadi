@@ -36,7 +36,7 @@ enum Type {
     PostgreSQL
 };
 
-/** Returns the type of the given databse object. */
+/** Returns the type of the given database object. */
 Type type(const QSqlDatabase &db);
 
 /** Returns the type for the given driver name. */

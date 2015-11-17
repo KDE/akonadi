@@ -236,4 +236,3 @@ bool NotificationManager::debugEnabled() const
 {
     return mDebug;
 }
-

@@ -69,7 +69,7 @@ ServerPath=/usr/sbin/mysqld
 Name=/home/foo/.local/share/akonadi/akonadi.db
 @endverbatim
 
-  Use @c General/Driver to select the QSql driver to use for databse
+  Use @c General/Driver to select the QSql driver to use for database
   access. The following drivers are currently supported, other might work
   but are untested:
 
@@ -104,7 +104,7 @@ public:
     virtual void open();
 
     /**
-      Closes the databse connection.
+      Closes the database connection.
     */
     virtual void close();
 

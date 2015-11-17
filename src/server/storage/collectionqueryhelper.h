@@ -67,7 +67,7 @@ Collection resolveHierarchicalRID(const QVector<Scope::HRID> &hridChain, Resourc
 
 /**
   Returns an existing collection specified by the given scope. If that does not
-  specify exactly one valid collection, an exception is thrwon.
+  specify exactly one valid collection, an exception is thrown.
 */
 Collection singleCollectionFromScope(const Scope &scope, Connection *connection);
 }

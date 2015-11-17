@@ -109,7 +109,7 @@ protected:
     QList< PreprocessorInstance *> mPreprocessorChain;
 
     /**
-     * Is preprocessing enabled at all in ths Akonad server instance ?
+     * Is preprocessing enabled at all in this Akonadi server instance?
      * This is true by default and can be set via setEnabled().
      * Mainly used to disable preprocessing via configuration file.
      */
@@ -130,7 +130,7 @@ public:
 
     /**
      * Returns the one and only instance pointer for the class PreprocessorManager
-     * The returned pointer is valid only after a succesfull call to init().
+     * The returned pointer is valid only after a successful call to init().
      *
      * \sa init()
      * \sa done()
@@ -146,7 +146,7 @@ public:
      *
      * The instance is later available via the static instance() method.
      * You must call done() when you've finished using this class services.
-     * Returns true upon succesfull initialisation and false when the initialization fails.
+     * Returns true upon successful initialisation and false when the initialization fails.
      *
      * \sa done()
      */

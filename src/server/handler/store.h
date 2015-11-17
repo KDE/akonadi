@@ -65,7 +65,7 @@ namespace Server {
   - based on a uid set (UID)
   - based on a list of remote identifiers within the currently selected collection (RID)
 
-  The following item properties can be mofidied:
+  The following item properties can be modified:
   - the remote identifier (@c REMOTEID)
   - the remote revision (@c REMOTEREVISION)
   - the global identifier (@c GID)
