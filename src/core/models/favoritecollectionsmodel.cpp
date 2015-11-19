@@ -209,7 +209,7 @@ public:
             }
         }
         //Remove what's left
-        foreach (const Akonadi::Collection::Id &colId, colIds) {
+        foreach (Akonadi::Collection::Id colId, colIds) {
             remove(colId);
         }
     }
