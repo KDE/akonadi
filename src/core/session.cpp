@@ -62,6 +62,20 @@ void SessionPrivate::startNext()
 
 void SessionPrivate::reconnect()
 {
+    if (!connThread) {
+        connThread = new ConnectionThread(sessionId);
+        mParent->connect(connThread, &ConnectionThread::reconnected, mParent, &Session::reconnected,
+                        Qt::QueuedConnection);
+        mParent->connect(connThread, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
+                        mParent, SLOT(handleCommand(qint64, Akonadi::Protocol::Command)),
+                        Qt::QueuedConnection);
+        mParent->connect(connThread, SIGNAL(socketDisconnected()), mParent, SLOT(socketDisconnected()),
+                        Qt::QueuedConnection);
+        mParent->connect(connThread, SIGNAL(socketError(QString)), mParent, SLOT(socketError(QString)),
+                        Qt::QueuedConnection);
+
+    }
+
     connThread->reconnect();
 }
 
@@ -250,6 +264,7 @@ void SessionPrivate::sendCommand(qint64 tag, const Protocol::Command &command)
 
 void SessionPrivate::serverStateChanged(ServerManager::State state)
 {
+    qDebug() << "============== SESSION: Server state changed to " << state;
     if (state == ServerManager::Running && !connected) {
         reconnect();
     } else if (!connected && state == ServerManager::Broken) {
@@ -259,6 +274,9 @@ void SessionPrivate::serverStateChanged(ServerManager::State state)
             job->setError(Job::ConnectionFailed);
             job->kill(KJob::EmitResult);
         }
+    } else if (state == ServerManager::Stopping) {
+        delete connThread;
+        connThread = Q_NULLPTR;
     }
 }
 
@@ -280,6 +298,14 @@ SessionPrivate::SessionPrivate(Session *parent)
     , protocolVersion(0)
     , currentJob(0)
 {
+    // Shutdown the thread before QApplication event loop quits - the
+    // thread()->wait() mechanism in ConnectionThread dtor crashes sometimes
+    // when called from QApplication destructor
+    QObject::connect(qApp, &QCoreApplication::aboutToQuit,
+                     [this]() {
+                        delete connThread;
+                        connThread = Q_NULLPTR;
+                     });
 }
 
 SessionPrivate::~SessionPrivate()
@@ -300,18 +326,6 @@ void SessionPrivate::init(const QByteArray &id)
     connected = false;
     theNextTag = 2;
     jobRunning = false;
-
-    connThread = new ConnectionThread(sessionId);
-    mParent->connect(connThread, &ConnectionThread::reconnected, mParent, &Session::reconnected,
-                     Qt::QueuedConnection);
-    mParent->connect(connThread, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
-                     mParent, SLOT(handleCommand(qint64, Akonadi::Protocol::Command)),
-                     Qt::QueuedConnection);
-    mParent->connect(connThread, SIGNAL(socketDisconnected()), mParent, SLOT(socketDisconnected()),
-                     Qt::QueuedConnection);
-    mParent->connect(connThread, SIGNAL(socketError(QString)), mParent, SLOT(socketError(QString)),
-                     Qt::QueuedConnection);
-
 
     if (ServerManager::state() == ServerManager::NotRunning) {
         ServerManager::start();
