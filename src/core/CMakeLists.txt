@@ -34,6 +34,7 @@ set(akonadicore_base_SRCS
     gidextractor.cpp
     indexpolicyattribute.cpp
     item.cpp
+    itemchangelog.cpp
     itemfetchscope.cpp
     itemmonitor.cpp
     itemserializer.cpp

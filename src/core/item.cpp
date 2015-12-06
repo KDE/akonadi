@@ -239,12 +239,12 @@ void Item::addAttribute(Attribute *attr)
         delete existing;
     }
     d_ptr->mAttributes.insert(attr->type(), attr);
-    d_ptr->mDeletedAttributes.remove(attr->type());
+    ItemChangeLog::instance()->deletedAttributes(d_ptr).remove(attr->type());
 }
 
 void Item::removeAttribute(const QByteArray &type)
 {
-    d_ptr->mDeletedAttributes.insert(type);
+    ItemChangeLog::instance()->deletedAttributes(d_ptr).insert(type);
     delete d_ptr->mAttributes.take(type);
 }
 
@@ -260,8 +260,10 @@ Attribute::List Item::attributes() const
 
 void Akonadi::Item::clearAttributes()
 {
+    ItemChangeLog *changelog = ItemChangeLog::instance();
+    QSet<QByteArray> &deletedAttributes = changelog->deletedAttributes(d_ptr);
     Q_FOREACH (Attribute *attr, d_ptr->mAttributes) {
-        d_ptr->mDeletedAttributes.insert(attr->type());
+        deletedAttributes.insert(attr->type());
         delete attr;
     }
     d_ptr->mAttributes.clear();
@@ -304,10 +306,12 @@ void Item::setFlag(const QByteArray &name)
 {
     d_ptr->mFlags.insert(name);
     if (!d_ptr->mFlagsOverwritten) {
-        if (d_ptr->mDeletedFlags.contains(name)) {
-            d_ptr->mDeletedFlags.remove(name);
+        Item::Flags &deletedFlags = ItemChangeLog::instance()->deletedFlags(d_ptr);
+        auto iter = deletedFlags.find(name);
+        if (iter != deletedFlags.end()) {
+            deletedFlags.erase(iter);
         } else {
-            d_ptr->mAddedFlags.insert(name);
+            ItemChangeLog::instance()->addedFlags(d_ptr).insert(name);
         }
     }
 }
@@ -316,10 +320,12 @@ void Item::clearFlag(const QByteArray &name)
 {
     d_ptr->mFlags.remove(name);
     if (!d_ptr->mFlagsOverwritten) {
-        if (d_ptr->mAddedFlags.contains(name)) {
-            d_ptr->mAddedFlags.remove(name);
+        Item::Flags &addedFlags = ItemChangeLog::instance()->addedFlags(d_ptr);
+        auto iter = addedFlags.find(name);
+        if (iter != addedFlags.end()) {
+            addedFlags.erase(iter);
         } else {
-            d_ptr->mDeletedFlags.insert(name);
+            ItemChangeLog::instance()->deletedFlags(d_ptr).insert(name);
         }
     }
 }
@@ -361,10 +367,11 @@ void Item::setTag(const Tag &tag)
 {
     d_ptr->mTags << tag;
     if (!d_ptr->mTagsOverwritten) {
-        if (d_ptr->mDeletedTags.contains(tag)) {
-            d_ptr->mDeletedTags.removeOne(tag);
+        Tag::List &deletedTags = ItemChangeLog::instance()->deletedTags(d_ptr);
+        if (deletedTags.contains(tag)) {
+            deletedTags.removeOne(tag);
         } else {
-            d_ptr->mAddedTags << tag ;
+            ItemChangeLog::instance()->addedTags(d_ptr).push_back(tag);
         }
     }
 }
@@ -379,10 +386,11 @@ void Item::clearTag(const Tag &tag)
 {
     d_ptr->mTags.removeOne(tag);
     if (!d_ptr->mTagsOverwritten) {
-        if (d_ptr->mAddedTags.contains(tag)) {
-            d_ptr->mAddedTags.removeOne(tag);
+        Tag::List &addedTags = ItemChangeLog::instance()->addedTags(d_ptr);
+        if (addedTags.contains(tag)) {
+            addedTags.removeOne(tag);
         } else {
-            d_ptr->mDeletedTags << tag;
+            ItemChangeLog::instance()->deletedTags(d_ptr).push_back(tag);
         }
     }
 }

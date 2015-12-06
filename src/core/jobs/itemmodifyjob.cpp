@@ -180,22 +180,26 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     if (item.d_ptr->mFlagsOverwritten) {
         cmd.setFlags(item.flags());
     } else {
-        if (!item.d_ptr->mAddedFlags.isEmpty()) {
-            cmd.setAddedFlags(item.d_ptr->mAddedFlags);
+        const auto addedFlags = ItemChangeLog::instance()->addedFlags(item.d_ptr);
+        if (!addedFlags.isEmpty()) {
+            cmd.setAddedFlags(addedFlags);
         }
-        if (!item.d_ptr->mDeletedFlags.isEmpty()) {
-            cmd.setRemovedFlags(item.d_ptr->mDeletedFlags);
+        const auto deletedFlags = ItemChangeLog::instance()->deletedFlags(item.d_ptr);
+        if (!deletedFlags.isEmpty()) {
+            cmd.setRemovedFlags(deletedFlags);
         }
     }
 
     if (item.d_ptr->mTagsOverwritten) {
         cmd.setTags(ProtocolHelper::entitySetToScope(item.tags()));
     } else {
-        if (!item.d_ptr->mAddedTags.isEmpty()) {
-            cmd.setAddedTags(ProtocolHelper::entitySetToScope(item.d_ptr->mAddedTags));
+        const auto addedTags = ItemChangeLog::instance()->addedTags(item.d_ptr);
+        if (!addedTags.isEmpty()) {
+            cmd.setAddedTags(ProtocolHelper::entitySetToScope(addedTags));
         }
-        if (!item.d_ptr->mDeletedTags.isEmpty()) {
-            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(item.d_ptr->mDeletedTags));
+        const auto deletedTags = ItemChangeLog::instance()->deletedTags(item.d_ptr);
+        if (!deletedTags.isEmpty()) {
+            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(deletedTags));
         }
     }
 
@@ -208,10 +212,11 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
         cmd.setParts(parts);
     }
 
-    if (!item.d_ptr->mDeletedAttributes.isEmpty()) {
+    const auto deletedAttributes = ItemChangeLog::instance()->deletedAttributes(item.d_ptr);
+    if (!deletedAttributes.isEmpty()) {
         QSet<QByteArray> removedParts;
-        removedParts.reserve(item.d_ptr->mDeletedAttributes.size());
-        Q_FOREACH (const QByteArray &part, item.d_ptr->mDeletedAttributes) {
+        removedParts.reserve(deletedAttributes.size());
+        Q_FOREACH (const QByteArray &part, deletedAttributes) {
             removedParts.insert("ATR:" + part);
         }
         cmd.setRemovedParts(removedParts);

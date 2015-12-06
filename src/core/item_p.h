@@ -25,6 +25,7 @@
 #include <QtCore/QVarLengthArray>
 
 #include "itempayloadinternals_p.h"
+#include "itemchangelog_p.h"
 #include "tag.h"
 
 #include <memory>
@@ -310,7 +311,6 @@ public:
         Q_FOREACH (Attribute *attr, other.mAttributes) {
             mAttributes.insert(attr->type(), attr->clone());
         }
-        mDeletedAttributes = other.mDeletedAttributes;
         if (other.mParent) {
             mParent = new Collection(*(other.mParent));
         }
@@ -323,37 +323,38 @@ public:
         mMimeType = other.mMimeType;
         mLegacyPayload = other.mLegacyPayload;
         mPayloads = other.mPayloads;
-        mAddedFlags = other.mAddedFlags;
-        mDeletedFlags = other.mDeletedFlags;
         mFlagsOverwritten = other.mFlagsOverwritten;
         mSizeChanged = other.mSizeChanged;
         mCollectionId = other.mCollectionId;
         mClearPayload = other.mClearPayload;
         mVirtualReferences = other.mVirtualReferences;
         mGid = other.mGid;
-        mAddedTags = other.mAddedTags;
-        mDeletedTags = other.mDeletedTags;
         mCachedPayloadParts = other.mCachedPayloadParts;
         mTagsOverwritten = other.mTagsOverwritten;
         mConversionInProgress = false;
+
+        ItemChangeLog *changelog = ItemChangeLog::instance();
+        changelog->addedFlags(this) = changelog->addedFlags(&other);
+        changelog->deletedFlags(this) = changelog->deletedFlags(&other);
+        changelog->addedTags(this) = changelog->addedTags(&other);
+        changelog->deletedTags(this) = changelog->deletedTags(&other);
+        changelog->deletedAttributes(this) = changelog->deletedAttributes(&other);
     }
 
     ~ItemPrivate()
     {
         qDeleteAll(mAttributes);
         delete mParent;
+
+        ItemChangeLog::instance()->clearItemChangelog(this);
     }
 
     void resetChangeLog()
     {
         mFlagsOverwritten = false;
-        mAddedFlags.clear();
-        mDeletedFlags.clear();
         mSizeChanged = false;
         mTagsOverwritten = false;
-        mAddedTags.clear();
-        mDeletedTags.clear();
-        mDeletedAttributes.clear();
+        ItemChangeLog::instance()->clearItemChangelog(this);
     }
 
     bool hasMetaTypeId(int mtid) const
@@ -438,7 +439,6 @@ public:
     QString mRemoteId;
     QString mRemoteRevision;
     QHash<QByteArray, Attribute *> mAttributes;
-    QSet<QByteArray> mDeletedAttributes;
     mutable Collection *mParent;
     mutable _detail::clone_ptr<Internal::PayloadBase> mLegacyPayload;
     mutable PayloadContainer mPayloads;
@@ -452,10 +452,6 @@ public:
     QDateTime mModificationTime;
     QString mMimeType;
     QString mGid;
-    Item::Flags mAddedFlags;
-    Item::Flags mDeletedFlags;
-    Tag::List mAddedTags;
-    Tag::List mDeletedTags;
     QSet<QByteArray> mCachedPayloadParts;
     bool mFlagsOverwritten : 1;
     bool mTagsOverwritten : 1;
