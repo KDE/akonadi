@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include "akonadi.h"
-#include "connectionthread.h"
+#include "connection.h"
 #include "serveradaptor.h"
 
 #include <shared/akdebug.h>
@@ -33,11 +33,11 @@
 #include "tracer.h"
 #include "utils.h"
 #include "debuginterface.h"
-#include "storage/itemretrievalthread.h"
+#include "storage/itemretrievalmanager.h"
 #include "storage/collectionstatistics.h"
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
-#include "search/searchtaskmanagerthread.h"
+#include "search/searchtaskmanager.h"
 
 #include "collectionreferencemanager.h"
 
@@ -72,11 +72,11 @@ AkonadiServer *AkonadiServer::s_instance = 0;
 
 AkonadiServer::AkonadiServer(QObject *parent)
     : QLocalServer(parent)
-    , mCacheCleanerThread(0)
-    , mIntervalCheckerThread(0)
-    , mStorageJanitor(0)
-    , mItemRetrievalThread(0)
-    , mAgentSearchManagerThread(0)
+    , mCacheCleaner(Q_NULLPTR)
+    , mIntervalCheck(Q_NULLPTR)
+    , mStorageJanitor(Q_NULLPTR)
+    , mItemRetrieval(Q_NULLPTR)
+    , mAgentSearchManager(Q_NULLPTR)
     , mDatabaseProcess(0)
     , mSearchManager(0)
     , mAlreadyShutdown(false)
@@ -207,27 +207,17 @@ bool AkonadiServer::init()
     }
 
     if (settings.value(QStringLiteral("Cache/EnableCleaner"), true).toBool()) {
-        mCacheCleanerThread = new CollectionSchedulerThread<CacheCleaner>(this);
-        mCacheCleanerThread->start(QThread::IdlePriority);
+        mCacheCleaner = new CacheCleaner();
     }
 
-    mIntervalCheckerThread = new CollectionSchedulerThread<IntervalCheck>(this);
-    mIntervalCheckerThread->start(QThread::IdlePriority);
-
-    mStorageJanitor = new StorageJanitorThread;
-    mStorageJanitor->start(QThread::IdlePriority);
-
-    mItemRetrievalThread = new ItemRetrievalThread(this);
-    mItemRetrievalThread->start(QThread::HighPriority);
-
-    mAgentSearchManagerThread = new SearchTaskManagerThread(this);
-    mAgentSearchManagerThread->start();
-
+    mIntervalCheck = new IntervalCheck();
+    mStorageJanitor = new StorageJanitor();
+    mItemRetrieval = new ItemRetrievalManager();
+    mAgentSearchManager = new SearchTaskManager();
 
     const QStringList searchManagers = settings.value(QStringLiteral("Search/Manager"),
                                                       QStringList() << QStringLiteral("Agent")).toStringList();
-    mSearchManager = new SearchManagerThread(searchManagers, this);
-    mSearchManager->start();
+    mSearchManager = new SearchManager(searchManagers);
 
     new ServerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Server"), this);
@@ -288,20 +278,16 @@ bool AkonadiServer::quit()
     mAlreadyShutdown = true;
 
     akDebug() << "terminating service threads";
-    quitThread(mCacheCleanerThread);
-    quitThread(mIntervalCheckerThread);
-    quitThread(mStorageJanitor);
-    quitThread(mItemRetrievalThread);
-    mAgentSearchManagerThread->stop();
-    quitThread(mAgentSearchManagerThread);
-    quitThread(mSearchManager);
-
+    delete mCacheCleaner;
+    delete mIntervalCheck;
+    delete mStorageJanitor;
+    delete mItemRetrieval;
+    delete mAgentSearchManager;
     delete mSearchManager;
-    mSearchManager = 0;
 
     akDebug() << "terminating connection threads";
     for (int i = 0; i < mConnections.count(); ++i) {
-        quitThread(mConnections[i]);
+        delete mConnections[i];
     }
     mConnections.clear();
 
@@ -345,10 +331,12 @@ void AkonadiServer::incomingConnection(quintptr socketDescriptor)
     if (mAlreadyShutdown) {
         return;
     }
-    QPointer<ConnectionThread> thread = new ConnectionThread(socketDescriptor, this);
-    connect(thread.data(), &QThread::finished, thread.data(), &QObject::deleteLater);
-    mConnections.append(thread);
-    thread->start();
+    QPointer<Connection> connection = new Connection(socketDescriptor);
+    connect(connection.data(), &Connection::disconnected,
+            this, [connection]() {
+                delete connection.data();
+            }, Qt::QueuedConnection);
+    mConnections.append(connection);
 }
 
 AkonadiServer *AkonadiServer::instance()
@@ -435,8 +423,8 @@ void AkonadiServer::serviceOwnerChanged(const QString &name, const QString &oldO
 
 CacheCleaner *AkonadiServer::cacheCleaner()
 {
-    if (mCacheCleanerThread) {
-        return mCacheCleanerThread->scheduler();
+    if (mCacheCleaner) {
+        return mCacheCleaner;
     }
 
     return Q_NULLPTR;
@@ -444,8 +432,8 @@ CacheCleaner *AkonadiServer::cacheCleaner()
 
 IntervalCheck *AkonadiServer::intervalChecker()
 {
-    if (mIntervalCheckerThread) {
-        return mIntervalCheckerThread->scheduler();
+    if (mIntervalCheck) {
+        return mIntervalCheck;
     }
 
     return Q_NULLPTR;

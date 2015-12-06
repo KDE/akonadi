@@ -30,15 +30,14 @@ class QProcess;
 namespace Akonadi {
 namespace Server {
 
-class ConnectionThread;
+class Connection;
 class SearchManagerThread;
-class ItemRetrievalThread;
-class SearchTaskManagerThread;
-class StorageJanitorThread;
+class ItemRetrievalManager;
+class SearchTaskManager;
+class SearchManager;
+class StorageJanitor;
 class CacheCleaner;
 class IntervalCheck;
-template<typename T>
-class CollectionSchedulerThread;
 
 class AkonadiServer : public QLocalServer
 {
@@ -82,14 +81,14 @@ private:
 protected:
     AkonadiServer(QObject *parent = 0);
 
-    CollectionSchedulerThread<CacheCleaner> *mCacheCleanerThread;
-    CollectionSchedulerThread<IntervalCheck> *mIntervalCheckerThread;
-    StorageJanitorThread *mStorageJanitor;
-    ItemRetrievalThread *mItemRetrievalThread;
-    SearchTaskManagerThread *mAgentSearchManagerThread;
+    CacheCleaner *mCacheCleaner;
+    IntervalCheck *mIntervalCheck;
+    StorageJanitor *mStorageJanitor;
+    ItemRetrievalManager *mItemRetrieval;
+    SearchTaskManager *mAgentSearchManager;
     QProcess *mDatabaseProcess;
-    QVector< QPointer<ConnectionThread> > mConnections;
-    SearchManagerThread *mSearchManager;
+    QVector<QPointer<Connection>> mConnections;
+    SearchManager *mSearchManager;
     bool mAlreadyShutdown;
 
     static AkonadiServer *s_instance;

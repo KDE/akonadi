@@ -41,28 +41,38 @@ using namespace Akonadi::Server;
 ItemRetrievalManager *ItemRetrievalManager::sInstance = 0;
 
 ItemRetrievalManager::ItemRetrievalManager(QObject *parent)
-    : QObject(parent)
-    , mDBusConnection(DBusConnectionPool::threadConnection())
+    : AkThread(QThread::HighPriority, parent)
 {
     qDBusRegisterMetaType<QByteArrayList>();
 
-    // make sure we are created from the retrieval thread and only once
-    Q_ASSERT(QThread::currentThread() != QCoreApplication::instance()->thread());
+    setObjectName(QStringLiteral("ItemRetrievalManager"));
+
     Q_ASSERT(sInstance == 0);
     sInstance = this;
 
     mLock = new QReadWriteLock();
     mWaitCondition = new QWaitCondition();
-
-    connect(mDBusConnection.interface(), &QDBusConnectionInterface::serviceOwnerChanged,
-            this, &ItemRetrievalManager::serviceOwnerChanged);
-    connect(this, &ItemRetrievalManager::requestAdded, this, &ItemRetrievalManager::processRequest,Qt::QueuedConnection);
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()
 {
+    quitThread();
+
     delete mWaitCondition;
     delete mLock;
+    sInstance = 0;
+}
+
+void ItemRetrievalManager::init()
+{
+    AkThread::init();
+
+    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    connect(conn.interface(), &QDBusConnectionInterface::serviceOwnerChanged,
+            this, &ItemRetrievalManager::serviceOwnerChanged);
+    connect(this, &ItemRetrievalManager::requestAdded,
+            this, &ItemRetrievalManager::processRequest,
+            Qt::QueuedConnection);
 }
 
 ItemRetrievalManager *ItemRetrievalManager::instance()
@@ -101,7 +111,9 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
 
     delete iface;
     iface = new org::freedesktop::Akonadi::Resource(DBus::agentServiceName(id, DBus::Resource),
-                                                    QStringLiteral("/"), mDBusConnection, this);
+                                                    QStringLiteral("/"),
+                                                    DBusConnectionPool::threadConnection(),
+                                                    this);
     if (!iface || !iface->isValid()) {
         akError() << QStringLiteral("Cannot connect to agent instance with identifier '%1', error message: '%2'")
                   .arg(id, iface ? iface->lastError().message() : QString());

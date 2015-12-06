@@ -21,6 +21,7 @@
 #define AKONADI_ITEMRETRIEVALMANAGER_H
 
 #include "itemretriever.h"
+#include "akthread.h"
 
 #include <QHash>
 #include <QStringList>
@@ -39,7 +40,7 @@ class ItemRetrievalJob;
 class ItemRetrievalRequest;
 
 /** Manages and processes item retrieval requests. */
-class ItemRetrievalManager : public QObject
+class ItemRetrievalManager : public AkThread
 {
     Q_OBJECT
 public:
@@ -64,6 +65,8 @@ private:
     OrgFreedesktopAkonadiResourceInterface *resourceInterface(const QString &id);
 
 private Q_SLOTS:
+    void init() Q_DECL_OVERRIDE;
+
     void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
     void processRequest();
     void triggerCollectionSync(const QString &resource, qint64 colId);
@@ -83,7 +86,6 @@ private:
 
     // resource dbus interface cache
     QHash<QString, OrgFreedesktopAkonadiResourceInterface *> mResourceInterfaces;
-    QDBusConnection mDBusConnection;
 };
 
 } // namespace Server

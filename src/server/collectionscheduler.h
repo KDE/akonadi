@@ -26,6 +26,7 @@
 #include <QMutex>
 
 #include "entities.h"
+#include "akthread.h"
 
 namespace Akonadi {
 namespace Server {
@@ -33,38 +34,12 @@ namespace Server {
 class Collection;
 class PauseableTimer;
 
-template<typename T>
-class CollectionSchedulerThread : public QThread
-{
-public:
-    explicit CollectionSchedulerThread(QObject *parent = Q_NULLPTR)
-        : QThread(parent)
-    {
-        mScheduler = new T();
-        mScheduler->moveToThread(this);
-    }
-
-    ~CollectionSchedulerThread()
-    {
-        delete mScheduler;
-    }
-
-    T *scheduler() const
-    {
-        return mScheduler;
-    }
-
-private:
-    T *mScheduler;
-};
-
-
-class CollectionScheduler : public QObject
+class CollectionScheduler : public AkThread
 {
     Q_OBJECT
 
 public:
-    CollectionScheduler(QObject *parent = 0);
+    CollectionScheduler(QThread::Priority priority, QObject *parent = 0);
     virtual ~CollectionScheduler();
 
     void collectionChanged(qint64 collectionId);
@@ -82,6 +57,9 @@ public:
     int minimumInterval() const;
 
 protected:
+    virtual void init() Q_DECL_OVERRIDE;
+    virtual void quit() Q_DECL_OVERRIDE;
+
     virtual bool shouldScheduleCollection(const Collection &collection) = 0;
     virtual bool hasChanged(const Collection &collection, const Collection &changed) = 0;
     /**
@@ -93,7 +71,6 @@ protected:
     void inhibit(bool inhibit = true);
 
 protected Q_SLOTS:
-    void initScheduler();
     void schedulerTimeout();
     void startScheduler();
     void scheduleCollection(/*sic!*/ Collection collection, bool shouldStartScheduler = true);

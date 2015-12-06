@@ -21,7 +21,8 @@
 #ifndef SEARCHMANAGER_H
 #define SEARCHMANAGER_H
 
-#include <QThread>
+#include "akthread.h"
+
 #include <QVector>
 #include <QSet>
 #include <QMutex>
@@ -41,35 +42,18 @@ class NotificationCollector;
 class AbstractSearchEngine;
 class Collection;
 
-class SearchManagerThread : public QThread
-{
-public:
-    SearchManagerThread(const QStringList &searchEngines, QObject *parent = 0);
-    ~SearchManagerThread();
-
-    void run();
-
-private:
-    void loadSearchPlugins();
-
-    QList<QPluginLoader*> mPluginLoaders;
-    QStringList mSearchEngines;
-};
-
 /**
  * SearchManager creates and deletes persistent searches for all currently
  * active search engines.
  */
-class SearchManager : public QObject
+class SearchManager : public AkThread
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.SearchManager")
 
-    friend class SearchManagerThread;
-
 public:
     /** Create a new search manager with the given @p searchEngines. */
-    explicit SearchManager(QObject *parent = 0);
+    explicit SearchManager(const QStringList &searchEngines, QObject *parent = 0);
 
     ~SearchManager();
 
@@ -122,15 +106,19 @@ private Q_SLOTS:
      */
     void updateSearchImpl(const Collection &collection, QSemaphore *cond);
 
-protected:
-    void init(const QStringList &searchEngines, const QList<QPluginLoader*> &loaders);
-
 private:
-    // Runs in SearchManagerThread
-    void initSearchPlugins(const QList<QPluginLoader*> &loaders);
+    void init() Q_DECL_OVERRIDE;
+    void quit() Q_DECL_OVERRIDE;
+
+    // Called from main thread
+    void loadSearchPlugins();
+    // Called from manager thread
+    void initSearchPlugins();
 
     static SearchManager *sInstance;
 
+    QStringList mEngineNames;
+    QVector<QPluginLoader *> mPluginLoaders;
     QVector<AbstractSearchEngine *> mEngines;
     QVector<AbstractSearchPlugin *> mPlugins;
 

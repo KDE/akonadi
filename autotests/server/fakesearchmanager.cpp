@@ -24,7 +24,7 @@
 using namespace Akonadi::Server;
 
 FakeSearchManager::FakeSearchManager(QObject *parent)
-    : SearchManager(parent)
+    : SearchManager(QStringList(), parent)
 {
 }
 

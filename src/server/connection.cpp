@@ -45,7 +45,7 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 Connection::Connection(QObject *parent)
-    : QObject(parent)
+    : AkThread(QThread::InheritPriority, parent)
     , m_socketDescriptor(0)
     , m_socket(0)
     , m_currentHandler(0)
@@ -63,9 +63,15 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
 {
     m_socketDescriptor = socketDescriptor;
     m_identifier.sprintf("%p", static_cast<void *>(this));
+    setObjectName(m_identifier);
 
     const QSettings settings(Akonadi::StandardDirs::serverConfigFile(), QSettings::IniFormat);
     m_verifyCacheOnRetrieval = settings.value(QStringLiteral("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
+}
+
+void Connection::init()
+{
+    AkThread::init();
 
     QLocalSocket *socket = new QLocalSocket();
 
@@ -93,10 +99,15 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     connect(socket, &QLocalSocket::disconnected,
             this, &Connection::disconnected);
 
-    // don't send before the event loop is active, since waitForBytesWritten() can cause interesting reentrancy issues
-    // TODO should be QueueConnection, but unfortunately that doesn't work (yet), since
-    // "this" belongs to the wrong thread, but that requires a slightly larger refactoring
-    QMetaObject::invokeMethod(this, "slotSendHello", Qt::DirectConnection);
+    slotSendHello();
+}
+
+void Connection::quit()
+{
+    delete m_socket;
+    m_socket = 0;
+
+    AkThread::quit();
 }
 
 void Connection::slotSendHello()
@@ -121,9 +132,6 @@ CollectionReferenceManager *Connection::collectionReferenceManager()
 
 Connection::~Connection()
 {
-    delete m_socket;
-    m_socket = 0;
-
     Tracer::self()->endConnection(m_identifier, QString());
     collectionReferenceManager()->removeSession(m_sessionId);
     NotificationManager::self()->unregisterConnection(this);

@@ -25,6 +25,7 @@
 #include <QtNetwork/QLocalSocket>
 #include <QtCore/QDataStream>
 
+#include "akthread.h"
 #include "entities.h"
 #include "global.h"
 #include "commandcontext.h"
@@ -43,7 +44,7 @@ class CollectionReferenceManager;
 /**
     An Connection represents one connection of a client to the server.
 */
-class Connection : public QObject
+class Connection : public AkThread
 {
     Q_OBJECT
 public:
@@ -91,6 +92,9 @@ protected Q_SLOTS:
 
 protected:
     Connection(QObject *parent = 0); // used for testing
+
+    virtual void init() Q_DECL_OVERRIDE;
+    virtual void quit() Q_DECL_OVERRIDE;
 
     virtual Handler *findHandlerForCommand(Protocol::Command::Type cmd);
 

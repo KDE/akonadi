@@ -84,13 +84,15 @@ void CacheCleanerInhibitor::uninhibit()
 }
 
 CacheCleaner::CacheCleaner(QObject *parent)
-    : CollectionScheduler(parent)
+    : CollectionScheduler(QThread::IdlePriority, parent)
 {
+    setObjectName(QStringLiteral("CacheCleaner"));
     setMinimumInterval(5);
 }
 
 CacheCleaner::~CacheCleaner()
 {
+    quitThread();
 }
 
 int CacheCleaner::collectionScheduleInterval(const Collection &collection)

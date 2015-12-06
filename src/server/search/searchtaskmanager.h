@@ -20,7 +20,8 @@
 #ifndef AKONADI_SEARCHTASKMANAGER_H
 #define AKONADI_SEARCHTASKMANAGER_H
 
-#include <QObject>
+#include "akthread.h"
+
 #include <QMap>
 #include <QVector>
 #include <QSet>
@@ -33,6 +34,7 @@
 namespace Akonadi {
 namespace Server {
 
+class AkonadiServer;
 class Connection;
 class SearchRequest;
 class AgentSearchInstance;
@@ -55,7 +57,7 @@ public:
     QSet<qint64> pendingResults;
 };
 
-class SearchTaskManager : public QObject
+class SearchTaskManager : public AkThread
 {
     Q_OBJECT
 
@@ -89,8 +91,8 @@ private:
     typedef QMap<QString /* resource */, ResourceTask *>  TasksMap;
 
     static SearchTaskManager *sInstance;
-    SearchTaskManager();
-    void stop();
+
+    explicit SearchTaskManager();
     bool mShouldStop;
 
     TasksMap::Iterator cancelRunningTask(TasksMap::Iterator &iter);
@@ -107,7 +109,7 @@ private:
     QMap<QString /* resource */, ResourceTask *> mRunningTasks;
     QVector<ResourceTask *> mPendingResults;
 
-    friend class SearchTaskManagerThread;
+    friend class AkonadiServer;
 };
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(SearchException);

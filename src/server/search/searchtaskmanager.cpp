@@ -38,9 +38,10 @@ using namespace Akonadi::Server;
 SearchTaskManager *SearchTaskManager::sInstance = 0;
 
 SearchTaskManager::SearchTaskManager()
-    : QObject()
+    : AkThread()
     , mShouldStop(false)
 {
+    setObjectName(QStringLiteral("SearchTaskManager"));
     sInstance = this;
 
     QTimer::singleShot(0, this, &SearchTaskManager::searchLoop);
@@ -48,6 +49,13 @@ SearchTaskManager::SearchTaskManager()
 
 SearchTaskManager::~SearchTaskManager()
 {
+    QMutexLocker locker(&mLock);
+    mShouldStop = true;
+    mWait.wakeAll();
+    locker.unlock();
+
+    quitThread();
+
     mInstancesLock.lock();
     qDeleteAll(mInstances);
     mInstancesLock.unlock();
@@ -57,13 +65,6 @@ SearchTaskManager *SearchTaskManager::instance()
 {
     Q_ASSERT(sInstance);
     return sInstance;
-}
-
-void SearchTaskManager::stop()
-{
-    QMutexLocker locker(&mLock);
-    mShouldStop = true;
-    mWait.wakeAll();
 }
 
 void SearchTaskManager::registerInstance(const QString &id)

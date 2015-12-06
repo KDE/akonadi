@@ -108,19 +108,22 @@ private:
 
 using namespace Akonadi::Server;
 
-CollectionScheduler::CollectionScheduler(QObject *parent)
-    : QObject(parent)
+CollectionScheduler::CollectionScheduler(QThread::Priority priority, QObject *parent)
+    : AkThread(priority, parent)
     , mMinInterval(5)
+    , mScheduler(Q_NULLPTR)
 {
-    // make sure we are created from the main thread, ie. before all other threads start to potentially use us
-    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
-
-    QMetaObject::invokeMethod(this, "initScheduler", Qt::QueuedConnection);
 }
 
 CollectionScheduler::~CollectionScheduler()
 {
+}
+
+void CollectionScheduler::quit()
+{
     delete mScheduler;
+
+    AkThread::quit();
 }
 
 void CollectionScheduler::inhibit(bool inhibit)
@@ -264,8 +267,10 @@ void CollectionScheduler::scheduleCollection(Collection collection, bool shouldS
     }
 }
 
-void CollectionScheduler::initScheduler()
+void CollectionScheduler::init()
 {
+    AkThread::init();
+
     mScheduler = new PauseableTimer();
     mScheduler->setSingleShot(true);
     connect(mScheduler, &QTimer::timeout,

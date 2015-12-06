@@ -57,23 +57,98 @@ Q_DECLARE_METATYPE(Collection)
 Q_DECLARE_METATYPE(QSet<qint64>)
 Q_DECLARE_METATYPE(QSemaphore *)
 
-SearchManagerThread::SearchManagerThread(const QStringList &searchEngines, QObject *parent)
-    : QThread(parent)
-    , mSearchEngines(searchEngines)
+SearchManager::SearchManager(const QStringList &searchEngines, QObject *parent)
+    : AkThread(QThread::InheritPriority, parent)
+    , mEngineNames(searchEngines)
 {
-    Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
+    setObjectName(QStringLiteral("SearchManager"));
 
-    // We load search plugins (as in QLibrary::load()) in the main thread so that
-    // static initialization happens in the QApplication thread
-    loadSearchPlugins();
+    qRegisterMetaType<QSet<qint64>>();
+    qRegisterMetaType<Collection>();
+    qRegisterMetaType<QSemaphore *>();
+
+    Q_ASSERT(sInstance == 0);
+    sInstance = this;
 }
 
-SearchManagerThread::~SearchManagerThread()
+void SearchManager::init()
 {
-    qDeleteAll(mPluginLoaders);
+    AkThread::init();
+
+    mEngines.reserve(mEngineNames.size());
+    Q_FOREACH (const QString &engineName, mEngineNames) {
+        if (engineName == QLatin1String("Agent")) {
+            mEngines.append(new AgentSearchEngine);
+        } else {
+            akError() << "Unknown search engine type: " << engineName;
+        }
+    }
+
+    initSearchPlugins();
+
+    new SearchManagerAdaptor(this);
+    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    conn.registerObject(QStringLiteral("/SearchManager"), this,
+                        QDBusConnection::ExportAdaptors);
+
+    // The timer will tick 15 seconds after last change notification. If a new notification
+    // is delivered in the meantime, the timer is reset
+    mSearchUpdateTimer = new QTimer(this);
+    mSearchUpdateTimer->setInterval(15 * 1000);
+    mSearchUpdateTimer->setSingleShot(true);
+    connect(mSearchUpdateTimer, &QTimer::timeout,
+            this, &SearchManager::searchUpdateTimeout);
 }
 
-void SearchManagerThread::loadSearchPlugins()
+void SearchManager::quit()
+{
+    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    conn.unregisterObject(QStringLiteral("/SearchManager"), QDBusConnection::UnregisterTree);
+    conn.disconnectFromBus(conn.name());
+
+    // Make sure all childrens are deleted within context of this thread
+    qDeleteAll(children());
+
+    qDeleteAll(mEngines);
+    qDeleteAll(mPlugins);
+    Q_FOREACH (QPluginLoader *loader, mPluginLoaders) {
+        loader->unload();
+        delete loader;
+    }
+
+    AkThread::quit();
+}
+
+
+SearchManager::~SearchManager()
+{
+    quitThread();
+
+    sInstance = 0;
+}
+
+SearchManager *SearchManager::instance()
+{
+    Q_ASSERT(sInstance);
+    return sInstance;
+}
+
+void SearchManager::registerInstance(const QString &id)
+{
+    SearchTaskManager::instance()->registerInstance(id);
+}
+
+void SearchManager::unregisterInstance(const QString &id)
+{
+    SearchTaskManager::instance()->unregisterInstance(id);
+}
+
+QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
+{
+    return mPlugins;
+}
+
+void SearchManager::loadSearchPlugins()
 {
     QStringList loadedPlugins;
     const QString pluginOverride = QString::fromLatin1(qgetenv("AKONADI_OVERRIDE_SEARCHPLUGIN"));
@@ -124,87 +199,9 @@ void SearchManagerThread::loadSearchPlugins()
     }
 }
 
-
-void SearchManagerThread::run()
+void SearchManager::initSearchPlugins()
 {
-    SearchManager *manager = new SearchManager();
-    manager->init(mSearchEngines, mPluginLoaders);
-    exec();
-    delete manager;
-}
-
-SearchManager::SearchManager(QObject *parent)
-    : QObject(parent)
-{
-    qRegisterMetaType< QSet<qint64> >();
-    qRegisterMetaType<Collection>();
-    qRegisterMetaType<QSemaphore *>();
-
-    Q_ASSERT(sInstance == 0);
-    sInstance = this;
-
-    DataStore::self();
-}
-
-void SearchManager::init(const QStringList &searchEngines, const QList<QPluginLoader*> &loaders)
-{
-    mEngines.reserve(searchEngines.size());
-    Q_FOREACH (const QString &engineName, searchEngines) {
-        if (engineName == QLatin1String("Agent")) {
-            mEngines.append(new AgentSearchEngine);
-        } else {
-            akError() << "Unknown search engine type: " << engineName;
-        }
-    }
-
-    initSearchPlugins(loaders);
-
-    new SearchManagerAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(
-        QStringLiteral("/SearchManager"),
-        this,
-        QDBusConnection::ExportAdaptors);
-
-    // The timer will tick 15 seconds after last change notification. If a new notification
-    // is delivered in the meantime, the timer is reset
-    mSearchUpdateTimer = new QTimer(this);
-    mSearchUpdateTimer->setInterval(15 * 1000);
-    mSearchUpdateTimer->setSingleShot(true);
-    connect(mSearchUpdateTimer, &QTimer::timeout,
-            this, &SearchManager::searchUpdateTimeout);
-}
-
-SearchManager::~SearchManager()
-{
-    qDeleteAll(mEngines);
-    DataStore::self()->close();
-    sInstance = 0;
-}
-
-SearchManager *SearchManager::instance()
-{
-    Q_ASSERT(sInstance);
-    return sInstance;
-}
-
-void SearchManager::registerInstance(const QString &id)
-{
-    SearchTaskManager::instance()->registerInstance(id);
-}
-
-void SearchManager::unregisterInstance(const QString &id)
-{
-    SearchTaskManager::instance()->unregisterInstance(id);
-}
-
-QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
-{
-    return mPlugins;
-}
-
-void SearchManager::initSearchPlugins(const QList<QPluginLoader*> &loaders)
-{
-    for (QPluginLoader *loader : loaders) {
+    for (QPluginLoader *loader : mPluginLoaders) {
         if (!loader->load()) {
             akError() << "Failed to load search plugin" << loader->fileName() << ":" << loader->errorString();
             continue;

@@ -39,9 +39,9 @@ akonadi_generate_schema(${AKONADI_DB_SCHEME} AkonadiSchema akonadischema)
 
 set(libakonadiserver_SRCS
     akonadi.cpp
+    akthread.cpp
     commandcontext.cpp
     connection.cpp
-    connectionthread.cpp
     collectionscheduler.cpp
     dbusconnectionpool.cpp
     handler.cpp
@@ -82,7 +82,6 @@ set(libakonadiserver_SRCS
     search/agentsearchengine.cpp
     search/agentsearchinstance.cpp
     search/searchtaskmanager.cpp
-    search/searchtaskmanagerthread.cpp
     search/searchrequest.cpp
     search/searchmanager.cpp
 
@@ -106,7 +105,6 @@ set(libakonadiserver_SRCS
     storage/itemqueryhelper.cpp
     storage/itemretriever.cpp
     storage/itemretrievalmanager.cpp
-    storage/itemretrievalthread.cpp
     storage/itemretrievaljob.cpp
     storage/notificationcollector.cpp
     storage/parthelper.cpp

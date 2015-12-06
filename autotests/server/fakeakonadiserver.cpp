@@ -271,14 +271,9 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
 
 void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
 {
-    QThread *thread = new QThread();
-    FakeConnection *connection = new FakeConnection(socketDescriptor, thread);
-    thread->start();
-
-    connect(connection, &Connection::disconnected, thread, &QThread::quit);
-    connect(thread, &QThread::finished, thread, &QObject::deleteLater);
-    connect(thread, &QThread::finished, connection, &QObject::deleteLater);
-
+    FakeConnection *connection = new FakeConnection(socketDescriptor);
+    connect(connection, &FakeConnection::disconnected,
+            connection, &QObject::deleteLater);
     mNotificationSpy = new QSignalSpy(connection->notificationCollector(),
                                       SIGNAL(notify(Akonadi::Protocol::ChangeNotification::List)));
     Q_ASSERT(mNotificationSpy->isValid());

@@ -51,35 +51,40 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-StorageJanitorThread::StorageJanitorThread(QObject *parent)
-    : QThread(parent)
-{
-}
-
-void StorageJanitorThread::run()
-{
-    StorageJanitor *janitor = new StorageJanitor;
-    exec();
-    delete janitor;
-}
-
 StorageJanitor::StorageJanitor(QObject *parent)
-    : QObject(parent)
-    , m_connection(DBusConnectionPool::threadConnection())
+    : AkThread(QThread::IdlePriority, parent)
     , m_lostFoundCollectionId(-1)
 {
-    DataStore::self();
-    m_connection.registerService(DBus::serviceName(DBus::StorageJanitor));
-    m_connection.registerObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
+    setObjectName(QStringLiteral("StorageJanitor"));
 }
 
 StorageJanitor::~StorageJanitor()
 {
-    m_connection.unregisterObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), QDBusConnection::UnregisterTree);
-    m_connection.unregisterService(DBus::serviceName(DBus::StorageJanitor));
-    m_connection.disconnectFromBus(m_connection.name());
+    quitThread();
+}
 
-    DataStore::self()->close();
+void StorageJanitor::init()
+{
+    AkThread::init();
+
+    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    conn.registerService(DBus::serviceName(DBus::StorageJanitor));
+    conn.registerObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), this,
+                        QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
+}
+
+void StorageJanitor::quit()
+{
+    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    conn.unregisterObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), QDBusConnection::UnregisterTree);
+    conn.unregisterService(DBus::serviceName(DBus::StorageJanitor));
+    conn.disconnectFromBus(conn.name());
+
+    // Make sure all childrens are deleted within context of this thread
+    qDeleteAll(children());
+
+    qDebug() << "chainup()";
+    AkThread::quit();
 }
 
 void StorageJanitor::check() // implementation of `akonadictl fsck`

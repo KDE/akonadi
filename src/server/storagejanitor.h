@@ -20,7 +20,7 @@
 #ifndef STORAGEJANITOR_H
 #define STORAGEJANITOR_H
 
-#include <QThread>
+#include "akthread.h"
 
 #include <QtDBus/QDBusConnection>
 
@@ -29,19 +29,10 @@ namespace Server {
 
 class Collection;
 
-class StorageJanitorThread : public QThread
-{
-    Q_OBJECT
-public:
-    explicit StorageJanitorThread(QObject *parent = 0);
-protected:
-    void run();
-};
-
 /**
  * Various database checking/maintenance features.
  */
-class StorageJanitor : public QObject
+class StorageJanitor : public AkThread
 {
     Q_OBJECT
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.Janitor")
@@ -60,6 +51,10 @@ Q_SIGNALS:
     /** Sends informational messages to a possible UI for this. */
     Q_SCRIPTABLE void information(const QString &msg);
     Q_SCRIPTABLE void done();
+
+protected:
+    void init() Q_DECL_OVERRIDE;
+    void quit() Q_DECL_OVERRIDE;
 
 private:
     void inform(const char *msg);
@@ -128,7 +123,6 @@ private:
     void migrateToLevelledCacheHierarchy();
 
 private:
-    QDBusConnection m_connection;
     qint64 m_lostFoundCollectionId;
 };
 

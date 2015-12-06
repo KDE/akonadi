@@ -29,12 +29,14 @@ static const int MINIMUM_AUTOSYNC_INTERVAL = 5; // minutes
 static const int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
 
 IntervalCheck::IntervalCheck(QObject *parent)
-    : CollectionScheduler(parent)
+    : CollectionScheduler(QThread::IdlePriority, parent)
 {
+    setObjectName(QStringLiteral("IntervalCheck"));
 }
 
 IntervalCheck::~ IntervalCheck()
 {
+    quitThread();
 }
 
 void IntervalCheck::requestCollectionSync(const Collection &collection)
