@@ -43,6 +43,7 @@ ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
     , mSessionId(sessionId)
 {
     qRegisterMetaType<Protocol::Command>();
+    qRegisterMetaType<QAbstractSocket::SocketState>();
 
     QThread *thread = new QThread();
     moveToThread(thread);
@@ -69,6 +70,7 @@ ConnectionThread::~ConnectionThread()
         // Make sure to wait until it's done, otherwise it can crash when the pthread callback is called
         thread()->wait();
     }
+    delete mLogFile;
     delete thread();
 }
 
@@ -81,7 +83,6 @@ void ConnectionThread::doThreadQuit()
         delete mSocket;
     }
     thread()->quit();
-    delete mLogFile;
 }
 
 void ConnectionThread::reconnect()
