@@ -110,8 +110,8 @@ using namespace Akonadi::Server;
 
 CollectionScheduler::CollectionScheduler(QThread::Priority priority, QObject *parent)
     : AkThread(priority, parent)
-    , mMinInterval(5)
     , mScheduler(Q_NULLPTR)
+    , mMinInterval(5)
 {
 }
 
