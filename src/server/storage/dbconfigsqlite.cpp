@@ -143,112 +143,114 @@ void DbConfigSqlite::setup()
 {
     const QLatin1String connectionName("initConnection");
 
-    QSqlDatabase db = QSqlDatabase::addDatabase(driverName(), connectionName);
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(driverName(), connectionName);
 
-    if (!db.isValid()) {
-        akDebug() << "Invalid database for "
-                  << mDatabaseName
-                  << " with driver "
-                  << driverName();
-        return;
-    }
-
-    QFileInfo finfo(mDatabaseName);
-    if (!finfo.dir().exists()) {
-        QDir dir;
-        dir.mkpath(finfo.path());
-    }
-
-#ifdef Q_OS_LINUX
-    QFile dbFile(mDatabaseName);
-    // It is recommended to disable CoW feature when running on Btrfs to improve
-    // database performance. It does not have any effect on non-empty files, so
-    // we check, whether the database has not yet been initialized.
-    if (dbFile.size() == 0) {
-        if (Utils::getDirectoryFileSystem(mDatabaseName) == QLatin1String("btrfs")) {
-            Utils::disableCoW(mDatabaseName);
+        if (!db.isValid()) {
+            akDebug() << "Invalid database for "
+                    << mDatabaseName
+                    << " with driver "
+                    << driverName();
+            return;
         }
-    }
-#endif
 
-    db.setDatabaseName(mDatabaseName);
-    if (!db.open()) {
-        akDebug() << "Could not open sqlite database "
-                  << mDatabaseName
-                  << " with driver "
-                  << driverName()
-                  << " for initialization";
+        QFileInfo finfo(mDatabaseName);
+        if (!finfo.dir().exists()) {
+            QDir dir;
+            dir.mkpath(finfo.path());
+        }
+
+    #ifdef Q_OS_LINUX
+        QFile dbFile(mDatabaseName);
+        // It is recommended to disable CoW feature when running on Btrfs to improve
+        // database performance. It does not have any effect on non-empty files, so
+        // we check, whether the database has not yet been initialized.
+        if (dbFile.size() == 0) {
+            if (Utils::getDirectoryFileSystem(mDatabaseName) == QLatin1String("btrfs")) {
+                Utils::disableCoW(mDatabaseName);
+            }
+        }
+    #endif
+
+        db.setDatabaseName(mDatabaseName);
+        if (!db.open()) {
+            akDebug() << "Could not open sqlite database "
+                    << mDatabaseName
+                    << " with driver "
+                    << driverName()
+                    << " for initialization";
+            db.close();
+            return;
+        }
+
+        apply(db);
+
+        QSqlQuery query(db);
+        if (!query.exec(QStringLiteral("SELECT sqlite_version()"))) {
+            akDebug() << "Could not query sqlite version";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        if (!query.next()) {   // should never occur
+            akDebug() << "Could not query sqlite version";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        const QString sqliteVersion = query.value(0).toString();
+        akDebug() << "sqlite version is " << sqliteVersion;
+
+        const QStringList list = sqliteVersion.split(QLatin1Char('.'));
+        const int sqliteVersionMajor = list[0].toInt();
+        const int sqliteVersionMinor = list[1].toInt();
+
+        // set synchronous mode to NORMAL; see http://www.sqlite.org/pragma.html#pragma_synchronous
+        if (!query.exec(QStringLiteral("PRAGMA synchronous = 1"))) {
+            akDebug() << "Could not set sqlite synchronous mode to NORMAL";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        if (sqliteVersionMajor < 3 && sqliteVersionMinor < 7) {
+            // wal mode is only supported with >= sqlite 3.7.0
+            db.close();
+            return;
+        }
+
+        // set write-ahead-log mode; see http://www.sqlite.org/wal.html
+        if (!query.exec(QStringLiteral("PRAGMA journal_mode=wal"))) {
+            akDebug() << "Could not set sqlite write-ahead-log journal mode";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        if (!query.next()) {   // should never occur
+            akDebug() << "Could not query sqlite journal mode";
+            akDebug() << "Database: " << mDatabaseName;
+            akDebug() << "Query error: " << query.lastError().text();
+            akDebug() << "Database error: " << db.lastError().text();
+            db.close();
+            return;
+        }
+
+        const QString journalMode = query.value(0).toString();
+        akDebug() << "sqlite journal mode is " << journalMode;
+
         db.close();
-        return;
     }
-
-    apply(db);
-
-    QSqlQuery query(db);
-    if (!query.exec(QStringLiteral("SELECT sqlite_version()"))) {
-        akDebug() << "Could not query sqlite version";
-        akDebug() << "Database: " << mDatabaseName;
-        akDebug() << "Query error: " << query.lastError().text();
-        akDebug() << "Database error: " << db.lastError().text();
-        db.close();
-        return;
-    }
-
-    if (!query.next()) {   // should never occur
-        akDebug() << "Could not query sqlite version";
-        akDebug() << "Database: " << mDatabaseName;
-        akDebug() << "Query error: " << query.lastError().text();
-        akDebug() << "Database error: " << db.lastError().text();
-        db.close();
-        return;
-    }
-
-    const QString sqliteVersion = query.value(0).toString();
-    akDebug() << "sqlite version is " << sqliteVersion;
-
-    const QStringList list = sqliteVersion.split(QLatin1Char('.'));
-    const int sqliteVersionMajor = list[0].toInt();
-    const int sqliteVersionMinor = list[1].toInt();
-
-    // set synchronous mode to NORMAL; see http://www.sqlite.org/pragma.html#pragma_synchronous
-    if (!query.exec(QStringLiteral("PRAGMA synchronous = 1"))) {
-        akDebug() << "Could not set sqlite synchronous mode to NORMAL";
-        akDebug() << "Database: " << mDatabaseName;
-        akDebug() << "Query error: " << query.lastError().text();
-        akDebug() << "Database error: " << db.lastError().text();
-        db.close();
-        return;
-    }
-
-    if (sqliteVersionMajor < 3 && sqliteVersionMinor < 7) {
-        // wal mode is only supported with >= sqlite 3.7.0
-        db.close();
-        return;
-    }
-
-    // set write-ahead-log mode; see http://www.sqlite.org/wal.html
-    if (!query.exec(QStringLiteral("PRAGMA journal_mode=wal"))) {
-        akDebug() << "Could not set sqlite write-ahead-log journal mode";
-        akDebug() << "Database: " << mDatabaseName;
-        akDebug() << "Query error: " << query.lastError().text();
-        akDebug() << "Database error: " << db.lastError().text();
-        db.close();
-        return;
-    }
-
-    if (!query.next()) {   // should never occur
-        akDebug() << "Could not query sqlite journal mode";
-        akDebug() << "Database: " << mDatabaseName;
-        akDebug() << "Query error: " << query.lastError().text();
-        akDebug() << "Database error: " << db.lastError().text();
-        db.close();
-        return;
-    }
-
-    const QString journalMode = query.value(0).toString();
-    akDebug() << "sqlite journal mode is " << journalMode;
-
-    db.close();
 
     QSqlDatabase::removeDatabase(connectionName);
 }

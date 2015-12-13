@@ -183,17 +183,20 @@ bool FakeAkonadiServer::init()
     }
 
     const QLatin1String initCon("initConnection");
-    QSqlDatabase db = QSqlDatabase::addDatabase(DbConfig::configuredDatabase()->driverName(), initCon);
-    DbConfig::configuredDatabase()->apply(db);
-    db.setDatabaseName(DbConfig::configuredDatabase()->databaseName());
-    if (!db.isDriverAvailable(DbConfig::configuredDatabase()->driverName())) {
-        throw FakeAkonadiServerException(QString::fromLatin1("SQL driver %s not available").arg(db.driverName()));
-    }
-    if (!db.isValid()) {
-        throw FakeAkonadiServerException("Got invalid database");
-    }
-    if (db.open()) {
-        qWarning() << "Database" << dbConfig->configuredDatabase()->databaseName() << "already exists, the test is not running in a clean environment!";
+    {
+        QSqlDatabase db = QSqlDatabase::addDatabase(DbConfig::configuredDatabase()->driverName(), initCon);
+        DbConfig::configuredDatabase()->apply(db);
+        db.setDatabaseName(DbConfig::configuredDatabase()->databaseName());
+        if (!db.isDriverAvailable(DbConfig::configuredDatabase()->driverName())) {
+            throw FakeAkonadiServerException(QString::fromLatin1("SQL driver %s not available").arg(db.driverName()));
+        }
+        if (!db.isValid()) {
+            throw FakeAkonadiServerException("Got invalid database");
+        }
+        if (db.open()) {
+            qWarning() << "Database" << dbConfig->configuredDatabase()->databaseName() << "already exists, the test is not running in a clean environment!";
+        }
+        db.close();
     }
 
     QSqlDatabase::removeDatabase(initCon);
