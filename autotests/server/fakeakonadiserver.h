@@ -93,8 +93,6 @@ public:
     /* Reimpl */
     bool quit();
 
-    FakeDataStore *dataStore() const;
-
     static QString basePath();
     static QString socketFile();
     static QString instanceName();

@@ -46,6 +46,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+Q_DECLARE_METATYPE(Akonadi::Server::NotificationCollector*)
 
 TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
                                   const Protocol::Command &response)
@@ -274,7 +275,13 @@ void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
     FakeConnection *connection = new FakeConnection(socketDescriptor);
     connect(connection, &FakeConnection::disconnected,
             connection, &QObject::deleteLater);
-    mNotificationSpy = new QSignalSpy(connection->notificationCollector(),
+    NotificationCollector *ntfCollector = Q_NULLPTR;
+    // Connection is it's own thread, so we have to make sure we get collector
+    // from DataStore of the Connection's thread, not ours
+    QMetaObject::invokeMethod(connection, "notificationCollector", Qt::BlockingQueuedConnection,
+                              Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, ntfCollector));
+    Q_ASSERT(ntfCollector);
+    mNotificationSpy = new QSignalSpy(ntfCollector,
                                       SIGNAL(notify(Akonadi::Protocol::ChangeNotification::List)));
     Q_ASSERT(mNotificationSpy->isValid());
 }
@@ -297,13 +304,6 @@ void FakeAkonadiServer::runTest()
     mServerLoop = 0;
 
     close();
-}
-
-FakeDataStore *FakeAkonadiServer::dataStore() const
-{
-    Q_ASSERT_X(mDataStore, "FakeAkonadiServer::dataStore()",
-               "You have to call FakeAkonadiServer::start() first");
-    return mDataStore;
 }
 
 QSignalSpy *FakeAkonadiServer::notificationSpy() const

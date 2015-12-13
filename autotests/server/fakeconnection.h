@@ -37,7 +37,9 @@ public:
     virtual ~FakeConnection();
 
     DataStore *storageBackend();
-    NotificationCollector *notificationCollector();
+
+public Q_SLOTS:
+    Akonadi::Server::NotificationCollector *notificationCollector();
 
 };
 
