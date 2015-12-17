@@ -56,6 +56,7 @@ Connection::Connection(QObject *parent)
     , m_isNotificationBus(false)
     , m_backend(0)
     , m_verifyCacheOnRetrieval(false)
+    , m_idleTimer(Q_NULLPTR)
     , m_totalTime( 0 )
     , m_reportTime( false )
 {
@@ -101,7 +102,9 @@ void Connection::init()
             this, &Connection::slotNewData);
     connect(socket, &QLocalSocket::disconnected,
             this, &Connection::disconnected);
-    connect(&m_idleTimer, &QTimer::timeout,
+
+    m_idleTimer = new QTimer(this);
+    connect(m_idleTimer, &QTimer::timeout,
             this, &Connection::slotConnectionIdle);
 
     slotSendHello();
@@ -145,7 +148,7 @@ Connection::~Connection()
         reportTime();
     }
 
-    m_idleTimer.stop();
+    m_idleTimer->stop();
 }
 
 void Connection::slotConnectionIdle()
@@ -171,7 +174,7 @@ void Connection::slotNewData()
         return;
     }
 
-    m_idleTimer.stop();
+    m_idleTimer->stop();
 
     // will only open() a previously idle backend.
     // Otherwise, a new backend could lazily be constructed by later calls.
@@ -254,7 +257,7 @@ void Connection::slotNewData()
     }
 
     // reset, arm the timer
-    m_idleTimer.start(IDLE_TIMER_TIMEOUT);
+    m_idleTimer->start(IDLE_TIMER_TIMEOUT);
 }
 
 CommandContext *Connection::context() const

@@ -112,7 +112,7 @@ protected:
     QByteArray m_sessionId;
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
-    QTimer m_idleTimer;
+    QTimer *m_idleTimer;
 
     QTime m_time;
     qint64 m_totalTime;
