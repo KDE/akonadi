@@ -118,6 +118,8 @@ FakeAkonadiServer::FakeAkonadiServer()
 FakeAkonadiServer::~FakeAkonadiServer()
 {
     delete mClient;
+    delete mConnection;
+    delete mNotificationSpy;
 }
 
 QString FakeAkonadiServer::basePath()
@@ -275,13 +277,11 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
 
 void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
 {
-    FakeConnection *connection = new FakeConnection(socketDescriptor);
-    connect(connection, &FakeConnection::disconnected,
-            connection, &QObject::deleteLater);
+    mConnection = new FakeConnection(socketDescriptor);
     NotificationCollector *ntfCollector = Q_NULLPTR;
     // Connection is it's own thread, so we have to make sure we get collector
     // from DataStore of the Connection's thread, not ours
-    QMetaObject::invokeMethod(connection, "notificationCollector", Qt::BlockingQueuedConnection,
+    QMetaObject::invokeMethod(mConnection, "notificationCollector", Qt::BlockingQueuedConnection,
                               Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, ntfCollector));
     Q_ASSERT(ntfCollector);
     mNotificationSpy = new QSignalSpy(ntfCollector,
