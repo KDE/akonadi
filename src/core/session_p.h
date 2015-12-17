@@ -29,6 +29,7 @@
 
 #include <QtCore/QQueue>
 #include <QtCore/QThreadStorage>
+#include <QtCore/QMetaObject>
 #include <QFile>
 
 class QIODevice;
@@ -125,6 +126,7 @@ public:
     Session *mParent;
     QThread *thread;
     ConnectionThread *connThread;
+    QMetaObject::Connection connThreadCleanUp;
     QByteArray sessionId;
     bool connected;
     qint64 theNextTag;

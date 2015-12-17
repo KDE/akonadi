@@ -301,15 +301,16 @@ SessionPrivate::SessionPrivate(Session *parent)
     // Shutdown the thread before QApplication event loop quits - the
     // thread()->wait() mechanism in ConnectionThread dtor crashes sometimes
     // when called from QApplication destructor
-    QObject::connect(qApp, &QCoreApplication::aboutToQuit,
-                     [this]() {
-                        delete connThread;
-                        connThread = Q_NULLPTR;
-                     });
+    connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit,
+                                         [this]() {
+                                             delete connThread;
+                                             connThread = Q_NULLPTR;
+                                         });
 }
 
 SessionPrivate::~SessionPrivate()
 {
+    QObject::disconnect(connThreadCleanUp);
     delete connThread;
 }
 
