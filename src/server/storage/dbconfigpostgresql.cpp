@@ -39,8 +39,8 @@
 using namespace Akonadi::Server;
 
 DbConfigPostgresql::DbConfigPostgresql()
-    : mInternalServer(true)
-    , mHostPort(0)
+    : mHostPort(0)
+    , mInternalServer(true)
 {
 }
 
