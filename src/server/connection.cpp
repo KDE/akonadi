@@ -112,8 +112,15 @@ void Connection::init()
 
 void Connection::quit()
 {
+    Tracer::self()->endConnection(m_identifier, QString());
+    collectionReferenceManager()->removeSession(m_sessionId);
+    NotificationManager::self()->unregisterConnection(this);
+
     delete m_socket;
     m_socket = 0;
+
+    m_idleTimer->stop();
+    delete m_idleTimer;
 
     AkThread::quit();
 }
@@ -140,15 +147,11 @@ CollectionReferenceManager *Connection::collectionReferenceManager()
 
 Connection::~Connection()
 {
-    Tracer::self()->endConnection(m_identifier, QString());
-    collectionReferenceManager()->removeSession(m_sessionId);
-    NotificationManager::self()->unregisterConnection(this);
+    quitThread();
 
     if (m_reportTime) {
         reportTime();
     }
-
-    m_idleTimer->stop();
 }
 
 void Connection::slotConnectionIdle()
