@@ -77,6 +77,7 @@ private:
 
     QString mDatabaseName;
     QString mHostName;
+    int     mHostPort;
     QString mUserName;
     QString mPassword;
     QString mConnectionOptions;

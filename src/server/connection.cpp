@@ -41,8 +41,11 @@
 #include <private/datastream_p_p.h>
 #include <private/standarddirs_p.h>
 
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
+
+#define IDLE_TIMER_TIMEOUT 180000 // 3 min
 
 Connection::Connection(QObject *parent)
     : AkThread(QThread::InheritPriority, parent)
@@ -98,6 +101,8 @@ void Connection::init()
             this, &Connection::slotNewData);
     connect(socket, &QLocalSocket::disconnected,
             this, &Connection::disconnected);
+    connect(&m_idleTimer, &QTimer::timeout,
+            this, &Connection::slotConnectionIdle);
 
     slotSendHello();
 }
@@ -139,6 +144,24 @@ Connection::~Connection()
     if (m_reportTime) {
         reportTime();
     }
+
+    m_idleTimer.stop();
+}
+
+void Connection::slotConnectionIdle()
+{
+    Q_ASSERT(m_currentHandler == 0);
+    if (m_backend && m_backend->isOpened() ) {
+        if (m_backend->inTransaction()) {
+            // This is a programming error, the timer should not have fired.
+            // But it is safer to abort and leave the connection open, until
+            // a later operation causes the idle timer to fire (than crash
+            // the akonadi server).
+            akDebug() << "NOT Closing idle db connection; we are in transaction";
+            return;
+        }
+        m_backend->close();
+    }
 }
 
 void Connection::slotNewData()
@@ -146,6 +169,14 @@ void Connection::slotNewData()
     if (m_isNotificationBus) {
         qWarning() << "Connection" << sessionId() << ": received data when in NotificationBus mode!";
         return;
+    }
+
+    m_idleTimer.stop();
+
+    // will only open() a previously idle backend.
+    // Otherwise, a new backend could lazily be constructed by later calls.
+    if (!storageBackend()->isOpened()) {
+        m_backend->open();
     }
 
     QString currentCommand;
@@ -168,7 +199,6 @@ void Connection::slotNewData()
             slotConnectionStateChange(Server::LoggingOut);
             return;
         }
-
         if (cmd.type() == Protocol::Command::Invalid) {
             qDebug() << "Received an invalid command: resetting connection";
             slotConnectionStateChange(Server::LoggingOut);
@@ -222,6 +252,9 @@ void Connection::slotNewData()
         delete m_currentHandler;
         m_currentHandler = 0;
     }
+
+    // reset, arm the timer
+    m_idleTimer.start(IDLE_TIMER_TIMEOUT);
 }
 
 CommandContext *Connection::context() const
