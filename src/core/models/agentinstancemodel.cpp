@@ -117,14 +117,14 @@ QHash<int, QByteArray> AgentInstanceModel::roleNames() const
     return roles;
 }
 
-int AgentInstanceModel::columnCount(const QModelIndex &) const
+int AgentInstanceModel::columnCount(const QModelIndex &index) const
 {
-    return 1;
+    return index.isValid() ? 0 : 1;
 }
 
-int AgentInstanceModel::rowCount(const QModelIndex &) const
+int AgentInstanceModel::rowCount(const QModelIndex &index) const
 {
-    return d->mInstances.count();
+    return index.isValid() ? 0 : d->mInstances.count();
 }
 
 QVariant AgentInstanceModel::data(const QModelIndex &index, int role) const
