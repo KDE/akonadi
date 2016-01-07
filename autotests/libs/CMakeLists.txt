@@ -55,7 +55,7 @@ macro(add_akonadi_test_widgets _source)
 endmacro()
 
 
-include(../KF5AkonadiMacros.cmake)
+include(../../KF5AkonadiMacros.cmake)
 
 # akonadi test fake library
 set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
