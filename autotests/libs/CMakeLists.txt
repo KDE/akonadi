@@ -58,7 +58,7 @@ endmacro()
 include(../../KF5AkonadiMacros.cmake)
 
 # akonadi test fake library
-set(akonaditestfake_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
+set(akonaditestfake_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationSource.xml)
 set_source_files_properties(${akonaditestfake_xml} PROPERTIES INCLUDE "protocol_p.h")
 qt5_add_dbus_interface( akonaditestfake_srcs ${akonaditestfake_xml} notificationsourceinterface )
 
@@ -78,7 +78,7 @@ generate_export_header(akonaditestfake BASE_NAME akonaditestfake)
 
 target_link_libraries(akonaditestfake Qt5::DBus KF5::AkonadiCore Qt5::Test Qt5::Widgets KF5::DBusAddons KF5::AkonadiPrivate)
 
-add_executable( akonadi-firstrun ../src/core/firstrun.cpp firstrunner.cpp )
+add_executable( akonadi-firstrun ../../src/core/firstrun.cpp firstrunner.cpp )
 target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore KF5::DBusAddons KF5::ConfigCore Qt5::Widgets)
 
 # qtestlib unit tests
