@@ -162,6 +162,22 @@ public:
      */
     static ServerManager *self();
 
+    enum OpenMode {
+        ReadOnly,
+        ReadWrite
+    };
+    /**
+     * Returns absolute path to akonadiserverrc file with Akonadi server
+     * configuration.
+     */
+    static QString serverConfigFilePath(OpenMode openMode);
+
+    /**
+     * Returns absolute path to configuration file of an agent identified by
+     * given @p identifier.
+     */
+    static QString agentConfigFilePath(const QString &identifier);
+
 Q_SIGNALS:
     /**
      * Emitted whenever the server becomes fully operational.

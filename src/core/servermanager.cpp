@@ -290,6 +290,7 @@ bool ServerManager::hasInstanceIdentifier()
 {
     return Instance::hasIdentifier();
 }
+
 QString ServerManager::serviceName(ServerManager::ServiceType serviceType)
 {
     switch (serviceType) {
@@ -318,6 +319,23 @@ QString ServerManager::agentServiceName(ServiceAgentType agentType, const QStrin
     }
     Q_ASSERT(!"WTF?");
     return QString();
+}
+
+QString ServerManager::serverConfigFilePath(OpenMode openMode)
+{
+    return XdgBaseDirs::akonadiServerConfigFile(openMode == Akonadi::ServerManager::ReadOnly
+                                                    ? XdgBaseDirs::ReadOnly
+                                                    : XdgBaseDirs::ReadWrite);
+}
+
+QString ServerManager::agentConfigFilePath(const QString &identifier)
+{
+    QString fullRelPath = QStringLiteral("akonadi");
+    if (hasInstanceIdentifier()) {
+        fullRelPath += QStringLiteral("/instance/%1").arg(ServerManager::instanceIdentifier());
+    }
+    fullRelPath += QStringLiteral("agent_config_%1").arg(identifier);
+    return Akonadi::XdgBaseDirs::findResourceFile("config", fullRelPath);
 }
 
 QString ServerManager::addNamespace(const QString &string)
@@ -350,5 +368,7 @@ void Internal::setClientType(ClientType type)
 {
     ServerManagerPrivate::clientType = type;
 }
+
+
 
 #include "moc_servermanager.cpp"
