@@ -20,7 +20,6 @@
 #ifndef AKONADI_RESOURCESELECTJOB_P_H
 #define AKONADI_RESOURCESELECTJOB_P_H
 
-#include "akonadiprivate_export.h"
 #include "akonadicore_export.h"
 #include "job.h"
 

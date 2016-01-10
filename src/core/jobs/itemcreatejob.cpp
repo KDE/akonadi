@@ -28,13 +28,13 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "gidextractor_p.h"
+#include "private/protocol_p.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>
 
 #include <KLocalizedString>
 
-#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 

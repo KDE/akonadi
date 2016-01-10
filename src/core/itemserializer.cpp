@@ -24,7 +24,7 @@
 #include "typepluginloader_p.h"
 #include "protocolhelper_p.h"
 
-#include <akonadi/private/externalpartstorage_p.h>
+#include "private/externalpartstorage_p.h"
 
 // Qt
 #include <QtCore/QBuffer>

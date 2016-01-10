@@ -30,9 +30,9 @@
 #include "tagfetchscope.h"
 #include "persistentsearchattribute.h"
 
-#include <akonadi/private/protocol_p.h>
-#include <akonadi/private/xdgbasedirs_p.h>
-#include <akonadi/private/externalpartstorage_p.h>
+#include "private/protocol_p.h"
+#include "private/xdgbasedirs_p.h"
+#include "private/externalpartstorage_p.h"
 
 #include <QtCore/QDateTime>
 #include <QtCore/QFile>

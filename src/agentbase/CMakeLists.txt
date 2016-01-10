@@ -52,18 +52,18 @@ target_link_libraries(KF5AkonadiAgentBase
 PUBLIC
     Qt5::Widgets # for QApplication
     KF5::AkonadiCore
-    KF5::AkonadiPrivate
     KF5::ConfigCore
     KF5::ConfigGui # for KConfigSkeleton
 PRIVATE
+    KF5::AkonadiPrivate
     KF5::DBusAddons
     KF5::I18n
     Qt5::Network
 )
 
 set_target_properties(KF5AkonadiAgentBase PROPERTIES
-    VERSION ${AKONADILIBRARIES_VERSION_STRING}
-    SOVERSION ${AKONADILIBRARIES_SOVERSION}
+    VERSION ${AKONADI_VERSION_STRING}
+    SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiAgentBase
 )
 

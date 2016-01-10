@@ -21,7 +21,7 @@
 #include "item_p.h"
 
 #include "itemserializer_p.h"
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QUrl>
 #include <qdebug.h>

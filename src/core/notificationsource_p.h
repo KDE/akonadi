@@ -28,7 +28,7 @@
 #include "collection.h"
 #include "item.h"
 
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 namespace Akonadi
 {

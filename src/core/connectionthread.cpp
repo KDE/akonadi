@@ -30,9 +30,9 @@
 #include <QtCore/QElapsedTimer>
 #include <QtWidgets/QApplication>
 
-#include <akonadi/private/xdgbasedirs_p.h>
-#include <akonadi/private/protocol_exception_p.h>
-#include <akonadi/private/standarddirs_p.h>
+#include <private/xdgbasedirs_p.h>
+#include <private/protocol_exception_p.h>
+#include <private/standarddirs_p.h>
 
 using namespace Akonadi;
 

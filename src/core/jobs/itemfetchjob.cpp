@@ -25,8 +25,7 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "session_p.h"
-
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <qdebug.h>
 

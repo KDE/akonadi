@@ -30,10 +30,10 @@
 
 #include <QDebug>
 
-#include <akonadi/private/protocol_p.h>
-#include <akonadi/private/standarddirs_p.h>
-#include <akonadi/private/dbus_p.h>
-#include <akonadi/private/instance_p.h>
+#include "private/protocol_p.h"
+#include "private/standarddirs_p.h"
+#include "private/dbus_p.h"
+#include "private/instance_p.h"
 
 #include <QtDBus>
 #include <QTimer>

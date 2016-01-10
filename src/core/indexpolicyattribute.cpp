@@ -19,7 +19,7 @@
 
 #include "indexpolicyattribute.h"
 
-#include <akonadi/private/imapparser_p.h>
+#include "private/imapparser_p.h"
 
 #include <QtCore/QString>
 

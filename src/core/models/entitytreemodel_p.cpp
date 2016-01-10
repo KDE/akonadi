@@ -44,7 +44,7 @@
 #include "itemmovejob.h"
 #include "linkjob.h"
 #include "session.h"
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <qdebug.h>
 #include <QMessageBox>

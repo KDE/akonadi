@@ -18,7 +18,7 @@
 */
 
 #include "imapparsertest.h"
-#include <akonadi/private/imapparser_p.h>
+#include "private/imapparser_p.h"
 #include <qtest.h>
 
 #include <QtCore/QDebug>

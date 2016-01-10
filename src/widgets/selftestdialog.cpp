@@ -23,9 +23,8 @@
 #include "session_p.h"
 #include "servermanager.h"
 #include "servermanager_p.h"
-
-#include <akonadi/private/standarddirs_p.h>
-#include <akonadi/private/protocol_p.h>
+#include "private/standarddirs_p.h"
+#include "private/protocol_p.h"
 
 #include <QUrl>
 #include <QIcon>

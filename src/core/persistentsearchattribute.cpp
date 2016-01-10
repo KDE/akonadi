@@ -20,7 +20,7 @@
 #include "persistentsearchattribute.h"
 #include "collection.h"
 
-#include <akonadi/private/imapparser_p.h>
+#include "private/imapparser_p.h"
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>

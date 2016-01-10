@@ -23,7 +23,7 @@
 #include "job_p.h"
 #include "KDBusConnectionPool"
 #include <QTime>
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 #include "session.h"
 #include "session_p.h"
 

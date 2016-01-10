@@ -25,7 +25,7 @@
 #include <QtCore/QQueue>
 #include <QtNetwork/QLocalSocket>
 
-#include <akonadi/private/protocol_p.h>
+#include <private/protocol_p.h>
 
 class QAbstractSocket;
 class QFile;

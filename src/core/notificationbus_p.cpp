@@ -21,7 +21,7 @@
 #include "session_p.h"
 #include "connectionthread_p.h"
 
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QTimer>
 

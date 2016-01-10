@@ -34,7 +34,7 @@
 #include "changenotificationdependenciesfactory_p.h"
 #include "notificationsource_p.h"
 
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QtCore/QObject>
 #include <QtCore/QTimer>

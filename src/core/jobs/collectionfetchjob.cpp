@@ -25,7 +25,7 @@
 #include "collectionfetchscope.h"
 #include "collectionutils.h"
 #include "protocolhelper_p.h"
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <qdebug.h>
 #include <KLocalizedString>

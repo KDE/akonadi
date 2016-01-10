@@ -23,8 +23,7 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "searchquery.h"
-
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include <QtCore/QTimer>
 #include <QThreadStorage>

@@ -21,9 +21,9 @@
 #include "job_p.h"
 #include "relation.h"
 #include "protocolhelper_p.h"
+#include "private/protocol_p.h"
 #include <KLocalizedString>
 
-#include <akonadi/private/protocol_p.h>
 
 using namespace Akonadi;
 

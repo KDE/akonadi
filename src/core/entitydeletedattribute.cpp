@@ -19,7 +19,7 @@
 
 #include "entitydeletedattribute.h"
 
-#include <akonadi/private/imapparser_p.h>
+#include "private/imapparser_p.h"
 
 #include <QtCore/QByteArray>
 #include <QtCore/QString>

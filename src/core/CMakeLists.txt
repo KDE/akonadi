@@ -265,16 +265,17 @@ if (NOT "${std_exception_file}" STREQUAL "")
     )
 endif()
 
-set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
+set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/org.freedesktop.Akonadi.NotificationManager.xml)
 qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationmanagerinterface)
 
-set(akonadicore_dbus_xml ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.NotificationSource.xml)
-set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${AKONADI_INCLUDE_DIR}/akonadi/private/protocol_p.h" )
+set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationSource.xml)
+set_source_files_properties(${akonadicore_dbus_xml} PROPERTIES INCLUDE "${Akonadi_SOURCE_DIR}/src/private/protocol_p.h" )
+
 qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificationsourceinterface)
 
-qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.AgentManager.xml)
-qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Tracer.xml)
-qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${AKONADI_DBUS_INTERFACES_DIR}/org.freedesktop.Akonadi.Agent.Control.xml)
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/org.freedesktop.Akonadi.AgentManager.xml)
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/org.freedesktop.Akonadi.Tracer.xml)
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/org.freedesktop.Akonadi.Agent.Control.xml)
 
 set(akonadicore_SRCS
     ${akonadicore_base_SRCS}
@@ -288,10 +289,9 @@ add_library(KF5AkonadiCore ${akonadicore_SRCS})
 generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
 
 add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
-target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore;${Boost_INCLUDE_DIR};${AKONADI_INCLUDE_DIR};${AKONADI_INCLUDE_DIR}/akonadi/private>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core>")
+target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${AKONADI_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Boost_INCLUDE_DIR}>")
 
 kde_target_enable_exceptions(KF5AkonadiCore PUBLIC)
@@ -309,11 +309,12 @@ PRIVATE
     KF5::I18n
     KF5::IconThemes
     KF5::ConfigCore
+    KF5AkonadiPrivate
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES
-    VERSION ${AKONADILIBRARIES_VERSION_STRING}
-    SOVERSION ${AKONADILIBRARIES_SOVERSION}
+    VERSION ${AKONADI_VERSION_STRING}
+    SOVERSION ${AKONADI_SOVERSION}
     EXPORT_NAME AkonadiCore
 )
 

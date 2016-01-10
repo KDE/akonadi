@@ -27,8 +27,7 @@
 #include "collectionfetchscope.h"
 #include "itemfetchscope.h"
 #include "akonaditestfake_export.h"
-
-#include <akonadi/private/protocol_p.h>
+#include "private/protocol_p.h"
 
 template<typename T, typename Cache>
 class FakeEntityCache : public Cache
