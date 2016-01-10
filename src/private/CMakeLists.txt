@@ -15,6 +15,10 @@ set(akonadiprivate_SRCS
 
 add_library(KF5AkonadiPrivate ${akonadiprivate_SRCS})
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
+
+target_include_directories(KF5AkonadiPrivate PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private>")
+
+
 target_link_libraries(KF5AkonadiPrivate
 PUBLIC
     Qt5::Core
