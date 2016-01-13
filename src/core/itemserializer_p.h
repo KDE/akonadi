@@ -24,7 +24,7 @@
 #include <QtCore/QByteArray>
 #include <QtCore/QSet>
 
-#include "akonadiprivate_export.h"
+#include "akonaditests_export.h"
 
 #include "itemserializerplugin.h"
 

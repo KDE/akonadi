@@ -20,7 +20,7 @@
 #ifndef AKONADI_PLUGINLOADER_P_H
 #define AKONADI_PLUGINLOADER_P_H
 
-#include "akonadiprivate_export.h"
+#include "akonaditests_export.h"
 
 #include <QtCore/QHash>
 #include <QtCore/QString>

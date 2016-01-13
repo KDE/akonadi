@@ -29,7 +29,7 @@
 
 #include "entitytreemodel.h"
 
-#include "akonadiprivate_export.h"
+#include "akonaditests_export.h"
 
 #include <QLoggingCategory>
 

@@ -20,7 +20,7 @@
 #ifndef AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
 #define AKONADI_SPECIALCOLLECTIONSHELPERJOBS_P_H
 
-#include "akonadiprivate_export.h"
+#include "akonaditests_export.h"
 #include "collection.h"
 #include "specialcollections.h"
 #include "transactionsequence.h"

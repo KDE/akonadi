@@ -934,7 +934,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     }
 
     QCoreApplication::setApplicationName(ServerManager::addNamespace(identifier));
-    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADILIBRARIES_VERSION_STRING));
+    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADI_VERSION_STRING));
 
     const QFileInfo fi(QString::fromLocal8Bit(argv[0]));
     // strip off full path and possible .exe suffix

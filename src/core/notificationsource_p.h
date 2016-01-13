@@ -22,7 +22,7 @@
 
 #include <QtCore/QObject>
 
-#include "akonadiprivate_export.h"
+#include "akonaditests_export.h"
 
 #include "tag.h"
 #include "collection.h"

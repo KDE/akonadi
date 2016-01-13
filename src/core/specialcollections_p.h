@@ -23,7 +23,7 @@
 #include <QtCore/QHash>
 #include <QtCore/QString>
 
-#include "akonadiprivate_export.h"
+#include "akonaditests_export.h"
 
 #include "collection.h"
 #include "collectionstatistics.h"

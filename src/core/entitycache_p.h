@@ -31,7 +31,7 @@
 #include "tagfetchscope.h"
 #include "session.h"
 
-#include "akonadiprivate_export.h"
+#include "akonaditests_export.h"
 
 #include <qobject.h>
 #include <QQueue>
