@@ -1,5 +1,14 @@
 /**
-\mainpage %Akonadi Server
+\mainpage %Akonadi
+
+Akonadi aims to be an extensible cross-desktop storage service for PIM data
+and meta data providing concurrent read, write, and query access.
+It provides unique desktop-wide object identification and retrieval.
+
+Akonadi framework provides two parts: the server, and client libraries to
+access the data managed by the server.
+
+\page akonadi_server Akonadi Server
 
 <p><b>
 Overview |
@@ -7,9 +16,6 @@ Overview |
 \ref akonadi_server_srclayout
 </b></p>
 
-Akonadi aims to be an extensible cross-desktop storage service for PIM data
-and meta data providing concurrent read, write, and query access.
-It provides unique desktop-wide object identification and retrieval.
 
 This is the API documentation for the Akonadi server.  If you are using Akonadi
 from within KDE, you almost certainly want the
@@ -331,10 +337,801 @@ The different parts are laid out as follows:
         The files contain a class which provides the access to the underlaying database tables.
     </ul>
 </ul>
+
+
+\page libakonadi Akonadi client library
+
+\section libakonadi_intro Introduction
+
+libakonadi is the client access library for using the Akonadi PIM data server.
+All processes accessing Akonadi, including those which communicate with a remote
+server (\ref akonadi_design_agents "agents"), are considered clients.
+
+Functionality provided by libakonadi:
+
+- \ref libakonadi_objects
+- \ref libakonadi_collections
+- \ref libakonadi_pimitems
+- \ref libakonadi_jobs
+- \ref libakonadi_monitor
+- \ref libakonadi_serializer
+- \ref libakonadi_resource
+- \ref libakonadi_integration
+
+Additional information about Akonadi:
+
+- <a href="http://api.kde.org/kdesupport-api/akonadi-apidocs/">Akonadi Server documentation</a>
+- \ref akonadi_history
+- <a href="https://community.kde.org/KDE_PIM/Akonadi">Website</a>
+- <a href="https://techbase.kde.org/index.php?title=Projects/PIM/Akonadi">Wiki</a>
+
+Tools for developers:
+
+- <a href="http://my.cdash.org/index.php?project=kdepimlibs">CDash</a>
+- <a href="https://bugs.kde.org/buglist.cgi?query_format=advanced&product=Akonadi&component=libakonadi&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED">Bugtracker</a>
+
+
+\section libakonadi_objects Akonadi Objects
+
+Akonadi works on two basic object types: collections and items.
+
+Collections are comparable to folders in a file system and are represented by
+the class Akonadi::Collection. Every collection has an associated cache policy
+represented by the class Akonadi::CachePolicy which defines what part of its
+content is cached for how long. All available ways to work with collections are
+listed in the \ref libakonadi_collections "Collections" section.
+
+Akonadi items are comparable to files in a file system and are represented by
+the class Akonadi::Item. Each item represents a single PIM object such as a mail
+or a contact. The actual object it represents is its so-called payload. All
+available ways to work with items are listed in the \ref libakonadi_pimitems "Items"
+section.
+
+Both items and collections are identified by a persistent unique identifier.
+Also, they can contain arbitrary attributes (derived from Akonadi::Attribute) to
+attach general or application specific meta data to them. Functionality common
+to both is provided by their base class Akonadi::Entity.
+
+
+\section libakonadi_collections Collection retrieval and manipulation
+
+A collection is represented by the Akonadi::Collection class.
+
+Classes to retrieve information about collections:
+
+- Akonadi::CollectionFetchJob
+- Akonadi::CollectionStatisticsJob
+
+Classes to manipulate collections:
+
+- Akonadi::CollectionCreateJob
+- Akonadi::CollectionCopyJob
+- Akonadi::CollectionModifyJob
+- Akonadi::CollectionDeleteJob
+
+There is also Akonadi::CollectionModel, which is a self-updating model class which can
+be used in combination with Akonadi::CollectionView. Akonadi::CollectionFilterProxyModel
+can be used to limit a displayed collection tree to collections supporting a certain
+type of PIM items. Akonadi::CollectionPropertiesDialog provides an extensible properties
+dialog for collections. Often needed KAction for collection operations are provided by
+Akonadi::StandardActionManager.
+
+
+\section libakonadi_pimitems PIM item retrieval and manipulation
+
+PIM items are represented by classes derived from Akonadi::Item.
+Items can be retrieved using Akonadi::ItemFetchJob.
+
+The following classes are provided to manipulate PIM items:
+
+- Akonadi::ItemCreateJob
+- Akonadi::ItemCopyJob
+- Akonadi::ItemModifyJob
+- Akonadi::ItemDeleteJob
+
+Akonadi::ItemModel provides a self-updating model class which can be used to display the content
+of a collection. Akonadi::ItemView is the base class for a corresponding view. Often needed KAction
+for item operations are provided by Akonadi::StandardActionManager.
+
+
+\section libakonadi_jobs Low-level access to the Akonadi server
+
+Accessing the Akonadi server is done using job classes derived from Akonadi::Job. The
+communication channel with the server is provided by Akonadi::Session.
+
+To use server-side transactions, the following jobs are provided:
+
+- Akonadi::TransactionBeginJob
+- Akonadi::TransactionCommitJob
+- Akonadi::TransactionRollbackJob
+
+There also is Akonadi::TransactionSequence which can be used to automatically group
+a set of jobs into a single transaction.
+
+
+\section libakonadi_monitor Change notifications
+
+The Akonadi::Monitor class allows you to monitor specific resources,
+collections and PIM items for changes. Akonadi::ChangeRecorder augments this
+by providing a way to record and replay change notifications.
+
+
+\section libakonadi_serializer PIM item serializer
+
+The class Akonadi::ItemSerializer is responsible for converting between the stored (binary) representation
+of a PIM item and the objects used to handle these items provided by the corresponding libraries (kabc, kcal, etc.).
+
+Serializer plugins allow you to add support for new kinds of PIM items to Akonadi.
+Akonadi::ItemSerializerPlugin can be used as a base class for such a plugin.
+
+
+\section libakonadi_resource Agents and Resources
+
+Agents are independent processes that watch the Akonadi store for changes and react to them if necessary.
+Example: The Nepomuk feeder (kdepim/runtime/agents/nepomukfeeder/) is an agent that watches Akonadi for
+new emails, retrieves the new items, and feeds them to Nepomuk for indexing.
+
+The class Akonadi::AgentBase is the common base class for all agents. It provides commonly needed
+functionality such as change monitoring and recording.
+
+Resources are a special kind of agents. They are used as the actual backend for whatever data the resource represents.
+In this situation the akonadi server acts more like a proxy service. It caches data on behalf of its clients
+(client here being the Resource), not permanently storing it. The Akonadi server forwards item retrieval requests to the
+corresponding resource, if the item is not in the cache.
+Example: The imap resource is responsible for storing and fetching emails from an imap server.
+
+Akonadi::ResourceBase is the base class for them. It provides the
+necessary interfaces to the server as well as many convenience functions to make implementing
+a new resource as easy as possible. Note that a collection contains items belonging to a single
+resource, although there are plans in the future for 'virtual' collections which will contain
+the results of a search query spanning multiple resources.
+
+A resource can support multiple mimetypes. There are two places where a resource can specify 
+mimetypes: in its desktop files, and in the content mimetypes field of 
+collections created by it. The ones in the desktop file are used for 
+filtering agent types, e.g. in the resource creation dialogs. The collection 
+content mimetypes specify what you can actually put into a collection, which 
+is not necessarily the same (e.g. the Kolab resource supports contacts and events, but not 
+in the same folder).
+
+
+
+\page libakonadi_integration Integration in your Application
+
+Akonadi::Control provides ways to ensure that the Akonadi server is running, to monitor its availability
+and provide help on server-side errors. A more low-level interface to the Akonadi server is provided
+by Akonadi::ServerManager.
+
+A set of standard actions is provided by Akonadi::StandardActionManager. These provide consistent
+look and feel across applications.
+
+
+This library provides classes for KDE applications to communicate with the Akonadi server. The most high-level interface to Akonadi is the Models and Views provided in this library. Ready to use models are provided for use with views to interact with a tree of collections, a list of items in a collection, or a combined tree of Collections and items.
+
+\subsection collections_and_items Collections and Items
+
+In the Akonadi concept, Items are individual objects of PIM data, e.g. emails, contacts, events, notes etc. The data in an item is stored in a typed payload. For example, if an Akonadi Item holds a contact, the contact is available as a KABC::Addressee:
+
+@code
+  if (item.hasPayload<KABC::Addressee>())
+  {
+    KABC::Addressee addr = item.payload<KABC::Addressee>();
+    // use addr in some way...
+  }
+@endcode
+
+Additionally, an Item must have a mimetype which corresponds to the type of payload it holds.
+
+Collections are simply containers of Items. A Collection has a name and a list of mimetypes that it may contain. A collection may for example contain events if it can contain the mimetype 'text/calendar'. A Collection itself (as opposed to its contents) has a mimetype, which is the same for all Collections. A Collection which can itself contain Collections must be able to contain the Collection mimetype.
+
+@code
+  Collection col;
+  // This collection can contain events and nested collections.
+  col.setContentMimetypes( QStringList() << Collection::mimeType() << "text/calendar" );
+@endcode
+
+This system makes it simple to create PIM applications. For example, to create an application for viewing and editing events, you simply need to tell %Akonadi to retrieve all items matching the mimetype 'text/calendar'.
+
+\subsection convenience_mimetype_accessors Convenience Mimetype Accessors
+
+In order to avoid typos, improve readability, and to encapsulate the correct mimetypes for particular pim items, many of the standard classes have an accessor for the kind of mimetype the can handle. For example, you can use KMime::Message::mimeType() for emails, KABC::Addressee::mimeType() for contacts etc. It makes sense to define a similar static function in your own types.
+
+@code
+  col.setContentMimetypes( QStringList() << Collection::mimeType() << KABC::Addressee::mimeType() << KMime::Message::mimeType() );
+@endcode
+
+
+<h2> Models and Views</h2>
+%Akonadi models and views are a high level way to interact with the %Akonadi server. Most applications will use these classes. See the EntityTreeModel documentation for more information.
+
+Models provide an interface for viewing, deleting and moving Items and Collections. New Items can also be created by dropping data of the appropriate type on a model. Additionally, the models are updated automatically if another application changes the data or inserts or deletes items etc.
+
+%Akonadi provides several models for particular uses, e.g. the MailModel is used for emails and the ContactsModel is used for showing contacts. Additional specific models can be implemented using EntityTreeModel as a base class.
+
+A typical use of these would be to create a model and use proxy models to make the view show different parts of the model. For example, show a collection tree in on one side and show items in a selected collection in another view.
+
+@code
+  mailModel = new MailModel( session, monitor, this);
+
+  collectionTree = new EntityMimeTypeFilterModel(this);
+  collectionTree->setSourceModel(mailModel);
+  // Filter out everything that is not a collection.
+  collectionTree->addMimeTypeInclusionFilter( Collection::mimeType() );
+  collectionTree->setHeaderSet(EntityTreeModel::CollectionTreeHeaders);
+
+  collectionView = new EntityTreeView(this);
+  collectionView->setModel(collectionTree);
+
+  itemList = new EntityMimeTypeFilterModel(this);
+  itemList->setSourceModel(mailModel);
+  // Filter out collections
+  itemList->addMimeTypeExclusionFilter( Collection::mimeType() );
+  itemList->setHeaderSet(EntityTreeModel::ItemListHeaders);
+
+  itemView = new EntityTreeView(this);
+  itemView->setModel(itemList);
+@endcode
+
+\image html dox/mailmodelapp.png "An email application using MailModel"
+
+The content of the model is determined by the configuration of the Monitor passed into it. The examples below show a use of the EntityTreeModel and some proxy models for a simple heirarchical note collection. As the model is generic, the configuration and proxy models will also work with any other mimetype.
+
+@code
+
+// Configure what should be shown in the model:
+Monitor *monitor = new Monitor( this );
+monitor->fetchCollection( true );
+monitor->setItemFetchScope( scope );
+monitor->setCollectionMonitored( Collection::root() );
+monitor->setMimeTypeMonitored( MyEntity::mimeType() );
+
+Session *session = new Session( QByteArray( "MyEmailApp-" ) + QByteArray::number( qrand() ), this );
+monitor->setSession(session);
+
+EntityTreeModel *entityTree = new Akonadi::EntityTreeModel(monitor, this);
+@endcode
+
+\image html dox/entitytreemodel.png "A plain EntityTreeModel in a view"
+
+The EntityTreeModel can be further configured for certain behaviours such as fetching of collections and items.
+
+To create a model of only a collection tree and no items, set that in the model. This is just like CollectionModel:
+
+@code
+entityTree->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
+@endcode
+
+
+\image html dox/entitytreemodel-collections.png "A plain EntityTreeModel which does not fetch items."
+
+Or, create a model of only items and not child collections. This is just like ItemModel:
+
+@code
+entityTree->setRootCollection(myCollection);
+entityTree->setCollectionFetchStrategy(EntityTreeModel::FetchNoCollections);
+@endcode
+
+Or, to create a model which includes items and first level collections:
+
+@code
+entityTree->setCollectionFetchStrategy(EntityTreeModel::FetchFirstLevelCollections);
+@endcode
+
+The items in the model can also be inserted lazily for performance reasons. The Collection tree is always built immediately.
+
+Additionally, a KDescendantsProxyModel may be used to alter how the items in the tree are presented.
+
+@code
+// ... Create an entityTreeModel
+KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(this);
+descProxy->setSourceModel(entityTree);
+view->setModel(descProxy);
+@endcode
+
+\image html dox/descendantentitiesproxymodel.png "A KDescendantsProxyModel wrapping an EntityTreeModel"
+
+KDescendantsProxyModel can also display ancestors of each Entity in the list.
+
+@code
+// ... Create an entityTreeModel
+KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(this);
+descProxy->setSourceModel(entityTree);
+
+// #### This is new
+descProxy->setDisplayAncestorData(true, QString(" / "));
+
+view->setModel(descProxy);
+
+@endcode
+
+\image html dox/descendantentitiesproxymodel-withansecnames.png "A DescendantEntitiesProxyModel with ancestor names."
+
+This proxy can be combined with a filter to for example remove collections.
+
+@code
+// ... Create an entityTreeModel
+DescendantEntitiesProxyModel *descProxy = new DescendantEntitiesProxyModel(this);
+descProxy->setSourceModel(entityTree);
+
+// #### This is new.
+EntityMimeTypeFilterModel *filterModel = new EntityMimeTypeFilterModel(this);
+filterModel->setSourceModel(descProxy);
+filterModel->setExclusionFilter(QStringList() << Collection::mimeType());
+
+view->setModel(filterModel);
+@endcode
+
+\image html dox/descendantentitiesproxymodel-colfilter.png "An EntityMimeTypeFilterModel wrapping a DescendantEntitiesProxyModel wrapping an EntityTreeModel"
+
+It is also possible to show the root item as part of the selectable model:
+
+@code
+
+entityTree->setIncludeRootCollection(true);
+
+@endcode
+
+\image html dox/entitytreemodel-showroot.png "An EntityTreeModel showing Collection::root"
+
+By default the displayed name of the root collection is '[*]', because it doesn't require i18n, and is generic. It can be changed too.
+
+@code
+entityTree->setIncludeRootCollection(true);
+entityTree->setRootCollectionDisplayName(i18nc("Name of top level for all collections in the application", "[All]"))
+@endcode
+
+\image html dox/entitytreemodel-showrootwithname.png "An EntityTreeModel showing Collection::root with an application specific name."
+
+These can of course be combined to create an application which uses one EntityTreeModel along with several proxies and views.
+
+@code
+// ... create an EntityTreeModel.
+EntityMimeTypeFilterModel *collectionTree = new EntityMimeTypeFilterModel(this);
+collectionTree->setSourceModel(entityTree);
+// Filter to include collections only:
+collectionTree->setInclusionFilter(QStringList() << Collection::mimeType());
+EntityTreeView *treeView = new EntityTreeView(this);
+treeView->setModel(collectionTree);
+
+EntityMimeTypeFilterModel *itemList = new EntityMimeTypeFilterModel(this);
+itemList->setSourceModel(entityTree);
+// Filter *out* collections
+itemList->setExclusionFilter(QStringList() << Collection::mimeType());
+EntityTreeView *listView = new EntityTreeView(this);
+listView->setModel(itemList);
+@endcode
+
+
+\image html dox/treeandlistapp.png "A single EntityTreeModel with several views and proxies."
+
+Or to also show items of child collections in the list:
+
+@code
+  // ... Create an entityTreeModel
+  collectionTree = new EntityMimeTypeFilterModel(this);
+  collectionTree->setSourceModel(entityTree);
+
+  // Include only collections in this proxy model.
+  collectionTree->addMimeTypeInclusionFilter( Collection::mimeType() );
+
+  treeview->setModel(collectionTree);
+
+  descendedList = new DescendantEntitiesProxyModel(this);
+  descendedList->setSourceModel(entityTree);
+
+  itemList = new EntityMimeTypeFilterModel(this);
+  itemList->setSourceModel(descendedList);
+
+  // Exclude collections from the list view.
+  itemList->addMimeTypeExclusionFilter( Collection::mimeType() );
+
+  listView = new EntityTreeView(this);
+  listView->setModel(itemList);
+@endcode
+
+\image html dox/treeandlistappwithdesclist.png "Showing descendants of all Collections in the list"
+
+Note that it is important in this case to use the DescendantEntitesProxyModel before the EntityMimeTypeFilterModel. Otherwise, by filtering out the collections first, you would also be filtering out their child items.
+
+A SelectionProxyModel can be used to simplify managing selection in one view through multiple proxy models to a representation in another view. The selectionModel of the initial view is used to create a proxied model which includes only the selected indexes and their children.
+
+@code
+  // ... Create an entityTreeModel
+  collectionTree = new EntityMimeTypeFilterModel(this);
+  collectionTree->setSourceModel(entityTree);
+
+  // Include only collections in this proxy model.
+  collectionTree->addMimeTypeInclusionFilter( Collection::mimeType() );
+
+  treeview->setModel(collectionTree);
+
+  // SelectionProxyModel can handle complex selections:
+  treeview->setSelectionMode(QAbstractItemView::ExtendedSelection);
+
+  SelectionProxyModel *selProxy = new SelectionProxyModel(treeview->selectionModel(), this);
+  selProxy->setSourceModel(entityTree);
+
+  EntityTreeView *selView = new EntityTreeView(splitter);
+  selView->setModel(selProxy);
+@endcode
+
+\image html dox/selectionproxymodelsimpleselection.png "A Selection in one view creating a model for use with another view."
+
+The SelectionProxyModel can handle complex selections.
+
+\image html dox/selectionproxymodelmultipleselection.png "Non-contiguous selection creating a new simple model in a second view."
+
+If an index and one or more of its descendants are selected, only the top-most selected index (including all of its descendants) are included in the proxy model. (Though this is configurable. See below)
+
+\image html dox/selectionproxymodelmultipleselection-withdescendant.png "Selecting an item and its descendant."
+
+SelectionProxyModel allows configuration using the methods setStartWithChildTrees, setOmitDescendants, setIncludeAllSelected. See testapp/proxymodeltestapp to try out the 5 valid configurations.
+
+Obviously, the SelectionProxyModel may be used in a view, or further processed with other proxy models. See the example_contacts application for example which uses a further DescendantEntitiesProxyModel and EntityMimeTypeFilterModel on top of a SelectionProxyModel.
+
+The SelectionProxyModel orders its items in the same top-to-bottom order as they appear in the source model. Note that this order may be different to the order in the selection model if there is a QSortFilterProxyModel between the selection and the source model.
+
+\image html dox/selectionproxymodel-ordered.png "Ordered items in the SelectionProxyModel"
+
+
+<h2>Jobs and Monitors</h2>
+
+The lower level way to interact with Akonadi is to use Jobs and Monitors (This is what models use internally). Jobs are used to make changes to akonadi, and in some cases (e.g., a fetch job) emit a signal with data resulting from the job. A Monitor reports changes made to the data stored in Akonadi (e.g., creating, updating, deleting or moving an item or collection ) via signals.
+
+Typically, an application will configure a monitor to report changes to a particular Collection, mimetype or resource, and then connect to the signals it emits.
+
+Most applications will use some of the low level api for actions unrelated to a model-tree view, such as creating new items and collections.
+
+<h2>Tricky details</h2>
+
+<h3>Change Conflicts</h3>
+It is possible that while an application is editing an item, that item gets updated in akonadi. Akonadi will notify the application that that item has changed via a Monitor signal. It is the responsibility of the application to handle the conflict by for example offering the user a dialog to resolve it. Alternatively, the application could ignore the dataChanged signal for that item, and will get another chance to resolve the conflict when trying to save the result back to akonadi. In that case, the ItemModifyJob will fail and report that the revision number of the item on the server differs from its revision number as reported by the job. Again, it is up to the application to handle this case.
+
+This is something that every application using akonadi will have to handle.
+
+<h3>Using Entity::Id as an identifier</h3>
+
+Items and Collections have a id() member which is a unique identifier used by akonadi. It can be useful to use the id() as an identifier when storing Collections or Items.
+
+However, as an item and a collection can have the same id(), if you need to store both Collections and Items together by a simple identifier, conflicts can occur.
+
+@code
+  QString getRemoteIdById( Entity::Id id )
+  {
+    // Note:
+    // m_items is QHash<Entity::Id, Item>
+    // m_collections is QHash<Entity::Id, Collection>
+    if ( m_items.contains( id ) )
+    {
+      // Oops, we could accidentally match a collection here.
+      return m_items.value( id ).remoteId();
+    } else if ( m_collections.contains( id ) )
+    {
+      return m_collections.value( id ).remoteId();
+    }
+    return QString();
+  }
+@endcode
+
+In this case, it makes more sense to use a normal qint64 as the internal identifier, and use the sign bit to determine if the identifier refers to a Collection or an Item. This is done in the implementation of EntityTreeModel to tell Collections and Items apart.
+
+@code
+  QString getRemoteIdByInternalIdentifier( qint64 internalIdentifier )
+  {
+    // Note:
+    // m_items is QHash<Entity::Id, Item>
+    // m_collections is QHash<Entity::Id, Collection>
+
+    // If the id is negative, it refers to an Item
+    // Otherwise it refers to a Collection.
+
+    if ( internalIdentifier < 0 )
+    {
+      // Reverse the sign of the id before using it.
+      return m_items.value( internalIdentifier * -1 ).remoteId();
+    } else
+    {
+      return m_collections.value( internalIdentifier ).remoteId();
+    }
+  }
+@endcode
+
+<h3>Unordered Lists</h3>
+Collection and Item both provide a ::List to represent groups of objects. However the objects in the list are usually not ordered in any particular way, even though the API provides methods to work with an ordered list. It makes more sense to think of it as a Set instead of a list in most cases.
+
+For example, when using an ItemFetchJob to fetch the items in a collection, the items could be in any order when returned from the job. The order that a Monitor emits notices of changes is also indeterminate. By using a Transaction however, it is sometimes possible to retrieve objects in order. Additionally, using s constructor overload in the CollectionFetchJob it is possible to retrieve collections in a particular order.
+
+@code
+  Collection::List getCollections(QList<Collection::Id> idsToGet)
+  {
+    Collection::List getList;
+    foreach ( Collection::Id id, idsToGet ) {
+      getList << Collection(id);
+    }
+    CollectionFetchJob *job = CollectionFetchJob(getList);
+    if (job->exec())
+    {
+       // job->collections() is in the same order as the ids in idsToGet.
+    }
+  }
+
+@endcode
+
+<h2>Resources</h2>
+The KDEPIM module includes resources for handling many types of PIM data, such as imap email, vcard files and vcard directories, ical event files etc. These cover many of the sources for your PIM data, but in the case that you need to use data from another source (for example a website providing a contacts storage service and an api), you simply have to write a new resource.
+
+http://techbase.kde.org/Development/Tutorials/Akonadi/Resources
+
+<h2>Serializers</h2>
+Serializers provide the functionality of converting raw data, for example from a file, to a strongly typed object of PIM data. For example, the addressee serializer reads data from a file and creates a KABC::Addressee object.
+
+New serializers can also easily be written if the data you are dealing with is not one of the standard PIM data types.
+
+<h1>Implementation details</h1>
+
+<h3>Updating Akonadi Models</h3>
+
+@note The details here are only relevant if you are writing a new view using EntityTreeModel, or writing a new model.
+
+Because communication with akonadi happens asynchronously, and the models only hold a cached copy of the data on the akonadi server, some typical behaviours of models are not followed by Akonadi models.
+
+For example, when setting data on a model via a view, most models syncronously update their internal store and notify akonadi to update its view of the data by returning <tt>true</tt>.
+
+@dot
+digraph utmg {
+    rankdir = LR;
+    { node [label="",style=invis, height=0, width=0 ];
+      V_Set_Data; V_Result; V_Data_Changed;
+      M_Set_Data; M_Result;
+    }
+    { node [shape=box, fillcolor=lightyellow, style=filled,fontsize=26];
+      View [label=":View"]; Model [label=":Model"];
+    }
+    { node [style=invis];
+      View_EOL; Model_EOL;
+    }
+    {
+      V_Set_Data -> M_Set_Data [label="Set Data"];
+      M_Result -> V_Result [label="Success",arrowhead="vee", style="dashed"];
+      V_Result -> V_Data_Changed [label="Update View \n[ Success = True ]"];
+    }
+
+    // Dashed Vertical lines for object lifetimes.
+    edge [style=dashed, arrowhead=none];
+    { rank = same; View -> V_Set_Data -> V_Result -> V_Data_Changed -> View_EOL; }
+    { rank = same; Model -> M_Set_Data -> M_Result -> Model_EOL; }
+
+    // Make sure top nodes are in a straight line.
+    { View -> Model [style=invis]; }
+    // And the bottom nodes.
+    { View_EOL -> Model_EOL [style=invis]; }
+}
+@enddot
+
+Akonadi models only cache data from the akonadi server. To update data on an Akonadi::Entity stored in a model, the model makes a request to the akonadi server to update the model data. At that point the data cached internally in the model is not updated, so <tt>false</tt> is always returned from setData. If the request to update data on the akonadi server is successful, an Akonadi::Monitor notifies the model that the data on that item has changed. The model then updates its internal data store and notifies the view that the data has changed. The details of how the Monitor communicates with akonadi are omitted for clarity.
+
+@dot
+digraph utmg {
+    rankdir = LR;
+    { node [label="",style=invis, height=0, width=0 ];
+      ETV_Set_Data; ETV_Result; ETV_Data_Changed;
+      ETM_Set_Data; ETM_Result; ETM_Changed;
+      M_Dummy_1; M_Changed;
+      AS_Modify;
+    }
+    { node [shape=box, fillcolor=lightyellow, style=filled,fontsize=26];
+      EntityTreeView [label=":View"]; EntityTreeModel [label=":Model"]; Monitor [label=":Monitor"]; Akonadi_Server [label=":Akonadi"];
+    }
+    { node [style=invis];
+      EntityTreeView_EOL; EntityTreeModel_EOL; Monitor_EOL; Akonadi_Server_EOL;
+    }
+    {
+      { rank = same; ETV_Set_Data -> ETM_Set_Data [label="Set Data"]; }
+      { rank = same; ETM_Result -> ETV_Result [label="False",arrowhead="vee", style="dashed"]; }
+      { rank = same; ETM_Result -> M_Dummy_1 [style=invis]; }
+      { rank = same; ETM_Set_Data -> AS_Modify [arrowhead="vee",taillabel="Modify Item", labeldistance=14.0, labelangle=10]; }
+      { rank = same; M_Changed -> ETM_Changed [arrowhead="vee",label="Item Changed"]; }
+      { rank = same; ETM_Changed -> ETV_Data_Changed [arrowhead="vee",label="Update View"]; }
+    }
+
+    // Dashed Vertical lines for object lifetimes.
+    edge [style=dashed, arrowhead=none];
+    { rank = same; EntityTreeView -> ETV_Set_Data -> ETV_Result -> ETV_Data_Changed -> EntityTreeView_EOL; }
+    { rank = same; EntityTreeModel -> ETM_Set_Data -> ETM_Result -> ETM_Changed -> EntityTreeModel_EOL; }
+    { rank = same; Monitor -> M_Dummy_1 -> M_Changed -> Monitor_EOL; }
+    { rank = same; Akonadi_Server -> AS_Modify -> Akonadi_Server_EOL; }
+
+    // Make sure top nodes are in a straight line.
+    { EntityTreeView -> EntityTreeModel -> Monitor -> Akonadi_Server [style=invis]; }
+    // And the bottom nodes.
+    { EntityTreeView_EOL -> EntityTreeModel_EOL -> Monitor_EOL -> Akonadi_Server_EOL [style=invis]; }
+}
+@enddot
+
+Similarly, in drag and drop operations, most models would update an internal data store and return <tt>true</tt> from dropMimeData if the drop is successful.
+
+@dot
+digraph utmg {
+    rankdir = LR;
+    { node [label="",style=invis, height=0, width=0 ];
+      Left_Phantom; Left_Phantom_DropEvent;
+      V_DropEvent; V_Result; V_Data_Changed; V_Dummy_1;
+      M_DropMimeData; M_Result;
+    }
+    { node [shape=box, fillcolor=lightyellow, style=filled,fontsize=26];
+      View [label=":View"]; Model [label=":Model"];
+    }
+    { node [style=invis];
+       Left_Phantom_EOL;
+       View_EOL; Model_EOL;
+    }
+    {
+      Left_Phantom_DropEvent -> V_DropEvent [label="DropEvent"];
+      V_DropEvent -> M_DropMimeData [label="DropMimeData"];
+      M_Result -> V_Result [label="Success",arrowhead="vee", style="dashed"];
+      V_Result -> V_Data_Changed [label="Update View \n[Success = True]"];
+    }
+
+    // Dashed Vertical lines for object lifetimes.
+    edge [style=dashed, arrowhead=none];
+    { rank = same; View -> V_DropEvent -> V_Result -> V_Dummy_1 -> V_Data_Changed -> View_EOL; }
+    { rank = same; Model -> M_DropMimeData -> M_Result -> Model_EOL; }
+
+    //Phantom line
+    { rank= same; Left_Phantom -> Left_Phantom_DropEvent -> Left_Phantom_EOL [style=invis]; }
+
+    // Make sure top nodes are in a straight line.
+    {  Left_Phantom -> View -> Model [style=invis]; }
+    // And the bottom nodes.
+    {  Left_Phantom_EOL ->  View_EOL -> Model_EOL [style=invis]; }
+}
+
+@enddot
+
+Akonadi models, for the same reason as above, always return false from dropMimeData. At the same time a suitable request is sent to the akonadi server to make the changes resulting from the drop (for example, moving or copying an entity, or adding a new entity to a collection etc). If that request is successful, the Akonadi::Monitor notifies the model that the data is changed and the model updates its internal store and notifies the view that the model data is changed.
+
+@dot
+
+digraph utmg {
+    rankdir = LR;
+    { node [label="",style=invis, height=0, width=0 ];
+      Left_Phantom; Left_Phantom_DropEvent;
+      ETV_DropEvent; ETV_Result; ETV_Data_Changed;
+      ETM_DropMimeData; ETM_Result; ETM_Changed;
+      M_Dummy_1; M_Changed;
+      AS_Modify;
+    }
+    { node [shape=box, fillcolor=lightyellow, style=filled,fontsize=26];
+      EntityTreeView [label=":View"];
+      EntityTreeModel [label=":Model"];
+      Monitor [label=":Monitor"];
+      Akonadi_Server [label=":Akonadi"];
+    }
+    { node [style=invis];
+      Left_Phantom_EOL;
+      EntityTreeView_EOL; EntityTreeModel_EOL; Monitor_EOL; Akonadi_Server_EOL;
+    }
+
+    {
+      { rank = same; Left_Phantom_DropEvent -> ETV_DropEvent [label="DropEvent"]; }
+      { rank = same; ETV_DropEvent -> ETM_DropMimeData [label="Drop MimeData"]; }
+      { rank = same; ETM_Result -> ETV_Result [label="False",arrowhead="vee", style="dashed"]; }
+      { rank = same; ETM_Result -> M_Dummy_1 [style=invis]; }
+      { rank = same; ETM_DropMimeData -> AS_Modify [arrowhead="vee",taillabel="Action", labeldistance=14.0, labelangle=10]; }
+      { rank = same; M_Changed -> ETM_Changed [arrowhead="vee",label="Item Changed"]; }
+      { rank = same; ETM_Changed -> ETV_Data_Changed [arrowhead="vee",label="Update View"]; }
+    }
+
+    // Dashed Vertical lines for object lifetimes.
+    edge [style=dashed, arrowhead=none];
+    { rank = same; EntityTreeView -> ETV_DropEvent -> ETV_Result -> ETV_Data_Changed -> EntityTreeView_EOL; }
+    { rank = same; EntityTreeModel -> ETM_DropMimeData -> ETM_Result -> ETM_Changed -> EntityTreeModel_EOL; }
+    { rank = same; Monitor -> M_Dummy_1 -> M_Changed -> Monitor_EOL; }
+    { rank = same; Akonadi_Server -> AS_Modify -> Akonadi_Server_EOL; }
+
+    //Phantom line
+    { rank= same; Left_Phantom -> Left_Phantom_DropEvent -> Left_Phantom_EOL [style=invis]; }
+
+    // Make sure top nodes are in a straight line.
+    { Left_Phantom -> EntityTreeView -> EntityTreeModel -> Monitor -> Akonadi_Server [style=invis]; }
+    // And the bottom nodes.
+    { Left_Phantom_EOL -> EntityTreeView_EOL -> EntityTreeModel_EOL -> Monitor_EOL -> Akonadi_Server_EOL [style=invis]; }
+}
+
+
+@enddot
+
+@section lazy-model-population Lazy Model Population
+
+@note This page is not part of the %Akonadi API. It is provided as internal documentation for %Akonadi maintainers. It was originally a blog post here: http://steveire.wordpress.com/2009/10/06/cache-invalidation-in-akonadi-models/
+@internal
+
+If using EntityTreeModel::LazyPopulation with your model, items will be fetched into the model when the collection they are a part of is selected. This ensures that the model is as sparsely populated as possible for performance reasons. As a consequence however, it is necessary to purge unused items from the model too. This is handled automatically when using an Akonadi::SelectionProxyModel.
+
+The problem is knowing when to invalidate the cache. If no application is currently showing the contents of a Collection, there is no need for the Items in that Collection to be fetched, cached and kept up to date in the model. The effect we would like to achieve is to purge the Items in a Collection when those items are no longer shown anywhere in the application. Generally, that will mean that the Collection is not selected.
+
+In Qt Model-View, the application data is stored in a model, and there may be one or more views attached to it displaying its contents. The model doesn’t have any knowledge of the views, and so it can’t know whether any particular Collection is selected, and purge its Iitems.
+
+To solve this, we use the KSelectionProxyModel, which already has a lot of code for managing the selection a user makes in a view. A subclass, Akonadi::SelectionProxyModel implements a reference counting system which increments the refcount of a Collection when it is selected, and decrements it when deselected. If the reference count of a Collection goes down to zero, it is put in a queue to be purged. It is not purged immediately, but queued because if the user is clicking around several Collection in a short time, we don’t want to purge the Collections each click or we’d lose the benefit of the caching. Like other <a href="http://qt-project.org/doc/qt-4.7/qobject.html#id-aa43c933-c869-42eb-af14-ff17b8304c96">similar optimisation techniques</a>, this violates the object-oriented principle of modularity, but it is worth it for the benefit it brings. The effect can be seen in the akonadiconsole tool by not filtering out the items from the tree.
+
+In the screenshots below I removed the filtering out of Items in the tree so that the fetching/purging can be seen. In real applications, the Items in the tree on the left would not be visible.
+
+@image html dox/bufferedcaching1.png "When a Collection is clicked, its Items are put into the model. The rest of the Collections have no items."
+
+@image html dox/bufferedcaching2.png "The Inbox Collection is selected, so its items are fetched. Personal Contacts is no longer selected, so it is put into a queue to be purged."
+
+@image html dox/bufferedcaching3.png "Select another Collection and its items are fetched too."
+
+@image html dox/bufferedcaching4.png "Another Collection is selected, pushing the Personal contacts out of the queue and purging them"
+
+@image html dox/bufferedcaching6.png "If the Collection is selected again, its Items are refetched"
+
+For this example, I used a queue length of just two Collections, so that if a Collection was deselected two clicks ago, it will be purged. In real applications, a longer queue length will be used, but it’s harder to illustrate in screenshots. Another unrealistic part of this demo is that this feature will like be used in applications like KMail where Collections can contain tens of thousands of Items and fetching them is an expensive operation.
+
+This feature should be totally invisible to users and even developers using Akonadi, but it should offset the main disadvantage of using a cache of Items in the EntityTreeModel.
+
 */
 
-// DOXYGEN_EXCLUDE = sqlplugin server/control server/akonadictl server/tests
-// DOXYGEN_PROJECTNAME=Akonadi
-// DOXYGEN_PROJECTVERSION=1.10.43
 
+/**
+\page akonadi_history Historical Background
+
+\section akonadi_history_general General
+
+During the last 5 years, after the release of KDE 3.0, the requirements of our users
+have constantly increased. While it was sufficient that our PIM solution was able to handle 100 contacts,
+300 events and maybe 1000 mails in 2001, nowadays users expect the software to be able to
+handle a multiple of that. Over the years, the KDE PIM developers tried to catch up with the new
+requirements; however, since KDE 3.x had to stay binary compatible, they were limited in their
+efforts.
+
+With the new major release KDE 4.0 it's possible to completely redesign the PIM libraries from
+the ground up and use new concepts to face the requirements of 2006 and beyond.
+
+After some discussion at the annual KDE PIM meeting in Osnabrück in January 2006, the PIM developers
+came to the conclusion that a service is needed which acts as a local cache on the user's desktop
+and provides search facilities. The name Akonadi comes from a divinity from Ghana and was chosen since
+all other nice names were already used by other projects on the Internet ;)
+
+\section akonadi_history_problems Problems with the implementation of KDE 3.x
+
+Before digging into the internals of Akonadi, we want to take a look at the implementation of the
+old KDE PIM libraries to understand the problems and conceptual shortcomings.
+
+The main PIM libraries libkabc (contacts) and libkcal (events) where designed at a time when the
+address book and calendar were files on the local file system, so there was no reason to think
+about access time and mode. The libraries accessed the files synchronously and loaded all data of the
+file into memory to be able to perform search queries on the data set. It worked well for local files,
+but over time plug-ins for loading data from groupware servers were written, so the synchronous access blocked
+applications which used libkabc/libkcal, and loading all 2000 contacts from a server is not only
+time consuming but also needs a lot of memory to store them locally. The KDE PIM developers tried to
+address the first issue by adding an asynchronous API, but it was not well implemented and was difficult to use.
+In the end, the design decisions caused the following problems:
+
+\li Bad Performance
+\li High Memory Consumption
+
+Another important but missing thing in the libraries was support for notifications and locking.
+The former was partly implemented (at least reflected by the API) but only implemented in the local
+file plug-in, so it was in practice unusable. The latter was also partly implemented but never really tested and
+lead to deadlocks sometimes, so the following problems appeared as well:
+
+\li Missing Notifications
+\li Missing Locking
+
+The main aim of Akonadi is to solve these issues and make use of the goodies which the new design brings.
+*/
+
+
+/**
+
+\defgroup AkonadiMacros Akonadi Macros
+
+*/
+
+// DOXYGEN_EXCLUDE = src/qsqlite src/akonadicontrol src/akonadictl autotests tests
+// DOXYGEN_PROJECTNAME=Akonadi
+// DOXYGEN_PROJECTVERSION=5.1.52
+// DOXYGEN_REFERENCES = kdecore kdeui
+// DOXYGEN_SET_RECURSIVE = YES
 // vim:ts=4:sw=4:expandtab:filetype=doxygen

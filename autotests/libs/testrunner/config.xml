@@ -1,0 +1,6 @@
+<config>
+  <kdehome>kde</kdehome>
+  <confighome>config</confighome>
+  <datahome>local/share</datahome>
+<!--  <item location="test.vcf" collection="akonadi_vcard_resource_0" />-->
+</config>

@@ -1,3 +1,7 @@
 REVIEWBOARD_URL = "https://git.reviewboard.kde.org"
 TARGET_GROUPS = "akonadi"
 REPOSITORY = "akonadi"
+TARGET_PEOPLE = "dvratil"
+#REPOSITORY = "git://anongit.kde.org/akonadi"
+BRANCH = "master"
+

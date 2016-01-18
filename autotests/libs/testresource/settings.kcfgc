@@ -1,0 +1,8 @@
+File=knutresource.kcfg
+ClassName=KnutSettings
+Mutators=true
+ItemAccessors=true
+SetUserTexts=true
+Singleton=false
+#IncludeFiles=
+GlobalEnums=true

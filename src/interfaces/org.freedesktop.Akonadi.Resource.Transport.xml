@@ -1,0 +1,14 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.Akonadi.Resource.Transport">
+    <method name="send">
+      <arg name="itemId" type="x" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <signal name="transportResult">
+      <arg name="itemId" type="x" direction="out"/>
+      <arg name="result" type="i" direction="out"/>
+      <arg name="message" type="s" direction="out"/>
+    </signal>
+  </interface>
+</node>

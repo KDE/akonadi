@@ -1,0 +1,3 @@
+
+#include "akonadicore_export.h"
+#define AKONADI_TESTS_EXPORT @AKONADI_TESTS_EXPORT@

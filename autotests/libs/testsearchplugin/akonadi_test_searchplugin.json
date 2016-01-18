@@ -1,0 +1,7 @@
+{
+    "X-Akonadi-PluginType": "SearchPlugin",
+    "X-Akonadi-Library": "akonadi_test_searchplugin",
+    "X-Akonadi-LoadByDefault": false,
+
+    "X-Akonadi-PluginName": "Akonadi Test Search Plugin"
+}

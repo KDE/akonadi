@@ -1,0 +1,37 @@
+<ui version="4.0" >
+ <class>ControlProgressIndicator</class>
+ <widget class="QWidget" name="ControlProgressIndicator" >
+  <property name="geometry" >
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>52</height>
+   </rect>
+  </property>
+  <layout class="QVBoxLayout" name="verticalLayout" >
+   <item>
+    <widget class="QLabel" name="statusLabel" >
+     <property name="text" >
+      <string comment="KDE::DoNotExtract" >TextLabel</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QProgressBar" name="progressBar" >
+     <property name="maximum" >
+      <number>0</number>
+     </property>
+     <property name="value" >
+      <number>775</number>
+     </property>
+     <property name="textVisible" >
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

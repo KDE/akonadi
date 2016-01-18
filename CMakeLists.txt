@@ -7,6 +7,7 @@ find_package(ECM 5.14.0 CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 include(GenerateExportHeader)
+include(ECMGenerateHeaders)
 include(ECMGeneratePriFile)
 include(ECMPackageConfigHelpers)
 include(ECMSetupVersion)
@@ -20,14 +21,14 @@ include(ECMQtDeclareLoggingCategory)
 include(AkonadiMacros)
 
 set(QT_REQUIRED_VERSION "5.2.0")
-set(AKONADI_VERSION "5.1.51")
+set(AKONADI_VERSION "5.1.52")
+set(KF5_VERSION "5.16.0")
 
 ecm_setup_version(${AKONADI_VERSION}
     VARIABLE_PREFIX AKONADI
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h"
-    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiServerConfigVersion.cmake"
+    PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfigVersion.cmake"
     SOVERSION 5)
-
 
 # Find packages
 find_package(Qt5Core ${QT_REQUIRED_VERSION} CONFIG  REQUIRED)
@@ -38,6 +39,52 @@ find_package(Qt5Network ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 find_package(Qt5Xml ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 find_package(Qt5DBus ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
 find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+
+find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DesignerPlugin ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemModels ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5GuiAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+
+find_package(Qt5Designer NO_MODULE)
+set_package_properties(Qt5Designer PROPERTIES
+   PURPOSE "Required to build the Qt Designer plugins"
+   TYPE OPTIONAL
+)
+
+set(Boost_MINIMUM_VERSION "1.34.0")
+find_package(Boost ${Boost_MINIMUM_VERSION})
+set_package_properties(Boost PROPERTIES
+    DESCRIPTION "Boost C++ Libraries"
+    URL "http://www.boost.org"
+    TYPE REQUIRED
+)
+
+find_package(LibXml2)
+set_package_properties(LibXml2 PROPERTIES
+    DESCRIPTION "The LibXML2 library"
+    URL "http://xmlsoft.org"
+    TYPE REQUIRED
+)
+
+
+
+set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
+configure_file(akonadiprivate_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiprivate_export.h")
+
+# Make sure the KF5Akonadi_DATA_DIR is absolute before passing it to KF5AkonadiConfig.cmake.in
+# otherwise build fails either on OSX CI, or for normal users
+if (IS_ABSOLUTE "${KDE_INSTALL_DATADIR_KF5}")
+    set(KF5Akonadi_DATA_DIR "${KDE_INSTALL_DATADIR_KF5}/akonadi")
+else()
+    set(KF5Akonadi_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DATADIR_KF5}/akonadi")
+endif()
 
 ############### Build Options ###############
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
@@ -240,6 +287,9 @@ configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
 
 ############### build targets ###############
 
+add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
+add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
+
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
     ${CMAKE_CURRENT_BINARY_DIR}
@@ -250,6 +300,7 @@ add_subdirectory(src)
 
 if(BUILD_TESTING)
     add_subdirectory(autotests)
+   add_subdirectory(tests)
 endif()
 
 
@@ -262,25 +313,37 @@ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 ############### CMake Config Files ###############
 
-set(CMAKECONFIG_INSTALL_DIR "${CMAKECONFIG_INSTALL_PREFIX}/KF5AkonadiServer")
+set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")
 
 ecm_configure_package_config_file(
-    "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiServerConfig.cmake.in"
-    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiServerConfig.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiConfig.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
 )
 
 install(FILES
-    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiServerConfig.cmake"
-    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiServerConfigVersion.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfigVersion.cmake"
+    "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiMacros.cmake"
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
     COMPONENT Devel
 )
 
 install(EXPORT
-    KF5AkonadiServerTargets
+    KF5AkonadiTargets
     DESTINATION "${CMAKECONFIG_INSTALL_DIR}"
-    FILE KF5AkonadiServerTargets.cmake
+    FILE KF5AkonadiTargets.cmake
     NAMESPACE KF5::)
 
-install( FILES akonadi.categories DESTINATION ${KDE_INSTALL_CONFDIR} )
+install(FILES akonadi.categories
+    DESTINATION ${KDE_INSTALL_CONFDIR}
+)
+
+install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h
+    DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5} COMPONENT Devel
+)
+
+if ("${CMAKE_BINARY_DIR}" STREQUAL "${CMAKE_CURRENT_BINARY_DIR}")
+    feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
+endif()
