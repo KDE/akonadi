@@ -107,4 +107,6 @@ void CollectionReferenceManager::cleanup()
             AkonadiServer::instance()->cacheCleaner()->collectionChanged(col.id());
         }
     }
+    QMutexLocker locker(&instance()->mReferenceLock);
+    instance()->mReferenceMap.clear();
 }

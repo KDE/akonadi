@@ -184,12 +184,15 @@ private Q_SLOTS:
         QFETCH(TestScenario::List, scenarios);
         QFETCH(QList<Protocol::ChangeNotification>, expectedNotifications);
 
+        // Clean all references from previous run
+        CollectionReferenceManager::cleanup();
+
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (expectedNotifications.isEmpty()) {
-            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
+            QTRY_VERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
         } else {
             Protocol::ChangeNotification::List receivedNotifications;
             for (int q = 0; q < notificationSpy->size(); q++) {
