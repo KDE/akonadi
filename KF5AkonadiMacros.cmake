@@ -1,13 +1,13 @@
 #
 # Convenience macros to add akonadi testrunner unit-tests
 #
-# Set KDEPIMLIBS_RUN_ISOLATED_TESTS to true to enable running the test
-# Set KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS to true to run the tests against MySQL
-# Set KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS to true to run the tests against PostgreSQL
-# Set KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS to true to run the tests against SQLite
-# Set KDEPIMLIBS_TESTS_XML to true if you provided per-test configuration XML files
+# Set AKONADI_RUN_ISOLATED_TESTS to true to enable running the test
+# Set AKONADI_RUN_MYSQL_ISOLATED_TESTS to true to run the tests against MySQL
+# Set AKONADI_RUN_PGSQL_ISOLATED_TESTS to true to run the tests against PostgreSQL
+# Set AKONADI_RUN_SQLITE_ISOLATED_TESTS to true to run the tests against SQLite
+# Set AKONADI_TESTS_XML to true if you provided per-test configuration XML files
 #
-# You still need to provide the test environment, see kdepimlibs/akonadi/tests/unittestenv,
+# You still need to provide the test environment, see akonadi/autotests/libs/unittestenv
 # copy the unittestenv directory to your unit test directory and update the files
 # as necessary
 
@@ -27,7 +27,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
                         Qt5::Test Qt5::Gui Qt5::Widgets KF5::KIOCore KF5::AkonadiCore KF5::DBusAddons
                         ${_linklibraries})
 
-  # Set the akonaditest path when the macro is used in kdepimlibs
+  # Set the akonaditest path when the macro is used in Akonadi
   find_program(_testrunner
                NAMES akonaditest akonaditest.exe
                PATHS ${CMAKE_CURRENT_BINARY_DIR} ${_akonaditest_DIR} ENV PATH)
@@ -50,7 +50,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     endif()
   endif()
 
-  if ( KDEPIMLIBS_TESTS_XML )
+  if ( KDEPIMLIBS_TESTS_XML OR AKONADI_TESTS_XML )
     set( MYSQL_EXTRA_OPTIONS_DB -xml -o ${TEST_RESULT_OUTPUT_PATH}/mysql-db-${_name}.xml )
     set( MYSQL_EXTRA_OPTIONS_FS -xml -o ${TEST_RESULT_OUTPUT_PATH}/mysql-fs-${_name}.xml )
     set( POSTGRESL_EXTRA_OPTIONS_DB -xml -o ${TEST_RESULT_OUTPUT_PATH}/postgresql-db-${_name}.xml )
@@ -58,7 +58,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     set( SQLITE_EXTRA_OPTIONS -xml -o ${TEST_RESULT_OUTPUT_PATH}/sqlite-${_name}.xml )
   endif()
 
-  if ( KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS )
+  if ( KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS OR AKONADI_RUN_MYSQL_ISOLATED_TESTS )
     find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
     if ( MYSQLD_EXECUTABLE )
       add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable}
@@ -68,7 +68,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     endif()
   endif()
 
-  if ( KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS )
+  if ( KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS OR AKONADI_RUN_PGSQL_ISOLATED_TESTS )
     find_program( POSTGRES_EXECUTABLE postgres )
     if ( POSTGRES_EXECUTABLE )
     add_test( akonadi-postgresql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-db.xml ${_executable}
@@ -86,11 +86,11 @@ endmacro()
 
 # add_akonadi_isolated_test
 #
-# Set KDEPIMLIBS_RUN_ISOLATED_TESTS to true to enable running the test
-# Set KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS to true to run the tests against MySQL
-# Set KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS to true to run the tests against PostgreSQL
-# Set KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS to true to run the tests against SQLite
-# Set KDEPIMLIBS_TESTS_XML to true to load initial database data from XML files
+# Set AKONADI_RUN_ISOLATED_TESTS to true to enable running the test
+# Set AKONADI_RUN_MYSQL_ISOLATED_TESTS to true to run the tests against MySQL
+# Set AKONADI_RUN_PGSQL_ISOLATED_TESTS to true to run the tests against PostgreSQL
+# Set AKONADI_RUN_SQLITE_ISOLATED_TESTS to true to run the tests against SQLite
+# Set AKONADI_TESTS_XML to true to load initial database data from XML files
 #
 # Arguments:
 #       source: a CPP file with the test itself

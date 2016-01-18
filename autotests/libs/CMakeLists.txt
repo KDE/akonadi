@@ -13,8 +13,8 @@ set( EXECUTABLE_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR} )
 set( TEST_RESULT_OUTPUT_PATH ${CMAKE_CURRENT_BINARY_DIR}/testresults )
 file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 
-option(KDEPIMLIBS_TESTS_XML "Use XML files for the test results, instead of plain text." FALSE)
-option(KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS "Run isolated tests with sqlite3 as backend" TRUE)
+option(AKONADI_TESTS_XML "Use XML files for the test results, instead of plain text." FALSE)
+option(AKONADI_RUN_SQLITE_ISOLATED_TESTS "Run isolated tests with sqlite3 as backend" TRUE)
 
 kde_enable_exceptions()
 
