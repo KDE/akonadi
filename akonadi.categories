@@ -1,4 +1,4 @@
-
-log_akonadiagentserver akonadi (akonadi agent server)
-log_akonadiserver akonadi (akonadi server)
-
+log_akonadiagentserver akonadi (Akonadi Agent Server)
+log_akonadiserver akonadi (Akonadi Server)
+log_akonadiagentbase akonadi (Akonadi AgentBase Library)
+log_akonadiwidgets akonadi (Akonadi Widget Library)
