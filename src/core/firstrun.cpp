@@ -26,9 +26,10 @@
 #include "agentmanager.h"
 #include "agenttype.h"
 
+#include "akonadicore_debug.h"
+
 #include <KConfig>
 #include <KConfigGroup>
-#include <QDebug>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusInterface>
@@ -55,13 +56,13 @@ Firstrun::Firstrun(QObject *parent)
         deleteLater();
         return;
     }
-    qDebug();
+    qCDebug(AKONADICORE_LOG);
     if (KDBusConnectionPool::threadConnection().registerService(QLatin1String(FIRSTRUN_DBUSLOCK))) {
         findPendingDefaults();
-        qDebug() << mPendingDefaults;
+        qCDebug(AKONADICORE_LOG) << mPendingDefaults;
         setupNext();
     } else {
-        qDebug() << "D-Bus lock found, so someone else does the work for us already.";
+        qCDebug(AKONADICORE_LOG) << "D-Bus lock found, so someone else does the work for us already.";
         deleteLater();
     }
 }
@@ -72,7 +73,7 @@ Firstrun::~Firstrun()
         KDBusConnectionPool::threadConnection().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
     }
     delete mConfig;
-    qDebug() << "done";
+    qCDebug(AKONADICORE_LOG) << "done";
 }
 
 void Firstrun::findPendingDefaults()
@@ -86,7 +87,7 @@ void Firstrun::findPendingDefaults()
             KConfig c(fullName);
             const QString id = KConfigGroup(&c, "Agent").readEntry("Id", QString());
             if (id.isEmpty()) {
-                qWarning() << "Found invalid default configuration in " << fullName;
+                qCWarning(AKONADICORE_LOG) << "Found invalid default configuration in " << fullName;
                 continue;
             }
             if (cfg.hasKey(id)) {
@@ -113,7 +114,7 @@ void Firstrun::setupNext()
 
     AgentType type = AgentManager::self()->type(agentCfg.readEntry("Type", QString()));
     if (!type.isValid()) {
-        qCritical() << "Unable to obtain agent type for default resource agent configuration " << mCurrentDefault->name();
+        qCCritical(AKONADICORE_LOG) << "Unable to obtain agent type for default resource agent configuration " << mCurrentDefault->name();
         setupNext();
         return;
     }
@@ -140,7 +141,7 @@ void Firstrun::instanceCreated(KJob *job)
     Q_ASSERT(mCurrentDefault);
 
     if (job->error()) {
-        qCritical() << "Creating agent instance failed for " << mCurrentDefault->name();
+        qCCritical(AKONADICORE_LOG) << "Creating agent instance failed for " << mCurrentDefault->name();
         setupNext();
         return;
     }
@@ -157,7 +158,7 @@ void Firstrun::instanceCreated(KJob *job)
             QStringLiteral("/Settings"), QString(),
             KDBusConnectionPool::threadConnection(), this);
     if (!iface->isValid()) {
-        qCritical() << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
+        qCCritical(AKONADICORE_LOG) << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
         setupNext();
         delete iface;
         return;
@@ -166,11 +167,11 @@ void Firstrun::instanceCreated(KJob *job)
     const KConfigGroup settings = KConfigGroup(mCurrentDefault, "Settings");
 
     foreach (const QString &setting, settings.keyList()) {
-        qDebug() << "Setting up " << setting << " for agent " << instance.identifier();
+        qCDebug(AKONADICORE_LOG) << "Setting up " << setting << " for agent " << instance.identifier();
         const QString methodName = QStringLiteral("set%1").arg(setting);
         const QVariant::Type argType = argumentType(iface->metaObject(), methodName);
         if (argType == QVariant::Invalid) {
-            qCritical() << "Setting " << setting << " not found in agent configuration interface of " << instance.identifier();
+            qCCritical(AKONADICORE_LOG) << "Setting " << setting << " not found in agent configuration interface of " << instance.identifier();
             continue;
         }
 
@@ -185,7 +186,7 @@ void Firstrun::instanceCreated(KJob *job)
 
         const QDBusReply<void> reply = iface->call(methodName, arg);
         if (!reply.isValid()) {
-            qCritical() << "Setting " << setting << " failed for agent " << instance.identifier();
+            qCCritical(AKONADICORE_LOG) << "Setting " << setting << " failed for agent " << instance.identifier();
         }
     }
 

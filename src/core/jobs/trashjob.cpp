@@ -38,6 +38,8 @@
 #include "itemfetchjob.h"
 #include "collectionfetchjob.h"
 
+#include "akonadicore_debug.h"
+
 #include <QHash>
 
 using namespace Akonadi;
@@ -89,8 +91,8 @@ void TrashJob::TrashJobPrivate::selectResult(KJob *job)
 {
     Q_Q(TrashJob);
     if (job->error()) {
-        qWarning() << job->objectName();
-        qWarning() << job->errorString();
+        qCWarning(AKONADICORE_LOG) << job->objectName();
+        qCWarning(AKONADICORE_LOG) << job->errorString();
         return; // KCompositeJob takes care of errors
     }
 
@@ -158,8 +160,8 @@ void TrashJob::TrashJobPrivate::setAttribute(KJob *job)
 {
     Q_Q(TrashJob);
     if (job->error()) {
-        qWarning() << job->objectName();
-        qWarning() << job->errorString();
+        qCWarning(AKONADICORE_LOG) << job->objectName();
+        qCWarning(AKONADICORE_LOG) << job->errorString();
         q->setError(Job::Unknown);
         q->setErrorText(i18n("Move to trash collection failed, aborting trash operation"));
         return;
@@ -244,7 +246,7 @@ void TrashJob::TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
         ItemDeleteJob *job = new ItemDeleteJob(toDelete, q);
         q->connect(job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)));
     } else if (mCollectionItems.isEmpty()) {   //No job started, so we abort the job
-        qWarning() << "Nothing to do";
+        qCWarning(AKONADICORE_LOG) << "Nothing to do";
         q->emitResult();
     }
 
@@ -267,7 +269,7 @@ void TrashJob::TrashJobPrivate::collectionsReceived(const Akonadi::Collection::L
             CollectionDeleteJob *job = new CollectionDeleteJob(mCollection, q);
             q->connect(job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)));
         } else {
-            qWarning() << "Nothing to do";
+            qCWarning(AKONADICORE_LOG) << "Nothing to do";
             q->emitResult();
         }
         return;
@@ -361,7 +363,7 @@ void TrashJob::doStart()
         connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), this, SLOT(collectionsReceived(Akonadi::Collection::List)));
 
     } else {
-        qWarning() << "No valid collection or empty itemlist";
+        qCWarning(AKONADICORE_LOG) << "No valid collection or empty itemlist";
         setError(Job::Unknown);
         setErrorText(i18n("No valid collection or empty itemlist"));
         emitResult();

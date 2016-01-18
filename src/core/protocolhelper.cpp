@@ -18,7 +18,7 @@
 */
 
 #include "protocolhelper_p.h"
-
+#include "akonadicore_debug.h"
 #include "attributefactory.h"
 #include "collectionstatistics.h"
 #include "item_p.h"
@@ -40,7 +40,6 @@
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 
-#include <qdebug.h>
 #include <KLocalizedString>
 
 using namespace Akonadi;
@@ -74,7 +73,7 @@ inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T
     for (auto iter = attributes.cbegin(), end = attributes.cend(); iter != end; ++iter) {
         Attribute *attribute = AttributeFactory::createAttribute(iter.key());
         if (!attribute) {
-            qWarning() << "Warning: unknown attribute" << iter.key();
+            qCWarning(AKONADICORE_LOG) << "Warning: unknown attribute" << iter.key();
             continue;
         }
         attribute->deserialize(iter.value());
@@ -495,7 +494,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
                 if (file.open(QFile::ReadOnly)) {
                     attr->deserialize(file.readAll());
                 } else {
-                    qWarning() << "Failed to open attribute file: " << filename;
+                    qCWarning(AKONADICORE_LOG) << "Failed to open attribute file: " << filename;
                     delete attr;
                     attr = 0;
                 }
@@ -509,7 +508,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         }
         case ProtocolHelper::PartGlobal:
         default:
-            qWarning() << "Unknown item part type:" << part.payloadName();
+            qCWarning(AKONADICORE_LOG) << "Unknown item part type:" << part.payloadName();
         }
     }
 
@@ -543,24 +542,24 @@ Relation ProtocolHelper::parseRelationFetchResult(const Protocol::FetchRelations
 bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArray &data, QByteArray &error)
 {
     const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
-    qDebug() << filePath << fileName;
+    qCDebug(AKONADICORE_LOG) << filePath << fileName;
     if (!filePath.startsWith(ExternalPartStorage::akonadiStoragePath())) {
-        qWarning() << "Invalid file path" << fileName;
+        qCWarning(AKONADICORE_LOG) << "Invalid file path" << fileName;
         error = "Invalid file path";
         return false;
     }
     QFile file(filePath);
     if (!file.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-        qWarning() << "Failed to open destination payload file" << file.errorString();
+        qCWarning(AKONADICORE_LOG) << "Failed to open destination payload file" << file.errorString();
         error = "Failed to store payload into file";
         return false;
     }
     if (file.write(data) != data.size()) {
-        qWarning() << "Failed to write all payload data to file";
+        qCWarning(AKONADICORE_LOG) << "Failed to write all payload data to file";
         error = "Failed to store payload into file";
         return false;
     }
-    qDebug() << "Wrote" << data.size() << "bytes to " << file.fileName();
+    qCDebug(AKONADICORE_LOG) << "Wrote" << data.size() << "bytes to " << file.fileName();
 
     // Make sure stuff is written to disk
     file.close();

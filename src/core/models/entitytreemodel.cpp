@@ -19,7 +19,7 @@
 
 #include "entitytreemodel.h"
 #include "entitytreemodel_p.h"
-
+#include "akonadicore_debug.h"
 #include "monitor_p.h"
 
 #include <QtCore/QHash>
@@ -43,7 +43,6 @@
 
 #include "collectionutils.h"
 
-#include "qdebug.h"
 #include "pastehelper_p.h"
 
 Q_DECLARE_METATYPE(QSet<QByteArray>)
@@ -508,7 +507,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
         if (!parent.parent().isValid()) {
             // The drop is somehow on an item with no parent (shouldn't happen)
             // The drop should be considered handled anyway.
-            qWarning() << "Dropped onto item with no parent collection";
+            qCWarning(AKONADICORE_LOG) << "Dropped onto item with no parent collection";
             return true;
         }
 
@@ -536,12 +535,12 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 if (collection.isValid()) {
                     if (collection.parentCollection().id() == destCollection.id() &&
                             action != Qt::CopyAction) {
-                        qWarning() << "Error: source and destination of move are the same.";
+                        qCWarning(AKONADICORE_LOG) << "Error: source and destination of move are the same.";
                         return false;
                     }
 
                     if (!mimeChecker.isWantedCollection(collection)) {
-                        qDebug() << "unwanted collection" << mimeChecker.wantedMimeTypes() << collection.contentMimeTypes();
+                        qCDebug(AKONADICORE_LOG) << "unwanted collection" << mimeChecker.wantedMimeTypes() << collection.contentMimeTypes();
                         return false;
                     }
 
@@ -561,12 +560,12 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                     const Item item = d->m_items.value(Item::fromUrl(url).id());
                     if (item.isValid()) {
                         if (item.parentCollection().id() == destCollection.id() && action != Qt::CopyAction) {
-                            qWarning() << "Error: source and destination of move are the same.";
+                            qCWarning(AKONADICORE_LOG) << "Error: source and destination of move are the same.";
                             return false;
                         }
 
                         if (!mimeChecker.isWantedItem(item)) {
-                            qDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
+                            qCDebug(AKONADICORE_LOG) << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
                             return false;
                         }
                     }
@@ -1187,7 +1186,7 @@ QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *m
     QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> pair = proxiesAndModel(model);
 
     if (!pair.second) {
-        qWarning() << "Couldn't find an EntityTreeModel";
+        qCWarning(AKONADICORE_LOG) << "Couldn't find an EntityTreeModel";
         return QModelIndexList();
     }
 

@@ -33,7 +33,8 @@
 #include "entitydisplayattribute.h"
 #include "resourcesynchronizationjob.h"
 
-#include <QDebug>
+#include "akonadicore_debug.h"
+
 #include <KLocalizedString>
 #include <kcoreconfigskeleton.h>
 
@@ -126,7 +127,7 @@ ResourceScanJob::Private::Private(KCoreConfigSkeleton *settings, ResourceScanJob
 void ResourceScanJob::Private::fetchResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorText();
+        qCWarning(AKONADICORE_LOG) << job->errorText();
         return;
     }
 
@@ -138,7 +139,7 @@ void ResourceScanJob::Private::fetchResult(KJob *job)
     foreach (const Collection &collection, fetchJob->collections()) {
         if (collection.parentCollection() == Collection::root()) {
             if (mRootCollection.isValid()) {
-                qWarning() << "Resource has more than one root collection. I don't know what to do.";
+                qCWarning(AKONADICORE_LOG) << "Resource has more than one root collection. I don't know what to do.";
             } else {
                 mRootCollection = collection;
             }
@@ -149,9 +150,9 @@ void ResourceScanJob::Private::fetchResult(KJob *job)
         }
     }
 
-    qDebug() << "Fetched root collection" << mRootCollection.id()
-             << "and" << mSpecialCollections.count() << "local folders"
-             << "(total" << fetchJob->collections().count() << "collections).";
+    qCDebug(AKONADICORE_LOG) << "Fetched root collection" << mRootCollection.id()
+                             << "and" << mSpecialCollections.count() << "local folders"
+                             << "(total" << fetchJob->collections().count() << "collections).";
 
     if (!mRootCollection.isValid()) {
         q->setError(Unknown);
@@ -200,7 +201,7 @@ void ResourceScanJob::doStart()
 {
     if (d->mResourceId.isEmpty()) {
         if (!qobject_cast<DefaultResourceJob *>(this)) {
-            qCritical() << "No resource ID given.";
+            qCCritical(AKONADICORE_LOG) << "No resource ID given.";
             setError(Job::Unknown);
             setErrorText(i18n("No resource ID given."));
         }
@@ -258,13 +259,13 @@ void DefaultResourceJobPrivate::tryFetchResource()
 
     const QString resourceId = defaultResourceId(mSettings);
 
-    qDebug() << "Read defaultResourceId" << resourceId << "from config.";
+    qCDebug(AKONADICORE_LOG) << "Read defaultResourceId" << resourceId << "from config.";
 
     const AgentInstance resource = AgentManager::self()->instance(resourceId);
     if (resource.isValid()) {
         // The resource exists; scan it.
         mResourceWasPreexisting = true;
-        qDebug() << "Found resource" << resourceId;
+        qCDebug(AKONADICORE_LOG) << "Found resource" << resourceId;
         q->setResourceId(resourceId);
 
         CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
@@ -283,7 +284,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
                     setDefaultResourceId(mSettings, resource.identifier());
                     mSettings->save();
                     mResourceWasPreexisting = true;
-                    qDebug() << "Found resource" << resource.identifier();
+                    qCDebug(AKONADICORE_LOG) << "Found resource" << resource.identifier();
                     q->setResourceId(resource.identifier());
                     q->ResourceScanJob::doStart();
                     return;
@@ -293,7 +294,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
 
         // Create the resource.
         mResourceWasPreexisting = false;
-        qDebug() << "Creating maildir resource.";
+        qCDebug(AKONADICORE_LOG) << "Creating maildir resource.";
         const AgentType type = AgentManager::self()->type(mDefaultResourceType);
         AgentInstanceCreateJob *job = new AgentInstanceCreateJob(type, q);
         QObject::connect(job, SIGNAL(result(KJob*)), q, SLOT(resourceCreateResult(KJob*)));
@@ -304,7 +305,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
 void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorText();
+        qCWarning(AKONADICORE_LOG) << job->errorText();
         //fail( i18n( "Failed to create the default resource (%1).", job->errorString() ) );
         q->setError(job->error());
         q->setErrorText(job->errorText());
@@ -320,7 +321,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
         Q_ASSERT(createJob);
         agent = createJob->instance();
         setDefaultResourceId(mSettings, agent.identifier());
-        qDebug() << "Created maildir resource with id" << defaultResourceId(mSettings);
+        qCDebug(AKONADICORE_LOG) << "Created maildir resource with id" << defaultResourceId(mSettings);
     }
 
     const QString defaultId = defaultResourceId(mSettings);
@@ -381,13 +382,13 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
 void DefaultResourceJobPrivate::resourceSyncResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorText();
+        qCWarning(AKONADICORE_LOG) << job->errorText();
         //fail( i18n( "ResourceSynchronizationJob failed (%1).", job->errorString() ) );
         return;
     }
 
     // Fetch the collections of the resource.
-    qDebug() << "Fetching maildir collections.";
+    qCDebug(AKONADICORE_LOG) << "Fetching maildir collections.";
     CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
     fetchJob->fetchScope().setResource(defaultResourceId(mSettings));
     QObject::connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)));
@@ -396,7 +397,7 @@ void DefaultResourceJobPrivate::resourceSyncResult(KJob *job)
 void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorText();
+        qCWarning(AKONADICORE_LOG) << job->errorText();
         //fail( i18n( "Failed to fetch the root maildir collection (%1).", job->errorString() ) );
         return;
     }
@@ -405,7 +406,7 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
     Q_ASSERT(fetchJob);
 
     const Collection::List collections = fetchJob->collections();
-    qDebug() << "Fetched" << collections.count() << "collections.";
+    qCDebug(AKONADICORE_LOG) << "Fetched" << collections.count() << "collections.";
 
     // Find the root maildir collection.
     Collection::List toRecover;
@@ -452,15 +453,15 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
         const QByteArray type = typeForName.value(name);
 
         if (!type.isEmpty()) {
-            qDebug() << "Recovering collection" << name;
+            qCDebug(AKONADICORE_LOG) << "Recovering collection" << name;
             setCollectionAttributes(collection, type, mNameForTypeMap, mIconForTypeMap);
 
             CollectionModifyJob *modifyJob = new CollectionModifyJob(collection, q);
             QObject::connect(modifyJob, SIGNAL(result(KJob*)), q, SLOT(collectionModifyResult(KJob*)));
             mPendingModifyJobs++;
         } else {
-            qDebug() << "Searching for names: " << typeForName.keys();
-            qDebug() << "Unknown collection name" << name << "-- not recovering.";
+            qCDebug(AKONADICORE_LOG) << "Searching for names: " << typeForName.keys();
+            qCDebug(AKONADICORE_LOG) << "Unknown collection name" << name << "-- not recovering.";
         }
     }
 
@@ -474,17 +475,17 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
 void DefaultResourceJobPrivate::collectionModifyResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorText();
+        qCWarning(AKONADICORE_LOG) << job->errorText();
         //fail( i18n( "Failed to modify the root maildir collection (%1).", job->errorString() ) );
         return;
     }
 
     Q_ASSERT(mPendingModifyJobs > 0);
     mPendingModifyJobs--;
-    qDebug() << "pendingModifyJobs now" << mPendingModifyJobs;
+    qCDebug(AKONADICORE_LOG) << "pendingModifyJobs now" << mPendingModifyJobs;
     if (mPendingModifyJobs == 0) {
         // Write the updated config.
-        qDebug() << "Writing defaultResourceId" << defaultResourceId(mSettings) << "to config.";
+        qCDebug(AKONADICORE_LOG) << "Writing defaultResourceId" << defaultResourceId(mSettings) << "to config.";
         mSettings->save();
 
         // Scan the resource.
@@ -537,13 +538,13 @@ void DefaultResourceJob::doStart()
 void DefaultResourceJob::slotResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorText();
+        qCWarning(AKONADICORE_LOG) << job->errorText();
         // Do some cleanup.
         if (!d->mResourceWasPreexisting) {
             // We only removed the resource instance if we have created it.
             // Otherwise we might lose the user's data.
             const AgentInstance resource = AgentManager::self()->instance(defaultResourceId(d->mSettings));
-            qDebug() << "Removing resource" << resource.identifier();
+            qCDebug(AKONADICORE_LOG) << "Removing resource" << resource.identifier();
             AgentManager::self()->removeInstance(resource);
         }
     }
@@ -583,12 +584,12 @@ void GetLockJob::Private::doStart()
     const bool gotIt = bus.registerService(dbusServiceName());
 
     if (gotIt && !alreadyLocked) {
-        //qDebug() << "Got lock immediately.";
+        //qCDebug(AKONADICORE_LOG) << "Got lock immediately.";
         q->emitResult();
     } else {
         QDBusServiceWatcher *watcher = new QDBusServiceWatcher(dbusServiceName(), KDBusConnectionPool::threadConnection(),
                 QDBusServiceWatcher::WatchForOwnerChange, q);
-        //qDebug() << "Waiting for lock.";
+        //qCDebug(AKONADICORE_LOG) << "Waiting for lock.";
         connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), q, SLOT(serviceOwnerChanged(QString,QString,QString)));
 
         mSafetyTimer = new QTimer(q);
@@ -614,7 +615,7 @@ void GetLockJob::Private::serviceOwnerChanged(const QString &name, const QString
 
 void GetLockJob::Private::timeout()
 {
-    qWarning() << "Timeout trying to get lock. Check who has acquired the name" << dbusServiceName() << "on DBus, using qdbus or qdbusviewer.";
+    qCWarning(AKONADICORE_LOG) << "Timeout trying to get lock. Check who has acquired the name" << dbusServiceName() << "on DBus, using qdbus or qdbusviewer.";
     q->setError(Job::Unknown);
     q->setErrorText(i18n("Timeout trying to get lock."));
     q->emitResult();

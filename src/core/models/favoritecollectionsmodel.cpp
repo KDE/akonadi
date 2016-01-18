@@ -18,7 +18,7 @@
 */
 
 #include "favoritecollectionsmodel.h"
-
+#include "akonadicore_debug.h"
 #include <QItemSelectionModel>
 #include <QtCore/QMimeData>
 
@@ -142,7 +142,7 @@ public:
     void reference(const Collection::Id &collectionId)
     {
         if (referencedCollections.contains(collectionId)) {
-            qWarning() << "already referenced " << collectionId;
+            qCWarning(AKONADICORE_LOG) << "already referenced " << collectionId;
             return;
         }
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
@@ -150,7 +150,7 @@ public:
             if (q->sourceModel()->setData(index, QVariant(), EntityTreeModel::CollectionRefRole)) {
                 referencedCollections << collectionId;
             } else {
-                qWarning() << "failed to reference collection";
+                qCWarning(AKONADICORE_LOG) << "failed to reference collection";
             }
             q->sourceModel()->fetchMore(index);
         }
@@ -159,7 +159,7 @@ public:
     void dereference(const Collection::Id &collectionId)
     {
         if (!referencedCollections.contains(collectionId)) {
-            qWarning() << "not referenced " << collectionId;
+            qCWarning(AKONADICORE_LOG) << "not referenced " << collectionId;
             return;
         }
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
@@ -182,7 +182,7 @@ public:
     void add(const Collection::Id &collectionId)
     {
         if (collectionIds.contains(collectionId)) {
-            qDebug() << "already in model " << collectionId;
+            qCDebug(AKONADICORE_LOG) << "already in model " << collectionId;
             return;
         }
         collectionIds << collectionId;
@@ -406,12 +406,12 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
                 if (item.isValid()) {
                     if (item.parentCollection().id() == destCollection.id() &&
                             action != Qt::CopyAction) {
-                        qDebug() << "Error: source and destination of move are the same.";
+                        qCDebug(AKONADICORE_LOG) << "Error: source and destination of move are the same.";
                         return false;
                     }
 #if 0
                     if (!mimeChecker.isWantedItem(item)) {
-                        qDebug() << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
+                        qCDebug(AKONADICORE_LOG) << "unwanted item" << mimeChecker.wantedMimeTypes() << item.mimeType();
                         return false;
                     }
 #endif
@@ -453,7 +453,7 @@ Qt::ItemFlags FavoriteCollectionsModel::flags(const QModelIndex &index) const
 void FavoriteCollectionsModel::pasteJobDone(KJob *job)
 {
     if (job->error()) {
-        qDebug() << job->errorString();
+        qCDebug(AKONADICORE_LOG) << job->errorString();
     }
 }
 

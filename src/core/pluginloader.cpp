@@ -18,14 +18,14 @@
 */
 
 #include "pluginloader_p.h"
-
+#include "akonadicore_debug.h"
 #include <kconfiggroup.h>
-#include <QDebug>
 #include <KLocalizedString>
 #include <KPluginLoader>
 #include <KConfig>
 #include <QDir>
 #include <QStandardPaths>
+
 using namespace Akonadi;
 
 PluginMetaData::PluginMetaData()
@@ -71,7 +71,7 @@ QStringList PluginLoader::names() const
 QObject *PluginLoader::createForName(const QString &name)
 {
     if (!mPluginInfos.contains(name)) {
-        qWarning() << "plugin name \"" << name << "\" is unknown to the plugin loader." << endl;
+        qCWarning(AKONADICORE_LOG) << "plugin name \"" << name << "\" is unknown to the plugin loader." << endl;
         return 0;
     }
 
@@ -89,7 +89,7 @@ QObject *PluginLoader::createForName(const QString &name)
     if (!info.loaded) {
         QPluginLoader *loader = new QPluginLoader(info.library);
         if (loader->fileName().isEmpty()) {
-            qWarning() << loader->errorString();
+            qCWarning(AKONADICORE_LOG) << loader->errorString();
             delete loader;
             return 0;
         }
@@ -103,8 +103,8 @@ QObject *PluginLoader::createForName(const QString &name)
 
     QObject *object = loader->instance();
     if (!object) {
-        qWarning() << "unable to load plugin for plugin name \"" << name << "\"." << endl;
-        qWarning() << "Error was:\"" << loader->errorString() << "\"." << endl;
+        qCWarning(AKONADICORE_LOG) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
+        qCWarning(AKONADICORE_LOG) << "Error was:\"" << loader->errorString() << "\"." << endl;
         return 0;
     }
 
@@ -133,7 +133,7 @@ void PluginLoader::scan()
 
                 const QString type = group.readEntry("Type").toLower();
                 if (type.isEmpty()) {
-                    qWarning() << "missing or empty [Plugin]Type value in \"" << entry << "\" - skipping" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]Type value in \"" << entry << "\" - skipping" << endl;
                     continue;
                 }
 
@@ -142,13 +142,13 @@ void PluginLoader::scan()
                 // and B>.
                 const QStringList classes = group.readXdgListEntry("X-Akonadi-Class");
                 if (classes.isEmpty()) {
-                    qWarning() << "missing or empty [Plugin]X-Akonadi-Class value in \"" << entry << "\" - skipping" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]X-Akonadi-Class value in \"" << entry << "\" - skipping" << endl;
                     continue;
                 }
 
                 const QString library = group.readEntry("X-KDE-Library");
                 if (library.isEmpty()) {
-                    qWarning() << "missing or empty [Plugin]X-KDE-Library value in \"" << entry << "\" - skipping" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]X-KDE-Library value in \"" << entry << "\" - skipping" << endl;
                     continue;
                 }
 
@@ -156,24 +156,24 @@ void PluginLoader::scan()
 
                 QString name = group2.readEntry("Name");
                 if (name.isEmpty()) {
-                    qWarning() << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name" << endl;
                     name = i18n("Unnamed plugin");
                 }
 
                 QString comment = group2.readEntry("Comment");
                 if (comment.isEmpty()) {
-                    qWarning() << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
                     comment = i18n("No description available");
                 }
 
                 QString cname      = group.readEntry("X-KDE-ClassName");
                 if (cname.isEmpty()) {
-                    qWarning() << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" << endl;
                 }
 
                 const QStringList mimeTypes = type.split(QLatin1Char(','), QString::SkipEmptyParts);
 
-                qDebug() << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
+                qCDebug(AKONADICORE_LOG) << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
                 Q_FOREACH (const QString &mimeType, mimeTypes) {
                     Q_FOREACH (const QString &classType, classes) {
                         mPluginInfos.insert(mimeType + QLatin1Char('@') + classType, PluginMetaData(library, name, comment, cname));
@@ -181,7 +181,7 @@ void PluginLoader::scan()
                 }
 
             } else {
-                qWarning() << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
+                qCWarning(AKONADICORE_LOG) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
             }
         }
     }

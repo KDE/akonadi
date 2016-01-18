@@ -29,7 +29,8 @@
 #include "private/standarddirs_p.h"
 #include "private/protocol_p.h"
 
-#include <QDebug>
+#include "akonadicore_debug.h"
+
 #include <KLocalizedString>
 
 #include <QCoreApplication>
@@ -86,7 +87,7 @@ QString SessionPrivate::connectionFile()
 
 void SessionPrivate::socketError(const QString &error)
 {
-    qWarning() << "Socket error occurred:" << error;
+    qCWarning(AKONADICORE_LOG) << "Socket error occurred:" << error;
     socketDisconnected();
 }
 
@@ -104,14 +105,14 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
     if (cmd.type() == Protocol::Command::Hello) {
         Protocol::HelloResponse hello(cmd);
         if (hello.isError()) {
-            qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
+            qCWarning(AKONADICORE_LOG) << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
             connThread->disconnect();
             QTimer::singleShot(1000, connThread, &ConnectionThread::reconnect);
             return false;
         }
 
-        qDebug() << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
-        qDebug() << "Server says:" << hello.message();
+        qCDebug(AKONADICORE_LOG) << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
+        qCDebug(AKONADICORE_LOG) << "Server says:" << hello.message();
         // Version mismatch is handled in SessionPrivate::startJob() so that
         // we can report the error out via KJob API
         protocolVersion = hello.protocolVersion();
@@ -126,7 +127,7 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
     if (cmd.type() == Protocol::Command::Login) {
         Protocol::LoginResponse login(cmd);
         if (login.isError()) {
-            qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
+            qCWarning(AKONADICORE_LOG) << "Unable to login to Akonadi server:" << login.errorMessage();
             connThread->disconnect();
             QTimer::singleShot(1000, mParent, SLOT(reconnect()));
             return false;
@@ -189,13 +190,13 @@ void SessionPrivate::startJob(Job *job)
             job->setErrorText(i18n("Protocol version mismatch. Server version is newer (%1) than ours (%2). "
                                    "If you updated your system recently please restart the Akonadi server.",
                                    protocolVersion, Protocol::version()));
-            qWarning() << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
+            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
                        "If you updated your system recently please restart the Akonadi server.";
         } else {
             job->setErrorText(i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
                                    "If you updated your system recently please restart all KDE PIM applications.",
                                    protocolVersion, Protocol::version()));
-            qWarning() << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
+            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
                        "If you updated your system recently please restart all KDE PIM applications.";
         }
         job->emitResult();
@@ -264,7 +265,7 @@ void SessionPrivate::sendCommand(qint64 tag, const Protocol::Command &command)
 
 void SessionPrivate::serverStateChanged(ServerManager::State state)
 {
-    qDebug() << "============== SESSION: Server state changed to " << state;
+    qCDebug(AKONADICORE_LOG) << "============== SESSION: Server state changed to " << state;
     if (state == ServerManager::Running && !connected) {
         reconnect();
     } else if (!connected && state == ServerManager::Broken) {
@@ -316,7 +317,7 @@ SessionPrivate::~SessionPrivate()
 
 void SessionPrivate::init(const QByteArray &id)
 {
-    qDebug() << id;
+    qCDebug(AKONADICORE_LOG) << id;
 
     if (!id.isEmpty()) {
         sessionId = id;

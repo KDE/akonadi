@@ -26,9 +26,9 @@
 #include "session_p.h"
 #include "firstrun_p.h"
 
-#include <Kdelibs4ConfigMigrator>
+#include "akonadicore_debug.h"
 
-#include <QDebug>
+#include <Kdelibs4ConfigMigrator>
 
 #include "private/protocol_p.h"
 #include "private/standarddirs_p.h"
@@ -175,22 +175,22 @@ bool ServerManager::start()
 
     const bool controlLockRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
-        qDebug() << "Akonadi server is already starting up";
+        qCDebug(AKONADICORE_LOG) << "Akonadi server is already starting up";
         sInstance->setState(Starting);
         return true;
     }
 
-    qDebug() << "executing akonadi_control";
+    qCDebug(AKONADICORE_LOG) << "executing akonadi_control";
     QStringList args;
     if (hasInstanceIdentifier()) {
         args << QStringLiteral("--instance") << instanceIdentifier();
     }
     const bool ok = QProcess::startDetached(QStringLiteral("akonadi_control"), args);
     if (!ok) {
-        qWarning() << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
+        qCWarning(AKONADICORE_LOG) << "Unable to execute akonadi_control, falling back to D-Bus auto-launch";
         QDBusReply<void> reply = KDBusConnectionPool::threadConnection().interface()->startService(ServerManager::serviceName(ServerManager::Control));
         if (!reply.isValid()) {
-            qDebug() << "Akonadi server could not be started via D-Bus either: "
+            qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus either: "
                      << reply.error().message();
             return false;
         }
@@ -263,7 +263,7 @@ ServerManager::State ServerManager::state()
 
     const bool controlLockRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
-        qDebug() << "Akonadi server is already starting up";
+        qCDebug(AKONADICORE_LOG) << "Akonadi server is already starting up";
         if (previousState == Running) {
             return NotRunning; // we don't know if it's starting or stopping, probably triggered by someone else
         }
@@ -271,7 +271,7 @@ ServerManager::State ServerManager::state()
     }
 
     if (serverRegistered) {
-        qWarning() << "Akonadi server running without control process!";
+        qCWarning(AKONADICORE_LOG) << "Akonadi server running without control process!";
         return Broken;
     }
 

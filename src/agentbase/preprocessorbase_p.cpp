@@ -47,7 +47,8 @@ PreprocessorBasePrivate::PreprocessorBasePrivate(PreprocessorBase *parent)
 void PreprocessorBasePrivate::delayedInit()
 {
     if (!KDBusConnectionPool::threadConnection().registerService(ServerManager::agentServiceName(ServerManager::Preprocessor, mId))) {
-        qCritical() << "Unable to register service at D-Bus: " << KDBusConnectionPool::threadConnection().lastError().message();
+        qCCritical(AKONADIAGENTBASE_LOG) << "Unable to register service at D-Bus: "
+                                         << KDBusConnectionPool::threadConnection().lastError().message();
     }
     AgentBasePrivate::delayedInit();
 }

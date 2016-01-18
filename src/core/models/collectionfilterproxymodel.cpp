@@ -18,11 +18,9 @@
 */
 
 #include "collectionfilterproxymodel.h"
-
+#include "akonadicore_debug.h"
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
-
-#include <qdebug.h>
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -76,8 +74,8 @@ bool CollectionFilterProxyModel::Private::collectionAccepted(const QModelIndex &
 
             // See if that resource is visible, if not, invalidate the filter.
             if (resource != index && !acceptedResources.contains(resource)) {
-                qDebug() << "We got a new collection:" << mParent->sourceModel()->data(index).toString()
-                         << "but the resource is not visible:" << mParent->sourceModel()->data(resource).toString();
+                qCDebug(AKONADICORE_LOG) << "We got a new collection:" << mParent->sourceModel()->data(index).toString()
+                                         << "but the resource is not visible:" << mParent->sourceModel()->data(resource).toString();
                 acceptedResources.clear();
                 // defer reset, the model might still be supplying new items at this point which crashs
                 mParent->invalidateFilter();

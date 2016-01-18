@@ -20,6 +20,7 @@
 #include "connectionthread_p.h"
 #include "session_p.h"
 #include "servermanager_p.h"
+#include "akonadicore_debug.h"
 
 #include <QtCore/QDataStream>
 #include <QtCore/QFile>
@@ -55,7 +56,7 @@ ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
                              .arg(QString::number(QApplication::applicationPid()))
                              .arg(QString::fromLatin1(mSessionId.replace('/', '_'))));
         if (!mLogFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-            qWarning() << "Failed to open Akonadi Session log file" << mLogFile->fileName();
+            qCWarning(AKONADICORE_LOG) << "Failed to open Akonadi Session log file" << mLogFile->fileName();
             delete mLogFile;
             mLogFile = Q_NULLPTR;
         }
@@ -118,7 +119,7 @@ void ConnectionThread::doReconnect()
             }
             options.insert(pair.first(), pair.last());
         }
-        qDebug() << protocol << options;
+        qCDebug(AKONADICORE_LOG) << protocol << options;
 
         if (protocol == "unix") {
             serverAddress = options.value(QStringLiteral("path"));
@@ -132,10 +133,10 @@ void ConnectionThread::doReconnect()
         const QString connectionConfigFile = SessionPrivate::connectionFile();
         const QFileInfo fileInfo(connectionConfigFile);
         if (!fileInfo.exists()) {
-            qDebug() << "Akonadi Client Session: connection config file '"
-                        "akonadi/akonadiconnectionrc' can not be found in"
-                     << XdgBaseDirs::homePath("config") << "nor in any of"
-                     << XdgBaseDirs::systemPathList("config");
+            qCDebug(AKONADICORE_LOG) << "Akonadi Client Session: connection config file '"
+                                        "akonadi/akonadiconnectionrc' can not be found in"
+                                    << XdgBaseDirs::homePath("config") << "nor in any of"
+                                    << XdgBaseDirs::systemPathList("config");
         }
         const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
 
@@ -157,7 +158,7 @@ void ConnectionThread::doReconnect()
     }
 
     // actually do connect
-    qDebug() << "connectToServer" << serverAddress;
+    qCDebug(AKONADICORE_LOG) << "connectToServer" << serverAddress;
     mSocket->connectToServer(serverAddress);
 
     Q_EMIT reconnected();
@@ -220,7 +221,7 @@ void ConnectionThread::dataReceived()
             // cmd's type will be Invalid by default.
         }
         if (cmd.type() == Protocol::Command::Invalid) {
-            qWarning() << "Invalid command, the world is going to end!";
+            qCWarning(AKONADICORE_LOG) << "Invalid command, the world is going to end!";
             mSocket->close();
             mSocket->readAll();
             reconnect();
@@ -284,7 +285,7 @@ void ConnectionThread::doSendCommand(qint64 tag, const Protocol::Command &cmd)
         try {
             Protocol::serialize(mSocket, cmd);
         } catch (const Akonadi::ProtocolException &e) {
-            qWarning() << "Protocol Exception:" << QString::fromUtf8(e.what());
+            qCWarning(AKONADICORE_LOG) << "Protocol Exception:" << QString::fromUtf8(e.what());
             mSocket->close();
             mSocket->readAll();
             reconnect();

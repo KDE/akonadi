@@ -24,7 +24,7 @@
 
 #include "entityhiddenattribute.h"
 
-#include <qdebug.h>
+#include "akonadicore_debug.h"
 
 #include <QtCore/QStringList>
 #include <QFont>
@@ -58,7 +58,7 @@ public:
     {
         if (job->error()) {
             // TODO
-            qWarning() << job->errorString();
+            qCWarning(AKONADICORE_LOG) << job->errorString();
             return;
         }
         q->beginResetModel();

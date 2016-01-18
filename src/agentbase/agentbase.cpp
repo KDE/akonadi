@@ -455,7 +455,8 @@ void AgentBasePrivate::delayedInit()
 
     const QString serviceId = ServerManager::agentServiceName(ServerManager::Agent, mId);
     if (!KDBusConnectionPool::threadConnection().registerService(serviceId)) {
-        qCritical() << "Unable to register service" << serviceId << "at dbus:" << KDBusConnectionPool::threadConnection().lastError().message();
+        qCCritical(AKONADIAGENTBASE_LOG) << "Unable to register service" << serviceId << "at dbus:"
+                                         << KDBusConnectionPool::threadConnection().lastError().message();
     }
     q->setOnlineInternal(mDesiredOnlineState);
 

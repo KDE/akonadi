@@ -22,8 +22,8 @@
 #include "ui_controlprogressindicator.h"
 #include "selftestdialog.h"
 #include "erroroverlay_p.h"
+#include "akonadiwidgets_debug.h"
 
-#include <qdebug.h>
 #include <KLocalizedString>
 
 #include <QtCore/QEventLoop>
@@ -138,14 +138,14 @@ bool ControlGui::Private::exec()
     if (mProgressIndicator) {
         mProgressIndicator->show();
     }
-    qDebug() << "Starting/Stopping Akonadi (using an event loop).";
+    qCDebug(AKONADIWIDGETS_LOG) << "Starting/Stopping Akonadi (using an event loop).";
     mEventLoop = new QEventLoop(mParent);
     mEventLoop->exec();
     mEventLoop->deleteLater();
     mEventLoop = 0;
 
     if (!mSuccess) {
-        qWarning() << "Could not start/stop Akonadi!";
+        qCWarning(AKONADIWIDGETS_LOG) << "Could not start/stop Akonadi!";
         if (mProgressIndicator && mStarting) {
             QPointer<SelfTestDialog> dlg = new SelfTestDialog(mProgressIndicator->parentWidget());
             dlg->exec();
@@ -168,7 +168,7 @@ bool ControlGui::Private::exec()
 
 void ControlGui::Private::serverStateChanged(ServerManager::State state)
 {
-    qDebug() << state;
+    qCDebug(AKONADIWIDGETS_LOG) << state;
     if (mEventLoop && mEventLoop->isRunning()) {
         // ignore transient states going into the right direction
         if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||
@@ -200,16 +200,16 @@ ControlGui::~ControlGui()
 bool ControlGui::start()
 {
     if (ServerManager::state() == ServerManager::Stopping) {
-        qDebug() << "Server is currently being stopped, wont try to start it now";
+        qCDebug(AKONADIWIDGETS_LOG) << "Server is currently being stopped, wont try to start it now";
         return false;
     }
     if (ServerManager::isRunning() || s_instance->d->mEventLoop) {
-        qDebug() << "Server is already running";
+        qCDebug(AKONADIWIDGETS_LOG) << "Server is already running";
         return true;
     }
     s_instance->d->mStarting = true;
     if (!ServerManager::start()) {
-        qDebug() << "ServerManager::start failed -> return false";
+        qCDebug(AKONADIWIDGETS_LOG) << "ServerManager::start failed -> return false";
         return false;
     }
     return s_instance->d->exec();

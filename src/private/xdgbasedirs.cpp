@@ -21,8 +21,9 @@
 
 #include "akonadi-prefix.h" // for prefix defines
 
+#include "akonadiprivate_debug.h"
+
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>
@@ -349,7 +350,7 @@ QString XdgBaseDirs::findExecutableFile(const QString &relPath, const QStringLis
 #if defined(Q_OS_MAC) //krazy:exclude=cpp
         executableDirs += QLatin1String(AKONADIBUNDLEPATH);
 #endif
-        qWarning() << "search paths: " << executableDirs;
+        qCWarning(AKONADIPRIVATE_LOG) << "search paths: " << executableDirs;
 
         instance()->mExecutableDirs = executableDirs;
     }
@@ -411,7 +412,7 @@ QStringList XdgBaseDirs::findPluginDirs()
                 }
             }
         }
-        qWarning() << "search paths: " << pluginDirs;
+        qCWarning(AKONADIPRIVATE_LOG) << "search paths: " << pluginDirs;
         instance()->mPluginDirs = pluginDirs;
     }
 
@@ -497,13 +498,13 @@ QString XdgBaseDirs::saveDir(const char *resource, const QString &relPath)
         if (fileInfo.isDir()) {
             return fullPath;
         } else {
-            qWarning() << "XdgBaseDirs::saveDir: '" << fileInfo.absoluteFilePath()
-                       << "' exists but is not a directory";
+            qCWarning(AKONADIPRIVATE_LOG) << "XdgBaseDirs::saveDir: '" << fileInfo.absoluteFilePath()
+                                          << "' exists but is not a directory";
         }
     } else {
         if (!QDir::home().mkpath(fileInfo.absoluteFilePath())) {
-            qWarning() << "XdgBaseDirs::saveDir: failed to create directory '"
-                       << fileInfo.absoluteFilePath() << "'";
+            qCWarning(AKONADIPRIVATE_LOG) << "XdgBaseDirs::saveDir: failed to create directory '"
+                                          << fileInfo.absoluteFilePath() << "'";
         } else {
             return fullPath;
         }

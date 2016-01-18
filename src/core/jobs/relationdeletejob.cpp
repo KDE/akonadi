@@ -22,6 +22,7 @@
 #include "relation.h"
 #include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "akonadicore_debug.h"
 #include <KLocalizedString>
 
 
@@ -48,7 +49,7 @@ void RelationDeleteJob::doStart()
     Q_D(RelationDeleteJob);
 
     if (!d->mRelation.isValid()) {
-        qWarning() << "The relation is invalid";
+        qCWarning(AKONADICORE_LOG) << "The relation is invalid";
         setError(Job::Unknown);
         setErrorText(i18n("Failed to create relation."));
         emitResult();

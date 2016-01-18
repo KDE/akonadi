@@ -19,12 +19,12 @@
 #include "KDBusConnectionPool"
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
+#include "akonadicore_debug.h"
 
 #include "agentinstance.h"
 #include "agentmanager.h"
 #include "collection.h"
 
-#include <QDebug>
 #include <KLocalizedString>
 
 #include <QDBusInterface>
@@ -144,7 +144,7 @@ void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
 
     if (instance.status() == AgentInstance::Idle) {
         // try again, we might have lost the synchronized() signal
-        qDebug() << "trying again to sync collection attributes" << collection.id() << instance.identifier();
+        qCDebug(AKONADICORE_LOG) << "collection attributes" << collection.id() << instance.identifier();
         interface->call(QStringLiteral("synchronizeCollectionAttributes"), collection.id());
     }
 }

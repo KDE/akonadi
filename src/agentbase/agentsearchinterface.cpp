@@ -78,7 +78,7 @@ void AgentSearchInterfacePrivate::collectionReceived(KJob *job)
 {
     CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
     if (fetchJob->error()) {
-        qCritical() << fetchJob->errorString();
+        qCCritical(AKONADIAGENTBASE_LOG) << fetchJob->errorString();
         new SearchResultJob(fetchJob->property("searchId").toByteArray(), Collection(mCollectionId), this);
         return;
     }

@@ -52,7 +52,6 @@
 #include "akonadiagentbase_debug.h"
 #include <KLocalizedString>
 
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QHash>
 #include <QtCore/QSettings>
@@ -109,7 +108,7 @@ public:
             if (reason.isEmpty()) {
                 reason = QStringLiteral("this service is probably running already.");
             }
-            qCritical() << "Unable to register service" << serviceId << "at D-Bus:" << reason;
+            qCCritical(AKONADIAGENTBASE_LOG) << "Unable to register service" << serviceId << "at D-Bus:" << reason;
 
             if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
                 QCoreApplication::instance()->exit(1);

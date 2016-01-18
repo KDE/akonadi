@@ -46,7 +46,8 @@
 #include "session.h"
 #include "private/protocol_p.h"
 
-#include <qdebug.h>
+#include "akonadicore_debug.h"
+
 #include <QMessageBox>
 #include <QtGui/QIcon>
 
@@ -484,7 +485,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
     Q_Q(EntityTreeModel);
 
     if (!m_collections.contains(collectionId)) {
-        qWarning() << "Collection has been removed while fetching items";
+        qCWarning(AKONADICORE_LOG) << "Collection has been removed while fetching items";
         return;
     }
 
@@ -519,7 +520,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
                 const Akonadi::Collection::List parents = getParentCollections(item);
                 foreach (const Akonadi::Collection &parent, parents) {
                     if (parent.id() == collectionId) {
-                        qWarning() << "Fetched an item which is already in the model";
+                        qCWarning(AKONADICORE_LOG) << "Fetched an item which is already in the model";
                         // Update it in case the revision changed;
                         m_items[item.id()].apply(item);
                         isNewItem = false;
@@ -972,7 +973,7 @@ void EntityTreeModelPrivate::monitoredCollectionMoved(const Akonadi::Collection 
     const int destRow = 0; // Prepend collections
 
     if (!q->beginMoveRows(srcParentIndex, srcRow, srcRow, destParentIndex, destRow)) {
-        qWarning() << "Invalid move";
+        qCWarning(AKONADICORE_LOG) << "Invalid move";
         return;
     }
 
@@ -1055,7 +1056,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
 
     if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch &&
             !m_collections.contains(collection.id())) {
-        qWarning() << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1112,7 +1113,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item)
     }
 
     if (!m_items.contains(item.id())) {
-        qWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1140,7 +1141,7 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
     }
 
     if (!m_items.contains(item.id())) {
-        qWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1159,7 +1160,7 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
     const QModelIndexList indexes = indexesForItem(item);
     foreach (const QModelIndex &index, indexes) {
         if (!index.isValid()) {
-            qWarning() << "item has invalid index:" << item.id() << item.remoteId();
+            qCWarning(AKONADICORE_LOG) << "item has invalid index:" << item.id() << item.remoteId();
         } else {
             dataChanged(index, index);
         }
@@ -1198,7 +1199,7 @@ void EntityTreeModelPrivate::monitoredItemMoved(const Akonadi::Item &item,
     // a reset of the source model inside of the message list (ouch!)
 #if 0
     if (!m_items.contains(item.id())) {
-        qWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1218,7 +1219,7 @@ void EntityTreeModelPrivate::monitoredItemMoved(const Akonadi::Item &item,
     Q_ASSERT(srcRow >= 0);
     Q_ASSERT(destRow >= 0);
     if (!q->beginMoveRows(srcIndex, srcRow, srcRow, destIndex, destRow)) {
-        qWarning() << "Invalid move";
+        qCWarning(AKONADICORE_LOG) << "Invalid move";
         return;
     }
 
@@ -1256,7 +1257,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
     int existingPosition = indexOf<Node::Item>(collectionEntities, itemId);
 
     if (existingPosition > 0) {
-        qWarning() << "Item with id " << itemId << " already in virtual collection with id " << collectionId;
+        qCWarning(AKONADICORE_LOG) << "Item with id " << itemId << " already in virtual collection with id " << collectionId;
         return;
     }
 
@@ -1285,7 +1286,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
     }
 
     if (!m_items.contains(item.id())) {
-        qWarning() << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1293,7 +1294,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
     const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
     if (row < 0 || row >= m_childEntities[ collection.id() ].size()) {
-        qWarning() << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
+        qCWarning(AKONADICORE_LOG) << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
         Q_ASSERT(false);
         return;
     }
@@ -1310,7 +1311,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
     m_pendingCollectionFetchJobs.remove(job);
     CollectionFetchJob *cJob = static_cast<CollectionFetchJob *>(job);
     if (job->error()) {
-        qWarning() << "Job error: " << job->errorString() << "for collection:" << cJob->collections() << endl;
+        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << cJob->collections() << endl;
         return;
     }
 
@@ -1332,11 +1333,11 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
     m_pendingCollectionRetrieveJobs.remove(collectionId);
 
     if (job->error()) {
-        qWarning() << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
+        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
         return;
     }
     if (!m_collections.contains(collectionId)) {
-        qWarning() << "Collection has been removed while fetching items";
+        qCWarning(AKONADICORE_LOG) << "Collection has been removed while fetching items";
         return;
     }
     ItemFetchJob *iJob = static_cast<ItemFetchJob *>(job);
@@ -1389,7 +1390,7 @@ void EntityTreeModelPrivate::updateJobDone(KJob *job)
 {
     if (job->error()) {
         // TODO: handle job errors
-        qWarning() << "Job error:" << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Job error:" << job->errorString();
     } else {
 
         //FIXME: This seems pretty pointless since we'll get an update through the monitor anyways
@@ -1414,7 +1415,7 @@ void EntityTreeModelPrivate::updateJobDone(KJob *job)
 void EntityTreeModelPrivate::rootFetchJobDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(AKONADICORE_LOG) << job->errorString();
         return;
     }
     CollectionFetchJob *collectionJob = qobject_cast<CollectionFetchJob *>(job);
@@ -1820,7 +1821,7 @@ void EntityTreeModelPrivate::endResetModel()
 void EntityTreeModelPrivate::monitoredItemsRetrieved(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(AKONADICORE_LOG) << job->errorString();
         return;
     }
 

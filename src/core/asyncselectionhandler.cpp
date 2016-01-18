@@ -19,6 +19,7 @@
 
 #include "asyncselectionhandler_p.h"
 #include "models/entitytreemodel.h"
+#include "akonadicore_debug.h"
 
 using namespace Akonadi;
 
@@ -57,7 +58,7 @@ bool AsyncSelectionHandler::scanSubTree(const QModelIndex &index, bool searchFor
         const QModelIndex childIndex = mModel->index(row, 0, index);
         //This should not normally happen, but if it does we end up in an endless loop
         if (!childIndex.isValid()) {
-            qWarning() << "Invalid child detected: " << index.data().toString();
+            qCWarning(AKONADICORE_LOG) << "Invalid child detected: " << index.data().toString();
             Q_ASSERT(false);
             return false;
         }

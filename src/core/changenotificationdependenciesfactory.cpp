@@ -25,6 +25,7 @@
 #include "notificationmanagerinterface.h"
 #include "changemediator_p.h"
 #include "servermanager.h"
+#include "akonadicore_debug.h"
 
 #include <KRandom>
 #include <qdbusextratypes.h>
@@ -56,7 +57,7 @@ NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSou
     QDBusObjectPath p = manager->subscribe(name, false);
     const bool validError = manager->lastError().isValid();
     if (validError) {
-        qWarning() << manager->lastError().name() << manager->lastError().message();
+        qCWarning(AKONADICORE_LOG) << manager->lastError().name() << manager->lastError().message();
         // :TODO: What to do?
         delete manager;
         return 0;

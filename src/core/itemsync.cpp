@@ -32,8 +32,8 @@
 #include "transactionsequence.h"
 #include "itemfetchscope.h"
 
-#include <qdebug.h>
-#include <QDebug>
+#include "akonadicore_debug.h"
+
 #include <QtCore/QStringList>
 
 using namespace Akonadi;
@@ -177,7 +177,7 @@ void ItemSyncPrivate::checkDone()
 
     if (allProcessed() && !mFinished) {
         // prevent double result emission, can happen since checkDone() is called from all over the place
-        qDebug() << "finished";
+        qCDebug(AKONADICORE_LOG) << "finished";
         mFinished = true;
         q->emitResult();
     }
@@ -211,7 +211,9 @@ void ItemSync::setFullSyncItems(const Item::List &items)
     }
     d->mRemoteItemQueue += items;
     d->mTotalItemsProcessed += items.count();
-    qDebug() << "Received: " << items.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
+    qCDebug(AKONADICORE_LOG) << "Received: " << items.count()
+                             << "In total: " << d->mTotalItemsProcessed
+                             << " Wanted: " << d->mTotalItems;
     if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItemsProcessed == d->mTotalItems)) {
         d->mDeliveryDone = true;
     }
@@ -224,7 +226,7 @@ void ItemSync::setTotalItems(int amount)
     Q_ASSERT(!d->mIncremental);
     Q_ASSERT(amount >= 0);
     setStreamingEnabled(true);
-    qDebug() << amount;
+    qCDebug(AKONADICORE_LOG) << amount;
     d->mTotalItems = amount;
     setTotalAmount(KJob::Bytes, amount);
     if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItems == 0)) {
@@ -256,7 +258,7 @@ void ItemSync::setIncrementalSyncItems(const Item::List &changedItems, const Ite
     d->mRemoteItemQueue += changedItems;
     d->mRemovedRemoteItemQueue += removedItems;
     d->mTotalItemsProcessed += changedItems.count() + removedItems.count();
-    qDebug() << "Received: " << changedItems.count() << "Removed: " << removedItems.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
+    qCDebug(AKONADICORE_LOG) << "Received: " << changedItems.count() << "Removed: " << removedItems.count() << "In total: " << d->mTotalItemsProcessed << " Wanted: " << d->mTotalItems;
     if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItemsProcessed == d->mTotalItems)) {
         d->mDeliveryDone = true;
     }
@@ -315,7 +317,7 @@ void ItemSyncPrivate::slotLocalListDone(KJob *job)
 {
     mPendingJobs--;
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(AKONADICORE_LOG) << job->errorString();
     }
     deleteItems(mItemsToDelete);
     checkDone();
@@ -333,7 +335,7 @@ void ItemSyncPrivate::execute()
     Q_Q(ItemSync);
     //shouldn't happen
     if (mFinished) {
-        qWarning() << "Call to execute() on finished job.";
+        qCWarning(AKONADICORE_LOG) << "Call to execute() on finished job.";
         Q_ASSERT(false);
         return;
     }
@@ -389,7 +391,7 @@ void ItemSyncPrivate::processItems()
     // added / updated
     foreach (const Item &remoteItem, mCurrentBatchRemoteItems) {
         if (remoteItem.remoteId().isEmpty()) {
-            qWarning() << "Item " << remoteItem.id() << " does not have a remote identifier";
+            qCWarning(AKONADICORE_LOG) << "Item " << remoteItem.id() << " does not have a remote identifier";
             continue;
         }
         if (!mIncremental) {
@@ -429,7 +431,7 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
 void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Deleting items from the akonadi database failed:" << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Deleting items from the akonadi database failed:" << job->errorString();
     }
     mPendingJobs--;
     mProgress++;
@@ -440,7 +442,7 @@ void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
 void ItemSyncPrivate::slotLocalChangeDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Creating/updating items from the akonadi database failed:" << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Creating/updating items from the akonadi database failed:" << job->errorString();
     }
     mPendingJobs--;
     mProgress++;
@@ -496,7 +498,7 @@ void ItemSync::deliveryDone()
 void ItemSync::slotResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Error during ItemSync: " << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Error during ItemSync: " << job->errorString();
         // pretent there were no errors
         Akonadi::Job::removeSubjob(job);
         // propagate the first error we got but continue, we might still be fed with stuff from a resource
@@ -512,7 +514,7 @@ void ItemSync::slotResult(KJob *job)
 void ItemSync::rollback()
 {
     Q_D(ItemSync);
-    qWarning() << "The item sync is being rolled-back.";
+    qCWarning(AKONADICORE_LOG) << "The item sync is being rolled-back.";
     setError(UserCanceled);
     if (d->mCurrentTransaction) {
         d->mCurrentTransaction->rollback();

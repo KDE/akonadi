@@ -398,12 +398,12 @@ void ResourceScheduler::executeNext()
         }
 
         if (!success) {
-            qCritical() << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
+            qCCritical(AKONADIAGENTBASE_LOG) << "Could not invoke slot" << mCurrentTask.methodName << "on" << mCurrentTask.receiver << "with argument" << mCurrentTask.argument;
         }
         break;
     }
     default: {
-        qCritical() << "Unhandled task type" << mCurrentTask.type;
+        qCCritical(AKONADIAGENTBASE_LOG) << "Unhandled task type" << mCurrentTask.type;
         dump();
         Q_ASSERT(false);
     }
@@ -497,7 +497,7 @@ void ResourceScheduler::Task::sendDBusReplies(const QString &errorMsg)
         } else if (methodName.isEmpty()) {
             continue; // unittest calls scheduleItemFetch with empty QDBusMessage
         } else {
-            qCritical() << "Got unexpected member:" << methodName;
+            qCCritical(AKONADIAGENTBASE_LOG) << "Got unexpected member:" << methodName;
         }
         KDBusConnectionPool::threadConnection().send(reply);
     }

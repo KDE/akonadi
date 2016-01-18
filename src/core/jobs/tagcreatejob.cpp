@@ -21,6 +21,7 @@
 #include "job_p.h"
 #include "tag.h"
 #include "protocolhelper_p.h"
+#include "akonadicore_debug.h"
 #include <KLocalizedString>
 
 using namespace Akonadi;
@@ -55,7 +56,7 @@ void TagCreateJob::doStart()
     Q_D(TagCreateJob);
 
     if (d->mTag.gid().isEmpty()) {
-        qWarning() << "The gid of a new tag must not be empty";
+        qCWarning(AKONADICORE_LOG) << "The gid of a new tag must not be empty";
         setError(Job::Unknown);
         setErrorText(i18n("Failed to create tag."));
         emitResult();

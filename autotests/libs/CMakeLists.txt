@@ -34,7 +34,7 @@ add_subdirectory(testsearchplugin)
 
 # convenience macro to add akonadi qtestlib unit-tests
 macro(add_akonadi_test _source)
-  set(_test ${_source})
+  set(_test ${_source} ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp)
   get_filename_component(_name ${_source} NAME_WE)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
@@ -45,7 +45,11 @@ endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
 macro(add_akonadi_test_widgets _source)
-  set(_test ${_source})
+  set(_test
+    ${_source}
+    ${CMAKE_BINARY_DIR}/src/widgets/akonadiwidgets_debug.cpp
+    ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
+  )
   get_filename_component(_name ${_source} NAME_WE)
   add_executable( ${_name} ${_test} )
   add_test( ${_name} ${_name} )
@@ -78,7 +82,11 @@ generate_export_header(akonaditestfake BASE_NAME akonaditestfake)
 
 target_link_libraries(akonaditestfake Qt5::DBus KF5::AkonadiCore Qt5::Test Qt5::Widgets KF5::DBusAddons KF5::AkonadiPrivate)
 
-add_executable( akonadi-firstrun ../../src/core/firstrun.cpp firstrunner.cpp )
+add_executable(akonadi-firstrun
+    ../../src/core/firstrun.cpp
+    firstrunner.cpp
+    ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
+)
 target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore KF5::DBusAddons KF5::ConfigCore Qt5::Widgets)
 
 # qtestlib unit tests
@@ -133,7 +141,7 @@ add_akonadi_isolated_test(itemcopytest.cpp)
 add_akonadi_isolated_test(itemmovetest.cpp)
 add_akonadi_isolated_test(collectioncopytest.cpp)
 add_akonadi_isolated_test(collectionmovetest.cpp)
-add_akonadi_isolated_test_advanced(collectionsynctest.cpp "" "KF5::I18n")
+add_akonadi_isolated_test_advanced(collectionsynctest.cpp "${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp" "KF5::I18n")
 add_akonadi_isolated_test(itemsynctest.cpp)
 add_akonadi_isolated_test(linktest.cpp)
 add_akonadi_isolated_test(cachetest.cpp)

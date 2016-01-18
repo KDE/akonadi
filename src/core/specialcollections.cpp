@@ -18,7 +18,7 @@
 */
 
 #include "specialcollections.h"
-
+#include "akonadicore_debug.h"
 #include "specialcollections_p.h"
 #include "specialcollectionattribute.h"
 
@@ -29,7 +29,6 @@
 #include "monitor.h"
 #include "collectionfetchscope.h"
 
-#include <QDebug>
 #include <kcoreconfigskeleton.h>
 
 #include <QtCore/QHash>
@@ -77,12 +76,12 @@ void SpecialCollectionsPrivate::emitChanged(const QString &resourceId)
     if (mBatchMode) {
         mToEmitChangedFor.insert(resourceId);
     } else {
-        qDebug() << "Emitting changed for" << resourceId;
+        qCDebug(AKONADICORE_LOG) << "Emitting changed for" << resourceId;
         const AgentInstance agentInstance = AgentManager::self()->instance(resourceId);
         emit q->collectionsChanged(agentInstance);
         // first compare with local value then with config value (which also updates the local value)
         if (resourceId == mDefaultResourceId || resourceId == defaultResourceId()) {
-            qDebug() << "Emitting defaultFoldersChanged.";
+            qCDebug(AKONADICORE_LOG) << "Emitting defaultFoldersChanged.";
             emit q->defaultCollectionsChanged();
         }
     }
@@ -90,7 +89,7 @@ void SpecialCollectionsPrivate::emitChanged(const QString &resourceId)
 
 void SpecialCollectionsPrivate::collectionRemoved(const Collection &collection)
 {
-    qDebug() << "Collection" << collection.id() << "resource" << collection.resource();
+    qCDebug(AKONADICORE_LOG) << "Collection" << collection.id() << "resource" << collection.resource();
     if (mFoldersForResource.contains(collection.resource())) {
 
         // Retrieve the list of special folders for the resource the collection belongs to
@@ -128,7 +127,7 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged(Akonadi::Collection:
 void SpecialCollectionsPrivate::collectionFetchJobFinished(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Error fetching collection to get name from id for statistics updating in specialcollections!";
+        qCWarning(AKONADICORE_LOG) << "Error fetching collection to get name from id for statistics updating in specialcollections!";
         return;
     }
 
@@ -221,13 +220,13 @@ void SpecialCollections::unsetSpecialCollection(const Akonadi::Collection &colle
 bool SpecialCollections::unregisterCollection(const Collection &collection)
 {
     if (!collection.isValid()) {
-        qWarning() << "Invalid collection.";
+        qCWarning(AKONADICORE_LOG) << "Invalid collection.";
         return false;
     }
 
     const QString &resourceId = collection.resource();
     if (resourceId.isEmpty()) {
-        qWarning() << "Collection has empty resourceId.";
+        qCWarning(AKONADICORE_LOG) << "Collection has empty resourceId.";
         return false;
     }
 
@@ -242,13 +241,13 @@ bool SpecialCollections::unregisterCollection(const Collection &collection)
 bool SpecialCollections::registerCollection(const QByteArray &type, const Collection &collection)
 {
     if (!collection.isValid()) {
-        qWarning() << "Invalid collection.";
+        qCWarning(AKONADICORE_LOG) << "Invalid collection.";
         return false;
     }
 
     const QString &resourceId = collection.resource();
     if (resourceId.isEmpty()) {
-        qWarning() << "Collection has empty resourceId.";
+        qCWarning(AKONADICORE_LOG) << "Collection has empty resourceId.";
         return false;
     }
 

@@ -28,7 +28,7 @@
 #include "collectioncreatejob.h"
 #include "entitydisplayattribute.h"
 
-#include <QDebug>
+#include "akonadicore_debug.h"
 
 #include <QtCore/QVariant>
 
@@ -115,7 +115,7 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
 void SpecialCollectionsRequestJobPrivate::lockResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Failed to get lock:" << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Failed to get lock:" << job->errorString();
         q->setError(job->error());
         q->setErrorText(job->errorString());
         q->emitResult();
@@ -141,14 +141,14 @@ void SpecialCollectionsRequestJobPrivate::releaseLock()
 {
     const bool ok = Akonadi::releaseLock();
     if (!ok) {
-        qWarning() << "WTF, can't release lock.";
+        qCWarning(AKONADICORE_LOG) << "WTF, can't release lock.";
     }
 }
 
 void SpecialCollectionsRequestJobPrivate::nextResource()
 {
     if (mFoldersForResource.isEmpty()) {
-        qDebug() << "All done! Comitting.";
+        qCDebug(AKONADICORE_LOG) << "All done! Comitting.";
 
         mSpecialCollections->d->beginBatchRegister();
 
@@ -175,8 +175,8 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
 
     } else {
         const QString resourceId = mFoldersForResource.cbegin().key();
-        qDebug() << "A resource is done," << mFoldersForResource.count()
-                 << "more to do. Now doing resource" << resourceId;
+        qCDebug(AKONADICORE_LOG) << "A resource is done," << mFoldersForResource.count()
+                                 << "more to do. Now doing resource" << resourceId;
         ResourceScanJob *resjob = new ResourceScanJob(resourceId, mSpecialCollections->d->mSettings, q);
         QObject::connect(resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)));
     }
@@ -188,18 +188,18 @@ void SpecialCollectionsRequestJobPrivate::resourceScanResult(KJob *job)
     Q_ASSERT(resjob);
 
     const QString resourceId = resjob->resourceId();
-    qDebug() << "resourceId" << resourceId;
+    qCDebug(AKONADICORE_LOG) << "resourceId" << resourceId;
 
     if (job->error()) {
-        qWarning() << "Failed to request resource" << resourceId << ":" << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Failed to request resource" << resourceId << ":" << job->errorString();
         return;
     }
 
     if (qobject_cast<DefaultResourceJob *>(job)) {
         // This is the default resource.
         if (resourceId != mSpecialCollections->d->defaultResourceId()) {
-            qCritical() << "Resource id's don't match: " << resourceId
-                        << mSpecialCollections->d->defaultResourceId();
+            qCWarning(AKONADICORE_LOG) << "Resource id's don't match: " << resourceId
+                                       << mSpecialCollections->d->defaultResourceId();
             Q_ASSERT(false);
         }
         //mToForget.append( mSpecialCollections->defaultResourceId() );
@@ -259,7 +259,7 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
 void SpecialCollectionsRequestJobPrivate::collectionCreateResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Failed CollectionCreateJob." << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Failed CollectionCreateJob." << job->errorString();
         return;
     }
 
@@ -271,7 +271,7 @@ void SpecialCollectionsRequestJobPrivate::collectionCreateResult(KJob *job)
 
     Q_ASSERT(mPendingCreateJobs > 0);
     mPendingCreateJobs--;
-    qDebug() << "mPendingCreateJobs now" << mPendingCreateJobs;
+    qCDebug(AKONADICORE_LOG) << "mPendingCreateJobs now" << mPendingCreateJobs;
 
     if (mPendingCreateJobs == 0) {
         nextResource();
@@ -354,7 +354,7 @@ void SpecialCollectionsRequestJob::slotResult(KJob *job)
 {
     if (job->error()) {
         // If we failed, let others try.
-        qWarning() << "Failed SpecialCollectionsRequestJob::slotResult" << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Failed SpecialCollectionsRequestJob::slotResult" << job->errorString();
 
         d->releaseLock();
     }

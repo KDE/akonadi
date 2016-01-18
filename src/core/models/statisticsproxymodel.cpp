@@ -18,24 +18,24 @@
 */
 
 #include "statisticsproxymodel.h"
-#include <QItemSelection>
+#include "akonadicore_debug.h"
 
-#include <entitytreemodel.h>
-#include <collectionutils.h>
+#include "entitytreemodel.h"
+#include "collectionutils.h"
+#include "collectionquotaattribute.h"
+#include "collectionstatistics.h"
+#include "entitydisplayattribute.h"
 
-#include <collectionquotaattribute.h>
-#include <collectionstatistics.h>
-#include <entitydisplayattribute.h>
-
-#include <qdebug.h>
 #include <kiconloader.h>
 #include <KLocalizedString>
 #include <KFormat>
 
+#include <QItemSelection>
 #include <QApplication>
 #include <QPalette>
 #include <QIcon>
 #include <QMetaMethod>
+
 using namespace Akonadi;
 
 /**
@@ -365,7 +365,7 @@ QModelIndex StatisticsProxyModel::parent(const QModelIndex &child) const
         // So the only way is to create a source index ourselves.
         const QModelIndex sourceIndex = d->sourceIndexAtFirstColumn(child);
         const QModelIndex sourceParent = sourceIndex.parent();
-        //qDebug() << "parent of" << child.data() << "is" << sourceParent.data();
+        //qCDebug(AKONADICORE_LOG) << "parent of" << child.data() << "is" << sourceParent.data();
         return mapFromSource(sourceParent);
     } else {
         return QIdentityProxyModel::parent(child);
@@ -397,7 +397,7 @@ QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
                     return QString();
                 }
             } else {
-                qWarning() << "We shouldn't get there for a column which is not total, unread or size.";
+                qCWarning(AKONADICORE_LOG) << "We shouldn't get there for a column which is not total, unread or size.";
                 return QVariant();
             }
         }

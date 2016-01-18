@@ -32,6 +32,8 @@
 #include "session.h"
 #include "unlinkjob.h"
 
+#include "akonadicore_debug.h"
+
 #include <QUrl>
 #include <QUrlQuery>
 
@@ -98,7 +100,7 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
             dragSourceCollection = parent;
         }
 
-        qDebug() << items.first().parentCollection().id() << dragSourceCollection.id();
+        qCDebug(AKONADICORE_LOG) << items.first().parentCollection().id() << dragSourceCollection.id();
     }
 
     if (dragSourceCollection.isValid()) {
@@ -123,7 +125,7 @@ PasteHelperJob::~PasteHelperJob()
 void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
 {
     CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
-    qDebug() << fetch->error() << fetch->collections().count();
+    qCDebug(AKONADICORE_LOG) << fetch->error() << fetch->collections().count();
     if (fetch->error() || fetch->collections().count() != 1) {
         runActions();
         commit();
@@ -132,9 +134,9 @@ void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
 
     // If the source collection is virtual, treat copy and move actions differently
     const Collection sourceCollection = fetch->collections().at(0);
-    qDebug() << "FROM: " << sourceCollection.id() << sourceCollection.name() << sourceCollection.isVirtual();
-    qDebug() << "DEST: " << mDestCollection.id() << mDestCollection.name() << mDestCollection.isVirtual();
-    qDebug() << "ACTN:" << mAction;
+    qCDebug(AKONADICORE_LOG) << "FROM: " << sourceCollection.id() << sourceCollection.name() << sourceCollection.isVirtual();
+    qCDebug(AKONADICORE_LOG) << "DEST: " << mDestCollection.id() << mDestCollection.name() << mDestCollection.isVirtual();
+    qCDebug(AKONADICORE_LOG) << "ACTN:" << mAction;
     if (sourceCollection.isVirtual()) {
         switch (mAction) {
         case Qt::CopyAction:

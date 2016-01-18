@@ -29,8 +29,7 @@
 #include "session.h"
 #include "changemediator_p.h"
 #include "vectorhelper.h"
-
-#include <qdebug.h>
+#include "akonadicore_debug.h"
 
 using namespace Akonadi;
 
@@ -278,7 +277,7 @@ void MonitorPrivate::checkBatchSupport(const Protocol::ChangeNotification &msg, 
         default:
             needsSplit = isBatch;
             batchSupported = false;
-            qDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
+            qCDebug(AKONADICORE_LOG) << "Unknown operation type" << msg.operation() << "in item change notification";
             return;
         }
     } else if (msg.type() == Protocol::ChangeNotification::Collections) {
@@ -350,7 +349,7 @@ bool MonitorPrivate::acceptNotification(const Akonadi::Protocol::ChangeNotificat
 
     switch (msg.type()) {
     case Protocol::ChangeNotification::InvalidType:
-        qWarning() << "Received invalid change notification!";
+        qCWarning(AKONADICORE_LOG) << "Received invalid change notification!";
         return false;
 
     case Protocol::ChangeNotification::Items:
@@ -626,7 +625,7 @@ void MonitorPrivate::slotSessionDestroyed(QObject *object)
 void MonitorPrivate::slotStatisticsChangedFinished(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Error on fetching collection statistics: " << job->errorText();
+        qCWarning(AKONADICORE_LOG) << "Error on fetching collection statistics: " << job->errorText();
     } else {
         CollectionStatisticsJob *statisticsJob = static_cast<CollectionStatisticsJob *>(job);
         Q_ASSERT(statisticsJob->collection().isValid());
@@ -1008,7 +1007,7 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ChangeNotification &m
         }
         return false;
     default:
-        qDebug() << "Unknown operation type" << msg.operation() << "in item change notification";
+        qCDebug(AKONADICORE_LOG) << "Unknown operation type" << msg.operation() << "in item change notification";
     }
 
     return false;
@@ -1086,7 +1085,7 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::ChangeNotificati
         }
         return true;
     default:
-        qDebug() << "Unknown operation type" << msg.operation() << "in collection change notification";
+        qCDebug(AKONADICORE_LOG) << "Unknown operation type" << msg.operation() << "in collection change notification";
     }
 
     return false;
@@ -1139,7 +1138,7 @@ bool MonitorPrivate::emitTagsNotification(const Protocol::ChangeNotification &ms
         }
         return true;
     default:
-        qDebug() << "Unknown operation type" << msg.operation() << "in tag change notification";
+        qCDebug(AKONADICORE_LOG) << "Unknown operation type" << msg.operation() << "in tag change notification";
     }
 
     return false;
@@ -1171,7 +1170,7 @@ bool MonitorPrivate::emitRelationsNotification(const Protocol::ChangeNotificatio
         }
         return true;
     default:
-        qDebug() << "Unknown operation type" << msg.operation() << "in tag change notification";
+        qCDebug(AKONADICORE_LOG) << "Unknown operation type" << msg.operation() << "in tag change notification";
     }
 
     return false;

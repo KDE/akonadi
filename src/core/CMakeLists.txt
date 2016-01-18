@@ -283,6 +283,8 @@ set(akonadicore_SRCS
     ${akonadicore_dbus_SRCS}
 )
 
+ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDENTIFIER AKONADICORE_LOG CATEGORY_NAME akonadicore_log)
+
 add_library(KF5AkonadiCore ${akonadicore_SRCS})
 
 generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)

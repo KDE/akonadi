@@ -23,6 +23,8 @@
 #include "collectionfetchjob.h"
 #include <QStringList>
 
+#include "akonadicore_debug.h"
+
 using namespace Akonadi;
 
 /**
@@ -62,7 +64,7 @@ void Akonadi::SpecialCollectionsDiscoveryJob::start()
 void Akonadi::SpecialCollectionsDiscoveryJob::slotResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(AKONADICORE_LOG) << job->errorString();
         return;
     }
     Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);

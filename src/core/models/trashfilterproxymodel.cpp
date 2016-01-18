@@ -17,7 +17,6 @@
  02110-1301, USA.
 */
 #include "trashfilterproxymodel.h"
-
 #include "entitydeletedattribute.h"
 #include "item.h"
 #include "entitytreemodel.h"
@@ -64,7 +63,6 @@ bool TrashFilterProxyModel::acceptRow(int sourceRow, const QModelIndex &sourcePa
     Q_D(const TrashFilterProxyModel);
     const QModelIndex &index = sourceModel()->index(sourceRow, 0, sourceParent);
     const Item &item = index.data(EntityTreeModel::ItemRole).value<Item>();
-    //qDebug() << item.id();
     if (item.isValid()) {
         if (item.hasAttribute<EntityDeletedAttribute>()) {
             return d->mTrashIsShown;

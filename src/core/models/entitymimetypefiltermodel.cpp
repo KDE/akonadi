@@ -19,11 +19,9 @@
 */
 
 #include "entitymimetypefiltermodel.h"
-
+#include "akonadicore_debug.h"
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
-
-#include <qdebug.h>
 
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -119,7 +117,7 @@ bool EntityMimeTypeFilterModel::filterAcceptsRow(int sourceRow, const QModelInde
         const Akonadi::Item item = idx.data(EntityTreeModel::ItemRole).value<Akonadi::Item>();
 
         if (item.isValid() && !item.hasPayload()) {
-            qDebug() << "Item " << item.id() << " doesn't have payload";
+            qCDebug(AKONADICORE_LOG) << "Item " << item.id() << " doesn't have payload";
             return false;
         }
 

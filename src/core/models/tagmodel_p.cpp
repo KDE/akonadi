@@ -24,7 +24,8 @@
 #include "session.h"
 #include "tagfetchjob.h"
 
-#include <QDebug>
+#include "akonadicore_debug.h"
+
 #include <QTimer>
 
 using namespace Akonadi;
@@ -155,14 +156,14 @@ void TagModelPrivate::monitoredTagRemoved(const Tag &tag)
     Q_Q(TagModel);
 
     if (!tag.isValid()) {
-        qWarning() << "Attempting to remove root tag?";
+        qCWarning(AKONADICORE_LOG) << "Attempting to remove root tag?";
         return;
     }
 
     // Better lookup parent in our cache
     auto iter = mTags.constFind(tag.id());
     if (iter == mTags.cend()) {
-        qWarning() << "Got removal notification for unknown tag" << tag.id();
+        qCWarning(AKONADICORE_LOG) << "Got removal notification for unknown tag" << tag.id();
         return;
     }
 
@@ -182,7 +183,7 @@ void TagModelPrivate::monitoredTagChanged(const Tag &tag)
     Q_Q(TagModel);
 
     if (!mTags.contains(tag.id())) {
-        qWarning() << "Got change notifications for unknown tag" << tag.id();
+        qCWarning(AKONADICORE_LOG) << "Got change notifications for unknown tag" << tag.id();
         return;
     }
 
@@ -229,14 +230,14 @@ void TagModelPrivate::tagsFetchDone(KJob *job)
     Q_Q(TagModel);
 
     if (job->error()) {
-        qWarning() << job->errorString();
+        qCWarning(AKONADICORE_LOG) << job->errorString();
         return;
     }
 
     if (!mPendingTags.isEmpty()) {
-        qWarning() << "Fetched all tags from server, but there are still" << mPendingTags.count() << "orphan tags:";
+        qCWarning(AKONADICORE_LOG) << "Fetched all tags from server, but there are still" << mPendingTags.count() << "orphan tags:";
         for (auto it = mPendingTags.cbegin(), e = mPendingTags.cend(); it != e; ++it) {
-            qWarning() << "tagId = " << it.key() << "; with list count =" << it.value().count();
+            qCWarning(AKONADICORE_LOG) << "tagId = " << it.key() << "; with list count =" << it.value().count();
         }
 
         return;

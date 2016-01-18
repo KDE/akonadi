@@ -18,12 +18,13 @@
 */
 
 #include "searchquery.h"
+#include "akonadicore_debug.h"
 
 #include <QtCore/QVariant>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
-#include <QDebug>
+
 
 using namespace Akonadi;
 
@@ -127,7 +128,7 @@ public:
             }
             return term;
         } else {
-            qWarning() << "Invalid JSON for term: " << map;
+            qCWarning(AKONADICORE_LOG) << "Invalid JSON for term: " << map;
             return SearchTerm();
         }
     }

@@ -21,6 +21,8 @@
 
 #include "private/imapparser_p.h"
 
+#include "akonadicore_debug.h"
+
 #include <QtCore/QByteArray>
 #include <QtCore/QString>
 
@@ -50,12 +52,12 @@ void EntityDeletedAttribute::setRestoreCollection(const Akonadi::Collection &col
 {
     Q_D(EntityDeletedAttribute);
     if (!collection.isValid()) {
-        qWarning() << "invalid collection" << collection;
+        qCWarning(AKONADICORE_LOG) << "invalid collection" << collection;
     }
     Q_ASSERT(collection.isValid());
     d->restoreCollection = collection;
     if (collection.resource().isEmpty()) {
-        qWarning() << "no resource set";
+        qCWarning(AKONADICORE_LOG) << "no resource set";
     }
     d->restoreResource = collection.resource();
 }
@@ -107,7 +109,7 @@ void EntityDeletedAttribute::deserialize(const QByteArray &data)
     QList<QByteArray> l;
     ImapParser::parseParenthesizedList(data, l);
     if (l.size() != 2) {
-        qWarning() << "invalid size";
+        qCWarning(AKONADICORE_LOG) << "invalid size";
         return;
     }
     d->restoreResource = QString::fromUtf8(l[0]);

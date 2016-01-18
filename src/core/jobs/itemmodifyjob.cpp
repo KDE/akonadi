@@ -19,6 +19,7 @@
 
 #include "itemmodifyjob.h"
 #include "itemmodifyjob_p.h"
+#include "akonadicore_debug.h"
 
 #include "changemediator_p.h"
 #include "collection.h"
@@ -316,7 +317,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
                 return item.id() == resp.id();
             });
             if (it == d->mItems.end()) {
-                qDebug() << "Received STORE response for an item we did not modify: " << tag << response.debugString();
+                qCDebug(AKONADICORE_LOG) << "Received STORE response for an item we did not modify: " << tag << response.debugString();
                 return true;
             }
 

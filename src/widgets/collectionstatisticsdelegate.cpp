@@ -232,7 +232,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     Collection collection = firstColumn.data(EntityTreeModel::CollectionRole).value<Collection>();
 
     if (!collection.isValid()) {
-        qCritical() << "Invalid collection: " << collection;
+        qCCritical(AKONADIWIDGETS_LOG) << "Invalid collection: " << collection;
     }
 
     Q_ASSERT(collection.isValid());   // TODO: I seem to hit this when removing a duplicated "Personal Contacts" or "Personal Calendar"

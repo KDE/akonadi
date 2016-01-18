@@ -19,12 +19,11 @@
 
 #include "item.h"
 #include "item_p.h"
-
+#include "akonadicore_debug.h"
 #include "itemserializer_p.h"
 #include "private/protocol_p.h"
 
 #include <QUrl>
-#include <qdebug.h>
 #include <QUrlQuery>
 
 #include <QtCore/QStringList>
@@ -610,10 +609,10 @@ bool Item::ensureMetaTypeId(int mtid) const
         Item converted = ItemSerializer::convert(*this, mtid);
         return d_ptr->movePayloadFrom(converted.d_ptr, mtid);
     } catch (const std::exception &e) {
-        qDebug() << "conversion threw:" << e.what();
+        qCDebug(AKONADICORE_LOG) << "conversion threw:" << e.what();
         return false;
     } catch (...) {
-        qDebug() << "conversion threw something not derived from std::exception: fix the program!";
+        qCDebug(AKONADICORE_LOG) << "conversion threw something not derived from std::exception: fix the program!";
         return false;
     }
 }
@@ -715,8 +714,8 @@ QVector<int> Item::availablePayloadMetaTypeIds() const
 void Item::apply(const Item &other)
 {
     if (mimeType() != other.mimeType() || id() != other.id()) {
-        qDebug() << "mimeType() = " << mimeType() << "; other.mimeType() = " << other.mimeType();
-        qDebug() << "id() = " << id() << "; other.id() = " << other.id();
+        qCDebug(AKONADICORE_LOG) << "mimeType() = " << mimeType() << "; other.mimeType() = " << other.mimeType();
+        qCDebug(AKONADICORE_LOG) << "id() = " << id() << "; other.id() = " << other.id();
         Q_ASSERT_X(false, "Item::apply", "mimetype or id missmatch");
     }
 

@@ -22,7 +22,7 @@ class Item;
 }
 
 #include "tagsync.h"
-
+#include "akonadicore_debug.h"
 #include "jobs/itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "jobs/itemmodifyjob.h"
@@ -76,7 +76,7 @@ void TagSync::setTagMembers(const QHash<QString, Akonadi::Item::List> &ridMember
 
 void TagSync::doStart()
 {
-    // qDebug();
+    // qCDebug(AKONADICORE_LOG);
     //This should include all tags, including the ones that don't have a remote id
     Akonadi::TagFetchJob *fetch = new Akonadi::TagFetchJob(this);
     connect(fetch, &KJob::result, this, &TagSync::onLocalTagFetchDone);
@@ -84,7 +84,7 @@ void TagSync::doStart()
 
 void TagSync::onLocalTagFetchDone(KJob *job)
 {
-    // qDebug();
+    // qCDebug(AKONADICORE_LOG);
     TagFetchJob *fetch = static_cast<TagFetchJob *>(job);
     mLocalTags = fetch->tags();
     mLocalTagsFetched = true;
@@ -94,10 +94,10 @@ void TagSync::onLocalTagFetchDone(KJob *job)
 void TagSync::diffTags()
 {
     if (!mDeliveryDone || !mTagMembersDeliveryDone || !mLocalTagsFetched) {
-        qDebug() << "waiting for delivery: " << mDeliveryDone << mLocalTagsFetched;
+        qCDebug(AKONADICORE_LOG) << "waiting for delivery: " << mDeliveryDone << mLocalTagsFetched;
         return;
     }
-    // qDebug() << "diffing";
+    // qCDebug(AKONADICORE_LOG) << "diffing";
     QHash<QByteArray, Akonadi::Tag> tagByGid;
     QHash<QByteArray, Akonadi::Tag> tagByRid;
     QHash<Akonadi::Tag::Id, Akonadi::Tag> tagById;
@@ -152,7 +152,7 @@ void TagSync::diffTags()
 void TagSync::onCreateTagDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "ItemFetch failed: " << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "ItemFetch failed: " << job->errorString();
         return;
     }
 
@@ -162,7 +162,7 @@ void TagSync::onCreateTagDone(KJob *job)
         item.setTag(tag);
         ItemModifyJob *modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);
-        qDebug() << "setting tag " << item.remoteId();
+        qCDebug(AKONADICORE_LOG) << "setting tag " << item.remoteId();
     }
 }
 
@@ -181,7 +181,7 @@ static bool containsByGidOrRid(const Item::List &items, const Item &key)
 void TagSync::onTagItemsFetchDone(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "ItemFetch failed: " << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "ItemFetch failed: " << job->errorString();
         return;
     }
 
@@ -216,14 +216,14 @@ void TagSync::onTagItemsFetchDone(KJob *job)
             item.clearTag(tag);
             ItemModifyJob *modJob = new ItemModifyJob(item, this);
             connect(modJob, &KJob::result, this, &TagSync::onJobDone);
-            qDebug() << "removing tag " << item.remoteId();
+            qCDebug(AKONADICORE_LOG) << "removing tag " << item.remoteId();
         }
     }
     Q_FOREACH (Item item, toAdd) {
         item.setTag(tag);
         ItemModifyJob *modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);
-        qDebug() << "setting tag " << item.remoteId();
+        qCDebug(AKONADICORE_LOG) << "setting tag " << item.remoteId();
     }
 }
 
@@ -235,7 +235,7 @@ void TagSync::onJobDone(KJob *)
 void TagSync::slotResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Error during TagSync: " << job->errorString() << job->metaObject()->className();
+        qCWarning(AKONADICORE_LOG) << "Error during TagSync: " << job->errorString() << job->metaObject()->className();
         // pretent there were no errors
         Akonadi::Job::removeSubjob(job);
     } else {
@@ -248,7 +248,7 @@ void TagSync::checkDone()
     if (hasSubjobs()) {
         return;
     }
-    qDebug() << "done";
+    qCDebug(AKONADICORE_LOG) << "done";
     emitResult();
 }
 

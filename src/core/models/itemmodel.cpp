@@ -18,7 +18,7 @@
 */
 
 #include "itemmodel.h"
-
+#include "akonadicore_debug.h"
 #include "itemfetchjob.h"
 #include "collectionfetchjob.h"
 #include "itemfetchscope.h"
@@ -30,7 +30,6 @@
 #include <QUrl>
 
 #include <QCoreApplication>
-#include <QtCore/QDebug>
 #include <QtCore/QMimeData>
 
 using namespace Akonadi;
@@ -129,7 +128,7 @@ void ItemModel::Private::listingDone(KJob *job)
     Q_UNUSED(fetch);
     if (job->error()) {
         // TODO
-        qWarning() << "Item query failed:" << job->errorString();
+        qCWarning(AKONADICORE_LOG) << "Item query failed:" << job->errorString();
     }
 }
 
@@ -147,7 +146,7 @@ void ItemModel::Private::collectionFetchResult(KJob *job)
     if (!c.contentMimeTypes().isEmpty()) {
         mParent->setCollection(c);
     } else {
-        qWarning() << "Failed to retrieve the contents mime type of the collection: " << c;
+        qCWarning(AKONADICORE_LOG) << "Failed to retrieve the contents mime type of the collection: " << c;
         mParent->setCollection(Collection());
     }
 }
@@ -338,7 +337,7 @@ QVariant ItemModel::headerData(int section, Qt::Orientation orientation, int rol
 
 void ItemModel::setCollection(const Collection &collection)
 {
-    qDebug();
+    qCDebug(AKONADICORE_LOG);
     if (d->collection == collection) {
         return;
     }

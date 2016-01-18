@@ -18,6 +18,7 @@
 */
 
 #include "changerecorder_p.h"
+#include "akonadicore_debug.h"
 
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -383,14 +384,14 @@ void ChangeRecorderPrivate::writeStartOffset()
 
     QFile file(notificationsFileName());
     if (!file.open(QIODevice::ReadWrite)) {
-        qWarning() << "Could not update notifications in file" << file.fileName();
+        qCWarning(AKONADICORE_LOG) << "Could not update notifications in file" << file.fileName();
         return;
     }
 
     // Skip "countAndVersion"
     file.seek(8);
 
-    //qDebug() << "Writing start offset=" << m_startOffset;
+    //qCDebug(AKONADICORE_LOG) << "Writing start offset=" << m_startOffset;
 
     QDataStream stream(&file);
     stream.setVersion(QDataStream::Qt_4_6);
@@ -412,7 +413,7 @@ void ChangeRecorderPrivate::saveNotifications()
         dir.mkpath(info.absolutePath());
     }
     if (!file.open(QIODevice::WriteOnly)) {
-        qWarning() << "Could not save notifications to file" << file.fileName();
+        qCWarning(AKONADICORE_LOG) << "Could not save notifications to file" << file.fileName();
         return;
     }
     saveTo(&file);
@@ -433,7 +434,7 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
     stream << countAndVersion;
     stream << quint64(0); // no start offset
 
-    //qDebug() << "Saving" << pendingNotifications.count() << "notifications (full save)";
+    //qCDebug(AKONADICORE_LOG) << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
     for (int i = 0; i < pendingNotifications.count(); ++i) {
         const Protocol::ChangeNotification msg = pendingNotifications.at(i);
@@ -447,7 +448,7 @@ void ChangeRecorderPrivate::notificationsEnqueued(int count)
     if (enableChangeRecording) {
         m_lastKnownNotificationsCount += count;
         if (m_lastKnownNotificationsCount != pendingNotifications.count()) {
-            qWarning() << this << "The number of pending notifications changed without telling us! Expected"
+            qCWarning(AKONADICORE_LOG) << this << "The number of pending notifications changed without telling us! Expected"
                        << m_lastKnownNotificationsCount << "but got" << pendingNotifications.count()
                        << "Caller just added" << count;
             Q_ASSERT(pendingNotifications.count() == m_lastKnownNotificationsCount);

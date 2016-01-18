@@ -27,7 +27,8 @@
 #include "protocolhelper_p.h"
 #include "private/protocol_p.h"
 
-#include <qdebug.h>
+#include "akonadicore_debug.h"
+
 #include <KLocalizedString>
 
 #include <QtCore/QObject>
@@ -377,7 +378,7 @@ void CollectionFetchJob::slotResult(KJob *job)
 
     if (d_ptr->mCurrentSubJob == job && !d->jobFailed(job)) {
         if (job->error()) {
-            qWarning() << "Error during CollectionFetchJob: " << job->errorString();
+            qCWarning(AKONADICORE_LOG) << "Error during CollectionFetchJob: " << job->errorString();
         }
         d_ptr->mCurrentSubJob = 0;
         removeSubjob(job);

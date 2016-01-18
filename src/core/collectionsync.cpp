@@ -19,7 +19,7 @@
 
 #include "collectionsync_p.h"
 #include "collection.h"
-
+#include "akonadicore_debug.h"
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
@@ -29,7 +29,6 @@
 
 #include "cachepolicy.h"
 
-#include <qdebug.h>
 #include <KLocalizedString>
 #include <QtCore/QVariant>
 #include <QTime>
@@ -498,7 +497,7 @@ public:
                 currentTransaction->rollback();
                 q->setError(Unknown);
                 q->setErrorText(i18n("Found unresolved orphan collections"));
-                qWarning() << "found unresolved orphan collection";
+                qCWarning(AKONADICORE_LOG) << "found unresolved orphan collection";
                 emitResult();
                 return;
             }
@@ -677,7 +676,7 @@ public:
     */
     void execute()
     {
-        qDebug() << "localListDone: " << localListDone << " deliveryDone: " << deliveryDone;
+        qCDebug(AKONADICORE_LOG) << "localListDone: " << localListDone << " deliveryDone: " << deliveryDone;
         if (!localListDone && !deliveryDone) {
             return;
         }
@@ -699,7 +698,7 @@ public:
         if (!currentTransaction) {
             // There's nothing to do after local listing -> we are done!
             if (remoteCollectionsToCreate.isEmpty() && remoteCollectionsToUpdate.isEmpty() && localCollectionsToRemove.isEmpty()) {
-                qDebug() << "Nothing to do";
+                qCDebug(AKONADICORE_LOG) << "Nothing to do";
                 emitResult();
                 return;
             }

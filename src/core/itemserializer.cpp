@@ -26,6 +26,8 @@
 
 #include "private/externalpartstorage_p.h"
 
+#include "akonadicore_debug.h"
+
 // Qt
 #include <QtCore/QBuffer>
 #include <QtCore/QFile>
@@ -95,7 +97,7 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
             deserialize(item, label, file, version);
             file.close();
         } else {
-            qWarning() << "Failed to open external payload:" << fileName << file.errorString();
+            qCWarning(AKONADICORE_LOG) << "Failed to open external payload:" << fileName << file.errorString();
         }
     } else {
         QBuffer buffer;
@@ -111,9 +113,9 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
 void ItemSerializer::deserialize(Item &item, const QByteArray &label, QIODevice &data, int version)
 {
     if (!TypePluginLoader::defaultPluginForMimeType(item.mimeType())->deserialize(item, label, data, version)) {
-        qWarning() << "Unable to deserialize payload part:" << label;
+        qCWarning(AKONADICORE_LOG) << "Unable to deserialize payload part:" << label;
         data.seek(0);
-        qWarning() << "Payload data was: " << data.readAll();
+        qCWarning(AKONADICORE_LOG) << "Payload data was: " << data.readAll();
     }
 }
 
@@ -195,30 +197,30 @@ QSet<QByteArray> ItemSerializer::availableParts(const Item &item)
 
 Item ItemSerializer::convert(const Item &item, int mtid)
 {
-//   qDebug() << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
+//   qCDebug(AKONADICORE_LOG) << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
     if (!item.hasPayload()) {
-        qDebug() << "  -> but item has no payload!";
+        qCDebug(AKONADICORE_LOG) << "  -> but item has no payload!";
         return Item();
     }
 
     if (ItemSerializerPlugin *const plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), QVector<int>(1, mtid), TypePluginLoader::NoDefault)) {
-        qDebug() << "  -> found a plugin that feels responsible, trying serialising the payload";
+        qCDebug(AKONADICORE_LOG) << "  -> found a plugin that feels responsible, trying serialising the payload";
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);
         int version;
         serialize(item, Item::FullPayload, buffer, version);
         buffer.seek(0);
-        qDebug() << "    -> serialized payload into" << buffer.size() << "bytes" << endl
+        qCDebug(AKONADICORE_LOG) << "    -> serialized payload into" << buffer.size() << "bytes" << endl
                  << "  -> going to deserialize";
         Item newItem;
         if (plugin->deserialize(newItem, Item::FullPayload, buffer, version)) {
-            qDebug() << "    -> conversion successful";
+            qCDebug(AKONADICORE_LOG) << "    -> conversion successful";
             return newItem;
         } else {
-            qDebug() << "    -> conversion FAILED";
+            qCDebug(AKONADICORE_LOG) << "    -> conversion FAILED";
         }
     } else {
-//     qDebug() << "  -> found NO plugin that feels responsible";
+//     qCDebug(AKONADICORE_LOG) << "  -> found NO plugin that feels responsible";
     }
     return Item();
 }

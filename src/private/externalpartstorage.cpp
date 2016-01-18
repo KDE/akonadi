@@ -19,12 +19,12 @@
 
 #include "externalpartstorage_p.h"
 #include "standarddirs_p.h"
+#include "akonadiprivate_debug.h"
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QMutexLocker>
 #include <QtCore/QThread>
-#include <QtCore/QDebug>
 
 #include <mutex>
 
@@ -139,18 +139,18 @@ bool ExternalPartStorage::createPartFile(const QByteArray &data, qint64 partId,
     partFileName = updateFileNameRevision(QByteArray::number(partId));
     const QString path = resolveAbsolutePath(partFileName, &exists);
     if (exists) {
-        qWarning() << "Error: asked to create a part" << partFileName << ", which already exists!";
+        qCWarning(AKONADIPRIVATE_LOG) << "Error: asked to create a part" << partFileName << ", which already exists!";
         return false;
     }
 
     QFile f(path);
     if (!f.open(QIODevice::WriteOnly)) {
-        qWarning() << "Error: failed to open new part file for writing:" << f.errorString();
+        qCWarning(AKONADIPRIVATE_LOG) << "Error: failed to open new part file for writing:" << f.errorString();
         return false;
     }
     if (f.write(data) != data.size()) {
         // TODO: Maybe just try again?
-        qWarning() << "Error: failed to write all data into the part file";
+        qCWarning(AKONADIPRIVATE_LOG) << "Error: failed to write all data into the part file";
         return false;
     }
     f.close();
@@ -167,7 +167,7 @@ bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteA
     bool exists = false;
     const QString currentPartPath = resolveAbsolutePath(partFile, &exists);
     if (!exists) {
-        qWarning() << "Error: asked to update a non-existent part, aborting update";
+        qCWarning(AKONADIPRIVATE_LOG) << "Error: asked to update a non-existent part, aborting update";
         return false;
     }
 
@@ -175,19 +175,19 @@ bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteA
     exists = false;
     const QString newPartPath = resolveAbsolutePath(newPartFile, &exists);
     if (exists) {
-        qWarning() << "Error: asked to update part" << partFile << ", but" << newPartFile << "already exists, aborting update";
+        qCWarning(AKONADIPRIVATE_LOG) << "Error: asked to update part" << partFile << ", but" << newPartFile << "already exists, aborting update";
         return false;
     }
 
     QFile f(newPartPath);
     if (!f.open(QIODevice::WriteOnly)) {
-        qWarning() << "Error: failed to open new part file for update:" << f.errorString();
+        qCWarning(AKONADIPRIVATE_LOG) << "Error: failed to open new part file for update:" << f.errorString();
         return false;
     }
 
     if (f.write(newData) != newData.size()) {
         // TODO: Maybe just try again?
-        qWarning() << "Error: failed to write all data into the part file";
+        qCWarning(AKONADIPRIVATE_LOG) << "Error: failed to write all data into the part file";
         return false;
     }
     f.close();
@@ -198,7 +198,7 @@ bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteA
     } else {
         if (!QFile::remove(currentPartPath)) {
             // Not a reason to fail the operation
-            qWarning() << "Error: failed to remove old part payload file" << currentPartPath;
+            qCWarning(AKONADIPRIVATE_LOG) << "Error: failed to remove old part payload file" << currentPartPath;
         }
     }
 
@@ -212,7 +212,7 @@ bool ExternalPartStorage::removePartFile(const QString &partFile)
     } else {
         if (!QFile::remove(partFile)) {
             // Not a reason to fail the operation
-            qWarning() << "Error: failed to remove part file" << partFile;
+            qCWarning(AKONADIPRIVATE_LOG) << "Error: failed to remove part file" << partFile;
         }
     }
 
@@ -242,7 +242,7 @@ bool ExternalPartStorage::beginTransaction()
 {
     QMutexLocker locker(&mTransactionLock);
     if (mTransactions.contains(QThread::currentThread())) {
-        qDebug() << "Error: there is already a transaction in progress in this thread";
+        qCDebug(AKONADIPRIVATE_LOG) << "Error: there is already a transaction in progress in this thread";
         return false;
     }
 
@@ -260,7 +260,7 @@ bool ExternalPartStorage::commitTransaction()
     QMutexLocker locker(&mTransactionLock);
     auto iter = mTransactions.find(QThread::currentThread());
     if (iter == mTransactions.end()) {
-        qDebug() << "Commit error: there is no transaction in progress in this thread";
+        qCDebug(AKONADIPRIVATE_LOG) << "Commit error: there is no transaction in progress in this thread";
         return false;
     }
 
@@ -276,7 +276,7 @@ bool ExternalPartStorage::rollbackTransaction()
     QMutexLocker locker(&mTransactionLock);
     auto iter = mTransactions.find(QThread::currentThread());
     if (iter == mTransactions.end()) {
-        qDebug() << "Rollback error: there is no transaction in progress in this thread";
+        qCDebug(AKONADIPRIVATE_LOG) << "Rollback error: there is no transaction in progress in this thread";
         return false;
     }
 
@@ -317,7 +317,7 @@ bool ExternalPartStorage::replayTransaction(const QVector<Operation> &trx, bool 
                 if (!QFile::remove(op.filename)) {
                     // We failed to remove the file, but don't abort the rollback.
                     // This is an error, but does not cause data loss.
-                    qDebug() << "Warning: failed to remove" << op.filename << "while rolling back a transaction";
+                    qCDebug(AKONADIPRIVATE_LOG) << "Warning: failed to remove" << op.filename << "while rolling back a transaction";
                 }
             }
         } else if (op.type == Operation::Delete) {
@@ -325,7 +325,7 @@ bool ExternalPartStorage::replayTransaction(const QVector<Operation> &trx, bool 
                 if (!QFile::remove(op.filename)) {
                     // We failed to remove the file, but don't abort the commit.
                     // This is an error, but does not cause data loss.
-                    qDebug() << "Warning: failed to remove" << op.filename << "while committing a transaction";
+                    qCDebug(AKONADIPRIVATE_LOG) << "Warning: failed to remove" << op.filename << "while committing a transaction";
                 }
             } else {
                 // no-op: we did not actually delete the file yet

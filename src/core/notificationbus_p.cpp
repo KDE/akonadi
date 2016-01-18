@@ -20,6 +20,7 @@
 #include "notificationbus_p.h"
 #include "session_p.h"
 #include "connectionthread_p.h"
+#include "akonadicore_debug.h"
 
 #include "private/protocol_p.h"
 
@@ -44,14 +45,14 @@ bool NotificationBusPrivate::handleCommand(qint64 tag, const Protocol::Command &
     if (cmd.type() == Protocol::Command::Hello) {
         Protocol::HelloResponse hello(cmd);
         if (hello.isError()) {
-            qWarning() << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
+            qCWarning(AKONADICORE_LOG) << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
             connThread->disconnect();
             QTimer::singleShot(1000, mParent, SLOT(reconnect()));
             return false;
         }
 
-        qDebug() << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
-        qDebug() << "Server says:" << hello.message();
+        qCDebug(AKONADICORE_LOG) << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
+        qCDebug(AKONADICORE_LOG) << "Server says:" << hello.message();
         // Version mismatch is handled in SessionPrivate::startJob() so that
         // we can report the error out via KJob API
         protocolVersion = hello.protocolVersion();
@@ -64,7 +65,7 @@ bool NotificationBusPrivate::handleCommand(qint64 tag, const Protocol::Command &
     if (cmd.type() == Protocol::Command::Login) {
         Protocol::LoginResponse login(cmd);
         if (login.isError()) {
-            qWarning() << "Unable to login to Akonadi server:" << login.errorMessage();
+            qCWarning(AKONADICORE_LOG) << "Unable to login to Akonadi server:" << login.errorMessage();
             connThread->disconnect();
             QTimer::singleShot(1000, mParent, SLOT(reconnect()));
             return false;
@@ -80,6 +81,6 @@ bool NotificationBusPrivate::handleCommand(qint64 tag, const Protocol::Command &
         return true;
     }
 
-    qWarning() << "Recieved invalid command on NotificationBus" << sessionId;
+    qCWarning(AKONADICORE_LOG) << "Recieved invalid command on NotificationBus" << sessionId;
     return false;
 }

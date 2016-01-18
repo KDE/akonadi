@@ -24,7 +24,7 @@
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
 
-#include <qdebug.h>
+#include "akonadicore_debug.h"
 
 // Qt
 #include <QtCore/QHash>
@@ -64,7 +64,7 @@ public:
         : mIdentifier(identifier)
         , mPlugin(plugin)
     {
-        qDebug() << " PLUGIN : identifier" << identifier;
+        qCDebug(AKONADICORE_LOG) << " PLUGIN : identifier" << identifier;
     }
 
     QObject *plugin() const
@@ -75,8 +75,8 @@ public:
 
         QObject *object = PluginLoader::self()->createForName(mIdentifier);
         if (!object) {
-            qWarning() << "ItemSerializerPluginLoader: "
-                       << "plugin" << mIdentifier << "is not valid!" << endl;
+            qCWarning(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
+                                       << "plugin" << mIdentifier << "is not valid!" << endl;
 
             // we try to use the default in that case
             mPlugin = s_defaultItemSerializerPlugin;
@@ -84,8 +84,9 @@ public:
 
         mPlugin = object;
         if (!qobject_cast<ItemSerializerPlugin *>(mPlugin)) {
-            qWarning() << "ItemSerializerPluginLoader: "
-                       << "plugin" << mIdentifier << "doesn't provide interface ItemSerializerPlugin!" << endl;
+            qCWarning(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
+                                       << "plugin" << mIdentifier
+                                       << "doesn't provide interface ItemSerializerPlugin!" << endl;
 
             // we try to use the default in that case
             mPlugin = s_defaultItemSerializerPlugin;
@@ -225,12 +226,12 @@ public:
     {
         const PluginLoader *pl = PluginLoader::self();
         if (!pl) {
-            qWarning() << "Cannot instantiate plugin loader!" << endl;
+            qCWarning(AKONADICORE_LOG) << "Cannot instantiate plugin loader!" << endl;
             return;
         }
         const QStringList names = pl->names();
-        qDebug() << "ItemSerializerPluginLoader: "
-                 << "found" << names.size() << "plugins." << endl;
+        qCDebug(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
+                                 << "found" << names.size() << "plugins." << endl;
         QMap<QString, MimeTypeEntry> map;
         QRegExp rx(QStringLiteral("(.+)@(.+)"));
         QMimeDatabase mimeDb;
@@ -247,8 +248,8 @@ public:
                     it->add(classType, PluginEntry(name));
                 }
             } else {
-                qDebug() << "ItemSerializerPluginLoader: "
-                         << "name" << name << "doesn't look like mimetype@classtype" << endl;
+                qCDebug(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
+                                         << "name" << name << "doesn't look like mimetype@classtype" << endl;
             }
         }
         const QString APPLICATION_OCTETSTREAM = QLatin1String(_APPLICATION_OCTETSTREAM);
@@ -342,36 +343,36 @@ private:
             try {
                 boost::topological_sort(graph, std::back_inserter(order));
             } catch (const boost::not_a_dag &e) {
-                qWarning() << "Mimetype tree is not a DAG!";
+                qCWarning(AKONADICORE_LOG) << "Mimetype tree is not a DAG!";
                 return mDefaultPlugin.plugin();
             }
         }
 
         // step 3: ask each one in turn if it can handle any of the metaTypeIds:
-//       qDebug() << "Looking for " << format( type, metaTypeIds );
+//       qCDebug(AKONADICORE_LOG) << "Looking for " << format( type, metaTypeIds );
         for (QVector<int>::const_iterator it = order.constBegin(), end = order.constEnd(); it != end; ++it) {
-//         qDebug() << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
+//         qCDebug(AKONADICORE_LOG) << "  Considering serializer plugin for type" << allMimeTypes[matchingIndexes[*it]].type()
 // //                  << "as the closest match";
             const MimeTypeEntry &mt = allMimeTypes[matchingIndexes[*it]];
             if (metaTypeIds.empty()) {
                 if (const PluginEntry *const entry = mt.defaultPlugin()) {
-//             qDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
+//             qCDebug(AKONADICORE_LOG) << "    -> got " << entry->pluginClassName() << " and am happy with it.";
                     //FIXME ? in qt5 we show "application/octet-stream" first so if will use default plugin. Exclude it until we look at all mimetype and use default at the end if necessary
                     if (allMimeTypes[matchingIndexes[*it]].type() != QLatin1String("application/octet-stream")) {
                         return entry->plugin();
                     }
                 } else {
-//             qDebug() << "    -> no default plugin for this mime type, trying next";
+//             qCDebug(AKONADICORE_LOG) << "    -> no default plugin for this mime type, trying next";
                 }
             } else if (const PluginEntry *const entry = mt.plugin(metaTypeIds, chosen)) {
-//           qDebug() << "    -> got " << entry->pluginClassName() << " and am happy with it.";
+//           qCDebug(AKONADICORE_LOG) << "    -> got " << entry->pluginClassName() << " and am happy with it.";
                 return entry->plugin();
             } else {
-//           qDebug() << "   -> can't handle any of the types, trying next";
+//           qCDebug(AKONADICORE_LOG) << "   -> can't handle any of the types, trying next";
             }
         }
 
-//       qDebug() << "  No further candidates, using default plugin";
+//       qCDebug(AKONADICORE_LOG) << "  No further candidates, using default plugin";
         // no luck? Use the default plugin
         return mDefaultPlugin.plugin();
     }

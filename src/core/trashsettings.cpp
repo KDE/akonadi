@@ -18,6 +18,7 @@
  */
 
 #include "trashsettings.h"
+#include "akonadicore_debug.h"
 
 #include <KConfig>
 #include <KConfigGroup>
@@ -32,7 +33,7 @@ Akonadi::Collection TrashSettings::getTrashCollection(const QString &resource)
     KConfig config(QStringLiteral("akonaditrashrc"));
     KConfigGroup group(&config, resource);
     const Akonadi::Collection::Id colId = group.readEntry<Akonadi::Collection::Id> ("TrashCollection", -1);
-    qWarning() << resource << colId;
+    qCWarning(AKONADICORE_LOG) << resource << colId;
     return Collection(colId);
 }
 
@@ -40,6 +41,6 @@ void TrashSettings::setTrashCollection(const QString &resource, const Akonadi::C
 {
     KConfig config(QStringLiteral("akonaditrashrc"));
     KConfigGroup group(&config, resource);
-    qWarning() << resource << collection.id();
+    qCWarning(AKONADICORE_LOG) << resource << collection.id();
     group.writeEntry("TrashCollection", collection.id());
 }

@@ -21,8 +21,8 @@
 #include "servermanager.h"
 #include "agentinstance.h"
 #include "agentmanager.h"
+#include "akonadicore_debug.h"
 
-#include <QDebug>
 #include <KLocalizedString>
 
 #include <QDBusInterface>
@@ -161,7 +161,7 @@ void ResourceSynchronizationJobPrivate::slotTimeout()
 
     if (instance.status() == AgentInstance::Idle) {
         // try again, we might have lost the synchronized()/synchronizedCollectionTree() signal
-        qDebug() << "trying again to sync resource" << instance.identifier();
+        qCDebug(AKONADICORE_LOG) << "trying again to sync resource" << instance.identifier();
         if (collectionTreeOnly) {
             instance.synchronizeCollectionTree();
         } else {

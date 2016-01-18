@@ -22,7 +22,7 @@ class Item;
 }
 
 #include "relationsync.h"
-
+#include "akonadicore_debug.h"
 #include "itemfetchscope.h"
 
 #include "jobs/itemfetchjob.h"
@@ -62,7 +62,6 @@ void RelationSync::doStart()
 
 void RelationSync::onLocalFetchDone(KJob *job)
 {
-    // qDebug();
     Akonadi::RelationFetchJob *fetch = static_cast<Akonadi::RelationFetchJob *>(job);
     mLocalRelations = fetch->relations();
     mLocalRelationsFetched = true;
@@ -72,11 +71,10 @@ void RelationSync::onLocalFetchDone(KJob *job)
 void RelationSync::diffRelations()
 {
     if (!mRemoteRelationsSet || !mLocalRelationsFetched) {
-        qDebug() << "waiting for delivery: " << mRemoteRelationsSet << mLocalRelationsFetched;
+        qCDebug(AKONADICORE_LOG) << "waiting for delivery: " << mRemoteRelationsSet << mLocalRelationsFetched;
         return;
     }
 
-    // qDebug() << "diffing";
     QHash<QByteArray, Akonadi::Relation> relationByRid;
     Q_FOREACH (const Akonadi::Relation &localRelation, mLocalRelations) {
         if (!localRelation.remoteId().isEmpty()) {
@@ -105,7 +103,7 @@ void RelationSync::diffRelations()
 void RelationSync::slotResult(KJob *job)
 {
     if (job->error()) {
-        qWarning() << "Error during CollectionSync: " << job->errorString() << job->metaObject()->className();
+        qCWarning(AKONADICORE_LOG) << "Error during CollectionSync: " << job->errorString() << job->metaObject()->className();
         // pretend there were no errors
         Akonadi::Job::removeSubjob(job);
     } else {
@@ -116,10 +114,10 @@ void RelationSync::slotResult(KJob *job)
 void RelationSync::checkDone()
 {
     if (hasSubjobs()) {
-        qDebug() << "Still going";
+        qCDebug(AKONADICORE_LOG) << "Still going";
         return;
     }
-    qDebug() << "done";
+    qCDebug(AKONADICORE_LOG) << "done";
     emitResult();
 }
 

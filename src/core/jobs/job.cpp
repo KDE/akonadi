@@ -21,13 +21,13 @@
 
 #include "job.h"
 #include "job_p.h"
+#include "akonadicore_debug.h"
 #include "KDBusConnectionPool"
 #include <QTime>
 #include "private/protocol_p.h"
 #include "session.h"
 #include "session_p.h"
 
-#include <qdebug.h>
 #include <KLocalizedString>
 
 #include <QtCore/QEventLoop>
@@ -348,7 +348,7 @@ bool Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
     // the Session dispatches next job in queue without TransactionSequence's
     // TransactionCommitJob finishing: the we get the response for TCJ out-of-order
     // and it's received by the currently running job instead of the TCJ.
-    qDebug() << this << "Unhandled response: " << tag << command.debugString();
+    qCDebug(AKONADICORE_LOG) << this << "Unhandled response: " << tag << command.debugString();
     /*
     setError(Unknown);
     setErrorText(i18n("Unexpected response"));

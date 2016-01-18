@@ -24,7 +24,7 @@
 #include "agentmanager_p.h"
 #include "servermanager.h"
 
-#include <QDebug>
+#include "akonadicore_debug.h"
 
 using namespace Akonadi;
 
@@ -139,10 +139,10 @@ void AgentInstance::abortCurrentTask() const
     if (iface.isValid()) {
         QDBusReply<void> reply = iface.call(QStringLiteral("abort"));
         if (!reply.isValid()) {
-            qWarning() << "Failed to place D-Bus call.";
+            qCWarning(AKONADICORE_LOG) << "Failed to place D-Bus call.";
         }
     } else {
-        qWarning() << "Unable to obtain agent interface";
+        qCWarning(AKONADICORE_LOG) << "Unable to obtain agent interface";
     }
 }
 
@@ -154,10 +154,10 @@ void AgentInstance::reconfigure() const
     if (iface.isValid()) {
         QDBusReply<void> reply = iface.call(QStringLiteral("reconfigure"));
         if (!reply.isValid()) {
-            qWarning() << "Failed to place D-Bus call.";
+            qCWarning(AKONADICORE_LOG) << "Failed to place D-Bus call.";
         }
     } else {
-        qWarning() << "Unable to obtain agent interface";
+        qCWarning(AKONADICORE_LOG) << "Unable to obtain agent interface";
     }
 }
 
@@ -169,9 +169,9 @@ void Akonadi::AgentInstance::restart() const
     if (iface.isValid()) {
         QDBusReply<void> reply = iface.call(QStringLiteral("restartAgentInstance"), identifier());
         if (!reply.isValid()) {
-            qWarning() << "Failed to place D-Bus call.";
+            qCWarning(AKONADICORE_LOG) << "Failed to place D-Bus call.";
         }
     } else {
-        qWarning() << "Unable to obtain control interface" << iface.lastError().message();
+        qCWarning(AKONADICORE_LOG) << "Unable to obtain control interface" << iface.lastError().message();
     }
 }

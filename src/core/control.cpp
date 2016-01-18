@@ -19,8 +19,7 @@
 
 #include "control.h"
 #include "servermanager.h"
-
-#include <qdebug.h>
+#include "akonadicore_debug.h"
 
 #include <QtCore/QEventLoop>
 #include <QtCore/QCoreApplication>
@@ -83,14 +82,14 @@ public:
 
 bool Control::Private::exec()
 {
-    qDebug() << "Starting/Stopping Akonadi (using an event loop).";
+    qCDebug(AKONADICORE_LOG) << "Starting/Stopping Akonadi (using an event loop).";
     mEventLoop = new QEventLoop(mParent);
     mEventLoop->exec();
     mEventLoop->deleteLater();
     mEventLoop = 0;
 
     if (!mSuccess) {
-        qWarning() << "Could not start/stop Akonadi!";
+        qCWarning(AKONADICORE_LOG) << "Could not start/stop Akonadi!";
     }
 
     mStarting = false;
@@ -103,7 +102,7 @@ bool Control::Private::exec()
 
 void Control::Private::serverStateChanged(ServerManager::State state)
 {
-    qDebug() << state;
+    qCDebug(AKONADICORE_LOG) << state;
     if (mEventLoop && mEventLoop->isRunning()) {
         // ignore transient states going into the right direction
         if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||
@@ -135,16 +134,16 @@ Control::~Control()
 bool Control::start()
 {
     if (ServerManager::state() == ServerManager::Stopping) {
-        qDebug() << "Server is currently being stopped, wont try to start it now";
+        qCDebug(AKONADICORE_LOG) << "Server is currently being stopped, wont try to start it now";
         return false;
     }
     if (ServerManager::isRunning() || s_instance->d->mEventLoop) {
-        qDebug() << "Server is already running";
+        qCDebug(AKONADICORE_LOG) << "Server is already running";
         return true;
     }
     s_instance->d->mStarting = true;
     if (!ServerManager::start()) {
-        qDebug() << "ServerManager::start failed -> return false";
+        qCDebug(AKONADICORE_LOG) << "ServerManager::start failed -> return false";
         return false;
     }
     return s_instance->d->exec();
