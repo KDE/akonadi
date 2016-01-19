@@ -97,7 +97,7 @@ private Q_SLOTS:
         foreach (const Item &item, itemSearchJob->items()) {
             actualResultSet << item.id();
         }
-//         qDebug() << actualResultSet << resultSet;
+        qDebug() << actualResultSet << resultSet;
         QCOMPARE(actualResultSet, resultSet);
     }
 
