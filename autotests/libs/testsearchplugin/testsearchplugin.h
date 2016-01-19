@@ -20,7 +20,7 @@
 #ifndef TESTSEARCHPLUGIN_H
 #define TESTSEARCHPLUGIN_H
 
-#include <akonadi/abstractsearchplugin.h>
+#include "../../../src/server/search/abstractsearchplugin.h"
 #include <searchquery.h>
 #include <QStringList>
 
