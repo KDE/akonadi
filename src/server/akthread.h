@@ -29,14 +29,22 @@ namespace Server {
 class AkThread : public QObject
 {
     Q_OBJECT
-
 public:
+    enum StartMode {
+        AutoStart,
+        ManualStart
+    };
+
     explicit AkThread(QThread::Priority priority = QThread::InheritPriority,
+                      QObject *parent = Q_NULLPTR);
+    explicit AkThread(StartMode startMode,
+                      QThread::Priority priority = QThread::InheritPriority,
                       QObject *parent = Q_NULLPTR);
     virtual ~AkThread();
 
 protected:
     void quitThread();
+    void startThread();
 
 protected Q_SLOTS:
     virtual void init();

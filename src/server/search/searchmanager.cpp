@@ -20,7 +20,6 @@
 
 #include "searchmanager.h"
 #include "abstractsearchplugin.h"
-#include "searchmanageradaptor.h"
 #include "akonadiserver_debug.h"
 
 #include "agentsearchengine.h"
@@ -58,7 +57,7 @@ Q_DECLARE_METATYPE(QSet<qint64>)
 Q_DECLARE_METATYPE(QSemaphore *)
 
 SearchManager::SearchManager(const QStringList &searchEngines, QObject *parent)
-    : AkThread(QThread::InheritPriority, parent)
+    : AkThread(AkThread::ManualStart, QThread::InheritPriority, parent)
     , mEngineNames(searchEngines)
 {
     setObjectName(QStringLiteral("SearchManager"));
@@ -69,6 +68,19 @@ SearchManager::SearchManager(const QStringList &searchEngines, QObject *parent)
 
     Q_ASSERT(sInstance == 0);
     sInstance = this;
+
+    // We load search plugins (as in QLibrary::load()) in the main thread so that
+    // static initialization happens in the QApplication thread
+    loadSearchPlugins();
+
+    // Register to DBus on the main thread connection - otherwise we don't appear
+    // on the service.
+    QDBusConnection conn = QDBusConnection::sessionBus();
+    conn.registerObject(QStringLiteral("/SearchManager"), this,
+                        QDBusConnection::ExportAllSlots);
+
+    // Delay-call init()
+    startThread();
 }
 
 void SearchManager::init()
@@ -85,11 +97,6 @@ void SearchManager::init()
     }
 
     initSearchPlugins();
-
-    new SearchManagerAdaptor(this);
-    QDBusConnection conn = DBusConnectionPool::threadConnection();
-    conn.registerObject(QStringLiteral("/SearchManager"), this,
-                        QDBusConnection::ExportAdaptors);
 
     // The timer will tick 15 seconds after last change notification. If a new notification
     // is delivered in the meantime, the timer is reset
@@ -165,8 +172,8 @@ void SearchManager::loadSearchPlugins()
             const QString filePath = pluginDir % QLatin1String("/akonadi/") % fileName;
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
-
             if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
+                akDebug() << "===>" << fileName << metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString();
                 continue;
             }
 

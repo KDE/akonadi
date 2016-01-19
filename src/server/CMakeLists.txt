@@ -148,7 +148,6 @@ qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h Akonadi::Server::DebugInterface)
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resourcemanager.h Akonadi::Server::ResourceManager)
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessormanager.h Akonadi::Server::PreprocessorManager)
-qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.SearchManager.xml search/searchmanager.h Akonadi::Server::SearchManager)
 qt5_add_dbus_interface(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml agentmanagerinterface)
 qt5_add_dbus_interface(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Resource.xml resourceinterface)
 qt5_add_dbus_interface(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Preprocessor.xml preprocessorinterface)

@@ -63,18 +63,6 @@ public:
     static SearchManager *instance();
 
     /**
-     * This is called via D-Bus from AgentManager to register an agent with
-     * search interface.
-     */
-    virtual void registerInstance(const QString &id);
-
-    /**
-     * This is called via D-Bus from AgentManager to unregister an agent with
-     * search interface.
-     */
-    virtual void unregisterInstance(const QString &id);
-
-    /**
      * Updates the search query asynchronously. Returns immediately
      */
     virtual void updateSearchAsync(const Collection &collection);
@@ -91,6 +79,18 @@ public:
 
 public Q_SLOTS:
     virtual void scheduleSearchUpdate();
+
+    /**
+     * This is called via D-Bus from AgentManager to register an agent with
+     * search interface.
+     */
+    virtual void registerInstance(const QString &id);
+
+    /**
+     * This is called via D-Bus from AgentManager to unregister an agent with
+     * search interface.
+     */
+    virtual void unregisterInstance(const QString &id);
 
 private Q_SLOTS:
     void searchUpdateTimeout();

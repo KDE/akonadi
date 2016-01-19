@@ -26,19 +26,31 @@
 
 using namespace Akonadi::Server;
 
-AkThread::AkThread(QThread::Priority priority, QObject *parent)
+AkThread::AkThread(StartMode startMode, QThread::Priority priority, QObject *parent)
     : QObject(parent)
 {
     QThread *thread = new QThread();
     moveToThread(thread);
     thread->start(priority);
 
-    const bool init = QMetaObject::invokeMethod(this, "init", Qt::QueuedConnection);
-    Q_ASSERT(init); Q_UNUSED(init);
+    if (startMode == AutoStart) {
+        startThread();
+    }
+}
+
+AkThread::AkThread(QThread::Priority priority, QObject *parent)
+    : AkThread(AutoStart, priority, parent)
+{
 }
 
 AkThread::~AkThread()
 {
+}
+
+void AkThread::startThread()
+{
+    const bool init = QMetaObject::invokeMethod(this, "init", Qt::QueuedConnection);
+    Q_ASSERT(init); Q_UNUSED(init);
 }
 
 void AkThread::quitThread()
