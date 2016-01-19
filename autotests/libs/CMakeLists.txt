@@ -19,9 +19,6 @@ option(AKONADI_RUN_SQLITE_ISOLATED_TESTS "Run isolated tests with sqlite3 as bac
 kde_enable_exceptions()
 
 include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${AKONADI_INCLUDE_DIR}
-  ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
 )
 

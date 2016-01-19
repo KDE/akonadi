@@ -1,7 +1,4 @@
 include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${AKONADI_INCLUDE_DIR}
-  ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
 )
 

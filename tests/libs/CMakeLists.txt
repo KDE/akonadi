@@ -18,10 +18,6 @@ option(KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS "Run isolated tests with PostgreSQL a
 kde_enable_exceptions()
 
 include_directories(
-  ${CMAKE_CURRENT_BINARY_DIR}
-  ${AKONADI_INCLUDE_DIR}
-  ${CMAKE_CURRENT_BINARY_DIR}/../src/selftest/
-  ${AKONADI_INCLUDE_DIR}/akonadi/private
   ${Boost_INCLUDE_DIR}
 )
 
