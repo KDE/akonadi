@@ -80,6 +80,11 @@ endif()
 ############### Build Options ###############
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(ENABLE_ASAN "Build Akonadi with AddressSanitzer - https://code.google.com/p/address-sanitizer/" FALSE)
+option(BUILD_TOOLS "Build and install tools for development and testing purposes." TRUE)
+
+if(BUILD_TESTING)
+   set(BUILD_TOOLS TRUE)
+endif()
 
 set(SMI_MIN_VERSION "0.20")
 find_package(SharedMimeInfo ${SMI_MIN_VERSION} REQUIRED)
@@ -289,9 +294,17 @@ include_directories(
 
 add_subdirectory(src)
 
+if(BUILD_TOOLS)
+    # add testrunner (application for managing a self-contained
+    # test environment)
+    add_subdirectory(autotests/libs/testrunner)
+    add_subdirectory(autotests/libs/testresource)
+    add_subdirectory(autotests/libs/testsearchplugin)
+endif()
+
 if(BUILD_TESTING)
-   add_subdirectory(autotests)
-   add_subdirectory(tests)
+    add_subdirectory(autotests)
+    add_subdirectory(tests)
 endif()
 
 

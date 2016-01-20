@@ -22,13 +22,6 @@ include_directories(
   ${Boost_INCLUDE_DIR}
 )
 
-# add testrunner (application for managing a self-contained test
-# environment)
-
-add_subdirectory(testrunner)
-add_subdirectory(testresource)
-add_subdirectory(testsearchplugin)
-
 # convenience macro to add akonadi qtestlib unit-tests
 macro(add_akonadi_test _source)
   set(_test ${_source} ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp)
