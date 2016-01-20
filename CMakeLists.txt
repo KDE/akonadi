@@ -66,13 +66,6 @@ set_package_properties(Boost PROPERTIES
     TYPE REQUIRED
 )
 
-find_package(LibXml2)
-set_package_properties(LibXml2 PROPERTIES
-    DESCRIPTION "The LibXML2 library"
-    URL "http://xmlsoft.org"
-    TYPE REQUIRED
-)
-
 set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
 configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
 

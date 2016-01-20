@@ -1,4 +1,11 @@
 
+find_package(LibXml2)
+set_package_properties(LibXml2 PROPERTIES
+    DESCRIPTION "Required for XML schema validation in akonadixml"
+    URL "http://xmlsoft.org"
+    TYPE OPTIONAL
+)
+
 # Turn exceptions on
 if (LIBXML2_FOUND)
     add_definitions(-DHAVE_LIBXML2)
