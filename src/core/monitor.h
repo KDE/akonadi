@@ -41,7 +41,7 @@ class TagFetchScope;
 
 namespace Protocol
 {
-class ChangeNotification;
+class Command;
 }
 
 /**
@@ -733,6 +733,8 @@ Q_SIGNALS:
      */
     void typeMonitored(const Akonadi::Monitor::Type type, bool monitored);
 
+    void monitorReady();
+
 protected:
     //@cond PRIVATE
     friend class EntityTreeModel;
@@ -748,7 +750,8 @@ private:
     Q_PRIVATE_SLOT(d_ptr, void slotSessionDestroyed(QObject *))
     Q_PRIVATE_SLOT(d_ptr, void slotStatisticsChangedFinished(KJob *))
     Q_PRIVATE_SLOT(d_ptr, void slotFlushRecentlyChangedCollections())
-    Q_PRIVATE_SLOT(d_ptr, void slotNotify(const Akonadi::Protocol::ChangeNotification &))
+    Q_PRIVATE_SLOT(d_ptr, void slotUpdateSubscription())
+    Q_PRIVATE_SLOT(d_ptr, void commandReceived(qint64 tag, const Akonadi::Protocol::Command &))
     Q_PRIVATE_SLOT(d_ptr, void dataAvailable())
     Q_PRIVATE_SLOT(d_ptr, void serverStateChanged(Akonadi::ServerManager::State))
     Q_PRIVATE_SLOT(d_ptr, void invalidateCollectionCache(qint64))

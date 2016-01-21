@@ -488,13 +488,11 @@ void ProtocolTest::testLoginCommand()
     QVERIFY(!in.isResponse());
     QVERIFY(in.isValid());
     in.setSessionId("MySession-123-notifications");
-    in.setSessionMode(LoginCommand::NotificationBus);
 
     const LoginCommand out = serializeAndDeserialize(in);
     QVERIFY(out.isValid());
     QVERIFY(!out.isResponse());
     QCOMPARE(out.sessionId(), QByteArray("MySession-123-notifications"));
-    QCOMPARE(out.sessionMode(), LoginCommand::NotificationBus);
     QCOMPARE(out, in);
     const bool notEquals = (out != in);
     QVERIFY(!notEquals);

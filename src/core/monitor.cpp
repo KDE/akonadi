@@ -67,15 +67,13 @@ void Monitor::setCollectionMonitored(const Collection &collection, bool monitore
     Q_D(Monitor);
     if (!d->collections.contains(collection) && monitored) {
         d->collections << collection;
-        if (d->notificationSource) {
-            d->notificationSource->setMonitoredCollection(collection.id(), true);
-        }
+        d->pendingModification.startMonitoringCollection(collection.id());
+        d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->collections.removeAll(collection)) {
             d->cleanOldNotifications();
-            if (d->notificationSource) {
-                d->notificationSource->setMonitoredCollection(collection.id(), false);
-            }
+            d->pendingModification.stopMonitoringCollection(collection.id());
+            d->scheduleSubscriptionUpdate();
         }
     }
 
@@ -87,15 +85,13 @@ void Monitor::setItemMonitored(const Item &item, bool monitored)
     Q_D(Monitor);
     if (!d->items.contains(item.id()) && monitored) {
         d->items.insert(item.id());
-        if (d->notificationSource) {
-            d->notificationSource->setMonitoredItem(item.id(), true);
-        }
+        d->pendingModification.startMonitoringItem(item.id());
+        d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->items.remove(item.id())) {
             d->cleanOldNotifications();
-            if (d->notificationSource) {
-                d->notificationSource->setMonitoredItem(item.id(), false);
-            }
+            d->pendingModification.stopMonitoringItem(item.id());
+            d->scheduleSubscriptionUpdate();
         }
     }
 
@@ -107,15 +103,13 @@ void Monitor::setResourceMonitored(const QByteArray &resource, bool monitored)
     Q_D(Monitor);
     if (!d->resources.contains(resource) && monitored) {
         d->resources.insert(resource);
-        if (d->notificationSource) {
-            d->notificationSource->setMonitoredResource(resource, true);
-        }
+        d->pendingModification.startMonitoringResource(resource);
+        d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->resources.remove(resource)) {
             d->cleanOldNotifications();
-            if (d->notificationSource) {
-                d->notificationSource->setMonitoredResource(resource, false);
-            }
+            d->pendingModification.stopMonitoringResource(resource);
+            d->scheduleSubscriptionUpdate();
         }
     }
 
@@ -127,15 +121,13 @@ void Monitor::setMimeTypeMonitored(const QString &mimetype, bool monitored)
     Q_D(Monitor);
     if (!d->mimetypes.contains(mimetype) && monitored) {
         d->mimetypes.insert(mimetype);
-        if (d->notificationSource) {
-            d->notificationSource->setMonitoredMimeType(mimetype, true);
-        }
+        d->pendingModification.startMonitoringMimeType(mimetype);
+        d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->mimetypes.remove(mimetype)) {
             d->cleanOldNotifications();
-            if (d->notificationSource) {
-                d->notificationSource->setMonitoredMimeType(mimetype, false);
-            }
+            d->pendingModification.stopMonitoringMimeType(mimetype);
+            d->scheduleSubscriptionUpdate();
         }
     }
 
@@ -147,15 +139,13 @@ void Monitor::setTagMonitored(const Akonadi::Tag &tag, bool monitored)
     Q_D(Monitor);
     if (!d->tags.contains(tag.id()) && monitored) {
         d->tags.insert(tag.id());
-        if (d->notificationSource) {
-            d->notificationSource->setMonitoredTag(tag.id(), true);
-        }
+        d->pendingModification.startMonitoringTag(tag.id());
+        d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->tags.remove(tag.id())) {
             d->cleanOldNotifications();
-            if (d->notificationSource) {
-                d->notificationSource->setMonitoredTag(tag.id(), false);
-            }
+            d->pendingModification.stopMonitoringTag(tag.id());
+            d->scheduleSubscriptionUpdate();
         }
     }
 
@@ -167,15 +157,13 @@ void Monitor::setTypeMonitored(Monitor::Type type, bool monitored)
     Q_D(Monitor);
     if (!d->types.contains(type) && monitored) {
         d->types.insert(type);
-        if (d->notificationSource) {
-            d->notificationSource->setMonitoredType(static_cast<Protocol::ChangeNotification::Type>(type), true);
-        }
+        d->pendingModification.startMonitoringType(static_cast<Protocol::ChangeNotification::Type>(type));
+        d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->types.remove(type)) {
             d->cleanOldNotifications();
-            if (d->notificationSource) {
-                d->notificationSource->setMonitoredType(static_cast<Protocol::ChangeNotification::Type>(type), false);
-            }
+            d->pendingModification.stopMonitoringType(static_cast<Protocol::ChangeNotification::Type>(type));
+            d->scheduleSubscriptionUpdate();
         }
     }
 
@@ -195,9 +183,8 @@ void Akonadi::Monitor::setAllMonitored(bool monitored)
         d->cleanOldNotifications();
     }
 
-    if (d->notificationSource) {
-        d->notificationSource->setAllMonitored(monitored);
-    }
+    d->pendingModification.setAllMonitored(monitored);
+    d->scheduleSubscriptionUpdate();
 
     emit allMonitored(monitored);
 }
@@ -206,9 +193,8 @@ void Monitor::setExclusive(bool exclusive)
 {
     Q_D(Monitor);
     d->exclusive = exclusive;
-    if (d->notificationSource) {
-        d->notificationSource->setExclusive(exclusive);
-    }
+    d->pendingModification.setExclusive(exclusive);
+    d->scheduleSubscriptionUpdate();
 }
 
 bool Monitor::exclusive() const
@@ -224,9 +210,8 @@ void Monitor::ignoreSession(Session *session)
     if (!d->sessions.contains(session->sessionId())) {
         d->sessions << session->sessionId();
         connect(session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)));
-        if (d->notificationSource) {
-            d->notificationSource->setIgnoredSession(session->sessionId(), true);
-        }
+        d->pendingModification.startIgnoringSession(session->sessionId());
+        d->scheduleSubscriptionUpdate();
     }
 }
 
@@ -368,9 +353,9 @@ void Monitor::setSession(Akonadi::Session *session)
 
     d->itemCache->setSession(d->session);
     d->collectionCache->setSession(d->session);
-    if (d->notificationSource) {
-        d->notificationSource->setSession(d->session->sessionId());
-    }
+
+    // Reconnect with a new session
+    d->connectToNotificationManager();
 }
 
 Session *Monitor::session() const

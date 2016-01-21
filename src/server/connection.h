@@ -67,12 +67,8 @@ public:
     void setSessionId(const QByteArray &id);
     QByteArray sessionId() const;
 
-    void setIsNotificationBus(bool on);
-    bool isNotificationBus() const;
-
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
-
 
     Protocol::Command readCommand();
 
@@ -105,7 +101,6 @@ protected:
     QLocalSocket *m_socket;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
-    bool m_isNotificationBus;
     mutable DataStore *m_backend;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;

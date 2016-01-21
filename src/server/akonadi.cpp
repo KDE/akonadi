@@ -57,16 +57,6 @@
 #include <QtDBus/QDBusServiceWatcher>
 #include <QtNetwork/QLocalServer>
 
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
-#include <stdlib.h>
-
-#ifdef Q_OS_WIN
-#include <windows.h>
-#include <Sddl.h>
-#endif
-
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -90,6 +80,7 @@ AkonadiServer::AkonadiServer(QObject *parent)
     qRegisterMetaType<Protocol::Command>();
     qRegisterMetaType<Protocol::ChangeNotification>();
     qRegisterMetaType<Protocol::ChangeNotification::List>();
+    qRegisterMetaType<quintptr>("quintptr");
 
     qRegisterMetaType<Protocol::ChangeNotification::Type>();
     qDBusRegisterMetaType<Protocol::ChangeNotification::Type>();
@@ -123,6 +114,9 @@ bool AkonadiServer::init()
 
     s_instance = this;
 
+    const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
+    QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
+
     mCmdServer = new AkLocalServer(this);
     connect(mCmdServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
             this, &AkonadiServer::newCmdConnection);
@@ -134,12 +128,6 @@ bool AkonadiServer::init()
     connect(mNtfServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
             mNotificationManager, &NotificationManager::registerConnection);
 
-
-
-    const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
-    QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
-
-    QString pipeName;
 #ifdef Q_OS_WIN
     HANDLE hToken = NULL;
     PSID sid;
@@ -173,36 +161,49 @@ bool AkonadiServer::init()
         free(sid);
     }
 
-    pipeName = QStringLiteral("Akonadi-%1").arg(userID);
-#else
-    uid_t uid = getuid();
-    pipeName = QStringLiteral("Akonadi-%1").arg(uid);
-#endif
-
-    if (Instance::hasIdentifier()) {
-        pipeName += QStringLiteral("-") % Instance::identifier();
-    }
-
-    const QString cmdPipeName = pipeName + QStringLiteral("-Cmd");
-    if (!mCmdServer->listen(cmdPipeName)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on named pipe" << cmdPipeName;
+    const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % userID;
+    const QString cmdPipe = settings.value(QStringLiteral("Connection/NamedPipe"), defaultCmdPipe).toString();
+    if (!mCmdServer->listen(cmdPipe)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << cmdPipe;
         quit();
         return false;
     }
 
-    const QString ntfPipeName = pipeName + QStringLiteral("-Ntf");
-    if (!mNtfServer->listen(ntfPipeName)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on named pipe" << ntfPipeName;
+    const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % userID;
+    const QString ntfPipe = settings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultNtfPipe).toString();
+    if (!mNtfServer->listen(ntfPipe)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << ntfPipe;
         quit();
         return false;
     }
 
     connectionSettings.setValue(QStringLiteral("Data/Method"), QStringLiteral("NamedPipe"));
-    connectionSettings.setValue(QStringLiteral("Data/NamedPipe"), cmdPipeName);
-
+    connectionSettings.setValue(QStringLiteral("Data/NamedPipe"), cmdPipe);
     connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("NamedPipe"));
-    connectionSettings.setValue(QStringLiteral("Nottifications/NamedPipe"), ntfPipeName);
+    connectionSettings.setValue(QStringLiteral("Notifications/NamedPipe"), ntfPipe);
+#else
+    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"));
+    const QString cmdSocketFile = socketDir % QStringLiteral("/akonadiserver-cmd.socket");
+    QFile::remove(cmdSocketFile);
+    if (!mCmdServer->listen(cmdSocketFile)) {
+        akError() << "Unable to listen on Unix socket" << cmdSocketFile;
+        quit();
+        return false;
+    }
 
+    const QString ntfSocketFile = socketDir % QStringLiteral("/akonadiserver-ntf.socket");
+    QFile::remove(ntfSocketFile);
+    if (!mNtfServer->listen(ntfSocketFile)) {
+        akError() << "Unable to listen on Unix socket" << ntfSocketFile;
+        quit();
+        return false;
+    }
+
+    connectionSettings.setValue(QStringLiteral("Data/Method"), QStringLiteral("UnixPath"));
+    connectionSettings.setValue(QStringLiteral("Data/UnixPath"), cmdSocketFile);
+    connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("UnixPath"));
+    connectionSettings.setValue(QStringLiteral("Notifications/UnixPath"), ntfSocketFile);
+#endif
 
     // initialize the database
     DataStore *db = DataStore::self();
@@ -331,13 +332,6 @@ bool AkonadiServer::quit()
     QSettings settings(StandardDirs::serverConfigFile(), QSettings::IniFormat);
     const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
 
-#ifndef Q_OS_WIN
-    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"));
-
-    if (!QDir::home().remove(socketDir + QLatin1String("/akonadiserver.socket"))) {
-        qCCritical(AKONADISERVER_LOG) << "Failed to remove Unix socket";
-    }
-#endif
     if (!QDir::home().remove(connectionSettingsFile)) {
         qCCritical(AKONADISERVER_LOG) << "Failed to remove runtime connection config file";
     }

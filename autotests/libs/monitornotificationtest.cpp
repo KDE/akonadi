@@ -93,6 +93,9 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
 {
     Q_UNUSED(itemCache)
 
+    // Workaround for the QTimer::singleShot() in fake monitors to happen
+    QTest::qWait(10);
+
     monitor->setSession(m_fakeSession);
     monitor->fetchCollection(true);
 
@@ -116,7 +119,7 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     QVERIFY(monitor->pipeline().isEmpty());
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
-    monitor->notificationBus()->emitNotify(msg);
+    monitor->notificationConnection()->emitNotify(msg);
 
     QCOMPARE(monitor->pipeline().size(), 1);
     QVERIFY(monitor->pendingNotifications().isEmpty());
@@ -185,7 +188,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
     Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
-        monitor->notificationBus()->emitNotify(ntf);
+        monitor->notificationConnection()->emitNotify(ntf);
     }
 
     QCOMPARE(monitor->pipeline().size(), 5);
@@ -272,7 +275,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
     Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
-        monitor->notificationBus()->emitNotify(ntf);
+        monitor->notificationConnection()->emitNotify(ntf);
     }
 
     // Collection 6 is not notified, because Collection 5 has held up the pipeline

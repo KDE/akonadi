@@ -2259,7 +2259,6 @@ class AKONADIPRIVATE_EXPORT ModifySubscriptionResponse : public Response
 {
 public:
     explicit ModifySubscriptionResponse();
-    explicit ModifySubscriptionResponse(const QByteArray &subscriptionId);
     ModifySubscriptionResponse(const Command &other);
 
 private:

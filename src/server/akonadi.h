@@ -84,6 +84,8 @@ private:
     bool startDatabaseProcess();
     bool createDatabase();
     void stopDatabaseProcess();
+    uint userId() const;
+
 
 protected:
     AkonadiServer(QObject *parent = Q_NULLPTR);

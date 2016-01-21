@@ -32,7 +32,7 @@
 #include "entitycache_p.h"
 #include "servermanager.h"
 #include "changenotificationdependenciesfactory_p.h"
-#include "notificationsource_p.h"
+#include "connection_p.h"
 
 #include "private/protocol_p.h"
 
@@ -60,8 +60,7 @@ public:
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC(Monitor)
     ChangeNotificationDependenciesFactory *dependenciesFactory;
-    NotificationSource *notificationSource;
-    QObject *notificationBus;
+    Connection *ntfConnection;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
@@ -80,6 +79,10 @@ public:
     ItemListCache *itemCache;
     TagListCache *tagCache;
     QMimeDatabase mimeDatabase;
+
+    Protocol::ModifySubscriptionCommand pendingModification;
+    QTimer *pendingModificationTimer;
+    bool monitorReady;
 
     // The waiting list
     QQueue<Protocol::ChangeNotification> pendingNotifications;
@@ -142,6 +145,8 @@ public:
     */
     int translateAndCompress(QQueue<Protocol::ChangeNotification> &notificationQueue, const Protocol::ChangeNotification &msg);
 
+    void commandReceived(qint64 tag, const Protocol::Command &command);
+
     virtual void slotNotify(const Protocol::ChangeNotification &msg);
 
     /**
@@ -177,6 +182,9 @@ public:
      * This method is called by the ChangeMediator to enforce an invalidation of the passed tag.
      */
     void invalidateTagCache(qint64 tagId);
+
+    void scheduleSubscriptionUpdate();
+    void slotUpdateSubscription();
 
     /**
       @brief Class used to determine when to purge items in a Collection

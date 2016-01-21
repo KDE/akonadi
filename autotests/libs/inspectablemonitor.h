@@ -50,14 +50,9 @@ class AKONADITESTFAKE_EXPORT InspectableMonitor : public Akonadi::Monitor
 public:
     InspectableMonitor(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = Q_NULLPTR);
 
-    FakeNotificationSource *notifier() const
+    FakeNotificationConnection *notificationConnection() const
     {
-        return qobject_cast<FakeNotificationSource *>(d_ptr->notificationSource->source());
-    }
-
-    FakeNotificationBus *notificationBus() const
-    {
-        return qobject_cast<FakeNotificationBus *>(d_ptr->notificationBus);
+        return qobject_cast<FakeNotificationConnection *>(d_ptr->ntfConnection);
     }
 
     QQueue<Akonadi::Protocol::ChangeNotification> pendingNotifications() const

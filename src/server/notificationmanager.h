@@ -20,98 +20,48 @@
 #ifndef AKONADI_NOTIFICATIONMANAGER_H
 #define AKONADI_NOTIFICATIONMANAGER_H
 
-#include <private/protocol_p.h>
-#include "storage/entity.h"
+#include "akthread.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QObject>
+#include <private/protocol_p.h>
+
 #include <QtCore/QTimer>
-#include <QtCore/QMutex>
-#include <QtDBus/QDBusContext>
-#include <QtDBus/QDBusObjectPath>
 
 class NotificationManagerTest;
+class QLocalSocket;
 
 namespace Akonadi {
 namespace Server {
 
 class NotificationCollector;
-class NotificationSource;
-class Connection;
+class NotificationSubscriber;
 
-/**
-  Notification manager D-Bus interface.
-*/
-class NotificationManager : public QObject, protected QDBusContext
+class NotificationManager : public AkThread
 {
     Q_OBJECT
-    Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.NotificationManager")
 
 public:
-    static NotificationManager *self();
-
+    explicit NotificationManager();
     virtual ~NotificationManager();
 
     void connectNotificationCollector(NotificationCollector *collector);
 
-    void registerConnection(Connection *connection);
-    void unregisterConnection(Connection *connection);
-
 public Q_SLOTS:
-    Q_SCRIPTABLE void emitPendingNotifications();
+    void registerConnection(quintptr socketDescriptor);
 
-    /**
-     * Subscribe to notifications emitted by this manager.
-     *
-     * @param identifier Identifier to use for our subscription.
-     * @param exclusive Exclusive subscribers also receive notifications on referenced collections
-     * @return The path we got assigned. Contains identifier.
-     */
-    QDBusObjectPath subscribe(const QString &identifier, bool exclusive);
-
-    /**
-     * Unsubscribe from this manager.
-     *
-     * This method is for your inconvenience only. It's advisable to use the unsubscribe method
-     * provided by the NotificationSource.
-     *
-     * @param identifier The identifier used for subscription.
-     */
-    void unsubscribe(const QString &identifier);
-
-    /**
-     * Returns identifiers of currently subscribed sources
-     */
-    Q_SCRIPTABLE QList<QDBusObjectPath> subscribers() const;
-
-    Q_SCRIPTABLE void enableDebug(bool enable);
-    Q_SCRIPTABLE bool debugEnabled() const;
-
-Q_SIGNALS:
-    Q_SCRIPTABLE void debugNotify(const QVector<QByteArray> &msg);
-
-    void subscribed(const QDBusObjectPath &path);
-    void unsubscribed(const QDBusObjectPath &path);
+    void emitPendingNotifications();
 
 private Q_SLOTS:
     void slotNotify(const Akonadi::Protocol::ChangeNotification::List &msgs);
 
-private:
-    NotificationManager();
+protected:
+    void init() Q_DECL_OVERRIDE;
+    void quit() Q_DECL_OVERRIDE;
 
 private:
-    void registerSource(NotificationSource *source);
-    void unregisterSource(NotificationSource *source);
-
-    static NotificationManager *mSelf;
     Protocol::ChangeNotification::List mNotifications;
-    QTimer mTimer;
+    QTimer *mTimer;
 
-    //! One message source for each subscribed process
-    QMutex mSourcesLock;
-    QHash<QString, NotificationSource *> mNotificationSources;
-
-    bool mDebug;
+    QVector<NotificationSubscriber *> mSubscribers;
 
     friend class NotificationSource;
     friend class ::NotificationManagerTest;

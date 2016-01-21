@@ -21,7 +21,7 @@
 
 #include "entities.h"
 #include "notificationmanager.h"
-#include "notificationsource.h"
+#include "notificationsubscriber.h"
 
 #include <QtCore/QObject>
 #include <QtTest/QTest>
@@ -33,11 +33,77 @@ using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE(QVector<QString>)
 
+class TestableNotificationSubscriber : public NotificationSubscriber
+{
+public:
+    TestableNotificationSubscriber()
+        : NotificationSubscriber()
+    {
+    }
+
+    void setAllMonitored(bool allMonitored)
+    {
+        mAllMonitored = allMonitored;
+    }
+
+    void setMonitoredCollection(qint64 collection, bool monitored)
+    {
+        if (monitored) {
+            mMonitoredCollections.insert(collection);
+        } else {
+            mMonitoredCollections.remove(collection);
+        }
+    }
+
+    void setMonitoredItem(qint64 item, bool monitored)
+    {
+        if (monitored) {
+            mMonitoredItems.insert(item);
+        } else {
+            mMonitoredItems.remove(item);
+        }
+    }
+
+    void setMonitoredResource(const QByteArray &resource, bool monitored)
+    {
+        if (monitored) {
+            mMonitoredResources.insert(resource);
+        } else {
+            mMonitoredResources.remove(resource);
+        }
+    }
+
+    void setMonitoredMimeType(const QString &mimeType, bool monitored)
+    {
+        if (monitored) {
+            mMonitoredMimeTypes.insert(mimeType);
+        } else {
+            mMonitoredMimeTypes.remove(mimeType);
+        }
+    }
+
+    void setIgnoredSession(const QByteArray &session, bool ignored)
+    {
+        if (ignored) {
+            mIgnoredSessions.insert(session);
+        } else {
+            mIgnoredSessions.remove(session);
+        }
+    }
+
+    void writeNotification(const Protocol::ChangeNotification &notification) Q_DECL_OVERRIDE
+    {
+        emittedNotifications << notification;
+    }
+
+    Protocol::ChangeNotification::List emittedNotifications;
+};
+
 class NotificationManagerTest : public QObject
 {
     Q_OBJECT
 
-    typedef QList<NotificationSource *> NSList;
+    typedef QList<NotificationSubscriber *> NSList;
 
 private Q_SLOTS:
     void testSourceFilter_data()
@@ -267,37 +333,33 @@ private Q_SLOTS:
         QFETCH(Protocol::ChangeNotification, notification);
         QFETCH(bool, accepted);
 
-        NotificationManager mgr;
-        NotificationSource source(QStringLiteral("testSource"), QString(), &mgr);
-        mgr.registerSource(&source);
+        TestableNotificationSubscriber subscriber;
 
-        source.setAllMonitored(allMonitored);
+        subscriber.setAllMonitored(allMonitored);
         Q_FOREACH (Entity::Id id, monitoredCollections) {
-            source.setMonitoredCollection(id, true);
+            subscriber.setMonitoredCollection(id, true);
         }
         Q_FOREACH (Entity::Id id, monitoredItems) {
-            source.setMonitoredItem(id, true);
+            subscriber.setMonitoredItem(id, true);
         }
         Q_FOREACH (const QByteArray &res, monitoredResources) {
-            source.setMonitoredResource(res, true);
+            subscriber.setMonitoredResource(res, true);
         }
         Q_FOREACH (const QString &mimeType, monitoredMimeTypes) {
-            source.setMonitoredMimeType(mimeType, true);
+            subscriber.setMonitoredMimeType(mimeType, true);
         }
         Q_FOREACH (const QByteArray &session, ignoredSessions) {
-            source.setIgnoredSession(session, true);
+            subscriber.setIgnoredSession(session, true);
         }
 
-        QSignalSpy spy(&source, SIGNAL(notify(Akonadi::Protocol::Command)));
         Protocol::ChangeNotification::List list;
         list << notification;
-        mgr.slotNotify(list);
-        mgr.emitPendingNotifications();
+        subscriber.notify(list);
 
-        QCOMPARE(spy.count(), accepted ? 1 : 0);
+        QCOMPARE(subscriber.emittedNotifications.count(), accepted ? 1 : 0);
 
         if (accepted) {
-            Protocol::ChangeNotification ntf = spy.at(0).at(0).value<Protocol::Command>();
+            const Protocol::ChangeNotification ntf = subscriber.emittedNotifications.at(0);
             QVERIFY(ntf.isValid());
         }
     }

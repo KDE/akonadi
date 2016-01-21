@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2015 Daniel Vrátil <dvratil@redhat.com>
+    Copyright (c) 2016 Daniel Vrátil <dvratil@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,33 +17,38 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_NOTIFICATIONBUS_P_H
-#define AKONADI_NOTIFICATIONBUS_P_H
+#ifndef SESSIONTHREAD_P_H
+#define SESSIONTHREAD_P_H
 
-#include "session_p.h"
+#include <QObject>
+#include <QVector>
+
+#include "connection_p.h"
 
 namespace Akonadi
 {
 
-namespace Protocol
-{
-class ChangeNotification;
-}
-
-class NotificationBusPrivate : public QObject,
-    public Akonadi::SessionPrivate
+class SessionThread : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit NotificationBusPrivate(Session *parent = Q_NULLPTR);
-    ~NotificationBusPrivate();
+    explicit SessionThread(QObject *parent = Q_NULLPTR);
+    ~SessionThread();
 
-    bool handleCommand(qint64 tag, const Protocol::Command &cmd) Q_DECL_OVERRIDE;
+    Connection *createConnection(Connection::ConnectionType connType, const QByteArray &sessionId);
 
-Q_SIGNALS:
-    void notify(const Akonadi::Protocol::ChangeNotification &ntf);
+private:
+    Q_INVOKABLE Akonadi::Connection *doCreateConnection(Akonadi::Connection::ConnectionType connType,
+                                                        const QByteArray &sessionId);
+
+    Q_INVOKABLE void doThreadQuit();
+
+private:
+    QVector<Connection *> mConnections;
 };
+
 }
 
-#endif // AKONADI_NOTIFICATIONBUS_P_H
+
+#endif

@@ -38,8 +38,7 @@ static const int PipelineSize = 5;
 MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent)
     : q_ptr(parent)
     , dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new ChangeNotificationDependenciesFactory)
-    , notificationSource(0)
-    , notificationBus(0)
+    , ntfConnection(Q_NULLPTR)
     , monitorAll(false)
     , exclusive(false)
     , mFetchChangedOnly(false)
@@ -47,6 +46,8 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     , collectionCache(0)
     , itemCache(0)
     , tagCache(0)
+    , pendingModificationTimer(Q_NULLPTR)
+    , monitorReady(false)
     , fetchCollection(false)
     , fetchCollectionStatistics(false)
     , collectionMoveTranslationEnabled(true)
@@ -86,62 +87,28 @@ void MonitorPrivate::init()
 
 bool MonitorPrivate::connectToNotificationManager()
 {
-    delete notificationSource;
+    if (ntfConnection) {
+        ntfConnection->deleteLater();
+        ntfConnection = Q_NULLPTR;
+    }
 
-    notificationSource = dependenciesFactory->createNotificationSource(q_ptr);
-    if (!notificationSource) {
+    if (!session) {
         return false;
     }
 
-    notificationSource->setSession(session->sessionId());
-
-    if (notificationBus) {
-        // HACK: Implementation detail: notificationBus is SessionPrivate subclass,
-        // so we cannot delete it directly, but we need to delete the owning
-        // Session instead, otherwise it will dereference a deleted d_ptr.
-        delete notificationBus->parent();
-    }
-    notificationBus = dependenciesFactory->createNotificationBus(q_ptr, notificationSource);
-    if (!notificationBus) {
-        delete notificationSource;
-        notificationSource = 0;
+    ntfConnection = dependenciesFactory->createNotificationConnection(session);
+    if (!ntfConnection) {
         return false;
     }
-    QObject::connect(notificationBus, SIGNAL(notify(Akonadi::Protocol::ChangeNotification)),
-                     q_ptr, SLOT(slotNotify(Akonadi::Protocol::ChangeNotification)));
-
+    q_ptr->connect(ntfConnection, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
+                   q_ptr, SLOT(commandReceived(qint64,Akonadi::Protocol::Command)));
     return true;
 }
 
 void MonitorPrivate::serverStateChanged(ServerManager::State state)
 {
     if (state == ServerManager::Running) {
-        if (connectToNotificationManager()) {
-            notificationSource->setAllMonitored(monitorAll);
-            notificationSource->setSession(session->sessionId());
-            Q_FOREACH (const Collection &col, collections) {
-                notificationSource->setMonitoredCollection(col.id(), true);
-            }
-            Q_FOREACH (const Item::Id id, items) {
-                notificationSource->setMonitoredItem(id, true);
-            }
-            Q_FOREACH (const QByteArray &resource, resources) {
-                notificationSource->setMonitoredResource(resource, true);
-            }
-            Q_FOREACH (const QByteArray &session, sessions) {
-                notificationSource->setIgnoredSession(session, true);
-            }
-            Q_FOREACH (const QString &mimeType, mimetypes) {
-                notificationSource->setMonitoredMimeType(mimeType, true);
-            }
-            Q_FOREACH (Tag::Id tagId, tags) {
-                notificationSource->setMonitoredTag(tagId, true);
-            }
-            Q_FOREACH (Monitor::Type type, types) {
-                notificationSource->setMonitoredType(
-                    static_cast<Protocol::ChangeNotification::Type>(type), true);
-            }
-        }
+        connectToNotificationManager();
     }
 }
 
@@ -163,6 +130,31 @@ void MonitorPrivate::invalidateTagCache(qint64 id)
 int MonitorPrivate::pipelineSize() const
 {
     return PipelineSize;
+}
+
+void MonitorPrivate::scheduleSubscriptionUpdate()
+{
+    if (pendingModificationTimer || !monitorReady) {
+        return;
+    }
+
+    pendingModificationTimer = new QTimer();
+    pendingModificationTimer->setSingleShot(true);
+    pendingModificationTimer->setInterval(0);
+    pendingModificationTimer->start();
+    q_ptr->connect(pendingModificationTimer, SIGNAL(timeout()),
+                   q_ptr, SLOT(slotUpdateSubscription()));
+}
+
+void MonitorPrivate::slotUpdateSubscription()
+{
+    delete pendingModificationTimer;
+    pendingModificationTimer = Q_NULLPTR;
+
+    if (ntfConnection) {
+        ntfConnection->sendCommand(3, pendingModification);
+        pendingModification = Protocol::ModifySubscriptionCommand();
+    }
 }
 
 bool MonitorPrivate::isLazilyIgnored(const Protocol::ChangeNotification &msg, bool allowModifyFlagsConversion) const
@@ -616,9 +608,8 @@ void MonitorPrivate::slotSessionDestroyed(QObject *object)
     Session *objectSession = qobject_cast<Session *>(object);
     if (objectSession) {
         sessions.removeAll(objectSession->sessionId());
-        if (notificationSource) {
-            notificationSource->setIgnoredSession(objectSession->sessionId(), false);
-        }
+        pendingModification.stopIgnoringSession(objectSession->sessionId());
+        scheduleSubscriptionUpdate();
     }
 }
 
@@ -711,6 +702,52 @@ int MonitorPrivate::translateAndCompress(QQueue< Protocol::ChangeNotification > 
         notificationQueue.enqueue(insertion);
     }
     return split.count();
+}
+
+void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &command)
+{
+    Q_UNUSED(tag);
+    if (command.isResponse()) {
+        switch (command.type()) {
+        case Protocol::Command::Hello: {
+            Protocol::HelloResponse hello(command);
+            qCDebug(AKONADICORE_LOG) << q_ptr << "Connected to notification bus";
+            Protocol::CreateSubscriptionCommand subCmd(session->sessionId() + QByteArray::number(quintptr(this)));
+            ntfConnection->sendCommand(2, subCmd);
+            break;
+        }
+
+        case Protocol::Command::CreateSubscription: {
+            Protocol::ModifySubscriptionCommand msubCmd = pendingModification;
+            pendingModification = Protocol::ModifySubscriptionCommand();
+            ntfConnection->sendCommand(3, msubCmd);
+            break;
+        }
+
+        case Protocol::Command::ModifySubscription:
+            // TODO: Handle errors
+            if (!monitorReady) {
+                monitorReady = true;
+                Q_EMIT q_ptr->monitorReady();
+            }
+            break;
+
+        default:
+            // TODO
+            break;
+        }
+    } else {
+        switch (command.type()) {
+        case Protocol::Command::ChangeNotification: {
+            Protocol::ChangeNotification ntf(command);
+            slotNotify(ntf);
+            break;
+        }
+
+        default:
+            break;
+        }
+    }
 }
 
 /*
