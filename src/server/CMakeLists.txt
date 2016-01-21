@@ -156,6 +156,7 @@ qt5_add_dbus_interface(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interface
 qt5_add_resources(libakonadiserver_SRCS storage/akonadidb.qrc)
 
 add_library(libakonadiserver STATIC ${libakonadiserver_SRCS})
+set_target_properties(libakonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
 target_link_libraries(libakonadiserver
     akonadi_shared
     KF5AkonadiPrivate
