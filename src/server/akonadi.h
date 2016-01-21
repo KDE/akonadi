@@ -20,10 +20,9 @@
 #ifndef AKONADISERVER_H
 #define AKONADISERVER_H
 
+#include <QtCore/QObject>
 #include <QtCore/QPointer>
 #include <QtCore/QVector>
-
-#include <QtNetwork/QLocalServer>
 
 class QProcess;
 
@@ -38,8 +37,10 @@ class SearchManager;
 class StorageJanitor;
 class CacheCleaner;
 class IntervalCheck;
+class AkLocalServer;
+class NotificationManager;
 
-class AkonadiServer : public QLocalServer
+class AkonadiServer : public QObject
 {
     Q_OBJECT
 
@@ -59,6 +60,11 @@ public:
 
     QString serverPath() const;
 
+    /**
+     * Can return a nullptr
+     */
+    NotificationManager *notificationManager();
+
 public Q_SLOTS:
     /**
      * Triggers a clean server shutdown.
@@ -67,13 +73,12 @@ public Q_SLOTS:
 
     virtual bool init();
 
+protected Q_SLOTS:
+    virtual void newCmdConnection(quintptr socketDescriptor);
+
 private Q_SLOTS:
     void doQuit();
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
-
-protected:
-    /** reimpl */
-    void incomingConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
 
 private:
     bool startDatabaseProcess();
@@ -83,6 +88,10 @@ private:
 protected:
     AkonadiServer(QObject *parent = Q_NULLPTR);
 
+    AkLocalServer *mCmdServer;
+    AkLocalServer *mNtfServer;
+
+    NotificationManager *mNotificationManager;
     CacheCleaner *mCacheCleaner;
     IntervalCheck *mIntervalCheck;
     StorageJanitor *mStorageJanitor;

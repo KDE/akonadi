@@ -94,7 +94,7 @@ public:
     bool quit() Q_DECL_OVERRIDE;
 
     static QString basePath();
-    static QString socketFile();
+    static QString namedPipe();
     static QString instanceName();
 
     static TestScenario::List loginScenario(const QByteArray &sessionId = QByteArray());
@@ -110,8 +110,7 @@ public:
     void setPopulateDb(bool populate);
 
 protected:
-    /* Reimpl */
-    void incomingConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
+    void newCmdConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
 
 private:
     explicit FakeAkonadiServer();

@@ -37,6 +37,7 @@
 #include <private/standarddirs_p.h>
 #include <shared/akapplication.h>
 
+#include "aklocalserver.h"
 #include "storage/dbconfig.h"
 #include "storage/datastore.h"
 #include "preprocessormanager.h"
@@ -127,9 +128,9 @@ QString FakeAkonadiServer::basePath()
     return QString::fromLatin1("/tmp/akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
-QString FakeAkonadiServer::socketFile()
+QString FakeAkonadiServer::namedPipe()
 {
-    return basePath() % QLatin1String("/local/share/akonadi/akonadiserver.socket");
+    return QStringLiteral("FakeAkonadiServer-%1").arg(qApp->applicationPid());
 }
 
 QString FakeAkonadiServer::instanceName()
@@ -249,7 +250,9 @@ bool FakeAkonadiServer::quit()
     qDebug() << "==== Fake Akonadi Server shutting down ====";
 
     // Stop listening for connections
-    close();
+    if (mCmdServer) {
+        mCmdServer->close();
+    }
 
     const QCommandLineParser &args = AkApplicationBase::instance()->commandLineArguments();
     if (!args.isSet(QLatin1String("no-cleanup"))) {
@@ -275,7 +278,7 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
     mClient->setScenarios(scenarios);
 }
 
-void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
+void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
     mConnection = new FakeConnection(socketDescriptor);
     NotificationCollector *ntfCollector = Q_NULLPTR;
@@ -291,7 +294,10 @@ void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
 
 void FakeAkonadiServer::runTest()
 {
-    QVERIFY(listen(socketFile()));
+    mCmdServer = new AkLocalServer(this);
+    connect(mCmdServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
+            this, &FakeAkonadiServer::newCmdConnection);
+    QVERIFY(mCmdServer->listen(namedPipe()));
 
     mServerLoop = new QEventLoop(this);
     connect(mClient, &QThread::finished, mServerLoop, &QEventLoop::quit);
@@ -306,7 +312,7 @@ void FakeAkonadiServer::runTest()
     mServerLoop->deleteLater();
     mServerLoop = 0;
 
-    close();
+    mCmdServer->close();
 }
 
 QSignalSpy *FakeAkonadiServer::notificationSpy() const

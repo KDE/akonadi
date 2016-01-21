@@ -39,6 +39,7 @@ akonadi_generate_schema(${AKONADI_DB_SCHEME} AkonadiSchema akonadischema)
 
 set(libakonadiserver_SRCS
     akonadi.cpp
+    aklocalserver.cpp
     akthread.cpp
     commandcontext.cpp
     connection.cpp
