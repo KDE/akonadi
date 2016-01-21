@@ -129,7 +129,11 @@ public:
 
         // Other
         StreamPayload = 100,
-        ChangeNotification,
+
+        // Notifications
+        ChangeNotification = 110,
+        CreateSubscription,
+        ModifySubscription,
 
         _ResponseBit = 0x80 // reserved
     };
@@ -492,20 +496,12 @@ class LoginCommandPrivate;
 class AKONADIPRIVATE_EXPORT LoginCommand : public Command
 {
 public:
-    enum SessionMode : uchar {
-        CommandMode = 0,
-        NotificationBus
-    };
-
     explicit LoginCommand();
-    explicit LoginCommand(const QByteArray &sessionId, SessionMode mode = CommandMode);
+    explicit LoginCommand(const QByteArray &sessionId);
     LoginCommand(const Command &command);
 
     void setSessionId(const QByteArray &sessionId);
     QByteArray sessionId() const;
-
-    void setSessionMode(SessionMode mode);
-    SessionMode sessionMode() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(LoginCommand)
@@ -2142,73 +2138,135 @@ inline uint qHash(ChangeNotification::Type type)
     return ::qHash(static_cast<uchar>(type));
 }
 
-#if 0
-class ChangeNotificationSubscriptionCommandPrivate;
-class AKONADIPRIVATE_EXPORT ChangeNotificationSubscriptionCommand : public Command
+
+class CreateSubscriptionCommandPrivate;
+class AKONADIPRIVATE_EXPORT CreateSubscriptionCommand : public Command
 {
 public:
-    explicit ChangeNotificationSubscriptionCommand();
-    explicit ChangeNotificationSubscriptionCommand(const QByteArray &subscriptionId);
-    ChangeNotificationSubscriptionCommand(const Command &other);
+    explicit CreateSubscriptionCommand();
+    explicit CreateSubscriptionCommand(const QByteArray &subscriberName);
+    CreateSubscriptionCommand(const Command &other);
 
-    void unsubscribe();
+    void setSubscriberName(const QByteArray &name);
+    QByteArray subscriberName() const;
 
-    void monitorCollection(qint64 id, bool monitor = true);
-    void setMonitoredCollections(const QVector<qint64> &ids);
-    QVector<qint64> monitoredCollections() const;
+private:
+    AKONADI_DECLARE_PRIVATE(CreateSubscriptionCommand)
 
-    void monitorItem(qint64 id, bool monitor = true);
-    void setMonitoredItems(const QVector<qint64> &ids);
-    QVector<qint64> monitoredItems() const;
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CreateSubscriptionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateSubscriptionCommand &command);
+};
 
-    void monitorTag(qint64 id, bool monitor = true);
-    void setMonitoredTags(const QVector<qint64> &ids);
-    QVector<qint64> monitoredTags() const;
 
-    void monitorType(ChangeNotification::Type type, bool monitor = true);
-    void setMonitoredTypes(const QVector<ChangeNotification::Type> &types);
-    QVector<ChangeNotification::Type> monitoredTypes() const;
+class AKONADIPRIVATE_EXPORT CreateSubscriptionResponse : public Response
+{
+public:
+    explicit CreateSubscriptionResponse();
+    CreateSubscriptionResponse(const Command &other);
+};
 
-    void monitorResource(const QByteArray &resourceId, bool monitor = true);
-    void setMonitoredResources(const QVector<QByteArray> &resources);
-    QVector<QByteArray> monitoredResources() const;
 
-    void monitorMimeType(const QString &mimeType, bool monitor = true);
-    void setMonitoredMimeTypes(const QStringList &mimeTypes);
-    QStringList monitoredMimeTypes() const;
 
-    void setAllMonitored(bool all);
-    bool isAllMonitored() const;
+class ModifySubscriptionCommandPrivate;
+class AKONADIPRIVATE_EXPORT ModifySubscriptionCommand : public Command
+{
+public:
+    enum ModifiedPart {
+        None            = 0,
+        Collections     = 1 << 0,
+        Items           = 1 << 1,
+        Tags            = 1 << 2,
+        Types           = 1 << 3,
+        Resources       = 1 << 4,
+        MimeTypes       = 1 << 5,
+        AllFlag         = 1 << 6,
+        ExclusiveFlag   = 1 << 7,
+        Sessions        = 1 << 8,
+
+        Add             = 1 << 14,
+        Remove          = 1 << 15
+    };
+    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart)
+
+
+    explicit ModifySubscriptionCommand();
+    ModifySubscriptionCommand(const Command &other);
+
+    void setSubscriberName(const QByteArray &subscriberName);
+    QByteArray subscriberName() const;
+
+    ModifiedParts modifiedParts() const;
+
+    void startMonitoringCollection(qint64 id);
+    QVector<qint64> startMonitoringCollections() const;
+
+    void stopMonitoringCollection(qint64 id);
+    QVector<qint64> stopMonitoringCollections() const;
+
+    void startMonitoringItem(qint64 id);
+    QVector<qint64> startMonitoringItems() const;
+
+    void stopMonitoringItem(qint64 id);
+    QVector<qint64> stopMonitoringItems() const;
+
+    void startMonitoringTag(qint64 id);
+    QVector<qint64> startMonitoringTags() const;
+
+    void stopMonitoringTag(qint64 id);
+    QVector<qint64> stopMonitoringTags() const;
+
+    void startMonitoringType(ChangeNotification::Type type);
+    QVector<ChangeNotification::Type> startMonitoringTypes() const;
+
+    void stopMonitoringType(ChangeNotification::Type type);
+    QVector<ChangeNotification::Type> stopMonitoringTypes() const;
+
+    void startMonitoringResource(const QByteArray &resource);
+    QVector<QByteArray> startMonitoringResources() const;
+
+    void stopMonitoringResource(const QByteArray &resource);
+    QVector<QByteArray> stopMonitoringResources() const;
+
+    void startMonitoringMimeType(const QString &mimeType);
+    QStringList startMonitoringMimeTypes() const;
+
+    void stopMonitoringMimeType(const QString &mimeType);
+    QStringList stopMonitoringMimeTypes() const;
+
+    void setAllMonitored(bool allMonitored);
+    bool allMonitored() const;
 
     void setExclusive(bool exclusive);
     bool isExclusive() const;
 
-    void ignoreSession(const QByteArray &sessionId, bool ignored = true);
-    void setIgnoredSessions(const QVector<QByteArray> &ignoredSessions);
-    QVector<QByteArray> ignoredSessions() const;
+    void startIgnoringSession(const QByteArray &sessionId);
+    QVector<QByteArray> startIgnoringSessions() const;
+
+    void stopIgnoringSession(const QByteArray &sessionId);
+    QVector<QByteArray> stopIgnoringSessions() const;
 
 private:
-    AKONADI_DECLARE_PRIVATE(ChangeNotificationSubscriptionCommand)
+    AKONADI_DECLARE_PRIVATE(ModifySubscriptionCommand)
 
-    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ChangeNotificationSubscriptionCommand &command);
-    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotificationSubscriptionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifySubscriptionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifySubscriptionCommand &command);
 };
 
 
 
-class ChangeNotificationSubscriptionResponsePrivate;
-class AKONADIPRIVATE_EXPORT ChangeNotificationSubscriptionResponse : public Response
+class ModifySubscriptionResponse;
+class AKONADIPRIVATE_EXPORT ModifySubscriptionResponse : public Response
 {
 public:
-    explicit ChangeNotificationSubscriptionResponse();
-    explicit ChangeNotificationSubscriptionResponse(const QByteArray &subscriptionId);
-    ChangeNotificationSubscriptionResponse(const Command &other);
+    explicit ModifySubscriptionResponse();
+    explicit ModifySubscriptionResponse(const QByteArray &subscriptionId);
+    ModifySubscriptionResponse(const Command &other);
 
 private:
-    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ChangeNotificationSubscriptionResponse &command);
-    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotificationSubscriptionResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifySubscriptionResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifySubscriptionResponse &command);
 };
-#endif
+
 
 } // namespace Protocol
 } // namespace Akonadi

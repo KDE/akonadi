@@ -134,6 +134,10 @@ QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
         return dbg << "StreamPayload";
     case Akonadi::Protocol::Command::ChangeNotification:
         return dbg << "ChangeNotification";
+    case Akonadi::Protocol::Command::CreateSubscription:
+        return dbg << "CreateSubscription";
+    case Akonadi::Protocol::Command::ModifySubscription:
+        return dbg << "ModifySubscription";
 
     case Akonadi::Protocol::Command::_ResponseBit:
         Q_ASSERT(false);
@@ -548,6 +552,8 @@ public:
         // Other...?
         registerType<Command::StreamPayload, StreamPayloadCommand, StreamPayloadResponse>();
         registerType<Command::ChangeNotification, ChangeNotification, Response /* invalid */>();
+        registerType<Command::CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse>();
+        registerType<Command::ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse>();
     }
 
     // clang has problem resolving the right qHash() overload for Command::Type,
@@ -1642,55 +1648,39 @@ DataStream &operator>>(DataStream &stream, HelloResponse &command)
 class LoginCommandPrivate : public CommandPrivate
 {
 public:
-    LoginCommandPrivate(const QByteArray &sessionId = QByteArray(),
-                        LoginCommand::SessionMode mode = LoginCommand::CommandMode)
+    LoginCommandPrivate(const QByteArray &sessionId = QByteArray())
         : CommandPrivate(Command::Login)
         , sessionId(sessionId)
-        , sessionMode(mode)
 
     {}
 
     LoginCommandPrivate(const LoginCommandPrivate &other)
         : CommandPrivate(other)
         , sessionId(other.sessionId)
-        , sessionMode(other.sessionMode)
     {}
 
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(sessionId)
-            && COMPARE(sessionMode);
+            && COMPARE(sessionId);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-                << sessionId
-                << sessionMode;
+                << sessionId;
     }
 
     DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
-                >> sessionId
-                >> sessionMode;
+                >> sessionId;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         CommandPrivate::debugString(blck);
         blck.write("Session ID", sessionId);
-        blck.write("Session mode", [this]() -> QString {
-            switch (sessionMode) {
-            case LoginCommand::CommandMode:
-                return QStringLiteral("CommandMode");
-            case LoginCommand::NotificationBus:
-                return QStringLiteral("NotificationBus");
-            }
-            Q_ASSERT(false);
-            return QString();
-        }());
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -1699,7 +1689,6 @@ public:
     }
 
     QByteArray sessionId;
-    LoginCommand::SessionMode sessionMode;
 };
 
 
@@ -1712,8 +1701,8 @@ LoginCommand::LoginCommand()
 {
 }
 
-LoginCommand::LoginCommand(const QByteArray &sessionId, SessionMode mode)
-    : Command(new LoginCommandPrivate(sessionId, mode))
+LoginCommand::LoginCommand(const QByteArray &sessionId)
+    : Command(new LoginCommandPrivate(sessionId))
 {
 }
 
@@ -1731,16 +1720,6 @@ void LoginCommand::setSessionId(const QByteArray &sessionId)
 QByteArray LoginCommand::sessionId() const
 {
     return d_func()->sessionId;
-}
-
-void LoginCommand::setSessionMode(SessionMode mode)
-{
-    d_func()->sessionMode = mode;
-}
-
-LoginCommand::SessionMode LoginCommand::sessionMode() const
-{
-    return d_func()->sessionMode;
 }
 
 DataStream &operator<<(DataStream &stream, const LoginCommand &command)
@@ -8607,6 +8586,596 @@ DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotification
 {
     return command.d_func()->deserialize(stream);
 }
+
+
+
+class CreateSubscriptionCommandPrivate : public CommandPrivate
+{
+public:
+    CreateSubscriptionCommandPrivate(const QByteArray &subscriberName = QByteArray())
+        : CommandPrivate(Command::CreateSubscription)
+        , subscriberName(subscriberName)
+    {}
+
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
+    {
+        return CommandPrivate::compare(other)
+            && COMPARE(subscriberName);
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Subscriber", subscriberName);
+    }
+
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
+    {
+        return CommandPrivate::deserialize(stream)
+            >> subscriberName;
+    }
+
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    {
+        return CommandPrivate::serialize(stream)
+            << subscriberName;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new CreateSubscriptionCommandPrivate(subscriberName);
+    }
+
+    QByteArray subscriberName;
+};
+
+AKONADI_DECLARE_PRIVATE(CreateSubscriptionCommand)
+
+CreateSubscriptionCommand::CreateSubscriptionCommand()
+    : Command(new CreateSubscriptionCommandPrivate())
+{
+}
+
+CreateSubscriptionCommand::CreateSubscriptionCommand(const QByteArray &subscriberName)
+    : Command(new CreateSubscriptionCommandPrivate(subscriberName))
+{
+}
+
+CreateSubscriptionCommand::CreateSubscriptionCommand(const Command &other)
+    : Command(other)
+{
+    checkCopyInvariant(Command::CreateSubscription);
+}
+
+void CreateSubscriptionCommand::setSubscriberName(const QByteArray &subscriberName)
+{
+    d_func()->subscriberName = subscriberName;
+}
+
+QByteArray CreateSubscriptionCommand::subscriberName() const
+{
+    return d_func()->subscriberName;
+}
+
+DataStream &operator<<(DataStream &stream, const CreateSubscriptionCommand &command)
+{
+    return command.d_func()->serialize(stream);
+}
+
+DataStream &operator>>(DataStream &stream, CreateSubscriptionCommand &command)
+{
+    return command.d_func()->deserialize(stream);
+}
+
+
+
+
+CreateSubscriptionResponse::CreateSubscriptionResponse()
+    : Response(new ResponsePrivate(Command::CreateSubscription))
+{
+}
+
+CreateSubscriptionResponse::CreateSubscriptionResponse(const Command &other)
+    : Response(other)
+{
+    checkCopyInvariant(Command::CreateSubscription);
+}
+
+
+
+
+class ModifySubscriptionCommandPrivate : public CommandPrivate
+{
+public:
+    explicit ModifySubscriptionCommandPrivate(const QByteArray &subscriberName = QByteArray())
+        : CommandPrivate(Command::ModifySubscription)
+        , subscriberName(subscriberName)
+        , modifiedParts(ModifySubscriptionCommand::None)
+        , monitorAll(false)
+        , exclusive(false)
+    {
+    }
+
+    ModifySubscriptionCommandPrivate(const ModifySubscriptionCommandPrivate &other)
+        : CommandPrivate(other)
+        , subscriberName(other.subscriberName)
+        , modifiedParts(other.modifiedParts)
+        , startCollections(other.startCollections)
+        , stopCollections(other.stopCollections)
+        , startItems(other.startItems)
+        , stopItems(other.stopItems)
+        , startTags(other.startTags)
+        , stopTags(other.stopTags)
+        , startTypes(other.startTypes)
+        , stopTypes(other.stopTypes)
+        , startResources(other.startResources)
+        , stopResources(other.stopResources)
+        , startMimeTypes(other.startMimeTypes)
+        , stopMimeTypes(other.stopMimeTypes)
+        , startSessions(other.startSessions)
+        , stopSessions(other.startSessions)
+        , monitorAll(other.monitorAll)
+        , exclusive(other.exclusive)
+    {
+    }
+
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
+    {
+        return CommandPrivate::compare(other)
+            && COMPARE(subscriberName)
+            && COMPARE(modifiedParts)
+            && COMPARE(startCollections)
+            && COMPARE(stopCollections)
+            && COMPARE(startItems)
+            && COMPARE(stopItems)
+            && COMPARE(startTags)
+            && COMPARE(stopTags)
+            && COMPARE(startTypes)
+            && COMPARE(stopTypes)
+            && COMPARE(startResources)
+            && COMPARE(stopResources)
+            && COMPARE(startMimeTypes)
+            && COMPARE(stopMimeTypes)
+            && COMPARE(startSessions)
+            && COMPARE(stopSessions)
+            && COMPARE(monitorAll)
+            && COMPARE(exclusive);
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Subscriber", subscriberName);
+        // TODO: Expand the flags
+        blck.write("Modified parts", modifiedParts);
+        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Add)) {
+            blck.write("Start Collections", startCollections);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Remove)) {
+            blck.write("Stop Collections", stopCollections);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Add)) {
+            blck.write("Start Items", startItems);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Remove)) {
+            blck.write("Stop Items", stopItems);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Add)) {
+            blck.write("Start Tags", startTags);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Remove)) {
+            blck.write("Stop Tags", stopTags);
+        }
+        // TODO: Expand types
+        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Add)) {
+            blck.write("Start types", startTypes);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Remove)) {
+            blck.write("Stop types", stopTypes);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Add)) {
+            blck.write("Start resources", startResources);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Remove)) {
+            blck.write("Stop resources", stopResources);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Add)) {
+            blck.write("Start mimetypes", startMimeTypes);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Remove)) {
+            blck.write("Stop mimetypes", stopMimeTypes);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Add)) {
+            blck.write("Start sessions", startSessions);
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Remove)) {
+            blck.write("Stop sessions", stopSessions);
+        }
+        if (modifiedParts & ModifySubscriptionCommand::AllFlag) {
+            blck.write("Monitor All", monitorAll);
+        }
+        if (modifiedParts & ModifySubscriptionCommand::ExclusiveFlag) {
+            blck.write("Exclusive", exclusive);
+        }
+    }
+
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    {
+        CommandPrivate::serialize(stream)
+            << subscriberName
+            << modifiedParts;
+        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Add)) {
+            stream << startCollections;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Remove)) {
+            stream << stopCollections;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Add)) {
+            stream << startItems;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Remove)) {
+            stream << stopItems;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Add)) {
+            stream << startTags;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Remove)) {
+            stream << stopTags;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Add)) {
+            stream << startTypes;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Remove)) {
+            stream << stopTypes;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Add)) {
+            stream << startResources;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Remove)) {
+            stream << stopResources;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Add)) {
+            stream << startMimeTypes;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Remove)) {
+            stream << stopMimeTypes;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Add)) {
+            stream << startSessions;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Remove)) {
+            stream << stopSessions;
+        }
+        if (modifiedParts & ModifySubscriptionCommand::AllFlag) {
+            stream << monitorAll;
+        }
+        if (modifiedParts & ModifySubscriptionCommand::ExclusiveFlag) {
+            stream << exclusive;
+        }
+        return stream;
+    }
+
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
+    {
+        CommandPrivate::deserialize(stream)
+               >> subscriberName
+               >> modifiedParts;
+        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Add)) {
+            stream >> startCollections;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Remove)) {
+            stream >> stopCollections;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Add)) {
+            stream >> startItems;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Remove)) {
+            stream >> stopItems;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Add)) {
+            stream >> startTags;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Remove)) {
+            stream >> stopTags;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Add)) {
+            stream >> startTypes;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Remove)) {
+            stream >> stopTypes;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Add)) {
+            stream >> startResources;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Remove)) {
+            stream >> stopResources;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Add)) {
+            stream >> startMimeTypes;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Remove)) {
+            stream >> stopMimeTypes;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Add)) {
+            stream >> startSessions;
+        }
+        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Remove)) {
+            stream >> stopSessions;
+        }
+        if (modifiedParts & ModifySubscriptionCommand::AllFlag) {
+            stream >> monitorAll;
+        }
+        if (modifiedParts & ModifySubscriptionCommand::ExclusiveFlag) {
+            stream >> exclusive;
+        }
+        return stream;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new ModifySubscriptionCommandPrivate(*this);
+    }
+
+    QByteArray subscriberName;
+    ModifySubscriptionCommand::ModifiedParts modifiedParts;
+    // TODO: Don't waste so much space!
+    QVector<qint64> startCollections;
+    QVector<qint64> stopCollections;
+    QVector<qint64> startItems;
+    QVector<qint64> stopItems;
+    QVector<qint64> startTags;
+    QVector<qint64> stopTags;
+    QVector<ChangeNotification::Type> startTypes;
+    QVector<ChangeNotification::Type> stopTypes;
+    QVector<QByteArray> startResources;
+    QVector<QByteArray> stopResources;
+    QStringList startMimeTypes;
+    QStringList stopMimeTypes;
+    QVector<QByteArray> startSessions;
+    QVector<QByteArray> stopSessions;
+    bool monitorAll;
+    bool exclusive;
+};
+
+AKONADI_DECLARE_PRIVATE(ModifySubscriptionCommand)
+
+ModifySubscriptionCommand::ModifySubscriptionCommand()
+    : Command(new ModifySubscriptionCommandPrivate())
+{
+}
+
+ModifySubscriptionCommand::ModifySubscriptionCommand(const Command &other)
+    : Command(other)
+{
+    checkCopyInvariant(Command::ModifySubscription);
+}
+
+void ModifySubscriptionCommand::setSubscriberName(const QByteArray &subscriberName)
+{
+    d_func()->subscriberName = subscriberName;
+}
+
+QByteArray ModifySubscriptionCommand::subscriberName() const
+{
+    return d_func()->subscriberName;
+}
+
+ModifySubscriptionCommand::ModifiedParts ModifySubscriptionCommand::modifiedParts() const
+{
+    return d_func()->modifiedParts;
+}
+
+void ModifySubscriptionCommand::startMonitoringCollection(qint64 id)
+{
+    d_func()->stopCollections.removeAll(id);
+    d_func()->startCollections << id;
+    d_func()->modifiedParts |= ModifiedParts(Collections | Add);
+}
+
+QVector<qint64> ModifySubscriptionCommand::startMonitoringCollections() const
+{
+    return d_func()->startCollections;
+}
+
+void ModifySubscriptionCommand::stopMonitoringCollection(qint64 id)
+{
+    d_func()->startCollections.removeAll(id);
+    d_func()->stopCollections << id;
+    d_func()->modifiedParts |= ModifiedParts(Collections | Remove);
+}
+
+QVector<qint64> ModifySubscriptionCommand::stopMonitoringCollections() const
+{
+    return d_func()->stopCollections;
+}
+
+void ModifySubscriptionCommand::startMonitoringItem(qint64 id)
+{
+    d_func()->stopItems.removeAll(id);
+    d_func()->startItems << id;
+    d_func()->modifiedParts |= ModifiedParts(Items | Add);
+}
+
+QVector<qint64> ModifySubscriptionCommand::startMonitoringItems() const
+{
+    return d_func()->startItems;
+}
+
+void ModifySubscriptionCommand::stopMonitoringItem(qint64 id)
+{
+    d_func()->startItems.removeAll(id);
+    d_func()->stopItems << id;
+    d_func()->modifiedParts |= ModifiedParts(Items | Remove);
+}
+
+QVector<qint64> ModifySubscriptionCommand::stopMonitoringItems() const
+{
+    return d_func()->stopItems;
+}
+
+void ModifySubscriptionCommand::startMonitoringTag(qint64 id)
+{
+    d_func()->stopTags.removeAll(id);
+    d_func()->startTags << id;
+    d_func()->modifiedParts |= ModifiedParts(Tags | Add);
+}
+
+QVector<qint64> ModifySubscriptionCommand::startMonitoringTags() const
+{
+    return d_func()->startTags;
+}
+
+void ModifySubscriptionCommand::stopMonitoringTag(qint64 id)
+{
+    d_func()->startTags.removeAll(id);
+    d_func()->stopTags << id;
+    d_func()->modifiedParts |= ModifiedParts(Tags | Remove);
+}
+
+QVector<qint64> ModifySubscriptionCommand::stopMonitoringTags() const
+{
+    return d_func()->stopTags;
+}
+
+void ModifySubscriptionCommand::startMonitoringType(ChangeNotification::Type type)
+{
+    d_func()->stopTypes.removeAll(type);
+    d_func()->startTypes << type;
+    d_func()->modifiedParts |= ModifiedParts(Types | Add);
+}
+
+QVector<ChangeNotification::Type> ModifySubscriptionCommand::startMonitoringTypes() const
+{
+    return d_func()->startTypes;
+}
+
+void ModifySubscriptionCommand::stopMonitoringType(ChangeNotification::Type type)
+{
+    d_func()->startTypes.removeAll(type);
+    d_func()->stopTypes << type;
+    d_func()->modifiedParts |= ModifiedParts(Types | Remove);
+}
+
+QVector<ChangeNotification::Type> ModifySubscriptionCommand::stopMonitoringTypes() const
+{
+    return d_func()->stopTypes;
+}
+
+void ModifySubscriptionCommand::startMonitoringResource(const QByteArray &resource)
+{
+    d_func()->stopResources.removeAll(resource);
+    d_func()->startResources << resource;
+    d_func()->modifiedParts |= ModifiedParts(Resources | Add);
+}
+
+QVector<QByteArray> ModifySubscriptionCommand::startMonitoringResources() const
+{
+    return d_func()->startResources;
+}
+
+void ModifySubscriptionCommand::stopMonitoringResource(const QByteArray &resource)
+{
+    d_func()->startResources.removeAll(resource);
+    d_func()->stopResources << resource;
+    d_func()->modifiedParts |= ModifiedParts(Resources | Remove);
+}
+
+QVector<QByteArray> ModifySubscriptionCommand::stopMonitoringResources() const
+{
+    return d_func()->stopResources;
+}
+
+void ModifySubscriptionCommand::startMonitoringMimeType(const QString &mimeType)
+{
+    d_func()->stopMimeTypes.removeAll(mimeType);
+    d_func()->startMimeTypes << mimeType;
+    d_func()->modifiedParts |= ModifiedParts(MimeTypes | Add);
+}
+
+QStringList ModifySubscriptionCommand::startMonitoringMimeTypes() const
+{
+    return d_func()->startMimeTypes;
+}
+
+void ModifySubscriptionCommand::stopMonitoringMimeType(const QString &mimeType)
+{
+    d_func()->startMimeTypes.removeAll(mimeType);
+    d_func()->stopMimeTypes << mimeType;
+    d_func()->modifiedParts |= ModifiedParts(MimeTypes | Remove);
+}
+
+QStringList ModifySubscriptionCommand::stopMonitoringMimeTypes() const
+{
+    return d_func()->stopMimeTypes;
+}
+
+void ModifySubscriptionCommand::setAllMonitored(bool allMonitored)
+{
+    d_func()->monitorAll = allMonitored;
+    d_func()->modifiedParts |= AllFlag;
+}
+
+bool ModifySubscriptionCommand::allMonitored() const
+{
+    return d_func()->monitorAll;
+}
+
+void ModifySubscriptionCommand::setExclusive(bool exclusive)
+{
+    d_func()->exclusive = exclusive;
+    d_func()->modifiedParts |= ExclusiveFlag;
+}
+
+bool ModifySubscriptionCommand::isExclusive() const
+{
+    return d_func()->exclusive;
+}
+
+void ModifySubscriptionCommand::startIgnoringSession(const QByteArray &session)
+{
+    d_func()->stopSessions.removeAll(session);
+    d_func()->startSessions << session;
+    d_func()->modifiedParts |= ModifiedParts(Sessions | Add);
+}
+
+QVector<QByteArray> ModifySubscriptionCommand::startIgnoringSessions() const
+{
+    return d_func()->startSessions;
+}
+
+void ModifySubscriptionCommand::stopIgnoringSession(const QByteArray &session)
+{
+    d_func()->startSessions.removeAll(session);
+    d_func()->stopSessions << session;
+    d_func()->modifiedParts |= ModifiedParts(Sessions | Remove);
+}
+
+QVector<QByteArray> ModifySubscriptionCommand::stopIgnoringSessions() const
+{
+    return d_func()->stopSessions;
+}
+
+DataStream &operator<<(DataStream &stream, const ModifySubscriptionCommand &command)
+{
+    return command.d_ptr->serialize(stream);
+}
+
+DataStream &operator>>(DataStream &stream, ModifySubscriptionCommand &command)
+{
+    return command.d_ptr->deserialize(stream);
+}
+
+
+
+ModifySubscriptionResponse::ModifySubscriptionResponse()
+    : Response(new ResponsePrivate(Command::ModifySubscription))
+{
+}
+
+ModifySubscriptionResponse::ModifySubscriptionResponse(const Command &other)
+    : Response(other)
+{
+    checkCopyInvariant(Command::ModifySubscription);
+}
+
 
 } // namespace Protocol
 } // namespace Akonadi
