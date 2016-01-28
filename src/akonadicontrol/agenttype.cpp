@@ -47,20 +47,14 @@ QString AgentType::readString(const QSettings &file, const QString &key)
     if (value.isNull()) {
         return QString();
     } else if (value.canConvert<QString>()) {
-        return QString::fromUtf8(value.toByteArray());
+        return value.toString();
     } else if (value.canConvert<QStringList>()) {
         // This is a workaround for QSettings interpreting value with a comma as
         // a QStringList, which is not compatible with KConfig. KConfig reads everything
         // as a QByteArray and splits it to a list when requested. See BKO#330010
         // TODO KF5: If we end up in Tier 2 or above, depend on KConfig for parsing
         // .desktop files
-        const QStringList parts = value.toStringList();
-        QStringList utf8Parts;
-        utf8Parts.reserve(parts.size());
-        Q_FOREACH (const QString &part, parts) {
-            utf8Parts << QString::fromUtf8(part.toLatin1());
-        }
-        return utf8Parts.join(QStringLiteral(", "));
+        return value.toStringList().join(QStringLiteral(", "));
     } else {
         akError() << "Agent desktop file" << file.fileName() << "contains invalid value for key" << key;
         return QString();
@@ -72,6 +66,7 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     Q_UNUSED(manager);
 
     QSettings file(fileName, QSettings::IniFormat);
+    file.setIniCodec("UTF-8");
     file.beginGroup(QStringLiteral("Desktop Entry"));
 
     Q_FOREACH (const QString &key, file.allKeys()) {
