@@ -193,12 +193,12 @@ void PreprocessorManager::lockedUnregisterInstance(const QString &id)
         Q_ASSERT(nextPreprocessor);
         Q_ASSERT(nextPreprocessor != instance);
 
-        Q_FOREACH (qint64 itemId, *itemList) {
+        for (qint64 itemId : *itemList) {
             nextPreprocessor->enqueueItem(itemId);
         }
     } else {
         // This was the last preprocessor: end handling the items
-        Q_FOREACH (qint64 itemId, *itemList) {
+        for (qint64 itemId : *itemList) {
             lockedEndHandleItem(itemId);
         }
     }
@@ -339,11 +339,11 @@ void PreprocessorManager::dataStoreTransactionCommitted()
 
     if (!mEnabled || mPreprocessorChain.isEmpty()) {
         // Preprocessing has been disabled in the meantime or all the preprocessors died
-        Q_FOREACH (qint64 id, *waitQueue) {
+        for (qint64 id : *waitQueue) {
             lockedEndHandleItem(id);
         }
     } else {
-        Q_FOREACH (qint64 id, *waitQueue) {
+        for (qint64 id : *waitQueue) {
             lockedActivateFirstPreprocessor(id);
         }
     }
