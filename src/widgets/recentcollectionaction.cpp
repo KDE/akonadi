@@ -103,7 +103,7 @@ QString RecentCollectionAction::actionName(QModelIndex index)
         return QStringLiteral("%1").arg(name);
     } else {
         topLevelName.replace(QStringLiteral("&"), QStringLiteral("&&"));
-        return QStringLiteral("%1 - %2").arg(name).arg(topLevelName);
+        return QStringLiteral("%1 - %2").arg(name, topLevelName);
     }
 }
 

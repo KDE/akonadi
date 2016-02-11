@@ -98,13 +98,11 @@ private:
     {
         QString header = QStringLiteral("<html>");
         header += QStringLiteral("<body text=\"%1\" bgcolor=\"%2\">")
-                  .arg(KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name())
-                  .arg(KColorScheme(QPalette::Active, KColorScheme::View).background().color().name());
+                  .arg(KColorScheme(QPalette::Active, KColorScheme::View).foreground().color().name(),
+                       KColorScheme(QPalette::Active, KColorScheme::View).background().color().name());
         header += QLatin1String("<center><table>");
         header += QStringLiteral("<tr><th align=\"center\">%1</th><th align=\"center\">%2</th><td>&nbsp;</td><th align=\"center\">%3</th></tr>")
-                  .arg(mNameTitle)
-                  .arg(mLeftTitle)
-                  .arg(mRightTitle);
+                  .arg(mNameTitle, mLeftTitle, mRightTitle);
 
         return header;
     }

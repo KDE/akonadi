@@ -91,7 +91,7 @@ public:
                    "      </div>\n"
                    "    </td>\n"
                    "  </tr>\n"
-               ).arg(txtColor).arg(bckColor).arg(index.data(Qt::DisplayRole).toString()).arg(textDirection);
+               ).arg(txtColor, bckColor, index.data(Qt::DisplayRole).toString(), textDirection);
 
         tip += QStringLiteral(
                    "  <tr>\n"
@@ -114,7 +114,7 @@ public:
                     QString percentStr = QString::number(percentage, 'f', 2);
                     tipInfo += QStringLiteral(
                                    "      <strong>%1</strong>: %2%<br>\n"
-                               ).arg(i18n("Quota")).arg(percentStr);
+                               ).arg(i18n("Quota"), percentStr);
                 }
             }
         }
@@ -123,7 +123,7 @@ public:
         qint64 currentFolderSize(collection.statistics().size());
         tipInfo += QStringLiteral(
                        "      <strong>%1</strong>: %2<br>\n"
-                   ).arg(i18n("Storage Size")).arg(formatter.formatByteSize(currentFolderSize));
+                   ).arg(i18n("Storage Size"), formatter.formatByteSize(currentFolderSize));
 
         qint64 totalSize = 0;
         getCountRecursive(index, totalSize);
@@ -131,7 +131,7 @@ public:
         if (totalSize > 0) {
             tipInfo += QStringLiteral(
                            "<strong>%1</strong>: %2<br>"
-                       ).arg(i18n("Subfolder Storage Size")).arg(formatter.formatByteSize(totalSize));
+                       ).arg(i18n("Subfolder Storage Size"), formatter.formatByteSize(totalSize));
         }
 
         QString iconName = CollectionUtils::defaultIconName(collection);
