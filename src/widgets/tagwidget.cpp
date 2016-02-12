@@ -49,6 +49,7 @@ TagWidget::TagWidget(QWidget *parent)
     d->mModel = new Akonadi::TagModel(monitor, this);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
+    layout->setMargin(0);
     d->mTagLabel = new QLabel;
     d->mTagLabel->setWordWrap(true);
     d->mTagLabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
