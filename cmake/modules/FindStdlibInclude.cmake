@@ -8,7 +8,7 @@ function(findStdlibInclude includeName filePath)
     )
     # With the "-v" flag, compiler will print out list of default include paths
     # (i.e. stdlib include paths)
-    execute_process(COMMAND ${CMAKE_CXX_COMPILER} -Wp,-v -E ${CMAKE_CURRENT_BINARY_DIR}/empty_test.cpp
+    execute_process(COMMAND ${CMAKE_CXX_COMPILER} ${CXX_STDLIB_FLAGS} -Wp,-v -E ${CMAKE_CURRENT_BINARY_DIR}/empty_test.cpp
                     OUTPUT_QUIET
                     ERROR_VARIABLE compilerSearchPaths
     )

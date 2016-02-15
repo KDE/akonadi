@@ -86,6 +86,10 @@ if(BUILD_TESTING)
    set(BUILD_TOOLS TRUE)
 endif()
 
+if (CXX_STDLIB)
+  set (CXX_STDLIB_FLAGS "-stdlib=${CXX_STDLIB}")
+endif ()
+
 set(SMI_MIN_VERSION "0.20")
 find_package(SharedMimeInfo ${SMI_MIN_VERSION} REQUIRED)
 
