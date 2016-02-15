@@ -327,6 +327,7 @@ Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, CommandCo
         throw HandlerException("Tags can be resolved by their RID only in resource context");
     }
 
+    tags.reserve(tagsRIDs.size());
     for (const QString &tagRID : tagsRIDs) {
         SelectQueryBuilder<Tag> qb;
         Query::Condition cond;
