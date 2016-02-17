@@ -3,6 +3,7 @@
 
     Copyright (c) 2010 Tobias Koenig <tokoe@kde.org>
     Copyright (c) 2014 Christian Mollekopf <mollekopf@kolabsys.com>
+    Copyright (c) 2016 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -31,14 +32,34 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QToolButton>
-
+#include <QMenu>
+#include <QContextMenuEvent>
 using namespace Akonadi;
 
 struct Q_DECL_HIDDEN TagWidget::Private {
-    QLabel *mTagLabel;
+    TagView *mTagView;
     Akonadi::Tag::List mTags;
     Akonadi::TagModel *mModel;
 };
+
+TagView::TagView(QWidget *parent)
+    : QLineEdit(parent)
+{
+    setPlaceholderText(i18n("Click to Add Tags"));
+    setReadOnly(true);
+}
+
+void TagView::contextMenuEvent(QContextMenuEvent *event)
+{
+    if (text().isEmpty()) {
+        return;
+    }
+
+    QMenu menu;
+    menu.addAction(i18n("Clear"), this, SIGNAL(clearTags()));
+
+    menu.exec(event->globalPos());
+}
 
 TagWidget::TagWidget(QWidget *parent)
     : QWidget(parent)
@@ -50,10 +71,9 @@ TagWidget::TagWidget(QWidget *parent)
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
-    d->mTagLabel = new QLabel;
-    d->mTagLabel->setWordWrap(true);
-    d->mTagLabel->setFrameStyle(QFrame::StyledPanel | QFrame::Sunken);
-    layout->addWidget(d->mTagLabel);
+    d->mTagView = new TagView;
+    connect(d->mTagView, &TagView::clearTags, this, &TagWidget::clearTags);
+    layout->addWidget(d->mTagView);
 
     QToolButton *editButton = new QToolButton;
     editButton->setText(i18n("..."));
@@ -67,6 +87,15 @@ TagWidget::TagWidget(QWidget *parent)
 
 TagWidget::~TagWidget()
 {
+}
+
+void TagWidget::clearTags()
+{
+    if (!d->mTags.isEmpty()) {
+        d->mTags.clear();
+        d->mTagView->clear();
+        emit selectionChanged(d->mTags);
+    }
 }
 
 void TagWidget::setSelection(const Akonadi::Tag::List &tags)
@@ -104,5 +133,5 @@ void TagWidget::updateView()
             tagsNames << tag.name();
         }
     }
-    d->mTagLabel->setText(tagsNames.join(QStringLiteral(", ")));
+    d->mTagView->setText(tagsNames.join(QStringLiteral(", ")));
 }
