@@ -45,7 +45,7 @@
 #include <QtCore/QTime>
 #include <QtCore/QTimer>
 
-#define LOCK_WAIT_TIMEOUT_SECONDS 10
+#define LOCK_WAIT_TIMEOUT_SECONDS 30
 
 using namespace Akonadi;
 
