@@ -19,6 +19,7 @@ macro(add_unit_test _source)
         akonadi_shared
         KF5AkonadiPrivate
         Qt5::Test
+        KF5::ConfigCore
         ${CMAKE_EXE_LINKER_FLAGS_ASAN}
     )
 endmacro()

@@ -46,15 +46,10 @@ void AgentTypeTest::testLoad_data()
         {QStringLiteral("KAccounts"), QStringList {QStringLiteral("google-contacts"), QStringLiteral("google-calendar")}}
     };
     googleContactsResource.launchMethod = AgentType::Process;
-    // We just test an UTF-8 entry
-    googleContactsResource.name = {{QStringLiteral("uk"), QStringLiteral("Контакти Google")}};
-    googleContactsResource.comment = {
-        {QStringLiteral("uk"), QStringLiteral("Доступ до ваших записів контактів Google з KDE")},
-        // Check for unquoted strings containing a comma. See bug #330010
-        {QStringLiteral("string_with_comma"), QStringLiteral("This is just a QString, not a QStringList")},
-        {QStringLiteral("quoted_string"), QStringLiteral("This is a QString")},
-        {QStringLiteral("escaped_quote_string"), QStringLiteral("\"This is a QString\"")}
-    };
+    // We test an UTF-8 name within quotes.
+    googleContactsResource.name = QStringLiteral("\"Контакти Google\"");
+    // We also check whether an unquoted string with a comma is not parsed as a QStringList. See bug #330010
+    googleContactsResource.comment = QStringLiteral("Доступ до ваших записів контактів, Google з KDE");
     googleContactsResource.icon = QStringLiteral("im-google");
 
 
@@ -70,6 +65,7 @@ void AgentTypeTest::testLoad()
     QFETCH(AgentType, expectedAgentType);
 
     AgentType agentType;
+    QLocale::setDefault(QLocale::Ukrainian);
     QVERIFY(agentType.load(fileName, Q_NULLPTR));
 
     QCOMPARE(agentType.exec, expectedAgentType.exec);
@@ -79,11 +75,9 @@ void AgentTypeTest::testLoad()
     QCOMPARE(agentType.identifier, expectedAgentType.identifier);
     QCOMPARE(agentType.custom, expectedAgentType.custom);
     QCOMPARE(agentType.launchMethod, expectedAgentType.launchMethod);
-    QCOMPARE(agentType.name.value(QLatin1String("uk")), expectedAgentType.name.value(QLatin1String("uk")));
-    QCOMPARE(agentType.comment.value(QLatin1String("uk")), expectedAgentType.comment.value(QLatin1String("uk")));
-    QCOMPARE(agentType.comment.value(QLatin1String("string_with_comma")), expectedAgentType.comment.value(QLatin1String("string_with_comma")));
-    QCOMPARE(agentType.comment.value(QLatin1String("quoted_string")), expectedAgentType.comment.value(QLatin1String("quoted_string")));
-    QCOMPARE(agentType.comment.value(QLatin1String("escaped_quote_string")), expectedAgentType.comment.value(QLatin1String("escaped_quote_string")));
+    QCOMPARE(agentType.name, expectedAgentType.name);
+    QCOMPARE(agentType.comment, expectedAgentType.comment);
+    QCOMPARE(agentType.icon, expectedAgentType.icon);
 }
 
 AKTEST_MAIN(AgentTypeTest)

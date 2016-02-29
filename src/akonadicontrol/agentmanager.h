@@ -75,15 +75,15 @@ public Q_SLOTS:
 
     /**
      * Returns the i18n'ed name of the agent type for
-     * the given @p identifier and the given @p language.
+     * the given @p identifier.
      */
-    QString agentName(const QString &identifier, const QString &language = QStringLiteral("en_US")) const;
+    QString agentName(const QString &identifier) const;
 
     /**
      * Returns the i18n'ed comment of the agent type for
-     * the given @p identifier and the given @p language.
+     * the given @p identifier..
      */
-    QString agentComment(const QString &identifier, const QString &language = QStringLiteral("en_US")) const;
+    QString agentComment(const QString &identifier) const;
 
     /**
      * Returns the icon name of the agent type for the
@@ -166,10 +166,8 @@ public Q_SLOTS:
 
     /**
      * Returns the name of the agent instance with the given @p identifier.
-     * If there is no name, it returns the default name of the agent, you can tweak
-     * the language for that name with the @p language setting.
      */
-    QString agentInstanceName(const QString &identifier, const QString &language = QStringLiteral("en_US")) const;
+    QString agentInstanceName(const QString &identifier) const;
 
     /**
      * Triggers the agent instance with the given @p identifier to show

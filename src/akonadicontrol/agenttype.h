@@ -47,8 +47,8 @@ public:
     void save(QSettings *config) const;
 
     QString identifier;
-    QHash<QString, QString> name;
-    QHash<QString, QString> comment;
+    QString name;
+    QString comment;
     QString icon;
     QStringList mimeTypes;
     QStringList capabilities;

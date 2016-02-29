@@ -52,19 +52,9 @@
       <arg type="s" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>
-    <method name="agentName">
-      <arg type="s" direction="out"/>
-      <arg name="identifier" type="s" direction="in"/>
-      <arg name="language" type="s" direction="in"/>
-    </method>
     <method name="agentComment">
       <arg type="s" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
-    </method>
-    <method name="agentComment">
-      <arg type="s" direction="out"/>
-      <arg name="identifier" type="s" direction="in"/>
-      <arg name="language" type="s" direction="in"/>
     </method>
     <method name="agentIcon">
       <arg type="s" direction="out"/>
@@ -120,11 +110,6 @@
     <method name="agentInstanceName">
       <arg type="s" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
-    </method>
-    <method name="agentInstanceName">
-      <arg type="s" direction="out"/>
-      <arg name="identifier" type="s" direction="in"/>
-      <arg name="language" type="s" direction="in"/>
     </method>
     <method name="agentInstanceConfigure">
       <arg name="identifier" type="s" direction="in"/>
