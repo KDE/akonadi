@@ -117,10 +117,16 @@ void SearchManager::quit()
 
     qDeleteAll(mEngines);
     qDeleteAll(mPlugins);
+    /*
+     * FIXME: Unloading plugin messes up some global statics from client libs
+     * and causes crash on Akonadi shutdown (below main). Keeping the plugins
+     * loaded is not really a big issue as this is only invoked on server shutdown
+     * anyway, so we are not leaking any memory.
     Q_FOREACH (QPluginLoader *loader, mPluginLoaders) {
         loader->unload();
         delete loader;
     }
+    */
 
     AkThread::quit();
 }
