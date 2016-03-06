@@ -83,4 +83,6 @@ void SessionThread::doThreadQuit()
         conn->closeConnection();
         delete conn;
     }
+
+    thread()->quit();
 }
