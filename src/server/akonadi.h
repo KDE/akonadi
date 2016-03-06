@@ -100,7 +100,7 @@ protected:
     ItemRetrievalManager *mItemRetrieval;
     SearchTaskManager *mAgentSearchManager;
     QProcess *mDatabaseProcess;
-    QVector<QPointer<Connection>> mConnections;
+    QVector<Connection *> mConnections;
     SearchManager *mSearchManager;
     bool mAlreadyShutdown;
 
