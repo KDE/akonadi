@@ -250,196 +250,237 @@ bool NotificationSubscriber::isMimeTypeMonitored(const QString &mimeType) const
     return false;
 }
 
-bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::ChangeNotification &msg) const
+bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::ItemChangeNotification &msg) const
 {
-    if (msg.operation() != Protocol::ChangeNotification::Move) {
+    if (msg.operation() != Protocol::ItemChangeNotification::Move) {
         return false;
     }
     return mMonitoredResources.contains(msg.destinationResource());
 }
 
-bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &notification)
+bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::CollectionChangeNotification &msg) const
+{
+    if (msg.operation() != Protocol::CollectionChangeNotification::Move) {
+        return false;
+    }
+    return mMonitoredResources.contains(msg.destinationResource());
+}
+
+bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeNotification &notification) const
+{
+    if (notification.items().count() == 0) {
+        return false;
+    }
+
+    //We always want notifications that affect the parent resource (like an item added to a referenced collection)
+    const bool notificationForParentResource = (mSession == notification.resource());
+    if (CollectionReferenceManager::instance()->isReferenced(notification.parentCollection())) {
+        return (mExclusive
+            || isCollectionMonitored(notification.parentCollection())
+            || isMoveDestinationResourceMonitored(notification)
+            || notificationForParentResource);
+    }
+
+
+    if (mAllMonitored) {
+        return true;
+    }
+
+    if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::ItemChanges)) {
+        return false;
+    }
+
+    // we have a resource or mimetype filter
+    if (!mMonitoredResources.isEmpty() || !mMonitoredMimeTypes.isEmpty()) {
+        if (mMonitoredResources.contains(notification.resource())) {
+            return true;
+        }
+
+        if (isMoveDestinationResourceMonitored(notification)) {
+            return true;
+        }
+
+        Q_FOREACH (const auto &item, notification.items()) {
+            if (isMimeTypeMonitored(item.mimeType)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    // we explicitly monitor that item or the collections it's in
+    Q_FOREACH (const auto &item, notification.items()) {
+        if (mMonitoredItems.contains(item.id)) {
+            return true;
+        }
+    }
+
+    return isCollectionMonitored(notification.parentCollection())
+            || isCollectionMonitored(notification.parentDestCollection());
+}
+
+bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::CollectionChangeNotification &notification) const
+{
+    if (notification.id() < 0) {
+        return false;
+    }
+
+    // HACK: We need to dispatch notifications about disabled collections to SOME
+    // agents (that's what we have the exclusive subscription for) - but because
+    // querying each Collection from database would be expensive, we use the
+    // metadata hack to transfer this information from NotificationCollector
+    if (notification.metadata().contains("DISABLED")
+            && (notification.operation() != Protocol::CollectionChangeNotification::Unsubscribe)
+            && !notification.changedParts().contains("ENABLED")) {
+        // Exclusive subscriber always gets it
+        if (mExclusive) {
+            return true;
+        }
+
+        //Deliver the notification if referenced from this session
+        if (CollectionReferenceManager::instance()->isReferenced(notification.id(), mSession)) {
+            return true;
+        }
+
+        //Exclusive subscribers still want the notification
+        if (mExclusive && CollectionReferenceManager::instance()->isReferenced(notification.id())) {
+            return true;
+        }
+
+        //The session belonging to this monitor referenced or dereferenced the collection. We always want this notification.
+        //The referencemanager no longer holds a reference, so we have to check this way.
+        if (notification.changedParts().contains("REFERENCED") && mSession == notification.sessionId()) {
+            return true;
+        }
+
+        // If the collection is not referenced, monitored or the subscriber is not
+        // exclusive (i.e. if we got here), then the subscriber does not care about
+        // this one, so drop it
+        return false;
+    }
+
+    if (mAllMonitored) {
+        return true;
+    }
+
+    if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::CollectionChanges)) {
+        return false;
+    }
+
+    // we have a resource filter
+    if (!mMonitoredResources.isEmpty()) {
+        const bool resourceMatches = mMonitoredResources.contains(notification.resource())
+                                        || isMoveDestinationResourceMonitored(notification);
+
+        // a bit hacky, but match the behaviour from the item case,
+        // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
+        if (mMonitoredMimeTypes.isEmpty() || resourceMatches) {
+            return resourceMatches;
+        }
+        // else continue
+    }
+
+    // we explicitly monitor that colleciton, or all of them
+    if (isCollectionMonitored(notification.id())) {
+        return true;
+    }
+
+    return isCollectionMonitored(notification.parentCollection())
+            || isCollectionMonitored(notification.parentDestCollection());
+
+}
+
+bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNotification &notification) const
+{
+    if (notification.id() < 0) {
+        return false;
+    }
+
+    // Special handling for Tag removal notifications: When a Tag is removed,
+    // a notification is emitted for each Resource that owns the tag (i.e.
+    // each resource that owns a Tag RID - Tag RIDs are resource-specific).
+    // Additionally then we send one more notification without any RID that is
+    // destined for regular applications (which don't know anything about Tag RIDs)
+    if (notification.operation() == Protocol::TagChangeNotification::Remove) {
+        // HACK: Since have no way to determine which resource this NotificationSource
+        // belongs to, we are abusing the fact that each resource ignores it's own
+        // main session, which is called the same name as the resource.
+
+        // If there are any ignored sessions, but this notification does not have
+        // a specific resource set, then we ignore it, as this notification is
+        // for clients, not resources (does not have tag RID)
+        if (!mIgnoredSessions.isEmpty() && notification.resource().isEmpty()) {
+            return false;
+        }
+
+        // If this source ignores a session (i.e. we assume it is a resource),
+        // but this notification is for another resource, then we ignore it
+        if (!notification.resource().isEmpty() && !mIgnoredSessions.contains(notification.resource())) {
+            return false;
+        }
+
+        // Now we got here, which means that this notification either has empty
+        // resource, i.e. it is destined for a client applications, or it's
+        // destined for resource that we *think* (see the hack above) this
+        // NotificationSource belongs too. Which means we approve this notification,
+        // but it can still be discarded in the generic Tag notification filter
+        // below
+    }
+
+    if (mAllMonitored) {
+        return true;
+    }
+
+    if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::TagChanges)) {
+        return false;
+    }
+
+    if (mMonitoredTags.isEmpty()) {
+        return true;
+    }
+
+    if (mMonitoredTags.contains(notification.id())) {
+        return true;
+    }
+
+    return false;
+}
+
+bool NotificationSubscriber::acceptsRelationNotification(const Protocol::RelationChangeNotification &notification) const
+{
+    Q_UNUSED(notification);
+
+    if (mAllMonitored) {
+        return true;
+    }
+
+    if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::RelationChanges)) {
+        return false;
+    }
+
+    return true;
+}
+
+bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &notification) const
 {
     // session is ignored
     if (mIgnoredSessions.contains(notification.sessionId())) {
         return false;
     }
 
-    if (notification.entities().count() == 0 && notification.type() != Protocol::ChangeNotification::Relations) {
-        return false;
-    }
-
-    //Only emit notifications for referenced collections if the subscriber is exclusive or monitors the collection
-    if (notification.type() == Protocol::ChangeNotification::Collections) {
-        // HACK: We need to dispatch notifications about disabled collections to SOME
-        // agents (that's what we have the exclusive subscription for) - but because
-        // querying each Collection from database would be expensive, we use the
-        // metadata hack to transfer this information from NotificationCollector
-        if (notification.metadata().contains("DISABLED") && (notification.operation() != Protocol::ChangeNotification::Unsubscribe) && !notification.itemParts().contains("ENABLED")) {
-            // Exclusive subscriber always gets it
-            if (mExclusive) {
-                return true;
-            }
-
-
-            Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
-                //Deliver the notification if referenced from this session
-                if (CollectionReferenceManager::instance()->isReferenced(entity.id, mSession)) {
-                    return true;
-                }
-                //Exclusive subscribers still want the notification
-                if (mExclusive && CollectionReferenceManager::instance()->isReferenced(entity.id)) {
-                    return true;
-                }
-            }
-
-            //The session belonging to this monitor referenced or dereferenced the collection. We always want this notification.
-            //The referencemanager no longer holds a reference, so we have to check this way.
-            if (notification.itemParts().contains("REFERENCED") && mSession == notification.sessionId()) {
-                return true;
-            }
-
-            // If the collection is not referenced, monitored or the subscriber is not
-            // exclusive (i.e. if we got here), then the subscriber does not care about
-            // this one, so drop it
-            return false;
-        }
-    } else if (notification.type() == Protocol::ChangeNotification::Items) {
-        //We always want notifications that affect the parent resource (like an item added to a referenced collection)
-        const bool notificationForParentResource = (mSession == notification.resource());
-        if (CollectionReferenceManager::instance()->isReferenced(notification.parentCollection())) {
-            return (mExclusive || isCollectionMonitored(notification.parentCollection()) || isMoveDestinationResourceMonitored(notification) || notificationForParentResource);
-        }
-    } else if (notification.type() == Protocol::ChangeNotification::Tags) {
-        // Special handling for Tag removal notifications: When a Tag is removed,
-        // a notification is emitted for each Resource that owns the tag (i.e.
-        // each resource that owns a Tag RID - Tag RIDs are resource-specific).
-        // Additionally then we send one more notification without any RID that is
-        // destined for regular applications (which don't know anything about Tag RIDs)
-        if (notification.operation() == Protocol::ChangeNotification::Remove) {
-            // HACK: Since have no way to determine which resource this NotificationSource
-            // belongs to, we are abusing the fact that each resource ignores it's own
-            // main session, which is called the same name as the resource.
-
-            // If there are any ignored sessions, but this notification does not have
-            // a specific resource set, then we ignore it, as this notification is
-            // for clients, not resources (does not have tag RID)
-            if (!mIgnoredSessions.isEmpty() && notification.resource().isEmpty()) {
-                return false;
-            }
-
-            // If this source ignores a session (i.e. we assume it is a resource),
-            // but this notification is for another resource, then we ignore it
-            if (!notification.resource().isEmpty() && !mIgnoredSessions.contains(notification.resource())) {
-                return false;
-            }
-
-            // Now we got here, which means that this notification either has empty
-            // resource, i.e. it is destined for a client applications, or it's
-            // destined for resource that we *think* (see the hack above) this
-            // NotificationSource belongs too. Which means we approve this notification,
-            // but it can still be discarded in the generic Tag notification filter
-            // below
-        }
-    }
-
-    // user requested everything
-    if (mAllMonitored && notification.type() != Protocol::ChangeNotification::InvalidType) {
-        return true;
-    }
-
-    switch (notification.type()) {
-    case Protocol::ChangeNotification::InvalidType:
+    if (notification.type() == Protocol::Command::ItemChangeNotification) {
+        return acceptsItemNotification(notification);
+    } else if (notification.type() == Protocol::Command::CollectionChangeNotification) {
+        return acceptsCollectionNotification(notification);
+    } else if (notification.type() == Protocol::Command::TagChangeNotification) {
+        return acceptsTagNotification(notification);
+    } else if (notification.type() == Protocol::Command::RelationChangeNotification) {
+        return acceptsRelationNotification(notification);
+    } else {
         qCDebug(AKONADISERVER_LOG) << "Received invalid change notification!";
         return false;
-
-    case Protocol::ChangeNotification::Items:
-        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ChangeNotification::Items)) {
-            return false;
-        }
-        // we have a resource or mimetype filter
-        if (!mMonitoredResources.isEmpty() || !mMonitoredMimeTypes.isEmpty()) {
-            if (mMonitoredResources.contains(notification.resource())) {
-                return true;
-            }
-
-            if (isMoveDestinationResourceMonitored(notification)) {
-                return true;
-            }
-
-            Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
-                if (isMimeTypeMonitored(entity.mimeType)) {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        // we explicitly monitor that item or the collections it's in
-        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
-            if (mMonitoredItems.contains(entity.id)) {
-                return true;
-            }
-        }
-
-        return isCollectionMonitored(notification.parentCollection())
-               || isCollectionMonitored(notification.parentDestCollection());
-
-    case Protocol::ChangeNotification::Collections:
-        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ChangeNotification::Collections)) {
-            return false;
-        }
-
-        // we have a resource filter
-        if (!mMonitoredResources.isEmpty()) {
-            const bool resourceMatches = mMonitoredResources.contains(notification.resource())
-                                         || isMoveDestinationResourceMonitored(notification);
-
-            // a bit hacky, but match the behaviour from the item case,
-            // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
-            if (mMonitoredMimeTypes.isEmpty() || resourceMatches) {
-                return resourceMatches;
-            }
-            // else continue
-        }
-
-        // we explicitly monitor that colleciton, or all of them
-        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
-            if (isCollectionMonitored(entity.id)) {
-                return true;
-            }
-        }
-
-        return isCollectionMonitored(notification.parentCollection())
-               || isCollectionMonitored(notification.parentDestCollection());
-
-    case Protocol::ChangeNotification::Tags:
-        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ChangeNotification::Tags)) {
-            return false;
-        }
-
-        if (mMonitoredTags.isEmpty()) {
-            return true;
-        }
-
-        Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
-            if (mMonitoredTags.contains(entity.id)) {
-                return true;
-            }
-        }
-
-        return false;
-
-    case Protocol::ChangeNotification::Relations:
-        if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ChangeNotification::Relations)) {
-            return false;
-        }
-        return true;
-
     }
-
-    return false;
 }
 
 void NotificationSubscriber::notify(const Protocol::ChangeNotification::List &notifications)
@@ -460,6 +501,6 @@ void NotificationSubscriber::writeNotification(const Protocol::ChangeNotificatio
 void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::Command& cmd)
 {
     QDataStream stream(mSocket);
-    stream << tag; // chosen by fair dice roll
+    stream << tag;
     Protocol::serialize(mSocket, cmd);
 }

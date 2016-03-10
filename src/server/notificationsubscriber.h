@@ -53,10 +53,16 @@ protected:
     void disconnectSubscriber();
 
 private:
-    bool acceptsNotification(const Protocol::ChangeNotification &notification);
+    bool acceptsNotification(const Protocol::ChangeNotification &notification) const;
+    bool acceptsItemNotification(const Protocol::ItemChangeNotification &notification) const;
+    bool acceptsCollectionNotification(const Protocol::CollectionChangeNotification &notification) const;
+    bool acceptsTagNotification(const Protocol::TagChangeNotification &notification) const;
+    bool acceptsRelationNotification(const Protocol::RelationChangeNotification &notification) const;
+
     bool isCollectionMonitored(Entity::Id id) const;
     bool isMimeTypeMonitored(const QString &mimeType) const;
-    bool isMoveDestinationResourceMonitored(const Protocol::ChangeNotification &msg) const;
+    bool isMoveDestinationResourceMonitored(const Protocol::ItemChangeNotification &msg) const;
+    bool isMoveDestinationResourceMonitored(const Protocol::CollectionChangeNotification &msg) const;
 
 protected:
     explicit NotificationSubscriber();
@@ -69,8 +75,7 @@ protected:
     QSet<Entity::Id> mMonitoredCollections;
     QSet<Entity::Id> mMonitoredItems;
     QSet<Entity::Id> mMonitoredTags;
-    // TODO: Make this a bitflag
-    QSet<Protocol::ChangeNotification::Type> mMonitoredTypes;
+    QSet<Protocol::ModifySubscriptionCommand::ChangeType> mMonitoredTypes;
     QSet<QString> mMonitoredMimeTypes;
     QSet<QByteArray> mMonitoredResources;
     QSet<QByteArray> mIgnoredSessions;

@@ -84,10 +84,14 @@ void NotificationManager::connectNotificationCollector(NotificationCollector *co
             this, &NotificationManager::slotNotify);
 }
 
-void NotificationManager::slotNotify(const Akonadi::Protocol::ChangeNotification::List &msgs)
+void NotificationManager::slotNotify(const Protocol::ChangeNotification::List &msgs)
 {
     Q_FOREACH (const Protocol::ChangeNotification &msg, msgs) {
-        Protocol::ChangeNotification::appendAndCompress(mNotifications, msg);
+        if (msg.type() == Protocol::Command::CollectionChangeNotification) {
+            Protocol::CollectionChangeNotification::appendAndCompress(mNotifications, msg);
+        } else {
+            mNotifications.push_back(msg);
+        }
     }
 
     if (!mTimer->isActive()) {

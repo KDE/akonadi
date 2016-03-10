@@ -33,7 +33,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(QList<Akonadi::Protocol::ChangeNotification>)
+Q_DECLARE_METATYPE(Akonadi::Protocol::CollectionChangeNotification::List)
 
 class ModifyHandlerTest : public QObject
 {
@@ -59,13 +59,14 @@ private Q_SLOTS:
     void testModify_data()
     {
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<QList<Akonadi::Protocol::ChangeNotification> >("expectedNotifications");
+        QTest::addColumn<Protocol::CollectionChangeNotification::List>("expectedNotifications");
         QTest::addColumn<QVariant>("newValue");
 
-        Akonadi::Protocol::ChangeNotification notificationTemplate;
-        notificationTemplate.setType(Protocol::ChangeNotification::Collections);
-        notificationTemplate.setOperation(Protocol::ChangeNotification::Modify);
-        notificationTemplate.addEntity(5, QStringLiteral("ColD"), QStringLiteral(""));
+        Protocol::CollectionChangeNotification notificationTemplate;
+        notificationTemplate.setOperation(Protocol::CollectionChangeNotification::Modify);
+        notificationTemplate.setId(5);
+        notificationTemplate.setRemoteId(QStringLiteral("ColD"));
+        notificationTemplate.setRemoteRevision(QStringLiteral(""));
         notificationTemplate.setParentCollection(4);
         notificationTemplate.setResource("akonadi_fake_resource_0");
         notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
@@ -79,10 +80,10 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
-            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
-            notification.setItemParts(QSet<QByteArray>() << "NAME");
+            Protocol::CollectionChangeNotification notification = notificationTemplate;
+            notification.setChangedParts(QSet<QByteArray>() << "NAME");
 
-            QTest::newRow("modify collection") << scenarios << (QList<Akonadi::Protocol::ChangeNotification>() << notification) << QVariant::fromValue(QString::fromLatin1("New Name"));
+            QTest::newRow("modify collection") << scenarios << Protocol::CollectionChangeNotification::List{ notification } << QVariant::fromValue(QString::fromLatin1("New Name"));
         }
         {
             Protocol::ModifyCollectionCommand cmd(5);
@@ -93,12 +94,12 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
-            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
-            notification.setItemParts(QSet<QByteArray>() << "ENABLED");
-            Akonadi::Protocol::ChangeNotification unsubscribeNotification = notificationTemplate;
-            unsubscribeNotification.setOperation(Protocol::ChangeNotification::Unsubscribe);
+            Protocol::CollectionChangeNotification notification = notificationTemplate;
+            notification.setChangedParts(QSet<QByteArray>() << "ENABLED");
+            Protocol::CollectionChangeNotification unsubscribeNotification = notificationTemplate;
+            unsubscribeNotification.setOperation(Protocol::CollectionChangeNotification::Unsubscribe);
 
-            QTest::newRow("disable collection") << scenarios << (QList<Akonadi::Protocol::ChangeNotification>() << notification << unsubscribeNotification) << QVariant::fromValue(false);
+            QTest::newRow("disable collection") << scenarios << Protocol::CollectionChangeNotification::List{ notification, unsubscribeNotification} << QVariant::fromValue(false);
         }
         {
             Protocol::ModifyCollectionCommand cmd(5);
@@ -109,12 +110,12 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
-            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
-            notification.setItemParts(QSet<QByteArray>() << "ENABLED");
-            Akonadi::Protocol::ChangeNotification subscribeNotification = notificationTemplate;
-            subscribeNotification.setOperation(Protocol::ChangeNotification::Subscribe);
+            Protocol::CollectionChangeNotification notification = notificationTemplate;
+            notification.setChangedParts(QSet<QByteArray>() << "ENABLED");
+            Protocol::CollectionChangeNotification subscribeNotification = notificationTemplate;
+            subscribeNotification.setOperation(Protocol::CollectionChangeNotification::Subscribe);
 
-            QTest::newRow("enable collection") << scenarios << (QList<Akonadi::Protocol::ChangeNotification>() << notification << subscribeNotification) << QVariant::fromValue(true);
+            QTest::newRow("enable collection") << scenarios << Protocol::CollectionChangeNotification::List{ notification, subscribeNotification } << QVariant::fromValue(true);
         }
         {
             Protocol::ModifyCollectionCommand cmd(5);
@@ -128,19 +129,19 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
 
-            Akonadi::Protocol::ChangeNotification notification = notificationTemplate;
-            notification.setItemParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
-            Akonadi::Protocol::ChangeNotification unsubscribeNotification = notificationTemplate;
-            unsubscribeNotification.setOperation(Protocol::ChangeNotification::Unsubscribe);
+            Protocol::CollectionChangeNotification notification = notificationTemplate;
+            notification.setChangedParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
+            Protocol::CollectionChangeNotification unsubscribeNotification = notificationTemplate;
+            unsubscribeNotification.setOperation(Protocol::CollectionChangeNotification::Unsubscribe);
 
-            QTest::newRow("local override enable") << scenarios << (QList<Akonadi::Protocol::ChangeNotification>() << notification << unsubscribeNotification) << QVariant::fromValue(true);
+            QTest::newRow("local override enable") << scenarios << Protocol::CollectionChangeNotification::List{ notification, unsubscribeNotification } << QVariant::fromValue(true);
         }
     }
 
     void testModify()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(QList<Protocol::ChangeNotification>, expectedNotifications);
+        QFETCH(Protocol::CollectionChangeNotification::List, expectedNotifications);
         QFETCH(QVariant, newValue);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
@@ -158,22 +159,20 @@ private Q_SLOTS:
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
 
         for (int i = 0; i < expectedNotifications.size(); i++) {
-            QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
-            Protocol::ChangeNotification notification = receivedNotifications.at(i);
-            Q_FOREACH (const Protocol::ChangeNotification::Entity &entity, notification.entities()) {
-                if (notification.itemParts().contains("NAME")) {
-                    Collection col = Collection::retrieveById(entity.id);
-                    QCOMPARE(col.name(), newValue.toString());
-                }
-                if (notification.itemParts().contains("ENABLED") || notification.itemParts().contains("SYNC") || notification.itemParts().contains("DISPLAY") || notification.itemParts().contains("INDEX")) {
-                    Collection col = Collection::retrieveById(entity.id);
-                    const bool sync = col.syncPref() == Tristate::Undefined ? col.enabled() : col.syncPref() == Tristate::True;
-                    QCOMPARE(sync, newValue.toBool());
-                    const bool display = col.displayPref() == Tristate::Undefined ? col.enabled() : col.displayPref() == Tristate::True;
-                    QCOMPARE(display, newValue.toBool());
-                    const bool index = col.indexPref() == Tristate::Undefined ? col.enabled() : col.indexPref() == Tristate::True;
-                    QCOMPARE(index, newValue.toBool());
-                }
+            QCOMPARE(Protocol::CollectionChangeNotification(receivedNotifications.at(i)), expectedNotifications.at(i));
+            Protocol::CollectionChangeNotification notification = receivedNotifications.at(i);
+            if (notification.changedParts().contains("NAME")) {
+                Collection col = Collection::retrieveById(notification.id());
+                QCOMPARE(col.name(), newValue.toString());
+            }
+            if (!notification.changedParts().intersect({ "ENABLED", "SYNC", "DISPLAY", "INDEX" }).isEmpty()) {
+                Collection col = Collection::retrieveById(notification.id());
+                const bool sync = col.syncPref() == Tristate::Undefined ? col.enabled() : col.syncPref() == Tristate::True;
+                QCOMPARE(sync, newValue.toBool());
+                const bool display = col.displayPref() == Tristate::Undefined ? col.enabled() : col.displayPref() == Tristate::True;
+                QCOMPARE(display, newValue.toBool());
+                const bool index = col.indexPref() == Tristate::Undefined ? col.enabled() : col.indexPref() == Tristate::True;
+                QCOMPARE(index, newValue.toBool());
             }
         }
     }

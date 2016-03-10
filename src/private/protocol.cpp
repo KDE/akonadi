@@ -132,8 +132,14 @@ QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
 
     case Akonadi::Protocol::Command::StreamPayload:
         return dbg << "StreamPayload";
-    case Akonadi::Protocol::Command::ChangeNotification:
-        return dbg << "ChangeNotification";
+    case Akonadi::Protocol::Command::ItemChangeNotification:
+        return dbg << "ItemChangeNotification";
+    case Akonadi::Protocol::Command::CollectionChangeNotification:
+        return dbg << "CollectionChangeNotification";
+    case Akonadi::Protocol::Command::TagChangeNotification:
+        return dbg << "TagChangeNotification";
+    case Akonadi::Protocol::Command::RelationChangeNotification:
+        return dbg << "RelationChangeNotification";
     case Akonadi::Protocol::Command::CreateSubscription:
         return dbg << "CreateSubscription";
     case Akonadi::Protocol::Command::ModifySubscription:
@@ -146,6 +152,12 @@ QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
 
     Q_ASSERT(false);
     return dbg;
+}
+
+QDebug operator<<(QDebug _dbg, const Akonadi::Protocol::ItemChangeNotification::Relation &rel)
+{
+    QDebug dbg(_dbg.noquote());
+    return dbg << "Left: " << rel.leftId << ", Right:" << rel.rightId << ", Type: " << rel.type;
 }
 
 namespace Akonadi
@@ -551,7 +563,10 @@ public:
 
         // Other...?
         registerType<Command::StreamPayload, StreamPayloadCommand, StreamPayloadResponse>();
-        registerType<Command::ChangeNotification, ChangeNotification, Response /* invalid */>();
+        registerType<Command::ItemChangeNotification, ItemChangeNotification, Response /* invalid */>();
+        registerType<Command::CollectionChangeNotification, CollectionChangeNotification, Response /* invalid */>();
+        registerType<Command::TagChangeNotification, TagChangeNotification, Response /* invalid */>();
+        registerType<Command::RelationChangeNotification, RelationChangeNotification, Response /* invalid */>();
         registerType<Command::CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse>();
         registerType<Command::ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse>();
     }
@@ -8145,253 +8160,102 @@ DataStream &operator>>(DataStream &stream, StreamPayloadResponse &command)
 /******************************************************************************/
 
 
-
-
 class ChangeNotificationPrivate : public CommandPrivate
 {
 public:
-    ChangeNotificationPrivate()
-        : CommandPrivate(Command::ChangeNotification)
-        , parentCollection(-1)
-        , parentDestCollection(-1)
-        , type(ChangeNotification::InvalidType)
-        , operation(ChangeNotification::InvalidOp)
-    {}
+    ChangeNotificationPrivate(Command::Type type)
+        : CommandPrivate(type)
+    {
+    }
 
     ChangeNotificationPrivate(const ChangeNotificationPrivate &other)
         : CommandPrivate(other)
         , sessionId(other.sessionId)
-        , items(other.items)
-        , resource(other.resource)
-        , destResource(other.destResource)
-        , parts(other.parts)
-        , addedFlags(other.addedFlags)
-        , removedFlags(other.removedFlags)
-        , addedTags(other.addedTags)
-        , removedTags(other.removedTags)
         , metadata(other.metadata)
-        , parentCollection(other.parentCollection)
-        , parentDestCollection(other.parentDestCollection)
-        , type(other.type)
-        , operation(other.operation)
-    {}
-
-    bool compareWithoutOpAndParts(const ChangeNotificationPrivate *other) const
     {
-        return type == other->type
-               && items == other->items
-               && sessionId == other->sessionId
-               && resource == other->resource
-               && destResource == other->destResource
-               && parentCollection == other->parentCollection
-               && parentDestCollection == other->parentDestCollection;
     }
 
-    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
+    virtual bool compare(const Akonadi::Protocol::CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-             && COMPARE(operation)
-             && COMPARE(parts)
-             && COMPARE(addedFlags)
-             && COMPARE(removedFlags)
-             && COMPARE(addedTags)
-             && COMPARE(removedTags)
-             && compareWithoutOpAndParts(static_cast<const ChangeNotificationPrivate*>(other));
+            && COMPARE(sessionId);
     }
 
-    CommandPrivate *clone() const Q_DECL_OVERRIDE
-    {
-        return new ChangeNotificationPrivate(*this);
-    }
-
-    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    virtual DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-               << type
-               << operation
-               << sessionId
-               << items
-               << resource
-               << destResource
-               << parts
-               << addedFlags
-               << removedFlags
-               << addedTags
-               << removedTags
-               << parentCollection
-               << parentDestCollection;
+               << sessionId;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
+    virtual DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
-               >> type
-               >> operation
-               >> sessionId
-               >> items
-               >> resource
-               >> destResource
-               >> parts
-               >> addedFlags
-               >> removedFlags
-               >> addedTags
-               >> removedTags
-               >> parentCollection
-               >> parentDestCollection;
+               >> sessionId;
     }
-
-    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
-    {
-        blck.write("Type", [this]() -> QString {
-            switch (type) {
-            case ChangeNotification::Items:
-                return QStringLiteral("Items");
-            case ChangeNotification::Collections:
-                return QStringLiteral("Collections");
-            case ChangeNotification::Tags:
-                return QStringLiteral("Tags");
-            case ChangeNotification::Relations:
-                return QStringLiteral("Relations");
-            case ChangeNotification::InvalidType:
-                return QStringLiteral("*INVALID TYPE*");
-            }
-            Q_ASSERT(false);
-            return QString();
-        }());
-        blck.write("Operation", [this]() -> QString {
-            switch (operation) {
-            case ChangeNotification::Add:
-                return QStringLiteral("Add");
-            case ChangeNotification::Modify:
-                return QStringLiteral("Modify");
-            case ChangeNotification::ModifyFlags:
-                return QStringLiteral("ModifyFlags");
-            case ChangeNotification::ModifyTags:
-                return QStringLiteral("ModifyTags");
-            case ChangeNotification::ModifyRelations:
-                return QStringLiteral("ModifyRelations");
-            case ChangeNotification::Move:
-                return QStringLiteral("Move");
-            case ChangeNotification::Remove:
-                return QStringLiteral("Remove");
-            case ChangeNotification::Link:
-                return QStringLiteral("Link");
-            case ChangeNotification::Unlink:
-                return QStringLiteral("Unlink");
-            case ChangeNotification::Subscribe:
-                return QStringLiteral("Subscribe");
-            case ChangeNotification::Unsubscribe:
-                return QStringLiteral("Unsubscribe");
-            case ChangeNotification::InvalidOp:
-                return QStringLiteral("*INVALID OPERATION*");
-            }
-            Q_ASSERT(false);
-            return QString();
-        }());
-        blck.beginBlock("Items");
-        Q_FOREACH (const ChangeNotification::Entity &item, items) {
-            blck.beginBlock();
-            blck.write("ID", item.id);
-            blck.write("RemoteID", item.remoteId);
-            blck.write("Remote Revision", item.remoteRevision);
-            blck.write("Mime Type", item.mimeType);
-            blck.endBlock();
-        }
-        blck.endBlock();
-        blck.write("Session", sessionId);
-        blck.write("Resource", resource);
-        blck.write("Destination Resource", destResource);
-        blck.write("Parent Collection", parentCollection);
-        blck.write("Parent Destination Collection", parentDestCollection);
-        blck.write("Parts", parts);
-        blck.write("Added Flags", addedFlags);
-        blck.write("Removed Flags", removedFlags);
-        blck.write("Added Tags", addedTags);
-        blck.write("Removed Tags", removedTags);
-    }
-
-
 
     QByteArray sessionId;
-    QMap<qint64, ChangeNotification::Entity> items;
-    QByteArray resource;
-    QByteArray destResource;
-    QSet<QByteArray> parts;
-    QSet<QByteArray> addedFlags;
-    QSet<QByteArray> removedFlags;
-    QSet<qint64> addedTags;
-    QSet<qint64> removedTags;
+
 
     // For internal use only: Akonadi server can add some additional information
     // that might be useful when evaluating the notification for example, but
     // it is never transferred to clients
     QVector<QByteArray> metadata;
-
-    qint64 parentCollection;
-    qint64 parentDestCollection;
-    ChangeNotification::Type type;
-    ChangeNotification::Operation operation;
 };
 
 AKONADI_DECLARE_PRIVATE(ChangeNotification)
 
-
 ChangeNotification::ChangeNotification()
-    : Command(new ChangeNotificationPrivate)
+    : Command()
+{
+}
+
+ChangeNotification::ChangeNotification(ChangeNotificationPrivate *dptr)
+    : Command(dptr)
 {
 }
 
 ChangeNotification::ChangeNotification(const Command &other)
     : Command(other)
 {
-    checkCopyInvariant(Command::ChangeNotification);
 }
 
-bool ChangeNotification::isValid() const
+bool ChangeNotification::isRemove() const
 {
-    Q_D(const ChangeNotification);
-    return d->commandType == Command::ChangeNotification
-        && d->type != InvalidType
-        && d->operation != InvalidOp;
-}
-
-void ChangeNotification::addEntity(Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType)
-{
-    d_func()->items.insert(id, Entity(id, remoteId, remoteRevision, mimeType));
-}
-
-void ChangeNotification::setEntities(const QVector<Entity> &entities)
-{
-    Q_D(ChangeNotification);
-    clearEntities();
-    Q_FOREACH (const Entity &entity, entities) {
-        d->items.insert(entity.id, entity);
+    switch (type()) {
+    case Command::Invalid:
+        return false;
+    case Command::ItemChangeNotification:
+        return static_cast<const Protocol::ItemChangeNotification*>(this)->operation() == ItemChangeNotification::Remove;
+    case Command::CollectionChangeNotification:
+        return static_cast<const Protocol::CollectionChangeNotification*>(this)->operation() == CollectionChangeNotification::Remove;
+    case Command::TagChangeNotification:
+        return static_cast<const Protocol::TagChangeNotification*>(this)->operation() == TagChangeNotification::Remove;
+    case Command::RelationChangeNotification:
+        return static_cast<const Protocol::RelationChangeNotification*>(this)->operation() == RelationChangeNotification::Remove;
+    default:
+        Q_ASSERT_X(false, __FUNCTION__, "Unknown ChangeNotification type");
     }
+
+    return false;
 }
 
-void ChangeNotification::clearEntities()
+bool ChangeNotification::isMove() const
 {
-    d_func()->items.clear();
-}
+    switch (type()) {
+    case Command::Invalid:
+        return false;
+    case Command::ItemChangeNotification:
+        return static_cast<const Protocol::ItemChangeNotification*>(this)->operation() == ItemChangeNotification::Move;
+    case Command::CollectionChangeNotification:
+        return static_cast<const Protocol::CollectionChangeNotification*>(this)->operation() == CollectionChangeNotification::Move;
+    case Command::TagChangeNotification:
+    case Command::RelationChangeNotification:
+        return false;
+    default:
+        Q_ASSERT_X(false, __FUNCTION__, "Unknown ChangeNotification type");
+    }
 
-QMap<qint64, ChangeNotification::Entity> ChangeNotification::entities() const
-{
-    return d_func()->items;
-}
-
-ChangeNotification::Entity ChangeNotification::entity(const Id id) const
-{
-    return d_func()->items.value(id);
-}
-
-QList<qint64> ChangeNotification::uids() const
-{
-    return d_func()->items.keys();
-}
-
-QByteArray ChangeNotification::sessionId() const
-{
-    return d_func()->sessionId;
+    return false;
 }
 
 void ChangeNotification::setSessionId(const QByteArray &sessionId)
@@ -8399,114 +8263,9 @@ void ChangeNotification::setSessionId(const QByteArray &sessionId)
     d_func()->sessionId = sessionId;
 }
 
-ChangeNotification::Type ChangeNotification::type() const
+QByteArray ChangeNotification::sessionId() const
 {
-    return d_func()->type;
-}
-
-void ChangeNotification::setType(Type type)
-{
-    d_func()->type = type;
-}
-
-ChangeNotification::Operation ChangeNotification::operation() const
-{
-    return d_func()->operation;
-}
-
-void ChangeNotification::setOperation(Operation operation)
-{
-    d_func()->operation = operation;
-}
-
-QByteArray ChangeNotification::resource() const
-{
-    return d_func()->resource;
-}
-
-void ChangeNotification::setResource(const QByteArray &resource)
-{
-    d_func()->resource = resource;
-}
-
-qint64 ChangeNotification::parentCollection() const
-{
-    return d_func()->parentCollection;
-}
-
-qint64 ChangeNotification::parentDestCollection() const
-{
-    return d_func()->parentDestCollection;
-}
-
-void ChangeNotification::setParentCollection(Id parent)
-{
-    d_func()->parentCollection = parent;
-}
-
-void ChangeNotification::setParentDestCollection(Id parent)
-{
-    d_func()->parentDestCollection = parent;
-}
-
-void ChangeNotification::setDestinationResource(const QByteArray &destResource)
-{
-    d_func()->destResource = destResource;
-}
-
-QByteArray ChangeNotification::destinationResource() const
-{
-    return d_func()->destResource;
-}
-
-QSet<QByteArray> ChangeNotification::itemParts() const
-{
-    return d_func()->parts;
-}
-
-void ChangeNotification::setItemParts(const QSet<QByteArray> &parts)
-{
-    d_func()->parts = parts;
-}
-
-QSet<QByteArray> ChangeNotification::addedFlags() const
-{
-    return d_func()->addedFlags;
-}
-
-void ChangeNotification::setAddedFlags(const QSet<QByteArray> &addedFlags)
-{
-    d_func()->addedFlags = addedFlags;
-}
-
-QSet<QByteArray> ChangeNotification::removedFlags() const
-{
-    return d_func()->removedFlags;
-}
-
-void ChangeNotification::setRemovedFlags(const QSet<QByteArray> &removedFlags)
-{
-    d_func()->removedFlags = removedFlags;
-}
-
-QSet<qint64> ChangeNotification::addedTags() const
-{
-    return d_func()->addedTags;
-}
-
-void ChangeNotification::setAddedTags(const QSet<qint64> &addedTags)
-{
-    d_func()->addedTags = addedTags;
-}
-
-QSet<qint64> ChangeNotification::removedTags() const
-{
-    return d_func()->removedTags;
-}
-
-void ChangeNotification::setRemovedTags(const QSet<qint64> &removedTags)
-{
-    d_func()->removedTags = removedTags;
+    return d_func()->sessionId;
 }
 
 void ChangeNotification::addMetadata(const QByteArray &metadata)
@@ -8524,28 +8283,643 @@ QVector<QByteArray> ChangeNotification::metadata() const
     return d_func()->metadata;
 }
 
-bool ChangeNotification::appendAndCompress(ChangeNotification::List &list, const ChangeNotification &msg)
+
+
+
+class ItemChangeNotificationPrivate : public ChangeNotificationPrivate
+{
+public:
+    ItemChangeNotificationPrivate()
+        : ChangeNotificationPrivate(Command::ItemChangeNotification)
+        , parentCollection(-1)
+        , parentDestCollection(-1)
+        , operation(ItemChangeNotification::InvalidOp)
+    {}
+
+    ItemChangeNotificationPrivate(const ItemChangeNotificationPrivate &other)
+        : ChangeNotificationPrivate(other)
+        , items(other.items)
+        , resource(other.resource)
+        , destResource(other.destResource)
+        , parts(other.parts)
+        , addedFlags(other.addedFlags)
+        , removedFlags(other.removedFlags)
+        , addedTags(other.addedTags)
+        , removedTags(other.removedTags)
+        , addedRelations(other.addedRelations)
+        , removedRelations(other.removedRelations)
+        , parentCollection(other.parentCollection)
+        , parentDestCollection(other.parentDestCollection)
+        , operation(other.operation)
+    {}
+
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::compare(other)
+             && COMPARE(operation)
+             && COMPARE(parts)
+             && COMPARE(addedFlags)
+             && COMPARE(removedFlags)
+             && COMPARE(addedTags)
+             && COMPARE(removedTags)
+             && COMPARE(addedRelations)
+             && COMPARE(removedRelations)
+             && COMPARE(items)
+             && COMPARE(resource)
+             && COMPARE(destResource)
+             && COMPARE(parentCollection)
+             && COMPARE(parentDestCollection);
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new ItemChangeNotificationPrivate(*this);
+    }
+
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::serialize(stream)
+               << operation
+               << items
+               << resource
+               << destResource
+               << parts
+               << addedFlags
+               << removedFlags
+               << addedTags
+               << removedTags
+               << addedRelations
+               << removedRelations
+               << parentCollection
+               << parentDestCollection;
+    }
+
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::deserialize(stream)
+               >> operation
+               >> items
+               >> resource
+               >> destResource
+               >> parts
+               >> addedFlags
+               >> removedFlags
+               >> addedTags
+               >> removedTags
+               >> addedRelations
+               >> removedRelations
+               >> parentCollection
+               >> parentDestCollection;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Operation", [this]() -> QString {
+            switch (operation) {
+            case ItemChangeNotification::Add:
+                return QStringLiteral("Add");
+            case ItemChangeNotification::Modify:
+                return QStringLiteral("Modify");
+            case ItemChangeNotification::ModifyFlags:
+                return QStringLiteral("ModifyFlags");
+            case ItemChangeNotification::ModifyTags:
+                return QStringLiteral("ModifyTags");
+            case ItemChangeNotification::ModifyRelations:
+                return QStringLiteral("ModifyRelations");
+            case ItemChangeNotification::Move:
+                return QStringLiteral("Move");
+            case ItemChangeNotification::Remove:
+                return QStringLiteral("Remove");
+            case ItemChangeNotification::Link:
+                return QStringLiteral("Link");
+            case ItemChangeNotification::Unlink:
+                return QStringLiteral("Unlink");
+            case ItemChangeNotification::InvalidOp:
+                return QStringLiteral("*INVALID OPERATION*");
+            }
+            Q_ASSERT(false);
+            return QString();
+        }());
+        blck.beginBlock("Items");
+        Q_FOREACH (const ItemChangeNotification::Item &item, items) {
+            blck.beginBlock();
+            blck.write("ID", item.id);
+            blck.write("RemoteID", item.remoteId);
+            blck.write("Remote Revision", item.remoteRevision);
+            blck.write("Mime Type", item.mimeType);
+            blck.endBlock();
+        }
+        blck.endBlock();
+        blck.write("Resource", resource);
+        blck.write("Destination Resource", destResource);
+        blck.write("Parent Collection", parentCollection);
+        blck.write("Parent Destination Collection", parentDestCollection);
+        blck.write("Parts", parts);
+        blck.write("Added Flags", addedFlags);
+        blck.write("Removed Flags", removedFlags);
+        blck.write("Added Tags", addedTags);
+        blck.write("Removed Tags", removedTags);
+        blck.write("Added Relations", addedRelations);
+        blck.write("Removed Relations", removedRelations);
+    }
+
+    QMap<qint64, ItemChangeNotification::Item> items;
+    QByteArray resource;
+    QByteArray destResource;
+    QSet<QByteArray> parts;
+    QSet<QByteArray> addedFlags;
+    QSet<QByteArray> removedFlags;
+    QSet<qint64> addedTags;
+    QSet<qint64> removedTags;
+    QSet<ItemChangeNotification::Relation> addedRelations;
+    QSet<ItemChangeNotification::Relation> removedRelations;
+
+    qint64 parentCollection;
+    qint64 parentDestCollection;
+    ItemChangeNotification::Operation operation;
+};
+
+AKONADI_DECLARE_PRIVATE(ItemChangeNotification)
+
+
+ItemChangeNotification::ItemChangeNotification()
+    : ChangeNotification(new ItemChangeNotificationPrivate)
+{
+}
+
+ItemChangeNotification::ItemChangeNotification(const Command &other)
+    : ChangeNotification(other)
+{
+    checkCopyInvariant(Command::ItemChangeNotification);
+}
+
+bool ItemChangeNotification::isValid() const
+{
+    Q_D(const ItemChangeNotification);
+    return d->commandType == Command::ItemChangeNotification
+        && d->operation != InvalidOp;
+}
+
+void ItemChangeNotification::addItem(Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType)
+{
+    d_func()->items.insert(id, Item(id, remoteId, remoteRevision, mimeType));
+}
+
+void ItemChangeNotification::setItem(const QVector<Item> &items)
+{
+    Q_D(ItemChangeNotification);
+    clearItems();
+    Q_FOREACH (const Item &item, items) {
+        d->items.insert(item.id, item);
+    }
+}
+
+void ItemChangeNotification::clearItems()
+{
+    d_func()->items.clear();
+}
+
+QMap<qint64, ItemChangeNotification::Item> ItemChangeNotification::items() const
+{
+    return d_func()->items;
+}
+
+ItemChangeNotification::Item ItemChangeNotification::item(const Id id) const
+{
+    return d_func()->items.value(id);
+}
+
+QList<qint64> ItemChangeNotification::uids() const
+{
+    return d_func()->items.keys();
+}
+
+ItemChangeNotification::Operation ItemChangeNotification::operation() const
+{
+    return d_func()->operation;
+}
+
+void ItemChangeNotification::setOperation(Operation operation)
+{
+    d_func()->operation = operation;
+}
+
+QByteArray ItemChangeNotification::resource() const
+{
+    return d_func()->resource;
+}
+
+void ItemChangeNotification::setResource(const QByteArray &resource)
+{
+    d_func()->resource = resource;
+}
+
+qint64 ItemChangeNotification::parentCollection() const
+{
+    return d_func()->parentCollection;
+}
+
+qint64 ItemChangeNotification::parentDestCollection() const
+{
+    return d_func()->parentDestCollection;
+}
+
+void ItemChangeNotification::setParentCollection(Id parent)
+{
+    d_func()->parentCollection = parent;
+}
+
+void ItemChangeNotification::setParentDestCollection(Id parent)
+{
+    d_func()->parentDestCollection = parent;
+}
+
+void ItemChangeNotification::setDestinationResource(const QByteArray &destResource)
+{
+    d_func()->destResource = destResource;
+}
+
+QByteArray ItemChangeNotification::destinationResource() const
+{
+    return d_func()->destResource;
+}
+
+QSet<QByteArray> ItemChangeNotification::itemParts() const
+{
+    return d_func()->parts;
+}
+
+void ItemChangeNotification::setItemParts(const QSet<QByteArray> &parts)
+{
+    d_func()->parts = parts;
+}
+
+QSet<QByteArray> ItemChangeNotification::addedFlags() const
+{
+    return d_func()->addedFlags;
+}
+
+void ItemChangeNotification::setAddedFlags(const QSet<QByteArray> &addedFlags)
+{
+    d_func()->addedFlags = addedFlags;
+}
+
+QSet<QByteArray> ItemChangeNotification::removedFlags() const
+{
+    return d_func()->removedFlags;
+}
+
+void ItemChangeNotification::setRemovedFlags(const QSet<QByteArray> &removedFlags)
+{
+    d_func()->removedFlags = removedFlags;
+}
+
+QSet<qint64> ItemChangeNotification::addedTags() const
+{
+    return d_func()->addedTags;
+}
+
+void ItemChangeNotification::setAddedTags(const QSet<qint64> &addedTags)
+{
+    d_func()->addedTags = addedTags;
+}
+
+QSet<qint64> ItemChangeNotification::removedTags() const
+{
+    return d_func()->removedTags;
+}
+
+void ItemChangeNotification::setRemovedTags(const QSet<qint64> &removedTags)
+{
+    d_func()->removedTags = removedTags;
+}
+
+QSet<ItemChangeNotification::Relation> ItemChangeNotification::addedRelations() const
+{
+    return d_func()->addedRelations;
+}
+
+void ItemChangeNotification::setAddedRelations(const QSet<Relation> &relations)
+{
+    d_func()->addedRelations = relations;
+}
+
+QSet<ItemChangeNotification::Relation> ItemChangeNotification::removedRelations() const
+{
+    return d_func()->removedRelations;
+}
+
+void ItemChangeNotification::setRemovedRelations(const QSet<Relation> &relations)
+{
+    d_func()->removedRelations = relations;
+}
+
+DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ItemChangeNotification::Item &item)
+{
+    return stream << item.id
+                  << item.remoteId
+                  << item.remoteRevision
+                  << item.mimeType;
+}
+
+DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ItemChangeNotification::Item &item)
+{
+    return stream >> item.id
+                  >> item.remoteId
+                  >> item.remoteRevision
+                  >> item.mimeType;
+}
+
+DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ItemChangeNotification::Relation &relation)
+{
+    return stream << relation.leftId
+                  << relation.rightId
+                  << relation.type;
+}
+
+DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ItemChangeNotification::Relation &relation)
+{
+    return stream >> relation.leftId
+                  >> relation.rightId
+                  >> relation.type;
+}
+
+DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ItemChangeNotification &command)
+{
+    return command.d_func()->serialize(stream);
+}
+
+DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ItemChangeNotification &command)
+{
+    return command.d_func()->deserialize(stream);
+}
+
+
+
+
+
+class CollectionChangeNotificationPrivate : public ChangeNotificationPrivate
+{
+public:
+    CollectionChangeNotificationPrivate()
+        : ChangeNotificationPrivate(Command::CollectionChangeNotification)
+        , id(-1)
+        , parentCollection(-1)
+        , parentDestCollection(-1)
+        , operation(CollectionChangeNotification::InvalidOp)
+    {}
+
+    CollectionChangeNotificationPrivate(const CollectionChangeNotificationPrivate &other)
+        : ChangeNotificationPrivate(other)
+        , resource(other.resource)
+        , destResource(other.destResource)
+        , changedParts(other.changedParts)
+        , remoteId(other.remoteId)
+        , remoteRevision(other.remoteRevision)
+        , id(other.id)
+        , parentCollection(other.parentCollection)
+        , parentDestCollection(other.parentDestCollection)
+        , operation(other.operation)
+    {}
+
+    bool compareWithoutOpAndParts(const CollectionChangeNotificationPrivate *other) const
+    {
+        return id == other->id
+               && remoteId == other->remoteId
+               && remoteRevision == other->remoteRevision
+               && resource == other->resource
+               && destResource == other->destResource
+               && parentCollection == other->parentCollection
+               && parentDestCollection == other->parentDestCollection;
+    }
+
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::compare(other)
+             && COMPARE(operation)
+             && COMPARE(changedParts)
+             && compareWithoutOpAndParts(static_cast<const CollectionChangeNotificationPrivate*>(other));
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new CollectionChangeNotificationPrivate(*this);
+    }
+
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::serialize(stream)
+               << operation
+               << id
+               << remoteId
+               << remoteRevision
+               << resource
+               << destResource
+               << changedParts
+               << parentCollection
+               << parentDestCollection;
+    }
+
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::deserialize(stream)
+               >> operation
+               >> id
+               >> remoteId
+               >> remoteRevision
+               >> resource
+               >> destResource
+               >> changedParts
+               >> parentCollection
+               >> parentDestCollection;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Operation", [this]() -> QString {
+            switch (operation) {
+            case CollectionChangeNotification::Add:
+                return QStringLiteral("Add");
+            case CollectionChangeNotification::Modify:
+                return QStringLiteral("Modify");
+            case CollectionChangeNotification::Move:
+                return QStringLiteral("Move");
+            case CollectionChangeNotification::Remove:
+                return QStringLiteral("Remove");
+            case CollectionChangeNotification::Subscribe:
+                return QStringLiteral("Subscribe");
+            case CollectionChangeNotification::Unsubscribe:
+                return QStringLiteral("Unsubscribe");
+            case ItemChangeNotification::InvalidOp:
+                return QStringLiteral("*INVALID OPERATION*");
+            }
+            Q_ASSERT(false);
+            return QString();
+        }());
+        blck.write("Col ID", id);
+        blck.write("Col RID", remoteId);
+        blck.write("Col RREV", remoteRevision);
+        blck.write("Resource", resource);
+        blck.write("Destination Resource", destResource);
+        blck.write("Parent Collection", parentCollection);
+        blck.write("Parent Destination Collection", parentDestCollection);
+        blck.write("Changed Parts", changedParts);
+    }
+
+    QByteArray resource;
+    QByteArray destResource;
+    QSet<QByteArray> changedParts;
+    QString remoteId;
+    QString remoteRevision;
+    qint64 id;
+    qint64 parentCollection;
+    qint64 parentDestCollection;
+    CollectionChangeNotification::Operation operation;
+};
+
+AKONADI_DECLARE_PRIVATE(CollectionChangeNotification)
+
+
+CollectionChangeNotification::CollectionChangeNotification()
+    : ChangeNotification(new CollectionChangeNotificationPrivate)
+{
+}
+
+CollectionChangeNotification::CollectionChangeNotification(const Command &other)
+    : ChangeNotification(other)
+{
+    checkCopyInvariant(Command::CollectionChangeNotification);
+}
+
+bool CollectionChangeNotification::isValid() const
+{
+    Q_D(const CollectionChangeNotification);
+    return d->commandType == Command::CollectionChangeNotification
+        && d->operation != InvalidOp;
+}
+
+CollectionChangeNotification::Id CollectionChangeNotification::id() const
+{
+    return d_func()->id;
+}
+
+void CollectionChangeNotification::setId(Id id)
+{
+    d_func()->id = id;
+}
+
+QString CollectionChangeNotification::remoteId() const
+{
+    return d_func()->remoteId;
+}
+
+void CollectionChangeNotification::setRemoteId(const QString &remoteId)
+{
+    d_func()->remoteId = remoteId;
+}
+
+QString CollectionChangeNotification::remoteRevision() const
+{
+    return d_func()->remoteRevision;
+}
+
+void CollectionChangeNotification::setRemoteRevision(const QString &remoteRevision)
+{
+    d_func()->remoteRevision = remoteRevision;
+}
+
+CollectionChangeNotification::Operation CollectionChangeNotification::operation() const
+{
+    return d_func()->operation;
+}
+
+void CollectionChangeNotification::setOperation(Operation operation)
+{
+    d_func()->operation = operation;
+}
+
+QByteArray CollectionChangeNotification::resource() const
+{
+    return d_func()->resource;
+}
+
+void CollectionChangeNotification::setResource(const QByteArray &resource)
+{
+    d_func()->resource = resource;
+}
+
+qint64 CollectionChangeNotification::parentCollection() const
+{
+    return d_func()->parentCollection;
+}
+
+qint64 CollectionChangeNotification::parentDestCollection() const
+{
+    return d_func()->parentDestCollection;
+}
+
+void CollectionChangeNotification::setParentCollection(Id parent)
+{
+    d_func()->parentCollection = parent;
+}
+
+void CollectionChangeNotification::setParentDestCollection(Id parent)
+{
+    d_func()->parentDestCollection = parent;
+}
+
+void CollectionChangeNotification::setDestinationResource(const QByteArray &destResource)
+{
+    d_func()->destResource = destResource;
+}
+
+QByteArray CollectionChangeNotification::destinationResource() const
+{
+    return d_func()->destResource;
+}
+
+QSet<QByteArray> CollectionChangeNotification::changedParts() const
+{
+    return d_func()->changedParts;
+}
+
+void CollectionChangeNotification::setChangedParts(const QSet<QByteArray> &changedParts)
+{
+    d_func()->changedParts = changedParts;
+}
+
+DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CollectionChangeNotification &command)
+{
+    return command.d_func()->serialize(stream);
+}
+
+DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CollectionChangeNotification &command)
+{
+    return command.d_func()->deserialize(stream);
+}
+
+bool CollectionChangeNotification::appendAndCompress(ChangeNotification::List &list, const CollectionChangeNotification &msg)
 {
     //It is likely that compressable notifications are within the last few notifications, so avoid searching a list that is potentially huge
     static const int maxCompressionSearchLength = 10;
     int searchCounter = 0;
     // There are often multiple Collection Modify notifications in the queue,
     // so we optimize for this case.
-    if (msg.type() == ChangeNotification::Collections && msg.operation() == ChangeNotification::Modify) {
-        typename List::Iterator iter, begin;
+    if (msg.operation() == Modify) {
         // We are iterating from end, since there's higher probability of finding
         // matching notification
-        for (iter = list.end(), begin = list.begin(); iter != begin; ) {
+        for (auto iter = list.end(), begin = list.begin(); iter != begin; ) {
             --iter;
-            if (msg.d_func()->compareWithoutOpAndParts((*iter).d_func())) {
+            CollectionChangeNotification &it = static_cast<CollectionChangeNotification&>(*iter);
+            if (msg.d_func()->compareWithoutOpAndParts(it.d_func())) {
                 // both are modifications, merge them together and drop the new one
-                if (msg.operation() == ChangeNotification::Modify && iter->operation() == ChangeNotification::Modify) {
-                    iter->setItemParts(iter->itemParts() + msg.itemParts());
+                if (msg.operation() == Modify && it.operation() == Modify) {
+                    it.setChangedParts(it.changedParts() + msg.changedParts());
                     return false;
                 }
 
                 // we found Add notification, which means we can drop this modification
-                if (iter->operation() == ChangeNotification::Add) {
+                if (it.operation() == Add) {
                     return false;
                 }
             }
@@ -8561,33 +8935,316 @@ bool ChangeNotification::appendAndCompress(ChangeNotification::List &list, const
     return true;
 }
 
-DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ChangeNotification::Entity &entity)
+
+
+class TagChangeNotificationPrivate : public ChangeNotificationPrivate
 {
-    return stream << entity.id
-                  << entity.remoteId
-                  << entity.remoteRevision
-                  << entity.mimeType;
+public:
+    TagChangeNotificationPrivate()
+        : ChangeNotificationPrivate(Command::TagChangeNotification)
+        , operation(TagChangeNotification::InvalidOp)
+    {}
+
+    TagChangeNotificationPrivate(const TagChangeNotificationPrivate &other)
+        : ChangeNotificationPrivate(other)
+        , resource(other.resource)
+        , remoteId(other.remoteId)
+        , id(other.id)
+        , operation(other.operation)
+    {}
+
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::compare(other)
+             && COMPARE(operation)
+             && COMPARE(id)
+             && COMPARE(remoteId)
+             && COMPARE(resource);
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new TagChangeNotificationPrivate(*this);
+    }
+
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::serialize(stream)
+               << operation
+               << id
+               << remoteId
+               << resource;
+    }
+
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::deserialize(stream)
+               >> operation
+               >> id
+               >> remoteId
+               >> resource;
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Operation", [this]() -> QString {
+            switch (operation) {
+            case TagChangeNotification::Add:
+                return QStringLiteral("Add");
+            case TagChangeNotification::Modify:
+                return QStringLiteral("Modify");
+            case TagChangeNotification::Remove:
+                return QStringLiteral("Remove");
+            case ItemChangeNotification::InvalidOp:
+                return QStringLiteral("*INVALID OPERATION*");
+            }
+            Q_ASSERT(false);
+            return QString();
+        }());
+        blck.write("Tag ID", id);
+        blck.write("Tag RID", remoteId);
+        blck.endBlock();
+        blck.write("Resource", resource);
+    }
+
+
+
+    QByteArray resource;
+    QString remoteId;
+    TagChangeNotification::Id id;
+    TagChangeNotification::Operation operation;
+};
+
+AKONADI_DECLARE_PRIVATE(TagChangeNotification)
+
+
+TagChangeNotification::TagChangeNotification()
+    : ChangeNotification(new TagChangeNotificationPrivate)
+{
 }
 
-DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotification::Entity &entity)
+TagChangeNotification::TagChangeNotification(const Command &other)
+    : ChangeNotification(other)
 {
-    return stream >> entity.id
-                  >> entity.remoteId
-                  >> entity.remoteRevision
-                  >> entity.mimeType;
+    checkCopyInvariant(Command::TagChangeNotification);
 }
 
-DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ChangeNotification &command)
+bool TagChangeNotification::isValid() const
+{
+    Q_D(const TagChangeNotification);
+    return d->commandType == Command::TagChangeNotification
+        && d->operation != InvalidOp;
+}
+
+void TagChangeNotification::setId(Id id)
+{
+    d_func()->id = id;
+}
+
+TagChangeNotification::Id TagChangeNotification::id() const
+{
+    return d_func()->id;
+}
+
+void TagChangeNotification::setRemoteId(const QString &remoteId)
+{
+    d_func()->remoteId = remoteId;
+}
+
+QString TagChangeNotification::remoteId() const
+{
+    return d_func()->remoteId;
+}
+
+TagChangeNotification::Operation TagChangeNotification::operation() const
+{
+    return d_func()->operation;
+}
+
+void TagChangeNotification::setOperation(Operation operation)
+{
+    d_func()->operation = operation;
+}
+
+QByteArray TagChangeNotification::resource() const
+{
+    return d_func()->resource;
+}
+
+void TagChangeNotification::setResource(const QByteArray &resource)
+{
+    d_func()->resource = resource;
+}
+
+DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::TagChangeNotification &command)
 {
     return command.d_func()->serialize(stream);
 }
 
-DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotification &command)
+DataStream &operator>>(DataStream &stream, Akonadi::Protocol::TagChangeNotification &command)
 {
     return command.d_func()->deserialize(stream);
 }
 
 
+
+class RelationChangeNotificationPrivate : public ChangeNotificationPrivate
+{
+
+public:
+    RelationChangeNotificationPrivate()
+        : ChangeNotificationPrivate(Command::RelationChangeNotification)
+        , left(-1)
+        , right(-1)
+        , operation(RelationChangeNotification::InvalidOp)
+    {
+    }
+
+    RelationChangeNotificationPrivate(const RelationChangeNotificationPrivate &other)
+        : ChangeNotificationPrivate(other)
+        , left(other.left)
+        , right(other.right)
+        , remoteId(other.remoteId)
+        , type(other.type)
+        , operation(other.operation)
+    {
+    }
+
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::compare(other)
+            && COMPARE(operation)
+            && COMPARE(left)
+            && COMPARE(right)
+            && COMPARE(remoteId)
+            && COMPARE(type);
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.write("Operation", [this]() -> QString {
+            switch (operation) {
+            case RelationChangeNotification::Add:
+                return QStringLiteral("Add");
+            case RelationChangeNotification::Remove:
+                return QStringLiteral("Remove");
+            case RelationChangeNotification::InvalidOp:
+                return QStringLiteral("*INVALID OPERATION*");
+            }
+            Q_ASSERT(false);
+            return QString();
+        }());
+        blck.write("Left Item", left);
+        blck.write("Right Item", right);
+        blck.write("Remote ID", remoteId);
+        blck.write("Type", type);
+    }
+
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::deserialize(stream)
+            >> operation
+            >> left
+            >> right
+            >> remoteId
+            >> type;
+    }
+
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::serialize(stream)
+            << operation
+            << left
+            << right
+            << remoteId
+            << type;
+    }
+
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
+    {
+        return new RelationChangeNotificationPrivate(*this);
+    }
+
+    RelationChangeNotification::Id left;
+    RelationChangeNotification::Id right;
+    QString remoteId;
+    QString type;
+    RelationChangeNotification::Operation operation;
+};
+
+AKONADI_DECLARE_PRIVATE(RelationChangeNotification)
+
+RelationChangeNotification::RelationChangeNotification()
+    : ChangeNotification(new RelationChangeNotificationPrivate)
+{
+}
+
+RelationChangeNotification::RelationChangeNotification(const Command &other)
+    : ChangeNotification(other)
+{
+    checkCopyInvariant(Command::RelationChangeNotification);
+}
+
+RelationChangeNotification::Operation RelationChangeNotification::operation() const
+{
+    return d_func()->operation;
+}
+
+void RelationChangeNotification::setOperation(Operation operation)
+{
+    d_func()->operation = operation;
+}
+
+RelationChangeNotification::Id RelationChangeNotification::leftItem() const
+{
+    return d_func()->left;
+}
+
+void RelationChangeNotification::setLeftItem(Id left)
+{
+    d_func()->left = left;
+}
+
+RelationChangeNotification::Id RelationChangeNotification::rightItem() const
+{
+    return d_func()->right;
+}
+
+void RelationChangeNotification::setRightItem(Id right)
+{
+    d_func()->right = right;
+}
+
+QString RelationChangeNotification::remoteId() const
+{
+    return d_func()->remoteId;
+}
+
+void RelationChangeNotification::setRemoteId(const QString &remoteId)
+{
+    d_func()->remoteId = remoteId;
+}
+
+QString RelationChangeNotification::type() const
+{
+    return d_func()->type;
+}
+
+void RelationChangeNotification::setType(const QString &type)
+{
+    d_func()->type = type;
+}
+
+
+DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::RelationChangeNotification &command)
+{
+    return command.d_func()->serialize(stream);
+}
+
+DataStream &operator>>(DataStream &stream, Akonadi::Protocol::RelationChangeNotification &command)
+{
+    return command.d_func()->deserialize(stream);
+}
 
 class CreateSubscriptionCommandPrivate : public CommandPrivate
 {
@@ -8923,8 +9580,8 @@ public:
     QVector<qint64> stopItems;
     QVector<qint64> startTags;
     QVector<qint64> stopTags;
-    QVector<ChangeNotification::Type> startTypes;
-    QVector<ChangeNotification::Type> stopTypes;
+    QVector<ModifySubscriptionCommand::ChangeType> startTypes;
+    QVector<ModifySubscriptionCommand::ChangeType> stopTypes;
     QVector<QByteArray> startResources;
     QVector<QByteArray> stopResources;
     QStringList startMimeTypes;
@@ -9035,26 +9692,26 @@ QVector<qint64> ModifySubscriptionCommand::stopMonitoringTags() const
     return d_func()->stopTags;
 }
 
-void ModifySubscriptionCommand::startMonitoringType(ChangeNotification::Type type)
+void ModifySubscriptionCommand::startMonitoringType(ChangeType type)
 {
     d_func()->stopTypes.removeAll(type);
     d_func()->startTypes << type;
     d_func()->modifiedParts |= ModifiedParts(Types | Add);
 }
 
-QVector<ChangeNotification::Type> ModifySubscriptionCommand::startMonitoringTypes() const
+QVector<ModifySubscriptionCommand::ChangeType> ModifySubscriptionCommand::startMonitoringTypes() const
 {
     return d_func()->startTypes;
 }
 
-void ModifySubscriptionCommand::stopMonitoringType(ChangeNotification::Type type)
+void ModifySubscriptionCommand::stopMonitoringType(ChangeType type)
 {
     d_func()->startTypes.removeAll(type);
     d_func()->stopTypes << type;
     d_func()->modifiedParts |= ModifiedParts(Types | Remove);
 }
 
-QVector<ChangeNotification::Type> ModifySubscriptionCommand::stopMonitoringTypes() const
+QVector<ModifySubscriptionCommand::ChangeType> ModifySubscriptionCommand::stopMonitoringTypes() const
 {
     return d_func()->stopTypes;
 }

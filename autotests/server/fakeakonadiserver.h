@@ -94,7 +94,7 @@ public:
     bool quit() Q_DECL_OVERRIDE;
 
     static QString basePath();
-    static QString namedPipe();
+    static QString socketFile();
     static QString instanceName();
 
     static TestScenario::List loginScenario(const QByteArray &sessionId = QByteArray());
@@ -124,6 +124,7 @@ private:
 
     QEventLoop *mServerLoop;
 
+    NotificationCollector *mNtfCollector;
     QSignalSpy *mNotificationSpy;
 
     bool mPopulateDb;

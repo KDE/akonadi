@@ -41,6 +41,8 @@ Monitor::Monitor(QObject *parent)
 {
     d_ptr->init();
     d_ptr->connectToNotificationManager();
+
+    ChangeMediator::registerMonitor(this);
 }
 
 //@cond PRIVATE
@@ -71,7 +73,6 @@ void Monitor::setCollectionMonitored(const Collection &collection, bool monitore
         d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->collections.removeAll(collection)) {
-            d->cleanOldNotifications();
             d->pendingModification.stopMonitoringCollection(collection.id());
             d->scheduleSubscriptionUpdate();
         }
@@ -89,7 +90,6 @@ void Monitor::setItemMonitored(const Item &item, bool monitored)
         d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->items.remove(item.id())) {
-            d->cleanOldNotifications();
             d->pendingModification.stopMonitoringItem(item.id());
             d->scheduleSubscriptionUpdate();
         }
@@ -107,7 +107,6 @@ void Monitor::setResourceMonitored(const QByteArray &resource, bool monitored)
         d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->resources.remove(resource)) {
-            d->cleanOldNotifications();
             d->pendingModification.stopMonitoringResource(resource);
             d->scheduleSubscriptionUpdate();
         }
@@ -125,7 +124,6 @@ void Monitor::setMimeTypeMonitored(const QString &mimetype, bool monitored)
         d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->mimetypes.remove(mimetype)) {
-            d->cleanOldNotifications();
             d->pendingModification.stopMonitoringMimeType(mimetype);
             d->scheduleSubscriptionUpdate();
         }
@@ -143,7 +141,6 @@ void Monitor::setTagMonitored(const Akonadi::Tag &tag, bool monitored)
         d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->tags.remove(tag.id())) {
-            d->cleanOldNotifications();
             d->pendingModification.stopMonitoringTag(tag.id());
             d->scheduleSubscriptionUpdate();
         }
@@ -157,12 +154,11 @@ void Monitor::setTypeMonitored(Monitor::Type type, bool monitored)
     Q_D(Monitor);
     if (!d->types.contains(type) && monitored) {
         d->types.insert(type);
-        d->pendingModification.startMonitoringType(static_cast<Protocol::ChangeNotification::Type>(type));
+        d->pendingModification.startMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
         d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->types.remove(type)) {
-            d->cleanOldNotifications();
-            d->pendingModification.stopMonitoringType(static_cast<Protocol::ChangeNotification::Type>(type));
+            d->pendingModification.stopMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
             d->scheduleSubscriptionUpdate();
         }
     }
@@ -178,10 +174,6 @@ void Akonadi::Monitor::setAllMonitored(bool monitored)
     }
 
     d->monitorAll = monitored;
-
-    if (!monitored) {
-        d->cleanOldNotifications();
-    }
 
     d->pendingModification.setAllMonitored(monitored);
     d->scheduleSubscriptionUpdate();

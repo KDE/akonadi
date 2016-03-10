@@ -24,6 +24,8 @@
 #include "changerecorder.h"
 #include "monitor_p.h"
 
+class QDataStream;
+
 namespace Akonadi
 {
 
@@ -55,6 +57,48 @@ public:
     void saveNotifications();
     void saveTo(QIODevice *device);
 private:
+    enum LegacyType {
+        InvalidType,
+        Item,
+        Collection,
+        Tag,
+        Relation
+    };
+    enum LegacyOp {
+        InvalidOp,
+        Add,
+        Modify,
+        Move,
+        Remove,
+        Link,
+        Unlink,
+        Subscribe,
+        Unsubscribe,
+        ModifyFlags,
+        ModifyTags,
+        ModifyRelations
+    };
+
+    Protocol::ChangeNotification loadItemNotification(QSettings *settings) const;
+    Protocol::ChangeNotification loadCollectionNotification(QSettings *settings) const;
+    Protocol::ChangeNotification loadItemNotification(QDataStream &stream, quint64 version) const;
+    Protocol::ChangeNotification loadCollectionNotification(QDataStream &stream, quint64 version) const;
+    Protocol::ChangeNotification loadTagNotification(QDataStream &stream, quint64 version) const;
+    Protocol::ChangeNotification loadRelationNotification(QDataStream &stream, quint64 version) const;
+    void saveItemNotification(QDataStream &stream, const Protocol::ItemChangeNotification &ntf);
+    void saveCollectionNotification(QDataStream &stream, const Protocol::CollectionChangeNotification &ntf);
+    void saveTagNotification(QDataStream &stream, const Protocol::TagChangeNotification &ntf);
+    void saveRelationNotification(QDataStream &stream, const Protocol::RelationChangeNotification &ntf);
+
+    Protocol::ItemChangeNotification::Operation mapItemOperation(LegacyOp op) const;
+    Protocol::CollectionChangeNotification::Operation mapCollectionOperation(LegacyOp op) const;
+    Protocol::TagChangeNotification::Operation mapTagOperation(LegacyOp op) const;
+    Protocol::RelationChangeNotification::Operation mapRelationOperation(LegacyOp op) const;
+    LegacyType mapToLegacyType(Protocol::Command::Type type) const;
+
+    QSet<Protocol::ItemChangeNotification::Relation> extractRelations(QSet<QByteArray> &flags) const;
+    QSet<QByteArray> encodeRelations(const QSet<Protocol::ItemChangeNotification::Relation> &relations) const;
+
     void dequeueNotification();
     void notificationsLoaded();
     void writeStartOffset();

@@ -108,13 +108,8 @@ public:
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
-    bool acceptNotification(const Protocol::ChangeNotification &msg) const;
     void dispatchNotifications();
     void flushPipeline();
-
-    // Called when the monitored item/collection changes, checks if the queued messages
-    // are still accepted, if not they are removed
-    void cleanOldNotifications();
 
     bool ensureDataAvailable(const Protocol::ChangeNotification &msg);
     /**
@@ -153,18 +148,18 @@ public:
      * Sends out a change notification for an item.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitItemsNotification(const Protocol::ChangeNotification &msg, const Item::List &items = Item::List(),
+    bool emitItemsNotification(const Protocol::ItemChangeNotification &msg, const Item::List &items = Item::List(),
                                const Collection &collection = Collection(), const Collection &collectionDest = Collection());
     /**
      * Sends out a change notification for a collection.
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    bool emitCollectionNotification(const Protocol::ChangeNotification &msg, const Collection &col = Collection(),
+    bool emitCollectionNotification(const Protocol::CollectionChangeNotification &msg, const Collection &col = Collection(),
                                     const Collection &par = Collection(), const Collection &dest = Collection());
 
-    bool emitTagsNotification(const Protocol::ChangeNotification &msg, const Tag::List &tags);
+    bool emitTagNotification(const Protocol::TagChangeNotification &msg, const Tag &tags);
 
-    bool emitRelationsNotification(const Protocol::ChangeNotification &msg, const Relation::List &relations);
+    bool emitRelationNotification(const Protocol::RelationChangeNotification &msg, const Relation &relation);
 
     void serverStateChanged(Akonadi::ServerManager::State state);
 
@@ -263,7 +258,7 @@ private:
     */
     void checkBatchSupport(const Protocol::ChangeNotification &msg, bool &needsSplit, bool &batchSupported) const;
 
-    Protocol::ChangeNotification::List splitMessage(const Protocol::ChangeNotification &msg, bool legacy) const;
+    Protocol::ChangeNotification::List splitMessage(const Protocol::ItemChangeNotification &msg, bool legacy) const;
 
     bool isCollectionMonitored(Collection::Id collection) const
     {
@@ -299,9 +294,10 @@ private:
         return false;
     }
 
-    bool isMoveDestinationResourceMonitored(const Protocol::ChangeNotification &msg) const
+    template<typename T>
+    bool isMoveDestinationResourceMonitored(const T &msg) const
     {
-        if (msg.operation() != Protocol::ChangeNotification::Move) {
+        if (msg.operation() != T::Move) {
             return false;
         }
         return resources.contains(msg.destinationResource());

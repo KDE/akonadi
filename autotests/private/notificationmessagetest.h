@@ -29,7 +29,6 @@ private Q_SLOTS:
     void testCompress();
     void testCompress2();
     void testCompress3();
-    void testPartModificationMerge_data();
     void testPartModificationMerge();
 };
 
