@@ -256,4 +256,64 @@
                                 WHERE PimItemTable.id IS NULL)
     </raw-sql>
   </update>
+  <!--
+   Update 31 fixes missing constraints on relation tables in MySQL.
+   We cannot just let DbInitializer create the foreign keys there, because data
+   in the relation tables might reference rows from other tables that no longer
+   exist.
+  -->
+  <update version="31" abortOnFailure="false">
+    <!-- PimItemFlagRelation -->
+    <raw-sql backends="mysql">DELETE FROM PimItemFlagRelation WHERE pimItem_id IN (
+                                SELECT id FROM (
+                                SELECT pimItem_id AS id FROM PimItemFlagRelation
+                                LEFT JOIN PimItemTable ON PimItemFlagRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL) x)
+    </raw-sql>
+    <raw-sql backends="mysql">DELETE FROM PimItemFlagRelation WHERE flag_id IN (
+                                SELECT id FROM (
+                                SELECT flag_id AS id FROM PimItemFlagRelation
+                                LEFT JOIN FlagTable ON PimItemFlagRelation.flag_id = FlagTable.id
+                                WHERE FlagTable.id IS NULL) x)
+    </raw-sql>
+    <!-- PimItemTagRelation -->
+    <raw-sql backends="mysql">DELETE FROM PimItemTagRelation WHERE pimItem_id IN (
+                                SELECT id FROM (
+                                SELECT pimItem_id AS id FROM PimItemTagRelation
+                                LEFT JOIN PimItemTable ON PimItemTagRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL) x)
+    </raw-sql>
+    <raw-sql backends="mysql">DELETE FROM PimItemTagRelation WHERE tag_id IN (
+                                SELECT id FROM (
+                                SELECT tag_id AS id FROM PimItemTagRelation
+                                LEFT JOIN TagTable ON PimItemTagRelation.tag_id = TagTable.id
+                                WHERE TagTable.id IS NULL) x)
+    </raw-sql>
+    <!-- CollectionMimeTypeRelation -->
+    <raw-sql backends="mysql">DELETE FROM CollectionMimeTypeRelation WHERE collection_id IN (
+                                SELECT id FROM (
+                                SELECT collection_id AS id  FROM CollectionMimeTypeRelation
+                                LEFT JOIN CollectionTable ON CollectionMimeTypeRelation.collection_id = CollectionTable.id
+                                WHERE CollectionTable.id IS NULL) x)
+    </raw-sql>
+    <raw-sql backends="mysql">DELETE FROM CollectionMimeTypeRelation WHERE mimeType_id IN (
+                                SELECT id FROM (
+                                SELECT mimeType_id AS id FROM CollectionMimeTypeRelation
+                                LEFT JOIN MimeTypeTable ON CollectionMimeTypeRelation.mimeType_id = MimeTypeTable.id
+                                WHERE MimeTypeTable.id IS NULL) x)
+    </raw-sql>
+    <!-- CollectionPimItemRelation -->
+    <raw-sql backends="mysql">DELETE FROM CollectionPimItemRelation WHERE collection_id IN (
+                                SELECT id FROM (
+                                SELECT collection_id AS id FROM CollectionPimItemRelation
+                                LEFT JOIN CollectionTable ON CollectionPimItemRelation.collection_id = CollectionTable.id
+                                WHERE CollectionTable.id IS NULL) x)
+    </raw-sql>
+    <raw-sql backends="mysql">DELETE FROM CollectionPimItemRelation WHERE pimItem_id IN (
+                                SELECT id FROM (
+                                SELECT pimItem_id AS id FROM CollectionPimItemRelation
+                                LEFT JOIN PimItemTable ON CollectionPimItemRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL) x)
+    </raw-sql>
+  </update>
 </updates>
