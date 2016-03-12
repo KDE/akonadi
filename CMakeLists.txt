@@ -129,7 +129,7 @@ else()
     set(SQLITE_TYPE "OPTIONAL")
 endif()
 
-if(AKONADI_BUILD_QSQLITE)
+if(AKONADI_BUILD_QSQLITE AND Qt5Core_VERSION VERSION_LESS 5.7.0) # API change in 5.7 breaks our sqlite driver
     set(SQLITE_MIN_VERSION 3.6.23)
     find_package(Sqlite ${SQLITE_MIN_VERSION})
     set_package_properties(Sqlite PROPERTIES
