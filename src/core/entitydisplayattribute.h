@@ -48,7 +48,7 @@ public:
     /**
      * Destroys the entity display attribute.
      */
-    ~EntityDisplayAttribute();
+    virtual ~EntityDisplayAttribute();
 
     /**
      * Sets the @p name that should be used for display.
