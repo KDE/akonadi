@@ -156,7 +156,9 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
         qstyleoption_cast<QStyleOptionViewItemV4 *>(option);
     QStyledItemDelegate::initStyleOption(noTextOption, index);
     if (option->decorationPosition != QStyleOptionViewItem::Top) {
-        noTextOption->text.clear();
+        if (noTextOption) {
+            noTextOption->text.clear();
+        }
     }
 
     if (d->animator) {
