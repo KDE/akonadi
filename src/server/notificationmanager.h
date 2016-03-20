@@ -63,7 +63,7 @@ private:
 
     QVector<NotificationSubscriber *> mSubscribers;
 
-    friend class NotificationSource;
+    friend class NotificationSubscriber;
     friend class ::NotificationManagerTest;
 };
 

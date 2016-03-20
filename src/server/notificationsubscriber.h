@@ -32,13 +32,14 @@ class QLocalSocket;
 namespace Akonadi {
 namespace Server {
 
+class NotificationManager;
 
 class NotificationSubscriber : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit NotificationSubscriber(quintptr socketDescriptor);
+    explicit NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor);
     ~NotificationSubscriber();
 
     void notify(const Protocol::ChangeNotification::List &notifications);
@@ -58,18 +59,21 @@ private:
     bool acceptsCollectionNotification(const Protocol::CollectionChangeNotification &notification) const;
     bool acceptsTagNotification(const Protocol::TagChangeNotification &notification) const;
     bool acceptsRelationNotification(const Protocol::RelationChangeNotification &notification) const;
+    bool acceptsSubscriptionNotification(const Protocol::SubscriptionChangeNotification &notification) const;
 
     bool isCollectionMonitored(Entity::Id id) const;
     bool isMimeTypeMonitored(const QString &mimeType) const;
     bool isMoveDestinationResourceMonitored(const Protocol::ItemChangeNotification &msg) const;
     bool isMoveDestinationResourceMonitored(const Protocol::CollectionChangeNotification &msg) const;
 
+    Protocol::ChangeNotification toChangeNotification() const;
 protected:
-    explicit NotificationSubscriber();
+    explicit NotificationSubscriber(NotificationManager *manager = Q_NULLPTR);
 
     virtual void writeNotification(const Protocol::ChangeNotification &notification);
     void writeCommand(qint64 tag, const Protocol::Command &cmd);
 
+    NotificationManager *mManager;
     QLocalSocket *mSocket;
     QByteArray mSubscriber;
     QSet<Entity::Id> mMonitoredCollections;

@@ -135,8 +135,10 @@ public:
         CollectionChangeNotification,
         TagChangeNotification,
         RelationChangeNotification,
+        SubscriptionChangeNotification,
         CreateSubscription,
         ModifySubscription,
+        FetchSubscriptions,
 
         _ResponseBit = 0x80 // reserved
     };
@@ -2291,7 +2293,7 @@ public:
     };
 
     explicit RelationChangeNotification();
-    RelationChangeNotification(const Command& other);
+    RelationChangeNotification(const Command &other);
 
     Operation operation() const;
     void setOperation(Operation operation);
@@ -2314,6 +2316,7 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::RelationChangeNotification &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::RelationChangeNotification &command);
 };
+
 
 
 
@@ -2372,7 +2375,8 @@ public:
         ItemChanges,
         CollectionChanges,
         TagChanges,
-        RelationChanges
+        RelationChanges,
+        SubscriptionChanges
     };
 
     explicit ModifySubscriptionCommand();
@@ -2439,7 +2443,6 @@ private:
 };
 
 
-
 class ModifySubscriptionResponse;
 class AKONADIPRIVATE_EXPORT ModifySubscriptionResponse : public Response
 {
@@ -2451,6 +2454,97 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifySubscriptionResponse &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifySubscriptionResponse &command);
 };
+
+
+
+
+class SubscriptionChangeNotificationPrivate;
+class AKONADIPRIVATE_EXPORT SubscriptionChangeNotification : public ChangeNotification
+{
+public:
+    enum Operation {
+        InvalidOp,
+        Add,
+        Modify,
+        Remove
+    };
+
+    enum ModifiedPart {
+        None            = 0,
+        Collections     = 1 << 0,
+        Items           = 1 << 1,
+        Tags            = 1 << 2,
+        Types           = 1 << 3,
+        MimeTypes       = 1 << 4,
+        Resources       = 1 << 5,
+        IgnoredSessions = 1 << 6,
+        Monitored       = 1 << 7,
+        Exclusive       = 1 << 8
+    };
+    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart)
+
+    explicit SubscriptionChangeNotification();
+    SubscriptionChangeNotification(const Command &other);
+
+    Operation operation() const;
+    void setOperation(Operation operation);
+
+    ModifiedParts modifiedParts() const;
+
+    QByteArray subscriber() const;
+    void setSubscriber(const QByteArray &subscriber);
+
+    QSet<Id> addedCollections() const;
+    void setAddedCollections(const QSet<Id> &addedCols);
+    QSet<Id> removedCollections() const;
+    void setRemovedCollections(const QSet<Id> &removedCols);
+
+    QSet<Id> addedItems() const;
+    void setAddedItems(const QSet<Id> &addedItems);
+    QSet<Id> removedItems() const;
+    void setRemovedItems(const QSet<Id> &removedItems);
+
+    QSet<Id> addedTags() const;
+    void setAddedTags(const QSet<Id> &addedTags);
+    QSet<Id> removedTags() const;
+    void setRemovedTags(const QSet<Id> &removedTags);
+
+    QSet<ModifySubscriptionCommand::ChangeType> addedTypes() const;
+    void setAddedTypes(const QSet<ModifySubscriptionCommand::ChangeType> &addedTypes);
+    QSet<ModifySubscriptionCommand::ChangeType> removedTypes() const;
+    void setRemovedTypes(const QSet<ModifySubscriptionCommand::ChangeType> &removedTypes);
+
+    QSet<QString> addedMimeTypes() const;
+    void setAddedMimeTypes(const QSet<QString> &addedMimeTypes);
+    QSet<QString> removedMimeTypes() const;
+    void setRemovedMimeTypes(const QSet<QString> &removedMimeTypes);
+
+    QSet<QByteArray> addedResources() const;
+    void setAddedResources(const QSet<QByteArray> &addedResources);
+    QSet<QByteArray> removedResources() const;
+    void setRemovedResources(const QSet<QByteArray> &removedResouces);
+
+    QSet<QByteArray> addedIgnoredSessions() const;
+    void setAddedIgnoredSessions(const QSet<QByteArray> &ignoredSessions);
+    QSet<QByteArray> removedIgnoredSessions() const;
+    void setRemovedIgnoredSessions(const QSet<QByteArray> &ignoredSessions);
+
+    bool isAllMonitored() const;
+    void setAllMonitored(bool allMonitored);
+
+    bool isExclusive() const;
+    void setExclusive(bool exclusive);
+
+private:
+    AKONADI_DECLARE_PRIVATE(SubscriptionChangeNotification)
+
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::SubscriptionChangeNotification &ntf);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SubscriptionChangeNotification &ntf);
+};
+
+
+
+
 
 
 } // namespace Protocol

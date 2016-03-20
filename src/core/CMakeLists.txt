@@ -61,6 +61,7 @@ set(akonadicore_base_SRCS
     sessionthread.cpp
     specialcollectionattribute.cpp
     specialcollections.cpp
+    subscriptionmonitor.cpp
     tag.cpp
     tagattribute.cpp
     tagfetchscope.cpp
@@ -114,6 +115,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     SpecialCollections
     SpecialCollectionAttribute
     Supertrait
+    SubscriptionMonitor
     Tag
     TagAttribute
     TagFetchScope

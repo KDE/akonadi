@@ -19,6 +19,7 @@
 
 #include "notificationsubscriber.h"
 #include "akonadiserver_debug.h"
+#include "notificationmanager.h"
 #include "collectionreferencemanager.h"
 
 #include <QLocalSocket>
@@ -32,8 +33,9 @@ using namespace Akonadi::Server;
 
 QMimeDatabase NotificationSubscriber::sMimeDatabase;
 
-NotificationSubscriber::NotificationSubscriber()
+NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
     : QObject()
+    , mManager(manager)
     , mSocket(Q_NULLPTR)
     , mAllMonitored(false)
     , mExclusive(false)
@@ -41,8 +43,8 @@ NotificationSubscriber::NotificationSubscriber()
 }
 
 
-NotificationSubscriber::NotificationSubscriber(quintptr socketDescriptor)
-    : NotificationSubscriber()
+NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor)
+    : NotificationSubscriber(manager)
 {
     mSocket = new QLocalSocket(this);
     connect(mSocket, &QLocalSocket::readyRead,
@@ -120,6 +122,14 @@ void NotificationSubscriber::socketDisconnected()
 
 void NotificationSubscriber::disconnectSubscriber()
 {
+    if (mManager) {
+        Protocol::SubscriptionChangeNotification changeNtf;
+        changeNtf.setSubscriber(mSubscriber);
+        changeNtf.setSessionId(mSession);
+        changeNtf.setOperation(Protocol::SubscriptionChangeNotification::Remove);
+        mManager->slotNotify({ changeNtf });
+    }
+
     disconnect(mSocket, &QLocalSocket::readyRead,
                this, &NotificationSubscriber::socketReadyRead);
     disconnect(mSocket, &QLocalSocket::disconnected,
@@ -132,6 +142,14 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
 {
     qDebug() << "Subscriber identified:" << command.subscriberName();
     mSubscriber = command.subscriberName();
+
+    if (mManager) {
+        Protocol::SubscriptionChangeNotification changeNtf;
+        changeNtf.setSubscriber(mSubscriber);
+        changeNtf.setSessionId(mSession);
+        changeNtf.setOperation(Protocol::SubscriptionChangeNotification::Add);
+        mManager->slotNotify({ changeNtf });
+    }
 }
 
 void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscriptionCommand &command)
@@ -149,77 +167,100 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         Q_FOREACH (const auto &entity, newItems) { \
             set.insert(entity); \
         }
+
     #define REMOVE(set, items) \
         Q_FOREACH (const auto &entity, items) { \
-            set.remove(entity); \
+            set.insert(entity); \
         }
 
-    qCDebug(AKONADISERVER_LOG) << "Subscription for" << mSubscriber << "updated:";
     if (START_MONITORING(Types)) {
         APPEND(mMonitoredTypes, command.startMonitoringTypes())
-        qCDebug(AKONADISERVER_LOG) << "\tStart monitoring types:" << command.startMonitoringTypes();
     }
     if (STOP_MONITORING(Types)) {
-        REMOVE(mMonitoredTypes, command.stopMonitoringTypes());
-        qCDebug(AKONADISERVER_LOG) << "\tStop monitoring types:" << command.stopMonitoringTypes();
+        REMOVE(mMonitoredTypes, command.stopMonitoringTypes())
     }
     if (START_MONITORING(Collections)) {
         APPEND(mMonitoredCollections, command.startMonitoringCollections())
-        qCDebug(AKONADISERVER_LOG) << "\tStart monitoring collections:" << command.startMonitoringCollections();
     }
     if (STOP_MONITORING(Collections)) {
         REMOVE(mMonitoredCollections, command.stopMonitoringCollections())
-        qCDebug(AKONADISERVER_LOG) << "\tStop monitoring collections:" << command.stopMonitoringCollections();
     }
     if (START_MONITORING(Items)) {
         APPEND(mMonitoredItems, command.startMonitoringItems())
-        qCDebug(AKONADISERVER_LOG) << "\tStart monitoring items:" << command.startMonitoringItems();
     }
     if (STOP_MONITORING(Items)) {
         REMOVE(mMonitoredItems, command.stopMonitoringItems())
-        qCDebug(AKONADISERVER_LOG) << "\tStop monitoring items:" << command.stopMonitoringItems();
     }
     if (START_MONITORING(Tags)) {
         APPEND(mMonitoredTags, command.startMonitoringTags())
-        qCDebug(AKONADISERVER_LOG) << "\tStart monitoring tags:" << command.startMonitoringTags();
     }
     if (STOP_MONITORING(Tags)) {
         REMOVE(mMonitoredTags, command.stopMonitoringTags())
-        qCDebug(AKONADISERVER_LOG) << "\tStop monitoring tags:" << command.stopMonitoringTags();
     }
     if (START_MONITORING(Resources)) {
         APPEND(mMonitoredResources, command.startMonitoringResources())
-        qCDebug(AKONADISERVER_LOG) << "\tStart monitoring resources:" << command.startMonitoringResources();
     }
     if (STOP_MONITORING(Resources)) {
         REMOVE(mMonitoredResources, command.stopMonitoringResources())
-        qCDebug(AKONADISERVER_LOG) << "\tStop monitoring resourceS:" << command.stopMonitoringResources();
     }
     if (START_MONITORING(MimeTypes)) {
         APPEND(mMonitoredMimeTypes, command.startMonitoringMimeTypes())
-        qCDebug(AKONADISERVER_LOG) << "\tStart monitoring mime types:" << command.startMonitoringMimeTypes();
     }
     if (STOP_MONITORING(MimeTypes)) {
         REMOVE(mMonitoredMimeTypes, command.stopMonitoringMimeTypes())
-        qCDebug(AKONADISERVER_LOG) << "\tStop monitoring mime types:" << command.stopMonitoringCollections();
     }
     if (START_MONITORING(Sessions)) {
         APPEND(mIgnoredSessions, command.startIgnoringSessions())
-        qCDebug(AKONADISERVER_LOG) << "\tStart ignoring sessions:" << command.startIgnoringSessions();
     }
     if (STOP_MONITORING(Sessions)) {
         REMOVE(mIgnoredSessions, command.stopIgnoringSessions())
-        qCDebug(AKONADISERVER_LOG) << "\tStop ignoring sessions:" << command.stopIgnoringSessions();
     }
     if (modifiedParts & Protocol::ModifySubscriptionCommand::AllFlag) {
         mAllMonitored = command.allMonitored();
-        qCDebug(AKONADISERVER_LOG) << "\tAll monitored:" << command.allMonitored();
     }
     if (modifiedParts & Protocol::ModifySubscriptionCommand::ExclusiveFlag) {
         mExclusive = command.isExclusive();
-        qCDebug(AKONADISERVER_LOG) << "\tExclusive:" << command.isExclusive();
+    }
+
+    if (mManager) {
+        // Did the caller just subscribed to subscription changes?
+        if ((modifiedParts & Protocol::ModifySubscriptionCommand::Types)
+            && command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges))
+        {
+            // If yes, then send them list of all existing subscribers
+            Protocol::ChangeNotification::List ntfs;
+            Q_FOREACH (const NotificationSubscriber *subscriber, mManager->mSubscribers) {
+                ntfs << subscriber->toChangeNotification();
+            }
+            // Send them back to caller
+            notify(ntfs);
+        }
+
+        // Emit subscription change notification
+        Protocol::SubscriptionChangeNotification changeNtf = toChangeNotification();
+        changeNtf.setOperation(Protocol::SubscriptionChangeNotification::Modify);
+        mManager->slotNotify({ changeNtf });
     }
 }
+
+Protocol::ChangeNotification NotificationSubscriber::toChangeNotification() const
+{
+    Protocol::SubscriptionChangeNotification ntf;
+    ntf.setSessionId(mSession);
+    ntf.setSubscriber(mSubscriber);
+    ntf.setOperation(Protocol::SubscriptionChangeNotification::Add);
+    ntf.setAddedCollections(mMonitoredCollections);
+    ntf.setAddedItems(mMonitoredItems);
+    ntf.setAddedTags(mMonitoredTags);
+    ntf.setAddedTypes(mMonitoredTypes);
+    ntf.setAddedMimeTypes(mMonitoredMimeTypes);
+    ntf.setAddedResources(mMonitoredResources);
+    ntf.setAddedIgnoredSessions(mIgnoredSessions);
+    ntf.setAllMonitored(mAllMonitored);
+    ntf.setExclusive(mExclusive);
+    return ntf;
+}
+
 
 
 bool NotificationSubscriber::isCollectionMonitored(Entity::Id id) const
@@ -462,6 +503,15 @@ bool NotificationSubscriber::acceptsRelationNotification(const Protocol::Relatio
     return true;
 }
 
+bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::SubscriptionChangeNotification &notification) const
+{
+    Q_UNUSED(notification);
+
+    // Unlike other types, subscription notifications must be explicitly enabled
+    // by caller and are excluded from "monitor all" as well
+    return mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges);
+}
+
 bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &notification) const
 {
     // session is ignored
@@ -469,15 +519,18 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
         return false;
     }
 
-    if (notification.type() == Protocol::Command::ItemChangeNotification) {
+    switch (notification.type()) {
+    case Protocol::Command::ItemChangeNotification:
         return acceptsItemNotification(notification);
-    } else if (notification.type() == Protocol::Command::CollectionChangeNotification) {
+    case Protocol::Command::CollectionChangeNotification:
         return acceptsCollectionNotification(notification);
-    } else if (notification.type() == Protocol::Command::TagChangeNotification) {
+    case Protocol::Command::TagChangeNotification:
         return acceptsTagNotification(notification);
-    } else if (notification.type() == Protocol::Command::RelationChangeNotification) {
+    case Protocol::Command::RelationChangeNotification:
         return acceptsRelationNotification(notification);
-    } else {
+    case Protocol::Command::SubscriptionChangeNotification:
+        return acceptsSubscriptionNotification(notification);
+    default:
         qCDebug(AKONADISERVER_LOG) << "Received invalid change notification!";
         return false;
     }

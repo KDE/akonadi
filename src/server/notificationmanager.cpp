@@ -68,7 +68,7 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
 {
     Q_ASSERT(thread() == QThread::currentThread());
 
-    NotificationSubscriber *subscriber = new NotificationSubscriber(socketDescriptor);
+    NotificationSubscriber *subscriber = new NotificationSubscriber(this, socketDescriptor);
     qDebug() << "NotificationManager: new connection (registered as" << subscriber << ")";
     connect(subscriber, &QObject::destroyed,
             [this, subscriber]() {
