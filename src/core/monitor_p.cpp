@@ -768,9 +768,15 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
     // (and thus neither is flagsModified), splitMessage() will convert the
     // notification to regular Modify with "FLAGS" part changed
     if (needsSplit || (!needsSplit && !supportsBatch && msg.operation() == Akonadi::Protocol::ChangeNotification::ModifyFlags)) {
-        const Protocol::ChangeNotification::List split = splitMessage(msg, !supportsBatch);
-        pendingNotifications << split.toList();
-        appendedMessages += split.count();
+        // Make sure inter-resource move notifications are translated into
+        // Add/Remove notifications
+        if (msg.operation() == Protocol::ChangeNotification::Move && msg.resource() != msg.destinationResource()) {
+            appendedMessages += translateAndCompress(pendingNotifications, msg);
+        } else {
+            const Protocol::ChangeNotification::List split = splitMessage(msg, !supportsBatch);
+            pendingNotifications << split.toList();
+            appendedMessages += split.count();
+        }
     }
 
     // tell ChangeRecorder (even if 0 appended, the compression could have made changes to existing messages)
