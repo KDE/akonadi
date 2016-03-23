@@ -118,7 +118,6 @@ void MonitorPrivate::invalidateCollectionCache(qint64 id)
 
 void MonitorPrivate::invalidateItemCache(qint64 id)
 {
-    qDebug() << "ITEMCACHE" << itemCache->isCached({ id });
     itemCache->update(QList<Item::Id>() << id, mItemFetchScope);
 }
 
@@ -786,7 +785,6 @@ void MonitorPrivate::dataAvailable()
 
 void MonitorPrivate::dispatchNotifications()
 {
-    qDebug() << "PIPELINE" << pipeline.size() << "PENDING: "<< pendingNotifications.size();
     // Note that this code is not used in a ChangeRecorder (pipelineSize==0)
     while (pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty()) {
         const Protocol::ChangeNotification msg = pendingNotifications.dequeue();
@@ -991,7 +989,6 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
 
 bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChangeNotification &msg, const Collection &col, const Collection &par, const Collection &dest)
 {
-    qDebug() << "EMIT  COL NTF" << msg.operation() << col.id() << par.id() << dest.id();
     Collection parent = par;
     if (!parent.isValid()) {
         parent = Collection(msg.parentCollection());
