@@ -138,6 +138,7 @@ Akonadi::Protocol::FetchCollectionsResponse DbInitializer::listResponse(const Co
                         attrs.insert(attr.type(), attr.value());
                     }
                 }
+                attrs.insert("ENABLED", parent.enabled() ? "TRUE" : "FALSE");
                 anc.setAttributes(attrs);
             }
             parent = parent.parent();
