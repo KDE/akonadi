@@ -101,6 +101,8 @@ bool MonitorPrivate::connectToNotificationManager()
     }
     q_ptr->connect(ntfConnection, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
                    q_ptr, SLOT(commandReceived(qint64,Akonadi::Protocol::Command)));
+    ntfConnection->reconnect();
+
     return true;
 }
 

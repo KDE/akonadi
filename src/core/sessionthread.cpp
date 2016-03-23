@@ -72,7 +72,6 @@ Connection *SessionThread::doCreateConnection(Connection::ConnectionType connTyp
             this, [this](QObject *obj) {
                 mConnections.removeOne(static_cast<Connection*>(obj));
             });
-    conn->doReconnect(); // immediately try to connect
     return conn;
 }
 
