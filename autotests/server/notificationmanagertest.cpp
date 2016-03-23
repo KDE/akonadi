@@ -39,6 +39,7 @@ public:
     TestableNotificationSubscriber()
         : NotificationSubscriber()
     {
+        mSubscriber = "TestSubscriber";
     }
 
     void setAllMonitored(bool allMonitored)

@@ -140,7 +140,7 @@ void NotificationSubscriber::disconnectSubscriber()
 
 void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscriptionCommand &command)
 {
-    qDebug() << "Subscriber identified:" << command.subscriberName();
+    qDebug() << "Subscriber" << this << "identified as" << command.subscriberName();
     mSubscriber = command.subscriberName();
 
     if (mManager) {
@@ -306,6 +306,7 @@ bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::
     }
     return mMonitoredResources.contains(msg.destinationResource());
 }
+
 
 bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeNotification &notification) const
 {
@@ -514,6 +515,11 @@ bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::Sub
 
 bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &notification) const
 {
+    // Uninitialized subscriber gets nothing
+    if (mSubscriber.isEmpty()) {
+        return false;
+    }
+
     // session is ignored
     if (mIgnoredSessions.contains(notification.sessionId())) {
         return false;
