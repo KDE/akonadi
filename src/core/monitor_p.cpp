@@ -629,13 +629,20 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotification> &n
 
 void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &command)
 {
+    Q_Q(Monitor);
     Q_UNUSED(tag);
     if (command.isResponse()) {
         switch (command.type()) {
         case Protocol::Command::Hello: {
             Protocol::HelloResponse hello(command);
             qCDebug(AKONADICORE_LOG) << q_ptr << "Connected to notification bus";
-            Protocol::CreateSubscriptionCommand subCmd(session->sessionId() + QByteArray::number(quintptr(this)));
+            QByteArray subname = session->sessionId() + " - ";
+            if (!q->objectName().isEmpty()) {
+                subname += q->objectName().toLatin1();
+            } else {
+                subname += QByteArray::number(quintptr(q));
+            }
+            Protocol::CreateSubscriptionCommand subCmd(subname);
             ntfConnection->sendCommand(2, subCmd);
             break;
         }
