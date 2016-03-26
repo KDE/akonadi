@@ -1,6 +1,20 @@
 [Desktop Entry]
 Name=Knut
+Name[ca]=Knut
+Name[en_GB]=Knut
+Name[nl]=Knut
+Name[pl]=Knut
+Name[pt_BR]=Knut
+Name[sv]=Knut
+Name[x-test]=xxKnutxx
 Comment=An agent for debugging purpose
+Comment[ca]=Un agent per a propòsits de depuració
+Comment[en_GB]=An agent for debugging purpose
+Comment[nl]=Een agent voor debugging-doeleinden
+Comment[pl]=Agent na potrzeby diagnostyczne
+Comment[pt_BR]=Um agente para depuração
+Comment[sv]=En modul för felsökningssyften
+Comment[x-test]=xxAn agent for debugging purposexx
 Type=AkonadiResource
 Exec=akonadi_knut_resource
 Icon=tools-report-bug
