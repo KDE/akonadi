@@ -41,9 +41,9 @@
 #define QTEST_AKONADIMAIN(TestObject) \
     int main(int argc, char *argv[]) \
     { \
-        setenv( "LC_ALL", "C", 1); \
-        unsetenv( "KDE_COLOR_DEBUG" ); \
-        QApplication app( argc, argv ); \
+        qputenv("LC_ALL", "C"); \
+        qunsetenv("KDE_COLOR_DEBUG"); \
+        QApplication app(argc, argv); \
         app.setApplicationName(QLatin1String("qttest")); \
         app.setOrganizationDomain(QLatin1String("kde.org")); \
         app.setOrganizationName(QLatin1String("KDE")); \

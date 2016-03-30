@@ -51,7 +51,7 @@ public:
         Gid = 1 << 3
     };
 
-    class HRID {
+    class AKONADIPRIVATE_EXPORT HRID {
     public:
         explicit HRID();
         HRID(qint64 id, const QString &remoteId = QString());

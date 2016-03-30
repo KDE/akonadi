@@ -265,6 +265,8 @@ if (NOT "${std_exception_file}" STREQUAL "")
     configure_file(${CMAKE_CURRENT_SOURCE_DIR}/std_exception.h.in
                    ${CMAKE_CURRENT_BINARY_DIR}/std_exception.h
     )
+else()
+    message(FATAL_ERROR "stdlib <exception> include absolute path not found")
 endif()
 
 set(akonadicore_dbus_xml ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationManager.xml)

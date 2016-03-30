@@ -26,7 +26,9 @@
 
 using namespace Akonadi;
 
-struct Akonadi::TagModifyJobPrivate : public JobPrivate {
+class Akonadi::TagModifyJobPrivate : public JobPrivate
+{
+public:
     TagModifyJobPrivate(TagModifyJob *parent)
         : JobPrivate(parent)
     {

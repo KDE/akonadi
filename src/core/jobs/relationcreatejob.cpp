@@ -27,7 +27,9 @@
 
 using namespace Akonadi;
 
-struct Akonadi::RelationCreateJobPrivate : public JobPrivate {
+class Akonadi::RelationCreateJobPrivate : public JobPrivate
+{
+public:
     RelationCreateJobPrivate(RelationCreateJob *parent)
         : JobPrivate(parent)
     {

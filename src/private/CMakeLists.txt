@@ -60,6 +60,9 @@ install(FILES
 ### Private static library used by unit-tests ####
 
 add_library(akonadiprivate_static STATIC ${akonadiprivate_SRCS})
+set_target_properties(akonadiprivate_static PROPERTIES
+    COMPILE_FLAGS -DAKONADIPRIVATE_STATIC_DEFINE
+)
 target_link_libraries(akonadiprivate_static
     Qt5::Core
     Qt5::DBus

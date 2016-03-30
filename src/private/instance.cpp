@@ -23,22 +23,25 @@
 
 using namespace Akonadi;
 
-QString Instance::sIdentifier = QString();
-
-void Instance::loadIdentifier()
+namespace
 {
-    sIdentifier = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
-    if (sIdentifier.isNull()) {
-        // QString is null by default, which means it wasn't initialized
-        // yet. Set it to empty when it is initialized
-        sIdentifier = QStringLiteral("");
+    static QString sIdentifier;
+
+    static void loadIdentifier()
+    {
+        sIdentifier = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
+        if (sIdentifier.isNull()) {
+            // QString is null by default, which means it wasn't initialized
+            // yet. Set it to empty when it is initialized
+            sIdentifier = QStringLiteral("");
+        }
     }
 }
 
 bool Instance::hasIdentifier()
 {
-    if (sIdentifier.isNull()) {
-        loadIdentifier();
+    if (::sIdentifier.isNull()) {
+        ::loadIdentifier();
     }
     return !sIdentifier.isEmpty();
 }
@@ -47,17 +50,17 @@ void Instance::setIdentifier(const QString &identifier)
 {
     if (identifier.isNull()) {
         qunsetenv("AKONADI_INSTANCE");
-        sIdentifier = QStringLiteral("");
+        ::sIdentifier = QStringLiteral("");
     } else {
-        sIdentifier = identifier;
+        ::sIdentifier = identifier;
         qputenv("AKONADI_INSTANCE", identifier.toUtf8());
     }
 }
 
 QString Instance::identifier()
 {
-    if (sIdentifier.isNull()) {
-        loadIdentifier();
+    if (::sIdentifier.isNull()) {
+        ::loadIdentifier();
     }
-    return sIdentifier;
+    return ::sIdentifier;
 }

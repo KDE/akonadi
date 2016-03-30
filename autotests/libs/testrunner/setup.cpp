@@ -35,8 +35,6 @@
 #include <QtCore/QTimer>
 #include <QDBusConnection>
 
-#include <unistd.h>
-
 bool SetupTest::startAkonadiDaemon()
 {
     Q_ASSERT(Akonadi::ServerManager::hasInstanceIdentifier());
@@ -358,7 +356,7 @@ void SetupTest::setupFailed()
 void SetupTest::setEnvironmentVariable(const QByteArray &name, const QString &value)
 {
     mEnvVars.push_back(qMakePair(name, value.toLocal8Bit()));
-    setenv(name.constData(), qPrintable(value), 1);
+    qputenv(name.constData(), value.toLatin1());
 }
 
 QVector< SetupTest::EnvVar > SetupTest::environmentVariables() const

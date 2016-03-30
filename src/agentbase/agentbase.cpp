@@ -1080,7 +1080,7 @@ void AgentBase::configure(WId windowId)
 #ifdef Q_OS_WIN //krazy:exclude=cpp
 void AgentBase::configure(qlonglong windowId)
 {
-    configure(reinterpret_cast<WId>(windowId));
+    configure(static_cast<WId>(windowId));
 }
 #endif
 

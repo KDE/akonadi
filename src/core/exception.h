@@ -35,6 +35,11 @@ class QString;
 namespace Akonadi
 {
 
+#ifdef _MSC_VER
+#pragma warning(push)
+#pragma warning(disable: 4275) // we are exporting a subclass of an unexported class, MSVC complains
+#endif
+
 /**
   Base class for exceptions used by the Akonadi library.
 */
@@ -80,6 +85,9 @@ private:
     class Private;
     Private *d;
 };
+#ifdef _MSC_VER
+#pragma warning(pop)
+#endif
 
 #define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( classname ) \
     class AKONADICORE_EXPORT classname : public Akonadi::Exception \

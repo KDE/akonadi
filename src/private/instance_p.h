@@ -26,18 +26,12 @@ class QString;
 
 namespace Akonadi {
 
-class AKONADIPRIVATE_EXPORT Instance
+namespace Instance
 {
-public:
-    static bool hasIdentifier();
-    static void setIdentifier(const QString &identifier);
-    static QString identifier();
-
-private:
-    static void loadIdentifier();
-
-    static QString sIdentifier;
-};
+    AKONADIPRIVATE_EXPORT bool hasIdentifier();
+    AKONADIPRIVATE_EXPORT void setIdentifier(const QString &identifier);
+    AKONADIPRIVATE_EXPORT QString identifier();
+}
 }
 
 #endif // AKONADI_INSTANCE_H

@@ -76,7 +76,7 @@ void ConflictHandler::slotOtherItemFetched(KJob *job)
 
 void ConflictHandler::resolve()
 {
-#warning KF5 Port me!
+#pragma warning KF5 Port me!
 #if 0
     ConflictResolveDialog dlg;
     dlg.setConflictingItems(mChangedItem, mConflictingItem);

@@ -36,7 +36,9 @@
 #include <QContextMenuEvent>
 using namespace Akonadi;
 
-struct Q_DECL_HIDDEN TagWidget::Private {
+class Q_DECL_HIDDEN TagWidget::Private
+{
+public:
     TagView *mTagView;
     Akonadi::Tag::List mTags;
     Akonadi::TagModel *mModel;

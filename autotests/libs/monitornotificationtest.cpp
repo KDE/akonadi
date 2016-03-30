@@ -29,7 +29,7 @@
 
 using namespace Akonadi;
 
-class AKONADITESTFAKE_EXPORT MonitorNotificationTest : public QObject
+class MonitorNotificationTest : public QObject
 {
     Q_OBJECT
 public:

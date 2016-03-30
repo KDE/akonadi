@@ -51,8 +51,7 @@ public:
     template<typename T>
     inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
     &operator<<(T val);
-    template<typename T>
-    inline DataStream &operator<<(const QFlags<T> &flags);
+
     inline DataStream &operator<<(const QString &str);
     inline DataStream &operator<<(const QByteArray &data);
     inline DataStream &operator<<(const QDateTime &dt);
@@ -64,8 +63,6 @@ public:
     template<typename T>
     inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
     &operator>>(T &val);
-    template<typename T>
-    inline DataStream &operator>>(QFlags<T> &flags);
     inline DataStream &operator>>(QString &str);
     inline DataStream &operator>>(QByteArray &data);
     inline DataStream &operator>>(QDateTime &dt);
@@ -102,12 +99,6 @@ inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
 &DataStream::operator<<(T val)
 {
     return *this << (typename std::underlying_type<T>::type) val;
-}
-
-template<typename T>
-inline DataStream &DataStream::operator<<(const QFlags<T> &flags)
-{
-    return *this << (int) flags;
 }
 
 inline DataStream &DataStream::operator<<(const QString &str)
@@ -166,15 +157,6 @@ inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
 &DataStream::operator>>(T &val)
 {
     return *this >> reinterpret_cast<typename std::underlying_type<T>::type &>(val);
-}
-
-template<typename T>
-inline DataStream &DataStream::operator>>(QFlags<T> &flags)
-{
-    int i;
-    *this >> i;
-    flags = QFlags<T>(i);
-    return *this;
 }
 
 inline DataStream &DataStream::operator>>(QString &str)
@@ -273,6 +255,21 @@ inline DataStream &DataStream::operator>>(QDateTime &dt)
 
 
 // Inline functions
+
+template<typename T>
+inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const QFlags<T> &flags)
+{
+    return stream << (int) flags;
+}
+
+template<typename T>
+inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, QFlags<T> &flags)
+{
+    int i;
+    stream >> i;
+    flags = QFlags<T>(i);
+    return stream;
+}
 
 // Generic streaming for all Qt value-based containers (as well as std containers that
 // implement operator<< for appending)

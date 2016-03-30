@@ -600,7 +600,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
 
 int ResourceBase::init(ResourceBase *r)
 {
-#warning port to the new way of doing this
+#pragma warning port to the new way of doing this
 //   KLocalizedString::insertCatalog( QLatin1String( "libakonadi" ) );
     int rv = qApp->exec();
     delete r;

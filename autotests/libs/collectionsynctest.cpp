@@ -25,9 +25,11 @@
 #include <collection.h>
 #include <collectionfetchjob.h>
 #include <collectionfetchscope.h>
+#include <collectiondeletejob.h>
+#include <collectionmodifyjob.h>
 #include <entitydisplayattribute.h>
 
-#include "../src/core/collectionsync.cpp"
+#include "../src/core/collectionsync_p.h"
 
 #include <krandom.h>
 

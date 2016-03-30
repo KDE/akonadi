@@ -104,6 +104,7 @@ Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_T
 #include &lt;QtCore/QHash&gt;
 #include &lt;QtCore/QMutex&gt;
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 static QStringList removeEntry(QStringList list, const QString&amp; entry)
