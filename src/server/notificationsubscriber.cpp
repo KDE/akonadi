@@ -122,6 +122,8 @@ void NotificationSubscriber::socketDisconnected()
 
 void NotificationSubscriber::disconnectSubscriber()
 {
+    QMutexLocker locker(&mLock);
+
     if (mManager) {
         Protocol::SubscriptionChangeNotification changeNtf;
         changeNtf.setSubscriber(mSubscriber);
@@ -140,6 +142,8 @@ void NotificationSubscriber::disconnectSubscriber()
 
 void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscriptionCommand &command)
 {
+    QMutexLocker locker(&mLock);
+
     qDebug() << "Subscriber" << this << "identified as" << command.subscriberName();
     mSubscriber = command.subscriberName();
 
@@ -154,6 +158,8 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
 
 void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscriptionCommand &command)
 {
+    QMutexLocker locker(&mLock);
+
     const auto modifiedParts = command.modifiedParts();
 
     #define START_MONITORING(type) \
@@ -245,6 +251,8 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
 
 Protocol::ChangeNotification NotificationSubscriber::toChangeNotification() const
 {
+    // Assumes mLock being locked by caller
+
     Protocol::SubscriptionChangeNotification ntf;
     ntf.setSessionId(mSession);
     ntf.setSubscriber(mSubscriber);
@@ -265,6 +273,8 @@ Protocol::ChangeNotification NotificationSubscriber::toChangeNotification() cons
 
 bool NotificationSubscriber::isCollectionMonitored(Entity::Id id) const
 {
+    // Assumes mLock being locked by caller
+
     if (id < 0) {
         return false;
     } else if (mMonitoredCollections.contains(id)) {
@@ -277,6 +287,8 @@ bool NotificationSubscriber::isCollectionMonitored(Entity::Id id) const
 
 bool NotificationSubscriber::isMimeTypeMonitored(const QString &mimeType) const
 {
+    // Assumes mLock being locked by caller
+
     const QMimeType mt = sMimeDatabase.mimeTypeForName(mimeType);
     if (mMonitoredMimeTypes.contains(mimeType)) {
         return true;
@@ -293,6 +305,8 @@ bool NotificationSubscriber::isMimeTypeMonitored(const QString &mimeType) const
 
 bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::ItemChangeNotification &msg) const
 {
+    // Assumes mLock being locked by caller
+
     if (msg.operation() != Protocol::ItemChangeNotification::Move) {
         return false;
     }
@@ -301,6 +315,8 @@ bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::
 
 bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::CollectionChangeNotification &msg) const
 {
+    // Assumes mLock being locked by caller
+
     if (msg.operation() != Protocol::CollectionChangeNotification::Move) {
         return false;
     }
@@ -310,13 +326,15 @@ bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::
 
 bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeNotification &notification) const
 {
+    // Assumes mLock being locked by caller
+
     if (notification.items().count() == 0) {
         return false;
     }
 
-    //We always want notifications that affect the parent resource (like an item added to a referenced collection)
-    const bool notificationForParentResource = (mSession == notification.resource());
     if (CollectionReferenceManager::instance()->isReferenced(notification.parentCollection())) {
+        //We always want notifications that affect the parent resource (like an item added to a referenced collection)
+        const bool notificationForParentResource = (mSession == notification.resource());
         return (mExclusive
             || isCollectionMonitored(notification.parentCollection())
             || isMoveDestinationResourceMonitored(notification)
@@ -364,6 +382,8 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
 
 bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::CollectionChangeNotification &notification) const
 {
+    // Assumes mLock being locked by caller
+
     if (notification.id() < 0) {
         return false;
     }
@@ -435,6 +455,8 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
 
 bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNotification &notification) const
 {
+    // Assumes mLock being locked by caller
+
     if (notification.id() < 0) {
         return false;
     }
@@ -491,6 +513,8 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
 
 bool NotificationSubscriber::acceptsRelationNotification(const Protocol::RelationChangeNotification &notification) const
 {
+    // Assumes mLock being locked by caller
+
     Q_UNUSED(notification);
 
     if (mAllMonitored) {
@@ -506,6 +530,8 @@ bool NotificationSubscriber::acceptsRelationNotification(const Protocol::Relatio
 
 bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::SubscriptionChangeNotification &notification) const
 {
+    // Assumes mLock being locked by caller
+
     Q_UNUSED(notification);
 
     // Unlike other types, subscription notifications must be explicitly enabled
@@ -515,6 +541,8 @@ bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::Sub
 
 bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &notification) const
 {
+    // Assumes mLock being locked
+
     // Uninitialized subscriber gets nothing
     if (mSubscriber.isEmpty()) {
         return false;
@@ -544,9 +572,12 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
 
 void NotificationSubscriber::notify(const Protocol::ChangeNotification::List &notifications)
 {
+    QMutexLocker locker(&mLock);
+
     Q_FOREACH (const auto &notification, notifications) {
         if (acceptsNotification(notification)) {
-            writeNotification(notification);
+            QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
+                                      Q_ARG(Akonadi::Protocol::ChangeNotification, notification));
         }
     }
 }

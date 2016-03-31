@@ -28,6 +28,7 @@
 
 class NotificationManagerTest;
 class QLocalSocket;
+class QThreadPool;
 
 namespace Akonadi {
 namespace Server {
@@ -61,6 +62,7 @@ private:
     Protocol::ChangeNotification::List mNotifications;
     QTimer *mTimer;
 
+    QThreadPool *mNotifyThreadPool;
     QVector<NotificationSubscriber *> mSubscribers;
 
     friend class NotificationSubscriber;

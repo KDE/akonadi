@@ -23,6 +23,7 @@
 #include <QObject>
 #include <QByteArray>
 #include <QMimeDatabase>
+#include <QMutex>
 
 #include <private/protocol_p.h>
 #include "entities.h"
@@ -67,12 +68,16 @@ private:
     bool isMoveDestinationResourceMonitored(const Protocol::CollectionChangeNotification &msg) const;
 
     Protocol::ChangeNotification toChangeNotification() const;
+
+protected Q_SLOTS:
+    virtual void writeNotification(const Akonadi::Protocol::ChangeNotification &notification);
+
 protected:
     explicit NotificationSubscriber(NotificationManager *manager = Q_NULLPTR);
 
-    virtual void writeNotification(const Protocol::ChangeNotification &notification);
     void writeCommand(qint64 tag, const Protocol::Command &cmd);
 
+    mutable QMutex mLock;
     NotificationManager *mManager;
     QLocalSocket *mSocket;
     QByteArray mSubscriber;

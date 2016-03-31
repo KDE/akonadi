@@ -30,6 +30,8 @@
 #include <QLocalSocket>
 #include <QSettings>
 #include <QCoreApplication>
+#include <QThreadPool>
+#include <QPointer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -55,6 +57,9 @@ void NotificationManager::init()
     mTimer->setSingleShot(true);
     connect(mTimer, &QTimer::timeout,
             this, &NotificationManager::emitPendingNotifications);
+
+    mNotifyThreadPool = new QThreadPool(this);
+    mNotifyThreadPool->setMaxThreadCount(5);
 }
 
 void NotificationManager::quit()
@@ -99,6 +104,32 @@ void NotificationManager::slotNotify(const Protocol::ChangeNotification::List &m
     }
 }
 
+class NotifyRunnable : public QRunnable
+{
+public:
+    explicit NotifyRunnable(NotificationSubscriber *subscriber,
+                            const Protocol::ChangeNotification::List &notifications)
+        : mSubscriber(subscriber)
+        , mNotifications(notifications)
+    {
+    }
+
+    ~NotifyRunnable()
+    {
+    }
+
+    void run() Q_DECL_OVERRIDE
+    {
+        if (mSubscriber) {
+            mSubscriber->notify(mNotifications);
+        }
+    }
+
+private:
+    QPointer<NotificationSubscriber> mSubscriber;
+    Protocol::ChangeNotification::List mNotifications;
+};
+
 void NotificationManager::emitPendingNotifications()
 {
     if (mNotifications.isEmpty()) {
@@ -106,7 +137,7 @@ void NotificationManager::emitPendingNotifications()
     }
 
     Q_FOREACH (NotificationSubscriber *subscriber, mSubscribers) {
-        subscriber->notify(mNotifications);
+        mNotifyThreadPool->start(new NotifyRunnable(subscriber, mNotifications));
     }
 
     mNotifications.clear();
