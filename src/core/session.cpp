@@ -383,7 +383,14 @@ void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
     Q_ASSERT_X(!instances()->hasLocalData(), "SessionPrivate::createDefaultSession",
                "You tried to create a default session twice!");
 
-    instances()->setLocalData(new Session(sessionId));
+    Session *session = new Session(sessionId);
+    session->connect(qApp, &QCoreApplication::aboutToQuit,
+                        []() {
+                            // We must destroy Session while QApplication is still
+                            // running otherwise deleting SessionThread will deadlock
+                            instances()->setLocalData(Q_NULLPTR);
+                        });
+    instances()->setLocalData(session);
 }
 
 void SessionPrivate::setDefaultSession(Session *session)
@@ -394,7 +401,12 @@ void SessionPrivate::setDefaultSession(Session *session)
 Session *Session::defaultSession()
 {
     if (!instances()->hasLocalData()) {
-        instances()->setLocalData(new Session());
+        Session *session = new Session();
+        session->connect(qApp, &QCoreApplication::aboutToQuit,
+                         []() {
+                             instances()->setLocalData(Q_NULLPTR);
+                         });
+        instances()->setLocalData(session);
     }
     return instances()->localData();
 }

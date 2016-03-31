@@ -25,6 +25,7 @@
 
 #include <QtTest/QTest>
 #include <QtTest/QSignalSpy>
+#include <QtCore/QTimer>
 
 /**
 * \short Akonadi Replacement for QTEST_MAIN from QTestLib
@@ -32,6 +33,10 @@
 * This macro should be used for classes that run inside the Akonadi Testrunner.
 * So instead of writing QTEST_MAIN( TestClass ) you write
 * QTEST_AKONADIMAIN( TestClass ).
+*
+* Unlike QTEST_MAIN, this macro actually does call QApplication::exec() so
+* that the application is running during test execution. This is needed
+* for proper clean up of Sessions.
 *
 * \param TestObject The class you use for testing.
 *
@@ -49,8 +54,14 @@
         app.setOrganizationName(QLatin1String("KDE")); \
         QGuiApplication::setQuitOnLastWindowClosed(false); \
         qRegisterMetaType<QList<QUrl>>(); \
-        TestObject tc; \
-        return QTest::qExec( &tc, argc, argv ); \
+        int result = 0; \
+        QTimer::singleShot(0, [argc, argv, &result]() { \
+            TestObject tc; \
+            result = QTest::qExec(&tc, argc, argv); \
+            qApp->quit(); \
+        }); \
+        app.exec(); \
+        return result; \
     }
 
 namespace AkonadiTest
