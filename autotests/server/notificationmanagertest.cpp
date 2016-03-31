@@ -236,6 +236,25 @@ private Q_SLOTS:
                 << Protocol::ChangeNotification(itemMsg)
                 << false;
 
+        itemMsg = Protocol::ItemChangeNotification();
+        itemMsg.setOperation(Protocol::ItemChangeNotification::Move);
+        itemMsg.setResource("akonadi_resource_0");
+        itemMsg.setDestinationResource("akonadi_resource_0");
+        itemMsg.setParentCollection(1);
+        itemMsg.setParentDestCollection(2);
+        itemMsg.setSessionId("kmail");
+        itemMsg.addItem(10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822"));
+        itemMsg.addItem(11, QStringLiteral("456"), QStringLiteral("1"), QStringLiteral("message/rfc822"));
+        QTest::newRow("intra-resource move, owning resource")
+                << false
+                << EmptyList(Entity::Id)
+                << EmptyList(Entity::Id)
+                << List(QByteArray, "akonadi_imap_resource_0")
+                << List(QString, QStringLiteral("message/rfc822"))
+                << List(QByteArray, "akonadi_imap_resource_0")
+                << Protocol::ChangeNotification(itemMsg)
+                << true;
+
         colMsg = Protocol::CollectionChangeNotification();
         colMsg.setOperation(Protocol::CollectionChangeNotification::Add);
         colMsg.setSessionId("kmail");
@@ -267,56 +286,56 @@ private Q_SLOTS:
                 << Protocol::ChangeNotification(itemMsg)
                 << true;
 
-      Protocol::TagChangeNotification tagMsg;
-      tagMsg.setOperation(Protocol::TagChangeNotification::Remove);
-      tagMsg.setSessionId("randomSession");
-      tagMsg.setResource("akonadi_random_resource_0");
-      tagMsg.setId(1);
-      tagMsg.setRemoteId(QStringLiteral("TAG"));
-      QTest::newRow("Tag removal - resource notification - matching resource source")
-        << false
-        << EmptyList(Entity::Id)
-        << EmptyList(Entity::Id)
-        << EmptyList(QByteArray)
-        << EmptyList(QString)
-        << List(QByteArray, "akonadi_random_resource_0")
-        << Protocol::ChangeNotification(tagMsg)
-        << true;
+        Protocol::TagChangeNotification tagMsg;
+        tagMsg.setOperation(Protocol::TagChangeNotification::Remove);
+        tagMsg.setSessionId("randomSession");
+        tagMsg.setResource("akonadi_random_resource_0");
+        tagMsg.setId(1);
+        tagMsg.setRemoteId(QStringLiteral("TAG"));
+        QTest::newRow("Tag removal - resource notification - matching resource source")
+                << false
+                << EmptyList(Entity::Id)
+                << EmptyList(Entity::Id)
+                << EmptyList(QByteArray)
+                << EmptyList(QString)
+                << List(QByteArray, "akonadi_random_resource_0")
+                << Protocol::ChangeNotification(tagMsg)
+                << true;
 
-      QTest::newRow("Tag removal - resource notification - wrong resource source")
-        << false
-        << EmptyList(Entity::Id)
-        << EmptyList(Entity::Id)
-        << EmptyList(QByteArray)
-        << EmptyList(QString)
-        << List(QByteArray, "akonadi_another_resource_1")
-        << Protocol::ChangeNotification(tagMsg)
-        << false;
+        QTest::newRow("Tag removal - resource notification - wrong resource source")
+                << false
+                << EmptyList(Entity::Id)
+                << EmptyList(Entity::Id)
+                << EmptyList(QByteArray)
+                << EmptyList(QString)
+                << List(QByteArray, "akonadi_another_resource_1")
+                << Protocol::ChangeNotification(tagMsg)
+                << false;
 
-      tagMsg = Protocol::TagChangeNotification();
-      tagMsg.setOperation(Protocol::TagChangeNotification::Remove);
-      tagMsg.setSessionId("randomSession");
-      tagMsg.setId(1);
-      tagMsg.setRemoteId(QStringLiteral("TAG"));
-      QTest::newRow("Tag removal - client notification - client source")
-        << false
-        << EmptyList(Entity::Id)
-        << EmptyList(Entity::Id)
-        << EmptyList(QByteArray)
-        << EmptyList(QString)
-        << EmptyList(QByteArray)
-        << Protocol::ChangeNotification(tagMsg)
-        << true;
+        tagMsg = Protocol::TagChangeNotification();
+        tagMsg.setOperation(Protocol::TagChangeNotification::Remove);
+        tagMsg.setSessionId("randomSession");
+        tagMsg.setId(1);
+        tagMsg.setRemoteId(QStringLiteral("TAG"));
+        QTest::newRow("Tag removal - client notification - client source")
+                << false
+                << EmptyList(Entity::Id)
+                << EmptyList(Entity::Id)
+                << EmptyList(QByteArray)
+                << EmptyList(QString)
+                << EmptyList(QByteArray)
+                << Protocol::ChangeNotification(tagMsg)
+                << true;
 
-      QTest::newRow("Tag removal - client notification - resource source")
-        << false
-        << EmptyList(Entity::Id)
-        << EmptyList(Entity::Id)
-        << EmptyList(QByteArray)
-        << EmptyList(QString)
-        << List( QByteArray, "akonadi_some_resource_0" )
-        << Protocol::ChangeNotification(tagMsg)
-        << false;
+        QTest::newRow("Tag removal - client notification - resource source")
+                << false
+                << EmptyList(Entity::Id)
+                << EmptyList(Entity::Id)
+                << EmptyList(QByteArray)
+                << EmptyList(QString)
+                << List( QByteArray, "akonadi_some_resource_0" )
+                << Protocol::ChangeNotification(tagMsg)
+                << false;
     }
 
     void testSourceFilter()
