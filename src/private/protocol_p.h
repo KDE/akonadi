@@ -138,7 +138,6 @@ public:
         SubscriptionChangeNotification,
         CreateSubscription,
         ModifySubscription,
-        FetchSubscriptions,
 
         _ResponseBit = 0x80 // reserved
     };

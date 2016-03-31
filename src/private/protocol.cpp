@@ -10062,7 +10062,7 @@ SubscriptionChangeNotification::SubscriptionChangeNotification()
 SubscriptionChangeNotification::SubscriptionChangeNotification(const Command &other)
     : ChangeNotification(other)
 {
-    checkCopyInvariant(SubscriptionChangeNotification);
+    checkCopyInvariant(Command::SubscriptionChangeNotification);
 }
 
 SubscriptionChangeNotification::Operation SubscriptionChangeNotification::operation() const
