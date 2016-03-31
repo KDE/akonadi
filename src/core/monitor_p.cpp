@@ -642,6 +642,7 @@ void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &comman
             } else {
                 subname += QByteArray::number(quintptr(q));
             }
+            qCDebug(AKONADICORE_LOG) << q_ptr << "Subscribing as \"" << subname << "\"";
             Protocol::CreateSubscriptionCommand subCmd(subname);
             ntfConnection->sendCommand(2, subCmd);
             break;
@@ -663,7 +664,7 @@ void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &comman
             break;
 
         default:
-            // TODO
+            qCWarning(AKONADICORE_LOG) << "Received an unexpected response on Notification stream: "<< command.debugString();
             break;
         }
     } else {
@@ -675,6 +676,7 @@ void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &comman
             slotNotify(command);
             break;
         default:
+            qCWarning(AKONADICORE_LOG) << "Received an unexpected message on Notification stream:" << command.debugString();
             break;
         }
     }
