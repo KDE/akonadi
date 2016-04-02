@@ -14,7 +14,15 @@ function(findStdlibInclude includeName filePath)
                         ERROR_QUIET
         )
     else()
-        execute_process(COMMAND ${CMAKE_CXX_COMPILER} ${CXX_STDLIB_FLAGS} -Wp,-v -E ${CMAKE_CURRENT_BINARY_DIR}/empty_test.cpp
+        # Handle case when CXX="ccache g++". There is a bug in cmake that causes it
+        # to parse ${CMAKE_CXX_COMPILER_ARG1} as " g++" (including the space). We can't
+        # then do ${CMAKE_CXX_COMPILER} ${CMAKE_CXX_COMPILER_ARG1}, because CMake will
+        # then complain that "ccache  g++" (two spaces) does not exist. We can't do
+        # $CMAKE_CXX_COMPILER}${CMAKE_CXX_COMPILER_ARG1} either, because CMake would
+        # interpret that as a single argument and would try to exec ("ccache g++" executable
+        # instead of "ccache" with "g++" as an argument.
+        string(REPLACE " " "" cxx_arg ${CMAKE_CXX_COMPILER_ARG1})
+        execute_process(COMMAND ${CMAKE_CXX_COMPILER} ${cxx_arg} ${CXX_STDLIB_FLAGS} -Wp,-v -E ${CMAKE_CURRENT_BINARY_DIR}/empty_test.cpp
                         OUTPUT_QUIET
                         ERROR_VARIABLE compilerSearchPaths
         )
