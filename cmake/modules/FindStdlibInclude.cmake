@@ -21,7 +21,7 @@ function(findStdlibInclude includeName filePath)
         # $CMAKE_CXX_COMPILER}${CMAKE_CXX_COMPILER_ARG1} either, because CMake would
         # interpret that as a single argument and would try to exec ("ccache g++" executable
         # instead of "ccache" with "g++" as an argument.
-        string(REPLACE " " "" cxx_arg ${CMAKE_CXX_COMPILER_ARG1})
+        string(REPLACE " " "" cxx_arg "${CMAKE_CXX_COMPILER_ARG1}")
         execute_process(COMMAND ${CMAKE_CXX_COMPILER} ${cxx_arg} ${CXX_STDLIB_FLAGS} -Wp,-v -E ${CMAKE_CURRENT_BINARY_DIR}/empty_test.cpp
                         OUTPUT_QUIET
                         ERROR_VARIABLE compilerSearchPaths
