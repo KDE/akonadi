@@ -21,7 +21,7 @@ include(ECMQtDeclareLoggingCategory)
 include(AkonadiMacros)
 
 set(QT_REQUIRED_VERSION "5.2.0")
-set(AKONADI_VERSION "5.1.80")
+set(AKONADI_VERSION "5.1.90")
 set(KF5_VERSION "5.16.0")
 
 ecm_setup_version(${AKONADI_VERSION}
