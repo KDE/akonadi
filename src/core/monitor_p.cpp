@@ -771,7 +771,14 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
         // Make sure inter-resource move notifications are translated into
         // Add/Remove notifications
         if (msg.operation() == Protocol::ChangeNotification::Move && msg.resource() != msg.destinationResource()) {
-            appendedMessages += translateAndCompress(pendingNotifications, msg);
+            if (needsSplit) {
+                const Protocol::ChangeNotification::List split = splitMessage(msg, !supportsBatch);
+                Q_FOREACH (const auto &splitMsg, split) {
+                    appendedMessages += translateAndCompress(pendingNotifications, splitMsg);
+                }
+            } else {
+                appendedMessages += translateAndCompress(pendingNotifications, msg);
+            }
         } else {
             const Protocol::ChangeNotification::List split = splitMessage(msg, !supportsBatch);
             pendingNotifications << split.toList();
