@@ -56,7 +56,7 @@ void AgentTypeTest::testLoad_data()
     QTest::addColumn<QString>("fileName");
     QTest::addColumn<AgentType>("expectedAgentType");
 
-    QTest::newRow("google contacts resource") << QFINDTESTDATA("data/googlecontactsresource.desktop") << googleContactsResource;
+    QTest::newRow("google contacts resource") << QFINDTESTDATA("data/akonaditestresource.desktop") << googleContactsResource;
 }
 
 void AgentTypeTest::testLoad()
