@@ -26,13 +26,9 @@
 #include <QtCore/QMutexLocker>
 #include <QtCore/QThread>
 
-#include <mutex>
-
 using namespace Akonadi;
 
 ExternalPartStorage *ExternalPartStorage::sInstance = Q_NULLPTR;
-std::once_flag storageOnce;
-
 
 ExternalPartStorageTransaction::ExternalPartStorageTransaction()
 {
@@ -65,7 +61,11 @@ ExternalPartStorage::ExternalPartStorage()
 
 ExternalPartStorage *ExternalPartStorage::self()
 {
-    std::call_once(storageOnce, []() { sInstance = new ExternalPartStorage(); });
+    static QMutex instanceLock;
+    QMutexLocker locker(&instanceLock);
+    if (!sInstance) {
+        sInstance = new ExternalPartStorage();
+    }
     return sInstance;
 }
 
