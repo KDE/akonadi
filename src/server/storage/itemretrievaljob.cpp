@@ -20,8 +20,7 @@
 #include "itemretrievaljob.h"
 #include "itemretrievalrequest.h"
 #include "resourceinterface.h"
-
-#include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 #include <QDBusPendingCallWatcher>
 #include <QDBusError>
@@ -36,7 +35,7 @@ ItemRetrievalJob::~ItemRetrievalJob()
 void ItemRetrievalJob::start(org::freedesktop::Akonadi::Resource *interface)
 {
     Q_ASSERT(m_request);
-    akDebug() << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
+    qCDebug(AKONADISERVER_LOG) << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
 
     m_interface = interface;
     // call the resource

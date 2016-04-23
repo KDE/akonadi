@@ -406,9 +406,9 @@ bool AkAppend::parseStream()
             }
             storageTrx.commit();
         } else {
-            akDebug() << "Multiple merge candidates:";
+            qCDebug(AKONADISERVER_LOG) << "Multiple merge candidates:";
             Q_FOREACH (const PimItem &item, result) {
-                akDebug() << "\t ID: " << item.id() << ", RID:" << item.remoteId() << ", GID:" << item.gid();
+                qCDebug(AKONADISERVER_LOG) << "\t ID: " << item.id() << ", RID:" << item.remoteId() << ", GID:" << item.gid();
             }
             // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
             // something we don't want

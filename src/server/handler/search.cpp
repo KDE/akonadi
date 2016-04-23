@@ -50,12 +50,12 @@ bool Search::parseStream()
         collections += SearchHelper::matchSubcollectionsByMimeType(collectionIds, cmd.mimeTypes());
     }
 
-    akDebug() << "SEARCH:";
-    akDebug() << "\tQuery:" << cmd.query();
-    akDebug() << "\tMimeTypes:" << cmd.mimeTypes();
-    akDebug() << "\tCollections:" << collections;
-    akDebug() << "\tRemote:" << cmd.remote();
-    akDebug() << "\tRecursive" << recursive;
+    qCDebug(AKONADISERVER_LOG) << "SEARCH:";
+    qCDebug(AKONADISERVER_LOG) << "\tQuery:" << cmd.query();
+    qCDebug(AKONADISERVER_LOG) << "\tMimeTypes:" << cmd.mimeTypes();
+    qCDebug(AKONADISERVER_LOG) << "\tCollections:" << collections;
+    qCDebug(AKONADISERVER_LOG) << "\tRemote:" << cmd.remote();
+    qCDebug(AKONADISERVER_LOG) << "\tRecursive" << recursive;
 
     if (collections.isEmpty()) {
         return successResponse<Protocol::SearchResponse>();
@@ -72,8 +72,8 @@ bool Search::parseStream()
             this, &Search::slotResultsAvailable);
     request.exec();
 
-    //akDebug() << "\tResult:" << uids;
-    akDebug() << "\tResult:" << mAllResults.count() << "matches";
+    //qCDebug(AKONADISERVER_LOG) << "\tResult:" << uids;
+    qCDebug(AKONADISERVER_LOG) << "\tResult:" << mAllResults.count() << "matches";
 
     return successResponse<Protocol::SearchResponse>();
 }

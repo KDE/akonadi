@@ -19,11 +19,10 @@
 
 #include "agenttype.h"
 #include "agentmanager.h"
+#include "akonadicontrol_debug.h"
 
 #include <private/standarddirs_p.h>
 #include <private/capabilities_p.h>
-
-#include <shared/akdebug.h>
 
 #include <KConfigGroup>
 #include <KDesktopFile>
@@ -77,15 +76,15 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     } else if (method.compare(QLatin1String("AgentLauncher"), Qt::CaseInsensitive) == 0) {
         launchMethod = Launcher;
     } else if (!method.isEmpty()) {
-        akError() << Q_FUNC_INFO << "Invalid exec method:" << method << "falling back to AgentProcess";
+        qCWarning(AKONADICONTROL_LOG) << "Invalid exec method:" << method << "falling back to AgentProcess";
     }
 
     if (identifier.isEmpty()) {
-        akError() << Q_FUNC_INFO << "Agent desktop file" << fileName << "contains empty identifier";
+        qCWarning(AKONADICONTROL_LOG) << "Agent desktop file" << fileName << "contains empty identifier";
         return false;
     }
     if (exec.isEmpty()) {
-        akError() << Q_FUNC_INFO << "Agent desktop file" << fileName << "contains empty Exec entry";
+        qCWarning(AKONADICONTROL_LOG) << "Agent desktop file" << fileName << "contains empty Exec entry";
         return false;
     }
 

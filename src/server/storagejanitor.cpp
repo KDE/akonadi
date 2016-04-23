@@ -29,8 +29,7 @@
 #include "entities.h"
 #include "dbusconnectionpool.h"
 #include "agentmanagerinterface.h"
-
-#include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 #include <private/dbus_p.h>
 #include <private/imapset_p.h>
@@ -153,7 +152,7 @@ qint64 StorageJanitor::lostAndFoundCollection()
     if (!lfRes.isValid()) {
         lfRes.setName(QStringLiteral("akonadi_lost+found_resource"));
         if (!lfRes.insert()) {
-            akFatal() << "Failed to create lost+found resource!";
+            qCCritical(AKONADISERVER_LOG) << "Failed to create lost+found resource!";
         }
     }
 
@@ -162,12 +161,12 @@ qint64 StorageJanitor::lostAndFoundCollection()
     qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, lfRes.id());
     qb.addValueCondition(Collection::parentIdFullColumnName(), Query::Is, QVariant());
     if (!qb.exec()) {
-        akError() << "Failed to query top level collections";
+        qCCritical(AKONADISERVER_LOG) << "Failed to query top level collections";
         return -1;
     }
     const Collection::List cols = qb.result();
     if (cols.size() > 1) {
-        akFatal() << "More than one top-level lost+found collection!?";
+        qCCritical(AKONADISERVER_LOG) << "More than one top-level lost+found collection!?";
     } else if (cols.size() == 1) {
         lfRoot = cols.first();
     } else {
@@ -177,7 +176,7 @@ qint64 StorageJanitor::lostAndFoundCollection()
         lfRoot.setCachePolicyCacheTimeout(-1);
         lfRoot.setCachePolicyInherit(false);
         if (!lfRoot.insert()) {
-            akFatal() << "Failed to create lost+found root.";
+            qCCritical(AKONADISERVER_LOG) << "Failed to create lost+found root.";
         }
         DataStore::self()->notificationCollector()->collectionAdded(lfRoot, lfRes.name().toUtf8());
     }
@@ -187,7 +186,7 @@ qint64 StorageJanitor::lostAndFoundCollection()
     lfCol.setResourceId(lfRes.id());
     lfCol.setParentId(lfRoot.id());
     if (!lfCol.insert()) {
-        akFatal() << "Failed to create lost+found collection!";
+        qCCritical(AKONADISERVER_LOG) << "Failed to create lost+found collection!";
     }
 
     Q_FOREACH (const MimeType &mt, MimeType::retrieveAll()) {
@@ -218,14 +217,14 @@ void StorageJanitor::findOrphanedResources()
         inform(QStringLiteral("ERROR: no known resources. This must be a mistake?"));
         return;
     }
-    akDebug() << "Known resources:" << knownResources;
+    qCDebug(AKONADISERVER_LOG) << "Known resources:" << knownResources;
     qbres.addValueCondition(Resource::nameFullColumnName(), Query::NotIn, QVariant(knownResources));
     qbres.addValueCondition(Resource::idFullColumnName(), Query::NotEquals, 1);   // skip akonadi_search_resource
     if (!qbres.exec()) {
         inform("Failed to query known resources, skipping test");
         return;
     }
-    //akDebug() << "SQL:" << qbres.query().lastQuery();
+    //qCDebug(AKONADISERVER_LOG) << "SQL:" << qbres.query().lastQuery();
     const Resource::List orphanResources = qbres.result();
     if (orphanResources.size() > 0) {
         QStringList resourceNames;
@@ -355,7 +354,7 @@ void StorageJanitor:: findOrphanedPimItemFlags()
         QueryBuilder qb(PimItemFlagRelation::tableName(), QueryBuilder::Delete);
         QueryHelper::setToQuery(set, PimItemFlagRelation::leftFullColumnName(), qb);
         if (!qb.exec()) {
-            akError() << "Error:" << qb.query().lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "Error:" << qb.query().lastError().text();
             return;
         }
 
@@ -555,7 +554,7 @@ void StorageJanitor::vacuum()
             }
             QSqlQuery q(DataStore::self()->database());
             if (!q.exec(queryStr)) {
-                akError() << "failed to optimize table" << table << ":" << q.lastError().text();
+                qCCritical(AKONADISERVER_LOG) << "failed to optimize table" << table << ":" << q.lastError().text();
             }
         }
         inform("vacuum done");
@@ -588,16 +587,16 @@ void StorageJanitor::checkSizeTreshold()
             const QString partPath = ExternalPartStorage::resolveAbsolutePath(name);
             QFile f(partPath);
             if (f.exists()) {
-                akDebug() << "External payload file" << name << "already exists";
+                qCDebug(AKONADISERVER_LOG) << "External payload file" << name << "already exists";
                 // That however is not a critical issue, since the part is not external,
                 // so we can safely overwrite it
             }
             if (!f.open(QIODevice::WriteOnly | QIODevice::Truncate)) {
-                akError() << "Failed to open file" << name << "for writing";
+                qCCritical(AKONADISERVER_LOG) << "Failed to open file" << name << "for writing";
                 continue;
             }
             if (f.write(part.data()) != part.datasize()) {
-                akError() << "Failed to write data to payload file" << name;
+                qCCritical(AKONADISERVER_LOG) << "Failed to write data to payload file" << name;
                 f.remove();
                 continue;
             }
@@ -605,7 +604,7 @@ void StorageJanitor::checkSizeTreshold()
             part.setData(name);
             part.setExternal(true);
             if (!part.update() || !transaction.commit()) {
-                akError() << "Failed to update database entry of part" << part.id();
+                qCCritical(AKONADISERVER_LOG) << "Failed to update database entry of part" << part.id();
                 f.remove();
                 continue;
             }
@@ -633,22 +632,22 @@ void StorageJanitor::checkSizeTreshold()
             const QString partPath = ExternalPartStorage::resolveAbsolutePath(part.data());
             QFile f(partPath);
             if (!f.exists()) {
-                akError() << "Part file" << part.data() << "does not exist";
+                qCCritical(AKONADISERVER_LOG) << "Part file" << part.data() << "does not exist";
                 continue;
             }
             if (!f.open(QIODevice::ReadOnly)) {
-                akError() << "Failed to open part file" << part.data() << "for reading";
+                qCCritical(AKONADISERVER_LOG) << "Failed to open part file" << part.data() << "for reading";
                 continue;
             }
 
             part.setExternal(false);
             part.setData(f.readAll());
             if (part.data().size() != part.datasize()) {
-                akError() << "Sizes of" << part.id() << "data don't match";
+                qCCritical(AKONADISERVER_LOG) << "Sizes of" << part.id() << "data don't match";
                 continue;
             }
             if (!part.update() || !transaction.commit()) {
-                akError() << "Failed to update database entry of part" << part.id();
+                qCCritical(AKONADISERVER_LOG) << "Failed to update database entry of part" << part.id();
                 continue;
             }
 
@@ -682,18 +681,18 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
         // returns the new levelled-cache path, even when the old one exists
         const QString newPath = ExternalPartStorage::resolveAbsolutePath(fileName, &newExists, false);
         if (!oldExists) {
-            akError() << "Old payload part does not exist, skipping part" << fileName;
+            qCCritical(AKONADISERVER_LOG) << "Old payload part does not exist, skipping part" << fileName;
             continue;
         }
         if (currentPath != newPath) {
             if (newExists) {
-                akError() << "Part is in legacy location, but the destination file already exists, skipping part" << fileName;
+                qCCritical(AKONADISERVER_LOG) << "Part is in legacy location, but the destination file already exists, skipping part" << fileName;
                 continue;
             }
 
             QFile f(currentPath);
             if (!f.rename(newPath)) {
-                akError() << "Failed to move part from" << currentPath << " to " << newPath << ":" << f.errorString();
+                qCCritical(AKONADISERVER_LOG) << "Failed to move part from" << currentPath << " to " << newPath << ":" << f.errorString();
                 continue;
             }
             inform(QStringLiteral("Migrated part %1 to new levelled cache").arg(id));
@@ -709,6 +708,6 @@ void StorageJanitor::inform(const char *msg)
 
 void StorageJanitor::inform(const QString &msg)
 {
-    akDebug() << msg;
+    qCDebug(AKONADISERVER_LOG) << msg;
     Q_EMIT information(msg);
 }

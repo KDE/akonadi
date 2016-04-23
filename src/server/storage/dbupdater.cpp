@@ -27,8 +27,7 @@
 #include "dbconfig.h"
 #include "dbintrospector.h"
 #include "dbinitializer_p.h"
-
-#include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 #include <private/dbus_p.h>
 
@@ -74,13 +73,13 @@ bool DbUpdater::run()
     // indicate clients this might take a while
     // we can ignore unregistration in error cases, that'll kill the server anyway
     if (!QDBusConnection::sessionBus().registerService(DBus::serviceName(DBus::UpgradeIndicator))) {
-        akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+        qCCritical(AKONADISERVER_LOG) << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
     }
 
     // QMap is sorted, so we should be replaying the changes in correct order
     for (QMap<int, UpdateSet>::ConstIterator it = updates.constBegin(); it != updates.constEnd(); ++it) {
         Q_ASSERT(it.key() > currentVersion.version());
-        akDebug() << "DbUpdater: update to version:" << it.key() << " mandatory:" << it.value().abortOnFailure;
+        qCDebug(AKONADISERVER_LOG) << "DbUpdater: update to version:" << it.key() << " mandatory:" << it.value().abortOnFailure;
 
         bool success = false;
         bool hasTransaction = false;
@@ -89,12 +88,12 @@ bool DbUpdater::run()
             const int index = metaObject()->indexOfMethod(methodName.toLatin1().constData());
             if (index == -1) {
                 success = false;
-                akError() << "Update to version" << it.value().version << "marked as complex, but no implementation is available";
+                qCCritical(AKONADISERVER_LOG) << "Update to version" << it.value().version << "marked as complex, but no implementation is available";
             } else {
                 const QMetaMethod method = metaObject()->method(index);
                 method.invoke(this, Q_RETURN_ARG(bool, success));
                 if (!success) {
-                    akError() << "Update failed";
+                    qCCritical(AKONADISERVER_LOG) << "Update failed";
                 }
             }
         } else { // regular update
@@ -105,10 +104,10 @@ bool DbUpdater::run()
                     QSqlQuery query(m_database);
                     success = query.exec(statement);
                     if (!success) {
-                        akError() << "DBUpdater: query error:" << query.lastError().text() << m_database.lastError().text();
-                        akError() << "Query was: " << statement;
-                        akError() << "Target version was: " << it.key();
-                        akError() << "Mandatory: " << it.value().abortOnFailure;
+                        qCCritical(AKONADISERVER_LOG) << "DBUpdater: query error:" << query.lastError().text() << m_database.lastError().text();
+                        qCCritical(AKONADISERVER_LOG) << "Query was: " << statement;
+                        qCCritical(AKONADISERVER_LOG) << "Target version was: " << it.key();
+                        qCCritical(AKONADISERVER_LOG) << "Mandatory: " << it.value().abortOnFailure;
                     }
                 }
             }
@@ -120,7 +119,7 @@ bool DbUpdater::run()
         }
 
         if (!success || (hasTransaction && !m_database.commit())) {
-            akError() << "Failed to commit transaction for database update";
+            qCCritical(AKONADISERVER_LOG) << "Failed to commit transaction for database update";
             if (hasTransaction) {
                 m_database.rollback();
             }
@@ -138,7 +137,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
 {
     QFile file(m_filename);
     if (!file.open(QIODevice::ReadOnly)) {
-        akError() << "Unable to open update description file" << m_filename;
+        qCCritical(AKONADISERVER_LOG) << "Unable to open update description file" << m_filename;
         return false;
     }
 
@@ -147,14 +146,14 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
     QString errorMsg;
     int line, column;
     if (!document.setContent(&file, &errorMsg, &line, &column)) {
-        akError() << "Unable to parse update description file" << m_filename << ":"
+        qCCritical(AKONADISERVER_LOG) << "Unable to parse update description file" << m_filename << ":"
                   << errorMsg << "at line" << line << "column" << column;
         return false;
     }
 
     const QDomElement documentElement = document.documentElement();
     if (documentElement.tagName() != QLatin1String("updates")) {
-        akError() << "Invalid update description file formant";
+        qCCritical(AKONADISERVER_LOG) << "Invalid update description file formant";
         return false;
     }
 
@@ -164,17 +163,17 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
         if (updateElement.tagName() == QLatin1String("update")) {
             const int version = updateElement.attribute(QStringLiteral("version"), QStringLiteral("-1")).toInt();
             if (version <= 0) {
-                akError() << "Invalid version attribute in database update description";
+                qCCritical(AKONADISERVER_LOG) << "Invalid version attribute in database update description";
                 return false;
             }
 
             if (updates.contains(version)) {
-                akError() << "Duplicate version attribute in database update description";
+                qCCritical(AKONADISERVER_LOG) << "Duplicate version attribute in database update description";
                 return false;
             }
 
             if (version <= currentVersion) {
-                akDebug() << "skipping update" << version;
+                qCDebug(AKONADISERVER_LOG) << "skipping update" << version;
             } else {
                 UpdateSet updateSet;
                 updateSet.version = version;
@@ -234,7 +233,7 @@ QString DbUpdater::buildRawSqlStatement(const QDomElement &element) const
 
 bool DbUpdater::complexUpdate_25()
 {
-    akDebug() << "Starting database update to version 25";
+    qCDebug(AKONADISERVER_LOG) << "Starting database update to version 25";
 
     DbType::Type dbType = DbType::type(DataStore::self()->database());
 
@@ -272,7 +271,7 @@ bool DbUpdater::complexUpdate_25()
         qb.exec();
     }
 
-    akDebug() << "Creating a PartTable_new";
+    qCDebug(AKONADISERVER_LOG) << "Creating a PartTable_new";
     {
         TableDescription description;
         description.name = QStringLiteral("PartTable_new");
@@ -324,12 +323,12 @@ bool DbUpdater::complexUpdate_25()
 
         QSqlQuery query(DataStore::self()->database());
         if (!query.exec(queryString)) {
-            akError() << query.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << query.lastError().text();
             return false;
         }
     }
 
-    akDebug() << "Migrating part types";
+    qCDebug(AKONADISERVER_LOG) << "Migrating part types";
     {
         // Get list of all part names
         QueryBuilder qb(QStringLiteral("PartTable"), QueryBuilder::Select);
@@ -337,7 +336,7 @@ bool DbUpdater::complexUpdate_25()
         qb.addColumn(QStringLiteral("PartTable.name"));
 
         if (!qb.exec()) {
-            akError() << qb.query().lastError().text();
+            qCCritical(AKONADISERVER_LOG) << qb.query().lastError().text();
             return false;
         }
 
@@ -354,15 +353,15 @@ bool DbUpdater::complexUpdate_25()
                 qb.setColumnValue(QStringLiteral("ns"), ns);
                 qb.setColumnValue(QStringLiteral("name"), name);
                 if (!qb.exec()) {
-                    akError() << qb.query().lastError().text();
+                    qCCritical(AKONADISERVER_LOG) << qb.query().lastError().text();
                     return false;
                 }
             }
-            akDebug() << "\t Moved part type" << partName << "to PartTypeTable";
+            qCDebug(AKONADISERVER_LOG) << "\t Moved part type" << partName << "to PartTypeTable";
         }
     }
 
-    akDebug() << "Migrating data from PartTable to PartTable_new";
+    qCDebug(AKONADISERVER_LOG) << "Migrating data from PartTable to PartTable_new";
     {
         QSqlQuery query(DataStore::self()->database());
         QString queryString;
@@ -388,12 +387,12 @@ bool DbUpdater::complexUpdate_25()
         }
 
         if (!query.exec(queryString)) {
-            akError() << query.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << query.lastError().text();
             return false;
         }
     }
 
-    akDebug() << "Swapping PartTable_new for PartTable";
+    qCDebug(AKONADISERVER_LOG) << "Swapping PartTable_new for PartTable";
     {
         // Does an atomic swap
 
@@ -405,14 +404,14 @@ bool DbUpdater::complexUpdate_25()
             }
 
             if (!query.exec(QStringLiteral("ALTER TABLE PartTable RENAME TO PartTable_old"))) {
-                akError() << query.lastError().text();
+                qCCritical(AKONADISERVER_LOG) << query.lastError().text();
                 DataStore::self()->rollbackTransaction();
                 return false;
             }
 
             // If this fails in SQLite (i.e. without transaction), we can still recover on next start)
             if (!query.exec(QStringLiteral("ALTER TABLE PartTable_new RENAME TO PartTable"))) {
-                akError() << query.lastError().text();
+                qCCritical(AKONADISERVER_LOG) << query.lastError().text();
                 if (DataStore::self()->inTransaction()) {
                     DataStore::self()->rollbackTransaction();
                 }
@@ -425,24 +424,24 @@ bool DbUpdater::complexUpdate_25()
         } else { // MySQL cannot do rename in transaction, but supports atomic renames
             if (!query.exec(QStringLiteral("RENAME TABLE PartTable TO PartTable_old,"
                                           "             PartTable_new TO PartTable"))) {
-                akError() << query.lastError().text();
+                qCCritical(AKONADISERVER_LOG) << query.lastError().text();
                 return false;
             }
         }
     }
 
-    akDebug() << "Removing PartTable_old";
+    qCDebug(AKONADISERVER_LOG) << "Removing PartTable_old";
     {
         QSqlQuery query(DataStore::self()->database());
         if (!query.exec(QStringLiteral("DROP TABLE PartTable_old;"))) {
             // It does not matter when this fails, we are successfully migrated
-            akDebug() << query.lastError().text();
-            akDebug() << "Not a fatal problem, continuing...";
+            qCDebug(AKONADISERVER_LOG) << query.lastError().text();
+            qCDebug(AKONADISERVER_LOG) << "Not a fatal problem, continuing...";
         }
     }
 
     // Fine tuning for PostgreSQL
-    akDebug() << "Final tuning of new PartTable";
+    qCDebug(AKONADISERVER_LOG) << "Final tuning of new PartTable";
     {
         QSqlQuery query(DataStore::self()->database());
         if (dbType == DbType::PostgreSQL) {
@@ -455,7 +454,7 @@ bool DbUpdater::complexUpdate_25()
         }
     }
 
-    akDebug() << "Update done in" << ttotal.elapsed() << "ms";
+    qCDebug(AKONADISERVER_LOG) << "Update done in" << ttotal.elapsed() << "ms";
 
     // Foreign keys and constraints will be reconstructed automatically once
     // all updates are done

@@ -21,10 +21,9 @@
 #include "itemretrievalrequest.h"
 #include "itemretrievaljob.h"
 #include "dbusconnectionpool.h"
+#include "akonadiserver_debug.h"
 
 #include "resourceinterface.h"
-
-#include <shared/akdebug.h>
 
 #include <private/dbus_p.h>
 
@@ -93,7 +92,7 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const
     if (resourceId.isEmpty() || type != DBus::Resource) {
         return;
     }
-    akDebug() << "Lost connection to resource" << serviceName << ", discarding cached interface";
+    qCDebug(AKONADISERVER_LOG) << "Lost connection to resource" << serviceName << ", discarding cached interface";
     mResourceInterfaces.remove(resourceId);
 }
 
@@ -115,7 +114,7 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
                                                     DBusConnectionPool::threadConnection(),
                                                     this);
     if (!iface || !iface->isValid()) {
-        akError() << QStringLiteral("Cannot connect to agent instance with identifier '%1', error message: '%2'")
+        qCCritical(AKONADISERVER_LOG) << QStringLiteral("Cannot connect to agent instance with identifier '%1', error message: '%2'")
                   .arg(id, iface ? iface->lastError().message() : QString());
         delete iface;
         return 0;
@@ -143,7 +142,7 @@ void ItemRetrievalManager::requestItemDelivery(qint64 uid, const QByteArray &rem
 void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
 {
     mLock->lockForWrite();
-    akDebug() << "posting retrieval request for item" << req->id << " there are "
+    qCDebug(AKONADISERVER_LOG) << "posting retrieval request for item" << req->id << " there are "
               << mPendingRequests.size() << " queues and "
               << mPendingRequests[req->resourceId].size() << " items in mine";
     mPendingRequests[req->resourceId].append(req);
@@ -153,23 +152,23 @@ void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
 
     mLock->lockForRead();
     Q_FOREVER {
-        //akDebug() << "checking if request for item" << req->id << "has been processed...";
+        //qCDebug(AKONADISERVER_LOG) << "checking if request for item" << req->id << "has been processed...";
         if (req->processed) {
             QScopedPointer<ItemRetrievalRequest> reqDeleter(req);
             Q_ASSERT(!mPendingRequests[req->resourceId].contains(req));
             const QString errorMsg = req->errorMsg;
             mLock->unlock();
             if (errorMsg.isEmpty()) {
-                akDebug() << "request for item" << req->id << "succeeded";
+                qCDebug(AKONADISERVER_LOG) << "request for item" << req->id << "succeeded";
                 return;
             } else {
-                akDebug() << "request for item" << req->id << req->remoteId << "failed:" << errorMsg;
+                qCDebug(AKONADISERVER_LOG) << "request for item" << req->id << req->remoteId << "failed:" << errorMsg;
                 throw ItemRetrieverException(errorMsg);
             }
         } else {
-            akDebug() << "request for item" << req->id << "still pending - waiting";
+            qCDebug(AKONADISERVER_LOG) << "request for item" << req->id << "still pending - waiting";
             mWaitCondition->wait(mLock);
-            akDebug() << "continuing";
+            qCDebug(AKONADISERVER_LOG) << "continuing";
         }
     }
 
@@ -224,7 +223,7 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
     // TODO check if (*it)->parts is a subset of currentRequest->parts
     for (QList<ItemRetrievalRequest *>::Iterator it = mPendingRequests[request->resourceId].begin(); it != mPendingRequests[request->resourceId].end();) {
         if ((*it)->id == request->id) {
-            akDebug() << "someone else requested item" << request->id << "as well, marking as processed";
+            qCDebug(AKONADISERVER_LOG) << "someone else requested item" << request->id << "as well, marking as processed";
             (*it)->errorMsg = errorMsg;
             (*it)->processed = true;
             it = mPendingRequests[request->resourceId].erase(it);

@@ -20,40 +20,11 @@
 #ifndef AKDEBUG_H
 #define AKDEBUG_H
 
-#include <QDebug>
-
-/**
- * Writes an error message to stdout/err and to the server error log and
- * aborts the program immediately.
- */
-QDebug akFatal();
-
-/**
- * Writes an error messasge to stdout/err and to the server error log.
- */
-QDebug akError();
-
-/**
- * Writes a debug message to stdout/err.
- */
-#ifndef QT_NO_DEBUG_OUTPUT
-QDebug akDebug();
-#else
-inline QNoDebug akDebug()
-{
-    return QNoDebug();
-}
-#endif
+#include <QString>
 
 /**
  * Init and rotate error logs.
  */
 void akInit(const QString &appName);
-
-/**
- * Returns the contents of @p name environment variable if it is defined,
- * or @p defaultValue otherwise.
- */
-QString getEnv(const char *name, const QString &defaultValue = QString());
 
 #endif

@@ -25,8 +25,7 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "search/searchmanager.h"
-
-#include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

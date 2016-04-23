@@ -25,6 +25,7 @@
 #include "preprocessorinstance.h"
 #include "preprocessorinterface.h"
 #include "preprocessormanager.h"
+#include "akonadiserver_debug.h"
 
 #include "entities.h"
 
@@ -33,7 +34,6 @@
 
 #include "tracer.h"
 
-#include <shared/akdebug.h>
 
 #include <private/dbus_p.h>
 
@@ -84,7 +84,7 @@ bool PreprocessorInstance::init()
 
 void PreprocessorInstance::enqueueItem(qint64 itemId)
 {
-    akDebug() << "PreprocessorInstance::enqueueItem("  << itemId <<  ")";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::enqueueItem("  << itemId <<  ")";
 
     mItemQueue.push_back(itemId);
 
@@ -132,7 +132,7 @@ void PreprocessorInstance::processHeadItem()
 
     // Ok.. got a valid item to process: collection and mimetype is known.
 
-    akDebug() << "PreprocessorInstance::processHeadItem(): about to begin processing item " << itemId;
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::processHeadItem(): about to begin processing item " << itemId;
 
     mBusy = true;
 
@@ -141,7 +141,7 @@ void PreprocessorInstance::processHeadItem()
     // The beginProcessItem() D-Bus call is asynchronous (marked with NoReply attribute)
     mInterface->beginProcessItem(itemId, actualItem.collectionId(), actualItem.mimeType().name());
 
-    akDebug() << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
 }
 
 int PreprocessorInstance::currentProcessingTime()
@@ -204,7 +204,7 @@ bool PreprocessorInstance::invokeRestart()
 
 void PreprocessorInstance::itemProcessed(qlonglong id)
 {
-    akDebug() << "PreprocessorInstance::itemProcessed("  << id <<  ")";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::itemProcessed("  << id <<  ")";
 
     // We shouldn't be called if there are no items in the queue
     if (mItemQueue.empty()) {

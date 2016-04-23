@@ -24,6 +24,7 @@
 #include "dbconfig.h"
 #include "connection.h"
 #include "capabilities_p.h"
+#include "akonadiserver_debug.h"
 
 #include <private/protocol_p.h>
 #include <private/standarddirs_p.h>
@@ -112,7 +113,7 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
     Protocol::StreamPayloadResponse response = mConnection->readCommand();
     if (response.isError() || !response.isValid()) {
         mError = QStringLiteral("Client failed to provide payload data");
-        akError() << mError;
+        qCCritical(AKONADISERVER_LOG) << mError;
         return false;
     }
     const QByteArray newData = response.data();
@@ -194,20 +195,20 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
     Protocol::StreamPayloadResponse response = mConnection->readCommand();
     if (response.isError() || !response.isValid()) {
         mError = QStringLiteral("Client failed to store payload into file");
-        akError() << mError;
+        qCCritical(AKONADISERVER_LOG) << mError;
         return false;
     }
 
     QFile file(ExternalPartStorage::resolveAbsolutePath(filename), this);
     if (!file.exists()) {
         mError = QStringLiteral("External payload file does not exist");
-        akError() << mError;
+        qCCritical(AKONADISERVER_LOG) << mError;
         return false;
     }
 
     if (file.size() != metaPart.size()) {
         mError = QStringLiteral("Payload size mismatch");
-        akDebug() << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
+        qCDebug(AKONADISERVER_LOG) << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
         return false;
     }
 

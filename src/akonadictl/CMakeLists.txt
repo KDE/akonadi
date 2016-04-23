@@ -7,6 +7,8 @@ set(akonadictl_SRCS
     main.cpp
 )
 
+ecm_qt_declare_logging_category(akonadictl_SRCS HEADER akonadictl_debug.h IDENTIFIER AKONADICTL_LOG CATEGORY_NAME log_akonadictl)
+
 qt5_add_dbus_interfaces(akonadictl_SRCS
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Janitor.xml

@@ -31,7 +31,6 @@
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
 
-#include <shared/akdebug.h>
 #include <private/protocol_p.h>
 
 #include "akonadiserver_debug.h"
@@ -257,7 +256,7 @@ bool ItemRetriever::exec()
         query.next();
     }
 
-    //akDebug() << "Closing queries and sending out requests.";
+    //qCDebug(AKONADISERVER_LOG) << "Closing queries and sending out requests.";
 
     query.finish();
 
@@ -271,7 +270,7 @@ bool ItemRetriever::exec()
         try {
             ItemRetrievalManager::instance()->requestItemDelivery(request);
         } catch (const ItemRetrieverException &e) {
-            akError() << e.type() << ": " << e.what();
+            qCCritical(AKONADISERVER_LOG) << e.type() << ": " << e.what();
             mLastError = e.what();
             return false;
         }

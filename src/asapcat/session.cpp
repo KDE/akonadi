@@ -20,10 +20,8 @@
 #include "session.h"
 
 #include <private/standarddirs_p.h>
-#include <shared/akdebug.h>
 
 #include <QCoreApplication>
-#include <QDebug>
 #include <QFile>
 #include <QSocketNotifier>
 #include <QSettings>
@@ -45,7 +43,7 @@ Session::Session(const QString &input, QObject *parent)
     if (input != QLatin1String("-")) {
         file->setFileName(input);
         if (!file->open(QFile::ReadOnly)) {
-            akFatal() << "Failed to open" << input;
+            qFatal("Failed to open %s", qPrintable(input));
         }
     } else {
         // ### does that work on Windows?
@@ -53,7 +51,7 @@ Session::Session(const QString &input, QObject *parent)
         fcntl(0, F_SETFL, flags | O_NONBLOCK);
 
         if (!file->open(stdin, QFile::ReadOnly | QFile::Unbuffered)) {
-            akFatal() << "Failed to open stdin!";
+            qFatal("Failed to open stdin!");
         }
         m_notifier = new QSocketNotifier(0, QSocketNotifier::Read, this);
         connect(m_notifier, &QSocketNotifier::activated, this, &Session::inputAvailable);
@@ -76,7 +74,7 @@ void Session::connectToHost()
     serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), QString()).toString();
 #endif
     if (serverAddress.isEmpty()) {
-        akFatal() << "Unable to determine server address.";
+        qFatal("Unable to determine server address.");
     }
 
     QLocalSocket *socket = new QLocalSocket(this);

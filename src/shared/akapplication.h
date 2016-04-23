@@ -82,6 +82,14 @@ public:
     }
 };
 
+
+/**
+ * Returns the contents of @p name environment variable if it is defined,
+ * or @p defaultValue otherwise.
+ */
+QString akGetEnv(const char *name, const QString &defaultValue = QString());
+
+
 typedef AkApplicationImpl<QCoreApplication> AkCoreApplication;
 typedef AkApplicationImpl<QApplication> AkApplication;
 typedef AkApplicationImpl<QGuiApplication> AkGuiApplication;

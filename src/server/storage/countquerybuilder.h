@@ -21,10 +21,8 @@
 #define AKONADI_COUNTQUERYBUILDER_H
 
 #include "storage/querybuilder.h"
-
-#include <shared/akdebug.h>
-
 #include "akonadiserver_debug.h"
+
 #include <QSqlError>
 
 namespace Akonadi {
@@ -75,7 +73,7 @@ public:
     inline int result()
     {
         if (!query().next()) {
-            akDebug() << "Error during retrieving result of query:" << query().lastError().text();
+            qCDebug(AKONADISERVER_LOG) << "Error during retrieving result of query:" << query().lastError().text();
             return -1;
         }
         return query().value(0).toInt();

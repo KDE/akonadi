@@ -29,6 +29,7 @@
 #include "processcontrol.h"
 #include "resource_manager.h"
 #include "serverinterface.h"
+#include "akonadicontrol_debug.h"
 
 #include <private/protocol_p.h>
 #include <private/xdgbasedirs_p.h>
@@ -36,10 +37,9 @@
 #include <private/standarddirs_p.h>
 #include <private/dbus_p.h>
 
-#include <shared/akdebug.h>
+#include <shared/akapplication.h>
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #ifndef QT_NO_DEBUG
 #include <QtCore/QFileSystemWatcher>
@@ -68,7 +68,7 @@ AgentManager::AgentManager(QObject *parent)
             this, &AgentManager::serviceOwnerChanged);
 
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
-        akFatal() << "akonadiserver already running!";
+        qFatal("akonadiserver already running!");
     }
 
     const QSettings settings(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
@@ -130,10 +130,11 @@ void AgentManager::continueStartup()
     // register the real service name once everything is up an running
     if (!QDBusConnection::sessionBus().registerService(Akonadi::DBus::serviceName(Akonadi::DBus::Control))) {
         // besides a race with an older Akonadi server I have no idea how we could possibly get here...
-        akFatal() << "Unable to register service as" << Akonadi::DBus::serviceName(Akonadi::DBus::Control)
-                  << "despite having the lock. Error was:" << QDBusConnection::sessionBus().lastError().message();
+        qFatal("Unable to register service as %s despite having the lock. Error was: %s",
+               qPrintable(Akonadi::DBus::serviceName(Akonadi::DBus::Control)),
+               qPrintable(QDBusConnection::sessionBus().lastError().message()));
     }
-    akDebug() << "Akonadi server is now operational.";
+    qCDebug(AKONADICONTROL_LOG) << "Akonadi server is now operational.";
 }
 
 AgentManager::~AgentManager()
@@ -265,7 +266,7 @@ QString AgentManager::createAgentInstance(const QString &identifier)
     }
 
     if (mAgentInstances.contains(instance->identifier())) {
-        akError() << Q_FUNC_INFO << "Cannot create another instance of agent" << identifier;
+        qCWarning(AKONADICONTROL_LOG) << "Cannot create another instance of agent" << identifier;
         return QString();
     }
 
@@ -289,7 +290,7 @@ QString AgentManager::createAgentInstance(const QString &identifier)
 void AgentManager::removeAgentInstance(const QString &identifier)
 {
     if (!mAgentInstances.contains(identifier)) {
-        akError() << Q_FUNC_INFO << "Agent instance with identifier" << identifier << "does not exist";
+        qCWarning(AKONADICONTROL_LOG) << Q_FUNC_INFO << "Agent instance with identifier" << identifier << "does not exist";
         return;
     }
 
@@ -297,7 +298,7 @@ void AgentManager::removeAgentInstance(const QString &identifier)
     if (instance->hasAgentInterface()) {
         instance->cleanup();
     } else {
-        akError() << Q_FUNC_INFO << "Agent instance" << identifier << "has no interface!";
+        qCWarning(AKONADICONTROL_LOG) << "Agent instance" << identifier << "has no interface!";
     }
 
     mAgentInstances.remove(identifier);
@@ -317,10 +318,10 @@ void AgentManager::removeAgentInstance(const QString &identifier)
     preProcessorManager.unregisterInstance(instance->identifier());
 
     if (instance->hasAgentInterface()) {
-        akDebug() << "AgentManager::removeAgentInstance: calling instance->quit()";
+        qCDebug(AKONADICONTROL_LOG) << "AgentManager::removeAgentInstance: calling instance->quit()";
         instance->quit();
     } else {
-        akError() << Q_FUNC_INFO << "Agent instance" << identifier << "has no interface!";
+        qCWarning(AKONADICONTROL_LOG) << "Agent instance" << identifier << "has no interface!";
     }
 
     Q_EMIT agentInstanceRemoved(identifier);
@@ -329,7 +330,7 @@ void AgentManager::removeAgentInstance(const QString &identifier)
 QString AgentManager::agentInstanceType(const QString &identifier)
 {
     if (!mAgentInstances.contains(identifier)) {
-        akError() << Q_FUNC_INFO << "Agent instance with identifier" << identifier << "does not exist";
+        qCWarning(AKONADICONTROL_LOG) << "Agent instance with identifier" << identifier << "does not exist";
         return QString();
     }
 
@@ -510,8 +511,8 @@ void AgentManager::readPluginInfos()
 void AgentManager::readPluginInfos(const QDir &directory)
 {
     const QStringList files = directory.entryList();
-    akDebug() << "PLUGINS: " << directory.canonicalPath();
-    akDebug() << "PLUGINS: " << files;
+    qCDebug(AKONADICONTROL_LOG) << "PLUGINS: " << directory.canonicalPath();
+    qCDebug(AKONADICONTROL_LOG) << "PLUGINS: " << files;
 
     for (int i = 0; i < files.count(); ++i) {
         const QString fileName = directory.absoluteFilePath(files[i]);
@@ -519,13 +520,13 @@ void AgentManager::readPluginInfos(const QDir &directory)
         AgentType agentInfo;
         if (agentInfo.load(fileName, this)) {
             if (mAgents.contains(agentInfo.identifier)) {
-                akError() << Q_FUNC_INFO << "Duplicated agent identifier" << agentInfo.identifier << "from file" << fileName;
+                qCWarning(AKONADICONTROL_LOG) << "Duplicated agent identifier" << agentInfo.identifier << "from file" << fileName;
                 continue;
             }
 
-            const QString disableAutostart = getEnv("AKONADI_DISABLE_AGENT_AUTOSTART");
+            const QString disableAutostart = akGetEnv("AKONADI_DISABLE_AGENT_AUTOSTART");
             if (!disableAutostart.isEmpty()) {
-                akDebug() << "Autostarting of agents is disabled.";
+                qCDebug(AKONADICONTROL_LOG) << "Autostarting of agents is disabled.";
                 agentInfo.capabilities.removeOne(AgentType::CapabilityAutostart);
             }
 
@@ -536,7 +537,7 @@ void AgentManager::readPluginInfos(const QDir &directory)
             if (agentInfo.launchMethod == AgentType::Process) {
                 const QString executable = Akonadi::XdgBaseDirs::findExecutableFile(agentInfo.exec);
                 if (executable.isEmpty()) {
-                    akError() << "Executable" << agentInfo.exec << "for agent" << agentInfo.identifier << "could not be found!";
+                    qCWarning(AKONADICONTROL_LOG) << "Executable" << agentInfo.exec << "for agent" << agentInfo.identifier << "could not be found!";
                     continue;
                 }
 #ifndef QT_NO_DEBUG
@@ -546,7 +547,7 @@ void AgentManager::readPluginInfos(const QDir &directory)
 #endif
             }
 
-            akDebug() << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
+            qCDebug(AKONADICONTROL_LOG) << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;
             mAgents.insert(agentInfo.identifier, agentInfo);
         }
     }
@@ -569,7 +570,7 @@ void AgentManager::load()
         const QString instanceIdentifier = entries[i];
 
         if (mAgentInstances.contains(instanceIdentifier)) {
-            akError() << Q_FUNC_INFO << "Duplicated instance identifier" << instanceIdentifier << "found in agentsrc";
+            qCWarning(AKONADICONTROL_LOG) << "Duplicated instance identifier" << instanceIdentifier << "found in agentsrc";
             continue;
         }
 
@@ -577,7 +578,7 @@ void AgentManager::load()
 
         const QString agentType = file.value(QStringLiteral("AgentType")).toString();
         if (!mAgents.contains(agentType)) {
-            akError() << Q_FUNC_INFO << "Reference to unknown agent type" << agentType << "in agentsrc";
+            qCWarning(AKONADICONTROL_LOG) << "Reference to unknown agent type" << agentType << "in agentsrc";
             file.endGroup();
             continue;
         }
@@ -585,7 +586,7 @@ void AgentManager::load()
 
         // recover if the db has been deleted in the meantime or got otherwise corrupted
         if (!knownResources.contains(instanceIdentifier) && type.capabilities.contains(AgentType::CapabilityResource)) {
-            akDebug() << "Recovering instance" << instanceIdentifier << "after database loss";
+            qCDebug(AKONADICONTROL_LOG) << "Recovering instance" << instanceIdentifier << "after database loss";
             registerAgentAtServer(instanceIdentifier, type);
         }
 
@@ -626,7 +627,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
     // This is called by the D-Bus server when a service comes up, goes down or changes ownership for some reason
     // and this is where we "hook up" our different Agent interfaces.
 
-    //akDebug() << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
+    //qCDebug(AKONADICONTROL_LOG) << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
 
     if ((name == Akonadi::DBus::serviceName(Akonadi::DBus::Server) || name == Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)) && !newOwner.isEmpty()) {
         if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))
@@ -689,10 +690,10 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
        // The order of interface deletions depends on Qt but we handle both cases.
 
        // Check if we "know" about it.
-       akDebug() << "Preprocessor " << agentIdentifier << " is going up or down...";
+       qCDebug(AKONADICONTROL_LOG) << "Preprocessor " << agentIdentifier << " is going up or down...";
 
        if (!mAgentInstances.contains(agentIdentifier)) {
-           akDebug() << "But it isn't registered as agent... not mine (anymore?)";
+           qCDebug(AKONADICONTROL_LOG) << "But it isn't registered as agent... not mine (anymore?)";
            return; // not our agent (?)
        }
 
@@ -703,7 +704,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
            this);
 
        if (!preProcessorManager.isValid()) {
-           akError() << Q_FUNC_INFO << "Could not connect to PreprocessorManager via D-Bus:" << preProcessorManager.lastError().message();
+           qCWarning(AKONADICONTROL_LOG) << "Could not connect to PreprocessorManager via D-Bus:" << preProcessorManager.lastError().message();
        } else {
            if (newOwner.isEmpty()) {
                // The preprocessor went down. Unregister it on server side.
@@ -717,13 +718,13 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
                if (!mAgentInstances.value(agentIdentifier)->obtainPreprocessorInterface()) {
                    // Hm.. couldn't hook up its preprocessor interface..
                    // Make sure we don't have it in the preprocessor chain
-                   qWarning() << "Couldn't obtain preprocessor interface for instance" << agentIdentifier;
+                   qCWarning(AKONADICONTROL_LOG) << "Couldn't obtain preprocessor interface for instance" << agentIdentifier;
 
                    preProcessorManager.unregisterInstance(agentIdentifier);
                    return;
                }
 
-               akDebug() << "Registering preprocessor instance" << agentIdentifier;
+               qCDebug(AKONADICONTROL_LOG) << "Registering preprocessor instance" << agentIdentifier;
 
                // Add to the preprocessor chain
                preProcessorManager.registerInstance(agentIdentifier);
@@ -740,7 +741,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 bool AgentManager::checkInstance(const QString &identifier) const
 {
     if (!mAgentInstances.contains(identifier)) {
-        qWarning() << "Agent instance with identifier " << identifier << " does not exist";
+        qCWarning(AKONADICONTROL_LOG) << "Agent instance with identifier " << identifier << " does not exist";
         return false;
     }
 
@@ -758,7 +759,7 @@ bool AgentManager::checkResourceInterface(const QString &identifier, const QStri
     }
 
     if (!mAgentInstances[identifier]->hasResourceInterface()) {
-        qWarning() << QLatin1String("AgentManager::") + method << " Agent instance "
+        qCWarning(AKONADICONTROL_LOG) << QLatin1String("AgentManager::") + method << " Agent instance "
                    << identifier << " has no resource interface!";
         return false;
     }
@@ -769,7 +770,7 @@ bool AgentManager::checkResourceInterface(const QString &identifier, const QStri
 bool AgentManager::checkAgentExists(const QString &identifier) const
 {
     if (!mAgents.contains(identifier)) {
-        qWarning() << "Agent instance " << identifier << " does not exist.";
+        qCWarning(AKONADICONTROL_LOG) << "Agent instance " << identifier << " does not exist.";
         return false;
     }
 
@@ -783,7 +784,7 @@ bool AgentManager::checkAgentInterfaces(const QString &identifier, const QString
     }
 
     if (!mAgentInstances.value(identifier)->hasAgentInterface()) {
-        qWarning() << "Agent instance (" << method << ") " << identifier << " has no agent interface.";
+        qCWarning(AKONADICONTROL_LOG) << "Agent instance (" << method << ") " << identifier << " has no agent interface.";
         return false;
     }
 
@@ -843,7 +844,7 @@ void AgentManager::registerAgentAtServer(const QString &agentIdentifier, const A
 
 void AgentManager::addSearch(const QString &query, const QString &queryLanguage, qint64 resultCollectionId)
 {
-    akDebug() << "AgentManager::addSearch" << query << queryLanguage << resultCollectionId;
+    qCDebug(AKONADICONTROL_LOG) << "AgentManager::addSearch" << query << queryLanguage << resultCollectionId;
     Q_FOREACH (const AgentInstance::Ptr &instance, mAgentInstances) {
         const AgentType type = mAgents.value(instance->agentType());
         if (type.capabilities.contains(AgentType::CapabilitySearch) && instance->searchInterface()) {
@@ -854,7 +855,7 @@ void AgentManager::addSearch(const QString &query, const QString &queryLanguage,
 
 void AgentManager::removeSearch(quint64 resultCollectionId)
 {
-    akDebug() << "AgentManager::removeSearch" << resultCollectionId;
+    qCDebug(AKONADICONTROL_LOG) << "AgentManager::removeSearch" << resultCollectionId;
     Q_FOREACH (const AgentInstance::Ptr &instance, mAgentInstances) {
         const AgentType type = mAgents.value(instance->agentType());
         if (type.capabilities.contains(AgentType::CapabilitySearch) && instance->searchInterface()) {
@@ -865,7 +866,7 @@ void AgentManager::removeSearch(quint64 resultCollectionId)
 
 void AgentManager::agentServerFailure()
 {
-    akError() << "Failed to start AgentServer!";
+    qCCritical(AKONADICONTROL_LOG) << "Failed to start AgentServer!";
     // if ( requiresAgentServer )
     //   QCoreApplication::instance()->exit( 255 );
 }

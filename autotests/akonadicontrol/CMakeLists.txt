@@ -5,6 +5,7 @@ include_directories(${Akonadi_SOURCE_DIR}/src/akonadicontrol
 
 macro(add_unit_test _source)
     set(_test ${_source}
+        ${Akonadi_BINARY_DIR}/src/akonadicontrol/akonadicontrol_debug.cpp
         ${Akonadi_SOURCE_DIR}/src/akonadicontrol/agenttype.cpp
     )
     get_filename_component(_name ${_source} NAME_WE)

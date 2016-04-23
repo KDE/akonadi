@@ -77,7 +77,7 @@ bool FakeDataStore::init()
     if (mPopulateDb) {
         DbPopulator dbPopulator;
         if (!dbPopulator.run()) {
-            akError() << "Failed to populate database";
+            qWarning() << "Failed to populate database";
             return false;
         }
     }

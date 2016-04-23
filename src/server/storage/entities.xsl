@@ -41,7 +41,6 @@
 
 #include &lt;private/tristate_p.h&gt;
 
-#include &lt;shared/akdebug.h&gt;
 #include &lt;QtCore/QDebug&gt;
 #include &lt;QtCore/QSharedDataPointer&gt;
 #include &lt;QtCore/QString&gt;
@@ -95,6 +94,7 @@ Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_T
 #include &lt;storage/datastore.h&gt;
 #include &lt;storage/selectquerybuilder.h&gt;
 #include &lt;utils.h&gt;
+#include &lt;akonadiserver_debug.h&gt;
 
 #include &lt;qsqldatabase.h&gt;
 #include &lt;qsqlquery.h&gt;
@@ -197,7 +197,7 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
   qb.addValueCondition( <xsl:value-of select="$key2"/>Column(), Query::Equals, <xsl:value-of select="$key2"/> );
   </xsl:if>
   if ( !qb.exec() ) {
-    akDebug() &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
+    qCWarning(AKONADISERVER_LOG) &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
       &lt;&lt; <xsl:value-of select="$key"/> &lt;&lt; "from table" &lt;&lt; tableName()
       &lt;&lt; qb.query().lastError().text();
     return <xsl:value-of select="$className"/>();

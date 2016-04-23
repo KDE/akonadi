@@ -20,7 +20,6 @@
 #include "connection.h"
 #include "akonadiserver_debug.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QEventLoop>
 #include <QtCore/QLatin1String>
 #include <QSettings>
@@ -32,7 +31,6 @@
 #include "tracer.h"
 #include "collectionreferencemanager.h"
 
-#include <shared/akdebug.h>
 #include <shared/akcrash.h>
 
 #include <assert.h>
@@ -163,7 +161,7 @@ void Connection::slotConnectionIdle()
             // But it is safer to abort and leave the connection open, until
             // a later operation causes the idle timer to fire (than crash
             // the akonadi server).
-            akDebug() << "NOT Closing idle db connection; we are in transaction";
+            qCDebug(AKONADISERVER_LOG) << "NOT Closing idle db connection; we are in transaction";
             return;
         }
         m_backend->close();
@@ -197,16 +195,16 @@ void Connection::slotNewData()
         try {
             cmd = Protocol::deserialize(m_socket);
         } catch (const Akonadi::ProtocolException &e) {
-            qDebug() << "ProtocolException:" << e.what();
+            qCWarning(AKONADISERVER_LOG) << "ProtocolException:" << e.what();
             slotConnectionStateChange(Server::LoggingOut);
             return;
         } catch (const std::exception &e) {
-            qDebug() << "Unknown exception:" << e.what();
+            qCWarning(AKONADISERVER_LOG) << "Unknown exception:" << e.what();
             slotConnectionStateChange(Server::LoggingOut);
             return;
         }
         if (cmd.type() == Protocol::Command::Invalid) {
-            qDebug() << "Received an invalid command: resetting connection";
+            qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
             slotConnectionStateChange(Server::LoggingOut);
             return;
         }
@@ -220,7 +218,7 @@ void Connection::slotNewData()
 
         m_currentHandler = findHandlerForCommand(cmd.type());
         if (!m_currentHandler) {
-            qDebug() << "Invalid command: no such handler for" << cmd.type();
+            qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd.type();
             slotConnectionStateChange(Server::LoggingOut);
             return;
         }
@@ -247,7 +245,7 @@ void Connection::slotNewData()
                 m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
             }
         } catch (...) {
-            akError() << "Unknown exception caught: " << akBacktrace();
+            qCCritical(AKONADISERVER_LOG) << "Unknown exception caught: " << akBacktrace();
             if (m_currentHandler) {
                 m_currentHandler->failureResponse("Unknown exception caught");
             }
@@ -336,7 +334,7 @@ void Connection::setIsNotificationBus(bool on)
 
     m_isNotificationBus = on;
     if (m_isNotificationBus) {
-        qDebug() << "New notification bus:" << m_sessionId;
+        qCDebug(AKONADISERVER_LOG()) << "New notification bus:" << m_sessionId;
         NotificationManager::self()->registerConnection(this);
     } else {
         NotificationManager::self()->unregisterConnection(this);

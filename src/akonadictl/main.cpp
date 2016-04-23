@@ -18,7 +18,6 @@
  ***************************************************************************/
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QString>
 #include <QtCore/QStringList>
@@ -27,7 +26,7 @@
 #include <QtDBus/QDBusConnectionInterface>
 
 #include <shared/akapplication.h>
-#include <shared/akdebug.h>
+
 
 #include "controlmanagerinterface.h"
 #include "janitorinterface.h"

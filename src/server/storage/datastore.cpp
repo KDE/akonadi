@@ -36,9 +36,9 @@
 #include "parttypehelper.h"
 #include "querycache.h"
 #include "queryhelper.h"
+#include "akonadiserver_debug.h"
 #include <utils.h>
 
-#include <shared/akdebug.h>
 #include <private/externalpartstorage_p.h>
 
 #include <QtCore/QCoreApplication>
@@ -124,7 +124,7 @@ void DataStore::open()
     if (!m_dbOpened) {
         debugLastDbError("Cannot open database.");
     } else {
-        akDebug() << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
+        qCDebug(AKONADISERVER_LOG) << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
     }
 
     DbConfig::configuredDatabase()->initSession(m_database);
@@ -171,7 +171,7 @@ bool DataStore::init()
     AkonadiSchema schema;
     DbInitializer::Ptr initializer = DbInitializer::createInstance(database(), &schema);
     if (!initializer->run()) {
-        akError() << initializer->errorMsg();
+        qCCritical(AKONADISERVER_LOG) << initializer->errorMsg();
         return false;
     }
     s_hasForeignKeyConstraints = initializer->hasForeignKeyConstraints();
@@ -186,7 +186,7 @@ bool DataStore::init()
     }
 
     if (!initializer->updateIndexesAndConstraints()) {
-        akError() << initializer->errorMsg();
+        qCCritical(AKONADISERVER_LOG) << initializer->errorMsg();
         return false;
     }
 
@@ -310,7 +310,7 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
     qb2.setColumnValue(PimItemFlagRelation::rightColumn(), flagIds);
     qb2.setIdentificationColumn(QString());
     if (!qb2.exec()) {
-        akDebug() << "Failed to execute query:" << qb2.query().lastError();
+        qCDebug(AKONADISERVER_LOG) << "Failed to execute query:" << qb2.query().lastError();
         return false;
     }
 
@@ -347,7 +347,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
             qb.addCondition(cond);
 
             if (!qb.exec()) {
-                akDebug() << "Failed to execute query:" << qb.query().lastError();
+                qCDebug(AKONADISERVER_LOG) << "Failed to execute query:" << qb.query().lastError();
                 return false;
             }
 
@@ -508,7 +508,7 @@ bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag,
     qb2.setColumnValue(PimItemTagRelation::rightColumn(), tagIds);
     qb2.setIdentificationColumn(QString());
     if (!qb2.exec()) {
-        akDebug() << "Failed to execute query:" << qb2.query().lastError();
+        qCDebug(AKONADISERVER_LOG) << "Failed to execute query:" << qb2.query().lastError();
         return false;
     }
 
@@ -545,7 +545,7 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
             qb.addCondition(cond);
 
             if (!qb.exec()) {
-                akDebug() << "Failed to execute query:" << qb.query().lastError();
+                qCDebug(AKONADISERVER_LOG) << "Failed to execute query:" << qb.query().lastError();
                 return false;
             }
 
@@ -772,7 +772,7 @@ bool DataStore::cleanupCollection(Collection &collection)
                 ExternalPartStorage::resolveAbsolutePath(qb.query().value(0).toByteArray()));
         }
     } catch (const PartHelperException &e) {
-        akDebug() << e.what();
+        qCDebug(AKONADISERVER_LOG) << e.what();
         return false;
     }
 
@@ -967,7 +967,7 @@ QVector<Collection> DataStore::virtualCollections(const PimItem &item)
     qb.addValueCondition(CollectionPimItemRelation::rightFullColumnName(), Query::Equals, item.id());
 
     if (!qb.exec()) {
-        akDebug() << "Error during selection of records from table CollectionPimItemRelation"
+        qCDebug(AKONADISERVER_LOG) << "Error during selection of records from table CollectionPimItemRelation"
                   << qb.query().lastError().text();
         return QVector<Collection>();
     }
@@ -1001,7 +1001,7 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
     }
 
     if (!qb.exec()) {
-        akDebug() << "Error during selection of records from table CollectionPimItemRelation"
+        qCDebug(AKONADISERVER_LOG) << "Error during selection of records from table CollectionPimItemRelation"
                   << qb.query().lastError().text();
         return QMap<Entity::Id, QList<PimItem> >();
     }
@@ -1029,7 +1029,7 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
 bool DataStore::appendMimeType(const QString &mimetype, qint64 *insertId)
 {
     if (MimeType::exists(mimetype)) {
-        akDebug() << "Cannot insert mimetype " << mimetype
+        qCDebug(AKONADISERVER_LOG) << "Cannot insert mimetype " << mimetype
                   << " because it already exists.";
         return false;
     }
@@ -1079,14 +1079,14 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
                 (*it).setDatasize((*it).data().size());
             }
 
-//      akDebug() << "Insert from DataStore::appendPimItem";
+//      qCDebug(AKONADISERVER_LOG) << "Insert from DataStore::appendPimItem";
             if (!PartHelper::insert(&(*it))) {
                 return false;
             }
         }
     }
 
-//   akDebug() << "appendPimItem: " << pimItem;
+//   qCDebug(AKONADISERVER_LOG) << "appendPimItem: " << pimItem;
 
     mNotificationCollector->itemAdded(pimItem, collection);
     return true;
@@ -1098,7 +1098,7 @@ bool DataStore::unhidePimItem(PimItem &pimItem)
         return false;
     }
 
-    akDebug() << "DataStore::unhidePimItem(" << pimItem << ")";
+    qCDebug(AKONADISERVER_LOG) << "DataStore::unhidePimItem(" << pimItem << ")";
 
     // FIXME: This is inefficient. Using a bit on the PimItemTable record would probably be some orders of magnitude faster...
     return removeItemParts(pimItem, { AKONADI_ATTRIBUTE_HIDDEN });
@@ -1110,7 +1110,7 @@ bool DataStore::unhideAllPimItems()
         return false;
     }
 
-    akDebug() << "DataStore::unhideAllPimItems()";
+    qCDebug(AKONADISERVER_LOG) << "DataStore::unhideAllPimItems()";
 
     try {
         return PartHelper::remove(Part::partTypeIdFullColumnName(),
@@ -1172,7 +1172,7 @@ bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &
     }
 
     if (qb.result().count() > 0) {
-        akDebug() << "Attribute" << key << "already exists for collection" << col.id();
+        qCDebug(AKONADISERVER_LOG) << "Attribute" << key << "already exists for collection" << col.id();
         return false;
     }
 
@@ -1214,9 +1214,9 @@ bool DataStore::removeCollectionAttribute(const Collection &col, const QByteArra
 
 void DataStore::debugLastDbError(const char *actionDescription) const
 {
-    akError() << "Database error:" << actionDescription;
-    akError() << "  Last driver error:" << m_database.lastError().driverText();
-    akError() << "  Last database error:" << m_database.lastError().databaseText();
+    qCCritical(AKONADISERVER_LOG) << "Database error:" << actionDescription;
+    qCCritical(AKONADISERVER_LOG) << "  Last driver error:" << m_database.lastError().driverText();
+    qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
 
     Tracer::self()->error("DataStore (Database Error)",
                           QStringLiteral("%1\nDriver said: %2\nDatabase said:%3")
@@ -1227,10 +1227,10 @@ void DataStore::debugLastDbError(const char *actionDescription) const
 
 void DataStore::debugLastQueryError(const QSqlQuery &query, const char *actionDescription) const
 {
-    akError() << "Query error:" << actionDescription;
-    akError() << "  Last error message:" << query.lastError().text();
-    akError() << "  Last driver error:" << m_database.lastError().driverText();
-    akError() << "  Last database error:" << m_database.lastError().databaseText();
+    qCCritical(AKONADISERVER_LOG) << "Query error:" << actionDescription;
+    qCCritical(AKONADISERVER_LOG) << "  Last error message:" << query.lastError().text();
+    qCCritical(AKONADISERVER_LOG) << "  Last driver error:" << m_database.lastError().driverText();
+    qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
 
     Tracer::self()->error("DataStore (Database Query Error)",
                           QStringLiteral("%1: %2")
@@ -1323,11 +1323,11 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
 
         if (!res) {
             // Don't do another deadlock detection here, just give up.
-            akError() << "DATABASE ERROR:";
-            akError() << "  Error code:" << query.lastError().number();
-            akError() << "  DB error: " << query.lastError().databaseText();
-            akError() << "  Error text:" << query.lastError().text();
-            akError() << "  Query:" << query.executedQuery();
+            qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR:";
+            qCCritical(AKONADISERVER_LOG) << "  Error code:" << query.lastError().number();
+            qCCritical(AKONADISERVER_LOG) << "  DB error: " << query.lastError().databaseText();
+            qCCritical(AKONADISERVER_LOG) << "  Error text:" << query.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "  Query:" << query.executedQuery();
 
             // Return the last query, because that's what caller expects to retrieve
             // from QueryBuilder. It is in error state anyway.

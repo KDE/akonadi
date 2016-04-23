@@ -61,7 +61,7 @@ void AkApplicationBase::init()
     akInit(QString::fromLatin1(mArgv[0]));
 
     if (!QDBusConnection::sessionBus().isConnected()) {
-        akFatal() << "D-Bus session bus is not available!";
+        qFatal("D-Bus session bus is not available!");
     }
 
     // there doesn't seem to be a signal to indicate that the session bus went down, so lets use polling for now
@@ -92,7 +92,7 @@ void AkApplicationBase::parseCommandLine()
 void AkApplicationBase::pollSessionBus() const
 {
     if (!QDBusConnection::sessionBus().isConnected()) {
-        akError() << "D-Bus session bus went down - quitting";
+        qCritical("D-Bus session bus went down - quitting");
         mApp->quit();
     }
 }
@@ -115,4 +115,10 @@ void AkApplicationBase::printUsage() const
 int AkApplicationBase::exec()
 {
     return mApp->exec();
+}
+
+QString akGetEnv(const char *name, const QString &defaultValue)
+{
+    const QString v = QString::fromLocal8Bit(qgetenv(name));
+    return !v.isEmpty() ? v : defaultValue;
 }

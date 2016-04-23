@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 #include "dbinitializer.h"
+#include "akonadiserver_debug.h"
 
-#include <shared/akdebug.h>
 #include <storage/querybuilder.h>
 #include <storage/datastore.h>
 

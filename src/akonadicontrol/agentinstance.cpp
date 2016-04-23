@@ -18,11 +18,11 @@
 */
 
 #include "agentinstance.h"
+#include "akonadicontrol_debug.h"
 
 #include "agenttype.h"
 #include "agentmanager.h"
 
-#include <shared/akdebug.h>
 #include <private/xdgbasedirs_p.h>
 
 AgentInstance::AgentInstance(AgentManager *manager)
@@ -210,7 +210,7 @@ void AgentInstance::refreshResourceStatus()
 void AgentInstance::errorHandler(const QDBusError &error)
 {
     //avoid using the server tracer, can result in D-BUS lockups
-    akError() <<  QStringLiteral("D-Bus communication error '%1': '%2'").arg(error.name(), error.message()) ;
+    qCCritical(AKONADICONTROL_LOG) <<  QStringLiteral("D-Bus communication error '%1': '%2'").arg(error.name(), error.message()) ;
     // TODO try again after some time, esp. on timeout errors
 }
 
@@ -221,8 +221,9 @@ T *AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *
                      QLatin1String(path), QDBusConnection::sessionBus(), this);
 
     if (!iface || !iface->isValid()) {
-        akError() << Q_FUNC_INFO << "Cannot connect to agent instance with identifier" << mIdentifier
-                  << ", error message:" << (iface ? iface->lastError().message() : QString());
+        qCCritical(AKONADICONTROL_LOG) << Q_FUNC_INFO << "Cannot connect to agent instance with identifier"
+                                       << mIdentifier << ", error message:"
+                                       << (iface ? iface->lastError().message() : QString());
         delete iface;
         return 0;
     }

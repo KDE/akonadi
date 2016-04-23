@@ -22,8 +22,8 @@
 #include "dbconfigmysql.h"
 #include "dbconfigpostgresql.h"
 #include "dbconfigsqlite.h"
+#include "akonadiserver_debug.h"
 
-#include <shared/akdebug.h>
 #include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 #include <private/instance_p.h>
@@ -88,8 +88,8 @@ DbConfig *DbConfig::configuredDatabase()
         } else if (driverName == QLatin1String("QPSQL")) {
             s_DbConfigInstance = new DbConfigPostgresql;
         } else {
-            akError() << "Unknown database driver: " << driverName;
-            akError() << "Available drivers are: " << QSqlDatabase::drivers();
+            qCCritical(AKONADISERVER_LOG) << "Unknown database driver: " << driverName;
+            qCCritical(AKONADISERVER_LOG) << "Available drivers are: " << QSqlDatabase::drivers();
             return Q_NULLPTR;
         }
 

@@ -20,7 +20,7 @@
 #include "collectionstatistics.h"
 #include "querybuilder.h"
 #include "countquerybuilder.h"
-#include "akdebug.h"
+#include "akonadiserver_debug.h"
 #include "entities.h"
 
 #include <private/protocol_p.h>
@@ -118,7 +118,7 @@ CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(c
         return { -1, -1, -1 };
     }
     if (!qb.query().next()) {
-        akError() << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
+        qCCritical(AKONADISERVER_LOG) << "Error during retrieving result of statistics query:" << qb.query().lastError().text();
         return { -1, -1, -1 };
     }
 

@@ -74,7 +74,7 @@ int Entity::countImpl(const QString &tableName, const QString &column, const QVa
     builder.addValueCondition(column, Query::Equals, value);
 
     if (!builder.exec()) {
-        akDebug() << "Error during counting records in table" << tableName
+        qCDebug(AKONADISERVER_LOG) << "Error during counting records in table" << tableName
                   << builder.query().lastError().text();
         return -1;
     }
@@ -93,7 +93,7 @@ bool Entity::removeImpl(const QString &tableName, const QString &column, const Q
     builder.addValueCondition(column, Query::Equals, value);
 
     if (!builder.exec()) {
-        akDebug() << "Error during deleting records from table"
+        qCDebug(AKONADISERVER_LOG) << "Error during deleting records from table"
                   << tableName << builder.query().lastError().text();
         return false;
     }
@@ -112,7 +112,7 @@ bool Entity::relatesToImpl(const QString &tableName, const QString &leftColumn, 
     builder.addValueCondition(rightColumn, Query::Equals, rightId);
 
     if (!builder.exec()) {
-        akDebug() << "Error during counting records in table" << tableName
+        qCDebug(AKONADISERVER_LOG) << "Error during counting records in table" << tableName
                   << builder.query().lastError().text();
         return false;
     }
@@ -136,7 +136,7 @@ bool Entity::addToRelationImpl(const QString &tableName, const QString &leftColu
     qb.setIdentificationColumn(QString());
 
     if (!qb.exec()) {
-        akDebug() << "Error during adding a record to table" << tableName
+        qCDebug(AKONADISERVER_LOG) << "Error during adding a record to table" << tableName
                   << qb.query().lastError().text();
         return false;
     }
@@ -156,7 +156,7 @@ bool Entity::removeFromRelationImpl(const QString &tableName, const QString &lef
     builder.addValueCondition(rightColumn, Query::Equals, rightId);
 
     if (!builder.exec()) {
-        akDebug() << "Error during removing a record from relation table" << tableName
+        qCDebug(AKONADISERVER_LOG) << "Error during removing a record from relation table" << tableName
                   << builder.query().lastError().text();
         return false;
     }
@@ -183,7 +183,7 @@ bool Entity::clearRelationImpl(const QString &tableName, const QString &leftColu
         qFatal("Invalid enum value");
     }
     if (!builder.exec()) {
-        akDebug() << "Error during clearing relation table" << tableName
+        qCDebug(AKONADISERVER_LOG) << "Error during clearing relation table" << tableName
                   << "for id" << id << builder.query().lastError().text();
         return false;
     }

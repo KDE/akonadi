@@ -20,7 +20,6 @@
 #include "fakeclient.h"
 #include "fakeakonadiserver.h"
 
-#include <shared/akdebug.h>
 #include <private/protocol_p.h>
 
 #include <QTest>
@@ -164,7 +163,7 @@ void FakeClient::run()
     connect(mSocket, &QIODevice::readyRead, this, &FakeClient::dataAvailable);
     connect(mSocket, &QLocalSocket::disconnected, this, &FakeClient::connectionLost);
     if (!mSocket->waitForConnected()) {
-        akFatal() << "Failed to connect to FakeAkonadiServer";
+        qFatal("Failed to connect to FakeAkonadiServer");
     }
     mStream.setDevice(mSocket);
 

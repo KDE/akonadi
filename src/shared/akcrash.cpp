@@ -20,8 +20,8 @@
  */
 
 #include "akcrash.h"
-#include "akdebug.h"
 
+#include <QDebug>
 #include <QtCore/QString>
 
 #include <string.h>
@@ -88,7 +88,7 @@ static void defaultCrashHandler(int sig)
     if (recursionCount <= 2) {
         if (sig != SIGTERM && sig != SIGINT) {
             if (recursionCount == 1) {
-                akError() << akBacktrace();
+                qCritical("%s", qPrintable(akBacktrace()));
             } else { // fall back to something more simple in case the other one crashed itself
                 fprintf(stderr, "%s", akBacktrace().toLatin1().data());
             }

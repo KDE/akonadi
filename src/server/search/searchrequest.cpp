@@ -25,8 +25,8 @@
 #include "abstractsearchplugin.h"
 #include "searchmanager.h"
 #include "connection.h"
+#include "akonadiserver_debug.h"
 
-#include <shared/akdebug.h>
 #include <private/xdgbasedirs_p.h>
 
 using namespace Akonadi::Server;
@@ -116,7 +116,7 @@ void SearchRequest::searchPlugins()
 
 void SearchRequest::exec()
 {
-    akDebug() << "Executing search" << mConnectionId;
+    qCDebug(AKONADISERVER_LOG) << "Executing search" << mConnectionId;
 
     //TODO should we move this to the AgentSearchManager as well? If we keep it here the agents can be searched in parallel
     //since the plugin search is executed in this thread directly.
@@ -124,7 +124,7 @@ void SearchRequest::exec()
 
     // If remote search is disabled, just finish here after searching the plugins
     if (!mRemoteSearch) {
-        akDebug() << "Search done" << mConnectionId << "(without remote search)";
+        qCDebug(AKONADISERVER_LOG) << "Search done" << mConnectionId << "(without remote search)";
         return;
     }
 
@@ -140,12 +140,12 @@ void SearchRequest::exec()
     task.sharedLock.lock();
     Q_FOREVER {
         if (task.complete) {
-            akDebug() << "All queries processed!";
+            qCDebug(AKONADISERVER_LOG) << "All queries processed!";
             break;
         } else {
             task.notifier.wait(&task.sharedLock);
 
-            akDebug() << task.pendingResults.count() << "search results available in search" << task.id;
+            qCDebug(AKONADISERVER_LOG) << task.pendingResults.count() << "search results available in search" << task.id;
             if (!task.pendingResults.isEmpty()) {
                 emitResults(task.pendingResults);
             }
@@ -158,5 +158,5 @@ void SearchRequest::exec()
     }
     task.sharedLock.unlock();
 
-    akDebug() << "Search done" << mConnectionId;
+    qCDebug(AKONADISERVER_LOG) << "Search done" << mConnectionId;
 }

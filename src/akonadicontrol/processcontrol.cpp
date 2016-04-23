@@ -18,14 +18,13 @@
  ***************************************************************************/
 
 #include "processcontrol.h"
+#include "akonadicontrol_debug.h"
+
+#include <shared/akapplication.h>
 
 #include <private/instance_p.h>
 
-#include <shared/akdebug.h>
-
-#include <QtCore/QDebug>
 #include <QtCore/QTimer>
-#include <QtDebug>
 
 #ifdef Q_OS_UNIX
 #include <sys/types.h>
@@ -104,7 +103,7 @@ void ProcessControl::slotError(QProcess::ProcessError error)
         break;
     }
 
-    akError() << "ProcessControl: Application" << qPrintable(mApplication) << "stopped unexpectedly (" << mProcess.errorString() << ")";
+    qCWarning(AKONADICONTROL_LOG) << "ProcessControl: Application" << mApplication << "stopped unexpectedly (" << mProcess.errorString() << ")";
 }
 
 void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
@@ -113,29 +112,29 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
         if (mPolicy == RestartOnCrash) {
             // don't try to start an unstartable application
             if (!mFailedToStart && mCrashCount <= s_maxCrashCount) {
-                qWarning("Application '%s' crashed! %d restarts left.", qPrintable(mApplication), s_maxCrashCount - mCrashCount);
+                qCWarning(AKONADICONTROL_LOG, "Application '%s' crashed! %d restarts left.", qPrintable(mApplication), s_maxCrashCount - mCrashCount);
                 start();
                 Q_EMIT restarted();
             } else {
                 if (mFailedToStart) {
-                    qWarning("Application '%s' failed to start!", qPrintable(mApplication));
+                    qCWarning(AKONADICONTROL_LOG, "Application '%s' failed to start!", qPrintable(mApplication));
                 } else {
-                    qWarning("Application '%s' crashed too often. Giving up!", qPrintable(mApplication));
+                    qCWarning(AKONADICONTROL_LOG, "Application '%s' crashed too often. Giving up!", qPrintable(mApplication));
                 }
                 mPolicy = StopOnCrash;
                 Q_EMIT unableToStart();
                 return;
             }
         } else {
-            qWarning("Application '%s' crashed. No restart!", qPrintable(mApplication));
+            qCWarning(AKONADICONTROL_LOG, "Application '%s' crashed. No restart!", qPrintable(mApplication));
         }
     } else {
         if (exitCode != 0) {
-            qWarning("ProcessControl: Application '%s' returned with exit code %d (%s)",
+            qCWarning(AKONADICONTROL_LOG, "ProcessControl: Application '%s' returned with exit code %d (%s)",
                      qPrintable(mApplication), exitCode, qPrintable(mProcess.errorString()));
             if (mPolicy == RestartOnCrash) {
                 if (mCrashCount > s_maxCrashCount) {
-                    qWarning() << mApplication << "crashed too often and will not be restarted!";
+                    qCWarning(AKONADICONTROL_LOG) << mApplication << "crashed too often and will not be restarted!";
                     mPolicy = StopOnCrash;
                     Q_EMIT unableToStart();
                     return;
@@ -150,10 +149,10 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
         } else {
             if (mRestartOnceOnExit) {
                 mRestartOnceOnExit = false;
-                qWarning("Restarting application '%s'.", qPrintable(mApplication));
+                qCWarning(AKONADICONTROL_LOG, "Restarting application '%s'.", qPrintable(mApplication));
                 start();
             } else {
-                qWarning("Application '%s' exited normally...", qPrintable(mApplication));
+                qCWarning(AKONADICONTROL_LOG, "Application '%s' exited normally...", qPrintable(mApplication));
                 Q_EMIT unableToStart();
             }
         }
@@ -173,39 +172,40 @@ static bool listContains(const QStringList &list, const QString &pattern)
 void ProcessControl::start()
 {
 #ifdef Q_OS_UNIX
-    QString agentValgrind = getEnv("AKONADI_VALGRIND");
+    QString agentValgrind = akGetEnv("AKONADI_VALGRIND");
     if (!agentValgrind.isEmpty() && (mApplication.contains(agentValgrind) || listContains(mArguments, agentValgrind))) {
 
         mArguments.prepend(mApplication);
         const QString originalArguments = mArguments.join(QString::fromLocal8Bit(" "));
         mApplication = QString::fromLocal8Bit("valgrind");
 
-        const QString valgrindSkin = getEnv("AKONADI_VALGRIND_SKIN", QString::fromLocal8Bit("memcheck"));
+        const QString valgrindSkin = akGetEnv("AKONADI_VALGRIND_SKIN", QString::fromLocal8Bit("memcheck"));
         mArguments.prepend(QLatin1String("--tool=") + valgrindSkin);
 
-        const QString valgrindOptions = getEnv("AKONADI_VALGRIND_OPTIONS");
+        const QString valgrindOptions = akGetEnv("AKONADI_VALGRIND_OPTIONS");
         if (!valgrindOptions.isEmpty()) {
             mArguments = valgrindOptions.split(QLatin1Char(' '), QString::SkipEmptyParts) << mArguments;
         }
 
-        akDebug();
-        akDebug() << "============================================================";
-        akDebug() << "ProcessControl: Valgrinding process" << originalArguments;
+        qCDebug(AKONADICONTROL_LOG);
+        qCDebug(AKONADICONTROL_LOG) << "============================================================";
+        qCDebug(AKONADICONTROL_LOG) << "ProcessControl: Valgrinding process" << originalArguments;
         if (!valgrindSkin.isEmpty()) {
-            akDebug() << "ProcessControl: Valgrind skin:" << valgrindSkin;
+            qCDebug(AKONADICONTROL_LOG) << "ProcessControl: Valgrind skin:" << valgrindSkin;
         }
         if (!valgrindOptions.isEmpty()) {
-            akDebug() << "ProcessControl: Additional Valgrind options:" << valgrindOptions;
+            qCDebug(AKONADICONTROL_LOG) << "ProcessControl: Additional Valgrind options:" << valgrindOptions;
         }
-        akDebug() << "============================================================";
-        akDebug();
+        qCDebug(AKONADICONTROL_LOG) << "============================================================";
+        qCDebug(AKONADICONTROL_LOG);
     }
 #endif
 
     mProcess.start(mApplication, mArguments);
     if (!mProcess.waitForStarted()) {
-        qWarning("ProcessControl: Unable to start application '%s' (%s)",
-                 qPrintable(mApplication), qPrintable(mProcess.errorString()));
+        qCWarning(AKONADICONTROL_LOG,
+                  "ProcessControl: Unable to start application '%s' (%s)",
+                  qPrintable(mApplication), qPrintable(mProcess.errorString()));
         Q_EMIT unableToStart();
         return;
     }
@@ -215,13 +215,13 @@ void ProcessControl::start()
         QString agentDebug = QString::fromLocal8Bit(qgetenv("AKONADI_DEBUG_WAIT"));
         pid_t pid = mProcess.pid();
         if (!agentDebug.isEmpty() && mApplication.contains(agentDebug)) {
-            akDebug();
-            akDebug() << "============================================================";
-            akDebug() << "ProcessControl: Suspending process" << mApplication;
-            akDebug() << "'gdb --pid" << pid << "' to debug";
-            akDebug() << "'kill -SIGCONT" << pid << "' to continue";
-            akDebug() << "============================================================";
-            akDebug();
+            qCDebug(AKONADICONTROL_LOG);
+            qCDebug(AKONADICONTROL_LOG) << "============================================================";
+            qCDebug(AKONADICONTROL_LOG) << "ProcessControl: Suspending process" << mApplication;
+            qCDebug(AKONADICONTROL_LOG) << "'gdb --pid" << pid << "' to debug";
+            qCDebug(AKONADICONTROL_LOG) << "'kill -SIGCONT" << pid << "' to continue";
+            qCDebug(AKONADICONTROL_LOG) << "============================================================";
+            qCDebug(AKONADICONTROL_LOG);
             kill(pid, SIGSTOP);
         }
     }

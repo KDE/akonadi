@@ -22,11 +22,10 @@
 #include "dbinitializer_p.h"
 #include "querybuilder.h"
 #include "dbexception.h"
-#include "shared/akdebug.h"
 #include "schema.h"
 #include "entity.h"
+#include "akonadiserver_debug.h"
 
-#include <QtCore/QDebug>
 #include <QtCore/QFile>
 #include <QtCore/QPair>
 #include <QtCore/QStringList>
@@ -56,7 +55,7 @@ DbInitializer::Ptr DbInitializer::createInstance(const QSqlDatabase &database, S
         i.reset(new DbInitializerPostgreSql(database));
         break;
     case DbType::Unknown:
-        akFatal() << database.driverName() << "backend not supported";
+        qCCritical(AKONADISERVER_LOG) << database.driverName() << "backend not supported";
         break;
     }
     i->mSchema = schema;
@@ -79,7 +78,7 @@ DbInitializer::~DbInitializer()
 bool DbInitializer::run()
 {
     try {
-        akDebug() << "DbInitializer::run()";
+        qCDebug(AKONADISERVER_LOG) << "DbInitializer::run()";
 
         Q_FOREACH (const TableDescription &table, mSchema->tables()) {
             if (!checkTable(table)) {
@@ -93,7 +92,7 @@ bool DbInitializer::run()
             }
         }
 
-        akDebug() << "DbInitializer::run() done";
+        qCDebug(AKONADISERVER_LOG) << "DbInitializer::run() done";
         return true;
     } catch (const DbException &e) {
         mErrorMsg = QString::fromUtf8(e.what());
@@ -103,12 +102,12 @@ bool DbInitializer::run()
 
 bool DbInitializer::checkTable(const TableDescription &tableDescription)
 {
-    akDebug() << "checking table " << tableDescription.name;
+    qCDebug(AKONADISERVER_LOG) << "checking table " << tableDescription.name;
 
     if (!m_introspector->hasTable(tableDescription.name)) {
         // Get the CREATE TABLE statement for the specific SQL dialect
         const QString createTableStatement = buildCreateTableStatement(tableDescription);
-        akDebug() << createTableStatement;
+        qCDebug(AKONADISERVER_LOG) << createTableStatement;
         execQuery(createTableStatement);
     } else {
         // Check for every column whether it exists, and add the missing ones
@@ -120,7 +119,7 @@ bool DbInitializer::checkTable(const TableDescription &tableDescription)
                 }
                 // Get the ADD COLUMN statement for the specific SQL dialect
                 const QString statement = buildAddColumnStatement(tableDescription, columnDescription);
-                akDebug() << statement;
+                qCDebug(AKONADISERVER_LOG) << statement;
                 execQuery(statement);
             }
         }
@@ -137,7 +136,7 @@ bool DbInitializer::checkTable(const TableDescription &tableDescription)
         Q_FOREACH (const DataDescription &dataDescription, tableDescription.data) {
             // Get the INSERT VALUES statement for the specific SQL dialect
             const QString statement = buildInsertValuesStatement(tableDescription, dataDescription);
-            akDebug() << statement;
+            qCDebug(AKONADISERVER_LOG) << statement;
             execQuery(statement);
         }
     }
@@ -170,7 +169,7 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
 
                     const QString statement = buildRemoveForeignKeyConstraintStatement(existingForeignKey, tableDescription);
                     if (!statement.isEmpty()) {
-                        akDebug() << "Found existing foreign constraint that doesn't match the schema:" << existingForeignKey.name
+                        qCDebug(AKONADISERVER_LOG) << "Found existing foreign constraint that doesn't match the schema:" << existingForeignKey.name
                                   << existingForeignKey.column << existingForeignKey.refTable << existingForeignKey.refColumn;
                         m_removedForeignKeys << statement;
                     }
@@ -188,14 +187,14 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
                 // constraint exists but we don't want one here
                 const QString statement = buildRemoveForeignKeyConstraintStatement(existingForeignKey, tableDescription);
                 if (!statement.isEmpty()) {
-                    akDebug() << "Found unexpected foreign key constraint:" << existingForeignKey.name << existingForeignKey.column
+                    qCDebug(AKONADISERVER_LOG) << "Found unexpected foreign key constraint:" << existingForeignKey.name << existingForeignKey.column
                               << existingForeignKey.refTable << existingForeignKey.refColumn;
                     m_removedForeignKeys << statement;
                 }
             }
         }
     } catch (const DbException &e) {
-        akDebug() << "Fixing foreign key constraints failed:" << e.what();
+        qCDebug(AKONADISERVER_LOG) << "Fixing foreign key constraints failed:" << e.what();
         // we ignore this since foreign keys are only used for optimizations (not all backends support them anyway)
         m_noForeignKeyContraints = true;
     }
@@ -244,35 +243,35 @@ bool DbInitializer::updateIndexesAndConstraints()
 
     try {
         if (!m_pendingIndexes.isEmpty()) {
-            akDebug() << "Updating indexes";
+            qCDebug(AKONADISERVER_LOG) << "Updating indexes";
             execPendingQueries(m_pendingIndexes);
             m_pendingIndexes.clear();
         }
 
         if (!m_removedForeignKeys.isEmpty()) {
-            akDebug() << "Removing invalid foreign key constraints";
+            qCDebug(AKONADISERVER_LOG) << "Removing invalid foreign key constraints";
             execPendingQueries(m_removedForeignKeys);
             m_removedForeignKeys.clear();
         }
 
         if (!m_pendingForeignKeys.isEmpty()) {
-            akDebug() << "Adding new foreign key constraints";
+            qCDebug(AKONADISERVER_LOG) << "Adding new foreign key constraints";
             execPendingQueries(m_pendingForeignKeys);
             m_pendingForeignKeys.clear();
         }
     } catch (const DbException &e) {
-        akDebug() << "Updating index failed: " << e.what();
+        qCDebug(AKONADISERVER_LOG) << "Updating index failed: " << e.what();
         return false;
     }
 
-    akDebug() << "Indexes successfully created";
+    qCDebug(AKONADISERVER_LOG) << "Indexes successfully created";
     return true;
 }
 
 void DbInitializer::execPendingQueries(const QStringList &queries)
 {
     Q_FOREACH (const QString &statement, queries) {
-        akDebug() << statement;
+        qCDebug(AKONADISERVER_LOG) << statement;
         execQuery(statement);
     }
 }
@@ -302,7 +301,7 @@ QString DbInitializer::sqlType(const QString &type, int size) const
         return QStringLiteral("TINYINT");
     }
 
-    akDebug() << "Invalid type" << type;
+    qCDebug(AKONADISERVER_LOG) << "Invalid type" << type;
     Q_ASSERT(false);
     return QString();
 }

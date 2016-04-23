@@ -19,8 +19,7 @@
 
 #include "agentsearchengine.h"
 #include "entities.h"
-
-#include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 #include <private/dbus_p.h>
 
@@ -44,7 +43,7 @@ void AgentSearchEngine::addSearch(const Collection &collection)
         return;
     }
 
-    akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
+    qCCritical(AKONADISERVER_LOG) << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }
 
 void AgentSearchEngine::removeSearch(qint64 id)
@@ -59,5 +58,5 @@ void AgentSearchEngine::removeSearch(qint64 id)
         return;
     }
 
-    akError() << "Failed to connect to agent manager: " << agentMgr.lastError().message();
+    qCCritical(AKONADISERVER_LOG) << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }

@@ -21,9 +21,9 @@
 
 #include "agenttype.h"
 #include "processcontrol.h"
+#include "akonadicontrol_debug.h"
 
 #include <private/xdgbasedirs_p.h>
-#include <shared/akdebug.h>
 
 using namespace Akonadi;
 
@@ -49,7 +49,7 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
                                ? XdgBaseDirs::findExecutableFile(agentInfo.exec) : agentInfo.exec;
 
     if (executable.isEmpty()) {
-        akError() << Q_FUNC_INFO << "Unable to find agent executable" << agentInfo.exec;
+        qCWarning(AKONADICONTROL_LOG) << "Unable to find agent executable" << agentInfo.exec;
         return false;
     }
 

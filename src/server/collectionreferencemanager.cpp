@@ -18,8 +18,8 @@
 */
 
 #include "collectionreferencemanager.h"
-
 #include "akonadi.h"
+#include "akonadiserver_debug.h"
 #include "cachecleaner.h"
 #include "storage/selectquerybuilder.h"
 
@@ -97,7 +97,7 @@ void CollectionReferenceManager::cleanup()
     SelectQueryBuilder<Collection> qb;
     qb.addValueCondition(Collection::referencedColumn(), Query::Equals, true);
     if (!qb.exec()) {
-        akError() << "Failed to execute  collection reference cleanup query.";
+        qCCritical(AKONADISERVER_LOG) << "Failed to execute  collection reference cleanup query.";
         return;
     }
     Q_FOREACH (Collection col, qb.result()) {

@@ -196,11 +196,11 @@
 
   <!-- Call .insert() //-->
   if (!<xsl:value-of select="$variable" />.insert()) {
-    akError() &lt;&lt; "Failed to insert <xsl:value-of select="$variable" /> into database";
-    akError() &lt;&lt; "DB Error:" &lt;&lt; FakeDataStore::self()->database().lastError().text();
+    qWarning() &lt;&lt; "Failed to insert <xsl:value-of select="$variable" /> into database";
+    qWarning() &lt;&lt; "DB Error:" &lt;&lt; FakeDataStore::self()->database().lastError().text();
     return false;
   }
-  akDebug() &lt;&lt; "<xsl:value-of select="local-name()" /> '<xsl:choose>
+  qDebug() &lt;&lt; "<xsl:value-of select="local-name()" /> '<xsl:choose>
     <xsl:when test="local-name() = 'PimItem'">
       <xsl:value-of select="$table/@remoteId" />
     </xsl:when>
@@ -307,7 +307,6 @@
  * Do not edit! All changes made to it will be lost.
  */
 
-#include &lt;shared/akdebug.h&gt;
 #include "dbpopulator.h"
 #include "entities.h"
 #include "fakedatastore.h"
@@ -377,7 +376,7 @@ bool DbPopulator::run()
     </xsl:call-template>
   </xsl:for-each>
 
-  akDebug() &lt;&lt; "Database successfully populated";
+  qDebug() &lt;&lt; "Database successfully populated";
   return true;
 }
 

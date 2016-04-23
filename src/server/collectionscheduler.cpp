@@ -67,11 +67,11 @@ public:
     Q_INVOKABLE void pause()
     {
         if (!isActive()) {
-            akError() << "Cannot pause an inactive timer";
+            qCCritical(AKONADISERVER_LOG) << "Cannot pause an inactive timer";
             return;
         }
         if (isPaused()) {
-            akError() << "Cannot pause an already paused timer";
+            qCCritical(AKONADISERVER_LOG) << "Cannot pause an already paused timer";
             return;
         }
 
@@ -82,7 +82,7 @@ public:
     Q_INVOKABLE void resume()
     {
         if (!isPaused()) {
-            akError() << "Cannot resume a timer that is not paused.";
+            qCCritical(AKONADISERVER_LOG) << "Cannot resume a timer that is not paused.";
             return;
         }
 

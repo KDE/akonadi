@@ -18,19 +18,20 @@
 */
 
 #include "akonadistarter.h"
+#include "akonadictl_debug.h"
 
 #include <shared/akapplication.h>
-#include <shared/akdebug.h>
 
 #include <private/dbus_p.h>
 #include <private/instance_p.h>
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
 #include <QtCore/QProcess>
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusServiceWatcher>
+
+#include <iostream>
 
 AkonadiStarter::AkonadiStarter(QObject *parent)
     : QObject(parent)
@@ -46,7 +47,7 @@ AkonadiStarter::AkonadiStarter(QObject *parent)
 
 bool AkonadiStarter::start()
 {
-    akDebug() << "Starting Akonadi Server...";
+    qCDebug(AKONADICTL_LOG) << "Starting Akonadi Server...";
 
     QStringList serverArgs;
     if (Akonadi::Instance::hasIdentifier()) {
@@ -55,7 +56,7 @@ bool AkonadiStarter::start()
 
     const bool ok = QProcess::startDetached(QStringLiteral("akonadi_control"), serverArgs);
     if (!ok) {
-        akError() << "Error: unable to execute binary akonadi_control";
+        std::cerr << "Error: unable to execute binary akonadi_control" << std::endl;
         return false;
     }
 
@@ -65,12 +66,13 @@ bool AkonadiStarter::start()
     QCoreApplication::instance()->exec();
 
     if (!mRegistered) {
-        akError() << "Error: akonadi_control was started but didn't register at D-Bus session bus.";
-        akError() << "Make sure your system is set up correctly!";
+        std::cerr << "Error: akonadi_control was started but didn't register at D-Bus session bus."
+                  << std::endl
+                  << "Make sure your system is set up correctly!" << std::endl;
         return false;
     }
 
-    akDebug() << "   done.";
+    qCDebug(AKONADICTL_LOG) << "   done.";
     return true;
 }
 

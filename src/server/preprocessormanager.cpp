@@ -24,7 +24,7 @@
 
 #include "preprocessormanager.h"
 #include "akonadiserver_debug.h"
-#include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 #include "entities.h" // Akonadi::Server::PimItem
 #include "storage/datastore.h"
@@ -32,8 +32,6 @@
 #include "collectionreferencemanager.h"
 
 #include "preprocessormanageradaptor.h"
-
-#include <QtCore/QDebug>
 
 namespace Akonadi {
 namespace Server {
@@ -137,7 +135,7 @@ void PreprocessorManager::registerInstance(const QString &id)
 {
     QMutexLocker locker(mMutex);
 
-    akDebug() << "PreprocessorManager::registerInstance(" << id << ")";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::registerInstance(" << id << ")";
 
     PreprocessorInstance *instance = lockedFindInstance(id);
     if (instance) {
@@ -158,7 +156,7 @@ void PreprocessorManager::registerInstance(const QString &id)
         return;
     }
 
-    akDebug() << "Registering preprocessor instance " << id;
+    qCDebug(AKONADISERVER_LOG) << "Registering preprocessor instance " << id;
 
     mPreprocessorChain.append(instance);
 }
@@ -167,7 +165,7 @@ void PreprocessorManager::unregisterInstance(const QString &id)
 {
     QMutexLocker locker(mMutex);
 
-    akDebug() << "PreprocessorManager::unregisterInstance(" << id << ")";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::unregisterInstance(" << id << ")";
 
     lockedUnregisterInstance(id);
 }
@@ -240,7 +238,7 @@ void PreprocessorManager::beginHandleItem(const PimItem &item, const DataStore *
     }
 
     if (dataStore->inTransaction()) {
-        akDebug() << "PreprocessorManager::beginHandleItem(" << item.id() << "): the DataStore is in transaction, pushing item to a wait queue";
+        qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::beginHandleItem(" << item.id() << "): the DataStore is in transaction, pushing item to a wait queue";
 
         // The calling thread data store is in a transaction: push the item into a wait queue
         std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, 0);
@@ -308,7 +306,7 @@ void PreprocessorManager::dataStoreDestroyed()
 {
     QMutexLocker locker(mMutex);
 
-    akDebug() << "PreprocessorManager::dataStoreDestroyed(): killing the wait queue";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreDestroyed(): killing the wait queue";
 
     const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
@@ -323,7 +321,7 @@ void PreprocessorManager::dataStoreTransactionCommitted()
 {
     QMutexLocker locker(mMutex);
 
-    akDebug() << "PreprocessorManager::dataStoreTransactionCommitted(): pushing items in wait queue to the preprocessing chain";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): pushing items in wait queue to the preprocessing chain";
 
     const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
@@ -355,7 +353,7 @@ void PreprocessorManager::dataStoreTransactionRolledBack()
 {
     QMutexLocker locker(mMutex);
 
-    akDebug() << "PreprocessorManager::dataStoreTransactionRolledBack(): killing the wait queue";
+    qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionRolledBack(): killing the wait queue";
 
     const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
@@ -396,14 +394,14 @@ void PreprocessorManager::lockedEndHandleItem(qint64 itemId)
         // HUM... the preprocessor killed the item ?
         // ... or retrieveById() failed ?
         // Well.. if the preprocessor killed the item then this might be actually OK (spam?).
-        akDebug() << "Invalid PIM item id '" << itemId << "' passed to preprocessing chain termination function";
+        qCDebug(AKONADISERVER_LOG) << "Invalid PIM item id '" << itemId << "' passed to preprocessing chain termination function";
         return;
     }
 
 #if 0
     if (!item.hidden()) {
         // HUM... the item was already unhidden for some reason: we have nothing more to do here.
-        akDebug() << "The PIM item with id '" << itemId << "' reached the preprocessing chain termination function in unhidden state";
+        qCDebug(AKONADISERVER_LOG) << "The PIM item with id '" << itemId << "' reached the preprocessing chain termination function in unhidden state";
         return;
     }
 #endif

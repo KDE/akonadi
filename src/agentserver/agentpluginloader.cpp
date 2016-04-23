@@ -17,6 +17,7 @@
     02110-1301, USA.
 */
 #include "agentpluginloader.h"
+#include "akonadiagentserver_debug.h"
 
 #include <private/xdgbasedirs_p.h>
 #include <shared/akdebug.h>
@@ -37,7 +38,7 @@ QPluginLoader *AgentPluginLoader::load(const QString &pluginName)
 {
     const QString pluginFile = XdgBaseDirs::findPluginFile(pluginName);
     if (pluginFile.isEmpty()) {
-        akError() << Q_FUNC_INFO << "plugin file:" << pluginName << "not found!";
+        qCWarning(AKONADIAGENTSERVER_LOG) << "plugin file:" << pluginName << "not found!";
         return 0;
     }
 
@@ -46,7 +47,7 @@ QPluginLoader *AgentPluginLoader::load(const QString &pluginName)
     } else {
         QPluginLoader *loader = new QPluginLoader(pluginFile);
         if (!loader->load()) {
-            akError() << Q_FUNC_INFO << "Failed to load agent: " << loader->errorString();
+            qCWarning(AKONADIAGENTSERVER_LOG) << "Failed to load agent: " << loader->errorString();
             delete loader;
             return 0;
         }

@@ -18,9 +18,9 @@
  ***************************************************************************/
 
 #include "akonadi.h"
+#include "akonadiserver_debug.h"
 
 #include <shared/akapplication.h>
-#include <shared/akdebug.h>
 #include <shared/akcrash.h>
 
 #include <private/dbus_p.h>
@@ -41,7 +41,7 @@ Q_IMPORT_PLUGIN(qsqlite3)
 
 void shutdownHandler(int)
 {
-    akDebug() << "Shutting down AkonadiServer...";
+    qCDebug(AKONADISERVER_LOG) << "Shutting down AkonadiServer...";
 
     Akonadi::Server::AkonadiServer::instance()->quit();
 
@@ -66,8 +66,8 @@ int main(int argc, char **argv)
 
     if (!app.commandLineArguments().isSet(QStringLiteral("start-without-control")) &&
         !QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock))) {
-        akError() << "Akonadi control process not found - aborting.";
-        akFatal() << "If you started akonadiserver manually, try 'akonadictl start' instead.";
+        qCCritical(AKONADISERVER_LOG) << "Akonadi control process not found - aborting.";
+        qCCritical(AKONADISERVER_LOG) << "If you started akonadiserver manually, try 'akonadictl start' instead.";
     }
 
     // Make sure we do initialization from eventloop, otherwise

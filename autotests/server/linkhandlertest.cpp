@@ -23,7 +23,6 @@
 
 #include "fakeakonadiserver.h"
 #include <shared/aktest.h>
-#include <shared/akdebug.h>
 #include "entities.h"
 
 #include <private/scope_p.h>
@@ -45,8 +44,8 @@ public:
         try {
             FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {
-            akError() << "Server exception: " << e.what();
-            akFatal() << "Fake Akonadi Server failed to start up, aborting test";
+            qWarning() << "Server exception: " << e.what();
+            qFatal("Fake Akonadi Server failed to start up, aborting test");
         }
     }
 

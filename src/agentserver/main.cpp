@@ -18,11 +18,11 @@
 */
 
 #include "agentserver.h"
+#include "akonadiagentserver_debug.h"
 
 #include <private/dbus_p.h>
 
 #include <shared/akapplication.h>
-#include <shared/akdebug.h>
 
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusConnectionInterface>
@@ -37,14 +37,14 @@ int main(int argc, char **argv)
     qApp->setQuitOnLastWindowClosed(false);
 
     if (!QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock))) {
-        akError() << "Akonadi control process not found - aborting.";
-        akFatal() << "If you started akonadi_agent_server manually, try 'akonadictl start' instead.";
+        qCCritical(AKONADIAGENTSERVER_LOG) << "Akonadi control process not found - aborting.";
+        qFatal("If you started akonadi_agent_server manually, try 'akonadictl start' instead.");
     }
 
     new Akonadi::AgentServer(&app);
 
     if (!QDBusConnection::sessionBus().registerService(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer))) {
-        akFatal() << "Unable to connect to dbus service: " << QDBusConnection::sessionBus().lastError().message();
+        qFatal("Unable to connect to dbus service: %s", qPrintable(QDBusConnection::sessionBus().lastError().message()));
     }
 
     return app.exec();

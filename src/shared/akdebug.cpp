@@ -54,10 +54,9 @@ public:
     {
         return 0;
     }
+
     qint64 writeData(const char *data, qint64 len)
     {
-        QByteArray buf = QByteArray::fromRawData(data, len);
-
         if (!mFileName.isEmpty()) {
             QFile outputFile(mFileName);
             outputFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered);
@@ -66,9 +65,6 @@ public:
             outputFile.close();
         }
 
-        qt_message_output(mType,
-                          QMessageLogContext(),
-                          QString::fromLatin1(buf.trimmed()));
         return len;
     }
 
@@ -90,13 +86,13 @@ class DebugPrivate
 {
 public:
     DebugPrivate()
-        : fileStream(new FileDebugStream())
+        : origHandler(Q_NULLPTR)
     {
     }
 
     ~DebugPrivate()
     {
-        delete fileStream;
+        file.close();
     }
 
     QString errorLogFileName() const
@@ -107,48 +103,62 @@ public:
                + QLatin1String(".error");
     }
 
-    QDebug stream(QtMsgType type)
+    void log(QtMsgType type, const QMessageLogContext &context, const QString &msg)
     {
         QMutexLocker locker(&mutex);
-#ifndef QT_NO_DEBUG_OUTPUT
+#ifdef QT_NO_DEBUG_OUTPUT
         if (type == QtDebugMsg) {
-            return qDebug();
+            return;
         }
 #endif
-        fileStream->setType(type);
-        return QDebug(fileStream);
+        const QByteArray buf = msg.toUtf8();
+        file.write(buf.constData(), buf.size());
+        file.flush();
+
+        if (origHandler) {
+            origHandler(type, context, msg);
+        }
     }
 
     void setName(const QString &appName)
     {
         // Keep only the executable name, e.g. akonadi_control
         name = appName.mid(appName.lastIndexOf(QLatin1Char('/')) + 1);
-        fileStream->setFileName(errorLogFileName());
+
+        if (file.isOpen()) {
+            file.close();
+        }
+        file.setFileName(errorLogFileName());
+        file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered);
+    }
+
+    void setOrigHandler(QtMessageHandler origHandler_)
+    {
+        origHandler = origHandler_;
     }
 
     QMutex mutex;
-    FileDebugStream *fileStream;
+    QFile file;
     QString name;
+    QtMessageHandler origHandler;
 };
 
 Q_GLOBAL_STATIC(DebugPrivate, sInstance)
 
-QDebug akFatal()
+void akMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
-    return sInstance()->stream(QtFatalMsg);
+    switch (type) {
+    case QtDebugMsg:
+    case QtInfoMsg:
+    case QtWarningMsg:
+    case QtCriticalMsg:
+        sInstance()->log(type, context, msg);
+        break;
+    case QtFatalMsg:
+        sInstance()->log(QtInfoMsg, context, msg);
+        abort();
+    }
 }
-
-QDebug akError()
-{
-    return sInstance()->stream(QtCriticalMsg);
-}
-
-#ifndef QT_NO_DEBUG_OUTPUT
-QDebug akDebug()
-{
-    return sInstance()->stream(QtDebugMsg);
-}
-#endif
 
 void akInit(const QString &appName)
 {
@@ -171,10 +181,7 @@ void akInit(const QString &appName)
             qFatal("Cannot rename log file - running on a readonly filesystem maybe?");
         }
     }
-}
 
-QString getEnv(const char *name, const QString &defaultValue)
-{
-    const QString v = QString::fromLocal8Bit(qgetenv(name));
-    return !v.isEmpty() ? v : defaultValue;
+    QtMessageHandler origHandler = qInstallMessageHandler(akMessageHandler);
+    sInstance()->setOrigHandler(origHandler);
 }

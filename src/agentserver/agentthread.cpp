@@ -21,7 +21,6 @@
 #include "akonadiagentserver_debug.h"
 
 #include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
 #include <QtCore/QPluginLoader>
 #include <QWidget> // Needed for WId
 

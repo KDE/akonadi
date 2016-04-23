@@ -18,7 +18,7 @@
 */
 
 #include "querybuilder.h"
-#include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -360,14 +360,14 @@ bool QueryBuilder::exec()
     }
 
     //too heavy debug info but worths to have from time to time
-    //akDebug() << "Executing query" << statement;
+    //qCDebug(AKONADISERVER_LOG) << "Executing query" << statement;
     bool isBatch = false;
     for (int i = 0; i < mBindValues.count(); ++i) {
         mQuery.bindValue(QLatin1Char(':') + QString::number(i), mBindValues[i]);
         if (!isBatch && mBindValues[i].canConvert<QVariantList>()) {
             isBatch = true;
         }
-        //akDebug() << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
+        //qCDebug(AKONADISERVER_LOG) << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
     }
 
     bool ret;
@@ -401,30 +401,30 @@ bool QueryBuilder::exec()
         if (mDatabaseType == DbType::PostgreSQL) {
             const QString dbError = mQuery.lastError().databaseText();
             if (dbError.contains(QLatin1String("40P01" /* deadlock_detected */))) {
-                akDebug() << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
-                akDebug() << mQuery.lastError().text();
+                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction();
             }
         } else if (mDatabaseType == DbType::MySQL) {
             const int error = mQuery.lastError().number();
             if (error == 1213 /* ER_LOCK_DEADLOCK */) {
-                akDebug() << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
-                akDebug() << mQuery.lastError().text();
+                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction();
             } else if (error == 1205 /* ER_LOCK_WAIT_TIMEOUT */) {
-                akDebug() << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
-                akDebug() << mQuery.lastError().text();
+                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
+                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction();
             }
         } else if (mDatabaseType == DbType::Sqlite && !DbType::isSystemSQLite(DataStore::self()->database())) {
             const int error = mQuery.lastError().number();
             if (error == 6 /* SQLITE_LOCKED */) {
-                akDebug() << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
-                akDebug() << mQuery.lastError().text();
+                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction(true);
             } else if (error == 5 /* SQLITE_BUSY */) {
-                akDebug() << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
-                akDebug() << mQuery.lastError().text();
+                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
+                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction(true);
             }
         } else if (mDatabaseType == DbType::Sqlite) {
@@ -433,11 +433,11 @@ bool QueryBuilder::exec()
             // serializes them through a global lock.
         }
 
-        akError() << "DATABASE ERROR:";
-        akError() << "  Error code:" << mQuery.lastError().number();
-        akError() << "  DB error: " << mQuery.lastError().databaseText();
-        akError() << "  Error text:" << mQuery.lastError().text();
-        akError() << "  Query:" << statement;
+        qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR:";
+        qCCritical(AKONADISERVER_LOG) << "  Error code:" << mQuery.lastError().number();
+        qCCritical(AKONADISERVER_LOG) << "  DB error: " << mQuery.lastError().databaseText();
+        qCCritical(AKONADISERVER_LOG) << "  Error text:" << mQuery.lastError().text();
+        qCCritical(AKONADISERVER_LOG) << "  Query:" << statement;
         return false;
     }
 #else

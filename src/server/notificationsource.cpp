@@ -18,9 +18,7 @@
 */
 
 #include "notificationsource.h"
-
-#include <shared/akdebug.h>
-
+#include "akonadiserver_debug.h"
 #include "notificationsourceadaptor.h"
 #include "notificationmanager.h"
 #include "collectionreferencemanager.h"
@@ -111,13 +109,13 @@ void NotificationSource::addClientServiceName(const QString &clientServiceName)
     }
 
     mClientWatcher->addWatchedService(clientServiceName);
-    akDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
+    qCDebug(AKONADISERVER_LOG) << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
 }
 
 void NotificationSource::serviceUnregistered(const QString &serviceName)
 {
     mClientWatcher->removeWatchedService(serviceName);
-    akDebug() << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
+    qCDebug(AKONADISERVER_LOG) << Q_FUNC_INFO << "Notification source" << mIdentifier << "now serving:" << mClientWatcher->watchedServices();
 
     if (mClientWatcher->watchedServices().isEmpty()) {
         unsubscribe();
@@ -392,7 +390,7 @@ bool NotificationSource::acceptsNotification(const Protocol::ChangeNotification 
 
     switch (notification.type()) {
     case Protocol::ChangeNotification::InvalidType:
-        akDebug() << "Received invalid change notification!";
+        qCDebug(AKONADISERVER_LOG) << "Received invalid change notification!";
         return false;
 
     case Protocol::ChangeNotification::Items:

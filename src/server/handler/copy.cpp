@@ -36,7 +36,7 @@ using namespace Akonadi::Server;
 
 bool Copy::copyItem(const PimItem &item, const Collection &target)
 {
-//  akDebug() << "Copy::copyItem";
+//  qCDebug(AKONADISERVER_LOG) << "Copy::copyItem";
 
     PimItem newItem = item;
     newItem.setId(-1);

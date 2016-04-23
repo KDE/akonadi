@@ -20,8 +20,7 @@
 
 #include "agentserverinterface.h"
 #include "agenttype.h"
-
-#include <shared/akdebug.h>
+#include "akonadicontrol_debug.h"
 
 #include <private/dbus_p.h>
 
@@ -52,7 +51,7 @@ bool AgentThreadInstance::start(const AgentType &agentInfo)
     org::freedesktop::Akonadi::AgentServer agentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
                                                        QStringLiteral("/AgentServer"), QDBusConnection::sessionBus());
     if (!agentServer.isValid()) {
-        akDebug() << "AgentServer not up (yet?)";
+        qCDebug(AKONADICONTROL_LOG) << "AgentServer not up (yet?)";
         return false;
     }
 

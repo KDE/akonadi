@@ -20,6 +20,7 @@
 
 #include "akthread.h"
 #include "storage/datastore.h"
+#include "akonadiserver_debug.h"
 
 #include <QThread>
 #include <QCoreApplication>
@@ -55,7 +56,7 @@ void AkThread::startThread()
 
 void AkThread::quitThread()
 {
-    akDebug() << "Shutting down" << objectName() << "...";
+    qCDebug(AKONADISERVER_LOG) << "Shutting down" << objectName() << "...";
     const bool invoke = QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
     Q_ASSERT(invoke); Q_UNUSED(invoke);
     if (!thread()->wait(10 * 1000)) {

@@ -23,7 +23,6 @@
 
 #include <private/xdgbasedirs_p.h>
 #include <private/standarddirs_p.h>
-#include <shared/akdebug.h>
 
 #include <QtCore/QDir>
 #include <QtCore/QProcess>
@@ -250,10 +249,10 @@ bool DbConfigPostgresql::startInternalServer()
     QProcess pgCtl;
     pgCtl.start(mServerPath, arguments);
     if (!pgCtl.waitForStarted()) {
-        akError() << "Could not start database server!";
-        akError() << "executable:" << mServerPath;
-        akError() << "arguments:" << arguments;
-        akError() << "process error:" << pgCtl.errorString();
+        qCCritical(AKONADISERVER_LOG) << "Could not start database server!";
+        qCCritical(AKONADISERVER_LOG) << "executable:" << mServerPath;
+        qCCritical(AKONADISERVER_LOG) << "arguments:" << arguments;
+        qCCritical(AKONADISERVER_LOG) << "process error:" << pgCtl.errorString();
         return false;
     }
 
@@ -266,7 +265,7 @@ bool DbConfigPostgresql::startInternalServer()
         db.setDatabaseName(QStringLiteral("postgres"));
 
         if (!db.isValid()) {
-            akError() << "Invalid database object during database server startup";
+            qCCritical(AKONADISERVER_LOG) << "Invalid database object during database server startup";
             return false;
         }
 
@@ -278,13 +277,13 @@ bool DbConfigPostgresql::startInternalServer()
             }
 
             if (pgCtl.waitForFinished(500) && pgCtl.exitCode()) {
-                akError() << "Database process exited unexpectedly during initial connection!";
-                akError() << "executable:" << mServerPath;
-                akError() << "arguments:" << arguments;
-                akError() << "stdout:" << pgCtl.readAllStandardOutput();
-                akError() << "stderr:" << pgCtl.readAllStandardError();
-                akError() << "exit code:" << pgCtl.exitCode();
-                akError() << "process error:" << pgCtl.errorString();
+                qCCritical(AKONADISERVER_LOG) << "Database process exited unexpectedly during initial connection!";
+                qCCritical(AKONADISERVER_LOG) << "executable:" << mServerPath;
+                qCCritical(AKONADISERVER_LOG) << "arguments:" << arguments;
+                qCCritical(AKONADISERVER_LOG) << "stdout:" << pgCtl.readAllStandardOutput();
+                qCCritical(AKONADISERVER_LOG) << "stderr:" << pgCtl.readAllStandardError();
+                qCCritical(AKONADISERVER_LOG) << "exit code:" << pgCtl.exitCode();
+                qCCritical(AKONADISERVER_LOG) << "process error:" << pgCtl.errorString();
                 return false;
             }
         }
@@ -299,9 +298,9 @@ bool DbConfigPostgresql::startInternalServer()
                 // if not, create it
                 if (!query.first()) {
                     if (!query.exec(QStringLiteral("CREATE DATABASE %1").arg(mDatabaseName))) {
-                        akError() << "Failed to create database";
-                        akError() << "Query error:" << query.lastError().text();
-                        akError() << "Database error:" << db.lastError().text();
+                        qCCritical(AKONADISERVER_LOG) << "Failed to create database";
+                        qCCritical(AKONADISERVER_LOG) << "Query error:" << query.lastError().text();
+                        qCCritical(AKONADISERVER_LOG) << "Database error:" << db.lastError().text();
                         success = false;
                     }
                 }
@@ -317,7 +316,7 @@ bool DbConfigPostgresql::startInternalServer()
 void DbConfigPostgresql::stopInternalServer()
 {
     if (!checkServerIsRunning()) {
-        akDebug() << "Database is no longer running";
+        qCDebug(AKONADISERVER_LOG) << "Database is no longer running";
         return;
     }
 
@@ -351,7 +350,7 @@ void DbConfigPostgresql::stopInternalServer()
     QFile pidFile(pidFileName);
     if (pidFile.open(QIODevice::ReadOnly)) {
         QString postmasterPid = QString::fromUtf8(pidFile.readLine(0).trimmed());
-        akError() << "The postmaster is still running. Killing it.";
+        qCCritical(AKONADISERVER_LOG) << "The postmaster is still running. Killing it.";
 
         arguments.clear();
         arguments << QStringLiteral("kill")

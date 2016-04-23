@@ -60,7 +60,7 @@ bool Store::replaceFlags(const PimItem::List &item, const QSet<QByteArray> &flag
     DataStore *store = connection()->storageBackend();
 
     if (!store->setItemsFlags(item, flagList, &flagsChanged)) {
-        akDebug() << "Store::replaceFlags: Unable to replace flags";
+        qCDebug(AKONADISERVER_LOG) << "Store::replaceFlags: Unable to replace flags";
         return false;
     }
 
@@ -73,7 +73,7 @@ bool Store::addFlags(const PimItem::List &items, const QSet<QByteArray> &flags, 
     DataStore *store = connection()->storageBackend();
 
     if (!store->appendItemsFlags(items, flagList, &flagsChanged)) {
-        akDebug() << "Store::addFlags: Unable to add new item flags";
+        qCDebug(AKONADISERVER_LOG) << "Store::addFlags: Unable to add new item flags";
         return false;
     }
     return true;
@@ -95,7 +95,7 @@ bool Store::deleteFlags(const PimItem::List &items, const QSet<QByteArray> &flag
     }
 
     if (!store->removeItemsFlags(items, flagList, &flagsChanged)) {
-        akDebug() << "Store::deleteFlags: Unable to remove item flags";
+        qCDebug(AKONADISERVER_LOG) << "Store::deleteFlags: Unable to remove item flags";
         return false;
     }
     return true;
@@ -105,7 +105,7 @@ bool Store::replaceTags(const PimItem::List &item, const Scope &tags, bool &tags
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->setItemsTags(item, tagList, &tagsChanged)) {
-        akDebug() << "Store::replaceTags: unable to replace tags";
+        qCDebug(AKONADISERVER_LOG) << "Store::replaceTags: unable to replace tags";
         return false;
     }
     return true;
@@ -115,7 +115,7 @@ bool Store::addTags(const PimItem::List &items, const Scope &tags, bool &tagsCha
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->appendItemsTags(items, tagList, &tagsChanged)) {
-        akDebug() << "Store::addTags: Unable to add new item tags";
+        qCDebug(AKONADISERVER_LOG) << "Store::addTags: Unable to add new item tags";
         return false;
     }
     return true;
@@ -125,7 +125,7 @@ bool Store::deleteTags(const PimItem::List &items, const Scope &tags, bool &tags
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->removeItemsTags(items, tagList, &tagsChanged)) {
-        akDebug() << "Store::deleteTags: Unable to remove item tags";
+        qCDebug(AKONADISERVER_LOG) << "Store::deleteTags: Unable to remove item tags";
         return false;
     }
     return true;

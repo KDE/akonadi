@@ -26,7 +26,6 @@
 
 #include "fakeakonadiserver.h"
 #include "aktest.h"
-#include "akdebug.h"
 #include "entities.h"
 #include "dbinitializer.h"
 #include <storage/storagedebugger.h>
@@ -48,8 +47,8 @@ public:
             FakeAkonadiServer::instance()->setPopulateDb(false);
             FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {
-            akError() << "Server exception: " << e.what();
-            akFatal() << "Fake Akonadi Server failed to start up, aborting test";
+            qWarning() << "Server exception: " << e.what();
+            qFatal("Fake Akonadi Server failed to start up, aborting test");
         }
         {
             MimeType mt(QLatin1String("mimetype1"));

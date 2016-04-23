@@ -22,11 +22,9 @@
 #include "utils.h"
 #include "akonadiserver_debug.h"
 
-#include <shared/akdebug.h>
 #include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 
-#include <QtCore/QDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QSettings>

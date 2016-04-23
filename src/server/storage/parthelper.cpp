@@ -24,7 +24,6 @@
 #include "dbconfig.h"
 #include "parttypehelper.h"
 
-#include <shared/akdebug.h>
 #include <private/externalpartstorage_p.h>
 
 #include <QDir>
@@ -121,7 +120,7 @@ bool PartHelper::remove(const QString &column, const QVariant &value)
     builder.addValueCondition(Part::externalColumn(), Query::Equals, true);
     builder.addValueCondition(Part::dataColumn(), Query::IsNot, QVariant());
     if (!builder.exec()) {
-//      akDebug() << "Error selecting records to be deleted from table"
+//      qCDebug(AKONADISERVER_LOG) << "Error selecting records to be deleted from table"
 //          << Part::tableName() << builder.query().lastError().text();
         return false;
     }
@@ -145,8 +144,8 @@ QByteArray PartHelper::translateData(const QByteArray &data, bool isExternal)
             file.close();
             return payload;
         } else {
-            akError() << "Payload file " << fileName << " could not be open for reading!";
-            akError() << "Error: " << file.errorString();
+            qCCritical(AKONADISERVER_LOG) << "Payload file " << fileName << " could not be open for reading!";
+            qCCritical(AKONADISERVER_LOG) << "Error: " << file.errorString();
             return QByteArray();
         }
     } else {
@@ -180,7 +179,7 @@ bool PartHelper::verify(Part &part)
 
     const QString fileName = ExternalPartStorage::resolveAbsolutePath(part.data());
     if (!QFile::exists(fileName)) {
-        akError() << "Payload file" << fileName << "is missing, trying to recover.";
+        qCCritical(AKONADISERVER_LOG) << "Payload file" << fileName << "is missing, trying to recover.";
         part.setData(QByteArray());
         part.setDatasize(0);
         part.setExternal(false);

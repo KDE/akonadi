@@ -24,8 +24,8 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/entity.h"
 #include "akonadi.h"
+#include "akonadiserver_debug.h"
 
-#include <shared/akdebug.h>
 #include <private/protocol_p.h>
 
 using namespace Akonadi::Server;
@@ -51,7 +51,7 @@ CacheCleanerInhibitor::~CacheCleanerInhibitor()
 void CacheCleanerInhibitor::inhibit()
 {
     if (mInhibited) {
-        akError() << "Cannot recursively inhibit an inhibitor";
+        qCCritical(AKONADISERVER_LOG) << "Cannot recursively inhibit an inhibitor";
         return;
     }
 
@@ -68,7 +68,7 @@ void CacheCleanerInhibitor::inhibit()
 void CacheCleanerInhibitor::uninhibit()
 {
     if (!mInhibited) {
-        akError() << "Cannot uninhibit an uninhibited inhibitor"; // aaaw yeah
+        qCCritical(AKONADISERVER_LOG) << "Cannot uninhibit an uninhibited inhibitor"; // aaaw yeah
         return;
     }
     mInhibited = false;
@@ -137,15 +137,15 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     if (qb.exec()) {
         const Part::List parts = qb.result();
         if (!parts.isEmpty()) {
-            akDebug() << "found" << parts.count() << "item parts to expire in collection" << collection.name();
+            qCDebug(AKONADISERVER_LOG) << "found" << parts.count() << "item parts to expire in collection" << collection.name();
             // clear data field
             Q_FOREACH (Part part, parts) {
                 try {
                     if (!PartHelper::truncate(part)) {
-                        akDebug() << "failed to update item part" << part.id();
+                        qCDebug(AKONADISERVER_LOG) << "failed to update item part" << part.id();
                     }
                 } catch (const PartHelperException &e) {
-                    akError() << e.type() << e.what();
+                    qCCritical(AKONADISERVER_LOG) << e.type() << e.what();
                 }
             }
         }

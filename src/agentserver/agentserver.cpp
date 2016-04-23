@@ -23,7 +23,6 @@
 
 #include <private/xdgbasedirs_p.h>
 #include <private/dbus_p.h>
-#include <shared/akdebug.h>
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDebug>
@@ -65,7 +64,7 @@ bool AgentServer::started(const QString &identifier) const
 
 void AgentServer::startAgent(const QString &identifier, const QString &typeIdentifier, const QString &fileName)
 {
-    akDebug() << Q_FUNC_INFO << identifier << typeIdentifier << fileName;
+    qCDebug(AKONADIAGENTSERVER_LOG) << identifier << typeIdentifier << fileName;
 
     //First try to load it staticly
     Q_FOREACH (QObject *plugin, QPluginLoader::staticInstances()) {

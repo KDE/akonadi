@@ -20,10 +20,10 @@
 #include "agentmanager.h"
 #include "controlmanager.h"
 #include "processcontrol.h"
+#include "akonadicontrol_debug.h"
 
 #include <shared/akapplication.h>
 #include <shared/akcrash.h>
-#include <shared/akdebug.h>
 
 #include <private/dbus_p.h>
 
@@ -60,16 +60,16 @@ int main(int argc, char **argv)
         // We couldn't register. Most likely, it's already running.
         const QString lastError = QDBusConnection::sessionBus().lastError().message();
         if (lastError.isEmpty()) {
-            akError() << "Unable to register service as" << Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock) << "Maybe it's already running?";
+            qCWarning(AKONADICONTROL_LOG) << "Unable to register service as" << Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock) << "Maybe it's already running?";
         } else {
-            akError() << "Unable to register service as" << Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock) << "Error was:" << lastError;
+            qCWarning(AKONADICONTROL_LOG) << "Unable to register service as" << Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock) << "Error was:" << lastError;
         }
         return -1;
     }
 
     // older Akonadi server versions don't use the lock service yet, so check if one is already running before we try to start another one
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control))) {
-        akError() << "Another Akonadi control process is already running.";
+        qCWarning(AKONADICONTROL_LOG) << "Another Akonadi control process is already running.";
         return -1;
     }
 

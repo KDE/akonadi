@@ -24,12 +24,11 @@
 #include "tracer.h"
 #include "storage/datastore.h"
 #include "connection.h"
+#include "akonadiserver_debug.h"
 
-#include <shared/akdebug.h>
 #include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 
-#include <QtCore/QDebug>
 #include <QDBusConnection>
 #include <QSettings>
 
@@ -118,11 +117,11 @@ void NotificationManager::unregisterConnection(Connection *connection)
 
 void NotificationManager::slotNotify(const Akonadi::Protocol::ChangeNotification::List &msgs)
 {
-    //akDebug() << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
+    //qCDebug(AKONADISERVER_LOG) << Q_FUNC_INFO << "Appending" << msgs.count() << "notifications to current list of " << mNotifications.count() << "notifications";
     Q_FOREACH (const Protocol::ChangeNotification &msg, msgs) {
         Protocol::ChangeNotification::appendAndCompress(mNotifications, msg);
     }
-    //akDebug() << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
+    //qCDebug(AKONADISERVER_LOG) << Q_FUNC_INFO << "We have" << mNotifications.count() << "notifications queued in total after appendAndCompress()";
 
     if (!mTimer.isActive()) {
         mTimer.start();
@@ -172,10 +171,10 @@ void NotificationManager::emitPendingNotifications()
 
 QDBusObjectPath NotificationManager::subscribe(const QString &identifier, bool exclusive)
 {
-    akDebug() << Q_FUNC_INFO << this << identifier <<  exclusive;
+    qCDebug(AKONADISERVER_LOG) << Q_FUNC_INFO << this << identifier <<  exclusive;
     NotificationSource *source = mNotificationSources.value(identifier);
     if (source) {
-        akDebug() << "Known subscriber" << identifier << "subscribes again";
+        qCDebug(AKONADISERVER_LOG) << "Known subscriber" << identifier << "subscribes again";
         source->addClientServiceName(message().service());
     } else {
         source = new NotificationSource(identifier, message().service(), this);
@@ -205,7 +204,7 @@ void NotificationManager::unsubscribe(const QString &identifier)
         source->deleteLater();
         Q_EMIT unsubscribed(source->dbusPath());
     } else {
-        akDebug() << "Attempt to unsubscribe unknown subscriber" << identifier;
+        qCDebug(AKONADISERVER_LOG) << "Attempt to unsubscribe unknown subscriber" << identifier;
     }
 }
 

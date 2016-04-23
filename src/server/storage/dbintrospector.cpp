@@ -23,8 +23,7 @@
 #include "dbtype.h"
 #include "dbexception.h"
 #include "querybuilder.h"
-
-#include <shared/akdebug.h>
+#include "akonadiserver_debug.h"
 
 #include <QStringList>
 #include <QSqlField>
@@ -45,7 +44,7 @@ DbIntrospector::Ptr DbIntrospector::createInstance(const QSqlDatabase &database)
     case DbType::Unknown:
         break;
     }
-    akFatal() << database.driverName() << "backend  not supported";
+    qCCritical(AKONADISERVER_LOG) << database.driverName() << "backend  not supported";
     return Ptr();
 }
 
@@ -117,6 +116,6 @@ QString DbIntrospector::hasIndexQuery(const QString &tableName, const QString &i
 {
     Q_UNUSED(tableName);
     Q_UNUSED(indexName);
-    akFatal() << "Implement index support for your database!";
+    qCCritical(AKONADISERVER_LOG) << "Implement index support for your database!";
     return QString();
 }
