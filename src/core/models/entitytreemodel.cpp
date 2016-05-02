@@ -768,7 +768,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
             urls << d->m_collections.value(node->id).url(Collection::UrlWithName);
         } else if (Node::Item == node->type) {
             QUrl url = d->m_items.value(node->id).url(Item::Item::UrlWithMimeType);
-            QUrlQuery query;
+            QUrlQuery query(url);
             query.addQueryItem(QStringLiteral("parent"), QString::number(node->parent));
             url.setQuery(query);
             urls << url;
