@@ -36,7 +36,8 @@ class Q_DECL_HIDDEN AgentTypeDialog::Private
 {
 public:
     Private(AgentTypeDialog *qq)
-        : q(qq)
+        : Widget(Q_NULLPTR),
+          q(qq)
     {
 
     }

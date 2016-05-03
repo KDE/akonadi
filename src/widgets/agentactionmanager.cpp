@@ -72,6 +72,8 @@ class Q_DECL_HIDDEN AgentActionManager::Private
 public:
     Private(AgentActionManager *parent)
         : q(parent)
+        , mActionCollection(Q_NULLPTR)
+        , mParentWidget(Q_NULLPTR)
         , mSelectionModel(0)
     {
         mActions.fill(0, AgentActionManager::LastType);

@@ -59,7 +59,10 @@ class Q_DECL_HIDDEN AgentTypeWidget::Private
 {
 public:
     Private(AgentTypeWidget *parent)
-        : mParent(parent)
+        : mParent(parent),
+          mView(Q_NULLPTR),
+          mModel(Q_NULLPTR),
+          proxyModel(Q_NULLPTR)
     {
     }
 

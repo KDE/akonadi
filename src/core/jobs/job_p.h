@@ -39,7 +39,9 @@ class JobPrivate
 public:
     explicit JobPrivate(Job *parent)
         : q_ptr(parent)
+        , mParentJob(Q_NULLPTR)
         , mCurrentSubJob(0)
+        , mTag(-1)
         , mSession(0)
         , mWriteFinished(false)
         , mStarted(false)

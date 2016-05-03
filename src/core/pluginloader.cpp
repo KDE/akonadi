@@ -29,6 +29,7 @@
 using namespace Akonadi;
 
 PluginMetaData::PluginMetaData()
+    : loaded(false)
 {
 }
 
