@@ -208,7 +208,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     // in initStyleOption(), which gets called by QStyledItemDelegate::paint().
     QStyledItemDelegate::paint(painter, option, index);
 
-    // No, we retrieve the correct style option by calling intiStyleOption from
+    // Now, we retrieve the correct style option by calling initStyleOption from
     // the superclass.
     QStyleOptionViewItemV4 option4 = option;
     QStyledItemDelegate::initStyleOption(&option4, index);
@@ -235,9 +235,8 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
 
     if (!collection.isValid()) {
         qCCritical(AKONADIWIDGETS_LOG) << "Invalid collection: " << collection;
+        return;
     }
-
-    Q_ASSERT(collection.isValid());   // TODO: I seem to hit this when removing a duplicated "Personal Contacts" or "Personal Calendar"
 
     CollectionStatistics statistics = collection.statistics();
 
