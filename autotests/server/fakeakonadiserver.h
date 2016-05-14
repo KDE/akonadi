@@ -88,10 +88,10 @@ public:
     ~FakeAkonadiServer();
 
     /* Reimpl */
-    bool init();
+    bool init() Q_DECL_OVERRIDE;
 
     /* Reimpl */
-    bool quit();
+    bool quit() Q_DECL_OVERRIDE;
 
     static QString basePath();
     static QString socketFile();
@@ -111,7 +111,7 @@ public:
 
 protected:
     /* Reimpl */
-    void incomingConnection(quintptr socketDescriptor);
+    void incomingConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
 
 private:
     explicit FakeAkonadiServer();

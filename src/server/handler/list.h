@@ -88,7 +88,7 @@ class List : public Handler
 public:
     List();
 
-    bool parseStream();
+    bool parseStream() Q_DECL_OVERRIDE;
 
 private:
     void listCollection(const Collection &root,

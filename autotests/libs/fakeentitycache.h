@@ -53,18 +53,18 @@ public:
         emit Cache::dataAvailable();
     }
 
-    T retrieve(typename T::Id id) const
+    T retrieve(typename T::Id id) const Q_DECL_OVERRIDE
     {
         return m_data.value(id);
     }
 
-    void request(typename T::Id id, const typename Cache::FetchScope &scope)
+    void request(typename T::Id id, const typename Cache::FetchScope &scope) Q_DECL_OVERRIDE
     {
         Q_UNUSED(id)
         Q_UNUSED(scope)
     }
 
-    bool ensureCached(typename T::Id id, const typename Cache::FetchScope &scope)
+    bool ensureCached(typename T::Id id, const typename Cache::FetchScope &scope) Q_DECL_OVERRIDE
     {
         Q_UNUSED(scope)
         return m_data.contains(id);

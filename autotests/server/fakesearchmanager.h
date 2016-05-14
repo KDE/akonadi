@@ -36,13 +36,13 @@ public:
     explicit FakeSearchManager(QObject *parent = 0);
     virtual ~FakeSearchManager();
 
-    void registerInstance(const QString &id);
-    void unregisterInstance(const QString &id);
-    void updateSearch(const Collection &collection);
-    void updateSearchAsync(const Collection &collection);
-    QVector<AbstractSearchPlugin *> searchPlugins() const;
+    void registerInstance(const QString &id) Q_DECL_OVERRIDE;
+    void unregisterInstance(const QString &id) Q_DECL_OVERRIDE;
+    void updateSearch(const Collection &collection) Q_DECL_OVERRIDE;
+    void updateSearchAsync(const Collection &collection) Q_DECL_OVERRIDE;
+    QVector<AbstractSearchPlugin *> searchPlugins() const Q_DECL_OVERRIDE;
 
-    void scheduleSearchUpdate();
+    void scheduleSearchUpdate() Q_DECL_OVERRIDE;
 };
 
 } // namespace Server

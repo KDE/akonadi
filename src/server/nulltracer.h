@@ -35,43 +35,43 @@ public:
     {
     }
 
-    virtual void beginConnection(const QString &identifier, const QString &msg)
+    void beginConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE
     {
         Q_UNUSED(identifier);
         Q_UNUSED(msg);
     }
 
-    virtual void endConnection(const QString &identifier, const QString &msg)
+    void endConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE
     {
         Q_UNUSED(identifier);
         Q_UNUSED(msg);
     }
 
-    virtual void connectionInput(const QString &identifier, const QByteArray &msg)
+    void connectionInput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE
     {
         Q_UNUSED(identifier);
         Q_UNUSED(msg);
     }
 
-    virtual void connectionOutput(const QString &identifier, const QByteArray &msg)
+    void connectionOutput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE
     {
         Q_UNUSED(identifier);
         Q_UNUSED(msg);
     }
 
-    virtual void signal(const QString &signalName, const QString &msg)
+    void signal(const QString &signalName, const QString &msg) Q_DECL_OVERRIDE
     {
         Q_UNUSED(signalName);
         Q_UNUSED(msg);
     }
 
-    virtual void warning(const QString &componentName, const QString &msg)
+    void warning(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE
     {
         Q_UNUSED(componentName);
         Q_UNUSED(msg);
     }
 
-    virtual void error(const QString &componentName, const QString &msg)
+    void error(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE
     {
         Q_UNUSED(componentName);
         Q_UNUSED(msg);

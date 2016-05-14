@@ -38,13 +38,13 @@ public:
     DBusTracer();
     virtual ~DBusTracer();
 
-    virtual void beginConnection(const QString &identifier, const QString &msg);
-    virtual void endConnection(const QString &identifier, const QString &msg);
-    virtual void connectionInput(const QString &identifier, const QByteArray &msg);
-    virtual void connectionOutput(const QString &identifier, const QByteArray &msg);
-    virtual void signal(const QString &signalName, const QString &msg);
-    virtual void warning(const QString &componentName, const QString &msg);
-    virtual void error(const QString &componentName, const QString &msg);
+    void beginConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE;
+    void endConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE;
+    void connectionInput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE;
+    void connectionOutput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE;
+    void signal(const QString &signalName, const QString &msg) Q_DECL_OVERRIDE;
+    void warning(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE;
+    void error(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE;
 
 Q_SIGNALS:
     void connectionStarted(const QString &identifier, const QString &msg);

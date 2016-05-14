@@ -37,7 +37,7 @@ class Modify : public Handler
 {
     Q_OBJECT
 public:
-    bool parseStream();
+    bool parseStream() Q_DECL_OVERRIDE;
 };
 
 } // namespace Server

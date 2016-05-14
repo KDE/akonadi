@@ -42,20 +42,20 @@ public:
         open(WriteOnly);
     }
 
-    bool isSequential() const
+    bool isSequential() const Q_DECL_OVERRIDE
     {
         return true;
     }
-    qint64 readData(char *, qint64)
+    qint64 readData(char *, qint64) Q_DECL_OVERRIDE
     {
         return 0;
     }
-    qint64 readLineData(char *, qint64)
+    qint64 readLineData(char *, qint64) Q_DECL_OVERRIDE
     {
         return 0;
     }
 
-    qint64 writeData(const char *data, qint64 len)
+    qint64 writeData(const char *data, qint64 len) Q_DECL_OVERRIDE
     {
         if (!mFileName.isEmpty()) {
             QFile outputFile(mFileName);

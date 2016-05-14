@@ -45,7 +45,7 @@ public:
     bool isScenarioDone() const;
 
 protected:
-    void run();
+    void run() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void dataAvailable();

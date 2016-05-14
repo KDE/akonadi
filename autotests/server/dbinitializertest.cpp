@@ -36,7 +36,7 @@ Q_DECLARE_METATYPE(QVector<DbIntrospector::ForeignKey>)
 class StatementCollector : public TestInterface
 {
 public:
-    virtual void execStatement(const QString &statement)
+    void execStatement(const QString &statement) Q_DECL_OVERRIDE
     {
         statements.push_back(statement);
     }
@@ -55,29 +55,29 @@ public:
     {
     }
 
-    virtual bool hasTable(const QString &tableName)
+    bool hasTable(const QString &tableName) Q_DECL_OVERRIDE
     {
         Q_UNUSED(tableName);
         return m_hasTable;
     }
-    virtual bool hasIndex(const QString &tableName, const QString &indexName)
+    bool hasIndex(const QString &tableName, const QString &indexName) Q_DECL_OVERRIDE
     {
         Q_UNUSED(tableName);
         Q_UNUSED(indexName);
         return m_hasIndex;
     }
-    virtual bool hasColumn(const QString &tableName, const QString &columnName)
+    bool hasColumn(const QString &tableName, const QString &columnName) Q_DECL_OVERRIDE
     {
         Q_UNUSED(tableName);
         Q_UNUSED(columnName);
         return false;
     }
-    virtual bool isTableEmpty(const QString &tableName)
+    bool isTableEmpty(const QString &tableName) Q_DECL_OVERRIDE
     {
         Q_UNUSED(tableName);
         return m_tableEmpty;
     }
-    virtual QVector< ForeignKey > foreignKeyConstraints(const QString &tableName)
+    QVector< ForeignKey > foreignKeyConstraints(const QString &tableName) Q_DECL_OVERRIDE
     {
         Q_UNUSED(tableName);
         return m_foreignKeys;

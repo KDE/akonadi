@@ -49,7 +49,7 @@ public:
     void configure(qlonglong windowId);
 
 protected:
-    void run();
+    void run() Q_DECL_OVERRIDE;
 
 private:
     QString m_identifier;

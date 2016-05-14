@@ -71,10 +71,10 @@ public:
     ~CacheCleaner();
 
 protected:
-    void collectionExpired(const Collection &collection);
-    int collectionScheduleInterval(const Collection &collection);
-    bool hasChanged(const Collection &collection, const Collection &changed);
-    bool shouldScheduleCollection(const Collection &collection);
+    void collectionExpired(const Collection &collection) Q_DECL_OVERRIDE;
+    int collectionScheduleInterval(const Collection &collection) Q_DECL_OVERRIDE;
+    bool hasChanged(const Collection &collection, const Collection &changed) Q_DECL_OVERRIDE;
+    bool shouldScheduleCollection(const Collection &collection) Q_DECL_OVERRIDE;
 
 private:
     static CacheCleaner *sInstance;

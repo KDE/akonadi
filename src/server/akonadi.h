@@ -71,7 +71,7 @@ private Q_SLOTS:
 
 protected:
     /** reimpl */
-    virtual void incomingConnection(quintptr socketDescriptor);
+    void incomingConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
 
 private:
     bool startDatabaseProcess();

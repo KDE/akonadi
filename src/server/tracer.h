@@ -61,7 +61,7 @@ public Q_SLOTS:
      *
      * @param msg A message specific string.
      */
-    virtual void beginConnection(const QString &identifier, const QString &msg);
+    void beginConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE;
 
     /**
      * This method is called whenever a data (imap) connection to akonadi server is
@@ -70,7 +70,7 @@ public Q_SLOTS:
      * @param identifier The unique identifier of this connection.
      * @param msg A message specific string.
      */
-    virtual void endConnection(const QString &identifier, const QString &msg);
+    void endConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE;
 
     /**
      * This method is called whenever the akonadi server retrieves some data from the
@@ -80,7 +80,7 @@ public Q_SLOTS:
      *                   is retrieved.
      * @param msg A message specific string.
      */
-    virtual void connectionInput(const QString &identifier, const QByteArray &msg);
+    void connectionInput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE;
 
     /**
      * This method is called whenever the akonadi server sends some data out to a client.
@@ -89,7 +89,7 @@ public Q_SLOTS:
      *                   data is send.
      * @param msg A message specific string.
      */
-    virtual void connectionOutput(const QString &identifier, const QByteArray &msg);
+    void connectionOutput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE;
 
     /**
      * This method is called whenever a dbus signal is emitted on the bus.
@@ -97,7 +97,7 @@ public Q_SLOTS:
      * @param signalName The name of the signal being sent.
      * @param msg A message specific string.
      */
-    virtual void signal(const QString &signalName, const QString &msg);
+    void signal(const QString &signalName, const QString &msg) Q_DECL_OVERRIDE;
 
     /**
       Convenience method with internal toLatin1 cast to compile with QT_NO_CAST_FROM_ASCII.
@@ -107,12 +107,12 @@ public Q_SLOTS:
     /**
      * This method is called whenever a component wants to output a warning.
      */
-    virtual void warning(const QString &componentName, const QString &msg);
+    void warning(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE;
 
     /**
      * This method is called whenever a component wants to output an error.
      */
-    virtual void error(const QString &componentName, const QString &msg);
+    void error(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE;
 
     /**
      * Convenience method for QT_NO_CAST_FROM_ASCII usage.
