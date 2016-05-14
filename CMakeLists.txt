@@ -33,32 +33,31 @@ ecm_setup_version(${AKONADI_VERSION}
     SOVERSION 5)
 
 # Find packages
-find_package(Qt5Core ${QT_REQUIRED_VERSION} CONFIG  REQUIRED)
-find_package(Qt5Gui ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
-find_package(Qt5Widgets ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
-find_package(Qt5Sql ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
-find_package(Qt5Network ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
-find_package(Qt5Xml ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
-find_package(Qt5DBus ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
-find_package(Qt5Test ${QT_REQUIRED_VERSION} CONFIG REQUIRED)
+find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED DBus Gui Network Sql Test Widgets Xml)
 
+find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5ConfigWidgets ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5CoreAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5ItemModels ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5ItemViews ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5I18n ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5DesignerPlugin ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5DBusAddons ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5ItemModels ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5GuiAddons ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5IconThemes ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
-find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)
 set_package_properties(Qt5Designer PROPERTIES
    PURPOSE "Required to build the Qt Designer plugins"
    TYPE OPTIONAL
 )
+
+if (Qt5Designer_FOUND)
+  find_package(KF5DesignerPlugin ${KF5_VERSION} CONFIG REQUIRED)
+endif()
 
 set(Boost_MINIMUM_VERSION "1.34.0")
 find_package(Boost ${Boost_MINIMUM_VERSION})
