@@ -72,9 +72,11 @@ QString Utils::preferredSocketDirectory(const QString &defaultDirectory)
         socketDir = serverSettings.value(QStringLiteral("Connection/SocketDirectory"), defaultDirectory).toString();
     }
 
-    const QString userName = QString::fromLocal8Bit(qgetenv("USER"));
-    if (socketDir.contains(QLatin1String("$USER")) && !userName.isEmpty()) {
-        socketDir.replace(QLatin1String("$USER"), userName);
+    if (socketDir.contains(QLatin1String("$USER"))) {
+        const QString userName = QString::fromLocal8Bit(qgetenv("USER"));
+        if (!userName.isEmpty()) {
+            socketDir.replace(QLatin1String("$USER"), userName);
+        }
     }
 
     if (socketDir[0] != QLatin1Char('/')) {
