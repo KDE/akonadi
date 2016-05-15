@@ -66,7 +66,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
-    <data columns="version" values="31"/>
+    <data columns="version" values="32"/>
   </table>
 
   <table name="Resource">
@@ -126,7 +126,7 @@
     <column name="datetime" type="QDateTime" default="QDateTime::currentDateTime()">
       <comment>create/modified time</comment>
     </column>
-    <column name="atime" type="QDateTime">
+    <column name="atime" type="QDateTime" default="QDateTime::currentDateTime()">
       <comment>read access time</comment>
     </column>
     <column name="dirty" type="bool">
