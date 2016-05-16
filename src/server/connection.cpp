@@ -427,6 +427,9 @@ void Connection::sendResponse(const Protocol::Command &response)
 Protocol::Command Connection::readCommand()
 {
     while (m_socket->bytesAvailable() < (int) sizeof(qint64)) {
+        if (m_socket->state() == QLocalSocket::UnconnectedState) {
+            return Protocol::Command();
+        }
         m_socket->waitForReadyRead(500);
     }
 
