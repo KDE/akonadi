@@ -312,8 +312,9 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         } else if (option.decorationPosition == QStyleOptionViewItem::Top) {
             if (unreadCount > 0) {
                 // draw over the icon
+                // the iconRect is enlarged to the whole width of the item, in case the text is wider than the underlying icon
                 painter->setPen(unreadColor);
-                painter->drawText(iconRect, Qt::AlignCenter, QString::number(unreadCount));
+                painter->drawText(QRect(option.rect.x(), iconRect.y(), option.rect.width(), iconRect.height()), Qt::AlignCenter, QString::number(unreadCount));
             }
         }
         return;
