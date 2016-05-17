@@ -448,6 +448,7 @@ Response::Response(ResponsePrivate *dd)
 Response::Response(const Command &command)
     : Command(command)
 {
+    Q_ASSERT(command.isResponse());
 }
 
 void Response::setError(int code, const QString &message)

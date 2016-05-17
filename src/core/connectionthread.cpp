@@ -234,6 +234,9 @@ void ConnectionThread::dataReceived()
             mLogFile->flush();
         }
 
+        if (cmd.type() == Protocol::Command::Hello)
+            Q_ASSERT(cmd.isResponse());
+
         Q_EMIT commandReceived(tag, cmd);
         /*
         if (!handleCommand(tag, cmd)) {
