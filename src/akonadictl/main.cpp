@@ -46,7 +46,7 @@
 
 #include <iostream>
 
-static bool startServer()
+static bool startServer(bool verbose)
 {
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control))
         || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
@@ -54,7 +54,7 @@ static bool startServer()
         return false;
     }
     AkonadiStarter starter;
-    return starter.start();
+    return starter.start(verbose);
 }
 
 static bool stopServer()
@@ -193,16 +193,16 @@ int main(int argc, char **argv)
                                        QStringLiteral("start|stop|restart|status|vacuum|fsck"));
 
     app.parseCommandLine();
-
     const QStringList commands = app.commandLineArguments().positionalArguments();
     if (commands.size() != 1) {
         app.printUsage();
         return -1;
     }
+    const bool verbose = app.commandLineArguments().isSet(QStringLiteral("verbose"));
 
     const QString command = commands[0];
     if (command == QLatin1String("start")) {
-        if (!startServer()) {
+        if (!startServer(verbose)) {
             return 3;
         }
     } else if (command == QLatin1String("stop")) {
@@ -224,7 +224,7 @@ int main(int argc, char **argv)
                 Sleep(100000);
 #endif
             } while (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control)));
-            if (!startServer()) {
+            if (!startServer(verbose)) {
                 return 3;
             }
         }

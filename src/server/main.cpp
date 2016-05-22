@@ -44,14 +44,13 @@ void shutdownHandler(int)
     qCDebug(AKONADISERVER_LOG) << "Shutting down AkonadiServer...";
 
     Akonadi::Server::AkonadiServer::instance()->quit();
-
     exit(255);
 }
 
 int main(int argc, char **argv)
 {
     Q_INIT_RESOURCE(akonadidb);
-    AkCoreApplication app(argc, argv);
+    AkCoreApplication app(argc, argv, AKONADISERVER_LOG());
     app.setDescription(QStringLiteral("Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi."));
 
 #if !defined(NDEBUG)

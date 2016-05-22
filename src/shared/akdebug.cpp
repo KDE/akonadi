@@ -30,6 +30,7 @@
 #include <QFile>
 #include <QFileInfo>
 #include <QMutex>
+#include <QLoggingCategory>
 
 #include <cassert>
 
@@ -137,10 +138,17 @@ public:
         origHandler = origHandler_;
     }
 
+    void setOrigCategoryFilter(QLoggingCategory::CategoryFilter origFilter_)
+    {
+        origFilter = origFilter_;
+    }
+
     QMutex mutex;
     QFile file;
     QString name;
     QtMessageHandler origHandler;
+    QLoggingCategory::CategoryFilter origFilter;
+    QByteArray loggingCategory;
 };
 
 Q_GLOBAL_STATIC(DebugPrivate, sInstance)
@@ -157,6 +165,20 @@ void akMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
     case QtFatalMsg:
         sInstance()->log(QtInfoMsg, context, msg);
         abort();
+    }
+}
+
+void akCategoryFilter(QLoggingCategory *category)
+{
+    if ((qstrcmp(category->categoryName(), sInstance()->loggingCategory) == 0)_ ||
+        (qstrcmp(category->categoryName(), "akonadiprivate_log") == 0)) {
+        category->setEnabled(QtDebugMsg, true);
+        category->setEnabled(QtInfoMsg, true);
+        category->setEnabled(QtWarningMsg, true);
+        category->setEnabled(QtCriticalMsg, true);
+        category->setEnabled(QtFatalMsg, true);
+    } else if (sInstance()->origFilter) {
+        sInstance()->origFilter(category);
     }
 }
 
@@ -184,4 +206,11 @@ void akInit(const QString &appName)
 
     QtMessageHandler origHandler = qInstallMessageHandler(akMessageHandler);
     sInstance()->setOrigHandler(origHandler);
+}
+
+void akMakeVerbose(const QByteArray &category)
+{
+    sInstance()->loggingCategory = category;
+    QLoggingCategory::CategoryFilter oldFilter = QLoggingCategory::installFilter(akCategoryFilter);
+    sInstance()->setOrigCategoryFilter(oldFilter);
 }

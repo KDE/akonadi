@@ -22,6 +22,7 @@
 
 #include <QtCore/QObject>
 #include <QtCore/QCommandLineParser>
+#include <QLoggingCategory>
 
 class QCoreApplication;
 class QApplication;
@@ -54,7 +55,7 @@ public:
     int exec();
 
 protected:
-    AkApplicationBase(int &argc, char **argv);
+    AkApplicationBase(int &argc, char **argv, const QLoggingCategory &loggingCategory);
     void init();
     QScopedPointer<QCoreApplication> mApp;
 
@@ -65,6 +66,7 @@ private:
     int mArgc;
     char **mArgv;
     QString mInstanceId;
+    const QLoggingCategory &mLoggingCategory;
     static AkApplicationBase *sInstance;
 
     QCommandLineParser mCmdLineParser;
@@ -74,8 +76,8 @@ template <typename T>
 class AkApplicationImpl : public AkApplicationBase
 {
 public:
-    AkApplicationImpl(int &argc, char **argv)
-        : AkApplicationBase(argc, argv)
+    AkApplicationImpl(int &argc, char **argv, const QLoggingCategory &loggingCategory = *QLoggingCategory::defaultCategory())
+        : AkApplicationBase(argc, argv, loggingCategory)
     {
         mApp.reset(new T(argc, argv));
         init();

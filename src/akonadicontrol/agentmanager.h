@@ -53,7 +53,7 @@ public:
      *
      * @param parent The parent object.
      */
-    AgentManager(QObject *parent = 0);
+    AgentManager(bool verbose, QObject *parent = 0);
 
     /**
      * Destroys the agent manager.
@@ -379,6 +379,7 @@ private:
     QFileSystemWatcher *mAgentWatcher;
 #endif
     bool mAgentServerEnabled;
+    bool mVerbose;
 
     friend class AgentInstance;
 };

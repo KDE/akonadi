@@ -50,7 +50,7 @@ void crashHandler(int)
 
 int main(int argc, char **argv)
 {
-    AkGuiApplication app(argc, argv);
+    AkGuiApplication app(argc, argv, AKONADICONTROL_LOG());
     app.setDescription(QStringLiteral("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
     app.parseCommandLine();
 
@@ -75,7 +75,7 @@ int main(int argc, char **argv)
 
     new ControlManager;
 
-    sAgentManager = new AgentManager;
+    sAgentManager = new AgentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
     AkonadiCrash::setEmergencyMethod(crashHandler);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)

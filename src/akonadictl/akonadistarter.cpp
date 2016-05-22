@@ -45,13 +45,16 @@ AkonadiStarter::AkonadiStarter(QObject *parent)
             this, &AkonadiStarter::serviceOwnerChanged);
 }
 
-bool AkonadiStarter::start()
+bool AkonadiStarter::start(bool verbose)
 {
     qCDebug(AKONADICTL_LOG) << "Starting Akonadi Server...";
 
     QStringList serverArgs;
     if (Akonadi::Instance::hasIdentifier()) {
         serverArgs << QStringLiteral("--instance") << Akonadi::Instance::identifier();
+    }
+    if (verbose) {
+        serverArgs << QStringLiteral("--verbose");
     }
 
     const bool ok = QProcess::startDetached(QStringLiteral("akonadi_control"), serverArgs);

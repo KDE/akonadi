@@ -32,10 +32,11 @@
 
 AkApplicationBase *AkApplicationBase::sInstance = 0;
 
-AkApplicationBase::AkApplicationBase(int &argc, char **argv)
+AkApplicationBase::AkApplicationBase(int &argc, char **argv, const QLoggingCategory &loggingCategory)
     : QObject(0)
     , mArgc(argc)
     , mArgv(argv)
+    , mLoggingCategory(loggingCategory)
 {
     Q_ASSERT(!sInstance);
     sInstance = this;
@@ -81,11 +82,18 @@ void AkApplicationBase::parseCommandLine()
                                             QStringLiteral("Namespace for starting multiple Akonadi instances in the same user session"),
                                             QStringLiteral("name"));
     mCmdLineParser.addOption(instanceOption);
+    const QCommandLineOption verboseOption(QStringLiteral("verbose"),
+                                           QStringLiteral("Make Akonadi very chatty"));
+    mCmdLineParser.addOption(verboseOption);
+
 
     mCmdLineParser.process(QCoreApplication::arguments());
 
     if (mCmdLineParser.isSet(instanceOption)) {
         Akonadi::Instance::setIdentifier(mCmdLineParser.value(instanceOption));
+    }
+    if (mCmdLineParser.isSet(verboseOption)) {
+        akMakeVerbose(mLoggingCategory.categoryName());
     }
 }
 

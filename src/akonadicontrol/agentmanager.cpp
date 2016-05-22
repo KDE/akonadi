@@ -53,12 +53,13 @@ using Akonadi::ProcessControl;
 
 static const bool enableAgentServerDefault = false;
 
-AgentManager::AgentManager(QObject *parent)
+AgentManager::AgentManager(bool verbose, QObject *parent)
     : QObject(parent)
     , mAgentServer(0)
 #ifndef QT_NO_DEBUG
     , mAgentWatcher(new QFileSystemWatcher(this))
 #endif
+    , mVerbose(verbose)
 {
     new AgentManagerAdaptor(this);
     new AgentManagerInternalAdaptor(this);
@@ -77,6 +78,9 @@ AgentManager::AgentManager(QObject *parent)
     QStringList serviceArgs;
     if (Akonadi::Instance::hasIdentifier()) {
         serviceArgs << QStringLiteral("--instance") << Akonadi::Instance::identifier();
+    }
+    if (verbose) {
+        serviceArgs << QStringLiteral("--verbose");
     }
 
     mStorageController = new Akonadi::ProcessControl;

@@ -350,7 +350,7 @@ QString XdgBaseDirs::findExecutableFile(const QString &relPath, const QStringLis
 #if defined(Q_OS_MAC) //krazy:exclude=cpp
         executableDirs += QLatin1String(AKONADIBUNDLEPATH);
 #endif
-        qCWarning(AKONADIPRIVATE_LOG) << "search paths: " << executableDirs;
+        qCDebug(AKONADIPRIVATE_LOG) << "search paths: " << executableDirs;
 
         instance()->mExecutableDirs = executableDirs;
     }
@@ -412,7 +412,7 @@ QStringList XdgBaseDirs::findPluginDirs()
                 }
             }
         }
-        qCWarning(AKONADIPRIVATE_LOG) << "search paths: " << pluginDirs;
+        qCDebug(AKONADIPRIVATE_LOG) << "search paths: " << pluginDirs;
         instance()->mPluginDirs = pluginDirs;
     }
 
