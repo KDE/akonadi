@@ -76,12 +76,18 @@ public:
     virtual void initSession(const QSqlDatabase &database);
 
 private:
+    int parseCommandLineToolsVersion() const;
+
+    bool initializeMariaDBDatabase(const QString &confFile, const QString &dataDir) const;
+    bool initializeMySQL5_7_6Database(const QString &confFile, const QString &dataDir) const;
+    bool initializeMySQLDatabase(const QString &confFile, const QString &dataDir) const;
+
     QString mDatabaseName;
     QString mHostName;
     QString mUserName;
     QString mPassword;
     QString mConnectionOptions;
-    QString mServerPath;
+    QString mMysqldPath;
     QString mCleanServerShutdownCommand;
     QString mMysqlInstallDbPath;
     QString mMysqlCheckPath;
