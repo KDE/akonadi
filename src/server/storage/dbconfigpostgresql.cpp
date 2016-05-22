@@ -80,12 +80,23 @@ bool DbConfigPostgresql::init(QSettings &settings)
         }
 #endif
         postgresSearchPath << QStringLiteral("/usr/sbin")
-                           << QStringLiteral("/usr/local/sbin")
-                           << QStringLiteral("/usr/lib/postgresql/8.4/bin")
-                           << QStringLiteral("/usr/lib/postgresql/9.0/bin")
-                           << QStringLiteral("/usr/lib/postgresql/9.1/bin")
-                           << QStringLiteral("/usr/lib/postgresql/9.2/bin")
-                           << QStringLiteral("/usr/lib/postgresql/9.3/bin");
+                           << QStringLiteral("/usr/local/sbin");
+        // Locale all versions in /usr/lib/postgresql (i.e. /usr/lib/postgresql/X.Y) in reversed
+        // sorted order, so we search from the newest one to the oldest.
+        QStringList postgresVersionedSearchPaths;
+        QDir versionedDir(QStringLiteral("/usr/lib/postgresql"));
+        if (versionedDir.exists()) {
+            const auto versionedDirs = versionedDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
+            Q_FOREACH (const auto &path, versionedDirs) {
+                // Don't break once PostgreSQL 10 is released, but something more future-proof will be needed
+                if (path.fileName().startsWith(QLatin1String("10."))) {
+                    postgresVersionedSearchPaths.prepend(path.absoluteFilePath() + QStringLiteral("/bin"));
+                } else {
+                    postgresVersionedSearchPaths.append(path.absoluteFilePath() + QStringLiteral("/bin"));
+                }
+            }
+        }
+        postgresSearchPath.append(postgresVersionedSearchPaths);
 
         defaultServerPath = XdgBaseDirs::findExecutableFile(QStringLiteral("pg_ctl"), postgresSearchPath);
         defaultInitDbPath = XdgBaseDirs::findExecutableFile(QStringLiteral("initdb"), postgresSearchPath);
@@ -112,10 +123,12 @@ bool DbConfigPostgresql::init(QSettings &settings)
     if (mInternalServer && mServerPath.isEmpty()) {
         mServerPath = defaultServerPath;
     }
+    akDebug() << "Found pg_ctl:" << mServerPath;
     mInitDbPath = settings.value(QStringLiteral("InitDbPath"), defaultInitDbPath).toString();
     if (mInternalServer && mInitDbPath.isEmpty()) {
         mInitDbPath = defaultInitDbPath;
     }
+    akDebug() << "Found initdb:" << mServerPath;
     mPgData = settings.value(QStringLiteral("PgData"), defaultPgData).toString();
     if (mPgData.isEmpty()) {
         mPgData = defaultPgData;
@@ -228,12 +241,9 @@ bool DbConfigPostgresql::startInternalServer()
 #endif
 
         // call 'initdb --pgdata=/home/user/.local/share/akonadi/data_db'
-        const QString command = QStringLiteral("%1").arg(mInitDbPath);
-        QStringList arguments;
-        arguments << QStringLiteral("--pgdata=%2").arg(mPgData)
-                  // TODO check locale
-                  << QStringLiteral("--locale=en_US.UTF-8");
-        QProcess::execute(command, arguments);
+        execute(mInitDbPath, { QStringLiteral("--pgdata=%1").arg(mPgData),
+                               QStringLiteral("--locale=en_US.UTF-8") // TODO: check locale
+                             });
     }
 
     // synthesize the postgres command
@@ -247,6 +257,7 @@ bool DbConfigPostgresql::startInternalServer()
               //  -h - disable listening for TCP/IP
               << QStringLiteral("-o \"-k%1\" -h ''").arg(socketDir);
 
+    akDebug() << "Executing:" << mServerPath << arguments.join(QLatin1Char(' '));
     QProcess pgCtl;
     pgCtl.start(mServerPath, arguments);
     if (!pgCtl.waitForStarted()) {
@@ -309,6 +320,8 @@ bool DbConfigPostgresql::startInternalServer()
             db.close();
         }
     }
+    // Make sure pg_ctl has returned
+    pgCtl.waitForFinished();
 
     QSqlDatabase::removeDatabase(initCon);
     return success;
@@ -321,24 +334,18 @@ void DbConfigPostgresql::stopInternalServer()
         return;
     }
 
-    const QString command = QStringLiteral("%1").arg(mServerPath);
-
     // first, try a FAST shutdown
-    QStringList arguments;
-    arguments << QStringLiteral("stop")
-              << QStringLiteral("--pgdata=%1").arg(mPgData)
-              << QStringLiteral("--mode=fast");
-    QProcess::execute(command, arguments);
+    execute(mServerPath, { QStringLiteral("stop"),
+                           QStringLiteral("--pgdata=%1").arg(mPgData),
+                           QStringLiteral("--mode=fast") });
     if (!checkServerIsRunning()) {
         return;
     }
 
     // second, try an IMMEDIATE shutdown
-    arguments.clear();
-    arguments << QStringLiteral("stop")
-              << QStringLiteral("--pgdata=%1").arg(mPgData)
-              << QStringLiteral("--mode=immediate");
-    QProcess::execute(command, arguments);
+    execute(mServerPath, { QStringLiteral("stop"),
+                           QStringLiteral("--pgdata=%1").arg(mPgData),
+                           QStringLiteral("--mode=immediate") });
     if (!checkServerIsRunning()) {
         return;
     }
@@ -353,11 +360,9 @@ void DbConfigPostgresql::stopInternalServer()
         QString postmasterPid = QString::fromUtf8(pidFile.readLine(0).trimmed());
         akError() << "The postmaster is still running. Killing it.";
 
-        arguments.clear();
-        arguments << QStringLiteral("kill")
-                  << QStringLiteral("ABRT")
-                  << QStringLiteral("%1").arg(postmasterPid);
-        QProcess::execute(command, arguments);
+        execute(mServerPath, { QStringLiteral("kill"),
+                               QStringLiteral("ABRT"),
+                               postmasterPid });
     }
 }
 
