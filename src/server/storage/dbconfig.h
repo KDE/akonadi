@@ -116,6 +116,10 @@ protected:
      */
     static QString defaultDatabaseName();
 
+    /**
+     * Calls QProcess::execute() and also prints the command and arguments via qCDebug()
+     */
+    int execute(const QString &cmd, const QStringList &args) const;
 private:
     qint64 mSizeThreshold;
 };

@@ -30,6 +30,7 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QStringBuilder>
+#include <QProcess>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -135,4 +136,10 @@ QString DbConfig::defaultDatabaseName()
 void DbConfig::initSession(const QSqlDatabase &database)
 {
     Q_UNUSED(database);
+}
+
+int DbConfig::execute(const QString &cmd, const QStringList &args) const
+{
+    qCDebug(AKONADISERVER_LOG) << "Executing: " << cmd << args.join(QLatin1Char(' '));
+    return QProcess::execute(cmd, args);
 }
