@@ -170,7 +170,7 @@ void akMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 
 void akCategoryFilter(QLoggingCategory *category)
 {
-    if ((qstrcmp(category->categoryName(), sInstance()->loggingCategory) == 0)_ ||
+    if ((qstrcmp(category->categoryName(), sInstance()->loggingCategory) == 0) ||
         (qstrcmp(category->categoryName(), "akonadiprivate_log") == 0)) {
         category->setEnabled(QtDebugMsg, true);
         category->setEnabled(QtInfoMsg, true);
