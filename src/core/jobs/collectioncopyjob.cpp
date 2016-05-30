@@ -74,7 +74,7 @@ void CollectionCopyJob::doStart()
 
 bool CollectionCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::CreateCollection) {
+    if (!response.isResponse() || response.type() != Protocol::Command::CopyCollection) {
         return Job::doHandleResponse(tag, response);
     }
 
