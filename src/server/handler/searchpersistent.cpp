@@ -80,12 +80,9 @@ bool SearchPersistent::parseStream()
     }
 
     Q_FOREACH (const QString &mimeType, cmd.mimeTypes()) {
-        MimeType mt = MimeType::retrieveByName(mimeType);
+        const MimeType mt = MimeType::retrieveByNameOrCreate(mimeType);
         if (!mt.isValid()) {
-            mt.setName(mimeType);
-            if (!mt.insert()) {
-                return failureResponse("Failed to create new mimetype");
-            }
+            return failureResponse("Failed to create new mimetype");
         }
         col.addMimeType(mt);
     }

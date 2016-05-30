@@ -65,13 +65,9 @@ bool RelationStore::parseStream()
     }
 
     const QString typeName = QString::fromUtf8(cmd.type());
-    RelationType relationType = RelationType::retrieveByName(typeName);
+    const RelationType relationType = RelationType::retrieveByNameOrCreate(typeName);
     if (!relationType.isValid()) {
-        RelationType t(typeName);
-        if (!t.insert()) {
-            return failureResponse(QStringLiteral("Unable to create relation type '") % typeName % QStringLiteral("'"));
-        }
-        relationType = t;
+        return failureResponse(QStringLiteral("Unable to create relation type '") % typeName % QStringLiteral("'"));
     }
 
     Relation existingRelation = fetchRelation(cmd.left(), cmd.right(), relationType.id());

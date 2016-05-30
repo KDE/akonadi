@@ -48,13 +48,9 @@ PartType PartTypeHelper::fromFqName(const QByteArray &fqName)
 
 PartType PartTypeHelper::fromFqName(const QString &ns, const QString &name)
 {
-    PartType partType = PartType::retrieveByFQName(ns, name);
+    const PartType partType = PartType::retrieveByFQNameOrCreate(ns, name);
     if (!partType.isValid()) {
-        PartType pt(name, ns);
-        if (!pt.insert()) {
-            throw PartTypeException("Failed to append part type");
-        }
-        partType = pt;
+        throw PartTypeException("Failed to append part type");
     }
     return partType;
 }

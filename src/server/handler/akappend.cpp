@@ -54,13 +54,9 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
         return failureResponse("Cannot append item into virtual collection");
     }
 
-    MimeType mimeType = MimeType::retrieveByName(cmd.mimeType());
+    MimeType mimeType = MimeType::retrieveByNameOrCreate(cmd.mimeType());
     if (!mimeType.isValid()) {
-        MimeType m(cmd.mimeType());
-        if (!m.insert()) {
-            return failureResponse(QStringLiteral("Unable to create mimetype '") % cmd.mimeType() % QStringLiteral("'."));
-        }
-        mimeType = m;
+        return failureResponse(QStringLiteral("Unable to create mimetype '") % cmd.mimeType() % QStringLiteral("'."));
     }
 
     item.setRev(0);

@@ -58,12 +58,9 @@ bool TagStore::parseStream()
         TagType type = TagType::retrieveById(changedTag.typeId());
         const QString newTypeName = QString::fromUtf8(cmd.type());
         if (newTypeName != type.name()) {
-            TagType newType = TagType::retrieveByName(newTypeName);
+            const TagType newType = TagType::retrieveByNameOrCreate(newTypeName);
             if (!newType.isValid()) {
-                newType.setName(newTypeName);
-                if (!newType.insert()) {
-                    return failureResponse("Failed to create new tag type");
-                }
+                return failureResponse("Failed to create new tag type");
             }
             changedTag.setTagType(newType);
             changes << AKONADI_PARAM_MIMETYPE;

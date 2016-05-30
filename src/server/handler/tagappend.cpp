@@ -42,13 +42,9 @@ bool TagAppend::parseStream()
     TagType tagType;
     if (!cmd.type().isEmpty()) {
         const QString typeName = QString::fromUtf8(cmd.type());
-        tagType = TagType::retrieveByName(typeName);
+        tagType = TagType::retrieveByNameOrCreate(typeName);
         if (!tagType.isValid()) {
-            TagType t(typeName);
-            if (!t.insert()) {
-                return failureResponse(QStringLiteral("Unable to create tagtype '") % typeName % QStringLiteral("'"));
-            }
-            tagType = t;
+            return failureResponse(QStringLiteral("Unable to create tagtype '") % typeName % QStringLiteral("'"));
         }
     }
 

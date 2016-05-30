@@ -251,12 +251,9 @@ Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)
     Flag::List flagList;
     flagList.reserve(flagNames.size());
     Q_FOREACH (const QByteArray &flagName, flagNames) {
-        Flag flag = Flag::retrieveByName(QString::fromUtf8(flagName));
+        const Flag flag = Flag::retrieveByNameOrCreate(QString::fromUtf8(flagName));
         if (!flag.isValid()) {
-            flag = Flag(QString::fromUtf8(flagName));
-            if (!flag.insert()) {
-                throw HandlerException("Unable to create flag");
-            }
+            throw HandlerException("Unable to create flag");
         }
         flagList.append(flag);
     }
@@ -294,12 +291,9 @@ Tag::List HandlerHelper::resolveTagsByGID(const QStringList &tagsGIDs)
             tag.setGid(tagGID);
             tag.setParentId(0);
 
-            TagType type = TagType::retrieveByName(QStringLiteral("PLAIN"));
+            const TagType type = TagType::retrieveByNameOrCreate(QStringLiteral("PLAIN"));
             if (!type.isValid()) {
-                type.setName(QStringLiteral("PLAIN"));
-                if (!type.insert()) {
-                    throw HandlerException("Unable to create tag type");
-                }
+                throw HandlerException("Unable to create tag type");
             }
             tag.setTagType(type);
             if (!tag.insert()) {

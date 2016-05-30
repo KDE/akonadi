@@ -136,11 +136,18 @@ class <xsl:value-of select="$className"/> : private Entity
     <xsl:if test="column[@name = 'name'] and $className != 'PartType'">
     /** Returns the record with name @p name. */
     <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByName( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name );
+
+    /** Returns the record with name @p name. If such record does not exist,
+        it will be created. This method is thread-safe, so if multiple callers
+        call it on non-existent name, only one will create the new record, others
+        will wait and read it from the cache. */
+    <xsl:text>static </xsl:text><xsl:value-of select="$className"/> retrieveByNameOrCreate( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name );
     </xsl:if>
 
     <xsl:if test="column[@name = 'name'] and $className = 'PartType'">
     <!-- Special case for PartTypes, which are identified by "NS:NAME" -->
     <xsl:text>static PartType retrieveByFQName( const QString &amp;ns, const QString &amp;name );</xsl:text>
+    <xsl:text>static PartType retrieveByFQNameOrCreate( const QString &amp;ns, const QString &amp;name );</xsl:text>
     </xsl:if>
 
     /** Retrieve all records from this table. */

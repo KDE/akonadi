@@ -523,16 +523,11 @@ bool List::parseStream()
         }
     }
     Q_FOREACH (const QString &mtName, cmd.mimeTypes()) {
-        const MimeType mt = MimeType::retrieveByName(mtName);
-        if (mt.isValid()) {
-            mMimeTypes.append(mt.id());
-        } else {
-            MimeType mt(mtName);
-            if (!mt.insert()) {
-                return failureResponse("Failed to create mimetype record");
-            }
-            mMimeTypes.append(mt.id());
+        const MimeType mt = MimeType::retrieveByNameOrCreate(mtName);
+        if (!mt.isValid()) {
+            return failureResponse("Failed to create mimetype record");
         }
+        mMimeTypes.append(mt.id());
     }
 
     mEnabledCollections = cmd.enabled();
