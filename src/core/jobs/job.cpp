@@ -62,7 +62,14 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
         }
     }
 
+    if (mReadingFinished) {
+        Q_ASSERT(!mReadingFinished);
+        qCWarning(AKONADICORE_LOG) << "Received response for a job that does not expect any more data, ignoring";
+        return;
+    }
+
     if (q->doHandleResponse(tag, response)) {
+        mReadingFinished = true;
         QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
     }
 }
@@ -149,8 +156,13 @@ void JobPrivate::aboutToFinish()
 void JobPrivate::delayedEmitResult()
 {
     Q_Q(Job);
-    aboutToFinish();
-    q->emitResult();
+    if (q->hasSubjobs()) {
+        // We still have subjobs, wait for them to finish
+        mFinishPending = true;
+    } else {
+        aboutToFinish();
+        q->emitResult();
+    }
 }
 
 void JobPrivate::startQueued()
@@ -190,6 +202,9 @@ void JobPrivate::startNext()
         Job *job = qobject_cast<Akonadi::Job *>(q->subjobs().at(0));
         Q_ASSERT(job);
         job->d_ptr->startQueued();
+    } else if (mFinishPending && !q->hasSubjobs()) {
+        // The last subjob we've been waiting for has finished, emitResult() finally
+        QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
     }
 }
 
@@ -343,17 +358,10 @@ bool Job::removeSubjob(KJob *job)
 
 bool Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
 {
-    // FIXME: We cannot set an error here due to how CollectionSync works: CS
-    // can sometimes schedule TransactionSequences and emitResult in a way that
-    // the Session dispatches next job in queue without TransactionSequence's
-    // TransactionCommitJob finishing: the we get the response for TCJ out-of-order
-    // and it's received by the currently running job instead of the TCJ.
     qCDebug(AKONADICORE_LOG) << this << "Unhandled response: " << tag << command.debugString();
-    /*
     setError(Unknown);
     setErrorText(i18n("Unexpected response"));
     emitResult();
-    */
     return true;
 }
 

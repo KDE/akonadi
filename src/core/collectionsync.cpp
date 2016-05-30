@@ -644,8 +644,20 @@ public:
         //Prevent double result emission
         Q_ASSERT(!resultEmitted);
         if (!resultEmitted) {
-            resultEmitted = true;
-            q->emitResult();
+            if (q->hasSubjobs()) {
+                // If there are subjobs, pick one, wait for it to finish, then
+                // try again. This way we make sure we don't emit result() signal
+                // while there is still a Transaction job running
+                KJob *subjob = q->subjobs().at(0);
+                connect(subjob, &KJob::result,
+                        q, [this](KJob*) {
+                            emitResult();
+                        },
+                        Qt::QueuedConnection);
+            } else {
+                resultEmitted = true;
+                q->emitResult();
+            }
         }
     }
 
