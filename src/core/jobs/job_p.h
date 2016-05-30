@@ -44,7 +44,9 @@ public:
         , mTag(-1)
         , mSession(0)
         , mWriteFinished(false)
+        , mReadingFinished(false)
         , mStarted(false)
+        , mFinishPending(false)
     {
     }
 
@@ -128,7 +130,9 @@ public:
     qint64 mTag;
     Session *mSession;
     bool mWriteFinished;
+    bool mReadingFinished;
     bool mStarted;
+    bool mFinishPending;
 };
 
 }
