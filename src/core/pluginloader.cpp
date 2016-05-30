@@ -104,8 +104,8 @@ QObject *PluginLoader::createForName(const QString &name)
 
     QObject *object = loader->instance();
     if (!object) {
-        qCWarning(AKONADICORE_LOG) << "unable to load plugin for plugin name \"" << name << "\"." << endl;
-        qCWarning(AKONADICORE_LOG) << "Error was:\"" << loader->errorString() << "\"." << endl;
+        qCWarning(AKONADICORE_LOG) << "unable to load plugin" << info.library << "for plugin name" << name << ".";
+        qCWarning(AKONADICORE_LOG) << "Error was:\"" << loader->errorString() << "\".";
         return 0;
     }
 
@@ -134,7 +134,7 @@ void PluginLoader::scan()
 
                 const QString type = group.readEntry("Type").toLower();
                 if (type.isEmpty()) {
-                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]Type value in \"" << entry << "\" - skipping" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]Type value in" << entry << "- skipping";
                     continue;
                 }
 
@@ -143,13 +143,13 @@ void PluginLoader::scan()
                 // and B>.
                 const QStringList classes = group.readXdgListEntry("X-Akonadi-Class");
                 if (classes.isEmpty()) {
-                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]X-Akonadi-Class value in \"" << entry << "\" - skipping" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]X-Akonadi-Class value in" << entry << "- skipping";
                     continue;
                 }
 
                 const QString library = group.readEntry("X-KDE-Library");
                 if (library.isEmpty()) {
-                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]X-KDE-Library value in \"" << entry << "\" - skipping" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Plugin]X-KDE-Library value in" << entry << "- skipping";
                     continue;
                 }
 
