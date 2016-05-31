@@ -63,8 +63,8 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
     }
 
     if (mReadingFinished) {
-        Q_ASSERT(!mReadingFinished);
         qCWarning(AKONADICORE_LOG) << "Received response for a job that does not expect any more data, ignoring";
+        Q_ASSERT(!mReadingFinished);
         return;
     }
 
