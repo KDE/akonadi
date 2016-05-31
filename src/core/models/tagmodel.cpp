@@ -88,6 +88,9 @@ QVariant TagModel::data(const QModelIndex &index, int role) const
 {
     Q_D(const TagModel);
 
+    if (!index.isValid()) {
+        return QVariant();
+    }
     const Tag tag = d->tagForIndex(index);
     if (!tag.isValid()) {
         return QVariant();
