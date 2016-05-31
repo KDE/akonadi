@@ -71,15 +71,17 @@ bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respons
 {
     Q_D(TagModifyJob);
 
-    if (response.isResponse() && (response.type() == Protocol::Command::DeleteTag
-                                  || response.type() == Protocol::Command::ModifyTag)) {
-        ChangeMediator::invalidateTag(d->mTag);
-        return true;
-    }
-
-    // We ignore the result for now
-    if (response.isResponse() && response.type() == Protocol::Command::FetchTags) {
-        return false;
+    if (response.isResponse()) {
+        if (response.type() == Protocol::Command::FetchTags) {
+            // Tag was modified, we ignore the response for now
+            return false;
+        } else if (response.type() == Protocol::Command::DeleteTag) {
+            // The tag was deleted/merged
+            return false;
+        } else if (response.type() == Protocol::Command::ModifyTag) {
+            // Done.
+            return true;
+        }
     }
 
     return Job::doHandleResponse(tag, response);
