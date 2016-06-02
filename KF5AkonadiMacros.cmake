@@ -33,8 +33,6 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
                PATHS ${CMAKE_CURRENT_BINARY_DIR} ${_akonaditest_DIR} ENV PATH)
   if (_testrunner-NOTFOUND)
     message(WARNING "Could not locate akonaditest executable, isolated Akonadi tests will fail!")
-  else()
-    message(STATUS "Found akonaditest: ${_testrunner}")
   endif()
 
   # based on kde4_add_unit_test
