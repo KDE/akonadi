@@ -220,6 +220,10 @@ SetupTest::SetupTest()
     // switch off agent auto-starting by default, can be re-enabled if really needed inside the config.xml
     setEnvironmentVariable("AKONADI_DISABLE_AGENT_AUTOSTART", QStringLiteral("true"));
     setEnvironmentVariable("AKONADI_TESTRUNNER_PID", QString::number(QCoreApplication::instance()->applicationPid()));
+    // enable all debugging, so we get some useful information when test fails
+    setEnvironmentVariable("QT_LOGGING_RULES", QStringLiteral("* = true\n"
+                                                              "qt.* = false\n"
+                                                              "kf5.coreaddons.desktopparser.debug = false"));
 
     QHashIterator<QString, QString> iter(Config::instance()->envVars());
     while (iter.hasNext()) {
