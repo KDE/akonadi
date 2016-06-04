@@ -80,16 +80,11 @@ endif()
 
 ############### Build Options ###############
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
-option(ENABLE_ASAN "Build Akonadi with AddressSanitzer - https://code.google.com/p/address-sanitizer/" FALSE)
 option(BUILD_TOOLS "Build and install tools for development and testing purposes." TRUE)
 
 if(BUILD_TESTING)
    set(BUILD_TOOLS TRUE)
 endif()
-
-if (CXX_STDLIB)
-  set (CXX_STDLIB_FLAGS "-stdlib=${CXX_STDLIB}")
-endif ()
 
 set(SMI_MIN_VERSION "0.20")
 find_package(SharedMimeInfo ${SMI_MIN_VERSION} REQUIRED)
@@ -157,10 +152,6 @@ if(HAVE_UNISTD_H)
     add_definitions(-DHAVE_UNISTD_H)
 endif()
 
-if (ENABLE_ASAN)
-    find_package(ASan)
-endif ()
-
 if (IS_ABSOLUTE "${DBUS_INTERFACES_INSTALL_DIR}")
     set(AKONADI_DBUS_INTERFACES_INSTALL_DIR "${DBUS_INTERFACES_INSTALL_DIR}")
 else()
@@ -214,72 +205,23 @@ set_default_db_backend(${DATABASE_BACKEND})
 
 ############### Compilers flags ###############
 
-option(CMAKE_COMPILE_GCOV "Build with coverage support." FALSE)
-
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMPILER_ID MATCHES "Clang"))
-    set(_ENABLE_EXCEPTIONS -fexceptions)
-
-    # more aggressive warnings and C++11 support
     set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} -Wno-long-long -std=iso9899:1990 -Wundef -Wcast-align -Werror-implicit-function-declaration -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wwrite-strings -Wformat-security -Wmissing-format-attribute -fno-common")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wnon-virtual-dtor -Wundef -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -fno-common")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wnon-virtual-dtor -Wundef -Wcast-align -Wchar-subscripts -Wall -Wextra -Wpointer-arith -Wformat-security -fno-common")
 
-    file(WRITE ${CMAKE_BINARY_DIR}/cxx11_check.cpp
-         "enum Enum { Value = 1 };
-          struct Class {
-              Class(int val) { (void)val; };
-              // Delegating constructor
-              Class(): Class(42) {};
-              // New-style enumerator
-              Class(Enum e = Enum::Value) { (void)e; };
-          };
-          int main() {}
-        ")
-    try_compile(CXX11_SUPPORTED
-                ${CMAKE_BINARY_DIR}/cxx11_check
-                ${CMAKE_BINARY_DIR}/cxx11_check.cpp)
-    if (NOT CXX11_SUPPORTED)
-        message(FATAL_ERROR "Compiler does not support all required C++11 features")
-    endif()
-
-    # debugfull target
     set(CMAKE_CXX_FLAGS_DEBUGFULL "-g3 -fno-inline" CACHE STRING "Flags used by the C++ compiler during debugfull builds." FORCE)
     set(CMAKE_C_FLAGS_DEBUGFULL   "-g3 -fno-inline" CACHE STRING "Flags used by the C compiler during debugfull builds." FORCE)
     mark_as_advanced(CMAKE_CXX_FLAGS_DEBUGFULL CMAKE_C_FLAGS_DEBUGFULL)
-
-    # Update the documentation string of CMAKE_BUILD_TYPE for ccache & cmake-gui
-    set(CMAKE_BUILD_TYPE "${CMAKE_BUILD_TYPE}" CACHE STRING
-        "Choose the type of build, options are: None debugfull Debug Release RelWithDebInfo MinSizeRel."
-        FORCE)
-
-    if (ASAN_FOUND)
-        set(CMAKE_C_FLAGS   "${CMAKE_C_FLAGS} ${CMAKE_C_FLAGS_ASAN}")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CMAKE_CXX_FLAGS_ASAN}")
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${CMAKE_EXE_LINKER_FLAGS_ASAN}" CACHE STRING "Flags used by the linker" FORCE)
-        set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_ASAN}" CACHE STRING "Flags used by the linker" FORCE)
-        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} ${CMAKE_SHARED_LINKER_FLAGS_ASAN}" CACHE STRING "Flags used by the linker" FORCE)
-        add_definitions(-DENABLE_ASAN)
-    endif()
-
-    # coverage support
-    if(CMAKE_COMPILE_GCOV)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fprofile-arcs -ftest-coverage")
-        if(CMAKE_CXX_COMPILER_ID MATCHES "Clang")
-            set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -lprofile_rt" CACHE STRING "Flags used by the linker" FORCE)
-            set(CMAKE_MODULE_LINKER_FLAGS "${CMAKE_MODULE_LINKER_FLAGS} -lprofile_rt" CACHE STRING "Flags used by the linker" FORCE)
-            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -lprofile_rt" CACHE STRING "Flags used by the linker" FORCE)
-        endif()
-    endif()
 endif()
+
 
 if(MSVC)
     set(_ENABLE_EXCEPTIONS -EHsc)
+else()
+    set(_ENABLE_EXCEPTIONS -fexceptions)
 endif()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${_ENABLE_EXCEPTIONS}")
-
-add_definitions(-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII)
-#add_definitions(-DQT_NO_KEYWORDS)
-add_definitions(-DQT_USE_QSTRINGBUILDER -DQT_USE_FAST_OPERATOR_PLUS)
 
 ############### Configure files #############
 
@@ -289,7 +231,6 @@ configure_file(config-akonadi.h.cmake ${Akonadi_BINARY_DIR}/config-akonadi.h)
 ############### build targets ###############
 
 add_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
-add_definitions("-DQT_NO_CAST_FROM_ASCII -DQT_NO_CAST_TO_ASCII")
 
 include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
