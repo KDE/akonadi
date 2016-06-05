@@ -72,11 +72,6 @@ void GidTest::initTestCase()
     AkonadiTest::checkTestIsIsolated();
     Control::start();
 
-    AkonadiTest::setAllResourcesOffline();
-    Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance(QStringLiteral("akonadi_knut_resource_0"));
-    QVERIFY(agent.isValid());
-    agent.setIsOnline(true);
-
     ItemSerializer::overridePluginLookup(new TestSerializer);
 }
 
