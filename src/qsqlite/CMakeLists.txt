@@ -9,6 +9,8 @@ message(STATUS "Building QSQLITE3 driver")
 set(QSQLITE_INSTALL_PREFIX "${PLUGIN_INSTALL_DIR}/sqldrivers")
 
 include_directories(
+    ${Qt5Core_PRIVATE_INCLUDE_DIRS}
+    ${Qt5Sql_PRIVATE_INCLUDE_DIRS}
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${SQLITE_INCLUDE_DIR}
 )

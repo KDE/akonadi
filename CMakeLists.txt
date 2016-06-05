@@ -33,7 +33,13 @@ ecm_setup_version(${AKONADI_VERSION}
     SOVERSION 5)
 
 # Find packages
-find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED DBus Gui Network Sql Test Widgets Xml)
+find_package(Qt5Core ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
+find_package(Qt5Sql ${QT_REQUIRED_VERSION} REQUIRED COMPONENTS Private)
+find_package(Qt5DBus ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt5Network ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt5Test ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt5Widgets ${QT_REQUIRED_VERSION} REQUIRED)
+find_package(Qt5Xml ${QT_REQUIRED_VERSION} REQUIRED)
 
 find_package(KF5Completion ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Config ${KF5_VERSION} CONFIG REQUIRED)
@@ -129,7 +135,7 @@ else()
     set(SQLITE_TYPE "OPTIONAL")
 endif()
 
-if(AKONADI_BUILD_QSQLITE AND Qt5Core_VERSION VERSION_LESS 5.7.0) # API change in 5.7 breaks our sqlite driver
+if(AKONADI_BUILD_QSQLITE)
     set(SQLITE_MIN_VERSION 3.6.23)
     find_package(Sqlite ${SQLITE_MIN_VERSION})
     set_package_properties(Sqlite PROPERTIES

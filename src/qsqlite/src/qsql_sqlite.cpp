@@ -51,8 +51,8 @@
 #include <qvector.h>
 #include <qdebug.h>
 
-#include "QtSql/private/qsqldriver_p.h"
-#include "QtSql/private/qsqlcachedresult_p.h"
+#include <QtSql/private/qsqldriver_p.h>
+#include <QtSql/private/qsqlcachedresult_p.h>
 
 #if defined Q_OS_WIN
 # include <qt_windows.h>
@@ -136,7 +136,10 @@ protected:
     void virtual_hook(int id, void *data);
 
 private:
-    QSQLiteResultPrivate* d;
+#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
+    QSQLiteResultPrivate* d_ptr;
+#endif
+    Q_DECLARE_PRIVATE(QSQLiteResult)
 };
 
 
@@ -144,24 +147,33 @@ class QSQLiteDriverPrivate : public QSqlDriverPrivate
 {
 public:
     inline QSQLiteDriverPrivate() : access(0) {
-      dbmsType = SQLite;
+      dbmsType = QSqlDriver::SQLite;
     }
     sqlite3 *access;
     QList<QSQLiteResult *> results;
 };
 
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+class QSQLiteResultPrivate : public QSqlCachedResultPrivate
+#else
 class QSQLiteResultPrivate
+#endif
 {
 public:
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    QSQLiteResultPrivate(QSQLiteResult *res, const QSQLiteDriver *drv);
+#else
     QSQLiteResultPrivate(QSQLiteResult *res);
+    QSQLiteResult* q_ptr;
+#endif
+
     void cleanup();
     bool fetchNext(QSqlCachedResult::ValueCache &values, int idx, bool initialFetch);
     // initializes the recordInfo and the cache
     void initColumns(bool emptyResultset);
     void finalize();
 
-    QSQLiteResult* q;
     sqlite3 *access;
 
     sqlite3_stmt *stmt;
@@ -170,15 +182,27 @@ public:
     bool skipRow; // skip the next fetchNext()?
     QSqlRecord rInf;
     QVector<QVariant> firstRow;
+
+    Q_DECLARE_PUBLIC(QSQLiteResult)
 };
 
-QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult* res) : q(res), access(0),
-    stmt(0), skippedStatus(false), skipRow(false)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult *res, const QSQLiteDriver *drv)
+    : QSqlCachedResultPrivate(res, drv)
+#else
+QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult* res)
+    : q_ptr(res)
+#endif
+    , access(0)
+    , stmt(0)
+    , skippedStatus(false)
+    , skipRow(false)
 {
 }
 
 void QSQLiteResultPrivate::cleanup()
 {
+    Q_Q(QSQLiteResult);
     finalize();
     rInf.clear();
     skippedStatus = false;
@@ -199,6 +223,7 @@ void QSQLiteResultPrivate::finalize()
 
 void QSQLiteResultPrivate::initColumns(bool emptyResultset)
 {
+    Q_Q(QSQLiteResult);
     int nCols = sqlite3_column_count(stmt);
     if (nCols <= 0)
         return;
@@ -251,6 +276,8 @@ void QSQLiteResultPrivate::initColumns(bool emptyResultset)
 
 bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int idx, bool initialFetch)
 {
+    Q_Q(QSQLiteResult);
+
     int res;
     int i;
 
@@ -351,20 +378,28 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
 }
 
 QSQLiteResult::QSQLiteResult(const QSQLiteDriver* db)
+#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
+    : QSqlCachedResult(*new QSQLiteResultPrivate(this, db))
+#else
     : QSqlCachedResult(db)
+    , d_ptr(new QSQLiteResultPrivate(this))
+#endif
 {
-    d = new QSQLiteResultPrivate(this);
+    Q_D(QSQLiteResult);
     d->access = db->d_func()->access;
     const_cast<QSQLiteDriverPrivate*>(db->d_func())->results.append(this);
 }
 
 QSQLiteResult::~QSQLiteResult()
 {
+    Q_D(QSQLiteResult);
     const QSqlDriver *sqlDriver = driver();
     if (sqlDriver)
         const_cast<QSQLiteDriverPrivate*>(qobject_cast<const QSQLiteDriver *>(sqlDriver)->d_func())->results.removeOne(this);
     d->cleanup();
+#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
     delete d;
+#endif
 }
 
 void QSQLiteResult::virtual_hook(int id, void *data)
@@ -381,6 +416,8 @@ bool QSQLiteResult::reset(const QString &query)
 
 bool QSQLiteResult::prepare(const QString &query)
 {
+    Q_D(QSQLiteResult);
+
     if (!driver() || !driver()->isOpen() || driver()->isOpenError())
         return false;
 
@@ -416,6 +453,7 @@ bool QSQLiteResult::prepare(const QString &query)
 
 bool QSQLiteResult::exec()
 {
+    Q_D(QSQLiteResult);
     const QVector<QVariant> values = boundValues();
 
     d->skippedStatus = false;
@@ -510,7 +548,7 @@ bool QSQLiteResult::exec()
 
 bool QSQLiteResult::gotoNext(QSqlCachedResult::ValueCache& row, int idx)
 {
-    return d->fetchNext(row, idx, false);
+    return d_func()->fetchNext(row, idx, false);
 }
 
 int QSQLiteResult::size()
@@ -520,13 +558,13 @@ int QSQLiteResult::size()
 
 int QSQLiteResult::numRowsAffected()
 {
-    return sqlite3_changes(d->access);
+    return sqlite3_changes(d_func()->access);
 }
 
 QVariant QSQLiteResult::lastInsertId() const
 {
     if (isActive()) {
-        qint64 id = sqlite3_last_insert_rowid(d->access);
+        qint64 id = sqlite3_last_insert_rowid(d_func()->access);
         if (id)
             return id;
     }
@@ -537,18 +575,18 @@ QSqlRecord QSQLiteResult::record() const
 {
     if (!isActive() || !isSelect())
         return QSqlRecord();
-    return d->rInf;
+    return d_func()->rInf;
 }
 
 void QSQLiteResult::detachFromResultSet()
 {
-    if (d->stmt)
-        sqlite3_reset(d->stmt);
+    if (d_func()->stmt)
+        sqlite3_reset(d_func()->stmt);
 }
 
 QVariant QSQLiteResult::handle() const
 {
-    return qVariantFromValue(d->stmt);
+    return qVariantFromValue(d_func()->stmt);
 }
 
 /////////////////////////////////////////////////////////
@@ -660,7 +698,7 @@ void QSQLiteDriver::close()
 
     if (isOpen()) {
         Q_FOREACH (QSQLiteResult *result, d->results) {
-            result->d->finalize();
+            result->d_func()->finalize();
         }
 
         if (sqlite3_close(d->access) != SQLITE_OK)
