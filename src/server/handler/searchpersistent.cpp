@@ -45,7 +45,6 @@ bool SearchPersistent::parseStream()
     DataStore *db = connection()->storageBackend();
     Transaction transaction(db);
 
-    QList<QByteArray> mimeTypes;
     QStringList queryAttributes;
 
     if (cmd.remote()) {
