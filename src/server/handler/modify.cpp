@@ -177,7 +177,7 @@ bool Modify::parseStream()
             if (cmd.persistentSearchRecursive()) {
                 queryAttributes.append(AKONADI_PARAM_RECURSIVE);
             } else {
-                queryAttributes.removeOne(AKONADI_PARAM_REMOTE);
+                queryAttributes.removeOne(AKONADI_PARAM_RECURSIVE);
             }
             changed = true;
         }
