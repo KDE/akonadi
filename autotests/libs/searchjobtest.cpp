@@ -19,42 +19,39 @@
 */
 
 #include "searchjobtest.h"
+#include "qtest_akonadi.h"
 
 #include <collection.h>
 #include <collectiondeletejob.h>
 #include <collectionfetchjob.h>
+#include <collectionmodifyjob.h>
 #include <searchcreatejob.h>
 #include <itemfetchjob.h>
 #include <monitor.h>
 #include <searchquery.h>
+#include <persistentsearchattribute.h>
 
 #include "collectionutils.h"
 
-#include <qtest_akonadi.h>
-
-QTEST_AKONADIMAIN(SearchJobTest, NoGUI)
+QTEST_AKONADIMAIN(SearchJobTest)
 
 using namespace Akonadi;
 
 void SearchJobTest::initTestCase()
 {
     AkonadiTest::checkTestIsIsolated();
-    AkonadiTest::setAllResourcesOffline();
-    Akonadi::AgentInstance agent = Akonadi::AgentManager::self()->instance("akonadi_knut_resource_0");
-    QVERIFY(agent.isValid());
-    agent.setIsOnline(true);
 }
 
 void SearchJobTest::testCreateDeleteSearch()
 {
     Akonadi::SearchQuery query;
-    query.addTerm(Akonadi::SearchTerm("plugin", 1));
-    query.addTerm(Akonadi::SearchTerm("resource", 2));
-    query.addTerm(Akonadi::SearchTerm("plugin", 3));
-    query.addTerm(Akonadi::SearchTerm("resource", 4));
+    query.addTerm(Akonadi::SearchTerm(QStringLiteral("plugin"), 1));
+    query.addTerm(Akonadi::SearchTerm(QStringLiteral("resource"), 2));
+    query.addTerm(Akonadi::SearchTerm(QStringLiteral("plugin"), 3));
+    query.addTerm(Akonadi::SearchTerm(QStringLiteral("resource"), 4));
 
     // Create collection
-    SearchCreateJob *create = new SearchCreateJob("search123456", query, this);
+    SearchCreateJob *create = new SearchCreateJob(QStringLiteral("search123456"), query, this);
     create->setRemoteSearchEnabled(false);
     AKVERIFYEXEC(create);
     const Collection created = create->createdCollection();
@@ -63,10 +60,10 @@ void SearchJobTest::testCreateDeleteSearch()
     // Fetch "Search" collection, check the search collection has been created
     CollectionFetchJob *list = new CollectionFetchJob(Collection(1), CollectionFetchJob::Recursive, this);
     AKVERIFYEXEC(list);
-    Collection::List cols = list->collections();
+    const Collection::List cols = list->collections();
     Collection col;
-    foreach (const Collection &c, cols) {
-        if (c.name() == "search123456") {
+    for (const auto &c : cols) {
+        if (c.name() == QLatin1String("search123456")) {
             col = c;
         }
     }
@@ -87,12 +84,47 @@ void SearchJobTest::testCreateDeleteSearch()
 void SearchJobTest::testModifySearch()
 {
     Akonadi::SearchQuery query;
-    query.addTerm(Akonadi::SearchTerm("plugin", 1));
-    query.addTerm(Akonadi::SearchTerm("resource", 2));
+    query.addTerm(Akonadi::SearchTerm(QStringLiteral("plugin"), 1));
+    query.addTerm(Akonadi::SearchTerm(QLatin1String("resource"), 2));
 
     // make sure there is a virtual collection
-    SearchCreateJob *create = new SearchCreateJob("search123456", query, this);
+    SearchCreateJob *create = new SearchCreateJob(QStringLiteral("search123456"), query, this);
     AKVERIFYEXEC(create);
     Collection created = create->createdCollection();
     QVERIFY(created.isValid());
+    QVERIFY(created.hasAttribute<PersistentSearchAttribute>());
+
+    auto attr = created.attribute<PersistentSearchAttribute>();
+    QVERIFY(!attr->isRecursive());
+    QVERIFY(!attr->isRemoteSearchEnabled());
+    QCOMPARE(attr->queryCollections(), QList<qint64>{ 0 });
+    const QString oldQueryString = attr->queryString();
+
+    // Change the attributes
+    attr->setRecursive(true);
+    attr->setRemoteSearchEnabled(true);
+    attr->setQueryCollections(QList<qint64>{ 1 });
+    Akonadi::SearchQuery newQuery;
+    newQuery.addTerm(Akonadi::SearchTerm(QStringLiteral("plugin"), 3));
+    newQuery.addTerm(Akonadi::SearchTerm(QStringLiteral("resource"), 4));
+    attr->setQueryString(QString::fromUtf8(newQuery.toJSON()));
+
+    auto modify = new CollectionModifyJob(created, this);
+    AKVERIFYEXEC(modify);
+
+    auto fetch = new CollectionFetchJob(created, CollectionFetchJob::Base, this);
+    AKVERIFYEXEC(fetch);
+    QCOMPARE(fetch->collections().size(), 1);
+
+    const auto col = fetch->collections().first();
+    QVERIFY(col.hasAttribute<PersistentSearchAttribute>());
+    attr = col.attribute<PersistentSearchAttribute>();
+
+    QVERIFY(attr->isRecursive());
+    QVERIFY(attr->isRemoteSearchEnabled());
+    QCOMPARE(attr->queryCollections(), QList<qint64>{ 1 });
+    QVERIFY(attr->queryString() != oldQueryString);
+
+    auto delJob = new CollectionDeleteJob(col, this);
+    AKVERIFYEXEC(delJob);
 }
