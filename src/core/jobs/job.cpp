@@ -64,6 +64,8 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
 
     if (mReadingFinished) {
         qCWarning(AKONADICORE_LOG) << "Received response for a job that does not expect any more data, ignoring";
+        qCDebug(AKONADICORE_LOG) << "Response tag:" << tag << ", response type:" << response.type();
+        qCDebug(AKONADICORE_LOG) << "Job tag:" << mTag << "job:" << q;
         Q_ASSERT(!mReadingFinished);
         return;
     }

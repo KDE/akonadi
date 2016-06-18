@@ -247,7 +247,7 @@ void SessionPrivate::jobDestroyed(QObject *job)
 void SessionPrivate::addJob(Job *job)
 {
     queue.append(job);
-    QObject::connect(job, SIGNAL(result(KJob*)), mParent, SLOT(jobDone(KJob*)));
+    QObject::connect(job, SIGNAL(finished(KJob*)), mParent, SLOT(jobDone(KJob*)));
     QObject::connect(job, SIGNAL(writeFinished(Akonadi::Job*)), mParent, SLOT(jobWriteFinished(Akonadi::Job*)));
     QObject::connect(job, SIGNAL(destroyed(QObject*)), mParent, SLOT(jobDestroyed(QObject*)));
     startNext();
