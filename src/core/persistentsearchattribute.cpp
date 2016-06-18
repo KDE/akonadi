@@ -31,7 +31,7 @@ class Q_DECL_HIDDEN PersistentSearchAttribute::Private
 {
 public:
     Private()
-        : remote(true)
+        : remote(false)
         , recursive(false)
     {
     }
