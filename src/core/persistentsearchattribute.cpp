@@ -143,7 +143,7 @@ void PersistentSearchAttribute::deserialize(const QByteArray &data)
 {
     QList<QByteArray> l;
     ImapParser::parseParenthesizedList(data, l);
-    for (int i = 0; i < l.size() - 1; ++i) {
+    for (int i = 0; i < l.size(); ++i) {
         const QByteArray key = l.at(i);
         if (key == "QUERYLANGUAGE") {
             // Skip the value
