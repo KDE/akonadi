@@ -39,7 +39,7 @@ bool Status::parseStream()
         return failureResponse("No status for this folder");
     }
 
-    const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
+    const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
     if (stats.count == -1) {
         return failureResponse("Failed to query statistics.");
     }

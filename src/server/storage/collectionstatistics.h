@@ -53,7 +53,7 @@ public:
 
     static CollectionStatistics *self();
 
-    const Statistics &statistics(const Collection &col);
+    const Statistics statistics(const Collection &col);
     void invalidateCollection(const Collection &col);
 
 private:

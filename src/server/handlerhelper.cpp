@@ -123,7 +123,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
     response.setIsVirtual(col.isVirtual());
 
     if (includeStatistics) {
-        const CollectionStatistics::Statistics &stats = CollectionStatistics::self()->statistics(col);
+        const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
         if (stats.count > -1) {
             Protocol::FetchCollectionStatsResponse statsResponse(stats.count,
                                                                  stats.count - stats.read,
