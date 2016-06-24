@@ -39,6 +39,12 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+static QVector<QByteArray> localFlagsToPreserve = QVector<QByteArray>() << "$ATTACHMENT"
+                                                                        << "$INVITATION"
+                                                                        << "$ENCRYPTED"
+                                                                        << "$SIGNED"
+                                                                        << "$WATCHED";
+
 Merge::Merge()
   : AkAppend()
 {
@@ -96,7 +102,20 @@ bool Merge::mergeItem( PimItem &newItem, PimItem &currentItem,
       }
     } else if ( !itemFlags.added.isEmpty() ) {
       bool flagsChanged = false;
-      const Flag::List flags = HandlerHelper::resolveFlags( itemFlags.added );
+
+      QVector<QByteArray> flagNames = itemFlags.added;
+      // Make sure we don't overwrite some local-only flags that can't come
+      // through from Resource during ItemSync, like $ATTACHMENT, because the
+      // resource is not aware of them (they are usually assigned by client
+      // upon inspecting the payload)
+      Q_FOREACH (const Flag &currentFlag, currentItem.flags()) {
+          const QByteArray flagName = currentFlag.name().toLatin1();
+          if (localFlagsToPreserve.contains(flagName) && !flagNames.contains(flagName)) {
+              flagNames.push_back(flagName);
+          }
+      }
+      const Flag::List flags = HandlerHelper::resolveFlags( flagNames );
+
       DataStore::self()->setItemsFlags( PimItem::List() << currentItem, flags,
                                         &flagsChanged, col, true );
       if ( flagsChanged ) {
