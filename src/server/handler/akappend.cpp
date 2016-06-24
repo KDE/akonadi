@@ -206,8 +206,11 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         // through from Resource during ItemSync, like $ATTACHMENT, because the
         // resource is not aware of them (they are usually assigned by client
         // upon inspecting the payload)
-        Q_FOREACH (const QByteArray &preserve, localFlagsToPreserve) {
-            flagNames.remove(preserve);
+        Q_FOREACH (const Flag &currentFlag, currentItem.flags()) {
+            const QByteArray currentFlagName = currentFlag.name().toLatin1();
+            if (localFlagsToPreserve.contains(currentFlagName)) {
+                flagNames.insert(currentFlagName);
+            }
         }
         const Flag::List flags = HandlerHelper::resolveFlags(flagNames);
         DataStore::self()->setItemsFlags(PimItem::List() << currentItem, flags,
