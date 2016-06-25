@@ -21,10 +21,10 @@
 #include "akonadicore_debug.h"
 #include <kconfiggroup.h>
 #include <KLocalizedString>
-#include <KPluginLoader>
 #include <KConfig>
 #include <QDir>
 #include <QStandardPaths>
+#include <QPluginLoader>
 
 using namespace Akonadi;
 
