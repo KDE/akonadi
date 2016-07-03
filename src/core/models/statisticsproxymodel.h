@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2009 Kevin Ottens <ervin@kde.org>
+                  2016 David Faure <faure@kde.org>s
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -22,7 +23,7 @@
 
 #include "akonadicore_export.h"
 
-#include <QIdentityProxyModel>
+#include <KExtraColumnsProxyModel>
 
 namespace Akonadi
 {
@@ -45,10 +46,10 @@ namespace Akonadi
  *
  * @endcode
  *
- * @author Kevin Ottens <ervin@kde.org>
+ * @author Kevin Ottens <ervin@kde.org>, now maintained by David Faure <faure@kde.org>
  * @since 4.4
  */
-class AKONADICORE_EXPORT StatisticsProxyModel : public QIdentityProxyModel
+class AKONADICORE_EXPORT StatisticsProxyModel : public KExtraColumnsProxyModel
 {
     Q_OBJECT
 
@@ -67,6 +68,7 @@ public:
 
     /**
      * @param enable Display tooltips
+     * By default, tooltips are disabled.
      */
     void setToolTipEnabled(bool enable);
 
@@ -77,6 +79,7 @@ public:
 
     /**
      * @param enable Display extra statistics columns
+     * By default, the extra columns are enabled.
      */
     void setExtraColumnsEnabled(bool enable);
 
@@ -85,33 +88,21 @@ public:
      */
     bool isExtraColumnsEnabled() const;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
+    QVariant extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const Q_DECL_OVERRIDE;
     QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
     Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
 
     virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
                                   Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
 
-    void setSourceModel(QAbstractItemModel *sourceModel) Q_DECL_OVERRIDE;
-    void connectNotify(const QMetaMethod &signal) Q_DECL_OVERRIDE;
-
-    QModelIndex mapFromSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
-    QModelIndex mapToSource(const QModelIndex &sourceIndex) const Q_DECL_OVERRIDE;
-    QModelIndex buddy(const QModelIndex &index) const Q_DECL_OVERRIDE;
-
-    QItemSelection mapSelectionToSource(const QItemSelection &selection) const Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
 
 private:
     //@cond PRIVATE
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT(d, void proxyDataChanged(QModelIndex, QModelIndex))
-    Q_PRIVATE_SLOT(d, void sourceLayoutAboutToBeChanged())
-    Q_PRIVATE_SLOT(d, void sourceLayoutChanged())
+    Q_PRIVATE_SLOT(d, void _k_sourceDataChanged(QModelIndex, QModelIndex, QVector<int>))
     //@endcond
 };
 

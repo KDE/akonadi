@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2009 Kevin Ottens <ervin@kde.org>
+                  2016 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -19,6 +20,7 @@
 
 #include "statisticsproxymodel.h"
 #include "akonadicore_debug.h"
+#include "kitemmodels_version.h"
 
 #include "entitytreemodel.h"
 #include "collectionutils.h"
@@ -45,7 +47,7 @@ class Q_DECL_HIDDEN StatisticsProxyModel::Private
 {
 public:
     Private(StatisticsProxyModel *parent)
-        : mParent(parent), mToolTipEnabled(false), mExtraColumnsEnabled(true)
+        : q(parent), mToolTipEnabled(false), mExtraColumnsEnabled(false)
     {
     }
 
@@ -69,10 +71,8 @@ public:
 
     int sourceColumnCount() const
     {
-        return mParent->sourceModel()->columnCount();
+        return q->sourceModel()->columnCount();
     }
-
-    QModelIndex sourceIndexAtFirstColumn(const QModelIndex &proxyIndex) const;
 
     QString toolTipForCollection(const QModelIndex &index, const Collection &collection)
     {
@@ -119,7 +119,7 @@ public:
             }
         }
 
-	KFormat formatter;
+        KFormat formatter;
         qint64 currentFolderSize(collection.statistics().size());
         tipInfo += QStringLiteral(
                        "      <strong>%1</strong>: %2<br>\n"
@@ -182,113 +182,47 @@ public:
         return tip;
     }
 
-    void proxyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
+    void _k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 
-    void sourceLayoutAboutToBeChanged();
-    void sourceLayoutChanged();
-
-    QVector<QModelIndex> m_proxyIndexes;
-    QVector<QPersistentModelIndex> m_persistentSourceFirstColumn;
-
-    StatisticsProxyModel *mParent;
+    StatisticsProxyModel *q;
 
     bool mToolTipEnabled;
     bool mExtraColumnsEnabled;
 };
 
-void StatisticsProxyModel::Private::proxyDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
+void StatisticsProxyModel::Private::_k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)
 {
-    if (mExtraColumnsEnabled) {
-        // Ugly hack.
-        // The proper solution is a KExtraColumnsProxyModel, but this will do for now.
-        QModelIndex parent = topLeft.parent();
-        int parentColumnCount = mParent->columnCount(parent);
-        QModelIndex extraTopLeft = mParent->index(topLeft.row(), parentColumnCount - 1 - 3, parent);
-        QModelIndex extraBottomRight = mParent->index(bottomRight.row(), parentColumnCount - 1, parent);
-        mParent->disconnect(mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)), mParent, SLOT(proxyDataChanged(QModelIndex,QModelIndex)));
-        emit mParent->dataChanged(extraTopLeft, extraBottomRight);
-
-        // We get this signal when the statistics of a row changes.
-        // However, we need to emit data changed for the statistics of all ancestor rows too
-        // so that recursive totals can be updated.
-        while (parent.isValid()) {
-            const QModelIndex left = mParent->index(parent.row(), parentColumnCount - 1 - 3, parent.parent());
-            const QModelIndex right = mParent->index(parent.row(), parentColumnCount - 1, parent.parent());
-            emit mParent->dataChanged(left, right);
-            parent = parent.parent();
-            parentColumnCount = mParent->columnCount(parent);
-        }
-        mParent->connect(mParent, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-                         SLOT(proxyDataChanged(QModelIndex,QModelIndex)));
+    QModelIndex proxyTopLeft(q->mapFromSource(topLeft));
+    QModelIndex proxyBottomRight(q->mapFromSource(bottomRight));
+    // Emit data changed for the whole row (bug #222292)
+    if (mExtraColumnsEnabled && topLeft.column() == 0) { // in theory we could filter on roles, but ETM doesn't set any yet
+        const int lastColumn = q->columnCount() - 1;
+        proxyBottomRight = proxyBottomRight.sibling(proxyBottomRight.row(), lastColumn);
     }
+    emit q->dataChanged(proxyTopLeft, proxyBottomRight, roles);
 }
 
-void StatisticsProxyModel::Private::sourceLayoutAboutToBeChanged()
+void StatisticsProxyModel::setSourceModel(QAbstractItemModel *model)
 {
-    // QIdentityProxyModel took care of the first columnCount() columns
-    // We have to take care of the extra columns (by storing persistent indexes in column 0,
-    // waiting for the source to update them, and then looking at where they ended up)
-    QModelIndexList persistent = mParent->persistentIndexList();
-    const int columnCount = mParent->sourceModel()->columnCount();
-    foreach (const QModelIndex &proxyPersistentIndex, persistent) {
-        if (proxyPersistentIndex.column() >= columnCount) {
-            m_proxyIndexes << proxyPersistentIndex;
-            m_persistentSourceFirstColumn << QPersistentModelIndex(sourceIndexAtFirstColumn(proxyPersistentIndex));
-        }
+    if (sourceModel()) {
+        disconnect(sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+                   this, SLOT(_k_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
     }
-}
-
-void StatisticsProxyModel::Private::sourceLayoutChanged()
-{
-    QModelIndexList oldList;
-    QModelIndexList newList;
-
-    for (int i = 0; i < m_proxyIndexes.size(); ++i) {
-        const QModelIndex oldProxyIndex = m_proxyIndexes.at(i);
-        const QModelIndex proxyIndexFirstCol = mParent->mapFromSource(m_persistentSourceFirstColumn.at(i));
-        const QModelIndex newProxyIndex = proxyIndexFirstCol.sibling(proxyIndexFirstCol.row(), oldProxyIndex.column());
-        if (newProxyIndex != oldProxyIndex) {
-            oldList.append(oldProxyIndex);
-            newList.append(newProxyIndex);
-        }
+    KExtraColumnsProxyModel::setSourceModel(model);
+    if (model) {
+        // Disconnect the default handling of dataChanged in QIdentityProxyModel, so we can extend it to the whole row
+        disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+                   this, SLOT(_q_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+                   this, SLOT(_k_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
     }
-    mParent->changePersistentIndexList(oldList, newList);
-    m_persistentSourceFirstColumn.clear();
-    m_proxyIndexes.clear();
-}
-
-void StatisticsProxyModel::setSourceModel(QAbstractItemModel *sourceModel)
-{
-    // Order is important here. sourceLayoutChanged must be called *before* any downstreams react
-    // to the layoutChanged so that it can have the QPersistentModelIndexes uptodate in time.
-    disconnect(this, SIGNAL(layoutChanged()), this, SLOT(sourceLayoutChanged()));
-    connect(this, SIGNAL(layoutChanged()), SLOT(sourceLayoutChanged()));
-    QIdentityProxyModel::setSourceModel(sourceModel);
-    // This one should come *after* any downstream handlers of layoutAboutToBeChanged.
-    // The connectNotify stuff below ensures that it remains the last one.
-    disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
-    connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
-}
-
-void StatisticsProxyModel::connectNotify(const QMetaMethod &signal)
-{
-    static bool ignore = false;
-    if (ignore || signal == QMetaMethod::fromSignal(&StatisticsProxyModel::layoutAboutToBeChanged)) {
-        return QIdentityProxyModel::connectNotify(signal);
-    }
-    ignore = true;
-    disconnect(this, SIGNAL(layoutAboutToBeChanged()), this, SLOT(sourceLayoutAboutToBeChanged()));
-    connect(this, SIGNAL(layoutAboutToBeChanged()), SLOT(sourceLayoutAboutToBeChanged()));
-    ignore = false;
-    QIdentityProxyModel::connectNotify(signal);
 }
 
 StatisticsProxyModel::StatisticsProxyModel(QObject *parent)
-    : QIdentityProxyModel(parent),
+    : KExtraColumnsProxyModel(parent),
       d(new Private(this))
 {
-    connect(this, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            SLOT(proxyDataChanged(QModelIndex,QModelIndex)));
+    setExtraColumnsEnabled(true);
 }
 
 StatisticsProxyModel::~StatisticsProxyModel()
@@ -308,7 +242,20 @@ bool StatisticsProxyModel::isToolTipEnabled() const
 
 void StatisticsProxyModel::setExtraColumnsEnabled(bool enable)
 {
+    if (d->mExtraColumnsEnabled == enable)
+        return;
     d->mExtraColumnsEnabled = enable;
+    if (enable) {
+        KExtraColumnsProxyModel::appendColumn(i18nc("number of unread entities in the collection", "Unread"));
+        KExtraColumnsProxyModel::appendColumn(i18nc("number of entities in the collection", "Total"));
+        KExtraColumnsProxyModel::appendColumn(i18nc("collection size", "Size"));
+    } else {
+#if KITEMMODELS_VERSION >= QT_VERSION_CHECK(5, 24, 0)
+        KExtraColumnsProxyModel::removeExtraColumn(2);
+        KExtraColumnsProxyModel::removeExtraColumn(1);
+        KExtraColumnsProxyModel::removeExtraColumn(0);
+#endif
+    }
 }
 
 bool StatisticsProxyModel::isExtraColumnsEnabled() const
@@ -316,163 +263,71 @@ bool StatisticsProxyModel::isExtraColumnsEnabled() const
     return d->mExtraColumnsEnabled;
 }
 
-QModelIndex StatisticsProxyModel::index(int row, int column, const QModelIndex &parent) const
+QVariant StatisticsProxyModel::extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const
 {
-    if (!hasIndex(row, column, parent)) {
-        return QModelIndex();
-    }
-
-    int sourceColumn = column;
-    if (column >= d->sourceColumnCount()) {
-        sourceColumn = 0;
-    }
-
-    QModelIndex i = QIdentityProxyModel::index(row, sourceColumn, parent);
-    return createIndex(i.row(), column, i.internalPointer());
-}
-
-struct SourceModelIndex {
-    SourceModelIndex(int _r, int _c, void *_p, QAbstractItemModel *_m)
-        : r(_r), c(_c), p(_p), m(_m) {}
-
-    operator QModelIndex()
-    {
-        return reinterpret_cast<QModelIndex &>(*this);
-    }
-
-    int r, c;
-    void *p;
-    const QAbstractItemModel *m;
-};
-
-QModelIndex StatisticsProxyModel::Private::sourceIndexAtFirstColumn(const QModelIndex &proxyIndex) const
-{
-    // We rely on the fact that the internal pointer is the same for column 0 and for the extra columns
-    return SourceModelIndex(proxyIndex.row(), 0, proxyIndex.internalPointer(), mParent->sourceModel());
-}
-
-QModelIndex StatisticsProxyModel::parent(const QModelIndex &child) const
-{
-    if (!sourceModel()) {
-        return QModelIndex();
-    }
-
-    Q_ASSERT(child.isValid() ? child.model() == this : true);
-    if (child.column() >= d->sourceColumnCount()) {
-        // We need to get hold of the source index at column 0. But we can't do that
-        // via the proxy index at column 0, because sibling() or index() needs the
-        // parent index, and that's *exactly* what we're trying to determine here.
-        // So the only way is to create a source index ourselves.
-        const QModelIndex sourceIndex = d->sourceIndexAtFirstColumn(child);
-        const QModelIndex sourceParent = sourceIndex.parent();
-        //qCDebug(AKONADICORE_LOG) << "parent of" << child.data() << "is" << sourceParent.data();
-        return mapFromSource(sourceParent);
-    } else {
-        return QIdentityProxyModel::parent(child);
-    }
-}
-
-QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
-{
-    if (!sourceModel()) {
-        return QVariant();
-    }
-
-    const int sourceColumnCount = d->sourceColumnCount();
-
-    if (role == Qt::DisplayRole && index.column() >= sourceColumnCount) {
-        const QModelIndex sourceIndex = d->sourceIndexAtFirstColumn(index);
-        Collection collection = sourceModel()->data(sourceIndex, EntityTreeModel::CollectionRole).value<Collection>();
-
+    switch (role) {
+    case Qt::DisplayRole: {
+        const QModelIndex firstColumn = index(row, 0, parent);
+        const Collection collection = data(firstColumn, EntityTreeModel::CollectionRole).value<Collection>();
         if (collection.isValid() && collection.statistics().count() >= 0) {
-            if (index.column() == sourceColumnCount + 2) {
+            const CollectionStatistics stats = collection.statistics();
+            if (extraColumn == 2) {
                 KFormat formatter;
-                return formatter.formatByteSize(collection.statistics().size());
-            } else if (index.column() == sourceColumnCount + 1) {
-                return collection.statistics().count();
-            } else if (index.column() == sourceColumnCount) {
-                if (collection.statistics().unreadCount() > 0) {
-                    return collection.statistics().unreadCount();
+                return formatter.formatByteSize(stats.size());
+            } else if (extraColumn == 1) {
+                return stats.count();
+            } else if (extraColumn == 0) {
+                if (stats.unreadCount() > 0) {
+                    return stats.unreadCount();
                 } else {
                     return QString();
                 }
             } else {
                 qCWarning(AKONADICORE_LOG) << "We shouldn't get there for a column which is not total, unread or size.";
-                return QVariant();
             }
         }
-
-    } else if (role == Qt::TextAlignmentRole && index.column() >= sourceColumnCount) {
+    }
+        break;
+    case Qt::TextAlignmentRole: {
         return Qt::AlignRight;
-
-    } else if (role == Qt::ToolTipRole && d->mToolTipEnabled) {
-        const QModelIndex sourceIndex = d->sourceIndexAtFirstColumn(index);
-        Collection collection
-            = sourceModel()->data(sourceIndex,
-                                  EntityTreeModel::CollectionRole).value<Collection>();
-
-        if (collection.isValid()) {
-            const QModelIndex sourceIndex = d->sourceIndexAtFirstColumn(index);
-            return d->toolTipForCollection(sourceIndex, collection);
-        }
-
-    } else if (role == Qt::DecorationRole && index.column() == 0) {
-        const QModelIndex sourceIndex = mapToSource(index);
-        return sourceModel()->data(sourceIndex, Qt::DecorationRole);
     }
-
-    if (index.column() >= sourceColumnCount) {
-        return QVariant();
+    default:
+        break;
     }
-
-    return QAbstractProxyModel::data(index, role);
+    return QVariant();
 }
 
-QVariant StatisticsProxyModel::headerData(int section, Qt::Orientation orientation, int role) const
+QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
 {
-    if (orientation == Qt::Horizontal && role == Qt::DisplayRole) {
-        if (section == d->sourceColumnCount() + 2) {
-            return i18nc("collection size", "Size");
-        } else if (section == d->sourceColumnCount() + 1) {
-            return i18nc("number of entities in the collection", "Total");
-        } else if (section == d->sourceColumnCount()) {
-            return i18nc("number of unread entities in the collection", "Unread");
+    if (role == Qt::ToolTipRole && d->mToolTipEnabled) {
+        const QModelIndex firstColumn = index.sibling(index.row(), 0);
+        const Collection collection = data(firstColumn, EntityTreeModel::CollectionRole).value<Collection>();
+
+        if (collection.isValid()) {
+            return d->toolTipForCollection(firstColumn, collection);
         }
     }
 
-    if (orientation == Qt::Horizontal && section >= d->sourceColumnCount()) {
-        return QVariant();
-    }
-
-    return QIdentityProxyModel::headerData(section, orientation, role);
+    return KExtraColumnsProxyModel::data(index, role);
 }
 
 Qt::ItemFlags StatisticsProxyModel::flags(const QModelIndex &index_) const
 {
     if (index_.column() >= d->sourceColumnCount()) {
-        return QIdentityProxyModel::flags(index(index_.row(), 0, index_.parent()))
+        return KExtraColumnsProxyModel::flags(index(index_.row(), 0, index_.parent()))
                & (Qt::ItemIsSelectable | Qt::ItemIsDragEnabled  // Allowed flags
                   | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
     }
 
-    return QIdentityProxyModel::flags(index_);
+    return KExtraColumnsProxyModel::flags(index_);
 }
 
-int StatisticsProxyModel::columnCount(const QModelIndex & /*parent*/) const
-{
-    if (sourceModel() == 0) {
-        return 0;
-    } else {
-        return d->sourceColumnCount()
-               + (d->mExtraColumnsEnabled ? 3 : 0);
-    }
-}
-
+// Not sure this is still necessary....
 QModelIndexList StatisticsProxyModel::match(const QModelIndex &start, int role, const QVariant &value,
         int hits, Qt::MatchFlags flags) const
 {
     if (role < Qt::UserRole) {
-        return QIdentityProxyModel::match(start, role, value, hits, flags);
+        return KExtraColumnsProxyModel::match(start, role, value, hits, flags);
     }
 
     QModelIndexList list;
@@ -485,68 +340,6 @@ QModelIndexList StatisticsProxyModel::match(const QModelIndex &start, int role, 
     }
 
     return list;
-}
-
-QModelIndex StatisticsProxyModel::mapFromSource(const QModelIndex &sourceIndex) const
-{
-    if (!sourceIndex.isValid()) {
-        return QModelIndex();
-    }
-    Q_ASSERT(sourceIndex.model() == sourceModel());
-    Q_ASSERT(sourceIndex.column() < d->sourceColumnCount());
-    return QIdentityProxyModel::mapFromSource(sourceIndex);
-}
-
-QModelIndex StatisticsProxyModel::mapToSource(const QModelIndex &index) const
-{
-    if (!index.isValid()) {
-        return QModelIndex();
-    }
-    Q_ASSERT(index.model() == this);
-    if (index.column() >= d->sourceColumnCount()) {
-        return QModelIndex();
-    }
-    return QIdentityProxyModel::mapToSource(index);
-}
-
-QModelIndex StatisticsProxyModel::buddy(const QModelIndex &index) const
-{
-    Q_UNUSED(index);
-    return QModelIndex();
-}
-
-QItemSelection StatisticsProxyModel::mapSelectionToSource(const QItemSelection &selection) const
-{
-    QItemSelection sourceSelection;
-
-    if (!sourceModel()) {
-        return sourceSelection;
-    }
-
-    // mapToSource will give invalid index for our additional columns, so truncate the selection
-    // to the columns known by the source model
-    const int sourceColumnCount = d->sourceColumnCount();
-    QItemSelection::const_iterator it = selection.constBegin();
-    const QItemSelection::const_iterator end = selection.constEnd();
-    for (; it != end; ++it) {
-        Q_ASSERT(it->model() == this);
-        QModelIndex topLeft = it->topLeft();
-        Q_ASSERT(topLeft.isValid());
-        Q_ASSERT(topLeft.model() == this);
-        topLeft = topLeft.sibling(topLeft.row(), 0);
-        QModelIndex bottomRight = it->bottomRight();
-        Q_ASSERT(bottomRight.isValid());
-        Q_ASSERT(bottomRight.model() == this);
-        if (bottomRight.column() >= sourceColumnCount) {
-            bottomRight = bottomRight.sibling(bottomRight.row(), sourceColumnCount - 1);
-        }
-        // This can lead to duplicate source indexes, so use merge().
-        const QItemSelectionRange range(mapToSource(topLeft), mapToSource(bottomRight));
-        QItemSelection newSelection; newSelection << range;
-        sourceSelection.merge(newSelection, QItemSelectionModel::Select);
-    }
-
-    return sourceSelection;
 }
 
 #include "moc_statisticsproxymodel.cpp"
