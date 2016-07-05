@@ -18,13 +18,14 @@
 */
 
 #include <collectionstatistics.h>
+#include <collection.h>
+#include <entitytreemodel.h>
 #include <qtest.h>
 
 #include <statisticsproxymodel.h>
 #include <QStandardItemModel>
-#include <AkonadiCore/Collection>
-#include <EntityTreeModel>
 #include "test_model_helpers.h"
+
 using namespace TestModelHelpers;
 
 using Akonadi::StatisticsProxyModel;
