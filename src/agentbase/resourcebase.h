@@ -511,11 +511,21 @@ protected:
      * sufficient items were delivered. To disable this and only make use
      * of the progress reporting, use setDisableAutomaticItemDeliveryDone()
      *
-     * @note Use setItemStreamingEnabled( true ) + itemsRetrieved[Incremental]()
-     * + itemsRetrieved() and avoid the automatic delivery based on the total
-     * number of items.
+     * @note The recommended way is therefore:
+     * @code
+     *   setDisableAutomaticItemDeliveryDone(true);
+     *   setItemStreamingEnabled(true);
+     *   setTotalItems(X); // X = sum of all items in all batches
+     *   while (...) {
+     *      itemsRetrievedIncremental(...);
+     *      // or itemsRetrieved(...);
+     *    }
+     *   itemsRetrievalDone();
+     * @endcode
      *
      * @param amount number of items that will arrive in streaming mode
+     * @see setDisableAutomaticItemDeliveryDone(bool)
+     * @see setItemStreamingEnabled(bool)
      */
     void setTotalItems(int amount);
 
@@ -527,7 +537,7 @@ protected:
      * is called, while still making it possible to use the automatic progress
      * reporting based on setTotalItems().
      *
-     * @note This needs to be called once, before the item sync started.
+     * @note This needs to be called once, before the item sync is started.
      *
      * @see setTotalItems(int)
      * @since 4.14
@@ -535,9 +545,12 @@ protected:
     void setDisableAutomaticItemDeliveryDone(bool disable);
 
     /**
-     * Enable item streaming.
-     * Item streaming is disabled by default.
+     * Enable item streaming, which is disabled by default.
+     * Item streaming means that the resource can call setTotalItems(),
+     * and then itemsRetrieved() or itemsRetrievedIncremental() multiple times,
+     * in chunks. When all is done, the resource should call itemsRetrievalDone().
      * @param enable @c true if items are delivered in chunks rather in one big block.
+     * @see setTotalItems(int)
      */
     void setItemStreamingEnabled(bool enable);
 
