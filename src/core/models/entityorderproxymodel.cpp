@@ -85,10 +85,6 @@ bool EntityOrderProxyModel::lessThan(const QModelIndex &left, const QModelIndex 
     }
     Collection col = left.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
 
-    if (!d->m_orderConfig.hasKey(QString::number(col.id()))) {
-        return QSortFilterProxyModel::lessThan(left, right);
-    }
-
     const QStringList list = d->m_orderConfig.readEntry(QString::number(col.id()), QStringList());
 
     if (list.isEmpty()) {
