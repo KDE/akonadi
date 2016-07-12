@@ -37,7 +37,7 @@ public:
     static ResourceManager *self();
 
 private:
-    ResourceManager(QObject *parent = 0);
+    ResourceManager(QObject *parent = Q_NULLPTR);
 
 public Q_SLOTS:
     void addResourceInstance(const QString &name, const QStringList &capabilities);

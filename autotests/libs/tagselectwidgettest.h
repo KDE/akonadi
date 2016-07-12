@@ -24,7 +24,7 @@ class TagSelectWidgetTest : public QObject
 {
     Q_OBJECT
 public:
-    explicit TagSelectWidgetTest(QObject *parent = 0);
+    explicit TagSelectWidgetTest(QObject *parent = Q_NULLPTR);
     ~TagSelectWidgetTest();
 private Q_SLOTS:
     void shouldHaveDefaultValue();

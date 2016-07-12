@@ -34,7 +34,7 @@ class DebugInterface : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.DebugInterface")
 
 public:
-    explicit DebugInterface(QObject *parent = 0);
+    explicit DebugInterface(QObject *parent = Q_NULLPTR);
 
 public Q_SLOTS:
     Q_SCRIPTABLE QString tracer() const;

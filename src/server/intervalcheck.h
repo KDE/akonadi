@@ -36,7 +36,7 @@ class IntervalCheck : public CollectionScheduler
     Q_OBJECT
 
 public:
-    IntervalCheck(QObject *parent = 0);
+    IntervalCheck(QObject *parent = Q_NULLPTR);
     ~IntervalCheck();
 
     /**

@@ -43,11 +43,11 @@ class PartStreamer : public  QObject
     Q_OBJECT
 
 public:
-    explicit PartStreamer(Connection *connection, const PimItem &pimItem, QObject *parent = 0);
+    explicit PartStreamer(Connection *connection, const PimItem &pimItem, QObject *parent = Q_NULLPTR);
     ~PartStreamer();
 
-    bool stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed = 0);
-    bool streamAttribute(bool checkExists, const QByteArray &partName, const QByteArray &value, bool *changed = 0);
+    bool stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed = Q_NULLPTR);
+    bool streamAttribute(bool checkExists, const QByteArray &partName, const QByteArray &value, bool *changed = Q_NULLPTR);
 
     QString error() const;
 

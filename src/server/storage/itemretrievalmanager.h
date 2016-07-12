@@ -44,7 +44,7 @@ class ItemRetrievalManager : public AkThread
 {
     Q_OBJECT
 public:
-    ItemRetrievalManager(QObject *parent = 0);
+    ItemRetrievalManager(QObject *parent = Q_NULLPTR);
     ~ItemRetrievalManager();
 
     void requestItemDelivery(qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,

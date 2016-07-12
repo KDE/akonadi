@@ -37,7 +37,7 @@ class FakeClient : public QThread
 
 public:
 
-    FakeClient(QObject *parent = 0);
+    FakeClient(QObject *parent = Q_NULLPTR);
     ~FakeClient();
 
     void setScenarios(const TestScenario::List &scenarios);

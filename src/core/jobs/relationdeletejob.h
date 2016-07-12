@@ -43,7 +43,7 @@ public:
      * @param relation The relation to delete.
      * @param parent The parent object.
      */
-    explicit RelationDeleteJob(const Relation &relation, QObject *parent = 0);
+    explicit RelationDeleteJob(const Relation &relation, QObject *parent = Q_NULLPTR);
 
     /**
      * Returns the relation.

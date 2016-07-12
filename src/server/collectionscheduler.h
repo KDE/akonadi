@@ -39,7 +39,7 @@ class CollectionScheduler : public AkThread
     Q_OBJECT
 
 public:
-    CollectionScheduler(QThread::Priority priority, QObject *parent = 0);
+    CollectionScheduler(QThread::Priority priority, QObject *parent = Q_NULLPTR);
     virtual ~CollectionScheduler();
 
     void collectionChanged(qint64 collectionId);

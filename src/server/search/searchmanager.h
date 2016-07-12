@@ -53,7 +53,7 @@ class SearchManager : public AkThread
 
 public:
     /** Create a new search manager with the given @p searchEngines. */
-    explicit SearchManager(const QStringList &searchEngines, QObject *parent = 0);
+    explicit SearchManager(const QStringList &searchEngines, QObject *parent = Q_NULLPTR);
 
     ~SearchManager();
 

@@ -154,7 +154,7 @@ Connection::~Connection()
 
 void Connection::slotConnectionIdle()
 {
-    Q_ASSERT(m_currentHandler == 0);
+    Q_ASSERT(m_currentHandler == Q_NULLPTR);
     if (m_backend && m_backend->isOpened() ) {
         if (m_backend->inTransaction()) {
             // This is a programming error, the timer should not have fired.

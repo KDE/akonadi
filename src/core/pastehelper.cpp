@@ -54,7 +54,7 @@ public:
     explicit PasteHelperJob(Qt::DropAction action, const Akonadi::Item::List &items,
                             const Akonadi::Collection::List &collections,
                             const Akonadi::Collection &destination,
-                            QObject *parent = 0);
+                            QObject *parent = Q_NULLPTR);
     virtual ~PasteHelperJob();
 
 private Q_SLOTS:

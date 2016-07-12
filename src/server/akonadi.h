@@ -79,7 +79,7 @@ private:
     void stopDatabaseProcess();
 
 protected:
-    AkonadiServer(QObject *parent = 0);
+    AkonadiServer(QObject *parent = Q_NULLPTR);
 
     CacheCleaner *mCacheCleaner;
     IntervalCheck *mIntervalCheck;

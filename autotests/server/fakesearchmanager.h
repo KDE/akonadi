@@ -33,7 +33,7 @@ class FakeSearchManager : public SearchManager
     Q_OBJECT
 
 public:
-    explicit FakeSearchManager(QObject *parent = 0);
+    explicit FakeSearchManager(QObject *parent = Q_NULLPTR);
     virtual ~FakeSearchManager();
 
     void registerInstance(const QString &id) Q_DECL_OVERRIDE;

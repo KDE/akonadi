@@ -42,7 +42,7 @@ namespace Internal
 class ControlProgressIndicator : public QFrame
 {
 public:
-    ControlProgressIndicator(QWidget *parent = 0)
+    ControlProgressIndicator(QWidget *parent = Q_NULLPTR)
         : QFrame(parent)
     {
         setWindowModality(Qt::ApplicationModal);
@@ -96,7 +96,7 @@ public:
         delete mProgressIndicator;
     }
 
-    void setupProgressIndicator(const QString &msg, QWidget *parent = 0)
+    void setupProgressIndicator(const QString &msg, QWidget *parent = Q_NULLPTR)
     {
         if (!mProgressIndicator) {
             mProgressIndicator = new Internal::ControlProgressIndicator(parent);

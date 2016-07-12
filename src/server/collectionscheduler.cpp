@@ -39,7 +39,7 @@ class PauseableTimer : public QTimer
     Q_OBJECT
 
 public:
-    PauseableTimer(QObject *parent = 0)
+    PauseableTimer(QObject *parent = Q_NULLPTR)
         : QTimer(parent)
     {
     }

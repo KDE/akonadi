@@ -39,7 +39,7 @@ namespace Internal
 class AgentTypeWidgetDelegate : public QAbstractItemDelegate
 {
 public:
-    AgentTypeWidgetDelegate(QObject *parent = 0);
+    AgentTypeWidgetDelegate(QObject *parent = Q_NULLPTR);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;

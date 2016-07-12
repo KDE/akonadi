@@ -60,7 +60,7 @@ public:
     {
     }
 
-    explicit PluginEntry(const QString &identifier, QObject *plugin = 0)
+    explicit PluginEntry(const QString &identifier, QObject *plugin = Q_NULLPTR)
         : mIdentifier(identifier)
         , mPlugin(plugin)
     {

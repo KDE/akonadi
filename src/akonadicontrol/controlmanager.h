@@ -34,7 +34,7 @@ public:
     /**
      * Creates a new control manager.
      */
-    ControlManager(QObject *parent = 0);
+    explicit ControlManager(QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the control manager.

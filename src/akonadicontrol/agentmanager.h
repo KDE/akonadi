@@ -53,7 +53,7 @@ public:
      *
      * @param parent The parent object.
      */
-    AgentManager(bool verbose, QObject *parent = 0);
+    AgentManager(bool verbose, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the agent manager.

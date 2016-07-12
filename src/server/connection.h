@@ -49,7 +49,7 @@ class Connection : public AkThread
 {
     Q_OBJECT
 public:
-    Connection(quintptr socketDescriptor, QObject *parent = 0);
+    Connection(quintptr socketDescriptor, QObject *parent = Q_NULLPTR);
     virtual ~Connection();
 
     virtual DataStore *storageBackend();
@@ -93,7 +93,7 @@ protected Q_SLOTS:
     void slotSendHello();
 
 protected:
-    Connection(QObject *parent = 0); // used for testing
+    Connection(QObject *parent = Q_NULLPTR); // used for testing
 
     virtual void init() Q_DECL_OVERRIDE;
     virtual void quit() Q_DECL_OVERRIDE;
