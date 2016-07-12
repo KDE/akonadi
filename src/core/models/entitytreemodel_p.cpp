@@ -584,7 +584,7 @@ void EntityTreeModelPrivate::monitoredCollectionsChanged(const Akonadi::Collecti
         fetchCollections(collection, CollectionFetchJob::Base);
         fetchCollections(collection, fetchType);
     } else {
-        //If a collection is derefernced and no longer explicitly monitored it might still match other filters
+        //If a collection is dereferenced and no longer explicitly monitored it might still match other filters
         if (!shouldBePartOfModel(collection)) {
             monitoredCollectionRemoved(collection);
         }
@@ -841,7 +841,7 @@ void EntityTreeModelPrivate::monitoredCollectionAdded(const Akonadi::Collection 
 
 void EntityTreeModelPrivate::monitoredCollectionRemoved(const Akonadi::Collection &collection)
 {
-    //if an explictly monitored collection is removed, we would also have to remove collections which were included to show it (as in the move case)
+    //if an explicitly monitored collection is removed, we would also have to remove collections which were included to show it (as in the move case)
     if ((collection == m_rootCollection) ||
             m_monitor->collectionsMonitored().contains(collection)) {
         beginResetModel();
