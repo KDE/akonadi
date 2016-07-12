@@ -72,6 +72,7 @@ static CollectionFetchJob::Type getFetchType(EntityTreeModel::CollectionFetchStr
 
 EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     : q_ptr(parent)
+    , m_monitor(nullptr)
     , m_rootNode(0)
     , m_collectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive)
     , m_itemPopulation(EntityTreeModel::ImmediatePopulation)
@@ -97,6 +98,7 @@ EntityTreeModelPrivate::~EntityTreeModelPrivate()
 void EntityTreeModelPrivate::init(ChangeRecorder *monitor)
 {
     Q_Q(EntityTreeModel);
+    Q_ASSERT(!m_monitor);
     m_monitor = monitor;
     // The default is to FetchCollectionsRecursive, so we tell the monitor to fetch collections
     // That way update signals from the monitor will contain the full collection.
