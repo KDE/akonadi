@@ -30,6 +30,14 @@ using namespace TestModelHelpers;
 
 using Akonadi::StatisticsProxyModel;
 
+#ifndef Q_OS_WIN
+void initLocale()
+{
+    setenv("LC_ALL", "en_US.utf-8", 1);
+}
+Q_CONSTRUCTOR_FUNCTION(initLocale)
+#endif
+
 class StatisticsProxyModelTest : public QObject
 {
     Q_OBJECT
