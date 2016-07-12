@@ -80,7 +80,7 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
     }
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetchJob);
-    if (fetchJob->items().size() == 0) {
+    if (fetchJob->items().isEmpty()) {
         q->emitResult();
         return;
     }
