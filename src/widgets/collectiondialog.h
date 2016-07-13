@@ -112,7 +112,7 @@ public:
      * @since 4.6
      */
 
-    explicit CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model = 0, QWidget *parent = Q_NULLPTR);
+    explicit CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model = Q_NULLPTR, QWidget *parent = Q_NULLPTR);
 
     /**
      * Destroys the collection dialog.
