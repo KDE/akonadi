@@ -314,7 +314,8 @@ QVariant StatisticsProxyModel::data(const QModelIndex &index, int role) const
 Qt::ItemFlags StatisticsProxyModel::flags(const QModelIndex &index_) const
 {
     if (index_.column() >= d->sourceColumnCount()) {
-        return KExtraColumnsProxyModel::flags(index(index_.row(), 0, index_.parent()))
+        const QModelIndex firstColumn = index_.sibling(index_.row(), 0);
+        return KExtraColumnsProxyModel::flags(firstColumn)
                & (Qt::ItemIsSelectable | Qt::ItemIsDragEnabled  // Allowed flags
                   | Qt::ItemIsDropEnabled | Qt::ItemIsEnabled);
     }
