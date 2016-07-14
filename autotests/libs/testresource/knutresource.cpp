@@ -117,7 +117,8 @@ void KnutResource::configure(WId windowId)
         oldFile = QDir::homePath();
     }
 
-    // TODO: Use winId
+    // TODO: Use windowId
+    Q_UNUSED(windowId);
     const QString newFile = QFileDialog::getSaveFileName(
         0, i18n("Select Data File"), QString(),
         QStringLiteral("*.xml |") + i18nc("Filedialog filter for Akonadi data file", "Akonadi Knut Data File"));
@@ -190,6 +191,9 @@ void KnutResource::collectionAdded(const Akonadi::Collection &collection, const 
         save();
         changeCommitted(c);
     }
+#else
+    Q_UNUSED(collection);
+    Q_UNUSED(parent);
 #endif
 }
 
@@ -223,6 +227,8 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
     oldElem.parentNode().replaceChild(newElem, oldElem);
     save();
     changeCommitted(c);
+#else
+    Q_UNUSED(collection);
 #endif
 }
 
@@ -239,6 +245,8 @@ void KnutResource::collectionRemoved(const Akonadi::Collection &collection)
     colElem.parentNode().removeChild(colElem);
     save();
     changeProcessed();
+#else
+    Q_UNUSED(collection);
 #endif
 }
 
@@ -261,6 +269,9 @@ void KnutResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collectio
         save();
         changeCommitted(i);
     }
+#else
+    Q_UNUSED(item);
+    Q_UNUSED(collection);
 #endif
 }
 
@@ -332,6 +343,9 @@ void KnutResource::itemMoved(const Item &item, const Collection &collectionSourc
         save();
     }
     changeProcessed();
+#else
+    Q_UNUSED(collectionSource);
+    Q_UNUSED(collectionDestination);
 #endif
 }
 
@@ -349,6 +363,7 @@ QSet<qint64> KnutResource::parseQuery(const QString &queryString)
 
 void KnutResource::search(const QString &query, const Collection &collection)
 {
+    Q_UNUSED(collection);
     const QVector<qint64> result = parseQuery(query).toList().toVector();
     qDebug() << "KNUT QUERY:" << query;
     qDebug() << "KNUT RESOURCE:" << result;
@@ -357,11 +372,15 @@ void KnutResource::search(const QString &query, const Collection &collection)
 
 void KnutResource::addSearch(const QString &query, const QString &queryLanguage, const Collection &resultCollection)
 {
+    Q_UNUSED(query);
+    Q_UNUSED(queryLanguage);
+    Q_UNUSED(resultCollection);
     qDebug();
 }
 
 void KnutResource::removeSearch(const Collection &resultCollection)
 {
+    Q_UNUSED(resultCollection);
     qDebug();
 }
 

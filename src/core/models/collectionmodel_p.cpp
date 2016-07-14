@@ -250,7 +250,7 @@ bool CollectionModelPrivate::removeRowFromModel(int row, const QModelIndex &pare
     Collection parentCol;
     if (parent.isValid()) {
         parentCol = collections.value(parent.internalId());
-        Q_ASSERT(parentCol.id() == parent.internalId());
+        Q_ASSERT(parentCol.id() == static_cast<qint64>(parent.internalId()));
         list = childCollections.value(parentCol.id());
     } else {
         parentCol = Collection::root();

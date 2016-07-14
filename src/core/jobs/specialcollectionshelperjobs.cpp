@@ -602,7 +602,8 @@ void GetLockJob::Private::doStart()
 
 void GetLockJob::Private::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
-    Q_UNUSED(oldOwner)
+    Q_UNUSED(name);
+    Q_UNUSED(oldOwner);
 
     if (newOwner.isEmpty()) {
         const bool gotIt = KDBusConnectionPool::threadConnection().registerService(dbusServiceName());

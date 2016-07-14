@@ -4,6 +4,7 @@ include_directories(
 
 kde_enable_exceptions()
 
+remove_definitions(-DTRANSLATION_DOMAIN=\"libakonadi5\")
 add_definitions(-DTRANSLATION_DOMAIN=\"akonadi_knut_resource\")
 
 find_package(LibXslt)
@@ -58,4 +59,3 @@ target_link_libraries(akonadi_knut_resource
 install( TARGETS akonadi_knut_resource ${KDE_INSTALL_TARGETS_DEFAULT_ARGS})
 install( FILES knutresource.desktop DESTINATION "${KDE_INSTALL_DATAROOTDIR}/akonadi/agents" )
 install( FILES knut-template.xml DESTINATION ${KDE_INSTALL_DATADIR_KF5}/akonadi_knut_resource/ )
-
