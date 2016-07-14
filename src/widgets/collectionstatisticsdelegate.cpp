@@ -30,6 +30,7 @@
 #include <QStyleOptionViewItemV4>
 #include <QAbstractItemView>
 #include <QTreeView>
+#include <QAbstractProxyModel>
 
 #include "entitytreemodel.h"
 #include "collectionstatistics.h"
@@ -234,7 +235,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     Collection collection = firstColumn.data(EntityTreeModel::CollectionRole).value<Collection>();
 
     if (!collection.isValid()) {
-        qCCritical(AKONADIWIDGETS_LOG) << "Invalid collection: " << collection;
+        qCCritical(AKONADIWIDGETS_LOG) << "Invalid collection at index" << firstColumn << firstColumn.data().toString() << "sibling of" << index << "rowCount=" << index.model()->rowCount(index.parent()) << "parent=" << index.parent().data().toString();
         return;
     }
 
