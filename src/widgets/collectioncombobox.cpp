@@ -56,6 +56,7 @@ public:
             mMonitor->fetchCollection(true);
             mMonitor->setCollectionMonitored(Akonadi::Collection::root());
 
+            // This ETM will be set to only show collections with the wanted mimetype in setMimeTypeFilter
             mModel = new EntityTreeModel(mMonitor, mParent);
             mModel->setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
             mModel->setListFilter(CollectionFetchScope::Display);
@@ -63,13 +64,20 @@ public:
             mBaseModel = mModel;
         }
 
+        // Flatten the tree, e.g.
+        // Kolab
+        // Kolab / Inbox
+        // Kolab / Inbox / Calendar
         KDescendantsProxyModel *proxyModel = new KDescendantsProxyModel(parent);
         proxyModel->setDisplayAncestorData(true);
         proxyModel->setSourceModel(mBaseModel);
 
+        // Filter it by mimetype again, to only keep
+        // Kolab / Inbox / Calendar
         mMimeTypeFilterModel = new CollectionFilterProxyModel(parent);
         mMimeTypeFilterModel->setSourceModel(proxyModel);
 
+        // Filter by access rights. TODO: maybe this functionality could be provided by CollectionFilterProxyModel, to save one proxy?
         mRightsFilterModel = new EntityRightsFilterModel(parent);
         mRightsFilterModel->setSourceModel(mMimeTypeFilterModel);
 
