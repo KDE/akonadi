@@ -345,7 +345,7 @@ QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDe
     }
 
     return QStringLiteral("CREATE %1 INDEX %2 ON %3 (%4)")
-           .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString(), indexName, tableDescription.name, columns.join(QStringLiteral(",")));
+           .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString(), indexName, tableDescription.name, columns.join(QLatin1Char(',')));
 }
 
 QString DbInitializer::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const

@@ -232,7 +232,7 @@ void StorageJanitor::findOrphanedResources()
         Q_FOREACH (const Resource &resource, orphanResources) {
             resourceNames.append(resource.name());
         }
-        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QStringLiteral(","))));
+        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QLatin1Char(','))));
         Q_FOREACH (const QString &resourceName, resourceNames) {
             inform(QStringLiteral("Removing resource %1").arg(resourceName));
             ResourceManager::self()->removeResourceInstance(resourceName);

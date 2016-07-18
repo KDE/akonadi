@@ -112,7 +112,7 @@ void ProgressSpinnerDelegate::initStyleOption(QStyleOptionViewItem *option, cons
 
     m_animator->push(index);
 
-    if (QStyleOptionViewItemV4 *v4 = qstyleoption_cast<QStyleOptionViewItemV4 *>(option)) {
+    if (QStyleOptionViewItem *v4 = qstyleoption_cast<QStyleOptionViewItem *>(option)) {
         v4->icon = m_animator->sequenceFrame(index);
     }
 }

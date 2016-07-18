@@ -27,7 +27,7 @@
 #include <QPainter>
 #include <QStyle>
 #include <QStyleOption>
-#include <QStyleOptionViewItemV4>
+#include <QStyleOptionViewItem>
 #include <QAbstractItemView>
 #include <QTreeView>
 #include <QAbstractProxyModel>
@@ -153,8 +153,8 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
 {
     Q_D(const CollectionStatisticsDelegate);
 
-    QStyleOptionViewItemV4 *noTextOption =
-        qstyleoption_cast<QStyleOptionViewItemV4 *>(option);
+    QStyleOptionViewItem *noTextOption =
+        qstyleoption_cast<QStyleOptionViewItem *>(option);
     QStyledItemDelegate::initStyleOption(noTextOption, index);
     if (option->decorationPosition != QStyleOptionViewItem::Top) {
         if (noTextOption) {
@@ -172,7 +172,7 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
 
         d->animator->push(index);
 
-        if (QStyleOptionViewItemV4 *v4 = qstyleoption_cast<QStyleOptionViewItemV4 *>(option)) {
+        if (QStyleOptionViewItem *v4 = qstyleoption_cast<QStyleOptionViewItem *>(option)) {
             v4->icon = d->animator->sequenceFrame(index);
         }
     }
@@ -211,7 +211,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
 
     // Now, we retrieve the correct style option by calling initStyleOption from
     // the superclass.
-    QStyleOptionViewItemV4 option4 = option;
+    QStyleOptionViewItem option4 = option;
     QStyledItemDelegate::initStyleOption(&option4, index);
     QString text = option4.text;
 
