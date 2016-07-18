@@ -107,8 +107,8 @@ QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &t
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name,
-                QStringList(data.keys()).join(QStringLiteral(",")),
-                QStringList(data.values()).join(QStringLiteral(",")));
+                QStringList(data.keys()).join(QLatin1Char(',')),
+                QStringList(data.values()).join(QLatin1Char(',')));
 }
 
 QString DbInitializerMySql::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const
@@ -194,8 +194,8 @@ QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name,
-                QStringList(data.keys()).join(QStringLiteral(",")),
-                QStringList(data.values()).join(QStringLiteral(",")));
+                QStringList(data.keys()).join(QLatin1Char(',')),
+                QStringList(data.values()).join(QLatin1Char(',')));
 }
 
 QString DbInitializerSqlite::sqlValue(const QString &type, const QString &value) const
@@ -290,8 +290,8 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescripti
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
            .arg(tableDescription.name,
-                QStringList(data.keys()).join(QStringLiteral(",")),
-                QStringList(data.values()).join(QStringLiteral(",")));
+                QStringList(data.keys()).join(QLatin1Char(',')),
+                QStringList(data.values()).join(QLatin1Char(',')));
 }
 
 QString DbInitializerPostgreSql::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const
