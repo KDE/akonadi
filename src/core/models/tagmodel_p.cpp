@@ -103,7 +103,7 @@ Tag TagModelPrivate::tagForIndex(const QModelIndex &index) const
 
     const Tag::Id parentId = index.internalId();
     const Tag::List &children = mChildTags.value(parentId);
-    return children.at(index.row());
+    return children.value(index.row());
 }
 
 void TagModelPrivate::monitoredTagAdded(const Tag &tag)
