@@ -39,13 +39,13 @@ class Akonadi::ManageAccountWidgetPrivate
 {
 public:
     ManageAccountWidgetPrivate()
-        : mWidget(Q_NULLPTR)
+        : ui(Q_NULLPTR)
     {
 
     }
     ~ManageAccountWidgetPrivate()
     {
-        delete mWidget;
+        delete ui;
     }
 
     QString mSpecialCollectionIdentifier;
@@ -54,30 +54,30 @@ public:
     QStringList mCapabilityFilter;
     QStringList mExcludeCapabilities;
 
-    Ui::ManageAccountWidget *mWidget;
+    Ui::ManageAccountWidget *ui;
 };
 
 ManageAccountWidget::ManageAccountWidget(QWidget *parent)
     : QWidget(parent),
       d(new Akonadi::ManageAccountWidgetPrivate)
 {
-    d->mWidget = new Ui::ManageAccountWidget;
-    d->mWidget->setupUi(this);
-    connect(d->mWidget->mAddAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotAddAccount);
+    d->ui = new Ui::ManageAccountWidget;
+    d->ui->setupUi(this);
+    connect(d->ui->mAddAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotAddAccount);
 
-    connect(d->mWidget->mModifyAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotModifySelectedAccount);
+    connect(d->ui->mModifyAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotModifySelectedAccount);
 
-    connect(d->mWidget->mRemoveAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotRemoveSelectedAccount);
-    connect(d->mWidget->mRestartAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotRestartSelectedAccount);
+    connect(d->ui->mRemoveAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotRemoveSelectedAccount);
+    connect(d->ui->mRestartAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotRestartSelectedAccount);
 
-    connect(d->mWidget->mAccountList, &Akonadi::AgentInstanceWidget::clicked, this, &ManageAccountWidget::slotAccountSelected);
-    connect(d->mWidget->mAccountList, &Akonadi::AgentInstanceWidget::doubleClicked, this, &ManageAccountWidget::slotModifySelectedAccount);
+    connect(d->ui->mAccountList, &Akonadi::AgentInstanceWidget::clicked, this, &ManageAccountWidget::slotAccountSelected);
+    connect(d->ui->mAccountList, &Akonadi::AgentInstanceWidget::doubleClicked, this, &ManageAccountWidget::slotModifySelectedAccount);
 
-    d->mWidget->mAccountList->view()->setSelectionMode(QAbstractItemView::SingleSelection);
+    d->ui->mAccountList->view()->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    d->mWidget->mFilterAccount->setProxy(d->mWidget->mAccountList->agentFilterProxyModel());
-    d->mWidget->mFilterAccount->installEventFilter(this);
-    slotAccountSelected(d->mWidget->mAccountList->currentAgentInstance());
+    d->ui->mFilterAccount->setProxy(d->ui->mAccountList->agentFilterProxyModel());
+    d->ui->mFilterAccount->installEventFilter(this);
+    slotAccountSelected(d->ui->mAccountList->currentAgentInstance());
 }
 
 ManageAccountWidget::~ManageAccountWidget()
@@ -87,12 +87,12 @@ ManageAccountWidget::~ManageAccountWidget()
 
 void ManageAccountWidget::setDescriptionLabelText(const QString &text)
 {
-    d->mWidget->label->setText(text);
+    d->ui->label->setText(text);
 }
 
 bool ManageAccountWidget::eventFilter(QObject *obj, QEvent *event)
 {
-    if (event->type() == QEvent::KeyPress && obj == d->mWidget->mFilterAccount) {
+    if (event->type() == QEvent::KeyPress && obj == d->ui->mFilterAccount) {
         QKeyEvent *key = static_cast<QKeyEvent *>(event);
         if ((key->key() == Qt::Key_Enter) || (key->key() == Qt::Key_Return)) {
             event->accept();
@@ -104,7 +104,7 @@ bool ManageAccountWidget::eventFilter(QObject *obj, QEvent *event)
 
 QAbstractItemView *ManageAccountWidget::view() const
 {
-    return d->mWidget->mAccountList->view();
+    return d->ui->mAccountList->view();
 }
 
 void ManageAccountWidget::setSpecialCollectionIdentifier(const QString &identifier)
@@ -150,7 +150,7 @@ void ManageAccountWidget::setExcludeCapabilities(const QStringList &excludeCapab
 
 void ManageAccountWidget::setItemDelegate(QAbstractItemDelegate *delegate)
 {
-    d->mWidget->mAccountList->view()->setItemDelegate(delegate);
+    d->ui->mAccountList->view()->setItemDelegate(delegate);
 }
 
 QStringList ManageAccountWidget::capabilityFilter() const
@@ -162,7 +162,7 @@ void ManageAccountWidget::setCapabilityFilter(const QStringList &capabilityFilte
 {
     d->mCapabilityFilter = capabilityFilter;
     Q_FOREACH (const QString &capability, d->mCapabilityFilter) {
-        d->mWidget->mAccountList->agentFilterProxyModel()->addCapabilityFilter(capability);
+        d->ui->mAccountList->agentFilterProxyModel()->addCapabilityFilter(capability);
     }
 }
 
@@ -175,13 +175,13 @@ void ManageAccountWidget::setMimeTypeFilter(const QStringList &mimeTypeFilter)
 {
     d->mMimeTypeFilter = mimeTypeFilter;
     Q_FOREACH (const QString &mimeType, d->mMimeTypeFilter) {
-        d->mWidget->mAccountList->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
+        d->ui->mAccountList->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
     }
 }
 
 void ManageAccountWidget::slotModifySelectedAccount()
 {
-    Akonadi::AgentInstance instance = d->mWidget->mAccountList->currentAgentInstance();
+    Akonadi::AgentInstance instance = d->ui->mAccountList->currentAgentInstance();
     if (instance.isValid()) {
         KWindowSystem::allowExternalProcessWindowActivation();
         instance.configure(this);
@@ -190,7 +190,7 @@ void ManageAccountWidget::slotModifySelectedAccount()
 
 void ManageAccountWidget::slotRestartSelectedAccount()
 {
-    const Akonadi::AgentInstance instance =  d->mWidget->mAccountList->currentAgentInstance();
+    const Akonadi::AgentInstance instance =  d->ui->mAccountList->currentAgentInstance();
     if (instance.isValid()) {
         instance.restart();
     }
@@ -198,7 +198,7 @@ void ManageAccountWidget::slotRestartSelectedAccount()
 
 void ManageAccountWidget::slotRemoveSelectedAccount()
 {
-    const Akonadi::AgentInstance instance =  d->mWidget->mAccountList->currentAgentInstance();
+    const Akonadi::AgentInstance instance =  d->ui->mAccountList->currentAgentInstance();
 
     const int rc = KMessageBox::questionYesNo(this,
                    i18n("Do you want to remove account '%1'?", instance.name()),
@@ -211,20 +211,20 @@ void ManageAccountWidget::slotRemoveSelectedAccount()
         Akonadi::AgentManager::self()->removeInstance(instance);
     }
 
-    slotAccountSelected(d->mWidget->mAccountList->currentAgentInstance());
+    slotAccountSelected(d->ui->mAccountList->currentAgentInstance());
 
 }
 
 void ManageAccountWidget::slotAccountSelected(const Akonadi::AgentInstance &current)
 {
     if (current.isValid()) {
-        d->mWidget->mModifyAccountButton->setEnabled(!current.type().capabilities().contains(QStringLiteral("NoConfig")));
-        d->mWidget->mRemoveAccountButton->setEnabled(d->mSpecialCollectionIdentifier != current.identifier());
+        d->ui->mModifyAccountButton->setEnabled(!current.type().capabilities().contains(QStringLiteral("NoConfig")));
+        d->ui->mRemoveAccountButton->setEnabled(d->mSpecialCollectionIdentifier != current.identifier());
         // Restarting an agent is not possible if it's in Running status... (see AgentProcessInstance::restartWhenIdle)
-        d->mWidget->mRestartAccountButton->setEnabled((current.status() != 1));
+        d->ui->mRestartAccountButton->setEnabled((current.status() != 1));
     } else {
-        d->mWidget->mModifyAccountButton->setEnabled(false);
-        d->mWidget->mRemoveAccountButton->setEnabled(false);
-        d->mWidget->mRestartAccountButton->setEnabled(false);
+        d->ui->mModifyAccountButton->setEnabled(false);
+        d->ui->mRemoveAccountButton->setEnabled(false);
+        d->ui->mRestartAccountButton->setEnabled(false);
     }
 }
