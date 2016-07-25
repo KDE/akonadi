@@ -85,6 +85,11 @@ ManageAccountWidget::~ManageAccountWidget()
     delete d;
 }
 
+void ManageAccountWidget::setDescriptionLabelText(const QString &text)
+{
+    d->mWidget->label->setText(text);
+}
+
 bool ManageAccountWidget::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress && obj == d->mWidget->mFilterAccount) {
