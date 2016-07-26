@@ -22,7 +22,7 @@ include(AkonadiMacros)
 
 set(PIM_VERSION "5.3.40")
 
-set(QT_REQUIRED_VERSION "5.4.0")
+set(QT_REQUIRED_VERSION "5.5.0")
 set(AKONADI_VERSION ${PIM_VERSION})
 set(KF5_VERSION "5.16.0")
 
