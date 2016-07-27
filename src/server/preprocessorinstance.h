@@ -183,7 +183,8 @@ private:
      */
     void processHeadItem();
 
-private Q_SLOTS:
+private:
+
 
     /**
      * This is invoked to signal that the processing of the current (head)
