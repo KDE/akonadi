@@ -63,9 +63,11 @@ public:
 Q_SIGNALS:
     void selectionChanged(const Akonadi::Tag::List &tags);
 
-private:
+private Q_SLOTS:
     void editTags();
     void updateView();
+
+private:
     class Private;
     QSharedPointer<Private> d;
 };

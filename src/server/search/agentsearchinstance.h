@@ -42,8 +42,10 @@ public:
 
     OrgFreedesktopAkonadiAgentSearchInterface *interface() const;
 
-private:
+private Q_SLOTS:
     void serviceOwnerChanged(const QString &service, const QString &oldName, const QString &newName);
+
+private:
     QString mId;
     OrgFreedesktopAkonadiAgentSearchInterface *mInterface;
     QDBusServiceWatcher *mServiceWatcher;

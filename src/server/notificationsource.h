@@ -120,8 +120,10 @@ Q_SIGNALS:
     Q_SCRIPTABLE void ignoredSessionsChanged();
     Q_SCRIPTABLE void monitoredTypesChanged();
 
-private:
+private Q_SLOTS:
     void serviceUnregistered(const QString &serviceName);
+
+private:
     bool isCollectionMonitored(Entity::Id id) const;
     bool isMimeTypeMonitored(const QString &mimeType) const;
     bool isMoveDestinationResourceMonitored(const Protocol::ChangeNotification &msg) const;

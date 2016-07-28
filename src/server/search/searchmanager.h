@@ -92,7 +92,7 @@ public Q_SLOTS:
      */
     virtual void unregisterInstance(const QString &id);
 
-private:
+private Q_SLOTS:
     void searchUpdateTimeout();
     void searchUpdateResultsAvailable(const QSet<qint64> &results);
 

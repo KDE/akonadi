@@ -59,8 +59,10 @@ protected:
     void init();
     QScopedPointer<QCoreApplication> mApp;
 
-private:
+private Q_SLOTS:
     void pollSessionBus() const;
+
+private:
     int mArgc;
     char **mArgv;
     QString mInstanceId;

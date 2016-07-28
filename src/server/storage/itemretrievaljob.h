@@ -50,8 +50,10 @@ public:
 Q_SIGNALS:
     void requestCompleted(ItemRetrievalRequest *req, const QString &errorMsg);
 
-private:
+private Q_SLOTS:
     void callFinished(QDBusPendingCallWatcher *watcher);
+
+private:
     ItemRetrievalRequest *m_request;
     bool m_active;
     OrgFreedesktopAkonadiResourceInterface *m_interface;
