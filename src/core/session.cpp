@@ -376,6 +376,11 @@ QByteArray Session::sessionId() const
 
 Q_GLOBAL_STATIC(QThreadStorage<Session *>, instances)
 
+static void cleanupDefaultSession()
+{
+    instances()->setLocalData(Q_NULLPTR);
+}
+
 void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
 {
     Q_ASSERT_X(!sessionId.isEmpty(), "SessionPrivate::createDefaultSession",
@@ -384,13 +389,8 @@ void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
                "You tried to create a default session twice!");
 
     Session *session = new Session(sessionId);
-    session->connect(qApp, &QCoreApplication::aboutToQuit,
-                        []() {
-                            // We must destroy Session while QApplication is still
-                            // running otherwise deleting SessionThread will deadlock
-                            instances()->setLocalData(Q_NULLPTR);
-                        });
     instances()->setLocalData(session);
+    qAddPostRoutine(cleanupDefaultSession);
 }
 
 void SessionPrivate::setDefaultSession(Session *session)
@@ -402,11 +402,8 @@ Session *Session::defaultSession()
 {
     if (!instances()->hasLocalData()) {
         Session *session = new Session();
-        session->connect(qApp, &QCoreApplication::aboutToQuit,
-                         []() {
-                             instances()->setLocalData(Q_NULLPTR);
-                         });
         instances()->setLocalData(session);
+        qAddPostRoutine(cleanupDefaultSession);
     }
     return instances()->localData();
 }
