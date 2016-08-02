@@ -64,8 +64,7 @@ inline bool isFolder(const Collection &collection)
     return (!isRoot(collection) &&
             !isResource(collection) &&
             !isStructural(collection) &&
-            collection.resource() != QLatin1String("akonadi_search_resource") &&
-            collection.resource() != QLatin1String("akonadi_nepomuktag_resource"));
+            collection.resource() != QLatin1String("akonadi_search_resource"));
 }
 
 inline QString defaultIconName(const Collection &col)
