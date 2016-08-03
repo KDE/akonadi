@@ -60,8 +60,6 @@
 # include <malloc.h> // for dumping memory information
 #endif
 
-//#define EXPERIMENTAL_INPROCESS_AGENTS 1
-
 using namespace Akonadi;
 
 static AgentBase *sAgentBase = 0;
