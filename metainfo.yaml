@@ -1,0 +1,47 @@
+name: akonadi
+description: PIM Storage Framework
+group: kdepim
+platforms:
+    - name: Linux
+public_lib: true
+libraries:
+    - qmake: AkonadiCore
+      cmake: KF5::AkonadiCore
+      cmakename: KF5AkonadiCore
+    - qmake: AkonadiAgentBase
+      cmake: KF5::AkonadiAgentBase
+      cmakename: KF5AkonadiAgentBase
+    - qmake: AkonadiWidgets
+      cmake: KF5::AkonadiWidgets
+      cmakename: KF5AkonadiWidgets
+    - qmake: AkonadiXml
+      cmake: KF5::AkonadiXml
+      cmakename: KF5AkonadiXml
+irc: akonadi
+
+group_info:
+    fancyname: KDE PIM
+    maintainer: mlaurent dvratil
+    irc: kontact
+    mailinglist: kde-pim
+    platforms:
+        - Linux
+    description: KDE PIM provides set of libraries and application to access and
+                 manage personal information like emails, contacts, events, etc.
+    logo: docs/kontact.svg
+    long_description:
+        - KDE PIM provides a set of libraries and applications to access and
+          manage personal information like emails, contacts, events, etc.
+        - KDE PIM provides a set of libraries to parse and interact with various
+          standardized PIM data formats, like RFC822 (KMime), ICAL (KCalendarCore)
+          or VCARD (KContacts).
+        - The backbone of the entire suite is Akonadi, the PIM storage framework.
+          Akonadi provides unified API to access and manage any kind of PIM data
+          regardless of the actual storage backend.
+        - There are quite a few other libraries that provide PIM-specific widgets
+          and utilities and can be useful for application developers who need to
+          work with PIM data in their projects.
+        - Please note that unless stated otherwise, none of the libraries have
+          stable API or ABI as of now. We are trying to keep the changes small and
+          we always announce big changes ahead on the mailing lists, but as the
+          project evolves we might need to adjust some API here and there.
