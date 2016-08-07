@@ -25,6 +25,7 @@
 #include "searchquery.h"
 #include "private/protocol_p.h"
 
+#include <QCoreApplication>
 #include <QtCore/QTimer>
 #include <QThreadStorage>
 
@@ -98,11 +99,17 @@ public:
 
 QThreadStorage<Session *> instances;
 
+static void cleanupDefaultSearchSession()
+{
+    instances.setLocalData(Q_NULLPTR);
+}
+
 static Session *defaultSearchSession()
 {
     if (!instances.hasLocalData()) {
         const QByteArray sessionName = Session::defaultSession()->sessionId() + "-SearchSession";
         instances.setLocalData(new Session(sessionName));
+        qAddPostRoutine(cleanupDefaultSearchSession);
     }
     return instances.localData();
 }

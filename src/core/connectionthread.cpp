@@ -65,7 +65,14 @@ ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
 
 ConnectionThread::~ConnectionThread()
 {
-    QMetaObject::invokeMethod(this, "doThreadQuit");
+    if (QCoreApplication::instance()) {
+        QMetaObject::invokeMethod(this, "doThreadQuit");
+    } else {
+        // QCoreApplication already destroyed -> invokeMethod would just not get the message delivered
+        // We leak the socket, but at least we don't block for 10s
+        qWarning() << "Akonadi ConnectionThread deleted after QCoreApplication is destroyed. Clean up your sessions earlier!";
+        thread()->quit();
+    }
     if (!thread()->wait(10 * 1000)) {
         thread()->terminate();
         // Make sure to wait until it's done, otherwise it can crash when the pthread callback is called

@@ -52,12 +52,15 @@ int main(int argc, char **argv)
               QStringLiteral("start-without-control"),
               QStringLiteral("Allow to start the Akonadi server without the Akonadi control process being available"));
     app.addCommandLineOptions(startWithoutControlOption);
-
 #endif
 
     app.parseCommandLine();
 
+#if !defined(NDEBUG)
     if (!app.commandLineArguments().isSet(QStringLiteral("start-without-control")) &&
+#else
+    if (true &&
+#endif
         !QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock))) {
         qCCritical(AKONADISERVER_LOG) << "Akonadi control process not found - aborting.";
         qCCritical(AKONADISERVER_LOG) << "If you started akonadiserver manually, try 'akonadictl start' instead.";
