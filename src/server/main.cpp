@@ -33,6 +33,12 @@
 
 #include <cstdlib>
 
+#ifdef QT_STATICPLUGIN
+#include <QtPlugin>
+
+Q_IMPORT_PLUGIN(qsqlite3)
+#endif
+
 void shutdownHandler(int)
 {
     qCDebug(AKONADISERVER_LOG) << "Shutting down AkonadiServer...";
