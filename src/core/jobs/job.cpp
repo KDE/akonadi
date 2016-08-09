@@ -62,17 +62,26 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
         }
     }
 
-    if (mReadingFinished) {
-        qCWarning(AKONADICORE_LOG) << "Received response for a job that does not expect any more data, ignoring";
+    if (mTag != tag) {
+        qCWarning(AKONADICORE_LOG) << "Received response with a different tag!";
         qCDebug(AKONADICORE_LOG) << "Response tag:" << tag << ", response type:" << response.type();
-        qCDebug(AKONADICORE_LOG) << "Job tag:" << mTag << "job:" << q;
-        Q_ASSERT(!mReadingFinished);
+        qCDebug(AKONADICORE_LOG) << "Job tag:" << mTag << ", job:" << q;
         return;
     }
 
-    if (q->doHandleResponse(tag, response)) {
-        mReadingFinished = true;
-        QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
+    if (mStarted) {
+        if (mReadingFinished) {
+            qCWarning(AKONADICORE_LOG) << "Received response for a job that does not expect any more data, ignoring";
+            qCDebug(AKONADICORE_LOG) << "Response tag:" << tag << ", response type:" << response.type();
+            qCDebug(AKONADICORE_LOG) << "Job tag:" << mTag << ", job:" << q;
+            Q_ASSERT(!mReadingFinished);
+            return;
+        }
+
+        if (q->doHandleResponse(tag, response)) {
+            mReadingFinished = true;
+            QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
+        }
     }
 }
 
