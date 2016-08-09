@@ -1,4 +1,4 @@
-# Akonadi Server {#server}
+# Akonadi Server # {#server}
 
 [TOC]
 
@@ -9,7 +9,7 @@ working on the Akonadi server itself.
 
 For additional information, see the <a href="http://community.kde.org/KDE_PIM/Akonadi">Akonadi website</a>.
 
-## Architecture
+## Architecture ##
 
 <img src="http://community.kde.org/images.community/8/8e/Akonadi_Architecture.png"/>
 
@@ -19,7 +19,7 @@ The Akonadi framework uses a client/server architecture. The Akonadi server has 
 * Provide change notifications and conflict detection
 * Support offline change recording and change replay for remote data
 
-## Design Principles
+## Design Principles ##
 
 The Akonadi architecture is based on the following four design principles:
 
@@ -44,7 +44,7 @@ The Akonadi architecture is based on the following four design principles:
   back-end itself must be asynchronous. You can easily provide a synchronous convenience
   for the application developer; the back-end, however, must communicate asynchronously.
 
-## Components
+## Components ##
 The Akonadi server itself consists of a number of components:
 * The Akonadi control process (`akonadi_control`). It is responsible for managing all other server components and Akonadi agents.
 * The Akonadi server process (`akonadiserver`). The actual data access and caching server.
@@ -55,7 +55,7 @@ The Akonadi server itself consists of a number of components:
 * The Akonadi protocol library (`libakonadiprotocolinternals`), Contains protocol definitions and protocol parsing methods
     useful for client implementations.
 
-### The Akonadi server process
+### The Akonadi server process ###
 
 The Akonadi server process (`akonadiserver`) has the following tasks:
 * Provide a transaction-safe data store.
@@ -64,7 +64,7 @@ The Akonadi server process (`akonadiserver`) has the following tasks:
 * Manage virtual collections representing search results.
 * Provide change notifications for all known Akonadi objects over D-Bus.
 
-### The Akonadi server control process
+### The Akonadi server control process ###
 
 The Akondi control process (\c akonadi_control) has the following tasks:
 * Manage and monitor the other server processes.
@@ -73,12 +73,12 @@ The Akondi control process (\c akonadi_control) has the following tasks:
 * Provide D-Bus API to manage agents.
 * Provide change notifications on agent types and agent instances.
 
-## Objects and Data Types
+## Objects and Data Types ##
 
 The Akonadi server operates on two basic object types, called items and collections. They are comparable to files and directories
 and are described in more detail in this section.
 
-## Akonadi Items
+## Akonadi Items ##
 
 An item is a generic container for whatever you want to store in Akonadi (eg. mails,
 events, contacts, etc.). An item consists of some generic information (such as identifier,
@@ -86,7 +86,7 @@ mimetype, change date, flags, etc.) and a set of data fields, the item parts. It
 are independent of the type of stored data, the semantics of the actual content is only
 known on the client side.
 
-## Items Parts
+## Items Parts ##
 
 Akonadi items can have one or more parts, e.g. an email message consists of the
 envelope, the body and possible one or more attachments. Item parts are identified
@@ -94,20 +94,20 @@ by an identifier string. There are a few special pre-defined part identifiers (A
 ENVELOPE, etc.), but in general the part identifiers are defined by the type specific
 extensions (ie. resource, serializer plugin, type specific client library).
 
-## Item Tags
+## Item Tags ##
 
 Tags are self-contained entities stored in separate database table. A tag is a
 relation between multiple items. Tags can have different types (PLAIN, ...) and applications
 can define their own type to describe application-specific relations. Tags can also have
 attributes to store additional metadata about the relation the tag describes.
 
-## Payload Data Serialization
+## Payload Data Serialization ##
 
 Item payload data is typically serialized in a standard format to ensure interoperability between different
 client library implementations. However, the %Akonadi server does not enforce any format,
 payload data is handled as an opaque binary blob.
 
-## Collections
+## Collections ##
 
 Collections are sets of items. Every item is stored in exactly one
 collection, this is sometimes also referred to as the "physical" storage location of the item.
@@ -120,7 +120,7 @@ collections, thus defining a collection tree.
 Collections are uniquely identified by their identifier in
 contrast to their path, which is more robust with regard to renaming and moving.
 
-## Collection Properties
+## Collection Properties ##
 
 Every collection has a set of supported content types.
 These are the mimetypes of items the collection can contain.
@@ -137,7 +137,7 @@ used for incremental synchronization. Evaluation of such attributes is the respo
 of client implementations, the %Akonadi server does not interpret properties
 other than content types and cache policies.
 
-## Collection Tree
+## Collection Tree ##
 
 There is a single collection tree in Akonadi, consisting of several parts:
 
@@ -169,9 +169,9 @@ Example:
     ...
 
 
-## Object Identification
+## Object Identification ##
 
-### Unique Identifier
+### Unique Identifier ###
 
 Every object stored in %Akonadi (collections and items) has a unique
 identifier in the form of an integer value. This identifier cannot be changed in
@@ -179,7 +179,7 @@ any way and will stay the same, regardless of any modifications to the referred
 object. A unique identifier will never be used twice and is globally unique,
 therefore it is possible to retrieve an item without knowing the collection it belongs to.
 
-### Remote Identifier
+### Remote Identifier ###
 
 Every object can also have an optional so-called remote identifier. This is an
 identifier used by the corresponding resource to identify the object on its
@@ -191,30 +191,30 @@ Special case applies for Tags, where each tag can have multiple remote IDs. This
 however opaque to resources as each resource is shown only the remote ID that it had
 provided when inserting the tag into Akonadi.
 
-### Global Identifier
+### Global Identifier ###
 
 Every item can has also so called GID, an identifier specific to the content (payload)
 of the item. The GID is extracted from the payload by client serializer when storing the
 item in Akonadi. For example, contacts have vCard "UID" field as their GID, emails can
 use value of "Message-Id" header.
 
-## Communication Protocols
+## Communication Protocols ###
 
 For communication within the Akonadi server infrastructure and for communication with Akonadi clients, two communication technologies are used:
 * D-Bus Used for management tasks and change notifications.
 * ASAP (Akonadi Server Access Protocol), used for high-throughput data transfer. ASAP is based on the well-known IMAP protocol (RFC 3501) which has been proven it's ability to handle large quantities of data in practice already.
 
-## Interacting with Akonadi
+## Interacting with Akonadi ##
 
 There are various possibilities to interact with Akonadi.
 
-### Akonadi Client Libraries
+### Akonadi Client Libraries ###
 
 Accessing the Akonadi server using the ASAP and D-Bus interfaces directly is cumbersome.
 Therefore you'd usually use a client library implementing the low-level protocol handling
 and providing convenient high-level APIs for Akonadi operations.
 
-### Akonadi Agents
+### Akonadi Agents ###
 
 Akonadi agents are processes which are controlled by the Akonadi server itself. Agents typically
 operate autonomously (ie. without much user interaction) on the objects handled by Akonadi, mostly
@@ -226,9 +226,9 @@ The most important ones are the so-called resource agents.
 Resource agents are connectors that provide access to data from an external source, and replay local changes
 back to their corresponding backend.
 
-## Implementation Details
+## Implementation Details ##
 
-### Data and Metadata Storage
+### Data and Metadata Storage ###
 
 The Akonadi server uses two mechanisms for data storage:
 * A SQL databases for metadata and small payload data

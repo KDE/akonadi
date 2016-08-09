@@ -1,6 +1,6 @@
-# Historical background {#history}
+# Historical background # {#history}
 
-## General
+# General #
 
 During the last 5 years, after the release of KDE 3.0, the requirements of our users
 have constantly increased. While it was sufficient that our PIM solution was able to handle 100 contacts,
@@ -17,7 +17,7 @@ came to the conclusion that a service is needed which acts as a local cache on t
 and provides search facilities. The name Akonadi comes from a divinity from Ghana and was chosen since
 all other nice names were already used by other projects on the Internet ;)
 
-## Problems with the implementation of KDE 3.x
+# Problems with the implementation of KDE 3.x #
 
 Before digging into the internals of Akonadi, we want to take a look at the implementation of the
 old KDE PIM libraries to understand the problems and conceptual shortcomings.

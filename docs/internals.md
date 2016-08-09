@@ -1,6 +1,6 @@
-# Internals documentation for Akonadi developers {#internals}
+# Internals documentation for Akonadi developers # {#internals}
 
-## Lazy Model Population
+## Lazy Model Population ##
 
 NOTE: This page is not part of the Akonadi API. It is provided as internal documentation for Akonadi maintainers. It was originally a blog post here: http://steveire.wordpress.com/2009/10/06/cache-invalidation-in-akonadi-models/
 @internal

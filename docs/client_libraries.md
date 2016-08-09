@@ -1,11 +1,11 @@
-# Akonadi client libraries {#client_libraries}
+# Akonadi client libraries # {#client_libraries}
 
 [TOC]
 
 Akonadi client libraries consist of three libraries that provide tools to access
 the Akonadi PIM data server: AkonadiCore, AkonadiWidgets and AkonadiAgentBase.
 All processes accessing Akonadi, including those which communicate with a remote
-server "[agents](@ref agents)", are considered clients.
+server [agents](@ref agents), are considered clients.
 
 <!--
 Additional information about Akonadi:
@@ -21,7 +21,7 @@ Tools for developers:
 - <a href="https://bugs.kde.org/buglist.cgi?query_format=advanced&product=Akonadi&component=libakonadi&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED">Bugtracker</a>
 //-->
 
-# Akonadi Objects {#objects}
+# Akonadi Objects # {#objects}
 
 Akonadi works on two basic object types: collections and items.
 
@@ -41,7 +41,7 @@ Both items and collections are identified by a persistent unique identifier.
 Also, they can contain arbitrary attributes (derived from Akonadi::Attribute) to
 attach general or application specific meta data to them.
 
-# Collection retrieval and manipulation {#collections}
+# Collection retrieval and manipulation # {#collections}
 
 A collection is represented by the Akonadi::Collection class.
 
@@ -64,7 +64,7 @@ type of PIM items. Akonadi::CollectionPropertiesDialog provides an extensible pr
 dialog for collections. Often needed KAction for collection operations are provided by
 Akonadi::StandardActionManager.
 
-# PIM item retrieval and manipulation      {#items}
+# PIM item retrieval and manipulation # {#items}
 
 PIM items are represented by classes derived from Akonadi::Item.
 Items can be retrieved using Akonadi::ItemFetchJob.
@@ -80,7 +80,7 @@ Akonadi::ItemModel provides a self-updating model class which can be used to dis
 of a collection. Akonadi::ItemView is the base class for a corresponding view. Often needed KAction
 for item operations are provided by Akonadi::StandardActionManager.
 
-# Low-level access to the Akonadi server   {#jobs}
+# Low-level access to the Akonadi server # {#jobs}
 
 Accessing the Akonadi server is done using job classes derived from Akonadi::Job. The
 communication channel with the server is provided by Akonadi::Session.
@@ -95,13 +95,13 @@ There also is Akonadi::TransactionSequence which can be used to automatically gr
 a set of jobs into a single transaction.
 
 
-# Change notifications (Monitor)   {#monitor}
+# Change notifications (Monitor) # {#monitor}
 
 The Akonadi::Monitor class allows you to monitor specific resources,
 collections and PIM items for changes. Akonadi::ChangeRecorder augments this
 by providing a way to record and replay change notifications.
 
-# PIM item serializer              {#serializer}
+# PIM item serializer # {#serializer}
 
 The class Akonadi::ItemSerializer is responsible for converting between the stored (binary) representation
 of a PIM item and the objects used to handle these items provided by the corresponding libraries (kabc, kcal, etc.).
@@ -109,7 +109,7 @@ of a PIM item and the objects used to handle these items provided by the corresp
 Serializer plugins allow you to add support for new kinds of PIM items to Akonadi.
 Akonadi::ItemSerializerPlugin can be used as a base class for such a plugin.
 
-# Agents and Resources             {#resource}
+# Agents and Resources # {#resource}
 
 Agents are independent processes that watch the Akonadi store for changes and react to them if necessary.
 Example: The Akonadi Indexing Agent is an agent that watches Akonadi for new emails, calendar events, etc.,
@@ -139,7 +139,7 @@ is not necessarily the same (e.g. the Kolab resource supports contacts and event
 in the same folder).
 
 
-# Integration in your Application      {#integration}
+# Integration in your Application # {#integration}
 
 Akonadi::Control provides ways to ensure that the Akonadi server is running, to monitor its availability
 and provide help on server-side errors. A more low-level interface to the Akonadi server is provided
@@ -151,7 +151,7 @@ look and feel across applications.
 
 This library provides classes for KDE applications to communicate with the Akonadi server. The most high-level interface to Akonadi is the Models and Views provided in this library. Ready to use models are provided for use with views to interact with a tree of collections, a list of items in a collection, or a combined tree of Collections and items.
 
-## Collections and Items {#collections_and_items}
+## Collections and Items ## {#collections_and_items}
 
 In the Akonadi concept, Items are individual objects of PIM data, e.g. emails, contacts, events, notes etc. The data in an item is stored in a typed payload. For example, if an Akonadi Item holds a contact, the contact is available as a KABC::Addressee:
 
@@ -175,7 +175,7 @@ col.setContentMimetypes({ Akonadi::Collection::mimeType(),
 
 This system makes it simple to create PIM applications. For example, to create an application for viewing and editing events, you simply need to tell %Akonadi to retrieve all items matching the mimetype 'text/calendar'.
 
-## Convenience Mimetype Accessors {#convenience_mimetype_accessors}
+## Convenience Mimetype Accessors ## {#convenience_mimetype_accessors}
 
 In order to avoid typos, improve readability, and to encapsulate the correct mimetypes for particular pim items, many of the standard classes have an accessor for the kind of mimetype the can handle. For example, you can use KMime::Message::mimeType() for emails, KABC::Addressee::mimeType() for contacts etc. It makes sense to define a similar static function in your own types.
 
@@ -185,7 +185,7 @@ col.setContentMimetypes({ Akonadi::Collection::mimeType(),
                           KMime::Message::mimeType() });
 ~~~~~~~~~~~~~
 
-## Models and Views {#models_and_views}
+## Models and Views ## {#models_and_views}
 Akonadi models and views are a high level way to interact with the Akonadi server. Most applications will use these classes. See the EntityTreeModel documentation for more information.
 
 Models provide an interface for viewing, deleting and moving Items and Collections. New Items can also be created by dropping data of the appropriate type on a model. Additionally, the models are updated automatically if another application changes the data or inserts or deletes items etc.
@@ -414,7 +414,7 @@ The SelectionProxyModel orders its items in the same top-to-bottom order as they
 
 Details on the actual implementation of lazy population are described on [this page](@ref internals).
 
-# Jobs and Monitors {#jobs_and_monitors}
+# Jobs and Monitors # {#jobs_and_monitors}
 
 The lower level way to interact with Akonadi is to use Jobs and Monitors (This is what models use internally). Jobs are used to make changes to akonadi, and in some cases (e.g., a fetch job) emit a signal with data resulting from the job. A Monitor reports changes made to the data stored in Akonadi (e.g., creating, updating, deleting or moving an item or collection ) via signals.
 
@@ -422,14 +422,14 @@ Typically, an application will configure a monitor to report changes to a partic
 
 Most applications will use some of the low level api for actions unrelated to a model-tree view, such as creating new items and collections.
 
-# Tricky details {#tricky_details}
+# Tricky details # {#tricky_details}
 
-## Change Conflicts {#change_conflicts}
+## Change Conflicts ## {#change_conflicts}
 It is possible that while an application is editing an item, that item gets updated in akonadi. Akonadi will notify the application that that item has changed via a Monitor signal. It is the responsibility of the application to handle the conflict by for example offering the user a dialog to resolve it. Alternatively, the application could ignore the dataChanged signal for that item, and will get another chance to resolve the conflict when trying to save the result back to akonadi. In that case, the ItemModifyJob will fail and report that the revision number of the item on the server differs from its revision number as reported by the job. Again, it is up to the application to handle this case.
 
 This is something that every application using akonadi will have to handle.
 
-## Using Item::Id or Collection::Id as an identifier {#using_id_as_an_identifier}
+## Using Item::Id or Collection::Id as an identifier ## {#using_id_as_an_identifier}
 
 Items and Collections have a id() member which is a unique identifier used by akonadi. It can be useful to use the id() as an identifier when storing Collections or Items.
 
@@ -473,7 +473,7 @@ qstring getremoteidbyinternalidentifier(qint64 internalidentifier)
 ~~~~~~~~~~~~~
 
 
-### Unordered Lists {#unordered_lists}
+### Unordered Lists ### {#unordered_lists}
 Collection and Item both provide a ::List to represent groups of objects. However the objects in the list are usually not ordered in any particular way, even though the API provides methods to work with an ordered list. It makes more sense to think of it as a Set instead of a list in most cases.
 
 For example, when using an ItemFetchJob to fetch the items in a collection, the items could be in any order when returned from the job. The order that a Monitor emits notices of changes is also indeterminate. By using a Transaction however, it is sometimes possible to retrieve objects in order. Additionally, using s constructor overload in the CollectionFetchJob it is possible to retrieve collections in a particular order.
@@ -492,19 +492,19 @@ Collection::List getCollections(const QList<Collection::Id> &idsToGet)
 }
 ~~~~~~~~~~~~~
 
-# Resources {#resources}
+# Resources # {#resources}
 The KDEPIM module includes resources for handling many types of PIM data, such as imap email, vcard files and vcard directories, ical event files etc. These cover many of the sources for your PIM data, but in the case that you need to use data from another source (for example a website providing a contacts storage service and an api), you simply have to write a new resource.
 
 http://techbase.kde.org/Development/Tutorials/Akonadi/Resources
 
-# Serializers {#serializers}
+# Serializers # {#serializers}
 Serializers provide the functionality of converting raw data, for example from a file, to a strongly typed object of PIM data. For example, the addressee serializer reads data from a file and creates a KABC::Addressee object.
 
 New serializers can also easily be written if the data you are dealing with is not one of the standard PIM data types.
 
-# Implementation details {#implementation_details}
+# Implementation details # {#implementation_details}
 
-## Updating Akonadi Models {#updating_models}
+## Updating Akonadi Models ## {#updating_models}
 
 NOTE: The details here are only relevant if you are writing a new view using EntityTreeModel, or writing a new model.
 
