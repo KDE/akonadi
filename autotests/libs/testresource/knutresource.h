@@ -50,7 +50,10 @@ public Q_SLOTS:
 protected:
     void retrieveCollections() Q_DECL_OVERRIDE;
     void retrieveItems(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
+#ifdef DO_IT_THE_OLD_WAY
     bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
+#endif
+    bool retrieveItems(const Akonadi::Item::List &items, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
 
     void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent) Q_DECL_OVERRIDE;
     void collectionChanged(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;

@@ -129,7 +129,7 @@ ItemFetchJob::ItemFetchJob(const Item &item, QObject *parent)
     d->mRequestedItems.append(item);
 }
 
-ItemFetchJob::ItemFetchJob(const Akonadi::Item::List &items, QObject *parent)
+ItemFetchJob::ItemFetchJob(const Item::List &items, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {
     Q_D(ItemFetchJob);
@@ -138,13 +138,26 @@ ItemFetchJob::ItemFetchJob(const Akonadi::Item::List &items, QObject *parent)
     d->mRequestedItems = items;
 }
 
-ItemFetchJob::ItemFetchJob(const QList<Akonadi::Item::Id> &items, QObject *parent)
+ItemFetchJob::ItemFetchJob(const QList<Item::Id> &items, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {
     Q_D(ItemFetchJob);
 
     d->init();
-    foreach (Item::Id id, items) {
+    d->mRequestedItems.reserve(items.size());
+    for (auto id : items) {
+        d->mRequestedItems.append(Item(id));
+    }
+}
+
+ItemFetchJob::ItemFetchJob(const QVector<Item::Id> &items, QObject *parent)
+    : Job(new ItemFetchJobPrivate(this), parent)
+{
+    Q_D(ItemFetchJob);
+
+    d->init();
+    d->mRequestedItems.reserve(items.size());
+    for (auto id : items) {
         d->mRequestedItems.append(Item(id));
     }
 }

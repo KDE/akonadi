@@ -47,8 +47,7 @@ public:
     ItemRetrievalManager(QObject *parent = Q_NULLPTR);
     ~ItemRetrievalManager();
 
-    void requestItemDelivery(qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,
-                             const QString &resource, const QVector<QByteArray> &parts);
+    void requestItemDelivery(qint64 uid, const QString &resource, const QVector<QByteArray> &parts);
 
     /**
      * Added for convenience. ItemRetrievalManager takes ownership over the

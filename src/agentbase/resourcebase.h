@@ -347,8 +347,24 @@ protected Q_SLOTS:
      * @param parts The item parts that should be retrieved.
      * @return false if there is an immediate error when retrieving the item.
      * @see itemRetrieved()
+     * @deprecated Use retrieveItems(const Akonadi::Item::List &, const QSet<QByteArray> &) instead.
      */
-    virtual bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) = 0;
+    AKONADIAGENTBASE_DEPRECATED virtual bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts);
+
+    /**
+     * Retrieve given @p items from the backend.
+     * Add the requested payload parts and call itemsRetrieved() when done.
+     * @param items The items whose payload should be retrieved. Use those objects
+     * when delivering the result instead of creating new items to ensure conflict
+     * detection will work.
+     * @param parts The item parts that should be retrieved.
+     * @return false if there is an immeidate error when retrieving the items.
+     * @see itemsRetrieved()
+     * @since 5.4
+     *
+     * @todo: Make this method pure virtual once retrieveItem() is gone
+     */
+    virtual bool retrieveItems(const Akonadi::Item::List &items, const QSet<QByteArray> &parts);
 
     /**
      * Abort any activity in progress in the backend. By default this method does nothing.
@@ -643,7 +659,14 @@ protected:
      * @note Calling this method is only allowed during fetching a single item, that
      * is directly or indirectly from retrieveItem().
      */
-    Item currentItem() const;
+    AKONADIAGENTBASE_DEPRECATED Item currentItem() const;
+
+    /**
+     * Returns the items that are currently retrieved.
+     * @note Calling this method is only allowed during item fetch, that is
+     * directly or indirectly from retrieveItems(Akonadi::Item::List,QSet<QByteArray>)
+     */
+    Item::List currentItems() const;
 
     /**
      * This method is called whenever the resource should start synchronize all data.
@@ -820,7 +843,7 @@ private:
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
 
-    QString requestItemDelivery(qint64 uid, const QString &remoteId, const QString &mimeType, const QByteArrayList &parts);
+    QString requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts);
 
 private:
     Q_DECLARE_PRIVATE(ResourceBase)
@@ -841,8 +864,10 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotItemSyncDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotPercent(KJob *, unsigned long))
     Q_PRIVATE_SLOT(d_func(), void slotDelayedEmitProgress())
-    Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrieval(const Akonadi::Item &item))
+    Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrieval(const Akonadi::Item &items))
     Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrievalResult(KJob *))
+    Q_PRIVATE_SLOT(d_func(), void slotPrepareItemsRetrieval(const QVector<Akonadi::Item> &items))
+    Q_PRIVATE_SLOT(d_func(), void slotPrepareItemsRetrievalResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void changeCommittedResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotSessionReconnected())
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplay(RecursiveMover *))

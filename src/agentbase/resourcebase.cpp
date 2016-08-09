@@ -163,6 +163,9 @@ public:
     void slotPrepareItemRetrieval(const Akonadi::Item &item);
     void slotPrepareItemRetrievalResult(KJob *job);
 
+    void slotPrepareItemsRetrieval(const QVector<Akonadi::Item> &item);
+    void slotPrepareItemsRetrievalResult(KJob *job);
+
     void changeCommittedResult(KJob *job);
 
     void slotRecursiveMoveReplay(RecursiveMover *mover);
@@ -505,6 +508,8 @@ ResourceBase::ResourceBase(const QString &id)
             SLOT(slotSynchronizeRelations()));
     connect(d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)),
             SLOT(slotPrepareItemRetrieval(Akonadi::Item)));
+    connect(d->scheduler, SIGNAL(executeItemsFetch(QVector<Akonadi::Item>,QSet<QByteArray>)),
+            SLOT(slotPrepareItemsRetrieval(QVector<Akonadi::Item>)));
     connect(d->scheduler, SIGNAL(executeResourceCollectionDeletion()),
             SLOT(slotDeleteResourceCollection()));
     connect(d->scheduler, SIGNAL(executeCacheInvalidation(Akonadi::Collection)),
@@ -620,8 +625,7 @@ void ResourceBase::itemRetrieved(const Item &item)
     Q_D(ResourceBase);
     Q_ASSERT(d->scheduler->currentTask().type == ResourceScheduler::FetchItem);
     if (!item.isValid()) {
-        d->scheduler->currentTask().sendDBusReplies(i18nc("@info", "Invalid item retrieved"));
-        d->scheduler->taskDone();
+        d->scheduler->itemFetchDone(i18nc("@info", "Invalid item retrieved"));
         return;
     }
 
@@ -647,8 +651,7 @@ void ResourceBasePrivate::slotDeliveryDone(KJob *job)
     if (job->error()) {
         emit q->error(i18nc("@info", "Error while creating item: %1", job->errorString()));
     }
-    scheduler->currentTask().sendDBusReplies(job->error() ? job->errorString() : QString());
-    scheduler->taskDone();
+    scheduler->itemFetchDone(QString());
 }
 
 void ResourceBase::collectionAttributesRetrieved(const Collection &collection)
@@ -775,7 +778,7 @@ void ResourceBase::changeCommitted(const Tag &tag)
     connect(job, SIGNAL(result(KJob*)), SLOT(changeCommittedResult(KJob*)));
 }
 
-QString ResourceBase::requestItemDelivery(qint64 uid, const QString &remoteId, const QString &mimeType, const QByteArrayList &parts)
+QString ResourceBase::requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts)
 {
     Q_D(ResourceBase);
     if (!isOnline()) {
@@ -785,15 +788,15 @@ QString ResourceBase::requestItemDelivery(qint64 uid, const QString &remoteId, c
     }
 
     setDelayedReply(true);
-    // FIXME: we need at least the revision number too
-    Item item(uid);
-    item.setMimeType(mimeType);
-    item.setRemoteId(remoteId);
 
-    d->scheduler->scheduleItemFetch(item, QSet<QByteArray>::fromList(parts), message());
+    Item::List items;
+    items.reserve(uids.size());
+    for (auto uid : uids) {
+        items.push_back(Item(uid));
+    }
+    d->scheduler->scheduleItemsFetch(items, QSet<QByteArray>::fromList(parts), message());
 
     return QString();
-
 }
 
 void ResourceBase::collectionsRetrieved(const Collection::List &collections)
@@ -1005,16 +1008,16 @@ void ResourceBasePrivate::slotSynchronizeRelations()
     QMetaObject::invokeMethod(q, "retrieveRelations");
 }
 
-void ResourceBasePrivate::slotPrepareItemRetrieval(const Akonadi::Item &item)
+void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
 {
     Q_Q(ResourceBase);
-    ItemFetchJob *fetch = new ItemFetchJob(item, this);
+    auto fetch = new ItemFetchJob(item, this);
     fetch->fetchScope().setAncestorRetrieval(q->changeRecorder()->itemFetchScope().ancestorRetrieval());
     fetch->fetchScope().setCacheOnly(true);
 
     // copy list of attributes to fetch
     const QSet<QByteArray> attributes = q->changeRecorder()->itemFetchScope().attributes();
-    foreach (const QByteArray &attribute, attributes) {
+    for (const auto &attribute : attributes) {
         fetch->fetchScope().fetchAttribute(attribute);
     }
 
@@ -1032,13 +1035,44 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult(KJob *job)
         return;
     }
     ItemFetchJob *fetch = qobject_cast<ItemFetchJob *>(job);
-    if (fetch->items().count() != 1) {
-        q->cancelTask(i18n("The requested item no longer exists"));
+    const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
+    if (!q->retrieveItem(fetch->items().at(0), parts)) {
+        q->cancelTask();
+    }
+}
+
+void ResourceBasePrivate::slotPrepareItemsRetrieval(const QVector<Item> &items)
+{
+    Q_Q(ResourceBase);
+    ItemFetchJob *fetch = new ItemFetchJob(items, this);
+    fetch->fetchScope().setAncestorRetrieval(q->changeRecorder()->itemFetchScope().ancestorRetrieval());
+    fetch->fetchScope().setCacheOnly(true);
+    // It's possible that one or more items were removed before this task was
+    // executed, so ignore it and just handle the rest.
+    fetch->fetchScope().setIgnoreRetrievalErrors(true);
+
+    // copy list of attributes to fetch
+    const QSet<QByteArray> attributes = q->changeRecorder()->itemFetchScope().attributes();
+    for (const auto &attribute : attributes) {
+        fetch->fetchScope().fetchAttribute(attribute);
+    }
+
+    q->connect(fetch, SIGNAL(result(KJob*)), SLOT(slotPrepareItemsRetrievalResult(KJob*)));
+}
+
+void ResourceBasePrivate::slotPrepareItemsRetrievalResult(KJob *job)
+{
+    Q_Q(ResourceBase);
+    Q_ASSERT_X(scheduler->currentTask().type == ResourceScheduler::FetchItems,
+               "ResourceBasePrivate::slotPrepareItemsRetrievalResult()",
+               "Preparing items retrieval although no items retrieval is in progress");
+    if (job->error()) {
+        q->cancelTask(job->errorText());
         return;
     }
-    const Item item = fetch->items().at(0);
+    ItemFetchJob *fetch = qobject_cast<ItemFetchJob *>(job);
     const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
-    if (!q->retrieveItem(item, parts)) {
+    if (!q->retrieveItems(fetch->items(), parts)) {
         q->cancelTask();
     }
 }
@@ -1073,6 +1107,9 @@ void ResourceBase::itemsRetrievalDone()
     if (d->mItemSyncer) {
         d->mItemSyncer->deliveryDone();
     } else {
+        if (d->scheduler->currentTask().type == ResourceScheduler::FetchItems) {
+            d->scheduler->currentTask().sendDBusReplies(QString());
+        }
         // user did the sync himself, we are done now
         d->scheduler->taskDone();
     }
@@ -1105,7 +1142,16 @@ Item ResourceBase::currentItem() const
     Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::FetchItem,
                "ResourceBase::currentItem()",
                "Trying to access current item although no item retrieval is in progress");
-    return d->scheduler->currentTask().item;
+    return d->scheduler->currentTask().items[0];
+}
+
+Item::List ResourceBase::currentItems() const
+{
+    Q_D(const ResourceBase);
+    Q_ASSERT_X(d->scheduler->currentTask().type == ResourceScheduler::FetchItems,
+               "ResourceBase::currentItems()",
+               "Trying to access current items although no items retrieval is in progress");
+    return d->scheduler->currentTask().items;
 }
 
 void ResourceBase::synchronizeCollectionTree()
@@ -1261,12 +1307,53 @@ void ResourceBase::setItemStreamingEnabled(bool enable)
     }
 }
 
+namespace {
+
+class UpdateItemsJob : public KCompositeJob
+{
+public:
+    explicit UpdateItemsJob(const Item::List &items, QObject *parent = Q_NULLPTR)
+        : KCompositeJob(parent)
+        , mItems(items)
+    {
+    }
+
+    void start() Q_DECL_OVERRIDE
+    {
+        Q_FOREACH (const Item &item, mItems) {
+            auto job = new ItemModifyJob(item, this);
+            addSubjob(job);
+        }
+    }
+
+    void slotResult(KJob *job) Q_DECL_OVERRIDE
+    {
+        KCompositeJob::slotResult(job);
+        if (!hasSubjobs()) {
+            emitResult();
+        }
+    }
+
+private:
+    Item::List mItems;
+};
+
+}
+
+
 void ResourceBase::itemsRetrieved(const Item::List &items)
 {
     Q_D(ResourceBase);
-    d->createItemSyncInstanceIfMissing();
-    if (d->mItemSyncer) {
-        d->mItemSyncer->setFullSyncItems(items);
+    if (d->scheduler->currentTask().type == ResourceScheduler::FetchItems) {
+        auto job = new UpdateItemsJob(items, this);
+        connect(job, SIGNAL(result(KJob*)),
+                this, SLOT(slotItemSyncDone(KJob*)));
+        job->start();
+    } else {
+        d->createItemSyncInstanceIfMissing();
+        if (d->mItemSyncer) {
+            d->mItemSyncer->setFullSyncItems(items);
+        }
     }
 }
 
@@ -1286,6 +1373,8 @@ void ResourceBasePrivate::slotItemSyncDone(KJob *job)
     Q_Q(ResourceBase);
     if (job->error() && job->error() != Job::UserCanceled) {
         emit q->error(job->errorString());
+    } else if (scheduler->currentTask().type == ResourceScheduler::FetchItems) {
+        scheduler->currentTask().sendDBusReplies(QString());
     }
     scheduler->taskDone();
 }
@@ -1360,6 +1449,39 @@ void ResourceBase::retrieveRelations()
     Q_D(ResourceBase);
     d->scheduler->taskDone();
 }
+
+bool ResourceBase::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
+{
+    Q_UNUSED(item);
+    Q_UNUSED(parts);
+    // retrieveItem() can no longer be pure virtual, because then we could not mark
+    // it as deprecated (i.e. implementations would still be forced to implement it),
+    // so instead we assert here.
+    // NOTE: Don't change to Q_ASSERT_X here: while the macro can be disabled at
+    // compile time, we want to hit this assert *ALWAYS*.
+    qt_assert_x("Akonadi::ResourceBase::retrieveItem()",
+                "The base implementation of retrieveItem() must never be reached. "
+                "You must implement either retrieveItem() or retrieveItems(Akonadi::Item::List, QSet<QByteArray>) overload "
+                "to handle item retrieval requests.", __FILE__, __LINE__);
+    return false;
+}
+
+bool ResourceBase::retrieveItems(const Akonadi::Item::List& items, const QSet<QByteArray>& parts)
+{
+    Q_D(ResourceBase);
+
+    // If we reach this implementation of retrieveItems() then it means that the
+    // resource is still using the deprecated retrieveItem() method, so we explode
+    // this to a myriad of tasks in scheduler and let them be processed one by one
+
+    const qint64 id = d->scheduler->currentTask().serial;
+    for (const auto &item : items) {
+        d->scheduler->scheduleItemFetch(item, parts, d->scheduler->currentTask().dbusMsgs, id);
+    }
+    taskDone();
+    return true;
+}
+
 
 void Akonadi::ResourceBase::abortActivity()
 {

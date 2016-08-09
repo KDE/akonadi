@@ -138,6 +138,12 @@ public:
     explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = Q_NULLPTR);
 
     /**
+     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = Q_NULLPTR)
+     * @since 5.4
+     */
+    explicit ItemFetchJob(const QVector<Item::Id> &items, QObject *parent = Q_NULLPTR);
+
+    /**
      * Creates a new item fetch job that retrieves all items tagged with specified @p tag.
      *
      * @param tag The tag to fetch all items from.

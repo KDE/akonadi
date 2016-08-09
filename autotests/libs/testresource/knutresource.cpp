@@ -156,6 +156,7 @@ void KnutResource::retrieveItems(const Akonadi::Collection &collection)
     itemsRetrieved(items);
 }
 
+#ifdef DO_IT_THE_OLD_WAY
 bool KnutResource::retrieveItem(const Item &item, const QSet<QByteArray> &parts)
 {
     Q_UNUSED(parts);
@@ -169,6 +170,30 @@ bool KnutResource::retrieveItem(const Item &item, const QSet<QByteArray> &parts)
     Item i = XmlReader::elementToItem(itemElem, true);
     i.setId(item.id());
     itemRetrieved(i);
+    return true;
+}
+#endif
+
+bool KnutResource::retrieveItems(const Item::List &items, const QSet<QByteArray> &parts)
+{
+    Q_UNUSED(parts);
+
+    Item::List results;
+    results.reserve(items.size());
+    for (const auto &item : items) {
+        const QDomElement itemElem = mDocument.itemElementByRemoteId(item.remoteId());
+        if (itemElem.isNull()) {
+            cancelTask(i18n("No item found for remoteid %1", item.remoteId()));
+            return false;
+        }
+
+        Item i = XmlReader::elementToItem(itemElem, true);
+        i.setParentCollection(item.parentCollection());
+        i.setId(item.id());
+        results.push_back(i);
+    }
+
+    itemsRetrieved(results);
     return true;
 }
 

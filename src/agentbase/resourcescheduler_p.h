@@ -57,6 +57,7 @@ public:
         SyncCollectionAttributes,
         SyncTags,
         FetchItem,
+        FetchItems,
         ChangeReplay,
         RecursiveMoveReplay,
         DeleteResourceCollection,
@@ -81,7 +82,7 @@ public:
         qint64 serial;
         TaskType type;
         Collection collection;
-        Item item;
+        QVector<Item> items;
         QSet<QByteArray> itemParts;
         QList<QDBusMessage> dbusMsgs;
         QObject *receiver;
@@ -94,7 +95,7 @@ public:
         {
             return type == other.type
                    && (collection == other.collection || (!collection.isValid() && !other.collection.isValid()))
-                   && (item == other.item || (!item.isValid() && !other.item.isValid()))
+                   && items == other.items
                    && itemParts == other.itemParts
                    && receiver == other.receiver
                    && methodName == other.methodName
@@ -131,11 +132,28 @@ public:
 
     /**
       Schedules fetching of a single PIM item.
-      @param item The item to fetch.
+
+      This task is only ever used if the resource still uses the old deprecated
+      retrieveItem() (instead of retrieveItems(Item::List)) method. This task has
+      a special meaning to the scheduler and instead of replying to the DBus message
+      after the single @p item is retrieved, the items are accumulated until all
+      tasks from the same messages are fetched.
+
+      @param items The items to fetch.
+      @param parts List of names of the parts of the item to fetch.
+      @param msg The associated D-Bus message.
+      @param parentId ID of the original ItemsFetch task that this task was created from.
+                      We can use this ID to group the tasks together
+    */
+    void scheduleItemFetch(const Item &item, const QSet<QByteArray> &parts, const QList<QDBusMessage> &msgs, const qint64 parentId);
+
+    /**
+      Schedules batch-fetching of PIM items.
+      @param items The items to fetch.
       @param parts List of names of the parts of the item to fetch.
       @param msg The associated D-Bus message.
     */
-    void scheduleItemFetch(const Item &item, const QSet<QByteArray> &parts, const QDBusMessage &msg);
+    void scheduleItemsFetch(const Item::List &item, const QSet<QByteArray> &parts, const QDBusMessage &msg);
 
     /**
       Schedules deletion of the resource collection.
@@ -180,6 +198,8 @@ public:
     */
     Task currentTask() const;
 
+    Task &currentTask();
+
     /**
       Sets the online state.
     */
@@ -220,6 +240,11 @@ public Q_SLOTS:
     void taskDone();
 
     /**
+      Like taskDone(), but special case for ItemFetch task
+    */
+    void itemFetchDone(const QString &msg);
+
+    /**
       The current task can't be finished now and will be rescheduled later
     */
     void deferTask();
@@ -237,6 +262,7 @@ Q_SIGNALS:
     void executeTagSync();
     void executeRelationSync();
     void executeItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts);
+    void executeItemsFetch(const QVector<Akonadi::Item> &items, const QSet<QByteArray> &parts);
     void executeResourceCollectionDeletion();
     void executeCacheInvalidation(const Akonadi::Collection &collection);
     void executeChangeReplay();

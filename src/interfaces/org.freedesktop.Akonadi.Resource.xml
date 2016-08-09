@@ -11,10 +11,9 @@
     <signal name="collectionTreeSynchronized"/>
     <method name="requestItemDelivery">
       <arg type="s" direction="out"/>
-      <arg name="uid" type="x" direction="in"/>
-      <arg name="remoteId" type="s" direction="in"/>
-      <arg name="mimeType" type="s" direction="in"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="QByteArrayList"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;qlonglong&gt;"/>
+      <arg name="uids" type="ax" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QByteArrayList"/>
       <arg name="parts" type="aay" direction="in"/>
     </method>
     <method name="synchronize">

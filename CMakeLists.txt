@@ -20,7 +20,7 @@ include(ECMQtDeclareLoggingCategory)
 
 include(AkonadiMacros)
 
-set(PIM_VERSION "5.3.40")
+set(PIM_VERSION "5.3.41")
 
 set(QT_REQUIRED_VERSION "5.5.0")
 set(AKONADI_VERSION ${PIM_VERSION})

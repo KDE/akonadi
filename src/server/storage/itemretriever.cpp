@@ -199,9 +199,6 @@ bool ItemRetriever::exec()
     verifyCache();
 
     QSqlQuery query = buildQuery();
-    ItemRetrievalRequest *lastRequest = 0;
-    QList<ItemRetrievalRequest *> requests;
-
     QByteArrayList parts;
     Q_FOREACH (const QByteArray &part, mParts) {
         if (part.startsWith(AKONADI_PARAM_PLD)) {
@@ -209,28 +206,35 @@ bool ItemRetriever::exec()
         }
     }
 
-    QHash<qint64, QString> mimeTypeIdNameCache;
     QHash<qint64, QString> resourceIdNameCache;
+    QVector<ItemRetrievalRequest *> requests;
+    QHash<QString /* resourceId */, ItemRetrievalRequest*> resRequests;
+    QHash<qint64, ItemRetrievalRequest*> itemRequests;
     while (query.isValid()) {
         const qint64 pimItemId = query.value(PimItemIdColumn).toLongLong();
-        if (!lastRequest || lastRequest->id != pimItemId) {
-            lastRequest = new ItemRetrievalRequest();
-            lastRequest->id = pimItemId;
-            lastRequest->remoteId = Utils::variantToString(query.value(PimItemRidColumn));
-            const qint64 mtId = query.value(MimeTypeIdColumn).toLongLong();
-            auto mtIter = mimeTypeIdNameCache.find(mtId);
-            if (mtIter == mimeTypeIdNameCache.end()) {
-                mtIter = mimeTypeIdNameCache.insert(mtId, MimeType::retrieveById(mtId).name());
+        const qint64 resourceId = query.value(ResourceIdColumn).toLongLong();
+        auto resIter = resourceIdNameCache.find(resourceId);
+        if (resIter == resourceIdNameCache.end()) {
+            resIter = resourceIdNameCache.insert(resourceId, Resource::retrieveById(resourceId).name());
+        }
+        ItemRetrievalRequest *lastRequest = Q_NULLPTR;
+        auto itemIter = itemRequests.constFind(pimItemId);
+        if (itemIter != itemRequests.constEnd()) {
+            lastRequest = *itemIter;
+        } else {
+            lastRequest = resRequests.value(*resIter);
+            if (!lastRequest || lastRequest->ids.size() > 100) {
+                lastRequest = new ItemRetrievalRequest();
+                lastRequest->ids.push_back(pimItemId);
+                lastRequest->resourceId = *resIter;
+                lastRequest->parts = parts;
+                resRequests.insert(*resIter, lastRequest);
+                itemRequests.insert(pimItemId, lastRequest);
+                requests << lastRequest;
+            } else {
+                lastRequest->ids.push_back(pimItemId);
+                itemRequests.insert(pimItemId, lastRequest);
             }
-            lastRequest->mimeType = *mtIter;
-            const qint64 resourceId = query.value(ResourceIdColumn).toLongLong();
-            auto resIter = resourceIdNameCache.find(resourceId);
-            if (resIter == resourceIdNameCache.end()) {
-                resIter = resourceIdNameCache.insert(resourceId, Resource::retrieveById(resourceId).name());
-            }
-            lastRequest->resourceId = *resIter;
-            lastRequest->parts = parts;
-            requests << lastRequest;
         }
 
         if (query.value(PartTypeNameColumn).isNull()) {

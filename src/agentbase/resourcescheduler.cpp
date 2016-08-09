@@ -124,11 +124,30 @@ void ResourceScheduler::scheduleAttributesSync(const Collection &collection)
     scheduleNext();
 }
 
-void ResourceScheduler::scheduleItemFetch(const Item &item, const QSet<QByteArray> &parts, const QDBusMessage &msg)
+void ResourceScheduler::scheduleItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts,
+                                          const QList<QDBusMessage> &msgs, qint64 parentId)
+
 {
     Task t;
     t.type = FetchItem;
-    t.item = item;
+    t.items << item;
+    t.itemParts = parts;
+    t.dbusMsgs = msgs;
+    t.argument = parentId;
+
+    TaskList &queue = queueForTaskType(t.type);
+    queue << t;
+
+    signalTaskToTracker(t, "FetchItem", QString::number(item.id()));
+    scheduleNext();
+}
+
+
+void ResourceScheduler::scheduleItemsFetch(const Item::List &items, const QSet<QByteArray> &parts, const QDBusMessage &msg)
+{
+    Task t;
+    t.type = FetchItems;
+    t.items = items;
     t.itemParts = parts;
 
     // if the current task does already fetch the requested item, break here but
@@ -148,7 +167,13 @@ void ResourceScheduler::scheduleItemFetch(const Item &item, const QSet<QByteArra
 
     t.dbusMsgs << msg;
     queue << t;
-    signalTaskToTracker(t, "FetchItem", QString::number(item.id()));
+
+    QStringList ids;
+    ids.reserve(items.size());
+    for (const auto &item : items) {
+        ids.push_back(QString::number(item.id()));
+    }
+    signalTaskToTracker(t, "FetchItems", ids.join(QStringLiteral(", ")));
     scheduleNext();
 }
 
@@ -282,6 +307,44 @@ void ResourceScheduler::taskDone()
     scheduleNext();
 }
 
+void ResourceScheduler::itemFetchDone(const QString &msg)
+{
+    Q_ASSERT(mCurrentTask.type == FetchItem);
+
+    TaskList &queue = queueForTaskType(mCurrentTask.type);
+
+    const qint64 parentId = mCurrentTask.argument.toLongLong();
+    // msg is empty, there was no error
+    if (msg.isEmpty() && !queue.isEmpty()) {
+        Task &nextTask = queue[0];
+        // If the next task is FetchItem too...
+        if (nextTask.type != mCurrentTask.type || nextTask.argument.toLongLong() != parentId) {
+            // If the next task is not FetchItem or the next FetchItem task has
+            // different parentId then this was the last task in the series, so
+            // send the DBus replies.
+            mCurrentTask.sendDBusReplies(msg);
+        }
+    } else {
+        // msg was not empty, there was an error.
+        // remove all subsequent FetchItem tasks with the same parentId
+        auto iter = queue.begin();
+        while (iter != queue.end()) {
+            if (iter->type != mCurrentTask.type || iter->argument.toLongLong() == parentId) {
+                iter = queue.erase(iter);
+                continue;
+            } else {
+                break;
+            }
+        }
+
+        // ... and send DBus reply with the error message
+        mCurrentTask.sendDBusReplies(msg);
+    }
+
+    taskDone();
+}
+
+
 void ResourceScheduler::deferTask()
 {
     if (mCurrentTask.type == Invalid) {
@@ -362,7 +425,10 @@ void ResourceScheduler::executeNext()
         emit executeTagSync();
         break;
     case FetchItem:
-        emit executeItemFetch(mCurrentTask.item, mCurrentTask.itemParts);
+        emit executeItemFetch(mCurrentTask.items.at(0), mCurrentTask.itemParts);
+        break;
+    case FetchItems:
+        emit executeItemsFetch(mCurrentTask.items, mCurrentTask.itemParts);
         break;
     case DeleteResourceCollection:
         emit executeResourceCollectionDeletion();
@@ -415,6 +481,11 @@ ResourceScheduler::Task ResourceScheduler::currentTask() const
     return mCurrentTask;
 }
 
+ResourceScheduler::Task &ResourceScheduler::currentTask()
+{
+    return mCurrentTask;
+}
+
 void ResourceScheduler::setOnline(bool state)
 {
     if (mOnline == state) {
@@ -432,9 +503,21 @@ void ResourceScheduler::setOnline(bool state)
         }
         // abort pending synchronous tasks, might take longer until the resource goes online again
         TaskList &itemFetchQueue = queueForTaskType(FetchItem);
+        qint64 parentId = -1;
+        Task lastTask;
         for (QList< Task >::iterator it = itemFetchQueue.begin(); it != itemFetchQueue.end();) {
             if ((*it).type == FetchItem) {
-                (*it).sendDBusReplies(i18nc("@info", "Job canceled."));
+                qint64 idx = it->argument.toLongLong();
+                if (parentId == -1) {
+                    parentId = idx;
+                }
+                if (idx != parentId) {
+                    // Only emit the DBus reply once we reach the last taskwith the
+                    // same "idx"
+                    lastTask.sendDBusReplies(i18nc("@info", "Job canceled."));
+                    parentId = idx;
+                }
+                lastTask = (*it);
                 it = itemFetchQueue.erase(it);
                 if (s_resourcetracker) {
                     QList<QVariant> argumentList;
@@ -510,6 +593,7 @@ ResourceScheduler::QueueType ResourceScheduler::queueTypeForTaskType(TaskType ty
     case RecursiveMoveReplay:
         return ChangeReplayQueue;
     case FetchItem:
+    case FetchItems:
     case SyncCollectionAttributes:
         return UserActionQueue;
     default:
@@ -582,6 +666,7 @@ static const char s_taskTypes[][27] = {
     "SyncCollectionAttributes",
     "SyncTags",
     "FetchItem",
+    "FetchItems",
     "ChangeReplay",
     "RecursiveMoveReplay",
     "DeleteResourceCollection",
@@ -599,8 +684,13 @@ QTextStream &Akonadi::operator<<(QTextStream &d, const ResourceScheduler::Task &
         if (task.collection.isValid()) {
             d << "collection " << task.collection.id() << " ";
         }
-        if (task.item.id() != -1) {
-            d << "item " << task.item.id() << " ";
+        if (!task.items.isEmpty()) {
+            QStringList ids;
+            ids.reserve(task.items.size());
+            for (const auto &item : task.items) {
+                ids.push_back(QString::number(item.id()));
+            }
+            d << "items " << ids.join(QStringLiteral(", ")) << " ";
         }
         if (!task.methodName.isEmpty()) {
             d << task.methodName << " " << task.argument.toString();

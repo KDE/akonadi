@@ -126,13 +126,10 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
 }
 
 // called from any thread
-void ItemRetrievalManager::requestItemDelivery(qint64 uid, const QByteArray &remoteId, const QByteArray &mimeType,
-                                               const QString &resource, const QVector<QByteArray> &parts)
+void ItemRetrievalManager::requestItemDelivery(qint64 uid, const QString &resource, const QVector<QByteArray> &parts)
 {
     ItemRetrievalRequest *req = new ItemRetrievalRequest();
-    req->id = uid;
-    req->remoteId = QString::fromUtf8(remoteId);
-    req->mimeType = QString::fromUtf8(mimeType);
+    req->ids << uid;
     req->resourceId = resource;
     req->parts = parts.toList();
 
@@ -142,7 +139,7 @@ void ItemRetrievalManager::requestItemDelivery(qint64 uid, const QByteArray &rem
 void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
 {
     mLock->lockForWrite();
-    qCDebug(AKONADISERVER_LOG) << "posting retrieval request for item" << req->id << " there are "
+    qCDebug(AKONADISERVER_LOG) << "posting retrieval request for items" << req->ids << " there are "
               << mPendingRequests.size() << " queues and "
               << mPendingRequests[req->resourceId].size() << " items in mine";
     mPendingRequests[req->resourceId].append(req);
@@ -159,14 +156,14 @@ void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
             const QString errorMsg = req->errorMsg;
             mLock->unlock();
             if (errorMsg.isEmpty()) {
-                qCDebug(AKONADISERVER_LOG) << "request for item" << req->id << "succeeded";
+                qCDebug(AKONADISERVER_LOG) << "request for items" << req->ids << "succeeded";
                 return;
             } else {
-                qCDebug(AKONADISERVER_LOG) << "request for item" << req->id << req->remoteId << "failed:" << errorMsg;
+                qCDebug(AKONADISERVER_LOG) << "request for items" << req->ids << "failed:" << errorMsg;
                 throw ItemRetrieverException(errorMsg);
             }
         } else {
-            qCDebug(AKONADISERVER_LOG) << "request for item" << req->id << "still pending - waiting";
+            qCDebug(AKONADISERVER_LOG) << "request for items" << req->ids << "still pending - waiting";
             mWaitCondition->wait(mLock);
             qCDebug(AKONADISERVER_LOG) << "continuing";
         }
@@ -222,8 +219,8 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
     mCurrentJobs.remove(request->resourceId);
     // TODO check if (*it)->parts is a subset of currentRequest->parts
     for (QList<ItemRetrievalRequest *>::Iterator it = mPendingRequests[request->resourceId].begin(); it != mPendingRequests[request->resourceId].end();) {
-        if ((*it)->id == request->id) {
-            qCDebug(AKONADISERVER_LOG) << "someone else requested item" << request->id << "as well, marking as processed";
+        if ((*it)->ids == request->ids) {
+            qCDebug(AKONADISERVER_LOG) << "someone else requested item" << request->ids << "as well, marking as processed";
             (*it)->errorMsg = errorMsg;
             (*it)->processed = true;
             it = mPendingRequests[request->resourceId].erase(it);

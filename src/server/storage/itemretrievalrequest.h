@@ -22,6 +22,7 @@
 
 #include <QByteArray>
 #include <QString>
+#include <QList>
 
 namespace Akonadi {
 namespace Server {
@@ -31,14 +32,11 @@ class ItemRetrievalRequest
 {
 public:
     ItemRetrievalRequest()
-        : id(-1)
-        , processed(false)
+        : processed(false)
     {
     }
 
-    qint64 id;
-    QString remoteId;
-    QString mimeType;
+    QList<qint64> ids;
     QString resourceId;
     QByteArrayList parts; // list instead of vector to simplify client-side handling
     QString errorMsg;

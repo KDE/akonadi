@@ -35,14 +35,13 @@ ItemRetrievalJob::~ItemRetrievalJob()
 void ItemRetrievalJob::start(org::freedesktop::Akonadi::Resource *interface)
 {
     Q_ASSERT(m_request);
-    qCDebug(AKONADISERVER_LOG) << "processing retrieval request for item" << m_request->id << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
+    qCDebug(AKONADISERVER_LOG) << "processing retrieval request for item" << m_request->ids << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
 
     m_interface = interface;
     // call the resource
     if (interface) {
         m_active = true;
-        auto reply = interface->requestItemDelivery(m_request->id, m_request->remoteId,
-                                                    m_request->mimeType, m_request->parts);
+        auto reply = interface->requestItemDelivery(m_request->ids, m_request->parts);
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
         connect(watcher, &QDBusPendingCallWatcher::finished,
                 this, &ItemRetrievalJob::callFinished);
