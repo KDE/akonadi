@@ -125,10 +125,8 @@ QVector<QByteArray> ItemRetriever::retrieveParts() const
 
 enum QueryColumns {
     PimItemIdColumn,
-    PimItemRidColumn,
 
-    MimeTypeIdColumn,
-
+    CollectionIdColumn,
     ResourceIdColumn,
 
     PartTypeNameColumn,
@@ -153,8 +151,7 @@ QSqlQuery ItemRetriever::buildQuery() const
     qb.addJoin(QueryBuilder::LeftJoin, PartType::tableName(), partTypeJoinCondition);
 
     qb.addColumn(PimItem::idFullColumnName());
-    qb.addColumn(PimItem::remoteIdFullColumnName());
-    qb.addColumn(PimItem::mimeTypeIdFullColumnName());
+    qb.addColumn(PimItem::collectionIdFullColumnName());
     qb.addColumn(Collection::resourceIdFullColumnName());
     qb.addColumn(PartType::nameFullColumnName());
     qb.addColumn(Part::datasizeFullColumnName());
@@ -208,27 +205,28 @@ bool ItemRetriever::exec()
 
     QHash<qint64, QString> resourceIdNameCache;
     QVector<ItemRetrievalRequest *> requests;
-    QHash<QString /* resourceId */, ItemRetrievalRequest*> resRequests;
-    QHash<qint64, ItemRetrievalRequest*> itemRequests;
+    QHash<qint64 /* collection */, ItemRetrievalRequest*> colRequests;
+    QHash<qint64 /* item */, ItemRetrievalRequest*> itemRequests;
     while (query.isValid()) {
         const qint64 pimItemId = query.value(PimItemIdColumn).toLongLong();
+        const qint64 collectionId = query.value(CollectionIdColumn).toLongLong();
         const qint64 resourceId = query.value(ResourceIdColumn).toLongLong();
-        auto resIter = resourceIdNameCache.find(resourceId);
-        if (resIter == resourceIdNameCache.end()) {
-            resIter = resourceIdNameCache.insert(resourceId, Resource::retrieveById(resourceId).name());
-        }
         ItemRetrievalRequest *lastRequest = Q_NULLPTR;
-        auto itemIter = itemRequests.constFind(pimItemId);
+        const auto itemIter = itemRequests.constFind(pimItemId);
         if (itemIter != itemRequests.constEnd()) {
             lastRequest = *itemIter;
         } else {
-            lastRequest = resRequests.value(*resIter);
+            lastRequest = colRequests.value(collectionId);
             if (!lastRequest || lastRequest->ids.size() > 100) {
                 lastRequest = new ItemRetrievalRequest();
                 lastRequest->ids.push_back(pimItemId);
+                auto resIter = resourceIdNameCache.find(resourceId);
+                if (resIter == resourceIdNameCache.end()) {
+                    resIter = resourceIdNameCache.insert(resourceId, Resource::retrieveById(resourceId).name());
+                }
                 lastRequest->resourceId = *resIter;
                 lastRequest->parts = parts;
-                resRequests.insert(*resIter, lastRequest);
+                colRequests.insert(collectionId, lastRequest);
                 itemRequests.insert(pimItemId, lastRequest);
                 requests << lastRequest;
             } else {
