@@ -32,32 +32,26 @@ RenameFavoriteDialog::RenameFavoriteDialog(const QString &caption, const QString
     setWindowTitle(caption);
     setModal(true);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
 
-    QWidget *frame = new QWidget(this);
-    mainLayout->addWidget(frame);
-    QVBoxLayout *layout = new QVBoxLayout(frame);
-    layout->setMargin(0);
-
-    m_label = new QLabel(text, frame);
+    m_label = new QLabel(text, this);
     m_label->setWordWrap(true);
-    layout->addWidget(m_label);
+    mainLayout->addWidget(m_label);
 
-    m_lineEdit = new QLineEdit(value, frame);
+    m_lineEdit = new QLineEdit(value, this);
     m_lineEdit->setClearButtonEnabled(true);
-    layout->addWidget(m_lineEdit);
+    mainLayout->addWidget(m_lineEdit);
 
     m_lineEdit->setFocus();
     m_label->setBuddy(m_lineEdit);
 
-    layout->addStretch();
+    mainLayout->addStretch();
 
     connect(m_lineEdit, &QLineEdit::textChanged, this, &RenameFavoriteDialog::slotEditTextChanged);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
     mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-    QPushButton *defaultButtonName = new QPushButton(i18n("Default Name"));
+    QPushButton *defaultButtonName = new QPushButton(i18n("Default Name"), this);
     buttonBox->addButton(defaultButtonName, QDialogButtonBox::ActionRole);
     connect(defaultButtonName, &QPushButton::clicked, this, &RenameFavoriteDialog::slotDefaultName);
 
