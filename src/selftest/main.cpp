@@ -26,6 +26,7 @@
 
 int main(int argc, char *argv[])
 {
+    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData about(QStringLiteral("akonadiselftest"),
                      i18n("Akonadi Self Test"),
@@ -35,7 +36,6 @@ int main(int argc, char *argv[])
                      i18n("(c) 2008 Volker Krause <vkrause@kde.org>"));
     about.setupCommandLine(&parser);
 
-    QApplication app(argc, argv);
     QCoreApplication::setApplicationName(QStringLiteral("akonadiselftest"));
     QCoreApplication::setApplicationVersion(QStringLiteral("1.0"));
     parser.process(app);
