@@ -86,11 +86,11 @@ void ItemDumper::done(KJob *job)
 
 int main(int argc, char **argv)
 {
+    QApplication app(argc, argv);
     KAboutData aboutData(QStringLiteral("test"),
                          i18n("Test Application"),
                          QStringLiteral("1.0"));
 
-    QApplication app(argc, argv);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
     parser.addVersionOption();
