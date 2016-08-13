@@ -55,7 +55,7 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     Q_FOREACH (const QString &key, group.keyList()) {
         if (key.startsWith(QLatin1String("X-Akonadi-Custom-"))) {
             QString customKey = key.mid(17, key.length());
-            custom[customKey] = group.readEntry(key, QStringList());
+            custom[customKey] = group.readEntry(key, QString());
         }
     }
 
