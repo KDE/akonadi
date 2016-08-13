@@ -1307,48 +1307,16 @@ void ResourceBase::setItemStreamingEnabled(bool enable)
     }
 }
 
-namespace {
-
-class UpdateItemsJob : public KCompositeJob
-{
-public:
-    explicit UpdateItemsJob(const Item::List &items, QObject *parent = Q_NULLPTR)
-        : KCompositeJob(parent)
-        , mItems(items)
-    {
-    }
-
-    void start() Q_DECL_OVERRIDE
-    {
-        Q_FOREACH (const Item &item, mItems) {
-            auto job = new ItemModifyJob(item, this);
-            addSubjob(job);
-        }
-    }
-
-    void slotResult(KJob *job) Q_DECL_OVERRIDE
-    {
-        KCompositeJob::slotResult(job);
-        if (!hasSubjobs()) {
-            emitResult();
-        }
-    }
-
-private:
-    Item::List mItems;
-};
-
-}
-
-
 void ResourceBase::itemsRetrieved(const Item::List &items)
 {
     Q_D(ResourceBase);
     if (d->scheduler->currentTask().type == ResourceScheduler::FetchItems) {
-        auto job = new UpdateItemsJob(items, this);
-        connect(job, SIGNAL(result(KJob*)),
+        auto trx = new TransactionSequence(this);
+        connect(trx, SIGNAL(result(KJob*)),
                 this, SLOT(slotItemSyncDone(KJob*)));
-        job->start();
+        Q_FOREACH (const Item &item, items) {
+            new ItemModifyJob(item, trx);
+        }
     } else {
         d->createItemSyncInstanceIfMissing();
         if (d->mItemSyncer) {
