@@ -42,6 +42,7 @@
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "itemmodifyjob_p.h"
+#include "itemcreatejob.h"
 #include "session.h"
 #include "resourceselectjob_p.h"
 #include "monitor_p.h"
@@ -1014,6 +1015,7 @@ void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
     auto fetch = new ItemFetchJob(item, this);
     fetch->fetchScope().setAncestorRetrieval(q->changeRecorder()->itemFetchScope().ancestorRetrieval());
     fetch->fetchScope().setCacheOnly(true);
+    fetch->fetchScope().setFetchRemoteIdentification(true);
 
     // copy list of attributes to fetch
     const QSet<QByteArray> attributes = q->changeRecorder()->itemFetchScope().attributes();
@@ -1035,6 +1037,10 @@ void ResourceBasePrivate::slotPrepareItemRetrievalResult(KJob *job)
         return;
     }
     ItemFetchJob *fetch = qobject_cast<ItemFetchJob *>(job);
+    if (fetch->items().count() != 1) {
+        q->cancelTask(i18n("The requested item no longer exists"));
+        return;
+    }
     const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
     if (!q->retrieveItem(fetch->items().at(0), parts)) {
         q->cancelTask();
@@ -1047,6 +1053,7 @@ void ResourceBasePrivate::slotPrepareItemsRetrieval(const QVector<Item> &items)
     ItemFetchJob *fetch = new ItemFetchJob(items, this);
     fetch->fetchScope().setAncestorRetrieval(q->changeRecorder()->itemFetchScope().ancestorRetrieval());
     fetch->fetchScope().setCacheOnly(true);
+    fetch->fetchScope().setFetchRemoteIdentification(true);
     // It's possible that one or more items were removed before this task was
     // executed, so ignore it and just handle the rest.
     fetch->fetchScope().setIgnoreRetrievalErrors(true);
@@ -1315,7 +1322,13 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
         connect(trx, SIGNAL(result(KJob*)),
                 this, SLOT(slotItemSyncDone(KJob*)));
         Q_FOREACH (const Item &item, items) {
-            new ItemModifyJob(item, trx);
+            if (!item.remoteId().isEmpty()) {
+                auto job = new ItemCreateJob(item, item.parentCollection(), trx);
+                job->setMerge(ItemCreateJob::RID);
+            } else {
+                // This should not happen, but just to be sure...
+                new ItemModifyJob(item, trx);
+            }
         }
     } else {
         d->createItemSyncInstanceIfMissing();
