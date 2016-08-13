@@ -265,7 +265,6 @@ void SessionPrivate::sendCommand(qint64 tag, const Protocol::Command &command)
 
 void SessionPrivate::serverStateChanged(ServerManager::State state)
 {
-    qCDebug(AKONADICORE_LOG) << "============== SESSION: Server state changed to " << state;
     if (state == ServerManager::Running && !connected) {
         reconnect();
     } else if (!connected && state == ServerManager::Broken) {
