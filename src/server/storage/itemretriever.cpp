@@ -207,12 +207,23 @@ bool ItemRetriever::exec()
     QVector<ItemRetrievalRequest *> requests;
     QHash<qint64 /* collection */, ItemRetrievalRequest*> colRequests;
     QHash<qint64 /* item */, ItemRetrievalRequest*> itemRequests;
+    qint64 prevPimItemId = -1;
     while (query.isValid()) {
         const qint64 pimItemId = query.value(PimItemIdColumn).toLongLong();
         const qint64 collectionId = query.value(CollectionIdColumn).toLongLong();
         const qint64 resourceId = query.value(ResourceIdColumn).toLongLong();
         ItemRetrievalRequest *lastRequest = Q_NULLPTR;
         const auto itemIter = itemRequests.constFind(pimItemId);
+
+        if (pimItemId == prevPimItemId && query.value(PartTypeNameColumn).isNull()) {
+            // This is not the first part of the Item we saw, but LEFT JOIN PartTable
+            // returned a null row - that means the row is an ATR part
+            // which we don't care about
+            query.next();
+            continue;
+        }
+        prevPimItemId = pimItemId;
+
         if (itemIter != itemRequests.constEnd()) {
             lastRequest = *itemIter;
         } else {
@@ -244,16 +255,20 @@ bool ItemRetriever::exec()
         qint64 datasize = query.value(PartDatasizeColumn).toLongLong();
         const QByteArray partName = Utils::variantToByteArray(query.value(PartTypeNameColumn));
         Q_ASSERT(!partName.startsWith(AKONADI_PARAM_PLD));
-
         if (datasize <= 0) {
             // request update for this part
             if (mFullPayload && !lastRequest->parts.contains(partName)) {
                 lastRequest->parts << partName;
             }
         } else {
-            Q_ASSERT(lastRequest->parts.count(partName) <= 1);
-            // data available, don't request update
-            lastRequest->parts.removeOne(partName);
+            // This particular item already has this particular part. If that's
+            // the only part we are requesting so far, then just remove the item
+            // from the queue.
+            if (lastRequest->parts.size() == 1 && lastRequest->parts.at(0) == partName) {
+                // TODO: Is this too expensive? Should we use a QSet?
+                lastRequest->ids.removeOne(pimItemId);
+                itemRequests.remove(pimItemId);
+            }
         }
         query.next();
     }
@@ -263,7 +278,7 @@ bool ItemRetriever::exec()
     query.finish();
 
     Q_FOREACH (ItemRetrievalRequest *request, requests) {
-        if (request->parts.isEmpty()) {
+        if (request->parts.isEmpty() || request->ids.isEmpty()) {
             delete request;
             continue;
         }
