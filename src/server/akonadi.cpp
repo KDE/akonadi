@@ -437,3 +437,8 @@ IntervalCheck *AkonadiServer::intervalChecker()
 
     return Q_NULLPTR;
 }
+
+QString AkonadiServer::serverPath() const
+{
+    return XdgBaseDirs::homePath("config");
+}

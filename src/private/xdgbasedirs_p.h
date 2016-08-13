@@ -289,10 +289,12 @@ public:
     * since this is an often needed procedure in several parts of the code.
     *
     * @param openMode how the application wants to use the config file
+    * @param relPath Relative path within the akonadi config directory
     *
     * @return the path of the server config file, suitable for \p openMode
     */
-    static QString akonadiServerConfigFile(FileAccessMode openMode = ReadOnly);
+    static QString akonadiServerConfigFile(FileAccessMode openMode = ReadOnly,
+                                           const QString &relPath = QString());
 
     /**
     * @brief Returns the path of the Akonadi data connection config file
@@ -301,10 +303,21 @@ public:
     * since this is an often needed procedure in several parts of the code.
     *
     * @param openMode how the application wants to use the config file
+    * @relPath Relative path within the akonadi config directory
     *
     * @return the path of the data connection config file, suitable for \p openMode
     */
-    static QString akonadiConnectionConfigFile(FileAccessMode openMode = ReadOnly);
+    static QString akonadiConnectionConfigFile(FileAccessMode openMode = ReadOnly,
+                                               const QString &relPath = QString());
+
+
+    /**
+     * @brief Overrides the lookup path to the "config" resource
+     *
+     * This is useful for testing purposes and when connecting to Akonadi
+     * instance that is not running in the default user path.
+     */
+    static void overrideConfigPath(const QString &configFile);
 
 private:
     XdgBaseDirsPrivate *const d;

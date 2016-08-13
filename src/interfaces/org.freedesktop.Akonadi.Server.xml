@@ -2,5 +2,8 @@
 <node>
   <interface name="org.freedesktop.Akonadi.Server">
     <method name="quit"/>
+    <method name="serverPath">
+       <arg name="path" type="s" direction="out"/>
+    </method>
   </interface>
 </node>

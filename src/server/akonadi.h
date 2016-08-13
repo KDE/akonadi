@@ -57,6 +57,8 @@ public:
      */
     IntervalCheck *intervalChecker();
 
+    QString serverPath() const;
+
 public Q_SLOTS:
     /**
      * Triggers a clean server shutdown.

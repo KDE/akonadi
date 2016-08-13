@@ -513,14 +513,14 @@ QString XdgBaseDirs::saveDir(const char *resource, const QString &relPath)
     return QString();
 }
 
-QString XdgBaseDirs::akonadiServerConfigFile(FileAccessMode openMode)
+QString XdgBaseDirs::akonadiServerConfigFile(FileAccessMode openMode, const QString &relPath)
 {
-    return akonadiConfigFile(QStringLiteral("akonadiserverrc"), openMode);
+    return akonadiConfigFile(QStringLiteral("%1/akonadiserverrc").arg(relPath), openMode);
 }
 
-QString XdgBaseDirs::akonadiConnectionConfigFile(FileAccessMode openMode)
+QString XdgBaseDirs::akonadiConnectionConfigFile(FileAccessMode openMode, const QString &relPath)
 {
-    return akonadiConfigFile(QStringLiteral("akonadiconnectionrc"), openMode);
+    return akonadiConfigFile(QStringLiteral("%1/akonadiconnectionrc").arg(relPath), openMode);
 }
 
 QString XdgBaseDirs::akonadiConfigFile(const QString &file, FileAccessMode openMode)
@@ -582,4 +582,9 @@ QStringList XdgBaseDirsSingleton::systemPathList(const char *variable, const cha
     }
 
     return splitPathList(xdgDirList);
+}
+
+void XdgBaseDirs::overrideConfigPath(const QString &configFile)
+{
+    instance()->mConfigHome = configFile;
 }
