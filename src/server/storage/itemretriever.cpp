@@ -278,7 +278,7 @@ bool ItemRetriever::exec()
     query.finish();
 
     Q_FOREACH (ItemRetrievalRequest *request, requests) {
-        if (request->parts.isEmpty() || request->ids.isEmpty()) {
+        if ((!mFullPayload && request->parts.isEmpty()) || request->ids.isEmpty()) {
             delete request;
             continue;
         }
