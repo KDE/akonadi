@@ -354,6 +354,8 @@ protected Q_SLOTS:
     /**
      * Retrieve given @p items from the backend.
      * Add the requested payload parts and call itemsRetrieved() when done.
+     * It is guaranteed that all @p items in the list belong to the same Collection.
+     *
      * @param items The items whose payload should be retrieved. Use those objects
      * when delivering the result instead of creating new items to ensure conflict
      * detection will work.
