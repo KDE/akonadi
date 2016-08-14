@@ -1013,7 +1013,9 @@ void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
 {
     Q_Q(ResourceBase);
     auto fetch = new ItemFetchJob(item, this);
-    fetch->fetchScope().setAncestorRetrieval(q->changeRecorder()->itemFetchScope().ancestorRetrieval());
+    // we always need at least parent so we can use ItemCreateJob to merge
+    fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent,
+                                                  q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
     fetch->fetchScope().setFetchRemoteIdentification(true);
 
@@ -1051,7 +1053,9 @@ void ResourceBasePrivate::slotPrepareItemsRetrieval(const QVector<Item> &items)
 {
     Q_Q(ResourceBase);
     ItemFetchJob *fetch = new ItemFetchJob(items, this);
-    fetch->fetchScope().setAncestorRetrieval(q->changeRecorder()->itemFetchScope().ancestorRetrieval());
+    // we always need at least parent so we can use ItemCreateJob to merge
+    fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent,
+                                                  q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
     fetch->fetchScope().setFetchRemoteIdentification(true);
     // It's possible that one or more items were removed before this task was
@@ -1079,6 +1083,7 @@ void ResourceBasePrivate::slotPrepareItemsRetrievalResult(KJob *job)
     }
     ItemFetchJob *fetch = qobject_cast<ItemFetchJob *>(job);
     const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
+    Q_ASSERT(fetch->items().first().parentCollection().isValid());
     if (!q->retrieveItems(fetch->items(), parts)) {
         q->cancelTask();
     }
@@ -1322,6 +1327,7 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
         connect(trx, SIGNAL(result(KJob*)),
                 this, SLOT(slotItemSyncDone(KJob*)));
         Q_FOREACH (const Item &item, items) {
+            Q_ASSERT(item.parentCollection().isValid());
             if (!item.remoteId().isEmpty()) {
                 auto job = new ItemCreateJob(item, item.parentCollection(), trx);
                 job->setMerge(ItemCreateJob::RID);
@@ -1330,6 +1336,7 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
                 new ItemModifyJob(item, trx);
             }
         }
+        trx->commit();
     } else {
         d->createItemSyncInstanceIfMissing();
         if (d->mItemSyncer) {
