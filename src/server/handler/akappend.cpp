@@ -154,9 +154,9 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 {
     QSet<QByteArray> changedParts;
 
-    if (newItem.rev() > 0) {
-        currentItem.setRev(newItem.rev());
-    }
+    // Always bump revision
+    currentItem.setRev(qMax(newItem.rev(), currentItem.rev()) + 1);
+
     if (!newItem.remoteId().isEmpty() && currentItem.remoteId() != newItem.remoteId()) {
         currentItem.setRemoteId(newItem.remoteId());
         changedParts.insert(AKONADI_PARAM_REMOTEID);
