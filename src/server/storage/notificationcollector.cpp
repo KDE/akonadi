@@ -368,9 +368,9 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
     msg.setDestinationResource(destResource);
     msg.setChangedParts(changes);
 
-  if (!collection.enabled()) {
-      msg.addMetadata("DISABLED");
-  }
+    if (!collection.enabled()) {
+        msg.addMetadata("DISABLED");
+    }
 
     QByteArray res = resource;
     if (res.isEmpty()) {
