@@ -19,15 +19,158 @@
 
 #include <QObject>
 #include <QtTest/QTest>
-#include <QtCore/QBuffer>
+#include <QTimer>
 
 #include "storage/itemretriever.h"
+#include "storage/itemretrievaljob.h"
+#include "storage/itemretrievalmanager.h"
+#include "storage/itemretrievalrequest.h"
+
+#include "fakeakonadiserver.h"
+#include "dbinitializer.h"
+
+#include <aktest.h>
 
 using namespace Akonadi::Server;
+
+struct JobResult
+{
+    qint64 pimItemId;
+    QByteArray partname;
+    QByteArray partdata;
+    QString error;
+};
+
+class FakeItemRetrievalJob : public AbstractItemRetrievalJob
+{
+    Q_OBJECT
+public:
+    FakeItemRetrievalJob(ItemRetrievalRequest *req, DbInitializer &dbInitializer,
+                         const QVector<JobResult> &results, QObject *parent)
+        : AbstractItemRetrievalJob(req, parent)
+        , mDbInitializer(dbInitializer)
+        , mResults(results)
+    {
+    }
+
+    void start() Q_DECL_OVERRIDE
+    {
+        Q_FOREACH (const JobResult &res, mResults) {
+            if (res.error.isEmpty()) {
+                // This is analogous to what STORE/MERGE does
+                const PimItem item = PimItem::retrieveById(res.pimItemId);
+                const auto parts = item.parts();
+                // Try to find the part by name
+                auto it = std::find_if(parts.begin(), parts.end(),
+                                       [res](const Part &part) {
+                                           return part.partType().name().toLatin1() == res.partname;
+                                       });
+                if (it == parts.end()) {
+                    // Does not exist, create it
+                    mDbInitializer.createPart(res.pimItemId, "PLD:" + res.partname, res.partdata);
+                } else {
+                    // Exist, update it
+                    Part part(*it);
+                    part.setData(res.partdata);
+                    part.setDatasize(res.partdata.size());
+                    part.update();
+                }
+            } else {
+                mError = res.error;
+                break;
+            }
+        }
+
+        QTimer::singleShot(0, this, [this]() {
+            Q_EMIT requestCompleted(m_request, mError);
+        });
+    }
+
+    void kill() Q_DECL_OVERRIDE
+    {
+        // TODO?
+    }
+
+private:
+    DbInitializer &mDbInitializer;
+    QVector<JobResult> mResults;
+    QString mError;
+};
+
+class FakeItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
+{
+public:
+    FakeItemRetrievalJobFactory(DbInitializer &initializer)
+        : mJobsCount(0)
+        , mDbInitializer(initializer)
+    {
+    }
+
+    void addJobResult(qint64 itemId, const QByteArray &partname, const QByteArray &partdata)
+    {
+        mJobResults.insert(itemId, JobResult{ itemId, partname, partdata, QString() });
+    }
+
+    void addJobResult(qint64 itemId, const QString &error)
+    {
+        mJobResults.insert(itemId, JobResult{ itemId, QByteArray(), QByteArray(), error });
+    }
+
+    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) Q_DECL_OVERRIDE
+    {
+        QVector<JobResult> results;
+        Q_FOREACH (auto id, request->ids) {
+            auto it = mJobResults.constFind(id);
+            while (it != mJobResults.constEnd() && it.key() == id) {
+                if (request->parts.contains(it->partname)) {
+                    results << *it;
+                }
+                ++it;
+            }
+        }
+
+        ++mJobsCount;
+        return new FakeItemRetrievalJob(request, mDbInitializer, results, parent);
+    }
+
+    int jobsCount() const
+    {
+        return mJobsCount;
+    }
+
+private:
+    int mJobsCount;
+    DbInitializer &mDbInitializer;
+    QMultiHash<qint64, JobResult> mJobResults;
+};
 
 class ItemRetrieverTest : public QObject
 {
     Q_OBJECT
+
+
+    using ExistingParts = QVector<QPair<QByteArray /* name */, QByteArray /* data */>>;
+    using AvailableParts = QVector<QPair<QByteArray /* name */, QByteArray /* data */>>;
+    using RequestedParts = QVector<QByteArray /* FQ name */>;
+
+public:
+    ItemRetrieverTest()
+        : QObject()
+    {
+        try {
+            FakeAkonadiServer::instance()->setPopulateDb(false);
+            FakeAkonadiServer::instance()->init();
+        } catch (const FakeAkonadiServerException &e) {
+            qWarning() << "Server exception: " << e.what();
+            qFatal("Fake Akonadi Server failed to start up, aborting test");
+        }
+    }
+
+    ~ItemRetrieverTest()
+    {
+        FakeAkonadiServer::instance()->quit();
+    }
+
 private Q_SLOTS:
     void testFullPayload()
     {
@@ -38,8 +181,137 @@ private Q_SLOTS:
         r1.setRetrieveParts({ "PLD:FOO" });
         QCOMPARE(r1.retrieveParts().size(), 2);
     }
+
+    void testRetrieval_data()
+    {
+        QTest::addColumn<ExistingParts>("existingParts");
+        QTest::addColumn<AvailableParts>("availableParts");
+        QTest::addColumn<RequestedParts>("requestedParts");
+        QTest::addColumn<int>("expectedRetrievalJobs");
+        QTest::addColumn<int>("expectedSignals");
+        QTest::addColumn<int>("expectedParts");
+
+        QTest::newRow("should retrieve missing payload part")
+            << ExistingParts()
+            << AvailableParts{ { "RFC822", "somedata" } }
+            << RequestedParts{ "PLD:RFC822" }
+            << 1 << 1 << 1;
+
+        QTest::newRow("should retrieve multiple missing payload parts")
+            << ExistingParts()
+            << AvailableParts{ { "RFC822", "somedata" }, { "HEAD", "head" } }
+            << RequestedParts{ "PLD:HEAD", "PLD:RFC822" }
+            << 1 << 1 << 2;
+
+        QTest::newRow("should not retrieve existing payload part")
+            << ExistingParts{ { "PLD:RFC822", "somedata" } }
+            << AvailableParts()
+            << RequestedParts{ "PLD:RFC822" }
+            << 0 << 1 << 1;
+
+        QTest::newRow("should not retrieve multiple existing payload parts")
+            << ExistingParts{ { "PLD:RFC822", "somedata" }, { "PLD:HEAD", "head" } }
+            << AvailableParts()
+            << RequestedParts{ "PLD:RFC822", "PLD:HEAD" }
+            << 0 << 1 << 2;
+
+        QTest::newRow("should retrieve missing but not existing payload part")
+            << ExistingParts{ { "PLD:HEAD", "head" } }
+            << AvailableParts{ { "RFC822", "somedata" } }
+            << RequestedParts{ "PLD:HEAD", "PLD:RFC822" }
+            << 1 << 1 << 2;
+
+        QTest::newRow("should retrieve expired payload part")
+            << ExistingParts{ { "PLD:RFC822", QByteArray() } }
+            << AvailableParts{ { "RFC822", "somedata" } }
+            << RequestedParts{ "PLD:RFc822" }
+            << 1 << 1 << 1;
+
+        QTest::newRow("should not retrieve one out of multiple existing payload parts")
+            << ExistingParts{ { "PLD:RFC822", "somedata" }, { "PLD:HEAD", "head" }, { "PLD:ENVELOPE", "envelope" } }
+            << AvailableParts()
+            << RequestedParts{ "PLD:RFC822", "PLD:HEAD" }
+            << 0 << 1 << 3;
+
+        QTest::newRow("should retrieve missing payload part and ignore attributes")
+            << ExistingParts{ { "ATR:MYATTR", "myattrdata" } }
+            << AvailableParts{ { "RFC822", "somedata" } }
+            << RequestedParts{ "PLD:RFC822" }
+            << 1 << 1 << 2;
+    }
+
+    void testRetrieval()
+    {
+        QFETCH(ExistingParts, existingParts);
+        QFETCH(AvailableParts, availableParts);
+        QFETCH(RequestedParts, requestedParts);
+        QFETCH(int, expectedRetrievalJobs);
+        QFETCH(int, expectedSignals);
+        QFETCH(int, expectedParts);
+
+
+        // Setup
+        DbInitializer dbInitializer;
+        FakeItemRetrievalJobFactory factory(dbInitializer);
+        ItemRetrievalManager mgr(&factory);
+        QTest::qWait(100);
+
+        // Given a PimItem with existing parts
+        Resource res = dbInitializer.createResource("testresource");
+        Collection col = dbInitializer.createCollection("col1");
+        PimItem item = dbInitializer.createItem("1", col);
+        Q_FOREACH (const auto &existingPart, existingParts) {
+            dbInitializer.createPart(item.id(), existingPart.first, existingPart.second);
+        }
+
+        Q_FOREACH (const auto &availablePart, availableParts) {
+            factory.addJobResult(item.id(), availablePart.first, availablePart.second);
+        }
+
+        // ItemRetriever should...
+        ItemRetriever retriever;
+        retriever.setItem(item.id());
+        retriever.setRetrieveParts(requestedParts);
+        QSignalSpy spy(&retriever, &ItemRetriever::itemsRetrieved);
+
+        // Succeed
+        QVERIFY(retriever.exec());
+        // Run exactly one retrieval job
+        QCOMPARE(factory.jobsCount(), expectedRetrievalJobs);
+        // Emit exactly one signal ...
+        QCOMPARE(spy.count(), expectedSignals);
+        // ... with that one item
+        if (expectedSignals > 0) {
+            QCOMPARE(spy.at(0).at(0).value<QList<qint64>>(), QList<qint64>{ item.id() });
+        }
+
+        // and the part exists in the DB
+        const auto parts = item.parts();
+        QCOMPARE(parts.count(), expectedParts);
+        Q_FOREACH (const Part &dbPart, item.parts()) {
+            const QString fqname = dbPart.partType().ns() + QLatin1Char(':') + dbPart.partType().name();
+            if (!requestedParts.contains(fqname.toLatin1())) {
+                continue;
+            }
+
+            auto it = std::find_if(availableParts.constBegin(), availableParts.constEnd(),
+                                   [dbPart](const QPair<QByteArray, QByteArray> &p) {
+                                       return dbPart.partType().name().toLatin1() == p.first;
+                                   });
+            if (it == availableParts.constEnd()) {
+                it = std::find_if(existingParts.constBegin(), existingParts.constEnd(),
+                                  [fqname](const QPair<QByteArray, QByteArray> &p) {
+                                      return fqname.toLatin1() == p.first;
+                                  });
+                QVERIFY(it != existingParts.constEnd());
+            }
+
+            QCOMPARE(dbPart.data(), it->second);
+            QCOMPARE(dbPart.datasize(), it->second.size());
+        }
+    }
 };
 
-QTEST_MAIN(ItemRetrieverTest)
+AKTEST_FAKESERVER_MAIN(ItemRetrieverTest)
 
 #include "itemretrievertest.moc"

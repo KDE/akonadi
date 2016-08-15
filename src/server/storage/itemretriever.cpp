@@ -33,6 +33,9 @@
 
 #include <private/protocol_p.h>
 
+#include <QMetaObject>
+#include <QEventLoop>
+
 #include "akonadiserver_debug.h"
 
 using namespace Akonadi;
@@ -187,6 +190,18 @@ QSqlQuery ItemRetriever::buildQuery() const
     return qb.query();
 }
 
+namespace {
+static bool hasAllParts(ItemRetrievalRequest *req, const QSet<QByteArray> &availableParts)
+{
+    Q_FOREACH (const auto &part, req->parts) {
+        if (!availableParts.contains(part)) {
+            return false;
+        }
+    }
+    return true;
+}
+}
+
 bool ItemRetriever::exec()
 {
     if (mParts.isEmpty() && !mFullPayload) {
@@ -207,22 +222,38 @@ bool ItemRetriever::exec()
     QVector<ItemRetrievalRequest *> requests;
     QHash<qint64 /* collection */, ItemRetrievalRequest*> colRequests;
     QHash<qint64 /* item */, ItemRetrievalRequest*> itemRequests;
+    QVector<qint64> readyItems;
     qint64 prevPimItemId = -1;
+    QSet<QByteArray> availableParts;
+    ItemRetrievalRequest *lastRequest = Q_NULLPTR;
     while (query.isValid()) {
         const qint64 pimItemId = query.value(PimItemIdColumn).toLongLong();
         const qint64 collectionId = query.value(CollectionIdColumn).toLongLong();
         const qint64 resourceId = query.value(ResourceIdColumn).toLongLong();
-        ItemRetrievalRequest *lastRequest = Q_NULLPTR;
         const auto itemIter = itemRequests.constFind(pimItemId);
 
-        if (pimItemId == prevPimItemId && query.value(PartTypeNameColumn).isNull()) {
-            // This is not the first part of the Item we saw, but LEFT JOIN PartTable
-            // returned a null row - that means the row is an ATR part
-            // which we don't care about
-            query.next();
-            continue;
+        if (pimItemId == prevPimItemId) {
+            if (query.value(PartTypeNameColumn).isNull()) {
+                // This is not the first part of the Item we saw, but LEFT JOIN PartTable
+                // returned a null row - that means the row is an ATR part
+                // which we don't care about
+                query.next();
+                continue;
+            }
+        } else {
+            if (lastRequest) {
+                if (hasAllParts(lastRequest, availableParts)) {
+                    // We went through all parts of a single item, if we have all
+                    // parts available in the DB and they are not expired, then
+                    // exclude this item from the retrieval
+                    lastRequest->ids.removeOne(prevPimItemId);
+                    itemRequests.remove(prevPimItemId);
+                    readyItems.push_back(prevPimItemId);
+                }
+            }
+            availableParts.clear();
+            prevPimItemId = pimItemId;
         }
-        prevPimItemId = pimItemId;
 
         if (itemIter != itemRequests.constEnd()) {
             lastRequest = *itemIter;
@@ -261,34 +292,67 @@ bool ItemRetriever::exec()
                 lastRequest->parts << partName;
             }
         } else {
-            // This particular item already has this particular part. If that's
-            // the only part we are requesting so far, then just remove the item
-            // from the queue.
-            if (lastRequest->parts.size() == 1 && lastRequest->parts.at(0) == partName) {
-                // TODO: Is this too expensive? Should we use a QSet?
-                lastRequest->ids.removeOne(pimItemId);
-                itemRequests.remove(pimItemId);
-            }
+            // add the part to list of available parts, we will compare it with
+            // the list of request parts once we handle all parts of this item
+            availableParts.insert(partName);
         }
         query.next();
     }
 
-    //qCDebug(AKONADISERVER_LOG) << "Closing queries and sending out requests.";
+    // Post-check in case we only queried one item thus did not reach the check
+    // at the beginning of the while() loop above
+    if (lastRequest && hasAllParts(lastRequest, availableParts)) {
+        lastRequest->ids.removeOne(prevPimItemId);
+        readyItems.push_back(prevPimItemId);
+        // No need to update the hashtable at this point
+    }
 
+    //qCDebug(AKONADISERVER_LOG) << "Closing queries and sending out requests.";
     query.finish();
 
-    Q_FOREACH (ItemRetrievalRequest *request, requests) {
+    if (!readyItems.isEmpty()) {
+        Q_EMIT itemsRetrieved(readyItems.toList());
+    }
+
+    QEventLoop eventLoop;
+    connect(ItemRetrievalManager::instance(), &ItemRetrievalManager::requestFinished,
+            this, [&](ItemRetrievalRequest *finishedRequest) {
+                if (!finishedRequest->errorMsg.isEmpty()) {
+                    mLastError = finishedRequest->errorMsg.toUtf8();
+                    eventLoop.exit(1);
+                } else {
+                    requests.removeOne(finishedRequest);
+                    Q_EMIT itemsRetrieved(finishedRequest->ids);
+                    if (requests.isEmpty()) {
+                        eventLoop.quit();
+                    }
+                }
+            }, Qt::UniqueConnection);
+
+    auto it = requests.begin();
+    while (it != requests.end()) {
+        auto request = (*it);
         if ((!mFullPayload && request->parts.isEmpty()) || request->ids.isEmpty()) {
+            it = requests.erase(it);
             delete request;
             continue;
         }
         // TODO: how should we handle retrieval errors here? so far they have been ignored,
         // which makes sense in some cases, do we need a command parameter for this?
         try {
+            // Request is deleted inside ItemRetrievalManager, so we need to take
+            // a copy here
+            const auto ids = request->ids;
             ItemRetrievalManager::instance()->requestItemDelivery(request);
         } catch (const ItemRetrieverException &e) {
             qCCritical(AKONADISERVER_LOG) << e.type() << ": " << e.what();
             mLastError = e.what();
+            return false;
+        }
+        ++it;
+    }
+    if (!requests.isEmpty()) {
+        if (eventLoop.exec(QEventLoop::ExcludeSocketNotifiers)) {
             return false;
         }
     }
@@ -301,6 +365,8 @@ bool ItemRetriever::exec()
             retriever.setCollection(col, mRecursive);
             retriever.setRetrieveParts(mParts);
             retriever.setRetrieveFullPayload(mFullPayload);
+            connect(&retriever, &ItemRetriever::itemsRetrieved,
+                    this, &ItemRetriever::itemsRetrieved);
             result = retriever.exec();
             if (!result) {
                 break;
@@ -313,7 +379,7 @@ bool ItemRetriever::exec()
 
 void ItemRetriever::verifyCache()
 {
-    if (!connection()->verifyCacheOnRetrieval()) {
+    if (!connection() || !connection()->verifyCacheOnRetrieval()) {
         return;
     }
 

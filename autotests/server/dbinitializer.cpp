@@ -21,6 +21,7 @@
 
 #include <storage/querybuilder.h>
 #include <storage/datastore.h>
+#include <storage/parttypehelper.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -74,6 +75,22 @@ PimItem DbInitializer::createItem(const char *name, const Collection &parent)
     Q_ASSERT(ret);
     Q_UNUSED(ret);
     return item;
+}
+
+Part DbInitializer::createPart(qint64 pimItem, const QByteArray &partName, const QByteArray &partData)
+{
+    auto partType = PartTypeHelper::parseFqName(QString::fromLatin1(partName));
+    PartType type = PartType::retrieveByFQNameOrCreate(partType.first, partType.second);
+
+    Part part;
+    part.setPimItemId(pimItem);
+    part.setPartTypeId(type.id());
+    part.setData(partData);
+    part.setDatasize(partData.size());
+    const bool ret = part.insert();
+    Q_ASSERT(ret);
+    Q_UNUSED(ret);
+    return part;
 }
 
 QByteArray DbInitializer::toByteArray(bool enabled)
@@ -178,7 +195,7 @@ void DbInitializer::cleanup()
 
     if (DataStore::self()->database().isOpen()) {
         {
-            QueryBuilder qb( Relation::tableName(), QueryBuilder::Delete );
+            QueryBuilder qb(Relation::tableName(), QueryBuilder::Delete);
             qb.exec();
         }
         {
@@ -191,6 +208,9 @@ void DbInitializer::cleanup()
         }
     }
 
+    Q_FOREACH(Part part, Part::retrieveAll()) {
+        part.remove();
+    }
     Q_FOREACH(PimItem item, PimItem::retrieveAll()) {
         item.remove();
     }

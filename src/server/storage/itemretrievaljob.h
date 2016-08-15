@@ -31,30 +31,49 @@ namespace Server {
 
 class ItemRetrievalRequest;
 
+class AbstractItemRetrievalJob : public QObject
+{
+    Q_OBJECT
+public:
+    AbstractItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent);
+    virtual ~AbstractItemRetrievalJob();
+
+    virtual void start() = 0;
+    virtual void kill() = 0;
+
+Q_SIGNALS:
+    void requestCompleted(ItemRetrievalRequest *request, const QString &errorMsg);
+
+protected:
+    ItemRetrievalRequest *m_request;
+};
+
+
 /// Async D-Bus retrieval, no modification of the request (thus no need for locking)
-class ItemRetrievalJob : public QObject
+class ItemRetrievalJob : public AbstractItemRetrievalJob
 {
     Q_OBJECT
 public:
     ItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent)
-        : QObject(parent)
-        , m_request(req)
+        : AbstractItemRetrievalJob(req, parent)
         , m_active(false)
         , m_interface(0)
     {
     }
-    ~ItemRetrievalJob();
-    void start(OrgFreedesktopAkonadiResourceInterface *interface);
-    void kill();
 
-Q_SIGNALS:
-    void requestCompleted(ItemRetrievalRequest *req, const QString &errorMsg);
+    void setInterface(OrgFreedesktopAkonadiResourceInterface *interface)
+    {
+        m_interface = interface;
+    }
+
+    ~ItemRetrievalJob() Q_DECL_OVERRIDE;
+    void start() Q_DECL_OVERRIDE;
+    void kill() Q_DECL_OVERRIDE;
 
 private Q_SLOTS:
     void callFinished(QDBusPendingCallWatcher *watcher);
 
 private:
-    ItemRetrievalRequest *m_request;
     bool m_active;
     OrgFreedesktopAkonadiResourceInterface *m_interface;
 

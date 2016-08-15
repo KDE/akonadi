@@ -38,6 +38,16 @@ namespace Server {
 class Collection;
 class ItemRetrievalJob;
 class ItemRetrievalRequest;
+class AbstractItemRetrievalJob;
+
+class AbstractItemRetrievalJobFactory
+{
+public:
+    explicit AbstractItemRetrievalJobFactory() {}
+    virtual ~AbstractItemRetrievalJobFactory() {}
+
+    virtual AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) = 0;
+};
 
 /** Manages and processes item retrieval requests. */
 class ItemRetrievalManager : public AkThread
@@ -45,9 +55,8 @@ class ItemRetrievalManager : public AkThread
     Q_OBJECT
 public:
     ItemRetrievalManager(QObject *parent = Q_NULLPTR);
+    ItemRetrievalManager(AbstractItemRetrievalJobFactory *factory, QObject *parent = Q_NULLPTR);
     ~ItemRetrievalManager();
-
-    void requestItemDelivery(qint64 uid, const QString &resource, const QVector<QByteArray> &parts);
 
     /**
      * Added for convenience. ItemRetrievalManager takes ownership over the
@@ -58,6 +67,7 @@ public:
     static ItemRetrievalManager *instance();
 
 Q_SIGNALS:
+    void requestFinished(ItemRetrievalRequest *request);
     void requestAdded();
 
 private:
@@ -74,6 +84,9 @@ private Q_SLOTS:
 
 private:
     static ItemRetrievalManager *sInstance;
+
+    AbstractItemRetrievalJobFactory *mJobFactory;
+
     /// Protects mPendingRequests and every Request object posted to it
     QReadWriteLock *mLock;
     /// Used to let requesting threads wait until the request has been processed
@@ -81,7 +94,7 @@ private:
     /// Pending requests queues, one per resource
     QHash<QString, QList<ItemRetrievalRequest *> > mPendingRequests;
     /// Currently running jobs, one per resource
-    QHash<QString, ItemRetrievalJob *> mCurrentJobs;
+    QHash<QString, AbstractItemRetrievalJob *> mCurrentJobs;
 
     // resource dbus interface cache
     QHash<QString, OrgFreedesktopAkonadiResourceInterface *> mResourceInterfaces;

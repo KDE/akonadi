@@ -20,6 +20,8 @@
 #ifndef ITEMRETRIEVER_H
 #define ITEMRETRIEVER_H
 
+#include <QObject>
+
 #include "../exception.h"
 #include "entities.h"
 
@@ -43,10 +45,12 @@ class QueryBuilder;
 
   @todo make usable for Fetch by allowing to share queries
 */
-class ItemRetriever
+class ItemRetriever : public QObject
 {
+    Q_OBJECT
+
 public:
-    ItemRetriever(Connection *connection);
+    ItemRetriever(Connection *connection = Q_NULLPTR);
 
     Connection *connection() const;
 
@@ -67,6 +71,9 @@ public:
     bool exec();
 
     QByteArray lastError() const;
+
+Q_SIGNALS:
+    void itemsRetrieved(const QList<qint64> &ids);
 
 private:
     QSqlQuery buildQuery() const;

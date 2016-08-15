@@ -27,21 +27,31 @@
 
 using namespace Akonadi::Server;
 
+AbstractItemRetrievalJob::AbstractItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent)
+    : QObject(parent)
+    , m_request(req)
+{
+}
+
+AbstractItemRetrievalJob::~AbstractItemRetrievalJob()
+{
+}
+
+
 ItemRetrievalJob::~ItemRetrievalJob()
 {
     Q_ASSERT(!m_active);
 }
 
-void ItemRetrievalJob::start(org::freedesktop::Akonadi::Resource *interface)
+void ItemRetrievalJob::start()
 {
     Q_ASSERT(m_request);
     qCDebug(AKONADISERVER_LOG) << "processing retrieval request for item" << m_request->ids << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
 
-    m_interface = interface;
     // call the resource
-    if (interface) {
+    if (m_interface) {
         m_active = true;
-        auto reply = interface->requestItemDelivery(m_request->ids, m_request->parts);
+        auto reply = m_interface->requestItemDelivery(m_request->ids, m_request->parts);
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
         connect(watcher, &QDBusPendingCallWatcher::finished,
                 this, &ItemRetrievalJob::callFinished);
