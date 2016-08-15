@@ -158,6 +158,8 @@ public:
 
     ImapSet(const QVector<qint64> &ids);
 
+    ImapSet(const QList<qint64> &ids);
+
     ImapSet(const ImapInterval &interval);
 
     /**
@@ -189,6 +191,7 @@ public:
       @param values List of positive integer numbers in arbitrary order
     */
     void add(const QVector<Id> &values);
+    void add(const QList<Id> &values);
 
     /**
      * @overload

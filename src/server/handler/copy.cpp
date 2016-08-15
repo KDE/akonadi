@@ -36,8 +36,6 @@ using namespace Akonadi::Server;
 
 bool Copy::copyItem(const PimItem &item, const Collection &target)
 {
-//  qCDebug(AKONADISERVER_LOG) << "Copy::copyItem";
-
     PimItem newItem = item;
     newItem.setId(-1);
     newItem.setRev(0);
@@ -67,6 +65,34 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
     return true;
 }
 
+void Copy::itemsRetrieved(const QList<qint64>& ids)
+{
+    SelectQueryBuilder<PimItem> qb;
+    ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
+    if (!qb.exec()) {
+        failureResponse("Unable to retrieve items");
+        return;
+    }
+    PimItem::List items = qb.result();
+    qb.query().finish();
+
+    DataStore *store = connection()->storageBackend();
+    Transaction transaction(store);
+
+    Q_FOREACH (const PimItem &item, items) {
+        if (!copyItem(item, mTargetCollection)) {
+            failureResponse("Unable to copy item");
+            return;
+        }
+    }
+
+    if (!transaction.commit()) {
+        failureResponse("Cannot commit transaction.");
+        return;
+    }
+}
+
+
 bool Copy::parseStream()
 {
     Protocol::CopyItemsCommand cmd(m_command);
@@ -79,42 +105,23 @@ bool Copy::parseStream()
         return failureResponse("No items specified");
     }
 
+    mTargetCollection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+    if (!mTargetCollection.isValid()) {
+        return failureResponse("No valid target specified");
+    }
+    if (mTargetCollection.isVirtual()) {
+        return failureResponse("Copying items into virtual collections is not allowed");
+    }
+
     CacheCleanerInhibitor inhibitor;
 
     ItemRetriever retriever(connection());
     retriever.setItemSet(cmd.items().uidSet());
     retriever.setRetrieveFullPayload(true);
+    connect(&retriever, &ItemRetriever::itemsRetrieved,
+            this, &Copy::itemsRetrieved);
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
-    }
-
-    const Collection targetCollection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
-    if (!targetCollection.isValid()) {
-        return failureResponse("No valid target specified");
-    }
-    if (targetCollection.isVirtual()) {
-        return failureResponse("Copying items into virtual collections is not allowed");
-    }
-
-    SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::itemSetToQuery(cmd.items().uidSet(), qb);
-    if (!qb.exec()) {
-        return failureResponse("Unable to retrieve items");
-    }
-    PimItem::List items = qb.result();
-    qb.query().finish();
-
-    DataStore *store = connection()->storageBackend();
-    Transaction transaction(store);
-
-    Q_FOREACH (const PimItem &item, items) {
-        if (!copyItem(item, targetCollection)) {
-            return failureResponse("Unable to copy item");
-        }
-    }
-
-    if (!transaction.commit()) {
-        return failureResponse("Cannot commit transaction.");
     }
 
     return successResponse<Protocol::CopyItemsResponse>();

@@ -63,6 +63,30 @@ public:
         intervals = other.intervals;
     }
 
+    template<typename T>
+    void add(const T &values)
+    {
+        T vals = values;
+        qSort(vals);
+        for (int i = 0; i < vals.count(); ++i) {
+            const int begin = vals[i];
+            Q_ASSERT(begin >= 0);
+            if (i == vals.count() - 1) {
+                intervals << ImapInterval(begin, begin);
+                break;
+            }
+            do {
+                ++i;
+                Q_ASSERT(vals[i] >= 0);
+                if (vals[i] != (vals[i - 1] + 1)) {
+                    --i;
+                    break;
+                }
+            } while (i < vals.count() - 1);
+            intervals << ImapInterval(begin, vals[i]);
+        }
+    }
+
     ImapInterval::List intervals;
 };
 
@@ -187,6 +211,12 @@ ImapSet::ImapSet(const QVector<qint64> &ids)
     add(ids);
 }
 
+ImapSet::ImapSet(const QList<qint64> &ids)
+    : d(new Private)
+{
+    add(ids);
+}
+
 ImapSet::ImapSet(const ImapInterval &interval)
     :d (new Private)
 {
@@ -225,25 +255,12 @@ bool ImapSet::operator==(const ImapSet &other) const
 
 void ImapSet::add(const QVector<Id> &values)
 {
-    QVector<Id> vals = values;
-    qSort(vals);
-    for (int i = 0; i < vals.count(); ++i) {
-        const int begin = vals[i];
-        Q_ASSERT(begin >= 0);
-        if (i == vals.count() - 1) {
-            d->intervals << ImapInterval(begin, begin);
-            break;
-        }
-        do {
-            ++i;
-            Q_ASSERT(vals[i] >= 0);
-            if (vals[i] != (vals[i - 1] + 1)) {
-                --i;
-                break;
-            }
-        } while (i < vals.count() - 1);
-        d->intervals << ImapInterval(begin, vals[i]);
-    }
+    d->add(values);
+}
+
+void ImapSet::add(const QList<Id> &values)
+{
+    d->add(values);
 }
 
 void ImapSet::add(const QSet<Id> &values)

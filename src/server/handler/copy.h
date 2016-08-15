@@ -62,6 +62,12 @@ protected:
       The changes mentioned above are applied.
     */
     bool copyItem(const PimItem &item, const Collection &target);
+
+private Q_SLOTS:
+    void itemsRetrieved(const QList<qint64> &ids);
+
+private:
+    Collection mTargetCollection;
 };
 
 } // namespace Server

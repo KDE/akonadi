@@ -41,8 +41,15 @@ namespace Server {
 class  Move : public Handler
 {
     Q_OBJECT
+
 public:
     bool parseStream() Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void itemsRetrieved(const QList<qint64> &ids);
+
+private:
+    Collection mDestination;
 };
 
 } // namespace Server
