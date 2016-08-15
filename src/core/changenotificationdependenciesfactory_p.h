@@ -26,7 +26,7 @@
 namespace Akonadi
 {
 
-class NotificationSource;
+class Connection;
 
 /**
  * This class exists so that we can create a fake notification source in
@@ -38,8 +38,7 @@ public:
     virtual ~ChangeNotificationDependenciesFactory()
     {
     }
-    virtual NotificationSource *createNotificationSource(QObject *parent);
-    virtual QObject *createNotificationBus(QObject *parent, NotificationSource *source);
+    virtual Connection *createNotificationConnection(Session *parent);
     virtual QObject *createChangeMediator(QObject *parent);
 
     virtual Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Session *session);

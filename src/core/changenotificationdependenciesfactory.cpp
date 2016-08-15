@@ -18,70 +18,25 @@
 */
 
 #include "changenotificationdependenciesfactory_p.h"
-#include "KDBusConnectionPool"
-#include "notificationsource_p.h"
-#include "notificationbus_p.h"
-#include "notificationsourceinterface.h"
-#include "notificationmanagerinterface.h"
+#include "sessionthread_p.h"
+#include "connection_p.h"
 #include "changemediator_p.h"
 #include "servermanager.h"
 #include "akonadicore_debug.h"
+#include "session_p.h"
 
 #include <KRandom>
 #include <qdbusextratypes.h>
 
 using namespace Akonadi;
 
-NotificationSource *ChangeNotificationDependenciesFactory::createNotificationSource(QObject *parent)
+Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(Session *session)
 {
     if (!Akonadi::ServerManager::self()->isRunning()) {
         return 0;
     }
 
-    org::freedesktop::Akonadi::NotificationManager *manager =
-        new org::freedesktop::Akonadi::NotificationManager(
-        ServerManager::serviceName(Akonadi::ServerManager::Server),
-        QStringLiteral("/notifications"),
-        KDBusConnectionPool::threadConnection());
-
-    if (!manager) {
-        // :TODO: error handling
-        return 0;
-    }
-
-    const QString name =
-        QStringLiteral("%1_%2_%3").arg(
-            QCoreApplication::applicationName(),
-            QString::number(QCoreApplication::applicationPid()),
-            KRandom::randomString(6));
-    QDBusObjectPath p = manager->subscribe(name, false);
-    const bool validError = manager->lastError().isValid();
-    if (validError) {
-        qCWarning(AKONADICORE_LOG) << manager->lastError().name() << manager->lastError().message();
-        // :TODO: What to do?
-        delete manager;
-        return 0;
-    }
-    delete manager;
-    org::freedesktop::Akonadi::NotificationSource *notificationSource =
-        new org::freedesktop::Akonadi::NotificationSource(
-        ServerManager::serviceName(Akonadi::ServerManager::Server),
-        p.path(),
-        KDBusConnectionPool::threadConnection(), parent);
-
-    if (!notificationSource) {
-        // :TODO: error handling
-        return 0;
-    }
-    return new NotificationSource(notificationSource);
-}
-
-QObject *ChangeNotificationDependenciesFactory::createNotificationBus(QObject *parent, NotificationSource *source)
-{
-    NotificationBusPrivate *priv = new NotificationBusPrivate;
-    Session *session = new Session(priv, source->identifier().toLatin1(), parent);
-    priv->setParent(session);
-    return priv;
+    return session->d->sessionThread()->createConnection(Connection::NotificationConnection, session->sessionId());
 }
 
 QObject *ChangeNotificationDependenciesFactory::createChangeMediator(QObject *parent)

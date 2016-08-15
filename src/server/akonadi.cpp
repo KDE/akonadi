@@ -37,6 +37,7 @@
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
 #include "search/searchtaskmanager.h"
+#include "aklocalserver.h"
 
 #include "collectionreferencemanager.h"
 
@@ -44,6 +45,7 @@
 #include <private/standarddirs_p.h>
 #include <private/protocol_p.h>
 #include <private/dbus_p.h>
+#include <private/instance_p.h>
 
 #include <QtSql/QSqlQuery>
 #include <QtSql/QSqlError>
@@ -53,16 +55,7 @@
 #include <QtCore/QSettings>
 #include <QtCore/QTimer>
 #include <QtDBus/QDBusServiceWatcher>
-
-#ifdef HAVE_UNISTD_H
-# include <unistd.h>
-#endif
-#include <stdlib.h>
-
-#ifdef Q_OS_WIN
-#include <windows.h>
-#include <Sddl.h>
-#endif
+#include <QtNetwork/QLocalServer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -70,7 +63,10 @@ using namespace Akonadi::Server;
 AkonadiServer *AkonadiServer::s_instance = 0;
 
 AkonadiServer::AkonadiServer(QObject *parent)
-    : QLocalServer(parent)
+    : QObject(parent)
+    , mCmdServer(Q_NULLPTR)
+    , mNtfServer(Q_NULLPTR)
+    , mNotificationManager(Q_NULLPTR)
     , mCacheCleaner(Q_NULLPTR)
     , mIntervalCheck(Q_NULLPTR)
     , mStorageJanitor(Q_NULLPTR)
@@ -84,9 +80,7 @@ AkonadiServer::AkonadiServer(QObject *parent)
     qRegisterMetaType<Protocol::Command>();
     qRegisterMetaType<Protocol::ChangeNotification>();
     qRegisterMetaType<Protocol::ChangeNotification::List>();
-
-    qRegisterMetaType<Protocol::ChangeNotification::Type>();
-    qDBusRegisterMetaType<Protocol::ChangeNotification::Type>();
+    qRegisterMetaType<quintptr>("quintptr");
 }
 
 bool AkonadiServer::init()
@@ -120,6 +114,17 @@ bool AkonadiServer::init()
     const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
     QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
 
+    mCmdServer = new AkLocalServer(this);
+    connect(mCmdServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
+            this, &AkonadiServer::newCmdConnection);
+
+    mNotificationManager = new NotificationManager();
+    mNtfServer = new AkLocalServer(this);
+    // Note: this is a queued connection, as NotificationManager lives in its
+    // own thread
+    connect(mNtfServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
+            mNotificationManager, &NotificationManager::registerConnection);
+
 #ifdef Q_OS_WIN
     HANDLE hToken = NULL;
     PSID sid;
@@ -152,29 +157,49 @@ bool AkonadiServer::init()
         }
         free(sid);
     }
-    QString defaultPipe = QLatin1String("Akonadi-") + userID;
 
-    QString namedPipe = settings.value(QLatin1String("Connection/NamedPipe"), defaultPipe).toString();
-    if (!listen(namedPipe)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << namedPipe;
+    const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % userID;
+    const QString cmdPipe = settings.value(QStringLiteral("Connection/NamedPipe"), defaultCmdPipe).toString();
+    if (!mCmdServer->listen(cmdPipe)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << cmdPipe;
         quit();
         return false;
     }
 
-    connectionSettings.setValue(QLatin1String("Data/Method"), QLatin1String("NamedPipe"));
-    connectionSettings.setValue(QLatin1String("Data/NamedPipe"), namedPipe);
+    const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % userID;
+    const QString ntfPipe = settings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultNtfPipe).toString();
+    if (!mNtfServer->listen(ntfPipe)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << ntfPipe;
+        quit();
+        return false;
+    }
+
+    connectionSettings.setValue(QStringLiteral("Data/Method"), QStringLiteral("NamedPipe"));
+    connectionSettings.setValue(QStringLiteral("Data/NamedPipe"), cmdPipe);
+    connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("NamedPipe"));
+    connectionSettings.setValue(QStringLiteral("Notifications/NamedPipe"), ntfPipe);
 #else
     const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"));
-    const QString socketFile = socketDir + QLatin1String("/akonadiserver.socket");
-    QFile::remove(socketFile);
-    if (!listen(socketFile)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << socketFile;
+    const QString cmdSocketFile = socketDir % QStringLiteral("/akonadiserver-cmd.socket");
+    QFile::remove(cmdSocketFile);
+    if (!mCmdServer->listen(cmdSocketFile)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << cmdSocketFile;
         quit();
         return false;
     }
 
-    connectionSettings.setValue(QStringLiteral("Data/Method"), QLatin1String("UnixPath"));
-    connectionSettings.setValue(QStringLiteral("Data/UnixPath"), socketFile);
+    const QString ntfSocketFile = socketDir % QStringLiteral("/akonadiserver-ntf.socket");
+    QFile::remove(ntfSocketFile);
+    if (!mNtfServer->listen(ntfSocketFile)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << ntfSocketFile;
+        quit();
+        return false;
+    }
+
+    connectionSettings.setValue(QStringLiteral("Data/Method"), QStringLiteral("UnixPath"));
+    connectionSettings.setValue(QStringLiteral("Data/UnixPath"), cmdSocketFile);
+    connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("UnixPath"));
+    connectionSettings.setValue(QStringLiteral("Notifications/UnixPath"), ntfSocketFile);
 #endif
 
     // initialize the database
@@ -190,7 +215,6 @@ bool AkonadiServer::init()
         return false;
     }
 
-    NotificationManager::self();
     Tracer::self();
     new DebugInterface(this);
     ResourceManager::self();
@@ -276,6 +300,10 @@ bool AkonadiServer::quit()
     }
     mAlreadyShutdown = true;
 
+    qCDebug(AKONADISERVER_LOG) << "terminating connection threads";
+    qDeleteAll(mConnections);
+    mConnections.clear();
+
     qCDebug(AKONADISERVER_LOG) << "terminating service threads";
     delete mCacheCleaner;
     delete mIntervalCheck;
@@ -283,12 +311,7 @@ bool AkonadiServer::quit()
     delete mItemRetrieval;
     delete mAgentSearchManager;
     delete mSearchManager;
-
-    qCDebug(AKONADISERVER_LOG) << "terminating connection threads";
-    for (int i = 0; i < mConnections.count(); ++i) {
-        delete mConnections[i];
-    }
-    mConnections.clear();
+    delete mNotificationManager;
 
     // Terminate the preprocessor manager before the database but after all connections are gone
     PreprocessorManager::done();
@@ -304,13 +327,6 @@ bool AkonadiServer::quit()
     QSettings settings(StandardDirs::serverConfigFile(), QSettings::IniFormat);
     const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
 
-#ifndef Q_OS_WIN
-    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"));
-
-    if (!QDir::home().remove(socketDir + QLatin1String("/akonadiserver.socket"))) {
-        qCCritical(AKONADISERVER_LOG) << "Failed to remove Unix socket";
-    }
-#endif
     if (!QDir::home().remove(connectionSettingsFile)) {
         qCCritical(AKONADISERVER_LOG) << "Failed to remove runtime connection config file";
     }
@@ -325,15 +341,17 @@ void AkonadiServer::doQuit()
     QCoreApplication::exit();
 }
 
-void AkonadiServer::incomingConnection(quintptr socketDescriptor)
+void AkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
     if (mAlreadyShutdown) {
         return;
     }
-    QPointer<Connection> connection = new Connection(socketDescriptor);
-    connect(connection.data(), &Connection::disconnected,
-            this, [connection]() {
-                delete connection.data();
+
+    Connection *connection = new Connection(socketDescriptor);
+    connect(connection, &Connection::disconnected,
+            this, [this, connection]() {
+                delete connection;
+                mConnections.removeOne(connection);
             }, Qt::QueuedConnection);
     mConnections.append(connection);
 }
@@ -422,23 +440,22 @@ void AkonadiServer::serviceOwnerChanged(const QString &name, const QString &oldO
 
 CacheCleaner *AkonadiServer::cacheCleaner()
 {
-    if (mCacheCleaner) {
-        return mCacheCleaner;
-    }
-
-    return Q_NULLPTR;
+    return mCacheCleaner;
 }
 
 IntervalCheck *AkonadiServer::intervalChecker()
 {
-    if (mIntervalCheck) {
-        return mIntervalCheck;
-    }
+    return mIntervalCheck;
+}
 
-    return Q_NULLPTR;
+NotificationManager *AkonadiServer::notificationManager()
+{
+    return mNotificationManager;
 }
 
 QString AkonadiServer::serverPath() const
 {
     return XdgBaseDirs::homePath("config");
 }
+
+#include "akonadi.moc"

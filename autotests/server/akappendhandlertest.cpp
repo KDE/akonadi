@@ -41,6 +41,7 @@ Q_DECLARE_METATYPE(PimItem)
 Q_DECLARE_METATYPE(QVector<Flag>)
 Q_DECLARE_METATYPE(QVector<FakePart>)
 Q_DECLARE_METATYPE(QVector<FakeTag>)
+Q_DECLARE_METATYPE(Akonadi::Protocol::ItemChangeNotification)
 
 class AkAppendHandlerTest : public QObject
 {
@@ -75,10 +76,10 @@ public:
         pimItem.setSize(size);
     }
 
-    void updateNotifcationEntity(Protocol::ChangeNotification &ntf, const PimItem &pimItem)
+    void updateNotifcationEntity(Protocol::ItemChangeNotification &ntf, const PimItem &pimItem)
     {
-        ntf.clearEntities();
-        ntf.addEntity(pimItem.id(), pimItem.remoteId(), pimItem.remoteRevision(), pimItem.mimeType().name());
+        ntf.clearItems();
+        ntf.addItem(pimItem.id(), pimItem.remoteId(), pimItem.remoteRevision(), pimItem.mimeType().name());
     }
 
     struct PartHelper
@@ -206,7 +207,7 @@ private Q_SLOTS:
     void testAkAppend_data()
     {
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<Protocol::ChangeNotification>("notification");
+        QTest::addColumn<Protocol::ItemChangeNotification>("notification");
         QTest::addColumn<PimItem>("pimItem");
         QTest::addColumn<QVector<FakePart> >("parts");
         QTest::addColumn<QVector<Flag> >("flags");
@@ -216,7 +217,7 @@ private Q_SLOTS:
         QTest::addColumn<bool>("expectFail");
 
         TestScenario::List scenarios;
-        Protocol::ChangeNotification notification;
+        Protocol::ItemChangeNotification notification;
         qint64 uidnext = 0;
         QDateTime datetime(QDate(2014, 05, 12), QTime(14, 46, 00), Qt::UTC);
         PimItem pimItem;
@@ -232,11 +233,10 @@ private Q_SLOTS:
         pimItem.setMimeType(MimeType::retrieveByName(QLatin1String("application/octet-stream")));
         pimItem.setDatetime(datetime);
         updateParts(parts, { { QLatin1String("PLD:DATA"), "0123456789", 10 } });
-        notification.setType(Protocol::ChangeNotification::Items);
-        notification.setOperation(Protocol::ChangeNotification::Add);
+        notification.setOperation(Protocol::ItemChangeNotification::Add);
         notification.setParentCollection(4);
         notification.setResource("akonadi_fake_resource_0");
-        notification.addEntity(-1, QLatin1String("TEST-1"), QLatin1String("1"), QLatin1String("application/octet-stream"));
+        notification.addItem(-1, QLatin1String("TEST-1"), QLatin1String("1"), QLatin1String("application/octet-stream"));
         notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
         uidnext = 13;
         scenarios << FakeAkonadiServer::loginScenario()
@@ -284,7 +284,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << inScenario
                   << errorResponse(QLatin1String("Invalid parent collection"));
-        QTest::newRow("invalid collection") << scenarios << Protocol::ChangeNotification()
+        QTest::newRow("invalid collection") << scenarios << Protocol::ItemChangeNotification()
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
@@ -298,7 +298,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << inScenario
                   << errorResponse(QLatin1String("Cannot append item into virtual collection"));
-        QTest::newRow("virtual collection") << scenarios << Protocol::ChangeNotification()
+        QTest::newRow("virtual collection") << scenarios << Protocol::ItemChangeNotification()
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
@@ -346,7 +346,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", "123"))
                   << errorResponse(QLatin1String("Payload size mismatch"));
-        QTest::newRow("incomplete part data") << scenarios << Protocol::ChangeNotification()
+        QTest::newRow("incomplete part data") << scenarios << Protocol::ItemChangeNotification()
                                               << PimItem() << QVector<FakePart>()
                                               << QVector<Flag>() << QVector<FakeTag>()
                                               << -1ll << QDateTime() << true;
@@ -359,7 +359,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", "1234567890"))
                   << errorResponse(QLatin1String("Payload size mismatch"));
-        QTest::newRow("part data larger than advertised") << scenarios << Protocol::ChangeNotification()
+        QTest::newRow("part data larger than advertised") << scenarios << Protocol::ItemChangeNotification()
                                                           << PimItem() << QVector<FakePart>()
                                                           << QVector<Flag>() << QVector<FakeTag>()
                                                           << -1ll << QDateTime() << true;
@@ -672,7 +672,7 @@ private Q_SLOTS:
     void testAkAppend()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(Protocol::ChangeNotification, notification);
+        QFETCH(Protocol::ItemChangeNotification, notification);
         QFETCH(PimItem, pimItem);
         QFETCH(QVector<FakePart>, parts);
         QFETCH(QVector<Flag>, flags);
@@ -689,10 +689,10 @@ private Q_SLOTS:
             QCOMPARE(notificationSpy->count(), 1);
             Protocol::ChangeNotification::List notifications = notificationSpy->at(0).first().value<Protocol::ChangeNotification::List>();
             QCOMPARE(notifications.count(), 1);
-            const Protocol::ChangeNotification itemNotification = notifications.at(0);
+            const Protocol::ItemChangeNotification itemNotification = notifications.at(0);
 
             QVERIFY(AkTest::compareNotifications(itemNotification, notification, QFlag(AkTest::NtfAll & ~ AkTest::NtfEntities)));
-            QCOMPARE(itemNotification.entities().count(), notification.entities().count());
+            QCOMPARE(itemNotification.items().count(), notification.items().count());
         } else {
             QVERIFY(notificationSpy->isEmpty());
         }

@@ -110,8 +110,7 @@ public:
     void setPopulateDb(bool populate);
 
 protected:
-    /* Reimpl */
-    void incomingConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
+    void newCmdConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
 
 private:
     explicit FakeAkonadiServer();
@@ -125,6 +124,7 @@ private:
 
     QEventLoop *mServerLoop;
 
+    NotificationCollector *mNtfCollector;
     QSignalSpy *mNotificationSpy;
 
     bool mPopulateDb;

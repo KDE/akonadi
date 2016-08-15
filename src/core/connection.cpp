@@ -17,7 +17,7 @@
  * 02110-1301, USA.
  */
 
-#include "connectionthread_p.h"
+#include "connection_p.h"
 #include "session_p.h"
 #include "servermanager_p.h"
 #include "akonadicore_debug.h"
@@ -37,8 +37,9 @@
 
 using namespace Akonadi;
 
-ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
+Connection::Connection(ConnectionType connType, const QByteArray &sessionId, QObject *parent)
     : QObject(parent)
+    , mConnectionType(connType)
     , mSocket(Q_NULLPTR)
     , mLogFile(Q_NULLPTR)
     , mSessionId(sessionId)
@@ -46,15 +47,12 @@ ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
     qRegisterMetaType<Protocol::Command>();
     qRegisterMetaType<QAbstractSocket::SocketState>();
 
-    QThread *thread = new QThread();
-    moveToThread(thread);
-    thread->start();
-
     const QByteArray sessionLogFile = qgetenv("AKONADI_SESSION_LOGFILE");
     if (!sessionLogFile.isEmpty()) {
-        mLogFile = new QFile(QStringLiteral("%1.%2.%3").arg(QString::fromLatin1(sessionLogFile),
-                                                            QString::number(QApplication::applicationPid()),
-                                                            QString::fromLatin1(mSessionId.replace('/', '_'))));
+        mLogFile = new QFile(QStringLiteral("%1.%2.%3-%4").arg(QString::fromLatin1(sessionLogFile))
+                             .arg(QString::number(QApplication::applicationPid()))
+                             .arg(QString::fromLatin1(mSessionId.replace('/', '_')))
+                             .arg(connType == CommandConnection ? QStringLiteral("Cmd") : QStringLiteral("Ntf")));
         if (!mLogFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             qCWarning(AKONADICORE_LOG) << "Failed to open Akonadi Session log file" << mLogFile->fileName();
             delete mLogFile;
@@ -63,44 +61,24 @@ ConnectionThread::ConnectionThread(const QByteArray &sessionId, QObject *parent)
     }
 }
 
-ConnectionThread::~ConnectionThread()
+Connection::~Connection()
 {
-    if (QCoreApplication::instance()) {
-        QMetaObject::invokeMethod(this, "doThreadQuit");
-    } else {
-        // QCoreApplication already destroyed -> invokeMethod would just not get the message delivered
-        // We leak the socket, but at least we don't block for 10s
-        qWarning() << "Akonadi ConnectionThread deleted after QCoreApplication is destroyed. Clean up your sessions earlier!";
-        thread()->quit();
-    }
-    if (!thread()->wait(10 * 1000)) {
-        thread()->terminate();
-        // Make sure to wait until it's done, otherwise it can crash when the pthread callback is called
-        thread()->wait();
-    }
     delete mLogFile;
-    delete thread();
-}
-
-void ConnectionThread::doThreadQuit()
-{
-    Q_ASSERT(QThread::currentThread() == thread());
     if (mSocket) {
         mSocket->disconnect(this);
         mSocket->close();
         delete mSocket;
     }
-    thread()->quit();
 }
 
-void ConnectionThread::reconnect()
+void Connection::reconnect()
 {
     const bool ok = QMetaObject::invokeMethod(this, "doReconnect", Qt::QueuedConnection);
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }
 
-void ConnectionThread::doReconnect()
+void Connection::doReconnect()
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
@@ -146,9 +124,15 @@ void ConnectionThread::doReconnect()
                                     << XdgBaseDirs::systemPathList("config");
         }
         const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
-
         const QString defaultSocketDir = StandardDirs::saveDir("data");
-        serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), QString(defaultSocketDir + QStringLiteral("/akonadiserver.socket"))).toString();
+
+        if (mConnectionType == CommandConnection) {
+            const QString defaultSocketPath = defaultSocketDir % QStringLiteral("akonadiserver-cmd.socket");
+            serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), defaultSocketPath).toString();
+        } else if (mConnectionType == NotificationConnection) {
+            const QString defaultSocketPath = defaultSocketDir % QStringLiteral("akonadiserver-ntf.socket");
+            serverAddress = connectionSettings.value(QStringLiteral("Notifications/UnixPath"), defaultSocketPath).toString();
+        }
     }
 
     // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
@@ -157,11 +141,12 @@ void ConnectionThread::doReconnect()
         mSocket = new QLocalSocket(this);
         connect(mSocket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
                 [this](QLocalSocket::LocalSocketError) {
+                    qCWarning(AKONADICORE_LOG) << mSocket->errorString();
                     Q_EMIT socketError(mSocket->errorString());
                     Q_EMIT socketDisconnected();
                 });
-        connect(mSocket, &QLocalSocket::disconnected, this, &ConnectionThread::socketDisconnected);
-        connect(mSocket, &QLocalSocket::readyRead, this, &ConnectionThread::dataReceived);
+        connect(mSocket, &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
+        connect(mSocket, &QLocalSocket::readyRead, this, &Connection::dataReceived);
     }
 
     // actually do connect
@@ -171,7 +156,7 @@ void ConnectionThread::doReconnect()
     Q_EMIT reconnected();
 }
 
-void ConnectionThread::forceReconnect()
+void Connection::forceReconnect()
 {
     const bool ok = QMetaObject::invokeMethod(this, "doForceReconnect",
                                               Qt::QueuedConnection);
@@ -179,7 +164,7 @@ void ConnectionThread::forceReconnect()
     Q_UNUSED(ok)
 }
 
-void ConnectionThread::doForceReconnect()
+void Connection::doForceReconnect()
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
@@ -191,14 +176,14 @@ void ConnectionThread::doForceReconnect()
     mSocket = Q_NULLPTR;
 }
 
-void ConnectionThread::disconnect()
+void Connection::closeConnection()
 {
-    const bool ok = QMetaObject::invokeMethod(this, "doDisconnect", Qt::QueuedConnection);
+    const bool ok = QMetaObject::invokeMethod(this, "doCloseConnection", Qt::QueuedConnection);
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }
 
-void ConnectionThread::doDisconnect()
+void Connection::doCloseConnection()
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
@@ -208,13 +193,12 @@ void ConnectionThread::doDisconnect()
     }
 }
 
-void ConnectionThread::dataReceived()
+void Connection::dataReceived()
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
     QElapsedTimer timer;
     timer.start();
-
     while (mSocket->bytesAvailable() > 0) {
         QDataStream stream(mSocket);
         qint64 tag;
@@ -263,13 +247,13 @@ void ConnectionThread::dataReceived()
         // to the jobs through event loop. That will be overall slower but should
         // result in much more responsive applications.
         if (timer.elapsed() > 50) {
-            QThread::currentThread()->eventDispatcher()->processEvents(QEventLoop::ExcludeSocketNotifiers);
+            thread()->eventDispatcher()->processEvents(QEventLoop::ExcludeSocketNotifiers);
             timer.restart();
         }
     }
 }
 
-void ConnectionThread::sendCommand(qint64 tag, const Protocol::Command &cmd)
+void Connection::sendCommand(qint64 tag, const Protocol::Command &cmd)
 {
     const bool ok = QMetaObject::invokeMethod(this, "doSendCommand",
                                               Qt::QueuedConnection,
@@ -279,7 +263,7 @@ void ConnectionThread::sendCommand(qint64 tag, const Protocol::Command &cmd)
     Q_UNUSED(ok)
 }
 
-void ConnectionThread::doSendCommand(qint64 tag, const Protocol::Command &cmd)
+void Connection::doSendCommand(qint64 tag, const Protocol::Command &cmd)
 {
     Q_ASSERT(QThread::currentThread() == thread());
 

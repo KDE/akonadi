@@ -39,6 +39,7 @@ akonadi_generate_schema(${AKONADI_DB_SCHEME} AkonadiSchema akonadischema)
 
 set(libakonadiserver_SRCS
     akonadi.cpp
+    aklocalserver.cpp
     akthread.cpp
     commandcontext.cpp
     connection.cpp
@@ -124,7 +125,7 @@ set(libakonadiserver_SRCS
     dbustracer.cpp
     filetracer.cpp
     notificationmanager.cpp
-    notificationsource.cpp
+    notificationsubscriber.cpp
     resourcemanager.cpp
     cachecleaner.cpp
     debuginterface.cpp
@@ -141,9 +142,7 @@ qt5_generate_dbus_interface(debuginterface.h org.freedesktop.Akonadi.DebugInterf
 
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.TracerNotification.xml dbustracer.h Akonadi::Server::DBusTracer)
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml tracer.h Akonadi::Server::Tracer)
-qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationManager.xml notificationmanager.h Akonadi::Server::NotificationManager)
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Server.xml akonadi.h Akonadi::Server::AkonadiServer)
-qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.NotificationSource.xml notificationsource.h Akonadi::Server::NotificationSource)
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.StorageDebugger.xml storage/storagedebugger.h Akonadi::Server::StorageDebugger)
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${CMAKE_CURRENT_BINARY_DIR}/org.freedesktop.Akonadi.DebugInterface.xml debuginterface.h Akonadi::Server::DebugInterface)
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resourcemanager.h Akonadi::Server::ResourceManager)
@@ -157,6 +156,7 @@ qt5_add_dbus_interface(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interface
 qt5_add_resources(libakonadiserver_SRCS storage/akonadidb.qrc)
 
 add_library(libakonadiserver STATIC ${libakonadiserver_SRCS})
+set_target_properties(libakonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
 target_link_libraries(libakonadiserver
     akonadi_shared
     KF5AkonadiPrivate

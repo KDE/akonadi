@@ -93,6 +93,9 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
 {
     Q_UNUSED(itemCache)
 
+    // Workaround for the QTimer::singleShot() in fake monitors to happen
+    QTest::qWait(10);
+
     monitor->setSession(m_fakeSession);
     monitor->fetchCollection(true);
 
@@ -101,11 +104,10 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     Collection parent(1);
     Collection added(2);
 
-    Protocol::ChangeNotification msg;
+    Protocol::CollectionChangeNotification msg;
     msg.setParentCollection(parent.id());
-    msg.setOperation(Protocol::ChangeNotification::Add);
-    msg.setType(Protocol::ChangeNotification::Collections);
-    msg.addEntity(added.id());
+    msg.setOperation(Protocol::CollectionChangeNotification::Add);
+    msg.setId(added.id());
 
     QHash<Collection::Id, Collection> data;
     data.insert(parent.id(), parent);
@@ -116,7 +118,7 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     QVERIFY(monitor->pipeline().isEmpty());
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
-    monitor->notificationBus()->emitNotify(msg);
+    monitor->notificationConnection()->emitNotify(msg);
 
     QCOMPARE(monitor->pipeline().size(), 1);
     QVERIFY(monitor->pendingNotifications().isEmpty());
@@ -169,11 +171,10 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
         Collection parent(i++);
         Collection added(i++);
 
-        Protocol::ChangeNotification msg;
+        Protocol::CollectionChangeNotification msg;
         msg.setParentCollection(parent.id());
-        msg.setOperation(Protocol::ChangeNotification::Add);
-        msg.setType(Protocol::ChangeNotification::Collections);
-        msg.addEntity(added.id());
+        msg.setOperation(Protocol::CollectionChangeNotification::Add);
+        msg.setId(added.id());
 
         data.insert(parent.id(), parent);
         data.insert(added.id(), added);
@@ -185,7 +186,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
     Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
-        monitor->notificationBus()->emitNotify(ntf);
+        monitor->notificationConnection()->emitNotify(ntf);
     }
 
     QCOMPARE(monitor->pipeline().size(), 5);
@@ -243,11 +244,10 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     while (i < 8) {
         Collection added(i++);
 
-        Protocol::ChangeNotification msg;
+        Protocol::CollectionChangeNotification msg;
         msg.setParentCollection(i % 2 ? 2 : added.id() - 1);
-        msg.setOperation(Protocol::ChangeNotification::Add);
-        msg.setType(Protocol::ChangeNotification::Collections);
-        msg.addEntity(added.id());
+        msg.setOperation(Protocol::CollectionChangeNotification::Add);
+        msg.setId(added.id());
 
         list << msg;
     }
@@ -272,7 +272,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
     Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
-        monitor->notificationBus()->emitNotify(ntf);
+        monitor->notificationConnection()->emitNotify(ntf);
     }
 
     // Collection 6 is not notified, because Collection 5 has held up the pipeline

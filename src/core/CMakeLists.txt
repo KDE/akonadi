@@ -11,7 +11,7 @@ set(akonadicore_base_SRCS
     changenotificationdependenciesfactory.cpp
     changerecorder.cpp
     changerecorder_p.cpp
-    connectionthread.cpp
+    connection.cpp
     collection.cpp
     collectioncolorattribute.cpp
     collectionfetchscope.cpp
@@ -46,7 +46,6 @@ set(akonadicore_base_SRCS
     monitor.cpp
     monitor_p.cpp
     newmailnotifierattribute.cpp
-    notificationbus_p.cpp
     notificationsource_p.cpp
     partfetcher.cpp
     pastehelper.cpp
@@ -59,8 +58,10 @@ set(akonadicore_base_SRCS
     searchquery.cpp
     servermanager.cpp
     session.cpp
+    sessionthread.cpp
     specialcollectionattribute.cpp
     specialcollections.cpp
+    subscriptionmonitor.cpp
     tag.cpp
     tagattribute.cpp
     tagfetchscope.cpp
@@ -114,6 +115,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     SpecialCollections
     SpecialCollectionAttribute
     Supertrait
+    SubscriptionMonitor
     Tag
     TagAttribute
     TagFetchScope

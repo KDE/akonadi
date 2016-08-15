@@ -110,8 +110,14 @@ void ProtocolTest::testFactory_data()
     QTest::newRow("selectResource resp") << Command::SelectResource << true << true;
     QTest::newRow("streamPayload cmd") << Command::StreamPayload << false << true;
     QTest::newRow("streamPayload resp") << Command::StreamPayload << true << true;
-    QTest::newRow("changeNotification cmd") << Command::ChangeNotification << false << true;
-    QTest::newRow("changeNotification resp") << Command::ChangeNotification << true << false;
+    QTest::newRow("itemChangeNotification cmd") << Command::ItemChangeNotification << false << true;
+    QTest::newRow("itemChangeNotification resp") << Command::ItemChangeNotification << true << false;
+    QTest::newRow("collectionChangeNotification cmd") << Command::CollectionChangeNotification << false << true;
+    QTest::newRow("collectionChangeNotification resp") << Command::CollectionChangeNotification << true << false;
+    QTest::newRow("tagChangeNotification cmd") << Command::TagChangeNotification << false << true;
+    QTest::newRow("tagChangENotification resp") << Command::TagChangeNotification << true << false;
+    QTest::newRow("relationChangeNotification cmd") << Command::RelationChangeNotification << false << true;
+    QTest::newRow("relationChangeNotification resp") << Command::RelationChangeNotification << true << false;
     QTest::newRow("_responseBit cmd") << Command::_ResponseBit << false << false;
     QTest::newRow("_responseBit resp") << Command::_ResponseBit << true << false;
 }
@@ -488,13 +494,11 @@ void ProtocolTest::testLoginCommand()
     QVERIFY(!in.isResponse());
     QVERIFY(in.isValid());
     in.setSessionId("MySession-123-notifications");
-    in.setSessionMode(LoginCommand::NotificationBus);
 
     const LoginCommand out = serializeAndDeserialize(in);
     QVERIFY(out.isValid());
     QVERIFY(!out.isResponse());
     QCOMPARE(out.sessionId(), QByteArray("MySession-123-notifications"));
-    QCOMPARE(out.sessionMode(), LoginCommand::NotificationBus);
     QCOMPARE(out, in);
     const bool notEquals = (out != in);
     QVERIFY(!notEquals);

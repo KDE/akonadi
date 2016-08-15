@@ -22,12 +22,11 @@
 
 #include "monitor_p.h"
 #include "notificationsource_p.h"
-#include "notificationbus_p.h"
-
 #include "collectionfetchscope.h"
 #include "itemfetchscope.h"
 #include "akonaditestfake_export.h"
 #include "private/protocol_p.h"
+
 
 template<typename T, typename Cache>
 class FakeEntityCache : public Cache
@@ -122,25 +121,27 @@ public Q_SLOTS:
     }
 };
 
-class AKONADITESTFAKE_EXPORT FakeNotificationBus : public QObject
+class AKONADITESTFAKE_EXPORT FakeNotificationConnection : public Akonadi::Connection
 {
     Q_OBJECT
 
 public:
-    explicit FakeNotificationBus(QObject *parent = Q_NULLPTR)
-        : QObject(parent)
+    explicit FakeNotificationConnection(QObject *parent = Q_NULLPTR)
+        : Connection(Connection::NotificationConnection, "testConn", parent)
     {}
 
-    virtual ~FakeNotificationBus()
+    virtual ~FakeNotificationConnection()
     {}
 
     void emitNotify(const Akonadi::Protocol::ChangeNotification &ntf)
     {
-        Q_EMIT notify(ntf);
+        Q_EMIT commandReceived(3, ntf);
     }
 
+    /*
 Q_SIGNALS:
     void notify(const Akonadi::Protocol::ChangeNotification &ntf);
+    */
 };
 
 class FakeMonitorDependeciesFactory : public Akonadi::ChangeNotificationDependenciesFactory
@@ -154,13 +155,8 @@ public:
     {
     }
 
-    Akonadi::NotificationSource *createNotificationSource(QObject *parent) Q_DECL_OVERRIDE {
-        return new Akonadi::NotificationSource(new FakeNotificationSource(parent));
-    }
-
-    QObject *createNotificationBus(QObject *parent, Akonadi::NotificationSource *source) Q_DECL_OVERRIDE {
-        Q_UNUSED(source);
-        return new FakeNotificationBus(parent);
+    Akonadi::Connection *createNotificationConnection(Akonadi::Session *parent) Q_DECL_OVERRIDE {
+        return new FakeNotificationConnection(parent);
     }
 
     Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE {

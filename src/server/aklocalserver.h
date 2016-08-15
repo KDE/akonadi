@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2016 Daniel Vrátil <dvratil@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,19 +17,29 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_NOTIFICATIONMESSAGETEST_H
-#define AKONADI_NOTIFICATIONMESSAGETEST_H
+#ifndef AKLOCALSERVER_H
+#define AKLOCALSERVER_H
 
-#include <QtCore/QObject>
+#include <QLocalServer>
 
-class NotificationMessageTest : public QObject
+namespace Akonadi {
+namespace Server {
+
+class AkLocalServer : public QLocalServer
 {
     Q_OBJECT
-private Q_SLOTS:
-    void testCompress();
-    void testCompress2();
-    void testCompress3();
-    void testPartModificationMerge();
+public:
+    AkLocalServer(QObject *parent = Q_NULLPTR);
+
+Q_SIGNALS:
+    void newConnection(quintptr socketDescriptor);
+
+protected:
+    void incomingConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
 };
+
+
+} // namespace Server
+} // namespace Akonadi
 
 #endif

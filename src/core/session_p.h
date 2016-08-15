@@ -36,7 +36,8 @@ class QIODevice;
 
 namespace Akonadi
 {
-class ConnectionThread;
+class SessionThread;
+class Connection;
 
 namespace Protocol
 {
@@ -54,6 +55,8 @@ public:
     virtual ~SessionPrivate();
 
     virtual void init(const QByteArray &sessionId);
+
+    SessionThread *sessionThread() const { return mSessionThread; }
 
     void startNext();
     /// Disconnects a previously existing connection and tries to reconnect
@@ -124,8 +127,8 @@ public:
     static QString connectionFile();
 
     Session *mParent;
-    QThread *thread;
-    ConnectionThread *connThread;
+    SessionThread *mSessionThread;
+    Connection *connection;
     QMetaObject::Connection connThreadCleanUp;
     QByteArray sessionId;
     bool connected;

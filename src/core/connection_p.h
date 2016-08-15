@@ -27,23 +27,33 @@
 
 #include <private/protocol_p.h>
 
+#include "akonadicore_export.h"
+
 class QAbstractSocket;
 class QFile;
 
 namespace Akonadi
 {
 
-class ConnectionThread : public QObject
+class SessionThread;
+
+class AKONADICORE_EXPORT Connection : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit ConnectionThread(const QByteArray &sessionId, QObject *parent = Q_NULLPTR);
-    ~ConnectionThread();
+    enum ConnectionType {
+        CommandConnection,
+        NotificationConnection
+    };
+    Q_ENUMS(ConnectionType)
+
+    explicit Connection(ConnectionType connType, const QByteArray &sessionId, QObject *parent = Q_NULLPTR);
+    ~Connection();
 
     Q_INVOKABLE void reconnect();
     void forceReconnect();
-    void disconnect();
+    void closeConnection();
     void sendCommand(qint64 tag, const Protocol::Command &command);
 
 Q_SIGNALS:
@@ -54,10 +64,9 @@ Q_SIGNALS:
     void socketError(const QString &message);
 
 private Q_SLOTS:
-    void doThreadQuit();
     void doReconnect();
     void doForceReconnect();
-    void doDisconnect();
+    void doCloseConnection();
     void doSendCommand(qint64 tag, const Akonadi::Protocol::Command &command);
 
     void dataReceived();
@@ -66,6 +75,7 @@ private:
 
     bool handleCommand(qint64 tag, const Protocol::Command &cmd);
 
+    ConnectionType mConnectionType;
     QLocalSocket *mSocket;
     QFile *mLogFile;
     QByteArray mSessionId;
@@ -75,6 +85,8 @@ private:
         Protocol::Command cmd;
     };
     QQueue<Command> mOutQueue;
+
+    friend class Akonadi::SessionThread;
 };
 
 }

@@ -33,10 +33,6 @@ bool Login::parseStream()
     }
 
     connection()->setSessionId(cmd.sessionId());
-    if (cmd.sessionMode() == Protocol::LoginCommand::NotificationBus) {
-        connection()->setIsNotificationBus(true);
-    }
-
     Q_EMIT connectionStateChange(Server::Authenticated);
 
     return successResponse<Protocol::LoginResponse>();

@@ -37,6 +37,7 @@
 #include <private/standarddirs_p.h>
 #include <shared/akapplication.h>
 
+#include "aklocalserver.h"
 #include "storage/dbconfig.h"
 #include "storage/datastore.h"
 #include "preprocessormanager.h"
@@ -101,9 +102,10 @@ FakeAkonadiServer *FakeAkonadiServer::instance()
 
 FakeAkonadiServer::FakeAkonadiServer()
     : AkonadiServer()
-    , mDataStore(0)
-    , mServerLoop(0)
-    , mNotificationSpy(0)
+    , mDataStore(Q_NULLPTR)
+    , mServerLoop(Q_NULLPTR)
+    , mNtfCollector(Q_NULLPTR)
+    , mNotificationSpy(Q_NULLPTR)
     , mPopulateDb(true)
 {
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
@@ -120,6 +122,7 @@ FakeAkonadiServer::~FakeAkonadiServer()
     delete mClient;
     delete mConnection;
     delete mNotificationSpy;
+    delete mNtfCollector;
 }
 
 QString FakeAkonadiServer::basePath()
@@ -129,7 +132,7 @@ QString FakeAkonadiServer::basePath()
 
 QString FakeAkonadiServer::socketFile()
 {
-    return basePath() % QLatin1String("/local/share/akonadi/akonadiserver.socket");
+    return basePath() % QStringLiteral("/local/share/akonadi/akonadiserver.socket");
 }
 
 QString FakeAkonadiServer::instanceName()
@@ -249,7 +252,9 @@ bool FakeAkonadiServer::quit()
     qDebug() << "==== Fake Akonadi Server shutting down ====";
 
     // Stop listening for connections
-    close();
+    if (mCmdServer) {
+        mCmdServer->close();
+    }
 
     const QCommandLineParser &args = AkApplicationBase::instance()->commandLineArguments();
     if (!args.isSet(QLatin1String("no-cleanup"))) {
@@ -275,23 +280,27 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
     mClient->setScenarios(scenarios);
 }
 
-void FakeAkonadiServer::incomingConnection(quintptr socketDescriptor)
+void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
     mConnection = new FakeConnection(socketDescriptor);
-    NotificationCollector *ntfCollector = Q_NULLPTR;
+    delete mNotificationSpy;
+    delete mNtfCollector;
+
     // Connection is it's own thread, so we have to make sure we get collector
     // from DataStore of the Connection's thread, not ours
     QMetaObject::invokeMethod(mConnection, "notificationCollector", Qt::BlockingQueuedConnection,
-                              Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, ntfCollector));
-    Q_ASSERT(ntfCollector);
-    mNotificationSpy = new QSignalSpy(ntfCollector,
-                                      SIGNAL(notify(Akonadi::Protocol::ChangeNotification::List)));
+                              Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, mNtfCollector));
+    Q_ASSERT(mNtfCollector);
+    mNotificationSpy = new QSignalSpy(mNtfCollector, &Server::NotificationCollector::notify);
     Q_ASSERT(mNotificationSpy->isValid());
 }
 
 void FakeAkonadiServer::runTest()
 {
-    QVERIFY(listen(socketFile()));
+    mCmdServer = new AkLocalServer(this);
+    connect(mCmdServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
+            this, &FakeAkonadiServer::newCmdConnection);
+    QVERIFY(mCmdServer->listen(socketFile()));
 
     mServerLoop = new QEventLoop(this);
     connect(mClient, &QThread::finished, mServerLoop, &QEventLoop::quit);
@@ -306,7 +315,10 @@ void FakeAkonadiServer::runTest()
     mServerLoop->deleteLater();
     mServerLoop = 0;
 
-    close();
+    mCmdServer->close();
+
+    // Flush any pending notifications
+    mNtfCollector->dispatchNotifications();
 }
 
 QSignalSpy *FakeAkonadiServer::notificationSpy() const

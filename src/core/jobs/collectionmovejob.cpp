@@ -18,6 +18,7 @@
 */
 
 #include "collectionmovejob.h"
+#include "changemediator_p.h"
 #include "collection.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
@@ -72,6 +73,8 @@ void CollectionMoveJob::doStart()
     const Scope destScope = ProtocolHelper::entitySetToScope(Collection::List() << d->destination);
 
     d->sendCommand(Protocol::MoveCollectionCommand(colScope, destScope));
+
+    ChangeMediator::invalidateCollection(d->collection);
 }
 
 bool CollectionMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)

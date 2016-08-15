@@ -220,7 +220,8 @@ Q_SIGNALS:
     void notify(const Akonadi::Protocol::ChangeNotification::List &msgs);
 
 private:
-    void itemNotification(Protocol::ChangeNotification::Operation op, const PimItem::List &items,
+    void itemNotification(Protocol::ItemChangeNotification::Operation op,
+                          const PimItem::List &items,
                           const Collection &collection,
                           const Collection &collectionDest,
                           const QByteArray &resource,
@@ -231,23 +232,24 @@ private:
                           const QSet<qint64> &removedTags = QSet<qint64>(),
                           const Relation::List &addedRelations = Relation::List(),
                           const Relation::List &removedRelations = Relation::List() );
-    void itemNotification(Protocol::ChangeNotification::Operation op, const PimItem &item,
+    void itemNotification(Protocol::ItemChangeNotification::Operation op,
+                          const PimItem &item,
                           const Collection &collection,
                           const Collection &collectionDest,
                           const QByteArray &resource,
                           const QSet<QByteArray> &parts = QSet<QByteArray>());
-    void collectionNotification(Protocol::ChangeNotification::Operation op,
+    void collectionNotification(Protocol::CollectionChangeNotification::Operation op,
                                 const Collection &collection,
                                 Collection::Id source, Collection::Id destination,
                                 const QByteArray &resource,
                                 const QSet<QByteArray> &changes = QSet<QByteArray>(),
                                 const QByteArray &destResource = QByteArray());
-    void tagNotification(Protocol::ChangeNotification::Operation op,
+    void tagNotification(Protocol::TagChangeNotification::Operation op,
                           const Tag &tag,
                           const QByteArray &resource = QByteArray(),
                           const QString &remoteId = QString());
-    void relationNotification(Protocol::ChangeNotification::Operation op,
-                                             const Relation &relation);
+    void relationNotification(Protocol::RelationChangeNotification::Operation op,
+                              const Relation &relation);
     void dispatchNotification(const Protocol::ChangeNotification &msg);
     void clear();
 

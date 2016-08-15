@@ -139,7 +139,9 @@ void MonitorTest::testMonitor()
     AKVERIFYEXEC(create);
     monitorCol = create->collection();
     QVERIFY(monitorCol.isValid());
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 1000));
+    if (caddspy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), 6000));
+    }
 
     QCOMPARE(caddspy.count(), 1);
     QList<QVariant> arg = caddspy.takeFirst();
@@ -169,8 +171,13 @@ void MonitorTest::testMonitor()
     AKVERIFYEXEC(append);
     Item monitorRef = append->item();
     QVERIFY(monitorRef.isValid());
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    if (cstatspy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    }
 
+    for (int i = 0; i < cstatspy.count(); i++) {
+        qDebug() << "CSTAT" << cstatspy[i][0].toLongLong() << cstatspy[i][1].value<Akonadi::CollectionStatistics>().count();
+    }
     QCOMPARE(cstatspy.count(), 1);
     arg = cstatspy.takeFirst();
     QCOMPARE(arg.at(0).value<Akonadi::Collection::Id>(), monitorCol.id());
@@ -197,7 +204,9 @@ void MonitorTest::testMonitor()
     item.setPayload<QByteArray>("some new content");
     ItemModifyJob *store = new ItemModifyJob(item, this);
     AKVERIFYEXEC(store);
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    if (cstatspy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    }
 
     QCOMPARE(cstatspy.count(), 1);
     arg = cstatspy.takeFirst();
@@ -225,7 +234,9 @@ void MonitorTest::testMonitor()
     // move an item
     ItemMoveJob *move = new ItemMoveJob(item, res3);
     AKVERIFYEXEC(move);
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    if (cstatspy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    }
     QCOMPARE(cstatspy.count(), 2);
     // NOTE: We don't make any assumptions about the order of the collectionStatisticsChanged
     // signals, they seem to arrive in random order
@@ -257,7 +268,9 @@ void MonitorTest::testMonitor()
     // delete an item
     ItemDeleteJob *del = new ItemDeleteJob(monitorRef, this);
     AKVERIFYEXEC(del);
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    if (cstatspy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), 1000));
+    }
 
     QCOMPARE(cstatspy.count(), 1);
     arg = cstatspy.takeFirst();
@@ -290,7 +303,9 @@ void MonitorTest::testMonitor()
     subscribeJob->unsubscribe(Collection::List() << subCollection);
     AKVERIFYEXEC(subscribeJob);
     // Wait for unsubscribed signal, it goes after changed, so we can check for both
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), 1000));
+    if (cUnsubscribedSpy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), 1000));
+    }
     QCOMPARE(cmodspy.size(), 1);
     arg = cmodspy.takeFirst();
     col = arg.at(0).value<Collection>();
@@ -306,7 +321,9 @@ void MonitorTest::testMonitor()
     subscribeJob->subscribe(Collection::List() << subCollection);
     AKVERIFYEXEC(subscribeJob);
     // Wait for subscribed signal, it goes after changed, so we can check for both
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), 1000));
+    if (cSubscribedSpy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), 1000));
+    }
     QCOMPARE(cmodspy.size(), 1);
     arg = cmodspy.takeFirst();
     col = arg.at(0).value<Collection>();
@@ -336,7 +353,9 @@ void MonitorTest::testMonitor()
     monitorCol.setName(QStringLiteral("changed name"));
     CollectionModifyJob *mod = new CollectionModifyJob(monitorCol, this);
     AKVERIFYEXEC(mod);
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionChanged(Akonadi::Collection)), 1000));
+    if (cmodspy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionChanged(Akonadi::Collection)), 1000));
+    }
 
     QCOMPARE(cmodspy.count(), 1);
     arg = cmodspy.takeFirst();
@@ -361,7 +380,9 @@ void MonitorTest::testMonitor()
     Collection dest = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
     CollectionMoveJob *cmove = new CollectionMoveJob(monitorCol, dest, this);
     AKVERIFYEXEC(cmove);
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), 1000));
+    if (cmvspy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), 1000));
+    }
 
     QCOMPARE(cmvspy.count(), 1);
     arg = cmvspy.takeFirst();
@@ -390,7 +411,9 @@ void MonitorTest::testMonitor()
     // delete a collection
     CollectionDeleteJob *cdel = new CollectionDeleteJob(monitorCol, this);
     AKVERIFYEXEC(cdel);
-    QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), 1000));
+    if (crmspy.isEmpty()) {
+        QVERIFY(AkonadiTest::akWaitForSignal(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)), 1000));
+    }
 
     QCOMPARE(crmspy.count(), 1);
     arg = crmspy.takeFirst();

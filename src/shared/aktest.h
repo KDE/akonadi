@@ -71,7 +71,7 @@ inline void akTestSetInstanceIdentifier(const QString &instanceId)
 
 namespace QTest {
 template<>
-char *toString(const Akonadi::Protocol::ChangeNotification &msg)
+char *toString(const Akonadi::Protocol::ItemChangeNotification &msg)
 {
     return qstrdup(qPrintable(msg.debugString()));
 }
@@ -100,13 +100,10 @@ enum NtfField {
 };
 typedef QFlags<NtfField> NtfFields;
 
-bool compareNotifications(const Akonadi::Protocol::ChangeNotification &actual,
-                          const Akonadi::Protocol::ChangeNotification &expected,
+bool compareNotifications(const Akonadi::Protocol::ItemChangeNotification &actual,
+                          const Akonadi::Protocol::ItemChangeNotification &expected,
                           const NtfFields fields = NtfAll)
 {
-    if (fields & NtfType) {
-        AKCOMPARE(actual.type(), expected.type());
-    }
     if (fields & NtfOperation) {
         AKCOMPARE(actual.operation(), expected.operation());
     }
@@ -114,7 +111,7 @@ bool compareNotifications(const Akonadi::Protocol::ChangeNotification &actual,
         AKCOMPARE(actual.sessionId(), expected.sessionId());
     }
     if (fields & NtfEntities) {
-        AKCOMPARE(actual.entities(), expected.entities());
+        AKCOMPARE(actual.items(), expected.items());
     }
     if (fields & NtfResource) {
         AKCOMPARE(actual.resource(), expected.resource());

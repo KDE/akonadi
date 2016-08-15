@@ -20,6 +20,7 @@
 
 #include "datastore.h"
 
+#include "akonadi.h"
 #include "dbconfig.h"
 #include "dbinitializer.h"
 #include "dbupdater.h"
@@ -204,7 +205,10 @@ NotificationCollector *DataStore::notificationCollector()
 {
     if (mNotificationCollector == 0) {
         mNotificationCollector = new NotificationCollector(this);
-        NotificationManager::self()->connectNotificationCollector(notificationCollector());
+        NotificationManager *notificationManager = AkonadiServer::instance()->notificationManager();
+        if (notificationManager) {
+            notificationManager->connectNotificationCollector(notificationCollector());
+        }
     }
 
     return mNotificationCollector;

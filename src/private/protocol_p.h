@@ -129,7 +129,15 @@ public:
 
         // Other
         StreamPayload = 100,
-        ChangeNotification,
+
+        // Notifications
+        ItemChangeNotification = 110,
+        CollectionChangeNotification,
+        TagChangeNotification,
+        RelationChangeNotification,
+        SubscriptionChangeNotification,
+        CreateSubscription,
+        ModifySubscription,
 
         _ResponseBit = 0x80 // reserved
     };
@@ -492,20 +500,12 @@ class LoginCommandPrivate;
 class AKONADIPRIVATE_EXPORT LoginCommand : public Command
 {
 public:
-    enum SessionMode : uchar {
-        CommandMode = 0,
-        NotificationBus
-    };
-
     explicit LoginCommand();
-    explicit LoginCommand(const QByteArray &sessionId, SessionMode mode = CommandMode);
+    explicit LoginCommand(const QByteArray &sessionId);
     LoginCommand(const Command &command);
 
     void setSessionId(const QByteArray &sessionId);
     QByteArray sessionId() const;
-
-    void setSessionMode(SessionMode mode);
-    SessionMode sessionMode() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(LoginCommand)
@@ -2012,22 +2012,40 @@ private:
 };
 
 
-
-
 class ChangeNotificationPrivate;
 class AKONADIPRIVATE_EXPORT ChangeNotification : public Command
 {
 public:
-    typedef QVector<ChangeNotification> List;
     typedef qint64 Id;
+    typedef QVector<ChangeNotification> List;
 
-    enum Type : uchar {
-        InvalidType,
-        Collections,
-        Items,
-        Tags,
-        Relations
-    };
+    ChangeNotification();
+    ChangeNotification(const Command &other);
+
+    bool isRemove() const;
+    bool isMove() const;
+
+    QByteArray sessionId() const;
+    void setSessionId(const QByteArray &sessionId);
+
+    void addMetadata(const QByteArray &metadata);
+    void removeMetadata(const QByteArray &metadata);
+    QVector<QByteArray> metadata() const;
+
+protected:
+    ChangeNotification(ChangeNotificationPrivate *dptr);
+
+private:
+    AKONADI_DECLARE_PRIVATE(ChangeNotification)
+};
+
+
+
+class ItemChangeNotificationPrivate;
+class AKONADIPRIVATE_EXPORT ItemChangeNotification : public ChangeNotification
+{
+public:
+    typedef QVector<ItemChangeNotification> List;
 
     enum Operation : uchar {
         InvalidOp,
@@ -2037,28 +2055,26 @@ public:
         Remove,
         Link,
         Unlink,
-        Subscribe,
-        Unsubscribe,
         ModifyFlags,
         ModifyTags,
         ModifyRelations
     };
 
-    class Entity
+    class Item
     {
     public:
-        Entity()
+        Item()
             : id(-1)
         {}
 
-        Entity(Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType)
+        Item(Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType)
             : id(id)
             , remoteId(remoteId)
             , remoteRevision(remoteRevision)
             , mimeType(mimeType)
         {}
 
-        bool operator==(const Entity &other) const
+        bool operator==(const Item &other) const
         {
             return id == other.id
                    && remoteId == other.remoteId
@@ -2072,26 +2088,48 @@ public:
         QString mimeType;
     };
 
-    explicit ChangeNotification();
-    ChangeNotification(const Command& other);
+    class Relation
+    {
+    public:
+        Relation()
+            : leftId(-1)
+            , rightId(-1)
+        {
+        }
+
+        Relation(qint64 leftId, qint64 rightId, const QString &type)
+            : leftId(leftId)
+            , rightId(rightId)
+            , type(type)
+        {
+        }
+
+        bool operator==(const Relation &other) const
+        {
+            return leftId == other.leftId
+                   && rightId == other.rightId
+                   && type == other.type;
+        }
+
+        qint64 leftId;
+        qint64 rightId;
+        QString type;
+    };
+
+    explicit ItemChangeNotification();
+    ItemChangeNotification(const Command &other);
 
     bool isValid() const;
 
-    ChangeNotification::Type type() const;
-    void setType(ChangeNotification::Type type);
+    Operation operation() const;
+    void setOperation(Operation operation);
 
-    ChangeNotification::Operation operation() const;
-    void setOperation(ChangeNotification::Operation operation);
-
-    QByteArray sessionId() const;
-    void setSessionId(const QByteArray &sessionId);
-
-    void addEntity(Id id, const QString &remoteId = QString(), const QString &remoteRevision = QString(), const QString &mimeType = QString());
-    void setEntities(const QVector<Entity> &items);
-    QMap<Id, Entity> entities() const;
-    Entity entity(Id id) const;
+    void addItem(Id id, const QString &remoteId = QString(), const QString &remoteRevision = QString(), const QString &mimeType = QString());
+    void setItem(const QVector<Item> &items);
+    QMap<Id, Item> items() const;
+    Item item(Id id) const;
     QList<Id> uids() const;
-    void clearEntities();
+    void clearItems();
 
     QByteArray resource() const;
     void setResource(const QByteArray &resource);
@@ -2120,95 +2158,397 @@ public:
     QSet<qint64> removedTags() const;
     void setRemovedTags(const QSet<qint64> &tags);
 
-    void addMetadata(const QByteArray &metadata);
-    void removeMetadata(const QByteArray &metadata);
-    QVector<QByteArray> metadata() const;
+    QSet<Relation> addedRelations() const;
+    void setAddedRelations(const QSet<Relation> &relations);
+
+    QSet<Relation> removedRelations() const;
+    void setRemovedRelations(const QSet<Relation> &relations);
+private:
+    AKONADI_DECLARE_PRIVATE(ItemChangeNotification)
+
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ItemChangeNotification &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ItemChangeNotification &command);
+};
+
+inline uint qHash(const ItemChangeNotification::Relation &rel)
+{
+    return ::qHash(rel.leftId + rel.rightId);
+}
+
+
+
+class CollectionChangeNotificationPrivate;
+class AKONADIPRIVATE_EXPORT CollectionChangeNotification : public ChangeNotification
+{
+public:
+    typedef QVector<CollectionChangeNotification> List;
+
+    enum Operation : uchar {
+        InvalidOp,
+        Add,
+        Modify,
+        Move,
+        Remove,
+        Subscribe,
+        Unsubscribe
+    };
+
+    explicit CollectionChangeNotification();
+    CollectionChangeNotification(const Command& other);
+
+    bool isValid() const;
+
+    Operation operation() const;
+    void setOperation(Operation operation);
+
+    Id id() const;
+    void setId(Id id);
+
+    QString remoteId() const;
+    void setRemoteId(const QString &remoteId);
+
+    QString remoteRevision() const;
+    void setRemoteRevision(const QString &remoteRevision);
+
+    QByteArray resource() const;
+    void setResource(const QByteArray &resource);
+
+    Id parentCollection() const;
+    void setParentCollection(Id parent);
+
+    Id parentDestCollection() const;
+    void setParentDestCollection(Id parent);
+
+    QByteArray destinationResource() const;
+    void setDestinationResource(const QByteArray &destResource);
+
+    QSet<QByteArray> changedParts() const;
+    void setChangedParts(const QSet<QByteArray> &parts);
 
     /**
       Adds a new notification message to the given list and compresses notifications
       where possible.
     */
-    static bool appendAndCompress(ChangeNotification::List &list, const ChangeNotification &msg);
+    static bool appendAndCompress(ChangeNotification::List &list, const CollectionChangeNotification &msg);
 
 private:
-    AKONADI_DECLARE_PRIVATE(ChangeNotification)
+    AKONADI_DECLARE_PRIVATE(CollectionChangeNotification)
 
-    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ChangeNotification &command);
-    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotification &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CollectionChangeNotification &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CollectionChangeNotification &command);
 };
 
-inline uint qHash(ChangeNotification::Type type)
-{
-    return ::qHash(static_cast<uchar>(type));
-}
 
-#if 0
-class ChangeNotificationSubscriptionCommandPrivate;
-class AKONADIPRIVATE_EXPORT ChangeNotificationSubscriptionCommand : public Command
+
+class TagChangeNotificationPrivate;
+class AKONADIPRIVATE_EXPORT TagChangeNotification : public ChangeNotification
 {
 public:
-    explicit ChangeNotificationSubscriptionCommand();
-    explicit ChangeNotificationSubscriptionCommand(const QByteArray &subscriptionId);
-    ChangeNotificationSubscriptionCommand(const Command &other);
+    typedef QVector<TagChangeNotification> List;
 
-    void unsubscribe();
+    enum Operation : uchar {
+        InvalidOp,
+        Add,
+        Modify,
+        Remove
+    };
 
-    void monitorCollection(qint64 id, bool monitor = true);
-    void setMonitoredCollections(const QVector<qint64> &ids);
-    QVector<qint64> monitoredCollections() const;
+    explicit TagChangeNotification();
+    TagChangeNotification(const Command& other);
 
-    void monitorItem(qint64 id, bool monitor = true);
-    void setMonitoredItems(const QVector<qint64> &ids);
-    QVector<qint64> monitoredItems() const;
+    bool isValid() const;
 
-    void monitorTag(qint64 id, bool monitor = true);
-    void setMonitoredTags(const QVector<qint64> &ids);
-    QVector<qint64> monitoredTags() const;
+    Operation operation() const;
+    void setOperation(Operation operation);
 
-    void monitorType(ChangeNotification::Type type, bool monitor = true);
-    void setMonitoredTypes(const QVector<ChangeNotification::Type> &types);
-    QVector<ChangeNotification::Type> monitoredTypes() const;
+    void setId(Id id);
+    Id id() const;
 
-    void monitorResource(const QByteArray &resourceId, bool monitor = true);
-    void setMonitoredResources(const QVector<QByteArray> &resources);
-    QVector<QByteArray> monitoredResources() const;
+    void setRemoteId(const QString &remoteId);
+    QString remoteId() const;
 
-    void monitorMimeType(const QString &mimeType, bool monitor = true);
-    void setMonitoredMimeTypes(const QStringList &mimeTypes);
-    QStringList monitoredMimeTypes() const;
+    QByteArray resource() const;
+    void setResource(const QByteArray &resource);
 
-    void setAllMonitored(bool all);
-    bool isAllMonitored() const;
+private:
+    AKONADI_DECLARE_PRIVATE(TagChangeNotification)
+
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::TagChangeNotification &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::TagChangeNotification &command);
+};
+
+
+
+class RelationChangeNotificationPrivate;
+class AKONADIPRIVATE_EXPORT RelationChangeNotification : public ChangeNotification
+{
+public:
+    typedef QVector<RelationChangeNotification> List;
+
+    enum Operation : uchar {
+        InvalidOp,
+        Add,
+        Remove
+    };
+
+    explicit RelationChangeNotification();
+    RelationChangeNotification(const Command &other);
+
+    Operation operation() const;
+    void setOperation(Operation operation);
+
+    Id leftItem() const;
+    void setLeftItem(Id left);
+
+    Id rightItem() const;
+    void setRightItem(Id right);
+
+    QString remoteId() const;
+    void setRemoteId(const QString &remoteId);
+
+    QString type() const;
+    void setType(const QString &type);
+
+private:
+    AKONADI_DECLARE_PRIVATE(RelationChangeNotification)
+
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::RelationChangeNotification &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::RelationChangeNotification &command);
+};
+
+
+
+
+class CreateSubscriptionCommandPrivate;
+class AKONADIPRIVATE_EXPORT CreateSubscriptionCommand : public Command
+{
+public:
+    explicit CreateSubscriptionCommand();
+    explicit CreateSubscriptionCommand(const QByteArray &subscriberName,
+                                       const QByteArray &session);
+    CreateSubscriptionCommand(const Command &other);
+
+    void setSubscriberName(const QByteArray &name);
+    QByteArray subscriberName() const;
+
+    void setSession(const QByteArray &session);
+    QByteArray session() const;
+
+private:
+    AKONADI_DECLARE_PRIVATE(CreateSubscriptionCommand)
+
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::CreateSubscriptionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateSubscriptionCommand &command);
+};
+
+
+class AKONADIPRIVATE_EXPORT CreateSubscriptionResponse : public Response
+{
+public:
+    explicit CreateSubscriptionResponse();
+    CreateSubscriptionResponse(const Command &other);
+};
+
+
+
+
+class ModifySubscriptionCommandPrivate;
+class AKONADIPRIVATE_EXPORT ModifySubscriptionCommand : public Command
+{
+public:
+    enum ModifiedPart {
+        None            = 0,
+        Collections     = 1 << 0,
+        Items           = 1 << 1,
+        Tags            = 1 << 2,
+        Types           = 1 << 3,
+        Resources       = 1 << 4,
+        MimeTypes       = 1 << 5,
+        AllFlag         = 1 << 6,
+        ExclusiveFlag   = 1 << 7,
+        Sessions        = 1 << 8,
+
+        Add             = 1 << 14,
+        Remove          = 1 << 15
+    };
+    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart)
+
+    enum ChangeType {
+        NoType          = 0,
+        ItemChanges,
+        CollectionChanges,
+        TagChanges,
+        RelationChanges,
+        SubscriptionChanges
+    };
+
+    explicit ModifySubscriptionCommand();
+    ModifySubscriptionCommand(const Command &other);
+
+    void setSubscriberName(const QByteArray &subscriberName);
+    QByteArray subscriberName() const;
+
+    ModifiedParts modifiedParts() const;
+
+    void startMonitoringCollection(qint64 id);
+    QVector<qint64> startMonitoringCollections() const;
+
+    void stopMonitoringCollection(qint64 id);
+    QVector<qint64> stopMonitoringCollections() const;
+
+    void startMonitoringItem(qint64 id);
+    QVector<qint64> startMonitoringItems() const;
+
+    void stopMonitoringItem(qint64 id);
+    QVector<qint64> stopMonitoringItems() const;
+
+    void startMonitoringTag(qint64 id);
+    QVector<qint64> startMonitoringTags() const;
+
+    void stopMonitoringTag(qint64 id);
+    QVector<qint64> stopMonitoringTags() const;
+
+    void startMonitoringType(ChangeType type);
+    QVector<ChangeType> startMonitoringTypes() const;
+
+    void stopMonitoringType(ChangeType type);
+    QVector<ChangeType> stopMonitoringTypes() const;
+
+    void startMonitoringResource(const QByteArray &resource);
+    QVector<QByteArray> startMonitoringResources() const;
+
+    void stopMonitoringResource(const QByteArray &resource);
+    QVector<QByteArray> stopMonitoringResources() const;
+
+    void startMonitoringMimeType(const QString &mimeType);
+    QStringList startMonitoringMimeTypes() const;
+
+    void stopMonitoringMimeType(const QString &mimeType);
+    QStringList stopMonitoringMimeTypes() const;
+
+    void setAllMonitored(bool allMonitored);
+    bool allMonitored() const;
 
     void setExclusive(bool exclusive);
     bool isExclusive() const;
 
-    void ignoreSession(const QByteArray &sessionId, bool ignored = true);
-    void setIgnoredSessions(const QVector<QByteArray> &ignoredSessions);
-    QVector<QByteArray> ignoredSessions() const;
+    void startIgnoringSession(const QByteArray &sessionId);
+    QVector<QByteArray> startIgnoringSessions() const;
+
+    void stopIgnoringSession(const QByteArray &sessionId);
+    QVector<QByteArray> stopIgnoringSessions() const;
 
 private:
-    AKONADI_DECLARE_PRIVATE(ChangeNotificationSubscriptionCommand)
+    AKONADI_DECLARE_PRIVATE(ModifySubscriptionCommand)
 
-    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ChangeNotificationSubscriptionCommand &command);
-    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotificationSubscriptionCommand &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifySubscriptionCommand &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifySubscriptionCommand &command);
 };
 
 
-
-class ChangeNotificationSubscriptionResponsePrivate;
-class AKONADIPRIVATE_EXPORT ChangeNotificationSubscriptionResponse : public Response
+class ModifySubscriptionResponse;
+class AKONADIPRIVATE_EXPORT ModifySubscriptionResponse : public Response
 {
 public:
-    explicit ChangeNotificationSubscriptionResponse();
-    explicit ChangeNotificationSubscriptionResponse(const QByteArray &subscriptionId);
-    ChangeNotificationSubscriptionResponse(const Command &other);
+    explicit ModifySubscriptionResponse();
+    ModifySubscriptionResponse(const Command &other);
 
 private:
-    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ChangeNotificationSubscriptionResponse &command);
-    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ChangeNotificationSubscriptionResponse &command);
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifySubscriptionResponse &command);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifySubscriptionResponse &command);
 };
-#endif
+
+
+
+
+class SubscriptionChangeNotificationPrivate;
+class AKONADIPRIVATE_EXPORT SubscriptionChangeNotification : public ChangeNotification
+{
+public:
+    enum Operation {
+        InvalidOp,
+        Add,
+        Modify,
+        Remove
+    };
+
+    enum ModifiedPart {
+        None            = 0,
+        Collections     = 1 << 0,
+        Items           = 1 << 1,
+        Tags            = 1 << 2,
+        Types           = 1 << 3,
+        MimeTypes       = 1 << 4,
+        Resources       = 1 << 5,
+        IgnoredSessions = 1 << 6,
+        Monitored       = 1 << 7,
+        Exclusive       = 1 << 8
+    };
+    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart)
+
+    explicit SubscriptionChangeNotification();
+    SubscriptionChangeNotification(const Command &other);
+
+    Operation operation() const;
+    void setOperation(Operation operation);
+
+    ModifiedParts modifiedParts() const;
+
+    QByteArray subscriber() const;
+    void setSubscriber(const QByteArray &subscriber);
+
+    QSet<Id> addedCollections() const;
+    void setAddedCollections(const QSet<Id> &addedCols);
+    QSet<Id> removedCollections() const;
+    void setRemovedCollections(const QSet<Id> &removedCols);
+
+    QSet<Id> addedItems() const;
+    void setAddedItems(const QSet<Id> &addedItems);
+    QSet<Id> removedItems() const;
+    void setRemovedItems(const QSet<Id> &removedItems);
+
+    QSet<Id> addedTags() const;
+    void setAddedTags(const QSet<Id> &addedTags);
+    QSet<Id> removedTags() const;
+    void setRemovedTags(const QSet<Id> &removedTags);
+
+    QSet<ModifySubscriptionCommand::ChangeType> addedTypes() const;
+    void setAddedTypes(const QSet<ModifySubscriptionCommand::ChangeType> &addedTypes);
+    QSet<ModifySubscriptionCommand::ChangeType> removedTypes() const;
+    void setRemovedTypes(const QSet<ModifySubscriptionCommand::ChangeType> &removedTypes);
+
+    QSet<QString> addedMimeTypes() const;
+    void setAddedMimeTypes(const QSet<QString> &addedMimeTypes);
+    QSet<QString> removedMimeTypes() const;
+    void setRemovedMimeTypes(const QSet<QString> &removedMimeTypes);
+
+    QSet<QByteArray> addedResources() const;
+    void setAddedResources(const QSet<QByteArray> &addedResources);
+    QSet<QByteArray> removedResources() const;
+    void setRemovedResources(const QSet<QByteArray> &removedResouces);
+
+    QSet<QByteArray> addedIgnoredSessions() const;
+    void setAddedIgnoredSessions(const QSet<QByteArray> &ignoredSessions);
+    QSet<QByteArray> removedIgnoredSessions() const;
+    void setRemovedIgnoredSessions(const QSet<QByteArray> &ignoredSessions);
+
+    bool isAllMonitored() const;
+    void setAllMonitored(bool allMonitored);
+
+    bool isExclusive() const;
+    void setExclusive(bool exclusive);
+
+private:
+    AKONADI_DECLARE_PRIVATE(SubscriptionChangeNotification)
+
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::SubscriptionChangeNotification &ntf);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SubscriptionChangeNotification &ntf);
+};
+
+
+
+
+
 
 } // namespace Protocol
 } // namespace Akonadi
@@ -2217,28 +2557,12 @@ Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::FetchScope::FetchFlags)
 Q_DECLARE_METATYPE(Akonadi::Protocol::Command::Type)
 Q_DECLARE_METATYPE(Akonadi::Protocol::Command)
 Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotification)
-Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotification::Type)
 Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotification::List)
 
 AKONADIPRIVATE_EXPORT DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Command::Type &type);
 AKONADIPRIVATE_EXPORT DataStream &operator<<(DataStream &stream, Akonadi::Protocol::Command::Type type);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Akonadi::Protocol::Command::Type type);
 
-AKONADIPRIVATE_EXPORT inline const QDBusArgument &operator>>(const QDBusArgument &arg, Akonadi::Protocol::ChangeNotification::Type &type)
-{
-    arg.beginStructure();
-    arg >> reinterpret_cast<int&>(type);
-    arg.endStructure();
-    return arg;
-}
-
-AKONADIPRIVATE_EXPORT inline QDBusArgument &operator<<(QDBusArgument &arg, Akonadi::Protocol::ChangeNotification::Type type)
-{
-    arg.beginStructure();
-    arg << (int) type;
-    arg.endStructure();
-    return arg;
-}
 
 // Command parameters
 #define AKONADI_PARAM_ATR                          "ATR:"
