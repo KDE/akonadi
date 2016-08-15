@@ -370,7 +370,7 @@ private Q_SLOTS:
 
         subscriber.notify({ notification });
 
-        QCOMPARE(subscriber.emittedNotifications.count(), accepted ? 1 : 0);
+        QTRY_COMPARE(subscriber.emittedNotifications.count(), accepted ? 1 : 0);
 
         if (accepted) {
             const Protocol::ChangeNotification ntf = subscriber.emittedNotifications.at(0);
