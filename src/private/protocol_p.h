@@ -2324,11 +2324,15 @@ class AKONADIPRIVATE_EXPORT CreateSubscriptionCommand : public Command
 {
 public:
     explicit CreateSubscriptionCommand();
-    explicit CreateSubscriptionCommand(const QByteArray &subscriberName);
+    explicit CreateSubscriptionCommand(const QByteArray &subscriberName,
+                                       const QByteArray &session);
     CreateSubscriptionCommand(const Command &other);
 
     void setSubscriberName(const QByteArray &name);
     QByteArray subscriberName() const;
+
+    void setSession(const QByteArray &session);
+    QByteArray session() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(CreateSubscriptionCommand)

@@ -643,7 +643,7 @@ void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &comman
                 subname += QByteArray::number(quintptr(q));
             }
             qCDebug(AKONADICORE_LOG) << q_ptr << "Subscribing as \"" << subname << "\"";
-            Protocol::CreateSubscriptionCommand subCmd(subname);
+            Protocol::CreateSubscriptionCommand subCmd(subname, session->sessionId());
             ntfConnection->sendCommand(2, subCmd);
             break;
         }

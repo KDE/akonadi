@@ -146,6 +146,7 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
 
     qDebug() << "Subscriber" << this << "identified as" << command.subscriberName();
     mSubscriber = command.subscriberName();
+    mSession = command.session();
 
     if (mManager) {
         Protocol::SubscriptionChangeNotification changeNtf;
@@ -412,7 +413,7 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
 
         //The session belonging to this monitor referenced or dereferenced the collection. We always want this notification.
         //The referencemanager no longer holds a reference, so we have to check this way.
-        if (notification.changedParts().contains("REFERENCED") && mSession == notification.sessionId()) {
+        if (notification.changedParts().contains(AKONADI_PARAM_REFERENCED) && mSession == notification.sessionId()) {
             return true;
         }
 

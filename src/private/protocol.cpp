@@ -9254,40 +9254,47 @@ DataStream &operator>>(DataStream &stream, Akonadi::Protocol::RelationChangeNoti
 class CreateSubscriptionCommandPrivate : public CommandPrivate
 {
 public:
-    CreateSubscriptionCommandPrivate(const QByteArray &subscriberName = QByteArray())
+    CreateSubscriptionCommandPrivate(const QByteArray &subscriberName = QByteArray(),
+                                     const QByteArray &session = QByteArray())
         : CommandPrivate(Command::CreateSubscription)
         , subscriberName(subscriberName)
+        , session(session)
     {}
 
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(subscriberName);
+            && COMPARE(subscriberName)
+            && COMPARE(session);
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         blck.write("Subscriber", subscriberName);
+        blck.write("Session", session);
     }
 
     DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
     {
         return CommandPrivate::deserialize(stream)
-            >> subscriberName;
+            >> subscriberName
+            >> session;
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-            << subscriberName;
+            << subscriberName
+            << session;
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
-        return new CreateSubscriptionCommandPrivate(subscriberName);
+        return new CreateSubscriptionCommandPrivate(subscriberName, session);
     }
 
     QByteArray subscriberName;
+    QByteArray session;
 };
 
 AKONADI_DECLARE_PRIVATE(CreateSubscriptionCommand)
@@ -9297,8 +9304,9 @@ CreateSubscriptionCommand::CreateSubscriptionCommand()
 {
 }
 
-CreateSubscriptionCommand::CreateSubscriptionCommand(const QByteArray &subscriberName)
-    : Command(new CreateSubscriptionCommandPrivate(subscriberName))
+CreateSubscriptionCommand::CreateSubscriptionCommand(const QByteArray &subscriberName,
+                                                     const QByteArray &session)
+    : Command(new CreateSubscriptionCommandPrivate(subscriberName, session))
 {
 }
 
@@ -9316,6 +9324,16 @@ void CreateSubscriptionCommand::setSubscriberName(const QByteArray &subscriberNa
 QByteArray CreateSubscriptionCommand::subscriberName() const
 {
     return d_func()->subscriberName;
+}
+
+void CreateSubscriptionCommand::setSession(const QByteArray &session)
+{
+    d_func()->session = session;
+}
+
+QByteArray CreateSubscriptionCommand::session() const
+{
+    return d_func()->session;
 }
 
 DataStream &operator<<(DataStream &stream, const CreateSubscriptionCommand &command)
