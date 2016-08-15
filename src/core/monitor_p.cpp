@@ -749,7 +749,7 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
             if (needsSplit) {
                 const Protocol::ChangeNotification::List split = splitMessage(msg, !supportsBatch);
                 Q_FOREACH (const auto &splitMsg, split) {
-                    appendedMessages += translateAndCompress(pendingNotifications, msg);
+                    appendedMessages += translateAndCompress(pendingNotifications, splitMsg);
                 }
             } else {
                 appendedMessages += translateAndCompress(pendingNotifications, msg);
