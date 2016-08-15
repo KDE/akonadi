@@ -183,7 +183,7 @@ bool AkonadiServer::init()
     const QString cmdSocketFile = socketDir % QStringLiteral("/akonadiserver-cmd.socket");
     QFile::remove(cmdSocketFile);
     if (!mCmdServer->listen(cmdSocketFile)) {
-        akError() << "Unable to listen on Unix socket" << cmdSocketFile;
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << cmdSocketFile;
         quit();
         return false;
     }
@@ -191,7 +191,7 @@ bool AkonadiServer::init()
     const QString ntfSocketFile = socketDir % QStringLiteral("/akonadiserver-ntf.socket");
     QFile::remove(ntfSocketFile);
     if (!mNtfServer->listen(ntfSocketFile)) {
-        akError() << "Unable to listen on Unix socket" << ntfSocketFile;
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << ntfSocketFile;
         quit();
         return false;
     }
