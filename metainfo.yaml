@@ -21,7 +21,9 @@ irc: akonadi
 
 group_info:
     fancyname: KDE PIM
-    maintainer: mlaurent dvratil
+    maintainer:
+        - mlaurent
+        - dvratil
     irc: kontact
     mailinglist: kde-pim
     platforms:
