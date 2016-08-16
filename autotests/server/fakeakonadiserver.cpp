@@ -284,7 +284,8 @@ void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
     mConnection = new FakeConnection(socketDescriptor);
     delete mNotificationSpy;
-    delete mNtfCollector;
+    // Delete collection in its own thread
+    mNtfCollector->deleteLater();
 
     // Connection is it's own thread, so we have to make sure we get collector
     // from DataStore of the Connection's thread, not ours
