@@ -3,7 +3,8 @@ project(Akonadi)
 cmake_minimum_required(VERSION 2.8.12)
 
 # ECM setup
-find_package(ECM 5.16.0 CONFIG REQUIRED)
+set(KF5_VERSION "5.24.0")
+find_package(ECM ${KF5_VERSION} CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
 include(GenerateExportHeader)
@@ -24,7 +25,6 @@ set(PIM_VERSION "5.3.42")
 
 set(QT_REQUIRED_VERSION "5.5.0")
 set(AKONADI_VERSION ${PIM_VERSION})
-set(KF5_VERSION "5.24.0")
 
 ecm_setup_version(${AKONADI_VERSION}
     VARIABLE_PREFIX AKONADI
