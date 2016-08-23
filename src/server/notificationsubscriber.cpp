@@ -177,7 +177,7 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
 
     #define REMOVE(set, items) \
         Q_FOREACH (const auto &entity, items) { \
-            set.insert(entity); \
+            set.remove(entity); \
         }
 
     if (START_MONITORING(Types)) {
@@ -251,6 +251,11 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         changeNtf.setOperation(Protocol::SubscriptionChangeNotification::Modify);
         mManager->slotNotify({ changeNtf });
     }
+
+    #undef START_MONITORING
+    #undef STOP_MONITORING
+    #undef APPEND
+    #undef REMOVE
 }
 
 Protocol::ChangeNotification NotificationSubscriber::toChangeNotification() const
