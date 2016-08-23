@@ -30,6 +30,7 @@
 #include "changemediator_p.h"
 #include "vectorhelper.h"
 #include "akonadicore_debug.h"
+#include "notificationsubscriber.h"
 
 using namespace Akonadi;
 class operation;
@@ -340,6 +341,10 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
         return true;
     }
 
+    if (msg.type() == Protocol::Command::SubscriptionChangeNotification) {
+        return true;
+    }
+
     if (msg.type() == Protocol::Command::CollectionChangeNotification
             && static_cast<const Protocol::CollectionChangeNotification&>(msg).operation() == Protocol::CollectionChangeNotification::Remove) {
         //For collection removals the collection is gone anyways, so we can't fetch it. Rid will be set later on instead.
@@ -466,6 +471,25 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
         if (!items.isEmpty() || itemNtf.operation() == Protocol::ItemChangeNotification::Remove || !fetchItems()) {
             someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
         }
+    } else if (msg.type() == Protocol::Command::SubscriptionChangeNotification) {
+        const auto &subNtf = static_cast<const Protocol::SubscriptionChangeNotification&>(msg);
+        NotificationSubscriber subscriber;
+        subscriber.setSubscriber(subNtf.subscriber());
+        subscriber.setSessionId(subNtf.sessionId());
+        subscriber.setMonitoredCollections(subNtf.collections());
+        subscriber.setMonitoredItems(subNtf.items());
+        subscriber.setMonitoredTags(subNtf.tags());
+        QSet<Monitor::Type> monitorTypes;
+        Q_FOREACH (auto type, subNtf.types()) {
+            monitorTypes.insert(static_cast<Monitor::Type>(type));
+        }
+        subscriber.setMonitoredTypes(monitorTypes);
+        subscriber.setMonitoredMimeTypes(subNtf.mimeTypes());
+        subscriber.setMonitoredResources(subNtf.resources());
+        subscriber.setIgnoredSessions(subNtf.ignoredSessions());
+        subscriber.setIsAllMonitored(subNtf.isAllMonitored());
+        subscriber.setIsExclusive(subNtf.isExclusive());
+        someoneWasListening = emitSubscriptionChangeNotification(subNtf, subscriber);
     }
 
     return someoneWasListening;
@@ -673,6 +697,7 @@ void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &comman
         case Protocol::Command::CollectionChangeNotification:
         case Protocol::Command::TagChangeNotification:
         case Protocol::Command::RelationChangeNotification:
+        case Protocol::Command::SubscriptionChangeNotification:
             slotNotify(command);
             break;
         default:
@@ -1140,6 +1165,40 @@ bool MonitorPrivate::emitRelationNotification(const Protocol::RelationChangeNoti
 
     return false;
 }
+
+bool MonitorPrivate::emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg,
+                                                        const Akonadi::NotificationSubscriber &subscriber)
+{
+    if (!subscriber.isValid()) {
+        return false;
+    }
+
+    switch (msg.operation()) {
+    case Protocol::SubscriptionChangeNotification::Add:
+        if (q_ptr->receivers(SIGNAL(notificationSubscriberAdded(Akonadi::NotificationSubscriber))) == 0) {
+            return false;
+        }
+        Q_EMIT q_ptr->notificationSubscriberAdded(subscriber);
+        return true;
+    case Protocol::SubscriptionChangeNotification::Modify:
+        if (q_ptr->receivers(SIGNAL(notificationSubscriberChanged(Akonadi::NotificationSubscriber))) == 0) {
+            return false;
+        }
+        Q_EMIT q_ptr->notificationSubscriberChanged(subscriber);
+        return true;
+    case Protocol::SubscriptionChangeNotification::Remove:
+        if (q_ptr->receivers(SIGNAL(notificationSubscriberRemoved(Akonadi::NotificationSubscriber))) == 0) {
+            return false;
+        }
+        Q_EMIT q_ptr->notificationSubscriberRemoved(subscriber);
+        return true;
+    default:
+        break;
+    }
+
+    return false;
+}
+
 
 void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)
 {

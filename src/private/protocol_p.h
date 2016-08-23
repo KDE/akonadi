@@ -2472,65 +2472,35 @@ public:
         Remove
     };
 
-    enum ModifiedPart {
-        None            = 0,
-        Collections     = 1 << 0,
-        Items           = 1 << 1,
-        Tags            = 1 << 2,
-        Types           = 1 << 3,
-        MimeTypes       = 1 << 4,
-        Resources       = 1 << 5,
-        IgnoredSessions = 1 << 6,
-        Monitored       = 1 << 7,
-        Exclusive       = 1 << 8
-    };
-    Q_DECLARE_FLAGS(ModifiedParts, ModifiedPart)
-
     explicit SubscriptionChangeNotification();
     SubscriptionChangeNotification(const Command &other);
 
     Operation operation() const;
     void setOperation(Operation operation);
 
-    ModifiedParts modifiedParts() const;
-
     QByteArray subscriber() const;
     void setSubscriber(const QByteArray &subscriber);
 
-    QSet<Id> addedCollections() const;
-    void setAddedCollections(const QSet<Id> &addedCols);
-    QSet<Id> removedCollections() const;
-    void setRemovedCollections(const QSet<Id> &removedCols);
+    QSet<Id> collections() const;
+    void setCollections(const QSet<Id> &cols);
 
-    QSet<Id> addedItems() const;
-    void setAddedItems(const QSet<Id> &addedItems);
-    QSet<Id> removedItems() const;
-    void setRemovedItems(const QSet<Id> &removedItems);
+    QSet<Id> items() const;
+    void setItems(const QSet<Id> &items);
 
-    QSet<Id> addedTags() const;
-    void setAddedTags(const QSet<Id> &addedTags);
-    QSet<Id> removedTags() const;
-    void setRemovedTags(const QSet<Id> &removedTags);
+    QSet<Id> tags() const;
+    void setTags(const QSet<Id> &tags);
 
-    QSet<ModifySubscriptionCommand::ChangeType> addedTypes() const;
-    void setAddedTypes(const QSet<ModifySubscriptionCommand::ChangeType> &addedTypes);
-    QSet<ModifySubscriptionCommand::ChangeType> removedTypes() const;
-    void setRemovedTypes(const QSet<ModifySubscriptionCommand::ChangeType> &removedTypes);
+    QSet<ModifySubscriptionCommand::ChangeType> types() const;
+    void setTypes(const QSet<ModifySubscriptionCommand::ChangeType> &types);
 
-    QSet<QString> addedMimeTypes() const;
-    void setAddedMimeTypes(const QSet<QString> &addedMimeTypes);
-    QSet<QString> removedMimeTypes() const;
-    void setRemovedMimeTypes(const QSet<QString> &removedMimeTypes);
+    QSet<QString> mimeTypes() const;
+    void setMimeTypes(const QSet<QString> &mimeTypes);
 
-    QSet<QByteArray> addedResources() const;
-    void setAddedResources(const QSet<QByteArray> &addedResources);
-    QSet<QByteArray> removedResources() const;
-    void setRemovedResources(const QSet<QByteArray> &removedResouces);
+    QSet<QByteArray> resources() const;
+    void setResources(const QSet<QByteArray> &resources);
 
-    QSet<QByteArray> addedIgnoredSessions() const;
-    void setAddedIgnoredSessions(const QSet<QByteArray> &ignoredSessions);
-    QSet<QByteArray> removedIgnoredSessions() const;
-    void setRemovedIgnoredSessions(const QSet<QByteArray> &ignoredSessions);
+    QSet<QByteArray> ignoredSessions() const;
+    void setIgnoredSessions(const QSet<QByteArray> &ignoredSessions);
 
     bool isAllMonitored() const;
     void setAllMonitored(bool allMonitored);

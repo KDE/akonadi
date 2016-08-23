@@ -43,7 +43,8 @@ public:
     explicit NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor);
     ~NotificationSubscriber();
 
-    void notify(const Protocol::ChangeNotification::List &notifications);
+public Q_SLOTS:
+    void notify(const Akonadi::Protocol::ChangeNotification::List &notifications);
 
 private Q_SLOTS:
     void socketReadyRead();

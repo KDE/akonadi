@@ -161,6 +161,9 @@ public:
 
     bool emitRelationNotification(const Protocol::RelationChangeNotification &msg, const Relation &relation);
 
+    bool emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg,
+                                            const NotificationSubscriber &subscriber);
+
     void serverStateChanged(Akonadi::ServerManager::State state);
 
     /**

@@ -38,6 +38,7 @@ class ItemFetchScope;
 class MonitorPrivate;
 class Session;
 class TagFetchScope;
+class NotificationSubscriber;
 
 namespace Protocol
 {
@@ -91,7 +92,14 @@ public:
         Collections = 1,
         Items,
         Tags,
-        Relations
+        Relations,
+        /**
+         * Listen to subscription changes of other Monitors connected to Akonadi.
+         * This is only for debugging purposes and should not be used in real
+         * applications.
+         * @since 5.4
+         */
+        Subscribers
     };
 
     /**
@@ -672,6 +680,45 @@ Q_SIGNALS:
      * @since 4.13
      */
     void relationRemoved(const Akonadi::Relation &relation);
+
+    /**
+     * This signal is emitted when Subscribers are monitored and a new subscriber
+     * subscribers to the server.
+     *
+     * @param subscriber The new subscriber
+     * @since 5.4
+     *
+     * @note Monitoring for subscribers and listening to this signal only makes
+     * sense if you want to globally debug Monitors. There is no reason to use
+     * this in regular applications.
+     */
+    void notificationSubscriberAdded(const Akonadi::NotificationSubscriber &subscriber);
+
+    /**
+     * This signal is emitted when Subscribers are monitored and an existing
+     * subscriber changes its subscription.
+     *
+     * @param subscriber The changed subscriber
+     * @since 5.4
+     *
+     * @note Monitoring for subscribers and listening to this signal only makes
+     * sense if you want to globally debug Monitors. There is no reason to use
+     * this in regular applications.
+     */
+    void notificationSubscriberChanged(const Akonadi::NotificationSubscriber &subscriber);
+
+    /**
+     * This signal is emitted when Subscribers are monitored and an existing
+     * subscriber unsubscribes from the server.
+     *
+     * @param subscriber The removed subscriber
+     * @since 5.4
+     *
+     * @note Monitoring for subscribers and listening to this signal only makes
+     * sense if you want to globally debug Monitors. There is no reason to use
+     * this in regular applications.
+     */
+    void notificationSubscriberRemoved(const Akonadi::NotificationSubscriber &subscriber);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p collection explicitly.

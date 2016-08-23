@@ -235,12 +235,15 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
             && command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges))
         {
             // If yes, then send them list of all existing subscribers
+            qDebug() << "========" << mSubscriber << "monitors subscriptions, will get" << mManager->mSubscribers.count() << "of them!";
             Protocol::ChangeNotification::List ntfs;
+            ntfs.reserve(mManager->mSubscribers.count());
             Q_FOREACH (const NotificationSubscriber *subscriber, mManager->mSubscribers) {
                 ntfs << subscriber->toChangeNotification();
             }
             // Send them back to caller
-            notify(ntfs);
+            QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
+                                      Q_ARG(Akonadi::Protocol::ChangeNotification::List, ntfs));
         }
 
         // Emit subscription change notification
@@ -258,13 +261,13 @@ Protocol::ChangeNotification NotificationSubscriber::toChangeNotification() cons
     ntf.setSessionId(mSession);
     ntf.setSubscriber(mSubscriber);
     ntf.setOperation(Protocol::SubscriptionChangeNotification::Add);
-    ntf.setAddedCollections(mMonitoredCollections);
-    ntf.setAddedItems(mMonitoredItems);
-    ntf.setAddedTags(mMonitoredTags);
-    ntf.setAddedTypes(mMonitoredTypes);
-    ntf.setAddedMimeTypes(mMonitoredMimeTypes);
-    ntf.setAddedResources(mMonitoredResources);
-    ntf.setAddedIgnoredSessions(mIgnoredSessions);
+    ntf.setCollections(mMonitoredCollections);
+    ntf.setItems(mMonitoredItems);
+    ntf.setTags(mMonitoredTags);
+    ntf.setTypes(mMonitoredTypes);
+    ntf.setMimeTypes(mMonitoredMimeTypes);
+    ntf.setResources(mMonitoredResources);
+    ntf.setIgnoredSessions(mIgnoredSessions);
     ntf.setAllMonitored(mAllMonitored);
     ntf.setExclusive(mExclusive);
     return ntf;

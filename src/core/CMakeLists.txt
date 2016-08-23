@@ -47,6 +47,7 @@ set(akonadicore_base_SRCS
     monitor_p.cpp
     newmailnotifierattribute.cpp
     notificationsource_p.cpp
+    notificationsubscriber.cpp
     partfetcher.cpp
     pastehelper.cpp
     persistentsearchattribute.cpp
@@ -61,7 +62,6 @@ set(akonadicore_base_SRCS
     sessionthread.cpp
     specialcollectionattribute.cpp
     specialcollections.cpp
-    subscriptionmonitor.cpp
     tag.cpp
     tagattribute.cpp
     tagfetchscope.cpp
@@ -104,6 +104,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     KDSignalBlocker
     MimeTypeChecker
     NewMailNotifierAttribute
+    NotificationSubscriber
     Monitor
     PartFetcher
     PersistentSearchAttribute
@@ -115,7 +116,6 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     SpecialCollections
     SpecialCollectionAttribute
     Supertrait
-    SubscriptionMonitor
     Tag
     TagAttribute
     TagFetchScope

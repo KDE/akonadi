@@ -49,7 +49,7 @@ namespace Akonadi {
 namespace Protocol {
 
 int version() {
-    return 53;
+    return 54;
 }
 
 }
@@ -569,6 +569,7 @@ public:
         registerType<Command::CollectionChangeNotification, CollectionChangeNotification, Response /* invalid */>();
         registerType<Command::TagChangeNotification, TagChangeNotification, Response /* invalid */>();
         registerType<Command::RelationChangeNotification, RelationChangeNotification, Response /* invalid */>();
+        registerType<Command::SubscriptionChangeNotification, SubscriptionChangeNotification, Response /* invalid */>();
         registerType<Command::CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse>();
         registerType<Command::ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse>();
     }
@@ -9863,7 +9864,6 @@ class SubscriptionChangeNotificationPrivate : public ChangeNotificationPrivate
 public:
     SubscriptionChangeNotificationPrivate()
         : ChangeNotificationPrivate(Command::SubscriptionChangeNotification)
-        , modifiedParts(SubscriptionChangeNotification::None)
         , operation(SubscriptionChangeNotification::InvalidOp)
         , isAllMonitored(false)
         , isExclusive(false)
@@ -9872,21 +9872,13 @@ public:
     SubscriptionChangeNotificationPrivate(const SubscriptionChangeNotificationPrivate &other)
         : ChangeNotificationPrivate(other)
         , subscriber(other.subscriber)
-        , addedCollections(other.addedCollections)
-        , removedCollections(other.removedCollections)
-        , addedItems(other.addedItems)
-        , removedItems(other.removedItems)
-        , addedTags(other.addedTags)
-        , removedTags(other.removedTags)
-        , addedTypes(other.addedTypes)
-        , removedTypes(other.removedTypes)
-        , addedMimeTypes(other.addedMimeTypes)
-        , removedMimeTypes(other.removedMimeTypes)
-        , addedResources(other.addedResources)
-        , removedResources(other.removedResources)
-        , addedIgnoredSessions(other.addedIgnoredSessions)
-        , removedIgnoredSessions(other.removedIgnoredSessions)
-        , modifiedParts(other.modifiedParts)
+        , collections(other.collections)
+        , items(other.items)
+        , tags(other.tags)
+        , types(other.types)
+        , mimeTypes(other.mimeTypes)
+        , resources(other.resources)
+        , ignoredSessions(other.ignoredSessions)
         , operation(other.operation)
         , isAllMonitored(other.isAllMonitored)
         , isExclusive(other.isExclusive)
@@ -9895,23 +9887,15 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ChangeNotificationPrivate::compare(other)
-            && COMPARE(modifiedParts)
             && COMPARE(operation)
             && COMPARE(subscriber)
-            && COMPARE(addedCollections)
-            && COMPARE(removedCollections)
-            && COMPARE(addedItems)
-            && COMPARE(removedItems)
-            && COMPARE(addedTags)
-            && COMPARE(removedTags)
-            && COMPARE(addedTypes)
-            && COMPARE(removedTypes)
-            && COMPARE(addedMimeTypes)
-            && COMPARE(removedMimeTypes)
-            && COMPARE(addedResources)
-            && COMPARE(removedResources)
-            && COMPARE(addedIgnoredSessions)
-            && COMPARE(removedIgnoredSessions)
+            && COMPARE(collections)
+            && COMPARE(items)
+            && COMPARE(tags)
+            && COMPARE(types)
+            && COMPARE(mimeTypes)
+            && COMPARE(resources)
+            && COMPARE(ignoredSessions)
             && COMPARE(isAllMonitored)
             && COMPARE(isExclusive);
     }
@@ -9921,41 +9905,15 @@ public:
         ChangeNotificationPrivate::debugString(blck);
         blck.write("Subscriber", subscriber);
         blck.write("Operation", operation);
-        blck.write("Modified parts", modifiedParts);
-        if (modifiedParts & SubscriptionChangeNotification::Collections) {
-            blck.write("Added cols", addedCollections);
-            blck.write("Removed cols", removedCollections);
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Items) {
-            blck.write("Added items", addedItems);
-            blck.write("Removed items", removedItems);
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Tags) {
-            blck.write("Added tags", addedTags);
-            blck.write("Removed tags", removedTags);
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Types) {
-            blck.write("Added types", addedTypes);
-            blck.write("Removed types", removedTypes);
-        }
-        if (modifiedParts & SubscriptionChangeNotification::MimeTypes) {
-            blck.write("Added mimetypes", addedMimeTypes);
-            blck.write("Removed mimetypes", removedMimeTypes);
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Resources) {
-            blck.write("Added resources", addedResources);
-            blck.write("Removed resources", removedResources);
-        }
-        if (modifiedParts & SubscriptionChangeNotification::IgnoredSessions) {
-            blck.write("Added ignored sessions", addedIgnoredSessions);
-            blck.write("Removed ignored sessions", removedIgnoredSessions);
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Monitored) {
-            blck.write("All monitored", isAllMonitored);
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Exclusive) {
-            blck.write("Is exclusive", isExclusive);
-        }
+        blck.write("Collections", collections);
+        blck.write("Items", items);
+        blck.write("Tags", tags);
+        blck.write("Types", types);
+        blck.write("Mime types", mimeTypes);
+        blck.write("Resources", resources);
+        blck.write("Ignored sessions", ignoredSessions);
+        blck.write("All monitored", isAllMonitored);
+        blck.write("Is exclusive", isExclusive);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -9963,41 +9921,15 @@ public:
         ChangeNotificationPrivate::serialize(stream)
             << subscriber
             << operation
-            << modifiedParts;
-        if (modifiedParts & SubscriptionChangeNotification::Collections) {
-            stream << addedCollections
-                   << removedCollections;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Items) {
-            stream << addedItems
-                   << removedItems;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Tags) {
-            stream << addedTags
-                   << removedTags;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Types) {
-            stream << addedTypes
-                   << removedTypes;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::MimeTypes) {
-            stream << addedMimeTypes
-                   << removedMimeTypes;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Resources) {
-            stream << addedResources
-                   << removedResources;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::IgnoredSessions) {
-            stream << addedIgnoredSessions
-                   << removedIgnoredSessions;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Monitored) {
-            stream << isAllMonitored;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Exclusive) {
-            stream << isExclusive;
-        }
+            << collections
+            << items
+            << tags
+            << types
+            << mimeTypes
+            << resources
+            << ignoredSessions
+            << isAllMonitored
+            << isExclusive;
         return stream;
     }
 
@@ -10006,41 +9938,15 @@ public:
         ChangeNotificationPrivate::deserialize(stream)
             >> subscriber
             >> operation
-            >> modifiedParts;
-        if (modifiedParts & SubscriptionChangeNotification::Collections) {
-            stream >> addedCollections
-                   >> removedCollections;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Items) {
-            stream >> addedItems
-                   >> removedItems;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Tags) {
-            stream >> addedTags
-                   >> removedTags;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Types) {
-            stream >> addedTypes
-                   >> removedTypes;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::MimeTypes) {
-            stream >> addedMimeTypes
-                   >> removedMimeTypes;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Resources) {
-            stream >> addedResources
-                   >> removedResources;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::IgnoredSessions) {
-            stream >> addedIgnoredSessions
-                   >> removedIgnoredSessions;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Monitored) {
-            stream >> isAllMonitored;
-        }
-        if (modifiedParts & SubscriptionChangeNotification::Exclusive) {
-            stream >> isExclusive;
-        }
+            >> collections
+            >> items
+            >> tags
+            >> types
+            >> mimeTypes
+            >> resources
+            >> ignoredSessions
+            >> isAllMonitored
+            >> isExclusive;
         return stream;
     }
 
@@ -10050,21 +9956,13 @@ public:
     }
 
     QByteArray subscriber;
-    QSet<ChangeNotification::Id> addedCollections;
-    QSet<ChangeNotification::Id> removedCollections;
-    QSet<ChangeNotification::Id> addedItems;
-    QSet<ChangeNotification::Id> removedItems;
-    QSet<ChangeNotification::Id> addedTags;
-    QSet<ChangeNotification::Id> removedTags;
-    QSet<ModifySubscriptionCommand::ChangeType> addedTypes;
-    QSet<ModifySubscriptionCommand::ChangeType> removedTypes;
-    QSet<QString> addedMimeTypes;
-    QSet<QString> removedMimeTypes;
-    QSet<QByteArray> addedResources;
-    QSet<QByteArray> removedResources;
-    QSet<QByteArray> addedIgnoredSessions;
-    QSet<QByteArray> removedIgnoredSessions;
-    SubscriptionChangeNotification::ModifiedParts modifiedParts;
+    QSet<ChangeNotification::Id> collections;
+    QSet<ChangeNotification::Id> items;
+    QSet<ChangeNotification::Id> tags;
+    QSet<ModifySubscriptionCommand::ChangeType> types;
+    QSet<QString> mimeTypes;
+    QSet<QByteArray> resources;
+    QSet<QByteArray> ignoredSessions;
     SubscriptionChangeNotification::Operation operation;
     bool isAllMonitored;
     bool isExclusive;
@@ -10093,11 +9991,6 @@ void SubscriptionChangeNotification::setOperation(Operation operation)
     d_func()->operation = operation;
 }
 
-SubscriptionChangeNotification::ModifiedParts SubscriptionChangeNotification::modifiedParts() const
-{
-    return d_func()->modifiedParts;
-}
-
 QByteArray SubscriptionChangeNotification::subscriber() const
 {
     return d_func()->subscriber;
@@ -10108,158 +10001,74 @@ void SubscriptionChangeNotification::setSubscriber(const QByteArray &subscriber)
     d_func()->subscriber = subscriber;
 }
 
-QSet<ChangeNotification::Id> SubscriptionChangeNotification::addedCollections() const
+QSet<ChangeNotification::Id> SubscriptionChangeNotification::collections() const
 {
-    return d_func()->addedCollections;
+    return d_func()->collections;
 }
 
-void SubscriptionChangeNotification::setAddedCollections(const QSet<Id> &addedCols)
+void SubscriptionChangeNotification::setCollections(const QSet<Id> &cols)
 {
-    d_func()->addedCollections = addedCols;
-    d_func()->modifiedParts |= Collections;
+    d_func()->collections = cols;
 }
 
-QSet<ChangeNotification::Id> SubscriptionChangeNotification::removedCollections() const
+QSet<ChangeNotification::Id> SubscriptionChangeNotification::items() const
 {
-    return d_func()->removedCollections;
+    return d_func()->items;
 }
 
-void SubscriptionChangeNotification::setRemovedCollections(const QSet<Id> &removedCols)
+void SubscriptionChangeNotification::setItems(const QSet<Id> &items)
 {
-    d_func()->removedCollections = removedCols;
-    d_func()->modifiedParts|= Collections;
+    d_func()->items = items;
 }
 
-QSet<ChangeNotification::Id> SubscriptionChangeNotification::addedItems() const
+QSet<ChangeNotification::Id> SubscriptionChangeNotification::tags() const
 {
-    return d_func()->addedItems;
+    return d_func()->tags;
 }
 
-void SubscriptionChangeNotification::setAddedItems(const QSet<Id> &addedItems)
+void SubscriptionChangeNotification::setTags(const QSet<Id> &tags)
 {
-    d_func()->addedItems = addedItems;
-    d_func()->modifiedParts |= Items;
+    d_func()->tags = tags;
 }
 
-QSet<ChangeNotification::Id> SubscriptionChangeNotification::removedItems() const
+QSet<ModifySubscriptionCommand::ChangeType> SubscriptionChangeNotification::types() const
 {
-    return d_func()->removedItems;
+    return d_func()->types;
 }
 
-void SubscriptionChangeNotification::setRemovedItems(const QSet<Id> &removedItems)
+void SubscriptionChangeNotification::setTypes(const QSet<ModifySubscriptionCommand::ChangeType> &types)
 {
-    d_func()->removedItems = removedItems;
-    d_func()->modifiedParts |= Items;
+    d_func()->types = types;
 }
 
-QSet<ChangeNotification::Id> SubscriptionChangeNotification::addedTags() const
+QSet<QString> SubscriptionChangeNotification::mimeTypes() const
 {
-    return d_func()->addedTags;
+    return d_func()->mimeTypes;
 }
 
-void SubscriptionChangeNotification::setAddedTags(const QSet<Id> &addedTags)
+void SubscriptionChangeNotification::setMimeTypes(const QSet<QString> &mimetypes)
 {
-    d_func()->addedTags = addedTags;
-    d_func()->modifiedParts |= Tags;
+    d_func()->mimeTypes = mimetypes;
 }
 
-QSet<ChangeNotification::Id> SubscriptionChangeNotification::removedTags() const
+QSet<QByteArray> SubscriptionChangeNotification::resources() const
 {
-    return d_func()->removedTags;
+    return d_func()->resources;
 }
 
-void SubscriptionChangeNotification::setRemovedTags(const QSet<Id> &removedTags)
+void SubscriptionChangeNotification::setResources(const QSet<QByteArray> &resources)
 {
-    d_func()->removedTags = removedTags;
-    d_func()->modifiedParts |= Tags;
+    d_func()->resources = resources;
 }
 
-QSet<ModifySubscriptionCommand::ChangeType> SubscriptionChangeNotification::addedTypes() const
+QSet<QByteArray> SubscriptionChangeNotification::ignoredSessions() const
 {
-    return d_func()->addedTypes;
+    return d_func()->ignoredSessions;
 }
 
-void SubscriptionChangeNotification::setAddedTypes(const QSet<ModifySubscriptionCommand::ChangeType> &addedTypes)
+void SubscriptionChangeNotification::setIgnoredSessions(const QSet<QByteArray> &sessions)
 {
-    d_func()->addedTypes = addedTypes;
-    d_func()->modifiedParts |= Types;
-}
-
-QSet<ModifySubscriptionCommand::ChangeType> SubscriptionChangeNotification::removedTypes() const
-{
-    return d_func()->removedTypes;
-}
-
-void SubscriptionChangeNotification::setRemovedTypes(const QSet<ModifySubscriptionCommand::ChangeType> &removedTypes)
-{
-    d_func()->removedTypes = removedTypes;
-    d_func()->modifiedParts |= Types;
-}
-
-QSet<QString> SubscriptionChangeNotification::addedMimeTypes() const
-{
-    return d_func()->addedMimeTypes;
-}
-
-void SubscriptionChangeNotification::setAddedMimeTypes(const QSet<QString> &addedMt)
-{
-    d_func()->addedMimeTypes = addedMt;
-    d_func()->modifiedParts |= MimeTypes;
-}
-
-QSet<QString> SubscriptionChangeNotification::removedMimeTypes() const
-{
-    return d_func()->removedMimeTypes;
-}
-
-void SubscriptionChangeNotification::setRemovedMimeTypes(const QSet<QString> &removedMt)
-{
-    d_func()->removedMimeTypes = removedMt;
-    d_func()->modifiedParts |= MimeTypes;
-}
-
-QSet<QByteArray> SubscriptionChangeNotification::addedResources() const
-{
-    return d_func()->addedResources;
-}
-
-void SubscriptionChangeNotification::setAddedResources(const QSet<QByteArray> &addedRes)
-{
-    d_func()->addedResources = addedRes;
-    d_func()->modifiedParts |= Resources;
-}
-
-QSet<QByteArray> SubscriptionChangeNotification::removedResources() const
-{
-    return d_func()->removedResources;
-}
-
-void SubscriptionChangeNotification::setRemovedResources(const QSet<QByteArray> &removedRes)
-{
-    d_func()->removedResources = removedRes;
-    d_func()->modifiedParts |= Resources;
-}
-
-QSet<QByteArray> SubscriptionChangeNotification::addedIgnoredSessions() const
-{
-    return d_func()->addedIgnoredSessions;
-}
-
-void SubscriptionChangeNotification::setAddedIgnoredSessions(const QSet<QByteArray> &addedSessions)
-{
-    d_func()->addedIgnoredSessions = addedSessions;
-    d_func()->modifiedParts |=  IgnoredSessions;
-}
-
-QSet<QByteArray> SubscriptionChangeNotification::removedIgnoredSessions() const
-{
-    return d_func()->removedIgnoredSessions;
-}
-
-void SubscriptionChangeNotification::setRemovedIgnoredSessions(const QSet<QByteArray> &removedSessions)
-{
-    d_func()->removedIgnoredSessions = removedSessions;
-    d_func()->modifiedParts |= IgnoredSessions;
+    d_func()->ignoredSessions = sessions;
 }
 
 bool SubscriptionChangeNotification::isAllMonitored() const
@@ -10270,7 +10079,6 @@ bool SubscriptionChangeNotification::isAllMonitored() const
 void SubscriptionChangeNotification::setAllMonitored(bool allMonitored)
 {
     d_func()->isAllMonitored = allMonitored;
-    d_func()->modifiedParts |= Monitored;
 }
 
 bool SubscriptionChangeNotification::isExclusive() const
@@ -10281,7 +10089,6 @@ bool SubscriptionChangeNotification::isExclusive() const
 void SubscriptionChangeNotification::setExclusive(bool isExclusive)
 {
     d_func()->isExclusive = isExclusive;
-    d_func()->modifiedParts |= Exclusive;
 }
 
 DataStream &operator<<(DataStream &stream, const SubscriptionChangeNotification &ntf)
