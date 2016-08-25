@@ -232,6 +232,9 @@ int main(int argc, char **argv)
         runJanitor(QStringLiteral("vacuum"));
     } else if (command == QLatin1String("fsck")) {
         runJanitor(QStringLiteral("check"));
+    } else {
+        app.printUsage();
+        return -1;
     }
     return 0;
 }
