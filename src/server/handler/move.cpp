@@ -44,90 +44,51 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
 
     const QDateTime mtime = QDateTime::currentDateTime();
 
-    if (qb.exec()) {
-        const QVector<PimItem> items = qb.result();
-        if (items.isEmpty()) {
-            successResponse<Protocol::MoveItemsResponse>();
+    if (!qb.exec()) {
+        failureResponse("Unable to execute query");
+        return;
+    }
+
+    const QVector<PimItem> items = qb.result();
+    if (items.isEmpty()) {
+        successResponse<Protocol::MoveItemsResponse>();
+        return;
+    }
+
+    // Split the list by source collection
+    QMap<Entity::Id /* collection */, PimItem> toMove;
+    QMap<Entity::Id /* collection */, Collection> sources;
+    Q_FOREACH (/*sic!*/ PimItem item, items) {
+        if (!item.isValid()) {
+            failureResponse("Invalid item in result set!?");
             return;
         }
 
-        // Split the list by source collection
-        QMap<Entity::Id /* collection */, PimItem> toMove;
-        QMap<Entity::Id /* collection */, Collection> sources;
-        Q_FOREACH (/*sic!*/ PimItem item, items) {
-            if (!item.isValid()) {
-                failureResponse("Invalid item in result set!?");
-                return;
-            }
-
-            const Collection source = item.collection();
-            if (!source.isValid()) {
-                failureResponse("Item without collection found!?");
-                return;
-            }
-            if (!sources.contains(source.id())) {
-                sources.insert(source.id(), source);
-            }
-
-            Q_ASSERT(item.collectionId() != mDestination.id());
-
-            item.setCollectionId(mDestination.id());
-            item.setAtime(mtime);
-            item.setDatetime(mtime);
-            // if the resource moved itself, we assume it did so because the change happend in the backend
-            if (connection()->context()->resource().id() != mDestination.resourceId()) {
-                item.setDirty(true);
-            }
-
-            if (!item.update()) {
-                failureResponse("Unable to update item");
-                return;
-            }
-
-            toMove.insertMulti(source.id(), item);
+        const Collection source = item.collection();
+        if (!source.isValid()) {
+            failureResponse("Item without collection found!?");
+            return;
+        }
+        if (!sources.contains(source.id())) {
+            sources.insert(source.id(), source);
         }
 
-        // Emit notification for each source collection separately
-        QVector<PimItem::Id> itemsToResetRID;
-        Collection source;
-        PimItem::List itemsToMove;
-        for (auto it = toMove.cbegin(), end = toMove.cend(); it != end; ++it) {
-            if (source.id() != it.key()) {
-                if (!itemsToMove.isEmpty()) {
-                    store->notificationCollector()->itemsMoved(itemsToMove, source, mDestination);
-                }
-                source = sources.value(it.key());
-                itemsToMove.clear();
-            }
+        Q_ASSERT(item.collectionId() != mDestination.id());
 
-            itemsToMove.push_back(*it);
-
-            // reset RID on inter-resource moves, but only after generating the change notification
-            // so that this still contains the old one for the source resource
-            const bool isInterResourceMove = it->collection().resource().id() != source.resource().id();
-            if (isInterResourceMove) {
-                itemsToResetRID.push_back(it->id());
-            }
+        item.setCollectionId(mDestination.id());
+        item.setAtime(mtime);
+        item.setDatetime(mtime);
+        // if the resource moved itself, we assume it did so because the change happend in the backend
+        if (connection()->context()->resource().id() != mDestination.resourceId()) {
+            item.setDirty(true);
         }
 
-        if (!itemsToMove.isEmpty()) {
-            store->notificationCollector()->itemsMoved(itemsToMove, source, mDestination);
+        if (!item.update()) {
+            failureResponse("Unable to update item");
+            return;
         }
 
-        // Batch-reset RID for all inter-resource moves
-        if (!itemsToResetRID.isEmpty()) {
-            QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
-            qb.setColumnValue(PimItem::remoteIdColumn(), QString());
-            ItemQueryHelper::itemSetToQuery(itemsToResetRID, connection()->context(), qb);
-            if (!qb.exec()) {
-                failureResponse("Unable to update RID");
-                return;
-            }
-        }
-
-    } else {
-        failureResponse("Unable to execute query");
-        return;
+        toMove.insertMulti(source.id(), item);
     }
 
     if (!transaction.commit()) {
@@ -135,6 +96,43 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
         return;
     }
 
+    // Emit notification for each source collection separately
+    QVector<PimItem::Id> itemsToResetRID;
+    Collection source;
+    PimItem::List itemsToMove;
+    for (auto it = toMove.cbegin(), end = toMove.cend(); it != end; ++it) {
+        if (source.id() != it.key()) {
+            if (!itemsToMove.isEmpty()) {
+                store->notificationCollector()->itemsMoved(itemsToMove, source, mDestination);
+            }
+            source = sources.value(it.key());
+            itemsToMove.clear();
+        }
+
+        itemsToMove.push_back(*it);
+
+        // reset RID on inter-resource moves, but only after generating the change notification
+        // so that this still contains the old one for the source resource
+        const bool isInterResourceMove = it->collection().resource().id() != source.resource().id();
+        if (isInterResourceMove) {
+            itemsToResetRID.push_back(it->id());
+        }
+    }
+
+    if (!itemsToMove.isEmpty()) {
+        store->notificationCollector()->itemsMoved(itemsToMove, source, mDestination);
+    }
+
+    // Batch-reset RID for all inter-resource moves
+    if (!itemsToResetRID.isEmpty()) {
+        QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
+        qb.setColumnValue(PimItem::remoteIdColumn(), QString());
+        ItemQueryHelper::itemSetToQuery(itemsToResetRID, connection()->context(), qb);
+        if (!qb.exec()) {
+            failureResponse("Unable to update RID");
+            return;
+        }
+    }
 }
 
 bool Move::parseStream()
