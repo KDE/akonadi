@@ -70,6 +70,7 @@ TagWidget::TagWidget(QWidget *parent)
     Monitor *monitor = new Monitor(this);
     monitor->setTypeMonitored(Monitor::Tags);
     d->mModel = new Akonadi::TagModel(monitor, this);
+    connect(monitor, &Monitor::tagAdded, this, &TagWidget::updateView);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
