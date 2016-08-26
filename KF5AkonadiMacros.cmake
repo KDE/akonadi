@@ -27,12 +27,19 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
                         Qt5::Test Qt5::Gui Qt5::Widgets KF5::KIOCore KF5::AkonadiCore KF5::DBusAddons
                         ${_linklibraries})
 
-  # Set the akonaditest path when the macro is used in Akonadi
-  find_program(_testrunner
-               NAMES akonaditest akonaditest.exe
-               PATHS ${CMAKE_CURRENT_BINARY_DIR} ${_akonaditest_DIR} ENV PATH)
-  if (_testrunner-NOTFOUND)
-    message(WARNING "Could not locate akonaditest executable, isolated Akonadi tests will fail!")
+  if (NOT DEFINED _testrunner)
+    if (${PROJECT_NAME} STREQUAL Akonadi AND TARGET akonaditest)
+      # If this macro is used in Akonadi itself, just use the target name;
+      # CMake will replace it with the path to the executable in the build
+      # directory. This will ensure it works even on a clean build,
+      # where the executable doesn't exist yet at cmake time.
+      set(_testrunner akonaditest)
+    else()
+      find_program(_testrunner NAMES akonaditest akonaditest.exe)
+      if (NOT _testrunner)
+        message(WARNING "Could not locate akonaditest executable, isolated Akonadi tests will fail!")
+      endif()
+    endif()
   endif()
 
   # based on kde4_add_unit_test
@@ -61,9 +68,9 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
   if ( KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS OR AKONADI_RUN_MYSQL_ISOLATED_TESTS )
     find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
     if ( MYSQLD_EXECUTABLE )
-      add_test( akonadi-mysql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable}
+      add_test( NAME akonadi-mysql-db-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-db.xml ${_executable}
         ${MYSQL_EXTRA_OPTIONS_DB} )
-      add_test( akonadi-mysql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable}
+      add_test( NAME akonadi-mysql-fs-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable}
         ${MYSQL_EXTRA_OPTIONS_FS} )
     endif()
   endif()
@@ -71,15 +78,15 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
   if ( KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS OR AKONADI_RUN_PGSQL_ISOLATED_TESTS )
     find_program( POSTGRES_EXECUTABLE postgres )
     if ( POSTGRES_EXECUTABLE )
-    add_test( akonadi-postgresql-db-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-db.xml ${_executable}
+    add_test( NAME akonadi-postgresql-db-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-db.xml ${_executable}
         ${POSTGRESL_EXTRA_OPTIONS_DB} )
-    add_test( akonadi-postgresql-fs-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable}
+    add_test( NAME akonadi-postgresql-fs-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable}
         ${POSTGRESL_EXTRA_OPTIONS_FS} )
     endif()
   endif()
 
   # Always have SQLITE tests
-  add_test( akonadi-sqlite-${_name} ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
+  add_test( NAME akonadi-sqlite-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
     ${SQLITE_EXTRA_OPTIONS} )
 endmacro()
 
