@@ -55,7 +55,12 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
         QMap<Entity::Id /* collection */, PimItem> toMove;
         QMap<Entity::Id /* collection */, Collection> sources;
         Q_FOREACH (/*sic!*/ PimItem item, items) {
-            const Collection source = items.at(0).collection();
+            if (!item.isValid()) {
+                failureResponse("Invalid item in result set!?");
+                return;
+            }
+
+            const Collection source = item.collection();
             if (!source.isValid()) {
                 failureResponse("Item without collection found!?");
                 return;
@@ -64,10 +69,6 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
                 sources.insert(source.id(), source);
             }
 
-            if (!item.isValid()) {
-                failureResponse("Invalid item in result set!?");
-                return;
-            }
             Q_ASSERT(item.collectionId() != mDestination.id());
 
             item.setCollectionId(mDestination.id());
@@ -78,35 +79,52 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
                 item.setDirty(true);
             }
 
+            if (!item.update()) {
+                failureResponse("Unable to update item");
+                return;
+            }
+
             toMove.insertMulti(source.id(), item);
         }
 
         // Emit notification for each source collection separately
-        Q_FOREACH (const Entity::Id &sourceId, toMove.uniqueKeys()) {
-            PimItem::List itemsToMove;
-            for (auto it = toMove.cbegin(), end = toMove.cend(); it != end; ++it) {
-                if (it.key() == sourceId)
-                    itemsToMove.push_back(it.value());
+        QVector<PimItem::Id> itemsToResetRID;
+        Collection source;
+        PimItem::List itemsToMove;
+        for (auto it = toMove.cbegin(), end = toMove.cend(); it != end; ++it) {
+            if (source.id() != it.key()) {
+                if (!itemsToMove.isEmpty()) {
+                    store->notificationCollector()->itemsMoved(itemsToMove, source, mDestination);
+                }
+                source = sources.value(it.key());
+                itemsToMove.clear();
             }
 
-            const Collection &source = sources.value(sourceId);
-            store->notificationCollector()->itemsMoved(itemsToMove, source, mDestination);
+            itemsToMove.push_back(*it);
 
-            for (auto iter = toMove.find(sourceId), end = toMove.end(); iter != end; ++iter) {
-                // reset RID on inter-resource moves, but only after generating the change notification
-                // so that this still contains the old one for the source resource
-                const bool isInterResourceMove = (*iter).collection().resource().id() != source.resource().id();
-                if (isInterResourceMove) {
-                    (*iter).setRemoteId(QString());
-                }
-
-                // FIXME Could we aggregate the changes to a single SQL query?
-                if (!(*iter).update()) {
-                    failureResponse("Unable to update item");
-                    return;
-                }
+            // reset RID on inter-resource moves, but only after generating the change notification
+            // so that this still contains the old one for the source resource
+            const bool isInterResourceMove = it->collection().resource().id() != source.resource().id();
+            if (isInterResourceMove) {
+                itemsToResetRID.push_back(it->id());
             }
         }
+
+        if (!itemsToMove.isEmpty()) {
+            store->notificationCollector()->itemsMoved(itemsToMove, source, mDestination);
+        }
+
+        // Batch-reset RID for all inter-resource moves
+        if (!itemsToResetRID.isEmpty()) {
+            QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
+            qb.setColumnValue(PimItem::remoteIdColumn(), QString());
+            ItemQueryHelper::itemSetToQuery(itemsToResetRID, connection()->context(), qb);
+            if (!qb.exec()) {
+                failureResponse("Unable to update RID");
+                return;
+            }
+        }
+
     } else {
         failureResponse("Unable to execute query");
         return;
