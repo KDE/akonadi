@@ -407,7 +407,10 @@ bool AkAppend::parseStream()
         } else {
             qCDebug(AKONADISERVER_LOG) << "Multiple merge candidates:";
             Q_FOREACH (const PimItem &item, result) {
-                qCDebug(AKONADISERVER_LOG) << "\t ID: " << item.id() << ", RID:" << item.remoteId() << ", GID:" << item.gid();
+                qCDebug(AKONADISERVER_LOG, "\tID: %ll, RID: %s, GID: %s, Collection: %s (%ll), Resource: %s (%ll)",
+                        item.id(), qPrintable(item.remoteId()), qPrintable(item.gid()),
+                        qPrintable(item.collection().name()), item.collectionId(),
+                        qPrintable(item.collection().resource().name()), item.collection().resource().id());
             }
             // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
             // something we don't want
