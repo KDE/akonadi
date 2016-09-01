@@ -68,8 +68,7 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
     , d(new Private(this))
 {
     setWindowTitle(i18nc("@title:window", "Manage Tags"));
-    QVBoxLayout *vbox = new QVBoxLayout;
-    setLayout(vbox);
+    QVBoxLayout *vbox = new QVBoxLayout(this);
 
     Monitor *monitor = new Monitor(this);
     monitor->setTypeMonitored(Monitor::Tags);

@@ -67,8 +67,7 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     : QDialog(parent)
     , d(new Private(this))
 {
-    QVBoxLayout *layout = new QVBoxLayout;
-    setLayout(layout);
+    QVBoxLayout *layout = new QVBoxLayout(this);
 
     d->Widget = new Akonadi::AgentTypeWidget;
     connect(d->Widget, &AgentTypeWidget::activated, this, &AgentTypeDialog::accept);

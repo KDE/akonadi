@@ -187,16 +187,15 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     : QDialog(parent), mResolveStrategy(ConflictHandler::UseBothItems)
 {
     setWindowTitle(i18nc("@title:window", "Conflict Resolution"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox();
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
     QWidget *mainWidget = new QWidget(this);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(mainWidget);
-    QPushButton *user1Button = new QPushButton;
+    QPushButton *user1Button = new QPushButton(this);
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    QPushButton *user2Button = new QPushButton;
+    QPushButton *user2Button = new QPushButton(this);
     buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-    QPushButton *user3Button = new QPushButton;
+    QPushButton *user3Button = new QPushButton(this);
     buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &ConflictResolveDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &ConflictResolveDialog::reject);
@@ -213,7 +212,7 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     QLabel *label = new QLabel(xi18nc("@label", "Two updates conflict with each other.<nl/>Please choose which update(s) to apply."), mainWidget);
     mainLayout->addWidget(label);
 
-    mView = new QTextBrowser;
+    mView = new QTextBrowser(this);
 
     mainLayout->addWidget(mView);
     mainLayout->addWidget(buttonBox);

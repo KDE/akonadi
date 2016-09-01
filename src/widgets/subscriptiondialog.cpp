@@ -158,8 +158,7 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
 {
     setWindowTitle(i18n("Local Subscriptions"));
     QWidget *mainWidget = new QWidget(this);
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(mainWidget);
 
     d->model = new SubscriptionModel(this);
