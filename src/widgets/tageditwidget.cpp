@@ -238,8 +238,6 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     topLayout->addWidget(d->m_tagsView);
     topLayout->addLayout(newTagLayout);
 
-    setLayout(topLayout);
-
     // create the delete button, which is shown when
     // hovering the items
     d->m_deleteButton = new QPushButton(d->m_tagsView->viewport());
