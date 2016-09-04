@@ -105,7 +105,6 @@ FakeAkonadiServer::FakeAkonadiServer()
     , mDataStore(Q_NULLPTR)
     , mServerLoop(Q_NULLPTR)
     , mNtfCollector(Q_NULLPTR)
-    , mNotificationSpy(Q_NULLPTR)
     , mPopulateDb(true)
 {
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
@@ -121,7 +120,6 @@ FakeAkonadiServer::~FakeAkonadiServer()
 {
     delete mClient;
     delete mConnection;
-    delete mNotificationSpy;
     delete mNtfCollector;
 }
 
@@ -283,7 +281,6 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
 void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
     mConnection = new FakeConnection(socketDescriptor);
-    delete mNotificationSpy;
     // Delete collection in its own thread
     mNtfCollector->deleteLater();
 
@@ -292,7 +289,7 @@ void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
     QMetaObject::invokeMethod(mConnection, "notificationCollector", Qt::BlockingQueuedConnection,
                               Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, mNtfCollector));
     Q_ASSERT(mNtfCollector);
-    mNotificationSpy = new QSignalSpy(mNtfCollector, &Server::NotificationCollector::notify);
+    mNotificationSpy.reset(new QSignalSpy(mNtfCollector, &Server::NotificationCollector::notify));
     Q_ASSERT(mNotificationSpy->isValid());
 }
 
@@ -322,7 +319,7 @@ void FakeAkonadiServer::runTest()
     mNtfCollector->dispatchNotifications();
 }
 
-QSignalSpy *FakeAkonadiServer::notificationSpy() const
+QSharedPointer<QSignalSpy> FakeAkonadiServer::notificationSpy() const
 {
     return mNotificationSpy;
 }

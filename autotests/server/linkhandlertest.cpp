@@ -150,7 +150,7 @@ private Q_SLOTS:
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);
             const Protocol::ChangeNotification::List notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>();
@@ -254,7 +254,7 @@ private Q_SLOTS:
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);
             const Protocol::ChangeNotification::List notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>();

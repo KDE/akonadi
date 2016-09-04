@@ -35,7 +35,7 @@ using namespace Akonadi::Server;
 Q_DECLARE_METATYPE(Akonadi::Server::Relation::List)
 Q_DECLARE_METATYPE(Akonadi::Server::Relation)
 
-static Protocol::ChangeNotification::List extractNotifications(QSignalSpy *notificationSpy)
+static Protocol::ChangeNotification::List extractNotifications(const QSharedPointer<QSignalSpy> &notificationSpy)
 {
     Protocol::ChangeNotification::List receivedNotifications;
     for (int q = 0; q < notificationSpy->size(); q++) {

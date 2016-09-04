@@ -683,7 +683,7 @@ private Q_SLOTS:
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
 
         if (notification.isValid()) {
             QCOMPARE(notificationSpy->count(), 1);

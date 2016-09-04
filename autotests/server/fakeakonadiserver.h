@@ -26,6 +26,7 @@
 #include <QBuffer>
 #include <QDataStream>
 #include <QtTest/QTest>
+#include <QSharedPointer>
 
 #include <type_traits>
 
@@ -105,7 +106,7 @@ public:
 
     void runTest();
 
-    QSignalSpy *notificationSpy() const;
+    QSharedPointer<QSignalSpy> notificationSpy() const;
 
     void setPopulateDb(bool populate);
 
@@ -125,7 +126,7 @@ private:
     QEventLoop *mServerLoop;
 
     NotificationCollector *mNtfCollector;
-    QSignalSpy *mNotificationSpy;
+    QSharedPointer<QSignalSpy> mNotificationSpy;
 
     bool mPopulateDb;
 

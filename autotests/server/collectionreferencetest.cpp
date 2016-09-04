@@ -189,7 +189,7 @@ private Q_SLOTS:
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        QSignalSpy *notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (expectedNotifications.isEmpty()) {
             QTRY_VERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
         } else {
