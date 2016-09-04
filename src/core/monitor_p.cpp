@@ -688,15 +688,6 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotification> &n
 
 void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &command)
 {
-    QByteArray subname = session->sessionId() + " - ";
-    if (!q_ptr->objectName().isEmpty()) {
-        subname += q_ptr->objectName().toLatin1();
-    } else {
-        subname += QByteArray::number(quintptr(q_ptr));
-    }
-    qDebug() << "=================== NOTIFY" << subname << command.type();
-
-
     Q_Q(Monitor);
     Q_UNUSED(tag);
     if (command.isResponse()) {
