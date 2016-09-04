@@ -46,6 +46,7 @@ namespace Akonadi
 {
 
 class Monitor;
+class ChangeNotification;
 
 /**
  * @internal
@@ -163,6 +164,8 @@ public:
 
     bool emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg,
                                             const NotificationSubscriber &subscriber);
+    bool emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg,
+                                     const ChangeNotification &ntf);
 
     void serverStateChanged(Akonadi::ServerManager::State state);
 

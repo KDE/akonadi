@@ -21,7 +21,7 @@
 
 namespace Akonadi
 {
-class NotificationSubscriber::Private : public QSharedData
+class AKONADICORE_NO_EXPORT NotificationSubscriber::Private : public QSharedData
 {
 public:
     explicit Private()

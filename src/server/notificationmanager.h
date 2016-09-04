@@ -58,12 +58,16 @@ protected:
     void init() Q_DECL_OVERRIDE;
     void quit() Q_DECL_OVERRIDE;
 
+    void emitDebugNotification(const Protocol::ChangeNotification &ntf,
+                               const QVector<QByteArray> &listeners);
+
 private:
     Protocol::ChangeNotification::List mNotifications;
     QTimer *mTimer;
 
     QThreadPool *mNotifyThreadPool;
     QVector<NotificationSubscriber *> mSubscribers;
+    int mDebugNotifications;
 
     friend class NotificationSubscriber;
     friend class ::NotificationManagerTest;

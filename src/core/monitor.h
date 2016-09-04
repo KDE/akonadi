@@ -39,6 +39,7 @@ class MonitorPrivate;
 class Session;
 class TagFetchScope;
 class NotificationSubscriber;
+class ChangeNotification;
 
 namespace Protocol
 {
@@ -99,7 +100,18 @@ public:
          * applications.
          * @since 5.4
          */
-        Subscribers
+        Subscribers,
+        /**
+         * Listens to all notifications being emitted by the server and provides
+         * additional information about them. This is only for debugging purposes
+         * and should not be used in real applications.
+         *
+         * @note Enabling monitoring this type has performance impact on the
+         * Akonadi Server.
+         *
+         * @since 5.4
+         */
+        Notifications
     };
 
     /**
@@ -719,6 +731,18 @@ Q_SIGNALS:
      * this in regular applications.
      */
     void notificationSubscriberRemoved(const Akonadi::NotificationSubscriber &subscriber);
+
+    /**
+     * This signal is emitted when Notifications are monitored and the server emits
+     * anny change notification.
+     *
+     * @since 5.4
+     *
+     * @note Getting introspection into all change notifications only makes sense
+     * if you want to globally debug Notifications. There is no reason to use
+     * this in regular applications.
+     */
+    void debugNotification(const Akonadi::ChangeNotification &notification);
 
     /**
      * This signal is emitted if the Monitor starts or stops monitoring @p collection explicitly.

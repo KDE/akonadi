@@ -39,6 +39,7 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
     , mSocket(Q_NULLPTR)
     , mAllMonitored(false)
     , mExclusive(false)
+    , mNotificationDebugging(false)
 {
 }
 
@@ -60,6 +61,9 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, qui
 
 NotificationSubscriber::~NotificationSubscriber()
 {
+    if (mNotificationDebugging) {
+        Q_EMIT notificationDebuggingChanged(false);
+    }
 }
 
 void NotificationSubscriber::socketReadyRead()
@@ -75,16 +79,16 @@ void NotificationSubscriber::socketReadyRead()
         try {
             cmd = Protocol::deserialize(mSocket);
         } catch (const Akonadi::ProtocolException &e) {
-            qDebug() << "ProtocolException:" << e.what();
+            qCWarning(AKONADISERVER_LOG) << "ProtocolException:" << e.what();
             disconnectSubscriber();
             return;
         } catch (const std::exception &e) {
-            qDebug() << "Unknown exception:" << e.what();
+            qCWarning(AKONADISERVER_LOG) << "Unknown exception:" << e.what();
             disconnectSubscriber();
             return;
         }
         if (cmd.type() == Protocol::Command::Invalid) {
-            qDebug() << "Received an invalid command: resetting connection";
+            qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
             disconnectSubscriber();
             return;
         }
@@ -96,7 +100,7 @@ void NotificationSubscriber::socketReadyRead()
             break;
         case Protocol::Command::ModifySubscription:
             if (mSubscriber.isEmpty()) {
-                qDebug() << "Received ModifySubscription command before RegisterSubscriber";
+                qCWarning(AKONADISERVER_LOG) << "Received ModifySubscription command before RegisterSubscriber";
                 disconnectSubscriber();
                 return;
             }
@@ -107,7 +111,7 @@ void NotificationSubscriber::socketReadyRead()
             disconnectSubscriber();
             break;
         default:
-            qDebug() << "Invalid command" << cmd.type() << "received by NotificationSubscriber" << mSubscriber;
+            qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd.type() << "received by NotificationSubscriber" << mSubscriber;
             disconnectSubscriber();
             break;
         }
@@ -116,7 +120,7 @@ void NotificationSubscriber::socketReadyRead()
 
 void NotificationSubscriber::socketDisconnected()
 {
-    qDebug() << "Subscriber" << mSubscriber << "disconnected from us!";
+    qCDebug(AKONADISERVER_LOG) << "Subscriber" << mSubscriber << "disconnected";
     disconnectSubscriber();
 }
 
@@ -144,7 +148,7 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
 {
     QMutexLocker locker(&mLock);
 
-    qDebug() << "Subscriber" << this << "identified as" << command.subscriberName();
+    qCDebug(AKONADISERVER_LOG) << "Subscriber" << this << "identified as" << command.subscriberName();
     mSubscriber = command.subscriberName();
     mSession = command.session();
 
@@ -230,20 +234,28 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
     }
 
     if (mManager) {
-        // Did the caller just subscribed to subscription changes?
-        if ((modifiedParts & Protocol::ModifySubscriptionCommand::Types)
-            && command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges))
-        {
-            // If yes, then send them list of all existing subscribers
-            qDebug() << "========" << mSubscriber << "monitors subscriptions, will get" << mManager->mSubscribers.count() << "of them!";
-            Protocol::ChangeNotification::List ntfs;
-            ntfs.reserve(mManager->mSubscribers.count());
-            Q_FOREACH (const NotificationSubscriber *subscriber, mManager->mSubscribers) {
-                ntfs << subscriber->toChangeNotification();
+        if (modifiedParts & Protocol::ModifySubscriptionCommand::Types) {
+            // Did the caller just subscribed to subscription changes?
+            if (command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges)) {
+                // If yes, then send them list of all existing subscribers
+                Q_FOREACH (const NotificationSubscriber *subscriber, mManager->mSubscribers) {
+                    // Send them back to caller
+                    QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
+                                              Q_ARG(Akonadi::Protocol::ChangeNotification,
+                                                    subscriber->toChangeNotification()));
+                }
             }
-            // Send them back to caller
-            QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
-                                      Q_ARG(Akonadi::Protocol::ChangeNotification::List, ntfs));
+            if (command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::ChangeNotifications)) {
+                if (!mNotificationDebugging) {
+                    mNotificationDebugging = true;
+                    Q_EMIT notificationDebuggingChanged(true);
+                }
+            } else if (command.stopMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::ChangeNotifications)) {
+                if (mNotificationDebugging) {
+                    mNotificationDebugging = false;
+                    Q_EMIT notificationDebuggingChanged(false);
+                }
+            }
         }
 
         // Emit subscription change notification
@@ -548,6 +560,25 @@ bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::Sub
     return mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges);
 }
 
+bool NotificationSubscriber::acceptsDebugChangeNotification(const Protocol::DebugChangeNotification &notification) const
+{
+    // Assumes mLock being locked by caller
+
+    Q_UNUSED(notification);
+
+    // We should never end up sending debug notification about a debug notification.
+    // This could get very messy very quickly...
+    Q_ASSERT(notification.notification().type() != Protocol::Command::DebugChangeNotification);
+    if (notification.notification().type() == Protocol::Command::DebugChangeNotification) {
+        return false;
+    }
+
+    // Unlike other types, debug change notifications must be explicitly enabled
+    // by caller and are excluded from "monitor all" as well
+    return mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::ChangeNotifications);
+}
+
+
 bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &notification) const
 {
     // Assumes mLock being locked
@@ -558,6 +589,7 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
     }
 
     // session is ignored
+    // TODO: Should this afect SubscriptionChangeNotification and DebugChangeNotification?
     if (mIgnoredSessions.contains(notification.sessionId())) {
         return false;
     }
@@ -573,22 +605,25 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
         return acceptsRelationNotification(notification);
     case Protocol::Command::SubscriptionChangeNotification:
         return acceptsSubscriptionNotification(notification);
+    case Protocol::Command::DebugChangeNotification:
+        return acceptsDebugChangeNotification(notification);
+
     default:
         qCDebug(AKONADISERVER_LOG) << "Received invalid change notification!";
         return false;
     }
 }
 
-void NotificationSubscriber::notify(const Protocol::ChangeNotification::List &notifications)
+bool NotificationSubscriber::notify(const Protocol::ChangeNotification &notification)
 {
     QMutexLocker locker(&mLock);
 
-    Q_FOREACH (const auto &notification, notifications) {
-        if (acceptsNotification(notification)) {
-            QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
-                                      Q_ARG(Akonadi::Protocol::ChangeNotification, notification));
-        }
+    if (acceptsNotification(notification)) {
+        QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
+                                    Q_ARG(Akonadi::Protocol::ChangeNotification, notification));
+        return true;
     }
+    return false;
 }
 
 void NotificationSubscriber::writeNotification(const Protocol::ChangeNotification &notification)

@@ -8,6 +8,7 @@ set(akonadicore_base_SRCS
     attributefactory.cpp
     cachepolicy.cpp
     changemediator_p.cpp
+    changenotification.cpp
     changenotificationdependenciesfactory.cpp
     changerecorder.cpp
     changerecorder_p.cpp
@@ -79,6 +80,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     Attribute
     AttributeFactory
     CachePolicy
+    ChangeNotification
     ChangeRecorder
     Collection
     CollectionColorAttribute

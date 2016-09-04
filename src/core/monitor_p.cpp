@@ -31,6 +31,7 @@
 #include "vectorhelper.h"
 #include "akonadicore_debug.h"
 #include "notificationsubscriber.h"
+#include "changenotification.h"
 
 using namespace Akonadi;
 class operation;
@@ -63,6 +64,8 @@ MonitorPrivate::~MonitorPrivate()
     delete collectionCache;
     delete itemCache;
     delete tagCache;
+    ntfConnection->disconnect(q_ptr);
+    ntfConnection->deleteLater();
 }
 
 void MonitorPrivate::init()
@@ -345,6 +348,10 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
         return true;
     }
 
+    if (msg.type() == Protocol::Command::DebugChangeNotification) {
+        return true;
+    }
+
     if (msg.type() == Protocol::Command::CollectionChangeNotification
             && static_cast<const Protocol::CollectionChangeNotification&>(msg).operation() == Protocol::CollectionChangeNotification::Remove) {
         //For collection removals the collection is gone anyways, so we can't fetch it. Rid will be set later on instead.
@@ -490,6 +497,34 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
         subscriber.setIsAllMonitored(subNtf.isAllMonitored());
         subscriber.setIsExclusive(subNtf.isExclusive());
         someoneWasListening = emitSubscriptionChangeNotification(subNtf, subscriber);
+    } else if (msg.type() == Protocol::Command::DebugChangeNotification) {
+        const auto &changeNtf = static_cast<const Protocol::DebugChangeNotification&>(msg);
+        ChangeNotification notification;
+        notification.setListeners(changeNtf.listeners());
+        notification.setTimestamp(QDateTime::fromMSecsSinceEpoch(changeNtf.timestamp()));
+        notification.setNotification(changeNtf.notification());
+        switch (changeNtf.notification().type()) {
+        case Protocol::Command::ItemChangeNotification:
+            notification.setType(ChangeNotification::Items);
+            break;
+        case Protocol::Command::CollectionChangeNotification:
+            notification.setType(ChangeNotification::Collection);
+            break;
+        case Protocol::Command::TagChangeNotification:
+            notification.setType(ChangeNotification::Tag);
+            break;
+        case Protocol::Command::RelationChangeNotification:
+            notification.setType(ChangeNotification::Relation);
+            break;
+        case  Protocol::Command::SubscriptionChangeNotification:
+            notification.setType(ChangeNotification::Subscription);
+            break;
+        default:
+            Q_ASSERT(false); // huh?
+            return false;
+        }
+
+        someoneWasListening = emitDebugChangeNotification(changeNtf, notification);
     }
 
     return someoneWasListening;
@@ -653,6 +688,15 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotification> &n
 
 void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &command)
 {
+    QByteArray subname = session->sessionId() + " - ";
+    if (!q_ptr->objectName().isEmpty()) {
+        subname += q_ptr->objectName().toLatin1();
+    } else {
+        subname += QByteArray::number(quintptr(q_ptr));
+    }
+    qDebug() << "=================== NOTIFY" << subname << command.type();
+
+
     Q_Q(Monitor);
     Q_UNUSED(tag);
     if (command.isResponse()) {
@@ -698,6 +742,7 @@ void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &comman
         case Protocol::Command::TagChangeNotification:
         case Protocol::Command::RelationChangeNotification:
         case Protocol::Command::SubscriptionChangeNotification:
+        case Protocol::Command::DebugChangeNotification:
             slotNotify(command);
             break;
         default:
@@ -1198,6 +1243,23 @@ bool MonitorPrivate::emitSubscriptionChangeNotification(const Protocol::Subscrip
 
     return false;
 }
+
+bool MonitorPrivate::emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg,
+                                                 const ChangeNotification &ntf)
+{
+    Q_UNUSED(msg);
+
+    if (!ntf.isValid()) {
+        return false;
+    }
+
+    if (q_ptr->receivers(SIGNAL(debugNotification(Akonadi::ChangeNotification))) == 0) {
+        return false;
+    }
+    Q_EMIT q_ptr->debugNotification(ntf);
+    return true;
+}
+
 
 
 void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)

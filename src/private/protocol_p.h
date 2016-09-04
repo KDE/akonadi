@@ -136,6 +136,7 @@ public:
         TagChangeNotification,
         RelationChangeNotification,
         SubscriptionChangeNotification,
+        DebugChangeNotification,
         CreateSubscription,
         ModifySubscription,
 
@@ -2379,7 +2380,8 @@ public:
         CollectionChanges,
         TagChanges,
         RelationChanges,
-        SubscriptionChanges
+        SubscriptionChanges,
+        ChangeNotifications,
     };
 
     explicit ModifySubscriptionCommand();
@@ -2517,8 +2519,28 @@ private:
 
 
 
+class DebugChangeNotificationPrivate;
+class AKONADIPRIVATE_EXPORT DebugChangeNotification : public ChangeNotification
+{
+public:
+    explicit DebugChangeNotification();
+    DebugChangeNotification(const Command &other);
 
+    ChangeNotification notification() const;
+    void setNotification(const ChangeNotification &notification);
 
+    QVector<QByteArray> listeners() const;
+    void setListeners(const QVector<QByteArray> &listeners);
+
+    qint64 timestamp() const;
+    void setTimestamp(qint64 timestamp);
+
+private:
+    AKONADI_DECLARE_PRIVATE(DebugChangeNotification)
+
+    friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::DebugChangeNotification &ntf);
+    friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::DebugChangeNotification &ntf);
+};
 
 } // namespace Protocol
 } // namespace Akonadi

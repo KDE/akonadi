@@ -43,12 +43,19 @@ public:
     explicit NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor);
     ~NotificationSubscriber();
 
+    inline QByteArray subscriber() const {
+        return mSubscriber;
+    }
+
 public Q_SLOTS:
-    void notify(const Akonadi::Protocol::ChangeNotification::List &notifications);
+    bool notify(const Akonadi::Protocol::ChangeNotification &notification);
 
 private Q_SLOTS:
     void socketReadyRead();
     void socketDisconnected();
+
+Q_SIGNALS:
+    void notificationDebuggingChanged(bool enabled);
 
 protected:
     void registerSubscriber(const Protocol::CreateSubscriptionCommand &command);
@@ -62,6 +69,7 @@ private:
     bool acceptsTagNotification(const Protocol::TagChangeNotification &notification) const;
     bool acceptsRelationNotification(const Protocol::RelationChangeNotification &notification) const;
     bool acceptsSubscriptionNotification(const Protocol::SubscriptionChangeNotification &notification) const;
+    bool acceptsDebugChangeNotification(const Protocol::DebugChangeNotification &notification) const;
 
     bool isCollectionMonitored(Entity::Id id) const;
     bool isMimeTypeMonitored(const QString &mimeType) const;
@@ -92,6 +100,7 @@ protected:
     QByteArray mSession;
     bool mAllMonitored;
     bool mExclusive;
+    bool mNotificationDebugging;
 
     static QMimeDatabase sMimeDatabase;
 };

@@ -49,7 +49,7 @@ namespace Akonadi {
 namespace Protocol {
 
 int version() {
-    return 54;
+    return 55;
 }
 
 }
@@ -142,6 +142,8 @@ QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
         return dbg << "RelationChangeNotification";
     case Akonadi::Protocol::Command::SubscriptionChangeNotification:
         return dbg << "SubscriptionChangeNotification";
+    case Akonadi::Protocol::Command::DebugChangeNotification:
+        return dbg << "DebugChangeNotification";
     case Akonadi::Protocol::Command::CreateSubscription:
         return dbg << "CreateSubscription";
     case Akonadi::Protocol::Command::ModifySubscription:
@@ -570,6 +572,7 @@ public:
         registerType<Command::TagChangeNotification, TagChangeNotification, Response /* invalid */>();
         registerType<Command::RelationChangeNotification, RelationChangeNotification, Response /* invalid */>();
         registerType<Command::SubscriptionChangeNotification, SubscriptionChangeNotification, Response /* invalid */>();
+        registerType<Command::DebugChangeNotification, DebugChangeNotification, Response /* invalid */>();
         registerType<Command::CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse>();
         registerType<Command::ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse>();
     }
@@ -8237,6 +8240,8 @@ bool ChangeNotification::isRemove() const
         return static_cast<const Protocol::RelationChangeNotification*>(this)->operation() == RelationChangeNotification::Remove;
     case Command::SubscriptionChangeNotification:
         return static_cast<const Protocol::SubscriptionChangeNotification*>(this)->operation() == SubscriptionChangeNotification::Remove;
+    case Command::DebugChangeNotification:
+        return false;
     default:
         Q_ASSERT_X(false, __FUNCTION__, "Unknown ChangeNotification type");
     }
@@ -8256,6 +8261,7 @@ bool ChangeNotification::isMove() const
     case Command::TagChangeNotification:
     case Command::RelationChangeNotification:
     case Command::SubscriptionChangeNotification:
+    case Command::DebugChangeNotification:
         return false;
     default:
         Q_ASSERT_X(false, __FUNCTION__, "Unknown ChangeNotification type");
@@ -10100,6 +10106,128 @@ DataStream &operator>>(DataStream &stream, SubscriptionChangeNotification &ntf)
 {
     return ntf.d_func()->deserialize(stream);
 }
+
+
+class DebugChangeNotificationPrivate : public ChangeNotificationPrivate
+{
+public:
+    explicit DebugChangeNotificationPrivate()
+        : ChangeNotificationPrivate(Command::DebugChangeNotification)
+        , timestamp(0)
+    {
+    }
+
+    DebugChangeNotificationPrivate(const DebugChangeNotificationPrivate &other)
+        : ChangeNotificationPrivate(other)
+        , notification(other.notification)
+        , listeners(other.listeners)
+        , timestamp(other.timestamp)
+    {
+    }
+
+    bool compare(const CommandPrivate * other) const Q_DECL_OVERRIDE
+    {
+        return ChangeNotificationPrivate::compare(other)
+            || COMPARE(notification)
+            || COMPARE(listeners)
+            || COMPARE(timestamp);
+    }
+
+    void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
+    {
+        blck.beginBlock("Notification");
+        notification.debugString(blck);
+        blck.endBlock();
+        blck.write("Listeners", listeners);
+        blck.write("Timestamp", timestamp);
+    }
+
+    DataStream & deserialize(DataStream &stream) Q_DECL_OVERRIDE
+    {
+        Command::Type type;
+        ChangeNotificationPrivate::deserialize(stream)
+            >> type;
+        auto ntf = Factory::command(type);
+        stream >> ntf
+               >> listeners
+               >> timestamp;
+        notification = ntf;
+        return stream;
+    }
+
+    DataStream & serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    {
+        ChangeNotificationPrivate::serialize(stream)
+            << notification.type()
+            << notification
+            << listeners
+            << timestamp;
+        return stream;
+    }
+
+    CommandPrivate * clone() const Q_DECL_OVERRIDE
+    {
+        return new DebugChangeNotificationPrivate(*this);
+    }
+
+    ChangeNotification notification;
+    QVector<QByteArray> listeners;
+    qint64 timestamp;
+};
+
+AKONADI_DECLARE_PRIVATE(DebugChangeNotification)
+
+DebugChangeNotification::DebugChangeNotification()
+    : ChangeNotification(new DebugChangeNotificationPrivate)
+{
+}
+
+DebugChangeNotification::DebugChangeNotification(const Command &other)
+    : ChangeNotification(other)
+{
+    checkCopyInvariant(Command::DebugChangeNotification);
+}
+
+ChangeNotification DebugChangeNotification::notification() const
+{
+    return d_func()->notification;
+}
+
+void DebugChangeNotification::setNotification(const ChangeNotification &notification)
+{
+    d_func()->notification = notification;
+}
+
+QVector<QByteArray> DebugChangeNotification::listeners() const
+{
+    return d_func()->listeners;
+}
+
+void DebugChangeNotification::setListeners(const QVector<QByteArray> &listeners)
+{
+    d_func()->listeners = listeners;
+}
+
+qint64 DebugChangeNotification::timestamp() const
+{
+    return d_func()->timestamp;
+}
+
+void DebugChangeNotification::setTimestamp(qint64 timestamp)
+{
+    d_func()->timestamp = timestamp;
+}
+
+DataStream &operator<<(DataStream &stream, const DebugChangeNotification &ntf)
+{
+    return ntf.d_func()->serialize(stream);
+}
+
+DataStream &operator>>(DataStream &stream, DebugChangeNotification &ntf)
+{
+    return ntf.d_func()->deserialize(stream);
+}
+
 
 
 } // namespace Protocol
