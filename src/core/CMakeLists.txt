@@ -6,6 +6,7 @@ set(akonadicore_base_SRCS
     asyncselectionhandler.cpp
     attribute.cpp
     attributefactory.cpp
+    braveheart.cpp
     cachepolicy.cpp
     changemediator_p.cpp
     changenotification.cpp

@@ -18,6 +18,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(CheckIncludeFiles)
 include(ECMQtDeclareLoggingCategory)
+include(CheckSymbolExists)
 
 include(AkonadiMacros)
 
@@ -87,6 +88,8 @@ if (IS_ABSOLUTE "${KDE_INSTALL_DATADIR_KF5}")
 else()
     set(KF5Akonadi_DATA_DIR "${CMAKE_INSTALL_PREFIX}/${KDE_INSTALL_DATADIR_KF5}/akonadi")
 endif()
+
+check_symbol_exists(malloc_trim "malloc.h" HAVE_MALLOC_TRIM)
 
 ############### Build Options ###############
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
