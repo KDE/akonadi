@@ -330,12 +330,18 @@ void AkonadiServer::incomingConnection(quintptr socketDescriptor)
     if (mAlreadyShutdown) {
         return;
     }
-    QPointer<Connection> connection = new Connection(socketDescriptor);
-    connect(connection.data(), &Connection::disconnected,
-            this, [connection]() {
-                delete connection.data();
-            }, Qt::QueuedConnection);
+
+    Connection *connection = new Connection(socketDescriptor);
+    connect(connection, &Connection::disconnected,
+            this, &AkonadiServer::connectionDisconnected);
     mConnections.append(connection);
+}
+
+void AkonadiServer::connectionDisconnected()
+{
+    auto conn = qobject_cast<Connection*>(sender());
+    mConnections.removeOne(conn);
+    delete conn;
 }
 
 AkonadiServer *AkonadiServer::instance()

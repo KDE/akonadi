@@ -68,6 +68,7 @@ public Q_SLOTS:
 private Q_SLOTS:
     void doQuit();
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
+    void connectionDisconnected();
 
 protected:
     /** reimpl */
