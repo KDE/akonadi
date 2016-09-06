@@ -349,11 +349,15 @@ void AkonadiServer::newCmdConnection(quintptr socketDescriptor)
 
     Connection *connection = new Connection(socketDescriptor);
     connect(connection, &Connection::disconnected,
-            this, [this, connection]() {
-                delete connection;
-                mConnections.removeOne(connection);
-            }, Qt::QueuedConnection);
+            this, &AkonadiServer::connectionDisconnected);
     mConnections.append(connection);
+}
+
+void AkonadiServer::connectionDisconnected()
+{
+    auto conn = qobject_cast<Connection*>(sender());
+    mConnections.removeOne(conn);
+    delete conn;
 }
 
 AkonadiServer *AkonadiServer::instance()
