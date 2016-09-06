@@ -31,8 +31,6 @@
 #include "tracer.h"
 #include "collectionreferencemanager.h"
 
-#include <shared/akcrash.h>
-
 #include <assert.h>
 
 #include <private/protocol_p.h>
@@ -238,7 +236,7 @@ void Connection::slotNewData()
                 m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
             }
         } catch (...) {
-            qCCritical(AKONADISERVER_LOG) << "Unknown exception caught: " << akBacktrace();
+            qCCritical(AKONADISERVER_LOG) << "Unknown exception caught in Connection for session" << m_sessionId;
             if (m_currentHandler) {
                 m_currentHandler->failureResponse("Unknown exception caught");
             }

@@ -22,7 +22,6 @@
 */
 
 #include "akdebug.h"
-#include "akcrash.h"
 
 #include <private/standarddirs_p.h>
 
@@ -31,6 +30,8 @@
 #include <QFileInfo>
 #include <QMutex>
 #include <QLoggingCategory>
+
+#include <KCrash/KCrash>
 
 #include <cassert>
 
@@ -184,7 +185,7 @@ void akCategoryFilter(QLoggingCategory *category)
 
 void akInit(const QString &appName)
 {
-    AkonadiCrash::init();
+    KCrash::initialize();
     sInstance()->setName(appName);
 
     QFileInfo infoOld(sInstance()->errorLogFileName() + QLatin1String(".old"));

@@ -21,7 +21,6 @@
 #include "akonadiserver_debug.h"
 
 #include <shared/akapplication.h>
-#include <shared/akcrash.h>
 
 #include <private/dbus_p.h>
 
@@ -38,14 +37,6 @@
 
 Q_IMPORT_PLUGIN(qsqlite3)
 #endif
-
-void shutdownHandler(int)
-{
-    qCDebug(AKONADISERVER_LOG) << "Shutting down AkonadiServer...";
-
-    Akonadi::Server::AkonadiServer::instance()->quit();
-    exit(255);
-}
 
 int main(int argc, char **argv)
 {
@@ -75,10 +66,10 @@ int main(int argc, char **argv)
     // Make sure we do initialization from eventloop, otherwise
     // org.freedesktop.Akonadi.upgrading service won't be registered to DBus at all
     QTimer::singleShot(0, Akonadi::Server::AkonadiServer::instance(), &Akonadi::Server::AkonadiServer::init);
-    AkonadiCrash::setShutdownMethod(shutdownHandler);
 
     const int result = app.exec();
 
+    qCDebug(AKONADISERVER_LOG) << "Shutting down AkonadiServer...";
     Akonadi::Server::AkonadiServer::instance()->quit();
 
     Q_CLEANUP_RESOURCE(akonadidb);

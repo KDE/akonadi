@@ -55,6 +55,7 @@ find_package(KF5KIO ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5WidgetsAddons ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
+find_package(KF5Crash ${KF5_VERSION} CONFIG REQUIRED)
 
 find_package(Qt5Designer NO_MODULE)
 set_package_properties(Qt5Designer PROPERTIES
@@ -147,12 +148,6 @@ if(AKONADI_BUILD_QSQLITE)
         TYPE ${SQLITE_TYPE}
         PURPOSE "Required by the Sqlite backend"
     )
-endif()
-
-find_package(Backtrace)
-if(Backtrace_FOUND)
-    include_directories(${Backtrace_INCLUDE_DIRS})
-    add_definitions(-DHAVE_BACKTRACE)
 endif()
 
 find_program(XMLLINT_EXECUTABLE xmllint)

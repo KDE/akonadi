@@ -23,7 +23,6 @@
 #include "akonadicontrol_debug.h"
 
 #include <shared/akapplication.h>
-#include <shared/akcrash.h>
 
 #include <private/dbus_p.h>
 
@@ -31,6 +30,8 @@
 #include <QtGui/QSessionManager>
 #include <QtDBus/QDBusConnection>
 #include <QtDBus/QDBusError>
+
+#include <KCrash/KCrash>
 
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
@@ -76,7 +77,7 @@ int main(int argc, char **argv)
     new ControlManager;
 
     sAgentManager = new AgentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
-    AkonadiCrash::setEmergencyMethod(crashHandler);
+    KCrash::setEmergencySaveFunction(crashHandler);
 
 #if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     QGuiApplication::setFallbackSessionManagementEnabled(false);
