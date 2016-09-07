@@ -24,6 +24,10 @@
 #include "kdbusconnectionpool.h"
 #include "servermanager.h"
 #include "qtest_akonadi.h"
+#include "monitor.h"
+#include "collectionfetchscope.h"
+#include "itemfetchscope.h"
+
 
 #include <QDBusInterface>
 #include <QDBusReply>
@@ -91,6 +95,23 @@ bool trackAkonadiProcess(bool track)
     } else {
         return true;
     }
+}
+
+Akonadi::Monitor *getTestMonitor()
+{
+    auto m = new Akonadi::Monitor();
+    m->fetchCollection(true);
+    m->collectionMonitored(Akonadi::Collection::root(), true);
+    m->setAllMonitored(true);
+    auto &itemFS = m->itemFetchScope();
+    itemFS.setAncestorRetrieval(Akonadi::ItemFetchScope::All);
+    auto &colFS = m->collectionFetchScope();
+    colFS.setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
+
+    QSignalSpy readySpy(m, &Akonadi::Monitor::monitorReady);
+    readySpy.wait();
+
+    return m;
 }
 
 #endif

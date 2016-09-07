@@ -27,6 +27,7 @@
 #include <tagcreatejob.h>
 #include <itemmodifyjob.h>
 #include <resourceselectjob_p.h>
+#include <monitor.h>
 #include "test_utils.h"
 
 #include <QtCore/QObject>
@@ -57,6 +58,9 @@ private Q_SLOTS:
 
     void testDelete()
     {
+        auto monitor = getTestMonitor();
+        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+
         ItemFetchJob *fjob = new ItemFetchJob(Item(1), this);
         AKVERIFYEXEC(fjob);
         QCOMPARE(fjob->items().count(), 1);
@@ -66,10 +70,19 @@ private Q_SLOTS:
 
         fjob = new ItemFetchJob(Item(1), this);
         QVERIFY(!fjob->exec());
+
+        QTRY_COMPARE(spy.count(), 1);
+        auto items = spy.at(0).at(0).value<Akonadi::Item::List>();
+        QCOMPARE(items.count(), 1);
+        QCOMPARE(items.at(0).id(), 1);
+        QVERIFY(items.at(0).parentCollection().isValid());
     }
 
     void testDeleteFromUnselectedCollection()
     {
+        auto monitor = getTestMonitor();
+        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+
         const QString path = QStringLiteral("res1") +
                              CollectionPathResolver::pathDelimiter() +
                              QStringLiteral("foo");
@@ -91,10 +104,19 @@ private Q_SLOTS:
 
         fjob = new ItemFetchJob(items[ 0 ], this);
         QVERIFY(!fjob->exec());
+
+        QTRY_COMPARE(spy.count(), 1);
+        auto ntfItems = spy.at(0).at(0).value<Akonadi::Item::List>();
+        QCOMPARE(ntfItems.count(), 1);
+        QCOMPARE(ntfItems.at(0).id(), items[0].id());
+        QVERIFY(ntfItems.at(0).parentCollection().isValid());
     }
 
     void testRidDelete()
     {
+        auto monitor = getTestMonitor();
+        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+
         {
             ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
             AKVERIFYEXEC(select);
@@ -108,10 +130,17 @@ private Q_SLOTS:
         ItemFetchJob *fjob = new ItemFetchJob(i, this);
         fjob->setCollection(col);
         AKVERIFYEXEC(fjob);
-        QCOMPARE(fjob->items().count(), 1);
+        auto items = fjob->items();
+        QCOMPARE(items.count(), 1);
 
         ItemDeleteJob *djob = new ItemDeleteJob(i, this);
         AKVERIFYEXEC(djob);
+
+        QTRY_COMPARE(spy.count(), 1);
+        auto ntfItems = spy.at(0).at(0).value<Akonadi::Item::List>();
+        QCOMPARE(ntfItems.count(), 1);
+        QCOMPARE(ntfItems.at(0).id(), items[0].id());
+        QVERIFY(ntfItems.at(0).parentCollection().isValid());
 
         fjob = new ItemFetchJob(i, this);
         fjob->setCollection(col);
@@ -124,6 +153,9 @@ private Q_SLOTS:
 
     void testTagDelete()
     {
+        auto monitor = getTestMonitor();
+        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+
         // Create tag
         Tag tag;
         tag.setName(QStringLiteral("Tag1"));
@@ -152,6 +184,12 @@ private Q_SLOTS:
         ItemDeleteJob *djob = new ItemDeleteJob(tag, this);
         AKVERIFYEXEC(djob);
 
+        QTRY_COMPARE(spy.count(), 1);
+        auto ntfItems = spy.at(0).at(0).value<Akonadi::Item::List>();
+        QCOMPARE(ntfItems.count(), 1);
+        QCOMPARE(ntfItems.at(0).id(), i.id());
+        QVERIFY(ntfItems.at(0).parentCollection().isValid());
+
         // Try to fetch the item again, there should be none
         fjob = new ItemFetchJob(i, this);
         QVERIFY(!fjob->exec());
@@ -159,14 +197,25 @@ private Q_SLOTS:
 
     void testCollectionDelete()
     {
+        auto monitor = getTestMonitor();
+        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+
         const Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
         ItemFetchJob *fjob = new ItemFetchJob(col, this);
         AKVERIFYEXEC(fjob);
-        QVERIFY(fjob->items().count() > 0);
+        auto items = fjob->items();
+        QVERIFY(items.count() > 0);
 
         // delete from non-empty collection
         ItemDeleteJob *djob = new ItemDeleteJob(col, this);
         AKVERIFYEXEC(djob);
+
+        QTRY_COMPARE(spy.count(), 1);
+        auto ntfItems = spy.at(0).at(0).value<Akonadi::Item::List>();
+        QCOMPARE(ntfItems.count(), items.count());
+        if (ntfItems.count() > 0) {
+            QVERIFY(ntfItems.at(0).parentCollection().isValid());
+        }
 
         fjob = new ItemFetchJob(col, this);
         AKVERIFYEXEC(fjob);
