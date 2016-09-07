@@ -110,6 +110,7 @@ public:
     QSharedPointer<QSignalSpy> notificationSpy() const;
 
     void setPopulateDb(bool populate);
+    void disableItemRetrievalManager();
 
 protected:
     void newCmdConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
@@ -131,6 +132,7 @@ private:
     QSharedPointer<QSignalSpy> mNotificationSpy;
 
     bool mPopulateDb;
+    bool mDisableItemRetrievalManager;
 
     static FakeAkonadiServer *sInstance;
 };

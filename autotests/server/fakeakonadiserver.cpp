@@ -111,6 +111,7 @@ FakeAkonadiServer::FakeAkonadiServer()
     , mServerLoop(Q_NULLPTR)
     , mNtfCollector(Q_NULLPTR)
     , mPopulateDb(true)
+    , mDisableItemRetrievalManager(false)
 {
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
     qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
@@ -169,6 +170,11 @@ TestScenario::List FakeAkonadiServer::selectResourceScenario(const QString &name
     };
 }
 
+void FakeAkonadiServer::disableItemRetrievalManager()
+{
+    mDisableItemRetrievalManager = true;
+}
+
 bool FakeAkonadiServer::init()
 {
     qDebug() << "==== Fake Akonadi Server starting up ====";
@@ -222,7 +228,9 @@ bool FakeAkonadiServer::init()
     PreprocessorManager::instance()->setEnabled(false);
     mSearchManager = new FakeSearchManager();
 
-    mRetrievalManager = new FakeItemRetrievalManager();
+    if (!mDisableItemRetrievalManager) {
+        mRetrievalManager = new FakeItemRetrievalManager();
+    }
 
     const QString socketFile = basePath() + QLatin1String("/local/share/akonadi/akonadiserver.socket");
 

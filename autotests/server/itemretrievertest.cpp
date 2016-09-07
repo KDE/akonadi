@@ -159,6 +159,7 @@ public:
     {
         try {
             FakeAkonadiServer::instance()->setPopulateDb(false);
+            FakeAkonadiServer::instance()->disableItemRetrievalManager();
             FakeAkonadiServer::instance()->init();
         } catch (const FakeAkonadiServerException &e) {
             qWarning() << "Server exception: " << e.what();
