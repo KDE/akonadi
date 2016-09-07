@@ -333,9 +333,6 @@ bool MonitorPrivate::fetchItems() const
 bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg)
 {
     bool allCached = true;
-    if (msg.isRemove()) {
-        return allCached; // the actual object is gone already, nothing to fetch there
-    }
 
     if (msg.type() == Protocol::Command::TagChangeNotification) {
         return tagCache->ensureCached({ static_cast<const Protocol::TagChangeNotification&>(msg).id() }, mTagFetchScope);
@@ -380,6 +377,11 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
         if (parentDestCollection > -1 && !collectionCache->ensureCached(parentDestCollection, mCollectionFetchScope)) {
             allCached = false;
         }
+
+    }
+
+    if (msg.isRemove()) {
+        return allCached;
     }
 
     if (msg.type() == Protocol::Command::ItemChangeNotification && fetchItems()) {
