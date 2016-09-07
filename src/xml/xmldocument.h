@@ -94,6 +94,11 @@ public:
     QDomElement itemElementByRemoteId(const QString &rid) const;
 
     /**
+     * Returns the DOM element representing the collection with the given remote id
+     */
+    QDomElement collectionElementByRemoteId(const QString &rid) const;
+
+    /**
       Returns the collection with the given remote id.
     */
     Collection collectionByRemoteId(const QString &rid) const;

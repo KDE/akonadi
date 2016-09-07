@@ -258,6 +258,11 @@ QDomElement XmlDocument::itemElementByRemoteId(const QString &rid) const
     return d->findElementByRid(rid, Format::Tag::item());
 }
 
+QDomElement XmlDocument::collectionElementByRemoteId(const QString &rid) const
+{
+    return d->findElementByRid(rid, Format::Tag::collection());
+}
+
 Collection XmlDocument::collectionByRemoteId(const QString &rid) const
 {
     const QDomElement elem = d->findElementByRid(rid, Format::Tag::collection());

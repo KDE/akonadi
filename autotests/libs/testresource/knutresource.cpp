@@ -199,7 +199,6 @@ bool KnutResource::retrieveItems(const Item::List &items, const QSet<QByteArray>
 
 void KnutResource::collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent)
 {
-#if 0 //PORT QT5
     QDomElement parentElem = mDocument.collectionElementByRemoteId(parent.remoteId());
     if (parentElem.isNull()) {
         emit error(i18n("Parent collection not found in DOM tree."));
@@ -216,15 +215,10 @@ void KnutResource::collectionAdded(const Akonadi::Collection &collection, const 
         save();
         changeCommitted(c);
     }
-#else
-    Q_UNUSED(collection);
-    Q_UNUSED(parent);
-#endif
 }
 
 void KnutResource::collectionChanged(const Akonadi::Collection &collection)
 {
-#if 0 //PORT QT5
     QDomElement oldElem = mDocument.collectionElementByRemoteId(collection.remoteId());
     if (oldElem.isNull()) {
         emit error(i18n("Modified collection not found in DOM tree."));
@@ -252,14 +246,10 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
     oldElem.parentNode().replaceChild(newElem, oldElem);
     save();
     changeCommitted(c);
-#else
-    Q_UNUSED(collection);
-#endif
 }
 
 void KnutResource::collectionRemoved(const Akonadi::Collection &collection)
 {
-#if 0 //PORT QT5
     const QDomElement colElem = mDocument.collectionElementByRemoteId(collection.remoteId());
     if (colElem.isNull()) {
         emit error(i18n("Deleted collection not found in DOM tree."));
@@ -270,14 +260,10 @@ void KnutResource::collectionRemoved(const Akonadi::Collection &collection)
     colElem.parentNode().removeChild(colElem);
     save();
     changeProcessed();
-#else
-    Q_UNUSED(collection);
-#endif
 }
 
 void KnutResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-#if 0 //PORT QT5
     QDomElement parentElem = mDocument.collectionElementByRemoteId(collection.remoteId());
     if (parentElem.isNull()) {
         emit error(i18n("Parent collection '%1' not found in DOM tree." , collection.remoteId()));
@@ -294,10 +280,6 @@ void KnutResource::itemAdded(const Akonadi::Item &item, const Akonadi::Collectio
         save();
         changeCommitted(i);
     }
-#else
-    Q_UNUSED(item);
-    Q_UNUSED(collection);
-#endif
 }
 
 void KnutResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts)
@@ -340,7 +322,7 @@ void KnutResource::itemMoved(const Item &item, const Collection &collectionSourc
         changeProcessed();
         return;
     }
-#if 0 //PORT QT5
+
     QDomElement sourceParentElem = mDocument.collectionElementByRemoteId(collectionSource.remoteId());
     if (sourceParentElem.isNull()) {
         emit error(i18n("Parent collection '%1' not found in DOM tree.", collectionSource.remoteId()));
@@ -368,10 +350,6 @@ void KnutResource::itemMoved(const Item &item, const Collection &collectionSourc
         save();
     }
     changeProcessed();
-#else
-    Q_UNUSED(collectionSource);
-    Q_UNUSED(collectionDestination);
-#endif
 }
 
 QSet<qint64> KnutResource::parseQuery(const QString &queryString)
