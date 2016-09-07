@@ -22,6 +22,7 @@
 #include "fakedatastore.h"
 #include "fakesearchmanager.h"
 #include "fakeclient.h"
+#include "fakeitemretrievalmanager.h"
 
 #include <QSettings>
 #include <QCoreApplication>
@@ -103,6 +104,10 @@ FakeAkonadiServer *FakeAkonadiServer::instance()
 FakeAkonadiServer::FakeAkonadiServer()
     : AkonadiServer()
     , mDataStore(Q_NULLPTR)
+    , mSearchManager(Q_NULLPTR)
+    , mConnection(Q_NULLPTR)
+    , mClient(Q_NULLPTR)
+    , mRetrievalManager(Q_NULLPTR)
     , mServerLoop(Q_NULLPTR)
     , mNtfCollector(Q_NULLPTR)
     , mPopulateDb(true)
@@ -120,6 +125,7 @@ FakeAkonadiServer::~FakeAkonadiServer()
 {
     delete mClient;
     delete mConnection;
+    delete mRetrievalManager;
     delete mNtfCollector;
 }
 
@@ -215,6 +221,8 @@ bool FakeAkonadiServer::init()
     PreprocessorManager::init();
     PreprocessorManager::instance()->setEnabled(false);
     mSearchManager = new FakeSearchManager();
+
+    mRetrievalManager = new FakeItemRetrievalManager();
 
     const QString socketFile = basePath() + QLatin1String("/local/share/akonadi/akonadiserver.socket");
 

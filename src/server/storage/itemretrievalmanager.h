@@ -62,7 +62,7 @@ public:
      * Added for convenience. ItemRetrievalManager takes ownership over the
      * pointer and deletes it when the request is processed.
      */
-    void requestItemDelivery(ItemRetrievalRequest *request);
+    virtual void requestItemDelivery(ItemRetrievalRequest *request);
 
     static ItemRetrievalManager *instance();
 
@@ -82,7 +82,7 @@ private Q_SLOTS:
     void triggerCollectionTreeSync(const QString &resource);
     void retrievalJobFinished(ItemRetrievalRequest *request, const QString &errorMsg);
 
-private:
+protected:
     static ItemRetrievalManager *sInstance;
 
     AbstractItemRetrievalJobFactory *mJobFactory;

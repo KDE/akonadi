@@ -42,6 +42,7 @@ class FakeSearchManager;
 class FakeDataStore;
 class FakeConnection;
 class FakeClient;
+class FakeItemRetrievalManager;
 
 class TestScenario {
 public:
@@ -122,6 +123,7 @@ private:
     FakeSearchManager *mSearchManager;
     FakeConnection *mConnection;
     FakeClient *mClient;
+    FakeItemRetrievalManager *mRetrievalManager;
 
     QEventLoop *mServerLoop;
 

@@ -34,7 +34,6 @@ using namespace Akonadi::Server;
 
 void Move::itemsRetrieved(const QList<qint64> &ids)
 {
-
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store);
 
@@ -51,7 +50,6 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
 
     const QVector<PimItem> items = qb.result();
     if (items.isEmpty()) {
-        successResponse<Protocol::MoveItemsResponse>();
         return;
     }
 

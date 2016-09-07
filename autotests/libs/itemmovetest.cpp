@@ -24,6 +24,9 @@
 #include "itemfetchjob.h"
 #include "itemmovejob.h"
 #include "itemfetchscope.h"
+#include "collectionfetchscope.h"
+#include "monitor.h"
+#include "session.h"
 
 #include <QtCore/QObject>
 
@@ -49,17 +52,22 @@ private Q_SLOTS:
         QTest::addColumn<Collection>("destination");
         QTest::addColumn<Collection>("source");
 
-        const Collection destination(collectionIdFromPath(QStringLiteral("res3")));
+        Collection destination(collectionIdFromPath(QStringLiteral("res1/foo/bar")));
         QVERIFY(destination.isValid());
 
-        QTest::newRow("single uid") << (Item::List() << Item(1)) << destination << Collection();
-        QTest::newRow("two uid") << (Item::List() << Item(2) << Item(3)) << destination << Collection();
+        QTest::newRow("intra-res single uid") << (Item::List() << Item(5)) << destination << Collection();
+
+        destination = Collection(collectionIdFromPath(QStringLiteral("res3")));
+        QVERIFY(destination.isValid());
+
+        QTest::newRow("inter-res single uid") << (Item::List() << Item(1)) << destination << Collection();
+        QTest::newRow("inter-res two uid") << (Item::List() << Item(2) << Item(3)) << destination << Collection();
         Item r1; r1.setRemoteId(QStringLiteral("D"));
         Collection ridDest;
         ridDest.setRemoteId(QStringLiteral("3"));
         Collection ridSource;
         ridSource.setRemoteId(QStringLiteral("10"));
-        QTest::newRow("single rid") << (Item::List() << r1) << ridDest << ridSource;
+        QTest::newRow("intra-res single rid") << (Item::List() << r1) << ridDest << ridSource;
     }
 
     void testMove()
@@ -68,8 +76,15 @@ private Q_SLOTS:
         QFETCH(Collection, destination);
         QFETCH(Collection, source);
 
-        //Collection source( collectionIdFromPath( "res1/foo" ) );
-        //QVERIFY( source.isValid() );
+        Session monitorSession;
+        Monitor monitor(&monitorSession);
+        monitor.setObjectName(QStringLiteral("itemmovetest"));
+        monitor.setCollectionMonitored(Collection::root());
+        monitor.fetchCollection(true);        monitor.itemFetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
+        monitor.itemFetchScope().setFetchRemoteIdentification(true);
+        QSignalSpy moveSpy(&monitor, &Monitor::itemsMoved);
+        QSignalSpy readySpy(&monitor, &Monitor::monitorReady);
+        readySpy.wait();
 
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);   // for rid based moves
@@ -82,12 +97,29 @@ private Q_SLOTS:
         AKVERIFYEXEC(move);
 
         ItemFetchJob *fetch = new ItemFetchJob(destination, this);
+        fetch->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
         fetch->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->items().count(), items.count() + baseline);
         foreach (const Item &movedItem, fetch->items()) {
             QVERIFY(movedItem.hasPayload());
             QVERIFY(!movedItem.payload<QByteArray>().isEmpty());
+            if (destination.id() >= 0) {
+                QCOMPARE(movedItem.parentCollection().id(), destination.id());
+            } else {
+                QCOMPARE(movedItem.parentCollection().remoteId(), destination.remoteId());
+            }
+        }
+
+        QTRY_COMPARE(moveSpy.count(), 1);
+        const Akonadi::Item::List &ntfItems = moveSpy.takeFirst().at(0).value<Akonadi::Item::List>();
+        QCOMPARE(ntfItems.size(), items.size());
+        Q_FOREACH (const Item &ntfItem, ntfItems) {
+            if (destination.id() >= 0) {
+                QCOMPARE(ntfItem.parentCollection().id(), destination.id());
+            } else {
+                QCOMPARE(ntfItem.parentCollection().remoteId(), destination.remoteId());
+            }
         }
     }
 

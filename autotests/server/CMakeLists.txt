@@ -30,6 +30,7 @@ set(common_SRCS
     fakeclient.cpp
     fakeakonadiserver.cpp
     fakesearchmanager.cpp
+    fakeitemretrievalmanager.cpp
     dbinitializer.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
 )
@@ -92,6 +93,7 @@ add_server_test(akappendhandlertest.cpp)
 add_server_test(linkhandlertest.cpp)
 add_server_test(listhandlertest.cpp)
 add_server_test(modifyhandlertest.cpp)
+add_server_test(movehandlertest.cpp)
 add_server_test(createhandlertest.cpp)
 add_server_test(collectionreferencetest.cpp)
 add_server_test(searchtest.cpp akonadiprivate)
