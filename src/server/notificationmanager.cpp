@@ -43,10 +43,12 @@ NotificationManager::NotificationManager()
     , mNotifyThreadPool(Q_NULLPTR)
     , mDebugNotifications(0)
 {
+    setObjectName(QStringLiteral("NotificationManager"));
 }
 
 NotificationManager::~NotificationManager()
 {
+    quitThread();
 }
 
 void NotificationManager::init()
@@ -68,9 +70,17 @@ void NotificationManager::init()
 
 void NotificationManager::quit()
 {
-    AkThread::quit();
-
+    mNotifyThreadPool->clear();
+    mNotifyThreadPool->waitForDone();
+    delete mTimer;
+    delete mNotifyThreadPool;
     qDeleteAll(mSubscribers);
+    // FIXME: There seems to be a QTimer somewhere that we must delete here,
+    // otherwise we get "Can't stop QTimer from a different thread" warning
+    // from QObject::~QObject()
+    qDeleteAll(children());
+
+    AkThread::quit();
 }
 
 void NotificationManager::registerConnection(quintptr socketDescriptor)
@@ -80,7 +90,7 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
     NotificationSubscriber *subscriber = new NotificationSubscriber(this, socketDescriptor);
     qCDebug(AKONADISERVER_LOG) << "New notification connection (registered as" << subscriber << ")";
     connect(subscriber, &QObject::destroyed,
-            [this, subscriber]() {
+            this, [this, subscriber]() {
                 mSubscribers.removeOne(subscriber);
             });
     connect(subscriber, &NotificationSubscriber::notificationDebuggingChanged,
@@ -105,6 +115,8 @@ void NotificationManager::connectNotificationCollector(NotificationCollector *co
 
 void NotificationManager::slotNotify(const Protocol::ChangeNotification::List &msgs)
 {
+    Q_ASSERT(QThread::currentThread() == thread());
+
     Q_FOREACH (const Protocol::ChangeNotification &msg, msgs) {
         if (msg.type() == Protocol::Command::CollectionChangeNotification) {
             Protocol::CollectionChangeNotification::appendAndCompress(mNotifications, msg);
