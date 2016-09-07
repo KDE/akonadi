@@ -33,6 +33,9 @@ using namespace Akonadi::Server;
 
 QMimeDatabase NotificationSubscriber::sMimeDatabase;
 
+#define TRACE_NTF(x)
+//#define TRACE_NTF(x) qCDebug(AKONADISERVER_LOG) << mSubscriber << x
+
 NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
     : QObject()
     , mManager(manager)
@@ -356,49 +359,72 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
     if (CollectionReferenceManager::instance()->isReferenced(notification.parentCollection())) {
         //We always want notifications that affect the parent resource (like an item added to a referenced collection)
         const bool notificationForParentResource = (mSession == notification.resource());
-        return (mExclusive
+        const bool accepts = mExclusive
             || isCollectionMonitored(notification.parentCollection())
             || isMoveDestinationResourceMonitored(notification)
-            || notificationForParentResource);
+            || notificationForParentResource;
+        TRACE_NTF("ACCEPTS ITEM: parent col referenced"
+                    << "exclusive:" << mExclusive << ","
+                    << "parent monitored:" << isCollectionMonitored(notification.parentCollection()) << ","
+                    << "destination monitored:" << isMoveDestinationResourceMonitored(notification) << ","
+                    << "ntf for parent resource:" << notificationForParentResource << ":"
+                    << "ACCEPTED:" << accepts);
+        return accepts;
     }
 
 
     if (mAllMonitored) {
+        TRACE_NTF("ACCEPTS ITEM: all monitored");
         return true;
     }
 
     if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::ItemChanges)) {
+        TRACE_NTF("ACCEPTS ITEM: REJECTED - Item changes not monitored");
         return false;
     }
 
     // we have a resource or mimetype filter
     if (!mMonitoredResources.isEmpty() || !mMonitoredMimeTypes.isEmpty()) {
         if (mMonitoredResources.contains(notification.resource())) {
+            TRACE_NTF("ACCEPTS ITEM: ACCEPTED - resource monitored");
             return true;
         }
 
         if (isMoveDestinationResourceMonitored(notification)) {
+            TRACE_NTF("ACCEPTS ITEM: ACCEPTED: move destination monitored");
             return true;
         }
 
         Q_FOREACH (const auto &item, notification.items()) {
             if (isMimeTypeMonitored(item.mimeType)) {
+                TRACE_NTF("ACCEPTS ITEM: ACCEPTED - mimetype monitored");
                 return true;
             }
         }
 
+        TRACE_NTF("ACCEPTS ITEM: REJECTED: resource nor mimetype monitored");
         return false;
     }
 
     // we explicitly monitor that item or the collections it's in
     Q_FOREACH (const auto &item, notification.items()) {
         if (mMonitoredItems.contains(item.id)) {
+            TRACE_NTF("ACCEPTS ITEM: ACCEPTED: item explicitly monitored");
             return true;
         }
     }
 
-    return isCollectionMonitored(notification.parentCollection())
-            || isCollectionMonitored(notification.parentDestCollection());
+    if (isCollectionMonitored(notification.parentCollection())) {
+        TRACE_NTF("ACCEPTS ITEM: ACCEPTED: parent collection monitored");
+        return true;
+    }
+    if (isCollectionMonitored(notification.parentDestCollection())) {
+        TRACE_NTF("ACCEPTS ITEM: ACCEPTED: destination collection monitored");
+        return true;
+    }
+
+    TRACE_NTF("ACCEPTS ITEM: REJECTED");
+    return false;
 }
 
 bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::CollectionChangeNotification &notification) const
