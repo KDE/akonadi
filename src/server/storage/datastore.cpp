@@ -908,29 +908,13 @@ bool DataStore::appendMimeTypeForCollection(qint64 collectionId, const QStringLi
     if (mimeTypes.isEmpty()) {
         return true;
     }
-    SelectQueryBuilder<MimeType> qb;
-    qb.addValueCondition(MimeType::nameColumn(), Query::In, mimeTypes);
-    if (!qb.exec()) {
-        return false;
-    }
-    QStringList missingMimeTypes = mimeTypes;
 
-    Q_FOREACH (const MimeType &mt, qb.result()) {
-        // unique index on n:m relation prevents duplicates, ie. this will fail
-        // if this mimetype is already set
+    Q_FOREACH (const QString &mimeType, mimeTypes) {
+        const auto &mt = MimeType::retrieveByNameOrCreate(mimeType);
+        if (!mt.isValid()) {
+            return false;
+        }
         if (!Collection::addMimeType(collectionId, mt.id())) {
-            return false;
-        }
-        missingMimeTypes.removeAll(mt.name());
-    }
-
-    // the MIME type doesn't exist, so we have to add it to the db
-    Q_FOREACH (const QString &mtName, missingMimeTypes) {
-        qint64 mimeTypeId;
-        if (!appendMimeType(mtName, &mimeTypeId)) {
-            return false;
-        }
-        if (!Collection::addMimeType(collectionId, mimeTypeId)) {
             return false;
         }
     }
