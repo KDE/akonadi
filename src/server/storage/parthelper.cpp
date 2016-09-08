@@ -42,13 +42,17 @@ void PartHelper::update(Part *part, const QByteArray &data, qint64 dataSize)
         throw PartHelperException("Invalid part");
     }
 
+    Q_ASSERT(part->isValid());
+    part->setVersion(part->version() + 1);
+
     const bool storeExternal = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
 
     QByteArray newFile;
     if (part->external() && storeExternal) {
-        if (!ExternalPartStorage::self()->updatePartFile(data, part->data(), newFile)) {
+        if (!ExternalPartStorage::self()->updatePartFile(data, part->data(), part->id(), part->version())) {
             throw PartHelperException(QStringLiteral("Failed to update external payload part"));
         }
+        newFile = ExternalPartStorage::nameForPartId(part->id(), part->version());
         part->setData(newFile);
     } if (!part->external() && storeExternal) {
         if (!ExternalPartStorage::self()->createPartFile(data, part->id(), newFile)) {

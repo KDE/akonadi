@@ -136,7 +136,7 @@ bool ExternalPartStorage::createPartFile(const QByteArray &data, qint64 partId,
                                         QByteArray &partFileName)
 {
     bool exists = false;
-    partFileName = updateFileNameRevision(QByteArray::number(partId));
+    partFileName = nameForPartId(partId, 0);
     const QString path = resolveAbsolutePath(partFileName, &exists);
     if (exists) {
         qCWarning(AKONADIPRIVATE_LOG) << "Error: asked to create a part" << partFileName << ", which already exists!";
@@ -162,7 +162,8 @@ bool ExternalPartStorage::createPartFile(const QByteArray &data, qint64 partId,
 }
 
 bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteArray &partFile,
-                                        QByteArray &newPartFile)
+                                         qint64 partId, int version)
+
 {
     bool exists = false;
     const QString currentPartPath = resolveAbsolutePath(partFile, &exists);
@@ -171,7 +172,7 @@ bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteA
         return false;
     }
 
-    newPartFile = updateFileNameRevision(partFile);
+    QByteArray newPartFile = nameForPartId(partId, version);
     exists = false;
     const QString newPartPath = resolveAbsolutePath(newPartFile, &exists);
     if (exists) {
@@ -219,23 +220,12 @@ bool ExternalPartStorage::removePartFile(const QString &partFile)
     return true;
 }
 
-QByteArray ExternalPartStorage::updateFileNameRevision(const QByteArray &filename)
+QByteArray ExternalPartStorage::nameForPartId(qint64 partId, int revision)
 {
-    const int revIndex = filename.indexOf("_r");
-    if (revIndex > -1) {
-        QByteArray rev = filename.mid(revIndex + 2);
-        int r = rev.toInt();
-        r++;
-        rev = QByteArray::number(r);
-        return filename.left(revIndex + 2) + rev;
+    if (revision < 0) {
+        revision = 0;
     }
-
-    return filename + "_r0";
-}
-
-QByteArray ExternalPartStorage::nameForPartId(qint64 partId)
-{
-    return QByteArray::number(partId) + "_r0";
+    return QByteArray::number(partId) + "_r" + QByteArray::number(revision);
 }
 
 bool ExternalPartStorage::beginTransaction()

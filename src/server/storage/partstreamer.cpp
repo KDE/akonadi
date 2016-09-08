@@ -81,7 +81,6 @@ bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
         mError = QStringLiteral("Part name is empty");
         return false;
     }
-    part.setVersion(metaPart.version());
 
     if (part.datasize() != metaPart.size()) {
         part.setDatasize(metaPart.size());
@@ -123,6 +122,7 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
     }
 
     if (part.isValid()) {
+        part.setVersion(part.version() + 1);
         if (!mDataChanged) {
             mDataChanged = mDataChanged || (newData != part.data());
         }
@@ -153,11 +153,9 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
             filename = part.data();
             ExternalPartStorage::self()->removePartFile(
                 ExternalPartStorage::resolveAbsolutePath(filename));
-            filename = ExternalPartStorage::updateFileNameRevision(filename);
-        } else {
-            // Part wasn't external, but is now
-            filename = ExternalPartStorage::nameForPartId(part.id());
         }
+        part.setVersion(part.version() + 1);
+        filename = ExternalPartStorage::nameForPartId(part.id(), part.version());
 
         QFileInfo finfo(QString::fromUtf8(filename));
         if (finfo.isAbsolute()) {
@@ -180,7 +178,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
             return false;
         }
 
-        filename = ExternalPartStorage::nameForPartId(part.id());
+        filename = ExternalPartStorage::nameForPartId(part.id(), 0);
         part.setData(filename);
         if (!part.update()) {
             mError = QStringLiteral("Failed to update part in database");
