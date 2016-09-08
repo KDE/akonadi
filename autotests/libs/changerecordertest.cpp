@@ -75,6 +75,7 @@ private Q_SLOTS:
         QString lastAction;
 
         ChangeRecorder *rec = createChangeRecorder();
+        AkonadiTest::akWaitForSignal(rec, SIGNAL(monitorReady()), 1000);
         QVERIFY(rec->isEmpty());
         Q_FOREACH (const QString &action, actions) {
             qDebug() << action;
@@ -84,6 +85,7 @@ private Q_SLOTS:
                 // Check saving and loading from disk
                 delete rec;
                 rec = createChangeRecorder();
+                AkonadiTest::akWaitForSignal(rec, SIGNAL(monitorReady()), 1000);
             } else if (action.at(0) == QLatin1Char('c')) {
                 // c1 = "trigger change on item 1"
                 const int id = action.mid(1).toInt();
