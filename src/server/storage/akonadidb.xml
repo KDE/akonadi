@@ -66,7 +66,7 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
-    <data columns="version" values="32"/>
+    <data columns="version" values="33"/>
   </table>
 
   <table name="Resource">
@@ -181,7 +181,7 @@
   <table name="TagType">
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="name" type="QString" allowNull="false" isUnique="true"/>
-    <data columns="id,name" values="1,'PLAIN'"/>
+    <data columns="name" values="'PLAIN'"/>
   </table>
 
   <table name="Tag">
@@ -209,7 +209,7 @@
   <table name="RelationType">
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="name" type="QString" allowNull="false" isUnique="true"/>
-    <data columns="id,name" values="1,'GENERIC'"/>
+    <data columns="name" values="'GENERIC'"/>
   </table>
 
   <table name="Relation" identificationColumn="">

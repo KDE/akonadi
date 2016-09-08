@@ -316,4 +316,8 @@
                                 WHERE PimItemTable.id IS NULL) x)
     </raw-sql>
   </update>
+  <update version="33" abortOnFailure="false">
+    <raw-sql backends="psql">SELECT setval('tagtypetable_pkey', (SELECT max(id) FROM TagTypeTable))</raw-sql>
+    <raw-sql backends="psql">SELECT setval('relationtypetable_pkey', (SELECT max(id) FROM RelationTypeTable))</raw-sql>
+  </update>
 </updates>
