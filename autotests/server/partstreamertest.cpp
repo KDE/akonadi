@@ -220,8 +220,9 @@ private Q_SLOTS:
             QCOMPARE(fileData, expectedFileData);
 
             // Make sure no previous versions are left behind in file_db_data
-            for (int i = 0; i < part.version(); ++i) {
-                const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(part.version());
+            const int revision = data.mid(data.indexOf("_r") + 2).toInt();
+            for (int i = 0; i < revision; ++i) {
+                const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(i);
                 const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
                 QVERIFY(!QFile::exists(filePath));
             }
@@ -229,8 +230,9 @@ private Q_SLOTS:
             QCOMPARE(data, expectedPartData);
 
             // Make sure nothing is left behind in file_db_data
-            for (int i = 0; i <= part.version(); ++i) {
-                const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(part.version());
+            // TODO: we have no way of knowing what is the last revision
+            for (int i = 0; i <= 100; ++i) {
+                const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(i);
                 const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
                 QVERIFY(!QFile::exists(filePath));
             }
