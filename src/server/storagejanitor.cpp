@@ -583,7 +583,7 @@ void StorageJanitor::checkSizeTreshold()
         while (query.next()) {
             Transaction transaction(DataStore::self());
             Part part = Part::retrieveById(query.value(0).toLongLong());
-            const QByteArray name = ExternalPartStorage::nameForPartId(part.id(), part.version());
+            const QByteArray name = ExternalPartStorage::nameForPartId(part.id());
             const QString partPath = ExternalPartStorage::resolveAbsolutePath(name);
             QFile f(partPath);
             if (f.exists()) {

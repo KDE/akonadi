@@ -35,6 +35,9 @@ private Q_SLOTS:
     void testResolveAbsolutePath_data();
     void testResolveAbsolutePath();
 
+    void testUpdateFileNameRevision_data();
+    void testUpdateFileNameRevision();
+
     void testNameForPartId_data();
     void testNameForPartId();
 
@@ -105,25 +108,43 @@ void ExternalPartStorageTest::testResolveAbsolutePath()
     QVERIFY(QFile::remove(path));
 }
 
+void ExternalPartStorageTest::testUpdateFileNameRevision_data()
+{
+    QTest::addColumn<QByteArray>("name");
+    QTest::addColumn<QByteArray>("expectedName");
+
+    QTest::newRow("no revision") << QByteArray("1234") << QByteArray("1234_r0");
+    QTest::newRow("r0") << QByteArray("1234_r0") << QByteArray("1234_r1");
+    QTest::newRow("r12") << QByteArray("1234_r12") << QByteArray("1234_r13");
+    QTest::newRow("r123456") << QByteArray("1234_r123456") << QByteArray("1234_r123457");
+}
+
+void ExternalPartStorageTest::testUpdateFileNameRevision()
+{
+    QFETCH(QByteArray, name);
+    QFETCH(QByteArray, expectedName);
+
+    const QByteArray newName = ExternalPartStorage::updateFileNameRevision(name);
+    QCOMPARE(newName, expectedName);
+}
+
 void ExternalPartStorageTest::testNameForPartId_data()
 {
     QTest::addColumn<qint64>("id");
-    QTest::addColumn<int>("version");
     QTest::addColumn<QByteArray>("expectedName");
 
-    QTest::newRow("0") << 0ll << 0 << QByteArray("0_r0");
-    QTest::newRow("12") << 12ll << 10 << QByteArray("12_r10");
-    QTest::newRow("9876543") << 9876543ll << 243243 << QByteArray("9876543_r243243");
+    QTest::newRow("0") << 0ll << QByteArray("0_r0");
+    QTest::newRow("12") << 12ll << QByteArray("12_r0");
+    QTest::newRow("9876543") << 9876543ll << QByteArray("9876543_r0");
 }
 
 
 void ExternalPartStorageTest::testNameForPartId()
 {
     QFETCH(qint64, id);
-    QFETCH(int, version);
     QFETCH(QByteArray, expectedName);
 
-    const QByteArray name = ExternalPartStorage::nameForPartId(id, version);
+    const QByteArray name = ExternalPartStorage::nameForPartId(id);
     QCOMPARE(name, expectedName);
 }
 
@@ -147,8 +168,9 @@ void ExternalPartStorageTest::testPartUpdate()
     const QString filePath = ExternalPartStorage::resolveAbsolutePath(filename);
     QVERIFY(QFile::exists(filePath));
 
-    QVERIFY(ExternalPartStorage::self()->updatePartFile("newdata", filename, 10, 1));
-    const QByteArray newfilename = ExternalPartStorage::nameForPartId(10, 1);
+    QByteArray newfilename;
+    QVERIFY(ExternalPartStorage::self()->updatePartFile("newdata", filename, newfilename));
+    QCOMPARE(ExternalPartStorage::updateFileNameRevision(filename), newfilename);
     const QString newFilePath = ExternalPartStorage::resolveAbsolutePath(newfilename);
     QVERIFY(!QFile::exists(filePath));
     QVERIFY(QFile::exists(newFilePath));
@@ -195,8 +217,9 @@ void ExternalPartStorageTest::testPartUpdateTrxRollback()
 
     ExternalPartStorageTransaction trx;
 
-    QVERIFY(ExternalPartStorage::self()->updatePartFile("newdata", filename, 10, 1));
-    const QByteArray newfilename = ExternalPartStorage::nameForPartId(10, 1);
+    QByteArray newfilename;
+    QVERIFY(ExternalPartStorage::self()->updatePartFile("newdata", filename, newfilename));
+    QCOMPARE(ExternalPartStorage::updateFileNameRevision(filename), newfilename);
     const QString newFilePath = ExternalPartStorage::resolveAbsolutePath(newfilename);
     QVERIFY(QFile::exists(filePath));
     QVERIFY(QFile::exists(newFilePath));
@@ -259,8 +282,9 @@ void ExternalPartStorageTest::testPartUpdateTrxCommit()
 
     ExternalPartStorageTransaction trx;
 
-    QVERIFY(ExternalPartStorage::self()->updatePartFile("newdata", filename, 10, 1));
-    const QByteArray newfilename = ExternalPartStorage::nameForPartId(10, 1);
+    QByteArray newfilename;
+    QVERIFY(ExternalPartStorage::self()->updatePartFile("newdata", filename, newfilename));
+    QCOMPARE(ExternalPartStorage::updateFileNameRevision(filename), newfilename);
     const QString newFilePath = ExternalPartStorage::resolveAbsolutePath(newfilename);
     QVERIFY(QFile::exists(filePath));
     QVERIFY(QFile::exists(newFilePath));

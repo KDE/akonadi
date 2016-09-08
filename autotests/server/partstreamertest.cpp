@@ -119,11 +119,24 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data, QString::fromLatin1("%1_r1").arg(partId)))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data, QString::fromLatin1("%1_r0").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponse(item.id(), 2));
 
-            QTest::newRow("item 1, change to external") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r1") << QByteArray("123456789") << 9ll << true << true << item;
+            QTest::newRow("item 1, change to external") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r0") << QByteArray("123456789") << 9ll << true << true << item;
+        }
+
+        {
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data, QString::fromLatin1("%1_r1").arg(partId)))
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponse(item.id(), 3));
+
+            QTest::newRow("item 1, update external") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r1") << QByteArray("987654321") << 9ll << true << true << item;
         }
 
         {
@@ -134,22 +147,9 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data, QString::fromLatin1("%1_r2").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponse(item.id(), 3));
-
-            QTest::newRow("item 1, update external") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r2") << QByteArray("987654321") << 9ll << true << true << item;
-        }
-
-        {
-            TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data, QString::fromLatin1("%1_r3").arg(partId)))
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponse(item.id(), 4));
 
-            QTest::newRow("item 1, external, no change") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r3") << QByteArray("987654321") << 9ll << false << true << item;
+            QTest::newRow("item 1, external, no change") << scenarios << QByteArray("PLD:DATA") << QByteArray("15_r2") << QByteArray("987654321") << 9ll << false << true << item;
         }
 
         {
@@ -221,7 +221,7 @@ private Q_SLOTS:
 
             // Make sure no previous versions are left behind in file_db_data
             for (int i = 0; i < part.version(); ++i) {
-                const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(i);
+                const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(part.version());
                 const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
                 QVERIFY(!QFile::exists(filePath));
             }
@@ -230,7 +230,7 @@ private Q_SLOTS:
 
             // Make sure nothing is left behind in file_db_data
             for (int i = 0; i <= part.version(); ++i) {
-                const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(i);
+                const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(part.version());
                 const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
                 QVERIFY(!QFile::exists(filePath));
             }

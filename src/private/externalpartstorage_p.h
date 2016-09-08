@@ -58,11 +58,11 @@ public:
 
     static QString resolveAbsolutePath(const QByteArray &filename, bool *exists = Q_NULLPTR, bool legacyFallback = true);
     static QString resolveAbsolutePath(const QString &filename, bool *exists = Q_NULLPTR, bool legacyFallback = true);
-    static QByteArray nameForPartId(qint64 partId, int revision);
+    static QByteArray updateFileNameRevision(const QByteArray &filename);
+    static QByteArray nameForPartId(qint64 partId);
     static QString akonadiStoragePath();
 
-    bool updatePartFile(const QByteArray &newData, const QByteArray &partFile,
-                        qint64 partId, int version);
+    bool updatePartFile(const QByteArray &newData, const QByteArray &partFile, QByteArray &newPartFile);
     bool createPartFile(const QByteArray &newData, qint64 partId, QByteArray &partFileName);
     bool removePartFile(const QString &partFile);
 

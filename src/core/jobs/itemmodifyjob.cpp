@@ -58,7 +58,7 @@ Protocol::PartMetaData ItemModifyJobPrivate::preparePart(const QByteArray &partN
     }
 
     mPendingData.clear();
-    int version = -1;
+    int version = 0;
     ItemSerializer::serialize(mItems.first(), partLabel, mPendingData, version);
 
     return Protocol::PartMetaData(partName, mPendingData.size(), version);
