@@ -50,13 +50,17 @@ void PartHelper::update(Part *part, const QByteArray &data, qint64 dataSize)
             throw PartHelperException(QStringLiteral("Failed to update external payload part"));
         }
         part->setData(newFile);
-    } if (!part->external() && storeExternal) {
+    } else if (!part->external() && storeExternal) {
         if (!ExternalPartStorage::self()->createPartFile(data, part->id(), newFile)) {
             throw PartHelperException(QStringLiteral("Failed to create external payload part"));
         }
         part->setData(newFile);
         part->setExternal(true);
     } else {
+        if (part->external() && !storeExternal) {
+            const QString file = ExternalPartStorage::resolveAbsolutePath(part->data());
+            ExternalPartStorage::self()->removePartFile(file);
+        }
         part->setData(data);
         part->setExternal(false);
     }
@@ -74,8 +78,9 @@ bool PartHelper::insert(Part *part, qint64 *insertId)
         return false;
     }
 
-    const bool storeInFile = part->datasize() > DbConfig::configuredDatabase()->sizeThreshold();
+    Q_ASSERT(!part->isValid());
 
+    const bool storeInFile = part->datasize() > DbConfig::configuredDatabase()->sizeThreshold();
     //it is needed to insert first the metadata so a new id is generated for the part,
     //and we need this id for the payload file name
     QByteArray data;
