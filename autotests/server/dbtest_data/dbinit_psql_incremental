@@ -100,27 +100,27 @@ ALTER TABLE PimItemTable DROP CONSTRAINT myForeignKeyIdentifier
 
 ALTER TABLE CollectionAttributeTable DROP CONSTRAINT myForeignKeyIdentifier
 
-ALTER TABLE CollectionTable ADD CONSTRAINT CollectionTableparentId_Collectionid_fk FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionTable ADD CONSTRAINT CollectionTableparentId_Collectionid_fk FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE CollectionTable ADD CONSTRAINT CollectionTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionTable ADD CONSTRAINT CollectionTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE PimItemTable ADD CONSTRAINT PimItemTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE PimItemTable ADD CONSTRAINT PimItemTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE PimItemTable ADD CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT
+ALTER TABLE PimItemTable ADD CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE PartTable ADD CONSTRAINT PartTablepimItemId_PimItemid_fk FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE PartTable ADD CONSTRAINT PartTablepimItemId_PimItemid_fk FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE CollectionAttributeTable ADD CONSTRAINT CollectionAttributeTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionAttributeTable ADD CONSTRAINT CollectionAttributeTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE PimItemFlagRelation ADD CONSTRAINT PimItemFlagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE PimItemFlagRelation ADD CONSTRAINT PimItemFlagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE PimItemFlagRelation ADD CONSTRAINT PimItemFlagRelationFlag_id_Flagid_fk FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE PimItemFlagRelation ADD CONSTRAINT PimItemFlagRelationFlag_id_Flagid_fk FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE CollectionMimeTypeRelation ADD CONSTRAINT CollectionMimeTypeRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionMimeTypeRelation ADD CONSTRAINT CollectionMimeTypeRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE CollectionMimeTypeRelation ADD CONSTRAINT CollectionMimeTypeRelationMimeType_id_MimeTypeid_fk FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionMimeTypeRelation ADD CONSTRAINT CollectionMimeTypeRelationMimeType_id_MimeTypeid_fk FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE CollectionPimItemRelation ADD CONSTRAINT CollectionPimItemRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionPimItemRelation ADD CONSTRAINT CollectionPimItemRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
-ALTER TABLE CollectionPimItemRelation ADD CONSTRAINT CollectionPimItemRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+ALTER TABLE CollectionPimItemRelation ADD CONSTRAINT CollectionPimItemRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
