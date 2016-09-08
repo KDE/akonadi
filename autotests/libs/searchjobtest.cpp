@@ -65,6 +65,7 @@ void SearchJobTest::testCreateDeleteSearch()
     for (const auto &c : cols) {
         if (c.name() == QLatin1String("search123456")) {
             col = c;
+            break;
         }
     }
     QVERIFY(col == created);
