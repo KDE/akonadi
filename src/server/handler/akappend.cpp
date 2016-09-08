@@ -63,7 +63,7 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
     item.setSize(cmd.itemSize());
     item.setMimeTypeId(mimeType.id());
     item.setCollectionId(parentCol.id());
-    item.setDatetime(cmd.dateTime().isValid() ? cmd.dateTime() : QDateTime::currentDateTimeUtc());
+    item.setDatetime(cmd.dateTime());
     if (cmd.remoteId().isEmpty()) {
         // from application
         item.setDirty(true);
@@ -84,6 +84,10 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
 {
     if (!item.insert()) {
         return failureResponse("Failed to append item");
+    }
+
+    if (!item.datetime().isValid()) {
+        item.setDatetime(QDateTime::currentDateTimeUtc());
     }
 
     // set message flags
@@ -152,31 +156,32 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
                          PimItem &newItem, PimItem &currentItem,
                          const Collection &parentCol)
 {
+    bool needsUpdate = false;
     QSet<QByteArray> changedParts;
-
-    // Always bump revision
-    currentItem.setRev(qMax(newItem.rev(), currentItem.rev()) + 1);
 
     if (!newItem.remoteId().isEmpty() && currentItem.remoteId() != newItem.remoteId()) {
         currentItem.setRemoteId(newItem.remoteId());
         changedParts.insert(AKONADI_PARAM_REMOTEID);
+        needsUpdate = true;
     }
     if (!newItem.remoteRevision().isEmpty() && currentItem.remoteRevision() != newItem.remoteRevision()) {
         currentItem.setRemoteRevision(newItem.remoteRevision());
         changedParts.insert(AKONADI_PARAM_REMOTEREVISION);
+        needsUpdate = true;
     }
     if (!newItem.gid().isEmpty() && currentItem.gid() != newItem.gid()) {
         currentItem.setGid(newItem.gid());
         changedParts.insert(AKONADI_PARAM_GID);
+        needsUpdate = true;
     }
-    if (newItem.datetime().isValid()) {
+    if (newItem.datetime().isValid() && newItem.datetime() != currentItem.datetime()) {
         currentItem.setDatetime(newItem.datetime());
+        needsUpdate = true;
     }
-    currentItem.setAtime(QDateTime::currentDateTime());
-    currentItem.setSize(newItem.size());
-
-    // Only mark dirty when merged from application
-    currentItem.setDirty(!connection()->context()->resource().isValid());
+    if (newItem.size() > 0 && newItem.size() != currentItem.size()) {
+        currentItem.setSize(newItem.size());
+        needsUpdate = true;
+    }
 
     const Collection col = Collection::retrieveById(parentCol.id());
     if (cmd.flags().isEmpty()) {
@@ -193,6 +198,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         }
         if (flagsAdded || flagsRemoved) {
             changedParts.insert(AKONADI_PARAM_FLAGS);
+            needsUpdate = true;
         }
     } else if (!cmd.flags().isEmpty()) {
         bool flagsChanged = false;
@@ -213,6 +219,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
                                          &flagsChanged, col, true);
         if (flagsChanged) {
             changedParts.insert(AKONADI_PARAM_FLAGS);
+            needsUpdate = true;
         }
     }
 
@@ -231,6 +238,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
         if (tagsAdded || tagsRemoved) {
             changedParts.insert(AKONADI_PARAM_TAGS);
+            needsUpdate = true;
         }
     } else if (!cmd.tags().isEmpty()) {
         bool tagsChanged = false;
@@ -239,6 +247,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
                                         &tagsChanged, true);
         if (tagsChanged) {
             changedParts.insert(AKONADI_PARAM_TAGS);
+            needsUpdate = true;
         }
     }
 
@@ -261,21 +270,30 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         if (changed) {
             changedParts.insert(partName);
             partsSizes.insert(partName, partSize);
+            needsUpdate = true;
         }
     }
 
     const qint64 size = std::accumulate(partsSizes.begin(), partsSizes.end(), 0);
     if (size > currentItem.size()) {
         currentItem.setSize(size);
+        needsUpdate = true;
     }
 
-    // Store all changes
-    if (!currentItem.update()) {
-        return failureResponse("Failed to store merged item");
+    if (needsUpdate) {
+        currentItem.setRev(qMax(newItem.rev(), currentItem.rev()) + 1);
+        currentItem.setAtime(QDateTime::currentDateTime());
+        // Only mark dirty when merged from application
+        currentItem.setDirty(!connection()->context()->resource().isValid());
+
+        // Store all changes
+        if (!currentItem.update()) {
+            return failureResponse("Failed to store merged item");
+        }
+
+        notify(currentItem, currentItem.collection(), changedParts);
     }
 
-
-    notify(currentItem, currentItem.collection(), changedParts);
     sendResponse(currentItem, cmd.mergeModes());
 
     return true;
