@@ -43,6 +43,7 @@
     </xsd:sequence>
     <xsd:attribute name="name"       type="xsd:string"   use="required"/>
     <xsd:attribute name="properties" type="xsd:string"/>
+    <xsd:attribute name="identificationColumn" type="xsd:string"/>
   </xsd:complexType>
 
   <xsd:complexType name="relationType">

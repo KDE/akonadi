@@ -591,8 +591,10 @@ void QueryBuilder::setIdentificationColumn(const QString &column)
 qint64 QueryBuilder::insertId()
 {
     if (mDatabaseType == DbType::PostgreSQL) {
-        Q_ASSERT(!mIdentificationColumn.isEmpty());
         query().next();
+        if (mIdentificationColumn.isEmpty()) {
+            return 0; // FIXME: Does this make sense?
+        }
         return query().record().value(mIdentificationColumn).toLongLong();
     } else {
         const QVariant v = query().lastInsertId();

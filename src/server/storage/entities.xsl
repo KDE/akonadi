@@ -103,6 +103,7 @@ Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_T
 #include &lt;qvariant.h&gt;
 #include &lt;QtCore/QHash&gt;
 #include &lt;QtCore/QMutex&gt;
+#include &lt;QtCore/QThread&gt;
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

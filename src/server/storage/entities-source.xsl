@@ -583,6 +583,9 @@ bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
     return false;
 
   QueryBuilder qb( tableName(), QueryBuilder::Insert );
+  <xsl:if test="@identificationColumn">
+  qb.setIdentificationColumn(QLatin1String("<xsl:value-of select="@identificationColumn"/>"));
+  </xsl:if>
   <xsl:for-each select="column[@name != 'id']">
     <xsl:variable name="refColumn"><xsl:value-of select="@refColumn"/></xsl:variable>
     <xsl:if test="$refColumn = 'id'">
