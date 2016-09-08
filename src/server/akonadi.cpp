@@ -461,5 +461,3 @@ QString AkonadiServer::serverPath() const
 {
     return XdgBaseDirs::homePath("config");
 }
-
-#include "akonadi.moc"
