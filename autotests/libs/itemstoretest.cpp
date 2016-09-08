@@ -378,6 +378,6 @@ void ItemStoreTest::testRemoteIdRace()
     ItemFetchJob *fetchJob = new ItemFetchJob(item2);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().size(), 1);
-    QVERIFY(fetchJob->items().first().remoteId().isNull());
+    QVERIFY(fetchJob->items().first().remoteId().isEmpty());
 }
 
