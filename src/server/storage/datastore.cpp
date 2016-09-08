@@ -1336,6 +1336,14 @@ bool DataStore::beginTransaction()
             TRANSACTION_MUTEX_UNLOCK;
             return false;
         }
+
+        if (DbType::type(m_database) == DbType::PostgreSQL) {
+            // Make constraints check deferred in PostgreSQL. Allows for
+            // INSERT INTO mimetypetable (name) VALUES ('foo') RETURNING id;
+            // INSERT INTO collectionmimetyperelation (collection_id, mimetype_id) VALUES (x, y)
+            // where "y" refers to the newly inserted mimetype
+            m_database.exec(QStringLiteral("SET CONSTRAINTS ALL DEFERRED"));
+        }
     }
 
     ++m_transactionLevel;

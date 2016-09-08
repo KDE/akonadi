@@ -300,7 +300,8 @@ QString DbInitializerPostgreSql::buildAddForeignKeyConstraintStatement(const Tab
     const QString constraintName = table.name + column.name + QLatin1Literal("_") + column.refTable + column.refColumn + QLatin1Literal("_fk");
     return QLatin1Literal("ALTER TABLE ") + table.name + QLatin1Literal(" ADD CONSTRAINT ") + constraintName + QLatin1Literal(" FOREIGN KEY (") + column.name
            + QLatin1Literal(") REFERENCES ") + column.refTable + QLatin1Literal("Table(") + column.refColumn
-           + QLatin1Literal(") ") + buildReferentialAction(column.onUpdate, column.onDelete);
+           + QLatin1Literal(") ") + buildReferentialAction(column.onUpdate, column.onDelete)
+           + QLatin1Literal(" DEFERRABLE INITIALLY DEFERRED");
 }
 
 QString DbInitializerPostgreSql::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
