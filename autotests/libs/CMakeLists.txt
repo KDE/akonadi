@@ -14,6 +14,8 @@ file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 
 option(AKONADI_TESTS_XML "Use XML files for the test results, instead of plain text." FALSE)
 option(AKONADI_RUN_SQLITE_ISOLATED_TESTS "Run isolated tests with sqlite3 as backend" TRUE)
+option(AKONADI_RUN_MYSQL_ISOLATED_TESTS "Run isolated tests with MySQL as backend" TRUE)
+option(AKONADI_RUN_PGSQL_ISOLATED_TESTS "Run isolated tests with PostgreSQL as backend" TRUE)
 
 kde_enable_exceptions()
 

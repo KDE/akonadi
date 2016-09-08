@@ -63,7 +63,8 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     set( SQLITE_EXTRA_OPTIONS -xml -o ${TEST_RESULT_OUTPUT_PATH}/sqlite-${_name}.xml )
   endif()
 
-  if (NOT KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS AND NOT AKONADI_RUN_MYSQL_ISOLATED_TESTS)
+  if ((NOT KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS AND NOT AKONADI_RUN_MYSQL_ISOLATED_TESTS)
+        OR ${KDEPIMLIBS_RUN_MYSQL_ISOLATED_TESTS} OR ${AKONADI_RUN_MYSQL_ISOLATED_TESTS})
     find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
     if ( MYSQLD_EXECUTABLE )
       add_test( NAME akonadi-mysql-fs-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable}
@@ -71,7 +72,8 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     endif()
   endif()
 
-  if (NOT KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS AND NOT AKONADI_RUN_PGSQL_ISOLATED_TESTS)
+  if ((NOT KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS AND NOT AKONADI_RUN_PGSQL_ISOLATED_TESTS)
+       OR ${KDEPIMLIBS_RUN_PGSQL_ISOLATED_TESTS} OR ${AKONADI_RUN_PGSQL_ISOLATED_TESTS})
     find_program( POSTGRES_EXECUTABLE postgres )
     if ( POSTGRES_EXECUTABLE )
       add_test( NAME akonadi-postgresql-fs-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable}
@@ -79,7 +81,8 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
     endif()
   endif()
 
-  if (NOT KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS AND NOT AKONADI_RUN_SQLITE_ISOLATED_TESTS)
+  if ((NOT KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS AND NOT AKONADI_RUN_SQLITE_ISOLATED_TESTS)
+        OR ${KDEPIMLIBS_RUN_SQLITE_ISOLATED_TESTS} OR ${AKONADI_RUN_SQLITE_ISOLATED_TESTS})
     add_test( NAME akonadi-sqlite-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
     ${SQLITE_EXTRA_OPTIONS} )
   endif()
