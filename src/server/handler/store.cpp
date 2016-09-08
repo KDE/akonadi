@@ -141,7 +141,14 @@ bool Store::parseStream()
     Transaction transaction(store);
     ExternalPartStorageTransaction storageTrx;
     // Set the same modification time for each item.
-    const QDateTime modificationtime = QDateTime::currentDateTimeUtc();
+    QDateTime modificationtime = QDateTime::currentDateTimeUtc();
+    if (DbType::type(store->database()) != DbType::Sqlite) {
+        // Remove milliseconds from the modificationtime. PSQL and MySQL don't
+        // support milliseconds in DATETIME column, so FETCHed Items will report
+        // time without milliseconds, while this command would return answer
+        // with milliseconds
+        modificationtime = modificationtime.addMSecs(-modificationtime.time().msec());
+    }
 
     // retrieve selected items
     SelectQueryBuilder<PimItem> qb;

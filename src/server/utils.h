@@ -26,6 +26,9 @@
 #include <QtCore/QDateTime>
 #include <QtCore/QSet>
 
+#include "storage/datastore.h"
+#include "storage/dbtype.h"
+
 namespace Akonadi {
 namespace Server {
 namespace Utils {
@@ -65,11 +68,24 @@ static inline QByteArray variantToByteArray(const QVariant &variant)
 static inline QDateTime variantToDateTime(const QVariant &variant)
 {
     if (variant.canConvert(QVariant::DateTime)) {
-        // the dt is stored as QString, which is serialized to Qt::LocalTime,
-        // even though it's UTC (but the information about TZ is not stored in DB)
-        QDateTime dt = variant.toDateTime();
-        dt.setTimeSpec(Qt::UTC);
-        return dt;
+        // MySQL and SQLite backends read the datetime from the database and
+        // assume it's local time. We stored it as UTC though, so we just need
+        // to change the interpretation in QDateTime.
+        // PostgreSQL on the other hand reads the datetime and assumes it's
+        // UTC(?) and converts it to local time via QDateTime::toLocalTime(),
+        // so we need to convert it back to UTC manually.
+        switch (DbType::type(DataStore::self()->database())) {
+        case DbType::MySQL:
+        case DbType::Sqlite: {
+            QDateTime dt = variant.toDateTime();
+            dt.setTimeSpec(Qt::UTC);
+            return dt;
+        }
+        case DbType::PostgreSQL:
+            return variant.toDateTime().toUTC();
+        default:
+            Q_UNREACHABLE();
+        }
     } else {
         qWarning("Unable to convert variant of type %s to QDateTime", variant.typeName());
         Q_ASSERT(false);
