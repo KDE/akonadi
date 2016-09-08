@@ -146,9 +146,11 @@ public:
 
     void run() Q_DECL_OVERRIDE
     {
-        if (mSubscriber) {
-            Q_FOREACH (const auto &ntf, mNotifications) {
+        Q_FOREACH (const auto &ntf, mNotifications) {
+            if (mSubscriber) {
                 mSubscriber->notify(ntf);
+            } else {
+                break;
             }
         }
     }

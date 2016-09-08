@@ -24,6 +24,7 @@
 
 #include <QLocalSocket>
 #include <QDataStream>
+#include <QPointer>
 
 #include <private/protocol_p.h>
 #include <private/protocol_exception_p.h>
@@ -64,6 +65,8 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, qui
 
 NotificationSubscriber::~NotificationSubscriber()
 {
+    QMutexLocker locker(&mLock);
+
     if (mNotificationDebugging) {
         Q_EMIT notificationDebuggingChanged(false);
     }
@@ -642,7 +645,12 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
 
 bool NotificationSubscriber::notify(const Protocol::ChangeNotification &notification)
 {
+    // Guard against this object being deleted while we are waiting for the lock
+    QPointer<NotificationSubscriber> ptr(this);
     QMutexLocker locker(&mLock);
+    if (!ptr) {
+        return false;
+    }
 
     if (acceptsNotification(notification)) {
         QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
