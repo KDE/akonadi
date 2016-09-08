@@ -75,10 +75,6 @@ void NotificationManager::quit()
     delete mTimer;
     delete mNotifyThreadPool;
     qDeleteAll(mSubscribers);
-    // FIXME: There seems to be a QTimer somewhere that we must delete here,
-    // otherwise we get "Can't stop QTimer from a different thread" warning
-    // from QObject::~QObject()
-    qDeleteAll(children());
 
     AkThread::quit();
 }

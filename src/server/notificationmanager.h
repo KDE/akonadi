@@ -25,6 +25,7 @@
 #include <private/protocol_p.h>
 
 #include <QtCore/QTimer>
+#include <QPointer>
 
 class NotificationManagerTest;
 class QLocalSocket;
@@ -66,7 +67,7 @@ private:
     QTimer *mTimer;
 
     QThreadPool *mNotifyThreadPool;
-    QVector<NotificationSubscriber *> mSubscribers;
+    QVector<QPointer<NotificationSubscriber>> mSubscribers;
     int mDebugNotifications;
 
     friend class NotificationSubscriber;
