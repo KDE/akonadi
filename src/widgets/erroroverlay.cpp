@@ -94,7 +94,7 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     sInstanceOverlay->baseWidgets.append(qMakePair(mBaseWidget, QPointer<QWidget>(this)));
 
     connect(baseWidget, &QObject::destroyed, this, &QObject::deleteLater);
-    mPreviousState = mBaseWidget->isEnabled();
+    mPreviousState = !mBaseWidget->testAttribute(Qt::WA_ForceDisabled);
 
     ui->setupUi(this);
     ui->notRunningIcon->setPixmap(QIcon::fromTheme(QStringLiteral("akonadi")).pixmap(64));
@@ -220,7 +220,7 @@ void ErrorOverlay::serverStateChanged(ServerManager::State state)
         }
 
         if (!mBaseWidgetIsParent) {
-            mPreviousState = mBaseWidget->isEnabled();
+            mPreviousState = !mBaseWidget->testAttribute(Qt::WA_ForceDisabled);
             mBaseWidget->setEnabled(false);
         }
 
