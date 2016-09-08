@@ -90,8 +90,6 @@ public:
 
     virtual void activeCachePolicy(Collection &col) Q_DECL_OVERRIDE;
 
-    virtual bool appendMimeType(const QString &mimetype,
-                                qint64 *insertId = Q_NULLPTR) Q_DECL_OVERRIDE;
     virtual bool appendPimItem(QVector<Part> &parts,
                                const MimeType &mimetype,
                                const Collection &collection,

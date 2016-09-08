@@ -176,9 +176,6 @@ public:
 
     QMap< Server::Entity::Id, QList< PimItem > > virtualCollections(const Akonadi::Server::PimItem::List &items);
 
-    /* --- MimeType ------------------------------------------------------ */
-    virtual bool appendMimeType(const QString &mimetype, qint64 *insertId = 0);
-
     /* --- PimItem ------------------------------------------------------- */
     virtual bool appendPimItem(QVector<Part> &parts,
                                const MimeType &mimetype,

@@ -232,14 +232,6 @@ void FakeDataStore::activeCachePolicy(Collection &col)
     return DataStore::activeCachePolicy(col);
 }
 
-bool FakeDataStore::appendMimeType(const QString &mimetype,
-                                   qint64 *insertId)
-{
-    mChanges.insert(QStringLiteral("appendMimeType"),
-                    QVariantList() << mimetype);
-    return DataStore::appendMimeType(mimetype, insertId);
-}
-
 bool FakeDataStore::appendPimItem(QVector<Part> &parts,
                                   const MimeType &mimetype,
                                   const Collection &collection,

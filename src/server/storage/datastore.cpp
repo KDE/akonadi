@@ -1029,19 +1029,6 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
     return map;
 }
 
-/* --- MimeType ------------------------------------------------------ */
-bool DataStore::appendMimeType(const QString &mimetype, qint64 *insertId)
-{
-    if (MimeType::exists(mimetype)) {
-        qCDebug(AKONADISERVER_LOG) << "Cannot insert mimetype " << mimetype
-                  << " because it already exists.";
-        return false;
-    }
-
-    MimeType mt(mimetype);
-    return mt.insert(insertId);
-}
-
 /* --- PimItem ------------------------------------------------------- */
 bool DataStore::appendPimItem(QVector<Part> &parts,
                               const MimeType &mimetype,
