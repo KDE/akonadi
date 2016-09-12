@@ -950,6 +950,8 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
                     // of the item before it has been moved.
                     if (msg.operation() != Protocol::ItemChangeNotification::Move) {
                         it.setParentCollection(col);
+                    } else {
+                        it.setParentCollection(colDest);
                     }
                 }
             }
@@ -1260,43 +1262,54 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)
     // remove invalidates
     // modify removes the cache entry, as we need to re-fetch
     // And subscription modify the visibility of the collection by the collectionFetchScope.
-    if (msg.isRemove()) {
-        switch (msg.type()) {
-        case Protocol::Command::CollectionChangeNotification: {
-            const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification&>(msg);
+    switch (msg.type()) {
+    case Protocol::Command::CollectionChangeNotification: {
+        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification&>(msg);
+        switch (colNtf.operation()) {
+        case Protocol::CollectionChangeNotification::Modify:
+        case Protocol::CollectionChangeNotification::Move:
+        case Protocol::CollectionChangeNotification::Subscribe:
+            collectionCache->update(colNtf.id(), mCollectionFetchScope);
+            break;
+        case Protocol::CollectionChangeNotification::Remove:
             collectionCache->invalidate(colNtf.id());
-            switch (colNtf.operation()) {
-            case Protocol::CollectionChangeNotification::Modify:
-            case Protocol::CollectionChangeNotification::Move:
-            case Protocol::CollectionChangeNotification::Subscribe:
-                collectionCache->update(colNtf.id(), mCollectionFetchScope);
-            default:
-                break;
-            }
-        } break;
-        case Protocol::Command::ItemChangeNotification: {
-            const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification&>(msg);
-            itemCache->invalidate(itemNtf.uids());
-            switch (itemNtf.operation()) {
-            case Protocol::ItemChangeNotification::Modify:
-            case Protocol::ItemChangeNotification::ModifyFlags:
-            case Protocol::ItemChangeNotification::ModifyTags:
-            case Protocol::ItemChangeNotification::ModifyRelations:
-                itemCache->update(itemNtf.uids(), mItemFetchScope);
-            default:
-                break;
-            }
-        } break;
-        case Protocol::Command::TagChangeNotification: {
-            const auto &tagNtf = static_cast<const Protocol::TagChangeNotification&>(msg);
-            tagCache->invalidate({ tagNtf.id() });
-            if (tagNtf.operation() == Protocol::TagChangeNotification::Modify) {
-                tagCache->update({ tagNtf.id() }, mTagFetchScope);
-            }
-        } break;
+            break;
         default:
             break;
         }
+    } break;
+    case Protocol::Command::ItemChangeNotification: {
+        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification&>(msg);
+        switch (itemNtf.operation()) {
+        case Protocol::ItemChangeNotification::Modify:
+        case Protocol::ItemChangeNotification::ModifyFlags:
+        case Protocol::ItemChangeNotification::ModifyTags:
+        case Protocol::ItemChangeNotification::ModifyRelations:
+        case Protocol::ItemChangeNotification::Move:
+            itemCache->update(itemNtf.uids(), mItemFetchScope);
+            break;
+        case Protocol::ItemChangeNotification::Remove:
+            itemCache->invalidate(itemNtf.uids());
+            break;
+        default:
+            break;
+        }
+    } break;
+    case Protocol::Command::TagChangeNotification: {
+        const auto &tagNtf = static_cast<const Protocol::TagChangeNotification&>(msg);
+        switch (tagNtf.operation()) {
+        case Protocol::TagChangeNotification::Modify:
+            tagCache->update({ tagNtf.id() }, mTagFetchScope);
+            break;
+        case Protocol::TagChangeNotification::Remove:
+            tagCache->invalidate({ tagNtf.id() });
+            break;
+        default:
+            break;
+        }
+    } break;
+    default:
+        break;
     }
 }
 
