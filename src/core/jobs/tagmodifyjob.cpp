@@ -55,37 +55,37 @@ void TagModifyJob::doStart()
 {
     Q_D(TagModifyJob);
 
-    Protocol::ModifyTagCommand cmd(d->mTag.id());
+    auto cmd = Protocol::ModifyTagCommandPtr::create(d->mTag.id());
     if (!d->mTag.remoteId().isNull()) {
-        cmd.setRemoteId(d->mTag.remoteId());
+        cmd->setRemoteId(d->mTag.remoteId());
     }
     if (!d->mTag.type().isEmpty()) {
-        cmd.setType(d->mTag.type());
+        cmd->setType(d->mTag.type());
     }
     if (d->mTag.parent().isValid() && !d->mTag.isImmutable()) {
-        cmd.setParentId(d->mTag.parent().id());
+        cmd->setParentId(d->mTag.parent().id());
     }
     if (!d->mTag.d_ptr->mDeletedAttributes.isEmpty()) {
-        cmd.setRemovedAttributes(d->mTag.d_ptr->mDeletedAttributes);
+        cmd->setRemovedAttributes(d->mTag.d_ptr->mDeletedAttributes);
     }
 
-    cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));
+    cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));
 
     d->sendCommand(cmd);
 }
 
-bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(TagModifyJob);
 
-    if (response.isResponse()) {
-        if (response.type() == Protocol::Command::FetchTags) {
+    if (response->isResponse()) {
+        if (response->type() == Protocol::Command::FetchTags) {
             // Tag was modified, we ignore the response for now
             return false;
-        } else if (response.type() == Protocol::Command::DeleteTag) {
+        } else if (response->type() == Protocol::Command::DeleteTag) {
             // The tag was deleted/merged
             return false;
-        } else if (response.type() == Protocol::Command::ModifyTag) {
+        } else if (response->type() == Protocol::Command::ModifyTag) {
             // Done.
             return true;
         }

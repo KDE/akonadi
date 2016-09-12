@@ -125,11 +125,11 @@ void ItemCreateJob::doStart()
         return;
     }
 
-    Protocol::CreateItemCommand cmd;
-    cmd.setMimeType(d->mItem.mimeType());
-    cmd.setGID(d->mItem.gid());
-    cmd.setRemoteId(d->mItem.remoteId());
-    cmd.setRemoteRevision(d->mItem.remoteRevision());
+    auto cmd = Protocol::CreateItemCommandPtr::create();
+    cmd->setMimeType(d->mItem.mimeType());
+    cmd->setGid(d->mItem.gid());
+    cmd->setRemoteId(d->mItem.remoteId());
+    cmd->setRemoteRevision(d->mItem.remoteRevision());
 
     Protocol::CreateItemCommand::MergeModes mergeModes = Protocol::CreateItemCommand::None;
     if ((d->mMergeOptions & GID) && !d->mItem.gid().isEmpty()) {
@@ -143,57 +143,57 @@ void ItemCreateJob::doStart()
     }
     const bool merge = (mergeModes & Protocol::CreateItemCommand::GID)
                        || (mergeModes & Protocol::CreateItemCommand::RemoteID);
-    cmd.setMergeModes(mergeModes);
+    cmd->setMergeModes(mergeModes);
 
     if (d->mItem.d_ptr->mFlagsOverwritten || !merge) {
-        cmd.setFlags(d->mItem.flags());
-        cmd.setFlagsOverwritten(d->mItem.d_ptr->mFlagsOverwritten);
+        cmd->setFlags(d->mItem.flags());
+        cmd->setFlagsOverwritten(d->mItem.d_ptr->mFlagsOverwritten);
     } else {
         auto addedFlags = ItemChangeLog::instance()->addedFlags(d->mItem.d_ptr);
         auto deletedFlags = ItemChangeLog::instance()->deletedFlags(d->mItem.d_ptr);
-        cmd.setAddedFlags(addedFlags);
-        cmd.setRemovedFlags(deletedFlags);
+        cmd->setAddedFlags(addedFlags);
+        cmd->setRemovedFlags(deletedFlags);
     }
     auto addedTags = ItemChangeLog::instance()->addedTags(d->mItem.d_ptr);
     auto deletedTags = ItemChangeLog::instance()->deletedTags(d->mItem.d_ptr);
     if (!addedTags.isEmpty() && (d->mItem.d_ptr->mTagsOverwritten || !merge)) {
-        cmd.setTags(ProtocolHelper::entitySetToScope(addedTags));
+        cmd->setTags(ProtocolHelper::entitySetToScope(addedTags));
     } else {
         if (!addedTags.isEmpty()) {
-            cmd.setAddedTags(ProtocolHelper::entitySetToScope(addedTags));
+            cmd->setAddedTags(ProtocolHelper::entitySetToScope(addedTags));
         }
         if (!deletedTags.isEmpty()) {
-            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(deletedTags));
+            cmd->setRemovedTags(ProtocolHelper::entitySetToScope(deletedTags));
         }
     }
 
-    cmd.setCollection(ProtocolHelper::entityToScope(d->mCollection));
-    cmd.setItemSize(d->mItem.size());
+    cmd->setCollection(ProtocolHelper::entityToScope(d->mCollection));
+    cmd->setItemSize(d->mItem.size());
 
-    cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mItem));
+    cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mItem));
     QSet<QByteArray> parts;
     parts.reserve(d->mParts.size());
     for (const QByteArray &part : qAsConst(d->mParts)) {
         parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
     }
-    cmd.setParts(parts);
+    cmd->setParts(parts);
 
     d->sendCommand(cmd);
 }
 
-bool ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(ItemCreateJob);
 
-    if (!response.isResponse() && response.type() == Protocol::Command::StreamPayload) {
-        const Protocol::StreamPayloadCommand streamCmd(response);
-        Protocol::StreamPayloadResponse streamResp;
-        streamResp.setPayloadName(streamCmd.payloadName());
+    if (!response->isResponse() && response->type() == Protocol::Command::StreamPayload) {
+        const auto &streamCmd = Protocol::cmdCast<Protocol::StreamPayloadCommand>(response);
+        auto streamResp = Protocol::StreamPayloadResponsePtr::create();
+        streamResp->setPayloadName(streamCmd.payloadName());
         if (streamCmd.request() == Protocol::StreamPayloadCommand::MetaData) {
-            streamResp.setMetaData(d->preparePart(streamCmd.payloadName()));
+            streamResp->setMetaData(d->preparePart(streamCmd.payloadName()));
         } else {
             if (streamCmd.destination().isEmpty()) {
-                streamResp.setData(d->mPendingData);
+                streamResp->setData(d->mPendingData);
             } else {
                 QByteArray error;
                 if (!ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error)) {
@@ -205,8 +205,8 @@ bool ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
         return false;
     }
 
-    if (response.isResponse() && response.type() == Protocol::Command::FetchItems) {
-        Protocol::FetchItemsResponse fetchResp(response);
+    if (response->isResponse() && response->type() == Protocol::Command::FetchItems) {
+        const auto &fetchResp = Protocol::cmdCast<Protocol::FetchItemsResponse>(response);
         Item item = ProtocolHelper::parseItemFetchResult(fetchResp);
         if (!item.isValid()) {
             // Error, maybe?
@@ -216,7 +216,7 @@ bool ItemCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
         return false;
     }
 
-    if (response.isResponse() && response.type() == Protocol::Command::CreateItem) {
+    if (response->isResponse() && response->type() == Protocol::Command::CreateItem) {
         return true;
     }
 

@@ -99,15 +99,15 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     monitor->setSession(m_fakeSession);
     monitor->fetchCollection(true);
 
-    Protocol::ChangeNotification::List list;
+    Protocol::ChangeNotificationList list;
 
     Collection parent(1);
     Collection added(2);
 
-    Protocol::CollectionChangeNotification msg;
-    msg.setParentCollection(parent.id());
-    msg.setOperation(Protocol::CollectionChangeNotification::Add);
-    msg.setId(added.id());
+    auto msg = Protocol::CollectionChangeNotificationPtr::create();
+    msg->setParentCollection(parent.id());
+    msg->setOperation(Protocol::CollectionChangeNotification::Add);
+    msg->setId(added.id());
 
     QHash<Collection::Id, Collection> data;
     data.insert(parent.id(), parent);
@@ -163,7 +163,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
     monitor->setSession(m_fakeSession);
     monitor->fetchCollection(true);
 
-    Protocol::ChangeNotification::List list;
+    Protocol::ChangeNotificationList list;
     QHash<Collection::Id, Collection> data;
 
     int i = 1;
@@ -171,10 +171,10 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
         Collection parent(i++);
         Collection added(i++);
 
-        Protocol::CollectionChangeNotification msg;
-        msg.setParentCollection(parent.id());
-        msg.setOperation(Protocol::CollectionChangeNotification::Add);
-        msg.setId(added.id());
+        auto msg = Protocol::CollectionChangeNotificationPtr::create();
+        msg->setParentCollection(parent.id());
+        msg->setOperation(Protocol::CollectionChangeNotification::Add);
+        msg->setId(added.id());
 
         data.insert(parent.id(), parent);
         data.insert(added.id(), added);
@@ -185,7 +185,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
     QVERIFY(monitor->pipeline().isEmpty());
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
-    Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
+    Q_FOREACH (const Protocol::ChangeNotificationPtr &ntf, list) {
         monitor->notificationConnection()->emitNotify(ntf);
     }
 
@@ -232,7 +232,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     monitor->setSession(m_fakeSession);
     monitor->fetchCollection(true);
 
-    Protocol::ChangeNotification::List list;
+    Protocol::ChangeNotificationList list;
 
     Collection col2(2);
     col2.setParentCollection(Collection::root());
@@ -244,10 +244,10 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     while (i < 8) {
         Collection added(i++);
 
-        Protocol::CollectionChangeNotification msg;
-        msg.setParentCollection(i % 2 ? 2 : added.id() - 1);
-        msg.setOperation(Protocol::CollectionChangeNotification::Add);
-        msg.setId(added.id());
+        auto msg = Protocol::CollectionChangeNotificationPtr::create();
+        msg->setParentCollection(i % 2 ? 2 : added.id() - 1);
+        msg->setOperation(Protocol::CollectionChangeNotification::Add);
+        msg->setId(added.id());
 
         list << msg;
     }
@@ -271,7 +271,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     QVERIFY(monitor->pipeline().isEmpty());
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
-    Q_FOREACH (const Protocol::ChangeNotification &ntf, list) {
+    Q_FOREACH (const Protocol::ChangeNotificationPtr &ntf, list) {
         monitor->notificationConnection()->emitNotify(ntf);
     }
 

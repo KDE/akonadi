@@ -53,12 +53,12 @@ void ResourceSelectJob::doStart()
 {
     Q_D(ResourceSelectJob);
 
-    d->sendCommand(Protocol::SelectResourceCommand(d->resourceId));
+    d->sendCommand(Protocol::SelectResourceCommandPtr::create(d->resourceId));
 }
 
-bool ResourceSelectJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ResourceSelectJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::SelectResource) {
+    if (!response->isResponse() || response->type() != Protocol::Command::SelectResource) {
         return Job::doHandleResponse(tag, response);
     }
 

@@ -57,15 +57,15 @@ void RelationCreateJob::doStart()
         return;
     }
 
-    d->sendCommand(Protocol::ModifyRelationCommand(d->mRelation.left().id(),
+    d->sendCommand(Protocol::ModifyRelationCommandPtr::create(d->mRelation.left().id(),
                    d->mRelation.right().id(),
                    d->mRelation.type(),
                    d->mRelation.remoteId()));
 }
 
-bool RelationCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool RelationCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::ModifyRelation) {
+    if (!response->isResponse() || response->type() != Protocol::Command::ModifyRelation) {
         return Job::doHandleResponse(tag, response);
     }
 

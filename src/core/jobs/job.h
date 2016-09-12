@@ -34,6 +34,7 @@ namespace Akonadi
 namespace Protocol
 {
 class Command;
+using CommandPtr = QSharedPointer<Command>;
 }
 
 class JobPrivate;
@@ -180,7 +181,7 @@ protected:
      * @return Implementations should return true if the last response was processed and
      * the job can emit result. Return false if more responses from server are expected.
      */
-    virtual bool doHandleResponse(qint64 tag, const Protocol::Command &response);
+    virtual bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response);
 
     /**
      * Adds the given job as a subjob to this job. This method is automatically called

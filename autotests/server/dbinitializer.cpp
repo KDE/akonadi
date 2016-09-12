@@ -116,29 +116,29 @@ QByteArray DbInitializer::toByteArray(Collection::Tristate tristate)
     return "DEFAULT";
 }
 
-Akonadi::Protocol::FetchCollectionsResponse DbInitializer::listResponse(const Collection &col,
-                                                                        bool ancestors,
-                                                                        bool mimetypes,
-                                                                        const QStringList &ancestorFetchScope)
+Akonadi::Protocol::FetchCollectionsResponsePtr DbInitializer::listResponse(const Collection &col,
+                                                                           bool ancestors,
+                                                                           bool mimetypes,
+                                                                           const QStringList &ancestorFetchScope)
 {
-    Akonadi::Protocol::FetchCollectionsResponse resp(col.id());
-    resp.setParentId(col.parentId());
-    resp.setName(col.name());
+    auto resp = Akonadi::Protocol::FetchCollectionsResponsePtr::create(col.id());
+    resp->setParentId(col.parentId());
+    resp->setName(col.name());
     if (mimetypes) {
         QStringList mts;
         for (const Akonadi::Server::MimeType &mt : col.mimeTypes()) {
             mts << mt.name();
         }
-        resp.setMimeTypes(mts);
+        resp->setMimeTypes(mts);
     }
-    resp.setRemoteId(col.remoteId());
-    resp.setRemoteRevision(col.remoteRevision());
-    resp.setResource(col.resource().name());
-    resp.setIsVirtual(col.isVirtual());
+    resp->setRemoteId(col.remoteId());
+    resp->setRemoteRevision(col.remoteRevision());
+    resp->setResource(col.resource().name());
+    resp->setIsVirtual(col.isVirtual());
     Akonadi::Protocol::CachePolicy cp;
     cp.setInherit(true);
     cp.setLocalParts({ QLatin1String("ALL") });
-    resp.setCachePolicy(cp);
+    resp->setCachePolicy(cp);
     if (ancestors) {
         QVector<Akonadi::Protocol::Ancestor> ancs;
         Collection parent = col.parent();
@@ -163,19 +163,19 @@ Akonadi::Protocol::FetchCollectionsResponse DbInitializer::listResponse(const Co
         }
         // Root
         ancs.push_back(Akonadi::Protocol::Ancestor(0));
-        resp.setAncestors(ancs);
+        resp->setAncestors(ancs);
     }
-    resp.setReferenced(col.referenced());
-    resp.setEnabled(col.enabled());
-    resp.setDisplayPref(static_cast<Tristate>(col.displayPref()));
-    resp.setSyncPref(static_cast<Tristate>(col.syncPref()));
-    resp.setIndexPref(static_cast<Tristate>(col.indexPref()));
+    resp->setReferenced(col.referenced());
+    resp->setEnabled(col.enabled());
+    resp->setDisplayPref(static_cast<Tristate>(col.displayPref()));
+    resp->setSyncPref(static_cast<Tristate>(col.syncPref()));
+    resp->setIndexPref(static_cast<Tristate>(col.indexPref()));
 
     Akonadi::Protocol::Attributes attrs;
     Q_FOREACH(const CollectionAttribute &attr, col.attributes()) {
         attrs.insert(attr.type(), attr.value());
     }
-    resp.setAttributes(attrs);
+    resp->setAttributes(attrs);
     return resp;
 }
 

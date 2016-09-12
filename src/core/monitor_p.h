@@ -86,9 +86,9 @@ public:
     bool monitorReady;
 
     // The waiting list
-    QQueue<Protocol::ChangeNotification> pendingNotifications;
+    QQueue<Protocol::ChangeNotificationPtr> pendingNotifications;
     // The messages for which data is currently being fetched
-    QQueue<Protocol::ChangeNotification> pipeline;
+    QQueue<Protocol::ChangeNotificationPtr> pipeline;
     // In a pure Monitor, the pipeline contains items that were dequeued from pendingNotifications.
     // The ordering [pipeline] [pendingNotifications] is kept at all times.
     // [] [A B C]  -> [A B] [C]  -> [B] [C] -> [B C] [] -> [C] [] -> []
@@ -112,15 +112,15 @@ public:
     void dispatchNotifications();
     void flushPipeline();
 
-    bool ensureDataAvailable(const Protocol::ChangeNotification &msg);
+    bool ensureDataAvailable(const Protocol::ChangeNotificationPtr &msg);
     /**
      * Sends out the change notification @p msg.
      * @param msg the change notification to send
      * @return @c true if the notification was actually send to someone, @c false if no one was listening.
      */
-    virtual bool emitNotification(const Protocol::ChangeNotification &msg);
-    void updatePendingStatistics(const Protocol::ChangeNotification &msg);
-    void invalidateCaches(const Protocol::ChangeNotification &msg);
+    virtual bool emitNotification(const Protocol::ChangeNotificationPtr &msg);
+    void updatePendingStatistics(const Protocol::ChangeNotificationPtr &msg);
+    void invalidateCaches(const Protocol::ChangeNotificationPtr &msg);
 
     /** Used by ResourceBase to inform us about collection changes before the notifications are emitted,
         needed to avoid the missing RID race on change replay.
@@ -139,11 +139,11 @@ public:
     /**
       Returns whether a message was appended to @p notificationQueue
     */
-    int translateAndCompress(QQueue<Protocol::ChangeNotification> &notificationQueue, const Protocol::ChangeNotification &msg);
+    int translateAndCompress(QQueue<Protocol::ChangeNotificationPtr> &notificationQueue, const Protocol::ChangeNotificationPtr &msg);
 
-    void commandReceived(qint64 tag, const Protocol::Command &command);
+    void commandReceived(qint64 tag, const Protocol::CommandPtr &command);
 
-    virtual void slotNotify(const Protocol::ChangeNotification &msg);
+    virtual void slotNotify(const Protocol::ChangeNotificationPtr &msg);
 
     /**
      * Sends out a change notification for an item.
@@ -164,6 +164,7 @@ public:
 
     bool emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg,
                                             const NotificationSubscriber &subscriber);
+
     bool emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg,
                                      const ChangeNotification &ntf);
 
@@ -255,16 +256,16 @@ private:
     /**
       @returns True if @p msg should be ignored. Otherwise appropriate signals are emitted for it.
     */
-    bool isLazilyIgnored(const Protocol::ChangeNotification &msg, bool allowModifyFlagsConversion = false) const;
+    bool isLazilyIgnored(const Protocol::ChangeNotificationPtr &msg, bool allowModifyFlagsConversion = false) const;
 
     /**
       Sets @p needsSplit to True when @p msg contains more than one item and there's at least one
       listener that does not support batch operations. Sets @p batchSupported to True when
       there's at least one listener that supports batch operations.
     */
-    void checkBatchSupport(const Protocol::ChangeNotification &msg, bool &needsSplit, bool &batchSupported) const;
+    void checkBatchSupport(const Protocol::ChangeNotificationPtr &msg, bool &needsSplit, bool &batchSupported) const;
 
-    Protocol::ChangeNotification::List splitMessage(const Protocol::ItemChangeNotification &msg, bool legacy) const;
+    Protocol::ChangeNotificationList splitMessage(const Protocol::ItemChangeNotification &msg, bool legacy) const;
 
     bool isCollectionMonitored(Collection::Id collection) const
     {

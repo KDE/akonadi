@@ -32,7 +32,17 @@ class ScopePrivate : public QSharedData
 {
 public:
     ScopePrivate()
-        : scope(Scope::Invalid)
+        : QSharedData()
+        , scope(Scope::Invalid)
+    {}
+
+    ScopePrivate(const ScopePrivate &other)
+        : QSharedData(other)
+        , uidSet(other.uidSet)
+        , ridSet(other.ridSet)
+        , hridChain(other.hridChain)
+        , gidSet(other.gidSet)
+        , scope(other.scope)
     {}
 
     ImapSet uidSet;

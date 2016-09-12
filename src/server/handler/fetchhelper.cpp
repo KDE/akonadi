@@ -416,30 +416,31 @@ bool FetchHelper::fetchItems()
         const qint64 pimItemId = extractQueryResult(itemQuery, ItemQueryPimItemIdColumn).toLongLong();
         const int pimItemRev = extractQueryResult(itemQuery, ItemQueryRevColumn).toInt();
 
-        Protocol::FetchItemsResponse response(pimItemId);
-        response.setRevision(pimItemRev);
+        auto response = Protocol::FetchItemsResponsePtr::create();
+        response->setId(pimItemId);
+        response->setRevision(pimItemRev);
         const qint64 mimeTypeId = extractQueryResult(itemQuery, ItemQueryMimeTypeIdColumn).toLongLong();
         auto mtIter = mimeTypeIdNameCache.find(mimeTypeId);
         if (mtIter == mimeTypeIdNameCache.end()) {
             mtIter = mimeTypeIdNameCache.insert(mimeTypeId, MimeType::retrieveById(mimeTypeId).name());
         }
-        response.setMimeType(mtIter.value());
+        response->setMimeType(mtIter.value());
         if (mFetchScope.fetchRemoteId()) {
-            response.setRemoteId(extractQueryResult(itemQuery, ItemQueryPimItemRidColumn).toString());
+            response->setRemoteId(extractQueryResult(itemQuery, ItemQueryPimItemRidColumn).toString());
         }
-        response.setParentId(extractQueryResult(itemQuery, ItemQueryCollectionIdColumn).toLongLong());
+        response->setParentId(extractQueryResult(itemQuery, ItemQueryCollectionIdColumn).toLongLong());
 
         if (mFetchScope.fetchSize()) {
-            response.setSize(extractQueryResult(itemQuery, ItemQuerySizeColumn).toLongLong());
+            response->setSize(extractQueryResult(itemQuery, ItemQuerySizeColumn).toLongLong());
         }
         if (mFetchScope.fetchMTime()) {
-            response.setMTime(Utils::variantToDateTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn)));
+            response->setMTime(Utils::variantToDateTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn)));
         }
         if (mFetchScope.fetchRemoteRevision()) {
-            response.setRemoteRevision(extractQueryResult(itemQuery, ItemQueryRemoteRevisionColumn).toString());
+            response->setRemoteRevision(extractQueryResult(itemQuery, ItemQueryRemoteRevisionColumn).toString());
         }
         if (mFetchScope.fetchGID()) {
-            response.setGid(extractQueryResult(itemQuery, ItemQueryPimItemGidColumn).toString());
+            response->setGid(extractQueryResult(itemQuery, ItemQueryPimItemGidColumn).toString());
         }
 
         if (mFetchScope.fetchFlags()) {
@@ -460,7 +461,7 @@ bool FetchHelper::fetchItems()
                 flags << flagNameIter.value();
                 flagQuery.next();
             }
-            response.setFlags(flags);
+            response->setFlags(flags);
         }
 
         if (mFetchScope.fetchTags()) {
@@ -484,14 +485,16 @@ bool FetchHelper::fetchItems()
             tags.reserve(tagIds.count());
             if (!fullTagsRequested) {
                 for (qint64 tagId : qAsConst(tagIds)) {
-                    tags << Protocol::FetchTagsResponse(tagId);
+                    Protocol::FetchTagsResponse resp;
+                    resp.setId(tagId);
+                    tags << resp;
                 }
             } else {
                 for (qint64 tagId : qAsConst(tagIds)) {
-                    tags << HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId));
+                    tags << *HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId));
                 }
             }
-            response.setTags(tags);
+            response->setTags(tags);
         }
 
         if (mFetchScope.fetchVirtualReferences()) {
@@ -508,7 +511,7 @@ bool FetchHelper::fetchItems()
                 vRefs << vRefQuery.value(VRefQueryCollectionIdColumn).toLongLong();
                 vRefQuery.next();
             }
-            response.setVirtualReferences(vRefs);
+            response->setVirtualReferences(vRefs);
         }
 
         if (mFetchScope.fetchRelations()) {
@@ -526,13 +529,13 @@ bool FetchHelper::fetchItems()
             const auto result = qb.result();
             relations.reserve(result.size());
             for (const Relation &rel : result) {
-                relations << HandlerHelper::fetchRelationsResponse(rel);
+                relations << *HandlerHelper::fetchRelationsResponse(rel);
             }
-            response.setRelations(relations);
+            response->setRelations(relations);
         }
 
-        if (mFetchScope.ancestorDepth() != Protocol::Ancestor::NoAncestor) {
-            response.setAncestors(ancestorsForItem(response.parentId()));
+        if (mFetchScope.ancestorDepth() != Protocol::FetchScope::NoAncestor) {
+            response->setAncestors(ancestorsForItem(response->parentId()));
         }
 
         bool skipItem = false;
@@ -591,7 +594,7 @@ bool FetchHelper::fetchItems()
                 partQuery.next();
             }
         }
-        response.setParts(parts);
+        response->setParts(parts);
 
         if (skipItem) {
             itemQuery.next();
@@ -599,7 +602,7 @@ bool FetchHelper::fetchItems()
         }
 
         if (mFetchScope.checkCachedPayloadPartsOnly()) {
-            response.setCachedParts(cachedParts);
+            response->setCachedParts(cachedParts);
         }
 
         mConnection->sendResponse(response);
@@ -686,7 +689,7 @@ void FetchHelper::triggerOnDemandFetch()
 
 QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentColId)
 {
-    if (mFetchScope.ancestorDepth() == Protocol::Ancestor::NoAncestor || parentColId == 0) {
+    if (mFetchScope.ancestorDepth() == Protocol::FetchScope::NoAncestor || parentColId == 0) {
         return QVector<Protocol::Ancestor>();
     }
     if (mAncestorCache.contains(parentColId)) {
@@ -695,13 +698,18 @@ QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentC
 
     QVector<Protocol::Ancestor> ancestors;
     Collection col = Collection::retrieveById(parentColId);
-    const int depthNum = mFetchScope.ancestorDepth() == Protocol::Ancestor::ParentAncestor ? 1 : INT_MAX;
+    const int depthNum = mFetchScope.ancestorDepth() == Protocol::FetchScope::ParentAncestor ? 1 : INT_MAX;
     for (int i = 0; i < depthNum; ++i) {
         if (!col.isValid()) {
-            ancestors << Protocol::Ancestor(0);
+            Protocol::Ancestor ancestor;
+            ancestor.setId(0);
+            ancestors << ancestor;
             break;
         }
-        ancestors << Protocol::Ancestor(col.id(), col.remoteId());
+        Protocol::Ancestor ancestor;
+        ancestor.setId(col.id());
+        ancestor.setRemoteId(col.remoteId());
+        ancestors << ancestor;
         col = col.parent();
     }
     mAncestorCache.insert(parentColId, ancestors);

@@ -178,7 +178,7 @@ protected:
     /**
      * Reimplemented from Akonadi::Job
      */
-    bool doHandleResponse(qint64 tag, const Protocol::Command &response) Q_DECL_OVERRIDE;
+    bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) Q_DECL_OVERRIDE;
 
 private:
     Q_DECLARE_PRIVATE(SearchCreateJob)

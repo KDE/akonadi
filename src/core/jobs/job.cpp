@@ -40,7 +40,7 @@ using namespace Akonadi;
 static QDBusAbstractInterface *s_jobtracker = nullptr;
 
 //@cond PRIVATE
-void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
+void JobPrivate::handleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_Q(Job);
 
@@ -50,8 +50,8 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
     }
 
     if (tag == mTag) {
-        if (response.isResponse()) {
-            Protocol::Response resp(response);
+        if (response->isResponse()) {
+            const auto &resp = Protocol::cmdCast<Protocol::Response>(response);
             if (resp.isError()) {
                 q->setError(Job::Unknown);
                 q->setErrorText(resp.errorMessage());
@@ -63,7 +63,7 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
 
     if (mTag != tag) {
         qCWarning(AKONADICORE_LOG) << "Received response with a different tag!";
-        qCDebug(AKONADICORE_LOG) << "Response tag:" << tag << ", response type:" << response.type();
+        qCDebug(AKONADICORE_LOG) << "Response tag:" << tag << ", response type:" << response->type();
         qCDebug(AKONADICORE_LOG) << "Job tag:" << mTag << ", job:" << q;
         return;
     }
@@ -71,7 +71,7 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
     if (mStarted) {
         if (mReadingFinished) {
             qCWarning(AKONADICORE_LOG) << "Received response for a job that does not expect any more data, ignoring";
-            qCDebug(AKONADICORE_LOG) << "Response tag:" << tag << ", response type:" << response.type();
+            qCDebug(AKONADICORE_LOG) << "Response tag:" << tag << ", response type:" << response->type();
             qCDebug(AKONADICORE_LOG) << "Job tag:" << mTag << ", job:" << q;
             Q_ASSERT(!mReadingFinished);
             return;
@@ -114,7 +114,7 @@ void JobPrivate::init(QObject *parent)
             if (s_lastTime.isNull()) {
                 s_lastTime.start();
             }
-            const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
+            const QString suffix; // = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
             if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
                 s_jobtracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole") + suffix,
                                                   QStringLiteral("/jobtracker"),
@@ -232,7 +232,7 @@ qint64 JobPrivate::tag() const
     return mTag;
 }
 
-void JobPrivate::sendCommand(qint64 tag, const Protocol::Command &cmd)
+void JobPrivate::sendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
 {
     if (mParentJob) {
         mParentJob->d_ptr->sendCommand(tag, cmd);
@@ -241,7 +241,7 @@ void JobPrivate::sendCommand(qint64 tag, const Protocol::Command &cmd)
     }
 }
 
-void JobPrivate::sendCommand(const Protocol::Command &cmd)
+void JobPrivate::sendCommand(const Protocol::CommandPtr &cmd)
 {
     sendCommand(newTag(), cmd);
 }
@@ -363,9 +363,9 @@ bool Job::removeSubjob(KJob *job)
     return rv;
 }
 
-bool Job::doHandleResponse(qint64 tag, const Protocol::Command &command)
+bool Akonadi::Job::doHandleResponse(qint64 tag, const Akonadi::Protocol::CommandPtr &response)
 {
-    qCDebug(AKONADICORE_LOG) << this << "Unhandled response: " << tag << command.debugString();
+    qCDebug(AKONADICORE_LOG) << this << "Unhandled response: " << tag << Protocol::debugString(response);
     setError(Unknown);
     setErrorText(i18n("Unexpected response"));
     emitResult();

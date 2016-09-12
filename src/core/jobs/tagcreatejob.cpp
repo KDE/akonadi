@@ -65,26 +65,27 @@ void TagCreateJob::doStart()
         return;
     }
 
-    Protocol::CreateTagCommand cmd;
-    cmd.setGid(d->mTag.gid());
-    cmd.setMerge(d->mMerge);
-    cmd.setType(d->mTag.type());
-    cmd.setRemoteId(d->mTag.remoteId());
-    cmd.setParentId(d->mTag.parent().id());
-    cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));
+    auto cmd = Protocol::CreateTagCommandPtr::create();
+    cmd->setGid(d->mTag.gid());
+    cmd->setMerge(d->mMerge);
+    cmd->setType(d->mTag.type());
+    cmd->setRemoteId(d->mTag.remoteId());
+    cmd->setParentId(d->mTag.parent().id());
+    cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));
     d->sendCommand(cmd);
 }
 
-bool TagCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool TagCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(TagCreateJob);
 
-    if (response.isResponse() && response.type() == Protocol::Command::FetchTags) {
-        d->mResultTag = ProtocolHelper::parseTagFetchResult(response);
+    if (response->isResponse() && response->type() == Protocol::Command::FetchTags) {
+        d->mResultTag = ProtocolHelper::parseTagFetchResult(
+            Protocol::cmdCast<Protocol::FetchTagsResponse>(response));
         return false;
     }
 
-    if (response.isResponse() && response.type() == Protocol::Command::CreateTag) {
+    if (response->isResponse() && response->type() == Protocol::Command::CreateTag) {
         return true;
     }
 

@@ -62,15 +62,20 @@ QString PartStreamer::error() const
 
 Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partName)
 {
-    Q_EMIT responseAvailable(Protocol::StreamPayloadCommand(partName, Protocol::StreamPayloadCommand::MetaData));
+    {
+        auto resp = Protocol::StreamPayloadCommandPtr::create();
+        resp->setPayloadName(partName);
+        resp->setRequest(Protocol::StreamPayloadCommand::MetaData);
+        Q_EMIT responseAvailable(resp);
+    }
 
     const auto cmd = mConnection->readCommand();
-    if (!cmd.isValid() || Protocol::Response(cmd).isError()) {
+    if (!cmd->isValid() || Protocol::cmdCast<Protocol::Response>(cmd).isError()) {
         mError = QStringLiteral("Client failed to provide part metadata");
         return Protocol::PartMetaData();
     }
 
-    return Protocol::StreamPayloadResponse(cmd).metaData();
+    return Protocol::cmdCast<Protocol::StreamPayloadResponse>(cmd).metaData();
 }
 
 bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
@@ -109,10 +114,16 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
     }
 
     // Request the actual data
-    Q_EMIT responseAvailable(Protocol::StreamPayloadCommand(metaPart.name(), Protocol::StreamPayloadCommand::Data));
+    {
+        auto resp = Protocol::StreamPayloadCommandPtr::create();
+        resp->setPayloadName(metaPart.name());
+        resp->setRequest(Protocol::StreamPayloadCommand::Data);
+        Q_EMIT responseAvailable(resp);
+    }
 
-    Protocol::StreamPayloadResponse response = mConnection->readCommand();
-    if (response.isError() || !response.isValid()) {
+    const auto cmd = mConnection->readCommand();
+    const auto &response = Protocol::cmdCast<Protocol::StreamPayloadResponse>(cmd);
+    if (!response.isValid() || response.isError()) {
         mError = QStringLiteral("Client failed to provide payload data");
         qCCritical(AKONADISERVER_LOG) << mError;
         return false;
@@ -194,12 +205,17 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         }
     }
 
-    Protocol::StreamPayloadCommand cmd(metaPart.name(), Protocol::StreamPayloadCommand::Data);
-    cmd.setDestination(QString::fromUtf8(filename));
-    Q_EMIT responseAvailable(cmd);
+    {
+        auto cmd = Protocol::StreamPayloadCommandPtr::create();
+        cmd->setPayloadName(metaPart.name());
+        cmd->setRequest(Protocol::StreamPayloadCommand::Data);
+        cmd->setDestination(QString::fromUtf8(filename));
+        Q_EMIT responseAvailable(cmd);
+    }
 
-    Protocol::StreamPayloadResponse response = mConnection->readCommand();
-    if (response.isError() || !response.isValid()) {
+    const auto cmd = mConnection->readCommand();
+    const auto &response = Protocol::cmdCast<Protocol::Response>(cmd);
+    if (!response.isValid() || response.isError()) {
         mError = QStringLiteral("Client failed to store payload into file");
         qCCritical(AKONADISERVER_LOG) << mError;
         return false;
@@ -234,11 +250,16 @@ bool PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData
         origData = PartHelper::translateData(part);
     }
 
-    Protocol::StreamPayloadCommand cmd(metaPart.name(), Protocol::StreamPayloadCommand::Data);
-    Q_EMIT responseAvailable(cmd);
+    {
+        auto cmd = Protocol::StreamPayloadCommandPtr::create();
+        cmd->setPayloadName(metaPart.name());
+        cmd->setRequest(Protocol::StreamPayloadCommand::Data);
+        Q_EMIT responseAvailable(cmd);
+    }
 
-    Protocol::StreamPayloadResponse response = mConnection->readCommand();
-    if (response.isError() || !response.isValid()) {
+    const auto cmd = mConnection->readCommand();
+    const auto response = Protocol::cmdCast<Protocol::StreamPayloadResponse>(cmd);
+    if (!response.isValid() || response.isError()) {
         mError = QStringLiteral("Client failed to store payload into file");
         qCCritical(AKONADISERVER_LOG) << mError;
         return false;

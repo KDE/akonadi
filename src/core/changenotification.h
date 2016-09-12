@@ -23,6 +23,7 @@
 #include <QDateTime>
 #include <QVector>
 #include <QSharedDataPointer>
+#include <QSharedPointer>
 
 #include <akonadicore_export.h>
 
@@ -31,6 +32,7 @@ namespace Akonadi
 namespace Protocol
 {
 class ChangeNotification;
+using ChangeNotificationPtr = QSharedPointer<ChangeNotification>;
 }
 
 /**
@@ -69,8 +71,8 @@ public:
     Type type() const;
     void setType(Type type);
 
-    Protocol::ChangeNotification notification() const;
-    void setNotification(const Protocol::ChangeNotification &ntf);
+    Protocol::ChangeNotificationPtr notification() const;
+    void setNotification(const Protocol::ChangeNotificationPtr &ntf);
 
 private:
     class Private;

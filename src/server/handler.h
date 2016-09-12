@@ -66,9 +66,9 @@ public:
      */
     quint64 tag() const;
 
-    void setCommand(const Protocol::Command &cmd);
+    void setCommand(const Protocol::CommandPtr &cmd);
 
-    Protocol::Command command() const;
+    Protocol::CommandPtr command() const;
 
     /**
      * Find a handler for a command that is always allowed, like LOGOUT.
@@ -100,11 +100,11 @@ public:
 
     template<typename T>
     typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, bool>::type
-    successResponse(const T &response = T());
+    successResponse(const QSharedPointer<T> &response = QSharedPointer<T>());
 
     template<typename T>
     typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
-    sendResponse(const T &response = T());
+    sendResponse(const QSharedPointer<T> &response = QSharedPointer<T>());
 
     /**
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
@@ -115,7 +115,7 @@ public:
     bool checkScopeConstraints(const Scope &scope, int permittedScopes);
 
 public Q_SLOTS:
-    void sendResponse(const Protocol::Command &response);
+    void sendResponse(const Protocol::CommandPtr &response);
 
 Q_SIGNALS:
     /**
@@ -132,22 +132,22 @@ private:
     bool m_sentFailureResponse;
 
 protected:
-    Protocol::Command m_command;
+    Protocol::CommandPtr m_command;
 };
 
 template<typename T>
 typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, bool>::type
-Handler::successResponse(const T &response)
+Handler::successResponse(const QSharedPointer<T> &response)
 {
-    sendResponse(response);
+    sendResponse(response ? response : QSharedPointer<T>::create());
     return true;
 }
 
 template<typename T>
 typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
-Handler::sendResponse(const T &response)
+Handler::sendResponse(const QSharedPointer<T> &response)
 {
-    sendResponse(static_cast<const Protocol::Command &>(response));
+    sendResponse(response.template staticCast<Protocol::Command>());
 }
 
 } // namespace Server

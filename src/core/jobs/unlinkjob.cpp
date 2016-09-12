@@ -52,7 +52,7 @@ void UnlinkJob::doStart()
     d->sendCommand(Protocol::LinkItemsCommand::Unlink);
 }
 
-bool UnlinkJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool UnlinkJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(UnlinkJob);
     return d->handleResponse(tag, response);

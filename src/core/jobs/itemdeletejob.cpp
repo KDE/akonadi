@@ -109,7 +109,7 @@ void ItemDeleteJob::doStart()
     Q_D(ItemDeleteJob);
 
     try {
-        d->sendCommand(Protocol::DeleteItemsCommand(
+        d->sendCommand(Protocol::DeleteItemsCommandPtr::create(
                            d->mItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mItems),
                            ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mItems)));
     } catch (const Akonadi::Exception &e) {
@@ -120,9 +120,9 @@ void ItemDeleteJob::doStart()
     }
 }
 
-bool ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemDeleteJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::DeleteItems) {
+    if (!response->isResponse() || response->type() != Protocol::Command::DeleteItems) {
         return Job::doHandleResponse(tag, response);
     }
 

@@ -179,7 +179,7 @@ Q_SIGNALS:
 
 protected:
     void doStart() Q_DECL_OVERRIDE;
-    bool doHandleResponse(qint64 tag, const Protocol::Command &response) Q_DECL_OVERRIDE;
+    bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) Q_DECL_OVERRIDE;
 
 protected Q_SLOTS:
     //@cond PRIVATE

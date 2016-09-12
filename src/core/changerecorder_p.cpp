@@ -48,7 +48,7 @@ int ChangeRecorderPrivate::pipelineSize() const
     return MonitorPrivate::pipelineSize();
 }
 
-void ChangeRecorderPrivate::slotNotify(const Akonadi::Protocol::ChangeNotification &msg)
+void ChangeRecorderPrivate::slotNotify(const Protocol::ChangeNotificationPtr &msg)
 {
     Q_Q(ChangeRecorder);
     const int oldChanges = pendingNotifications.size();
@@ -87,7 +87,7 @@ void ChangeRecorderPrivate::loadNotifications()
 
         for (int i = 0; i < size; ++i) {
             settings->setArrayIndex(i);
-            Protocol::ChangeNotification msg;
+            Protocol::ChangeNotificationPtr msg;
 
             switch (static_cast<LegacyType>(settings->value(QStringLiteral("type")).toInt())) {
             case Item:
@@ -102,7 +102,7 @@ void ChangeRecorderPrivate::loadNotifications()
                 qWarning() << "Unexpected notification type in legacy store";
                 continue;
             }
-            if (msg.isValid()) {
+            if (msg->isValid()) {
                 pendingNotifications << msg;
             }
         }
@@ -133,7 +133,7 @@ static const quint64 s_currentVersion = Q_UINT64_C(0x000600000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
-QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QFile *device, bool &needsFullSave) const
+QQueue<Protocol::ChangeNotificationPtr> ChangeRecorderPrivate::loadFrom(QFile *device, bool &needsFullSave) const
 {
     QDataStream stream(device);
     stream.setVersion(QDataStream::Qt_4_6);
@@ -141,7 +141,7 @@ QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QFile *devi
     QByteArray sessionId;
     int type;
 
-    QQueue<Protocol::ChangeNotification> list;
+    QQueue<Protocol::ChangeNotificationPtr> list;
 
     quint64 sizeAndVersion;
     stream >> sizeAndVersion;
@@ -159,7 +159,7 @@ QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QFile *devi
     needsFullSave = startOffset > 0 || version == 0;
 
     for (quint64 i = 0; i < size && !stream.atEnd(); ++i) {
-        Protocol::ChangeNotification msg;
+        Protocol::ChangeNotificationPtr msg;
         stream >> sessionId;
         stream >> type;
 
@@ -190,8 +190,8 @@ QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QFile *devi
             continue;
         }
 
-        if (msg.isValid()) {
-            msg.setSessionId(sessionId);
+        if (msg->isValid()) {
+            msg->setSessionId(sessionId);
             list << msg;
         }
     }
@@ -213,32 +213,32 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
 
     QString result;
     bool dummy;
-    const QQueue<Protocol::ChangeNotification> notifications = loadFrom(&file, dummy);
-    for (const Protocol::ChangeNotification &n : notifications) {
-        result += n.debugString() + QLatin1Char('\n');
+    const QQueue<Protocol::ChangeNotificationPtr> notifications = loadFrom(&file, dummy);
+    for (const Protocol::ChangeNotificationPtr &n : notifications) {
+        result += Protocol::debugString(n) + QLatin1Char('\n');
     }
     return result;
 }
 
-void ChangeRecorderPrivate::addToStream(QDataStream &stream, const Protocol::ChangeNotification &msg)
+void ChangeRecorderPrivate::addToStream(QDataStream &stream, const Protocol::ChangeNotificationPtr &msg)
 {
     // We deliberately don't use Factory::serialize(), because the internal
     // serialization format could change at any point
 
-    stream << msg.sessionId();
-    stream << int(mapToLegacyType(msg.type()));
-    switch (msg.type()) {
+    stream << msg->sessionId();
+    stream << int(mapToLegacyType(msg->type()));
+    switch (msg->type()) {
     case Protocol::Command::ItemChangeNotification:
-        saveItemNotification(stream, static_cast<const Protocol::ItemChangeNotification &>(msg));
+        saveItemNotification(stream, Protocol::cmdCast<Protocol::ItemChangeNotification>(msg));
         break;
     case Protocol::Command::CollectionChangeNotification:
-        saveCollectionNotification(stream, static_cast<const Protocol::CollectionChangeNotification &>(msg));
+        saveCollectionNotification(stream, Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg));
         break;
     case Protocol::Command::TagChangeNotification:
-        saveTagNotification(stream, static_cast<const Protocol::TagChangeNotification &>(msg));
+        saveTagNotification(stream, Protocol::cmdCast<Protocol::TagChangeNotification>(msg));
         break;
     case Protocol::Command::RelationChangeNotification:
-        saveRelationNotification(stream, static_cast<const Protocol::RelationChangeNotification &>(msg));
+        saveRelationNotification(stream, Protocol::cmdCast<Protocol::RelationChangeNotification>(msg));
         break;
     default:
         qWarning() << "Unexpected type?";
@@ -307,7 +307,7 @@ void ChangeRecorderPrivate::saveTo(QIODevice *device)
     //qCDebug(AKONADICORE_LOG) << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
     for (int i = 0; i < pendingNotifications.count(); ++i) {
-        const Protocol::ChangeNotification msg = pendingNotifications.at(i);
+        const Protocol::ChangeNotificationPtr msg = pendingNotifications.at(i);
         addToStream(stream, msg);
     }
 }
@@ -364,7 +364,7 @@ void ChangeRecorderPrivate::notificationsLoaded()
     m_startOffset = 0;
 }
 
-bool ChangeRecorderPrivate::emitNotification(const Protocol::ChangeNotification &msg)
+bool ChangeRecorderPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg)
 {
     const bool someoneWasListening = MonitorPrivate::emitNotification(msg);
     if (!someoneWasListening && enableChangeRecording) {
@@ -375,43 +375,43 @@ bool ChangeRecorderPrivate::emitNotification(const Protocol::ChangeNotification 
     return someoneWasListening;
 }
 
-Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QSettings *settings) const
+Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QSettings *settings) const
 {
-    Protocol::ItemChangeNotification msg;
-    msg.setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
-    msg.setOperation(mapItemOperation(static_cast<LegacyOp>(settings->value(QStringLiteral("op")).toInt())));
-    msg.addItem(settings->value(QStringLiteral("uid")).toLongLong(),
-                settings->value(QStringLiteral("rid")).toString(),
-                QString(),
-                settings->value(QStringLiteral("mimeType")).toString());
-    msg.setResource(settings->value(QStringLiteral("resource")).toByteArray());
-    msg.setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
-    msg.setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
+    auto msg = Protocol::ItemChangeNotificationPtr::create();
+    msg->setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
+    msg->setOperation(mapItemOperation(static_cast<LegacyOp>(settings->value(QStringLiteral("op")).toInt())));
+    msg->setItems({ { settings->value(QStringLiteral("uid")).toLongLong(),
+                     settings->value(QStringLiteral("rid")).toString(),
+                     QString(),
+                     settings->value(QStringLiteral("mimeType")).toString() } });
+    msg->setResource(settings->value(QStringLiteral("resource")).toByteArray());
+    msg->setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
+    msg->setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
     const QStringList list = settings->value(QStringLiteral("itemParts")).toStringList();
     QSet<QByteArray> itemParts;
     for (const QString &entry : list) {
         itemParts.insert(entry.toLatin1());
     }
-    msg.setItemParts(itemParts);
+    msg->setItemParts(itemParts);
     return msg;
 }
 
-Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(QSettings *settings) const
+Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotification(QSettings *settings) const
 {
-    Protocol::CollectionChangeNotification msg;
-    msg.setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
-    msg.setOperation(mapCollectionOperation(static_cast<LegacyOp>(settings->value(QStringLiteral("op")).toInt())));
-    msg.setId(settings->value(QStringLiteral("uid")).toLongLong());
-    msg.setRemoteId(settings->value(QStringLiteral("rid")).toString());
-    msg.setResource(settings->value(QStringLiteral("resource")).toByteArray());
-    msg.setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
-    msg.setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
+    auto msg = Protocol::CollectionChangeNotificationPtr::create();
+    msg->setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
+    msg->setOperation(mapCollectionOperation(static_cast<LegacyOp>(settings->value(QStringLiteral("op")).toInt())));
+    msg->setId(settings->value(QStringLiteral("uid")).toLongLong());
+    msg->setRemoteId(settings->value(QStringLiteral("rid")).toString());
+    msg->setResource(settings->value(QStringLiteral("resource")).toByteArray());
+    msg->setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
+    msg->setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
     const QStringList list = settings->value(QStringLiteral("itemParts")).toStringList();
     QSet<QByteArray> changedParts;
     for (const QString &entry : list) {
         changedParts.insert(entry.toLatin1());
     }
-    msg.setChangedParts(changedParts);
+    msg->setChangedParts(changedParts);
     return msg;
 }
 
@@ -437,16 +437,17 @@ QSet<Protocol::ItemChangeNotification::Relation> ChangeRecorderPrivate::extractR
     return relations;
 }
 
-Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QDataStream &stream, quint64 version) const
+Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDataStream &stream, quint64 version) const
 {
     QByteArray resource, destinationResource;
     int operation, entityCnt;
-    quint64 uid, parentCollection, parentDestCollection;
+    qint64 uid, parentCollection, parentDestCollection;
     QString remoteId, mimeType, remoteRevision;
     QSet<QByteArray> itemParts, addedFlags, removedFlags;
     QSet<qint64> addedTags, removedTags;
+    QVector<Protocol::ChangeNotification::Item> items;
 
-    Protocol::ItemChangeNotification msg;
+    auto msg = Protocol::ItemChangeNotificationPtr::create();
 
     if (version == 1) {
         stream >> operation;
@@ -458,7 +459,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QDataSt
         stream >> mimeType;
         stream >> itemParts;
 
-        msg.addItem(uid, remoteId, QString(), mimeType);
+        items << Protocol::ChangeNotification::Item{ uid, remoteId, QString(), mimeType };
     } else if (version >= 2) {
         stream >> operation;
         stream >> entityCnt;
@@ -471,7 +472,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QDataSt
                 qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
                 return msg;
             }
-            msg.addItem(uid, remoteId, remoteRevision, mimeType);
+            items << Protocol::ChangeNotification::Item{ uid, remoteId, remoteRevision, mimeType };
         }
         stream >> resource;
         stream >> destinationResource;
@@ -489,21 +490,22 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QDataSt
         return msg;
     }
     if (version >= 5) {
-        msg.setOperation(static_cast<Protocol::ItemChangeNotification::Operation>(operation));
+        msg->setOperation(static_cast<Protocol::ItemChangeNotification::Operation>(operation));
     } else {
-        msg.setOperation(mapItemOperation(static_cast<LegacyOp>(operation)));
+        msg->setOperation(mapItemOperation(static_cast<LegacyOp>(operation)));
     }
-    msg.setResource(resource);
-    msg.setDestinationResource(destinationResource);
-    msg.setParentCollection(parentCollection);
-    msg.setParentDestCollection(parentDestCollection);
-    msg.setItemParts(itemParts);
-    msg.setAddedRelations(extractRelations(addedFlags));
-    msg.setAddedFlags(addedFlags);
-    msg.setRemovedRelations(extractRelations(removedFlags));
-    msg.setRemovedFlags(removedFlags);
-    msg.setAddedTags(addedTags);
-    msg.setRemovedTags(removedTags);
+    msg->setItems(items);
+    msg->setResource(resource);
+    msg->setDestinationResource(destinationResource);
+    msg->setParentCollection(parentCollection);
+    msg->setParentDestCollection(parentDestCollection);
+    msg->setItemParts(itemParts);
+    msg->setAddedRelations(extractRelations(addedFlags));
+    msg->setAddedFlags(addedFlags);
+    msg->setRemovedRelations(extractRelations(removedFlags));
+    msg->setRemovedFlags(removedFlags);
+    msg->setAddedTags(addedTags);
+    msg->setRemovedTags(removedTags);
     return msg;
 }
 
@@ -538,7 +540,7 @@ void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Prot
     stream << msg.removedTags();
 }
 
-Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(QDataStream &stream, quint64 version) const
+Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotification(QDataStream &stream, quint64 version) const
 {
     QByteArray resource, destinationResource;
     int operation, entityCnt;
@@ -547,7 +549,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(Q
     QSet<QByteArray> changedParts, dummyBa;
     QSet<qint64> dummyIv;
 
-    Protocol::CollectionChangeNotification msg;
+    auto msg = Protocol::CollectionChangeNotificationPtr::create();
 
     if (version == 1) {
         stream >> operation;
@@ -559,8 +561,8 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(Q
         stream >> dummyString;
         stream >> changedParts;
 
-        msg.setId(uid);
-        msg.setRemoteId(remoteId);
+        msg->setId(uid);
+        msg->setRemoteId(remoteId);
     } else if (version >= 2) {
         stream >> operation;
         stream >> entityCnt;
@@ -573,9 +575,9 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(Q
                 qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
                 return msg;
             }
-            msg.setId(uid);
-            msg.setRemoteId(remoteId);
-            msg.setRemoteRevision(remoteRevision);
+            msg->setId(uid);
+            msg->setRemoteId(remoteId);
+            msg->setRemoteRevision(remoteRevision);
         }
         stream >> resource;
         stream >> destinationResource;
@@ -594,15 +596,15 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(Q
      }
 
     if (version >= 5) {
-        msg.setOperation(static_cast<Protocol::CollectionChangeNotification::Operation>(operation));
+        msg->setOperation(static_cast<Protocol::CollectionChangeNotification::Operation>(operation));
     } else {
-        msg.setOperation(mapCollectionOperation(static_cast<LegacyOp>(operation)));
+        msg->setOperation(mapCollectionOperation(static_cast<LegacyOp>(operation)));
     }
-    msg.setResource(resource);
-    msg.setDestinationResource(destinationResource);
-    msg.setParentCollection(parentCollection);
-    msg.setParentDestCollection(parentDestCollection);
-    msg.setChangedParts(changedParts);
+    msg->setResource(resource);
+    msg->setDestinationResource(destinationResource);
+    msg->setParentCollection(parentCollection);
+    msg->setParentDestCollection(parentDestCollection);
+    msg->setChangedParts(changedParts);
     return msg;
 }
 
@@ -625,7 +627,7 @@ void Akonadi::ChangeRecorderPrivate::saveCollectionNotification(QDataStream &str
     stream << QSet<qint64>();
 }
 
-Protocol::ChangeNotification ChangeRecorderPrivate::loadTagNotification(QDataStream &stream, quint64 version) const
+Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadTagNotification(QDataStream &stream, quint64 version) const
 {
     QByteArray resource, dummyBa;
     int operation, entityCnt;
@@ -634,7 +636,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadTagNotification(QDataStr
     QSet<QByteArray> dummyBaV;
     QSet<qint64> dummyIv;
 
-    Protocol::TagChangeNotification msg;
+    auto msg = Protocol::TagChangeNotificationPtr::create();
 
     if (version == 1) {
         stream >> operation;
@@ -646,8 +648,8 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadTagNotification(QDataStr
         stream >> dummyString;
         stream >> dummyBaV;
 
-        msg.setId(uid);
-        msg.setRemoteId(remoteId);
+        msg->setId(uid);
+        msg->setRemoteId(remoteId);
     } else if (version >= 2) {
         stream >> operation;
         stream >> entityCnt;
@@ -660,8 +662,8 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadTagNotification(QDataStr
                 qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
                 return msg;
             }
-            msg.setId(uid);
-            msg.setRemoteId(remoteId);
+            msg->setId(uid);
+            msg->setRemoteId(remoteId);
         }
         stream >> resource;
         stream >> dummyBa;
@@ -676,11 +678,11 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadTagNotification(QDataStr
         }
     }
     if (version >= 5) {
-        msg.setOperation(static_cast<Protocol::TagChangeNotification::Operation>(operation));
+        msg->setOperation(static_cast<Protocol::TagChangeNotification::Operation>(operation));
     } else {
-        msg.setOperation(mapTagOperation(static_cast<LegacyOp>(operation)));
+        msg->setOperation(mapTagOperation(static_cast<LegacyOp>(operation)));
     }
-    msg.setResource(resource);
+    msg->setResource(resource);
     return msg;
 }
 
@@ -703,7 +705,7 @@ void Akonadi::ChangeRecorderPrivate::saveTagNotification(QDataStream &stream, co
     stream << QSet<qint64>();
 }
 
-Protocol::ChangeNotification ChangeRecorderPrivate::loadRelationNotification(QDataStream &stream, quint64 version) const
+Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(QDataStream &stream, quint64 version) const
 {
     QByteArray dummyBa;
     int operation, entityCnt;
@@ -712,7 +714,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadRelationNotification(QDa
     QSet<QByteArray> itemParts, dummyBaV;
     QSet<qint64> dummyIv;
 
-    Protocol::RelationChangeNotification msg;
+    auto msg = Protocol::RelationChangeNotificationPtr::create();
 
     if (version == 1) {
         qWarning() << "Invalid version of relation notification";
@@ -751,9 +753,9 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadRelationNotification(QDa
     }
 
     if (version >= 5) {
-        msg.setOperation(static_cast<Protocol::RelationChangeNotification::Operation>(operation));
+        msg->setOperation(static_cast<Protocol::RelationChangeNotification::Operation>(operation));
     } else {
-        msg.setOperation(mapRelationOperation(static_cast<LegacyOp>(operation)));
+        msg->setOperation(mapRelationOperation(static_cast<LegacyOp>(operation)));
     }
     for (const QByteArray &part : qAsConst(itemParts)) {
         const QByteArrayList p = part.split(' ');
@@ -761,13 +763,13 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadRelationNotification(QDa
             continue;
         }
         if (p[0] == "LEFT") {
-            msg.setLeftItem(p[1].toLongLong());
+            msg->setLeftItem(p[1].toLongLong());
         } else if (p[0] == "RIGHT") {
-            msg.setRightItem(p[1].toLongLong());
+            msg->setRightItem(p[1].toLongLong());
         } else if (p[0] == "RID") {
-            msg.setRemoteId(QString::fromLatin1(p[1]));
+            msg->setRemoteId(QString::fromLatin1(p[1]));
         } else if (p[0] == "TYPE") {
-            msg.setType(QString::fromLatin1(p[1]));
+            msg->setType(QString::fromLatin1(p[1]));
         }
     }
     return msg;

@@ -44,7 +44,7 @@ public:
 
     QDateTime timestamp;
     QVector<QByteArray> listeners;
-    Protocol::ChangeNotification notification;
+    Protocol::ChangeNotificationPtr notification;
     ChangeNotification::Type type;
 };
 
@@ -105,12 +105,12 @@ QDateTime ChangeNotification::timestamp() const
     return d->timestamp;
 }
 
-Protocol::ChangeNotification ChangeNotification::notification() const
+Protocol::ChangeNotificationPtr ChangeNotification::notification() const
 {
     return d->notification;
 }
 
-void ChangeNotification::setNotification(const Protocol::ChangeNotification &ntf)
+void ChangeNotification::setNotification(const Protocol::ChangeNotificationPtr &ntf)
 {
     d->notification = ntf;
 }

@@ -119,12 +119,12 @@ void TagFetchJob::doStart()
 {
     Q_D(TagFetchJob);
 
-    Protocol::FetchTagsCommand cmd;
+    Protocol::FetchTagsCommandPtr cmd;
     if (d->mRequestedTags.isEmpty()) {
-        cmd = Protocol::FetchTagsCommand(Scope(ImapInterval(1, 0)));
+        cmd = Protocol::FetchTagsCommandPtr::create(Scope(ImapInterval(1, 0)));
     } else {
         try {
-            cmd = Protocol::FetchTagsCommand(ProtocolHelper::entitySetToScope(d->mRequestedTags));
+            cmd = Protocol::FetchTagsCommandPtr::create(ProtocolHelper::entitySetToScope(d->mRequestedTags));
         } catch (const Exception &e) {
             setError(Job::Unknown);
             setErrorText(QString::fromUtf8(e.what()));
@@ -132,27 +132,27 @@ void TagFetchJob::doStart()
             return;
         }
     }
-    cmd.setAttributes(d->mFetchScope.attributes());
-    cmd.setIdOnly(d->mFetchScope.fetchIdOnly());
+    cmd->setAttributes(d->mFetchScope.attributes());
+    cmd->setIdOnly(d->mFetchScope.fetchIdOnly());
 
     d->sendCommand(cmd);
 }
 
-bool TagFetchJob::doHandleResponse(qint64 _tag, const Protocol::Command &response)
+bool TagFetchJob::doHandleResponse(qint64 _tag, const Protocol::CommandPtr &response)
 {
     Q_D(TagFetchJob);
 
-    if (!response.isResponse() || response.type() != Protocol::Command::FetchTags) {
+    if (!response->isResponse() || response->type() != Protocol::Command::FetchTags) {
         return Job::doHandleResponse(_tag, response);
     }
 
-    Protocol::FetchTagsResponse resp(response);
+    const auto &resp = Protocol::cmdCast<Protocol::FetchTagsResponse>(response);
     // Invalid tag in response marks the last response
     if (resp.id() < 0) {
         return true;
     }
 
-    const Tag tag = ProtocolHelper::parseTagFetchResult(response);
+    const Tag tag = ProtocolHelper::parseTagFetchResult(resp);
     d->mResultTags.append(tag);
     d->mPendingTags.append(tag);
     if (!d->mEmitTimer->isActive()) {

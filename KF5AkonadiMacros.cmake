@@ -24,8 +24,8 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
   add_executable( ${_name} ${_test} ${_additionalsources})
   ecm_mark_as_test(${_name})
   target_link_libraries(${_name}
-                        Qt5::Test Qt5::Gui Qt5::Widgets Qt5::Network KF5::KIOCore KF5::AkonadiCore KF5::DBusAddons
-                        ${_linklibraries})
+                        Qt5::Test Qt5::Gui Qt5::Widgets Qt5::Network KF5::KIOCore KF5::AkonadiCore
+                        KF5::AkonadiPrivate KF5::DBusAddons ${_linklibraries})
 
   if (NOT DEFINED _testrunner)
     if (${PROJECT_NAME} STREQUAL Akonadi AND TARGET akonaditest)

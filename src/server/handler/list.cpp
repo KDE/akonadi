@@ -515,7 +515,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
 
 bool List::parseStream()
 {
-    Protocol::FetchCollectionsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::FetchCollectionsCommand>(m_command);
 
     if (!cmd.resource().isEmpty()) {
         mResource = Resource::retrieveByName(cmd.resource());

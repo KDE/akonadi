@@ -59,11 +59,11 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, qui
 
     const SchemaVersion schema = SchemaVersion::retrieveAll().first();
 
-    Protocol::HelloResponse hello;
-    hello.setServerName(QStringLiteral("Akonadi"));
-    hello.setMessage(QStringLiteral("Not really IMAP server"));
-    hello.setProtocolVersion(Protocol::version());
-    hello.setGeneration(schema.generation());
+    auto hello = Protocol::HelloResponsePtr::create();
+    hello->setServerName(QStringLiteral("Akonadi"));
+    hello->setMessage(QStringLiteral("Not really IMAP server"));
+    hello->setProtocolVersion(Protocol::version());
+    hello->setGeneration(schema.generation());
     writeCommand(0, hello);
 }
 
@@ -85,7 +85,7 @@ void NotificationSubscriber::socketReadyRead()
         qint64 tag = -1;
         stream >> tag;
 
-        Protocol::Command cmd;
+        Protocol::CommandPtr cmd;
         try {
             cmd = Protocol::deserialize(mSocket);
         } catch (const Akonadi::ProtocolException &e) {
@@ -97,16 +97,16 @@ void NotificationSubscriber::socketReadyRead()
             disconnectSubscriber();
             return;
         }
-        if (cmd.type() == Protocol::Command::Invalid) {
+        if (cmd->type() == Protocol::Command::Invalid) {
             qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
             disconnectSubscriber();
             return;
         }
 
-        switch (cmd.type()) {
+        switch (cmd->type()) {
         case Protocol::Command::CreateSubscription:
-            registerSubscriber(cmd);
-            writeCommand(tag, Protocol::CreateSubscriptionResponse());
+            registerSubscriber(Protocol::cmdCast<Protocol::CreateSubscriptionCommand>(cmd));
+            writeCommand(tag, Protocol::CreateSubscriptionResponsePtr::create());
             break;
         case Protocol::Command::ModifySubscription:
             if (mSubscriber.isEmpty()) {
@@ -114,14 +114,14 @@ void NotificationSubscriber::socketReadyRead()
                 disconnectSubscriber();
                 return;
             }
-            modifySubscription(cmd);
-            writeCommand(tag, Protocol::ModifySubscriptionResponse());
+            modifySubscription(Protocol::cmdCast<Protocol::ModifySubscriptionCommand>(cmd));
+            writeCommand(tag, Protocol::ModifySubscriptionResponsePtr::create());
             break;
         case Protocol::Command::Logout:
             disconnectSubscriber();
             break;
         default:
-            qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd.type() << "received by NotificationSubscriber" << mSubscriber;
+            qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd->type() << "received by NotificationSubscriber" << mSubscriber;
             disconnectSubscriber();
             break;
         }
@@ -139,10 +139,10 @@ void NotificationSubscriber::disconnectSubscriber()
     QMutexLocker locker(&mLock);
 
     if (mManager) {
-        Protocol::SubscriptionChangeNotification changeNtf;
-        changeNtf.setSubscriber(mSubscriber);
-        changeNtf.setSessionId(mSession);
-        changeNtf.setOperation(Protocol::SubscriptionChangeNotification::Remove);
+        auto changeNtf = Protocol::SubscriptionChangeNotificationPtr::create();
+        changeNtf->setSubscriber(mSubscriber);
+        changeNtf->setSessionId(mSession);
+        changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Remove);
         mManager->slotNotify({ changeNtf });
     }
 
@@ -164,10 +164,10 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
     mSession = command.session();
 
     if (mManager) {
-        Protocol::SubscriptionChangeNotification changeNtf;
-        changeNtf.setSubscriber(mSubscriber);
-        changeNtf.setSessionId(mSession);
-        changeNtf.setOperation(Protocol::SubscriptionChangeNotification::Add);
+        auto changeNtf = Protocol::SubscriptionChangeNotificationPtr::create();
+        changeNtf->setSubscriber(mSubscriber);
+        changeNtf->setSessionId(mSession);
+        changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Add);
         mManager->slotNotify({ changeNtf });
     }
 }
@@ -253,7 +253,7 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
                     // Send them back to caller
                     if (subscriber) {
                         QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
-                                                  Q_ARG(Akonadi::Protocol::ChangeNotification,
+                                                  Q_ARG(Akonadi::Protocol::ChangeNotificationPtr,
                                                         subscriber->toChangeNotification()));
                     }
                 }
@@ -272,8 +272,8 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         }
 
         // Emit subscription change notification
-        Protocol::SubscriptionChangeNotification changeNtf = toChangeNotification();
-        changeNtf.setOperation(Protocol::SubscriptionChangeNotification::Modify);
+        auto changeNtf = toChangeNotification();
+        changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Modify);
         mManager->slotNotify({ changeNtf });
     }
 
@@ -283,23 +283,23 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
 #undef REMOVE
 }
 
-Protocol::ChangeNotification NotificationSubscriber::toChangeNotification() const
+Protocol::SubscriptionChangeNotificationPtr NotificationSubscriber::toChangeNotification() const
 {
     // Assumes mLock being locked by caller
 
-    Protocol::SubscriptionChangeNotification ntf;
-    ntf.setSessionId(mSession);
-    ntf.setSubscriber(mSubscriber);
-    ntf.setOperation(Protocol::SubscriptionChangeNotification::Add);
-    ntf.setCollections(mMonitoredCollections);
-    ntf.setItems(mMonitoredItems);
-    ntf.setTags(mMonitoredTags);
-    ntf.setTypes(mMonitoredTypes);
-    ntf.setMimeTypes(mMonitoredMimeTypes);
-    ntf.setResources(mMonitoredResources);
-    ntf.setIgnoredSessions(mIgnoredSessions);
-    ntf.setAllMonitored(mAllMonitored);
-    ntf.setExclusive(mExclusive);
+    auto ntf = Protocol::SubscriptionChangeNotificationPtr::create();
+    ntf->setSessionId(mSession);
+    ntf->setSubscriber(mSubscriber);
+    ntf->setOperation(Protocol::SubscriptionChangeNotification::Add);
+    ntf->setCollections(mMonitoredCollections);
+    ntf->setItems(mMonitoredItems);
+    ntf->setTags(mMonitoredTags);
+    ntf->setTypes(mMonitoredTypes);
+    ntf->setMimeTypes(mMonitoredMimeTypes);
+    ntf->setResources(mMonitoredResources);
+    ntf->setIgnoredSessions(mIgnoredSessions);
+    ntf->setAllMonitored(mAllMonitored);
+    ntf->setExclusive(mExclusive);
     return ntf;
 }
 
@@ -356,20 +356,20 @@ bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::
     return mMonitoredResources.contains(msg.destinationResource());
 }
 
-bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeNotification &notification) const
+bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeNotification &msg) const
 {
     // Assumes mLock being locked by caller
 
-    if (notification.items().isEmpty()) {
+    if (msg.items().isEmpty()) {
         return false;
     }
 
-    if (CollectionReferenceManager::instance()->isReferenced(notification.parentCollection())) {
+    if (CollectionReferenceManager::instance()->isReferenced(msg.parentCollection())) {
         //We always want notifications that affect the parent resource (like an item added to a referenced collection)
-        const bool notificationForParentResource = (mSession == notification.resource());
+        const bool notificationForParentResource = (mSession == msg.resource());
         const bool accepts = mExclusive
-                             || isCollectionMonitored(notification.parentCollection())
-                             || isMoveDestinationResourceMonitored(notification)
+                             || isCollectionMonitored(msg.parentCollection())
+                             || isMoveDestinationResourceMonitored(msg)
                              || notificationForParentResource;
         TRACE_NTF("ACCEPTS ITEM: parent col referenced"
                   << "exclusive:" << mExclusive << ","
@@ -392,17 +392,17 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
 
     // we have a resource or mimetype filter
     if (!mMonitoredResources.isEmpty() || !mMonitoredMimeTypes.isEmpty()) {
-        if (mMonitoredResources.contains(notification.resource())) {
+        if (mMonitoredResources.contains(msg.resource())) {
             TRACE_NTF("ACCEPTS ITEM: ACCEPTED - resource monitored");
             return true;
         }
 
-        if (isMoveDestinationResourceMonitored(notification)) {
+        if (isMoveDestinationResourceMonitored(msg)) {
             TRACE_NTF("ACCEPTS ITEM: ACCEPTED: move destination monitored");
             return true;
         }
 
-        Q_FOREACH (const auto &item, notification.items()) {
+        Q_FOREACH (const auto &item, msg.items()) {
             if (isMimeTypeMonitored(item.mimeType)) {
                 TRACE_NTF("ACCEPTS ITEM: ACCEPTED - mimetype monitored");
                 return true;
@@ -414,18 +414,18 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
     }
 
     // we explicitly monitor that item or the collections it's in
-    Q_FOREACH (const auto &item, notification.items()) {
+    Q_FOREACH (const auto &item, msg.items()) {
         if (mMonitoredItems.contains(item.id)) {
             TRACE_NTF("ACCEPTS ITEM: ACCEPTED: item explicitly monitored");
             return true;
         }
     }
 
-    if (isCollectionMonitored(notification.parentCollection())) {
+    if (isCollectionMonitored(msg.parentCollection())) {
         TRACE_NTF("ACCEPTS ITEM: ACCEPTED: parent collection monitored");
         return true;
     }
-    if (isCollectionMonitored(notification.parentDestCollection())) {
+    if (isCollectionMonitored(msg.parentDestCollection())) {
         TRACE_NTF("ACCEPTS ITEM: ACCEPTED: destination collection monitored");
         return true;
     }
@@ -434,11 +434,11 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
     return false;
 }
 
-bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::CollectionChangeNotification &notification) const
+bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::CollectionChangeNotification &msg) const
 {
     // Assumes mLock being locked by caller
 
-    if (notification.id() < 0) {
+    if (msg.id() < 0) {
         return false;
     }
 
@@ -446,27 +446,27 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
     // agents (that's what we have the exclusive subscription for) - but because
     // querying each Collection from database would be expensive, we use the
     // metadata hack to transfer this information from NotificationCollector
-    if (notification.metadata().contains("DISABLED")
-            && (notification.operation() != Protocol::CollectionChangeNotification::Unsubscribe)
-            && !notification.changedParts().contains("ENABLED")) {
+    if (msg.metadata().contains("DISABLED")
+            && (msg.operation() != Protocol::CollectionChangeNotification::Unsubscribe)
+            && !msg.changedParts().contains("ENABLED")) {
         // Exclusive subscriber always gets it
         if (mExclusive) {
             return true;
         }
 
         //Deliver the notification if referenced from this session
-        if (CollectionReferenceManager::instance()->isReferenced(notification.id(), mSession)) {
+        if (CollectionReferenceManager::instance()->isReferenced(msg.id(), mSession)) {
             return true;
         }
 
         //Exclusive subscribers still want the notification
-        if (mExclusive && CollectionReferenceManager::instance()->isReferenced(notification.id())) {
+        if (mExclusive && CollectionReferenceManager::instance()->isReferenced(msg.id())) {
             return true;
         }
 
         //The session belonging to this monitor referenced or dereferenced the collection. We always want this notification.
         //The referencemanager no longer holds a reference, so we have to check this way.
-        if (notification.changedParts().contains(AKONADI_PARAM_REFERENCED) && mSession == notification.sessionId()) {
+        if (msg.changedParts().contains(AKONADI_PARAM_REFERENCED) && mSession == msg.sessionId()) {
             return true;
         }
 
@@ -486,8 +486,8 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
 
     // we have a resource filter
     if (!mMonitoredResources.isEmpty()) {
-        const bool resourceMatches = mMonitoredResources.contains(notification.resource())
-                                     || isMoveDestinationResourceMonitored(notification);
+        const bool resourceMatches = mMonitoredResources.contains(msg.resource())
+                                     || isMoveDestinationResourceMonitored(msg);
 
         // a bit hacky, but match the behaviour from the item case,
         // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
@@ -498,20 +498,20 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
     }
 
     // we explicitly monitor that colleciton, or all of them
-    if (isCollectionMonitored(notification.id())) {
+    if (isCollectionMonitored(msg.id())) {
         return true;
     }
 
-    return isCollectionMonitored(notification.parentCollection())
-           || isCollectionMonitored(notification.parentDestCollection());
+    return isCollectionMonitored(msg.parentCollection())
+           || isCollectionMonitored(msg.parentDestCollection());
 
 }
 
-bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNotification &notification) const
+bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNotification &msg) const
 {
     // Assumes mLock being locked by caller
 
-    if (notification.id() < 0) {
+    if (msg.id() < 0) {
         return false;
     }
 
@@ -520,7 +520,7 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
     // each resource that owns a Tag RID - Tag RIDs are resource-specific).
     // Additionally then we send one more notification without any RID that is
     // destined for regular applications (which don't know anything about Tag RIDs)
-    if (notification.operation() == Protocol::TagChangeNotification::Remove) {
+    if (msg.operation() == Protocol::TagChangeNotification::Remove) {
         // HACK: Since have no way to determine which resource this NotificationSource
         // belongs to, we are abusing the fact that each resource ignores it's own
         // main session, which is called the same name as the resource.
@@ -528,13 +528,13 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
         // If there are any ignored sessions, but this notification does not have
         // a specific resource set, then we ignore it, as this notification is
         // for clients, not resources (does not have tag RID)
-        if (!mIgnoredSessions.isEmpty() && notification.resource().isEmpty()) {
+        if (!mIgnoredSessions.isEmpty() && msg.resource().isEmpty()) {
             return false;
         }
 
         // If this source ignores a session (i.e. we assume it is a resource),
         // but this notification is for another resource, then we ignore it
-        if (!notification.resource().isEmpty() && !mIgnoredSessions.contains(notification.resource())) {
+        if (!msg.resource().isEmpty() && !mIgnoredSessions.contains(msg.resource())) {
             return false;
         }
 
@@ -558,18 +558,18 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
         return true;
     }
 
-    if (mMonitoredTags.contains(notification.id())) {
+    if (mMonitoredTags.contains(msg.id())) {
         return true;
     }
 
     return false;
 }
 
-bool NotificationSubscriber::acceptsRelationNotification(const Protocol::RelationChangeNotification &notification) const
+bool NotificationSubscriber::acceptsRelationNotification(const Protocol::RelationChangeNotification &msg) const
 {
     // Assumes mLock being locked by caller
 
-    Q_UNUSED(notification);
+    Q_UNUSED(msg);
 
     if (mAllMonitored) {
         return true;
@@ -582,27 +582,25 @@ bool NotificationSubscriber::acceptsRelationNotification(const Protocol::Relatio
     return true;
 }
 
-bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::SubscriptionChangeNotification &notification) const
+bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::SubscriptionChangeNotification &msg) const
 {
     // Assumes mLock being locked by caller
 
-    Q_UNUSED(notification);
+    Q_UNUSED(msg);
 
     // Unlike other types, subscription notifications must be explicitly enabled
     // by caller and are excluded from "monitor all" as well
     return mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges);
 }
 
-bool NotificationSubscriber::acceptsDebugChangeNotification(const Protocol::DebugChangeNotification &notification) const
+bool NotificationSubscriber::acceptsDebugChangeNotification(const Protocol::DebugChangeNotification &msg) const
 {
     // Assumes mLock being locked by caller
 
-    Q_UNUSED(notification);
-
     // We should never end up sending debug notification about a debug notification.
     // This could get very messy very quickly...
-    Q_ASSERT(notification.notification().type() != Protocol::Command::DebugChangeNotification);
-    if (notification.notification().type() == Protocol::Command::DebugChangeNotification) {
+    Q_ASSERT(msg.notification()->type() != Protocol::Command::DebugChangeNotification);
+    if (msg.notification()->type() == Protocol::Command::DebugChangeNotification) {
         return false;
     }
 
@@ -611,7 +609,7 @@ bool NotificationSubscriber::acceptsDebugChangeNotification(const Protocol::Debu
     return mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::ChangeNotifications);
 }
 
-bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &notification) const
+bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &msg) const
 {
     // Assumes mLock being locked
 
@@ -622,23 +620,23 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
 
     // session is ignored
     // TODO: Should this afect SubscriptionChangeNotification and DebugChangeNotification?
-    if (mIgnoredSessions.contains(notification.sessionId())) {
+    if (mIgnoredSessions.contains(msg.sessionId())) {
         return false;
     }
 
-    switch (notification.type()) {
+    switch (msg.type()) {
     case Protocol::Command::ItemChangeNotification:
-        return acceptsItemNotification(notification);
+        return acceptsItemNotification(static_cast<const Protocol::ItemChangeNotification &>(msg));
     case Protocol::Command::CollectionChangeNotification:
-        return acceptsCollectionNotification(notification);
+        return acceptsCollectionNotification(static_cast<const Protocol::CollectionChangeNotification &>(msg));
     case Protocol::Command::TagChangeNotification:
-        return acceptsTagNotification(notification);
+        return acceptsTagNotification(static_cast<const Protocol::TagChangeNotification &>(msg));
     case Protocol::Command::RelationChangeNotification:
-        return acceptsRelationNotification(notification);
+        return acceptsRelationNotification(static_cast<const Protocol::RelationChangeNotification &>(msg));
     case Protocol::Command::SubscriptionChangeNotification:
-        return acceptsSubscriptionNotification(notification);
+        return acceptsSubscriptionNotification(static_cast<const Protocol::SubscriptionChangeNotification &>(msg));
     case Protocol::Command::DebugChangeNotification:
-        return acceptsDebugChangeNotification(notification);
+        return acceptsDebugChangeNotification(static_cast<const Protocol::DebugChangeNotification &>(msg));
 
     default:
         qCDebug(AKONADISERVER_LOG) << "Received invalid change notification!";
@@ -646,7 +644,7 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
     }
 }
 
-bool NotificationSubscriber::notify(const Protocol::ChangeNotification &notification)
+bool NotificationSubscriber::notify(const Protocol::ChangeNotificationPtr &notification)
 {
     // Guard against this object being deleted while we are waiting for the lock
     QPointer<NotificationSubscriber> ptr(this);
@@ -655,21 +653,21 @@ bool NotificationSubscriber::notify(const Protocol::ChangeNotification &notifica
         return false;
     }
 
-    if (acceptsNotification(notification)) {
+    if (acceptsNotification(*notification)) {
         QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
-                                  Q_ARG(Akonadi::Protocol::ChangeNotification, notification));
+                                  Q_ARG(Akonadi::Protocol::ChangeNotificationPtr, notification));
         return true;
     }
     return false;
 }
 
-void NotificationSubscriber::writeNotification(const Protocol::ChangeNotification &notification)
+void NotificationSubscriber::writeNotification(const Protocol::ChangeNotificationPtr &notification)
 {
     // tag chosen by fair dice roll
     writeCommand(4, notification);
 }
 
-void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::Command &cmd)
+void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::CommandPtr &cmd)
 {
     Q_ASSERT(QThread::currentThread() == thread());
 

@@ -90,22 +90,23 @@ void RelationFetchJob::doStart()
 {
     Q_D(RelationFetchJob);
 
-    d->sendCommand(Protocol::FetchRelationsCommand(
+    d->sendCommand(Protocol::FetchRelationsCommandPtr::create(
                        d->mRequestedRelation.left().id(),
                        d->mRequestedRelation.right().id(),
                        (d->mTypes.isEmpty() && !d->mRequestedRelation.type().isEmpty()) ? QVector<QByteArray>() << d->mRequestedRelation.type() : d->mTypes,
                        d->mResource));
 }
 
-bool RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(RelationFetchJob);
 
-    if (!response.isResponse() || response.type() != Protocol::Command::FetchRelations) {
+    if (!response->isResponse() || response->type() != Protocol::Command::FetchRelations) {
         return Job::doHandleResponse(tag, response);
     }
 
-    const Relation rel = ProtocolHelper::parseRelationFetchResult(response);
+    const Relation rel = ProtocolHelper::parseRelationFetchResult(
+        Protocol::cmdCast<Protocol::FetchRelationsResponse>(response));
     // Invalid response means there will be no more responses
     if (!rel.isValid()) {
         return true;

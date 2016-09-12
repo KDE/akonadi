@@ -63,15 +63,15 @@ private Q_SLOTS:
 
 private:
     template<typename T>
-    typename std::enable_if<std::is_base_of<Akonadi::Protocol::Command, T>::value, T>::type
-    serializeAndDeserialize(const T &in)
+    typename std::enable_if<std::is_base_of<Akonadi::Protocol::Command, T>::value, QSharedPointer<T>>::type
+    serializeAndDeserialize(const QSharedPointer<T> &in)
     {
         QBuffer buf;
         buf.open(QIODevice::ReadWrite);
 
         Akonadi::Protocol::serialize(&buf, in);
         buf.seek(0);
-        return T(Akonadi::Protocol::deserialize(&buf));
+        return Akonadi::Protocol::deserialize(&buf).staticCast<T>();
 
     }
 

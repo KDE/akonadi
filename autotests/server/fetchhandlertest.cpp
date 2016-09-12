@@ -60,18 +60,18 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-    Protocol::FetchItemsCommand createCommand(const Scope &scope, const Protocol::ScopeContext &ctx = Protocol::ScopeContext())
+    Protocol::FetchItemsCommandPtr createCommand(const Scope &scope, const Protocol::ScopeContext &ctx = Protocol::ScopeContext())
     {
-        Protocol::FetchItemsCommand cmd(scope, ctx);
-        cmd.fetchScope().setFetch(Protocol::FetchScope::IgnoreErrors);
+        auto cmd = Protocol::FetchItemsCommandPtr::create(scope, ctx);
+        cmd->fetchScope().setFetch(Protocol::FetchScope::IgnoreErrors);
         return cmd;;
     }
 
-    Protocol::FetchItemsResponse createResponse(const PimItem &item)
+    Protocol::FetchItemsResponsePtr createResponse(const PimItem &item)
     {
-        Protocol::FetchItemsResponse resp(item.id());
-        resp.setMimeType(item.mimeType().name());
-        resp.setParentId(item.collectionId());
+        auto resp = Protocol::FetchItemsResponsePtr::create(item.id());
+        resp->setMimeType(item.mimeType().name());
+        resp->setParentId(item.collectionId());
 
         return resp;
     }
@@ -94,7 +94,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item1.id()))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
             QTest::newRow("basic fetch") << scenarios;
         }
@@ -104,7 +104,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
             QTest::newRow("collection context") << scenarios;
         }
     }
@@ -143,7 +143,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
             QTest::newRow("fetch by tag") << scenarios;
         }
@@ -153,7 +153,7 @@ private Q_SLOTS:
                       << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
             QTest::newRow("uid fetch by tag from resource") << scenarios;
         }
@@ -164,7 +164,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
             QTest::newRow("fetch collection") << scenarios;
         }
@@ -204,10 +204,10 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col2.id())))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse())
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create())
                       << TestScenario::create(6, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(6, TestScenario::ServerCmd, createResponse(item1))
-                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
 
             //Special case that used to be broken due to persistent command context
             QTest::newRow("fetch by tag after collection") << scenarios;
@@ -247,7 +247,7 @@ private Q_SLOTS:
                 const PimItem &item = items.takeLast();
                 scenarios << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item));
             }
-            scenarios << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponse());
+            scenarios << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
             QTest::newRow("complete list") << scenarios;
         }
         qDebug() << timer.nsecsElapsed()/1.0e6 << "ms";

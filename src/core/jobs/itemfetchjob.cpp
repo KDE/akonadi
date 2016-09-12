@@ -196,7 +196,7 @@ void ItemFetchJob::doStart()
     Q_D(ItemFetchJob);
 
     try {
-        d->sendCommand(Protocol::FetchItemsCommand(
+        d->sendCommand(Protocol::FetchItemsCommandPtr::create(
                            d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
                            ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mRequestedItems),
                            ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope)));
@@ -208,15 +208,15 @@ void ItemFetchJob::doStart()
     }
 }
 
-bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(ItemFetchJob);
 
-    if (!response.isResponse() || response.type() != Protocol::Command::FetchItems) {
+    if (!response->isResponse() || response->type() != Protocol::Command::FetchItems) {
         return Job::doHandleResponse(tag, response);
     }
 
-    Protocol::FetchItemsResponse resp(response);
+    const auto resp = Protocol::cmdCast<Protocol::FetchItemsResponse>(response);
     // Invalid ID marks the last part of the response
     if (resp.id() < 0) {
         return true;

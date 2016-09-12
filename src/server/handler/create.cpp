@@ -32,7 +32,7 @@ using namespace Akonadi::Server;
 
 bool Create::parseStream()
 {
-    Protocol::CreateCollectionCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::CreateCollectionCommand>(m_command);
 
     if (cmd.name().isEmpty()) {
         return failureResponse("Invalid collection name");

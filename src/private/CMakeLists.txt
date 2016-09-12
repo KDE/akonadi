@@ -1,3 +1,14 @@
+add_subdirectory(protocolgen)
+
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/protocol_gen.cpp
+                          ${CMAKE_CURRENT_BINARY_DIR}/protocol_gen.h
+    COMMAND protocolgen ${CMAKE_CURRENT_SOURCE_DIR}/protocol.xml
+    DEPENDS protocolgen ${CMAKE_CURRENT_SOURCE_DIR}/protocol.xml
+    COMMENT "Generating Protocol implementation"
+)
+
+add_custom_target(generate_protocol DEPENDS ${CMAKE_CURRENT_BINARY_DIR}/protocol_gen.cpp)
+
 set(akonadiprivate_SRCS
     imapparser.cpp
     imapset.cpp
@@ -18,6 +29,7 @@ add_library(akonadiprivate_obj OBJECT ${akonadiprivate_SRCS})
 target_include_directories(akonadiprivate_obj PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
 target_include_directories(akonadiprivate_obj PUBLIC "$<BUILD_INTERFACE:${Qt5Core_INCLUDE_DIRS};${Qt5DBus_INCLUDE_DIRS}>")
 set_target_properties(akonadiprivate_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
+add_dependencies(akonadiprivate_obj generate_protocol)
 
 
 add_library(KF5AkonadiPrivate SHARED $<TARGET_OBJECTS:akonadiprivate_obj>)
@@ -50,6 +62,7 @@ install(FILES
     instance_p.h
     externalpartstorage_p.h
     protocol_p.h
+    ${CMAKE_CURRENT_BINARY_DIR}/protocol_gen.h
     protocol_exception_p.h
     xdgbasedirs_p.h
     capabilities_p.h

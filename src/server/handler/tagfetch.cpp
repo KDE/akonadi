@@ -26,7 +26,7 @@ using namespace Akonadi::Server;
 
 bool TagFetch::parseStream()
 {
-    Protocol::FetchTagsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::FetchTagsCommand>(m_command);
 
     if (!checkScopeConstraints(cmd.scope(), Scope::Uid)) {
         return failureResponse("Only UID-based TAGFETCH is supported");

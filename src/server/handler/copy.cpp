@@ -91,7 +91,7 @@ void Copy::itemsRetrieved(const QList<qint64> &ids)
 
 bool Copy::parseStream()
 {
-    Protocol::CopyItemsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::CopyItemsCommand>(m_command);
 
     if (!checkScopeConstraints(cmd.items(), Scope::Uid)) {
         return failureResponse("Only UID copy is allowed");

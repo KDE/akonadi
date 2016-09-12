@@ -94,31 +94,34 @@ void FakeClient::readServerPart()
         } else {
             QDataStream expectedStream(scenario.data);
             qint64 expectedTag, actualTag;
-            Protocol::Command expectedCommand, actualCommand;
 
             expectedStream >> expectedTag;
+            const auto expectedCommand = Protocol::deserialize(expectedStream.device());
 
             while ((size_t)mSocket->bytesAvailable() < sizeof(qint64)) {
-                mSocket->waitForReadyRead();
+                if (!mSocket->waitForReadyRead(5000)) {
+                    qDebug() << "Timeout while waiting for server response";
+                    qDebug() << "Expected response:" << Protocol::debugString(expectedCommand);
+                    QVERIFY(false);
+                }
             }
             mStream >> actualTag;
             CLIENT_COMPARE(actualTag, expectedTag);
 
-            expectedCommand = Protocol::deserialize(expectedStream.device());
-            actualCommand = Protocol::deserialize(mStream.device());
+            const auto actualCommand = Protocol::deserialize(mStream.device());
 
-            if (actualCommand.type() != expectedCommand.type()) {
-                qDebug() << "Actual command:  " << actualCommand.debugString();
-                qDebug() << "Expected Command:" << expectedCommand.debugString();
+            if (actualCommand->type() != expectedCommand->type()) {
+                qDebug() << "Actual command:  " << Protocol::debugString(actualCommand);
+                qDebug() << "Expected Command:" << Protocol::debugString(expectedCommand);
             }
-            CLIENT_COMPARE(actualCommand.type(), expectedCommand.type());
-            CLIENT_COMPARE(actualCommand.isResponse(), expectedCommand.isResponse());
-            if (actualCommand != expectedCommand) {
-                qDebug() << "Actual command:  " << actualCommand.debugString();
-                qDebug() << "Expected Command:" << expectedCommand.debugString();
+            CLIENT_COMPARE(actualCommand->type(), expectedCommand->type());
+            CLIENT_COMPARE(actualCommand->isResponse(), expectedCommand->isResponse());
+            if (*actualCommand != *expectedCommand) {
+                qDebug() << "Actual command:  " << Protocol::debugString(actualCommand);
+                qDebug() << "Expected Command:" << Protocol::debugString(expectedCommand);
             }
 
-            CLIENT_COMPARE(actualCommand, expectedCommand);
+            CLIENT_COMPARE(*actualCommand, *expectedCommand);
         }
     }
 

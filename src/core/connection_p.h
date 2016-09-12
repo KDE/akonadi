@@ -25,7 +25,7 @@
 #include <QQueue>
 #include <QLocalSocket>
 
-#include <private/protocol_p.h>
+#include "private/protocol_p.h"
 
 #include "akonadicore_export.h"
 
@@ -53,12 +53,12 @@ public:
     Q_INVOKABLE void reconnect();
     void forceReconnect();
     void closeConnection();
-    void sendCommand(qint64 tag, const Protocol::Command &command);
+    void sendCommand(qint64 tag, const Protocol::CommandPtr &command);
 
 Q_SIGNALS:
     void connected();
     void reconnected();
-    void commandReceived(qint64 tag, const Akonadi::Protocol::Command &command);
+    void commandReceived(qint64 tag, const Akonadi::Protocol::CommandPtr &command);
     void socketDisconnected();
     void socketError(const QString &message);
 
@@ -66,13 +66,13 @@ private Q_SLOTS:
     void doReconnect();
     void doForceReconnect();
     void doCloseConnection();
-    void doSendCommand(qint64 tag, const Akonadi::Protocol::Command &command);
+    void doSendCommand(qint64 tag, const Akonadi::Protocol::CommandPtr &command);
 
     void dataReceived();
 
 private:
 
-    bool handleCommand(qint64 tag, const Protocol::Command &cmd);
+    bool handleCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
     ConnectionType mConnectionType;
     QLocalSocket *mSocket;
@@ -81,7 +81,7 @@ private:
     QMutex mLock;
     struct Command {
         qint64 tag;
-        Protocol::Command cmd;
+        Protocol::CommandPtr cmd;
     };
     QQueue<Command> mOutQueue;
 

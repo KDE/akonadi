@@ -114,7 +114,7 @@ void ItemMoveJob::doStart()
     }
 
     try {
-        d->sendCommand(Protocol::MoveItemsCommand(
+        d->sendCommand(Protocol::MoveItemsCommandPtr::create(
                            ProtocolHelper::entitySetToScope(d->items),
                            ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
                            ProtocolHelper::entityToScope(d->destination)));
@@ -126,9 +126,9 @@ void ItemMoveJob::doStart()
     }
 }
 
-bool ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemMoveJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::MoveItems) {
+    if (!response->isResponse() || response->type() != Protocol::Command::MoveItems) {
         return Job::doHandleResponse(tag, response);
     }
 

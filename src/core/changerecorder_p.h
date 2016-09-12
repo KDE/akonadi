@@ -45,15 +45,15 @@ public:
     void notificationsEnqueued(int count) Q_DECL_OVERRIDE;
     void notificationsErased() Q_DECL_OVERRIDE;
 
-    void slotNotify(const Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE;
-    bool emitNotification(const Akonadi::Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE;
+    void slotNotify(const Protocol::ChangeNotificationPtr &msg) Q_DECL_OVERRIDE;
+    bool emitNotification(const Protocol::ChangeNotificationPtr &msg) Q_DECL_OVERRIDE;
 
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<Protocol::ChangeNotification> loadFrom(QFile *device, bool &needsFullSave) const;
+    QQueue<Protocol::ChangeNotificationPtr> loadFrom(QFile *device, bool &needsFullSave) const;
     QString dumpNotificationListToString() const;
-    void addToStream(QDataStream &stream, const Protocol::ChangeNotification &msg);
+    void addToStream(QDataStream &stream, const Protocol::ChangeNotificationPtr &msg);
     void saveNotifications();
     void saveTo(QIODevice *device);
 private:
@@ -79,12 +79,12 @@ private:
         ModifyRelations
     };
 
-    Protocol::ChangeNotification loadItemNotification(QSettings *settings) const;
-    Protocol::ChangeNotification loadCollectionNotification(QSettings *settings) const;
-    Protocol::ChangeNotification loadItemNotification(QDataStream &stream, quint64 version) const;
-    Protocol::ChangeNotification loadCollectionNotification(QDataStream &stream, quint64 version) const;
-    Protocol::ChangeNotification loadTagNotification(QDataStream &stream, quint64 version) const;
-    Protocol::ChangeNotification loadRelationNotification(QDataStream &stream, quint64 version) const;
+    Protocol::ChangeNotificationPtr loadItemNotification(QSettings *settings) const;
+    Protocol::ChangeNotificationPtr loadCollectionNotification(QSettings *settings) const;
+    Protocol::ChangeNotificationPtr loadItemNotification(QDataStream &stream, quint64 version) const;
+    Protocol::ChangeNotificationPtr loadCollectionNotification(QDataStream &stream, quint64 version) const;
+    Protocol::ChangeNotificationPtr loadTagNotification(QDataStream &stream, quint64 version) const;
+    Protocol::ChangeNotificationPtr loadRelationNotification(QDataStream &stream, quint64 version) const;
     void saveItemNotification(QDataStream &stream, const Protocol::ItemChangeNotification &ntf);
     void saveCollectionNotification(QDataStream &stream, const Protocol::CollectionChangeNotification &ntf);
     void saveTagNotification(QDataStream &stream, const Protocol::TagChangeNotification &ntf);

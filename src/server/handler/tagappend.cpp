@@ -33,7 +33,7 @@ using namespace Akonadi::Server;
 
 bool TagAppend::parseStream()
 {
-    Protocol::CreateTagCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::CreateTagCommand>(m_command);
 
     if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
         return failureResponse("Only resources can create tags with remote ID");

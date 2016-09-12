@@ -32,7 +32,7 @@ using namespace Akonadi::Server;
 
 bool Status::parseStream()
 {
-    Protocol::FetchCollectionStatsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::FetchCollectionStatsCommand>(m_command);
 
     const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!col.isValid()) {
@@ -44,7 +44,9 @@ bool Status::parseStream()
         return failureResponse("Failed to query statistics.");
     }
 
-    return successResponse(Protocol::FetchCollectionStatsResponse(stats.count,
-                           stats.count - stats.read,
-                           stats.size));
+    auto resp = Protocol::FetchCollectionStatsResponsePtr::create();
+    resp->setCount(stats.count);
+    resp->setUnseen(stats.count - stats.read);
+    resp->setSize(stats.size);
+    return successResponse(resp);
 }

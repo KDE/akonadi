@@ -104,7 +104,7 @@ void ItemModifyJobPrivate::doUpdateItemRevision(Akonadi::Item::Id itemId, int ol
 QString ItemModifyJobPrivate::jobDebuggingString() const
 {
     try {
-        return fullCommand().debugString();
+        return Protocol::debugString(fullCommand());
     } catch (const Exception &e) {
         return QString::fromUtf8(e.what());
     }
@@ -153,66 +153,66 @@ ItemModifyJob::~ItemModifyJob()
 {
 }
 
-Protocol::Command ItemModifyJobPrivate::fullCommand() const
+Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
 {
-    Protocol::ModifyItemsCommand cmd;
+    auto cmd = Protocol::ModifyItemsCommandPtr::create();
 
     const Akonadi::Item item = mItems.first();
     for (int op : qAsConst(mOperations)) {
         switch (op) {
         case ItemModifyJobPrivate::RemoteId:
             if (!item.remoteId().isNull()) {
-                cmd.setRemoteId(item.remoteId());
+                cmd->setRemoteId(item.remoteId());
             }
             break;
         case ItemModifyJobPrivate::Gid: {
             const QString gid = GidExtractor::getGid(item);
             if (!gid.isNull()) {
-                cmd.setGid(gid);
+                cmd->setGid(gid);
             }
             break;
         }
         case ItemModifyJobPrivate::RemoteRevision:
             if (!item.remoteRevision().isNull()) {
-                cmd.setRemoteRevision(item.remoteRevision());
+                cmd->setRemoteRevision(item.remoteRevision());
             }
             break;
         case ItemModifyJobPrivate::Dirty:
-            cmd.setDirty(false);
+            cmd->setDirty(false);
             break;
         }
     }
 
     if (item.d_ptr->mClearPayload) {
-        cmd.setInvalidateCache(true);
+        cmd->setInvalidateCache(true);
     }
     if (mSilent) {
-        cmd.setNotify(true);
+        cmd->setNotify(true);
     }
 
     if (item.d_ptr->mFlagsOverwritten) {
-        cmd.setFlags(item.flags());
+        cmd->setFlags(item.flags());
     } else {
         const auto addedFlags = ItemChangeLog::instance()->addedFlags(item.d_ptr);
         if (!addedFlags.isEmpty()) {
-            cmd.setAddedFlags(addedFlags);
+            cmd->setAddedFlags(addedFlags);
         }
         const auto deletedFlags = ItemChangeLog::instance()->deletedFlags(item.d_ptr);
         if (!deletedFlags.isEmpty()) {
-            cmd.setRemovedFlags(deletedFlags);
+            cmd->setRemovedFlags(deletedFlags);
         }
     }
 
     if (item.d_ptr->mTagsOverwritten) {
-        cmd.setTags(ProtocolHelper::entitySetToScope(item.tags()));
+        cmd->setTags(ProtocolHelper::entitySetToScope(item.tags()));
     } else {
         const auto addedTags = ItemChangeLog::instance()->addedTags(item.d_ptr);
         if (!addedTags.isEmpty()) {
-            cmd.setAddedTags(ProtocolHelper::entitySetToScope(addedTags));
+            cmd->setAddedTags(ProtocolHelper::entitySetToScope(addedTags));
         }
         const auto deletedTags = ItemChangeLog::instance()->deletedTags(item.d_ptr);
         if (!deletedTags.isEmpty()) {
-            cmd.setRemovedTags(ProtocolHelper::entitySetToScope(deletedTags));
+            cmd->setRemovedTags(ProtocolHelper::entitySetToScope(deletedTags));
         }
     }
 
@@ -222,7 +222,7 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
         for (const QByteArray &part : qAsConst(mParts)) {
             parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
         }
-        cmd.setParts(parts);
+        cmd->setParts(parts);
     }
 
     const auto deletedAttributes = ItemChangeLog::instance()->deletedAttributes(item.d_ptr);
@@ -232,24 +232,24 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
         for (const QByteArray &part : deletedAttributes) {
             removedParts.insert("ATR:" + part);
         }
-        cmd.setRemovedParts(removedParts);
+        cmd->setRemovedParts(removedParts);
     }
 
     // nothing to do
-    if (cmd.modifiedParts() == Protocol::ModifyItemsCommand::None && mParts.isEmpty() && item.attributes().isEmpty()) {
+    if (cmd->modifiedParts() == Protocol::ModifyItemsCommand::None && mParts.isEmpty() && item.attributes().isEmpty()) {
         return cmd;
     }
 
-    cmd.setItems(ProtocolHelper::entitySetToScope(mItems));
+    cmd->setItems(ProtocolHelper::entitySetToScope(mItems));
     if (mRevCheck && item.revision() >= 0) {
-        cmd.setOldRevision(item.revision());
+        cmd->setOldRevision(item.revision());
     }
 
     if (item.d_ptr->mSizeChanged) {
-        cmd.setItemSize(item.size());
+        cmd->setItemSize(item.size());
     }
 
-    cmd.setAttributes(ProtocolHelper::attributesToProtocol(item));
+    cmd->setAttributes(ProtocolHelper::attributesToProtocol(item));
 
     return cmd;
 }
@@ -258,7 +258,7 @@ void ItemModifyJob::doStart()
 {
     Q_D(ItemModifyJob);
 
-    Protocol::ModifyItemsCommand command;
+    Protocol::ModifyItemsCommandPtr command;
     try {
         command = d->fullCommand();
     } catch (const Exception &e) {
@@ -268,7 +268,7 @@ void ItemModifyJob::doStart()
         return;
     }
 
-    if (command.modifiedParts() == Protocol::ModifyItemsCommand::None) {
+    if (command->modifiedParts() == Protocol::ModifyItemsCommand::None) {
         emitResult();
         return;
     }
@@ -276,18 +276,18 @@ void ItemModifyJob::doStart()
     d->sendCommand(command);
 }
 
-bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(ItemModifyJob);
 
-    if (!response.isResponse() && response.type() == Protocol::Command::StreamPayload) {
-        const Protocol::StreamPayloadCommand streamCmd(response);
-        Protocol::StreamPayloadResponse streamResp;
+    if (!response->isResponse() && response->type() == Protocol::Command::StreamPayload) {
+        const auto &streamCmd = Protocol::cmdCast<Protocol::StreamPayloadCommand>(response);
+        auto streamResp = Protocol::StreamPayloadResponsePtr::create();
         if (streamCmd.request() == Protocol::StreamPayloadCommand::MetaData) {
-            streamResp.setMetaData(d->preparePart(streamCmd.payloadName()));
+            streamResp->setMetaData(d->preparePart(streamCmd.payloadName()));
         } else {
             if (streamCmd.destination().isEmpty()) {
-                streamResp.setData(d->mPendingData);
+                streamResp->setData(d->mPendingData);
             } else {
                 QByteArray error;
                 if (!ProtocolHelper::streamPayloadToFile(streamCmd.destination(), d->mPendingData, error)) {
@@ -299,8 +299,8 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
         return false;
     }
 
-    if (response.isResponse() && response.type() == Protocol::Command::ModifyItems) {
-        Protocol::ModifyItemsResponse resp(response);
+    if (response->isResponse() && response->type() == Protocol::Command::ModifyItems) {
+        const auto &resp = Protocol::cmdCast<Protocol::ModifyItemsResponse>(response);
         if (resp.errorCode()) {
             setError(Unknown);
             setErrorText(resp.errorMessage());
@@ -329,7 +329,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
                 return item.id() == resp.id();
             });
             if (it == d->mItems.end()) {
-                qCDebug(AKONADICORE_LOG) << "Received STORE response for an item we did not modify: " << tag << response.debugString();
+                qCDebug(AKONADICORE_LOG) << "Received STORE response for an item we did not modify: " << tag << Protocol::debugString(response);
                 return true;
             }
 

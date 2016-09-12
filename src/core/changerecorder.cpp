@@ -63,7 +63,7 @@ void ChangeRecorder::replayNext()
     }
 
     if (!d->pendingNotifications.isEmpty()) {
-        const Protocol::ChangeNotification msg = d->pendingNotifications.head();
+        const auto msg = d->pendingNotifications.head();
         if (d->ensureDataAvailable(msg)) {
             d->emitNotification(msg);
         } else if (d->translateAndCompress(d->pipeline, msg)) {

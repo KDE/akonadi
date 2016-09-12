@@ -32,7 +32,7 @@ using namespace Akonadi::Server;
 
 bool Remove::parseStream()
 {
-    Protocol::DeleteItemsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::DeleteItemsCommand>(m_command);
 
     connection()->context()->setScopeContext(cmd.scopeContext());
 

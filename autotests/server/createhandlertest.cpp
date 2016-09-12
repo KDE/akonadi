@@ -33,8 +33,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(Akonadi::Protocol::CollectionChangeNotification)
-
 class CreateHandlerTest : public QObject
 {
     Q_OBJECT
@@ -61,105 +59,105 @@ private Q_SLOTS:
         DbInitializer dbInitializer;
 
         QTest::addColumn<TestScenario::List >("scenarios");
-        QTest::addColumn<Akonadi::Protocol::CollectionChangeNotification>("notification");
+        QTest::addColumn<Protocol::CollectionChangeNotificationPtr>("notification");
 
-        Akonadi::Protocol::CollectionChangeNotification notificationTemplate;
-        notificationTemplate.setOperation(Protocol::CollectionChangeNotification::Add);
-        notificationTemplate.setParentCollection(3);
-        notificationTemplate.setResource("akonadi_fake_resource_0");
-        notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+        auto notificationTemplate = Protocol::CollectionChangeNotificationPtr::create();
+        notificationTemplate->setOperation(Protocol::CollectionChangeNotification::Add);
+        notificationTemplate->setParentCollection(3);
+        notificationTemplate->setResource("akonadi_fake_resource_0");
+        notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         {
-            Protocol::CreateCollectionCommand cmd;
-            cmd.setName(QLatin1String("New Name"));
-            cmd.setParent(Scope(3));
-            cmd.setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
+            auto cmd = Protocol::CreateCollectionCommandPtr::create();
+            cmd->setName(QLatin1String("New Name"));
+            cmd->setParent(Scope(3));
+            cmd->setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
 
-            Protocol::FetchCollectionsResponse resp(8);
-            resp.setName(QLatin1String("New Name"));
-            resp.setParentId(3);
-            resp.setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
-            resp.setResource(QLatin1String("akonadi_fake_resource_0"));
-            resp.cachePolicy().setLocalParts({ QLatin1String("ALL") });
-            resp.setMimeTypes({ QLatin1String("application/octet-stream"),
+            auto resp = Protocol::FetchCollectionsResponsePtr::create(8);
+            resp->setName(QLatin1String("New Name"));
+            resp->setParentId(3);
+            resp->setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
+            resp->setResource(QLatin1String("akonadi_fake_resource_0"));
+            resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
+            resp->setMimeTypes({ QLatin1String("application/octet-stream"),
                                 QLatin1String("inode/directory") });
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
-            Akonadi::Protocol::CollectionChangeNotification notification = notificationTemplate;
-            notification.setId(8);
-            notification.setRemoteId(QStringLiteral(""));
-            notification.setRemoteRevision(QStringLiteral(""));
+            auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
+            notification->setId(8);
+            notification->setRemoteId(QStringLiteral(""));
+            notification->setRemoteRevision(QStringLiteral(""));
 
             QTest::newRow("create collection") << scenarios <<  notification;
         }
         {
-            Protocol::CreateCollectionCommand cmd;
-            cmd.setName(QLatin1String("Name 2"));
-            cmd.setParent(Scope(3));
-            cmd.setEnabled(false);
-            cmd.setDisplayPref(Tristate::True);
-            cmd.setSyncPref(Tristate::True);
-            cmd.setIndexPref(Tristate::True);
+            auto cmd = Protocol::CreateCollectionCommandPtr::create();
+            cmd->setName(QLatin1String("Name 2"));
+            cmd->setParent(Scope(3));
+            cmd->setEnabled(false);
+            cmd->setDisplayPref(Tristate::True);
+            cmd->setSyncPref(Tristate::True);
+            cmd->setIndexPref(Tristate::True);
 
-            Protocol::FetchCollectionsResponse resp(9);
-            resp.setName(QLatin1String("Name 2"));
-            resp.setParentId(3);
-            resp.setEnabled(false);
-            resp.setDisplayPref(Tristate::True);
-            resp.setSyncPref(Tristate::True);
-            resp.setIndexPref(Tristate::True);
-            resp.setResource(QLatin1String("akonadi_fake_resource_0"));
-            resp.cachePolicy().setLocalParts({ QLatin1String("ALL") });
-            resp.setMimeTypes({ QLatin1String("application/octet-stream"),
-                                QLatin1String("inode/directory") });
+            auto resp = Protocol::FetchCollectionsResponsePtr::create(9);
+            resp->setName(QLatin1String("Name 2"));
+            resp->setParentId(3);
+            resp->setEnabled(false);
+            resp->setDisplayPref(Tristate::True);
+            resp->setSyncPref(Tristate::True);
+            resp->setIndexPref(Tristate::True);
+            resp->setResource(QLatin1String("akonadi_fake_resource_0"));
+            resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
+            resp->setMimeTypes({ QLatin1String("application/octet-stream"),
+                                 QLatin1String("inode/directory") });
 
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
-            Akonadi::Protocol::CollectionChangeNotification notification = notificationTemplate;
-            notification.setId(9);
-            notification.setRemoteId(QStringLiteral(""));
-            notification.setRemoteRevision(QStringLiteral(""));
+            auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
+            notification->setId(9);
+            notification->setRemoteId(QStringLiteral(""));
+            notification->setRemoteRevision(QStringLiteral(""));
 
             QTest::newRow("create collection with local override") << scenarios <<  notification;
         }
 
 
         {
-            Protocol::CreateCollectionCommand cmd;
-            cmd.setName(QLatin1String("TopLevel"));
-            cmd.setParent(Scope(0));
-            cmd.setMimeTypes({ QLatin1String("inode/directory") });
+            auto cmd = Protocol::CreateCollectionCommandPtr::create();
+            cmd->setName(QLatin1String("TopLevel"));
+            cmd->setParent(Scope(0));
+            cmd->setMimeTypes({ QLatin1String("inode/directory") });
 
-            Protocol::FetchCollectionsResponse resp(10);
-            resp.setName(QLatin1String("TopLevel"));
-            resp.setParentId(0);
-            resp.setEnabled(true);
-            resp.setMimeTypes({ QLatin1String("inode/directory") });
-            resp.cachePolicy().setLocalParts({ QLatin1String("ALL") });
-            resp.setResource(QLatin1String("akonadi_fake_resource_0"));
+            auto resp = Protocol::FetchCollectionsResponsePtr::create(10);
+            resp->setName(QLatin1String("TopLevel"));
+            resp->setParentId(0);
+            resp->setEnabled(true);
+            resp->setMimeTypes({ QLatin1String("inode/directory") });
+            resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
+            resp->setResource(QLatin1String("akonadi_fake_resource_0"));
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario("akonadi_fake_resource_0")
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
-            Akonadi::Protocol::CollectionChangeNotification notification = notificationTemplate;
-            notification.setSessionId("akonadi_fake_resource_0");
-            notification.setParentCollection(0);
-            notification.setId(10);
-            notification.setRemoteId(QStringLiteral(""));
-            notification.setRemoteRevision(QStringLiteral(""));
+            auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
+            notification->setSessionId("akonadi_fake_resource_0");
+            notification->setParentCollection(0);
+            notification->setId(10);
+            notification->setRemoteId(QStringLiteral(""));
+            notification->setRemoteRevision(QStringLiteral(""));
 
             QTest::newRow("create top-level collection") << scenarios <<  notification;
         }
@@ -169,19 +167,19 @@ private Q_SLOTS:
     void testCreate()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(Protocol::CollectionChangeNotification, notification);
+        QFETCH(Protocol::CollectionChangeNotificationPtr, notification);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
         auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
-        if (notification.isValid()) {
+        if (notification->operation() != Protocol::CollectionChangeNotification::InvalidOp) {
             QCOMPARE(notificationSpy->count(), 1);
-            const Protocol::ChangeNotification::List notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>();
+            const auto notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>();
             QCOMPARE(notifications.count(), 1);
-            QCOMPARE(Protocol::CollectionChangeNotification(notifications.first()), notification);
+            QCOMPARE(*notifications.first().staticCast<Protocol::CollectionChangeNotification>(), *notification);
         } else {
-            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());
         }
     }
 

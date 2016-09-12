@@ -55,17 +55,17 @@ public Q_SLOTS:
     void emitPendingNotifications();
 
 private Q_SLOTS:
-    void slotNotify(const Akonadi::Protocol::ChangeNotification::List &msgs);
+    void slotNotify(const Akonadi::Protocol::ChangeNotificationList &msgs);
 
 protected:
     void init() Q_DECL_OVERRIDE;
     void quit() Q_DECL_OVERRIDE;
 
-    void emitDebugNotification(const Protocol::ChangeNotification &ntf,
+    void emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf,
                                const QVector<QByteArray> &listeners);
 
 private:
-    Protocol::ChangeNotification::List mNotifications;
+    Protocol::ChangeNotificationList mNotifications;
     QTimer *mTimer;
 
     QThreadPool *mNotifyThreadPool;

@@ -37,8 +37,11 @@ namespace Protocol
 class Ancestor;
 class CachePolicy;
 class FetchCollectionsResponse;
+using FetchCollectionsResponsePtr = QSharedPointer<FetchCollectionsResponse>;
 class FetchTagsResponse;
+using FetchTagsResponsePtr = QSharedPointer<FetchTagsResponse>;
 class FetchRelationsResponse;
+using FetchRelationsResponsePtr = QSharedPointer<FetchRelationsResponse>;
 }
 
 namespace Server
@@ -74,14 +77,14 @@ public:
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col);
+    static Protocol::FetchCollectionsResponsePtr fetchCollectionsResponse(const Collection &col);
 
     /**
       Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col,
+    static Protocol::FetchCollectionsResponsePtr fetchCollectionsResponse(const Collection &col,
             const CollectionAttribute::List &attributeList,
             bool includeStatistics = false,
             int ancestorDepth = 0,
@@ -97,11 +100,11 @@ public:
             const QStack<Collection> &ancestors,
             const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
 
-    static Protocol::FetchTagsResponse fetchTagsResponse(const Tag &tag,
+    static Protocol::FetchTagsResponsePtr fetchTagsResponse(const Tag &tag,
             bool withRID = false,
             Connection *connection = nullptr);
 
-    static Protocol::FetchRelationsResponse fetchRelationsResponse(const Relation &relation);
+    static Protocol::FetchRelationsResponsePtr fetchRelationsResponse(const Relation &relation);
 
     /**
       Converts a bytearray list of flag names into flag records.

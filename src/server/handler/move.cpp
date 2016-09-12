@@ -129,7 +129,7 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
 
 bool Move::parseStream()
 {
-    Protocol::MoveItemsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::MoveItemsCommand>(m_command);
 
     mDestination = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (mDestination.isVirtual()) {

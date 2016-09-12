@@ -38,7 +38,7 @@ public:
     {
     }
 
-    bool emitNotification(const Akonadi::Protocol::ChangeNotification &msg) Q_DECL_OVERRIDE {
+    bool emitNotification(const Akonadi::Protocol::ChangeNotificationPtr &msg) Q_DECL_OVERRIDE {
         // TODO: Check/Log
         return Akonadi::MonitorPrivate::emitNotification(msg);
     }
@@ -55,11 +55,11 @@ public:
         return qobject_cast<FakeNotificationConnection *>(d_ptr->ntfConnection);
     }
 
-    QQueue<Akonadi::Protocol::ChangeNotification> pendingNotifications() const
+    QQueue<Akonadi::Protocol::ChangeNotificationPtr> pendingNotifications() const
     {
         return d_ptr->pendingNotifications;
     }
-    QQueue<Akonadi::Protocol::ChangeNotification> pipeline() const
+    QQueue<Akonadi::Protocol::ChangeNotificationPtr> pipeline() const
     {
         return d_ptr->pipeline;
     }

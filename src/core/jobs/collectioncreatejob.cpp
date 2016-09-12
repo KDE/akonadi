@@ -66,24 +66,24 @@ void CollectionCreateJob::doStart()
         return;
     }
 
-    Protocol::CreateCollectionCommand cmd;
-    cmd.setName(d->mCollection.name());
-    cmd.setParent(ProtocolHelper::entityToScope(d->mCollection.parentCollection()));
-    cmd.setMimeTypes(d->mCollection.contentMimeTypes());
-    cmd.setRemoteId(d->mCollection.remoteId());
-    cmd.setRemoteRevision(d->mCollection.remoteRevision());
-    cmd.setIsVirtual(d->mCollection.isVirtual());
-    cmd.setEnabled(d->mCollection.enabled());
-    cmd.setDisplayPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
-    cmd.setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
-    cmd.setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
-    cmd.setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
+    auto cmd = Protocol::CreateCollectionCommandPtr::create();
+    cmd->setName(d->mCollection.name());
+    cmd->setParent(ProtocolHelper::entityToScope(d->mCollection.parentCollection()));
+    cmd->setMimeTypes(d->mCollection.contentMimeTypes());
+    cmd->setRemoteId(d->mCollection.remoteId());
+    cmd->setRemoteRevision(d->mCollection.remoteRevision());
+    cmd->setIsVirtual(d->mCollection.isVirtual());
+    cmd->setEnabled(d->mCollection.enabled());
+    cmd->setDisplayPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
+    cmd->setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
+    cmd->setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
+    cmd->setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
     Protocol::Attributes attrs;
     const Akonadi::Attribute::List attrList = d->mCollection.attributes();
     for (Attribute *attr : attrList) {
         attrs.insert(attr->type(), attr->serialized());
     }
-    cmd.setAttributes(attrs);
+    cmd->setAttributes(attrs);
 
     d->sendCommand(cmd);
     emitWriteFinished();
@@ -96,16 +96,16 @@ Collection CollectionCreateJob::collection() const
     return d->mCollection;
 }
 
-bool CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(CollectionCreateJob);
 
-    if (!response.isResponse()) {
+    if (!response->isResponse()) {
         return Job::doHandleResponse(tag, response);
     }
 
-    if (response.type() == Protocol::Command::FetchCollections) {
-        Protocol::FetchCollectionsResponse resp(response);
+    if (response->type() == Protocol::Command::FetchCollections) {
+        auto &resp = Protocol::cmdCast<Protocol::FetchCollectionsResponse>(response);
         Collection col = ProtocolHelper::parseCollection(resp);
         if (!col.isValid()) {
             setError(Unknown);
@@ -121,7 +121,7 @@ bool CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &
         return false;
     }
 
-    if (response.type() == Protocol::Command::CreateCollection) {
+    if (response->type() == Protocol::Command::CreateCollection) {
         return true;
     }
 

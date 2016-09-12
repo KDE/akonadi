@@ -33,7 +33,7 @@ using namespace Akonadi::Server;
 
 bool SearchPersistent::parseStream()
 {
-    Protocol::StoreSearchCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::StoreSearchCommand>(m_command);
 
     if (cmd.name().isEmpty()) {
         return failureResponse("No name specified");

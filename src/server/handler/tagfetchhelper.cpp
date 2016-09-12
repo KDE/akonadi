@@ -122,12 +122,13 @@ bool TagFetchHelper::fetchTags()
 
     while (tagQuery.isValid()) {
         const qint64 tagId = tagQuery.value(0).toLongLong();
-        Protocol::FetchTagsResponse response(tagId);
-        response.setGid(Utils::variantToByteArray(tagQuery.value(1)));
-        response.setParentId(tagQuery.value(2).toLongLong());
-        response.setType(Utils::variantToByteArray(tagQuery.value(4)));
+        auto response = Protocol::FetchTagsResponsePtr::create();
+        response->setId(tagId);
+        response->setGid(Utils::variantToByteArray(tagQuery.value(1)));
+        response->setParentId(tagQuery.value(2).toLongLong());
+        response->setType(Utils::variantToByteArray(tagQuery.value(4)));
         if (mConnection->context()->resource().isValid()) {
-            response.setRemoteId(Utils::variantToByteArray(tagQuery.value(5)));
+            response->setRemoteId(Utils::variantToByteArray(tagQuery.value(5)));
         }
 
         QMap<QByteArray, QByteArray> tagAttributes;
@@ -145,7 +146,7 @@ bool TagFetchHelper::fetchTags()
             attributeQuery.next();
         }
 
-        response.setAttributes(tagAttributes);
+        response->setAttributes(tagAttributes);
 
         mConnection->sendResponse(response);
 

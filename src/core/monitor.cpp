@@ -182,7 +182,7 @@ void Monitor::setExclusive(bool exclusive)
 {
     Q_D(Monitor);
     d->exclusive = exclusive;
-    d->pendingModification.setExclusive(exclusive);
+    d->pendingModification.setIsExclusive(exclusive);
     d->scheduleSubscriptionUpdate();
 }
 

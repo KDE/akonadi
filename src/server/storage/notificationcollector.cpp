@@ -285,63 +285,68 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
         vCollections = DataStore::self()->virtualCollections(items);
     }
 
-    Protocol::ItemChangeNotification msg;
-    msg.setSessionId(mSessionId);
-    msg.setOperation(op);
+    auto msg = Protocol::ItemChangeNotificationPtr::create();
+    msg->setSessionId(mSessionId);
+    msg->setOperation(op);
 
-    msg.setItemParts(parts);
-    msg.setAddedFlags(addedFlags);
-    msg.setRemovedFlags(removedFlags);
-    msg.setAddedTags(addedTags);
-    msg.setRemovedTags(removedTags);
+    msg->setItemParts(parts);
+    msg->setAddedFlags(addedFlags);
+    msg->setRemovedFlags(removedFlags);
+    msg->setAddedTags(addedTags);
+    msg->setRemovedTags(removedTags);
     if (!addedRelations.isEmpty()) {
         QSet<Protocol::ItemChangeNotification::Relation> rels;
         Q_FOREACH (const Relation &rel, addedRelations) {
             rels.insert(Protocol::ItemChangeNotification::Relation(rel.leftId(), rel.rightId(), rel.relationType().name()));
         }
-        msg.setAddedRelations(rels);
+        msg->setAddedRelations(rels);
     }
     if (!removedRelations.isEmpty()) {
         QSet<Protocol::ItemChangeNotification::Relation> rels;
         Q_FOREACH (const Relation &rel, removedRelations) {
             rels.insert(Protocol::ItemChangeNotification::Relation(rel.leftId(), rel.rightId(), rel.relationType().name()));
         }
-        msg.setRemovedRelations(rels);
+        msg->setRemovedRelations(rels);
     }
 
     if (collectionDest.isValid()) {
         QByteArray destResourceName;
         destResourceName = collectionDest.resource().name().toLatin1();
-        msg.setDestinationResource(destResourceName);
+        msg->setDestinationResource(destResourceName);
     }
 
-    msg.setParentDestCollection(collectionDest.id());
+    msg->setParentDestCollection(collectionDest.id());
 
     /* Notify all virtual collections the items are linked to. */
     auto iter = vCollections.constBegin(), endIter = vCollections.constEnd();
     for (; iter != endIter; ++iter) {
-        Protocol::ItemChangeNotification copy = msg;
-
+        auto copy = Protocol::ItemChangeNotificationPtr::create(*msg);
+        QVector<Protocol::ChangeNotification::Item> items;
+        items.reserve(iter.value().size());
         Q_FOREACH (const PimItem &item, iter.value()) {
-            copy.addItem(item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name());
+            items.push_back({ item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() });
         }
-        copy.setParentCollection(iter.key());
-        copy.setResource(resource);
+        copy->setItems(items);
+        copy->setParentCollection(iter.key());
+        copy->setResource(resource);
 
         CollectionStatistics::self()->invalidateCollection(Collection::retrieveById(iter.key()));
         dispatchNotification(copy);
     }
 
+    QVector<Protocol::ChangeNotification::Item> ntfItems;
+    ntfItems.reserve(items.size());
     Q_FOREACH (const PimItem &item, items) {
-        msg.addItem(item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name());
+        ntfItems.push_back({ item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() });
     }
+    msg->setItems(ntfItems);
 
     Collection col;
     if (!collection.isValid()) {
-        msg.setParentCollection(items.first().collection().id());
+        msg->setParentCollection(items.first().collection().id());
         col = items.first().collection();
     } else {
-        msg.setParentCollection(collection.id());
+        msg->setParentCollection(collection.id());
         col = collection;
     }
 
@@ -352,12 +357,12 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
         }
         res = col.resource().name().toLatin1();
     }
-    msg.setResource(res);
+    msg->setResource(res);
 
     // Add and ModifyFlags are handled incrementally
     // (see itemAdded() and itemsFlagsChanged())
-    if (msg.operation() != Protocol::ItemChangeNotification::Add
-            && msg.operation() != Protocol::ItemChangeNotification::ModifyFlags) {
+    if (msg->operation() != Protocol::ItemChangeNotification::Add
+            && msg->operation() != Protocol::ItemChangeNotification::ModifyFlags) {
         CollectionStatistics::self()->invalidateCollection(col);
     }
     dispatchNotification(msg);
@@ -371,26 +376,26 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
         const QSet<QByteArray> &changes,
         const QByteArray &destResource)
 {
-    Protocol::CollectionChangeNotification msg;
-    msg.setOperation(op);
-    msg.setSessionId(mSessionId);
-    msg.setId(collection.id());
-    msg.setRemoteId(collection.remoteId());
-    msg.setRemoteRevision(collection.remoteRevision());
-    msg.setParentCollection(source);
-    msg.setParentDestCollection(destination);
-    msg.setDestinationResource(destResource);
-    msg.setChangedParts(changes);
+    auto msg = Protocol::CollectionChangeNotificationPtr::create();
+    msg->setOperation(op);
+    msg->setSessionId(mSessionId);
+    msg->setId(collection.id());
+    msg->setRemoteId(collection.remoteId());
+    msg->setRemoteRevision(collection.remoteRevision());
+    msg->setParentCollection(source);
+    msg->setParentDestCollection(destination);
+    msg->setDestinationResource(destResource);
+    msg->setChangedParts(changes);
 
     if (!collection.enabled()) {
-        msg.addMetadata("DISABLED");
+        msg->addMetadata("DISABLED");
     }
 
     QByteArray res = resource;
     if (res.isEmpty()) {
         res = collection.resource().name().toLatin1();
     }
-    msg.setResource(res);
+    msg->setResource(res);
 
     dispatchNotification(msg);
 }
@@ -401,12 +406,12 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
         const QString &remoteId
                                            )
 {
-    Protocol::TagChangeNotification msg;
-    msg.setOperation(op);
-    msg.setSessionId(mSessionId);
-    msg.setResource(resource);
-    msg.setId(tag.id());
-    msg.setRemoteId(remoteId);
+    auto msg = Protocol::TagChangeNotificationPtr::create();
+    msg->setOperation(op);
+    msg->setSessionId(mSessionId);
+    msg->setResource(resource);
+    msg->setId(tag.id());
+    msg->setRemoteId(remoteId);
 
     dispatchNotification(msg);
 }
@@ -414,21 +419,21 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
 void NotificationCollector::relationNotification(Protocol::RelationChangeNotification::Operation op,
         const Relation &relation)
 {
-    Protocol::RelationChangeNotification msg;
-    msg.setOperation(op);
-    msg.setSessionId(mSessionId);
-    msg.setLeftItem(relation.leftId());
-    msg.setRightItem(relation.rightId());
-    msg.setRemoteId(relation.remoteId());
-    msg.setType(relation.relationType().name());
+    auto msg = Protocol::RelationChangeNotificationPtr::create();
+    msg->setOperation(op);
+    msg->setSessionId(mSessionId);
+    msg->setLeftItem(relation.leftId());
+    msg->setRightItem(relation.rightId());
+    msg->setRemoteId(relation.remoteId());
+    msg->setType(relation.relationType().name());
 
     dispatchNotification(msg);
 }
 
-void NotificationCollector::dispatchNotification(const Protocol::ChangeNotification &msg)
+void NotificationCollector::dispatchNotification(const Protocol::ChangeNotificationPtr &msg)
 {
     if (!mDb || mDb->inTransaction()) {
-        if (msg.type() == Protocol::Command::CollectionChangeNotification) {
+        if (msg->type() == Protocol::Command::CollectionChangeNotification) {
             Protocol::CollectionChangeNotification::appendAndCompress(mNotifications, msg);
         } else {
             mNotifications.append(msg);

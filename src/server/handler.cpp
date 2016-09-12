@@ -97,12 +97,12 @@ quint64 Handler::tag() const
     return m_tag;
 }
 
-void Handler::setCommand(const Protocol::Command &cmd)
+void Handler::setCommand(const Protocol::CommandPtr &cmd)
 {
     m_command = cmd;
 }
 
-Protocol::Command Handler::command() const
+Protocol::CommandPtr Handler::command() const
 {
     return m_command;
 }
@@ -259,9 +259,9 @@ bool Handler::failureResponse(const QString &failureMessage)
     // error response
     if (!m_sentFailureResponse) {
         m_sentFailureResponse = true;
-        Protocol::Response r = Protocol::Factory::response(m_command.type());
+        Protocol::ResponsePtr r = Protocol::Factory::response(m_command->type());
         // FIXME: Error enums?
-        r.setError(1, failureMessage);
+        r->setError(1, failureMessage);
 
         sendResponse(r);
     }
@@ -269,7 +269,7 @@ bool Handler::failureResponse(const QString &failureMessage)
     return false;
 }
 
-void Handler::sendResponse(const Protocol::Command &response)
+void Handler::sendResponse(const Protocol::CommandPtr &response)
 {
     m_connection->sendResponse(response);
 }

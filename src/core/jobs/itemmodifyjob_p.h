@@ -30,6 +30,8 @@ namespace Protocol
 {
 class PartMetaData;
 class Command;
+class ModifyItemsCommand;
+using ModifyItemsCommandPtr = QSharedPointer<ModifyItemsCommand>;
 }
 
 /**
@@ -56,7 +58,7 @@ public:
     void doUpdateItemRevision(Item::Id id, int oldRevision, int newRevision) Q_DECL_OVERRIDE;
 
     QString jobDebuggingString() const Q_DECL_OVERRIDE;
-    Protocol::Command fullCommand() const;
+    Protocol::ModifyItemsCommandPtr fullCommand() const;
 
     void setSilent(bool silent);
 

@@ -78,14 +78,14 @@ void CollectionMoveJob::doStart()
     const Scope colScope = ProtocolHelper::entitySetToScope(Collection::List() << d->collection);
     const Scope destScope = ProtocolHelper::entitySetToScope(Collection::List() << d->destination);
 
-    d->sendCommand(Protocol::MoveCollectionCommand(colScope, destScope));
+    d->sendCommand(Protocol::MoveCollectionCommandPtr::create(colScope, destScope));
 
     ChangeMediator::invalidateCollection(d->collection);
 }
 
-bool CollectionMoveJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionMoveJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::MoveCollection) {
+    if (!response->isResponse() || response->type() != Protocol::Command::MoveCollection) {
         return Job::doHandleResponse(tag, response);
     }
 

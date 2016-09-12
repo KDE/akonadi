@@ -57,14 +57,14 @@ void RelationDeleteJob::doStart()
         return;
     }
 
-    d->sendCommand(Protocol::RemoveRelationsCommand(d->mRelation.left().id(),
+    d->sendCommand(Protocol::RemoveRelationsCommandPtr::create(d->mRelation.left().id(),
                    d->mRelation.right().id(),
                    d->mRelation.type()));
 }
 
-bool RelationDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool RelationDeleteJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::RemoveRelations) {
+    if (!response->isResponse() || response->type() != Protocol::Command::RemoveRelations) {
         return Job::doHandleResponse(tag, response);
     }
 

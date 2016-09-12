@@ -128,17 +128,17 @@ void ProtocolTest::testFactory()
     QFETCH(bool, response);
     QFETCH(bool, success);
 
-    Command result;
+    CommandPtr result;
     if (response) {
         result = Factory::response(type);
     } else {
         result = Factory::command(type);
     }
 
-    QCOMPARE(result.isValid(), success);
-    QCOMPARE(result.isResponse(), response);
+    QCOMPARE(result->isValid(), success);
+    QCOMPARE(result->isResponse(), response);
     if (success) {
-        QCOMPARE(result.type(), type);
+        QCOMPARE(result->type(), type);
     }
 }
 
@@ -147,15 +147,15 @@ void ProtocolTest::testFactory()
 void ProtocolTest::testCommand()
 {
     // There is no way to construct a valid Command directly
-    Command cmd;
-    QCOMPARE(cmd.type(), Command::Invalid);
-    QVERIFY(!cmd.isValid());
-    QVERIFY(!cmd.isResponse());
+    auto cmd = CommandPtr::create();
+    QCOMPARE(cmd->type(), Command::Invalid);
+    QVERIFY(!cmd->isValid());
+    QVERIFY(!cmd->isResponse());
 
-    Command cmdTest = serializeAndDeserialize(cmd);
-    QCOMPARE(cmdTest.type(), Command::Invalid);
-    QVERIFY(!cmd.isValid());
-    QVERIFY(!cmd.isResponse());
+    CommandPtr cmdTest = serializeAndDeserialize(cmd);
+    QCOMPARE(cmdTest->type(), Command::Invalid);
+    QVERIFY(!cmd->isValid());
+    QVERIFY(!cmd->isResponse());
 }
 
 void ProtocolTest::testResponse_data()
@@ -179,15 +179,15 @@ void ProtocolTest::testResponse()
         response.setError(errorCode, errorString);
     }
 
-    const Response res = serializeAndDeserialize(response);
-    QCOMPARE(res.type(), Command::Invalid);
-    QVERIFY(!res.isValid());
-    QVERIFY(res.isResponse());
-    QCOMPARE(res.isError(), isError);
-    QCOMPARE(res.errorCode(), errorCode);
-    QCOMPARE(res.errorMessage(), errorString);
-    QVERIFY(res == response);
-    const bool notEquals = (res != response);
+    const auto res = serializeAndDeserialize(ResponsePtr::create(response));
+    QCOMPARE(res->type(), Command::Invalid);
+    QVERIFY(!res->isValid());
+    QVERIFY(res->isResponse());
+    QCOMPARE(res->isError(), isError);
+    QCOMPARE(res->errorCode(), errorCode);
+    QCOMPARE(res->errorMessage(), errorString);
+    QVERIFY(*res == response);
+    const bool notEquals = (*res != response);
     QVERIFY(!notEquals);
 }
 
@@ -250,7 +250,7 @@ void ProtocolTest::testFetchScope()
     in.setRequestedParts(requestedParts);
     in.setChangedSince(QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), Qt::UTC));
     in.setTagFetchScope({ "TAGID" });
-    in.setAncestorDepth(Ancestor::AllAncestors);
+    in.setAncestorDepth(FetchScope::AllAncestors);
     in.setFetch(FetchScope::CacheOnly);
     in.setFetch(FetchScope::CheckCachedPayloadPartsOnly);
     in.setFetch(FetchScope::FullPayload, fullPayload);
@@ -271,7 +271,7 @@ void ProtocolTest::testFetchScope()
     QCOMPARE(out.requestedPayloads(), expectedPayloads);
     QCOMPARE(out.changedSince(), QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), Qt::UTC));
     QCOMPARE(out.tagFetchScope(), QSet<QByteArray>{ "TAGID" });
-    QCOMPARE(out.ancestorDepth(), Ancestor::AllAncestors);
+    QCOMPARE(out.ancestorDepth(), FetchScope::AllAncestors);
     QCOMPARE(out.fetch(FetchScope::None), false);
     QCOMPARE(out.cacheOnly(), true);
     QCOMPARE(out.checkCachedPayloadPartsOnly(), true);
@@ -474,17 +474,17 @@ void ProtocolTest::testHelloResponse()
     in.setProtocolVersion(42);
     in.setError(10, QStringLiteral("Ooops"));
 
-    const HelloResponse out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(out.isResponse());
-    QVERIFY(out.isError());
-    QCOMPARE(out.errorCode(), 10);
-    QCOMPARE(out.errorMessage(), QStringLiteral("Ooops"));
-    QCOMPARE(out.serverName(), QStringLiteral("AkonadiTest"));
-    QCOMPARE(out.message(), QStringLiteral("Oh, hello there!"));
-    QCOMPARE(out.protocolVersion(), 42);
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(HelloResponsePtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(out->isResponse());
+    QVERIFY(out->isError());
+    QCOMPARE(out->errorCode(), 10);
+    QCOMPARE(out->errorMessage(), QStringLiteral("Ooops"));
+    QCOMPARE(out->serverName(), QStringLiteral("AkonadiTest"));
+    QCOMPARE(out->message(), QStringLiteral("Oh, hello there!"));
+    QCOMPARE(out->protocolVersion(), 42);
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -495,12 +495,12 @@ void ProtocolTest::testLoginCommand()
     QVERIFY(in.isValid());
     in.setSessionId("MySession-123-notifications");
 
-    const LoginCommand out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(!out.isResponse());
-    QCOMPARE(out.sessionId(), QByteArray("MySession-123-notifications"));
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(LoginCommandPtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(!out->isResponse());
+    QCOMPARE(out->sessionId(), QByteArray("MySession-123-notifications"));
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -512,14 +512,14 @@ void ProtocolTest::testLoginResponse()
     QVERIFY(!in.isError());
     in.setError(42, QStringLiteral("Ooops"));
 
-    const LoginResponse out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(out.isResponse());
-    QVERIFY(out.isError());
-    QCOMPARE(out.errorCode(), 42);
-    QCOMPARE(out.errorMessage(), QStringLiteral("Ooops"));
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(LoginResponsePtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(out->isResponse());
+    QVERIFY(out->isError());
+    QCOMPARE(out->errorCode(), 42);
+    QCOMPARE(out->errorMessage(), QStringLiteral("Ooops"));
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -529,11 +529,11 @@ void ProtocolTest::testLogoutCommand()
     QVERIFY(!in.isResponse());
     QVERIFY(in.isValid());
 
-    const LogoutCommand out = serializeAndDeserialize(in);
-    QVERIFY(!out.isResponse());
-    QVERIFY(out.isValid());
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(LogoutCommandPtr::create(in));
+    QVERIFY(!out->isResponse());
+    QVERIFY(out->isValid());
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -545,14 +545,14 @@ void ProtocolTest::testLogoutResponse()
     QVERIFY(!in.isError());
     in.setError(42, QStringLiteral("Ooops"));
 
-    const LogoutResponse out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(out.isResponse());
-    QVERIFY(out.isError());
-    QCOMPARE(out.errorCode(), 42);
-    QCOMPARE(out.errorMessage(), QStringLiteral("Ooops"));
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(LogoutResponsePtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(out->isResponse());
+    QVERIFY(out->isError());
+    QCOMPARE(out->errorCode(), 42);
+    QCOMPARE(out->errorMessage(), QStringLiteral("Ooops"));
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -564,12 +564,12 @@ void ProtocolTest::testTransactionCommand()
     QVERIFY(in.isValid());
     in.setMode(TransactionCommand::Begin);
 
-    const TransactionCommand out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(!out.isResponse());
-    QCOMPARE(out.mode(), TransactionCommand::Begin);
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(TransactionCommandPtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(!out->isResponse());
+    QCOMPARE(out->mode(), TransactionCommand::Begin);
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -581,14 +581,14 @@ void ProtocolTest::testTransactionResponse()
     QVERIFY(!in.isError());
     in.setError(42, QStringLiteral("Ooops"));
 
-    const TransactionResponse out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(out.isResponse());
-    QVERIFY(out.isError());
-    QCOMPARE(out.errorCode(), 42);
-    QCOMPARE(out.errorMessage(), QStringLiteral("Ooops"));
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(TransactionResponsePtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(out->isResponse());
+    QVERIFY(out->isError());
+    QCOMPARE(out->errorCode(), 42);
+    QCOMPARE(out->errorMessage(), QStringLiteral("Ooops"));
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -607,7 +607,7 @@ void ProtocolTest::testCreateItemCommand()
     in.setCollection(Scope(1));
     in.setItemSize(100);
     in.setMimeType(QStringLiteral("text/directory"));
-    in.setGID(QStringLiteral("GID"));
+    in.setGid(QStringLiteral("GID"));
     in.setRemoteId(QStringLiteral("RID"));
     in.setRemoteRevision(QStringLiteral("RREV"));
     in.setDateTime(QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
@@ -621,28 +621,28 @@ void ProtocolTest::testCreateItemCommand()
     in.setAttributes(attrs);
     in.setParts(parts);
 
-    const CreateItemCommand out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(!out.isResponse());
-    QCOMPARE(out.mergeModes(), CreateItemCommand::GID | CreateItemCommand::RemoteID);
-    QCOMPARE(out.collection(), Scope(1));
-    QCOMPARE(out.itemSize(), 100);
-    QCOMPARE(out.mimeType(), QStringLiteral("text/directory"));
-    QCOMPARE(out.gid(), QStringLiteral("GID"));
-    QCOMPARE(out.remoteId(), QStringLiteral("RID"));
-    QCOMPARE(out.remoteRevision(), QStringLiteral("RREV"));
-    QCOMPARE(out.dateTime(), QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
-    QCOMPARE(out.flags(), QSet<QByteArray>() << "\\SEEN" << "FLAG");
-    QCOMPARE(out.flagsOverwritten(), true);
-    QCOMPARE(out.addedFlags(), QSet<QByteArray>{ "FLAG2" });
-    QCOMPARE(out.removedFlags(), QSet<QByteArray>{ "FLAG3" });
-    QCOMPARE(out.tags(), Scope(2));
-    QCOMPARE(out.addedTags(), addedTags);
-    QCOMPARE(out.removedTags(), removedTags);
-    QCOMPARE(out.attributes(), attrs);
-    QCOMPARE(out.parts(), parts);
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(CreateItemCommandPtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(!out->isResponse());
+    QCOMPARE(out->mergeModes(), CreateItemCommand::GID | CreateItemCommand::RemoteID);
+    QCOMPARE(out->collection(), Scope(1));
+    QCOMPARE(out->itemSize(), 100);
+    QCOMPARE(out->mimeType(), QStringLiteral("text/directory"));
+    QCOMPARE(out->gid(), QStringLiteral("GID"));
+    QCOMPARE(out->remoteId(), QStringLiteral("RID"));
+    QCOMPARE(out->remoteRevision(), QStringLiteral("RREV"));
+    QCOMPARE(out->dateTime(), QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
+    QCOMPARE(out->flags(), QSet<QByteArray>() << "\\SEEN" << "FLAG");
+    QCOMPARE(out->flagsOverwritten(), true);
+    QCOMPARE(out->addedFlags(), QSet<QByteArray>{ "FLAG2" });
+    QCOMPARE(out->removedFlags(), QSet<QByteArray>{ "FLAG3" });
+    QCOMPARE(out->tags(), Scope(2));
+    QCOMPARE(out->addedTags(), addedTags);
+    QCOMPARE(out->removedTags(), removedTags);
+    QCOMPARE(out->attributes(), attrs);
+    QCOMPARE(out->parts(), parts);
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -654,14 +654,14 @@ void ProtocolTest::testCreateItemResponse()
     QVERIFY(!in.isError());
     in.setError(42, QStringLiteral("Ooops"));
 
-    const CreateItemResponse out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(out.isResponse());
-    QVERIFY(out.isError());
-    QCOMPARE(out.errorCode(), 42);
-    QCOMPARE(out.errorMessage(), QStringLiteral("Ooops"));
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(CreateItemResponsePtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(out->isResponse());
+    QVERIFY(out->isError());
+    QCOMPARE(out->errorCode(), 42);
+    QCOMPARE(out->errorMessage(), QStringLiteral("Ooops"));
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -675,13 +675,13 @@ void ProtocolTest::testCopyItemsCommand()
     in.setItems(items);
     in.setDestination(Scope(42));
 
-    const CopyItemsCommand out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(!out.isResponse());
-    QCOMPARE(out.items(), items);
-    QCOMPARE(out.destination(), Scope(42));
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(CopyItemsCommandPtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(!out->isResponse());
+    QCOMPARE(out->items(), items);
+    QCOMPARE(out->destination(), Scope(42));
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 
@@ -693,14 +693,14 @@ void ProtocolTest::testCopyItemsResponse()
     QVERIFY(!in.isError());
     in.setError(42, QStringLiteral("Ooops"));
 
-    const CopyItemsResponse out = serializeAndDeserialize(in);
-    QVERIFY(out.isValid());
-    QVERIFY(out.isResponse());
-    QVERIFY(out.isError());
-    QCOMPARE(out.errorCode(), 42);
-    QCOMPARE(out.errorMessage(), QStringLiteral("Ooops"));
-    QCOMPARE(out, in);
-    const bool notEquals = (out != in);
+    const auto out = serializeAndDeserialize(CopyItemsResponsePtr::create(in));
+    QVERIFY(out->isValid());
+    QVERIFY(out->isResponse());
+    QVERIFY(out->isError());
+    QCOMPARE(out->errorCode(), 42);
+    QCOMPARE(out->errorMessage(), QStringLiteral("Ooops"));
+    QCOMPARE(*out, in);
+    const bool notEquals = (*out != in);
     QVERIFY(!notEquals);
 }
 

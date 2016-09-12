@@ -79,7 +79,7 @@ void ItemCopyJob::doStart()
     Q_D(ItemCopyJob);
 
     try {
-        d->sendCommand(Protocol::CopyItemsCommand(ProtocolHelper::entitySetToScope(d->mItems),
+        d->sendCommand(Protocol::CopyItemsCommandPtr::create(ProtocolHelper::entitySetToScope(d->mItems),
                        ProtocolHelper::entityToScope(d->mTarget)));
     } catch (std::exception &e) {
         setError(Unknown);
@@ -88,9 +88,9 @@ void ItemCopyJob::doStart()
     }
 }
 
-bool ItemCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemCopyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::CopyItems) {
+    if (!response->isResponse() || response->type() != Protocol::Command::CopyItems) {
         return Job::doHandleResponse(tag, response);
     }
 

@@ -31,7 +31,7 @@ using namespace Akonadi::Server;
 
 bool TagStore::parseStream()
 {
-    Protocol::ModifyTagCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::ModifyTagCommand>(m_command);
 
     Tag changedTag = Tag::retrieveById(cmd.tagId());
     if (!changedTag.isValid()) {

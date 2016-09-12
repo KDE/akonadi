@@ -61,7 +61,7 @@ void CollectionStatisticsJob::doStart()
     Q_D(CollectionStatisticsJob);
 
     try {
-        d->sendCommand(Protocol::FetchCollectionStatsCommand(ProtocolHelper::entityToScope(d->mCollection)));
+        d->sendCommand(Protocol::FetchCollectionStatsCommandPtr::create(ProtocolHelper::entityToScope(d->mCollection)));
     } catch (const std::exception &e) {
         setError(Unknown);
         setErrorText(QString::fromUtf8(e.what()));
@@ -70,15 +70,16 @@ void CollectionStatisticsJob::doStart()
     }
 }
 
-bool CollectionStatisticsJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionStatisticsJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(CollectionStatisticsJob);
 
-    if (!response.isResponse() || response.type() != Protocol::Command::FetchCollectionStats) {
+    if (!response->isResponse() || response->type() != Protocol::Command::FetchCollectionStats) {
         return Job::doHandleResponse(tag, response);
     }
 
-    d->mStatistics = ProtocolHelper::parseCollectionStatistics(response);
+    d->mStatistics = ProtocolHelper::parseCollectionStatistics(
+        Protocol::cmdCast<Protocol::FetchCollectionStatsResponse>(response));
     return true;
 }
 

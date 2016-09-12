@@ -236,35 +236,35 @@ void CollectionFetchJob::doStart()
         return;
     }
 
-    Protocol::FetchCollectionsCommand cmd(ProtocolHelper::entityToScope(d->mBase));
+    const auto cmd = Protocol::FetchCollectionsCommandPtr::create(ProtocolHelper::entityToScope(d->mBase));
     switch (d->mType) {
     case Base:
-        cmd.setDepth(Protocol::FetchCollectionsCommand::BaseCollection);
+        cmd->setDepth(Protocol::FetchCollectionsCommand::BaseCollection);
         break;
     case Akonadi::CollectionFetchJob::FirstLevel:
-        cmd.setDepth(Protocol::FetchCollectionsCommand::ParentCollection);
+        cmd->setDepth(Protocol::FetchCollectionsCommand::ParentCollection);
         break;
     case Akonadi::CollectionFetchJob::Recursive:
-        cmd.setDepth(Protocol::FetchCollectionsCommand::AllCollections);
+        cmd->setDepth(Protocol::FetchCollectionsCommand::AllCollections);
         break;
     default:
         Q_ASSERT(false);
     }
-    cmd.setResource(d->mScope.resource());
-    cmd.setMimeTypes(d->mScope.contentMimeTypes());
+    cmd->setResource(d->mScope.resource());
+    cmd->setMimeTypes(d->mScope.contentMimeTypes());
 
     switch (d->mScope.listFilter()) {
     case CollectionFetchScope::Display:
-        cmd.setDisplayPref(true);
+        cmd->setDisplayPref(true);
         break;
     case CollectionFetchScope::Sync:
-        cmd.setSyncPref(true);
+        cmd->setSyncPref(true);
         break;
     case CollectionFetchScope::Index:
-        cmd.setIndexPref(true);
+        cmd->setIndexPref(true);
         break;
     case CollectionFetchScope::Enabled:
-        cmd.setEnabled(true);
+        cmd->setEnabled(true);
         break;
     case CollectionFetchScope::NoFilter:
         break;
@@ -272,26 +272,26 @@ void CollectionFetchJob::doStart()
         Q_ASSERT(false);
     }
 
-    cmd.setFetchStats(d->mScope.includeStatistics());
+    cmd->setFetchStats(d->mScope.includeStatistics());
     switch (d->mScope.ancestorRetrieval()) {
     case CollectionFetchScope::None:
-        cmd.setAncestorsDepth(Protocol::Ancestor::NoAncestor);
+        cmd->setAncestorsDepth(Protocol::Ancestor::NoAncestor);
         break;
     case CollectionFetchScope::Parent:
-        cmd.setAncestorsDepth(Protocol::Ancestor::ParentAncestor);
+        cmd->setAncestorsDepth(Protocol::Ancestor::ParentAncestor);
         break;
     case CollectionFetchScope::All:
-        cmd.setAncestorsDepth(Protocol::Ancestor::AllAncestors);
+        cmd->setAncestorsDepth(Protocol::Ancestor::AllAncestors);
         break;
     }
     if (d->mScope.ancestorRetrieval() != CollectionFetchScope::None) {
-        cmd.setAncestorsAttributes(d->mScope.ancestorFetchScope().attributes());
+        cmd->setAncestorsAttributes(d->mScope.ancestorFetchScope().attributes());
     }
 
     d->sendCommand(cmd);
 }
 
-bool CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(CollectionFetchJob);
 
@@ -299,11 +299,11 @@ bool CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::Command &r
         return false;
     }
 
-    if (!response.isResponse() || response.type() != Protocol::Command::FetchCollections) {
+    if (!response->isResponse() || response->type() != Protocol::Command::FetchCollections) {
         return Job::doHandleResponse(tag, response);
     }
 
-    Protocol::FetchCollectionsResponse resp(response);
+    const auto &resp = Protocol::cmdCast<Protocol::FetchCollectionsResponse>(response);
     // Invalid response (no ID) means this was the last response
     if (resp.id() == -1) {
         return true;

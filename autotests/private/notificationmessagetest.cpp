@@ -30,64 +30,73 @@ using namespace Akonadi::Protocol;
 
 void NotificationMessageTest::testCompress()
 {
-    ChangeNotification::List list;
+    ChangeNotificationList list;
     CollectionChangeNotification msg;
     msg.setOperation(CollectionChangeNotification::Add);
 
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 1);
 
     msg.setOperation(CollectionChangeNotification::Modify);
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(!CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 1);
-    QCOMPARE(static_cast<CollectionChangeNotification&>(list.first()).operation(), CollectionChangeNotification::Add);
+    QCOMPARE(list.first().staticCast<CollectionChangeNotification>()->operation(), CollectionChangeNotification::Add);
 
     msg.setOperation(CollectionChangeNotification::Remove);
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 2);
 }
 
 void NotificationMessageTest::testCompress2()
 {
-    ChangeNotification::List list;
+    ChangeNotificationList list;
     CollectionChangeNotification msg;
     msg.setOperation(CollectionChangeNotification::Modify);
 
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 1);
 
     msg.setOperation(CollectionChangeNotification::Remove);
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 2);
-    QCOMPARE(static_cast<CollectionChangeNotification&>(list.first()).operation(), CollectionChangeNotification::Modify);
-    QCOMPARE(static_cast<CollectionChangeNotification&>(list.last()).operation(), CollectionChangeNotification::Remove);
+    QCOMPARE(list.first().staticCast<CollectionChangeNotification>()->operation(), CollectionChangeNotification::Modify);
+    QCOMPARE(list.last().staticCast<CollectionChangeNotification>()->operation(), CollectionChangeNotification::Remove);
 }
 
 void NotificationMessageTest::testCompress3()
 {
-    ChangeNotification::List list;
+    ChangeNotificationList list;
     CollectionChangeNotification msg;
     msg.setOperation(CollectionChangeNotification::Modify);
 
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 1);
 
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(!CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 1);
 }
 
 void NotificationMessageTest::testPartModificationMerge()
 {
-    ChangeNotification::List list;
+    ChangeNotificationList list;
     CollectionChangeNotification msg;
     msg.setOperation(CollectionChangeNotification::Modify);
     msg.setChangedParts(QSet<QByteArray>() << "PART1");
 
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 1);
 
     msg.setChangedParts(QSet<QByteArray>() << "PART2");
-    CollectionChangeNotification::appendAndCompress(list, msg);
+    QVERIFY(!CollectionChangeNotification::appendAndCompress(
+                    list, CollectionChangeNotificationPtr::create(msg)));
     QCOMPARE(list.count(), 1);
-    QCOMPARE(static_cast<CollectionChangeNotification&>(list.first()).changedParts(), (QSet<QByteArray>() << "PART1" << "PART2"));
+    QCOMPARE(list.first().staticCast<CollectionChangeNotification>()->changedParts(), (QSet<QByteArray>() << "PART1" << "PART2"));
 }

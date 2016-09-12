@@ -35,16 +35,16 @@ using namespace Akonadi::Server;
 Q_DECLARE_METATYPE(Akonadi::Server::Relation::List)
 Q_DECLARE_METATYPE(Akonadi::Server::Relation)
 
-static Protocol::ChangeNotification::List extractNotifications(const QSharedPointer<QSignalSpy> &notificationSpy)
+static Protocol::ChangeNotificationList extractNotifications(const QSharedPointer<QSignalSpy> &notificationSpy)
 {
-    Protocol::ChangeNotification::List receivedNotifications;
+    Protocol::ChangeNotificationList receivedNotifications;
     for (int q = 0; q < notificationSpy->size(); q++) {
         //Only one notify call
         if (notificationSpy->at(q).count() != 1) {
             qWarning() << "Error: We're assuming only one notify call.";
-            return Protocol::ChangeNotification::List();
+            return Protocol::ChangeNotificationList();
         }
-        const Protocol::ChangeNotification::List n = notificationSpy->at(q).first().value<Protocol::ChangeNotification::List>();
+        const Protocol::ChangeNotificationList n = notificationSpy->at(q).first().value<Protocol::ChangeNotificationList>();
         for (int i = 0; i < n.size(); i++) {
             // qDebug() << n.at(i);
             receivedNotifications.append(n.at(i));
@@ -87,17 +87,17 @@ public:
 
     QScopedPointer<DbInitializer> initializer;
 
-    Protocol::RelationChangeNotification relationNotification(const Protocol::RelationChangeNotification &notificationTemplate,
-                                                              const PimItem &item1,
-                                                              const PimItem &item2,
-                                                              const QString &rid,
-                                                              const QString &type = QStringLiteral("type"))
+    Protocol::RelationChangeNotificationPtr relationNotification(const Protocol::RelationChangeNotificationPtr &notificationTemplate,
+                                                                 const PimItem &item1,
+                                                                 const PimItem &item2,
+                                                                 const QString &rid,
+                                                                 const QString &type = QStringLiteral("type"))
     {
-        Protocol::RelationChangeNotification notification = notificationTemplate;
-        notification.setLeftItem(item1.id());
-        notification.setRightItem(item2.id());
-        notification.setRemoteId(rid);
-        notification.setType(type);
+        auto notification = Protocol::RelationChangeNotificationPtr::create(*notificationTemplate);
+        notification->setLeftItem(item1.id());
+        notification->setRightItem(item2.id());
+        notification->setRemoteId(rid);
+        notification->setType(type);
         return notification;
     }
 
@@ -112,17 +112,17 @@ private Q_SLOTS:
 
         QTest::addColumn<TestScenario::List >("scenarios");
         QTest::addColumn<Relation::List>("expectedRelations");
-        QTest::addColumn<Protocol::ChangeNotification::List>("expectedNotifications");
+        QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
 
-        Protocol::RelationChangeNotification notificationTemplate;
-        notificationTemplate.setOperation(Protocol::RelationChangeNotification::Add);
-        notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+        auto notificationTemplate = Protocol::RelationChangeNotificationPtr::create();
+        notificationTemplate->setOperation(Protocol::RelationChangeNotification::Add);
+        notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::ModifyRelationCommand(item1.id(), item2.id(), "type"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyRelationResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::ModifyRelationCommandPtr::create(item1.id(), item2.id(), "type"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyRelationResponsePtr::create());
 
             Relation rel;
             rel.setLeftId(item1.id());
@@ -131,18 +131,19 @@ private Q_SLOTS:
             type.setName(QLatin1String("type"));
             rel.setRelationType(type);
 
-            Protocol::ItemChangeNotification itemNotification;
-            itemNotification.setOperation(Protocol::ItemChangeNotification::ModifyRelations);
-            itemNotification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            itemNotification.setResource("testresource");
-            itemNotification.setParentCollection(col1.id());
-            itemNotification.addItem(item1.id(), item1.remoteId(), QString(), item1.mimeType().name());
-            itemNotification.addItem(item2.id(), item2.remoteId(), QString(), item2.mimeType().name());
-            itemNotification.setAddedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
+            auto itemNotification = Protocol::ItemChangeNotificationPtr::create();
+            itemNotification->setOperation(Protocol::ItemChangeNotification::ModifyRelations);
+            itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            itemNotification->setResource("testresource");
+            itemNotification->setParentCollection(col1.id());
+            itemNotification->setItems({
+                { item1.id(), item1.remoteId(), QString(), item1.mimeType().name() },
+                { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
+            itemNotification->setAddedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
 
-            Protocol::ChangeNotification notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId());
+            const auto notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId());
 
-            QTest::newRow("uid create relation") << scenarios << (Relation::List() << rel) << (Protocol::ChangeNotification::List() << notification << itemNotification);
+            QTest::newRow("uid create relation") << scenarios << (Relation::List() << rel) << (Protocol::ChangeNotificationList() << notification << itemNotification);
         }
     }
 
@@ -150,15 +151,15 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Relation::List, expectedRelations);
-        QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
-            QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+            QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
         }
 
         const Relation::List relations = Relation::retrieveAll();
@@ -197,51 +198,53 @@ private Q_SLOTS:
         rel2.setRelationType(RelationType::retrieveByName(QLatin1String("type2")));
         QVERIFY(rel2.insert());
 
-        Protocol::RelationChangeNotification notificationTemplate;
-        notificationTemplate.setOperation(Protocol::RelationChangeNotification::Remove);
-        notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+        auto notificationTemplate = Protocol::RelationChangeNotificationPtr::create();
+        notificationTemplate->setOperation(Protocol::RelationChangeNotification::Remove);
+        notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Relation::List>("expectedRelations");
-        QTest::addColumn<Protocol::ChangeNotification::List>("expectedNotifications");
+        QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::RemoveRelationsCommand(item1.id(), item2.id(), "type"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::RemoveRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::RemoveRelationsCommandPtr::create(item1.id(), item2.id(), "type"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::RemoveRelationsResponsePtr::create());
 
-            Protocol::ItemChangeNotification itemNotification;
-            itemNotification.setOperation(Protocol::ItemChangeNotification::ModifyRelations);
-            itemNotification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            itemNotification.setResource("testresource");
-            itemNotification.setParentCollection(col1.id());
-            itemNotification.addItem(item1.id(), item1.remoteId(), QString(), item1.mimeType().name());
-            itemNotification.addItem(item2.id(), item2.remoteId(), QString(), item2.mimeType().name());
-            itemNotification.setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
+            auto itemNotification = Protocol::ItemChangeNotificationPtr::create();
+            itemNotification->setOperation(Protocol::ItemChangeNotification::ModifyRelations);
+            itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            itemNotification->setResource("testresource");
+            itemNotification->setParentCollection(col1.id());
+            itemNotification->setItems({
+                { item1.id(), item1.remoteId(), QString(), item1.mimeType().name() },
+                { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
+            itemNotification->setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
 
-            Protocol::ChangeNotification notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId());
+            const auto notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId());
 
-            QTest::newRow("uid remove relation") << scenarios << (Relation::List() << rel2) << (Protocol::ChangeNotification::List() << notification << itemNotification);
+            QTest::newRow("uid remove relation") << scenarios << (Relation::List() << rel2) << (Protocol::ChangeNotificationList() << notification << itemNotification);
         }
 
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::RemoveRelationsCommand(item1.id(), item2.id()))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::RemoveRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::RemoveRelationsCommandPtr::create(item1.id(), item2.id()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::RemoveRelationsResponsePtr::create());
 
-            Protocol::ItemChangeNotification itemNotification;
-            itemNotification.setOperation(Protocol::ItemChangeNotification::ModifyRelations);
-            itemNotification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            itemNotification.setResource("testresource");
-            itemNotification.setParentCollection(col1.id());
-            itemNotification.addItem(item1.id(), item1.remoteId(), QString(), item1.mimeType().name());
-            itemNotification.addItem(item2.id(), item2.remoteId(), QString(), item2.mimeType().name());
-            itemNotification.setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type2")) });
+            auto itemNotification = Protocol::ItemChangeNotificationPtr::create();
+            itemNotification->setOperation(Protocol::ItemChangeNotification::ModifyRelations);
+            itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            itemNotification->setResource("testresource");
+            itemNotification->setParentCollection(col1.id());
+            itemNotification->setItems({
+                { item1.id(), item1.remoteId(), QString(), item1.mimeType().name() },
+                { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
+            itemNotification->setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type2")) });
 
-            Protocol::ChangeNotification notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId(), QStringLiteral("type2"));
+            const auto notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId(), QStringLiteral("type2"));
 
-            QTest::newRow("uid remove relation without type") << scenarios << Relation::List() << (Protocol::ChangeNotification::List() << notification << itemNotification);
+            QTest::newRow("uid remove relation without type") << scenarios << Relation::List() << (Protocol::ChangeNotificationList() << notification << itemNotification);
         }
 
     }
@@ -250,15 +253,15 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Relation::List, expectedRelations);
-        QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
-            QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+            QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
         }
 
         const Relation::List relations = Relation::retrieveAll();
@@ -320,35 +323,35 @@ private Q_SLOTS:
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, { "type" }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type" }, "foobar1"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), { "type" }, "foobar3"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), { "type" }, "foobar4"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(-1, QVector<QByteArray>{ "type" }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), "type", "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), "type", "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("filter by type") << scenarios;
         }
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand())
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type" }, "foobar1"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type2" }, "foobar2"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), { "type" }, "foobar3"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), { "type" }, "foobar4"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create())
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type2", "foobar2"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), "type", "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), "type", "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("no filter") << scenarios;
         }
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, {}, QLatin1String("testresource")))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type" }, "foobar1"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), { "type2" }, "foobar2"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), { "type" }, "foobar3"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), { "type" }, "foobar4"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(-1, QVector<QByteArray>{}, QLatin1String("testresource")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type2", "foobar2"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), "type", "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), "type", "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("filter by resource with matching resource") << scenarios;
         }
@@ -360,36 +363,36 @@ private Q_SLOTS:
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, {}, QLatin1String("testresource2")))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(-1, QVector<QByteArray>{}, QLatin1String("testresource2")))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("filter by resource with nonmatching resource") << scenarios;
         }
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(item1.id(), -1, { "type" }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(item1.id(), -1, QVector<QByteArray>{ "type" }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("filter by left and type") << scenarios;
         }
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(-1, item2.id(), { "type" }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(-1, item2.id(), QVector<QByteArray>{ "type" }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item1.id(), item1.mimeType().name().toUtf8(), item2.id(), item2.mimeType().name().toUtf8(), "type", "foobar1"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("filter by right and type") << scenarios;
         }
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommand(item3.id(), { "type" }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), "type", "foobar3"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), "type", "foobar4"))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::FetchRelationsCommandPtr::create(item3.id(), QVector<QByteArray>{ "type" }))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item3.id(), item3.mimeType().name().toUtf8(), item4.id(), item4.mimeType().name().toUtf8(), "type", "foobar3"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create(item4.id(), item4.mimeType().name().toUtf8(), item3.id(), item3.mimeType().name().toUtf8(), "type", "foobar4"))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchRelationsResponsePtr::create());
 
             QTest::newRow("fetch by side with typefilter") << scenarios;
         }

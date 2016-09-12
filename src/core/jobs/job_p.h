@@ -56,7 +56,7 @@ public:
 
     void init(QObject *parent);
 
-    void handleResponse(qint64 tag, const Protocol::Command &response);
+    void handleResponse(qint64 tag, const Protocol::CommandPtr &response);
     void startQueued();
     void lostConnection();
     void slotSubJobAboutToStart(Akonadi::Job *job);
@@ -84,12 +84,12 @@ public:
     /**
       Sends the @p command to the backend
      */
-    void sendCommand(qint64 tag, const Protocol::Command &command);
+    void sendCommand(qint64 tag, const Protocol::CommandPtr &command);
 
     /**
      * Same as calling JobPrivate::sendCommand(newTag(), command)
      */
-    void sendCommand(const Protocol::Command &command);
+    void sendCommand(const Protocol::CommandPtr &command);
 
     /**
      * Notify following jobs about item revision changes.

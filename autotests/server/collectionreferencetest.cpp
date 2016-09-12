@@ -70,118 +70,118 @@ private Q_SLOTS:
     void testModify_data()
     {
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<QList<Protocol::ChangeNotification> >("expectedNotifications");
+        QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
 
-        Protocol::CollectionChangeNotification notificationTemplate;
-        notificationTemplate.setOperation(Protocol::CollectionChangeNotification::Modify);
-        notificationTemplate.setId(initializer.collection("col2").id());
-        notificationTemplate.setRemoteId(QStringLiteral("col2"));
-        notificationTemplate.setRemoteRevision(QStringLiteral(""));
-        notificationTemplate.setParentCollection(0);
-        notificationTemplate.setResource("testresource");
-        notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+        auto notificationTemplate = Protocol::CollectionChangeNotificationPtr::create();
+        notificationTemplate->setOperation(Protocol::CollectionChangeNotification::Modify);
+        notificationTemplate->setId(initializer.collection("col2").id());
+        notificationTemplate->setRemoteId(QStringLiteral("col2"));
+        notificationTemplate->setRemoteRevision(QStringLiteral(""));
+        notificationTemplate->setParentCollection(0);
+        notificationTemplate->setResource("testresource");
+        notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
         {
-            Protocol::FetchCollectionsCommand cmd;
-            cmd.setDepth(Protocol::FetchCollectionsCommand::AllCollections);
-            cmd.setResource(QLatin1String("testresource"));
-            cmd.setEnabled(true);
+            auto cmd = Protocol::FetchCollectionsCommandPtr::create();
+            cmd->setDepth(Protocol::FetchCollectionsCommand::AllCollections);
+            cmd->setResource(QLatin1String("testresource"));
+            cmd->setEnabled(true);
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer.listResponse(initializer.collection("col1")))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
-            QTest::newRow("list before referenced first level") << scenarios << QList<Protocol::ChangeNotification>();
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
+            QTest::newRow("list before referenced first level") << scenarios << Protocol::ChangeNotificationList();
         }
 
         {
-            Protocol::ModifyCollectionCommand cmd(initializer.collection("col2").id());
-            cmd.setReferenced(true);
+            auto cmd = Protocol::ModifyCollectionCommandPtr::create(initializer.collection("col2").id());
+            cmd->setReferenced(true);
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create());
 
-            Protocol::CollectionChangeNotification notification = notificationTemplate;
-            notification.setChangedParts(QSet<QByteArray>() << "REFERENCED");
+            auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
+            notification->setChangedParts(QSet<QByteArray>() << "REFERENCED");
 
-            QTest::newRow("reference") << scenarios << (QList<Protocol::ChangeNotification>() << notification);
+            QTest::newRow("reference") << scenarios << (Protocol::ChangeNotificationList() << notification);
         }
 
         {
-            Protocol::ModifyCollectionCommand cmd(initializer.collection("col2").id());
-            cmd.setReferenced(true);
+            auto cmd = Protocol::ModifyCollectionCommandPtr::create(initializer.collection("col2").id());
+            cmd->setReferenced(true);
 
-            Protocol::FetchCollectionsCommand listCmd(initializer.collection("col2").id());
-            listCmd.setDepth(Protocol::FetchCollectionsCommand::BaseCollection);
-            listCmd.setEnabled(true);
+            auto listCmd = Protocol::FetchCollectionsCommandPtr::create(initializer.collection("col2").id());
+            listCmd->setDepth(Protocol::FetchCollectionsCommand::BaseCollection);
+            listCmd->setEnabled(true);
 
             Collection col2 = initializer.collection("col2");
             col2.setReferenced(true);
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse())
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create())
                       << TestScenario::create(6, TestScenario::ClientCmd, listCmd)
                       << TestScenario::create(6, TestScenario::ServerCmd, initializer.listResponse(col2))
-                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
 
-            Protocol::CollectionChangeNotification notification = notificationTemplate;
-            notification.setChangedParts(QSet<QByteArray>() << "REFERENCED");
+            auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
+            notification->setChangedParts(QSet<QByteArray>() << "REFERENCED");
 
-            QTest::newRow("list referenced base") << scenarios << (QList<Protocol::ChangeNotification>() << notification);
+            QTest::newRow("list referenced base") << scenarios << (Protocol::ChangeNotificationList() << notification);
         }
         {
-            Protocol::ModifyCollectionCommand cmd(initializer.collection("col2").id());
-            cmd.setReferenced(true);
+            auto cmd = Protocol::ModifyCollectionCommandPtr::create(initializer.collection("col2").id());
+            cmd->setReferenced(true);
 
-            Protocol::FetchCollectionsCommand listCmd;
-            listCmd.setResource(QLatin1String("testresource"));
-            listCmd.setEnabled(true);
-            listCmd.setDepth(Protocol::FetchCollectionsCommand::ParentCollection);
+            auto listCmd = Protocol::FetchCollectionsCommandPtr::create();
+            listCmd->setResource(QLatin1String("testresource"));
+            listCmd->setEnabled(true);
+            listCmd->setDepth(Protocol::FetchCollectionsCommand::ParentCollection);
 
             Collection col2 = initializer.collection("col2");
             col2.setReferenced(true);
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse())
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create())
                       << TestScenario::create(6, TestScenario::ClientCmd, listCmd)
                       << TestScenario::create(6, TestScenario::ServerCmd, initializer.listResponse(initializer.collection("col1")))
                       << TestScenario::create(6, TestScenario::ServerCmd, initializer.listResponse(col2))
-                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
 
-            Protocol::CollectionChangeNotification notification = notificationTemplate;
-            notification.setChangedParts(QSet<QByteArray>() << "REFERENCED");
+            auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
+            notification->setChangedParts(QSet<QByteArray>() << "REFERENCED");
 
-            QTest::newRow("list referenced first level") << scenarios << (QList<Protocol::ChangeNotification>() << notification);
+            QTest::newRow("list referenced first level") << scenarios << (Protocol::ChangeNotificationList() << notification);
         }
         {
-            Protocol::ModifyCollectionCommand cmd1(initializer.collection("col2").id());
-            cmd1.setReferenced(true);
+            auto cmd1 = Protocol::ModifyCollectionCommandPtr::create(initializer.collection("col2").id());
+            cmd1->setReferenced(true);
 
-            Protocol::ModifyCollectionCommand cmd2(initializer.collection("col2").id());
-            cmd2.setReferenced(false);
+            auto cmd2 = Protocol::ModifyCollectionCommandPtr::create(initializer.collection("col2").id());
+            cmd2->setReferenced(false);
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd1)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse())
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create())
                       << TestScenario::create(6, TestScenario::ClientCmd, cmd2)
-                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::ModifyCollectionResponse());
+                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create());
 
-            Protocol::CollectionChangeNotification notification = notificationTemplate;
-            notification.setChangedParts(QSet<QByteArray>() << "REFERENCED");
+            auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
+            notification->setChangedParts(QSet<QByteArray>() << "REFERENCED");
 
-            QTest::newRow("dereference") << scenarios << (QList<Protocol::ChangeNotification>() << notification << notification);
+            QTest::newRow("dereference") << scenarios << (Protocol::ChangeNotificationList() << notification << notification);
         }
     }
 
     void testModify()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(QList<Protocol::ChangeNotification>, expectedNotifications);
+        QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
         // Clean all references from previous run
         CollectionReferenceManager::cleanup();
@@ -191,20 +191,20 @@ private Q_SLOTS:
 
         auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (expectedNotifications.isEmpty()) {
-            QTRY_VERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
+            QTRY_VERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());
         } else {
-            Protocol::ChangeNotification::List receivedNotifications;
+            Protocol::ChangeNotificationList receivedNotifications;
             for (int q = 0; q < notificationSpy->size(); q++) {
                 //Only one notify call
                 QCOMPARE(notificationSpy->first().count(), 1);
-                const Protocol::ChangeNotification::List n = notificationSpy->first().first().value<Protocol::ChangeNotification::List>();
+                const Protocol::ChangeNotificationList n = notificationSpy->first().first().value<Protocol::ChangeNotificationList>();
                 for (int i = 0; i < n.size(); i++) {
                     receivedNotifications.append(n.at(i));
                 }
             }
             QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
             for (int i = 0; i < expectedNotifications.size(); i++) {
-                QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+                QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
             }
         }
     }

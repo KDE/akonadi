@@ -33,9 +33,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(Akonadi::Protocol::ItemChangeNotification::List)
-Q_DECLARE_METATYPE(Akonadi::Protocol::ItemChangeNotification)
-
 class MoveHandlerTest : public QObject
 {
     Q_OBJECT
@@ -63,46 +60,46 @@ private Q_SLOTS:
         const Collection destCol = Collection::retrieveByName(QStringLiteral("Collection A"));
 
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<Protocol::ItemChangeNotification::List>("expectedNotifications");
+        QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
         QTest::addColumn<QVariant>("newValue");
 
-        Protocol::ItemChangeNotification notificationTemplate;
-        notificationTemplate.setOperation(Protocol::ItemChangeNotification::Move);
-        notificationTemplate.setResource("akonadi_fake_resource_0");
-        notificationTemplate.setDestinationResource("akonadi_fake_resource_0");
-        notificationTemplate.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-        notificationTemplate.setParentCollection(srcCol.id());
-        notificationTemplate.setParentDestCollection(destCol.id());
+        auto notificationTemplate = Protocol::ItemChangeNotificationPtr::create();
+        notificationTemplate->setOperation(Protocol::ItemChangeNotification::Move);
+        notificationTemplate->setResource("akonadi_fake_resource_0");
+        notificationTemplate->setDestinationResource("akonadi_fake_resource_0");
+        notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+        notificationTemplate->setParentCollection(srcCol.id());
+        notificationTemplate->setParentDestCollection(destCol.id());
 
         {
-            Protocol::MoveItemsCommand cmd(1, destCol.id());
+            auto cmd = Protocol::MoveItemsCommandPtr::create(1, destCol.id());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::MoveItemsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::MoveItemsResponsePtr::create());
 
-            Protocol::ItemChangeNotification notification = notificationTemplate;
-            notification.setItem({ Protocol::ItemChangeNotification::Item(1, QStringLiteral("A"), QString(), QStringLiteral("application/octet-stream")) });
+            auto notification = Protocol::ItemChangeNotificationPtr::create(*notificationTemplate);
+            notification->setItems({ { 1, QStringLiteral("A"), QString(), QStringLiteral("application/octet-stream") } });
 
-            QTest::newRow("move item") << scenarios << Protocol::ItemChangeNotification::List{ notification }
+            QTest::newRow("move item") << scenarios << Protocol::ChangeNotificationList{ notification }
                                        << QVariant::fromValue(destCol.id());
         }
 
         {
-            Protocol::MoveItemsCommand cmd(QVector<qint64>{ 2, 3 }, destCol.id());
+            auto cmd = Protocol::MoveItemsCommandPtr::create(QVector<qint64>{ 2, 3 }, destCol.id());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::MoveItemsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::MoveItemsResponsePtr::create());
 
-            Protocol::ItemChangeNotification notification = notificationTemplate;
-            notification.setItem({ Protocol::ItemChangeNotification::Item(2, QStringLiteral("B"), QString(), QStringLiteral("application/octet-stream")),
-                                   Protocol::ItemChangeNotification::Item(3, QStringLiteral("C"), QString(),
-            QStringLiteral("application/octet-stream")) });
+            auto notification = Protocol::ItemChangeNotificationPtr::create(*notificationTemplate);
+            notification->setItems({
+                { 3, QStringLiteral("C"), QString(), QStringLiteral("application/octet-stream") },
+                { 2, QStringLiteral("B"), QString(), QStringLiteral("application/octet-stream") } });
 
-            QTest::newRow("mote items") << scenarios << Protocol::ItemChangeNotification::List{ notification }
+            QTest::newRow("move items") << scenarios << Protocol::ChangeNotificationList{ notification }
                                         << QVariant::fromValue(destCol.id());
         }
 
@@ -111,7 +108,7 @@ private Q_SLOTS:
     void testMove()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(Protocol::ItemChangeNotification::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
         QFETCH(QVariant, newValue);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
@@ -119,21 +116,22 @@ private Q_SLOTS:
 
         auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
         if (expectedNotifications.isEmpty()) {
-            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotification::List>().isEmpty());
+            QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());
             return;
         }
         QCOMPARE(notificationSpy->count(), 1);
         //Only one notify call
         QCOMPARE(notificationSpy->first().count(), 1);
-        const Protocol::ChangeNotification::List receivedNotifications = notificationSpy->first().first().value<Protocol::ChangeNotification::List>();
+        const auto receivedNotifications = notificationSpy->first().first().value<Protocol::ChangeNotificationList>();
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
 
         for (int i = 0; i < expectedNotifications.size(); i++) {
-            QCOMPARE(Protocol::ItemChangeNotification(receivedNotifications.at(i)), expectedNotifications.at(i));
-            Protocol::ItemChangeNotification notification = receivedNotifications.at(i);
-            QCOMPARE(notification.parentDestCollection(), newValue.toInt());
+            QCOMPARE(*receivedNotifications.at(i).staticCast<Protocol::ItemChangeNotification>(),
+                     *expectedNotifications.at(i).staticCast<Protocol::ItemChangeNotification>());
+            const auto notification = receivedNotifications.at(i).staticCast<Protocol::ItemChangeNotification>();
+            QCOMPARE(notification->parentDestCollection(), newValue.toInt());
 
-            Q_FOREACH (const auto &ntfItem, notification.items()) {
+            Q_FOREACH (const auto &ntfItem, notification->items()) {
                 const PimItem item = PimItem::retrieveById(ntfItem.id);
                 QCOMPARE(item.collectionId(), newValue.toInt());
             }

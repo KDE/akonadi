@@ -58,12 +58,12 @@ void TransactionJob::doStart()
         mode = Protocol::TransactionCommand::Invalid;
     }
 
-    d->sendCommand(Protocol::TransactionCommand(mode));
+    d->sendCommand(Protocol::TransactionCommandPtr::create(mode));
 }
 
-bool TransactionJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool TransactionJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::Transaction) {
+    if (!response->isResponse() || response->type() != Protocol::Command::Transaction) {
         return Job::doHandleResponse(tag, response);
     }
 

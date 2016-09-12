@@ -216,30 +216,31 @@ void ItemSearchJob::doStart()
 {
     Q_D(ItemSearchJob);
 
-    Protocol::SearchCommand cmd;
-    cmd.setMimeTypes(d->mMimeTypes);
+    auto cmd = Protocol::SearchCommandPtr::create();
+    cmd->setMimeTypes(d->mMimeTypes);
     if (!d->mCollections.isEmpty()) {
         QVector<qint64> ids;
         ids.reserve(d->mCollections.size());
         for (const Collection &col : qAsConst(d->mCollections)) {
             ids << col.id();
         }
-        cmd.setCollections(ids);
+        cmd->setCollections(ids);
     }
-    cmd.setRecursive(d->mRecursive);
-    cmd.setRemote(d->mRemote);
-    cmd.setQuery(QString::fromUtf8(d->mQuery.toJSON()));
-    cmd.setFetchScope(ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope));
+    cmd->setRecursive(d->mRecursive);
+    cmd->setRemote(d->mRemote);
+    cmd->setQuery(QString::fromUtf8(d->mQuery.toJSON()));
+    cmd->setFetchScope(ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope));
 
     d->sendCommand(cmd);
 }
 
-bool ItemSearchJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool ItemSearchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(ItemSearchJob);
 
-    if (response.isResponse() && response.type() == Protocol::Command::FetchItems) {
-        const Item item = ProtocolHelper::parseItemFetchResult(response);
+    if (response->isResponse() && response->type() == Protocol::Command::FetchItems) {
+        const Item item = ProtocolHelper::parseItemFetchResult(
+            Protocol::cmdCast<Protocol::FetchItemsResponse>(response));
         if (!item.isValid()) {
             return false;
         }
@@ -252,7 +253,7 @@ bool ItemSearchJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
         return false;
     }
 
-    if (response.isResponse() && response.type() == Protocol::Command::Search) {
+    if (response->isResponse() && response->type() == Protocol::Command::Search) {
         return true;
     }
 

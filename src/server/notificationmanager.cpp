@@ -112,12 +112,12 @@ void NotificationManager::connectNotificationCollector(NotificationCollector *co
             this, &NotificationManager::slotNotify);
 }
 
-void NotificationManager::slotNotify(const Protocol::ChangeNotification::List &msgs)
+void NotificationManager::slotNotify(const Protocol::ChangeNotificationList &msgs)
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
-    for (const Protocol::ChangeNotification &msg : msgs) {
-        if (msg.type() == Protocol::Command::CollectionChangeNotification) {
+    for (const auto &msg : msgs) {
+        if (msg->type() == Protocol::Command::CollectionChangeNotification) {
             Protocol::CollectionChangeNotification::appendAndCompress(mNotifications, msg);
         } else {
             mNotifications.push_back(msg);
@@ -133,7 +133,7 @@ class NotifyRunnable : public QRunnable
 {
 public:
     explicit NotifyRunnable(NotificationSubscriber *subscriber,
-                            const Protocol::ChangeNotification::List &notifications)
+                            const Protocol::ChangeNotificationList &notifications)
         : mSubscriber(subscriber)
         , mNotifications(notifications)
     {
@@ -156,7 +156,7 @@ public:
 
 private:
     QPointer<NotificationSubscriber> mSubscriber;
-    Protocol::ChangeNotification::List mNotifications;
+    Protocol::ChangeNotificationList mNotifications;
 };
 
 void NotificationManager::emitPendingNotifications()
@@ -189,13 +189,13 @@ void NotificationManager::emitPendingNotifications()
     mNotifications.clear();
 }
 
-void NotificationManager::emitDebugNotification(const Protocol::ChangeNotification &ntf,
+void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf,
         const QVector<QByteArray> &listeners)
 {
-    Protocol::DebugChangeNotification debugNtf;
-    debugNtf.setNotification(ntf);
-    debugNtf.setListeners(listeners);
-    debugNtf.setTimestamp(QDateTime::currentMSecsSinceEpoch());
+    auto debugNtf = Protocol::DebugChangeNotificationPtr::create();
+    debugNtf->setNotification(ntf);
+    debugNtf->setListeners(listeners);
+    debugNtf->setTimestamp(QDateTime::currentMSecsSinceEpoch());
     for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
         mNotifyThreadPool->start(new NotifyRunnable(subscriber, { debugNtf }));
     }

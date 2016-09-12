@@ -72,10 +72,10 @@ public:
     /** Returns @c true if permanent cache verification is enabled. */
     bool verifyCacheOnRetrieval() const;
 
-    Protocol::Command readCommand();
+    Protocol::CommandPtr readCommand();
 
 public Q_SLOTS:
-    virtual void sendResponse(const Protocol::Command &response);
+    virtual void sendResponse(const Protocol::CommandPtr &response);
 
 Q_SIGNALS:
     void disconnected();
@@ -120,7 +120,7 @@ protected:
     bool m_connectionClosing;
 
 private:
-    void sendResponse(qint64 tag, const Protocol::Command &response);
+    void sendResponse(qint64 tag, const Protocol::CommandPtr &response);
 
     /** For debugging */
     void startTime();

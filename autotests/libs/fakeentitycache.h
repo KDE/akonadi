@@ -133,7 +133,7 @@ public:
     virtual ~FakeNotificationConnection()
     {}
 
-    void emitNotify(const Akonadi::Protocol::ChangeNotification &ntf)
+    void emitNotify(const Akonadi::Protocol::ChangeNotificationPtr &ntf)
     {
         Q_EMIT commandReceived(3, ntf);
     }

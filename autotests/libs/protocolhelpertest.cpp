@@ -24,9 +24,7 @@ using namespace Akonadi;
 
 Q_DECLARE_METATYPE(Scope)
 Q_DECLARE_METATYPE(QVector<Protocol::Ancestor>)
-Q_DECLARE_METATYPE(Protocol::FetchCollectionsResponse)
 Q_DECLARE_METATYPE(Protocol::FetchScope)
-Q_DECLARE_METATYPE(Protocol::FetchTagsResponse)
 
 class ProtocolHelperTest : public QObject
 {
@@ -257,7 +255,7 @@ private Q_SLOTS:
                         Protocol::FetchScope::RemoteRevision |
                         Protocol::FetchScope::MTime |
                         Protocol::FetchScope::IgnoreErrors);
-            fs.setAncestorDepth(Akonadi::Protocol::Ancestor::AllAncestors);
+            fs.setAncestorDepth(Protocol::FetchScope::AllAncestors);
             QTest::newRow("full") << scope << fs;
         }
 

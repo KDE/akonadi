@@ -349,6 +349,7 @@ void ItemAppendTest::testItemMerge()
         QCOMPARE(merge->item().remoteRevision(), mergedItem.remoteRevision());
         QCOMPARE(merge->item().payloadData(), mergedItem.payloadData());
         QCOMPARE(merge->item().size(), mergedItem.size());
+        qDebug() << merge->item().flags() << mergedItem.flags();
         QCOMPARE(merge->item().flags(), mergedItem.flags());
     }
 

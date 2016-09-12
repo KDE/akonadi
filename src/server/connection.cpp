@@ -135,11 +135,11 @@ void Connection::slotSendHello()
 {
     SchemaVersion version = SchemaVersion::retrieveAll().first();
 
-    Protocol::HelloResponse hello;
-    hello.setServerName(QStringLiteral("Akonadi"));
-    hello.setMessage(QStringLiteral("Not Really IMAP server"));
-    hello.setProtocolVersion(Protocol::version());
-    hello.setGeneration(version.generation());
+    auto hello = Protocol::HelloResponsePtr::create();
+    hello->setServerName(QStringLiteral("Akonadi"));
+    hello->setMessage(QStringLiteral("Not Really IMAP server"));
+    hello->setProtocolVersion(Protocol::version());
+    hello->setGeneration(version.generation());
     sendResponse(0, hello);
 }
 
@@ -214,7 +214,7 @@ void Connection::slotNewData()
         stream >> tag;
         // TODO: Check tag is incremental sequence
 
-        Protocol::Command cmd;
+        Protocol::CommandPtr cmd;
         try {
             cmd = Protocol::deserialize(m_socket);
         } catch (const Akonadi::ProtocolException &e) {
@@ -226,7 +226,7 @@ void Connection::slotNewData()
             slotConnectionStateChange(Server::LoggingOut);
             return;
         }
-        if (cmd.type() == Protocol::Command::Invalid) {
+        if (cmd->type() == Protocol::Command::Invalid) {
             qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
             slotConnectionStateChange(Server::LoggingOut);
             return;
@@ -236,12 +236,12 @@ void Connection::slotNewData()
         context()->setTag(-1);
         context()->setCollection(Collection());
         if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-            Tracer::self()->connectionInput(m_identifier, QByteArray::number(tag) + ' ' + cmd.debugString().toUtf8());
+            Tracer::self()->connectionInput(m_identifier, QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8());
         }
 
-        m_currentHandler = findHandlerForCommand(cmd.type());
+        m_currentHandler = findHandlerForCommand(cmd->type());
         if (!m_currentHandler) {
-            qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd.type();
+            qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type();
             slotConnectionStateChange(Server::LoggingOut);
             return;
         }
@@ -451,23 +451,23 @@ void Connection::reportTime() const
     }
 }
 
-void Connection::sendResponse(qint64 tag, const Protocol::Command &response)
+void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-        Tracer::self()->connectionOutput(m_identifier, QByteArray::number(tag) + ' ' + response.debugString().toUtf8());
+        Tracer::self()->connectionOutput(m_identifier, QByteArray::number(tag) + ' ' + Protocol::debugString(response).toUtf8());
     }
     QDataStream stream(m_socket);
     stream << tag;
     Protocol::serialize(m_socket, response);
 }
 
-void Connection::sendResponse(const Protocol::Command &response)
+void Connection::sendResponse(const Protocol::CommandPtr &response)
 {
     Q_ASSERT(m_currentHandler);
     sendResponse(m_currentHandler->tag(), response);
 }
 
-Protocol::Command Connection::readCommand()
+Protocol::CommandPtr Connection::readCommand()
 {
     while (m_socket->bytesAvailable() < (int) sizeof(qint64)) {
         if (m_socket->state() == QLocalSocket::UnconnectedState) {

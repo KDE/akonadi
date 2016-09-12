@@ -43,7 +43,7 @@ Connection::Connection(ConnectionType connType, const QByteArray &sessionId, QOb
     , mLogFile(nullptr)
     , mSessionId(sessionId)
 {
-    qRegisterMetaType<Protocol::Command>();
+    qRegisterMetaType<Protocol::CommandPtr>();
     qRegisterMetaType<QAbstractSocket::SocketState>();
 
     const QByteArray sessionLogFile = qgetenv("AKONADI_SESSION_LOGFILE");
@@ -205,13 +205,13 @@ void Connection::dataReceived()
         // TODO: Verify the tag matches the last tag we sent
         stream >> tag;
 
-        Protocol::Command cmd;
+        Protocol::CommandPtr cmd;
         try {
             cmd = Protocol::deserialize(mSocket);
         } catch (const Akonadi::ProtocolException &) {
             // cmd's type will be Invalid by default.
         }
-        if (cmd.type() == Protocol::Command::Invalid) {
+        if (cmd->type() == Protocol::Command::Invalid) {
             qCWarning(AKONADICORE_LOG) << "Invalid command, the world is going to end!";
             mSocket->close();
             mSocket->readAll();
@@ -220,13 +220,13 @@ void Connection::dataReceived()
         }
 
         if (mLogFile) {
-            mLogFile->write("S: " + cmd.debugString().toUtf8());
+            mLogFile->write("S: " + Protocol::debugString(cmd).toUtf8());
             mLogFile->write("\n\n");
             mLogFile->flush();
         }
 
-        if (cmd.type() == Protocol::Command::Hello) {
-            Q_ASSERT(cmd.isResponse());
+        if (cmd->type() == Protocol::Command::Hello) {
+            Q_ASSERT(cmd->isResponse());
         }
 
         Q_EMIT commandReceived(tag, cmd);
@@ -254,22 +254,22 @@ void Connection::dataReceived()
     }
 }
 
-void Connection::sendCommand(qint64 tag, const Protocol::Command &cmd)
+void Connection::sendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
 {
     const bool ok = QMetaObject::invokeMethod(this, "doSendCommand",
                     Qt::QueuedConnection,
                     Q_ARG(qint64, tag),
-                    Q_ARG(Akonadi::Protocol::Command, cmd));
+                    Q_ARG(Akonadi::Protocol::CommandPtr, cmd));
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }
 
-void Connection::doSendCommand(qint64 tag, const Protocol::Command &cmd)
+void Connection::doSendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
     if (mLogFile) {
-        mLogFile->write("C: " + cmd.debugString().toUtf8());
+        mLogFile->write("C: " + Protocol::debugString(cmd).toUtf8());
         mLogFile->write("\n\n");
         mLogFile->flush();
     }

@@ -73,17 +73,17 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-    Protocol::FetchCollectionsCommand createCommand(const Scope &scope,
-                                                    Protocol::FetchCollectionsCommand::Depth depth = Akonadi::Protocol::FetchCollectionsCommand::BaseCollection,
-                                                    Protocol::Ancestor::Depth ancDepth = Protocol::Ancestor::NoAncestor,
-                                                    const QStringList &mimeTypes = QStringList(),
-                                                    const QString &resource = QString())
+    Protocol::FetchCollectionsCommandPtr createCommand(const Scope &scope,
+                                                       Protocol::FetchCollectionsCommand::Depth depth = Akonadi::Protocol::FetchCollectionsCommand::BaseCollection,
+                                                       Protocol::Ancestor::Depth ancDepth = Protocol::Ancestor::NoAncestor,
+                                                       const QStringList &mimeTypes = QStringList(),
+                                                       const QString &resource = QString())
     {
-        Protocol::FetchCollectionsCommand cmd(scope);
-        cmd.setDepth(depth);
-        cmd.setAncestorsDepth(ancDepth);
-        cmd.setMimeTypes(mimeTypes);
-        cmd.setResource(resource);
+        auto cmd = Protocol::FetchCollectionsCommandPtr::create(scope);
+        cmd->setDepth(depth);
+        cmd->setAncestorsDepth(ancDepth);
+        cmd->setMimeTypes(mimeTypes);
+        cmd->setResource(resource);
         return cmd;
     }
 
@@ -110,7 +110,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("recursive list") << scenarios;
         }
         {
@@ -118,7 +118,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id()))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("base list") << scenarios;
         }
         {
@@ -126,7 +126,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id(), Protocol::FetchCollectionsCommand::ParentCollection))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("first level list") << scenarios;
         }
         {
@@ -135,7 +135,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id(), Protocol::FetchCollectionsCommand::AllCollections))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("recursive list that filters collection") << scenarios;
         }
         {
@@ -144,7 +144,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection,
                                                                                         Protocol::Ancestor::AllAncestors))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("base ancestors") << scenarios;
         }
         {
@@ -153,7 +153,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection,
                                                                                         Protocol::Ancestor::AllAncestors))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("first level ancestors") << scenarios;
         }
         {
@@ -163,7 +163,7 @@ private Q_SLOTS:
                                                                                         Protocol::Ancestor::AllAncestors))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3, true))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("recursive ancestors") << scenarios;
         }
         {
@@ -173,7 +173,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("first level root list") << scenarios;
         }
     }
@@ -210,7 +210,7 @@ private Q_SLOTS:
                                 { QLatin1String("text/calendar") }))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1, false, false))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("recursive list to display including local override") << scenarios;
         }
     }
@@ -246,7 +246,7 @@ private Q_SLOTS:
                             Protocol::FetchCollectionsCommand::AllCollections,
                             Protocol::Ancestor::NoAncestor, {}, QLatin1String("testresource")))
                   << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
-                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                  << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
@@ -279,11 +279,11 @@ private Q_SLOTS:
             TestScenario::List scenarios;
 
             auto cmd = createCommand(col3.id());
-            cmd.setDisplayPref(true);
+            cmd->setDisplayPref(true);
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             //Listing a disabled collection should still work for base listing
             QTest::newRow("list base of disabled collection") << scenarios;
         }
@@ -291,53 +291,53 @@ private Q_SLOTS:
             TestScenario::List scenarios;
 
             auto cmd = createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections);
-            cmd.setDisplayPref(true);
+            cmd->setDisplayPref(true);
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("recursive list to display including local override") << scenarios;
         }
         {
             TestScenario::List scenarios;
 
             auto cmd = createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections);
-            cmd.setSyncPref(true);
+            cmd->setSyncPref(true);
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("recursive list to sync including local override") << scenarios;
         }
         {
             TestScenario::List scenarios;
 
             auto cmd = createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections);
-            cmd.setIndexPref(true);
+            cmd->setIndexPref(true);
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("recursive list to index including local override") << scenarios;
         }
         {
             TestScenario::List scenarios;
 
             auto cmd = createCommand(Scope(), Protocol::FetchCollectionsCommand::AllCollections);
-            cmd.setEnabled(true);
+            cmd->setEnabled(true);
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(initializer->collection("Search")))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("recursive list of enabled") << scenarios;
         }
     }
@@ -376,7 +376,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col1.id()))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1, false, true))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("list attribute") << scenarios;
         }
 
@@ -385,7 +385,7 @@ private Q_SLOTS:
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(col2.id()))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, false, true))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("list attribute") << scenarios;
         }
     }
@@ -418,11 +418,11 @@ private Q_SLOTS:
             TestScenario::List scenarios;
 
             auto cmd = createCommand(col2.id(), Protocol::FetchCollectionsCommand::BaseCollection, Protocol::Ancestor::AllAncestors);
-            cmd.setAncestorsAttributes({ "type" });
+            cmd->setAncestorsAttributes({ "type" });
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2, true, true, { QLatin1String("type") }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("list ancestor attribute with fetch scope") << scenarios;
         }
     }
@@ -464,7 +464,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             QTest::newRow("ensure filtered grandparent is included") << scenarios;
         }
         {
@@ -475,7 +475,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col2))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col3))
                       << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col4))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
             //This also ensures col1 is excluded although it matches the mimetype filter
             QTest::newRow("ensure filtered grandparent is included with specified parent") << scenarios;
         }

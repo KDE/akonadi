@@ -31,7 +31,7 @@ using namespace Akonadi::Server;
 
 bool Search::parseStream()
 {
-    Protocol::SearchCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::SearchCommand>(m_command);
 
     if (cmd.query().isEmpty()) {
         return failureResponse("No query specified");

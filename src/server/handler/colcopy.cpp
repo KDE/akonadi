@@ -87,7 +87,7 @@ bool ColCopy::copyCollection(const Collection &source, const Collection &target)
 
 bool ColCopy::parseStream()
 {
-    Protocol::CopyCollectionCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::CopyCollectionCommand>(m_command);
 
     const Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!source.isValid()) {

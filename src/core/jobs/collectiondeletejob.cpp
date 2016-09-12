@@ -68,12 +68,12 @@ void CollectionDeleteJob::doStart()
         return;
     }
 
-    d->sendCommand(Protocol::DeleteCollectionCommand(ProtocolHelper::entityToScope(d->mCollection)));
+    d->sendCommand(Protocol::DeleteCollectionCommandPtr::create(ProtocolHelper::entityToScope(d->mCollection)));
 }
 
-bool CollectionDeleteJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionDeleteJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::DeleteCollection) {
+    if (!response->isResponse() || response->type() != Protocol::Command::DeleteCollection) {
         return Job::doHandleResponse(tag, response);
     }
 

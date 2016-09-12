@@ -130,7 +130,7 @@ bool Store::deleteTags(const PimItem::List &items, const Scope &tags, bool &tags
 
 bool Store::parseStream()
 {
-    Protocol::ModifyItemsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::ModifyItemsCommand>(m_command);
 
     //parseCommand();
 
@@ -282,7 +282,7 @@ bool Store::parseStream()
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Parts) {
         PartStreamer streamer(connection(), item, this);
         connect(&streamer, &PartStreamer::responseAvailable,
-                this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
+                this, static_cast<void(Handler::*)(const Protocol::CommandPtr &)>(&Handler::sendResponse));
         Q_FOREACH (const QByteArray &partName, cmd.parts()) {
             qint64 partSize = 0;
             if (!streamer.stream(true, partName, partSize)) {
@@ -297,7 +297,7 @@ bool Store::parseStream()
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Attributes) {
         PartStreamer streamer(connection(), item, this);
         connect(&streamer, &PartStreamer::responseAvailable,
-                this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
+                this, static_cast<void(Handler::*)(const Protocol::CommandPtr &)>(&Handler::sendResponse));
         const Protocol::Attributes attrs = cmd.attributes();
         for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
             bool changed = false;
@@ -361,7 +361,10 @@ bool Store::parseStream()
             }
 
             if (!cmd.noResponse()) {
-                sendResponse(Protocol::ModifyItemsResponse(item.id(), item.rev()));
+                auto resp = Protocol::ModifyItemsResponsePtr::create();
+                resp->setId(item.id());
+                resp->setNewRevision(item.rev());
+                sendResponse(resp);
             }
         }
 
@@ -376,5 +379,7 @@ bool Store::parseStream()
         datetime = pimItems.first().datetime();
     }
 
-    return successResponse<Protocol::ModifyItemsResponse>(datetime);
+    auto resp = Protocol::ModifyItemsResponsePtr::create();
+    resp->setModificationDateTime(datetime);
+    return successResponse(resp);
 }

@@ -51,7 +51,7 @@ using namespace Akonadi::Server;
 Q_DECLARE_METATYPE(Akonadi::Server::NotificationCollector*)
 
 TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
-                                  const Protocol::Command &response)
+                                  const Protocol::CommandPtr &response)
 {
     TestScenario sc;
     sc.action = action;
@@ -70,15 +70,15 @@ TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
         qint64 cmpTag;
         os >> cmpTag;
         Q_ASSERT(cmpTag == tag);
-        Protocol::Command cmpResp = Protocol::deserialize(os.device());
+        Protocol::CommandPtr cmpResp = Protocol::deserialize(os.device());
 
         bool ok = false;
         [cmpTag, tag, cmpResp, response, &ok]() {
             QCOMPARE(cmpTag, tag);
-            QCOMPARE(cmpResp.type(), response.type());
-            QCOMPARE(cmpResp.isResponse(), response.isResponse());
-            QCOMPARE(cmpResp.debugString(), response.debugString());
-            QCOMPARE(cmpResp, response);
+            QCOMPARE(cmpResp->type(), response->type());
+            QCOMPARE(cmpResp->isResponse(), response->isResponse());
+            QCOMPARE(Protocol::debugString(cmpResp), Protocol::debugString(response));
+            QCOMPARE(*cmpResp, *response);
             ok = true;
         }();
         if (!ok) {
@@ -149,18 +149,18 @@ TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
 {
     SchemaVersion schema = SchemaVersion::retrieveAll().first();
 
-    Protocol::HelloResponse hello;
-    hello.setServerName(QStringLiteral("Akonadi"));
-    hello.setMessage(QStringLiteral("Not Really IMAP server"));
-    hello.setProtocolVersion(Protocol::version());
-    hello.setGeneration(schema.generation());
+    auto hello = Protocol::HelloResponsePtr::create();
+    hello->setServerName(QStringLiteral("Akonadi"));
+    hello->setMessage(QStringLiteral("Not Really IMAP server"));
+    hello->setProtocolVersion(Protocol::version());
+    hello->setGeneration(schema.generation());
 
     return {
         TestScenario::create(0, TestScenario::ServerCmd, hello),
         TestScenario::create(1,TestScenario::ClientCmd,
-                             Protocol::LoginCommand(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
+                             Protocol::LoginCommandPtr::create(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
         TestScenario::create(1, TestScenario::ServerCmd,
-                             Protocol::LoginResponse())
+                             Protocol::LoginResponsePtr::create())
     };
 }
 
@@ -169,9 +169,9 @@ TestScenario::List FakeAkonadiServer::selectResourceScenario(const QString &name
     const Resource resource = Resource::retrieveByName(name);
     return {
         TestScenario::create(3, TestScenario::ClientCmd,
-                             Protocol::SelectResourceCommand(resource.name())),
+                             Protocol::SelectResourceCommandPtr::create(resource.name())),
         TestScenario::create(3, TestScenario::ServerCmd,
-                             Protocol::SelectResourceResponse())
+                             Protocol::SelectResourceResponsePtr::create())
     };
 }
 

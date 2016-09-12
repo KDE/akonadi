@@ -60,9 +60,9 @@ void CollectionModifyJob::doStart()
 {
     Q_D(CollectionModifyJob);
 
-    Protocol::ModifyCollectionCommand cmd;
+    Protocol::ModifyCollectionCommandPtr cmd;
     try {
-        cmd = Protocol::ModifyCollectionCommand(ProtocolHelper::entityToScope(d->mCollection));
+        cmd = Protocol::ModifyCollectionCommandPtr::create(ProtocolHelper::entityToScope(d->mCollection));
     } catch (const std::exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));
@@ -71,49 +71,49 @@ void CollectionModifyJob::doStart()
     }
 
     if (d->mCollection.d_ptr->contentTypesChanged) {
-        cmd.setMimeTypes(d->mCollection.contentMimeTypes());
+        cmd->setMimeTypes(d->mCollection.contentMimeTypes());
     }
     if (d->mCollection.parentCollection().id() >= 0) {
-        cmd.setParentId(d->mCollection.parentCollection().id());
+        cmd->setParentId(d->mCollection.parentCollection().id());
     }
     const QString &collectionName = d->mCollection.name();
     if (!collectionName.isEmpty()) {
-        cmd.setName(collectionName);
+        cmd->setName(collectionName);
     }
     if (!d->mCollection.remoteId().isNull()) {
-        cmd.setRemoteId(d->mCollection.remoteId());
+        cmd->setRemoteId(d->mCollection.remoteId());
     }
     if (!d->mCollection.remoteRevision().isNull()) {
-        cmd.setRemoteRevision(d->mCollection.remoteRevision());
+        cmd->setRemoteRevision(d->mCollection.remoteRevision());
     }
     if (d->mCollection.d_ptr->cachePolicyChanged) {
-        cmd.setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
+        cmd->setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
     }
     if (d->mCollection.d_ptr->enabledChanged) {
-        cmd.setEnabled(d->mCollection.enabled());
+        cmd->setEnabled(d->mCollection.enabled());
     }
     if (d->mCollection.d_ptr->listPreferenceChanged) {
-        cmd.setDisplayPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
-        cmd.setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListSync)));
-        cmd.setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
+        cmd->setDisplayPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
+        cmd->setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListSync)));
+        cmd->setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
     }
     if (d->mCollection.d_ptr->referencedChanged) {
-        cmd.setReferenced(d->mCollection.referenced());
+        cmd->setReferenced(d->mCollection.referenced());
     }
     if (!d->mCollection.attributes().isEmpty()) {
-        cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
+        cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
     }
     if (auto attr = d->mCollection.attribute<Akonadi::PersistentSearchAttribute>()) {
-        cmd.setPersistentSearchCollections(attr->queryCollections());
-        cmd.setPersistentSearchQuery(attr->queryString());
-        cmd.setPersistentSearchRecursive(attr->isRecursive());
-        cmd.setPersistentSearchRemote(attr->isRemoteSearchEnabled());
+        cmd->setPersistentSearchCollections(attr->queryCollections());
+        cmd->setPersistentSearchQuery(attr->queryString());
+        cmd->setPersistentSearchRecursive(attr->isRecursive());
+        cmd->setPersistentSearchRemote(attr->isRemoteSearchEnabled());
     }
     if (!d->mCollection.d_ptr->mDeletedAttributes.isEmpty()) {
-        cmd.setRemovedAttributes(d->mCollection.d_ptr->mDeletedAttributes);
+        cmd->setRemovedAttributes(d->mCollection.d_ptr->mDeletedAttributes);
     }
 
-    if (cmd.modifiedParts() == Protocol::ModifyCollectionCommand::None) {
+    if (cmd->modifiedParts() == Protocol::ModifyCollectionCommand::None) {
         emitResult();
         return;
     }
@@ -123,11 +123,11 @@ void CollectionModifyJob::doStart()
     ChangeMediator::invalidateCollection(d->mCollection);
 }
 
-bool CollectionModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionModifyJob::doHandleResponse(qint64 tag, const Akonadi::Protocol::CommandPtr &response)
 {
     Q_D(CollectionModifyJob);
 
-    if (!response.isResponse() || response.type() != Protocol::Command::ModifyCollection) {
+    if (!response->isResponse() || response->type() != Protocol::Command::ModifyCollection) {
         return Job::doHandleResponse(tag, response);
     }
 

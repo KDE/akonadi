@@ -26,7 +26,7 @@ using namespace Akonadi::Server;
 
 bool TransactionHandler::parseStream()
 {
-    Protocol::TransactionCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::TransactionCommand>(m_command);
 
     DataStore *store = connection()->storageBackend();
 

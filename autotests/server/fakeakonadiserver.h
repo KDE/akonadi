@@ -60,7 +60,7 @@ public:
     Action action;
     QByteArray data;
 
-    static TestScenario create(qint64 tag, Action action, const Protocol::Command &response);
+    static TestScenario create(qint64 tag, Action action, const Protocol::CommandPtr &response);
 
     static TestScenario wait(int timeout)
     {

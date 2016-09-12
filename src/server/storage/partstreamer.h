@@ -31,6 +31,7 @@ namespace Protocol
 {
 class PartMetaData;
 class Command;
+using CommandPtr = QSharedPointer<Command>;
 }
 
 namespace Server
@@ -54,7 +55,7 @@ public:
     QString error() const;
 
 Q_SIGNALS:
-    void responseAvailable(const Protocol::Command &response);
+    void responseAvailable(const Protocol::CommandPtr &response);
 
 private:
     bool streamPayload(Part &part, const QByteArray &partName);

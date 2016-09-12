@@ -51,7 +51,7 @@ public:
     }
 
 public Q_SLOTS:
-    bool notify(const Akonadi::Protocol::ChangeNotification &notification);
+    bool notify(const Akonadi::Protocol::ChangeNotificationPtr &notification);
 
 private Q_SLOTS:
     void socketReadyRead();
@@ -79,15 +79,15 @@ private:
     bool isMoveDestinationResourceMonitored(const Protocol::ItemChangeNotification &msg) const;
     bool isMoveDestinationResourceMonitored(const Protocol::CollectionChangeNotification &msg) const;
 
-    Protocol::ChangeNotification toChangeNotification() const;
+    Protocol::SubscriptionChangeNotificationPtr toChangeNotification() const;
 
 protected Q_SLOTS:
-    virtual void writeNotification(const Akonadi::Protocol::ChangeNotification &notification);
+    virtual void writeNotification(const Akonadi::Protocol::ChangeNotificationPtr &notification);
 
 protected:
     explicit NotificationSubscriber(NotificationManager *manager = nullptr);
 
-    void writeCommand(qint64 tag, const Protocol::Command &cmd);
+    void writeCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
     mutable QMutex mLock;
     NotificationManager *mManager;

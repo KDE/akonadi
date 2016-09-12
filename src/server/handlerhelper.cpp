@@ -92,7 +92,7 @@ Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
     return cachePolicy;
 }
 
-Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col)
+Protocol::FetchCollectionsResponsePtr HandlerHelper::fetchCollectionsResponse(const Collection &col)
 {
     QStringList mimeTypes;
     mimeTypes.reserve(col.mimeTypes().size());
@@ -104,7 +104,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
                                     QStack<CollectionAttribute::List>(), false, mimeTypes);
 }
 
-Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col,
+Protocol::FetchCollectionsResponsePtr HandlerHelper::fetchCollectionsResponse(const Collection &col,
         const CollectionAttribute::List &attrs,
         bool includeStatistics,
         int ancestorDepth,
@@ -113,56 +113,58 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
         bool isReferenced,
         const QStringList &mimeTypes)
 {
-    Protocol::FetchCollectionsResponse response(col.id());
-    response.setParentId(col.parentId());
-    response.setName(col.name());
-    response.setMimeTypes(mimeTypes);
-    response.setRemoteId(col.remoteId());
-    response.setRemoteRevision(col.remoteRevision());
-    response.setResource(col.resource().name());
-    response.setIsVirtual(col.isVirtual());
+    auto response = Protocol::FetchCollectionsResponsePtr::create();
+    response->setId(col.id());
+    response->setParentId(col.parentId());
+    response->setName(col.name());
+    response->setMimeTypes(mimeTypes);
+    response->setRemoteId(col.remoteId());
+    response->setRemoteRevision(col.remoteRevision());
+    response->setResource(col.resource().name());
+    response->setIsVirtual(col.isVirtual());
 
     if (includeStatistics) {
         const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
         if (stats.count > -1) {
-            Protocol::FetchCollectionStatsResponse statsResponse(stats.count,
-                    stats.count - stats.read,
-                    stats.size);
-            response.setStatistics(statsResponse);
+            Protocol::FetchCollectionStatsResponse statsResponse;
+            statsResponse.setCount(stats.count);
+            statsResponse.setUnseen(stats.count - stats.read);
+            statsResponse.setSize(stats.size);
+            response->setStatistics(statsResponse);
         }
     }
 
     if (!col.queryString().isEmpty()) {
-        response.setSearchQuery(col.queryString());
+        response->setSearchQuery(col.queryString());
         QVector<qint64> searchCols;
         const QStringList searchColIds = col.queryCollections().split(QLatin1Char(' '));
         searchCols.reserve(searchColIds.size());
         for (const QString &searchColId : searchColIds) {
             searchCols << searchColId.toLongLong();
         }
-        response.setSearchCollections(searchCols);
+        response->setSearchCollections(searchCols);
     }
 
     Protocol::CachePolicy cachePolicy = cachePolicyResponse(col);
-    response.setCachePolicy(cachePolicy);
+    response->setCachePolicy(cachePolicy);
 
     if (ancestorDepth) {
         QVector<Protocol::Ancestor> ancestorList
             = HandlerHelper::ancestorsResponse(ancestorDepth, ancestors, ancestorAttributes);
-        response.setAncestors(ancestorList);
+        response->setAncestors(ancestorList);
     }
 
-    response.setReferenced(isReferenced);
-    response.setEnabled(col.enabled());
-    response.setDisplayPref(static_cast<Tristate>(col.displayPref()));
-    response.setSyncPref(static_cast<Tristate>(col.syncPref()));
-    response.setIndexPref(static_cast<Tristate>(col.indexPref()));
+    response->setReferenced(isReferenced);
+    response->setEnabled(col.enabled());
+    response->setDisplayPref(static_cast<Tristate>(col.displayPref()));
+    response->setSyncPref(static_cast<Tristate>(col.syncPref()));
+    response->setIndexPref(static_cast<Tristate>(col.indexPref()));
 
     QMap<QByteArray, QByteArray> ra;
     for (const CollectionAttribute &attr : attrs) {
         ra.insert(attr.type(), attr.value());
     }
-    response.setAttributes(ra);
+    response->setAttributes(ra);
 
     return response;
 }
@@ -177,11 +179,14 @@ QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
         QStack<CollectionAttribute::List> ancestorAttributes(_ancestorsAttributes);
         for (int i = 0; i < ancestorDepth; ++i) {
             if (ancestors.isEmpty()) {
-                rv << Protocol::Ancestor(0);
+                Protocol::Ancestor ancestor;
+                ancestor.setId(0);
+                rv << ancestor;
                 break;
             }
             const Collection c = ancestors.pop();
-            Protocol::Ancestor a(c.id());
+            Protocol::Ancestor a;
+            a.setId(c.id());
             a.setRemoteId(c.remoteId());
             a.setName(c.name());
             if (!ancestorAttributes.isEmpty()) {
@@ -199,14 +204,15 @@ QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
     return rv;
 }
 
-Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
+Protocol::FetchTagsResponsePtr HandlerHelper::fetchTagsResponse(const Tag &tag,
         bool withRID,
         Connection *connection)
 {
-    Protocol::FetchTagsResponse response(tag.id());
-    response.setType(tag.tagType().name().toUtf8());
-    response.setParentId(tag.parentId());
-    response.setGid(tag.gid().toUtf8());
+    auto response = Protocol::FetchTagsResponsePtr::create();
+    response->setId(tag.id());
+    response->setType(tag.tagType().name().toUtf8());
+    response->setParentId(tag.parentId());
+    response->setGid(tag.gid().toUtf8());
 
     if (withRID && connection) {
         // Fail silently if retrieving tag RID is not allowed in current context
@@ -230,19 +236,21 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
         if (!query.next()) {
             return response;
         }
-        response.setRemoteId(Utils::variantToByteArray(query.value(0)));
+        response->setRemoteId(Utils::variantToByteArray(query.value(0)));
     }
 
     return response;
 }
 
-Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Relation &relation)
+Protocol::FetchRelationsResponsePtr HandlerHelper::fetchRelationsResponse(const Relation &relation)
 {
-    return Protocol::FetchRelationsResponse(relation.leftId(),
-                                            relation.left().mimeType().name().toUtf8(),
-                                            relation.rightId(),
-                                            relation.right().mimeType().name().toUtf8(),
-                                            relation.relationType().name().toUtf8());
+    auto resp = Protocol::FetchRelationsResponsePtr::create();
+    resp->setLeft(relation.leftId());
+    resp->setLeftMimeType(relation.left().mimeType().name().toUtf8());
+    resp->setRight(relation.rightId());
+    resp->setRightMimeType(relation.right().mimeType().name().toUtf8());
+    resp->setType(relation.relationType().name().toUtf8());
+    return resp;
 }
 
 Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)

@@ -75,12 +75,12 @@ void CollectionCopyJob::doStart()
         emitResult();
         return;
     }
-    d->sendCommand(Protocol::CopyCollectionCommand(d->mSource.id(), d->mTarget.id()));
+    d->sendCommand(Protocol::CopyCollectionCommandPtr::create(d->mSource.id(), d->mTarget.id()));
 }
 
-bool CollectionCopyJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool CollectionCopyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::CopyCollection) {
+    if (!response->isResponse() || response->type() != Protocol::Command::CopyCollection) {
         return Job::doHandleResponse(tag, response);
     }
 

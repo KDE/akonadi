@@ -1,0 +1,1068 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<protocol version="57">
+
+  <class name="Ancestor">
+    <enum name="Depth">
+      <value name="NoAncestor" />
+      <value name="ParentAncestor" />
+      <value name="AllAncestors" />
+    </enum>
+
+    <ctor>
+      <arg name="id" />
+      <arg name="remoteId" default="QString()" />
+    </ctor>
+
+    <param name="id" type="qint64" default="-1" />
+    <param name="remoteId" type="QString" />
+    <param name="name" type="QString" />
+    <param name="attributes" type="Akonadi::Protocol::Attributes" />
+  </class>
+
+  <class name="PartMetaData">
+    <enum name="StorageType">
+      <value name="Internal" />
+      <value name="External" />
+      <value name="Foreign" />
+    </enum>
+
+    <ctor>
+      <arg name="name" />
+      <arg name="size" />
+      <arg name="version" default="0" />
+      <arg name="storageType" default="Internal" />
+    </ctor>
+
+    <param name="name" type="QByteArray" />
+    <param name="size" type="qint64" />
+    <param name="version" type="int" />
+    <param name="storageType" type="PartMetaData::StorageType" default="Internal" />
+  </class>
+
+  <class name="CachePolicy">
+    <param name="inherit" type="bool" default="true" />
+    <param name="checkInterval" type="int" default="-1" />
+    <param name="cacheTimeout" type="int" default="-1" />
+    <param name="syncOnDemand" type="bool" />
+    <param name="localParts" type="QStringList" />
+  </class>
+
+
+
+    <!-- Hello //-->
+  <response name="Hello">
+    <param name="serverName" type="QString" />
+    <param name="message" type="QString" />
+    <param name="protocolVersion" type="int" />
+    <param name="generation" type="uint" />
+  </response>
+
+
+  <!-- Login //-->
+  <command name="Login">
+    <ctor>
+      <arg name="sessionId" />
+    </ctor>
+    <param name="sessionId" type="QByteArray" />
+  </command>
+
+  <response name="Login" />
+
+
+  <!-- Logout //-->
+  <command name="Logout" />
+
+  <response name="Logout" />
+
+
+  <!-- Transaction //-->
+  <command name="Transaction">
+    <enum name="Mode">
+      <value name="Invalid" value="0" />
+      <value name="Begin" />
+      <value name="Commit" />
+      <value name="Rollback" />
+    </enum>
+
+    <ctor>
+      <arg name="mode" />
+    </ctor>
+
+    <param name="mode" type="TransactionCommand::Mode" default="Invalid" />
+  </command>
+
+  <response name="Transaction" />
+
+
+  <!-- Create Item //-->
+  <command name="CreateItem">
+    <flag name="MergeMode">
+      <value name="None" value="0" />
+      <value name="GID" value="1" />
+      <value name="RemoteID" value="2" />
+      <value name="Silent" value="4" />
+    </flag>
+
+    <param name="mergeModes" type="CreateItemCommand::MergeModes" default="None" />
+    <param name="collection" type="Scope" />
+    <param name="itemSize" type="qint64" />
+    <param name="mimeType" type="QString" />
+    <param name="gid" type="QString" />
+    <param name="remoteId" type="QString" />
+    <param name="remoteRevision" type="QString" />
+    <param name="dateTime" type="QDateTime" />
+    <param name="flags" type="QSet&lt;QByteArray&gt;" />
+    <param name="addedFlags" type="QSet&lt;QByteArray&gt;" />
+    <param name="removedFlags" type="QSet&lt;QByteArray&gt;" />
+    <param name="tags" type="Scope" />
+    <param name="addedTags" type="Scope" />
+    <param name="removedTags" type="Scope" />
+    <param name="attributes" type="Akonadi::Protocol::Attributes" />
+    <param name="parts" type="QSet&lt;QByteArray&gt;" />
+    <param name="flagsOverwritten" type="bool" />
+  </command>
+
+  <response name="CreateItem"/>
+
+
+  <!-- Copy Items //-->
+  <command name="CopyItems">
+    <ctor>
+      <arg name="items" />
+      <arg name="destination" />
+    </ctor>
+
+    <param name="items" type="Scope" />
+    <param name="destination" type="Scope" />
+  </command>
+
+  <response name="CopyItems" />
+
+
+  <!-- Delete Items //-->
+  <command name="DeleteItems">
+    <ctor>
+      <arg name="items" />
+      <arg name="scopeContext" default="ScopeContext()" />
+    </ctor>
+    <param name="items" type="Scope" />
+    <param name="scopeContext" type="Akonadi::Protocol::ScopeContext" />
+  </command>
+
+  <response name="DeleteItems" />
+
+
+  <!-- Fetch Relations //-->
+  <command name="FetchRelations">
+    <ctor>
+      <arg name="left" />
+      <arg name="right" />
+      <arg name="types" default="QVector&lt;QByteArray&gt;()" />
+      <arg name="resource" default="QString()" />
+    </ctor>
+    <ctor>
+      <arg name="side" />
+      <arg name="types" default="QVector&lt;QByteArray&gt;()" />
+      <arg name="resource" default="QString()" />
+    </ctor>
+
+    <param name="left" type="qint64" default="-1" />
+    <param name="right" type="qint64" default="-1" />
+    <param name="side" type="qint64" default="-1" />
+    <param name="types" type="QVector&lt;QByteArray&gt;" />
+    <param name="resource" type="QString" />
+  </command>
+
+  <response name="FetchRelations">
+    <ctor>
+      <arg name="left"/>
+      <arg name="leftMimeType" />
+      <arg name="right" />
+      <arg name="rightMimeType" />
+      <arg name="type" />
+      <arg name="remoteId" default="QByteArray()" />
+    </ctor>
+
+    <param name="left" type="qint64" default="-1" />
+    <param name="leftMimeType" type="QByteArray" />
+    <param name="right" type="qint64" default="-1" />
+    <param name="rightMimeType" type="QByteArray" />
+    <param name="type" type="QByteArray" />
+    <param name="remoteId" type="QByteArray" />
+  </response>
+
+
+  <!-- Fetch Tags //-->
+  <command name="FetchTags">
+    <ctor>
+        <arg name="scope" />
+    </ctor>
+
+    <param name="scope" type="Scope"/>
+    <param name="attributes" type="QSet&lt;QByteArray&gt;"/>
+    <param name="idOnly" type="bool" />
+  </command>
+
+  <response name="FetchTags">
+    <ctor>
+      <arg name="id" />
+    </ctor>
+    <ctor>
+      <arg name="id" />
+      <arg name="gid" />
+      <arg name="type" />
+      <arg name="remoteId" default="QByteArray()" />
+      <arg name="parentId" default="0" />
+      <arg name="attributes" default="Attributes()" />
+    </ctor>
+
+    <param name="id" type="qint64" default="-1" />
+    <param name="parentId" type="qint64" default="-1" />
+    <param name="gid" type="QByteArray" />
+    <param name="type" type="QByteArray" />
+    <param name="remoteId" type="QByteArray" />
+    <param name="attributes" type="Akonadi::Protocol::Attributes" />
+  </response>
+
+
+  <!-- Fetch Items //-->
+  <command name="FetchItems">
+    <ctor>
+      <arg name="scope" />
+      <arg name="scopeContext" default="ScopeContext()" />
+      <arg name="fetchScope" default="FetchScope()" />
+    </ctor>
+
+    <param name="scope" type="Scope" />
+    <param name="scopeContext" type="Akonadi::Protocol::ScopeContext" />
+    <param name="fetchScope" type="Akonadi::Protocol::FetchScope" />
+  </command>
+
+  <response name="FetchItems">
+    <ctor>
+      <arg name="id" />
+    </ctor>
+
+    <param name="id" type="qint64" default="-1" />
+    <param name="revision" type="int" default="-1" />
+    <param name="parentId" type="qint64" default="-1" />
+    <param name="remoteId" type="QString" />
+    <param name="remoteRevision" type="QString" />
+    <param name="gid" type="QString" />
+    <param name="size" type="qint64" />
+    <param name="mimeType" type="QString" />
+    <param name="mTime" type="QDateTime" />
+    <param name="flags" type="QVector&lt;QByteArray&gt;" />
+    <param name="tags" type="QVector&lt;Akonadi::Protocol::FetchTagsResponse&gt;" />
+    <param name="virtualReferences" type="QVector&lt;qint64&gt;" />
+    <param name="relations" type="QVector&lt;Akonadi::Protocol::FetchRelationsResponse&gt;" />
+    <param name="ancestors" type="QVector&lt;Akonadi::Protocol::Ancestor&gt;" />
+    <param name="parts" type="QVector&lt;Akonadi::Protocol::StreamPayloadResponse&gt;"/>
+    <param name="cachedParts" type="QVector&lt;QByteArray&gt;" />
+  </response>
+
+
+  <!-- Links Items //-->
+  <command name="LinkItems">
+    <enum name="Action">
+      <value name="Link" />
+      <value name="Unlink" />
+    </enum>
+
+    <ctor>
+      <arg name="action" />
+      <arg name="items" />
+      <arg name="destination" />
+    </ctor>
+
+    <param name="items" type="Scope" />
+    <param name="destination" type="Scope" />
+    <param name="action" type="LinkItemsCommand::Action"  default="Link" />
+  </command>
+
+  <response name="LinkItems" />
+
+
+  <!-- Modify Items //-->
+  <command name="ModifyItems">
+    <flag name="ModifiedPart">
+      <value name="None" value="0" />
+      <value name="Flags" value="1" />
+      <value name="AddedFlags" value="2" />
+      <value name="RemovedFlags" value="4" />
+      <value name="Tags" value="8" />
+      <value name="AddedTags" value="16" />
+      <value name="RemovedTags" value="32" />
+      <value name="RemoteID" value="64" />
+      <value name="RemoteRevision" value="128" />
+      <value name="GID" value="256" />
+      <value name="Size" value="512" />
+      <value name="Parts" value="1024" />
+      <value name="RemovedParts" value="2048" />
+      <value name="Attributes" value="4096" />
+    </flag>
+
+    <ctor>
+      <arg name="items" />
+    </ctor>
+
+    <param name="modifiedParts" type="ModifyItemsCommand::ModifiedParts" default="None" readonly="true" />
+    <param name="items" type="Scope" />
+    <param name="oldRevision" type="int" default="-1" />
+    <param name="flags" type="QSet&lt;QByteArray&gt;">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::Flags" />
+    </param>
+    <param name="addedFlags" type="QSet&lt;QByteArray&gt;">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::AddedFlags" />
+    </param>
+    <param name="removedFlags" type="QSet&lt;QByteArray&gt;">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::RemovedFlags" />
+    </param>
+    <param name="tags" type="Scope">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::Tags" />
+    </param>
+    <param name="addedTags" type="Scope">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::AddedTags" />
+    </param>
+    <param name="removedTags" type="Scope">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::RemovedTags" />
+    </param>
+    <param name="remoteId" type="QString">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::RemoteID" />
+    </param>
+    <param name="gid" type="QString">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::GID" />
+    </param>
+    <param name="remoteRevision" type="QString">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::RemoteRevision" />
+    </param>
+    <param name="dirty" type="bool" default="true" />
+    <param name="invalidateCache" type="bool" />
+    <param name="noResponse" type="bool" />
+    <param name="notify" type="bool" default="true" />
+    <param name="itemSize" type="qint64">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::Size" />
+    </param>
+    <param name="removedParts" type="QSet&lt;QByteArray&gt;">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::RemovedParts" />
+    </param>
+    <param name="parts" type="QSet&lt;QByteArray&gt;">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::Parts" />
+    </param>
+    <param name="attributes" type="Akonadi::Protocol::Attributes">
+      <depends enum="modifiedParts" value="ModifyItemsCommand::Attributes" />
+    </param>
+  </command>
+
+  <response name="ModifyItems">
+    <ctor>
+      <arg name="id" />
+      <arg name="newRevision" />
+    </ctor>
+
+    <param name="id" type="qint64" default="-1" />
+    <param name="newRevision" type="int" />
+    <param name="modificationDateTime" type="QDateTime" />
+  </response>
+
+
+  <!-- Move Items //-->
+  <command name="MoveItems">
+    <ctor>
+      <arg name="items" />
+      <arg name="destination" />
+    </ctor>
+    <ctor>
+      <arg name="items" />
+      <arg name="itemsContext" />
+      <arg name="destination" />
+    </ctor>
+
+    <param name="items" type="Scope" />
+    <param name="itemsContext" type="Akonadi::Protocol::ScopeContext" />
+    <param name="destination" type="Scope" />
+  </command>
+
+  <response name="MoveItems" />
+
+  <!-- Create Collection //-->
+  <command name="CreateCollection">
+    <param name="parent" type="Scope" />
+    <param name="name" type="QString" />
+    <param name="remoteId" type="QString" />
+    <param name="remoteRevision" type="QString" />
+    <param name="mimeTypes" type="QStringList" />
+    <param name="cachePolicy" type="Akonadi::Protocol::CachePolicy" />
+    <param name="attributes" type="Akonadi::Protocol::Attributes" />
+    <param name="isVirtual" type="bool" />
+    <param name="enabled" type="bool" default="true" />
+    <param name="syncPref" type="Tristate" default="Tristate::Undefined" />
+    <param name="displayPref" type="Tristate" default="Tristate::Undefined" />
+    <param name="indexPref" type="Tristate" default="Tristate::Undefined" />
+  </command>
+
+  <response name="CreateCollection" />
+
+
+  <!--Copy Collection //-->
+  <command name="CopyCollection">
+    <ctor>
+      <arg name="collection" />
+      <arg name="destination" />
+    </ctor>
+
+    <param name="collection" type="Scope" />
+    <param name="destination" type="Scope" />
+  </command>
+
+  <response name="CopyCollection" />
+
+
+  <!-- Delete Collection //-->
+  <command name="DeleteCollection">
+    <ctor>
+      <arg name="collection" />
+    </ctor>
+
+    <param name="collection" type="Scope" />
+  </command>
+
+  <response name="DeleteCollection" />
+
+
+  <!--Fetch Collection Statistics //-->
+  <command name="FetchCollectionStats">
+    <ctor>
+      <arg name="collection" />
+    </ctor>
+
+    <param name="collection" type="Scope" />
+  </command>
+
+  <response name="FetchCollectionStats">
+    <ctor>
+      <arg name="count" />
+      <arg name="unseen" />
+      <arg name="size" />
+    </ctor>
+
+    <param name="count" type="qint64" />
+    <param name="unseen" type="qint64" />
+    <param name="size" type="qint64" />
+  </response>
+
+
+  <!-- Fetch Collections //-->
+  <command name="FetchCollections">
+    <enum name="Depth">
+      <value name="BaseCollection" />
+      <value name="ParentCollection" />
+      <value name="AllCollections" />
+    </enum>
+
+    <ctor>
+      <arg name="collections" />
+    </ctor>
+
+    <param name="collections" type="Scope" />
+    <param name="depth" type="FetchCollectionsCommand::Depth" default="BaseCollection" />
+    <param name="resource" type="QString" />
+    <param name="mimeTypes" type="QStringList" />
+    <param name="ancestorsDepth" type="Akonadi::Protocol::Ancestor::Depth" />
+    <param name="ancestorsAttributes" type="QSet&lt;QByteArray&gt;" />
+    <param name="enabled" type="bool" />
+    <param name="syncPref" type="bool" />
+    <param name="displayPref" type="bool" />
+    <param name="indexPref" type="bool" />
+    <param name="fetchStats" type="bool" />
+  </command>
+
+  <response name="FetchCollections">
+    <ctor>
+      <arg name="id" />
+    </ctor>
+    <param name="id" type="qint64" default="-1" />
+    <param name="parentId" type="qint64" default="-1" />
+    <param name="name" type="QString" />
+    <param name="mimeTypes" type="QStringList" />
+    <param name="remoteId" type="QString" />
+    <param name="remoteRevision" type="QString" />
+    <param name="resource" type="QString" />
+    <param name="statistics" type="Akonadi::Protocol::FetchCollectionStatsResponse" />
+    <param name="searchQuery" type="QString" />
+    <param name="searchCollections" type="QVector&lt;qint64&gt;" />
+    <param name="ancestors" type="QVector&lt;Akonadi::Protocol::Ancestor&gt;" />
+    <param name="cachePolicy" type="Akonadi::Protocol::CachePolicy" />
+    <param name="attributes" type="Akonadi::Protocol::Attributes" />
+    <param name="enabled" type="bool" default="true" />
+    <param name="displayPref" type="Tristate" default="Tristate::Undefined" />
+    <param name="syncPref" type="Tristate" default="Tristate::Undefined" />
+    <param name="indexPref" type="Tristate" default="Tristate::Undefined" />
+    <param name="referenced" type="bool" />
+    <param name="isVirtual" type="bool" />
+  </response>
+
+
+  <!-- Modify Collection //-->
+  <command name="ModifyCollection">
+    <flag name="ModifiedPart">
+      <value name="None" value="0" />
+      <value name="Name" value="1" />
+      <value name="RemoteID" value="2" />
+      <value name="RemoteRevision" value="4" />
+      <value name="ParentID" value="8" />
+      <value name="MimeTypes" value="16" />
+      <value name="CachePolicy" value="32" />
+      <value name="PersistentSearch" value="64" />
+      <value name="RemovedAttributes" value="128" />
+      <value name="Attributes" value="256" />
+      <value name="ListPreferences" value="512" />
+      <value name="Referenced" value="1024" />
+    </flag>
+
+    <ctor>
+      <arg name="collection" />
+    </ctor>
+
+    <param name="modifiedParts" type="ModifyCollectionCommand::ModifiedParts" default="None" readonly="true" />
+    <param name="collection" type="Scope" />
+    <param name="parentId" type="qint64" default="-1">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::ParentID" />
+    </param>
+    <param name="mimeTypes" type="QStringList">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::MimeTypes" />
+    </param>
+    <param name="cachePolicy" type="Akonadi::Protocol::CachePolicy">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::CachePolicy" />
+    </param>
+    <param name="name" type="QString">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::Name" />
+    </param>
+    <param name="remoteId" type="QString">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::RemoteID" />
+    </param>
+    <param name="remoteRevision" type="QString">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::RemoteRevision" />
+    </param>
+    <param name="persistentSearchQuery" type="QString">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::PersistentSearch" />
+    </param>
+    <param name="persistentSearchCollections" type="QVector&lt;qint64&gt;">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::PersistentSearch" />
+    </param>
+    <param name="persistentSearchRecursive" type="bool">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::PersistentSearch" />
+    </param>
+    <param name="persistentSearchRemote" type="bool">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::PersistentSearch" />
+    </param>
+    <param name="removedAttributes" type="QSet&lt;QByteArray&gt;">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::RemovedAttributes" />
+    </param>
+    <param name="attributes" type="Akonadi::Protocol::Attributes">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::Attributes" />
+    </param>
+    <param name="enabled" type="bool" default="true">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::ListPreferences" />
+    </param>
+    <param name="syncPref" type="Tristate" default="Tristate::Undefined">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::ListPreferences" />
+    </param>
+    <param name="displayPref" type="Tristate" default="Tristate::Undefined">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::ListPreferences" />
+    </param>
+    <param name="indexPref" type="Tristate" default="Tristate::Undefined">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::ListPreferences" />
+    </param>
+    <param name="referenced" type="bool">
+      <depends enum="modifiedParts" value="ModifyCollectionCommand::Referenced" />
+    </param>
+  </command>
+
+  <response name="ModifyCollection" />
+
+
+  <!-- Move Collection //-->
+  <command name="MoveCollection">
+    <ctor>
+      <arg name="collection" />
+      <arg name="destination" />
+    </ctor>
+
+    <param name="collection" type="Scope" />
+    <param name="destination" type="Scope" />
+  </command>
+
+  <response name="MoveCollection" />
+
+
+  <!-- Search Collection //-->
+  <command name="Search">
+    <ctor>
+      <arg name="query" />
+    </ctor>
+
+    <param name="mimeTypes" type="QStringList" />
+    <param name="collections" type="QVector&lt;qint64&gt;" />
+    <param name="query" type="QString" />
+    <param name="fetchScope" type="Akonadi::Protocol::FetchScope" />
+    <param name="recursive" type="bool" />
+    <param name="remote" type="bool" />
+  </command>
+
+  <response name="Search" />
+
+
+  <!-- Search Result //-->
+  <command name="SearchResult">
+    <ctor>
+      <arg name="searchId" />
+      <arg name="collectionId" />
+      <arg name="result" />
+    </ctor>
+
+    <param name="searchId" type="QByteArray" />
+    <param name="collectionId" type="qint64" default="-1" />
+    <param name="result" type="Scope" />
+  </command>
+
+  <response name="SearchResult" />
+
+
+  <!-- Store Search //-->
+  <command name="StoreSearch">
+    <param name="name" type="QString" />
+    <param name="query" type="QString" />
+    <param name="mimeTypes" type="QStringList" />
+    <param name="queryCollections" type="QVector&lt;qint64&gt;" />
+    <param name="remote" type="bool" />
+    <param name="recursive" type="bool" />
+  </command>
+
+  <response name="StoreSearch" />
+
+
+  <!-- Create Tag //-->
+  <command name="CreateTag">
+    <param name="gid" type="QByteArray" />
+    <param name="remoteId" type="QByteArray" />
+    <param name="type" type="QByteArray" />
+    <param name="attributes" type="Akonadi::Protocol::Attributes" />
+    <param name="parentId" type="qint64" default="-1" />
+    <param name="merge" type="bool" />
+  </command>
+
+  <response name="CreateTag" />
+
+
+  <!-- Delete Tag //-->
+  <command name="DeleteTag">
+    <ctor>
+      <arg name="tag" />
+    </ctor>
+
+    <param name="tag" type="Scope" />
+  </command>
+
+  <response name="DeleteTag" />
+
+
+  <!-- Modify Tag //-->
+  <command name="ModifyTag">
+    <flag name="ModifiedPart">
+      <value name="None" value="0" />
+      <value name="ParentId" value="1" />
+      <value name="Type" value="2" />
+      <value name="RemoteId" value="4" />
+      <value name="RemovedAttributes" value="8" />
+      <value name="Attributes" value="16" />
+    </flag>
+
+    <ctor>
+      <arg name="tagId" />
+    </ctor>
+
+    <param name="modifiedParts" type="ModifyTagCommand::ModifiedParts" default="None" readonly="true" />
+    <param name="tagId" type="qint64" default="-1" />
+    <param name="parentId" type="qint64" default="-1">
+      <depends enum="modifiedParts" value="ModifyTagCommand::ParentId" />
+    </param>
+    <param name="type" type="QByteArray">
+      <depends enum="modifiedParts" value="ModifyTagCommand::Type" />
+    </param>
+    <param name="remoteId" type="QByteArray">
+      <depends enum="modifiedParts" value="ModifyTagCommand::RemoteId" />
+    </param>
+    <param name="removedAttributes" type="QSet&lt;QByteArray&gt;">
+      <depends enum="modifiedParts" value="ModifyTagCommand::RemovedAttributes" />
+    </param>
+    <param name="attributes" type="Akonadi::Protocol::Attributes">
+      <depends enum="modifiedParts" value="ModifyTagCommand::Attributes" />
+    </param>
+  </command>
+
+  <response name="ModifyTag" />
+
+
+  <!-- Modify Relation //-->
+  <command name="ModifyRelation">
+    <ctor>
+      <arg name="left" />
+      <arg name="right" />
+      <arg name="type" />
+      <arg name="remoteId" default="QByteArray()" />
+    </ctor>
+
+    <param name="left" type="qint64" default="-1" />
+    <param name="right" type="qint64" default="-1" />
+    <param name="type" type="QByteArray" />
+    <param name="remoteId" type="QByteArray" />
+  </command>
+
+  <response name="ModifyRelation" />
+
+
+  <!-- Remove Relations //-->
+  <command name="RemoveRelations">
+    <ctor>
+      <arg name="left" />
+      <arg name="right" />
+      <arg name="type" default="QByteArray()" />
+    </ctor>
+
+    <param name="left" type="qint64" default="-1" />
+    <param name="right" type="qint64" default="-1" />
+    <param name="type" type="QByteArray" />
+  </command>
+
+  <response name="RemoveRelations" />
+
+
+  <!-- Select Resource //-->
+  <command name="SelectResource">
+    <ctor>
+      <arg name="resourceId" />
+    </ctor>
+
+    <param name="resourceId" type="QString" />
+  </command>
+
+  <response name="SelectResource" />
+
+
+  <!-- Stream Payload //-->
+  <command name="StreamPayload">
+    <enum name="Request">
+      <value name="MetaData" />
+      <value name="Data" />
+    </enum>
+
+    <ctor>
+      <arg name="payloadName" />
+      <arg name="request" />
+      <arg name="destination" default="QString()" />
+    </ctor>
+
+    <param name="payloadName" type="QByteArray" />
+    <param name="destination" type="QString" />
+    <param name="request" type="StreamPayloadCommand::Request" default="MetaData" />
+  </command>
+
+  <response name="StreamPayload">
+    <ctor>
+      <arg name="payloadName" />
+      <arg name="metaData" default="PartMetaData()" />
+    </ctor>
+    <ctor>
+      <arg name="payloadName" />
+      <arg name="data" />
+    </ctor>
+    <ctor>
+      <arg name="payloadName" />
+      <arg name="metaData" />
+      <arg name="data" />
+    </ctor>
+
+    <param name="payloadName" type="QByteArray" />
+    <param name="metaData" type="Akonadi::Protocol::PartMetaData" />
+    <param name="data" type="QByteArray" />
+  </response>
+
+
+  <!-- Item Change Notification //-->
+  <notification name="ItemChange">
+    <enum name="Operation">
+      <value name="InvalidOp" value="0"/>
+      <value name="Add" />
+      <value name="Modify" />
+      <value name="Move" />
+      <value name="Remove" />
+      <value name="Link" />
+      <value name="Unlink" />
+      <value name="ModifyFlags" />
+      <value name="ModifyTags" />
+      <value name="ModifyRelations" />
+    </enum>
+
+    <param name="operation" type="ItemChangeNotification::Operation" default="InvalidOp" />
+    <param name="items" type="QVector&lt;Akonadi::Protocol::ChangeNotification::Item&gt;" />
+    <param name="resource" type="QByteArray" />
+    <param name="parentCollection" type="qint64" default="-1"/>
+    <param name="parentDestCollection" type="qint64" default="-1" />
+    <param name="destinationResource" type="QByteArray" />
+    <param name="itemParts" type="QSet&lt;QByteArray&gt;" />
+    <param name="addedFlags" type="QSet&lt;QByteArray&gt;" />
+    <param name="removedFlags" type="QSet&lt;QByteArray&gt;" />
+    <param name="addedTags" type="QSet&lt;qint64&gt;" />
+    <param name="removedTags" type="QSet&lt;qint64&gt;" />
+    <param name="addedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
+    <param name="removedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
+  </notification>
+
+  <!-- Collection Change Notification //-->
+  <notification name="CollectionChange">
+    <enum name="Operation">
+      <value name="InvalidOp" />
+      <value name="Add" />
+      <value name="Modify" />
+      <value name="Move" />
+      <value name="Remove" />
+      <value name="Subscribe" />
+      <value name="Unsubscribe" />
+    </enum>
+
+    <param name="operation" type="CollectionChangeNotification::Operation" default="InvalidOp" />
+    <param name="id" type="qint64" default="-1" />
+    <param name="remoteId" type="QString" />
+    <param name="remoteRevision" type="QString" />
+    <param name="resource" type="QByteArray" />
+    <param name="parentCollection" type="qint64" default="-1"/>
+    <param name="parentDestCollection" type="qint64" default="-1" />
+    <param name="destinationResource" type="QByteArray" />
+    <param name="changedParts" type="QSet&lt;QByteArray&gt;" />
+  </notification>
+
+  <!-- Tag Change Notification //-->
+  <notification name="TagChange">
+    <enum name="Operation">
+      <value name="InvalidOp" />
+      <value name="Add" />
+      <value name="Modify" />
+      <value name="Remove" />
+    </enum>
+
+    <param name="operation" type="TagChangeNotification::Operation" default="InvalidOp" />
+    <param name="id" type="qint64" default="-1" />
+    <param name="remoteId" type="QString" />
+    <param name="resource" type="QByteArray" />
+  </notification>
+
+  <!-- Relation Change Notification //-->
+  <notification name="RelationChange">
+    <enum name="Operation">
+      <value name="InvalidOp" />
+      <value name="Add" />
+      <value name="Remove" />
+    </enum>
+
+    <param name="operation" type="RelationChangeNotification::Operation" default="InvalidOp" />
+    <param name="leftItem" type="qint64" default="-1" />
+    <param name="rightItem" type="qint64" default="-1" />
+    <param name="remoteId" type="QString" />
+    <param name="type" type="QString" />
+  </notification>
+
+  <!--Create Subscription //-->
+  <command name="CreateSubscription">
+    <ctor>
+      <arg name="subscriberName" />
+      <arg name="session" default="QByteArray()" />
+  </ctor>
+    <param name="subscriberName" type="QByteArray" />
+    <param name="session" type="QByteArray" />
+  </command>
+
+  <response name="CreateSubscription" />
+
+
+  <!-- Modify Subscription //-->
+  <command name="ModifySubscription">
+    <flag name="ModifiedPart">
+      <value name="None" value="0" />
+      <value name="Collections" value="1" />
+      <value name="Items" value="2" />
+      <value name="Tags" value="4" />
+      <value name="Types" value="8" />
+      <value name="Resources" value="16" />
+      <value name="MimeTypes" value="32" />
+      <value name="AllFlag" value="64" />
+      <value name="ExclusiveFlag" value="128" />
+      <value name="Sessions" value="256" />
+      <value name="Add" value="16384" />
+      <value name="Remove" value="32768" />
+    </flag>
+
+    <enum name="ChangeType">
+      <value name="NoType" />
+      <value name="ItemChanges" />
+      <value name="CollectionChanges" />
+      <value name="TagChanges" />
+      <value name="RelationChanges" />
+      <value name="SubscriptionChanges" />
+      <value name="ChangeNotifications" />
+    </enum>
+
+    <param name="modifiedParts" type="ModifySubscriptionCommand::ModifiedParts" default="None" readonly="true" />
+    <param name="subscriberName" type="QByteArray" />
+    <param name="startMonitoringCollections" type="QVector&lt;qint64&gt;">
+      <setter name="startMonitoringCollection" type="qint64">
+        <append name="startMonitoringCollections" />
+        <remove name="stopMonitoringCollections" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Collections" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
+    </param>
+    <param name="stopMonitoringCollections" type="QVector&lt;qint64&gt;">
+      <setter name="stopMonitoringCollection" type="qint64">
+        <append name="stopMonitoringCollections" />
+        <remove name="startMonitoringCollections" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Collections" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
+    </param>
+    <param name="startMonitoringItems" type="QVector&lt;qint64&gt;">
+      <setter name="startMonitoringItem" type="qint64">
+        <append name="startMonitoringItems" />
+        <remove name="stopMonitoringItems" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Items" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
+    </param>
+    <param name="stopMonitoringItems" type="QVector&lt;qint64&gt;">
+      <setter name="stopMonitoringItem" type="qint64">
+        <append name="stopMonitoringItems" />
+        <remove name="startMonitoringItems" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Items" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
+    </param>
+    <param name="startMonitoringTags" type="QVector&lt;qint64&gt;">
+      <setter name="startMonitoringTag" type="qint64">
+        <append name="startMonitoringTags" />
+        <remove name="stopMonitoringTags" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Tags" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
+    </param>
+    <param name="stopMonitoringTags" type="QVector&lt;qint64&gt;">
+      <setter name="stopMonitoringTag" type="qint64">
+        <append name="stopMonitoringTags" />
+        <remove name="startMonitoringTags" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Tags" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
+    </param>
+    <param name="startMonitoringTypes" type="QVector&lt;ModifySubscriptionCommand::ChangeType&gt;">
+      <setter name="startMonitoringType" type="ModifySubscriptionCommand::ChangeType">
+        <append name="startMonitoringTypes" />
+        <remove name="stopMonitoringTypes" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Types" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
+    </param>
+    <param name="stopMonitoringTypes" type="QVector&lt;ModifySubscriptionCommand::ChangeType&gt;">
+      <setter name="stopMonitoringType" type="ModifySubscriptionCommand::ChangeType">
+        <append name="stopMonitoringTypes" />
+        <remove name="startMonitoringTypes" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Types" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
+    </param>
+    <param name="startMonitoringResources" type="QVector&lt;QByteArray&gt;">
+      <setter name="startMonitoringResource" type="QByteArray">
+        <append name="startMonitoringResources" />
+        <remove name="stopMonitoringResources" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Resources" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
+    </param>
+    <param name="stopMonitoringResources" type="QVector&lt;QByteArray&gt;">
+      <setter name="stopMonitoringResource" type="QByteArray">
+        <append name="stopMonitoringResources" />
+        <remove name="startMonitoringResources" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Resources" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
+    </param>
+    <param name="startMonitoringMimeTypes" type="QStringList">
+      <setter name="startMonitoringMimeType" type="QString">
+        <append name="startMonitoringMimeTypes" />
+        <remove name="stopMonitoringMimeTypes" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::MimeTypes" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
+    </param>
+    <param name="stopMonitoringMimeTypes" type="QStringList">
+      <setter name="stopMonitoringMimeType" type="QString">
+        <append name="stopMonitoringMimeTypes" />
+        <remove name="startMonitoringMimeTypes" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::MimeTypes" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
+    </param>
+    <param name="allMonitored" type="bool">
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::AllFlag" />
+    </param>
+    <param name="isExclusive" type="bool">
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::ExclusiveFlag" />
+    </param>
+    <param name="startIgnoringSessions" type="QVector&lt;QByteArray&gt;">
+      <setter name="startIgnoringSession" type="QByteArray">
+        <append name="startIgnoringSessions" />
+        <remove name="stopIgnoringSessions" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Sessions" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Add" />
+    </param>
+    <param name="stopIgnoringSessions" type="QVector&lt;QByteArray&gt;">
+      <setter name="stopIgnoringSession" type="QByteArray">
+        <append name="stopIgnoringSessions" />
+        <remove name="startIgnoringSessions" />
+      </setter>
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Sessions" />
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
+    </param>
+  </command>
+
+  <response name="ModifySubscription" />
+
+  <!-- Subscription Change Notification //-->
+  <notification name="SubscriptionChange">
+    <enum name="Operation">
+      <value name="InvalidOp" />
+      <value name="Add" />
+      <value name="Modify" />
+      <value name="Remove" />
+    </enum>
+
+    <param name="operation" type="SubscriptionChangeNotification::Operation" default="InvalidOp" />
+    <param name="subscriber" type="QByteArray" />
+    <param name="collections" type="QSet&lt;qint64&gt;" />
+    <param name="items" type="QSet&lt;qint64&gt;" />
+    <param name="tags" type="QSet&lt;qint64&gt;" />
+    <param name="types" type="QSet&lt;ModifySubscriptionCommand::ChangeType&gt;" />
+    <param name="mimeTypes" type="QSet&lt;QString&gt;" />
+    <param name="resources" type="QSet&lt;QByteArray&gt;" />
+    <param name="ignoredSessions" type="QSet&lt;QByteArray&gt;" />
+    <param name="allMonitored" type="bool" />
+    <param name="exclusive" type="bool" />
+  </notification>
+
+  <!-- Debug Change Notification //-->
+  <notification name="DebugChange">
+    <param name="notification" type="Akonadi::Protocol::ChangeNotificationPtr" />
+    <param name="listeners" type="QVector&lt;QByteArray&gt;" />
+    <param name="timestamp" type="qint64" default="0" />
+  </notification>
+
+</protocol>

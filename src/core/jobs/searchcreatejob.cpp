@@ -129,19 +129,19 @@ void SearchCreateJob::doStart()
 {
     Q_D(SearchCreateJob);
 
-    Protocol::StoreSearchCommand cmd;
-    cmd.setName(d->mName);
-    cmd.setQuery(QString::fromUtf8(d->mQuery.toJSON()));
-    cmd.setMimeTypes(d->mMimeTypes);
-    cmd.setRecursive(d->mRecursive);
-    cmd.setRemote(d->mRemote);
+    auto cmd = Protocol::StoreSearchCommandPtr::create();
+    cmd->setName(d->mName);
+    cmd->setQuery(QString::fromUtf8(d->mQuery.toJSON()));
+    cmd->setMimeTypes(d->mMimeTypes);
+    cmd->setRecursive(d->mRecursive);
+    cmd->setRemote(d->mRemote);
     if (!d->mCollections.isEmpty()) {
         QVector<qint64> ids;
         ids.reserve(d->mCollections.size());
         for (const Collection &col : qAsConst(d->mCollections)) {
             ids << col.id();
         }
-        cmd.setQueryCollections(ids);
+        cmd->setQueryCollections(ids);
     }
 
     d->sendCommand(cmd);
@@ -153,15 +153,16 @@ Akonadi::Collection SearchCreateJob::createdCollection() const
     return d->mCreatedCollection;
 }
 
-bool SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool SearchCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     Q_D(SearchCreateJob);
-    if (response.isResponse() && response.type() == Protocol::Command::FetchCollections) {
-        d->mCreatedCollection = ProtocolHelper::parseCollection(response);
+    if (response->isResponse() && response->type() == Protocol::Command::FetchCollections) {
+        d->mCreatedCollection = ProtocolHelper::parseCollection(
+            Protocol::cmdCast<Protocol::FetchCollectionsResponse>(response));
         return false;
     }
 
-    if (response.isResponse() && response.type() == Protocol::Command::StoreSearch) {
+    if (response->isResponse() && response->type() == Protocol::Command::StoreSearch) {
         return true;
     }
 

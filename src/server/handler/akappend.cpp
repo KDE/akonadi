@@ -114,7 +114,7 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     qint64 partSizes = 0;
     PartStreamer streamer(connection(), item, this);
     connect(&streamer, &PartStreamer::responseAvailable,
-            this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
+            this, static_cast<void(Handler::*)(const Protocol::CommandPtr &)>(&Handler::sendResponse));
     Q_FOREACH (const QByteArray &partName, cmd.parts()) {
         qint64 partSize = 0;
         if (!streamer.stream(true, partName, partSize)) {
@@ -261,7 +261,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     PartStreamer streamer(connection(), currentItem);
     connect(&streamer, &PartStreamer::responseAvailable,
-            this, static_cast<void(Handler::*)(const Protocol::Command &)>(&Handler::sendResponse));
+            this, static_cast<void(Handler::*)(const Protocol::CommandPtr &)>(&Handler::sendResponse));
     Q_FOREACH (const QByteArray &partName, cmd.parts()) {
         bool changed = false;
         qint64 partSize = 0;
@@ -304,14 +304,15 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 bool AkAppend::sendResponse(const PimItem &item, Protocol::CreateItemCommand::MergeModes mergeModes)
 {
     if (mergeModes & Protocol::CreateItemCommand::Silent || mergeModes & Protocol::CreateItemCommand::None) {
-        Protocol::FetchItemsResponse resp(item.id());
-        resp.setMTime(item.datetime());
+        auto resp = Protocol::FetchItemsResponsePtr::create();
+        resp->setId(item.id());
+        resp->setMTime(item.datetime());
         Handler::sendResponse(resp);
         return true;
     }
 
     Protocol::FetchScope fetchScope;
-    fetchScope.setAncestorDepth(Protocol::Ancestor::ParentAncestor);
+    fetchScope.setAncestorDepth(Protocol::FetchScope::ParentAncestor);
     fetchScope.setFetch(Protocol::FetchScope::AllAttributes |
                         Protocol::FetchScope::FullPayload |
                         Protocol::FetchScope::CacheOnly |
@@ -359,7 +360,7 @@ bool AkAppend::notify(const PimItem &item, const Collection &collection,
 
 bool AkAppend::parseStream()
 {
-    Protocol::CreateItemCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::CreateItemCommand>(m_command);
 
     // FIXME: The streaming/reading of all item parts can hold the transaction for
     // unnecessary long time -> should we wrap the PimItem into one transaction

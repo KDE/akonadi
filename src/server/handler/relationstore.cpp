@@ -50,7 +50,7 @@ Relation RelationStore::fetchRelation(qint64 leftId, qint64 rightId, qint64 type
 
 bool RelationStore::parseStream()
 {
-    Protocol::ModifyRelationCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::ModifyRelationCommand>(m_command);
 
     if (cmd.type().isEmpty()) {
         return failureResponse("Relation type not specified");

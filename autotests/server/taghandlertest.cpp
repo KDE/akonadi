@@ -40,16 +40,16 @@ Q_DECLARE_METATYPE(Akonadi::Server::Tag::List)
 Q_DECLARE_METATYPE(Akonadi::Server::Tag)
 Q_DECLARE_METATYPE(QVector<TagTagAttributeListPair>)
 
-static Protocol::ChangeNotification::List extractNotifications(const QSharedPointer<QSignalSpy> &notificationSpy)
+static Protocol::ChangeNotificationList extractNotifications(const QSharedPointer<QSignalSpy> &notificationSpy)
 {
-    Protocol::ChangeNotification::List receivedNotifications;
+    Protocol::ChangeNotificationList receivedNotifications;
     for (int q = 0; q < notificationSpy->size(); q++) {
         //Only one notify call
         if (notificationSpy->at(q).count() != 1) {
             qWarning() << "Error: We're assuming only one notify call.";
-            return Protocol::ChangeNotification::List();
+            return Protocol::ChangeNotificationList();
         }
-        const Protocol::ChangeNotification::List n = notificationSpy->at(q).first().value<Protocol::ChangeNotification::List>();
+        const auto n = notificationSpy->at(q).first().value<Protocol::ChangeNotificationList>();
         for (int i = 0; i < n.size(); i++) {
             // qDebug() << n.at(i);
             receivedNotifications.append(n.at(i));
@@ -82,15 +82,15 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-    Protocol::FetchTagsResponse createResponse(const Tag &tag, const QByteArray &remoteId = QByteArray(),
-                                               const Protocol::Attributes &attrs = Protocol::Attributes())
+    Protocol::FetchTagsResponsePtr createResponse(const Tag &tag, const QByteArray &remoteId = QByteArray(),
+                                                  const Protocol::Attributes &attrs = Protocol::Attributes())
     {
-        Protocol::FetchTagsResponse resp(tag.id());
-        resp.setGid(tag.gid().toUtf8());
-        resp.setParentId(tag.parentId());
-        resp.setType(tag.tagType().name().toUtf8());
-        resp.setRemoteId(remoteId);
-        resp.setAttributes(attrs);
+        auto resp = Protocol::FetchTagsResponsePtr::create(tag.id());
+        resp->setGid(tag.gid().toUtf8());
+        resp->setParentId(tag.parentId());
+        resp->setType(tag.tagType().name().toUtf8());
+        resp->setRemoteId(remoteId);
+        resp->setAttributes(attrs);
         return resp;
     }
 
@@ -111,26 +111,26 @@ private Q_SLOTS:
 
         QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<QVector<QPair<Tag, TagAttribute::List>>>("expectedTags");
-        QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
+        QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
 
         {
-            Protocol::CreateTagCommand cmd;
-            cmd.setGid("tag");
-            cmd.setParentId(0);
-            cmd.setType("PLAIN");
-            cmd.setAttributes({ { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
+            auto cmd = Protocol::CreateTagCommandPtr::create();
+            cmd->setGid("tag");
+            cmd->setParentId(0);
+            cmd->setType("PLAIN");
+            cmd->setAttributes({ { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
 
-            Protocol::FetchTagsResponse resp(1);
-            resp.setGid(cmd.gid());
-            resp.setParentId(cmd.parentId());
-            resp.setType(cmd.type());
-            resp.setAttributes(cmd.attributes());
+            auto resp = Protocol::FetchTagsResponsePtr::create(1);
+            resp->setGid(cmd->gid());
+            resp->setParentId(cmd->parentId());
+            resp->setType(cmd->type());
+            resp->setAttributes(cmd->attributes());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateTagResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateTagResponsePtr::create());
 
             Tag tag;
             tag.setId(1);
@@ -142,34 +142,34 @@ private Q_SLOTS:
             attribute.setType("TAG");
             attribute.setValue("(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")");
 
-            Akonadi::Protocol::TagChangeNotification notification;
-            notification.setOperation(Protocol::TagChangeNotification::Add);
-            notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            notification.setId(1);
+            auto notification = Protocol::TagChangeNotificationPtr::create();
+            notification->setOperation(Protocol::TagChangeNotification::Add);
+            notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            notification->setId(1);
 
             QTest::newRow("uid create relation") << scenarios
                                                  << QVector<TagTagAttributeListPair>{ { tag, { attribute } } }
-                                                 << Protocol::ChangeNotification::List{ notification };
+                                                 << Protocol::ChangeNotificationList{ notification };
         }
 
         {
-            Protocol::CreateTagCommand cmd;
-            cmd.setGid("tag2");
-            cmd.setParentId(1);
-            cmd.setType("PLAIN");
-            cmd.setAttributes({ { "TAG", "(\\\"tag3\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
+            auto cmd = Protocol::CreateTagCommandPtr::create();
+            cmd->setGid("tag2");
+            cmd->setParentId(1);
+            cmd->setType("PLAIN");
+            cmd->setAttributes({ { "TAG", "(\\\"tag3\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
 
-            Protocol::FetchTagsResponse resp(2);
-            resp.setGid(cmd.gid());
-            resp.setParentId(cmd.parentId());
-            resp.setType(cmd.type());
-            resp.setAttributes(cmd.attributes());
+            auto resp = Protocol::FetchTagsResponsePtr::create(2);
+            resp->setGid(cmd->gid());
+            resp->setParentId(cmd->parentId());
+            resp->setType(cmd->type());
+            resp->setAttributes(cmd->attributes());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateTagResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateTagResponsePtr::create());
 
             Tag tag;
             tag.setId(2);
@@ -181,14 +181,14 @@ private Q_SLOTS:
             attribute.setType("TAG");
             attribute.setValue("(\\\"tag3\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")");
 
-            Akonadi::Protocol::TagChangeNotification notification;
-            notification.setOperation(Protocol::TagChangeNotification::Add);
-            notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            notification.setId(2);
+            auto notification = Protocol::TagChangeNotificationPtr::create();
+            notification->setOperation(Protocol::TagChangeNotification::Add);
+            notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            notification->setId(2);
 
             QTest::newRow("create child tag") << scenarios
                                               << QVector<TagTagAttributeListPair>{ { tag, { attribute } } }
-                                              << Protocol::ChangeNotification::List{ notification };
+                                              << Protocol::ChangeNotificationList{ notification };
         }
     }
 
@@ -196,18 +196,18 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(QVector<TagTagAttributeListPair>, expectedTags);
-        QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
 
         QVariantList ids;
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
-            QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
-            ids << Protocol::TagChangeNotification(receivedNotifications.at(i)).id();
+            QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
+            ids << Protocol::cmdCast<Protocol::TagChangeNotification>(receivedNotifications.at(i)).id();
         }
 
         SelectQueryBuilder<Tag> qb;
@@ -264,28 +264,28 @@ private Q_SLOTS:
 
         QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Tag::List>("expectedTags");
-        QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
+        QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
         {
-            Protocol::ModifyTagCommand cmd(tag.id());
-            cmd.setAttributes({ { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
+            auto cmd = Protocol::ModifyTagCommandPtr::create(tag.id());
+            cmd->setAttributes({ { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } });
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QByteArray(), cmd.attributes()))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QByteArray(), cmd->attributes()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponsePtr::create());
 
-            Akonadi::Protocol::TagChangeNotification notification;
-            notification.setOperation(Protocol::TagChangeNotification::Modify);
-            notification.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            notification.setId(tag.id());
+            auto notification = Protocol::TagChangeNotificationPtr::create();
+            notification->setOperation(Protocol::TagChangeNotification::Modify);
+            notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            notification->setId(tag.id());
 
-            QTest::newRow("uid store name") << scenarios << (Tag::List() << tag) << (Protocol::ChangeNotification::List() << notification);
+            QTest::newRow("uid store name") << scenarios << (Tag::List() << tag) << (Protocol::ChangeNotificationList() << notification);
         }
 
         {
-            Protocol::ModifyTagCommand cmd(tag.id());
-            cmd.setRemoteId("remote1");
+            auto cmd = Protocol::ModifyTagCommandPtr::create(tag.id());
+            cmd->setRemoteId("remote1");
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
@@ -293,7 +293,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, "remote1",
                             { { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponsePtr::create());
 
             // RID-only changes don't emit notifications
             /*
@@ -304,12 +304,12 @@ private Q_SLOTS:
             notification.addEntity(tag.id());
             */
 
-            QTest::newRow("uid store rid") << scenarios << (Tag::List() << tag) << Protocol::ChangeNotification::List();
+            QTest::newRow("uid store rid") << scenarios << (Tag::List() << tag) << Protocol::ChangeNotificationList();
         }
 
         {
-            Protocol::ModifyTagCommand cmd(tag.id());
-            cmd.setRemoteId(QByteArray());
+            auto cmd = Protocol::ModifyTagCommandPtr::create(tag.id());
+            cmd->setRemoteId(QByteArray());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
@@ -317,7 +317,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(tag, QByteArray(),
                             { { "TAG", "(\\\"tag2\\\" \\\"\\\" \\\"\\\" \\\"\\\" \\\"0\\\" () () \\\"-1\\\")" } }))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponsePtr::create());
 
             // RID-only changes don't emit notifications
             /*
@@ -328,34 +328,34 @@ private Q_SLOTS:
             tagChangeNtf.addEntity(tag.id());
             */
 
-            QTest::newRow("uid store unset one rid") << scenarios << (Tag::List() << tag) << Protocol::ChangeNotification::List();
+            QTest::newRow("uid store unset one rid") << scenarios << (Tag::List() << tag) << Protocol::ChangeNotificationList();
         }
 
        {
-            Protocol::ModifyTagCommand cmd(tag.id());
-            cmd.setRemoteId(QByteArray());
+            auto cmd = Protocol::ModifyTagCommandPtr::create(tag.id());
+            cmd->setRemoteId(QByteArray());
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
                       << FakeAkonadiServer::selectResourceScenario(res2.name())
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::DeleteTagResponse())
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponse());
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::DeleteTagResponsePtr::create())
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyTagResponsePtr::create());
 
-            Akonadi::Protocol::ItemChangeNotification itemUntaggedNtf;
-            itemUntaggedNtf.setOperation(Protocol::ItemChangeNotification::ModifyTags);
-            itemUntaggedNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            itemUntaggedNtf.addItem(pimItem.id(), pimItem.remoteId(), QString(), pimItem.mimeType().name());
-            itemUntaggedNtf.setResource(res2.name().toLatin1());
-            itemUntaggedNtf.setParentCollection(col.id());
-            itemUntaggedNtf.setRemovedTags(QSet<qint64>() << tag.id());
+            auto itemUntaggedNtf = Protocol::ItemChangeNotificationPtr::create();
+            itemUntaggedNtf->setOperation(Protocol::ItemChangeNotification::ModifyTags);
+            itemUntaggedNtf->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            itemUntaggedNtf->setItems({ { pimItem.id(), pimItem.remoteId(), QString(), pimItem.mimeType().name() } });
+            itemUntaggedNtf->setResource(res2.name().toLatin1());
+            itemUntaggedNtf->setParentCollection(col.id());
+            itemUntaggedNtf->setRemovedTags(QSet<qint64>() << tag.id());
 
-            Akonadi::Protocol::TagChangeNotification tagRemoveNtf;
-            tagRemoveNtf.setOperation(Protocol::TagChangeNotification::Remove);
-            tagRemoveNtf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            tagRemoveNtf.setId(tag.id());
+            auto tagRemoveNtf = Protocol::TagChangeNotificationPtr::create();
+            tagRemoveNtf->setOperation(Protocol::TagChangeNotification::Remove);
+            tagRemoveNtf->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            tagRemoveNtf->setId(tag.id());
 
-            QTest::newRow("uid store unset last rid") << scenarios << Tag::List() << (Protocol::ChangeNotification::List() << itemUntaggedNtf << tagRemoveNtf);
+            QTest::newRow("uid store unset last rid") << scenarios << Tag::List() << (Protocol::ChangeNotificationList() << itemUntaggedNtf << tagRemoveNtf);
         }
     }
 
@@ -363,16 +363,16 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Tag::List, expectedTags);
-        QFETCH(Protocol::ChangeNotification::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
 
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < receivedNotifications.size(); i++) {
-            QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+            QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
         }
 
         const Tag::List tags = Tag::retrieveAll();
@@ -411,31 +411,31 @@ private Q_SLOTS:
 
         QTest::addColumn<TestScenario::List >("scenarios");
         QTest::addColumn<Tag::List>("expectedTags");
-        QTest::addColumn<Akonadi::Protocol::ChangeNotification::List>("expectedNotifications");
+        QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
         {
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario()
-                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::DeleteTagCommand(tag.id()))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::DeleteTagResponse());
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::DeleteTagCommandPtr::create(tag.id()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::DeleteTagResponsePtr::create());
 
-            Akonadi::Protocol::TagChangeNotification ntf;
-            ntf.setOperation(Protocol::TagChangeNotification::Remove);
-            ntf.setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+            auto ntf = Protocol::TagChangeNotificationPtr::create();
+            ntf->setOperation(Protocol::TagChangeNotification::Remove);
+            ntf->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
-            Akonadi::Protocol::TagChangeNotification res1Ntf = ntf;
-            res1Ntf.setId(tag.id());
-            res1Ntf.setRemoteId(rel1.remoteId());
-            res1Ntf.setResource(res1.name().toLatin1());
+            auto res1Ntf = Protocol::TagChangeNotificationPtr::create(*ntf);
+            res1Ntf->setId(tag.id());
+            res1Ntf->setRemoteId(rel1.remoteId());
+            res1Ntf->setResource(res1.name().toLatin1());
 
-            Akonadi::Protocol::TagChangeNotification res2Ntf = ntf;
-            res2Ntf.setId(tag.id());
-            res2Ntf.setRemoteId(rel2.remoteId());
-            res2Ntf.setResource(res2.name().toLatin1());
+            auto res2Ntf = Protocol::TagChangeNotificationPtr::create(*ntf);
+            res2Ntf->setId(tag.id());
+            res2Ntf->setRemoteId(rel2.remoteId());
+            res2Ntf->setResource(res2.name().toLatin1());
 
-            Akonadi::Protocol::TagChangeNotification clientNtf = ntf;
-            clientNtf.setId(tag.id());
+            auto clientNtf = Protocol::TagChangeNotificationPtr::create(*ntf);
+            clientNtf->setId(tag.id());
 
-            QTest::newRow("uid remove") << scenarios << Tag::List() << (Protocol::ChangeNotification::List() << res1Ntf << res2Ntf << clientNtf);
+            QTest::newRow("uid remove") << scenarios << Tag::List() << (Protocol::ChangeNotificationList() << res1Ntf << res2Ntf << clientNtf);
         }
     }
 
@@ -443,16 +443,16 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Tag::List, expectedTags);
-        QFETCH(Akonadi::Protocol::ChangeNotification::List, expectedNotifications);
+        QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
         FakeAkonadiServer::instance()->setScenarios(scenarios);
         FakeAkonadiServer::instance()->runTest();
 
-        const Protocol::ChangeNotification::List receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
 
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < receivedNotifications.size(); i++) {
-            QCOMPARE(receivedNotifications.at(i), expectedNotifications.at(i));
+            QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
         }
 
         const Tag::List tags = Tag::retrieveAll();

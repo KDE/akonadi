@@ -29,7 +29,7 @@ using namespace Akonadi::Server;
 
 bool Fetch::parseStream()
 {
-    Protocol::FetchItemsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::FetchItemsCommand>(m_command);
 
     if (!connection()->context()->setScopeContext(cmd.scopeContext())) {
         return failureResponse("Invalid scope context");

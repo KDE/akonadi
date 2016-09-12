@@ -37,7 +37,7 @@ using namespace Akonadi::Server;
 
 bool Modify::parseStream()
 {
-    Protocol::ModifyCollectionCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::ModifyCollectionCommand>(m_command);
 
     Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!collection.isValid()) {

@@ -92,12 +92,12 @@ public:
         }
     }
 
-    void writeNotification(const Protocol::ChangeNotification &notification) Q_DECL_OVERRIDE
+    void writeNotification(const Protocol::ChangeNotificationPtr &notification) Q_DECL_OVERRIDE
     {
         emittedNotifications << notification;
     }
 
-    Protocol::ChangeNotification::List emittedNotifications;
+    Protocol::ChangeNotificationList emittedNotifications;
 };
 
 class NotificationManagerTest : public QObject
@@ -109,7 +109,7 @@ class NotificationManagerTest : public QObject
 private Q_SLOTS:
     void testSourceFilter_data()
     {
-        qRegisterMetaType<Protocol::ChangeNotification::List>();
+        qRegisterMetaType<Protocol::ChangeNotificationList>();
 
         QTest::addColumn<bool>("allMonitored");
         QTest::addColumn<QVector<Entity::Id> >("monitoredCollections");
@@ -117,17 +117,15 @@ private Q_SLOTS:
         QTest::addColumn<QVector<QByteArray> >("monitoredResources");
         QTest::addColumn<QVector<QString> >("monitoredMimeTypes");
         QTest::addColumn<QVector<QByteArray> >("ignoredSessions");
-        QTest::addColumn<Protocol::ChangeNotification>("notification");
+        QTest::addColumn<Protocol::ChangeNotificationPtr>("notification");
         QTest::addColumn<bool>("accepted");
-
-        Protocol::ItemChangeNotification itemMsg;
 
 #define EmptyList(T) (QVector<T>())
 #define List(T,x) (QVector<T>() << x)
 
-        itemMsg = Protocol::ItemChangeNotification();
-        itemMsg.setOperation(Protocol::ItemChangeNotification::Add);
-        itemMsg.setParentCollection(1);
+        auto itemMsg = Protocol::ItemChangeNotificationPtr::create();
+        itemMsg->setOperation(Protocol::ItemChangeNotification::Add);
+        itemMsg->setParentCollection(1);
         QTest::newRow("monitorAll vs notification without items")
                 << true
                 << EmptyList(Entity::Id)
@@ -135,10 +133,11 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << EmptyList(QString)
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(itemMsg)
+                << itemMsg.staticCast<Protocol::ChangeNotification>()
                 << false;
 
-        itemMsg.addItem(1, QString(), QString(), QStringLiteral("message/rfc822"));
+        itemMsg = Protocol::ItemChangeNotificationPtr::create(*itemMsg);
+        itemMsg->setItems({ { 1, QString(), QString(), QStringLiteral("message/rfc822") } });
         QTest::newRow("monitorAll vs notification with one item")
                 << true
                 << EmptyList(Entity::Id)
@@ -146,7 +145,7 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << EmptyList(QString)
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(itemMsg)
+                << itemMsg.staticCast<Protocol::ChangeNotification>()
                 << true;
 
         QTest::newRow("item monitored but different mimetype")
@@ -156,7 +155,7 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << List(QString, QStringLiteral("random/mimetype"))
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(itemMsg)
+                << Protocol::ItemChangeNotificationPtr::create(*itemMsg).staticCast<Protocol::ChangeNotification>()
                 << false;
 
         QTest::newRow("item not monitored, but mimetype matches")
@@ -166,10 +165,11 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << List(QString, QStringLiteral("message/rfc822"))
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(itemMsg)
+                << Protocol::ItemChangeNotificationPtr::create(*itemMsg).staticCast<Protocol::ChangeNotification>()
                 << true;
 
-        itemMsg.setSessionId("testSession");
+        itemMsg = Protocol::ItemChangeNotificationPtr::create(*itemMsg);
+        itemMsg->setSessionId("testSession");
         QTest::newRow("item monitored but session ignored")
                 << false
                 << EmptyList(Entity::Id)
@@ -177,17 +177,17 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << EmptyList(QString)
                 << List(QByteArray, "testSession")
-                << Protocol::ChangeNotification(itemMsg)
+                << itemMsg.staticCast<Protocol::ChangeNotification>()
                 << false;
 
         // Simulate adding a new resource
-        Protocol::CollectionChangeNotification colMsg;
-        colMsg.setOperation(Protocol::CollectionChangeNotification::Add);
-        colMsg.setId(1);
-        colMsg.setRemoteId(QStringLiteral("imap://user@some.domain/"));
-        colMsg.setParentCollection(0);
-        colMsg.setSessionId("akonadi_imap_resource_0");
-        colMsg.setResource("akonadi_imap_resource_0");
+        auto colMsg = Protocol::CollectionChangeNotificationPtr::create();
+        colMsg->setOperation(Protocol::CollectionChangeNotification::Add);
+        colMsg->setId(1);
+        colMsg->setRemoteId(QStringLiteral("imap://user@some.domain/"));
+        colMsg->setParentCollection(0);
+        colMsg->setSessionId("akonadi_imap_resource_0");
+        colMsg->setResource("akonadi_imap_resource_0");
         QTest::newRow("new root collection in non-monitored resource")
                 << false
                 << List(Entity::Id, 0)
@@ -195,17 +195,17 @@ private Q_SLOTS:
                 << List(QByteArray, "akonadi_search_resource")
                 << List(QString, QStringLiteral("message/rfc822"))
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(colMsg)
+                << colMsg.staticCast<Protocol::ChangeNotification>()
                 << true;
 
-        itemMsg = Protocol::ItemChangeNotification();
-        itemMsg.setOperation(Protocol::ItemChangeNotification::Move);
-        itemMsg.setResource("akonadi_resource_1");
-        itemMsg.setDestinationResource("akonadi_resource_2");
-        itemMsg.setParentCollection(1);
-        itemMsg.setParentDestCollection(2);
-        itemMsg.setSessionId("kmail");
-        itemMsg.addItem(10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822"));
+        itemMsg = Protocol::ItemChangeNotificationPtr::create();
+        itemMsg->setOperation(Protocol::ItemChangeNotification::Move);
+        itemMsg->setResource("akonadi_resource_1");
+        itemMsg->setDestinationResource("akonadi_resource_2");
+        itemMsg->setParentCollection(1);
+        itemMsg->setParentDestCollection(2);
+        itemMsg->setSessionId("kmail");
+        itemMsg->setItems({ { 10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822") } });
         QTest::newRow("inter-resource move, source source")
                 << false
                 << EmptyList(Entity::Id)
@@ -213,7 +213,7 @@ private Q_SLOTS:
                 << List(QByteArray, "akonadi_resource_1")
                 << List(QString, QStringLiteral("message/rfc822"))
                 << List(QByteArray, "akonadi_resource_1")
-                << Protocol::ChangeNotification(itemMsg)
+                << itemMsg.staticCast<Protocol::ChangeNotification>()
                 << true;
 
         QTest::newRow("inter-resource move, destination source")
@@ -223,7 +223,7 @@ private Q_SLOTS:
                 << List(QByteArray, "akonadi_resource_2")
                 << List(QString, QStringLiteral("message/rfc822"))
                 << List(QByteArray, "akonadi_resource_2")
-                << Protocol::ChangeNotification(itemMsg)
+                << itemMsg.staticCast<Protocol::ChangeNotification>()
                 << true;
 
         QTest::newRow("inter-resource move, uninterested party")
@@ -233,18 +233,19 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << List(QString, QStringLiteral("inode/directory"))
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(itemMsg)
+                << itemMsg.staticCast<Protocol::ChangeNotification>()
                 << false;
 
-        itemMsg = Protocol::ItemChangeNotification();
-        itemMsg.setOperation(Protocol::ItemChangeNotification::Move);
-        itemMsg.setResource("akonadi_resource_0");
-        itemMsg.setDestinationResource("akonadi_resource_0");
-        itemMsg.setParentCollection(1);
-        itemMsg.setParentDestCollection(2);
-        itemMsg.setSessionId("kmail");
-        itemMsg.addItem(10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822"));
-        itemMsg.addItem(11, QStringLiteral("456"), QStringLiteral("1"), QStringLiteral("message/rfc822"));
+        itemMsg = Protocol::ItemChangeNotificationPtr::create();
+        itemMsg->setOperation(Protocol::ItemChangeNotification::Move);
+        itemMsg->setResource("akonadi_resource_0");
+        itemMsg->setDestinationResource("akonadi_resource_0");
+        itemMsg->setParentCollection(1);
+        itemMsg->setParentDestCollection(2);
+        itemMsg->setSessionId("kmail");
+        itemMsg->setItems({
+            { 10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822") },
+            { 11, QStringLiteral("456"), QStringLiteral("1"), QStringLiteral("message/rfc822") } });
         QTest::newRow("intra-resource move, owning resource")
                 << false
                 << EmptyList(Entity::Id)
@@ -252,14 +253,14 @@ private Q_SLOTS:
                 << List(QByteArray, "akonadi_imap_resource_0")
                 << List(QString, QStringLiteral("message/rfc822"))
                 << List(QByteArray, "akonadi_imap_resource_0")
-                << Protocol::ChangeNotification(itemMsg)
+                << itemMsg.staticCast<Protocol::ChangeNotification>()
                 << true;
 
-        colMsg = Protocol::CollectionChangeNotification();
-        colMsg.setOperation(Protocol::CollectionChangeNotification::Add);
-        colMsg.setSessionId("kmail");
-        colMsg.setResource("akonadi_resource_1");
-        colMsg.setParentCollection(1);
+        colMsg = Protocol::CollectionChangeNotificationPtr::create();
+        colMsg->setOperation(Protocol::CollectionChangeNotification::Add);
+        colMsg->setSessionId("kmail");
+        colMsg->setResource("akonadi_resource_1");
+        colMsg->setParentCollection(1);
         QTest::newRow("new subfolder")
                 << false
                 << List(Entity::Id, 0)
@@ -267,15 +268,15 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << List(QString, QStringLiteral("message/rfc822"))
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(colMsg)
+                << colMsg.staticCast<Protocol::ChangeNotification>()
                 << false;
 
-        itemMsg = Protocol::ItemChangeNotification();
-        itemMsg.setOperation(Protocol::ItemChangeNotification::Add);
-        itemMsg.setSessionId("randomSession");
-        itemMsg.setResource("randomResource");
-        itemMsg.setParentCollection(1);
-        itemMsg.addItem(10, QString(), QString(), QStringLiteral("message/rfc822"));
+        itemMsg = Protocol::ItemChangeNotificationPtr::create();
+        itemMsg->setOperation(Protocol::ItemChangeNotification::Add);
+        itemMsg->setSessionId("randomSession");
+        itemMsg->setResource("randomResource");
+        itemMsg->setParentCollection(1);
+        itemMsg->setItems({ { 10, QString(), QString(), QStringLiteral("message/rfc822") } });
         QTest::newRow("new mail for mailfilter or maildispatcher")
                 << false
                 << List(Entity::Id, 0)
@@ -283,15 +284,15 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << List(QString, QStringLiteral("message/rfc822"))
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(itemMsg)
+                << itemMsg.staticCast<Protocol::ChangeNotification>()
                 << true;
 
-        Protocol::TagChangeNotification tagMsg;
-        tagMsg.setOperation(Protocol::TagChangeNotification::Remove);
-        tagMsg.setSessionId("randomSession");
-        tagMsg.setResource("akonadi_random_resource_0");
-        tagMsg.setId(1);
-        tagMsg.setRemoteId(QStringLiteral("TAG"));
+        auto tagMsg = Protocol::TagChangeNotificationPtr::create();
+        tagMsg->setOperation(Protocol::TagChangeNotification::Remove);
+        tagMsg->setSessionId("randomSession");
+        tagMsg->setResource("akonadi_random_resource_0");
+        tagMsg->setId(1);
+        tagMsg->setRemoteId(QStringLiteral("TAG"));
         QTest::newRow("Tag removal - resource notification - matching resource source")
                 << false
                 << EmptyList(Entity::Id)
@@ -299,7 +300,7 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << EmptyList(QString)
                 << List(QByteArray, "akonadi_random_resource_0")
-                << Protocol::ChangeNotification(tagMsg)
+                << tagMsg.staticCast<Protocol::ChangeNotification>()
                 << true;
 
         QTest::newRow("Tag removal - resource notification - wrong resource source")
@@ -309,14 +310,14 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << EmptyList(QString)
                 << List(QByteArray, "akonadi_another_resource_1")
-                << Protocol::ChangeNotification(tagMsg)
+                << tagMsg.staticCast<Protocol::ChangeNotification>()
                 << false;
 
-        tagMsg = Protocol::TagChangeNotification();
-        tagMsg.setOperation(Protocol::TagChangeNotification::Remove);
-        tagMsg.setSessionId("randomSession");
-        tagMsg.setId(1);
-        tagMsg.setRemoteId(QStringLiteral("TAG"));
+        tagMsg = Protocol::TagChangeNotificationPtr::create();
+        tagMsg->setOperation(Protocol::TagChangeNotification::Remove);
+        tagMsg->setSessionId("randomSession");
+        tagMsg->setId(1);
+        tagMsg->setRemoteId(QStringLiteral("TAG"));
         QTest::newRow("Tag removal - client notification - client source")
                 << false
                 << EmptyList(Entity::Id)
@@ -324,7 +325,7 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << EmptyList(QString)
                 << EmptyList(QByteArray)
-                << Protocol::ChangeNotification(tagMsg)
+                << tagMsg.staticCast<Protocol::ChangeNotification>()
                 << true;
 
         QTest::newRow("Tag removal - client notification - resource source")
@@ -334,7 +335,7 @@ private Q_SLOTS:
                 << EmptyList(QByteArray)
                 << EmptyList(QString)
                 << List( QByteArray, "akonadi_some_resource_0" )
-                << Protocol::ChangeNotification(tagMsg)
+                << tagMsg.staticCast<Protocol::ChangeNotification>()
                 << false;
     }
 
@@ -346,7 +347,7 @@ private Q_SLOTS:
         QFETCH(QVector<QByteArray>, monitoredResources);
         QFETCH(QVector<QString>, monitoredMimeTypes);
         QFETCH(QVector<QByteArray>, ignoredSessions);
-        QFETCH(Protocol::ChangeNotification, notification);
+        QFETCH(Protocol::ChangeNotificationPtr, notification);
         QFETCH(bool, accepted);
 
         TestableNotificationSubscriber subscriber;
@@ -373,8 +374,8 @@ private Q_SLOTS:
         QTRY_COMPARE(subscriber.emittedNotifications.count(), accepted ? 1 : 0);
 
         if (accepted) {
-            const Protocol::ChangeNotification ntf = subscriber.emittedNotifications.at(0);
-            QVERIFY(ntf.isValid());
+            const Protocol::ChangeNotificationPtr ntf = subscriber.emittedNotifications.at(0);
+            QVERIFY(ntf->isValid());
         }
     }
 };

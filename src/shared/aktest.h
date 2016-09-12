@@ -71,9 +71,9 @@ inline void akTestSetInstanceIdentifier(const QString &instanceId)
 namespace QTest
 {
 template<>
-char *toString(const Akonadi::Protocol::ItemChangeNotification &msg)
+char *toString(const Akonadi::Protocol::ItemChangeNotificationPtr &msg)
 {
-    return qstrdup(qPrintable(msg.debugString()));
+    return qstrdup(qPrintable(Akonadi::Protocol::debugString(msg)));
 }
 }
 
@@ -101,42 +101,42 @@ enum NtfField {
 };
 typedef QFlags<NtfField> NtfFields;
 
-bool compareNotifications(const Akonadi::Protocol::ItemChangeNotification &actual,
-                          const Akonadi::Protocol::ItemChangeNotification &expected,
+bool compareNotifications(const Akonadi::Protocol::ItemChangeNotificationPtr &actual,
+                          const Akonadi::Protocol::ItemChangeNotificationPtr &expected,
                           const NtfFields fields = NtfAll)
 {
     if (fields & NtfOperation) {
-        AKCOMPARE(actual.operation(), expected.operation());
+        AKCOMPARE(actual->operation(), expected->operation());
     }
     if (fields & NtfSession) {
-        AKCOMPARE(actual.sessionId(), expected.sessionId());
+        AKCOMPARE(actual->sessionId(), expected->sessionId());
     }
     if (fields & NtfEntities) {
-        AKCOMPARE(actual.items(), expected.items());
+        AKCOMPARE(actual->items(), expected->items());
     }
     if (fields & NtfResource) {
-        AKCOMPARE(actual.resource(), expected.resource());
+        AKCOMPARE(actual->resource(), expected->resource());
     }
     if (fields & NtfCollection) {
-        AKCOMPARE(actual.parentCollection(), expected.parentCollection());
+        AKCOMPARE(actual->parentCollection(), expected->parentCollection());
     }
     if (fields & NtfDestResource) {
-        AKCOMPARE(actual.destinationResource(), expected.destinationResource());
+        AKCOMPARE(actual->destinationResource(), expected->destinationResource());
     }
     if (fields & NtfDestCollection) {
-        AKCOMPARE(actual.parentDestCollection(), expected.parentDestCollection());
+        AKCOMPARE(actual->parentDestCollection(), expected->parentDestCollection());
     }
     if (fields & NtfAddedFlags) {
-        AKCOMPARE(actual.addedFlags(), expected.addedFlags());
+        AKCOMPARE(actual->addedFlags(), expected->addedFlags());
     }
     if (fields & NtfRemovedFlags) {
-        AKCOMPARE(actual.removedFlags(), expected.removedFlags());
+        AKCOMPARE(actual->removedFlags(), expected->removedFlags());
     }
     if (fields & NtfAddedTags) {
-        AKCOMPARE(actual.addedTags(), expected.addedTags());
+        AKCOMPARE(actual->addedTags(), expected->addedTags());
     }
     if (fields & NtfRemovedTags) {
-        AKCOMPARE(actual.removedTags(), expected.removedTags());
+        AKCOMPARE(actual->removedTags(), expected->removedTags());
     }
 
     return true;

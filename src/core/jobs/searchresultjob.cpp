@@ -117,12 +117,12 @@ void SearchResultJob::doStart()
     } else {
         scope.setUidSet(d->uid);
     }
-    d->sendCommand(Protocol::SearchResultCommand(d->searchId, d->collection.id(), scope));
+    d->sendCommand(Protocol::SearchResultCommandPtr::create(d->searchId, d->collection.id(), scope));
 }
 
-bool SearchResultJob::doHandleResponse(qint64 tag, const Protocol::Command &response)
+bool SearchResultJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (!response.isResponse() || response.type() != Protocol::Command::SearchResult) {
+    if (!response->isResponse() || response->type() != Protocol::Command::SearchResult) {
         return Job::doHandleResponse(tag, response);
     }
 

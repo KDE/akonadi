@@ -57,7 +57,7 @@ public:
         }
 
         try {
-            JobPrivate::sendCommand(Protocol::LinkItemsCommand(action,
+            JobPrivate::sendCommand(Protocol::LinkItemsCommandPtr::create(action,
                                     ProtocolHelper::entitySetToScope(objectsToLink),
                                     ProtocolHelper::entityToScope(destination)));
         } catch (const std::exception &e) {
@@ -68,10 +68,10 @@ public:
         }
     }
 
-    inline bool handleResponse(qint64 tag, const Protocol::Command &response)
+    inline bool handleResponse(qint64 tag, const Protocol::CommandPtr &response)
     {
         LinkJob *q = static_cast<LinkJob *>(q_func());
-        if (!response.isResponse() || response.type() != Protocol::Command::LinkItems) {
+        if (!response->isResponse() || response->type() != Protocol::Command::LinkItems) {
             return q->Job::doHandleResponse(tag, response);
         }
 

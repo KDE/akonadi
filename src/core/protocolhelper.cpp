@@ -350,16 +350,16 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchSco
     if (fetchScope.ancestorRetrieval() != ItemFetchScope::None) {
         switch (fetchScope.ancestorRetrieval()) {
         case ItemFetchScope::Parent:
-            fs.setAncestorDepth(Protocol::Ancestor::ParentAncestor);
+            fs.setAncestorDepth(Protocol::FetchScope::ParentAncestor);
             break;
         case ItemFetchScope::All:
-            fs.setAncestorDepth(Protocol::Ancestor::AllAncestors);
+            fs.setAncestorDepth(Protocol::FetchScope::AllAncestors);
             break;
         default:
             Q_ASSERT(false);
         }
     } else {
-        fs.setAncestorDepth(Protocol::Ancestor::NoAncestor);
+        fs.setAncestorDepth(Protocol::FetchScope::NoAncestor);
     }
 
     if (fetchScope.fetchChangedSince().isValid()) {
@@ -470,7 +470,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     }
 
     item.setSize(data.size());
-    item.setModificationTime(data.MTime());
+    item.setModificationTime(data.mTime());
     parseAncestorsCached(data.ancestors(), &item, data.parentId(), valuePool);
 
     Q_FOREACH (const Protocol::StreamPayloadResponse &part, data.parts()) {

@@ -63,8 +63,8 @@ void SessionPrivate::reconnect()
         connection = sessionThread()->createConnection(Connection::CommandConnection, sessionId);
         mParent->connect(connection, &Connection::reconnected, mParent, &Session::reconnected,
                          Qt::QueuedConnection);
-        mParent->connect(connection, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
-                         mParent, SLOT(handleCommand(qint64,Akonadi::Protocol::Command)),
+        mParent->connect(connection, SIGNAL(commandReceived(qint64,Akonadi::Protocol::CommandPtr)),
+                         mParent, SLOT(handleCommand(qint64,Akonadi::Protocol::CommandPtr)),
                          Qt::QueuedConnection);
         mParent->connect(connection, SIGNAL(socketDisconnected()), mParent, SLOT(socketDisconnected()),
                          Qt::QueuedConnection);
@@ -94,11 +94,11 @@ void SessionPrivate::socketDisconnected()
     connected = false;
 }
 
-bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
+bool SessionPrivate::handleCommand(qint64 tag, const Protocol::CommandPtr &cmd)
 {
     // Handle Hello response -> send Login
-    if (cmd.type() == Protocol::Command::Hello) {
-        Protocol::HelloResponse hello(cmd);
+    if (cmd->type() == Protocol::Command::Hello) {
+        const auto &hello = Protocol::cmdCast<Protocol::HelloResponse>(cmd);
         if (hello.isError()) {
             qCWarning(AKONADICORE_LOG) << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
             connection->closeConnection();
@@ -115,14 +115,13 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
         Internal::setServerProtocolVersion(protocolVersion);
         Internal::setGeneration(hello.generation());
 
-        Protocol::LoginCommand login(sessionId);
-        sendCommand(nextTag(), login);
+        sendCommand(nextTag(), Protocol::LoginCommandPtr::create(sessionId));
         return true;
     }
 
     // Login response
-    if (cmd.type() == Protocol::Command::Login) {
-        Protocol::LoginResponse login(cmd);
+    if (cmd->type() == Protocol::Command::Login) {
+        const auto &login = Protocol::cmdCast<Protocol::LoginResponse>(cmd);
         if (login.isError()) {
             qCWarning(AKONADICORE_LOG) << "Unable to login to Akonadi server:" << login.errorMessage();
             connection->closeConnection();
@@ -255,7 +254,7 @@ qint64 SessionPrivate::nextTag()
     return theNextTag++;
 }
 
-void SessionPrivate::sendCommand(qint64 tag, const Protocol::Command &command)
+void SessionPrivate::sendCommand(qint64 tag, const Protocol::CommandPtr &command)
 {
     connection->sendCommand(tag, command);
 }

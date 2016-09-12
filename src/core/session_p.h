@@ -67,7 +67,7 @@ public:
     void socketDisconnected();
     void socketError(const QString &error);
     void dataReceived();
-    virtual bool handleCommand(qint64 tag, const Protocol::Command &cmd);
+    virtual bool handleCommand(qint64 tag, const Protocol::CommandPtr &cmd);
     void doStartNext();
     void startJob(Job *job);
 
@@ -114,7 +114,7 @@ public:
     /**
       Sends the given command to server
     */
-    void sendCommand(qint64 tag, const Protocol::Command &command);
+    void sendCommand(qint64 tag, const Protocol::CommandPtr &command);
 
     /**
      * Propagate item revision changes to following jobs.

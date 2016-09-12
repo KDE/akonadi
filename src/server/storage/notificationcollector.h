@@ -220,7 +220,7 @@ public:
     void dispatchNotifications();
 
 Q_SIGNALS:
-    void notify(const Akonadi::Protocol::ChangeNotification::List &msgs);
+    void notify(const Akonadi::Protocol::ChangeNotificationList &msgs);
 
 private:
     void itemNotification(Protocol::ItemChangeNotification::Operation op,
@@ -253,7 +253,7 @@ private:
                          const QString &remoteId = QString());
     void relationNotification(Protocol::RelationChangeNotification::Operation op,
                               const Relation &relation);
-    void dispatchNotification(const Protocol::ChangeNotification &msg);
+    void dispatchNotification(const Protocol::ChangeNotificationPtr &msg);
     void clear();
 
 private Q_SLOTS:
@@ -264,7 +264,7 @@ private:
     DataStore *mDb;
     QByteArray mSessionId;
 
-    Protocol::ChangeNotification::List mNotifications;
+    Protocol::ChangeNotificationList mNotifications;
 };
 
 } // namespace Server

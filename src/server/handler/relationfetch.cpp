@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include "relationfetch.h"
-
+#include "handlerhelper.h"
 #include "connection.h"
 #include "storage/selectquerybuilder.h"
 
@@ -29,7 +29,7 @@ using namespace Akonadi::Server;
 
 bool RelationFetch::parseStream()
 {
-    Protocol::FetchRelationsCommand cmd(m_command);
+    const auto &cmd = Protocol::cmdCast<Protocol::FetchRelationsCommand>(m_command);
 
     SelectQueryBuilder<Relation> relationQuery;
     if (cmd.side() > 0) {
@@ -77,10 +77,7 @@ bool RelationFetch::parseStream()
     }
     const Relation::List existingRelations = relationQuery.result();
     for (const Relation &relation : existingRelations) {
-        sendResponse(Protocol::FetchRelationsResponse(relation.leftId(), relation.left().mimeType().name().toUtf8(),
-                     relation.rightId(), relation.right().mimeType().name().toUtf8(),
-                     relation.relationType().name().toUtf8(),
-                     relation.remoteId().toUtf8()));
+        sendResponse(HandlerHelper::fetchRelationsResponse(relation));
     }
 
     return successResponse<Protocol::FetchRelationsResponse>();
