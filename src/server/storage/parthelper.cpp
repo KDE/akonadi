@@ -78,8 +78,6 @@ bool PartHelper::insert(Part *part, qint64 *insertId)
         return false;
     }
 
-    Q_ASSERT(!part->isValid());
-
     const bool storeInFile = part->datasize() > DbConfig::configuredDatabase()->sizeThreshold();
     //it is needed to insert first the metadata so a new id is generated for the part,
     //and we need this id for the payload file name
