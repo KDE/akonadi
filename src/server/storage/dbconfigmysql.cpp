@@ -76,6 +76,7 @@ bool DbConfigMysql::init(QSettings &settings)
     }
 #endif
     const QStringList mysqldSearchPath = QStringList()
+                                         << QStringLiteral("/usr/bin")
                                          << QStringLiteral("/usr/sbin")
                                          << QStringLiteral("/usr/local/sbin")
                                          << QStringLiteral("/usr/local/libexec")
@@ -504,9 +505,14 @@ int DbConfigMysql::parseCommandLineToolsVersion() const
 
 bool DbConfigMysql::initializeMariaDBDatabase(const QString &confFile, const QString &dataDir) const
 {
+    QFileInfo fi(mMysqlInstallDbPath);
+    QDir dir = fi.dir();
+    dir.cdUp();
+    const QString baseDir = dir.absolutePath();
     return 0 == execute(mMysqlInstallDbPath,
                         { QStringLiteral("--defaults-file=%1").arg(confFile),
                           QStringLiteral("--force"),
+                          QStringLiteral("--basedir=%1").arg(baseDir),
                           QStringLiteral("--datadir=%1/").arg(dataDir) });
 }
 
@@ -524,8 +530,14 @@ bool DbConfigMysql::initializeMySQL5_7_6Database(const QString &confFile, const 
 
 bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QString &dataDir) const
 {
+    QFileInfo fi(mMysqlInstallDbPath);
+    QDir dir = fi.dir();
+    dir.cdUp();
+    const QString baseDir = dir.absolutePath();
+
     // Don't use --force, it has been removed in MySQL 5.7.5
     return 0 == execute(mMysqlInstallDbPath,
                         {  QStringLiteral("--defaults-file=%1").arg(confFile),
+                           QStringLiteral("--basedir=%1").arg(baseDir),
                            QStringLiteral("--datadir=%1/").arg(dataDir) });
 }
