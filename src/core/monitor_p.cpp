@@ -105,6 +105,32 @@ bool MonitorPrivate::connectToNotificationManager()
     }
     q_ptr->connect(ntfConnection, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
                    q_ptr, SLOT(commandReceived(qint64,Akonadi::Protocol::Command)));
+
+    pendingModification = Protocol::ModifySubscriptionCommand();
+    for (const auto &col : collections) {
+        pendingModification.startMonitoringCollection(col.id());
+    }
+    for (const auto &res : resources) {
+        pendingModification.startMonitoringResource(res);
+    }
+    for (auto itemId : items) {
+        pendingModification.startMonitoringItem(itemId);
+    }
+    for (auto tagId : tags) {
+        pendingModification.startMonitoringTag(tagId);
+    }
+    for (auto type : types) {
+        pendingModification.startMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
+    }
+    for (const auto &mimetype : mimetypes) {
+        pendingModification.startMonitoringMimeType(mimetype);
+    }
+    for (const auto &session : sessions) {
+        pendingModification.startIgnoringSession(session);
+    }
+    pendingModification.setAllMonitored(monitorAll);
+    pendingModification.setExclusive(exclusive);
+
     ntfConnection->reconnect();
 
     return true;
