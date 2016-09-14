@@ -290,39 +290,6 @@ bool DbConfigMysql::startInternalServer()
     }
 #endif
 
-    // move mysql error log file out of the way
-    const QFileInfo errorLog(dataDir + QDir::separator() + QLatin1String("mysql.err"));
-    if (errorLog.exists()) {
-        QFile logFile(errorLog.absoluteFilePath());
-        QFile oldLogFile(dataDir + QDir::separator() + QLatin1String("mysql.err.old"));
-        if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::Append)) {
-            oldLogFile.write(logFile.readAll());
-            oldLogFile.close();
-            logFile.close();
-            logFile.remove();
-        } else {
-            qCCritical(AKONADISERVER_LOG) << "Failed to open MySQL error log.";
-        }
-    }
-
-    // first run, some MySQL versions need a mysql_install_db run for that
-    const QString confFile = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
-    if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty() && !mMysqlInstallDbPath.isEmpty()) {
-        if (isMariaDB) {
-            initializeMariaDBDatabase(confFile, dataDir);
-        } else if (localVersion >= MYSQL_VERSION_CHECK(5, 7, 6)) {
-            initializeMySQL5_7_6Database(confFile, dataDir);
-        } else {
-            initializeMySQLDatabase(confFile, dataDir);
-        }
-    }
-
-    // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
-    if (confUpdate) {
-        QFile(dataDir + QDir::separator() + QLatin1String("ib_logfile0")).remove();
-        QFile(dataDir + QDir::separator() + QLatin1String("ib_logfile1")).remove();
-    }
-
     // synthesize the mysqld command
     QStringList arguments;
     arguments << QStringLiteral("--defaults-file=%1/mysql.conf").arg(akDir);
@@ -333,25 +300,65 @@ bool DbConfigMysql::startInternalServer()
     arguments << QString::fromLatin1("--shared-memory");
 #endif
 
-    qCDebug(AKONADISERVER_LOG) << "Executing:" << mMysqldPath << arguments.join(QLatin1Char(' '));
-    mDatabaseProcess = new QProcess;
-    mDatabaseProcess->start(mMysqldPath, arguments);
-    if (!mDatabaseProcess->waitForStarted()) {
-        qCCritical(AKONADISERVER_LOG) << "Could not start database server!";
-        qCCritical(AKONADISERVER_LOG) << "executable:" << mMysqldPath;
-        qCCritical(AKONADISERVER_LOG) << "arguments:" << arguments;
-        qCCritical(AKONADISERVER_LOG) << "process error:" << mDatabaseProcess->errorString();
-        return false;
-    }
+    // If mysql.socket file does not exists, then we must start the server,
+    // otherwise we reconnect to it
+    if (!QFile::exists(QStringLiteral("%1/mysql.socket").arg(socketDirectory))) {
+        // move mysql error log file out of the way
+        const QFileInfo errorLog(dataDir + QDir::separator() + QLatin1String("mysql.err"));
+        if (errorLog.exists()) {
+            QFile logFile(errorLog.absoluteFilePath());
+            QFile oldLogFile(dataDir + QDir::separator() + QLatin1String("mysql.err.old"));
+            if (logFile.open(QFile::ReadOnly) && oldLogFile.open(QFile::Append)) {
+                oldLogFile.write(logFile.readAll());
+                oldLogFile.close();
+                logFile.close();
+                logFile.remove();
+            } else {
+                qCCritical(AKONADISERVER_LOG) << "Failed to open MySQL error log.";
+            }
+        }
 
-#ifndef Q_OS_WIN
-    // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
-    QString socketFile = QStringLiteral("%1/mysql.socket").arg(socketDirectory);
-    int counter = 50;  // avoid an endless loop in case mysqld terminated
-    while ((counter-- > 0) && !QFileInfo::exists(socketFile)) {
-      QThread::msleep(100);
+        // first run, some MySQL versions need a mysql_install_db run for that
+        const QString confFile = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
+        if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty() && !mMysqlInstallDbPath.isEmpty()) {
+            if (isMariaDB) {
+                initializeMariaDBDatabase(confFile, dataDir);
+            } else if (localVersion >= MYSQL_VERSION_CHECK(5, 7, 6)) {
+                initializeMySQL5_7_6Database(confFile, dataDir);
+            } else {
+                initializeMySQLDatabase(confFile, dataDir);
+            }
+        }
+
+        // clear mysql ib_logfile's in case innodb_log_file_size option changed in last confUpdate
+        if (confUpdate) {
+            QFile(dataDir + QDir::separator() + QLatin1String("ib_logfile0")).remove();
+            QFile(dataDir + QDir::separator() + QLatin1String("ib_logfile1")).remove();
+        }
+
+        qCDebug(AKONADISERVER_LOG) << "Executing:" << mMysqldPath << arguments.join(QLatin1Char(' '));
+        mDatabaseProcess = new QProcess;
+        mDatabaseProcess->start(mMysqldPath, arguments);
+        if (!mDatabaseProcess->waitForStarted()) {
+            qCCritical(AKONADISERVER_LOG) << "Could not start database server!";
+            qCCritical(AKONADISERVER_LOG) << "executable:" << mMysqldPath;
+            qCCritical(AKONADISERVER_LOG) << "arguments:" << arguments;
+            qCCritical(AKONADISERVER_LOG) << "process error:" << mDatabaseProcess->errorString();
+            return false;
+        }
+
+    #ifndef Q_OS_WIN
+        // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
+        QString socketFile = QStringLiteral("%1/mysql.socket").arg(socketDirectory);
+        int counter = 50;  // avoid an endless loop in case mysqld terminated
+        while ((counter-- > 0) && !QFileInfo::exists(socketFile)) {
+            QThread::msleep(100);
+        }
+    #endif
+    } else {
+        qCDebug(AKONADISERVER_LOG) << "Found mysql.socket file, reconnecting to the database";
+        mDatabaseProcess = new QProcess();
     }
-#endif
 
     const QLatin1String initCon("initConnection");
     {
