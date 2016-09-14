@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2014  Daniel Vrátil <dvratil@redhat.com>
+ * Copyright (C) 2016  Daniel Vrátil <dvratil@kde.org>
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Lesser General Public
@@ -22,6 +23,7 @@
 #include "countquerybuilder.h"
 #include "akonadiserver_debug.h"
 #include "entities.h"
+#include "datastore.h"
 
 #include <private/protocol_p.h>
 
@@ -39,8 +41,50 @@ CollectionStatistics *CollectionStatistics::self()
     return sInstance;
 }
 
+void CollectionStatistics::destroy()
+{
+    delete sInstance;
+    sInstance = Q_NULLPTR;
+}
+
+void CollectionStatistics::itemAdded(const Collection &col, qint64 size, bool seen)
+{
+    if (!col.isValid()) {
+        return;
+    }
+
+    QMutexLocker lock(&mCacheLock);
+    auto stats = mCache.find(col.id());
+    if (stats != mCache.end()) {
+        ++(stats->count);
+        stats->size += size;
+        stats->read += (seen ? 1 : 0);
+    } else {
+        mCache.insert(col.id(), calculateCollectionStatistics(col));
+    }
+}
+
+void CollectionStatistics::itemsSeenChanged(const Collection &col, qint64 seenCount)
+{
+    if (!col.isValid()) {
+        return;
+    }
+
+    QMutexLocker lock(&mCacheLock);
+    auto stats = mCache.find(col.id());
+    if (stats != mCache.end()) {
+        stats->read += seenCount;
+    } else {
+        mCache.insert(col.id(), calculateCollectionStatistics(col));
+    }
+}
+
 void CollectionStatistics::invalidateCollection(const Collection &col)
 {
+    if (!col.isValid()) {
+        return;
+    }
+
     QMutexLocker lock(&mCacheLock);
     mCache.remove(col.id());
 }
@@ -50,12 +94,12 @@ const CollectionStatistics::Statistics CollectionStatistics::statistics(const Co
     QMutexLocker lock(&mCacheLock);
     auto it = mCache.find(col.id());
     if (it == mCache.end()) {
-        it = mCache.insert(col.id(), getCollectionStatistics(col));
+        it = mCache.insert(col.id(), calculateCollectionStatistics(col));
     }
     return it.value();
 }
 
-CollectionStatistics::Statistics CollectionStatistics::getCollectionStatistics(const Collection &col)
+CollectionStatistics::Statistics CollectionStatistics::calculateCollectionStatistics(const Collection &col)
 {
     static const QString SeenFlagsTableName = QStringLiteral("SeenFlags");
     static const QString IgnoredFlagsTableName = QStringLiteral("IgnoredFlags");

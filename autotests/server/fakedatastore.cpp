@@ -233,6 +233,7 @@ void FakeDataStore::activeCachePolicy(Collection &col)
 }
 
 bool FakeDataStore::appendPimItem(QVector<Part> &parts,
+                                  const QVector<Flag> &flags,
                                   const MimeType &mimetype,
                                   const Collection &collection,
                                   const QDateTime &dateTime,
@@ -248,7 +249,7 @@ bool FakeDataStore::appendPimItem(QVector<Part> &parts,
                     << remote_id
                     << remoteRevision
                     << gid);
-    return DataStore::appendPimItem(parts, mimetype, collection, dateTime,
+    return DataStore::appendPimItem(parts, flags, mimetype, collection, dateTime,
                                     remote_id, remoteRevision, gid, pimItem);
 }
 

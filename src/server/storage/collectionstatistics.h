@@ -52,12 +52,19 @@ public:
     };
 
     static CollectionStatistics *self();
+    static void destroy();
+
+    virtual ~CollectionStatistics() {}
 
     const Statistics statistics(const Collection &col);
+
+    void itemAdded(const Collection &col, qint64 size, bool seen);
+    void itemsSeenChanged(const Collection &col, qint64 seenCount);
+
     void invalidateCollection(const Collection &col);
 
-private:
-    Statistics getCollectionStatistics(const Collection &col);
+protected:
+    virtual Statistics calculateCollectionStatistics(const Collection &col);
 
     QMutex mCacheLock;
     QHash<qint64, Statistics> mCache;

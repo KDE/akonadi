@@ -52,10 +52,12 @@ NotificationCollector::~NotificationCollector()
 }
 
 void NotificationCollector::itemAdded(const PimItem &item,
+                                      bool seen,
                                       const Collection &collection,
                                       const QByteArray &resource)
 {
     SearchManager::instance()->scheduleSearchUpdate();
+    CollectionStatistics::self()->itemAdded(collection, item.size(), seen);
     itemNotification(Protocol::ItemChangeNotification::Add, item, collection, Collection(), resource);
 }
 
@@ -74,6 +76,10 @@ void NotificationCollector::itemsFlagsChanged(const PimItem::List &items,
                                               const Collection &collection,
                                               const QByteArray &resource)
 {
+    int seenCount = (addedFlags.contains(AKONADI_FLAG_SEEN) || addedFlags.contains(AKONADI_FLAG_IGNORED) ? items.count() : 0);
+    seenCount -= (removedFlags.contains(AKONADI_FLAG_SEEN) || removedFlags.contains(AKONADI_FLAG_IGNORED) ? -items.count() : 0);
+
+    CollectionStatistics::self()->itemsSeenChanged(collection, seenCount);
     itemNotification(Protocol::ItemChangeNotification::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags);
 }
 
@@ -143,7 +149,9 @@ void NotificationCollector::collectionChanged(const Collection &collection,
     if (AkonadiServer::instance()->intervalChecker()) {
         AkonadiServer::instance()->intervalChecker()->collectionChanged(collection.id());
     }
-    CollectionStatistics::self()->invalidateCollection(collection);
+    if (changes.contains(AKONADI_PARAM_ENABLED) || changes.contains(AKONADI_PARAM_REFERENCED)) {
+        CollectionStatistics::self()->invalidateCollection(collection);
+    }
     collectionNotification(Protocol::CollectionChangeNotification::Modify, collection, collection.parentId(), -1, resource, changes.toSet());
 }
 
@@ -345,7 +353,12 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     }
     msg.setResource(res);
 
-    CollectionStatistics::self()->invalidateCollection(col);
+    // Add and ModifyFlags are handled incrementally
+    // (see itemAdded() and itemsFlagsChanged())
+    if (msg.operation() != Protocol::ItemChangeNotification::Add
+        && msg.operation() != Protocol::ItemChangeNotification::ModifyFlags) {
+        CollectionStatistics::self()->invalidateCollection(col);
+    }
     dispatchNotification(msg);
 }
 

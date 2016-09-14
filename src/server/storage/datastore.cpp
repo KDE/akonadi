@@ -230,13 +230,14 @@ bool DataStore::hasDataStore()
 /* --- ItemFlags ----------------------------------------------------- */
 
 bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
-                              bool *flagsChanged, const Collection &col, bool silent)
+                              bool *flagsChanged, const Collection &col_, bool silent)
 {
     QSet<QByteArray> removedFlags;
     QSet<QByteArray> addedFlags;
     QVariantList insIds;
     QVariantList insFlags;
     Query::Condition delConds(Query::Or);
+    Collection col = col_;
 
     setBoolPtr(flagsChanged, false);
 
@@ -258,6 +259,12 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
                 insIds << item.id();
                 insFlags << flag.id();
             }
+        }
+
+        if (col.id() == -1) {
+            col.setId(item.collectionId());
+        } else if (col.id() != item.collectionId()) {
+            col.setId(-2);
         }
     }
 
@@ -289,9 +296,10 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
 }
 
 bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
-                                  const QSet<Entity::Id> &existing, const Collection &col,
+                                  const QSet<Entity::Id> &existing, const Collection &col_,
                                   bool silent)
 {
+    Collection col = col_;
     QVariantList flagIds;
     QVariantList appendIds;
     PimItem::List appendItems;
@@ -303,6 +311,12 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
         flagIds << flag.id();
         appendIds << item.id();
         appendItems << item;
+
+        if (col.id() == -1) {
+            col.setId(item.collectionId());
+        } else if (col.id() != item.collectionId()) {
+            col.setId(-2);
+        }
     }
 
     if (appendItems.isEmpty()) {
@@ -383,8 +397,9 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
 }
 
 bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
-                                 bool *flagsChanged, const Collection &col, bool silent)
+                                 bool *flagsChanged, const Collection &col_, bool silent)
 {
+    Collection col = col_;
     QSet<QByteArray> removedFlags;
     QVariantList itemsIds;
     QVariantList flagsIds;
@@ -394,6 +409,11 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
 
     Q_FOREACH (const PimItem &item, items) {
         itemsIds << item.id();
+        if (col.id() == -1) {
+            col.setId(item.collectionId());
+        } else if (col.id() != item.collectionId()) {
+            col.setId(-2);
+        }
         for (int i = 0; i < flags.count(); ++i) {
             const QByteArray flagName = flags[i].name().toLatin1();
             if (!removedFlags.contains(flagName)) {
@@ -1015,6 +1035,7 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
 
 /* --- PimItem ------------------------------------------------------- */
 bool DataStore::appendPimItem(QVector<Part> &parts,
+                              const QVector<Flag> &flags,
                               const MimeType &mimetype,
                               const Collection &collection,
                               const QDateTime &dateTime,
@@ -1061,9 +1082,18 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
         }
     }
 
+    bool seen = false;
+    Q_FOREACH (const Flag &flag, flags) {
+        seen |= (flag.name() == QLatin1String(AKONADI_FLAG_SEEN)
+                || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
+        if (!pimItem.addFlag(flag)) {
+            return false;
+        }
+    }
+
 //   qCDebug(AKONADISERVER_LOG) << "appendPimItem: " << pimItem;
 
-    mNotificationCollector->itemAdded(pimItem, collection);
+    mNotificationCollector->itemAdded(pimItem, seen, collection);
     return true;
 }
 

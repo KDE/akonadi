@@ -315,6 +315,7 @@ bool AkonadiServer::quit()
 
     // Terminate the preprocessor manager before the database but after all connections are gone
     PreprocessorManager::done();
+    CollectionStatistics::destroy();
 
     if (DbConfig::isConfigured()) {
         if (DataStore::hasDataStore()) {

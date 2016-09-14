@@ -91,6 +91,7 @@ public:
     virtual void activeCachePolicy(Collection &col) Q_DECL_OVERRIDE;
 
     virtual bool appendPimItem(QVector<Part> &parts,
+                               const QVector<Flag> &flags,
                                const MimeType &mimetype,
                                const Collection &collection,
                                const QDateTime &dateTime,

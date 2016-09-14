@@ -146,7 +146,8 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
         PartHelper::insert(&hiddenAttribute);
     }
 
-    notify(item, item.collection());
+    const bool seen = flags.contains(AKONADI_FLAG_SEEN) || flags.contains(AKONADI_FLAG_IGNORED);
+    notify(item, seen, item.collection());
     sendResponse(item, Protocol::CreateItemCommand::None);
 
     return true;
@@ -336,9 +337,9 @@ bool AkAppend::sendResponse(const PimItem& item, Protocol::CreateItemCommand::Me
 }
 
 
-bool AkAppend::notify(const PimItem &item, const Collection &collection)
+bool AkAppend::notify(const PimItem &item, bool seen, const Collection &collection)
 {
-    DataStore::self()->notificationCollector()->itemAdded(item, collection);
+    DataStore::self()->notificationCollector()->itemAdded(item, seen, collection);
 
     if (PreprocessorManager::instance()->isActive()) {
         // enqueue the item for preprocessing

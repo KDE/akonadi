@@ -55,7 +55,7 @@ private:
 
     bool sendResponse(const PimItem &item, Protocol::CreateItemCommand::MergeModes mergeModes);
 
-    bool notify(const PimItem &item, const Collection &collection);
+    bool notify(const PimItem &item, bool seen, const Collection &collection);
     bool notify(const PimItem &item, const Collection &collection,
                 const QSet<QByteArray> &changedParts);
 };

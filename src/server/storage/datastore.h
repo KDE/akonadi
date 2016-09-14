@@ -178,6 +178,7 @@ public:
 
     /* --- PimItem ------------------------------------------------------- */
     virtual bool appendPimItem(QVector<Part> &parts,
+                               const QVector<Flag> &flags,
                                const MimeType &mimetype,
                                const Collection &collection,
                                const QDateTime &dateTime,

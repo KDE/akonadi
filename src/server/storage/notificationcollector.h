@@ -71,7 +71,8 @@ public:
       Provide as many parameters as you have at hand currently, everything
       that is missing will be looked up in the database later.
     */
-    void itemAdded(const PimItem &item, const Collection &collection = Collection(),
+    void itemAdded(const PimItem &item, bool seen,
+                   const Collection &collection = Collection(),
                    const QByteArray &resource = QByteArray());
 
     /**
