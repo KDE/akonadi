@@ -38,7 +38,7 @@ Q_DECLARE_LOGGING_CATEGORY(DebugETM)
 namespace Akonadi
 {
 class ItemFetchJob;
-class ChangeRecorder;
+class Monitor;
 class AgentInstance;
 }
 
@@ -74,7 +74,7 @@ public:
         Recursive
     };
 
-    void init(ChangeRecorder *monitor);
+    void init(Monitor *monitor);
 
     void fetchCollections(const Collection &collection, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
     void fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
@@ -149,7 +149,7 @@ public:
     mutable QHash<QString, QIcon> m_iconCache;
     mutable QString m_iconThemeName;
 
-    ChangeRecorder *m_monitor;
+    Monitor *m_monitor;
     Collection m_rootCollection;
     Node *m_rootNode;
     QString m_rootCollectionDisplayName;

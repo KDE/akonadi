@@ -30,7 +30,7 @@
 
 #include "agentmanager.h"
 #include "agenttype.h"
-#include "changerecorder.h"
+#include "monitor.h"
 #include "collectioncopyjob.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
@@ -95,7 +95,7 @@ EntityTreeModelPrivate::~EntityTreeModelPrivate()
 {
 }
 
-void EntityTreeModelPrivate::init(ChangeRecorder *monitor)
+void EntityTreeModelPrivate::init(Monitor *monitor)
 {
     Q_Q(EntityTreeModel);
     Q_ASSERT(!m_monitor);
@@ -105,8 +105,6 @@ void EntityTreeModelPrivate::init(ChangeRecorder *monitor)
     // This may be updated if the CollectionFetchStrategy is changed.
     m_monitor->fetchCollection(true);
     m_session = m_monitor->session();
-
-    m_monitor->setChangeRecordingEnabled(false);
 
     m_rootCollectionDisplayName = QStringLiteral("[*]");
 

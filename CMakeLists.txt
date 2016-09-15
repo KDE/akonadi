@@ -22,7 +22,7 @@ include(CheckSymbolExists)
 
 include(AkonadiMacros)
 
-set(PIM_VERSION "5.3.44")
+set(PIM_VERSION "5.3.45")
 
 set(QT_REQUIRED_VERSION "5.5.0")
 set(AKONADI_VERSION ${PIM_VERSION})

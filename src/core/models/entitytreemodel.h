@@ -31,7 +31,6 @@
 namespace Akonadi
 {
 
-class ChangeRecorder;
 class CollectionStatistics;
 class Item;
 class ItemFetchScope;
@@ -71,14 +70,14 @@ class EntityTreeModelPrivate;
  * <h3>Using EntityTreeModel in your application</h3>
  *
  * The responsibilities which fall to the application developer are
- * - Configuring the ChangeRecorder and EntityTreeModel
+ * - Configuring the Monitor and EntityTreeModel
  * - Making use of this class via proxy models
  * - Subclassing for type specific display information
  *
  * <h3>Creating and configuring the EntityTreeModel</h3>
  *
- * This class is a wrapper around a Akonadi::ChangeRecorder object. The model represents a
- * part of the collection and item tree configured in the ChangeRecorder. The structure of the
+ * This class is a wrapper around a Akonadi::Monitor object. The model represents a
+ * part of the collection and item tree configured in the Monitor. The structure of the
  * model mirrors the structure of Collections and Items on the %Akonadi server.
  *
  * The following code creates a model which fetches items and collections relevant to
@@ -86,12 +85,12 @@ class EntityTreeModelPrivate;
  *
  * @code
  *
- *   ChangeRecorder *changeRecorder = new ChangeRecorder( this );
- *   changeRecorder->setCollectionMonitored( Collection::root() );
- *   changeRecorder->setMimeTypeMonitored( KContacts::addresseeMimeType() );
- *   changeRecorder->setSession( session );
+ *   Monitor *monitor = new Monitor( this );
+ *   monitor->setCollectionMonitored( Collection::root() );
+ *   monitor->setMimeTypeMonitored( KContacts::addresseeMimeType() );
+ *   monitor->setSession( session );
  *
- *   EntityTreeModel *model = new EntityTreeModel( changeRecorder, this );
+ *   EntityTreeModel *model = new EntityTreeModel( monitor, this );
  *
  *   EntityTreeView *view = new EntityTreeView( this );
  *   view->setModel( model );
@@ -101,7 +100,7 @@ class EntityTreeModelPrivate;
  * The EntityTreeModel will show items of a different type by changing the line
  *
  * @code
- * changeRecorder->setMimeTypeMonitored( KContacts::addresseeMimeType() );
+ * monitor->setMimeTypeMonitored( KContacts::addresseeMimeType() );
  * @endcode
  *
  * to a different mimetype. KContacts::addresseeMimeType() is an alias for "text/directory". If changed to KMime::Message::mimeType()
@@ -173,8 +172,8 @@ class EntityTreeModelPrivate;
  * fetched. To fetch all item data, including all attributes:
  *
  * @code
- * changeRecorder->itemFetchScope().fetchFullPayload();
- * changeRecorder->itemFetchScope().fetchAllAttributes();
+ * monitor->itemFetchScope().fetchFullPayload();
+ * monitor->itemFetchScope().fetchAllAttributes();
  * @endcode
  *
  * <h2>Using EntityTreeModel with Proxy models</h2>
@@ -389,10 +388,10 @@ public:
     /**
      * Creates a new entity tree model.
      *
-     * @param monitor The ChangeRecorder whose entities should be represented in the model.
+     * @param monitor The Monitor whose entities should be represented in the model.
      * @param parent The parent object.
      */
-    explicit EntityTreeModel(ChangeRecorder *monitor, QObject *parent = Q_NULLPTR);
+    explicit EntityTreeModel(Monitor *monitor, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the entity tree model.
@@ -672,7 +671,7 @@ protected:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(EntityTreeModel)
     EntityTreeModelPrivate *d_ptr;
-    EntityTreeModel(ChangeRecorder *monitor, EntityTreeModelPrivate *d, QObject *parent = Q_NULLPTR);
+    EntityTreeModel(Monitor *monitor, EntityTreeModelPrivate *d, QObject *parent = Q_NULLPTR);
     //@endcond
 
 private:

@@ -33,7 +33,7 @@
 #include <QUrlQuery>
 
 #include "attributefactory.h"
-#include "changerecorder.h"
+#include "monitor.h"
 #include "collectionmodifyjob.h"
 #include "entitydisplayattribute.h"
 #include "transactionsequence.h"
@@ -49,7 +49,7 @@ Q_DECLARE_METATYPE(QSet<QByteArray>)
 
 using namespace Akonadi;
 
-EntityTreeModel::EntityTreeModel(ChangeRecorder *monitor, QObject *parent)
+EntityTreeModel::EntityTreeModel(Monitor *monitor, QObject *parent)
     : QAbstractItemModel(parent)
     , d_ptr(new EntityTreeModelPrivate(this))
 {
@@ -57,7 +57,7 @@ EntityTreeModel::EntityTreeModel(ChangeRecorder *monitor, QObject *parent)
     d->init(monitor);
 }
 
-EntityTreeModel::EntityTreeModel(ChangeRecorder *monitor, EntityTreeModelPrivate *d, QObject *parent)
+EntityTreeModel::EntityTreeModel(Monitor *monitor, EntityTreeModelPrivate *d, QObject *parent)
     : QAbstractItemModel(parent)
     , d_ptr(d)
 {
