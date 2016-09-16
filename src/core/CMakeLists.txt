@@ -43,7 +43,6 @@ set(akonadicore_base_SRCS
     itemserializer.cpp
     itemserializerplugin.cpp
     itemsync.cpp
-    kdsignalblocker.cpp
     mimetypechecker.cpp
     monitor.cpp
     monitor_p.cpp
@@ -104,7 +103,6 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     ItemMonitor
     ItemSerializerPlugin
     ItemSync
-    KDSignalBlocker
     MimeTypeChecker
     NewMailNotifierAttribute
     NotificationSubscriber
