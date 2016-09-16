@@ -31,6 +31,7 @@
 #include "agentmanager.h"
 #include "agenttype.h"
 #include "monitor.h"
+#include "changerecorder.h"
 #include "collectioncopyjob.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
@@ -107,6 +108,10 @@ void EntityTreeModelPrivate::init(Monitor *monitor)
     m_session = m_monitor->session();
 
     m_rootCollectionDisplayName = QStringLiteral("[*]");
+
+    if (Akonadi::ChangeRecorder *cr = qobject_cast<Akonadi::ChangeRecorder*>(m_monitor)) {
+        cr->setChangeRecordingEnabled(false);
+    }
 
     m_includeStatistics = true;
     m_monitor->fetchCollectionStatistics(true);
