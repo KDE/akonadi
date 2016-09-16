@@ -70,10 +70,13 @@ void NotificationManager::init()
 
 void NotificationManager::quit()
 {
+    mTimer->stop();
+    delete mTimer;
+
     mNotifyThreadPool->clear();
     mNotifyThreadPool->waitForDone();
-    delete mTimer;
     delete mNotifyThreadPool;
+
     qDeleteAll(mSubscribers);
 
     AkThread::quit();
