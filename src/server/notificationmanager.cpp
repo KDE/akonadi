@@ -87,7 +87,16 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
     qCDebug(AKONADISERVER_LOG) << "New notification connection (registered as" << subscriber << ")";
     connect(subscriber, &QObject::destroyed,
             this, [this, subscriber]() {
-                mSubscribers.removeOne(subscriber);
+                // Can't use mSubscribers.remove() because that would try to create
+                // a QPointer for the subscriber pointer triggering a Q_ASSERT in Qt
+                // (see QtSharedPointer::ExternalRefCountData::getAndRef)
+                auto it = std::find_if(mSubscribers.begin(), mSubscribers.end(),
+                                       [subscriber](const QPointer<NotificationSubscriber> &qptr) {
+                                           return qptr.data() == subscriber;
+                                       });
+                if (it != mSubscribers.end()) {
+                    mSubscribers.erase(it);
+                }
             });
     connect(subscriber, &NotificationSubscriber::notificationDebuggingChanged,
             this, [this](bool enabled) {
