@@ -246,9 +246,11 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
                 // If yes, then send them list of all existing subscribers
                 Q_FOREACH (const NotificationSubscriber *subscriber, mManager->mSubscribers) {
                     // Send them back to caller
-                    QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
-                                              Q_ARG(Akonadi::Protocol::ChangeNotification,
-                                                    subscriber->toChangeNotification()));
+                    if (subscriber) {
+                        QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
+                                                  Q_ARG(Akonadi::Protocol::ChangeNotification,
+                                                        subscriber->toChangeNotification()));
+                    }
                 }
             }
             if (command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::ChangeNotifications)) {
