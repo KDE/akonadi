@@ -46,6 +46,7 @@ public:
     virtual ~NotificationManager();
 
     void connectNotificationCollector(NotificationCollector *collector);
+    void forgetSubscriber(NotificationSubscriber *subscriber);
 
 public Q_SLOTS:
     void registerConnection(quintptr socketDescriptor);

@@ -85,19 +85,6 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
 
     NotificationSubscriber *subscriber = new NotificationSubscriber(this, socketDescriptor);
     qCDebug(AKONADISERVER_LOG) << "New notification connection (registered as" << subscriber << ")";
-    connect(subscriber, &QObject::destroyed,
-            this, [this, subscriber]() {
-                // Can't use mSubscribers.remove() because that would try to create
-                // a QPointer for the subscriber pointer triggering a Q_ASSERT in Qt
-                // (see QtSharedPointer::ExternalRefCountData::getAndRef)
-                auto it = std::find_if(mSubscribers.begin(), mSubscribers.end(),
-                                       [subscriber](const QPointer<NotificationSubscriber> &qptr) {
-                                           return qptr.data() == subscriber;
-                                       });
-                if (it != mSubscribers.end()) {
-                    mSubscribers.erase(it);
-                }
-            });
     connect(subscriber, &NotificationSubscriber::notificationDebuggingChanged,
             this, [this](bool enabled) {
                 if (enabled) {
@@ -110,6 +97,12 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
             });
 
     mSubscribers.push_back(subscriber);
+}
+
+void NotificationManager::forgetSubscriber(NotificationSubscriber *subscriber)
+{
+    Q_ASSERT(QThread::currentThread() == thread());
+    mSubscribers.removeOne(subscriber);
 }
 
 void NotificationManager::connectNotificationCollector(NotificationCollector *collector)
@@ -167,6 +160,8 @@ private:
 
 void NotificationManager::emitPendingNotifications()
 {
+    Q_ASSERT(QThread::currentThread() == thread());
+
     if (mNotifications.isEmpty()) {
         return;
     }

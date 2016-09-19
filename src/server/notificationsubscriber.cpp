@@ -147,6 +147,7 @@ void NotificationSubscriber::disconnectSubscriber()
     disconnect(mSocket, &QLocalSocket::disconnected,
                this, &NotificationSubscriber::socketDisconnected);
     mSocket->close();
+    mManager->forgetSubscriber(this);
     deleteLater();
 }
 
@@ -670,6 +671,8 @@ void NotificationSubscriber::writeNotification(const Protocol::ChangeNotificatio
 
 void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::Command& cmd)
 {
+    Q_ASSERT(QThread::currentThread() == thread());
+
     QDataStream stream(mSocket);
     stream << tag;
     Protocol::serialize(mSocket, cmd);
