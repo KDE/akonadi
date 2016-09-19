@@ -349,6 +349,9 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
 
     QByteArray res = resource;
     if (res.isEmpty()) {
+        if (col.resourceId() <= 0) {
+            col = Collection::retrieveById(col.id());
+        }
         res = col.resource().name().toLatin1();
     }
     msg.setResource(res);
