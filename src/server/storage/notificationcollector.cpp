@@ -77,7 +77,7 @@ void NotificationCollector::itemsFlagsChanged(const PimItem::List &items,
                                               const QByteArray &resource)
 {
     int seenCount = (addedFlags.contains(AKONADI_FLAG_SEEN) || addedFlags.contains(AKONADI_FLAG_IGNORED) ? items.count() : 0);
-    seenCount -= (removedFlags.contains(AKONADI_FLAG_SEEN) || removedFlags.contains(AKONADI_FLAG_IGNORED) ? -items.count() : 0);
+    seenCount -= (removedFlags.contains(AKONADI_FLAG_SEEN) || removedFlags.contains(AKONADI_FLAG_IGNORED) ? items.count() : 0);
 
     CollectionStatistics::self()->itemsSeenChanged(collection, seenCount);
     itemNotification(Protocol::ItemChangeNotification::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags);
