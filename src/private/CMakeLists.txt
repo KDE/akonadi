@@ -12,7 +12,7 @@ set(akonadiprivate_SRCS
     dbus.cpp
 )
 
-ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.h IDENTIFIER AKONADIPRIVATE_LOG CATEGORY_NAME akonadiprivate_log)
+ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.h IDENTIFIER AKONADIPRIVATE_LOG CATEGORY_NAME org.kde.pim.akonadiprivate)
 
 add_library(KF5AkonadiPrivate ${akonadiprivate_SRCS})
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)

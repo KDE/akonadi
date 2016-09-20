@@ -137,7 +137,7 @@ set(libakonadiserver_SRCS
 set(akonadiserver_SRCS
     main.cpp
 )
-ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME log_akonadiserver)
+ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME org.kde.pim.akonadiserver)
 qt5_generate_dbus_interface(debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml)
 
 qt5_add_dbus_adaptor(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.TracerNotification.xml dbustracer.h Akonadi::Server::DBusTracer)

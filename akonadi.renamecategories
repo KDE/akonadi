@@ -1,0 +1,7 @@
+log_akonadiagentserver org.kde.pim.akonadiagentserver
+log_akonadiserver org.kde.pim.akonadiserver
+akonadiagentbase_log org.kde.pim.akonadiagentbase
+akonadiwidgets_log org.kde.pim.akonadiwidgets
+akonadiprivate_log org.kde.pim.akonadiprivate
+log_akonadicore org.kde.pim.akonadicore
+log_akonadictl org.kde.pim.akonadictl

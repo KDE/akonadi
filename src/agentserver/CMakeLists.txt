@@ -6,7 +6,7 @@ set(akonadi_agent_server_srcs
     main.cpp
 )
 
-ecm_qt_declare_logging_category(akonadi_agent_server_srcs HEADER akonadiagentserver_debug.h IDENTIFIER AKONADIAGENTSERVER_LOG CATEGORY_NAME log_akonadiagentserver)
+ecm_qt_declare_logging_category(akonadi_agent_server_srcs HEADER akonadiagentserver_debug.h IDENTIFIER AKONADIAGENTSERVER_LOG CATEGORY_NAME org.kde.pim.akonadiagentserver)
 
 add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
 

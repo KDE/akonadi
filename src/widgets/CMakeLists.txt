@@ -35,7 +35,7 @@ set(akonadiwidgets_SRCS
     tagselectwidget.cpp
 )
 
-ecm_qt_declare_logging_category(akonadiwidgets_SRCS HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME akonadiwidgets_log)
+ecm_qt_declare_logging_category(akonadiwidgets_SRCS HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets)
 
 set(akonadiwidgets_UI
     cachepolicypage.ui

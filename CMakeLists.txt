@@ -293,7 +293,7 @@ install(EXPORT
     FILE KF5AkonadiTargets.cmake
     NAMESPACE KF5::)
 
-install(FILES akonadi.categories
+install(FILES akonadi.categories akonadi.renamecategories
     DESTINATION ${KDE_INSTALL_CONFDIR}
 )
 
