@@ -250,11 +250,9 @@ void StatisticsProxyModel::setExtraColumnsEnabled(bool enable)
         KExtraColumnsProxyModel::appendColumn(i18nc("number of entities in the collection", "Total"));
         KExtraColumnsProxyModel::appendColumn(i18nc("collection size", "Size"));
     } else {
-#if KITEMMODELS_VERSION >= QT_VERSION_CHECK(5, 24, 0)
         KExtraColumnsProxyModel::removeExtraColumn(2);
         KExtraColumnsProxyModel::removeExtraColumn(1);
         KExtraColumnsProxyModel::removeExtraColumn(0);
-#endif
     }
 }
 
