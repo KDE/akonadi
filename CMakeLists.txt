@@ -24,7 +24,7 @@ include(AkonadiMacros)
 
 set(PIM_VERSION "5.3.45")
 
-set(QT_REQUIRED_VERSION "5.5.0")
+set(QT_REQUIRED_VERSION "5.6.0")
 set(AKONADI_VERSION ${PIM_VERSION})
 
 ecm_setup_version(${AKONADI_VERSION}
