@@ -44,18 +44,21 @@
       </widget>
      </item>
      <item>
-      <widget class="QSpinBox" name="checkInterval" native="true">
-       <property name="value" stdset="0">
-        <number>-1</number>
+      <widget class="QSpinBox" name="checkInterval">
+       <property name="specialValueText">
+        <string comment="never check the cache">Never</string>
        </property>
-       <property name="minimum" stdset="0">
-        <number>0</number>
-       </property>
-       <property name="suffix" stdset="0">
+       <property name="suffix">
         <string>minutes</string>
        </property>
-       <property name="specialValueText" stdset="0">
-        <string comment="never check the cache">Never</string>
+       <property name="minimum">
+        <number>0</number>
+       </property>
+       <property name="maximum">
+        <number>9999</number>
+       </property>
+       <property name="value">
+        <number>0</number>
        </property>
       </widget>
      </item>
@@ -68,36 +71,54 @@
      </property>
      <widget class="QWidget" name="rawPage">
       <layout class="QHBoxLayout" name="horizontalLayout">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
-         <widget class="QGroupBox" name="groupBox_2">
-           <property name="title">
-	     <string>Locally Cached Parts</string>
-	   </property>
-	   <layout class="QGridLayout" name="gridLayout">
-	     <item row="0" column="0">
-	       <widget class="KEditListWidget" name="localParts">
-         <property name="enabled">
-          <bool>false</bool>
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="title">
+          <string>Locally Cached Parts</string>
          </property>
-         <property name="buttons">
-           <set>KEditListWidget::Add|KEditListWidget::Remove</set>
-         </property>
-         <property name="title" stdset="0">
-	 <string>Locally Cached Parts</string>
-         </property>
+         <layout class="QGridLayout" name="gridLayout">
+          <item row="0" column="0">
+           <widget class="KEditListWidget" name="localParts">
+            <property name="enabled">
+             <bool>false</bool>
+            </property>
+            <property name="buttons">
+             <set>KEditListWidget::Add|KEditListWidget::Remove</set>
+            </property>
+            <property name="title" stdset="0">
+             <string>Locally Cached Parts</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
         </widget>
        </item>
       </layout>
      </widget>
-      </item>
-      </layout>
-      </widget>
      <widget class="QWidget" name="endUserPage">
       <layout class="QVBoxLayout" name="verticalLayout_2">
-       <property name="margin">
+       <property name="leftMargin">
+        <number>0</number>
+       </property>
+       <property name="topMargin">
+        <number>0</number>
+       </property>
+       <property name="rightMargin">
+        <number>0</number>
+       </property>
+       <property name="bottomMargin">
         <number>0</number>
        </property>
        <item>
@@ -109,7 +130,7 @@
           <item>
            <widget class="QRadioButton" name="retrieveFullMessages">
             <property name="text">
-             <string>Always retrieve full messages</string>
+             <string>Always retrieve full &amp;messages</string>
             </property>
             <property name="checked">
              <bool>true</bool>
@@ -119,7 +140,7 @@
           <item>
            <widget class="QRadioButton" name="retrieveOnlyHeaders">
             <property name="text">
-             <string>Retrieve message bodies on demand</string>
+             <string>&amp;Retrieve message bodies on demand</string>
             </property>
            </widget>
           </item>
@@ -133,18 +154,18 @@
              </widget>
             </item>
             <item>
-             <widget class="QSpinBox" name="localCacheTimeout" native="true">
-              <property name="value" stdset="0">
-               <number>-1</number>
+             <widget class="QSpinBox" name="localCacheTimeout">
+              <property name="specialValueText">
+               <string comment="no cache timeout">Forever</string>
               </property>
-              <property name="minimum" stdset="0">
-               <number>0</number>
-              </property>
-              <property name="suffix" stdset="0">
+              <property name="suffix">
                <string>minutes</string>
               </property>
-              <property name="specialValueText" stdset="0">
-               <string comment="no cache timeout">Forever</string>
+              <property name="minimum">
+               <number>0</number>
+              </property>
+              <property name="value">
+               <number>0</number>
               </property>
              </widget>
             </item>
