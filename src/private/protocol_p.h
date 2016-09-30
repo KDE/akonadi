@@ -476,7 +476,6 @@ class AKONADIPRIVATE_EXPORT HelloResponse : public Response
 public:
     explicit HelloResponse();
     explicit HelloResponse(const Command &command);
-    HelloResponse(const QString &server, const QString &message, int protocol);
 
     void setServerName(const QString &server);
     QString serverName() const;
@@ -486,6 +485,9 @@ public:
 
     void setProtocolVersion(int protocolVersion);
     int protocolVersion() const;
+
+    void setGeneration(uint generation);
+    uint generation() const;
 
 private:
     AKONADI_DECLARE_PRIVATE(HelloResponse)

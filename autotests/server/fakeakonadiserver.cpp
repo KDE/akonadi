@@ -147,11 +147,14 @@ QString FakeAkonadiServer::instanceName()
 
 TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
 {
+    Protocol::HelloResponse hello;
+    hello.setServerName(QStringLiteral("Akonadi"));
+    hello.setMessage(QStringLiteral("Not really IMAP server"));
+    hello.setProtocolVersion(Protocol::version());
+    hello.setGeneration(1);
+
     return {
-        TestScenario::create(0, TestScenario::ServerCmd,
-                             Protocol::HelloResponse(QStringLiteral("Akonadi"),
-                                                     QStringLiteral("Not Really IMAP server"),
-                                                     Protocol::version())),
+        TestScenario::create(0, TestScenario::ServerCmd, hello),
         TestScenario::create(1,TestScenario::ClientCmd,
                              Protocol::LoginCommand(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
         TestScenario::create(1, TestScenario::ServerCmd,

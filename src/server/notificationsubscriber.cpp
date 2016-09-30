@@ -58,9 +58,14 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, qui
             this, &NotificationSubscriber::socketDisconnected);
     mSocket->setSocketDescriptor(socketDescriptor);
 
-    writeCommand(0, Protocol::HelloResponse(QStringLiteral("Akonadi"),
-                                                        QStringLiteral("Not-really IMAP server"),
-                                                        Protocol::version()));
+    const SchemaVersion schema = SchemaVersion::retrieveAll().first();
+
+    Protocol::HelloResponse hello;
+    hello.setServerName(QStringLiteral("Akonadi"));
+    hello.setMessage(QStringLiteral("Not really IMAP server"));
+    hello.setProtocolVersion(Protocol::version());
+    hello.setGeneration(schema.generation());
+    writeCommand(0, hello);
 }
 
 NotificationSubscriber::~NotificationSubscriber()

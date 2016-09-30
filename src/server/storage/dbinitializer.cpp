@@ -23,7 +23,7 @@
 #include "querybuilder.h"
 #include "dbexception.h"
 #include "schema.h"
-#include "entity.h"
+#include "entities.h"
 #include "akonadiserver_debug.h"
 
 #include <QtCore/QFile>
@@ -90,6 +90,15 @@ bool DbInitializer::run()
             if (!checkRelation(relation)) {
                 return false;
             }
+        }
+
+        // Now finally check and set the generation identifier if necessary
+        SchemaVersion version = SchemaVersion::retrieveAll().first();
+        if (version.generation() == 0) {
+            version.setGeneration(QDateTime::currentDateTimeUtc().toTime_t());
+            version.update();
+
+            qCDebug(AKONADISERVER_LOG) << "Generation:" << version.generation();
         }
 
         qCDebug(AKONADISERVER_LOG) << "DbInitializer::run() done";

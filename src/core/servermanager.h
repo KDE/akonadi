@@ -178,6 +178,25 @@ public:
      */
     static QString agentConfigFilePath(const QString &identifier);
 
+    /**
+     * Returns current Akonadi database generation identifier
+     *
+     * Generation is guaranteed to never change unless as long as the database
+     * backend is not removed and re-created. In such case it is guaranteed that
+     * the new generation number will be higher than the previous one.
+     *
+     * Generation can be used by applications to detect when Akonadi database
+     * has been recreated and thus some of the configuration (for example
+     * collection IDs stored in a config file) must be invalidated.
+     *
+     * @note Note that the generation number is only available if the server
+     * is running. If this function is called before the server starts it will
+     * return 0.
+     *
+     * @since 5.4
+     */
+    static uint generation();
+
 Q_SIGNALS:
     /**
      * Emitted whenever the server becomes fully operational.

@@ -49,7 +49,7 @@ namespace Akonadi {
 namespace Protocol {
 
 int version() {
-    return 55;
+    return 56;
 }
 
 }
@@ -1533,12 +1533,7 @@ public:
     HelloResponsePrivate()
         : ResponsePrivate(Command::Hello)
         , protocol(0)
-    {}
-    HelloResponsePrivate(const QString &server, const QString &message, int protocol)
-        : ResponsePrivate(Command::Hello)
-        , server(server)
-        , message(message)
-        , protocol(protocol)
+        , generation(0)
     {}
 
     HelloResponsePrivate(const HelloResponsePrivate &other)
@@ -1546,6 +1541,7 @@ public:
         , server(other.server)
         , message(other.message)
         , protocol(other.protocol)
+        , generation(other.generation)
     {}
 
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
@@ -1553,7 +1549,8 @@ public:
         return ResponsePrivate::compare(other)
             && COMPARE(server)
             && COMPARE(message)
-            && COMPARE(protocol);
+            && COMPARE(protocol)
+            && COMPARE(generation);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -1561,7 +1558,8 @@ public:
         return ResponsePrivate::serialize(stream)
                << server
                << message
-               << protocol;
+               << protocol
+               << generation;
     }
 
     DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
@@ -1569,7 +1567,8 @@ public:
         return ResponsePrivate::deserialize(stream)
                >> server
                >> message
-               >> protocol;
+               >> protocol
+               >> generation;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -1578,6 +1577,7 @@ public:
         blck.write("Server", server);
         blck.write("Protocol Version", protocol);
         blck.write("Message", message);
+        blck.write("Generation", generation);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -1588,6 +1588,7 @@ public:
     QString server;
     QString message;
     int protocol;
+    uint generation;
 };
 
 
@@ -1601,11 +1602,6 @@ public:
 
 
 AKONADI_DECLARE_PRIVATE(HelloResponse)
-
-HelloResponse::HelloResponse(const QString &server, const QString &message, int protocol)
-    : Response(new HelloResponsePrivate(server, message, protocol))
-{
-}
 
 HelloResponse::HelloResponse()
     : Response(new HelloResponsePrivate)
@@ -1646,6 +1642,16 @@ void HelloResponse::setProtocolVersion(int protocolVersion)
 int HelloResponse::protocolVersion() const
 {
     return d_func()->protocol;
+}
+
+void HelloResponse::setGeneration(uint generation)
+{
+    d_func()->generation = generation;
+}
+
+uint HelloResponse::generation() const
+{
+    return d_func()->generation;
 }
 
 DataStream &operator<<(DataStream &stream, const HelloResponse &command)

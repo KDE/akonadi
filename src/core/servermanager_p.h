@@ -32,6 +32,8 @@ namespace Internal
 
 AKONADICORE_EXPORT int serverProtocolVersion();
 AKONADICORE_EXPORT void setServerProtocolVersion(int version);
+AKONADICORE_EXPORT uint generation();
+AKONADICORE_EXPORT void setGeneration(uint generation);
 
 enum ClientType {
     User,

@@ -118,6 +118,7 @@ public:
 
     ServerManager *instance;
     static int serverProtocolVersion;
+    static uint generation;
     ServerManager::State mState;
     QScopedPointer<QTimer> mSafetyTimer;
     Firstrun *mFirstRunner;
@@ -125,6 +126,7 @@ public:
 };
 
 int ServerManagerPrivate::serverProtocolVersion = -1;
+uint ServerManagerPrivate::generation = 0;
 Internal::ClientType ServerManagerPrivate::clientType = Internal::User;
 
 Q_GLOBAL_STATIC(ServerManagerPrivate, sInstance)
@@ -351,6 +353,11 @@ QString ServerManager::addNamespace(const QString &string)
     return string;
 }
 
+uint ServerManager::generation()
+{
+    return Internal::generation();
+}
+
 int Internal::serverProtocolVersion()
 {
     return ServerManagerPrivate::serverProtocolVersion;
@@ -362,6 +369,16 @@ void Internal::setServerProtocolVersion(int version)
     if (sInstance.exists()) {
         sInstance->checkStatusChanged();
     }
+}
+
+uint Internal::generation()
+{
+    return ServerManagerPrivate::generation;
+}
+
+void Internal::setGeneration(uint generation)
+{
+    ServerManagerPrivate::generation = generation;
 }
 
 Internal::ClientType Internal::clientType()

@@ -111,11 +111,14 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
         }
 
         qCDebug(AKONADICORE_LOG) << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
+        qCDebug(AKONADICORE_LOG) << "Server generation:" << hello.generation();
         qCDebug(AKONADICORE_LOG) << "Server says:" << hello.message();
         // Version mismatch is handled in SessionPrivate::startJob() so that
         // we can report the error out via KJob API
         protocolVersion = hello.protocolVersion();
         Internal::setServerProtocolVersion(protocolVersion);
+        Internal::setGeneration(hello.generation());
+
 
         Protocol::LoginCommand login(sessionId);
         sendCommand(nextTag(), login);

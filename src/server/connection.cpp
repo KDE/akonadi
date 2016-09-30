@@ -121,9 +121,14 @@ void Connection::quit()
 
 void Connection::slotSendHello()
 {
-    sendResponse(0, Protocol::HelloResponse(QStringLiteral("Akonadi"),
-                                            QStringLiteral("Not Really IMAP server"),
-                                            Protocol::version()));
+    SchemaVersion version = SchemaVersion::retrieveAll().first();
+
+    Protocol::HelloResponse hello;
+    hello.setServerName(QStringLiteral("Akonadi"));
+    hello.setMessage(QStringLiteral("Not Really IMAP server"));
+    hello.setProtocolVersion(Protocol::version());
+    hello.setGeneration(version.generation());
+    sendResponse(0, hello);
 }
 
 DataStore *Connection::storageBackend()
