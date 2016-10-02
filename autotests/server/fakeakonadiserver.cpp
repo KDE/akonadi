@@ -147,11 +147,13 @@ QString FakeAkonadiServer::instanceName()
 
 TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
 {
+    SchemaVersion schema = SchemaVersion::retrieveAll().first();
+
     Protocol::HelloResponse hello;
     hello.setServerName(QStringLiteral("Akonadi"));
-    hello.setMessage(QStringLiteral("Not really IMAP server"));
+    hello.setMessage(QStringLiteral("Not Really IMAP server"));
     hello.setProtocolVersion(Protocol::version());
-    hello.setGeneration(1);
+    hello.setGeneration(schema.generation());
 
     return {
         TestScenario::create(0, TestScenario::ServerCmd, hello),
