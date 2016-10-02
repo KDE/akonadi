@@ -92,6 +92,7 @@ bool DbInitializer::run()
             }
         }
 
+#ifndef DBINITIALIZER_UNITTEST
         // Now finally check and set the generation identifier if necessary
         SchemaVersion version = SchemaVersion::retrieveAll().first();
         if (version.generation() == 0) {
@@ -100,6 +101,7 @@ bool DbInitializer::run()
 
             qCDebug(AKONADISERVER_LOG) << "Generation:" << version.generation();
         }
+#endif
 
         qCDebug(AKONADISERVER_LOG) << "DbInitializer::run() done";
         return true;

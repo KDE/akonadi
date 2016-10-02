@@ -24,7 +24,10 @@
 #include <QtCore/QDebug>
 #include <QtCore/QVariant>
 
-#include "storage/dbinitializer.h"
+#define DBINITIALIZER_UNITTEST
+#include "storage/dbinitializer.cpp"
+#undef DBINITIALIZER_UNITTEST
+
 #include <shared/aktest.h>
 
 #define QL1S(x) QLatin1String(x)
