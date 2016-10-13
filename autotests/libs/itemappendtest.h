@@ -20,7 +20,7 @@
 #ifndef ITEMAPPENDTEST_H
 #define ITEMAPPENDTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ItemAppendTest : public QObject
 {

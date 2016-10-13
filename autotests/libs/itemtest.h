@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEMTEST_H
 #define AKONADI_ITEMTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ItemTest : public QObject
 {

@@ -21,9 +21,9 @@
 #ifndef AGENTMANAGER_H
 #define AGENTMANAGER_H
 
-#include <QtCore/QHash>
-#include <QtCore/QMap>
-#include <QtCore/QStringList>
+#include <QHash>
+#include <QMap>
+#include <QStringList>
 
 #include "agenttype.h"
 #include "agentinstance.h"
@@ -53,7 +53,7 @@ public:
      *
      * @param parent The parent object.
      */
-    AgentManager(bool verbose, QObject *parent = Q_NULLPTR);
+    explicit AgentManager(bool verbose, QObject *parent = Q_NULLPTR);
 
     /**
      * Destroys the agent manager.

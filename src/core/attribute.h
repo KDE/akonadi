@@ -22,7 +22,7 @@
 
 #include "akonadicore_export.h"
 
-#include <QtCore/QList>
+#include <QList>
 
 namespace Akonadi
 {

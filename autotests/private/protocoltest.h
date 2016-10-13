@@ -20,8 +20,8 @@
 #ifndef PROTOCOLTEST_H
 #define PROTOCOLTEST_H
 
-#include <QtCore/QObject>
-#include <QtCore/QBuffer>
+#include <QObject>
+#include <QBuffer>
 
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>

@@ -20,7 +20,7 @@
 #include "searchquery.h"
 #include "akonadicore_debug.h"
 
-#include <QtCore/QVariant>
+#include <QVariant>
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>

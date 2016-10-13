@@ -34,16 +34,16 @@
 #include <KLocalizedString>
 
 #include <QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QQueue>
-#include <QtCore/QThreadStorage>
-#include <QtCore/QTimer>
-#include <QtCore/QThread>
+#include <QDir>
+#include <QQueue>
+#include <QThreadStorage>
+#include <QTimer>
+#include <QThread>
 #include <QSettings>
 
-#include <QtNetwork/QLocalSocket>
-#include <QtNetwork/QTcpSocket>
-#include <QtNetwork/QHostAddress>
+#include <QLocalSocket>
+#include <QTcpSocket>
+#include <QHostAddress>
 #include <QApplication>
 
 // ### FIXME pipelining got broken by switching result emission in JobPrivate::handleResponse to delayed emission
@@ -68,7 +68,7 @@ void SessionPrivate::reconnect()
         mParent->connect(connection, &Connection::reconnected, mParent, &Session::reconnected,
                          Qt::QueuedConnection);
         mParent->connect(connection, SIGNAL(commandReceived(qint64,Akonadi::Protocol::Command)),
-                         mParent, SLOT(handleCommand(qint64, Akonadi::Protocol::Command)),
+                         mParent, SLOT(handleCommand(qint64,Akonadi::Protocol::Command)),
                          Qt::QueuedConnection);
         mParent->connect(connection, SIGNAL(socketDisconnected()), mParent, SLOT(socketDisconnected()),
                          Qt::QueuedConnection);

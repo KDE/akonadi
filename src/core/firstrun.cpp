@@ -31,12 +31,12 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusReply>
-#include <QtCore/QDir>
-#include <QtCore/QMetaMethod>
-#include <QtCore/QMetaObject>
+#include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusReply>
+#include <QDir>
+#include <QMetaMethod>
+#include <QMetaObject>
 #include <QStandardPaths>
 #include <QCoreApplication>
 

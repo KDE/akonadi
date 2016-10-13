@@ -25,9 +25,9 @@
 #ifndef AKONADI_PREPROCESSORMANAGER_H
 #define AKONADI_PREPROCESSORMANAGER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
-#include <QtCore/QHash>
+#include <QObject>
+#include <QList>
+#include <QHash>
 
 #include <deque>
 

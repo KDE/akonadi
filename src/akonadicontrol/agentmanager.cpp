@@ -39,15 +39,15 @@
 
 #include <shared/akapplication.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
+#include <QCoreApplication>
+#include <QDir>
 #ifndef QT_NO_DEBUG
-#include <QtCore/QFileSystemWatcher>
+#include <QFileSystemWatcher>
 #endif
 #include <QScopedPointer>
-#include <QtCore/QSettings>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
+#include <QSettings>
+#include <QDBusConnection>
+#include <QDBusError>
 
 using Akonadi::ProcessControl;
 

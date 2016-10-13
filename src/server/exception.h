@@ -33,17 +33,17 @@ namespace Server {
 class Exception : public std::exception
 {
 public:
-    Exception(const char *what) throw()
+    explicit Exception(const char *what) throw()
         : mWhat(what)
     {
     }
 
-    Exception(const QByteArray &what) throw()
+    explicit Exception(const QByteArray &what) throw()
         : mWhat(what)
     {
     }
 
-    Exception(const QString &what) throw()
+    explicit Exception(const QString &what) throw()
         : mWhat(what.toUtf8())
     {
     }

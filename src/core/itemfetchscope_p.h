@@ -20,8 +20,8 @@
 #ifndef ITEMFETCHSCOPE_P_H
 #define ITEMFETCHSCOPE_P_H
 
-#include <QtCore/QSet>
-#include <QtCore/QString>
+#include <QSet>
+#include <QString>
 #include <QDateTime>
 #include "itemfetchscope.h"
 #include "tagfetchscope.h"

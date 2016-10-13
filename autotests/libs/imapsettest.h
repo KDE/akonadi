@@ -20,7 +20,7 @@
 #ifndef AKONADI_IMAPSETTEST_H
 #define AKONADI_IMAPSETTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ImapSetTest : public QObject
 {

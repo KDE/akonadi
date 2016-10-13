@@ -158,7 +158,7 @@ void TagSync::onCreateTagDone(KJob *job)
 
     Akonadi::Tag tag = static_cast<Akonadi::TagCreateJob *>(job)->tag();
     const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
-    Q_FOREACH (Item item, remoteMembers) {
+    Q_FOREACH (Item item, remoteMembers) {  //krazy:exclude=foreach
         item.setTag(tag);
         ItemModifyJob *modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);
@@ -212,14 +212,14 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     }
 
     if (!merge) {
-        Q_FOREACH (Item item, toRemove) {
+        Q_FOREACH (Item item, toRemove) {   //krazy:exclude=foreach
             item.clearTag(tag);
             ItemModifyJob *modJob = new ItemModifyJob(item, this);
             connect(modJob, &KJob::result, this, &TagSync::onJobDone);
             qCDebug(AKONADICORE_LOG) << "removing tag " << item.remoteId();
         }
     }
-    Q_FOREACH (Item item, toAdd) {
+    Q_FOREACH (Item item, toAdd) {  //krazy:exclude=foreach
         item.setTag(tag);
         ItemModifyJob *modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);

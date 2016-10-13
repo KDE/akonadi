@@ -19,8 +19,8 @@
 
 #include "dbupdatertest.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QVariant>
+#include <QDebug>
+#include <QVariant>
 #include <QBuffer>
 #include <QDir>
 

@@ -23,8 +23,8 @@
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QString>
+#include <QStringList>
 
 using namespace Akonadi;
 

@@ -18,12 +18,14 @@
  *  02110-1301, USA.
  */
 
+//krazy:excludeall=dpointer
+
 #ifndef AKONADI_PRIVATE_SCOPE_P_H
 #define AKONADI_PRIVATE_SCOPE_P_H
 
 #include "akonadiprivate_export.h"
 
-#include <QtCore/QSharedDataPointer>
+#include <QSharedDataPointer>
 
 class QString;
 class QStringList;
@@ -53,8 +55,8 @@ public:
 
     class AKONADIPRIVATE_EXPORT HRID {
     public:
-        explicit HRID();
-        HRID(qint64 id, const QString &remoteId = QString());
+        HRID();
+        explicit HRID(qint64 id, const QString &remoteId = QString());
         HRID(const HRID &other);
         HRID(HRID &&other);
 
@@ -72,11 +74,11 @@ public:
     Scope(SelectionScope scope, const QStringList &ids);
 
     /* UID */
-    Scope(qint64 id);
-    Scope(const ImapSet &uidSet);
-    Scope(const ImapInterval &interval);
-    Scope(const QVector<qint64> &interval);
-    Scope(const QVector<HRID> &hridChain);
+    Scope(qint64 id);                       //krazy:exclude=explicit
+    Scope(const ImapSet &uidSet);           //krazy:exclude=explicit
+    Scope(const ImapInterval &interval);    //krazy:exclude=explicit
+    Scope(const QVector<qint64> &interval); //krazy:exclude=explicit
+    Scope(const QVector<HRID> &hridChain);  //krazy:exclude=explicit
 
     Scope(const Scope &other);
     Scope(Scope &&other);

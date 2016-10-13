@@ -20,7 +20,7 @@
 #ifndef TRANSACTIONTEST_H
 #define TRANSACTIONTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class TransactionTest : public QObject
 {

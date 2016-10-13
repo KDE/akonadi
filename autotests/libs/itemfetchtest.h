@@ -20,7 +20,7 @@
 #ifndef ITEMFETCHTEST_H
 #define ITEMFETCHTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ItemFetchTest : public QObject
 {

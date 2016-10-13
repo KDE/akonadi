@@ -20,12 +20,12 @@
 #include "storagedebugger.h"
 #include "storagedebuggeradaptor.h"
 
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlRecord>
-#include <QtSql/QSqlError>
+#include <QSqlQuery>
+#include <QSqlRecord>
+#include <QSqlError>
 
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusMetaType>
+#include <QDBusConnection>
+#include <QDBusMetaType>
 
 Akonadi::Server::StorageDebugger *Akonadi::Server::StorageDebugger::mSelf = 0;
 QMutex Akonadi::Server::StorageDebugger::mMutex;

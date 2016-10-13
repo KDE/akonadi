@@ -30,7 +30,7 @@
 
 #include "akonadicore_debug.h"
 
-#include <QtCore/QVariant>
+#include <QVariant>
 
 using namespace Akonadi;
 

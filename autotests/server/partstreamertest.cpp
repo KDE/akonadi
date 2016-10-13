@@ -30,7 +30,7 @@
 #include "storage/partstreamer.h"
 #include <storage/parthelper.h>
 
-#include <QtTest>
+#include <QTest>
 #include <QSettings>
 
 #include <private/scope_p.h>

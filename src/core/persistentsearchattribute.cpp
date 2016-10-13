@@ -22,8 +22,8 @@
 
 #include "private/imapparser_p.h"
 
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QString>
+#include <QStringList>
 
 using namespace Akonadi;
 
@@ -129,7 +129,7 @@ QByteArray PersistentSearchAttribute::serialized() const
     l.append("QUERYSTRING");
     l.append(ImapParser::quote(d->queryString.toUtf8()));
     l.append("QUERYCOLLECTIONS");
-    l.append("(" + cols.join(QStringLiteral(" ")).toLatin1() + ")");
+    l.append("(" + cols.join(QStringLiteral(" ")).toLatin1() + ')');
     if (d->remote) {
         l.append("REMOTE");
     }

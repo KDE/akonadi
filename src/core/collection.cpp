@@ -26,10 +26,10 @@
 #include "collectionstatistics.h"
 #include "entitydisplayattribute.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QHash>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QDebug>
+#include <QHash>
+#include <QString>
+#include <QStringList>
 
 #include <QUrl>
 #include <QUrlQuery>

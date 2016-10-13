@@ -30,8 +30,8 @@
 #include "gidextractor_p.h"
 #include "private/protocol_p.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QFile>
+#include <QDateTime>
+#include <QFile>
 
 #include <KLocalizedString>
 

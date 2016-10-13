@@ -25,11 +25,11 @@
 #include "item.h"
 #include "servermanager.h"
 
-#include <QtNetwork/QLocalSocket>
+#include <QLocalSocket>
 
-#include <QtCore/QQueue>
-#include <QtCore/QThreadStorage>
-#include <QtCore/QMetaObject>
+#include <QQueue>
+#include <QThreadStorage>
+#include <QMetaObject>
 #include <QFile>
 
 class QIODevice;

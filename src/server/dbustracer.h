@@ -20,7 +20,7 @@
 #ifndef AKONADI_DBUSTRACER_H
 #define AKONADI_DBUSTRACER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "tracerinterface.h"
 

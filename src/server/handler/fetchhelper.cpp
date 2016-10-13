@@ -41,16 +41,16 @@
 #include <private/scope_p.h>
 #include <private/dbus_p.h>
 
-#include <QtCore/QLocale>
-#include <QtCore/QStringList>
-#include <QtCore/QUuid>
-#include <QtCore/QVariant>
-#include <QtCore/QDateTime>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
+#include <QLocale>
+#include <QStringList>
+#include <QUuid>
+#include <QVariant>
+#include <QDateTime>
+#include <QSqlDatabase>
+#include <QSqlError>
+#include <QSqlQuery>
 
-#include <QtCore/QElapsedTimer>
+#include <QElapsedTimer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

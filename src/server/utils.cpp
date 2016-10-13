@@ -25,10 +25,10 @@
 #include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
-#include <QtNetwork/QHostInfo>
+#include <QDir>
+#include <QFileInfo>
+#include <QSettings>
+#include <QHostInfo>
 
 #if !defined(Q_OS_WIN)
 #include <cstdlib>
@@ -155,7 +155,7 @@ static bool createSocketDirectory(const QString &link, const QString &tmpl)
 {
     QString directory = QStringLiteral("%1%2%3").arg(QDir::tempPath()).arg(QDir::separator()).arg(tmpl);
 
-    QByteArray directoryString = directory.toLocal8Bit().data();
+    QByteArray directoryString = directory.toLocal8Bit();
 
     if (!mkdtemp(directoryString.data())) {
         qCCritical(AKONADISERVER_LOG) << "Creating socket directory with template" << directoryString << "failed:" << strerror(errno);

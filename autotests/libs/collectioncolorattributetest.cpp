@@ -19,7 +19,7 @@
 
 #include "collectioncolorattribute.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <QTest>
 

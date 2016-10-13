@@ -28,7 +28,7 @@
 
 #include "collection.h"
 
-#include <QtDBus/QDBusServiceWatcher>
+#include <QDBusServiceWatcher>
 #include <QWidget>
 
 

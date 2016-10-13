@@ -28,8 +28,8 @@
 #include <private/xdgbasedirs_p.h>
 #include <private/instance_p.h>
 
-#include <QtCore/QDir>
-#include <QtCore/QStringBuilder>
+#include <QDir>
+#include <QStringBuilder>
 #include <QProcess>
 
 using namespace Akonadi;

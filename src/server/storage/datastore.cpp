@@ -42,22 +42,22 @@
 
 #include <private/externalpartstorage_p.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QEventLoop>
-#include <QtCore/QSettings>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QThread>
-#include <QtCore/QThreadStorage>
-#include <QtCore/QTimer>
-#include <QtCore/QUuid>
-#include <QtCore/QVariant>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlDriver>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlField>
-#include <QtSql/QSqlQuery>
+#include <QCoreApplication>
+#include <QDir>
+#include <QEventLoop>
+#include <QSettings>
+#include <QString>
+#include <QStringList>
+#include <QThread>
+#include <QThreadStorage>
+#include <QTimer>
+#include <QUuid>
+#include <QVariant>
+#include <QSqlDatabase>
+#include <QSqlDriver>
+#include <QSqlError>
+#include <QSqlField>
+#include <QSqlQuery>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -712,7 +712,7 @@ bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &par
 
     qb.exec();
     Part::List existingParts = qb.result();
-    Q_FOREACH (Part part, existingParts) {
+    Q_FOREACH (Part part, existingParts) {  //krazy:exclude=foreach
         if (!PartHelper::remove(&part)) {
             return false;
         }
@@ -739,7 +739,7 @@ bool DataStore::invalidateItemCache(const PimItem &item)
 
     const Part::List parts = qb.result();
     // clear data field
-    Q_FOREACH (Part part, parts) {
+    Q_FOREACH (Part part, parts) { //krazy:exclude=foreach
         if (!PartHelper::truncate(part)) {
             return false;
         }
@@ -836,7 +836,7 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
     Collection::clearPimItems(collection.id());
 
     // delete attributes
-    Q_FOREACH (CollectionAttribute attr, collection.attributes()) {
+    Q_FOREACH (CollectionAttribute attr, collection.attributes()) { //krazy:exclude=foreach
         if (!attr.remove()) {
             return false;
         }
@@ -1204,7 +1204,7 @@ bool DataStore::removeCollectionAttribute(const Collection &col, const QByteArra
     }
 
     const QVector<CollectionAttribute> result = qb.result();
-    Q_FOREACH (CollectionAttribute attr, result) {
+    Q_FOREACH (CollectionAttribute attr, result) {  //krazy:exclude=foreach
         if (!attr.remove()) {
             throw HandlerException("Unable to remove collection attribute");
         }

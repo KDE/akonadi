@@ -22,8 +22,8 @@
 
 #include "akonadicore_export.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QMetaType>
+#include <QObject>
+#include <QMetaType>
 
 namespace Akonadi
 {

@@ -30,7 +30,7 @@
 #include "cachepolicy.h"
 
 #include <KLocalizedString>
-#include <QtCore/QVariant>
+#include <QVariant>
 #include <QTime>
 #include <QHash>
 
@@ -322,7 +322,7 @@ public:
 
         // At this point remoteChildren contains collections that don't exist locally yet
         if (!remoteChildren.isEmpty()) {
-            Q_FOREACH (Collection c, remoteChildren) {
+            Q_FOREACH (Collection c, remoteChildren) {  //krazy:exclude=foreach
                 c.setParentCollection(parentCollection);
                 remoteCollectionsToCreate.append(c);
             }
@@ -482,7 +482,7 @@ public:
         if (collectionsToCreate.isEmpty() && !hierarchicalRIDs) {
             collectionsToCreate = remoteCollections.take(RemoteId(newLocal.remoteId()));
         }
-        Q_FOREACH (Collection col, collectionsToCreate) {
+        Q_FOREACH (Collection col, collectionsToCreate) {   //krazy:exclude=foreach
             col.setParentCollection(newLocal);
             remoteCollectionsToCreate.append(col);
         }

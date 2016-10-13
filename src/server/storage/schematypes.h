@@ -122,7 +122,7 @@ public:
 class RelationTableDescription : public TableDescription
 {
 public:
-    RelationTableDescription(const RelationDescription &relation);
+    explicit RelationTableDescription(const RelationDescription &relation);
 };
 
 } // namespace Server

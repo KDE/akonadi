@@ -53,12 +53,12 @@
 #include "akonadiagentbase_debug.h"
 #include <KLocalizedString>
 
-#include <QtCore/QDir>
-#include <QtCore/QHash>
-#include <QtCore/QSettings>
-#include <QtCore/QTimer>
+#include <QDir>
+#include <QHash>
+#include <QSettings>
+#include <QTimer>
 #include <QApplication>
-#include <QtDBus/QtDBus>
+#include <QDBusConnection>
 
 using namespace Akonadi;
 

@@ -20,9 +20,9 @@
 #ifndef AKONADISERVER_H
 #define AKONADISERVER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QPointer>
-#include <QtCore/QVector>
+#include <QObject>
+#include <QPointer>
+#include <QVector>
 
 class QProcess;
 

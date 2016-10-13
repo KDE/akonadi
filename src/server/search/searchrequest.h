@@ -35,7 +35,7 @@ class SearchRequest : public QObject
     Q_OBJECT
 
 public:
-    SearchRequest(const QByteArray &connectionId);
+    explicit SearchRequest(const QByteArray &connectionId);
     ~SearchRequest();
 
     void setQuery(const QString &query);

@@ -27,7 +27,7 @@
 #include "entities.h"
 #include "dbinitializer.h"
 
-#include <QtTest/QTest>
+#include <QTest>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

@@ -22,9 +22,9 @@
 
 #include "akonaditests_export.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QString>
-#include <QtCore/QObject>
+#include <QHash>
+#include <QString>
+#include <QObject>
 
 class QPluginLoader;
 

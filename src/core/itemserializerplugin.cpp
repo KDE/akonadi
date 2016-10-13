@@ -22,7 +22,7 @@
 #include "item.h"
 #include "itemserializer_p.h"
 
-#include <QtCore/QBuffer>
+#include <QBuffer>
 
 using namespace Akonadi;
 

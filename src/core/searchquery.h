@@ -56,7 +56,7 @@ public:
     /**
      * Constructs a term where all subterms will be in given relation
      */
-    SearchTerm(SearchTerm::Relation relation = SearchTerm::RelAnd);
+    explicit SearchTerm(SearchTerm::Relation relation = SearchTerm::RelAnd);
 
     /**
      * Constructs an end term
@@ -131,7 +131,7 @@ public:
     /**
      * Constructs query where all added terms will be in given relation
      */
-    SearchQuery(SearchTerm::Relation rel = SearchTerm::RelAnd);
+    explicit SearchQuery(SearchTerm::Relation rel = SearchTerm::RelAnd);
 
     ~SearchQuery();
     SearchQuery(const SearchQuery &other);

@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <kstandardshortcut.h>
 
-#include <QtCore/QEvent>
+#include <QEvent>
 #include <QAction>
 #include <QPushButton>
 #include <QHBoxLayout>

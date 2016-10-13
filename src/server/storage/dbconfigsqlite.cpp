@@ -24,10 +24,10 @@
 #include <private/xdgbasedirs_p.h>
 #include <private/standarddirs_p.h>
 
-#include <QtCore/QDir>
-#include <QtSql/QSqlDriver>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
+#include <QDir>
+#include <QSqlDriver>
+#include <QSqlError>
+#include <QSqlQuery>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

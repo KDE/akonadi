@@ -18,8 +18,8 @@
  ***************************************************************************/
 #include "filetracer.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QTime>
+#include <QFile>
+#include <QTime>
 
 using namespace Akonadi::Server;
 

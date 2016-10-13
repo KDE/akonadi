@@ -34,7 +34,7 @@ namespace Server {
 class FileTracer : public TracerInterface
 {
 public:
-    FileTracer(const QString &fileName);
+    explicit FileTracer(const QString &fileName);
     virtual ~FileTracer();
 
     virtual void beginConnection(const QString &identifier, const QString &msg);

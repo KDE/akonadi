@@ -27,8 +27,8 @@
 #include <KLocalizedString>
 #include <kglobal.h>
 
-#include <QtCore/QThread>
-#include <QtCore/QThreadStorage>
+#include <QThread>
+#include <QThreadStorage>
 
 QThreadStorage<KComponentData *> s_agentComponentDatas;
 

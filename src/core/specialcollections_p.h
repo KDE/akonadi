@@ -20,8 +20,8 @@
 #ifndef AKONADI_SPECIALCOLLECTIONS_P_H
 #define AKONADI_SPECIALCOLLECTIONS_P_H
 
-#include <QtCore/QHash>
-#include <QtCore/QString>
+#include <QHash>
+#include <QString>
 
 #include "akonaditests_export.h"
 

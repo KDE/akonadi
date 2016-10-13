@@ -33,7 +33,7 @@
 
 #include <krandom.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QSignalSpy>
 #include <QEventLoop>
 

@@ -22,7 +22,7 @@
 
 #include "servermanager.h"
 
-#include <QtCore/QPointer>
+#include <QPointer>
 #include <QWidget>
 
 namespace Ui

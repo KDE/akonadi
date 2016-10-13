@@ -20,7 +20,7 @@
 #ifndef AKONADI_KJOBPRIVATEBASE_P_H
 #define AKONADI_KJOBPRIVATEBASE_P_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "servermanager.h"
 

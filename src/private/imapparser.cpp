@@ -19,8 +19,8 @@
 
 #include "imapparser_p.h"
 
-#include <QtCore/QDateTime>
-#include <QtCore/QDebug>
+#include <QDateTime>
+#include <QDebug>
 
 #include <ctype.h>
 

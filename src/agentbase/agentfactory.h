@@ -26,8 +26,8 @@
 #include "akonadiagentbase_export.h"
 #include "agentbase.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QtPlugin>
+#include <QObject>
+#include <QtPlugin>
 
 namespace Akonadi
 {

@@ -26,7 +26,7 @@
 #include "item.h"
 #include "relation.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace Akonadi
 {

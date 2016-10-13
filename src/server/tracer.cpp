@@ -18,8 +18,8 @@
  ***************************************************************************/
 #include "tracer.h"
 
-#include <QtCore/QSettings>
-#include <QtCore/QString>
+#include <QSettings>
+#include <QString>
 
 #include "traceradaptor.h"
 

@@ -20,8 +20,8 @@
 #ifndef AKAPPLICATION_H
 #define AKAPPLICATION_H
 
-#include <QtCore/QObject>
-#include <QtCore/QCommandLineParser>
+#include <QObject>
+#include <QCommandLineParser>
 #include <QLoggingCategory>
 
 class QCoreApplication;

@@ -71,7 +71,15 @@ add_library(akonaditestfake SHARED
 
 generate_export_header(akonaditestfake BASE_NAME akonaditestfake)
 
-target_link_libraries(akonaditestfake Qt5::DBus KF5::AkonadiCore Qt5::Test Qt5::Widgets KF5::DBusAddons KF5::AkonadiPrivate)
+target_link_libraries(akonaditestfake
+        Qt5::DBus
+        KF5::AkonadiCore
+        Qt5::Test
+        Qt5::Widgets
+        Qt5::Network
+        KF5::DBusAddons
+        KF5::AkonadiPrivate
+)
 
 add_executable(akonadi-firstrun
     ../../src/core/firstrun.cpp

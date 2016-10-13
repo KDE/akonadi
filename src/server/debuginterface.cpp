@@ -20,7 +20,8 @@
 #include "debuginterface.h"
 #include "debuginterfaceadaptor.h"
 #include "tracer.h"
-#include <QtDBus>
+
+#include <QDBusConnection>
 
 using namespace Akonadi::Server;
 

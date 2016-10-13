@@ -22,9 +22,9 @@
 #include "akonadicore_debug.h"
 #include "monitor_p.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QMimeData>
-#include <QtCore/QTimer>
+#include <QHash>
+#include <QMimeData>
+#include <QTimer>
 #include <QAbstractProxyModel>
 #include <QMessageBox>
 

@@ -26,7 +26,7 @@
 #include "collection.h"
 #include "item.h"
 
-#include <QtXml/QDomElement>
+#include <QDomElement>
 
 namespace Akonadi
 {

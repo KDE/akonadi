@@ -23,7 +23,7 @@
 #include "akonadicore_export.h"
 #include "collection.h"
 
-#include <QtCore/QAbstractItemModel>
+#include <QAbstractItemModel>
 
 namespace Akonadi
 {

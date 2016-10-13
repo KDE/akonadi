@@ -24,14 +24,14 @@
 #include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 
-#include <QtCore/QDateTime>
-#include <QtCore/QDir>
-#include <QtCore/QProcess>
-#include <QtCore/QThread>
+#include <QDateTime>
+#include <QDir>
+#include <QProcess>
+#include <QThread>
 #include <QRegularExpression>
-#include <QtSql/QSqlDriver>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
+#include <QSqlDriver>
+#include <QSqlError>
+#include <QSqlQuery>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

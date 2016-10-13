@@ -20,7 +20,7 @@
 #ifndef AKONADI_COLLECTIONUTILS_P_H
 #define AKONADI_COLLECTIONUTILS_P_H
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 #include "entitydisplayattribute.h"
 #include "collectionstatistics.h"

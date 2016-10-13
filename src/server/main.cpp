@@ -24,10 +24,10 @@
 
 #include <private/dbus_p.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusConnectionInterface>
-#include <QtDBus/QDBusError>
+#include <QCoreApplication>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusError>
 #include <QTimer>
 
 #include <cstdlib>

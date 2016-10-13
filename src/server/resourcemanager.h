@@ -20,7 +20,7 @@
 #ifndef AKONADI_RESOURCEMANAGER_H
 #define AKONADI_RESOURCEMANAGER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace Akonadi {
 namespace Server {
@@ -37,7 +37,7 @@ public:
     static ResourceManager *self();
 
 private:
-    ResourceManager(QObject *parent = Q_NULLPTR);
+    explicit ResourceManager(QObject *parent = Q_NULLPTR);
 
 public Q_SLOTS:
     void addResourceInstance(const QString &name, const QStringList &capabilities);

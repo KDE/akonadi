@@ -25,8 +25,8 @@
 #include <itemdeletejob.h>
 #include <agentmanager.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
+#include <QObject>
+#include <QSettings>
 
 #include <qtest_akonadi.h>
 

@@ -19,7 +19,7 @@
 #ifndef AKONADI_RDS_EXCEPTION_H
 #define AKONADI_RDS_EXCEPTION_H
 
-#include <QtCore/QString>
+#include <QString>
 #include <stdexcept>
 
 template <typename Ex>

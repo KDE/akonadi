@@ -422,9 +422,7 @@ void PreprocessorManager::heartbeat()
 
     QList< PreprocessorInstance *> firedPreprocessors;
 
-    PreprocessorInstance *instance;
-
-    Q_FOREACH (instance, mPreprocessorChain) {
+    Q_FOREACH (PreprocessorInstance *instance, mPreprocessorChain) {
         // In this loop we check for "stuck" preprocessors.
 
         int elapsedTime = instance->currentProcessingTime();
@@ -482,7 +480,7 @@ void PreprocessorManager::heartbeat()
     }
 
     // Kill the fired preprocessors, if any.
-    Q_FOREACH (instance, firedPreprocessors) {
+    Q_FOREACH (PreprocessorInstance *instance, firedPreprocessors) {
         lockedUnregisterInstance(instance->id());
     }
 }

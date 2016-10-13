@@ -21,7 +21,7 @@
 #ifndef AKONADI_TYPEPLUGINLOADER_P_H
 #define AKONADI_TYPEPLUGINLOADER_P_H
 
-#include <QtCore/qglobal.h>
+#include <qglobal.h>
 #include "akonadicore_export.h"
 
 class QObject;

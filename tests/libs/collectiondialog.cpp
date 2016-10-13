@@ -19,7 +19,7 @@
 
 #include "collectiondialog.h"
 
-#include <QtCore/QDebug>
+#include <QDebug>
 
 #include <KLocalizedString>
 #include <qapplication.h>

@@ -21,8 +21,8 @@
 #include "private/imapparser_p.h"
 #include <qtest.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QVariant>
+#include <QDebug>
+#include <QVariant>
 #include <QBuffer>
 
 Q_DECLARE_METATYPE(QList<QByteArray>)

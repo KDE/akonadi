@@ -20,11 +20,11 @@
 #ifndef AKONADI_CONNECTION_H
 #define AKONADI_CONNECTION_H
 
-#include <QtCore/QPointer>
-#include <QtCore/QThread>
-#include <QtCore/QTimer>
-#include <QtNetwork/QLocalSocket>
-#include <QtCore/QDataStream>
+#include <QPointer>
+#include <QThread>
+#include <QTimer>
+#include <QLocalSocket>
+#include <QDataStream>
 
 #include "akthread.h"
 #include "entities.h"
@@ -49,7 +49,7 @@ class Connection : public AkThread
 {
     Q_OBJECT
 public:
-    Connection(quintptr socketDescriptor, QObject *parent = Q_NULLPTR);
+    explicit Connection(quintptr socketDescriptor, QObject *parent = Q_NULLPTR);
     virtual ~Connection();
 
     virtual DataStore *storageBackend();

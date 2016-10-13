@@ -24,9 +24,9 @@
 
 #include "imapset_p.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
-#include <QtCore/QVarLengthArray>
+#include <QByteArray>
+#include <QList>
+#include <QVarLengthArray>
 
 namespace Akonadi {
 

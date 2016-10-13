@@ -19,8 +19,8 @@
 
 #include "collectionstatistics.h"
 
-#include <QtCore/QSharedData>
-#include <QtCore/QDebug>
+#include <QSharedData>
+#include <QDebug>
 
 using namespace Akonadi;
 

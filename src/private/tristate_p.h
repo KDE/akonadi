@@ -20,8 +20,8 @@
 #ifndef AKONADI_PRIVATE_TRISTATE_P_H_
 #define AKONADI_PRIVATE_TRISTATE_P_H_
 
-#include <QtCore/QMetaType>
-#include <QtCore/QDebug>
+#include <QMetaType>
+#include <QDebug>
 
 #include "akonadiprivate_export.h"
 

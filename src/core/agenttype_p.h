@@ -20,9 +20,9 @@
 #ifndef AKONADI_AGENTTYPE_P_H
 #define AKONADI_AGENTTYPE_P_H
 
-#include <QtCore/QSharedData>
-#include <QtCore/QStringList>
-#include <QtCore/QVariantMap>
+#include <QSharedData>
+#include <QStringList>
+#include <QVariantMap>
 
 namespace Akonadi
 {

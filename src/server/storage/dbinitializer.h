@@ -23,12 +23,12 @@
 #include "dbintrospector.h"
 #include "schematypes.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QPair>
-#include <QtCore/QVector>
-#include <QtCore/QStringList>
+#include <QHash>
+#include <QPair>
+#include <QVector>
+#include <QStringList>
 #include <QSharedPointer>
-#include <QtSql/QSqlDatabase>
+#include <QSqlDatabase>
 
 class DbInitializerTest;
 

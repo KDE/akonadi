@@ -47,15 +47,15 @@
 #include <private/dbus_p.h>
 #include <private/instance_p.h>
 
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+#include <QSqlQuery>
+#include <QSqlError>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QSettings>
-#include <QtCore/QTimer>
-#include <QtDBus/QDBusServiceWatcher>
-#include <QtNetwork/QLocalServer>
+#include <QCoreApplication>
+#include <QDir>
+#include <QSettings>
+#include <QTimer>
+#include <QDBusServiceWatcher>
+#include <QLocalServer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

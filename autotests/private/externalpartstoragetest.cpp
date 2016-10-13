@@ -21,8 +21,8 @@
 #include <private/standarddirs_p.h>
 #include <shared/aktest.h>
 
-#include <QtCore/QObject>
-#include <QtCore/QFile>
+#include <QObject>
+#include <QFile>
 #include <QDir>
 
 using namespace Akonadi;

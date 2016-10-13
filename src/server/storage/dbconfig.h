@@ -20,8 +20,8 @@
 #ifndef DBCONFIG_H
 #define DBCONFIG_H
 
-#include <QtCore/QSettings>
-#include <QtSql/QSqlDatabase>
+#include <QSettings>
+#include <QSqlDatabase>
 
 namespace Akonadi {
 namespace Server {

@@ -20,7 +20,7 @@
 #ifndef AKONADI_ASYNCSELECTIONHANDLER_P_H
 #define AKONADI_ASYNCSELECTIONHANDLER_P_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "akonadicore_export.h"
 #include "collection.h"

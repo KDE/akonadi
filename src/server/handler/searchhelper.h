@@ -20,8 +20,8 @@
 #ifndef AKONADISEARCHHELPER_H
 #define AKONADISEARCHHELPER_H
 
-#include <QtCore/QVector>
-#include <QtCore/QStringList>
+#include <QVector>
+#include <QStringList>
 
 namespace Akonadi {
 namespace Server {

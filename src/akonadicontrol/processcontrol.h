@@ -20,8 +20,8 @@
 #ifndef AKONADI_PROCESSCONTROL_H
 #define AKONADI_PROCESSCONTROL_H
 
-#include <QtCore/QObject>
-#include <QtCore/QProcess>
+#include <QObject>
+#include <QProcess>
 
 namespace Akonadi {
 

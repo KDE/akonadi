@@ -399,7 +399,7 @@ void ItemRetriever::verifyCache()
     }
 
     const Part::List externalParts = qb.result();
-    Q_FOREACH (Part part, externalParts) {
+    Q_FOREACH (Part part, externalParts) {  // krazy:exclude=foreach
         PartHelper::verify(part);
     }
 }

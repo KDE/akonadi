@@ -31,9 +31,9 @@
 
 #include <kcoreconfigskeleton.h>
 
-#include <QtCore/QHash>
-#include <QtCore/QObject>
-#include <QtCore/QSet>
+#include <QHash>
+#include <QObject>
+#include <QSet>
 
 using namespace Akonadi;
 

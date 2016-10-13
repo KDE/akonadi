@@ -25,7 +25,7 @@
 #include <QSignalSpy>
 #include <QBuffer>
 #include <QDataStream>
-#include <QtTest/QTest>
+#include <QTest>
 #include <QSharedPointer>
 
 #include <type_traits>

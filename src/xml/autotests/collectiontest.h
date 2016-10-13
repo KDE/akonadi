@@ -19,7 +19,7 @@
 #ifndef COLLECTIONTEST_H
 #define COLLECTIONTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 #include "collection.h"
 
 class CollectionTest : public QObject

@@ -21,7 +21,7 @@
 #ifndef AKONADI_CONFLICTHANDLER_P_H
 #define AKONADI_CONFLICTHANDLER_P_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "item.h"
 

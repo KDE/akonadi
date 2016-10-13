@@ -25,11 +25,11 @@
 #include <private/dbus_p.h>
 #include <private/instance_p.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QProcess>
-#include <QtCore/QTimer>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusServiceWatcher>
+#include <QCoreApplication>
+#include <QProcess>
+#include <QTimer>
+#include <QDBusConnection>
+#include <QDBusServiceWatcher>
 
 #include <iostream>
 

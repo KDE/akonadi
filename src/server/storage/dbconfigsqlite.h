@@ -36,7 +36,7 @@ public:
     };
 
 public:
-    DbConfigSqlite(Version driver);
+    explicit DbConfigSqlite(Version driver);
 
     /**
      * Returns the name of the used driver.

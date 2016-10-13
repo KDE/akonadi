@@ -26,7 +26,7 @@
 #include <QDBusConnection>
 #include <QTimer>
 #include <QCommandLineParser>
-#include <QtCore/QCoreApplication>
+#include <QCoreApplication>
 
 #include <iostream>
 

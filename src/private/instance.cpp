@@ -19,7 +19,7 @@
 
 #include "instance_p.h"
 
-#include <QtCore/QString>
+#include <QString>
 
 using namespace Akonadi;
 

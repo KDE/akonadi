@@ -26,7 +26,7 @@
 #include <itemfetchjob.h>
 #include <itemfetchscope.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "test_utils.h"
 #include <qtest_akonadi.h>

@@ -22,8 +22,8 @@
 
 #include "job_p.h"
 
-#include <QtCore/QSet>
-#include <QtCore/QVariant>
+#include <QSet>
+#include <QVariant>
 
 using namespace Akonadi;
 

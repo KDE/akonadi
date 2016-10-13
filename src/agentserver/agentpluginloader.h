@@ -19,8 +19,8 @@
 #ifndef AGENTPLUGINLOADER_H
 #define AGENTPLUGINLOADER_H
 
-#include <QtCore/QHash>
-#include <QtCore/QPluginLoader>
+#include <QHash>
+#include <QPluginLoader>
 
 class AgentPluginLoader
 {

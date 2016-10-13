@@ -22,8 +22,8 @@
 
 #include "akonadicore_export.h"
 
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QStringList>
+#include <QSharedDataPointer>
+#include <QStringList>
 
 namespace Akonadi
 {

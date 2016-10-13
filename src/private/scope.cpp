@@ -21,7 +21,7 @@
 #include "scope_p.h"
 #include "datastream_p_p.h"
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 #include "imapset_p.h"
 

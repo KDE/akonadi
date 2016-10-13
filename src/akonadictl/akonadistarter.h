@@ -20,7 +20,7 @@
 #ifndef AKONADISTARTER_H
 #define AKONADISTARTER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class AkonadiStarter : public QObject
 {

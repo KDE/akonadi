@@ -24,7 +24,7 @@
 
 #include <private/dbus_p.h>
 
-#include <QtDBus/QDBusServiceWatcher>
+#include <QDBusServiceWatcher>
 
 using namespace Akonadi;
 

@@ -21,10 +21,10 @@
 #include "standarddirs_p.h"
 #include "akonadiprivate_debug.h"
 
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QMutexLocker>
-#include <QtCore/QThread>
+#include <QDir>
+#include <QFileInfo>
+#include <QMutexLocker>
+#include <QThread>
 
 using namespace Akonadi;
 

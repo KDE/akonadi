@@ -32,7 +32,7 @@
 
 #include <krandom.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QSignalSpy>
 
 #include <qtest_akonadi.h>

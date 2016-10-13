@@ -23,7 +23,7 @@
 #include "akonadiwidgets_export.h"
 #include "agentinstance.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class QAction;
 class KActionCollection;

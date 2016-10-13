@@ -17,13 +17,13 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QSettings>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusConnectionInterface>
+#include <QCoreApplication>
+#include <QDir>
+#include <QString>
+#include <QStringList>
+#include <QSettings>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 
 #include <shared/akapplication.h>
 

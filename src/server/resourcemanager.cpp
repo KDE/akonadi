@@ -25,7 +25,7 @@
 
 #include <private/capabilities_p.h>
 
-#include <QtDBus/QDBusConnection>
+#include <QDBusConnection>
 
 using namespace Akonadi::Server;
 
@@ -64,7 +64,7 @@ void ResourceManager::removeResourceInstance(const QString &name)
     Resource resource = Resource::retrieveByName(name);
     if (resource.isValid()) {
         const QVector<Collection> collections = resource.collections();
-        Q_FOREACH (/*sic!*/ Collection collection, collections) {
+        Q_FOREACH (/*sic!*/ Collection collection, collections) { // krazy:exclude=foreach
             db->cleanupCollection(collection);
         }
 

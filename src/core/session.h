@@ -21,7 +21,7 @@
 #define AKONADI_SESSION_H
 
 #include "akonadicore_export.h"
-#include <QtCore/QObject>
+#include <QObject>
 
 class KJob;
 class FakeSession;

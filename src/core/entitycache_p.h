@@ -37,7 +37,7 @@
 #include <QQueue>
 #include <QVariant>
 #include <QHash>
-#include <QtCore/QQueue>
+#include <QQueue>
 
 class KJob;
 

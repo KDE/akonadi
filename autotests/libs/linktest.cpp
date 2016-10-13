@@ -28,7 +28,7 @@
 #include <searchcreatejob.h>
 #include <searchquery.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <qtest_akonadi.h>
 

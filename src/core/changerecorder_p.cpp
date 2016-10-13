@@ -20,11 +20,11 @@
 #include "changerecorder_p.h"
 #include "akonadicore_debug.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QDir>
-#include <QtCore/QSettings>
-#include <QtCore/QFileInfo>
-#include <QtCore/QDataStream>
+#include <QFile>
+#include <QDir>
+#include <QSettings>
+#include <QFileInfo>
+#include <QDataStream>
 
 using namespace Akonadi;
 
@@ -500,7 +500,7 @@ QSet<QByteArray> ChangeRecorderPrivate::encodeRelations(const QSet<Protocol::Ite
 {
     QSet<QByteArray> rv;
     Q_FOREACH (const auto &rel, relations) {
-        rv.insert("RELATION " + rel.type.toLatin1() + " " + QByteArray::number(rel.leftId) + " " + QByteArray::number(rel.rightId));
+        rv.insert("RELATION " + rel.type.toLatin1() + ' ' + QByteArray::number(rel.leftId) + ' ' + QByteArray::number(rel.rightId));
     }
     return rv;
 }

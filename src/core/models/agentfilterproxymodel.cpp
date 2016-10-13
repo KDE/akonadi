@@ -24,9 +24,9 @@
 
 #include <qdebug.h>
 
-#include <QtCore/QStringList>
-#include <QtCore/QMimeDatabase>
-#include <QtCore/QMimeType>
+#include <QStringList>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 using namespace Akonadi;
 

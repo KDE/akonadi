@@ -22,7 +22,7 @@
 
 #include "akthread.h"
 
-#include <QtDBus/QDBusConnection>
+#include <QDBusConnection>
 
 namespace Akonadi {
 namespace Server {

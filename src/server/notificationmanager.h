@@ -24,7 +24,7 @@
 
 #include <private/protocol_p.h>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <QPointer>
 
 class NotificationManagerTest;

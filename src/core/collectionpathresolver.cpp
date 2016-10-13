@@ -26,7 +26,7 @@
 
 #include <KLocalizedString>
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 using namespace Akonadi;
 

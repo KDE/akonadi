@@ -28,8 +28,8 @@
 #include <session.h>
 #include <transactionjobs.h>
 
-#include <QtCore/QVariant>
-#include <QtTest/QSignalSpy>
+#include <QVariant>
+#include <QSignalSpy>
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;

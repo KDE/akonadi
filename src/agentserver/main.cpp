@@ -24,9 +24,9 @@
 
 #include <shared/akapplication.h>
 
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusConnectionInterface>
-#include <QtDBus/QDBusError>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QDBusError>
 #include <QApplication>
 
 int main(int argc, char **argv)

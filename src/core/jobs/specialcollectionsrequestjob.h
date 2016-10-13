@@ -25,7 +25,7 @@
 #include "specialcollections.h"
 #include "transactionsequence.h"
 
-#include <QtCore/QVariant>
+#include <QVariant>
 
 namespace Akonadi
 {

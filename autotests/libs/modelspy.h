@@ -52,7 +52,7 @@ class AKONADITESTFAKE_EXPORT ModelSpy : public QObject, public QList<QVariantLis
 {
     Q_OBJECT
 public:
-    ModelSpy(QObject *parent);
+    explicit ModelSpy(QObject *parent);
 
     void setModel(QAbstractItemModel *model);
 

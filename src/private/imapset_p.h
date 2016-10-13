@@ -22,11 +22,11 @@
 
 #include "akonadiprivate_export.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QDebug>
-#include <QtCore/QList>
-#include <QtCore/QMetaType>
-#include <QtCore/QSharedDataPointer>
+#include <QByteArray>
+#include <QDebug>
+#include <QList>
+#include <QMetaType>
+#include <QSharedDataPointer>
 
 namespace Akonadi {
 namespace Protocol {
@@ -154,13 +154,13 @@ public:
     */
     ImapSet();
 
-    ImapSet(qint64 Id);
+    ImapSet(qint64 Id);                     // krazy:exclude=explicit
 
-    ImapSet(const QVector<qint64> &ids);
+    ImapSet(const QVector<qint64> &ids);    // krazy:exclude=explicit
 
-    ImapSet(const QList<qint64> &ids);
+    ImapSet(const QList<qint64> &ids);      // krazy:exclude=explicit
 
-    ImapSet(const ImapInterval &interval);
+    ImapSet(const ImapInterval &interval);  // krazy:exclude=explicit
 
     /**
       Copy constructor.

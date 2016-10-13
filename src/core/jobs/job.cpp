@@ -30,11 +30,11 @@
 
 #include <KLocalizedString>
 
-#include <QtCore/QEventLoop>
-#include <QtCore/QTimer>
-#include <QtCore/QTextStream>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusConnectionInterface>
+#include <QEventLoop>
+#include <QTimer>
+#include <QTextStream>
+#include <QDBusInterface>
+#include <QDBusConnectionInterface>
 
 using namespace Akonadi;
 

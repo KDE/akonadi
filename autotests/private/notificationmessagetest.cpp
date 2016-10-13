@@ -21,7 +21,7 @@
 #include <private/protocol_p.h>
 
 #include <QSet>
-#include <QtTest/QTest>
+#include <QTest>
 
 QTEST_APPLESS_MAIN(NotificationMessageTest)
 

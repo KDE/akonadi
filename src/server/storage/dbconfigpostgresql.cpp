@@ -24,11 +24,11 @@
 #include <private/xdgbasedirs_p.h>
 #include <private/standarddirs_p.h>
 
-#include <QtCore/QDir>
-#include <QtCore/QProcess>
-#include <QtSql/QSqlDriver>
-#include <QtSql/QSqlError>
-#include <QtSql/QSqlQuery>
+#include <QDir>
+#include <QProcess>
+#include <QSqlDriver>
+#include <QSqlError>
+#include <QSqlQuery>
 
 #include <config-akonadi.h>
 #ifdef HAVE_UNISTD_H

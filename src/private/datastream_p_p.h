@@ -24,9 +24,9 @@
 
 #include "protocol_exception_p.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QIODevice>
-#include <QtCore/QTimeZone>
+#include <QByteArray>
+#include <QIODevice>
+#include <QTimeZone>
 
 namespace Akonadi {
 namespace Protocol {

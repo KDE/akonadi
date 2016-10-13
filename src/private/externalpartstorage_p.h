@@ -17,14 +17,16 @@
  *
  */
 
+//krazy:excludeall=dpointer
+
 #ifndef EXTERNALPARTSTORAGE_P_H
 #define EXTERNALPARTSTORAGE_P_H
 
 #include "akonadiprivate_export.h"
 
-#include <QtCore/QVector>
-#include <QtCore/QMutex>
-#include <QtCore/QHash>
+#include <QVector>
+#include <QMutex>
+#include <QHash>
 
 class QString;
 class QByteArray;

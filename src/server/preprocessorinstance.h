@@ -25,8 +25,8 @@
 #ifndef AKONADI_PREPROCESSORINSTANCE_H
 #define AKONADI_PREPROCESSORINSTANCE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QDateTime>
+#include <QObject>
+#include <QDateTime>
 
 #include <deque>
 

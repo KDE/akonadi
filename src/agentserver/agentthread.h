@@ -20,7 +20,7 @@
 #ifndef AKONADI_AGENTTHREAD_H
 #define AKONADI_AGENTTHREAD_H
 
-#include <QtCore/QThread>
+#include <QThread>
 
 namespace Akonadi {
 

@@ -20,7 +20,7 @@
 #ifndef GIDTEST_H
 #define GIDTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class GidTest : public QObject
 {

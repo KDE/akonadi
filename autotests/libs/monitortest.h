@@ -20,7 +20,7 @@
 #ifndef MONITORTEST_H
 #define MONITORTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class MonitorTest : public QObject
 {

@@ -28,7 +28,7 @@ class AgentThreadInstance : public AgentInstance
 {
     Q_OBJECT
 public:
-    AgentThreadInstance(AgentManager *manager);
+    explicit AgentThreadInstance(AgentManager *manager);
 
     bool start(const AgentType &agentInfo) Q_DECL_OVERRIDE;
     void quit() Q_DECL_OVERRIDE;

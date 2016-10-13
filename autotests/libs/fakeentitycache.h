@@ -79,7 +79,7 @@ class AKONADITESTFAKE_EXPORT FakeNotificationSource : public QObject
 {
     Q_OBJECT
 public:
-    FakeNotificationSource(QObject *parent = Q_NULLPTR)
+    explicit FakeNotificationSource(QObject *parent = Q_NULLPTR)
         : QObject(parent)
     {
     }

@@ -186,7 +186,7 @@ Collection DbInitializer::collection(const char *name)
 
 void DbInitializer::cleanup()
 {
-    Q_FOREACH (Collection col, mResource.collections()) {
+    Q_FOREACH (Collection col, mResource.collections()) { //krazy:exclude=foreach
         if (!col.isVirtual()) {
             col.remove();
         }
@@ -208,10 +208,10 @@ void DbInitializer::cleanup()
         }
     }
 
-    Q_FOREACH(Part part, Part::retrieveAll()) {
+    Q_FOREACH(Part part, Part::retrieveAll()) {          //krazy:exclude=foreach
         part.remove();
     }
-    Q_FOREACH(PimItem item, PimItem::retrieveAll()) {
+    Q_FOREACH(PimItem item, PimItem::retrieveAll()) {    //krazy:exclude=foreach
         item.remove();
     }
 }

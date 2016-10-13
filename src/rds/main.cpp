@@ -22,8 +22,8 @@
 
 #include <shared/akapplication.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
+#include <QCoreApplication>
+#include <QDebug>
 
 int main(int argc, char **argv)
 {

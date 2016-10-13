@@ -22,8 +22,8 @@
 
 #include "akonadicore_export.h"
 
-#include <QtCore/QMetaType>
-#include <QtCore/QSharedDataPointer>
+#include <QMetaType>
+#include <QSharedDataPointer>
 
 namespace Akonadi
 {

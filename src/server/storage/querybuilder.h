@@ -23,12 +23,12 @@
 #include "query.h"
 #include "dbtype.h"
 
-#include <QtCore/QPair>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
-#include <QtCore/QVector>
-#include <QtSql/QSqlQuery>
+#include <QPair>
+#include <QString>
+#include <QStringList>
+#include <QVariant>
+#include <QVector>
+#include <QSqlQuery>
 
 #ifdef QUERYBUILDER_UNITTEST
 class QueryBuilderTest;

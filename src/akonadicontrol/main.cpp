@@ -26,10 +26,10 @@
 
 #include <private/dbus_p.h>
 
-#include <QtGui/QGuiApplication>
-#include <QtGui/QSessionManager>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusError>
+#include <QGuiApplication>
+#include <QSessionManager>
+#include <QDBusConnection>
+#include <QDBusError>
 
 #include <KCrash/KCrash>
 

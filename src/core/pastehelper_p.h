@@ -23,7 +23,7 @@
 #include "akonadicore_export.h"
 #include "collection.h"
 
-#include <QtCore/QList>
+#include <QList>
 
 class KJob;
 class QMimeData;

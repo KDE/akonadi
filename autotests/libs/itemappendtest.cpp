@@ -32,7 +32,7 @@
 #include <itemfetchscope.h>
 #include <itemdeletejob.h>
 
-#include <QtCore/QDebug>
+#include <QDebug>
 
 using namespace Akonadi;
 

@@ -23,9 +23,9 @@
 #include <agentinstance.h>
 #include <agentmanager.h>
 
-#include <QtTest/QTest>
-#include <QtTest/QSignalSpy>
-#include <QtCore/QTimer>
+#include <QTest>
+#include <QSignalSpy>
+#include <QTimer>
 
 /**
 * \short Akonadi Replacement for QTEST_MAIN from QTestLib

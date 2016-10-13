@@ -21,10 +21,10 @@
 #include "servermanager.h"
 #include "akonadicore_debug.h"
 
-#include <QtCore/QEventLoop>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QTimer>
-#include <QtCore/QPointer>
+#include <QEventLoop>
+#include <QCoreApplication>
+#include <QTimer>
+#include <QPointer>
 
 using namespace Akonadi;
 

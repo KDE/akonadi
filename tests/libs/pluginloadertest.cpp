@@ -20,8 +20,8 @@
 #include "pluginloader_p.h"
 #include "itemserializerplugin.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QFile>
+#include <QDebug>
+#include <QFile>
 #include <QStringList>
 #include <QApplication>
 

@@ -20,7 +20,7 @@
 #ifndef AKONADI_SEARCHJOBTEST_H
 #define AKONADI_SEARCHJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class SearchJobTest : public QObject
 {

@@ -21,8 +21,8 @@
 #ifndef AKONADI_ITEMSERIALIZERPLUGIN_H
 #define AKONADI_ITEMSERIALIZERPLUGIN_H
 
-#include <QtCore/QByteArray>
-#include <QtCore/QSet>
+#include <QByteArray>
+#include <QSet>
 
 #include "item.h"
 #include "akonadicore_export.h"
@@ -53,7 +53,7 @@ namespace Akonadi
  *
  * The serializer plugin code:
  * @code
- * #include <QtCore/qplugin.h>
+ * #include <qplugin.h>
  *
  * class SerializerPluginPimNote : public QObject, public Akonadi::ItemSerializerPlugin
  * {

@@ -24,11 +24,11 @@
 #include <private/xdgbasedirs_p.h>
 #include <private/dbus_p.h>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDebug>
-#include <QtCore/QPluginLoader>
-#include <QtCore/QTimer>
-#include <QtDBus/QDBusConnection>
+#include <QCoreApplication>
+#include <QDebug>
+#include <QPluginLoader>
+#include <QTimer>
+#include <QDBusConnection>
 
 using namespace Akonadi;
 

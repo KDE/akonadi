@@ -20,9 +20,9 @@
 #ifndef AKONADI_QUERY_H
 #define AKONADI_QUERY_H
 
-#include <QtCore/QString>
-#include <QtCore/QVariant>
-#include <QtCore/QVector>
+#include <QString>
+#include <QVariant>
+#include <QVector>
 
 namespace Akonadi {
 namespace Server {
@@ -82,7 +82,7 @@ public:
       Create an empty condition.
       @param op how to combine sub queries.
     */
-    Condition(LogicOperator op = And);
+    explicit Condition(LogicOperator op = And);
 
     /**
       Add a WHERE condition which compares a column with a given value.

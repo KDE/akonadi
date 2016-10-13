@@ -37,7 +37,7 @@
 
 #include <private/dbus_p.h>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

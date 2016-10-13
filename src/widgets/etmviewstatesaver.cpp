@@ -21,7 +21,7 @@
 
 #include "etmviewstatesaver.h"
 
-#include <QtCore/QModelIndex>
+#include <QModelIndex>
 
 #include "entitytreemodel.h"
 

@@ -23,12 +23,12 @@
 
 #include "akonadiprivate_debug.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
-#include <QtCore/QProcessEnvironment>
-#include <QtCore/QRegExp>
+#include <QCoreApplication>
+#include <QDir>
+#include <QFileInfo>
+#include <QSettings>
+#include <QProcessEnvironment>
+#include <QRegExp>
 
 #include <cstdlib>
 

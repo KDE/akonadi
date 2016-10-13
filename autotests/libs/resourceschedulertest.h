@@ -19,8 +19,8 @@
 #ifndef RESOURCESCHEDULERTEST_H
 #define RESOURCESCHEDULERTEST_H
 
-#include <QtCore/QObject>
-#include <QtCore/QVariant>
+#include <QObject>
+#include <QVariant>
 
 class ResourceSchedulerTest : public QObject
 {

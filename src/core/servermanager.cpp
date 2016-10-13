@@ -35,7 +35,12 @@
 #include "private/dbus_p.h"
 #include "private/instance_p.h"
 
-#include <QtDBus>
+#include <QDBusConnection>
+#include <QDBusServiceWatcher>
+#include <QDBusConnectionInterface>
+#include <QDBusInterface>
+#include <QDBusReply>
+#include <QProcess>
 #include <QTimer>
 #include <QScopedPointer>
 

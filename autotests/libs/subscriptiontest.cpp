@@ -25,7 +25,7 @@
 #include <collectionfetchscope.h>
 #include <subscriptionjob_p.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <qtest_akonadi.h>
 

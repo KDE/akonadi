@@ -22,7 +22,7 @@
 
 #include "akonadicore_export.h"
 
-#include <QtCore/QSharedDataPointer>
+#include <QSharedDataPointer>
 
 class QString;
 class QStringList;

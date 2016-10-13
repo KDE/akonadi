@@ -56,7 +56,7 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
     // Split the list by source collection
     QMap<Entity::Id /* collection */, PimItem> toMove;
     QMap<Entity::Id /* collection */, Collection> sources;
-    Q_FOREACH (/*sic!*/ PimItem item, items) {
+    Q_FOREACH (/*sic!*/ PimItem item, items) {  //krazy:exclude=foreach
         if (!item.isValid()) {
             failureResponse("Invalid item in result set!?");
             return;

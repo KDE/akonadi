@@ -20,7 +20,7 @@
 #ifndef GIDEXTRACTORINTERFACE_H
 #define GIDEXTRACTORINTERFACE_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace Akonadi
 {

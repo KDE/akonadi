@@ -24,7 +24,7 @@
 
 #include <private/instance_p.h>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 
 #ifdef Q_OS_UNIX
 #include <sys/types.h>

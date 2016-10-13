@@ -20,13 +20,13 @@
 #ifndef DATASTORE_H
 #define DATASTORE_H
 
-#include <QtCore/QObject>
-#include <QtCore/QList>
-#include <QtCore/QMutex>
-#include <QtCore/QVector>
-#include <QtCore/QWaitCondition>
-#include <QtCore/QThreadStorage>
-#include <QtSql/QSqlDatabase>
+#include <QObject>
+#include <QList>
+#include <QMutex>
+#include <QVector>
+#include <QWaitCondition>
+#include <QThreadStorage>
+#include <QSqlDatabase>
 
 class QSqlQuery;
 class QTimer;

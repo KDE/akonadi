@@ -21,7 +21,7 @@
 
 #include "private/scope_p.h"
 
-#include <QtTest/QTest>
+#include <QTest>
 
 using namespace Akonadi;
 using namespace Akonadi::Protocol;

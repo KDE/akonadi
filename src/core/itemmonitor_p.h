@@ -20,7 +20,7 @@
 #ifndef AKONADI_ITEMMONITOR_P_H
 #define AKONADI_ITEMMONITOR_P_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "itemfetchjob.h"
 #include "monitor.h"

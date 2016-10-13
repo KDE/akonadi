@@ -20,7 +20,7 @@
 #ifndef ATTRIBUTEFACTORYTEST_H
 #define ATTRIBUTEFACTORYTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class AttributeFactoryTest : public QObject
 {

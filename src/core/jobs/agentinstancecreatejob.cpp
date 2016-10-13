@@ -30,7 +30,7 @@
 #include <qdebug.h>
 #include <KLocalizedString>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 
 #ifdef Q_OS_UNIX
 #include <sys/types.h>

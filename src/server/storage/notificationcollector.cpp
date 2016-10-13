@@ -28,7 +28,7 @@
 #include "akonadi.h"
 #include "handler/search.h"
 
-#include <QtCore/QDebug>
+#include <QDebug>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

@@ -23,8 +23,8 @@
 #include <QMimeType>
 #include <QMimeDatabase>
 
-#include <QtCore/QSet>
-#include <QtCore/QStringList>
+#include <QSet>
+#include <QStringList>
 
 namespace Akonadi
 {

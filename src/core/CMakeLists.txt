@@ -310,8 +310,8 @@ PUBLIC
     KF5::ItemModels
     Qt5::Gui # for QColor
 PRIVATE
-    Qt5::Widgets
     Qt5::Network
+    Qt5::Widgets
     KF5::AkonadiPrivate
     KF5::DBusAddons
     KF5::I18n

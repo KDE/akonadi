@@ -21,7 +21,7 @@
 #include <aktest.h>
 
 #include <QObject>
-#include <QtTest/QTest>
+#include <QTest>
 #include <QDebug>
 
 #define QL1S(x) QStringLiteral(x)

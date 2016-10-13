@@ -22,8 +22,8 @@
 
 #include "mimetypechecker.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QStringList>
 
 class MimeTypeCheckerTest : public QObject
 {

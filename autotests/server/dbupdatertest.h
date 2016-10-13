@@ -20,8 +20,8 @@
 #ifndef DBUPDATERTEST_H
 #define DBUPDATERTEST_H
 
-#include <QtCore/QObject>
-#include <QtTest/QtTest>
+#include <QObject>
+#include <QTest>
 
 class DbUpdaterTest : public QObject
 {

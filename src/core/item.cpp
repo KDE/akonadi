@@ -26,8 +26,8 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#include <QtCore/QStringList>
-#include <QtCore/QReadWriteLock>
+#include <QStringList>
+#include <QReadWriteLock>
 
 #include <algorithm>
 #include <map>

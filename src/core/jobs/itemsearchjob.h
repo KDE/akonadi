@@ -25,7 +25,7 @@
 #include "job.h"
 #include "collection.h"
 
-#include <QtCore/QUrl>
+#include <QUrl>
 
 namespace Akonadi
 {

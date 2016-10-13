@@ -42,7 +42,7 @@ class Collection;
 class CacheCleanerInhibitor
 {
 public:
-    CacheCleanerInhibitor(bool inhibit = true);
+    explicit CacheCleanerInhibitor(bool inhibit = true);
     ~CacheCleanerInhibitor();
 
     void inhibit();
@@ -67,7 +67,7 @@ public:
       Creates a new cache cleaner thread.
       @param parent The parent object.
     */
-    CacheCleaner(QObject *parent = Q_NULLPTR);
+    explicit CacheCleaner(QObject *parent = Q_NULLPTR);
     ~CacheCleaner();
 
 protected:

@@ -45,7 +45,7 @@ public:
         Dirty
     };
 
-    ItemModifyJobPrivate(ItemModifyJob *parent);
+    explicit ItemModifyJobPrivate(ItemModifyJob *parent);
 
     void setClean();
     Protocol::PartMetaData preparePart(const QByteArray &partName);

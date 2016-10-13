@@ -19,8 +19,8 @@
 
 #include "controlmanager.h"
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QTimer>
+#include <QCoreApplication>
+#include <QTimer>
 
 #include "controlmanageradaptor.h"
 

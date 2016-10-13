@@ -25,9 +25,9 @@
 #include "akonadiagentbase_debug.h"
 #include <KLocalizedString>
 
-#include <QtCore/QTimer>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusConnectionInterface>
+#include <QTimer>
+#include <QDBusInterface>
+#include <QDBusConnectionInterface>
 
 using namespace Akonadi;
 

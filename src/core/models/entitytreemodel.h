@@ -25,8 +25,8 @@
 #include "collectionfetchscope.h"
 #include "item.h"
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QStringList>
+#include <QAbstractItemModel>
+#include <QStringList>
 
 namespace Akonadi
 {

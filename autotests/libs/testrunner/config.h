@@ -18,9 +18,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#include <QtCore/QHash>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QHash>
+#include <QString>
+#include <QStringList>
 
 class Config
 {

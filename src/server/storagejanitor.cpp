@@ -38,11 +38,11 @@
 #include <private/externalpartstorage_p.h>
 
 #include <QStringBuilder>
-#include <QtDBus/QDBusConnection>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
-#include <QtCore/QDir>
-#include <QtCore/qdiriterator.h>
+#include <QDBusConnection>
+#include <QSqlQuery>
+#include <QSqlError>
+#include <QDir>
+#include <qdiriterator.h>
 #include <QDateTime>
 
 #include <algorithm>

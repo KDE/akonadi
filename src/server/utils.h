@@ -21,10 +21,10 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-#include <QtCore/QVariant>
-#include <QtCore/QVector>
-#include <QtCore/QDateTime>
-#include <QtCore/QSet>
+#include <QVariant>
+#include <QVector>
+#include <QDateTime>
+#include <QSet>
 
 #include "storage/datastore.h"
 #include "storage/dbtype.h"

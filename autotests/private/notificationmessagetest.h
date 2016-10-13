@@ -20,7 +20,7 @@
 #ifndef AKONADI_NOTIFICATIONMESSAGETEST_H
 #define AKONADI_NOTIFICATIONMESSAGETEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class NotificationMessageTest : public QObject
 {

@@ -22,7 +22,7 @@
 
 #include "transportresourcebase.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class Akonadi__TransportAdaptor;
 

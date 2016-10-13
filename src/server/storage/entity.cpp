@@ -21,11 +21,11 @@
 #include "datastore.h"
 #include "countquerybuilder.h"
 
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlDatabase>
-#include <QtSql/QSqlError>
+#include <QStringList>
+#include <QVariant>
+#include <QSqlQuery>
+#include <QSqlDatabase>
+#include <QSqlError>
 
 using namespace Akonadi::Server;
 

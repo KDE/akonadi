@@ -26,7 +26,7 @@
 #include "private/protocol_p.h"
 
 #include <QCoreApplication>
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <QThreadStorage>
 
 using namespace Akonadi;

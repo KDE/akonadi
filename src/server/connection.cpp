@@ -20,8 +20,8 @@
 #include "connection.h"
 #include "akonadiserver_debug.h"
 
-#include <QtCore/QEventLoop>
-#include <QtCore/QLatin1String>
+#include <QEventLoop>
+#include <QLatin1String>
 #include <QSettings>
 
 #include "storage/datastore.h"

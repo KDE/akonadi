@@ -26,10 +26,10 @@
 
 #include <KLocalizedString>
 
-#include <QtCore/QEventLoop>
-#include <QtCore/QCoreApplication>
-#include <QtCore/QTimer>
-#include <QtCore/QPointer>
+#include <QEventLoop>
+#include <QCoreApplication>
+#include <QTimer>
+#include <QPointer>
 #include <QFrame>
 
 using namespace Akonadi;

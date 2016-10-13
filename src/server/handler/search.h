@@ -22,8 +22,8 @@
 
 #include "handler.h"
 
-#include <QtCore/QVector>
-#include <QtCore/QSet>
+#include <QVector>
+#include <QSet>
 
 namespace Akonadi {
 namespace Server {

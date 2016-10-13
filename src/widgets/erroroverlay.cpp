@@ -27,7 +27,7 @@
 #include <KLocalizedString>
 #include <KStandardGuiItem>
 
-#include <QtCore/QEvent>
+#include <QEvent>
 #include <QPalette>
 
 using namespace Akonadi;

@@ -20,10 +20,10 @@
 #ifndef STORAGEDEBUGGER_H
 #define STORAGEDEBUGGER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QMutex>
-#include <QtCore/QMap>
-#include <QtCore/QVariant>
+#include <QObject>
+#include <QMutex>
+#include <QMap>
+#include <QVariant>
 #include <QFile>
 
 #ifdef QT5_BUILD

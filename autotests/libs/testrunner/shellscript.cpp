@@ -21,8 +21,8 @@
 
 #include <QDebug>
 #include <QCoreApplication>
-#include <QtCore/QFile>
-#include <QtCore/QHashIterator>
+#include <QFile>
+#include <QHashIterator>
 
 ShellScript::ShellScript()
 {

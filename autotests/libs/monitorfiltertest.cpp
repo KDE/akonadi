@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "monitor_p.h"
 #include <qtest.h>

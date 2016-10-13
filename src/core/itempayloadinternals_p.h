@@ -22,9 +22,9 @@
 
 #include "supertrait.h"
 
-#include <QtCore/QtGlobal>
-#include <QtCore/QSharedPointer>
-#include <QtCore/QMetaType>
+#include <QtGlobal>
+#include <QSharedPointer>
+#include <QMetaType>
 
 #include <type_traits>
 #include <typeinfo>

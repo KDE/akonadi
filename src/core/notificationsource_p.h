@@ -20,7 +20,7 @@
 #ifndef NOTIFICATIONSOURCE_P_H
 #define NOTIFICATIONSOURCE_P_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include "akonaditests_export.h"
 
@@ -38,7 +38,7 @@ class AKONADI_TESTS_EXPORT NotificationSource : public QObject
     Q_OBJECT
 
 public:
-    NotificationSource(QObject *source);
+    explicit NotificationSource(QObject *source);
     ~NotificationSource();
 
     QString identifier() const;

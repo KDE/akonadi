@@ -21,12 +21,12 @@
 
 #include <private/standarddirs_p.h>
 
-#include <QtCore/QDebug>
-#include <QtCore/QMetaObject>
-#include <QtCore/QRegExp>
-#include <QtCore/QSettings>
-#include <QtNetwork/QLocalSocket>
-#include <QtNetwork/QTcpSocket>
+#include <QDebug>
+#include <QMetaObject>
+#include <QRegExp>
+#include <QSettings>
+#include <QLocalSocket>
+#include <QTcpSocket>
 
 #ifdef Q_OS_UNIX
 #include <sys/socket.h>

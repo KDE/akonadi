@@ -22,7 +22,7 @@
 #include "selectquerybuilder.h"
 #include "entities.h"
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 using namespace Akonadi::Server;
 

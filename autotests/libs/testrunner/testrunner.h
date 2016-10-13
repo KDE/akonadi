@@ -18,9 +18,9 @@
 #ifndef TESTRUNNER_H
 #define TESTRUNNER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QProcess>
-#include <QtCore/QStringList>
+#include <QObject>
+#include <QProcess>
+#include <QStringList>
 
 class KProcess;
 
@@ -29,7 +29,7 @@ class TestRunner : public QObject
     Q_OBJECT
 
 public:
-    TestRunner(const QStringList &args, QObject *parent = Q_NULLPTR);
+    explicit TestRunner(const QStringList &args, QObject *parent = Q_NULLPTR);
     int exitCode() const;
     void terminate();
 

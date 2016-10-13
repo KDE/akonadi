@@ -31,10 +31,10 @@
 
 #include <KLocalizedString>
 
-#include <QtCore/QObject>
-#include <QtCore/QHash>
-#include <QtCore/QStringList>
-#include <QtCore/QTimer>
+#include <QObject>
+#include <QHash>
+#include <QStringList>
+#include <QTimer>
 
 using namespace Akonadi;
 

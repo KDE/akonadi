@@ -24,7 +24,7 @@
 #include "collection.h"
 #include "item.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class KCoreConfigSkeleton;
 class KJob;

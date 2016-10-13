@@ -20,7 +20,7 @@
 #ifndef AKONADI_ABSTRACTSEARCHPLUGIN
 #define AKONADI_ABSTRACTSEARCHPLUGIN
 
-#include <QtCore/QSet>
+#include <QSet>
 #include <QObject>
 #include <QStringList>
 

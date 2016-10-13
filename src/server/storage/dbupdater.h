@@ -20,10 +20,10 @@
 #ifndef AKONADI_DBUPDATER_H
 #define AKONADI_DBUPDATER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QMap>
-#include <QtCore/QStringList>
-#include <QtSql/QSqlDatabase>
+#include <QObject>
+#include <QMap>
+#include <QStringList>
+#include <QSqlDatabase>
 
 class QDomElement;
 class DbUpdaterTest;

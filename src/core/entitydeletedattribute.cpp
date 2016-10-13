@@ -23,8 +23,8 @@
 
 #include "akonadicore_debug.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QString>
+#include <QByteArray>
+#include <QString>
 
 using namespace Akonadi;
 

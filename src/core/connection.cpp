@@ -22,14 +22,14 @@
 #include "servermanager_p.h"
 #include "akonadicore_debug.h"
 
-#include <QtCore/QDataStream>
-#include <QtCore/QFile>
-#include <QtCore/QAbstractEventDispatcher>
-#include <QtCore/QTimer>
-#include <QtCore/QFileInfo>
-#include <QtCore/QSettings>
-#include <QtCore/QElapsedTimer>
-#include <QtWidgets/QApplication>
+#include <QDataStream>
+#include <QFile>
+#include <QAbstractEventDispatcher>
+#include <QTimer>
+#include <QFileInfo>
+#include <QSettings>
+#include <QElapsedTimer>
+#include <QApplication>
 
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_exception_p.h>

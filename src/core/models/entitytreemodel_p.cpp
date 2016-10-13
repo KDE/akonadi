@@ -50,7 +50,7 @@
 #include "akonadicore_debug.h"
 
 #include <QMessageBox>
-#include <QtGui/QIcon>
+#include <QIcon>
 
 QHash<KJob *, QTime> jobTimeTracker;
 

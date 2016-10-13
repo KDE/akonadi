@@ -20,10 +20,10 @@
 #ifndef CONNECTIONTHREAD_P_H
 #define CONNECTIONTHREAD_P_H
 
-#include <QtCore/QThread>
-#include <QtCore/QMutex>
-#include <QtCore/QQueue>
-#include <QtNetwork/QLocalSocket>
+#include <QThread>
+#include <QMutex>
+#include <QQueue>
+#include <QLocalSocket>
 
 #include <private/protocol_p.h>
 

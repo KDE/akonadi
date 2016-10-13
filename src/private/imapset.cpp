@@ -284,7 +284,7 @@ QByteArray ImapSet::toImapSequenceSet() const
     QByteArray rv;
     for (auto iter = d->intervals.cbegin(), end = d->intervals.cend(); iter != end; ++iter) {
         if (iter != d->intervals.cbegin()) {
-            rv += ",";
+            rv += ',';
         }
         rv += iter->toImapSequence();
     }

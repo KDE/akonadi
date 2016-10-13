@@ -50,7 +50,7 @@ class ItemRetriever : public QObject
     Q_OBJECT
 
 public:
-    ItemRetriever(Connection *connection = Q_NULLPTR);
+    explicit ItemRetriever(Connection *connection = Q_NULLPTR);
 
     Connection *connection() const;
 

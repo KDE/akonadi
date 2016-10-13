@@ -20,7 +20,6 @@
 #include "selftestdialog.h"
 #include "agentmanager.h"
 #include "KDBusConnectionPool"
-#include "session_p.h"
 #include "servermanager.h"
 #include "servermanager_p.h"
 #include "private/standarddirs_p.h"
@@ -36,11 +35,12 @@
 #include <QSqlError>
 #include <KUser>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QProcess>
-#include <QtCore/QSettings>
-#include <QtCore/QTextStream>
-#include <QtDBus/QtDBus>
+#include <QFileInfo>
+#include <QProcess>
+#include <QSettings>
+#include <QTextStream>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
 #include <QApplication>
 #include <QClipboard>
 #include <QStandardItemModel>
@@ -48,6 +48,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QVBoxLayout>
+#include <QDate>
 
 // @cond PRIVATE
 

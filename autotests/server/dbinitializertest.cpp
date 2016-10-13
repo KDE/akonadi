@@ -21,8 +21,8 @@
 #include "dbinitializertest.h"
 #include "unittestschema.h"
 
-#include <QtCore/QDebug>
-#include <QtCore/QVariant>
+#include <QDebug>
+#include <QVariant>
 
 #define DBINITIALIZER_UNITTEST
 #include "storage/dbinitializer.cpp"

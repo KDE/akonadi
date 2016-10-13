@@ -21,7 +21,7 @@
 
 #include "itemfetchscope_p.h"
 
-#include <QtCore/QStringList>
+#include <QStringList>
 
 using namespace Akonadi;
 

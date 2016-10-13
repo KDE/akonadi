@@ -21,7 +21,7 @@
 #include "changerecorder_p.h"
 
 #include <qdebug.h>
-#include <QtCore/QSettings>
+#include <QSettings>
 
 using namespace Akonadi;
 

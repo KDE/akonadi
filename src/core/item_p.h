@@ -20,9 +20,9 @@
 #ifndef AKONADI_ITEM_P_H
 #define AKONADI_ITEM_P_H
 
-#include <QtCore/QDateTime>
-#include <QtCore/QMap>
-#include <QtCore/QVarLengthArray>
+#include <QDateTime>
+#include <QMap>
+#include <QVarLengthArray>
 
 #include "itempayloadinternals_p.h"
 #include "itemchangelog_p.h"

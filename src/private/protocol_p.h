@@ -18,16 +18,18 @@
     02110-1301, USA.
 */
 
+//krazy:excludeall=dpointer,explicit,inline
+
 #ifndef AKONADI_PROTOCOL_P_H
 #define AKONADI_PROTOCOL_P_H
 
 #include "akonadiprivate_export.h"
 
 
-#include <QtCore/QFlags>
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QDebug>
-#include <QtDBus/QDBusArgument>
+#include <QFlags>
+#include <QSharedDataPointer>
+#include <QDebug>
+#include <QDBusArgument>
 
 #include "tristate_p.h"
 

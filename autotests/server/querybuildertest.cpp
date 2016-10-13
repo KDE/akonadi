@@ -25,7 +25,7 @@
 #include "storage/query.cpp"
 #include "storage/querybuilder.cpp"
 
-#include <QtTest/QtTest>
+#include <QTest>
 
 QTEST_MAIN(QueryBuilderTest)
 

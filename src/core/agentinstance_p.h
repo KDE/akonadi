@@ -22,8 +22,8 @@
 
 #include "agenttype.h"
 
-#include <QtCore/QSharedData>
-#include <QtCore/QString>
+#include <QSharedData>
+#include <QString>
 
 namespace Akonadi
 {

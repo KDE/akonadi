@@ -33,7 +33,7 @@ class AgentSearchInstance : public QObject
 {
     Q_OBJECT
 public:
-    AgentSearchInstance(const QString &id);
+    explicit AgentSearchInstance(const QString &id);
     virtual ~AgentSearchInstance();
 
     bool init();

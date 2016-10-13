@@ -30,9 +30,9 @@
 #include "itempayloadinternals_p.h"
 #include "job.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QMetaType>
-#include <QtCore/QSet>
+#include <QByteArray>
+#include <QMetaType>
+#include <QSet>
 
 #include <type_traits>
 #include <typeinfo>

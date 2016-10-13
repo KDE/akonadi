@@ -28,11 +28,11 @@
 #include <qdebug.h>
 #include <KProcess>
 
-#include <QtCore/QCoreApplication>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtCore/QTimer>
+#include <QCoreApplication>
+#include <QDir>
+#include <QFile>
+#include <QFileInfo>
+#include <QTimer>
 #include <QDBusConnection>
 
 bool SetupTest::startAkonadiDaemon()

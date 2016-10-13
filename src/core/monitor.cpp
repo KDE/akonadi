@@ -27,10 +27,10 @@
 
 #include <qdebug.h>
 
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusConnection>
 
-#include <QtCore/QTimer>
+#include <QTimer>
 #include <iterator>
 
 using namespace Akonadi;

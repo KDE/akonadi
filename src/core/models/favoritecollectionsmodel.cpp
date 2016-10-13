@@ -20,7 +20,7 @@
 #include "favoritecollectionsmodel.h"
 #include "akonadicore_debug.h"
 #include <QItemSelectionModel>
-#include <QtCore/QMimeData>
+#include <QMimeData>
 
 #include <kconfiggroup.h>
 #include <KLocalizedString>

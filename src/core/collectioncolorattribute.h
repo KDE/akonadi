@@ -41,7 +41,7 @@ class AKONADICORE_EXPORT CollectionColorAttribute : public Akonadi::Attribute
 {
 public:
     CollectionColorAttribute();
-    CollectionColorAttribute(const QColor &color);
+    explicit CollectionColorAttribute(const QColor &color);
 
     virtual ~CollectionColorAttribute();
 

@@ -100,7 +100,7 @@ void CollectionReferenceManager::cleanup()
         qCCritical(AKONADISERVER_LOG) << "Failed to execute  collection reference cleanup query.";
         return;
     }
-    Q_FOREACH (Collection col, qb.result()) {
+    Q_FOREACH (Collection col, qb.result()) {   // krazy:exclude=foreach
         col.setReferenced(false);
         col.update();
         if (AkonadiServer::instance()->cacheCleaner()) {

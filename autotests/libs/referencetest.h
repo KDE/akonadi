@@ -20,7 +20,7 @@
 #ifndef REFERENCETEST_H
 #define REFERENCETEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ReferenceTest : public QObject
 {

@@ -26,7 +26,7 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 
-#include <QtDBus/QDBusConnection>
+#include <QDBusConnection>
 
 using namespace Akonadi;
 

@@ -21,7 +21,7 @@
 #ifndef ITEMSTORETEST_H
 #define ITEMSTORETEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ItemStoreTest : public QObject
 {

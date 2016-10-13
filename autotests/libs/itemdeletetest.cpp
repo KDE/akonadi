@@ -30,7 +30,7 @@
 #include <monitor.h>
 #include "test_utils.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <sys/types.h>
 

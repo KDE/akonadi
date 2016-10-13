@@ -21,9 +21,9 @@
 #ifndef AKONADI_CHANGEMEDIATOR_P_H
 #define AKONADI_CHANGEMEDIATOR_P_H
 
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QSet>
+#include <QList>
+#include <QObject>
+#include <QSet>
 
 #include "item.h"
 

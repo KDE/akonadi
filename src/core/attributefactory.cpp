@@ -29,7 +29,7 @@
 #include "tagattribute.h"
 #include "entityannotationsattribute.h"
 
-#include <QtCore/QHash>
+#include <QHash>
 
 using namespace Akonadi;
 

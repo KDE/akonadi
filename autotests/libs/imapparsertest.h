@@ -20,7 +20,7 @@
 #ifndef IMAPPARSER_TEST_H
 #define IMAPPARSER_TEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ImapParserTest : public QObject
 {

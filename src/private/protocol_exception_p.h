@@ -17,6 +17,8 @@
     02110-1301, USA.
 */
 
+//krazy:excludeall=dpointer,inline
+
 #ifndef AKONADI_PROTOCOLEXCEPTION_P_H
 #define AKONADI_PROTOCOLEXCEPTION_P_H
 
@@ -24,14 +26,14 @@
 
 #include <exception>
 
-#include <QtCore/QByteArray>
+#include <QByteArray>
 
 namespace Akonadi {
 
 class AKONADIPRIVATE_EXPORT ProtocolException : public std::exception
 {
 public:
-    ProtocolException(const char *what)
+    explicit ProtocolException(const char *what)
         : std::exception()
         , mWhat(what)
     {}

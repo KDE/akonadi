@@ -18,7 +18,7 @@
 */
 
 #include <QObject>
-#include <QtTest/QTest>
+#include <QTest>
 #include <QTimer>
 
 #include "storage/itemretriever.h"

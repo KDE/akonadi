@@ -28,7 +28,7 @@
 #include <private/scope_p.h>
 #include <private/imapset_p.h>
 
-#include <QtTest/QTest>
+#include <QTest>
 #include <QSignalSpy>
 
 using namespace Akonadi;

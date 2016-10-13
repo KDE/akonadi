@@ -20,7 +20,7 @@
 #ifndef COLLECTIONJOBTEST_H
 #define COLLECTIONJOBTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class CollectionJobTest : public QObject
 {

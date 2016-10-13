@@ -18,7 +18,7 @@
 */
 
 #include <QObject>
-#include <QtTest/QTest>
+#include <QTest>
 
 #include <private/dbus_p.h>
 

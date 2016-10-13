@@ -31,8 +31,8 @@
 
 #include <KSharedConfig>
 
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusContext>
+#include <QDBusConnection>
+#include <QDBusContext>
 
 class Akonadi__ControlAdaptor;
 class Akonadi__StatusAdaptor;

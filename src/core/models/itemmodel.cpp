@@ -30,7 +30,7 @@
 #include <QUrl>
 
 #include <QCoreApplication>
-#include <QtCore/QMimeData>
+#include <QMimeData>
 
 using namespace Akonadi;
 

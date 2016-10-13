@@ -27,12 +27,12 @@
 #include "akonadicore_debug.h"
 
 // Qt
-#include <QtCore/QHash>
-#include <QtCore/QString>
-#include <QtCore/QByteArray>
-#include <QtCore/QStringList>
-#include <QtCore/QMimeDatabase>
-#include <QtCore/QMimeType>
+#include <QHash>
+#include <QString>
+#include <QByteArray>
+#include <QStringList>
+#include <QMimeDatabase>
+#include <QMimeType>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>

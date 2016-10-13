@@ -24,10 +24,10 @@
 
 #include <private/protocol_p.h>
 
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
-#include <QtCore/QObject>
-#include <QtCore/QString>
+#include <QByteArray>
+#include <QList>
+#include <QObject>
+#include <QString>
 
 namespace Akonadi {
 namespace Server {
@@ -48,13 +48,13 @@ public:
       Create a new notification collector that is not attached to
       a DataStore and just collects notifications until you emit them manually.
     */
-    NotificationCollector(QObject *parent = Q_NULLPTR);
+    explicit NotificationCollector(QObject *parent = Q_NULLPTR);
 
     /**
       Create a new notification collector for the given DataStore @p db.
       @param db The datastore using this notification collector.
     */
-    NotificationCollector(DataStore *db);
+    explicit NotificationCollector(DataStore *db);
 
     /**
       Destroys this notification collector.

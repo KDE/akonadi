@@ -329,7 +329,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         }
 
         tag.setId(fakeServerData->nextTagId());
-        tag.setRemoteId("RID_" + QByteArray::number(tag.id()) + " " + type.toLatin1());
+        tag.setRemoteId("RID_" + QByteArray::number(tag.id()) + ' ' + type.toLatin1());
         tag.setType(type.toLatin1());
 
         if (depth == 0) {

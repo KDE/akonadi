@@ -38,12 +38,12 @@
 #include <KLocalizedString>
 #include <kcoreconfigskeleton.h>
 
-#include <QtDBus/QDBusConnectionInterface>
-#include <QtDBus/QDBusInterface>
-#include <QtDBus/QDBusServiceWatcher>
-#include <QtCore/QMetaMethod>
-#include <QtCore/QTime>
-#include <QtCore/QTimer>
+#include <QDBusConnectionInterface>
+#include <QDBusInterface>
+#include <QDBusServiceWatcher>
+#include <QMetaMethod>
+#include <QTime>
+#include <QTimer>
 
 #define LOCK_WAIT_TIMEOUT_SECONDS 30
 

@@ -20,9 +20,9 @@
 #include "dbus_p.h"
 #include "instance_p.h"
 
-#include <QtCore/QString>
-#include <QtCore/QStringBuilder>
-#include <QtCore/QStringList>
+#include <QString>
+#include <QStringBuilder>
+#include <QStringList>
 
 using namespace Akonadi;
 

@@ -24,11 +24,11 @@
 
 #include <KLocalizedString>
 
-#include <QtCore/QHash>
-#include <QtCore/QList>
-#include <QtCore/QModelIndex>
-#include <QtCore/QStringList>
-#include <QtGui/QIcon>
+#include <QHash>
+#include <QList>
+#include <QModelIndex>
+#include <QStringList>
+#include <QIcon>
 
 class KJob;
 

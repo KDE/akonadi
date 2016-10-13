@@ -23,7 +23,7 @@
 #include "akonadiagentbase_export.h"
 #include "item.h"
 
-#include <QtCore/QString>
+#include <QString>
 
 namespace Akonadi
 {

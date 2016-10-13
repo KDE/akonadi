@@ -25,7 +25,7 @@
 #include "agenttype.h"
 #include "agentinstance.h"
 
-#include <QtCore/QHash>
+#include <QHash>
 
 namespace Akonadi
 {
@@ -40,7 +40,7 @@ class AgentManagerPrivate
     friend class AgentManager;
 
 public:
-    AgentManagerPrivate(AgentManager *parent)
+    explicit AgentManagerPrivate(AgentManager *parent)
         : mParent(parent)
         , mManager(0)
     {

@@ -22,10 +22,10 @@
 
 #include "entities.h"
 
-#include <QtCore/QByteArray>
-#include <QtCore/QList>
-#include <QtCore/QString>
-#include <QtCore/QStack>
+#include <QByteArray>
+#include <QList>
+#include <QString>
+#include <QStack>
 
 namespace Akonadi {
 

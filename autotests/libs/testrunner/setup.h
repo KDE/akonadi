@@ -20,7 +20,7 @@
 
 #include <servermanager.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 #include <QVector>
 #include <QPair>
 

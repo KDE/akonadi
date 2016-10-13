@@ -20,11 +20,10 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <QtCore/Qt>
-#include <QtCore/QDateTime>
-#include <QtCore/QDebug>
-#include <QtCore/QString>
-#include <QtCore/QStringList>
+#include <QDateTime>
+#include <QDebug>
+#include <QString>
+#include <QStringList>
 
 class QVariant;
 class QSqlDatabase;

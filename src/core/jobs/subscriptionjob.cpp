@@ -68,11 +68,11 @@ void SubscriptionJob::doStart()
         emitResult();
     }
 
-    Q_FOREACH (Collection col, d->mSub) {
+    Q_FOREACH (Collection col, d->mSub) {   //krazy:exclude=foreach
         col.setEnabled(true);
         new CollectionModifyJob(col, this);
     }
-    Q_FOREACH (Collection col, d->mUnsub) {
+    Q_FOREACH (Collection col, d->mUnsub) { //krazy:exclude=foreach
         col.setEnabled(false);
         new CollectionModifyJob(col, this);
     }

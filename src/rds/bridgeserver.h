@@ -20,8 +20,8 @@
 #ifndef BRIDGESERVER_H
 #define BRIDGESERVER_H
 
-#include <QtCore/QObject>
-#include <QtNetwork/QTcpServer>
+#include <QObject>
+#include <QTcpServer>
 
 class BridgeServerBase : public QObject
 {

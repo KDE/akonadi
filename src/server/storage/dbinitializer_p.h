@@ -29,7 +29,7 @@ namespace Server {
 class DbInitializerMySql : public DbInitializer
 {
 public:
-    DbInitializerMySql(const QSqlDatabase &database);
+    explicit DbInitializerMySql(const QSqlDatabase &database);
 protected:
     QString sqlType(const QString &type, int size) const Q_DECL_OVERRIDE;
 
@@ -43,7 +43,7 @@ protected:
 class DbInitializerSqlite : public DbInitializer
 {
 public:
-    DbInitializerSqlite(const QSqlDatabase &database);
+    explicit DbInitializerSqlite(const QSqlDatabase &database);
 protected:
     QString buildCreateTableStatement(const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
     QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
@@ -54,7 +54,7 @@ protected:
 class DbInitializerPostgreSql : public DbInitializer
 {
 public:
-    DbInitializerPostgreSql(const QSqlDatabase &database);
+    explicit DbInitializerPostgreSql(const QSqlDatabase &database);
 protected:
     QString sqlType(const QString &type, int size) const Q_DECL_OVERRIDE;
 

@@ -36,7 +36,7 @@
 #include <kiconloader.h>
 
 #include <QCoreApplication>
-#include <QtCore/QTimer>
+#include <QTimer>
 
 using namespace Akonadi;
 

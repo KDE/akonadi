@@ -20,8 +20,8 @@
 #ifndef AKONADI_TRACER_H
 #define AKONADI_TRACER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QMutex>
+#include <QObject>
+#include <QMutex>
 
 #include "tracerinterface.h"
 

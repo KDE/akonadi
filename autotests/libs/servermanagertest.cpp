@@ -20,7 +20,7 @@
 #include <control.h>
 #include <servermanager.h>
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <qtest_akonadi.h>
 

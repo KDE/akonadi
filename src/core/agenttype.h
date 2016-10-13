@@ -22,9 +22,9 @@
 
 #include "akonadicore_export.h"
 
-#include <QtCore/QList>
-#include <QtCore/QMetaType>
-#include <QtCore/QSharedDataPointer>
+#include <QList>
+#include <QMetaType>
+#include <QSharedDataPointer>
 
 class QIcon;
 class QString;

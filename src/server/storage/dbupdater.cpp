@@ -33,16 +33,16 @@
 
 #include <QCoreApplication>
 #include <QMetaMethod>
-#include <QtDBus/QDBusConnection>
-#include <QtDBus/QDBusConnectionInterface>
-#include <QtSql/QSqlQuery>
-#include <QtSql/QSqlError>
+#include <QDBusConnection>
+#include <QDBusConnectionInterface>
+#include <QSqlQuery>
+#include <QSqlError>
 #include <QThread>
 
 #include <QDomDocument>
 #include <QFile>
 #include <QTime>
-#include <QtSql/qsqlresult.h>
+#include <qsqlresult.h>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

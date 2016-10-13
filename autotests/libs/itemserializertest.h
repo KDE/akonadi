@@ -20,7 +20,7 @@
 #ifndef ITEMSERIALIZERTEST_H
 #define ITEMSERIALIZERTEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class ItemSerializerTest : public QObject
 {

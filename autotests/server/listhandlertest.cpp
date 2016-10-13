@@ -30,7 +30,7 @@
 #include "dbinitializer.h"
 #include <storage/storagedebugger.h>
 
-#include <QtTest/QTest>
+#include <QTest>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -489,7 +489,7 @@ private Q_SLOTS:
         FakeAkonadiServer::instance()->runTest();
     }
 
-//No point in running the benchmark everytime
+//No point in running the benchmark every time
 #if 0
 
     void testListEnabledBenchmark_data()

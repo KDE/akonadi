@@ -20,7 +20,7 @@
 #ifndef COLLECTIONATTRIBUTETEST_H
 #define COLLECTIONATTRIBUTETEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class CollectionAttributeTest : public QObject
 {

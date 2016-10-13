@@ -25,7 +25,7 @@
 #include "collection.h"
 #include <item.h>
 
-#include <QtXml/QDomDocument>
+#include <QDomDocument>
 
 namespace Akonadi
 {
@@ -48,7 +48,7 @@ public:
 
       @see loadFile()
     */
-    XmlDocument(const QString &fileName);
+    explicit XmlDocument(const QString &fileName);
     ~XmlDocument();
 
     /**

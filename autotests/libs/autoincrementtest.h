@@ -21,7 +21,7 @@
 
 #include "collection.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace Akonadi
 {

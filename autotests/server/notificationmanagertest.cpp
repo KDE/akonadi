@@ -23,10 +23,10 @@
 #include "notificationmanager.h"
 #include "notificationsubscriber.h"
 
-#include <QtCore/QObject>
-#include <QtTest/QTest>
+#include <QObject>
+#include <QTest>
 #include <QSignalSpy>
-#include <QtCore/QDebug>
+#include <QDebug>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

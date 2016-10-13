@@ -29,10 +29,10 @@
 #include "akonadicore_debug.h"
 
 // Qt
-#include <QtCore/QBuffer>
-#include <QtCore/QFile>
-#include <QtCore/QIODevice>
-#include <QtCore/QString>
+#include <QBuffer>
+#include <QFile>
+#include <QIODevice>
+#include <QString>
 
 #include <string>
 

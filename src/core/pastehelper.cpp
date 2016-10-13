@@ -37,10 +37,10 @@
 #include <QUrl>
 #include <QUrlQuery>
 
-#include <QtCore/QByteArray>
-#include <QtCore/QMimeData>
-#include <QtCore/QStringList>
-#include <QtCore/QMutexLocker>
+#include <QByteArray>
+#include <QMimeData>
+#include <QStringList>
+#include <QMutexLocker>
 
 #include <functional>
 

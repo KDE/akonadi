@@ -19,7 +19,7 @@
 
 #include "xmldocument.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <qtest.h>
 

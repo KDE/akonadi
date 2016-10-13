@@ -36,8 +36,8 @@
 
 #include "private/protocol_p.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QTimer>
+#include <QObject>
+#include <QTimer>
 
 #include <QMimeDatabase>
 #include <QMimeType>

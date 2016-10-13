@@ -23,8 +23,8 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 
-#include <QtCore/QStringList>
-#include <QtCore/QVariant>
+#include <QStringList>
+#include <QVariant>
 
 using namespace Akonadi;
 

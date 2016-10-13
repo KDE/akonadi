@@ -21,8 +21,8 @@
 #ifndef AKONADI_ITEM_SERIALIZER_P_H
 #define AKONADI_ITEM_SERIALIZER_P_H
 
-#include <QtCore/QByteArray>
-#include <QtCore/QSet>
+#include <QByteArray>
+#include <QSet>
 
 #include "akonaditests_export.h"
 

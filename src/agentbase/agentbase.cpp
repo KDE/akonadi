@@ -44,13 +44,13 @@
 
 #include <Kdelibs4ConfigMigrator>
 
-#include <QtCore/QDir>
-#include <QtCore/QSettings>
-#include <QtCore/QTimer>
-#include <QtDBus/QtDBus>
+#include <QDir>
+#include <QSettings>
+#include <QTimer>
+#include <QDBusConnection>
 #include <QApplication>
-#include <QtCore/QCommandLineParser>
-#include <QtNetwork/QNetworkConfiguration>
+#include <QCommandLineParser>
+#include <QNetworkConfiguration>
 #include <QNetworkConfigurationManager>
 
 #include <signal.h>

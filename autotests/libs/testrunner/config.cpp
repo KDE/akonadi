@@ -19,13 +19,13 @@
 
 #include <QDebug>
 
-#include <QtCore/QDir>
-#include <QtCore/QPair>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
-#include <QtXml/QDomDocument>
-#include <QtXml/QDomElement>
-#include <QtXml/QDomNode>
+#include <QDir>
+#include <QPair>
+#include <QFile>
+#include <QFileInfo>
+#include <QDomDocument>
+#include <QDomElement>
+#include <QDomNode>
 
 Q_GLOBAL_STATIC(Config, globalConfig)
 

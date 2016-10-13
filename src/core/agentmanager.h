@@ -25,7 +25,7 @@
 #include "agenttype.h"
 #include "agentinstance.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace Akonadi
 {

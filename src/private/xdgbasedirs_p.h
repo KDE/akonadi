@@ -21,8 +21,8 @@
 #define XDGBASEDIRS_H
 
 // Qt includes
-#include <QtCore/QFlags>
-#include <QtCore/QStringList>
+#include <QFlags>
+#include <QStringList>
 
 #include "akonadiprivate_export.h"
 

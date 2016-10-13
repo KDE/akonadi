@@ -22,7 +22,7 @@
 
 #undef QT_NO_CAST_FROM_ASCII
 
-#include <QtCore/QObject>
+#include <QObject>
 
 namespace Akonadi {
 namespace Server {

@@ -37,13 +37,13 @@
 #include <QFileDialog>
 #include <KLocalizedString>
 
-#include <QtCore/QFile>
+#include <QFile>
 #include <QFileSystemWatcher>
-#include <QtCore/QDir>
-#include <QtCore/QUuid>
+#include <QDir>
+#include <QUuid>
 #include <QStandardPaths>
 #include <QDebug>
-#include <QtWidgets/QFileDialog>
+#include <QFileDialog>
 
 using namespace Akonadi;
 

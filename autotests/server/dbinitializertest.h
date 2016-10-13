@@ -20,8 +20,8 @@
 #ifndef DBINITIALIZERTEST_H
 #define DBINITIALIZERTEST_H
 
-#include <QtCore/QObject>
-#include <QtTest/QtTest>
+#include <QObject>
+#include <QTest>
 
 class DbInitializerTest : public QObject
 {

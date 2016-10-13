@@ -24,7 +24,7 @@
 
 #include <QMetaType>
 #include <QSet>
-#include <QtCore/QSharedDataPointer>
+#include <QSharedDataPointer>
 #include <QDateTime>
 
 template <typename T> class QSet;

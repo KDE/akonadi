@@ -54,7 +54,7 @@
 #include <KMessageBox>
 #include <KToggleAction>
 
-#include <QtCore/QMimeData>
+#include <QMimeData>
 #include <QApplication>
 #include <QClipboard>
 #include <QItemSelectionModel>

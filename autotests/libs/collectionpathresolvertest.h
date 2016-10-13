@@ -20,7 +20,7 @@
 #ifndef COLLECTIONPATHRESOLVER_TEST_H
 #define COLLECTIONPATHRESOLVER_TEST_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 class CollectionPathResolverTest : public QObject
 {

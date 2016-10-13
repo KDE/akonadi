@@ -21,7 +21,7 @@
 
 #include "entityhiddenattribute.h"
 
-#include <QtCore/QByteArray>
+#include <QByteArray>
 
 using namespace Akonadi;
 

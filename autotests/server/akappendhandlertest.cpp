@@ -31,7 +31,7 @@
 
 #include <shared/aktest.h>
 
-#include <QtTest/QTest>
+#include <QTest>
 #include <QSignalSpy>
 
 using namespace Akonadi;

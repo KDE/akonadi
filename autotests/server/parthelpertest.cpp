@@ -22,7 +22,7 @@
 #include "storage/parthelper.h"
 
 #include <QObject>
-#include <QtTest/QTest>
+#include <QTest>
 #include <QDebug>
 #include <QDir>
 

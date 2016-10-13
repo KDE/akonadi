@@ -20,7 +20,7 @@
 #ifndef CONTROLMANAGER_H
 #define CONTROLMANAGER_H
 
-#include <QtCore/QObject>
+#include <QObject>
 
 /**
  * The control manager provides a dbus method to shutdown

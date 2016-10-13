@@ -19,7 +19,7 @@
 
 #include "entitydisplayattribute.h"
 
-#include <QtCore/QObject>
+#include <QObject>
 
 #include <qtest.h>
 

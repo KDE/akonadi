@@ -23,9 +23,9 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
-#include <QtCore/QMetaType>
-#include <QtCore/QSharedDataPointer>
-#include <QtCore/QDebug>
+#include <QMetaType>
+#include <QSharedDataPointer>
+#include <QDebug>
 
 class QUrl;
 

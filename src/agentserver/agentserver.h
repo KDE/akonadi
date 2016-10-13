@@ -22,9 +22,9 @@
 
 #include "agentpluginloader.h"
 
-#include <QtCore/QHash>
-#include <QtCore/QObject>
-#include <QtCore/QQueue>
+#include <QHash>
+#include <QObject>
+#include <QQueue>
 
 namespace Akonadi {
 

@@ -19,8 +19,8 @@
 #ifndef AKONADIHANDLER_H
 #define AKONADIHANDLER_H
 
-#include <QtCore/QObject>
-#include <QtCore/QDataStream>
+#include <QObject>
+#include <QDataStream>
 
 #include "global.h"
 #include "exception.h"

@@ -24,7 +24,7 @@
 #include "item.h"
 #include "job.h"
 
-#include <QtCore/QAbstractTableModel>
+#include <QAbstractTableModel>
 
 namespace Akonadi
 {

@@ -34,8 +34,8 @@
 
 #include <kdescendantsproxymodel.h>
 
-#include <QtCore/QAbstractItemModel>
-#include <QtCore/QEvent>
+#include <QAbstractItemModel>
+#include <QEvent>
 #include <QPointer>
 #include <QMouseEvent>
 

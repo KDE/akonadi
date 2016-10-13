@@ -40,8 +40,8 @@
 #include <searchquery.h>
 #include <subscriptionjob_p.h>
 
-#include <QtCore/QVariant>
-#include <QtTest/QSignalSpy>
+#include <QVariant>
+#include <QSignalSpy>
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;

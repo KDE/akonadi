@@ -25,9 +25,9 @@
 #include "item.h"
 #include "resourcebase.h"
 
-#include <QtCore/QObject>
-#include <QtCore/QStringList>
-#include <QtDBus/QDBusMessage>
+#include <QObject>
+#include <QStringList>
+#include <QDBusMessage>
 
 namespace Akonadi
 {

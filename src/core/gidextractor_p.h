@@ -20,7 +20,7 @@
 #ifndef GIDEXTRACTOR_H
 #define GIDEXTRACTOR_H
 
-#include <QtCore/QString>
+#include <QString>
 
 namespace Akonadi
 {

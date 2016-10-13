@@ -23,8 +23,8 @@
 
 #include <QSqlQuery>
 #include <QThreadStorage>
-#include <QtCore/QHash>
-#include <QtCore/QTimer>
+#include <QHash>
+#include <QTimer>
 
 using namespace Akonadi::Server;
 
