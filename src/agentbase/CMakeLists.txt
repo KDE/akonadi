@@ -50,6 +50,7 @@ target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${
 
 target_link_libraries(KF5AkonadiAgentBase
 PUBLIC
+    Qt5::DBus
     Qt5::Widgets # for QApplication
     KF5::AkonadiCore
     KF5::ConfigCore
