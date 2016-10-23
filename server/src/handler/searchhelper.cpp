@@ -107,6 +107,15 @@ static qint64 parentCollectionId(qint64 collectionId)
 
 QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64> &ancestors, const QStringList &mimeTypes)
 {
+    // build the query condition first, and return silently if it remains empty.
+    Query::Condition cond(Query::Or);
+    Q_FOREACH (const QString &mt, mimeTypes) {
+        cond.addValueCondition(MimeType::nameFullColumnName(), Query::Equals, mt);
+    }
+    if (cond.isEmpty()) {
+        return QVector<qint64>();
+    }
+
     // Get all collections with given mime types
     QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
     qb.setDistinct(true);
@@ -116,10 +125,6 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
                CollectionMimeTypeRelation::leftFullColumnName(), Collection::idFullColumnName());
     qb.addJoin(QueryBuilder::LeftJoin, MimeType::tableName(),
                CollectionMimeTypeRelation::rightFullColumnName(), MimeType::idFullColumnName());
-    Query::Condition cond(Query::Or);
-    Q_FOREACH (const QString &mt, mimeTypes) {
-        cond.addValueCondition(MimeType::nameFullColumnName(), Query::Equals, mt);
-    }
     qb.addCondition(cond);
 
     if (!qb.exec()) {
