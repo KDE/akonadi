@@ -30,6 +30,9 @@ endmacro()
 
 set( knutresource_SRCS knutresource.cpp)
 
+ecm_qt_declare_logging_category(knutresource_SRCS HEADER knutresource_debug.h IDENTIFIER KNUTRESOURCE_LOG CATEGORY_NAME org.kde.pim.knut)
+
+
 kconfig_add_kcfg_files(knutresource_SRCS settings.kcfgc)
 
 kcfg_generate_dbus_interface(${CMAKE_CURRENT_SOURCE_DIR}/knutresource.kcfg org.kde.Akonadi.Knut.Settings)

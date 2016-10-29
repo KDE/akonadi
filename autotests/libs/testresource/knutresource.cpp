@@ -19,6 +19,7 @@
 */
 
 #include "knutresource.h"
+#include "knutresource_debug.h"
 #include "settings.h"
 #include "settingsadaptor.h"
 #include "xmlwriter.h"
@@ -234,7 +235,7 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
     const int numberOfChildren = children.count();
     for (int i = 0; i < numberOfChildren; ++i) {
         const QDomElement child = children.at(i).toElement();
-        qDebug() << "reparenting " << child.tagName() << child.attribute(QStringLiteral("rid"));
+        qCDebug(KNUTRESOURCE_LOG) << "reparenting " << child.tagName() << child.attribute(QStringLiteral("rid"));
         if (child.isNull()) {
             continue;
         }
@@ -318,7 +319,7 @@ void KnutResource::itemMoved(const Item &item, const Collection &collectionSourc
 {
     const QDomElement oldElem = mDocument.itemElementByRemoteId(item.remoteId());
     if (oldElem.isNull()) {
-        qWarning() << "Moved item not found in DOM tree";
+        qCWarning(KNUTRESOURCE_LOG) << "Moved item not found in DOM tree";
         changeProcessed();
         return;
     }
@@ -368,8 +369,8 @@ void KnutResource::search(const QString &query, const Collection &collection)
 {
     Q_UNUSED(collection);
     const QVector<qint64> result = parseQuery(query).toList().toVector();
-    qDebug() << "KNUT QUERY:" << query;
-    qDebug() << "KNUT RESOURCE:" << result;
+    qCDebug(KNUTRESOURCE_LOG) << "KNUT QUERY:" << query;
+    qCDebug(KNUTRESOURCE_LOG) << "KNUT RESOURCE:" << result;
     searchFinished(result, Akonadi::AgentSearchInterface::Uid);
 }
 
@@ -378,13 +379,13 @@ void KnutResource::addSearch(const QString &query, const QString &queryLanguage,
     Q_UNUSED(query);
     Q_UNUSED(queryLanguage);
     Q_UNUSED(resultCollection);
-    qDebug();
+    qCDebug(KNUTRESOURCE_LOG);
 }
 
 void KnutResource::removeSearch(const Collection &resultCollection)
 {
     Q_UNUSED(resultCollection);
-    qDebug();
+    qCDebug(KNUTRESOURCE_LOG);
 }
 
 AKONADI_RESOURCE_MAIN(KnutResource)
