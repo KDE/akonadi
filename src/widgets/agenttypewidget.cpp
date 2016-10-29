@@ -189,7 +189,7 @@ void AgentTypeWidgetDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     int wc = fm.boundingRect(0, 0, 0, 0, Qt::AlignLeft, comment).width();
     int wp = pixmap.width();
 
-    QStyleOptionViewItemV4 opt(option);
+    QStyleOptionViewItem opt(option);
     opt.showDecorationSelected = true;
     QApplication::style()->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter);
 
