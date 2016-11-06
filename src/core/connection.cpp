@@ -127,10 +127,10 @@ void Connection::doReconnect()
         const QString defaultSocketDir = StandardDirs::saveDir("data");
 
         if (mConnectionType == CommandConnection) {
-            const QString defaultSocketPath = defaultSocketDir % QStringLiteral("akonadiserver-cmd.socket");
+            const QString defaultSocketPath = defaultSocketDir % QStringLiteral("/akonadiserver-cmd.socket");
             serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), defaultSocketPath).toString();
         } else if (mConnectionType == NotificationConnection) {
-            const QString defaultSocketPath = defaultSocketDir % QStringLiteral("akonadiserver-ntf.socket");
+            const QString defaultSocketPath = defaultSocketDir % QStringLiteral("/akonadiserver-ntf.socket");
             serverAddress = connectionSettings.value(QStringLiteral("Notifications/UnixPath"), defaultSocketPath).toString();
         }
     }
@@ -141,7 +141,7 @@ void Connection::doReconnect()
         mSocket = new QLocalSocket(this);
         connect(mSocket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
                 [this](QLocalSocket::LocalSocketError) {
-                    qCWarning(AKONADICORE_LOG) << mSocket->errorString();
+                    qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
                     Q_EMIT socketError(mSocket->errorString());
                     Q_EMIT socketDisconnected();
                 });
