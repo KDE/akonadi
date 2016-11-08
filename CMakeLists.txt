@@ -3,7 +3,7 @@ project(Akonadi)
 cmake_minimum_required(VERSION 2.8.12)
 
 # ECM setup
-set(KF5_VERSION "5.24.0")
+set(KF5_VERSION "5.28.0")
 find_package(ECM ${KF5_VERSION} CONFIG REQUIRED)
 set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modules)
 
@@ -22,7 +22,7 @@ include(CheckSymbolExists)
 
 include(AkonadiMacros)
 
-set(PIM_VERSION "5.3.46")
+set(PIM_VERSION "5.3.80")
 
 set(QT_REQUIRED_VERSION "5.6.0")
 set(AKONADI_VERSION ${PIM_VERSION})
