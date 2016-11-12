@@ -226,9 +226,10 @@ void StorageJanitor::findOrphanedResources()
     }
     //qCDebug(AKONADISERVER_LOG) << "SQL:" << qbres.query().lastQuery();
     const Resource::List orphanResources = qbres.result();
-    if (orphanResources.size() > 0) {
+    const int orphanResourcesSize(orphanResources.size());
+    if (orphanResourcesSize > 0) {
         QStringList resourceNames;
-        resourceNames.reserve(orphanResources.size());
+        resourceNames.reserve(orphanResourcesSize);
         Q_FOREACH (const Resource &resource, orphanResources) {
             resourceNames.append(resource.name());
         }
@@ -289,7 +290,7 @@ void StorageJanitor::findOrphanedItems()
         return;
     }
     const PimItem::List orphans = qb.result();
-    if (orphans.size() > 0) {
+    if (!orphans.isEmpty()) {
         inform(QLatin1Literal("Found ") + QString::number(orphans.size()) + QLatin1Literal(" orphan items."));
         // Attach to lost+found collection
         Transaction transaction(DataStore::self());
@@ -325,7 +326,7 @@ void StorageJanitor::findOrphanedParts()
         return;
     }
     const Part::List orphans = qb.result();
-    if (orphans.size() > 0) {
+    if (!orphans.isEmpty()) {
         inform(QLatin1Literal("Found ") + QString::number(orphans.size()) + QLatin1Literal(" orphan parts."));
         // TODO: create lost+found items for those? delete?
     }
