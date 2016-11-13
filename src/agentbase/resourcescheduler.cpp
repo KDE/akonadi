@@ -624,7 +624,8 @@ QString ResourceScheduler::dumpToString() const
             str << " queue " << i << " is empty" << endl;
         } else {
             str << " queue " << i << " " << queue.size() << " tasks:" << endl;
-            for (QList<Task>::const_iterator it = queue.begin(); it != queue.end(); ++it) {
+            QList<Task>::const_iterator queueEnd(queue.constEnd());
+            for (QList<Task>::const_iterator it = queue.constBegin(); it != queueEnd; ++it) {
                 str << "  " << (*it) << endl;
             }
         }

@@ -75,8 +75,9 @@ void CollectionModifyJob::doStart()
     if (d->mCollection.parentCollection().id() >= 0) {
         cmd.setParentId(d->mCollection.parentCollection().id());
     }
-    if (!d->mCollection.name().isEmpty()) {
-        cmd.setName(d->mCollection.name());
+    const QString &collectionName = d->mCollection.name();
+    if (!collectionName.isEmpty()) {
+        cmd.setName(collectionName);
     }
     if (!d->mCollection.remoteId().isNull()) {
         cmd.setRemoteId(d->mCollection.remoteId());
