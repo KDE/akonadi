@@ -186,7 +186,8 @@ bool SearchTaskManager::allResourceTasksCompleted(SearchTask *agentSearchTask) c
 
     // Check for running queries
     QMap<QString, ResourceTask *>::const_iterator it = mRunningTasks.begin();
-    for (; it != mRunningTasks.end(); ++it) {
+    QMap<QString, ResourceTask *>::const_iterator end = mRunningTasks.end();
+    for (; it != end; ++it) {
         if (it.value()->parentTask == agentSearchTask) {
             return false;
         }
