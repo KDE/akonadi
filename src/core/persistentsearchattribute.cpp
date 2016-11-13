@@ -70,6 +70,7 @@ QList<qint64> PersistentSearchAttribute::queryCollections() const
 void PersistentSearchAttribute::setQueryCollections(const QVector<Collection> &collections)
 {
     d->queryCollections.clear();
+    d->queryCollections.reserve(collections.count());
     Q_FOREACH (const Collection &collection, collections) {
         d->queryCollections << collection.id();
     }
@@ -143,7 +144,8 @@ void PersistentSearchAttribute::deserialize(const QByteArray &data)
 {
     QList<QByteArray> l;
     ImapParser::parseParenthesizedList(data, l);
-    for (int i = 0; i < l.size(); ++i) {
+    const int listSize(l.size());
+    for (int i = 0; i < listSize; ++i) {
         const QByteArray key = l.at(i);
         if (key == "QUERYLANGUAGE") {
             // Skip the value
@@ -155,6 +157,7 @@ void PersistentSearchAttribute::deserialize(const QByteArray &data)
             QList<QByteArray> ids;
             ImapParser::parseParenthesizedList(l.at(i + 1), ids);
             d->queryCollections.clear();
+            d->queryCollections.reserve(ids.count());
             Q_FOREACH (const QByteArray &id, ids) {
                 d->queryCollections << id.toLongLong();
             }
