@@ -53,7 +53,7 @@ public:
     int end;
 
 public Q_SLOTS:
-    void onRowsInserted(QModelIndex p, int s, int e)
+    void onRowsInserted(const QModelIndex &p, int s, int e)
     {
         qDebug() << "rowsInserted( parent =" << p << ", start = " << s << ", end = " << e << ", data = " << p.data().toString() << ")";
         mSignals << QStringLiteral("rowsInserted");
@@ -61,7 +61,7 @@ public Q_SLOTS:
         start = s;
         end = e;
     }
-    void onRowsRemoved(QModelIndex p, int s, int e)
+    void onRowsRemoved(const QModelIndex &p, int s, int e)
     {
         qDebug() << "rowsRemoved( parent = " << p << ", start = " << s << ", end = " << e << ")";
         mSignals << QStringLiteral("rowsRemoved");
@@ -69,11 +69,11 @@ public Q_SLOTS:
         start = s;
         end = e;
     }
-    void onRowsMoved(QModelIndex, int, int, QModelIndex, int)
+    void onRowsMoved(const QModelIndex &, int, int, const QModelIndex &, int)
     {
         mSignals << QStringLiteral("rowsMoved");
     }
-    void onDataChanged(QModelIndex tl, QModelIndex br)
+    void onDataChanged(const QModelIndex &tl, const QModelIndex &br)
     {
         qDebug() << "dataChanged( topLeft =" << tl << "(" << tl.data().toString() << "), bottomRight =" << br << "(" << br.data().toString() << ") )";
         mSignals << QStringLiteral("dataChanged");

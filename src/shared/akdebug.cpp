@@ -37,6 +37,7 @@
 
 class FileDebugStream : public QIODevice
 {
+    Q_OBJECT
 public:
     FileDebugStream()
         : mType(QtCriticalMsg)
@@ -215,3 +216,6 @@ void akMakeVerbose(const QByteArray &category)
     QLoggingCategory::CategoryFilter oldFilter = QLoggingCategory::installFilter(akCategoryFilter);
     sInstance()->setOrigCategoryFilter(oldFilter);
 }
+
+#include "akdebug.moc"
+
