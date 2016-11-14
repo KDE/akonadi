@@ -363,7 +363,7 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
 {
     // Assumes mLock being locked by caller
 
-    if (notification.items().count() == 0) {
+    if (notification.items().isEmpty()) {
         return false;
     }
 

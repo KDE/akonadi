@@ -29,7 +29,7 @@ using namespace Akonadi;
 Attribute *XmlReader::elementToAttribute(const QDomElement &elem)
 {
     if (elem.isNull() || elem.tagName() != Format::Tag::attribute()) {
-        return 0;
+        return Q_NULLPTR;
     }
     Attribute *attr = AttributeFactory::createAttribute(elem.attribute(Format::Attr::attributeType()).toUtf8());
     Q_ASSERT(attr);
