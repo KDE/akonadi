@@ -113,7 +113,7 @@ public:
     void setRemoteId(const QByteArray &type) const;
 
     /**
-     * Returns the remote idof the relation.
+     * Returns the remote id of the relation.
      */
     QByteArray remoteId() const;
 
