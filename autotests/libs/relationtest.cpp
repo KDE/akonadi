@@ -47,6 +47,7 @@ private Q_SLOTS:
 
     void testCreateFetch();
     void testMonitor();
+    void testEqualRelation();
 };
 
 void RelationTest::initTestCase()
@@ -157,6 +158,20 @@ void RelationTest::testMonitor()
         QTRY_VERIFY(removedSpy.count() >= 1);
         QTRY_COMPARE(removedSpy.last().first().value<Akonadi::Relation>(), rel);
     }
+}
+
+void RelationTest::testEqualRelation()
+{
+    Relation r1;
+    Item it1(45);
+    Item it2(46);
+    r1.setLeft(it1);
+    r1.setRight(it2);
+    r1.setRemoteId(QByteArrayLiteral("foo"));
+    r1.setType(QByteArrayLiteral("foo1"));
+
+    Relation r2 = r1;
+    QCOMPARE(r1, r2);
 }
 
 QTEST_AKONADIMAIN(RelationTest)
