@@ -61,6 +61,7 @@ Relation &Relation::operator=(const Relation &other)
     d->left = other.d->left;
     d->right = other.d->right;
     d->type = other.d->type;
+    d->remoteId = other.d->remoteId;
     return *this;
 }
 
@@ -69,7 +70,8 @@ bool Relation::operator==(const Relation &other) const
     if (isValid() && other.isValid()) {
         return d->left == other.d->left
                && d->right == other.d->right
-               && d->type == other.d->type;
+               && d->type == other.d->type
+               && d->remoteId == other.d->remoteId;
     }
     return false;
 }
@@ -121,7 +123,7 @@ QByteArray Relation::remoteId() const
 
 bool Relation::isValid() const
 {
-    return (d->left.isValid() || !d->left.remoteId().isEmpty()) && (d->right.isValid() || !d->left.remoteId().isEmpty()) && !d->type.isEmpty();
+    return (d->left.isValid() || !d->left.remoteId().isEmpty()) && (d->right.isValid() || !d->right.remoteId().isEmpty()) && !d->type.isEmpty();
 }
 
 uint qHash(const Relation &relation)
