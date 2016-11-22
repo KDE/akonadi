@@ -128,11 +128,11 @@ bool Relation::isValid() const
 
 uint qHash(const Relation &relation)
 {
-    return (3 * qHash(relation.left()) + qHash(relation.right()) + qHash(relation.type()));
+    return (3 * qHash(relation.left()) + qHash(relation.right()) + qHash(relation.type()) + qHash(relation.remoteId()));
 }
 
 QDebug &operator<<(QDebug &debug, const Relation &relation)
 {
-    debug << "Akonadi::Relation( TYPE " << relation.type() << ", LEFT " << relation.left().id() << ", RIGHT " << relation.right().id() << ")";
+    debug << "Akonadi::Relation( TYPE " << relation.type() << ", LEFT " << relation.left().id() << ", RIGHT " << relation.right().id() << ", REMOTEID " << relation.remoteId() << ")";
     return debug;
 }
