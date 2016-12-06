@@ -19,6 +19,8 @@ include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(CheckIncludeFiles)
 include(ECMQtDeclareLoggingCategory)
 include(CheckSymbolExists)
+include(ECMCoverageOption)
+
 
 include(AkonadiMacros)
 
