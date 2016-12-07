@@ -119,6 +119,7 @@ void CollectionPropertiesDialog::Private::init()
 {
     QVBoxLayout *mainLayout = new QVBoxLayout;
     q->setLayout(mainLayout);
+    q->setAttribute(Qt::WA_DeleteOnClose);
     mTabWidget = new QTabWidget(q);
     mainLayout->addWidget(mTabWidget);
 
