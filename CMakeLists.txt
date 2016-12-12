@@ -77,10 +77,6 @@ set_package_properties(Boost PROPERTIES
     TYPE REQUIRED
 )
 
-# Some more strictness not enforced by ECM
-add_definitions(-DQT_STRICT_ITERATORS)
-
-
 set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
 configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
 
