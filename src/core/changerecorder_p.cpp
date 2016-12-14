@@ -131,7 +131,7 @@ static const quint64 s_currentVersion = Q_UINT64_C(0x000500000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
-QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QIODevice *device, bool &needsFullSave) const
+QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QFile *device, bool &needsFullSave) const
 {
     QDataStream stream(device);
     stream.setVersion(QDataStream::Qt_4_6);
@@ -160,6 +160,11 @@ QQueue<Protocol::ChangeNotification> ChangeRecorderPrivate::loadFrom(QIODevice *
         Protocol::ChangeNotification msg;
         stream >> sessionId;
         stream >> type;
+
+        if (stream.status() != QDataStream::Ok) {
+            qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting. Corrupt file:" << device->fileName();
+            break;
+        }
 
         switch (static_cast<LegacyType>(type)) {
         case Item:
@@ -463,6 +468,10 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QDataSt
             stream >> remoteId;
             stream >> remoteRevision;
             stream >> mimeType;
+            if (stream.status() != QDataStream::Ok) {
+                qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
+                return msg;
+            }
             msg.addItem(uid, remoteId, remoteRevision, mimeType);
         }
         stream >> resource;
@@ -558,6 +567,10 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(Q
             stream >> remoteId;
             stream >> remoteRevision;
             stream >> dummyString;
+            if (stream.status() != QDataStream::Ok) {
+                qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
+                return msg;
+            }
             msg.setId(uid);
             msg.setRemoteId(remoteId);
             msg.setRemoteRevision(remoteRevision);
@@ -637,6 +650,10 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadTagNotification(QDataStr
             stream >> remoteId;
             stream >> dummyString;
             stream >> dummyString;
+            if (stream.status() != QDataStream::Ok) {
+                qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
+                return msg;
+            }
             msg.setId(uid);
             msg.setRemoteId(remoteId);
         }
@@ -702,6 +719,10 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadRelationNotification(QDa
             stream >> dummyString;
             stream >> dummyString;
             stream >> dummyString;
+            if (stream.status() != QDataStream::Ok) {
+                qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
+                return msg;
+            }
         }
         stream >> dummyBa;
         stream >> dummyBa;
