@@ -51,7 +51,7 @@ public:
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<Protocol::ChangeNotification> loadFrom(QIODevice *device, bool &needsFullSave) const;
+    QQueue<Protocol::ChangeNotification> loadFrom(QFile *device, bool &needsFullSave) const;
     QString dumpNotificationListToString() const;
     void addToStream(QDataStream &stream, const Protocol::ChangeNotification &msg);
     void saveNotifications();
