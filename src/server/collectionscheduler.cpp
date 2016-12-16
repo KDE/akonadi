@@ -66,12 +66,7 @@ public:
 
     Q_INVOKABLE void pause()
     {
-        if (!isActive()) {
-            qCCritical(AKONADISERVER_LOG) << "Cannot pause an inactive timer";
-            return;
-        }
-        if (isPaused()) {
-            qCCritical(AKONADISERVER_LOG) << "Cannot pause an already paused timer";
+        if (!isActive() || isPaused()) {
             return;
         }
 
@@ -82,7 +77,6 @@ public:
     Q_INVOKABLE void resume()
     {
         if (!isPaused()) {
-            qCCritical(AKONADISERVER_LOG) << "Cannot resume a timer that is not paused.";
             return;
         }
 
@@ -128,14 +122,12 @@ void CollectionScheduler::quit()
 
 void CollectionScheduler::inhibit(bool inhibit)
 {
-    if (inhibit && mScheduler->isActive() && !mScheduler->isPaused()) {
+    if (inhibit) {
         const bool success = QMetaObject::invokeMethod(mScheduler, "pause", Qt::QueuedConnection);
-        Q_ASSERT(success);
-        Q_UNUSED(success);
-    } else if (!inhibit && mScheduler->isPaused()) {
+        Q_ASSERT(success); Q_UNUSED(success);
+    } else {
         const bool success = QMetaObject::invokeMethod(mScheduler, "resume", Qt::QueuedConnection);
-        Q_ASSERT(success);
-        Q_UNUSED(success);
+        Q_ASSERT(success); Q_UNUSED(success);
     }
 }
 
