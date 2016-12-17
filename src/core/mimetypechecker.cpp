@@ -94,7 +94,7 @@ bool MimeTypeChecker::isWantedCollection(const Collection &collection) const
         return false;
     }
 
-    foreach (const QString &mimeType, contentMimeTypes) {
+    for (const QString &mimeType : contentMimeTypes) {
         if (mimeType.isEmpty()) {
             continue;
         }
@@ -142,7 +142,7 @@ bool MimeTypeChecker::isWantedCollection(const Collection &collection, const QSt
         return false;
     }
 
-    foreach (const QString &mimeType, contentMimeTypes) {
+    for (const QString &mimeType : contentMimeTypes) {
         if (mimeType.isEmpty()) {
             continue;
         }
@@ -172,7 +172,7 @@ bool MimeTypeChecker::isWantedMimeType(const QString &mimeType) const
 
 bool MimeTypeChecker::containsWantedMimeType(const QStringList &mimeTypes) const
 {
-    foreach (const QString &mt, mimeTypes) {
+    for (const QString &mt : mimeTypes) {
         if (d->isWantedMimeType(mt)) {
             return true;
         }

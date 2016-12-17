@@ -66,7 +66,7 @@ bool DragDropManager::dropAllowed(QDragMoveEvent *event) const
 
         const QMimeData *data = event->mimeData();
         const QList<QUrl> urls = data->urls();
-        foreach (const QUrl &url, urls) {
+        for (const QUrl &url : urls) {
             const Collection collection = Collection::fromUrl(url);
             if (collection.isValid()) {
                 if (!supportedContentTypes.contains(Collection::mimeType()) &&
@@ -125,7 +125,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
 
     const QMimeData *data = event->mimeData();
     const QList<QUrl> urls = data->urls();
-    foreach (const QUrl &url, urls) {
+    for (const QUrl &url : urls) {
         const Collection collection = Collection::fromUrl(url);
         if (!collection.isValid()) {
             if (!dropOnItem) {

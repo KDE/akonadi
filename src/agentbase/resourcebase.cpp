@@ -255,7 +255,7 @@ protected Q_SLOTS:
         }
 
         Item::List validItems;
-        foreach (const Akonadi::Item &item, items)
+        for (const Akonadi::Item &item : items)
         {
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
@@ -278,7 +278,7 @@ protected Q_SLOTS:
         }
 
         Item::List validItems;
-        foreach (const Akonadi::Item &item, items)
+        for (const Akonadi::Item &item : items)
         {
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
@@ -311,7 +311,7 @@ protected Q_SLOTS:
         }
 
         Item::List validItems;
-        foreach (const Akonadi::Item &item, items)
+        for (const Akonadi::Item &item : items)
         {
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
@@ -337,7 +337,7 @@ protected Q_SLOTS:
 
     void itemsRemoved(const Item::List &items) Q_DECL_OVERRIDE {
         Item::List validItems;
-        foreach (const Akonadi::Item &item, items)
+        for (const Akonadi::Item &item : items)
         {
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
@@ -631,8 +631,8 @@ void ResourceBase::itemRetrieved(const Item &item)
     }
 
     Item i(item);
-    QSet<QByteArray> requestedParts = d->scheduler->currentTask().itemParts;
-    foreach (const QByteArray &part, requestedParts) {
+    const QSet<QByteArray> requestedParts = d->scheduler->currentTask().itemParts;
+    for (const QByteArray &part : requestedParts) {
         if (!item.loadedPayloadParts().contains(part)) {
             qCWarning(AKONADIAGENTBASE_LOG) << "Item does not provide part" << part;
         }
@@ -737,7 +737,7 @@ void ResourceBase::changesCommitted(const Item::List &items)
             this, SLOT(changeCommittedResult(KJob*)));
 
     // Modify the items one-by-one, because STORE does not support mass RID change
-    Q_FOREACH (const Item &item, items) {
+    for (const Item &item : items) {
         ItemModifyJob *job = new ItemModifyJob(item, transaction);
         job->d_func()->setClean();
         job->disableRevisionCheck(); // TODO: remove, but where/how do we handle the error?
@@ -903,8 +903,8 @@ void ResourceBasePrivate::slotLocalListDone(KJob *job)
     if (job->error()) {
         emit q->error(job->errorString());
     } else {
-        Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
-        foreach (const Collection &col, cols) {
+        const Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
+        for (const Collection &col : cols) {
             scheduler->scheduleSync(col);
         }
         scheduler->scheduleFullSyncCompletion();
@@ -1251,7 +1251,7 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
 {
     if (!job->error()) {
         const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
-        Q_FOREACH (const Collection &collection, list) {
+        for (const Collection &collection : list) {
             //We also get collections that should not be synced but are part of the tree.
             if (collection.shouldList(Collection::ListSync) || collection.referenced()) {
                 if (mScheduleAttributeSyncBeforeCollectionSync) {
@@ -1326,7 +1326,7 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
         auto trx = new TransactionSequence(this);
         connect(trx, SIGNAL(result(KJob*)),
                 this, SLOT(slotItemSyncDone(KJob*)));
-        Q_FOREACH (const Item &item, items) {
+        for (const Item &item : items) {
             Q_ASSERT(item.parentCollection().isValid());
             if (!item.remoteId().isEmpty()) {
                 auto job = new ItemCreateJob(item, item.parentCollection(), trx);

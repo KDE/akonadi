@@ -195,7 +195,7 @@ public:
                         QString(),
                         KMessageBox::Dangerous) == KMessageBox::Yes) {
 
-                foreach (const AgentInstance &instance, instances) {
+                for (const AgentInstance &instance : instances) {
                     AgentManager::self()->removeInstance(instance);
                 }
             }

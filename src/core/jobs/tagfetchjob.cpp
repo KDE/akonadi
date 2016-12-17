@@ -98,7 +98,7 @@ TagFetchJob::TagFetchJob(const QList<Tag::Id> &ids, QObject *parent)
 {
     Q_D(TagFetchJob);
     d->init();
-    Q_FOREACH (Tag::Id id, ids) {
+    for (Tag::Id id : ids) {
         d->mRequestedTags << Tag(id);
     }
 }

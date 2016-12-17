@@ -118,7 +118,7 @@ void NotificationManager::slotNotify(const Protocol::ChangeNotification::List &m
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
-    Q_FOREACH (const Protocol::ChangeNotification &msg, msgs) {
+    for (const Protocol::ChangeNotification &msg : msgs) {
         if (msg.type() == Protocol::Command::CollectionChangeNotification) {
             Protocol::CollectionChangeNotification::appendAndCompress(mNotifications, msg);
         } else {

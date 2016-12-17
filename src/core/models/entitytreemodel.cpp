@@ -530,7 +530,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
             mimeChecker.setWantedMimeTypes(destCollection.contentMimeTypes());
 
             const QList<QUrl> urls = data->urls();
-            foreach (const QUrl &url, urls) {
+            for (const QUrl &url : urls) {
                 const Collection collection = d->m_collections.value(Collection::fromUrl(url).id());
                 if (collection.isValid()) {
                     if (collection.parentCollection().id() == destCollection.id() &&

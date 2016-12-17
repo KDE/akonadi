@@ -462,9 +462,9 @@ void SelfTestDialog::testProtocolVersion()
 
 void SelfTestDialog::testResources()
 {
-    AgentType::List agentTypes = AgentManager::self()->types();
+    const AgentType::List agentTypes = AgentManager::self()->types();
     bool resourceFound = false;
-    foreach (const AgentType &type, agentTypes) {
+    for (const AgentType &type : agentTypes) {
         if (type.capabilities().contains(QStringLiteral("Resource"))) {
             resourceFound = true;
             break;
@@ -596,7 +596,7 @@ QString SelfTestDialog::createReport()
             if (pathList.isEmpty()) {
                 s << "Directory list is empty." << endl;
             }
-            foreach (const QString &path, pathList) {
+            for (const QString &path : pathList) {
                 s << "Directory listing of '" << path << "':" << endl;
                 QDir dir(path);
                 dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);

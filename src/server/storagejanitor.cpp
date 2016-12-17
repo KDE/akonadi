@@ -230,7 +230,7 @@ void StorageJanitor::findOrphanedResources()
     if (orphanResourcesSize > 0) {
         QStringList resourceNames;
         resourceNames.reserve(orphanResourcesSize);
-        Q_FOREACH (const Resource &resource, orphanResources) {
+        for (const Resource &resource : orphanResources) {
             resourceNames.append(resource.name());
         }
         inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QLatin1Char(','))));
@@ -439,7 +439,7 @@ void StorageJanitor::verifyExternalParts()
     const QSet<QString> unreferencedFiles = existingFiles - usedFiles;
     if (!unreferencedFiles.isEmpty()) {
         const QString lfDir = StandardDirs::saveDir("data", QStringLiteral("file_lost+found"));
-        Q_FOREACH (const QString &file, unreferencedFiles) {
+        for (const QString &file : unreferencedFiles) {
             inform(QLatin1Literal("Found unreferenced external file: ") + file);
             const QFileInfo f(file);
             QFile::rename(file, lfDir + QDir::separator() + f.fileName());
@@ -461,7 +461,7 @@ void StorageJanitor::findDirtyObjects()
         return;
     }
     const Collection::List ridLessCols = cqb.result();
-    Q_FOREACH (const Collection &col, ridLessCols) {
+    for (const Collection &col : ridLessCols) {
         inform(QLatin1Literal("Collection \"") + col.name() + QLatin1Literal("\" (id: ") + QString::number(col.id())
                + QLatin1Literal(") has no RID."));
     }
@@ -476,7 +476,7 @@ void StorageJanitor::findDirtyObjects()
         return;
     }
     const PimItem::List ridLessItems = iqb1.result();
-    Q_FOREACH (const PimItem &item, ridLessItems) {
+    for (const PimItem &item : ridLessItems) {
         inform(QLatin1Literal("Item \"") + QString::number(item.id()) + QLatin1Literal("\" has no RID."));
     }
     inform(QLatin1Literal("Found ") + QString::number(ridLessItems.size()) + QLatin1Literal(" items without RID."));
@@ -490,7 +490,7 @@ void StorageJanitor::findDirtyObjects()
         return;
     }
     const PimItem::List dirtyItems = iqb2.result();
-    Q_FOREACH (const PimItem &item, dirtyItems) {
+    for (const PimItem &item : dirtyItems) {
         inform(QLatin1Literal("Item \"") + QString::number(item.id()) + QLatin1Literal("\" has RID and is dirty."));
     }
     inform(QLatin1Literal("Found ") + QString::number(dirtyItems.size()) + QLatin1Literal(" dirty items."));
@@ -520,7 +520,7 @@ void StorageJanitor::findRIDDuplicates()
         Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(id);
         const QVector<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes();
         QVariantList contentMimeTypesVariantList;
-        Q_FOREACH (const Akonadi::Server::MimeType &mimeType, contentMimeTypes) {
+        for (const Akonadi::Server::MimeType &mimeType : contentMimeTypes) {
             contentMimeTypesVariantList << mimeType.id();
         }
         while (duplicates.query().next()) {

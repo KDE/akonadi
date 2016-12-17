@@ -71,7 +71,7 @@ void PersistentSearchAttribute::setQueryCollections(const QVector<Collection> &c
 {
     d->queryCollections.clear();
     d->queryCollections.reserve(collections.count());
-    Q_FOREACH (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         d->queryCollections << collection.id();
     }
 }

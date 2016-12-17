@@ -302,7 +302,7 @@ void ItemSyncPrivate::fetchLocalItemsToDelete()
 
 void ItemSyncPrivate::slotItemsReceived(const Item::List &items)
 {
-    foreach (const Akonadi::Item &item, items) {
+    for (const Akonadi::Item &item : items) {
         //Don't delete items that have not yet been synchronized
         if (item.remoteId().isEmpty()) {
             continue;

@@ -282,8 +282,8 @@ bool CollectionModelPrivate::supportsContentType(const QModelIndex &index, const
     }
     Collection col = collections.value(index.internalId());
     Q_ASSERT(col.isValid());
-    QStringList ct = col.contentMimeTypes();
-    foreach (const QString &a, ct) {
+    const QStringList ct = col.contentMimeTypes();
+    for (const QString &a : ct) {
         if (contentTypes.contains(a)) {
             return true;
         }

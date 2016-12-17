@@ -108,7 +108,7 @@ void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selecte
 {
     Q_UNUSED(deselected)
     const int column = 0;
-    foreach (const QItemSelectionRange &range, selected) {
+    for (const QItemSelectionRange &range : selected) {
         const QModelIndex index = range.topLeft();
 
         if (index.column() > 0) {

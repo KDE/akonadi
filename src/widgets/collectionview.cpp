@@ -178,7 +178,7 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
     const QStringList supportedContentTypes = model()->data(index, CollectionModel::CollectionRole).value<Collection>().contentMimeTypes();
     const QMimeData *mimeData = event->mimeData();
     const QList<QUrl> urls = mimeData->urls();
-    foreach (const QUrl &url, urls) {
+    for (const QUrl &url : urls) {
 
         const Collection collection = Collection::fromUrl(url);
         if (collection.isValid()) {

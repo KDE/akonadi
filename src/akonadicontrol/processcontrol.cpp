@@ -161,7 +161,7 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
 
 static bool listContains(const QStringList &list, const QString &pattern)
 {
-    Q_FOREACH (const QString &s, list) {
+    for (const QString &s : list) {
         if (s.contains(pattern)) {
             return true;
         }

@@ -141,7 +141,7 @@ void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors
     QList<QByteArray> parentIds;
 
     Collection *current = collection;
-    Q_FOREACH (const Protocol::Ancestor &ancestor, ancestors) {
+    for (const Protocol::Ancestor &ancestor : ancestors) {
         if (ancestor.id() == rootCollectionId) {
             current->setParentCollection(Collection::root());
             break;
@@ -406,7 +406,7 @@ static Item::Flags convertFlags(const QVector<QByteArray> &flags, ProtocolHelper
 
     Item::Flags convertedFlags;
     convertedFlags.reserve(flags.size());
-    foreach (const QByteArray &flag, flags) {
+    for (const QByteArray &flag : flags) {
         if (valuePool) {
             convertedFlags.insert(valuePool->flagPool.sharedValue(flag));
         } else {

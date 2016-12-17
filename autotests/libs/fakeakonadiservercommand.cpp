@@ -140,9 +140,9 @@ QList<FakeJobResponse::Token> FakeJobResponse::tokenize(const QString &treeStrin
 QList<FakeAkonadiServerCommand *> FakeJobResponse::interpret(FakeServerData *fakeServerData, const QString &serverData)
 {
     QList<FakeAkonadiServerCommand *> list;
-    QList<FakeJobResponse *> response = parseTreeString(fakeServerData, serverData);
+    const QList<FakeJobResponse *> response = parseTreeString(fakeServerData, serverData);
 
-    foreach (FakeJobResponse *command, response) {
+    for (FakeJobResponse *command : response) {
         list.append(command);
     }
     return list;

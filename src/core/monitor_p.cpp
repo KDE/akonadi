@@ -337,7 +337,7 @@ Protocol::ChangeNotification::List MonitorPrivate::splitMessage(const Protocol::
 
     const auto items = msg.items();
     list.reserve(items.count());
-    Q_FOREACH (const Protocol::ItemChangeNotification::Item &item, items) {
+    for (const Protocol::ItemChangeNotification::Item &item : items) {
         Protocol::ItemChangeNotification copy = baseMsg;
         copy.addItem(item.id, item.remoteId, item.remoteRevision, item.mimeType);
         list << copy;
@@ -416,19 +416,19 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
         if (mFetchChangedOnly && (itemNtf.operation() == Protocol::ItemChangeNotification::Modify || itemNtf.operation() == Protocol::ItemChangeNotification::ModifyFlags)) {
             bool fullPayloadWasRequested = scope.fullPayload();
             scope.fetchFullPayload(false);
-            QSet<QByteArray> requestedPayloadParts = scope.payloadParts();
-            Q_FOREACH (const QByteArray &part, requestedPayloadParts) {
+            const QSet<QByteArray> requestedPayloadParts = scope.payloadParts();
+            for (const QByteArray &part : requestedPayloadParts) {
                 scope.fetchPayloadPart(part, false);
             }
 
             bool allAttributesWereRequested = scope.allAttributes();
-            QSet<QByteArray> requestedAttrParts = scope.attributes();
-            Q_FOREACH (const QByteArray &part, requestedAttrParts) {
+            const QSet<QByteArray> requestedAttrParts = scope.attributes();
+            for (const QByteArray &part : requestedAttrParts) {
                 scope.fetchAttribute(part, false);
             }
 
-            QSet<QByteArray> changedParts = itemNtf.itemParts();
-            Q_FOREACH (const QByteArray &part, changedParts)  {
+            const QSet<QByteArray> changedParts = itemNtf.itemParts();
+            for (const QByteArray &part : changedParts)  {
                 if (part.startsWith("PLD:") &&    //krazy:exclude=strings since QByteArray
                         (fullPayloadWasRequested || requestedPayloadParts.contains(part))) {
                     scope.fetchPayloadPart(part.mid(4), true);;
@@ -904,7 +904,7 @@ static Relation::List extractRelations(const QSet<Protocol::ItemChangeNotificati
     }
 
     relations.reserve(rels.size());
-    Q_FOREACH (const auto &rel, rels) {
+    for (const auto &rel : rels) {
         relations.push_back(Relation(rel.type.toLatin1(), Akonadi::Item(rel.leftId), Akonadi::Item(rel.rightId)));
     }
     return relations;

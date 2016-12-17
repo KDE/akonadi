@@ -76,7 +76,7 @@ bool RelationFetch::parseStream()
         return failureResponse("Failed to query for existing relation");
     }
     const Relation::List existingRelations = relationQuery.result();
-    Q_FOREACH (const Relation &relation, existingRelations) {
+    for (const Relation &relation : existingRelations) {
         sendResponse(Protocol::FetchRelationsResponse(relation.leftId(), relation.left().mimeType().name().toUtf8(),
                                                       relation.rightId(), relation.right().mimeType().name().toUtf8(),
                                                       relation.relationType().name().toUtf8(),

@@ -470,7 +470,7 @@ public:
         Collection::List selectedCollectionsList;
         if (collectionSelectionModel) {
             const QModelIndexList rows = safeSelectedRows(collectionSelectionModel);
-            foreach (const QModelIndex &index, rows) {
+            for (const QModelIndex &index : rows) {
                 Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
                 if (!collection.isValid()) {
                     continue;
@@ -487,7 +487,7 @@ public:
         Item::List selectedItems;
         if (itemSelectionModel) {
             const QModelIndexList rows = safeSelectedRows(itemSelectionModel);
-            foreach (const QModelIndex &index, rows) {
+            for (const QModelIndex &index : rows) {
                 Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
                 if (!item.isValid()) {
                     continue;

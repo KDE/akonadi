@@ -76,7 +76,7 @@ Query::Condition conditionFromFqNames(const T<QByteArray> &fqNames)
 {
     Query::Condition c;
     c.setSubQueryMode(Query::Or);
-    Q_FOREACH (const QByteArray &fqName, fqNames) {
+    for (const QByteArray &fqName : fqNames) {
         c.addCondition(conditionFromFqName(QLatin1String(fqName)));
     }
     return c;

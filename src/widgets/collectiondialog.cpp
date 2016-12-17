@@ -251,7 +251,7 @@ bool CollectionDialog::Private::canCreateCollection(const Akonadi::Collection &p
     if ((parentCollection.rights() & Akonadi::Collection::CanCreateCollection)) {
         const QStringList dialogMimeTypeFilter = mParent->mimeTypeFilter();
         const QStringList parentCollectionMimeTypes = parentCollection.contentMimeTypes();
-        Q_FOREACH (const QString &mimetype, dialogMimeTypeFilter) {
+        for (const QString &mimetype : dialogMimeTypeFilter) {
             if (parentCollectionMimeTypes.contains(mimetype)) {
                 return true;
             }
@@ -330,7 +330,7 @@ Akonadi::Collection::List CollectionDialog::selectedCollections() const
     Collection::List collections;
     const QItemSelectionModel *selectionModel = d->mView->selectionModel();
     const QModelIndexList selectedIndexes = selectionModel->selectedIndexes();
-    Q_FOREACH (const QModelIndex &index, selectedIndexes) {
+    for (const QModelIndex &index : selectedIndexes) {
         if (index.isValid()) {
             const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
             if (collection.isValid()) {
@@ -352,7 +352,7 @@ void CollectionDialog::setMimeTypeFilter(const QStringList &mimeTypes)
     d->mMimeTypeFilterModel->addMimeTypeFilters(mimeTypes);
 
     if (d->mMonitor) {
-        Q_FOREACH (const QString &mimetype, mimeTypes) {
+        for (const QString &mimetype : mimeTypes) {
             d->mMonitor->setMimeTypeMonitored(mimetype);
         }
     }

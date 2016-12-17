@@ -254,7 +254,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     const Part::List existingParts = Part::retrieveFiltered(Part::pimItemIdColumn(), currentItem.id());
     QMap<QByteArray, qint64> partsSizes;
-    Q_FOREACH (const Part &part, existingParts ) {
+    for (const Part &part : existingParts ) {
         partsSizes.insert(PartTypeHelper::fullName(part.partType()).toLatin1(), part.datasize());
     }
 

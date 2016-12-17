@@ -122,7 +122,7 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
     //backwards compatibility, collectionToByteArray will automatically fall-back to id + remoteid
     if (!mAncestorAttributes.isEmpty()) {
         ancestorAttributes.reserve(ancestors.size());
-        Q_FOREACH (const Collection &col, ancestors) {
+        for (const Collection &col : ancestors) {
             ancestorAttributes.push(getAttributes(col, mAncestorAttributes));
         }
     }
@@ -190,7 +190,7 @@ static QSqlQuery getAttributeQuery(const QVariantList &ids, const QSet<QByteArra
     if (!requestedAttributes.isEmpty()) {
         QVariantList attributes;
         attributes.reserve(requestedAttributes.size());
-        Q_FOREACH (const QByteArray &type, requestedAttributes) {
+        for (const QByteArray &type : requestedAttributes) {
             attributes << type;
         }
         qb.addValueCondition(CollectionAttribute::typeFullColumnName(), Query::In, attributes);

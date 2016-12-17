@@ -388,7 +388,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QSettin
     msg.setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
     const QStringList list = settings->value(QStringLiteral("itemParts")).toStringList();
     QSet<QByteArray> itemParts;
-    Q_FOREACH (const QString &entry, list) {
+    for (const QString &entry : list) {
         itemParts.insert(entry.toLatin1());
     }
     msg.setItemParts(itemParts);
@@ -408,7 +408,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(Q
     msg.setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
     const QStringList list = settings->value(QStringLiteral("itemParts")).toStringList();
     QSet<QByteArray> changedParts;
-    Q_FOREACH (const QString &entry, list) {
+    for (const QString &entry : list) {
         changedParts.insert(entry.toLatin1());
     }
     msg.setChangedParts(changedParts);
@@ -508,7 +508,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QDataSt
 QSet<QByteArray> ChangeRecorderPrivate::encodeRelations(const QSet<Protocol::ItemChangeNotification::Relation> &relations) const
 {
     QSet<QByteArray> rv;
-    Q_FOREACH (const auto &rel, relations) {
+    for (const auto &rel : relations) {
         rv.insert("RELATION " + rel.type.toLatin1() + ' ' + QByteArray::number(rel.leftId) + ' ' + QByteArray::number(rel.rightId));
     }
     return rv;
@@ -519,7 +519,7 @@ void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Prot
     stream << int(msg.operation());
     const auto items = msg.items();
     stream << items.count();
-    Q_FOREACH (const Protocol::ItemChangeNotification::Item &item, items) {
+    for (const Protocol::ItemChangeNotification::Item &item : items) {
         stream << quint64(item.id);
         stream << item.remoteId;
         stream << item.remoteRevision;

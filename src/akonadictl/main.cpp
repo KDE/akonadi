@@ -96,10 +96,10 @@ static bool checkSearchSupportStatus()
         searchMethods << pluginOverride;
     } else {
         const QStringList dirs = Akonadi::XdgBaseDirs::findPluginDirs();
-        Q_FOREACH (const QString &pluginDir, dirs) {
+        for (const QString &pluginDir : dirs) {
             QDir dir(pluginDir + QLatin1String("/akonadi"));
             const QStringList desktopFiles = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files);
-            Q_FOREACH (const QString &desktopFileName, desktopFiles) {
+            for (const QString &desktopFileName : desktopFiles) {
                 QSettings desktop(pluginDir + QLatin1String("/akonadi/") + desktopFileName, QSettings::IniFormat);
                 desktop.beginGroup(QStringLiteral("Desktop Entry"));
                 if (desktop.value(QStringLiteral("Type")).toString() != QLatin1String("AkonadiSearchPlugin")) {
@@ -123,10 +123,10 @@ static bool checkAvailableAgentTypes()
 {
     const QStringList dirs = Akonadi::XdgBaseDirs::findAllResourceDirs("data", QStringLiteral("akonadi/agents"));
     QStringList types;
-    Q_FOREACH (const QString &pluginDir, dirs) {
+    for (const QString &pluginDir : dirs) {
         QDir dir(pluginDir);
         const QStringList plugins = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files);
-        Q_FOREACH (const QString &plugin, plugins) {
+        for (const QString &plugin : plugins) {
             QSettings pluginInfo(pluginDir + QLatin1String("/") + plugin, QSettings::IniFormat);
             pluginInfo.beginGroup(QStringLiteral("Desktop Entry"));
             types << pluginInfo.value(QStringLiteral("X-Akonadi-Identifier")).toString();

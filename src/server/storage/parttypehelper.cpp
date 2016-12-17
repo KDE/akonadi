@@ -69,7 +69,7 @@ Query::Condition PartTypeHelper::conditionFromFqNames(const QStringList &fqNames
 {
     Query::Condition c;
     c.setSubQueryMode(Query::Or);
-    Q_FOREACH (const QString &fqName, fqNames) {
+    for (const QString &fqName : fqNames) {
         c.addCondition(conditionFromFqName(fqName));
     }
     return c;

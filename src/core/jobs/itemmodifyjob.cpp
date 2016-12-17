@@ -217,7 +217,7 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     if (!deletedAttributes.isEmpty()) {
         QSet<QByteArray> removedParts;
         removedParts.reserve(deletedAttributes.size());
-        Q_FOREACH (const QByteArray &part, deletedAttributes) {
+        for (const QByteArray &part : deletedAttributes) {
             removedParts.insert("ATR:" + part);
         }
         cmd.setRemovedParts(removedParts);

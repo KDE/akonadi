@@ -117,7 +117,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
     if (mPathToId) {
         const QString currentPart = mPathParts.takeFirst();
         bool found = false;
-        foreach (const Collection &c, cols) {
+        for (const Collection &c : cols) {
             if (c.name() == currentPart) {
                 mCurrentNode = c;
                 found = true;

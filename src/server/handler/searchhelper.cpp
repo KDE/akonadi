@@ -53,7 +53,7 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
     qb.addJoin(QueryBuilder::LeftJoin, MimeType::tableName(),
                CollectionMimeTypeRelation::rightFullColumnName(), MimeType::idFullColumnName());
     Query::Condition cond(Query::Or);
-    Q_FOREACH (const QString &mt, mimeTypes) {
+    for (const QString &mt : mimeTypes) {
         cond.addValueCondition(MimeType::nameFullColumnName(), Query::Equals, mt);
     }
     if (!cond.isEmpty()) {

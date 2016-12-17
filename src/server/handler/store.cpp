@@ -45,7 +45,7 @@ using namespace Akonadi::Server;
 
 static bool payloadChanged(const QSet<QByteArray> &changes)
 {
-    Q_FOREACH (const QByteArray &change, changes) {
+    for (const QByteArray &change : changes) {
         if (change.startsWith(AKONADI_PARAM_PLD)) {
             return true;
         }

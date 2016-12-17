@@ -50,7 +50,7 @@ Collection HandlerHelper::collectionFromIdOrName(const QByteArray &id)
 
     const QStringList pathParts = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
     Collection col;
-    Q_FOREACH (const QString &part, pathParts) {
+    for (const QString &part : pathParts) {
         SelectQueryBuilder<Collection> qb;
         qb.addValueCondition(Collection::nameColumn(), Query::Equals, part);
         if (col.isValid()) {
@@ -250,7 +250,7 @@ Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)
 {
     Flag::List flagList;
     flagList.reserve(flagNames.size());
-    Q_FOREACH (const QByteArray &flagName, flagNames) {
+    for (const QByteArray &flagName : flagNames) {
         const Flag flag = Flag::retrieveByNameOrCreate(QString::fromUtf8(flagName));
         if (!flag.isValid()) {
             throw HandlerException("Unable to create flag");

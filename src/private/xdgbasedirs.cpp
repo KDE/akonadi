@@ -429,7 +429,7 @@ QString XdgBaseDirs::findPluginFile(const QString &relPath, const QStringList &s
     const QString pluginName = relPath + QLatin1String(".so");
 #endif
 
-    Q_FOREACH (const QString &path, searchDirs) {
+    for (const QString &path : searchDirs) {
         const QFileInfo fileInfo(path + QDir::separator() + pluginName);
 
         // resolve symlinks, happens eg. with Maemo optify

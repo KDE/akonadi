@@ -141,7 +141,7 @@ void TagModelPrivate::removeTagsRecursively(qint64 tagId)
 
     // Remove all children first
     const Tag::List childTags = mChildTags.take(tagId);
-    Q_FOREACH (const Tag &child, childTags) {
+    for (const Tag &child : childTags) {
         removeTagsRecursively(child.id());
     }
 
@@ -220,7 +220,7 @@ void TagModelPrivate::monitoredTagChanged(const Tag &tag)
 
 void TagModelPrivate::tagsFetched(const Tag::List &tags)
 {
-    Q_FOREACH (const Tag &tag, tags) {
+    for (const Tag &tag : tags) {
         monitoredTagAdded(tag);
     }
 }

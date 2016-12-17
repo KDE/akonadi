@@ -241,7 +241,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
 
     setBoolPtr(flagsChanged, false);
 
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         const Flag::List itemFlags = item.flags();
         Q_FOREACH (const Flag &flag, itemFlags) {
             if (!flags.contains(flag)) {
@@ -1129,7 +1129,7 @@ bool DataStore::unhideAllPimItems()
 bool DataStore::cleanupPimItems(const PimItem::List &items)
 {
     // generate relation removed notifications
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         SelectQueryBuilder<Relation> relationQuery;
         relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, item.id());
         relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, item.id());
@@ -1139,7 +1139,7 @@ bool DataStore::cleanupPimItems(const PimItem::List &items)
             throw HandlerException("Failed to obtain relations");
         }
         const Relation::List relations = relationQuery.result();
-        Q_FOREACH (const Relation &relation, relations) {
+        for (const Relation &relation : relations) {
             DataStore::self()->notificationCollector()->relationRemoved(relation);
         }
     }

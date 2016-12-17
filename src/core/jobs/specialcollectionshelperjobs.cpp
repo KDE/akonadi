@@ -411,7 +411,7 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
     // Find the root maildir collection.
     Collection::List toRecover;
     Collection resourceCollection;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         if (collection.parentCollection() == Collection::root()) {
             resourceCollection = collection;
             toRecover.append(collection);

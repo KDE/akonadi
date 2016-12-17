@@ -169,11 +169,11 @@ void SearchManager::loadSearchPlugins()
     }
 
     const QStringList dirs = XdgBaseDirs::findPluginDirs();
-    Q_FOREACH (const QString &pluginDir, dirs) {
+    for (const QString &pluginDir : dirs) {
         QDir dir(pluginDir + QLatin1String("/akonadi"));
         const QStringList fileNames = dir.entryList(QDir::Files);
         qCDebug(AKONADISERVER_LOG) << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << fileNames;
-        Q_FOREACH (const QString &fileName, fileNames) {
+        for (const QString &fileName : fileNames) {
             const QString filePath = pluginDir % QLatin1String("/akonadi/") % fileName;
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
@@ -242,7 +242,7 @@ void SearchManager::searchUpdateTimeout()
 {
     // Get all search collections, that is subcollections of "Search", which always has ID 1
     const Collection::List collections = Collection::retrieveFiltered(Collection::parentIdFullColumnName(), 1);
-    Q_FOREACH (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         updateSearchAsync(collection);
     }
 }
@@ -311,7 +311,7 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     const QVector<MimeType> mimeTypes = collection.mimeTypes();
     queryMimeTypes.reserve(mimeTypes.count());
 
-    Q_FOREACH (const MimeType &mt, mimeTypes) {
+    for (const MimeType &mt : mimeTypes) {
         queryMimeTypes << mt.name();
     }
 
@@ -322,7 +322,7 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     } else {
         const QStringList collectionIds = collection.queryCollections().split(QLatin1Char(' '));
         queryAncestors.reserve(collectionIds.count());
-        Q_FOREACH (const QString &colId, collectionIds) {
+        for (const QString &colId : collectionIds) {
             queryAncestors << colId.toLongLong();
         }
     }

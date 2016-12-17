@@ -86,7 +86,7 @@ bool DbConfigPostgresql::init(QSettings &settings)
         QDir versionedDir(QStringLiteral("/usr/lib/postgresql"));
         if (versionedDir.exists()) {
             const auto versionedDirs = versionedDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
-            Q_FOREACH (const auto &path, versionedDirs) {
+            for (const auto &path : versionedDirs) {
                 // Don't break once PostgreSQL 10 is released, but something more future-proof will be needed
                 if (path.fileName().startsWith(QLatin1String("10."))) {
                     postgresVersionedSearchPaths.prepend(path.absoluteFilePath() + QStringLiteral("/bin"));

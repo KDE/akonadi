@@ -124,9 +124,9 @@ PluginMetaData PluginLoader::infoForName(const QString &name) const
 void PluginLoader::scan()
 {
     const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/plugins/serializer/"), QStandardPaths::LocateDirectory);
-    Q_FOREACH (const QString &dir, dirs) {
+    for (const QString &dir : dirs) {
         const QStringList fileNames = QDir(dir).entryList(QStringList() << QStringLiteral("*.desktop"));
-        Q_FOREACH (const QString &file, fileNames) {
+        for (const QString &file : fileNames) {
             const QString entry = dir + QLatin1Char('/') + file;
             KConfig config(entry, KConfig::SimpleConfig);
             if (config.hasGroup("Misc") && config.hasGroup("Plugin")) {
@@ -175,8 +175,8 @@ void PluginLoader::scan()
                 const QStringList mimeTypes = type.split(QLatin1Char(','), QString::SkipEmptyParts);
 
                 qCDebug(AKONADICORE_LOG) << "registering Desktop file" << entry << "for" << mimeTypes << '@' << classes;
-                Q_FOREACH (const QString &mimeType, mimeTypes) {
-                    Q_FOREACH (const QString &classType, classes) {
+                for (const QString &mimeType : mimeTypes) {
+                    for (const QString &classType : classes) {
                         mPluginInfos.insert(mimeType + QLatin1Char('@') + classType, PluginMetaData(library, name, comment, cname));
                     }
                 }

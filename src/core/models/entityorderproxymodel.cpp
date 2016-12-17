@@ -139,7 +139,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
     }
 
     QStringList droppedList;
-    foreach (const QUrl &url, urls) {
+    for (const QUrl &url : urls) {
         Collection col = Collection::fromUrl(url);
 
         if (!col.isValid()) {

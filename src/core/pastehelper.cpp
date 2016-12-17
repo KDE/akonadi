@@ -232,7 +232,7 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
     Collection::Rights neededRights = Collection::ReadOnly;
     if (mimeData->hasUrls()) {
         const QList<QUrl> urls = mimeData->urls();
-        foreach (const QUrl &url, urls) {
+        for (const QUrl &url : urls) {
             const QUrlQuery query(url);
             if (query.hasQueryItem(QStringLiteral("item"))) {
                 neededRights |= Collection::CanCreateItem;

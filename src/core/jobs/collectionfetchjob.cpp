@@ -179,7 +179,7 @@ CollectionFetchJob::CollectionFetchJob(const QList<Collection::Id> &cols, Type t
     if (cols.size() == 1) {
         d->mBase = Collection(cols.first());
     } else {
-        foreach (Collection::Id id, cols) {
+        for (Collection::Id id : cols) {
             d->mBaseList.append(Collection(id));
         }
     }
@@ -330,7 +330,7 @@ static Collection::List filterDescendants(const Collection::List &list)
 
     QVector<QList<Collection::Id> > ids;
     ids.reserve(list.count());
-    foreach (const Collection &collection, list) {
+    for (const Collection &collection : list) {
         QList<Collection::Id> ancestors;
         Collection parent = collection.parentCollection();
         ancestors << parent.id();
@@ -345,9 +345,9 @@ static Collection::List filterDescendants(const Collection::List &list)
     }
 
     QSet<Collection::Id> excludeList;
-    foreach (const Collection &collection, list) {
+    for (const Collection &collection : list) {
         int i = 0;
-        foreach (const QList<Collection::Id> &ancestors, ids) {
+        for (const QList<Collection::Id> &ancestors : ids) {
             if (qBinaryFind(ancestors, collection.id()) != ancestors.end()) {
                 excludeList.insert(list.at(i).id());
             }

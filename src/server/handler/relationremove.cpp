@@ -55,7 +55,7 @@ bool RelationRemove::parseStream()
         return failureResponse("Failed to obtain relations");
     }
     const Relation::List relations = relationQuery.result();
-    Q_FOREACH (const Relation &relation, relations) {
+    for (const Relation &relation : relations) {
         DataStore::self()->notificationCollector()->relationRemoved(relation);
     }
 

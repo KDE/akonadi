@@ -80,7 +80,7 @@ void RecursiveMover::collectionListResult(KJob *job)
             continue;
         }
         m_pendingCollections += children;
-        foreach (const Collection &child, children) {
+        for (const Collection &child : children) {
             toBeProcessed.enqueue(child);
         }
     }

@@ -203,7 +203,7 @@ public:
 
     void localCollectionsReceived(const Akonadi::Collection::List &localCols)
     {
-        Q_FOREACH (const Akonadi::Collection &collection, localCols) {
+        for (const Akonadi::Collection &collection : localCols) {
             const RemoteId parentRid = remoteIdForCollection(collection.parentCollection());
             localCollections[parentRid] += collection;
         }
@@ -774,7 +774,7 @@ CollectionSync::~CollectionSync()
 void CollectionSync::setRemoteCollections(const Collection::List &remoteCollections)
 {
     setTotalAmount(KJob::Bytes, totalAmount(KJob::Bytes) + remoteCollections.count());
-    Q_FOREACH (const Collection &c, remoteCollections) {
+    for (const Collection &c : remoteCollections) {
         d->addRemoteColection(c);
     }
 
@@ -788,10 +788,10 @@ void CollectionSync::setRemoteCollections(const Collection::List &changedCollect
 {
     setTotalAmount(KJob::Bytes, totalAmount(KJob::Bytes) + changedCollections.count());
     d->incremental = true;
-    Q_FOREACH (const Collection &c, changedCollections) {
+    for (const Collection &c : changedCollections) {
         d->addRemoteColection(c);
     }
-    Q_FOREACH (const Collection &c, removedCollections) {
+    for (const Collection &c : removedCollections) {
         d->addRemoteColection(c, true);
     }
 

@@ -652,7 +652,7 @@ bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, c
     bool openUriOption = false;
 
     const QStringList opts = QString(conOpts).remove(QLatin1Char(' ' )).split(QLatin1Char(';'));
-    Q_FOREACH (const QString &option, opts) {
+    for (const QString &option : opts) {
         if (option.startsWith(QStringLiteral("QSQLITE_BUSY_TIMEOUT="))) {
             bool ok;
             const int nt = option.midRef(21).toInt(&ok);

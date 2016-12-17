@@ -235,7 +235,7 @@ public:
         QMap<QString, MimeTypeEntry> map;
         QRegExp rx(QStringLiteral("(.+)@(.+)"));
         QMimeDatabase mimeDb;
-        Q_FOREACH (const QString &name, names) {
+        for (const QString &name : names) {
             if (rx.exactMatch(name)) {
                 const QMimeType mime = mimeDb.mimeTypeForName(rx.cap(1));
                 if (mime.isValid()) {

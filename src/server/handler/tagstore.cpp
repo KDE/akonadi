@@ -43,7 +43,7 @@ bool TagStore::parseStream()
     // Retrieve all tag's attributes
     const TagAttribute::List attributes = TagAttribute::retrieveFiltered(TagAttribute::tagIdFullColumnName(), cmd.tagId());
     QMap<QByteArray, TagAttribute> attributesMap;
-    Q_FOREACH (const TagAttribute &attribute, attributes) {
+    for (const TagAttribute &attribute : attributes) {
         attributesMap.insert(attribute.type(), attribute);
     }
 

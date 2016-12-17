@@ -78,7 +78,7 @@ bool Link::parseStream()
 
     PimItem::List toLink, toUnlink;
     const bool createLinks = (cmd.action() == Protocol::LinkItemsCommand::Link);
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         const bool alreadyLinked = collection.relatesToPimItem(item);
         bool result = true;
         if (createLinks && !alreadyLinked) {

@@ -145,7 +145,7 @@ void CollectionComboBox::setMimeTypeFilter(const QStringList &contentMimeTypes)
     d->mMimeTypeFilterModel->addMimeTypeFilters(contentMimeTypes);
 
     if (d->mMonitor) {
-        foreach (const QString &mimeType, contentMimeTypes) {
+        for (const QString &mimeType : contentMimeTypes) {
             d->mMonitor->setMimeTypeMonitored(mimeType, true);
         }
     }
