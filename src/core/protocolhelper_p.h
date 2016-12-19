@@ -172,7 +172,6 @@ public:
             return Scope(set);
         }
 
-        qDebug() << entitySetHasGID(_objects);
         if (entitySetHasGID(_objects)) {
             return entitySetToGID(_objects);
         }
