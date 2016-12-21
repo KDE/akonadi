@@ -57,8 +57,7 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
     connect(mController, &ProcessControl::unableToStart, this, &AgentProcessInstance::failedToStart);
 
     if (agentInfo.launchMethod == AgentType::Process) {
-        QStringList arguments;
-        arguments << QStringLiteral("--identifier") << identifier();
+        const QStringList arguments = { QStringLiteral("--identifier"), identifier()};
         mController->start(executable, arguments);
     } else {
         Q_ASSERT(agentInfo.launchMethod == AgentType::Launcher);

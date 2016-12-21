@@ -117,7 +117,7 @@ void AgentManager::continueStartup()
     const QStringList pathList = pluginInfoPathList();
 
 #ifndef QT_NO_DEBUG
-    Q_FOREACH (const QString &path, pathList) {
+    for (const QString &path : pathList) {
         QFileSystemWatcher *watcher = new QFileSystemWatcher(this);
         watcher->addPath(path);
 
