@@ -1176,7 +1176,7 @@ bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &
         return false;
     }
 
-    if (qb.result().count() > 0) {
+    if (!qb.result().isEmpty()) {
         qCDebug(AKONADISERVER_LOG) << "Attribute" << key << "already exists for collection" << col.id();
         return false;
     }
