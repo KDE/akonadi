@@ -47,13 +47,13 @@ DbConfig::DbConfig()
     const QVariant value = settings.value(QStringLiteral("General/SizeThreshold"), mSizeThreshold);
     if (value.canConvert<qint64>()) {
         mSizeThreshold = value.value<qint64>();
+        if (mSizeThreshold < 0) {
+            mSizeThreshold = 0;
+        }
     } else {
         mSizeThreshold = 0;
     }
 
-    if (mSizeThreshold < 0) {
-        mSizeThreshold = 0;
-    }
 }
 
 DbConfig::~DbConfig()
