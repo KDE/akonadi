@@ -126,7 +126,6 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     qb.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1String("PLD"));
     qb.addValueCondition(PimItem::dirtyFullColumnName(), Query::Equals, false);
 
-    QStringList localParts;
     const QStringList partNames = collection.cachePolicyLocalParts().split(QStringLiteral(" "));
     Q_FOREACH (QString partName, partNames) {   // krazy:exclude=foreach
         if (partName.startsWith(QLatin1String(AKONADI_PARAM_PLD))) {
