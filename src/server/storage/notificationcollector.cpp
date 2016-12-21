@@ -277,7 +277,6 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
                                              const Relation::List &addedRelations,
                                              const Relation::List &removedRelations)
 {
-    Collection notificationDestCollection;
     QMap<Entity::Id, QList<PimItem> > vCollections;
 
     if ((op == Protocol::ItemChangeNotification::Modify) ||
