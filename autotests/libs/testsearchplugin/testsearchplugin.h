@@ -30,7 +30,7 @@ class TestSearchPlugin : public QObject, public Akonadi::AbstractSearchPlugin
     Q_INTERFACES(Akonadi::AbstractSearchPlugin)
     Q_PLUGIN_METADATA(IID "org.kde.akonadi.TestSearchPlugin" FILE "akonadi_test_searchplugin.json")
 public:
-    QSet<qint64> search(const QString &query, const QList<qint64> &collections, const QStringList &mimeTypes) Q_DECL_OVERRIDE;
+    QSet<qint64> search(const QString &query, const QVector<qint64> &collections, const QStringList &mimeTypes) Q_DECL_OVERRIDE;
 
     static QSet<qint64> parseQuery(const QString &queryString);
 };

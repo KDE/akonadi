@@ -109,7 +109,7 @@ void SearchRequest::searchPlugins()
 {
     const QVector<AbstractSearchPlugin *> plugins = SearchManager::instance()->searchPlugins();
     Q_FOREACH (AbstractSearchPlugin *plugin, plugins) {
-        const QSet<qint64> result = plugin->search(mQuery, mCollections.toList(), mMimeTypes);
+        const QSet<qint64> result = plugin->search(mQuery, mCollections, mMimeTypes);
         emitResults(result);
     }
 }

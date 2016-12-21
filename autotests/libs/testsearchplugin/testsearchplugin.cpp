@@ -23,7 +23,7 @@
 #include <QStringList>
 #include "searchquery.h"
 
-QSet<qint64> TestSearchPlugin::search(const QString &query, const QList<qint64> &collections, const QStringList &mimeTypes)
+QSet<qint64> TestSearchPlugin::search(const QString &query, const QVector<qint64> &collections, const QStringList &mimeTypes)
 {
     Q_UNUSED(collections);
     Q_UNUSED(mimeTypes);
