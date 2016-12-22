@@ -383,6 +383,11 @@ AgentManager *AgentManager::self()
 
 AgentType::List AgentManager::types() const
 {
+    // Maybe the Control process is up and ready but we haven't been to the event loop yet so serviceOwnerChanged wasn't called yet.
+    // In that case make sure to do it here, to avoid going into Broken state.
+    if (d->mTypes.isEmpty()) {
+        d->readAgentTypes();
+    }
     return Akonadi::valuesToVector(d->mTypes);
 }
 
