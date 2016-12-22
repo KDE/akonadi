@@ -76,7 +76,7 @@ void AgentBase::Observer::itemAdded(const Item &item, const Collection &collecti
 {
     Q_UNUSED(item);
     Q_UNUSED(collection);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -85,7 +85,7 @@ void AgentBase::Observer::itemChanged(const Item &item, const QSet<QByteArray> &
 {
     Q_UNUSED(item);
     Q_UNUSED(partIdentifiers);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -93,7 +93,7 @@ void AgentBase::Observer::itemChanged(const Item &item, const QSet<QByteArray> &
 void AgentBase::Observer::itemRemoved(const Item &item)
 {
     Q_UNUSED(item);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -102,7 +102,7 @@ void AgentBase::Observer::collectionAdded(const Akonadi::Collection &collection,
 {
     Q_UNUSED(collection);
     Q_UNUSED(parent);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -110,7 +110,7 @@ void AgentBase::Observer::collectionAdded(const Akonadi::Collection &collection,
 void AgentBase::Observer::collectionChanged(const Collection &collection)
 {
     Q_UNUSED(collection);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -118,7 +118,7 @@ void AgentBase::Observer::collectionChanged(const Collection &collection)
 void AgentBase::Observer::collectionRemoved(const Collection &collection)
 {
     Q_UNUSED(collection);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -128,7 +128,7 @@ void AgentBase::ObserverV2::itemMoved(const Akonadi::Item &item, const Akonadi::
     Q_UNUSED(item);
     Q_UNUSED(source);
     Q_UNUSED(dest);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -137,7 +137,7 @@ void AgentBase::ObserverV2::itemLinked(const Akonadi::Item &item, const Akonadi:
 {
     Q_UNUSED(item);
     Q_UNUSED(collection);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemLinked,
                             sAgentBase->d_ptr, &AgentBasePrivate::itemLinked);
@@ -149,7 +149,7 @@ void AgentBase::ObserverV2::itemUnlinked(const Akonadi::Item &item, const Akonad
 {
     Q_UNUSED(item);
     Q_UNUSED(collection);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemUnlinked,
                             sAgentBase->d_ptr, &AgentBasePrivate::itemUnlinked);
@@ -162,7 +162,7 @@ void AgentBase::ObserverV2::collectionMoved(const Akonadi::Collection &collectio
     Q_UNUSED(collection);
     Q_UNUSED(source);
     Q_UNUSED(dest);
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
 }
@@ -179,7 +179,7 @@ void AgentBase::ObserverV3::itemsFlagsChanged(const Akonadi::Item::List &items, 
     Q_UNUSED(addedFlags);
     Q_UNUSED(removedFlags);
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsFlagsChanged,
                             sAgentBase->d_ptr, &AgentBasePrivate::itemsFlagsChanged);
@@ -193,7 +193,7 @@ void AgentBase::ObserverV3::itemsMoved(const Akonadi::Item::List &items, const C
     Q_UNUSED(sourceCollection);
     Q_UNUSED(destinationCollection);
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsMoved,
                             sAgentBase->d_ptr, &AgentBasePrivate::itemsMoved);
@@ -205,7 +205,7 @@ void AgentBase::ObserverV3::itemsRemoved(const Akonadi::Item::List &items)
 {
     Q_UNUSED(items);
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsRemoved,
                             sAgentBase->d_ptr, &AgentBasePrivate::itemsRemoved);
@@ -218,7 +218,7 @@ void AgentBase::ObserverV3::itemsLinked(const Akonadi::Item::List &items, const 
     Q_UNUSED(items);
     Q_UNUSED(collection);
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsLinked,
                             sAgentBase->d_ptr, &AgentBasePrivate::itemsLinked);
@@ -231,7 +231,7 @@ void AgentBase::ObserverV3::itemsUnlinked(const Akonadi::Item::List &items, cons
     Q_UNUSED(items);
     Q_UNUSED(collection)
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsUnlinked,
                             sAgentBase->d_ptr, &AgentBasePrivate::itemsUnlinked);
@@ -243,7 +243,7 @@ void AgentBase::ObserverV4::tagAdded(const Tag &tag)
 {
     Q_UNUSED(tag);
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagAdded,
                             sAgentBase->d_ptr, &AgentBasePrivate::tagAdded);
@@ -255,7 +255,7 @@ void AgentBase::ObserverV4::tagChanged(const Tag &tag)
 {
     Q_UNUSED(tag);
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagChanged,
                             sAgentBase->d_ptr, &AgentBasePrivate::tagChanged);
@@ -267,7 +267,7 @@ void AgentBase::ObserverV4::tagRemoved(const Tag &tag)
 {
     Q_UNUSED(tag);
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::tagRemoved,
                             sAgentBase->d_ptr, &AgentBasePrivate::tagRemoved);
@@ -281,7 +281,7 @@ void AgentBase::ObserverV4::itemsTagsChanged(const Item::List &items, const QSet
     Q_UNUSED(addedTags);
     Q_UNUSED(removedTags);
 
-    if (sAgentBase != 0) {
+    if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemsTagsChanged,
                             sAgentBase->d_ptr, &AgentBasePrivate::itemsTagsChanged);
@@ -474,14 +474,14 @@ void AgentBasePrivate::setProgramName()
 
 void AgentBasePrivate::itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    if (mObserver != 0) {
+    if (mObserver) {
         mObserver->itemAdded(item, collection);
     }
 }
 
 void AgentBasePrivate::itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers)
 {
-    if (mObserver != 0) {
+    if (mObserver) {
         mObserver->itemChanged(item, partIdentifiers);
     }
 }
@@ -523,7 +523,7 @@ void AgentBasePrivate::itemMoved(const Akonadi::Item &item, const Akonadi::Colle
 
 void AgentBasePrivate::itemRemoved(const Akonadi::Item &item)
 {
-    if (mObserver != 0) {
+    if (mObserver) {
         mObserver->itemRemoved(item);
     }
 }
@@ -709,7 +709,7 @@ void AgentBasePrivate::itemsRelationsChanged(const Akonadi::Item::List &items,
 
 void AgentBasePrivate::collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent)
 {
-    if (mObserver != 0) {
+    if (mObserver) {
         mObserver->collectionAdded(collection, parent);
     }
 }
@@ -717,7 +717,7 @@ void AgentBasePrivate::collectionAdded(const Akonadi::Collection &collection, co
 void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection)
 {
     AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
-    if (mObserver != 0 && observer2 == 0) {   // For ObserverV2 we use the variant with the part identifiers
+    if (mObserver && observer2 == 0) {   // For ObserverV2 we use the variant with the part identifiers
         mObserver->collectionChanged(collection);
     }
 }
@@ -725,7 +725,7 @@ void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection)
 void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes)
 {
     AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
-    if (observer2 != 0) {
+    if (observer2) {
         observer2->collectionChanged(collection, changedAttributes);
     }
 }
@@ -747,7 +747,7 @@ void AgentBasePrivate::collectionMoved(const Akonadi::Collection &collection, co
 
 void AgentBasePrivate::collectionRemoved(const Akonadi::Collection &collection)
 {
-    if (mObserver != 0) {
+    if (mObserver) {
         mObserver->collectionRemoved(collection);
     }
 }

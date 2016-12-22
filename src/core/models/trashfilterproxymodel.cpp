@@ -29,7 +29,7 @@ public:
     TrashFilterProxyModelPrivate()
         : mTrashIsShown(false)
     {
-    };
+    }
     bool mTrashIsShown;
 };
 

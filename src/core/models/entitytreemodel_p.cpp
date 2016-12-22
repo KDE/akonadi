@@ -540,7 +540,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
         }
     }
 
-    if (itemsToInsert.size() > 0) {
+    if (!itemsToInsert.isEmpty()) {
         const Collection::Id colId = m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch ? m_rootCollection.id()
                                      : m_collectionFetchStrategy == EntityTreeModel::FetchNoCollections ? m_rootCollection.id()
                                      : collectionId;

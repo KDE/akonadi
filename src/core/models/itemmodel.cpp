@@ -430,7 +430,7 @@ QMimeData *ItemModel::mimeData(const QModelIndexList &indexes) const
     QMimeData *data = new QMimeData();
     // Add item uri to the mimedata for dropping in external applications
     QList<QUrl> urls;
-    foreach (const QModelIndex &index, indexes) {
+    for (const QModelIndex &index : indexes) {
         if (index.column() != 0) {
             continue;
         }
