@@ -96,7 +96,7 @@ void Connection::init()
     connect(socket, &QIODevice::readyRead,
             this, &Connection::slotNewData);
     connect(socket, &QLocalSocket::disconnected,
-            this, &Connection::disconnected);
+            this, &Connection::slotSocketDisconnected);
 
     m_idleTimer = new QTimer(this);
     connect(m_idleTimer, &QTimer::timeout,
@@ -169,8 +169,23 @@ void Connection::slotConnectionIdle()
     }
 }
 
+void Connection::slotSocketDisconnected()
+{
+    // If we have active handler, wait for it to finish, then we emit the signal
+    // from slotNewDate()
+    if (m_currentHandler) {
+        return;
+    }
+
+    Q_EMIT disconnected();
+}
+
 void Connection::slotNewData()
 {
+    if (m_socket->state() != QLocalSocket::ConnectedState) {
+        return;
+    }
+
     m_idleTimer->stop();
 
     // will only open() a previously idle backend.
@@ -251,6 +266,11 @@ void Connection::slotNewData()
         }
         delete m_currentHandler;
         m_currentHandler = 0;
+
+        if (m_socket->state() != QLocalSocket::ConnectedState) {
+            Q_EMIT disconnected();
+            return;
+        }
     }
 
     // reset, arm the timer
@@ -394,7 +414,7 @@ Protocol::Command Connection::readCommand()
 {
     while (m_socket->bytesAvailable() < (int) sizeof(qint64)) {
         if (m_socket->state() == QLocalSocket::UnconnectedState) {
-            return Protocol::Command();
+            throw ProtocolException("Socket disconnected");
         }
         m_socket->waitForReadyRead(500);
     }
