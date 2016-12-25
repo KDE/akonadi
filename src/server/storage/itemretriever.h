@@ -93,6 +93,7 @@ private:
     bool mRecursive;
     QDateTime mChangedSince;
     mutable QByteArray mLastError;
+    bool mCanceled;
 };
 
 } // namespace Server

@@ -46,7 +46,10 @@ ItemRetriever::ItemRetriever(Connection *connection)
     , mConnection(connection)
     , mFullPayload(false)
     , mRecursive(false)
+    , mCanceled(false)
 {
+    connect(mConnection, &Connection::disconnected,
+            this, [this]() { mCanceled = true; });
 }
 
 Connection *ItemRetriever::connection() const
@@ -232,6 +235,10 @@ bool ItemRetriever::exec()
         const qint64 resourceId = query.value(ResourceIdColumn).toLongLong();
         const auto itemIter = itemRequests.constFind(pimItemId);
 
+        if (Q_UNLIKELY(mCanceled)) {
+            return false;
+        }
+
         if (pimItemId == prevPimItemId) {
             if (query.value(PartTypeNameColumn).isNull()) {
                 // This is not the first part of the Item we saw, but LEFT JOIN PartTable
@@ -317,7 +324,9 @@ bool ItemRetriever::exec()
     QEventLoop eventLoop;
     connect(ItemRetrievalManager::instance(), &ItemRetrievalManager::requestFinished,
             this, [&](ItemRetrievalRequest *finishedRequest) {
-                if (!finishedRequest->errorMsg.isEmpty()) {
+                if (mCanceled) {
+                    eventLoop.exit(1);
+                } else if (!finishedRequest->errorMsg.isEmpty()) {
                     mLastError = finishedRequest->errorMsg.toUtf8();
                     eventLoop.exit(1);
                 } else {
