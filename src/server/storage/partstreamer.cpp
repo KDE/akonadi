@@ -64,13 +64,13 @@ Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partN
 {
     Q_EMIT responseAvailable(Protocol::StreamPayloadCommand(partName, Protocol::StreamPayloadCommand::MetaData));
 
-    Protocol::StreamPayloadResponse response = mConnection->readCommand();
-    if (response.isError() || !response.isValid()) {
+    const auto cmd = mConnection->readCommand();
+    if (!cmd.isValid() || Protocol::Response(cmd).isError()) {
         mError = QStringLiteral("Client failed to provide part metadata");
         return Protocol::PartMetaData();
     }
 
-    return response.metaData();
+    return Protocol::StreamPayloadResponse(cmd).metaData();
 }
 
 

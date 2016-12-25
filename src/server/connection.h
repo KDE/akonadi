@@ -85,7 +85,7 @@ protected Q_SLOTS:
     void slotNewData();
     void slotConnectionStateChange(ConnectionState state);
     void slotConnectionIdle();
-
+    void slotSocketDisconnected();
     void slotSendHello();
 
 protected:
