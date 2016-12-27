@@ -228,7 +228,7 @@ void SelfTestDialog::testMySQLServer()
     }
 
     const QString driver = serverSetting(QStringLiteral("General"), "Driver", QStringLiteral("QMYSQL")).toString();
-    const QString serverPath = serverSetting(driver,  "ServerPath", QStringLiteral("")).toString();     // ### default?
+    const QString serverPath = serverSetting(driver,  "ServerPath", QString()).toString();     // ### default?
 
     const KLocalizedString details = ki18n("You have currently configured Akonadi to use the MySQL server '%1'.\n"
                                            "Make sure you have the MySQL server installed, set the correct path and ensure you have the "

@@ -90,7 +90,7 @@ TagManagementDialog::~TagManagementDialog()
     d->writeConfig();
 }
 
-QDialogButtonBox *TagManagementDialog::buttons()
+QDialogButtonBox *TagManagementDialog::buttons() const
 {
     return d->buttonBox;
 }

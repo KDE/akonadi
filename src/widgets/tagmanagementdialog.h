@@ -42,7 +42,7 @@ public:
     explicit TagManagementDialog(QWidget *parent = Q_NULLPTR);
     virtual ~TagManagementDialog();
 
-    QDialogButtonBox *buttons();
+    QDialogButtonBox *buttons() const;
 
 private:
     class Private;
