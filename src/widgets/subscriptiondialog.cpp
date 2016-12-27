@@ -119,8 +119,8 @@ public:
 
 void SubscriptionDialog::Private::slotSubscribe()
 {
-    QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
-    foreach (const QModelIndex &index, list) {
+    const QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
+    for (const QModelIndex &index : list) {
         model->setData(index, Qt::Checked, Qt::CheckStateRole);
     }
     collectionView->setFocus();
@@ -128,8 +128,8 @@ void SubscriptionDialog::Private::slotSubscribe()
 
 void SubscriptionDialog::Private::slotUnSubscribe()
 {
-    QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
-    foreach (const QModelIndex &index, list) {
+    const QModelIndexList list = collectionView->selectionModel()->selectedIndexes();
+    for (const QModelIndex &index : list) {
         model->setData(index, Qt::Unchecked, Qt::CheckStateRole);
     }
     collectionView->setFocus();
