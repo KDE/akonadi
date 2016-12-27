@@ -223,7 +223,7 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     mainLayout->addWidget(buttonBox);
 
     connect(d->model, SIGNAL(loaded()), SLOT(modelLoaded()));
-    connect(d->mOkButton, &QAbstractButton::clicked, this, &QDialog::done);
+    connect(d->mOkButton, SIGNAL(clicked(bool)), this, SLOT(done()));
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &SubscriptionDialog::deleteLater);
     ControlGui::widgetNeedsAkonadi(mainWidget);
     d->readConfig();
