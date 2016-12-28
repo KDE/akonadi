@@ -697,7 +697,7 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotification> &n
         insertionMessage.setParentDestCollection(-1);
         // We don't support batch insertion, so we have to do it one by one
         const auto split = splitMessage(insertionMessage, false);
-        Q_FOREACH (const Protocol::ChangeNotification &insertion, split) {
+        for (const Protocol::ChangeNotification &insertion : split) {
             notificationQueue.enqueue(insertion);
         }
         return split.count();
@@ -837,7 +837,7 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
             && static_cast<const Protocol::ItemChangeNotification&>(msg).resource() != static_cast<const Protocol::ItemChangeNotification&>(msg).destinationResource()) {
             if (needsSplit) {
                 const Protocol::ChangeNotification::List split = splitMessage(msg, !supportsBatch);
-                Q_FOREACH (const auto &splitMsg, split) {
+                for (const auto &splitMsg : split) {
                     appendedMessages += translateAndCompress(pendingNotifications, splitMsg);
                 }
             } else {

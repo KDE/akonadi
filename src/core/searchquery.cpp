@@ -123,7 +123,7 @@ public:
             SearchTerm term(static_cast<SearchTerm::Relation>(map[QStringLiteral("rel")].toInt()));
             term.setIsNegated(map[QStringLiteral("negated")].toBool());
             const QList<QVariant> list = map[QStringLiteral("subTerms")].toList();
-            Q_FOREACH (const QVariant &var, list) {
+            for (const QVariant &var : list) {
                 term.addSubTerm(JSONToTerm(var.toMap()));
             }
             return term;

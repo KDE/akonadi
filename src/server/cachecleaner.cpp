@@ -127,7 +127,7 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     qb.addValueCondition(PimItem::dirtyFullColumnName(), Query::Equals, false);
 
     const QStringList partNames = collection.cachePolicyLocalParts().split(QLatin1Char(' '));
-    Q_FOREACH (QString partName, partNames) {   // krazy:exclude=foreach
+    for (QString partName : partNames) {   // krazy:exclude=foreach
         if (partName.startsWith(QLatin1String(AKONADI_PARAM_PLD))) {
             partName = partName.mid(4);
         }
@@ -138,7 +138,7 @@ void CacheCleaner::collectionExpired(const Collection &collection)
         if (!parts.isEmpty()) {
             qCDebug(AKONADISERVER_LOG) << "found" << parts.count() << "item parts to expire in collection" << collection.name();
             // clear data field
-            Q_FOREACH (Part part, parts) {  // krazy:exclude=foreach
+            for (Part part : parts) {  // krazy:exclude=foreach
                 try {
                     if (!PartHelper::truncate(part)) {
                         qCDebug(AKONADISERVER_LOG) << "failed to update item part" << part.id();

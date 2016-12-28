@@ -322,14 +322,14 @@ public:
 
         // At this point remoteChildren contains collections that don't exist locally yet
         if (!remoteChildren.isEmpty()) {
-            Q_FOREACH (Collection c, remoteChildren) {  //krazy:exclude=foreach
+            for (Collection c : remoteChildren) {  //krazy:exclude=foreach
                 c.setParentCollection(parentCollection);
                 remoteCollectionsToCreate.append(c);
             }
         }
         // At this point localChildren contains collections that don't exist remotely anymore
         if (!localChildren.isEmpty() && !incremental) {
-            Q_FOREACH (const auto &c, localChildren) {
+            for (const auto &c : localChildren) {
                 if (!c.remoteId().isEmpty())
                     localCollectionsToRemove.push_back(c);
             }

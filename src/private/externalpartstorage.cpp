@@ -300,7 +300,7 @@ void ExternalPartStorage::addToTransaction(const QVector<Operation> &ops)
     Q_ASSERT(iter != mTransactions.end());
     locker.unlock();
 
-    Q_FOREACH (const Operation &op, ops) {
+    for (const Operation &op : ops) {
         iter->append(op);
     }
 }

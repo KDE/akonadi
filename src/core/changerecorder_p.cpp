@@ -212,7 +212,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     QString result;
     bool dummy;
     const QQueue<Protocol::ChangeNotification> notifications = loadFrom(&file, dummy);
-    Q_FOREACH (const Protocol::ChangeNotification &n, notifications) {
+    for (const Protocol::ChangeNotification &n : notifications) {
         result += n.debugString() + QLatin1Char('\n');
     }
     return result;

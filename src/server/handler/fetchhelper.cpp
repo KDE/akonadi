@@ -528,7 +528,7 @@ bool FetchHelper::fetchItems()
             QVector<Protocol::FetchRelationsResponse> relations;
             const auto result = qb.result();
             relations.reserve(result.size());
-            Q_FOREACH (const Relation &rel, result) {
+            for (const Relation &rel : result) {
                 relations << HandlerHelper::fetchRelationsResponse(rel);
             }
             response.setRelations(relations);

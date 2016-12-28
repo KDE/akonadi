@@ -78,7 +78,7 @@ QStringList ResourceManager::resourceInstances() const
     QStringList result;
     const auto resources = Resource::retrieveAll();
     result.reserve(resources.size());
-    Q_FOREACH (const Resource &res, resources) {
+    for (const Resource &res : resources) {
         result.append(res.name());
     }
     return result;

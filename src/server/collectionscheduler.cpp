@@ -285,7 +285,7 @@ void CollectionScheduler::init()
     }
 
     const Collection::List collections = qb.result();
-    Q_FOREACH (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         scheduleCollection(collection);
     }
 
@@ -303,7 +303,7 @@ void CollectionScheduler::schedulerTimeout()
     mSchedule.remove(timestamp);
     mScheduleLock.unlock();
 
-    Q_FOREACH (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         collectionExpired(collection);
         scheduleCollection(collection, false);
     }

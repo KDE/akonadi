@@ -110,7 +110,7 @@ void AgentSearchInterface::searchFinished(const QVector<qint64> &result, ResultS
     if (scope == Akonadi::AgentSearchInterface::Rid) {
         QVector<QByteArray> rids;
         rids.reserve(result.size());
-        Q_FOREACH (qint64 rid, result) {
+        for (qint64 rid : result) {
             rids << QByteArray::number(rid);
         }
 

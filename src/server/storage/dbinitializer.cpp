@@ -281,7 +281,7 @@ bool DbInitializer::updateIndexesAndConstraints()
 
 void DbInitializer::execPendingQueries(const QStringList &queries)
 {
-    Q_FOREACH (const QString &statement, queries) {
+    for (const QString &statement : queries) {
         qCDebug(AKONADISERVER_LOG) << statement;
         execQuery(statement);
     }

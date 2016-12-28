@@ -108,7 +108,7 @@ void SearchRequest::emitResults(const QSet<qint64> &results)
 void SearchRequest::searchPlugins()
 {
     const QVector<AbstractSearchPlugin *> plugins = SearchManager::instance()->searchPlugins();
-    Q_FOREACH (AbstractSearchPlugin *plugin, plugins) {
+    for (AbstractSearchPlugin *plugin : plugins) {
         const QSet<qint64> result = plugin->search(mQuery, mCollections, mMimeTypes);
         emitResults(result);
     }

@@ -243,7 +243,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
 
     for (const PimItem &item : items) {
         const Flag::List itemFlags = item.flags();
-        Q_FOREACH (const Flag &flag, itemFlags) {
+        for (const Flag &flag : itemFlags) {
             if (!flags.contains(flag)) {
                 removedFlags << flag.name().toLatin1();
                 Query::Condition cond;

@@ -168,7 +168,7 @@ void TagSync::onCreateTagDone(KJob *job)
 
 static bool containsByGidOrRid(const Item::List &items, const Item &key)
 {
-    Q_FOREACH (const Item &item, items) {
+    for (const Item &item : items) {
         if ((!item.gid().isEmpty() && !key.gid().isEmpty()) && (item.gid() == key.gid())) {
             return true;
         } else if (item.remoteId() == key.remoteId()) {
@@ -192,7 +192,7 @@ void TagSync::onTagItemsFetchDone(KJob *job)
 
     //add = remote - local
     Item::List toAdd;
-    Q_FOREACH (const Item &remote, remoteMembers) {
+    for (const Item &remote : remoteMembers) {
         if (!containsByGidOrRid(items, remote)) {
             toAdd << remote;
         }
@@ -200,7 +200,7 @@ void TagSync::onTagItemsFetchDone(KJob *job)
 
     //remove = local - remote
     Item::List toRemove;
-    Q_FOREACH (const Item &local, items) {
+    for (const Item &local : items) {
         //Skip items that have no remote id yet
         //Trying to them will only result in a conflict
         if (local.remoteId().isEmpty()) {

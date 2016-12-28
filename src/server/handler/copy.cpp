@@ -69,13 +69,13 @@ void Copy::itemsRetrieved(const QList<qint64>& ids)
         failureResponse("Unable to retrieve items");
         return;
     }
-    PimItem::List items = qb.result();
+    const PimItem::List items = qb.result();
     qb.query().finish();
 
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store);
 
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         if (!copyItem(item, mTargetCollection)) {
             failureResponse("Unable to copy item");
             return;

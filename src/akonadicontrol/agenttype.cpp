@@ -52,7 +52,8 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     KDesktopFile desktopFile(fileName);
     KConfigGroup group = desktopFile.desktopGroup();
 
-    Q_FOREACH (const QString &key, group.keyList()) {
+    const QStringList keyList(group.keyList());
+    for (const QString &key : keyList) {
         if (key.startsWith(QLatin1String("X-Akonadi-Custom-"))) {
             QString customKey = key.mid(17, key.length());
             QStringList val = group.readEntry(key, QStringList());

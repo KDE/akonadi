@@ -318,7 +318,7 @@ QString XdgBaseDirs::findResourceFile(const char *resource, const QString &relPa
 
     const QStringList pathList = systemPathList(resource);
 
-    Q_FOREACH (const QString &path, pathList) {
+    for (const QString &path : pathList) {
         fileInfo = QFileInfo(path + QLatin1Char('/') + relPath);
         if (fileInfo.exists() && fileInfo.isFile() && fileInfo.isReadable()) {
             return fileInfo.absoluteFilePath();
