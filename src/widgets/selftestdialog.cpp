@@ -482,7 +482,7 @@ void SelfTestDialog::testResources()
                             "The following paths have been searched: '%1'. "
                             "The XDG_DATA_DIRS environment variable is set to '%2'; make sure this includes all paths "
                             "where Akonadi agents are installed.")
-                      .subs(pathList.join(QStringLiteral(" ")))
+                      .subs(pathList.join(QLatin1Char(' ')))
                       .subs(QString::fromLocal8Bit(qgetenv("XDG_DATA_DIRS"))));
     }
     item->setData(pathList, ListDirectoryRole);
