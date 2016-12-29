@@ -29,7 +29,7 @@ QVector<Value> valuesToVector(const Container<Key, Value> &container)
 {
     QVector<Value> values;
     values.reserve(container.size());
-    Q_FOREACH (const Value &value, container) {
+    for (const Value &value : container) {
         values << value;
     }
     return values;
@@ -40,7 +40,7 @@ QSet<T> vectorToSet(const QVector<T> &container)
 {
     QSet<T> set;
     set.reserve(container.size());
-    Q_FOREACH (const T &value, container) {
+    for (const T &value : container) {
         set.insert(value);
     }
     return set;
