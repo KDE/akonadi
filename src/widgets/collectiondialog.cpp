@@ -267,7 +267,7 @@ void CollectionDialog::Private::slotAddChildCollection()
     if (canCreateCollection(parentCollection)) {
         const QString name = QInputDialog::getText(mParent, i18nc("@title:window", "New Folder"),
                              i18nc("@label:textbox, name of a thing", "Name"));
-        if (name.isEmpty()) {
+        if (name.trimmed().isEmpty()) {
             return;
         }
 
