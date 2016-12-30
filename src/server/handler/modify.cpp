@@ -69,7 +69,7 @@ bool Modify::parseStream()
         QStringList mts = cmd.mimeTypes();
         const MimeType::List currentMts = collection.mimeTypes();
         bool equal = true;
-        Q_FOREACH (const MimeType &currentMt, currentMts) {
+        for (const MimeType &currentMt : currentMts) {
             if (mts.contains(currentMt.name())) {
                 mts.removeAll(currentMt.name());
                 continue;

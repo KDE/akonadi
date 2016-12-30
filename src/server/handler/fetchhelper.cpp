@@ -712,6 +712,7 @@ QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentC
 
 QVariant FetchHelper::extractQueryResult(const QSqlQuery &query, FetchHelper::ItemQueryColumns column) const
 {
-    Q_ASSERT(mItemQueryColumnMap[column] >= 0);
-    return query.value(mItemQueryColumnMap[column]);
+    const int colId = mItemQueryColumnMap[column];
+    Q_ASSERT(colId >= 0);
+    return query.value(colId);
 }

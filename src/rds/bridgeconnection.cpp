@@ -35,7 +35,7 @@
 
 BridgeConnection::BridgeConnection(QTcpSocket *remoteSocket, QObject *parent)
     : QObject(parent)
-    , m_localSocket(0)
+    , m_localSocket(Q_NULLPTR)
     , m_remoteSocket(remoteSocket)
 {
     // wait for the vtable to be complete

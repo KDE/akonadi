@@ -44,7 +44,7 @@ public:
     CollectionFetchJobPrivate(CollectionFetchJob *parent)
         : JobPrivate(parent)
         , mType(CollectionFetchJob::Base)
-        , mEmitTimer(0)
+        , mEmitTimer(Q_NULLPTR)
         , mBasePrefetch(false)
     {
 
@@ -355,7 +355,7 @@ static Collection::List filterDescendants(const Collection::List &list)
         }
     }
 
-    foreach (const Collection &collection, list) {
+    for (const Collection &collection : list) {
         if (!excludeList.contains(collection.id())) {
             result.append(collection);
         }
@@ -393,7 +393,7 @@ void CollectionFetchJob::slotResult(KJob *job)
         const Collection::List roots = list->collections();
         Q_ASSERT(!hasSubjobs());
         if (!job->error()) {
-            foreach (const Collection &col, roots) {
+            for (const Collection &col : roots) {
                 CollectionFetchJob *subJob = new CollectionFetchJob(col, d->mType, this);
                 connect(subJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(subJobCollectionReceived(Akonadi::Collection::List)));
                 subJob->setFetchScope(fetchScope());

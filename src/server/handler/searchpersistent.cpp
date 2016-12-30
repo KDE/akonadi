@@ -78,7 +78,8 @@ bool SearchPersistent::parseStream()
         return failureResponse("Unable to set rights attribute on persistent search");
     }
 
-    Q_FOREACH (const QString &mimeType, cmd.mimeTypes()) {
+    const QStringList lstMimeTypes = cmd.mimeTypes();
+    for (const QString &mimeType : lstMimeTypes) {
         const MimeType mt = MimeType::retrieveByNameOrCreate(mimeType);
         if (!mt.isValid()) {
             return failureResponse("Failed to create new mimetype");

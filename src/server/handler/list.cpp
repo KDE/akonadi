@@ -522,7 +522,8 @@ bool List::parseStream()
             return failureResponse("Unknown resource");
         }
     }
-    Q_FOREACH (const QString &mtName, cmd.mimeTypes()) {
+    const QStringList lstMimeTypes = cmd.mimeTypes();
+    for (const QString &mtName : lstMimeTypes) {
         const MimeType mt = MimeType::retrieveByNameOrCreate(mtName);
         if (!mt.isValid()) {
             return failureResponse("Failed to create mimetype record");
