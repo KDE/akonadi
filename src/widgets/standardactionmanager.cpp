@@ -137,13 +137,6 @@ static bool canCreateCollection(const Akonadi::Collection &collection)
     return true;
 }
 
-/*
-static inline bool isRootCollection( const Akonadi::Collection &collection )
-{
-  return (collection == Akonadi::Collection::root());
-}
-*/
-
 static void setWorkOffline(bool offline)
 {
     KConfig config(QStringLiteral("akonadikderc"));
@@ -193,12 +186,12 @@ class Q_DECL_HIDDEN StandardActionManager::Private
 public:
     Private(StandardActionManager *parent)
         : q(parent)
-        , actionCollection(0)
-        , parentWidget(0)
-        , collectionSelectionModel(0)
-        , itemSelectionModel(0)
-        , favoritesModel(0)
-        , favoriteSelectionModel(0)
+        , actionCollection(Q_NULLPTR)
+        , parentWidget(Q_NULLPTR)
+        , collectionSelectionModel(Q_NULLPTR)
+        , itemSelectionModel(Q_NULLPTR)
+        , favoritesModel(Q_NULLPTR)
+        , favoriteSelectionModel(Q_NULLPTR)
         , insideSelectionSlot(false)
     {
         actions.fill(0, StandardActionManager::LastType);
@@ -448,7 +441,7 @@ public:
     void encodeToClipboard(QItemSelectionModel *selectionModel, bool cut = false)
     {
         Q_ASSERT(selectionModel);
-        if (safeSelectedRows(selectionModel).count() <= 0) {
+        if (safeSelectedRows(selectionModel).isEmpty()) {
             return;
         }
 
@@ -726,7 +719,7 @@ public:
             return;
         }
 
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             TrashRestoreJob *job = new TrashRestoreJob(collection, q);
             q->connect(job, SIGNAL(result(KJob*)), q, SLOT(moveCollectionToTrashResult(KJob*)));
         }
@@ -781,7 +774,7 @@ public:
         }
 
         bool collectionsAreInTrash = false;
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             if (collection.hasAttribute<EntityDeletedAttribute>()) {
                 collectionsAreInTrash = true;
                 break;
@@ -803,7 +796,7 @@ public:
         }
 
         bool itemsAreInTrash = false;
-        foreach (const Item &item, items) {
+        for (const Item &item : items) {
             if (item.hasAttribute<EntityDeletedAttribute>()) {
                 itemsAreInTrash = true;
                 break;
@@ -830,7 +823,7 @@ public:
             return;
         }
 
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             if (!testAndSetOnlineResources(collection)) {
                 break;
             }
@@ -876,7 +869,7 @@ public:
             return;
         }
 
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             if (!testAndSetOnlineResources(collection)) {
                 break;
             }

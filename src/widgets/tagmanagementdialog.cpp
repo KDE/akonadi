@@ -36,7 +36,7 @@ using namespace Akonadi;
 struct Q_DECL_HIDDEN TagManagementDialog::Private {
     Private(QDialog *parent)
         : d(parent),
-          buttonBox(0)
+          buttonBox(Q_NULLPTR)
     {
     }
     void writeConfig();

@@ -81,12 +81,12 @@ TagEditWidget::Private::Private(Akonadi::TagModel *model, QWidget *parent)
     : QObject()
     , d(parent)
     , m_model(model)
-    , m_tagsView(0)
+    , m_tagsView(Q_NULLPTR)
     , m_checkableProxy(Q_NULLPTR)
-    , m_newTagButton(0)
-    , m_newTagEdit(0)
-    , m_deleteButton(0)
-    , m_deleteButtonTimer(0)
+    , m_newTagButton(Q_NULLPTR)
+    , m_newTagEdit(Q_NULLPTR)
+    , m_deleteButton(Q_NULLPTR)
+    , m_deleteButtonTimer(Q_NULLPTR)
 {
 
 }

@@ -39,6 +39,13 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN TagWidget::Private
 {
 public:
+    Private()
+        : mTagView(Q_NULLPTR),
+          mModel(Q_NULLPTR)
+    {
+
+    }
+
     TagView *mTagView;
     Akonadi::Tag::List mTags;
     Akonadi::TagModel *mModel;
@@ -74,11 +81,11 @@ TagWidget::TagWidget(QWidget *parent)
 
     QHBoxLayout *layout = new QHBoxLayout(this);
     layout->setMargin(0);
-    d->mTagView = new TagView;
+    d->mTagView = new TagView(this);
     connect(d->mTagView, &TagView::clearTags, this, &TagWidget::clearTags);
     layout->addWidget(d->mTagView);
 
-    QToolButton *editButton = new QToolButton;
+    QToolButton *editButton = new QToolButton(this);
     editButton->setText(i18n("..."));
     layout->addWidget(editButton, Qt::AlignRight);
 

@@ -37,8 +37,8 @@ class Q_DECL_HIDDEN TagSelectionDialog::Private
 public:
     Private(QDialog *parent)
         : d(parent)
-        , mTagWidget(0)
-        , mButtonBox(0)
+        , mTagWidget(Q_NULLPTR)
+        , mButtonBox(Q_NULLPTR)
     {
     }
     void writeConfig();
