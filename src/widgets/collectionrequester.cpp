@@ -39,9 +39,9 @@ class Q_DECL_HIDDEN CollectionRequester::Private
 public:
     Private(CollectionRequester *parent)
         : q(parent)
-        , edit(0)
-        , button(0)
-        , collectionDialog(0)
+        , edit(Q_NULLPTR)
+        , button(Q_NULLPTR)
+        , collectionDialog(Q_NULLPTR)
     {
     }
 
@@ -99,7 +99,8 @@ void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
     const qint64 originalId = fetch->property("OriginalCollectionId").toLongLong();
 
     QMap<qint64, Collection> names;
-    Q_FOREACH (const Collection &collection, fetch->collections()) {
+    const Akonadi::Collection::List lstCols = fetch->collections();
+    for (const Collection &collection : lstCols) {
         names.insert(collection.id(), collection);
     }
 

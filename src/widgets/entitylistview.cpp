@@ -51,7 +51,7 @@ public:
 #ifndef QT_NO_DRAGANDDROP
         , mDragDropManager(new DragDropManager(mParent))
 #endif
-        , mXmlGuiClient(0)
+        , mXmlGuiClient(Q_NULLPTR)
     {
     }
 

@@ -44,13 +44,13 @@ QModelIndex ETMViewStateSaver::indexFromConfigString(const QAbstractItemModel *m
     }
 
     if (key.startsWith(QLatin1Char('c'))) {
-        QModelIndex idx = EntityTreeModel::modelIndexForCollection(model, Collection(id));
+        const QModelIndex idx = EntityTreeModel::modelIndexForCollection(model, Collection(id));
         if (!idx.isValid()) {
             return QModelIndex();
         }
         return idx;
     } else if (key.startsWith(QLatin1Char('i'))) {
-        QModelIndexList list = EntityTreeModel::modelIndexesForItem(model, Item(id));
+        const QModelIndexList list = EntityTreeModel::modelIndexesForItem(model, Item(id));
         if (list.isEmpty()) {
             return QModelIndex();
         }

@@ -87,9 +87,9 @@ class Q_DECL_HIDDEN AgentInstanceWidget::Private
 public:
     Private(AgentInstanceWidget *parent)
         : mParent(parent)
-        , mView(0)
-        , mModel(0)
-        , proxy(0)
+        , mView(Q_NULLPTR)
+        , mModel(Q_NULLPTR)
+        , proxy(Q_NULLPTR)
     {
     }
 

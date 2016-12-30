@@ -49,7 +49,8 @@ public:
 
     void save()
     {
-        for (int i = 0; i < mTabWidget->count(); ++i) {
+        const int numberOfTab(mTabWidget->count());
+        for (int i = 0; i < numberOfTab; ++i) {
             CollectionPropertiesPage *page = static_cast<CollectionPropertiesPage *>(mTabWidget->widget(i));
             page->save(mCollection);
         }
@@ -69,7 +70,8 @@ public:
 
     void setCurrentPage(const QString &name)
     {
-        for (int i = 0; i < mTabWidget->count(); ++i) {
+        const int numberOfTab(mTabWidget->count());
+        for (int i = 0; i < numberOfTab; ++i) {
             QWidget *w = mTabWidget->widget(i);
             if (w->objectName() == name) {
                 mTabWidget->setCurrentIndex(i);

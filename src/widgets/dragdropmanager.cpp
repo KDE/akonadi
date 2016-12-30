@@ -79,7 +79,7 @@ bool DragDropManager::dropAllowed(QDragMoveEvent *event) const
                     break;
                 }
             } else { // This is an item.
-                QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
+                const QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
                 for (int i = 0; i < query.count(); ++i) {
                     if (query.at(i).first == QLatin1String("type")) {
                         const QString type = query.at(i).second;
@@ -120,8 +120,6 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     if (!mIsManualSortingActive && !dropOnItem) {
         return false;
     }
-
-    const QStringList supportedContentTypes = targetCollection.contentMimeTypes();
 
     const QMimeData *data = event->mimeData();
     const QList<QUrl> urls = data->urls();

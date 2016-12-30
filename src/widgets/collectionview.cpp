@@ -49,7 +49,7 @@ class Q_DECL_HIDDEN CollectionView::Private
 public:
     Private(CollectionView *parent)
         : mParent(parent)
-        , xmlGuiClient(0)
+        , xmlGuiClient(Q_NULLPTR)
     {
     }
 
@@ -192,7 +192,8 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
             }
         } else {
             QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
-            for (int i = 0; i < query.count(); ++i) {
+            const int numberOfQuery(query.count());
+            for (int i = 0; i < numberOfQuery; ++i) {
                 if (query.at(i).first == QLatin1String("type")) {
                     const QString type = query.at(i).second;
                     if (!supportedContentTypes.contains(type)) {
