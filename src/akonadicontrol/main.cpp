@@ -38,7 +38,7 @@
 # include <unistd.h>
 #endif
 
-static AgentManager *sAgentManager = 0;
+static AgentManager *sAgentManager = Q_NULLPTR;
 
 void crashHandler(int)
 {
@@ -79,9 +79,8 @@ int main(int argc, char **argv)
     sAgentManager = new AgentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
     KCrash::setEmergencySaveFunction(crashHandler);
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 6, 0)
     QGuiApplication::setFallbackSessionManagementEnabled(false);
-#endif
+
     // akonadi_control is started on-demand, no need to auto restart by session.
     auto disableSessionManagement = [](QSessionManager &sm) {
         sm.setRestartHint(QSessionManager::RestartNever);
@@ -92,7 +91,7 @@ int main(int argc, char **argv)
     int retval = app.exec();
 
     delete sAgentManager;
-    sAgentManager = 0;
+    sAgentManager = Q_NULLPTR;
 
     return retval;
 }

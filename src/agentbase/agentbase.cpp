@@ -62,7 +62,7 @@
 
 using namespace Akonadi;
 
-static AgentBase *sAgentBase = 0;
+static AgentBase *sAgentBase = Q_NULLPTR;
 
 AgentBase::Observer::Observer()
 {
@@ -338,13 +338,13 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mNeedsNetwork(false)
     , mOnline(false)
     , mDesiredOnlineState(false)
-    , mSettings(0)
-    , mChangeRecorder(0)
-    , mTracer(0)
-    , mObserver(0)
-    , mPowerInterface(0)
-    , mTemporaryOfflineTimer(0)
-    , mEventLoopLocker(0)
+    , mSettings(Q_NULLPTR)
+    , mChangeRecorder(Q_NULLPTR)
+    , mTracer(Q_NULLPTR)
+    , mObserver(Q_NULLPTR)
+    , mPowerInterface(Q_NULLPTR)
+    , mTemporaryOfflineTimer(Q_NULLPTR)
+    , mEventLoopLocker(Q_NULLPTR)
     , mNetworkManager(Q_NULLPTR)
 {
     Internal::setClientType(Internal::Agent);

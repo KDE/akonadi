@@ -29,7 +29,7 @@ using namespace Akonadi;
 
 AgentProcessInstance::AgentProcessInstance(AgentManager *manager)
     : AgentInstance(manager)
-    , mController(0)
+    , mController(Q_NULLPTR)
 {
 }
 

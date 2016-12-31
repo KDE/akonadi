@@ -145,7 +145,6 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     Protocol::ModifyItemsCommand cmd;
 
     const Akonadi::Item item = mItems.first();
-    QList<QByteArray> changes;
     foreach (int op, mOperations) {
         switch (op) {
         case ItemModifyJobPrivate::RemoteId:

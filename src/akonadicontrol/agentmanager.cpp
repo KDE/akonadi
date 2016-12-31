@@ -169,10 +169,10 @@ void AgentManager::cleanup()
     }
 
     delete mStorageController;
-    mStorageController = 0;
+    mStorageController = Q_NULLPTR;
 
     delete mAgentServer;
-    mAgentServer = 0;
+    mAgentServer = Q_NULLPTR;
 }
 
 QStringList AgentManager::agentTypes() const
@@ -481,7 +481,7 @@ void AgentManager::updatePluginInfos()
     const QHash<QString, AgentType> oldInfos = mAgents;
     readPluginInfos();
 
-    Q_FOREACH (const AgentType &oldInfo, oldInfos) {
+    for (const AgentType &oldInfo : oldInfos) {
         if (!mAgents.contains(oldInfo.identifier)) {
             Q_EMIT agentTypeRemoved(oldInfo.identifier);
         }
@@ -506,7 +506,7 @@ void AgentManager::readPluginInfos()
 
     const QStringList pathList = pluginInfoPathList();
 
-    Q_FOREACH (const QString &path, pathList) {
+    for (const QString &path : pathList) {
         const QDir directory(path, QStringLiteral("*.desktop"));
         readPluginInfos(directory);
     }

@@ -38,11 +38,11 @@ int main(int argc, char *argv[])
 
     AgentPluginLoader loader;
     QPluginLoader *factory = loader.load(agentPluginName);
-    if (factory == 0) {
+    if (!factory) {
         return 1;
     }
 
-    QObject *instance = 0;
+    QObject *instance = Q_NULLPTR;
     const bool invokeSucceeded = QMetaObject::invokeMethod(factory->instance(),
                                                            "createInstance",
                                                            Qt::DirectConnection,

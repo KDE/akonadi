@@ -55,8 +55,8 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
     const QStringList keyList(group.keyList());
     for (const QString &key : keyList) {
         if (key.startsWith(QLatin1String("X-Akonadi-Custom-"))) {
-            QString customKey = key.mid(17, key.length());
-            QStringList val = group.readEntry(key, QStringList());
+            const QString customKey = key.mid(17, key.length());
+            const QStringList val = group.readEntry(key, QStringList());
             if (val.size() == 1) {
                 custom[customKey] = QVariant(val[0]);
             } else {

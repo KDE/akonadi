@@ -225,7 +225,7 @@ T *AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *
                                        << mIdentifier << ", error message:"
                                        << (iface ? iface->lastError().message() : QString());
         delete iface;
-        return 0;
+        return Q_NULLPTR;
     }
     return iface;
 }

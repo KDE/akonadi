@@ -32,7 +32,7 @@
 using namespace Akonadi;
 
 qint64 ResourceScheduler::Task::latestSerial = 0;
-static QDBusAbstractInterface *s_resourcetracker = 0;
+static QDBusAbstractInterface *s_resourcetracker = Q_NULLPTR;
 
 //@cond PRIVATE
 
@@ -296,9 +296,7 @@ void ResourceScheduler::taskDone()
     }
 
     if (s_resourcetracker) {
-        QList<QVariant> argumentList;
-        argumentList << QString::number(mCurrentTask.serial)
-                     << QString();
+        const QList<QVariant> argumentList = { QString::number(mCurrentTask.serial), QString() };
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
     }
 
@@ -403,8 +401,7 @@ void ResourceScheduler::executeNext()
     }
 
     if (s_resourcetracker) {
-        QList<QVariant> argumentList;
-        argumentList << QString::number(mCurrentTask.serial);
+        const QList<QVariant> argumentList = { QString::number(mCurrentTask.serial) };
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobStarted"), argumentList);
     }
 
