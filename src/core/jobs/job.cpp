@@ -38,7 +38,7 @@
 
 using namespace Akonadi;
 
-static QDBusAbstractInterface *s_jobtracker = 0;
+static QDBusAbstractInterface *s_jobtracker = Q_NULLPTR;
 
 //@cond PRIVATE
 void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
@@ -361,7 +361,7 @@ bool Job::removeSubjob(KJob *job)
 {
     bool rv = KCompositeJob::removeSubjob(job);
     if (job == d_ptr->mCurrentSubJob) {
-        d_ptr->mCurrentSubJob = 0;
+        d_ptr->mCurrentSubJob = Q_NULLPTR;
         QTimer::singleShot(0, this, SLOT(startNext()));
     }
     return rv;

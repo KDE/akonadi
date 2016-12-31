@@ -59,7 +59,7 @@ CollectionModel::~CollectionModel()
     d->collections.clear();
 
     delete d->monitor;
-    d->monitor = 0;
+    d->monitor = Q_NULLPTR;
 
     delete d;
 }
@@ -146,8 +146,7 @@ QModelIndex CollectionModel::parent(const QModelIndex &index) const
     if (!parentCol.isValid()) {
         return QModelIndex();
     }
-    QVector<Collection::Id> list;
-    list = d->childCollections.value(parentCol.parentCollection().id());
+    const QVector<Collection::Id> list = d->childCollections.value(parentCol.parentCollection().id());
 
     int parentRow = list.indexOf(parentCol.id());
     if (parentRow < 0) {

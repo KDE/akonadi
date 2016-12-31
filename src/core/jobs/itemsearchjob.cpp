@@ -39,7 +39,7 @@ public:
         , mQuery(query)
         , mRecursive(false)
         , mRemote(false)
-        , mEmitTimer(0)
+        , mEmitTimer(Q_NULLPTR)
     {
     }
 

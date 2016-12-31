@@ -753,7 +753,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
 
     QMimeData *data = new QMimeData();
     QList<QUrl> urls;
-    foreach (const QModelIndex &index, indexes) {
+    for (const QModelIndex &index : indexes) {
         if (index.column() != 0) {
             continue;
         }
@@ -1190,9 +1190,9 @@ QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *m
         return QModelIndexList();
     }
 
-    QModelIndexList list = pair.second->d_ptr->indexesForItem(item);
+    const QModelIndexList list = pair.second->d_ptr->indexesForItem(item);
     QModelIndexList proxyList;
-    foreach (const QModelIndex &idx, list) {
+    for (const QModelIndex &idx : list) {
         const QModelIndex pIdx = proxiedIndex(idx, pair.first);
         if (pIdx.isValid()) {
             proxyList << pIdx;

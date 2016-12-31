@@ -36,8 +36,8 @@ class ResourceSynchronizationJobPrivate : public KJobPrivateBase
 public:
     ResourceSynchronizationJobPrivate(ResourceSynchronizationJob *parent)
         : q(parent)
-        , interface(0)
-        , safetyTimer(0)
+        , interface(Q_NULLPTR)
+        , safetyTimer(Q_NULLPTR)
         , timeoutCount(60)
         , collectionTreeOnly(false)
     {

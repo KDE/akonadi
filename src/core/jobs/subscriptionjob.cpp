@@ -66,6 +66,7 @@ void SubscriptionJob::doStart()
 
     if (d->mSub.isEmpty() && d->mUnsub.isEmpty()) {
         emitResult();
+        return;
     }
 
     Q_FOREACH (Collection col, d->mSub) {   //krazy:exclude=foreach
