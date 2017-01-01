@@ -54,7 +54,7 @@ class Q_DECL_HIDDEN Control::Private
 public:
     Private(Control *parent)
         : mParent(parent)
-        , mEventLoop(0)
+        , mEventLoop(Q_NULLPTR)
         , mSuccess(false)
         , mStarting(false)
         , mStopping(false)
@@ -86,7 +86,7 @@ bool Control::Private::exec()
     mEventLoop = new QEventLoop(mParent);
     mEventLoop->exec();
     mEventLoop->deleteLater();
-    mEventLoop = 0;
+    mEventLoop = Q_NULLPTR;
 
     if (!mSuccess) {
         qCWarning(AKONADICORE_LOG) << "Could not start/stop Akonadi!";

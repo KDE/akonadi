@@ -53,7 +53,7 @@ public:
         : instance(new ServerManager(this))
         , mState(ServerManager::NotRunning)
         , mSafetyTimer(new QTimer)
-        , mFirstRunner(0)
+        , mFirstRunner(Q_NULLPTR)
     {
         mState = instance->state();
         mSafetyTimer->setSingleShot(true);

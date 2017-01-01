@@ -523,7 +523,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
             bool isNewItem = true;
             if (m_items.contains(item.id())) {
                 const Akonadi::Collection::List parents = getParentCollections(item);
-                foreach (const Akonadi::Collection &parent, parents) {
+                for (const Akonadi::Collection &parent : parents) {
                     if (parent.id() == collectionId) {
                         qCWarning(AKONADICORE_LOG) << "Fetched an item which is already in the model";
                         // Update it in case the revision changed;
@@ -1435,7 +1435,7 @@ void EntityTreeModelPrivate::startFirstListJob()
 {
     Q_Q(EntityTreeModel);
 
-    if (m_collections.size() > 0) {
+    if (!m_collections.isEmpty()) {
         return;
     }
 
@@ -1515,7 +1515,7 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
 void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collection::List &list)
 {
     Q_Q(EntityTreeModel);
-    foreach (const Collection &collection, list) {
+    for (const Collection &collection : list) {
         // These collections have been explicitly shown in the Monitor,
         // but hidden trumps that for now. This may change in the future if we figure out a use for it.
         if (isHidden(collection)) {
@@ -1893,7 +1893,8 @@ void EntityTreeModelPrivate::fillModel()
         CollectionFetchJob *rootFetchJob = new CollectionFetchJob(m_rootCollection, CollectionFetchJob::Base, m_session);
         q->connect(rootFetchJob, SIGNAL(result(KJob*)),
                    SLOT(rootFetchJobDone(KJob*)));
-        qCDebug(DebugETM) << ""; jobTimeTracker[rootFetchJob].start();
+        qCDebug(DebugETM) << "";
+        jobTimeTracker[rootFetchJob].start();
     }
 }
 

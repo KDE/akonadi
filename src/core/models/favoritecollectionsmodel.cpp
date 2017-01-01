@@ -218,7 +218,7 @@ public:
     {
         QList<Akonadi::Collection::Id> colIds;
         colIds.reserve(collections.count());
-        foreach (const Akonadi::Collection &col, collections) {
+        for (const Akonadi::Collection &col : collections) {
             colIds << col.id();
         }
         set(colIds);
@@ -397,7 +397,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
         MimeTypeChecker mimeChecker;
         mimeChecker.setWantedMimeTypes(destCollection.contentMimeTypes());
 
-        foreach (const QUrl &url, urls) {
+        for (const QUrl &url : urls) {
             const Collection col = Collection::fromUrl(url);
             if (col.isValid()) {
                 addCollection(col);

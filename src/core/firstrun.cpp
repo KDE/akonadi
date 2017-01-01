@@ -102,7 +102,7 @@ void Firstrun::findPendingDefaults()
 void Firstrun::setupNext()
 {
     delete mCurrentDefault;
-    mCurrentDefault = 0;
+    mCurrentDefault = Q_NULLPTR;
 
     if (mPendingDefaults.isEmpty()) {
         deleteLater();

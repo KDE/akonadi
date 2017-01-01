@@ -47,7 +47,7 @@ public:
     ItemSyncPrivate(ItemSync *parent)
         : JobPrivate(parent)
         , mTransactionMode(ItemSync::SingleTransaction)
-        , mCurrentTransaction(0)
+        , mCurrentTransaction(Q_NULLPTR)
         , mTransactionJobs(0)
         , mPendingJobs(0)
         , mProgress(0)
@@ -159,7 +159,7 @@ void ItemSyncPrivate::checkDone()
             if (mCurrentTransaction) {
                 q->emit transactionCommitted();
                 mCurrentTransaction->commit();
-                mCurrentTransaction = 0;
+                mCurrentTransaction = Q_NULLPTR;
             }
             return;
         }
@@ -454,7 +454,7 @@ void ItemSyncPrivate::slotTransactionResult(KJob *job)
 {
     --mTransactionJobs;
     if (mCurrentTransaction == job) {
-        mCurrentTransaction = 0;
+        mCurrentTransaction = Q_NULLPTR;
     }
 
     checkDone();

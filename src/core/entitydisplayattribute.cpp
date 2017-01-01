@@ -29,14 +29,12 @@ class Q_DECL_HIDDEN EntityDisplayAttribute::Private
 {
 public:
     Private()
-        : hidden(false)
     {
     }
     QString name;
     QString icon;
     QString activeIcon;
     QColor backgroundColor;
-    bool hidden;
 };
 
 EntityDisplayAttribute::EntityDisplayAttribute()

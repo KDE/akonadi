@@ -62,8 +62,8 @@ public:
             return;
         }
         q->beginResetModel();
-        Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
-        foreach (const Collection &col, cols) {
+        const Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
+        for (const Collection &col : cols) {
             if (!CollectionUtils::isStructural(col)) {
                 subscriptions[ col.id() ] = true;
             }

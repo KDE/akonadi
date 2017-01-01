@@ -38,7 +38,7 @@ Q_GLOBAL_STATIC(ChangeMediator, s_globalChangeMediator)
 ChangeMediator *ChangeMediator::instance()
 {
     if (s_globalChangeMediator.isDestroyed()) {
-        return 0;
+        return Q_NULLPTR;
     } else {
         return s_globalChangeMediator;
     }

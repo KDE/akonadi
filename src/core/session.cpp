@@ -219,7 +219,7 @@ void SessionPrivate::jobDone(KJob *job)
     if (job == currentJob) {
         if (pipeline.isEmpty()) {
             jobRunning = false;
-            currentJob = 0;
+            currentJob = Q_NULLPTR;
         } else {
             currentJob = pipeline.dequeue();
         }

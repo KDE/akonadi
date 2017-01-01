@@ -349,7 +349,7 @@ void AgentManagerPrivate::createDBusInterface()
 AgentManager *AgentManagerPrivate::mSelf = Q_NULLPTR;
 
 AgentManager::AgentManager()
-    : QObject(0)
+    : QObject(Q_NULLPTR)
     , d(new AgentManagerPrivate(this))
 {
     // needed for queued connections on our signals
