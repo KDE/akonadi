@@ -269,12 +269,12 @@ public:
         if (QObject *const plugin = findBestMatch(type, metaTypeId)) {
             {
                 if ((opt & TypePluginLoader::NoDefault) && plugin == mDefaultPlugin.plugin()) {
-                    return 0;
+                    return Q_NULLPTR;
                 }
                 return plugin;
             }
         }
-        return 0;
+        return Q_NULLPTR;
     }
 
     QObject *findBestMatch(const QString &type, const QVector<int> &metaTypeIds)
