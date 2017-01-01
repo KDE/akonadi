@@ -43,7 +43,7 @@ using namespace Akonadi::Server;
 
 DbConfigMysql::DbConfigMysql()
     : mInternalServer(true)
-    , mDatabaseProcess(0)
+    , mDatabaseProcess(Q_NULLPTR)
 {
 }
 

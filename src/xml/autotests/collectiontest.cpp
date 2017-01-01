@@ -60,7 +60,7 @@ void CollectionTest::testBuildCollection()
 {
     QDomDocument mDocument;
 
-    mDocument.setContent(collection1, true, 0);
+    mDocument.setContent(collection1, true, Q_NULLPTR);
     Collection::List colist = XmlReader::readCollections(mDocument.documentElement());
 
     QStringList mimeType;
@@ -69,7 +69,7 @@ void CollectionTest::testBuildCollection()
     QCOMPARE(colist.size(), 1);
     verifyCollection(colist, 0, QStringLiteral("c11"), QStringLiteral("Inbox"), mimeType);
 
-    mDocument.setContent(collection2, true, 0);
+    mDocument.setContent(collection2, true, Q_NULLPTR);
     colist = XmlReader::readCollections(mDocument.documentElement());
 
     QCOMPARE(colist.size(), 3);

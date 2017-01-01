@@ -40,7 +40,7 @@ int main()
     }
 
     QObject *object = loader->createForName(QStringLiteral("text/vcard@KContacts::Addressee"));
-    if (qobject_cast<ItemSerializerPlugin *>(object) != 0) {
+    if (qobject_cast<ItemSerializerPlugin *>(object) != Q_NULLPTR) {
         qDebug("Loaded plugin for mimetype 'text/vcard@KContacts::Addressee' successfully");
     } else {
         qDebug("Unable to load plugin for mimetype 'text/vcard'");

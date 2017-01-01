@@ -55,7 +55,7 @@ static const bool enableAgentServerDefault = false;
 
 AgentManager::AgentManager(bool verbose, QObject *parent)
     : QObject(parent)
-    , mAgentServer(0)
+    , mAgentServer(Q_NULLPTR)
 #ifndef QT_NO_DEBUG
     , mAgentWatcher(new QFileSystemWatcher(this))
 #endif

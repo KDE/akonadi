@@ -53,7 +53,7 @@ class Q_DECL_HIDDEN CollectionDialog::Private
 public:
     Private(QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options)
         : mParent(parent)
-        , mMonitor(0)
+        , mMonitor(Q_NULLPTR)
     {
         // setup GUI
         QVBoxLayout *layout = new QVBoxLayout(mParent);
@@ -292,7 +292,7 @@ void CollectionDialog::Private::slotCollectionCreationResult(KJob *job)
 
 CollectionDialog::CollectionDialog(QWidget *parent)
     : QDialog(parent)
-    , d(new Private(0, this, CollectionDialog::None))
+    , d(new Private(Q_NULLPTR, this, CollectionDialog::None))
 {
 }
 

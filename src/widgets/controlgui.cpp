@@ -83,8 +83,8 @@ class Q_DECL_HIDDEN ControlGui::Private
 public:
     Private(ControlGui *parent)
         : mParent(parent)
-        , mEventLoop(0)
-        , mProgressIndicator(0)
+        , mEventLoop(Q_NULLPTR)
+        , mProgressIndicator(Q_NULLPTR)
         , mSuccess(false)
         , mStarting(false)
         , mStopping(false)
@@ -142,7 +142,7 @@ bool ControlGui::Private::exec()
     mEventLoop = new QEventLoop(mParent);
     mEventLoop->exec();
     mEventLoop->deleteLater();
-    mEventLoop = 0;
+    mEventLoop = Q_NULLPTR;
 
     if (!mSuccess) {
         qCWarning(AKONADIWIDGETS_LOG) << "Could not start/stop Akonadi!";
@@ -157,7 +157,7 @@ bool ControlGui::Private::exec()
     }
 
     delete mProgressIndicator;
-    mProgressIndicator = 0;
+    mProgressIndicator = Q_NULLPTR;
     mStarting = false;
     mStopping = false;
 

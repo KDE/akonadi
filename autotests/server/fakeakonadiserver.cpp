@@ -332,7 +332,7 @@ void FakeAkonadiServer::runTest()
     mServerLoop->exec();
 
     mServerLoop->deleteLater();
-    mServerLoop = 0;
+    mServerLoop = Q_NULLPTR;
 
     mCmdServer->close();
 

@@ -46,7 +46,7 @@ PreprocessorInstance::PreprocessorInstance(const QString &id)
     : QObject()
     , mBusy(false)
     , mId(id)
-    , mInterface(0)
+    , mInterface(Q_NULLPTR)
 {
     Q_ASSERT(!id.isEmpty());
 }
@@ -73,7 +73,7 @@ bool PreprocessorInstance::init()
             .arg(mId,
                  mInterface ? mInterface->lastError().message() : QString()));
         delete mInterface;
-        mInterface = 0;
+        mInterface = Q_NULLPTR;
         return false;
     }
 

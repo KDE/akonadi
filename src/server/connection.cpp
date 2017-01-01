@@ -46,10 +46,10 @@ using namespace Akonadi::Server;
 Connection::Connection(QObject *parent)
     : AkThread(QThread::InheritPriority, parent)
     , m_socketDescriptor(0)
-    , m_socket(0)
-    , m_currentHandler(0)
+    , m_socket(Q_NULLPTR)
+    , m_currentHandler(Q_NULLPTR)
     , m_connectionState(NonAuthenticated)
-    , m_backend(0)
+    , m_backend(Q_NULLPTR)
     , m_verifyCacheOnRetrieval(false)
     , m_idleTimer(Q_NULLPTR)
     , m_totalTime( 0 )
@@ -111,7 +111,7 @@ void Connection::quit()
     collectionReferenceManager()->removeSession(m_sessionId);
 
     delete m_socket;
-    m_socket = 0;
+    m_socket = Q_NULLPTR;
 
     m_idleTimer->stop();
     delete m_idleTimer;
@@ -265,7 +265,7 @@ void Connection::slotNewData()
             stopTime(currentCommand);
         }
         delete m_currentHandler;
-        m_currentHandler = 0;
+        m_currentHandler = Q_NULLPTR;
 
         if (m_socket->state() != QLocalSocket::ConnectedState) {
             Q_EMIT disconnected();

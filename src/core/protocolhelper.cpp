@@ -496,7 +496,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
                 } else {
                     qCWarning(AKONADICORE_LOG) << "Failed to open attribute file: " << filename;
                     delete attr;
-                    attr = 0;
+                    attr = Q_NULLPTR;
                 }
             } else {
                 attr->deserialize(part.data());

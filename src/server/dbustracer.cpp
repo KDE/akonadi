@@ -23,7 +23,7 @@
 using namespace Akonadi::Server;
 
 DBusTracer::DBusTracer()
-    : QObject(0)
+    : QObject(Q_NULLPTR)
 {
     new TracerNotificationAdaptor(this);
 

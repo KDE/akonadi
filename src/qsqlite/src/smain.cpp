@@ -68,7 +68,7 @@ QSqlDriver* QSQLiteDriverPlugin::create(const QString &name)
         QSQLiteDriver* driver = new QSQLiteDriver();
         return driver;
     }
-    return 0;
+    return Q_NULLPTR;
 }
 
 #include "smain.moc"

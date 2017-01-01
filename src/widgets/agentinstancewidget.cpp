@@ -229,7 +229,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     }
 
     QStyle *style = QApplication::style();
-    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, 0);
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, Q_NULLPTR);
 
     QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
     const QString name = index.model()->data(index, Qt::DisplayRole).toString();

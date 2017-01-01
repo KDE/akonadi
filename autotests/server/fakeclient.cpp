@@ -172,7 +172,7 @@ void FakeClient::run()
     mStream.setDevice(Q_NULLPTR);
     mSocket->close();
     delete mSocket;
-    mSocket = 0;
+    mSocket = Q_NULLPTR;
 }
 
 void FakeClient::connectionLost()

@@ -275,7 +275,7 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
 KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection, bool copy, Session *session)
 {
     if (!canPaste(mimeData, collection)) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     // we try to drop data not coming with the akonadi:// url
@@ -300,7 +300,7 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
     }
 
     if (!mimeData->hasUrls()) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     // data contains an url list
@@ -310,11 +310,11 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
 KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &destination, Qt::DropAction action, Session *session)
 {
     if (!mimeData->hasUrls()) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     if (!canPaste(mimeData, destination)) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     const QList<QUrl> urls = mimeData->urls();

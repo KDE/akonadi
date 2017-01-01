@@ -115,7 +115,7 @@ void CollectionAttributeTest::testAttributes()
     QVERIFY(col.isValid());
 
     attr = col.attribute<TestAttribute>();
-    QVERIFY(attr != 0);
+    QVERIFY(attr != Q_NULLPTR);
     QCOMPARE(attr->serialized(), QByteArray(attr1));
 
     CollectionFetchJob *list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
@@ -125,20 +125,20 @@ void CollectionAttributeTest::testAttributes()
 
     QVERIFY(col.isValid());
     attr = col.attribute<TestAttribute>();
-    QVERIFY(attr != 0);
+    QVERIFY(attr != Q_NULLPTR);
     QCOMPARE(attr->serialized(), QByteArray(attr1));
 
     TestAttribute *attrB = new TestAttribute();
     attrB->deserialize(attr2);
     col.addAttribute(attrB);
     attrB = col.attribute<TestAttribute>();
-    QVERIFY(attrB != 0);
+    QVERIFY(attrB != Q_NULLPTR);
     QCOMPARE(attrB->serialized(), QByteArray(attr2));
 
     attrB->deserialize(attr1);
     col.addAttribute(attrB);
     attrB = col.attribute<TestAttribute>();
-    QVERIFY(attrB != 0);
+    QVERIFY(attrB != Q_NULLPTR);
     QCOMPARE(attrB->serialized(), QByteArray(attr1));
 
     // modify a custom attribute
@@ -153,7 +153,7 @@ void CollectionAttributeTest::testAttributes()
 
     QVERIFY(col.isValid());
     attr = col.attribute<TestAttribute>();
-    QVERIFY(attr != 0);
+    QVERIFY(attr != Q_NULLPTR);
     QCOMPARE(attr->serialized(), QByteArray(attr2));
 
     // delete a custom attribute
@@ -168,7 +168,7 @@ void CollectionAttributeTest::testAttributes()
 
     QVERIFY(col.isValid());
     attr = col.attribute<TestAttribute>();
-    QVERIFY(attr == 0);
+    QVERIFY(attr == Q_NULLPTR);
 
     // cleanup
     CollectionDeleteJob *del = new CollectionDeleteJob(col, this);

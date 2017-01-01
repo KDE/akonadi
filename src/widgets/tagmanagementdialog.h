@@ -45,7 +45,7 @@ public:
     QDialogButtonBox *buttons() const;
 
 private:
-    class Private;
+    struct Private;
     QSharedPointer<Private> d;
 };
 

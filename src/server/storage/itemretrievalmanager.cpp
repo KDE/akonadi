@@ -37,7 +37,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ItemRetrievalManager *ItemRetrievalManager::sInstance = 0;
+ItemRetrievalManager *ItemRetrievalManager::sInstance = Q_NULLPTR;
 
 class ItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
 {
@@ -61,7 +61,7 @@ ItemRetrievalManager::ItemRetrievalManager(AbstractItemRetrievalJobFactory *fact
 
     setObjectName(QStringLiteral("ItemRetrievalManager"));
 
-    Q_ASSERT(sInstance == 0);
+    Q_ASSERT(sInstance == Q_NULLPTR);
     sInstance = this;
 
     mLock = new QReadWriteLock();
@@ -74,7 +74,7 @@ ItemRetrievalManager::~ItemRetrievalManager()
 
     delete mWaitCondition;
     delete mLock;
-    sInstance = 0;
+    sInstance = Q_NULLPTR;
 }
 
 void ItemRetrievalManager::init()
@@ -115,7 +115,7 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const
 org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(const QString &id)
 {
     if (id.isEmpty()) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     org::freedesktop::Akonadi::Resource *iface = mResourceInterfaces.value(id);
@@ -132,7 +132,7 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
         qCCritical(AKONADISERVER_LOG) << QStringLiteral("Cannot connect to agent instance with identifier '%1', error message: '%2'")
                   .arg(id, iface ? iface->lastError().message() : QString());
         delete iface;
-        return 0;
+        return Q_NULLPTR;
     }
     // DBus calls can take some time to reply -- e.g. if a huge local mbox has to be parsed first.
     iface->setTimeout(5 * 60 * 1000);   // 5 minutes, rather than 25 seconds
@@ -189,7 +189,7 @@ void ItemRetrievalManager::processRequest()
             it = mPendingRequests.erase(it);
             continue;
         }
-        if (!mCurrentJobs.contains(it.key()) || mCurrentJobs.value(it.key()) == 0) {
+        if (!mCurrentJobs.contains(it.key()) || mCurrentJobs.value(it.key()) == Q_NULLPTR) {
             // TODO: check if there is another one for the same uid with more parts requested
             ItemRetrievalRequest *req = it.value().takeFirst();
             Q_ASSERT(req->resourceId == it.key());

@@ -61,7 +61,7 @@ static bool stopServer()
 {
     org::freedesktop::Akonadi::ControlManager iface(Akonadi::DBus::serviceName(Akonadi::DBus::Control),
                                                     QStringLiteral("/ControlManager"),
-                                                    QDBusConnection::sessionBus(), 0);
+                                                    QDBusConnection::sessionBus(), Q_NULLPTR);
     if (!iface.isValid()) {
         std::cerr << "Akonadi is not running." << std::endl;
         return false;

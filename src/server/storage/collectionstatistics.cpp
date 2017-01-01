@@ -31,11 +31,11 @@
 
 using namespace Akonadi::Server;
 
-CollectionStatistics *CollectionStatistics::sInstance = 0;
+CollectionStatistics *CollectionStatistics::sInstance = Q_NULLPTR;
 
 CollectionStatistics *CollectionStatistics::self()
 {
-    if (sInstance == 0) {
+    if (sInstance == Q_NULLPTR) {
         sInstance = new CollectionStatistics();
     }
     return sInstance;

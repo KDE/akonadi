@@ -76,7 +76,7 @@ EntityTreeModel::~EntityTreeModel()
         }
     }
 
-    d->m_rootNode = 0;
+    d->m_rootNode = Q_NULLPTR;
 
     delete d_ptr;
 }
@@ -386,7 +386,7 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
     Q_D(const EntityTreeModel);
     // Pass modeltest.
     if (!index.isValid()) {
-        return 0;
+        return Q_NULLPTR;
     }
 
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
@@ -550,7 +550,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                         const QStringList collectionNames = d->childCollectionNames(destCollection);
 
                         if (collectionNames.contains(collectionName)) {
-                            QMessageBox::critical(0, i18n("Error"),
+                            QMessageBox::critical(Q_NULLPTR, i18n("Error"),
                                                   i18n("The target collection '%1' contains already\na collection with name '%2'.",
                                                        destCollection.name(), collection.name()));
                             return false;

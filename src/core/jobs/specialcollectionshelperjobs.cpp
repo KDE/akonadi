@@ -570,7 +570,7 @@ public:
 
 GetLockJob::Private::Private(GetLockJob *qq)
     : q(qq)
-    , mSafetyTimer(0)
+    , mSafetyTimer(Q_NULLPTR)
 {
 }
 

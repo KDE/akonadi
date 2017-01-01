@@ -33,7 +33,7 @@ public:
 };
 
 Exception::Exception(const char *what) throw()
-    : d(0)
+    : d(Q_NULLPTR)
 {
     try {
         std::unique_ptr<Private> nd(new Private);
@@ -44,7 +44,7 @@ Exception::Exception(const char *what) throw()
 }
 
 Exception::Exception(const QByteArray &what) throw()
-    : d(0)
+    : d(Q_NULLPTR)
 {
     try {
         std::unique_ptr<Private> nd(new Private);
@@ -55,7 +55,7 @@ Exception::Exception(const QByteArray &what) throw()
 }
 
 Exception::Exception(const QString &what) throw()
-    : d(0)
+    : d(Q_NULLPTR)
 {
     try {
         std::unique_ptr<Private> nd(new Private);
@@ -67,7 +67,7 @@ Exception::Exception(const QString &what) throw()
 
 Exception::Exception(const Akonadi::Exception &other) throw()
     : std::exception(other)
-    , d(0)
+    , d(Q_NULLPTR)
 {
     if (!other.d) {
         return;

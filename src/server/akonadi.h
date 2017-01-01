@@ -49,19 +49,19 @@ public:
     static AkonadiServer *instance();
 
     /**
-     * Can return a nullptr
+     * Can return a Q_NULLPTR
      */
     CacheCleaner *cacheCleaner();
 
     /**
-     * Can return a nullptr
+     * Can return a Q_NULLPTR
      */
     IntervalCheck *intervalChecker();
 
     QString serverPath() const;
 
     /**
-     * Can return a nullptr
+     * Can return a Q_NULLPTR
      */
     NotificationManager *notificationManager();
 

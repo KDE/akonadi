@@ -74,9 +74,9 @@ public:
         : q(parent)
         , mActionCollection(Q_NULLPTR)
         , mParentWidget(Q_NULLPTR)
-        , mSelectionModel(0)
+        , mSelectionModel(Q_NULLPTR)
     {
-        mActions.fill(0, AgentActionManager::LastType);
+        mActions.fill(Q_NULLPTR, AgentActionManager::LastType);
 
         setContextText(AgentActionManager::CreateAgentInstance,
                        AgentActionManager::DialogTitle,
@@ -167,7 +167,7 @@ public:
             dlg->agentFilterProxyModel()->addCapabilityFilter(capability);
         }
 
-        if (dlg->exec() == QDialog::Accepted && dlg != 0) {
+        if (dlg->exec() == QDialog::Accepted && dlg != Q_NULLPTR) {
             const AgentType agentType = dlg->agentType();
 
             if (agentType.isValid()) {

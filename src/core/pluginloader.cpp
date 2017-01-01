@@ -73,7 +73,7 @@ QObject *PluginLoader::createForName(const QString &name)
 {
     if (!mPluginInfos.contains(name)) {
         qCWarning(AKONADICORE_LOG) << "plugin name \"" << name << "\" is unknown to the plugin loader." << endl;
-        return 0;
+        return Q_NULLPTR;
     }
 
     PluginMetaData &info = mPluginInfos[name];
@@ -92,7 +92,7 @@ QObject *PluginLoader::createForName(const QString &name)
         if (loader->fileName().isEmpty()) {
             qCWarning(AKONADICORE_LOG) << loader->errorString();
             delete loader;
-            return 0;
+            return Q_NULLPTR;
         }
 
         mPluginLoaders.insert(name, loader);
@@ -106,7 +106,7 @@ QObject *PluginLoader::createForName(const QString &name)
     if (!object) {
         qCWarning(AKONADICORE_LOG) << "unable to load plugin" << info.library << "for plugin name" << name << ".";
         qCWarning(AKONADICORE_LOG) << "Error was:\"" << loader->errorString() << "\".";
-        return 0;
+        return Q_NULLPTR;
     }
 
     return object;

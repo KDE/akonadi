@@ -27,7 +27,7 @@ TestRunner::TestRunner(const QStringList &args, QObject *parent)
     : QObject(parent)
     , mArguments(args)
     , mExitCode(0)
-    , mProcess(0)
+    , mProcess(Q_NULLPTR)
 {
 }
 

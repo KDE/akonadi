@@ -96,7 +96,7 @@ CollectionPropertiesDialog::Private::Private(CollectionPropertiesDialog *qq, con
     : q(qq)
     , mCollection(collection)
     , mPageNames(pageNames)
-    , mTabWidget(0)
+    , mTabWidget(Q_NULLPTR)
 {
     if (s_defaultPage) {
         registerBuiltinPages();

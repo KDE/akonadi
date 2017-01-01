@@ -61,7 +61,7 @@ static inline bool canContainItems(const Collection &collection)
 }
 
 ActionStateManager::ActionStateManager()
-    : mReceiver(0)
+    : mReceiver(Q_NULLPTR)
 {
 }
 

@@ -57,7 +57,7 @@ void SetupTest::stopAkonadiDaemon()
     if (!mAkonadiDaemonProcess) {
         return;
     }
-    disconnect(mAkonadiDaemonProcess, SIGNAL(finished(int)), this, 0);
+    disconnect(mAkonadiDaemonProcess, SIGNAL(finished(int)), this, Q_NULLPTR);
     mAkonadiDaemonProcess->terminate();
     const bool finished = mAkonadiDaemonProcess->waitForFinished(5000);
     if (!finished) {
@@ -65,7 +65,7 @@ void SetupTest::stopAkonadiDaemon()
     }
     mAkonadiDaemonProcess->close();
     mAkonadiDaemonProcess->deleteLater();
-    mAkonadiDaemonProcess = 0;
+    mAkonadiDaemonProcess = Q_NULLPTR;
 }
 
 void SetupTest::setupAgents()
@@ -206,7 +206,7 @@ void SetupTest::cleanTempEnvironment()
 }
 
 SetupTest::SetupTest()
-    : mAkonadiDaemonProcess(0)
+    : mAkonadiDaemonProcess(Q_NULLPTR)
     , mShuttingDown(false)
     , mAgentsCreated(false)
     , mTrackAkonadiProcess(true)
@@ -286,7 +286,7 @@ void SetupTest::shutdownHarder()
 void SetupTest::restartAkonadiServer()
 {
     qDebug();
-    disconnect(mAkonadiDaemonProcess, SIGNAL(finished(int)), this, 0);
+    disconnect(mAkonadiDaemonProcess, SIGNAL(finished(int)), this, Q_NULLPTR);
     Akonadi::ServerManager::self()->stop();
     const bool shutdownResult = mAkonadiDaemonProcess->waitForFinished();
     if (!shutdownResult) {
@@ -327,7 +327,7 @@ void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)
         qWarning() << "Akonadi server process was terminated externally!";
         emit serverExited(exitCode);
     }
-    mAkonadiDaemonProcess = 0;
+    mAkonadiDaemonProcess = Q_NULLPTR;
 }
 
 void SetupTest::trackAkonadiProcess(bool track)

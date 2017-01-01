@@ -31,8 +31,8 @@
 using namespace Akonadi;
 
 TagModelPrivate::TagModelPrivate(TagModel *parent)
-    : mMonitor(0)
-    , mSession(0)
+    : mMonitor(Q_NULLPTR)
+    , mSession(Q_NULLPTR)
     , q_ptr(parent)
 {
     // Root tag

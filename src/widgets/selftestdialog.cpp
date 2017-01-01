@@ -126,8 +126,8 @@ QStandardItem *SelfTestDialog::report(ResultType type, const KLocalizedString &s
     item->setEditable(false);
     item->setWhatsThis(details.toString());
     item->setData(type, ResultTypeRole);
-    item->setData(summary.toString(0), SummaryRole);
-    item->setData(details.toString(0), DetailsRole);
+    item->setData(summary.toString(Q_NULLPTR), SummaryRole);
+    item->setData(details.toString(Q_NULLPTR), DetailsRole);
     mTestModel->appendRow(item);
     return item;
 }
@@ -210,7 +210,7 @@ void SelfTestDialog::testSQLDriver()
                                          "Make sure the required driver is installed.")
                                          .subs(driver)
                                          .subs(availableDrivers.join(QStringLiteral(", ")));
-    QStandardItem *item = 0;
+    QStandardItem *item = Q_NULLPTR;
     if (availableDrivers.contains(driver)) {
         item = report(Success, ki18n("Database driver found."), detailsOk);
     } else {
@@ -283,7 +283,7 @@ void SelfTestDialog::testMySQLServerLog()
         return;
     }
     bool warningsFound = false;
-    QStandardItem *item = 0;
+    QStandardItem *item = Q_NULLPTR;
     while (!logFile.atEnd()) {
         const QString line = QString::fromUtf8(logFile.readLine());
         if (line.contains(QStringLiteral("error"), Qt::CaseInsensitive)) {
@@ -317,7 +317,7 @@ void SelfTestDialog::testMySQLServerConfig()
         return;
     }
 
-    QStandardItem *item = 0;
+    QStandardItem *item = Q_NULLPTR;
     const QString globalConfig = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
     const QFileInfo globalConfigInfo(globalConfig);
     if (!globalConfig.isEmpty() && globalConfigInfo.exists() && globalConfigInfo.isReadable()) {
@@ -472,7 +472,7 @@ void SelfTestDialog::testResources()
     }
 
     const QStringList pathList = XdgBaseDirs::findAllResourceDirs("data", QStringLiteral("akonadi/agents"));
-    QStandardItem *item = 0;
+    QStandardItem *item = Q_NULLPTR;
     if (resourceFound) {
         item = report(Success, ki18n("Resource agents found."), ki18n("At least one resource agent has been found."));
     } else {

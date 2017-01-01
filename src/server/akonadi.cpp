@@ -60,7 +60,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-AkonadiServer *AkonadiServer::s_instance = 0;
+AkonadiServer *AkonadiServer::s_instance = Q_NULLPTR;
 
 AkonadiServer::AkonadiServer(QObject *parent)
     : QObject(parent)
@@ -72,8 +72,8 @@ AkonadiServer::AkonadiServer(QObject *parent)
     , mStorageJanitor(Q_NULLPTR)
     , mItemRetrieval(Q_NULLPTR)
     , mAgentSearchManager(Q_NULLPTR)
-    , mDatabaseProcess(0)
-    , mSearchManager(0)
+    , mDatabaseProcess(Q_NULLPTR)
+    , mSearchManager(Q_NULLPTR)
     , mAlreadyShutdown(false)
 {
     // Register bunch of useful types

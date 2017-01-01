@@ -34,10 +34,10 @@
 
 using namespace Akonadi::Server;
 
-Tracer *Tracer::mSelf = 0;
+Tracer *Tracer::mSelf = Q_NULLPTR;
 
 Tracer::Tracer()
-    : mTracerBackend(0)
+    : mTracerBackend(Q_NULLPTR)
     , mSettings(new QSettings(Akonadi::StandardDirs::serverConfigFile(), QSettings::IniFormat))
 {
     activateTracer(currentTracer());
@@ -50,7 +50,7 @@ Tracer::Tracer()
 Tracer::~Tracer()
 {
     delete mTracerBackend;
-    mTracerBackend = 0;
+    mTracerBackend = Q_NULLPTR;
 }
 
 Tracer *Tracer::self()
@@ -131,7 +131,7 @@ void Tracer::activateTracer(const QString &type)
 {
     QMutexLocker locker(&mMutex);
     delete mTracerBackend;
-    mTracerBackend = 0;
+    mTracerBackend = Q_NULLPTR;
 
     mSettings->setValue(QStringLiteral("Debug/Tracer"), type);
     mSettings->sync();

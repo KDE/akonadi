@@ -84,8 +84,8 @@ DataStore::DataStore()
     : QObject()
     , m_dbOpened(false)
     , m_transactionLevel(0)
-    , mNotificationCollector(0)
-    , m_keepAliveTimer(0)
+    , mNotificationCollector(Q_NULLPTR)
+    , m_keepAliveTimer(Q_NULLPTR)
 {
     notificationCollector();
 
@@ -203,7 +203,7 @@ bool DataStore::init()
 
 NotificationCollector *DataStore::notificationCollector()
 {
-    if (mNotificationCollector == 0) {
+    if (mNotificationCollector == Q_NULLPTR) {
         mNotificationCollector = new NotificationCollector(this);
         NotificationManager *notificationManager = AkonadiServer::instance()->notificationManager();
         if (notificationManager) {

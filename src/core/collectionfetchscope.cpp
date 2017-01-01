@@ -53,7 +53,7 @@ public:
             ancestorFetchScope.reset(new CollectionFetchScope());
             *ancestorFetchScope = *other.ancestorFetchScope;
         } else if (ancestorFetchScope && !other.ancestorFetchScope) {
-            ancestorFetchScope.reset(0);
+            ancestorFetchScope.reset(Q_NULLPTR);
         }
         fetchAllAttributes = other.fetchAllAttributes;
         fetchIdOnly = other.fetchIdOnly;

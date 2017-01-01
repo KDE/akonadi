@@ -47,8 +47,8 @@ using namespace Akonadi;
 Firstrun::Firstrun(QObject *parent)
     : QObject(parent)
     , mConfig(new KConfig(ServerManager::addNamespace(QStringLiteral("akonadi-firstrunrc"))))
-    , mCurrentDefault(0)
-    , mProcess(0)
+    , mCurrentDefault(Q_NULLPTR)
+    , mProcess(Q_NULLPTR)
 {
     //The code in firstrun is not safe in multi-instance mode
     Q_ASSERT(!ServerManager::hasInstanceIdentifier());

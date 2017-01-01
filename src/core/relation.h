@@ -120,7 +120,7 @@ public:
     bool isValid() const;
 
 private:
-    class Private;
+    struct Private;
     QSharedPointer<Private> d;
 };
 

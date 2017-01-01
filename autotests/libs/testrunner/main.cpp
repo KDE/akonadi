@@ -31,8 +31,8 @@
 #include <QCommandLineParser>
 #include <QCommandLineOption>
 
-static SetupTest *setup = 0;
-static TestRunner *runner = 0;
+static SetupTest *setup = Q_NULLPTR;
+static TestRunner *runner = Q_NULLPTR;
 
 void sigHandler(int signal)
 {
@@ -124,7 +124,7 @@ int main(int argc, char **argv)
     }
 
     delete setup;
-    setup = 0;
+    setup = Q_NULLPTR;
 
     return exitCode;
 }

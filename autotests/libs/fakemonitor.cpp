@@ -31,7 +31,7 @@ class FakeMonitorPrivate : public ChangeRecorderPrivate
     Q_DECLARE_PUBLIC(FakeMonitor)
 public:
     FakeMonitorPrivate(FakeMonitor *monitor)
-        : ChangeRecorderPrivate(0, monitor)
+        : ChangeRecorderPrivate(Q_NULLPTR, monitor)
     {
     }
 

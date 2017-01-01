@@ -105,7 +105,7 @@ public:
     bool fetchIdOnly() const;
 
 private:
-    class Private;
+    struct Private;
     //@cond PRIVATE
     QSharedPointer<Private> d;
     //@endcond

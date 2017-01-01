@@ -32,7 +32,7 @@ class Akonadi::RelationFetchJobPrivate : public JobPrivate
 public:
     RelationFetchJobPrivate(RelationFetchJob *parent)
         : JobPrivate(parent)
-        , mEmitTimer(0)
+        , mEmitTimer(Q_NULLPTR)
     {
     }
 

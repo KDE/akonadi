@@ -60,7 +60,7 @@ using namespace Akonadi::Server;
 
 Handler::Handler()
     : QObject()
-    , m_connection(0)
+    , m_connection(Q_NULLPTR)
 {
 }
 

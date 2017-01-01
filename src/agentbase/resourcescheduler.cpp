@@ -536,7 +536,7 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
         s_resourcetracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole"),
                                                QStringLiteral("/resourcesJobtracker"),
                                                QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
-                                               KDBusConnectionPool::threadConnection(), 0);
+                                               KDBusConnectionPool::threadConnection(), Q_NULLPTR);
     }
 
     if (s_resourcetracker) {

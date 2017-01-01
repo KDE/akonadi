@@ -46,8 +46,8 @@ class Q_DECL_HIDDEN CollectionComboBox::Private
 public:
     Private(QAbstractItemModel *customModel, CollectionComboBox *parent)
         : mParent(parent)
-        , mMonitor(0)
-        , mModel(0)
+        , mMonitor(Q_NULLPTR)
+        , mModel(Q_NULLPTR)
     {
         if (customModel) {
             mBaseModel = customModel;
@@ -124,7 +124,7 @@ void CollectionComboBox::Private::activated(const QModelIndex &index)
 
 CollectionComboBox::CollectionComboBox(QWidget *parent)
     : QComboBox(parent)
-    , d(new Private(0, this))
+    , d(new Private(Q_NULLPTR, this))
 {
 }
 

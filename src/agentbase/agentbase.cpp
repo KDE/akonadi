@@ -352,7 +352,7 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
 
 AgentBasePrivate::~AgentBasePrivate()
 {
-    mChangeRecorder->setConfig(0);
+    mChangeRecorder->setConfig(Q_NULLPTR);
     delete mSettings;
 }
 
@@ -434,7 +434,7 @@ void AgentBasePrivate::init()
                 q, SLOT(slotResumedFromSuspend()));
     } else {
         delete mPowerInterface;
-        mPowerInterface = 0;
+        mPowerInterface = Q_NULLPTR;
     }
 
     // Use reference counting to allow agents to finish internal jobs when the
@@ -717,7 +717,7 @@ void AgentBasePrivate::collectionAdded(const Akonadi::Collection &collection, co
 void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection)
 {
     AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
-    if (mObserver && observer2 == 0) {   // For ObserverV2 we use the variant with the part identifiers
+    if (mObserver && observer2 == Q_NULLPTR) {   // For ObserverV2 we use the variant with the part identifiers
         mObserver->collectionChanged(collection);
     }
 }
@@ -1108,7 +1108,7 @@ void AgentBase::quit()
     aboutToQuit();
 
     if (d->mSettings) {
-        d->mChangeRecorder->setConfig(0);
+        d->mChangeRecorder->setConfig(Q_NULLPTR);
         d->mSettings->sync();
     }
 
@@ -1134,9 +1134,9 @@ void AgentBase::cleanup()
     /*
      * First destroy the settings object...
      */
-    d->mChangeRecorder->setConfig(0);
+    d->mChangeRecorder->setConfig(Q_NULLPTR);
     delete d->mSettings;
-    d->mSettings = 0;
+    d->mSettings = Q_NULLPTR;
 
     /*
      * ... then remove the file from hd.
@@ -1163,8 +1163,8 @@ void AgentBase::registerObserver(Observer *observer)
     // TODO in theory we should re-connect change recorder signals here that we disconnected previously
     d_ptr->mObserver = observer;
 
-    const bool hasObserverV3 = (dynamic_cast<AgentBase::ObserverV3 *>(d_ptr->mObserver) != 0);
-    const bool hasObserverV4 = (dynamic_cast<AgentBase::ObserverV4 *>(d_ptr->mObserver) != 0);
+    const bool hasObserverV3 = (dynamic_cast<AgentBase::ObserverV3 *>(d_ptr->mObserver) != Q_NULLPTR);
+    const bool hasObserverV4 = (dynamic_cast<AgentBase::ObserverV4 *>(d_ptr->mObserver) != Q_NULLPTR);
 
     disconnect(d_ptr->mChangeRecorder, &Monitor::tagAdded,
                d_ptr, &AgentBasePrivate::tagAdded);

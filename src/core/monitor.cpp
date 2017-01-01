@@ -37,7 +37,7 @@ using namespace Akonadi;
 
 Monitor::Monitor(QObject *parent)
     : QObject(parent)
-    , d_ptr(new MonitorPrivate(0, this))
+    , d_ptr(new MonitorPrivate(Q_NULLPTR, this))
 {
     d_ptr->init();
     d_ptr->connectToNotificationManager();

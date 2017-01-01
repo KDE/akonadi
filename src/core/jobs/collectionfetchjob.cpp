@@ -381,7 +381,7 @@ void CollectionFetchJob::slotResult(KJob *job)
         if (job->error()) {
             qCWarning(AKONADICORE_LOG) << "Error during CollectionFetchJob: " << job->errorString();
         }
-        d_ptr->mCurrentSubJob = 0;
+        d_ptr->mCurrentSubJob = Q_NULLPTR;
         removeSubjob(job);
         QTimer::singleShot(0, this, SLOT(startNext()));
     } else {
