@@ -46,7 +46,7 @@ public:
         CommandConnection,
         NotificationConnection
     };
-    Q_ENUMS(ConnectionType)
+    Q_ENUM(ConnectionType)
 
     explicit Connection(ConnectionType connType, const QByteArray &sessionId, QObject *parent = nullptr);
     ~Connection();
