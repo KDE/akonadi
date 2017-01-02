@@ -33,7 +33,7 @@ class SessionThread : public QObject
     Q_OBJECT
 
 public:
-    explicit SessionThread(QObject *parent = Q_NULLPTR);
+    explicit SessionThread(QObject *parent = nullptr);
     ~SessionThread();
 
     Connection *createConnection(Connection::ConnectionType connType, const QByteArray &sessionId);

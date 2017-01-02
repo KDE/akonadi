@@ -38,7 +38,7 @@ class AgentServer : public QObject
     typedef QPair<QString, qlonglong> ConfigureInfo;
 
 public:
-    explicit AgentServer(QObject *parent = Q_NULLPTR);
+    explicit AgentServer(QObject *parent = nullptr);
     ~AgentServer();
 
 public Q_SLOTS:

@@ -34,7 +34,7 @@ class TagView : public QLineEdit
 {
     Q_OBJECT
 public:
-    explicit TagView(QWidget *parent = Q_NULLPTR);
+    explicit TagView(QWidget *parent = nullptr);
 
 Q_SIGNALS:
     void clearTags();
@@ -53,7 +53,7 @@ class AKONADIWIDGETS_EXPORT TagWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit TagWidget(QWidget *parent = Q_NULLPTR);
+    explicit TagWidget(QWidget *parent = nullptr);
     ~TagWidget();
 
     void setSelection(const Akonadi::Tag::List &tags);

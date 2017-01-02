@@ -44,7 +44,7 @@ public:
      * @param tag The tag to modify.
      * @param parent The parent object.
      */
-    explicit TagModifyJob(const Tag &tag, QObject *parent = Q_NULLPTR);
+    explicit TagModifyJob(const Tag &tag, QObject *parent = nullptr);
 
     /**
      * Returns the modified tag.

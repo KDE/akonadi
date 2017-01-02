@@ -39,7 +39,7 @@ namespace Internal
 class AgentTypeWidgetDelegate : public QAbstractItemDelegate
 {
 public:
-    AgentTypeWidgetDelegate(QObject *parent = Q_NULLPTR);
+    AgentTypeWidgetDelegate(QObject *parent = nullptr);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -60,9 +60,9 @@ class Q_DECL_HIDDEN AgentTypeWidget::Private
 public:
     Private(AgentTypeWidget *parent)
         : mParent(parent),
-          mView(Q_NULLPTR),
-          mModel(Q_NULLPTR),
-          proxyModel(Q_NULLPTR)
+          mView(nullptr),
+          mModel(nullptr),
+          proxyModel(nullptr)
     {
     }
 

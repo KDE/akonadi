@@ -56,7 +56,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit QuotaColorProxyModel(QObject *parent = Q_NULLPTR);
+    explicit QuotaColorProxyModel(QObject *parent = nullptr);
 
     /**
      * Destroys the statistics tooltip proxy model.

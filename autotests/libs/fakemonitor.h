@@ -31,7 +31,7 @@ class AKONADITESTFAKE_EXPORT FakeMonitor : public Akonadi::ChangeRecorder
 {
     Q_OBJECT
 public:
-    explicit FakeMonitor(QObject *parent = Q_NULLPTR);
+    explicit FakeMonitor(QObject *parent = nullptr);
 
 private:
     Q_DECLARE_PRIVATE(FakeMonitor)

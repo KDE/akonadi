@@ -74,7 +74,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit AgentInstanceWidget(QWidget *parent = Q_NULLPTR);
+    explicit AgentInstanceWidget(QWidget *parent = nullptr);
 
     /**
      * Destroys the agent instance widget.

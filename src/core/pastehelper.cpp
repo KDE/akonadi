@@ -54,7 +54,7 @@ public:
     explicit PasteHelperJob(Qt::DropAction action, const Akonadi::Item::List &items,
                             const Akonadi::Collection::List &collections,
                             const Akonadi::Collection &destination,
-                            QObject *parent = Q_NULLPTR);
+                            QObject *parent = nullptr);
     virtual ~PasteHelperJob();
 
 private Q_SLOTS:
@@ -275,7 +275,7 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
 KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection, bool copy, Session *session)
 {
     if (!canPaste(mimeData, collection)) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     // we try to drop data not coming with the akonadi:// url
@@ -300,7 +300,7 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
     }
 
     if (!mimeData->hasUrls()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     // data contains an url list
@@ -310,11 +310,11 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
 KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &destination, Qt::DropAction action, Session *session)
 {
     if (!mimeData->hasUrls()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     if (!canPaste(mimeData, destination)) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     const QList<QUrl> urls = mimeData->urls();

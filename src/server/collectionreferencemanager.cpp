@@ -26,7 +26,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-CollectionReferenceManager *CollectionReferenceManager::s_instance = Q_NULLPTR;
+CollectionReferenceManager *CollectionReferenceManager::s_instance = nullptr;
 
 CollectionReferenceManager::CollectionReferenceManager()
     : mReferenceLock(QMutex::Recursive)

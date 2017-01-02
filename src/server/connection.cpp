@@ -46,12 +46,12 @@ using namespace Akonadi::Server;
 Connection::Connection(QObject *parent)
     : AkThread(QThread::InheritPriority, parent)
     , m_socketDescriptor(0)
-    , m_socket(Q_NULLPTR)
-    , m_currentHandler(Q_NULLPTR)
+    , m_socket(nullptr)
+    , m_currentHandler(nullptr)
     , m_connectionState(NonAuthenticated)
-    , m_backend(Q_NULLPTR)
+    , m_backend(nullptr)
     , m_verifyCacheOnRetrieval(false)
-    , m_idleTimer(Q_NULLPTR)
+    , m_idleTimer(nullptr)
     , m_totalTime( 0 )
     , m_reportTime( false )
 {
@@ -111,7 +111,7 @@ void Connection::quit()
     collectionReferenceManager()->removeSession(m_sessionId);
 
     delete m_socket;
-    m_socket = Q_NULLPTR;
+    m_socket = nullptr;
 
     m_idleTimer->stop();
     delete m_idleTimer;
@@ -155,7 +155,7 @@ Connection::~Connection()
 
 void Connection::slotConnectionIdle()
 {
-    Q_ASSERT(m_currentHandler == Q_NULLPTR);
+    Q_ASSERT(m_currentHandler == nullptr);
     if (m_backend && m_backend->isOpened() ) {
         if (m_backend->inTransaction()) {
             // This is a programming error, the timer should not have fired.
@@ -265,7 +265,7 @@ void Connection::slotNewData()
             stopTime(currentCommand);
         }
         delete m_currentHandler;
-        m_currentHandler = Q_NULLPTR;
+        m_currentHandler = nullptr;
 
         if (m_socket->state() != QLocalSocket::ConnectedState) {
             Q_EMIT disconnected();

@@ -66,7 +66,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit CollectionRequester(QWidget *parent = Q_NULLPTR);
+    explicit CollectionRequester(QWidget *parent = nullptr);
 
     /**
      * Creates a collection requester with an initial @p collection.
@@ -74,7 +74,7 @@ public:
      * @param collection The initial collection.
      * @param parent The parent widget.
      */
-    explicit CollectionRequester(const Akonadi::Collection &collection, QWidget *parent = Q_NULLPTR);
+    explicit CollectionRequester(const Akonadi::Collection &collection, QWidget *parent = nullptr);
 
     /**
      * Destroys the collection requester.

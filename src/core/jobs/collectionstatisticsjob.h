@@ -74,7 +74,7 @@ public:
      * @param collection The collection to fetch the statistics from.
      * @param parent The parent object.
      */
-    explicit CollectionStatisticsJob(const Collection &collection, QObject *parent = Q_NULLPTR);
+    explicit CollectionStatisticsJob(const Collection &collection, QObject *parent = nullptr);
 
     /**
      * Destroys the collection statistics job.

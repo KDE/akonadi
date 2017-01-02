@@ -38,7 +38,7 @@
 # include <unistd.h>
 #endif
 
-static AgentManager *sAgentManager = Q_NULLPTR;
+static AgentManager *sAgentManager = nullptr;
 
 void crashHandler(int)
 {
@@ -91,7 +91,7 @@ int main(int argc, char **argv)
     int retval = app.exec();
 
     delete sAgentManager;
-    sAgentManager = Q_NULLPTR;
+    sAgentManager = nullptr;
 
     return retval;
 }

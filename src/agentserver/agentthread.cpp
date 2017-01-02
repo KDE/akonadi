@@ -33,7 +33,7 @@ AgentThread::AgentThread(const QString &identifier, QObject *factory, QObject *p
     : QThread(parent)
     , m_identifier(identifier)
     , m_factory(factory)
-    , m_instance(Q_NULLPTR)
+    , m_instance(nullptr)
 {
 }
 

@@ -44,9 +44,9 @@ public:
      * @param relation The relation to fetch.
      * @param parent The parent object.
      */
-    explicit RelationFetchJob(const Relation &relation, QObject *parent = Q_NULLPTR);
+    explicit RelationFetchJob(const Relation &relation, QObject *parent = nullptr);
 
-    explicit RelationFetchJob(const QVector<QByteArray> &types, QObject *parent = Q_NULLPTR);
+    explicit RelationFetchJob(const QVector<QByteArray> &types, QObject *parent = nullptr);
 
     void setResource(const QString &identifier);
 

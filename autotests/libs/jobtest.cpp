@@ -31,7 +31,7 @@ class FakeJob : public Job
 {
     Q_OBJECT
 public:
-    explicit FakeJob(QObject *parent = Q_NULLPTR) : Job(parent) {}
+    explicit FakeJob(QObject *parent = nullptr) : Job(parent) {}
     void done()
     {
         emitResult();

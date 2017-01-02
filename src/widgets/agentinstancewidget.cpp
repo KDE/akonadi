@@ -69,7 +69,7 @@ static const int s_delegatePaddingSize = 7;
 class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 {
 public:
-    explicit AgentInstanceWidgetDelegate(QObject *parent = Q_NULLPTR);
+    explicit AgentInstanceWidgetDelegate(QObject *parent = nullptr);
 
     void paint(QPainter *painter, const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const Q_DECL_OVERRIDE;
@@ -87,9 +87,9 @@ class Q_DECL_HIDDEN AgentInstanceWidget::Private
 public:
     Private(AgentInstanceWidget *parent)
         : mParent(parent)
-        , mView(Q_NULLPTR)
-        , mModel(Q_NULLPTR)
-        , proxy(Q_NULLPTR)
+        , mView(nullptr)
+        , mModel(nullptr)
+        , proxy(nullptr)
     {
     }
 
@@ -229,7 +229,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     }
 
     QStyle *style = QApplication::style();
-    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, Q_NULLPTR);
+    style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, nullptr);
 
     QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
     const QString name = index.model()->data(index, Qt::DisplayRole).toString();

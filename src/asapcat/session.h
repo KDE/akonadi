@@ -32,7 +32,7 @@ class Session : public QObject
 {
     Q_OBJECT
 public:
-    explicit Session(const QString &input, QObject *parent = Q_NULLPTR);
+    explicit Session(const QString &input, QObject *parent = nullptr);
     ~Session();
 
     void printStats() const;

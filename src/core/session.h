@@ -80,7 +80,7 @@ public:
      *
      * @see defaultSession()
      */
-    explicit Session(const QByteArray &sessionId = QByteArray(), QObject *parent = Q_NULLPTR);
+    explicit Session(const QByteArray &sessionId = QByteArray(), QObject *parent = nullptr);
 
     /**
      * Destroys the session.
@@ -122,7 +122,7 @@ protected:
      *
      * @note This constructor is needed for unit testing only.
      */
-    explicit Session(SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = Q_NULLPTR);
+    explicit Session(SessionPrivate *d, const QByteArray &sessionId = QByteArray(), QObject *parent = nullptr);
 
 private:
     //@cond PRIVATE

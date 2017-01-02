@@ -70,20 +70,20 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 public:
     ResourceBasePrivate(ResourceBase *parent)
         : AgentBasePrivate(parent)
-        , scheduler(Q_NULLPTR)
-        , mItemSyncer(Q_NULLPTR)
-        , mItemSyncFetchScope(Q_NULLPTR)
+        , scheduler(nullptr)
+        , mItemSyncer(nullptr)
+        , mItemSyncFetchScope(nullptr)
         , mItemTransactionMode(ItemSync::SingleTransaction)
         , mItemMergeMode(ItemSync::RIDMerge)
-        , mCollectionSyncer(Q_NULLPTR)
-        , mTagSyncer(Q_NULLPTR)
-        , mRelationSyncer(Q_NULLPTR)
+        , mCollectionSyncer(nullptr)
+        , mTagSyncer(nullptr)
+        , mRelationSyncer(nullptr)
         , mHierarchicalRid(false)
         , mUnemittedProgress(0)
         , mAutomaticProgressReporting(true)
         , mDisableAutomaticItemDeliveryDone(false)
         , mItemSyncBatchSize(10)
-        , mCurrentCollectionFetchJob(Q_NULLPTR)
+        , mCurrentCollectionFetchJob(nullptr)
         , mScheduleAttributeSyncBeforeCollectionSync(false)
     {
         Internal::setClientType(Internal::Resource);
@@ -877,7 +877,7 @@ void ResourceBase::setKeepLocalCollectionChanges(const QSet<QByteArray> &parts)
 void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
 {
     Q_Q(ResourceBase);
-    mCollectionSyncer = Q_NULLPTR;
+    mCollectionSyncer = nullptr;
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
             emit q->error(job->errorString());
@@ -940,7 +940,7 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
 void ResourceBasePrivate::slotItemRetrievalCollectionFetchDone(KJob *job)
 {
     Q_Q(ResourceBase);
-    mCurrentCollectionFetchJob = Q_NULLPTR;
+    mCurrentCollectionFetchJob = nullptr;
     if (job->error()) {
         qCWarning(AKONADIAGENTBASE_LOG) << "Failed to retrieve collection for sync: " << job->errorString();
         q->cancelTask(i18n("Failed to retrieve collection for sync."));
@@ -986,7 +986,7 @@ void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &
 
 void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
 {
-    mCurrentCollectionFetchJob = Q_NULLPTR;
+    mCurrentCollectionFetchJob = nullptr;
     Q_Q(ResourceBase);
     if (job->error()) {
         qCWarning(AKONADIAGENTBASE_LOG) << "Failed to retrieve collection for attribute sync: " << job->errorString();
@@ -1102,7 +1102,7 @@ void ResourceBasePrivate::slotRecursiveMoveReplay(RecursiveMover *mover)
 void ResourceBasePrivate::slotRecursiveMoveReplayResult(KJob *job)
 {
     Q_Q(ResourceBase);
-    m_recursiveMover = Q_NULLPTR;
+    m_recursiveMover = nullptr;
 
     if (job->error()) {
         q->deferTask();
@@ -1186,7 +1186,7 @@ void ResourceBase::cancelTask()
     Q_D(ResourceBase);
     if (d->mCurrentCollectionFetchJob) {
         d->mCurrentCollectionFetchJob->kill();
-        d->mCurrentCollectionFetchJob = Q_NULLPTR;
+        d->mCurrentCollectionFetchJob = nullptr;
     }
     switch (d->scheduler->currentTask().type) {
     case ResourceScheduler::FetchItem:
@@ -1357,7 +1357,7 @@ void ResourceBase::itemsRetrievedIncremental(const Item::List &changedItems,
 
 void ResourceBasePrivate::slotItemSyncDone(KJob *job)
 {
-    mItemSyncer = Q_NULLPTR;
+    mItemSyncer = nullptr;
     Q_Q(ResourceBase);
     if (job->error() && job->error() != Job::UserCanceled) {
         emit q->error(job->errorString());
@@ -1546,7 +1546,7 @@ void ResourceBase::tagsRetrieved(const Tag::List &tags, const QHash<QString, Ite
 void ResourceBasePrivate::slotTagSyncDone(KJob *job)
 {
     Q_Q(ResourceBase);
-    mTagSyncer = Q_NULLPTR;
+    mTagSyncer = nullptr;
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
             qCWarning(AKONADIAGENTBASE_LOG) << "TagSync failed: " << job->errorString();
@@ -1576,7 +1576,7 @@ void ResourceBase::relationsRetrieved(const Relation::List &relations)
 void ResourceBasePrivate::slotRelationSyncDone(KJob *job)
 {
     Q_Q(ResourceBase);
-    mRelationSyncer = Q_NULLPTR;
+    mRelationSyncer = nullptr;
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
             qCWarning(AKONADIAGENTBASE_LOG) << "RelationSync failed: " << job->errorString();

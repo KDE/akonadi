@@ -33,7 +33,7 @@ using namespace Akonadi;
 Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(Session *session)
 {
     if (!Akonadi::ServerManager::self()->isRunning()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     return session->d->sessionThread()->createConnection(Connection::NotificationConnection, session->sessionId());

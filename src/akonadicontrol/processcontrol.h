@@ -51,7 +51,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit ProcessControl(QObject *parent = Q_NULLPTR);
+    explicit ProcessControl(QObject *parent = nullptr);
 
     /**
      * Destroys the process control.

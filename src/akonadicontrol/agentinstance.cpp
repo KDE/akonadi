@@ -28,11 +28,11 @@
 AgentInstance::AgentInstance(AgentManager *manager)
     : QObject(manager)
     , mManager(manager)
-    , mAgentControlInterface(Q_NULLPTR)
-    , mAgentStatusInterface(Q_NULLPTR)
-    , mSearchInterface(Q_NULLPTR)
-    , mResourceInterface(Q_NULLPTR)
-    , mPreprocessorInterface(Q_NULLPTR)
+    , mAgentControlInterface(nullptr)
+    , mAgentStatusInterface(nullptr)
+    , mSearchInterface(nullptr)
+    , mResourceInterface(nullptr)
+    , mPreprocessorInterface(nullptr)
     , mStatus(0)
     , mPercent(0)
     , mOnline(false)
@@ -225,7 +225,7 @@ T *AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *
                                        << mIdentifier << ", error message:"
                                        << (iface ? iface->lastError().message() : QString());
         delete iface;
-        return Q_NULLPTR;
+        return nullptr;
     }
     return iface;
 }

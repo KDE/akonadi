@@ -55,7 +55,7 @@ const int gDeadlineItemProcessingTimeInSecs = 240;
 using namespace Akonadi::Server;
 
 // The one and only PreprocessorManager object
-PreprocessorManager *PreprocessorManager::mSelf = Q_NULLPTR;
+PreprocessorManager *PreprocessorManager::mSelf = nullptr;
 
 PreprocessorManager::PreprocessorManager()
     : QObject()
@@ -107,7 +107,7 @@ void PreprocessorManager::done()
         return;
     }
     delete mSelf;
-    mSelf = Q_NULLPTR;
+    mSelf = nullptr;
 }
 
 bool PreprocessorManager::isActive()
@@ -128,7 +128,7 @@ PreprocessorInstance *PreprocessorManager::lockedFindInstance(const QString &id)
         }
     }
 
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 void PreprocessorManager::registerInstance(const QString &id)
@@ -241,7 +241,7 @@ void PreprocessorManager::beginHandleItem(const PimItem &item, const DataStore *
         qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::beginHandleItem(" << item.id() << "): the DataStore is in transaction, pushing item to a wait queue";
 
         // The calling thread data store is in a transaction: push the item into a wait queue
-        std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, Q_NULLPTR);
+        std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, nullptr);
 
         if (!waitQueue) {
             // No wait queue for this transaction yet...
@@ -282,7 +282,7 @@ void PreprocessorManager::lockedActivateFirstPreprocessor(qint64 itemId)
 
 void PreprocessorManager::lockedKillWaitQueue(const DataStore *dataStore, bool disconnectSlots)
 {
-    std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, Q_NULLPTR);
+    std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, nullptr);
     if (!waitQueue) {
         qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::lockedKillWaitQueue(): called for dataStore which has no wait queue";
         return;
@@ -329,7 +329,7 @@ void PreprocessorManager::dataStoreTransactionCommitted()
         return;
     }
 
-    std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, Q_NULLPTR);
+    std::deque< qint64 > *waitQueue = mTransactionWaitQueueHash.value(dataStore, nullptr);
     if (!waitQueue) {
         qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): called for dataStore which has no wait queue";
         return;

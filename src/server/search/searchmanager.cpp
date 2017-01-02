@@ -49,7 +49,7 @@ Q_DECLARE_METATYPE(Akonadi::Server::NotificationCollector *)
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-SearchManager *SearchManager::sInstance = Q_NULLPTR;
+SearchManager *SearchManager::sInstance = nullptr;
 
 Q_DECLARE_METATYPE(Collection)
 Q_DECLARE_METATYPE(QSet<qint64>)
@@ -65,7 +65,7 @@ SearchManager::SearchManager(const QStringList &searchEngines, QObject *parent)
     qRegisterMetaType<Collection>();
     qRegisterMetaType<QSemaphore *>();
 
-    Q_ASSERT(sInstance == Q_NULLPTR);
+    Q_ASSERT(sInstance == nullptr);
     sInstance = this;
 
     // We load search plugins (as in QLibrary::load()) in the main thread so that
@@ -136,7 +136,7 @@ SearchManager::~SearchManager()
 {
     quitThread();
 
-    sInstance = Q_NULLPTR;
+    sInstance = nullptr;
 }
 
 SearchManager *SearchManager::instance()
@@ -252,7 +252,7 @@ void SearchManager::updateSearchAsync(const Collection &collection)
     QMetaObject::invokeMethod(this, "updateSearchImpl",
                               Qt::QueuedConnection,
                               Q_ARG(Collection, collection),
-                              Q_ARG(QSemaphore *, Q_NULLPTR));
+                              Q_ARG(QSemaphore *, nullptr));
 }
 
 void SearchManager::updateSearch(const Collection &collection)

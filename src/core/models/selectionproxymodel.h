@@ -107,7 +107,7 @@ public:
      * @param selectionModel The selection model of the source view.
      * @param parent The parent object.
      */
-    explicit SelectionProxyModel(QItemSelectionModel *selectionModel, QObject *parent = Q_NULLPTR);
+    explicit SelectionProxyModel(QItemSelectionModel *selectionModel, QObject *parent = nullptr);
     ~SelectionProxyModel();
 
 private:

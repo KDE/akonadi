@@ -67,7 +67,7 @@ void AgentTypeTest::testLoad()
 
     AgentType agentType;
     QLocale::setDefault(QLocale::Ukrainian);
-    QVERIFY(agentType.load(fileName, Q_NULLPTR));
+    QVERIFY(agentType.load(fileName, nullptr));
 
     QCOMPARE(agentType.exec, expectedAgentType.exec);
     QCOMPARE(agentType.mimeTypes, expectedAgentType.mimeTypes);

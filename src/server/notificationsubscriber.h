@@ -82,7 +82,7 @@ protected Q_SLOTS:
     virtual void writeNotification(const Akonadi::Protocol::ChangeNotification &notification);
 
 protected:
-    explicit NotificationSubscriber(NotificationManager *manager = Q_NULLPTR);
+    explicit NotificationSubscriber(NotificationManager *manager = nullptr);
 
     void writeCommand(qint64 tag, const Protocol::Command &cmd);
 

@@ -72,11 +72,11 @@ class Q_DECL_HIDDEN AgentActionManager::Private
 public:
     Private(AgentActionManager *parent)
         : q(parent)
-        , mActionCollection(Q_NULLPTR)
-        , mParentWidget(Q_NULLPTR)
-        , mSelectionModel(Q_NULLPTR)
+        , mActionCollection(nullptr)
+        , mParentWidget(nullptr)
+        , mSelectionModel(nullptr)
     {
-        mActions.fill(Q_NULLPTR, AgentActionManager::LastType);
+        mActions.fill(nullptr, AgentActionManager::LastType);
 
         setContextText(AgentActionManager::CreateAgentInstance,
                        AgentActionManager::DialogTitle,
@@ -167,7 +167,7 @@ public:
             dlg->agentFilterProxyModel()->addCapabilityFilter(capability);
         }
 
-        if (dlg->exec() == QDialog::Accepted && dlg != Q_NULLPTR) {
+        if (dlg->exec() == QDialog::Accepted && dlg != nullptr) {
             const AgentType agentType = dlg->agentType();
 
             if (agentType.isValid()) {

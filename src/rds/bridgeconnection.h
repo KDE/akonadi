@@ -30,7 +30,7 @@ class BridgeConnection : public QObject
     Q_OBJECT
 
 public:
-    explicit BridgeConnection(QTcpSocket *remoteSocket, QObject *parent = Q_NULLPTR);
+    explicit BridgeConnection(QTcpSocket *remoteSocket, QObject *parent = nullptr);
     ~BridgeConnection();
 
 protected Q_SLOTS:
@@ -52,7 +52,7 @@ class AkonadiBridgeConnection : public BridgeConnection
     Q_OBJECT
 
 public:
-    explicit AkonadiBridgeConnection(QTcpSocket *remoteSocket, QObject *parent = Q_NULLPTR);
+    explicit AkonadiBridgeConnection(QTcpSocket *remoteSocket, QObject *parent = nullptr);
 
 protected:
     void connectLocal() Q_DECL_OVERRIDE;
@@ -63,7 +63,7 @@ class DBusBridgeConnection : public BridgeConnection
     Q_OBJECT
 
 public:
-    explicit DBusBridgeConnection(QTcpSocket *remoteSocket, QObject *parent = Q_NULLPTR);
+    explicit DBusBridgeConnection(QTcpSocket *remoteSocket, QObject *parent = nullptr);
 
 protected:
     void connectLocal() Q_DECL_OVERRIDE;

@@ -36,7 +36,7 @@ class AKONADIWIDGETS_EXPORT ETMViewStateSaver : public KConfigViewStateSaver  //
 {
     Q_OBJECT
 public:
-    explicit ETMViewStateSaver(QObject *parent = Q_NULLPTR);
+    explicit ETMViewStateSaver(QObject *parent = nullptr);
 
     void selectCollections(const Akonadi::Collection::List &list);
     void selectCollections(const QList<Akonadi::Collection::Id> &list);

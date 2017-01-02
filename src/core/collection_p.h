@@ -50,13 +50,13 @@ public:
         , cachePolicyChanged(false)
         , isVirtual(false)
         , mId(id)
-        , mParent(Q_NULLPTR)
+        , mParent(nullptr)
     {
     }
 
     CollectionPrivate(const CollectionPrivate &other)
         : QSharedData(other)
-        , mParent(Q_NULLPTR)
+        , mParent(nullptr)
     {
         mId = other.mId;
         mRemoteId = other.mRemoteId;

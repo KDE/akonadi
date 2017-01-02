@@ -39,7 +39,7 @@ class Akonadi::ManageAccountWidgetPrivate
 {
 public:
     ManageAccountWidgetPrivate()
-        : ui(Q_NULLPTR)
+        : ui(nullptr)
     {
 
     }

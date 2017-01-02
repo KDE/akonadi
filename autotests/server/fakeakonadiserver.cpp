@@ -103,13 +103,13 @@ FakeAkonadiServer *FakeAkonadiServer::instance()
 
 FakeAkonadiServer::FakeAkonadiServer()
     : AkonadiServer()
-    , mDataStore(Q_NULLPTR)
-    , mSearchManager(Q_NULLPTR)
-    , mConnection(Q_NULLPTR)
-    , mClient(Q_NULLPTR)
-    , mRetrievalManager(Q_NULLPTR)
-    , mServerLoop(Q_NULLPTR)
-    , mNtfCollector(Q_NULLPTR)
+    , mDataStore(nullptr)
+    , mSearchManager(nullptr)
+    , mConnection(nullptr)
+    , mClient(nullptr)
+    , mRetrievalManager(nullptr)
+    , mServerLoop(nullptr)
+    , mNtfCollector(nullptr)
     , mPopulateDb(true)
     , mDisableItemRetrievalManager(false)
 {
@@ -332,7 +332,7 @@ void FakeAkonadiServer::runTest()
     mServerLoop->exec();
 
     mServerLoop->deleteLater();
-    mServerLoop = Q_NULLPTR;
+    mServerLoop = nullptr;
 
     mCmdServer->close();
 

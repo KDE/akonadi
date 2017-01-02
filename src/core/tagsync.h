@@ -31,7 +31,7 @@ class AKONADICORE_EXPORT TagSync : public Akonadi::Job
 {
     Q_OBJECT
 public:
-    explicit TagSync(QObject *parent = Q_NULLPTR);
+    explicit TagSync(QObject *parent = nullptr);
     virtual ~TagSync();
 
     void setFullTagList(const Akonadi::Tag::List &tags);

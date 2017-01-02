@@ -287,7 +287,7 @@ public:
         : QSharedData()
         , mRevision(-1)
         , mId(id)
-        , mParent(Q_NULLPTR)
+        , mParent(nullptr)
         , mLegacyPayload()
         , mPayloads()
         , mCollectionId(-1)
@@ -303,7 +303,7 @@ public:
 
     ItemPrivate(const ItemPrivate &other)
         : QSharedData(other)
-        , mParent(Q_NULLPTR)
+        , mParent(nullptr)
     {
         mId = other.mId;
         mRemoteId = other.mRemoteId;

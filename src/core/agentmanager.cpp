@@ -346,10 +346,10 @@ void AgentManagerPrivate::createDBusInterface()
     }
 }
 
-AgentManager *AgentManagerPrivate::mSelf = Q_NULLPTR;
+AgentManager *AgentManagerPrivate::mSelf = nullptr;
 
 AgentManager::AgentManager()
-    : QObject(Q_NULLPTR)
+    : QObject(nullptr)
     , d(new AgentManagerPrivate(this))
 {
     // needed for queued connections on our signals

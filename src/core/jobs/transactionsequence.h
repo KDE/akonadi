@@ -75,7 +75,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit TransactionSequence(QObject *parent = Q_NULLPTR);
+    explicit TransactionSequence(QObject *parent = nullptr);
 
     /**
      * Destroys the transaction sequence.

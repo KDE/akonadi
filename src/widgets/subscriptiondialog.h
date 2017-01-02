@@ -39,7 +39,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit SubscriptionDialog(QWidget *parent = Q_NULLPTR);
+    explicit SubscriptionDialog(QWidget *parent = nullptr);
 
     /**
      * Creates a new subscription dialog.
@@ -48,7 +48,7 @@ public:
      * @param mimetypes The specific mimetypes
      * @since 4.6
      */
-    explicit SubscriptionDialog(const QStringList &mimetypes, QWidget *parent = Q_NULLPTR);
+    explicit SubscriptionDialog(const QStringList &mimetypes, QWidget *parent = nullptr);
 
     /**
      * Destroys the subscription dialog.

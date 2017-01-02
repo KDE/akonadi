@@ -34,7 +34,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-SearchTaskManager *SearchTaskManager::sInstance = Q_NULLPTR;
+SearchTaskManager *SearchTaskManager::sInstance = nullptr;
 
 SearchTaskManager::SearchTaskManager()
     : AkThread()

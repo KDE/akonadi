@@ -33,9 +33,9 @@
 
 Session::Session(const QString &input, QObject *parent)
     : QObject(parent)
-    , m_input(Q_NULLPTR)
-    , m_session(Q_NULLPTR)
-    , m_notifier(Q_NULLPTR)
+    , m_input(nullptr)
+    , m_session(nullptr)
+    , m_notifier(nullptr)
     , m_receivedBytes(0)
     , m_sentBytes(0)
 {

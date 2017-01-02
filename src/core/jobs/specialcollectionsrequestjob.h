@@ -84,7 +84,7 @@ protected:
      * @param collections The SpecialCollections object that shall be used.
      * @param parent The parent object.
      */
-    explicit SpecialCollectionsRequestJob(SpecialCollections *collections, QObject *parent = Q_NULLPTR);
+    explicit SpecialCollectionsRequestJob(SpecialCollections *collections, QObject *parent = nullptr);
 
     /**
      * Sets the @p type of the resource that shall be created if the requested

@@ -76,7 +76,7 @@ void AttributeFactoryTest::testRegisteredAttribute()
     item.setMimeType(QStringLiteral("text/directory"));
     item.setPayload<QByteArray>("payload");
     TestAttribute *ta = new TestAttribute;
-    QVERIFY(AttributeFactory::createAttribute(ta->type()) != Q_NULLPTR);
+    QVERIFY(AttributeFactory::createAttribute(ta->type()) != nullptr);
     ta->data = "lalala";
     item.addAttribute(ta);
     ItemCreateJob *cjob = new ItemCreateJob(item, res1);

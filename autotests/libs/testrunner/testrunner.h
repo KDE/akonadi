@@ -29,7 +29,7 @@ class TestRunner : public QObject
     Q_OBJECT
 
 public:
-    explicit TestRunner(const QStringList &args, QObject *parent = Q_NULLPTR);
+    explicit TestRunner(const QStringList &args, QObject *parent = nullptr);
     int exitCode() const;
     void terminate();
 

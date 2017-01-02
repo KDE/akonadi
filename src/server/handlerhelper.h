@@ -97,7 +97,7 @@ public:
 
     static Protocol::FetchTagsResponse fetchTagsResponse(const Tag &tag,
                                                          bool withRID = false,
-                                                         Connection *connection = Q_NULLPTR);
+                                                         Connection *connection = nullptr);
 
     static Protocol::FetchRelationsResponse fetchRelationsResponse(const Relation &relation);
 

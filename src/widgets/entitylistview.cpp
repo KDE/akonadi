@@ -51,7 +51,7 @@ public:
 #ifndef QT_NO_DRAGANDDROP
         , mDragDropManager(new DragDropManager(mParent))
 #endif
-        , mXmlGuiClient(Q_NULLPTR)
+        , mXmlGuiClient(nullptr)
     {
     }
 
@@ -208,7 +208,7 @@ void EntityListView::contextMenuEvent(QContextMenuEvent *event)
 
     const QModelIndex index = indexAt(event->pos());
 
-    QMenu *popup = Q_NULLPTR;
+    QMenu *popup = nullptr;
 
     // check if the index under the cursor is a collection or item
     const Collection collection = model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();

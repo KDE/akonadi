@@ -60,7 +60,7 @@ using namespace Akonadi::Server;
 
 Handler::Handler()
     : QObject()
-    , m_connection(Q_NULLPTR)
+    , m_connection(nullptr)
 {
 }
 
@@ -75,7 +75,7 @@ Handler *Handler::findHandlerForCommandNonAuthenticated(Protocol::Command::Type 
         return new Login();
     }
 
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 Handler *Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd)
@@ -84,7 +84,7 @@ Handler *Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd
     if (cmd == Protocol::Command::Logout) {
         return new Logout();
     }
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 void Handler::setTag(quint64 tag)
@@ -115,23 +115,23 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
     case Protocol::Command::Invalid:
         Q_ASSERT_X(cmd != Protocol::Command::Invalid, __FUNCTION__,
                    "Invalid command is not allowed");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::Hello:
         Q_ASSERT_X(cmd != Protocol::Command::Hello, __FUNCTION__,
                    "Hello command is not allowed in this context");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::Login:
         Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
                    "Login command is not allowed in this context");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::Logout:
         Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
                    "Logout command is not allowed in this context");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::_ResponseBit:
         Q_ASSERT_X(cmd != Protocol::Command::_ResponseBit, __FUNCTION__,
                    "ResponseBit is not a valid command type");
-        return Q_NULLPTR;
+        return nullptr;
 
     case Protocol::Command::Transaction:
         return new TransactionHandler();
@@ -195,24 +195,24 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
     case Protocol::Command::StreamPayload:
         Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
                    "StreamPayload command is not allowed in this context");
-        return Q_NULLPTR;
+        return nullptr;
 
     case Protocol::Command::ItemChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::ItemChangeNotification, __FUNCTION__,
                    "ItemChangeNotification command is not allowed on this connection");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::CollectionChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::CollectionChangeNotification, __FUNCTION__,
                    "CollectionChangeNotification command is not allowed on this connection");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::TagChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::TagChangeNotification, __FUNCTION__,
                    "TagChangeNotification command is not allowed on this connection");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::RelationChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::RelationChangeNotification, __FUNCTION__,
                    "RelationChangeNotification command is not allowed on this connection");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::SubscriptionChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::SubscriptionChangeNotification, __FUNCTION__,
                    "SubscriptionChangeNotification command is not allowed on this connection");
@@ -222,14 +222,14 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
     case Protocol::Command::ModifySubscription:
         Q_ASSERT_X(cmd != Protocol::Command::ModifySubscription, __FUNCTION__,
                    "ModifySubscription command is not allowed on this connection");
-        return Q_NULLPTR;
+        return nullptr;
     case Protocol::Command::CreateSubscription:
         Q_ASSERT_X(cmd != Protocol::Command::CreateSubscription, __FUNCTION__,
                    "CreateSubscription command is not allowed on this connection");
-        return Q_NULLPTR;
+        return nullptr;
     }
 
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 void Handler::setConnection(Connection *connection)

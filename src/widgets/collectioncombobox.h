@@ -70,7 +70,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit CollectionComboBox(QWidget *parent = Q_NULLPTR);
+    explicit CollectionComboBox(QWidget *parent = nullptr);
 
     /**
      * Creates a new collection combobox with a custom @p model.
@@ -81,7 +81,7 @@ public:
      * @param model The custom model to use.
      * @param parent The parent widget.
      */
-    explicit CollectionComboBox(QAbstractItemModel *model, QWidget *parent = Q_NULLPTR);
+    explicit CollectionComboBox(QAbstractItemModel *model, QWidget *parent = nullptr);
 
     /**
      * Destroys the collection combobox.

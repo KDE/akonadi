@@ -28,7 +28,7 @@
 
 using namespace Akonadi;
 
-ExternalPartStorage *ExternalPartStorage::sInstance = Q_NULLPTR;
+ExternalPartStorage *ExternalPartStorage::sInstance = nullptr;
 
 ExternalPartStorageTransaction::ExternalPartStorageTransaction()
 {

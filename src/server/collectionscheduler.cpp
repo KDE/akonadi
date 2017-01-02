@@ -39,7 +39,7 @@ class PauseableTimer : public QTimer
     Q_OBJECT
 
 public:
-    PauseableTimer(QObject *parent = Q_NULLPTR)
+    PauseableTimer(QObject *parent = nullptr)
         : QTimer(parent)
     {
     }
@@ -104,7 +104,7 @@ using namespace Akonadi::Server;
 
 CollectionScheduler::CollectionScheduler(QThread::Priority priority, QObject *parent)
     : AkThread(priority, parent)
-    , mScheduler(Q_NULLPTR)
+    , mScheduler(nullptr)
     , mMinInterval(5)
 {
 }

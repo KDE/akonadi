@@ -219,7 +219,7 @@ void SessionPrivate::jobDone(KJob *job)
     if (job == currentJob) {
         if (pipeline.isEmpty()) {
             jobRunning = false;
-            currentJob = Q_NULLPTR;
+            currentJob = nullptr;
         } else {
             currentJob = pipeline.dequeue();
         }
@@ -278,7 +278,7 @@ void SessionPrivate::serverStateChanged(ServerManager::State state)
         }
     } else if (state == ServerManager::Stopping) {
         delete connection;
-        connection = Q_NULLPTR;
+        connection = nullptr;
     }
 }
 
@@ -296,9 +296,9 @@ void SessionPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevisi
 SessionPrivate::SessionPrivate(Session *parent)
     : mParent(parent)
     , mSessionThread(new SessionThread)
-    , connection(Q_NULLPTR)
+    , connection(nullptr)
     , protocolVersion(0)
-    , currentJob(Q_NULLPTR)
+    , currentJob(nullptr)
 {
     // Shutdown the thread before QApplication event loop quits - the
     // thread()->wait() mechanism in Connection dtor crashes sometimes
@@ -306,7 +306,7 @@ SessionPrivate::SessionPrivate(Session *parent)
     connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit,
                                          [this]() {
                                              delete mSessionThread;
-                                             mSessionThread = Q_NULLPTR;
+                                             mSessionThread = nullptr;
                                          });
 }
 
@@ -379,7 +379,7 @@ Q_GLOBAL_STATIC(QThreadStorage<Session *>, instances)
 
 static void cleanupDefaultSession()
 {
-    instances()->setLocalData(Q_NULLPTR);
+    instances()->setLocalData(nullptr);
 }
 
 void SessionPrivate::createDefaultSession(const QByteArray &sessionId)

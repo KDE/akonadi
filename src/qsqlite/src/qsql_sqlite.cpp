@@ -146,7 +146,7 @@ private:
 class QSQLiteDriverPrivate : public QSqlDriverPrivate
 {
 public:
-    inline QSQLiteDriverPrivate() : access(Q_NULLPTR) {
+    inline QSQLiteDriverPrivate() : access(nullptr) {
       dbmsType = QSqlDriver::SQLite;
     }
     sqlite3 *access;
@@ -193,8 +193,8 @@ QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult *res, const QSQLiteDriv
 QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult* res)
     : q_ptr(res)
 #endif
-    , access(Q_NULLPTR)
-    , stmt(Q_NULLPTR)
+    , access(nullptr)
+    , stmt(nullptr)
     , skippedStatus(false)
     , skipRow(false)
 {
@@ -218,7 +218,7 @@ void QSQLiteResultPrivate::finalize()
         return;
 
     sqlite3_finalize(stmt);
-    stmt = Q_NULLPTR;
+    stmt = nullptr;
 }
 
 void QSQLiteResultPrivate::initColumns(bool emptyResultset)
@@ -425,7 +425,7 @@ bool QSQLiteResult::prepare(const QString &query)
 
     setSelect(false);
 
-    const void *pzTail = Q_NULLPTR;
+    const void *pzTail = nullptr;
 
 #if (SQLITE_VERSION_NUMBER >= 3003011)
 //    int res = sqlite3_prepare16_v2(d->access, query.constData(), (query.size() + 1) * sizeof(QChar),
@@ -673,7 +673,7 @@ bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, c
 
     sqlite3_enable_shared_cache(sharedCache);
 
-    if (sqlite3_open_v2(db.toUtf8().constData(), &d->access, openMode, Q_NULLPTR) == SQLITE_OK) {
+    if (sqlite3_open_v2(db.toUtf8().constData(), &d->access, openMode, nullptr) == SQLITE_OK) {
         sqlite3_busy_timeout(d->access, timeout);
         sqlite3_extended_result_codes(d->access, 1);
         setOpen(true);
@@ -682,7 +682,7 @@ bool QSQLiteDriver::open(const QString & db, const QString &, const QString &, c
     } else {
         if (d->access) {
             sqlite3_close(d->access);
-            d->access = Q_NULLPTR;
+            d->access = nullptr;
         }
 
         setLastError(qMakeError(d->access, tr("Error opening database"),
@@ -704,7 +704,7 @@ void QSQLiteDriver::close()
         if (sqlite3_close(d->access) != SQLITE_OK)
             setLastError(qMakeError(d->access, tr("Error closing database"),
                                     QSqlError::ConnectionError));
-        d->access = Q_NULLPTR;
+        d->access = nullptr;
         setOpen(false);
         setOpenError(false);
     }

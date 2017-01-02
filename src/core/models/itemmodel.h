@@ -83,7 +83,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit ItemModel(QObject *parent = Q_NULLPTR);
+    explicit ItemModel(QObject *parent = nullptr);
 
     /**
      * Destroys the item model.

@@ -56,11 +56,11 @@ class PluginEntry
 {
 public:
     PluginEntry()
-        : mPlugin(Q_NULLPTR)
+        : mPlugin(nullptr)
     {
     }
 
-    explicit PluginEntry(const QString &identifier, QObject *plugin = Q_NULLPTR)
+    explicit PluginEntry(const QString &identifier, QObject *plugin = nullptr)
         : mIdentifier(identifier)
         , mPlugin(plugin)
     {
@@ -146,7 +146,7 @@ public:
     const PluginEntry *plugin(const QByteArray &class_) const
     {
         const QHash<QByteArray, PluginEntry>::const_iterator it = m_plugins.find(class_);
-        return it == m_plugins.end() ? Q_NULLPTR : it.operator->();
+        return it == m_plugins.end() ? nullptr : it.operator->();
     }
 
     const PluginEntry *defaultPlugin() const
@@ -180,7 +180,7 @@ public:
         if (sawZero) {
             return plugin(0);
         }
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     const PluginEntry *plugin(int metaTypeId) const
@@ -190,7 +190,7 @@ public:
         if (it == c_pluginsByMetaTypeId.end()) {
             it = QMap<int, QHash<QByteArray, PluginEntry>::const_iterator>::const_iterator(m_pluginsByMetaTypeId.insert(metaTypeId, m_plugins.find(metaTypeId ? QMetaType::typeName(metaTypeId) : LEGACY_NAME)));
         }
-        return *it == m_plugins.end() ? Q_NULLPTR : it->operator->();
+        return *it == m_plugins.end() ? nullptr : it->operator->();
     }
 
     const PluginEntry *plugin(const QVector<int> &metaTypeIds, int &chosen) const
@@ -208,7 +208,7 @@ public:
             chosen = 0;
             return plugin(0);
         }
-        return Q_NULLPTR;
+        return nullptr;
     }
 
 private:
@@ -222,7 +222,7 @@ class PluginRegistry
 public:
     PluginRegistry()
         : mDefaultPlugin(PluginEntry(QStringLiteral("application/octet-stream@QByteArray"), s_defaultItemSerializerPlugin))
-        , mOverridePlugin(Q_NULLPTR)
+        , mOverridePlugin(nullptr)
     {
         const PluginLoader *pl = PluginLoader::self();
         if (!pl) {
@@ -269,12 +269,12 @@ public:
         if (QObject *const plugin = findBestMatch(type, metaTypeId)) {
             {
                 if ((opt & TypePluginLoader::NoDefault) && plugin == mDefaultPlugin.plugin()) {
-                    return Q_NULLPTR;
+                    return nullptr;
                 }
                 return plugin;
             }
         }
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     QObject *findBestMatch(const QString &type, const QVector<int> &metaTypeIds)
@@ -393,7 +393,7 @@ private:
 
         const QHash<QString, QMap<int, QObject *> >::const_iterator hit = cachedPlugins.find(mimeType);
         if (hit == cachedPlugins.end()) {
-            return Q_NULLPTR;
+            return nullptr;
         }
         bool sawZero = false;
         for (QVector<int>::const_iterator it = metaTypeIds.begin(), end = metaTypeIds.end(); it != end; ++it) {
@@ -406,7 +406,7 @@ private:
         if (sawZero) {
             return hit->value(0);
         }
-        return Q_NULLPTR;
+        return nullptr;
     }
 
 private:

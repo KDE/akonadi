@@ -51,7 +51,7 @@ SessionThread::~SessionThread()
 Connection *SessionThread::createConnection(Connection::ConnectionType connectionType,
                                             const QByteArray &sessionId)
 {
-    Connection *conn = Q_NULLPTR;
+    Connection *conn = nullptr;
     const bool invoke = QMetaObject::invokeMethod(this, "doCreateConnection",
                                                   Qt::BlockingQueuedConnection,
                                                   Q_RETURN_ARG(Akonadi::Connection*, conn),

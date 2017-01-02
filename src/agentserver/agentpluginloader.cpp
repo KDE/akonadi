@@ -39,7 +39,7 @@ QPluginLoader *AgentPluginLoader::load(const QString &pluginName)
     const QString pluginFile = XdgBaseDirs::findPluginFile(pluginName);
     if (pluginFile.isEmpty()) {
         qCWarning(AKONADIAGENTSERVER_LOG) << "plugin file:" << pluginName << "not found!";
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     if (m_pluginLoaders.contains(pluginFile)) {
@@ -49,7 +49,7 @@ QPluginLoader *AgentPluginLoader::load(const QString &pluginName)
         if (!loader->load()) {
             qCWarning(AKONADIAGENTSERVER_LOG) << "Failed to load agent: " << loader->errorString();
             delete loader;
-            return Q_NULLPTR;
+            return nullptr;
         }
         m_pluginLoaders.insert(pluginFile, loader);
         return loader;

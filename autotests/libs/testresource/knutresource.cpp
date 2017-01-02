@@ -121,7 +121,7 @@ void KnutResource::configure(WId windowId)
     // TODO: Use windowId
     Q_UNUSED(windowId);
     const QString newFile = QFileDialog::getSaveFileName(
-        Q_NULLPTR, i18n("Select Data File"), QString(),
+        nullptr, i18n("Select Data File"), QString(),
         QStringLiteral("*.xml |") + i18nc("Filedialog filter for Akonadi data file", "Akonadi Knut Data File"));
 
     if (newFile.isEmpty() || oldFile == newFile) {

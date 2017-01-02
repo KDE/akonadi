@@ -40,8 +40,8 @@ class Q_DECL_HIDDEN TagWidget::Private
 {
 public:
     Private()
-        : mTagView(Q_NULLPTR),
-          mModel(Q_NULLPTR)
+        : mTagView(nullptr),
+          mModel(nullptr)
     {
 
     }

@@ -31,7 +31,7 @@ using namespace Akonadi;
 ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_,
         ChangeRecorder *parent)
     : MonitorPrivate(dependenciesFactory_, parent)
-    , settings(Q_NULLPTR)
+    , settings(nullptr)
     , enableChangeRecording(true)
     , m_lastKnownNotificationsCount(0)
     , m_startOffset(0)

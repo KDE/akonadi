@@ -84,7 +84,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit CollectionDialog(QWidget *parent = Q_NULLPTR);
+    explicit CollectionDialog(QWidget *parent = nullptr);
 
     /**
      * Creates a new collection dialog with a custom @p model.
@@ -97,7 +97,7 @@ public:
      *
      * @since 4.4
      */
-    explicit CollectionDialog(QAbstractItemModel *model, QWidget *parent = Q_NULLPTR);
+    explicit CollectionDialog(QAbstractItemModel *model, QWidget *parent = nullptr);
 
     /**
      * Creates a new collection dialog with a custom @p model.
@@ -112,7 +112,7 @@ public:
      * @since 4.6
      */
 
-    explicit CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model = Q_NULLPTR, QWidget *parent = Q_NULLPTR);
+    explicit CollectionDialog(CollectionDialogOptions options, QAbstractItemModel *model = nullptr, QWidget *parent = nullptr);
 
     /**
      * Destroys the collection dialog.

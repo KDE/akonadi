@@ -29,7 +29,7 @@ class AkLocalServer : public QLocalServer
 {
     Q_OBJECT
 public:
-    explicit AkLocalServer(QObject *parent = Q_NULLPTR);
+    explicit AkLocalServer(QObject *parent = nullptr);
 
 Q_SIGNALS:
     void newConnection(quintptr socketDescriptor);

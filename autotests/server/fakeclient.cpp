@@ -169,10 +169,10 @@ void FakeClient::run()
 
     exec();
 
-    mStream.setDevice(Q_NULLPTR);
+    mStream.setDevice(nullptr);
     mSocket->close();
     delete mSocket;
-    mSocket = Q_NULLPTR;
+    mSocket = nullptr;
 }
 
 void FakeClient::connectionLost()

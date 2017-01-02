@@ -30,10 +30,10 @@
 
 #include <iostream>
 
-AkApplicationBase *AkApplicationBase::sInstance = Q_NULLPTR;
+AkApplicationBase *AkApplicationBase::sInstance = nullptr;
 
 AkApplicationBase::AkApplicationBase(int &argc, char **argv, const QLoggingCategory &loggingCategory)
-    : QObject(Q_NULLPTR)
+    : QObject(nullptr)
     , mArgc(argc)
     , mArgv(argv)
     , mLoggingCategory(loggingCategory)

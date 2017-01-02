@@ -39,8 +39,8 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 public:
     ItemFetchJobPrivate(ItemFetchJob *parent)
         : JobPrivate(parent)
-        , mEmitTimer(Q_NULLPTR)
-        , mValuePool(Q_NULLPTR)
+        , mEmitTimer(nullptr)
+        , mValuePool(nullptr)
         , mCount(0)
     {
         mCollection = Collection::root();

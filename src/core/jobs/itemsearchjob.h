@@ -78,7 +78,7 @@ public:
      * @param parent The parent object.
      * @since 5.1
      */
-    explicit ItemSearchJob(QObject *parent = Q_NULLPTR);
+    explicit ItemSearchJob(QObject *parent = nullptr);
 
     /**
      * Creates an item search job.
@@ -87,7 +87,7 @@ public:
      * @param parent The parent object.
      * @since 4.13
      */
-    explicit ItemSearchJob(const SearchQuery &query, QObject *parent = Q_NULLPTR);
+    explicit ItemSearchJob(const SearchQuery &query, QObject *parent = nullptr);
 
     /**
      * Destroys the item search job.

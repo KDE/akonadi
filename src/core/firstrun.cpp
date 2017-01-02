@@ -47,8 +47,8 @@ using namespace Akonadi;
 Firstrun::Firstrun(QObject *parent)
     : QObject(parent)
     , mConfig(new KConfig(ServerManager::addNamespace(QStringLiteral("akonadi-firstrunrc"))))
-    , mCurrentDefault(Q_NULLPTR)
-    , mProcess(Q_NULLPTR)
+    , mCurrentDefault(nullptr)
+    , mProcess(nullptr)
 {
     //The code in firstrun is not safe in multi-instance mode
     Q_ASSERT(!ServerManager::hasInstanceIdentifier());
@@ -102,7 +102,7 @@ void Firstrun::findPendingDefaults()
 void Firstrun::setupNext()
 {
     delete mCurrentDefault;
-    mCurrentDefault = Q_NULLPTR;
+    mCurrentDefault = nullptr;
 
     if (mPendingDefaults.isEmpty()) {
         deleteLater();

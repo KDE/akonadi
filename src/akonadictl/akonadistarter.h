@@ -26,7 +26,7 @@ class AkonadiStarter : public QObject
 {
     Q_OBJECT
 public:
-    explicit AkonadiStarter(QObject *parent = Q_NULLPTR);
+    explicit AkonadiStarter(QObject *parent = nullptr);
     bool start(bool verbose);
 
 private Q_SLOTS:

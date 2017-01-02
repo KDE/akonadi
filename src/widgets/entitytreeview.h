@@ -78,7 +78,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit EntityTreeView(QWidget *parent = Q_NULLPTR);
+    explicit EntityTreeView(QWidget *parent = nullptr);
 
     /**
      * Creates a new entity tree view.
@@ -88,7 +88,7 @@ public:
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit EntityTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent = Q_NULLPTR);
+    explicit EntityTreeView(KXMLGUIClient *xmlGuiClient, QWidget *parent = nullptr);
 
     /**
      * Destroys the entity tree view.

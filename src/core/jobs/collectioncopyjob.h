@@ -68,7 +68,7 @@ public:
      * @param target The target collection.
      * @param parent The parent object.
      */
-    CollectionCopyJob(const Collection &source, const Collection &target, QObject *parent = Q_NULLPTR);
+    CollectionCopyJob(const Collection &source, const Collection &target, QObject *parent = nullptr);
 
     /**
      * Destroys the collection copy job.

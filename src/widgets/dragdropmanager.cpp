@@ -211,9 +211,9 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
 
     // otherwise show up a menu to allow the user to select an action
     QMenu popup(m_view);
-    QAction *moveDropAction = Q_NULLPTR;
-    QAction *copyDropAction = Q_NULLPTR;
-    QAction *linkAction = Q_NULLPTR;
+    QAction *moveDropAction = nullptr;
+    QAction *copyDropAction = nullptr;
+    QAction *linkAction = nullptr;
     QString sequence;
 
     if (moveAllowed) {

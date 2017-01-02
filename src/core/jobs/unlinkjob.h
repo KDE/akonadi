@@ -76,7 +76,7 @@ public:
      * @param items The items of which the references should be removed.
      * @param parent The parent object.
      */
-    UnlinkJob(const Collection &collection, const Item::List &items, QObject *parent = Q_NULLPTR);
+    UnlinkJob(const Collection &collection, const Item::List &items, QObject *parent = nullptr);
 
     /**
      * Destroys the unlink job.

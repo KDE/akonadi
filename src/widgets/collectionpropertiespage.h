@@ -45,7 +45,7 @@ class Collection;
  * class SecrecyPage : public CollectionPropertiesPage
  * {
  *    public:
- *      SecrecyPage( QWidget *parent = Q_NULLPTR )
+ *      SecrecyPage( QWidget *parent = nullptr )
  *        : CollectionPropertiesPage( parent )
  *      {
  *        QVBoxLayout *layout = new QVBoxLayout( this );
@@ -106,7 +106,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit CollectionPropertiesPage(QWidget *parent = Q_NULLPTR);
+    explicit CollectionPropertiesPage(QWidget *parent = nullptr);
 
     /**
      * Destroys the collection properties page.
@@ -179,7 +179,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    virtual CollectionPropertiesPage *createWidget(QWidget *parent = Q_NULLPTR) const = 0;
+    virtual CollectionPropertiesPage *createWidget(QWidget *parent = nullptr) const = 0;
 };
 
 /**
@@ -209,7 +209,7 @@ public:
     class factoryName : public Akonadi::CollectionPropertiesPageFactory \
     { \
     public: \
-        inline Akonadi::CollectionPropertiesPage *createWidget( QWidget *parent = Q_NULLPTR ) const \
+        inline Akonadi::CollectionPropertiesPage *createWidget( QWidget *parent = nullptr ) const \
         { \
             return new className( parent ); \
         } \

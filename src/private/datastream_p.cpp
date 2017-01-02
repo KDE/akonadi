@@ -23,7 +23,7 @@ using namespace Akonadi;
 using namespace Akonadi::Protocol;
 
 DataStream::DataStream()
-    : mDev(Q_NULLPTR)
+    : mDev(nullptr)
     , mWaitTimeout(30000)
 {
 }

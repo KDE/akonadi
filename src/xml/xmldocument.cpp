@@ -53,7 +53,7 @@ public:
 
     operator bool() const
     {
-        return p != Q_NULLPTR;
+        return p != nullptr;
     }
 
 private:
@@ -157,7 +157,7 @@ bool Akonadi::XmlDocument::loadFile(const QString &fileName)
     }
 
     const QString &schemaFileName = QStandardPaths::locate(QStandardPaths::GenericDataLocation, QStringLiteral("kf5/akonadi/akonadi-xml.xsd"));
-    XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc(xmlReadFile(schemaFileName.toLocal8Bit().constData(), Q_NULLPTR, XML_PARSE_NONET));
+    XmlPtr<xmlDocPtr, xmlFreeDoc> schemaDoc(xmlReadFile(schemaFileName.toLocal8Bit().constData(), nullptr, XML_PARSE_NONET));
     if (!schemaDoc) {
         d->lastError = i18n("Schema definition could not be loaded and parsed.");
         return false;

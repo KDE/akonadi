@@ -26,7 +26,7 @@
 using namespace Akonadi;
 
 EntityHiddenAttribute::EntityHiddenAttribute()
-    : d(Q_NULLPTR)
+    : d(nullptr)
 {
 }
 

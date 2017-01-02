@@ -29,7 +29,7 @@ class Dialog : public QDialog
     Q_OBJECT
 
 public:
-    Dialog(QWidget *parent = Q_NULLPTR);
+    Dialog(QWidget *parent = nullptr);
 
     void done(int) Q_DECL_OVERRIDE;
 

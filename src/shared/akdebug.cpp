@@ -89,7 +89,7 @@ class DebugPrivate
 {
 public:
     DebugPrivate()
-        : origHandler(Q_NULLPTR)
+        : origHandler(nullptr)
     {
     }
 

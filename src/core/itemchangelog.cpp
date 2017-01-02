@@ -23,7 +23,7 @@
 
 using namespace Akonadi;
 
-ItemChangeLog *ItemChangeLog::sInstance = Q_NULLPTR;
+ItemChangeLog *ItemChangeLog::sInstance = nullptr;
 
 ItemChangeLog *ItemChangeLog::instance()
 {

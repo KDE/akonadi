@@ -44,7 +44,7 @@ public:
     CollectionFetchJobPrivate(CollectionFetchJob *parent)
         : JobPrivate(parent)
         , mType(CollectionFetchJob::Base)
-        , mEmitTimer(Q_NULLPTR)
+        , mEmitTimer(nullptr)
         , mBasePrefetch(false)
     {
 
@@ -381,7 +381,7 @@ void CollectionFetchJob::slotResult(KJob *job)
         if (job->error()) {
             qCWarning(AKONADICORE_LOG) << "Error during CollectionFetchJob: " << job->errorString();
         }
-        d_ptr->mCurrentSubJob = Q_NULLPTR;
+        d_ptr->mCurrentSubJob = nullptr;
         removeSubjob(job);
         QTimer::singleShot(0, this, SLOT(startNext()));
     } else {

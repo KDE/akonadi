@@ -59,7 +59,7 @@ public:
     CollectionStatisticsDelegatePrivate(QAbstractItemView *treeView)
         : parent(treeView)
         , drawUnreadAfterFolder(false)
-        , animator(Q_NULLPTR)
+        , animator(nullptr)
     {
         updateColor();
     }
@@ -129,7 +129,7 @@ bool CollectionStatisticsDelegate::unreadCountShown() const
 void CollectionStatisticsDelegate::setProgressAnimationEnabled(bool enable)
 {
     Q_D(CollectionStatisticsDelegate);
-    if (enable == (d->animator != Q_NULLPTR)) {
+    if (enable == (d->animator != nullptr)) {
         return;
     }
     if (enable) {
@@ -138,14 +138,14 @@ void CollectionStatisticsDelegate::setProgressAnimationEnabled(bool enable)
         d->animator = animator;
     } else {
         delete d->animator;
-        d->animator = Q_NULLPTR;
+        d->animator = nullptr;
     }
 }
 
 bool CollectionStatisticsDelegate::progressAnimationEnabled() const
 {
     Q_D(const CollectionStatisticsDelegate);
-    return (d->animator != Q_NULLPTR);
+    return (d->animator != nullptr);
 }
 
 void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,

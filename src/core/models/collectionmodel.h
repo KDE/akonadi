@@ -72,7 +72,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit CollectionModel(QObject *parent = Q_NULLPTR);
+    explicit CollectionModel(QObject *parent = nullptr);
 
     /**
      * Destroys the collection model.
@@ -115,7 +115,7 @@ protected:
 
     //@cond PRIVATE
     Akonadi::CollectionModelPrivate *d_ptr;
-    explicit CollectionModel(CollectionModelPrivate *d, QObject *parent = Q_NULLPTR);
+    explicit CollectionModel(CollectionModelPrivate *d, QObject *parent = nullptr);
     //@endcond
 
 private:

@@ -35,7 +35,7 @@ using namespace Akonadi::Server;
 
 NotificationCollector::NotificationCollector(QObject *parent)
     : QObject(parent)
-    , mDb(Q_NULLPTR)
+    , mDb(nullptr)
 {
 }
 

@@ -253,7 +253,7 @@ void ItemHydra::testPolymorphicPayload()
 
 void ItemHydra::testNullPointerPayload()
 {
-    RudiPtr p((Rudi *)Q_NULLPTR);
+    RudiPtr p((Rudi *)nullptr);
     Item i;
     i.setPayload(p);
     QVERIFY(i.hasPayload());
@@ -262,8 +262,8 @@ void ItemHydra::testNullPointerPayload()
     // Fails, because GerdQPtr is QSharedPointer, while RudiPtr is std::shared_ptr
     // and we cannot do sharedptr casting for null pointers
     QVERIFY(!i.hasPayload<GerdQPtr>());
-    QCOMPARE(i.payload<RudiPtr>().get(), (Rudi *)Q_NULLPTR);
-    QCOMPARE(i.payload<VolkerPtr>().get(), (Volker *)Q_NULLPTR);
+    QCOMPARE(i.payload<RudiPtr>().get(), (Rudi *)nullptr);
+    QCOMPARE(i.payload<VolkerPtr>().get(), (Volker *)nullptr);
 }
 
 void ItemHydra::testQSharedPointerPayload()

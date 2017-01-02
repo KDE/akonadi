@@ -36,10 +36,10 @@ public:
     };
 
     explicit AkThread(QThread::Priority priority = QThread::InheritPriority,
-                      QObject *parent = Q_NULLPTR);
+                      QObject *parent = nullptr);
     explicit AkThread(StartMode startMode,
                       QThread::Priority priority = QThread::InheritPriority,
-                      QObject *parent = Q_NULLPTR);
+                      QObject *parent = nullptr);
     virtual ~AkThread();
 
 protected:

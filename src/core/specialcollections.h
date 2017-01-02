@@ -153,7 +153,7 @@ protected:
      * @param config The configuration skeleton that provides the default resource id.
      * @param parent The parent object.
      */
-    explicit SpecialCollections(KCoreConfigSkeleton *config, QObject *parent = Q_NULLPTR);
+    explicit SpecialCollections(KCoreConfigSkeleton *config, QObject *parent = nullptr);
 
 private:
     //@cond PRIVATE

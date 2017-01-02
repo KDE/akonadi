@@ -53,7 +53,7 @@ public:
     /**
      * Creates a new change recorder.
      */
-    explicit ChangeRecorder(QObject *parent = Q_NULLPTR);
+    explicit ChangeRecorder(QObject *parent = nullptr);
 
     /**
      * Destroys the change recorder.
@@ -111,7 +111,7 @@ Q_SIGNALS:
 
 protected:
     //@cond PRIVATE
-    explicit ChangeRecorder(ChangeRecorderPrivate *d, QObject *parent = Q_NULLPTR);
+    explicit ChangeRecorder(ChangeRecorderPrivate *d, QObject *parent = nullptr);
     //@endcond
 
 private:

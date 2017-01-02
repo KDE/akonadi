@@ -32,7 +32,7 @@ class Akonadi::TagFetchJobPrivate : public JobPrivate
 public:
     TagFetchJobPrivate(TagFetchJob *parent)
         : JobPrivate(parent)
-        , mEmitTimer(Q_NULLPTR)
+        , mEmitTimer(nullptr)
     {
     }
 

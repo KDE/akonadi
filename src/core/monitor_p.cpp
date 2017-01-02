@@ -41,15 +41,15 @@ static const int PipelineSize = 5;
 MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent)
     : q_ptr(parent)
     , dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new ChangeNotificationDependenciesFactory)
-    , ntfConnection(Q_NULLPTR)
+    , ntfConnection(nullptr)
     , monitorAll(false)
     , exclusive(false)
     , mFetchChangedOnly(false)
     , session(Session::defaultSession())
-    , collectionCache(Q_NULLPTR)
-    , itemCache(Q_NULLPTR)
-    , tagCache(Q_NULLPTR)
-    , pendingModificationTimer(Q_NULLPTR)
+    , collectionCache(nullptr)
+    , itemCache(nullptr)
+    , tagCache(nullptr)
+    , pendingModificationTimer(nullptr)
     , monitorReady(false)
     , fetchCollection(false)
     , fetchCollectionStatistics(false)
@@ -92,7 +92,7 @@ bool MonitorPrivate::connectToNotificationManager()
 {
     if (ntfConnection) {
         ntfConnection->deleteLater();
-        ntfConnection = Q_NULLPTR;
+        ntfConnection = nullptr;
     }
 
     if (!session) {
@@ -180,7 +180,7 @@ void MonitorPrivate::scheduleSubscriptionUpdate()
 void MonitorPrivate::slotUpdateSubscription()
 {
     delete pendingModificationTimer;
-    pendingModificationTimer = Q_NULLPTR;
+    pendingModificationTimer = nullptr;
 
     if (ntfConnection) {
         ntfConnection->sendCommand(3, pendingModification);

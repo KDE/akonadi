@@ -62,7 +62,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit CollectionFilterProxyModel(QObject *parent = Q_NULLPTR);
+    explicit CollectionFilterProxyModel(QObject *parent = nullptr);
 
     /**
      * Destroys the collection proxy filter model.

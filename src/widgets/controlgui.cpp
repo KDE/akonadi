@@ -42,7 +42,7 @@ namespace Internal
 class ControlProgressIndicator : public QFrame
 {
 public:
-    ControlProgressIndicator(QWidget *parent = Q_NULLPTR)
+    ControlProgressIndicator(QWidget *parent = nullptr)
         : QFrame(parent)
     {
         setWindowModality(Qt::ApplicationModal);
@@ -83,8 +83,8 @@ class Q_DECL_HIDDEN ControlGui::Private
 public:
     Private(ControlGui *parent)
         : mParent(parent)
-        , mEventLoop(Q_NULLPTR)
-        , mProgressIndicator(Q_NULLPTR)
+        , mEventLoop(nullptr)
+        , mProgressIndicator(nullptr)
         , mSuccess(false)
         , mStarting(false)
         , mStopping(false)
@@ -96,7 +96,7 @@ public:
         delete mProgressIndicator;
     }
 
-    void setupProgressIndicator(const QString &msg, QWidget *parent = Q_NULLPTR)
+    void setupProgressIndicator(const QString &msg, QWidget *parent = nullptr)
     {
         if (!mProgressIndicator) {
             mProgressIndicator = new Internal::ControlProgressIndicator(parent);
@@ -142,7 +142,7 @@ bool ControlGui::Private::exec()
     mEventLoop = new QEventLoop(mParent);
     mEventLoop->exec();
     mEventLoop->deleteLater();
-    mEventLoop = Q_NULLPTR;
+    mEventLoop = nullptr;
 
     if (!mSuccess) {
         qCWarning(AKONADIWIDGETS_LOG) << "Could not start/stop Akonadi!";
@@ -157,7 +157,7 @@ bool ControlGui::Private::exec()
     }
 
     delete mProgressIndicator;
-    mProgressIndicator = Q_NULLPTR;
+    mProgressIndicator = nullptr;
     mStarting = false;
     mStopping = false;
 

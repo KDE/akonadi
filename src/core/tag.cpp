@@ -163,7 +163,7 @@ Attribute *Tag::attribute(const QByteArray &type) const
     if (d_ptr->mAttributes.contains(type)) {
         return d_ptr->mAttributes.value(type);
     }
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 void Tag::setId(Tag::Id identifier)

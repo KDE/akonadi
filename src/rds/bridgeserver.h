@@ -28,7 +28,7 @@ class BridgeServerBase : public QObject
     Q_OBJECT
 
 public:
-    explicit BridgeServerBase(quint16 port, QObject *parent = Q_NULLPTR);
+    explicit BridgeServerBase(quint16 port, QObject *parent = nullptr);
 
 protected Q_SLOTS:
     virtual void slotNewConnection() = 0;
@@ -41,7 +41,7 @@ template <typename ConnectionType>
 class BridgeServer : public BridgeServerBase
 {
 public:
-    explicit BridgeServer(quint16 port, QObject *parent = Q_NULLPTR)
+    explicit BridgeServer(quint16 port, QObject *parent = nullptr)
         : BridgeServerBase(port, parent)
     {
     }

@@ -31,11 +31,11 @@
 
 using namespace Akonadi::Server;
 
-CollectionStatistics *CollectionStatistics::sInstance = Q_NULLPTR;
+CollectionStatistics *CollectionStatistics::sInstance = nullptr;
 
 CollectionStatistics *CollectionStatistics::self()
 {
-    if (sInstance == Q_NULLPTR) {
+    if (sInstance == nullptr) {
         sInstance = new CollectionStatistics();
     }
     return sInstance;
@@ -44,7 +44,7 @@ CollectionStatistics *CollectionStatistics::self()
 void CollectionStatistics::destroy()
 {
     delete sInstance;
-    sInstance = Q_NULLPTR;
+    sInstance = nullptr;
 }
 
 void CollectionStatistics::itemAdded(const Collection &col, qint64 size, bool seen)

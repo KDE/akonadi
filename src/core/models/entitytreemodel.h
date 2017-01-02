@@ -391,7 +391,7 @@ public:
      * @param monitor The Monitor whose entities should be represented in the model.
      * @param parent The parent object.
      */
-    explicit EntityTreeModel(Monitor *monitor, QObject *parent = Q_NULLPTR);
+    explicit EntityTreeModel(Monitor *monitor, QObject *parent = nullptr);
 
     /**
      * Destroys the entity tree model.
@@ -671,7 +671,7 @@ protected:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(EntityTreeModel)
     EntityTreeModelPrivate *d_ptr;
-    EntityTreeModel(Monitor *monitor, EntityTreeModelPrivate *d, QObject *parent = Q_NULLPTR);
+    EntityTreeModel(Monitor *monitor, EntityTreeModelPrivate *d, QObject *parent = nullptr);
     //@endcond
 
 private:

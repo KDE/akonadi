@@ -59,7 +59,7 @@ public:
      * By default no filtering is done.
      * @param parent parent object
      */
-    explicit AgentFilterProxyModel(QObject *parent = Q_NULLPTR);
+    explicit AgentFilterProxyModel(QObject *parent = nullptr);
 
     /**
      * Destroys the agent filter proxy model.

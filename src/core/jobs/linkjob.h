@@ -76,7 +76,7 @@ public:
      * @param items The items of which the references should be created.
      * @param parent The parent object.
      */
-    LinkJob(const Collection &collection, const Item::List &items, QObject *parent = Q_NULLPTR);
+    LinkJob(const Collection &collection, const Item::List &items, QObject *parent = nullptr);
 
     /**
      * Destroys the link job.

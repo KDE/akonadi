@@ -32,7 +32,7 @@ FakeItemRetrievalManager::FakeItemRetrievalManager()
 
 FakeItemRetrievalManager::~FakeItemRetrievalManager()
 {
-    sInstance = Q_NULLPTR;
+    sInstance = nullptr;
 }
 
 void FakeItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *request)

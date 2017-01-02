@@ -74,7 +74,7 @@ protected:
     Q_DECLARE_PRIVATE(TagModel)
     TagModelPrivate *d_ptr;
 
-    TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = Q_NULLPTR);
+    TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = nullptr);
 
 Q_SIGNALS:
     void populated();

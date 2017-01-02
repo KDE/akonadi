@@ -58,8 +58,8 @@ class AKONADIPRIVATE_EXPORT ExternalPartStorage
 public:
     static ExternalPartStorage *self();
 
-    static QString resolveAbsolutePath(const QByteArray &filename, bool *exists = Q_NULLPTR, bool legacyFallback = true);
-    static QString resolveAbsolutePath(const QString &filename, bool *exists = Q_NULLPTR, bool legacyFallback = true);
+    static QString resolveAbsolutePath(const QByteArray &filename, bool *exists = nullptr, bool legacyFallback = true);
+    static QString resolveAbsolutePath(const QString &filename, bool *exists = nullptr, bool legacyFallback = true);
     static QByteArray updateFileNameRevision(const QByteArray &filename);
     static QByteArray nameForPartId(qint64 partId);
     static QString akonadiStoragePath();

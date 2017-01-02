@@ -59,7 +59,7 @@ CollectionModel::~CollectionModel()
     d->collections.clear();
 
     delete d->monitor;
-    d->monitor = Q_NULLPTR;
+    d->monitor = nullptr;
 
     delete d;
 }
@@ -214,7 +214,7 @@ Qt::ItemFlags CollectionModel::flags(const QModelIndex &index) const
 
     // Pass modeltest.
     if (!index.isValid()) {
-        return Q_NULLPTR;
+        return nullptr;
     }
 
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);

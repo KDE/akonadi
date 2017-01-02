@@ -40,8 +40,8 @@ using namespace Akonadi;
 Connection::Connection(ConnectionType connType, const QByteArray &sessionId, QObject *parent)
     : QObject(parent)
     , mConnectionType(connType)
-    , mSocket(Q_NULLPTR)
-    , mLogFile(Q_NULLPTR)
+    , mSocket(nullptr)
+    , mLogFile(nullptr)
     , mSessionId(sessionId)
 {
     qRegisterMetaType<Protocol::Command>();
@@ -56,7 +56,7 @@ Connection::Connection(ConnectionType connType, const QByteArray &sessionId, QOb
         if (!mLogFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             qCWarning(AKONADICORE_LOG) << "Failed to open Akonadi Session log file" << mLogFile->fileName();
             delete mLogFile;
-            mLogFile = Q_NULLPTR;
+            mLogFile = nullptr;
         }
     }
 }
@@ -171,9 +171,9 @@ void Connection::doForceReconnect()
     if (mSocket) {
         mSocket->disconnect(this, SIGNAL(socketDisconnected()));
         delete mSocket;
-        mSocket = Q_NULLPTR;
+        mSocket = nullptr;
     }
-    mSocket = Q_NULLPTR;
+    mSocket = nullptr;
 }
 
 void Connection::closeConnection()

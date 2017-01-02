@@ -84,13 +84,13 @@ static const struct {
     ActionType actionType;
 } standardActionData[] = {
     { "akonadi_collection_create", I18N_NOOP("&New Folder..."), I18N_NOOP("New"), "folder-new", 0, SLOT(slotCreateCollection()), NormalAction },
-    { "akonadi_collection_copy", Q_NULLPTR, Q_NULLPTR, "edit-copy", 0, SLOT(slotCopyCollections()), NormalAction },
+    { "akonadi_collection_copy", nullptr, nullptr, "edit-copy", 0, SLOT(slotCopyCollections()), NormalAction },
     { "akonadi_collection_delete", I18N_NOOP("&Delete Folder"), I18N_NOOP("Delete"), "edit-delete", 0, SLOT(slotDeleteCollection()), NormalAction },
     { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), I18N_NOOP("Synchronize"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()), NormalAction },
     { "akonadi_collection_properties", I18N_NOOP("Folder &Properties"), I18N_NOOP("Properties"), "configure", 0, SLOT(slotCollectionProperties()), NormalAction },
-    { "akonadi_item_copy", Q_NULLPTR, Q_NULLPTR, "edit-copy", 0, SLOT(slotCopyItems()), NormalAction },
+    { "akonadi_item_copy", nullptr, nullptr, "edit-copy", 0, SLOT(slotCopyItems()), NormalAction },
     { "akonadi_paste", I18N_NOOP("&Paste"), I18N_NOOP("Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()), NormalAction },
-    { "akonadi_item_delete", Q_NULLPTR, Q_NULLPTR, "edit-delete", 0, SLOT(slotDeleteItems()), NormalAction },
+    { "akonadi_item_delete", nullptr, nullptr, "edit-delete", 0, SLOT(slotDeleteItems()), NormalAction },
     { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), I18N_NOOP("Manage Local Subscriptions"), "folder-bookmarks", 0, SLOT(slotLocalSubscription()), NormalAction },
     { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), I18N_NOOP("Add to Favorite"), "bookmark-new", 0, SLOT(slotAddToFavorites()), NormalAction },
     { "akonadi_collection_remove_from_favorites", I18N_NOOP("Remove from Favorite Folders"), I18N_NOOP("Remove from Favorite"), "edit-delete", 0, SLOT(slotRemoveFromFavorites()), NormalAction },
@@ -101,11 +101,11 @@ static const struct {
     { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), I18N_NOOP("Move To"), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), MenuAction },
     { "akonadi_item_cut", I18N_NOOP("&Cut Item"), I18N_NOOP("Cut"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutItems()), NormalAction },
     { "akonadi_collection_cut", I18N_NOOP("&Cut Folder"), I18N_NOOP("Cut"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), NormalAction },
-    { "akonadi_resource_create", I18N_NOOP("Create Resource"), Q_NULLPTR, "folder-new", 0, SLOT(slotCreateResource()), NormalAction },
-    { "akonadi_resource_delete", I18N_NOOP("Delete Resource"), Q_NULLPTR, "edit-delete", 0, SLOT(slotDeleteResource()), NormalAction },
+    { "akonadi_resource_create", I18N_NOOP("Create Resource"), nullptr, "folder-new", 0, SLOT(slotCreateResource()), NormalAction },
+    { "akonadi_resource_delete", I18N_NOOP("Delete Resource"), nullptr, "edit-delete", 0, SLOT(slotDeleteResource()), NormalAction },
     { "akonadi_resource_properties", I18N_NOOP("&Resource Properties"), I18N_NOOP("Properties"), "configure", 0, SLOT(slotResourceProperties()), NormalAction },
     { "akonadi_resource_synchronize", I18N_NOOP("Synchronize Resource"), I18N_NOOP("Synchronize"), "view-refresh", 0, SLOT(slotSynchronizeResource()), NormalAction },
-    { "akonadi_work_offline", I18N_NOOP("Work Offline"), Q_NULLPTR, "user-offline", 0, SLOT(slotToggleWorkOffline(bool)), ToggleAction },
+    { "akonadi_work_offline", I18N_NOOP("Work Offline"), nullptr, "user-offline", 0, SLOT(slotToggleWorkOffline(bool)), ToggleAction },
     { "akonadi_collection_copy_to_dialog", I18N_NOOP("Copy Folder To..."), I18N_NOOP("Copy To"), "edit-copy", 0, SLOT(slotCopyCollectionTo()), NormalAction },
     { "akonadi_collection_move_to_dialog", I18N_NOOP("Move Folder To..."), I18N_NOOP("Move To"), "go-jump", 0, SLOT(slotMoveCollectionTo()), NormalAction },
     { "akonadi_item_copy_to_dialog", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", 0, SLOT(slotCopyItemTo()), NormalAction },
@@ -116,9 +116,9 @@ static const struct {
     { "akonadi_restore_collection_from_trash", I18N_NOOP("&Restore Folder From Trash"), I18N_NOOP("Restore Folder From Trash"), "view-refresh", 0, SLOT(slotRestoreCollectionFromTrash()), NormalAction },
     { "akonadi_restore_item_from_trash", I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", 0, SLOT(slotRestoreItemFromTrash()), NormalAction },
     { "akonadi_collection_trash_restore", I18N_NOOP("&Restore Folder From Trash"), I18N_NOOP("Restore Folder From Trash"), "user-trash", 0, SLOT(slotTrashRestoreCollection()), ActionWithAlternative },
-    { Q_NULLPTR, I18N_NOOP("&Restore Collection From Trash"), I18N_NOOP("Restore Collection From Trash"), "view-refresh", 0, Q_NULLPTR, ActionAlternative },
+    { nullptr, I18N_NOOP("&Restore Collection From Trash"), I18N_NOOP("Restore Collection From Trash"), "view-refresh", 0, nullptr, ActionAlternative },
     { "akonadi_item_trash_restore", I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "user-trash", 0, SLOT(slotTrashRestoreItem()), ActionWithAlternative },
-    { Q_NULLPTR, I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", 0, Q_NULLPTR, ActionAlternative },
+    { nullptr, I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", 0, nullptr, ActionAlternative },
     { "akonadi_collection_sync_favorite_folders", I18N_NOOP("&Synchronize Favorite Folders"), I18N_NOOP("Synchronize Favorite Folders"), "view-refresh", Qt::CTRL + Qt::SHIFT + Qt::Key_L , SLOT(slotSynchronizeFavoriteCollections()), NormalAction },
     { "akonadi_resource_synchronize_collectiontree", I18N_NOOP("Synchronize Folder Tree"), I18N_NOOP("Synchronize"), "view-refresh", 0, SLOT(slotSynchronizeCollectionTree()), NormalAction }
 
@@ -186,15 +186,15 @@ class Q_DECL_HIDDEN StandardActionManager::Private
 public:
     Private(StandardActionManager *parent)
         : q(parent)
-        , actionCollection(Q_NULLPTR)
-        , parentWidget(Q_NULLPTR)
-        , collectionSelectionModel(Q_NULLPTR)
-        , itemSelectionModel(Q_NULLPTR)
-        , favoritesModel(Q_NULLPTR)
-        , favoriteSelectionModel(Q_NULLPTR)
+        , actionCollection(nullptr)
+        , parentWidget(nullptr)
+        , collectionSelectionModel(nullptr)
+        , itemSelectionModel(nullptr)
+        , favoritesModel(nullptr)
+        , favoriteSelectionModel(nullptr)
         , insideSelectionSlot(false)
     {
-        actions.fill(Q_NULLPTR, StandardActionManager::LastType);
+        actions.fill(nullptr, StandardActionManager::LastType);
 
         pluralLabels.insert(StandardActionManager::CopyCollections,
                             ki18np("&Copy Folder", "&Copy %1 Folders"));
@@ -1027,7 +1027,7 @@ public:
         Q_ASSERT(collection.isValid());
 
         QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle), contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText), favoritesModel->favoriteLabel(collection), collection.displayName(), parentWidget));
-        if (dlg->exec() == QDialog::Accepted && dlg != Q_NULLPTR) {
+        if (dlg->exec() == QDialog::Accepted && dlg != nullptr) {
             favoritesModel->setFavoriteLabel(collection, dlg->newName());
         }
         delete dlg;
@@ -1132,7 +1132,7 @@ public:
             dlg->agentFilterProxyModel()->addCapabilityFilter(capability);
         }
 
-        if (dlg->exec() == QDialog::Accepted && dlg != Q_NULLPTR) {
+        if (dlg->exec() == QDialog::Accepted && dlg != nullptr) {
             const AgentType agentType = dlg->agentType();
 
             if (agentType.isValid()) {
@@ -1222,7 +1222,7 @@ public:
             dlg->setAccessRightsFilter(Collection::CanCreateCollection);
         }
 
-        if (dlg->exec() == QDialog::Accepted && dlg != Q_NULLPTR) {
+        if (dlg->exec() == QDialog::Accepted && dlg != nullptr) {
             const QModelIndex index = EntityTreeModel::modelIndexForCollection(collectionSelectionModel->model(), dlg->selectedCollection());
             if (!index.isValid()) {
                 return;
@@ -1442,7 +1442,7 @@ public:
 
     void checkModelsConsistency()
     {
-        if (favoritesModel == Q_NULLPTR || favoriteSelectionModel == Q_NULLPTR) {
+        if (favoritesModel == nullptr || favoriteSelectionModel == nullptr) {
             // No need to check when the favorite collections feature is not used
             return;
         }
@@ -1455,7 +1455,7 @@ public:
 
         // Check that the collection selection model maps to the same
         // EntityTreeModel than favoritesModel
-        if (collectionSelectionModel != Q_NULLPTR) {
+        if (collectionSelectionModel != nullptr) {
             const QAbstractItemModel *model = collectionSelectionModel->model();
             while (const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel *>(model)) {
                 model = proxy->sourceModel();
@@ -1623,7 +1623,7 @@ QAction *StandardActionManager::createAction(Type type)
     if (d->actions[type]) {
         return d->actions[type];
     }
-    QAction *action = Q_NULLPTR;
+    QAction *action = nullptr;
     switch (standardActionData[type].actionType) {
     case NormalAction:
     case ActionWithAlternative:

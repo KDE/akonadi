@@ -71,7 +71,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit CollectionView(QWidget *parent = Q_NULLPTR);
+    explicit CollectionView(QWidget *parent = nullptr);
 
     /**
      * Creates a new collection view.
@@ -81,7 +81,7 @@ public:
      *                     Passing 0 is ok and will disable the builtin context menu.
      * @param parent The parent widget.
      */
-    explicit CollectionView(KXMLGUIClient *xmlGuiClient, QWidget *parent = Q_NULLPTR);
+    explicit CollectionView(KXMLGUIClient *xmlGuiClient, QWidget *parent = nullptr);
 
     /**
      * Destroys the collection view.

@@ -29,8 +29,8 @@ using namespace Akonadi::Server;
 
 AgentSearchInstance::AgentSearchInstance(const QString &id)
     : mId(id)
-    , mInterface(Q_NULLPTR)
-    , mServiceWatcher(Q_NULLPTR)
+    , mInterface(nullptr)
+    , mServiceWatcher(nullptr)
 {
 }
 
@@ -50,7 +50,7 @@ bool AgentSearchInstance::init()
 
     if (!mInterface || !mInterface->isValid()) {
         delete mInterface;
-        mInterface = Q_NULLPTR;
+        mInterface = nullptr;
         return false;
     }
 

@@ -53,7 +53,7 @@ public:
      * @param catalogName The translation catalog of this resource.
      * @param parent The parent object.
      */
-    explicit AgentFactoryBase(const char *catalogName, QObject *parent = Q_NULLPTR);
+    explicit AgentFactoryBase(const char *catalogName, QObject *parent = nullptr);
 
     virtual ~AgentFactoryBase();
 
@@ -82,7 +82,7 @@ class AgentFactory : public AgentFactoryBase
 {
 public:
     /** reimplemented */
-    explicit AgentFactory(const char *catalogName, QObject *parent = Q_NULLPTR)
+    explicit AgentFactory(const char *catalogName, QObject *parent = nullptr)
         : AgentFactoryBase(catalogName, parent)
     {
     }

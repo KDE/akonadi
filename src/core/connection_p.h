@@ -48,7 +48,7 @@ public:
     };
     Q_ENUMS(ConnectionType)
 
-    explicit Connection(ConnectionType connType, const QByteArray &sessionId, QObject *parent = Q_NULLPTR);
+    explicit Connection(ConnectionType connType, const QByteArray &sessionId, QObject *parent = nullptr);
     ~Connection();
 
     Q_INVOKABLE void reconnect();

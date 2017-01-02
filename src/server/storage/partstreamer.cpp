@@ -256,8 +256,8 @@ bool PartStreamer::preparePart(bool checkExists, const QByteArray &partName, Par
 
 bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed)
 {
-    mCheckChanged = (changed != Q_NULLPTR);
-    if (changed != Q_NULLPTR) {
+    mCheckChanged = (changed != nullptr);
+    if (changed != nullptr) {
         *changed = false;
     }
 
@@ -278,8 +278,8 @@ bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &
 
 bool PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName, const QByteArray &value, bool *changed)
 {
-    mCheckChanged = (changed != Q_NULLPTR);
-    if (changed != Q_NULLPTR) {
+    mCheckChanged = (changed != nullptr);
+    if (changed != nullptr) {
         *changed = false;
     }
 

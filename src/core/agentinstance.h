@@ -150,7 +150,7 @@ public:
      *
      * @param parent Parent window for the configuration dialog.
      */
-    void configure(QWidget *parent = Q_NULLPTR);
+    void configure(QWidget *parent = nullptr);
 
     /**
      * Triggers the agent instance to start synchronization.

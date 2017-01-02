@@ -130,7 +130,7 @@ public:
         : q(parent)
         , pendingJobs(0)
         , progress(0)
-        , currentTransaction(Q_NULLPTR)
+        , currentTransaction(nullptr)
         , incremental(false)
         , streaming(false)
         , hierarchicalRIDs(false)
@@ -618,7 +618,7 @@ public:
 
         if (pendingJobs == 0) {
             currentTransaction->commit();
-            currentTransaction = Q_NULLPTR;
+            currentTransaction = nullptr;
 
             done();
         }
@@ -629,7 +629,7 @@ public:
         if (currentTransaction) {
             //This can trigger a direct call of transactionSequenceResult
             currentTransaction->commit();
-            currentTransaction = Q_NULLPTR;
+            currentTransaction = nullptr;
         }
 
         if (!remoteCollections.isEmpty()) {
@@ -679,7 +679,7 @@ public:
         // If this was the last transaction, then finish, otherwise there's
         // a new transaction in the queue already
         if (job == currentTransaction) {
-            currentTransaction = Q_NULLPTR;
+            currentTransaction = nullptr;
         }
     }
 

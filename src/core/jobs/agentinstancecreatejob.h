@@ -79,7 +79,7 @@ public:
      * @param type The type of the agent to create.
      * @param parent The parent object.
      */
-    explicit AgentInstanceCreateJob(const AgentType &type, QObject *parent = Q_NULLPTR);
+    explicit AgentInstanceCreateJob(const AgentType &type, QObject *parent = nullptr);
 
     /**
      * Creates a new agent instance create job.
@@ -88,7 +88,7 @@ public:
      * @param parent The parent object.
      * @since 4.5
      */
-    explicit AgentInstanceCreateJob(const QString &typeId, QObject *parent = Q_NULLPTR);
+    explicit AgentInstanceCreateJob(const QString &typeId, QObject *parent = nullptr);
 
     /**
      * Destroys the agent instance create job.
@@ -100,7 +100,7 @@ public:
      * has been successfully started.
      * @param parent The parent window for the configuration dialog.
      */
-    void configure(QWidget *parent = Q_NULLPTR);
+    void configure(QWidget *parent = nullptr);
 
     /**
      * Returns the AgentInstance object of the newly created agent instance.

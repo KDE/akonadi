@@ -71,7 +71,7 @@ public:
      * @param collection The collection which properties should be shown.
      * @param parent The parent widget.
      */
-    explicit CollectionPropertiesDialog(const Collection &collection, QWidget *parent = Q_NULLPTR);
+    explicit CollectionPropertiesDialog(const Collection &collection, QWidget *parent = nullptr);
 
     /**
      * Creates a new collection properties dialog.
@@ -88,7 +88,7 @@ public:
      *
      * @since 4.6
      */
-    CollectionPropertiesDialog(const Collection &collection, const QStringList &pages, QWidget *parent = Q_NULLPTR);
+    CollectionPropertiesDialog(const Collection &collection, const QStringList &pages, QWidget *parent = nullptr);
 
     /**
      * Destroys the collection properties dialog.

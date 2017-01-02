@@ -54,7 +54,7 @@ public:
      * @param path The collection path.
      * @param parent The parent object.
      */
-    explicit CollectionPathResolver(const QString &path, QObject *parent = Q_NULLPTR);
+    explicit CollectionPathResolver(const QString &path, QObject *parent = nullptr);
 
     /**
      * Create a new collection path resolver to convert a path into an id.
@@ -68,7 +68,7 @@ public:
      *
      * @since 4.14
      */
-    explicit CollectionPathResolver(const QString &path, const Collection &parentCollection, QObject *parent = Q_NULLPTR);
+    explicit CollectionPathResolver(const QString &path, const Collection &parentCollection, QObject *parent = nullptr);
 
     /**
      * Creates a new collection path resolver to determine the path of
@@ -77,7 +77,7 @@ public:
      * @param collection The collection.
      * @param parent The parent object.
      */
-    explicit CollectionPathResolver(const Collection &collection, QObject *parent = Q_NULLPTR);
+    explicit CollectionPathResolver(const Collection &collection, QObject *parent = nullptr);
 
     /**
      * Destroys the collection path resolver.

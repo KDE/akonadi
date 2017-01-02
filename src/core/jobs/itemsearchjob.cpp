@@ -39,7 +39,7 @@ public:
         , mQuery(query)
         , mRecursive(false)
         , mRemote(false)
-        , mEmitTimer(Q_NULLPTR)
+        , mEmitTimer(nullptr)
     {
     }
 
@@ -101,7 +101,7 @@ QThreadStorage<Session *> instances;
 
 static void cleanupDefaultSearchSession()
 {
-    instances.setLocalData(Q_NULLPTR);
+    instances.setLocalData(nullptr);
 }
 
 static Session *defaultSearchSession()

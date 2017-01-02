@@ -228,7 +228,7 @@ bool ItemRetriever::exec()
     QVector<qint64> readyItems;
     qint64 prevPimItemId = -1;
     QSet<QByteArray> availableParts;
-    ItemRetrievalRequest *lastRequest = Q_NULLPTR;
+    ItemRetrievalRequest *lastRequest = nullptr;
     while (query.isValid()) {
         const qint64 pimItemId = query.value(PimItemIdColumn).toLongLong();
         const qint64 collectionId = query.value(CollectionIdColumn).toLongLong();

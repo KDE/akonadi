@@ -27,7 +27,7 @@
 #include <QDBusConnection>
 #include <QDBusMetaType>
 
-Akonadi::Server::StorageDebugger *Akonadi::Server::StorageDebugger::mSelf = Q_NULLPTR;
+Akonadi::Server::StorageDebugger *Akonadi::Server::StorageDebugger::mSelf = nullptr;
 QMutex Akonadi::Server::StorageDebugger::mMutex;
 
 using namespace Akonadi::Server;
@@ -37,7 +37,7 @@ Q_DECLARE_METATYPE(QList< QList<QVariant> >)
 StorageDebugger *StorageDebugger::instance()
 {
     mMutex.lock();
-    if (mSelf == Q_NULLPTR) {
+    if (mSelf == nullptr) {
         mSelf = new StorageDebugger();
     }
     mMutex.unlock();
@@ -46,7 +46,7 @@ StorageDebugger *StorageDebugger::instance()
 }
 
 StorageDebugger::StorageDebugger()
-    : mFile(Q_NULLPTR)
+    : mFile(nullptr)
     , mEnabled(false)
     , mSequence(0)
 {

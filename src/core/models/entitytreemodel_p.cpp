@@ -73,8 +73,8 @@ static CollectionFetchJob::Type getFetchType(EntityTreeModel::CollectionFetchStr
 
 EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     : q_ptr(parent)
-    , m_monitor(Q_NULLPTR)
-    , m_rootNode(Q_NULLPTR)
+    , m_monitor(nullptr)
+    , m_rootNode(nullptr)
     , m_collectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive)
     , m_itemPopulation(EntityTreeModel::ImmediatePopulation)
     , m_listFilter(CollectionFetchScope::NoFilter)
@@ -1387,7 +1387,7 @@ void EntityTreeModelPrivate::pasteJobDone(KJob *job)
 
         errorMsg += QLatin1Char(' ') + job->errorString();
 
-        QMessageBox::critical(Q_NULLPTR, i18n("Error"), errorMsg);
+        QMessageBox::critical(nullptr, i18n("Error"), errorMsg);
     }
 }
 
@@ -1817,7 +1817,7 @@ void EntityTreeModelPrivate::endResetModel()
         qDeleteAll(list);
     }
     m_childEntities.clear();
-    m_rootNode = Q_NULLPTR;
+    m_rootNode = nullptr;
 
     q->endResetModel();
     fillModel();

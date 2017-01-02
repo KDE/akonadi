@@ -175,7 +175,7 @@ public:
 private Q_SLOTS:
     void testFullPayload()
     {
-        ItemRetriever r1(Q_NULLPTR);
+        ItemRetriever r1(nullptr);
         r1.setRetrieveFullPayload(true);
         QCOMPARE(r1.retrieveParts().size(), 1);
         QCOMPARE(r1.retrieveParts().at(0), { "PLD:RFC822" });

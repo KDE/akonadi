@@ -67,7 +67,7 @@ public:
       Creates a new cache cleaner thread.
       @param parent The parent object.
     */
-    explicit CacheCleaner(QObject *parent = Q_NULLPTR);
+    explicit CacheCleaner(QObject *parent = nullptr);
     ~CacheCleaner();
 
 protected:

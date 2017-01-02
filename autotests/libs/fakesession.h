@@ -35,7 +35,7 @@ public:
         EndJobsManually
     };
 
-    explicit FakeSession(const QByteArray &sessionId = QByteArray(), Mode mode = EndJobsImmediately, QObject *parent = Q_NULLPTR);
+    explicit FakeSession(const QByteArray &sessionId = QByteArray(), Mode mode = EndJobsImmediately, QObject *parent = nullptr);
 
     /** Make this the default session returned by Akonadi::Session::defaultSession().
      *  Note that ownership is taken over by the thread-local storage.

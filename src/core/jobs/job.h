@@ -124,7 +124,7 @@ public:
      *
      * @param parent The parent object, job or session.
      */
-    explicit Job(QObject *parent = Q_NULLPTR);
+    explicit Job(QObject *parent = nullptr);
 
     /**
      * Destroys the job.

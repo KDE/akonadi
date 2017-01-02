@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
         return 1;
     }
 
-    QObject *instance = Q_NULLPTR;
+    QObject *instance = nullptr;
     const bool invokeSucceeded = QMetaObject::invokeMethod(factory->instance(),
                                                            "createInstance",
                                                            Qt::DirectConnection,

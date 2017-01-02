@@ -43,7 +43,7 @@ public:
      * @param relation The relation to create.
      * @param parent The parent object.
      */
-    explicit RelationCreateJob(const Relation &relation, QObject *parent = Q_NULLPTR);
+    explicit RelationCreateJob(const Relation &relation, QObject *parent = nullptr);
 
     /**
      * Returns the relation.

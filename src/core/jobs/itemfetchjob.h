@@ -92,7 +92,7 @@ public:
      * @param collection The parent collection to fetch all items from.
      * @param parent The parent object.
      */
-    explicit ItemFetchJob(const Collection &collection, QObject *parent = Q_NULLPTR);
+    explicit ItemFetchJob(const Collection &collection, QObject *parent = nullptr);
 
     /**
      * Creates a new item fetch job that retrieves the specified item.
@@ -110,7 +110,7 @@ public:
      * @param item The item to fetch.
      * @param parent The parent object.
      */
-    explicit ItemFetchJob(const Item &item, QObject *parent = Q_NULLPTR);
+    explicit ItemFetchJob(const Item &item, QObject *parent = nullptr);
 
     /**
      * Creates a new item fetch job that retrieves the specified items.
@@ -129,19 +129,19 @@ public:
      * @param parent The parent object.
      * @since 4.4
      */
-    explicit ItemFetchJob(const Item::List &items, QObject *parent = Q_NULLPTR);
+    explicit ItemFetchJob(const Item::List &items, QObject *parent = nullptr);
 
     /**
-     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = Q_NULLPTR)
+     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = nullptr)
      * @since 4.8
      */
-    explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = Q_NULLPTR);
+    explicit ItemFetchJob(const QList<Item::Id> &items, QObject *parent = nullptr);
 
     /**
-     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = Q_NULLPTR)
+     * Convenience ctor equivalent to ItemFetchJob(const Item::List &items, QObject *parent = nullptr)
      * @since 5.4
      */
-    explicit ItemFetchJob(const QVector<Item::Id> &items, QObject *parent = Q_NULLPTR);
+    explicit ItemFetchJob(const QVector<Item::Id> &items, QObject *parent = nullptr);
 
     /**
      * Creates a new item fetch job that retrieves all items tagged with specified @p tag.
@@ -151,7 +151,7 @@ public:
      *
      * @since 4.14
      */
-    explicit ItemFetchJob(const Tag &tag, QObject *parent = Q_NULLPTR);
+    explicit ItemFetchJob(const Tag &tag, QObject *parent = nullptr);
 
     /**
      * Destroys the item fetch job.

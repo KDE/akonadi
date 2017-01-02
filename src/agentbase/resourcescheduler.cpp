@@ -32,7 +32,7 @@
 using namespace Akonadi;
 
 qint64 ResourceScheduler::Task::latestSerial = 0;
-static QDBusAbstractInterface *s_resourcetracker = Q_NULLPTR;
+static QDBusAbstractInterface *s_resourcetracker = nullptr;
 
 //@cond PRIVATE
 
@@ -536,7 +536,7 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
         s_resourcetracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole"),
                                                QStringLiteral("/resourcesJobtracker"),
                                                QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
-                                               KDBusConnectionPool::threadConnection(), Q_NULLPTR);
+                                               KDBusConnectionPool::threadConnection(), nullptr);
     }
 
     if (s_resourcetracker) {

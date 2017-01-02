@@ -68,7 +68,7 @@ public:
      *
      * @param parent The parent widget.
      */
-    explicit ItemView(QWidget *parent = Q_NULLPTR);
+    explicit ItemView(QWidget *parent = nullptr);
 
     /**
      * Creates a new item view.
@@ -79,7 +79,7 @@ public:
      * @param parent The parent widget.
      * @since 4.3
      */
-    explicit ItemView(KXMLGUIClient *xmlGuiClient, QWidget *parent = Q_NULLPTR);
+    explicit ItemView(KXMLGUIClient *xmlGuiClient, QWidget *parent = nullptr);
 
     /**
      * Destroys the item view.

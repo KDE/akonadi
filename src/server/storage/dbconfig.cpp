@@ -36,7 +36,7 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 //TODO: make me Q_GLOBAL_STATIC
-static DbConfig *s_DbConfigInstance = Q_NULLPTR;
+static DbConfig *s_DbConfigInstance = nullptr;
 
 DbConfig::DbConfig()
 {
@@ -91,12 +91,12 @@ DbConfig *DbConfig::configuredDatabase()
         } else {
             qCCritical(AKONADISERVER_LOG) << "Unknown database driver: " << driverName;
             qCCritical(AKONADISERVER_LOG) << "Available drivers are: " << QSqlDatabase::drivers();
-            return Q_NULLPTR;
+            return nullptr;
         }
 
         if (!s_DbConfigInstance->init(settings)) {
             delete s_DbConfigInstance;
-            s_DbConfigInstance = Q_NULLPTR;
+            s_DbConfigInstance = nullptr;
         }
     }
 

@@ -51,7 +51,7 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
 public:
     AgentInstanceCreateJobPrivate(AgentInstanceCreateJob *parent)
         : q(parent)
-        , parentWidget(Q_NULLPTR)
+        , parentWidget(nullptr)
         , safetyTimer(new QTimer(parent))
         , doConfig(false)
         , tooLate(false)

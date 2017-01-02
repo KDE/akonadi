@@ -40,7 +40,7 @@ QMimeDatabase NotificationSubscriber::sMimeDatabase;
 NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
     : QObject()
     , mManager(manager)
-    , mSocket(Q_NULLPTR)
+    , mSocket(nullptr)
     , mAllMonitored(false)
     , mExclusive(false)
     , mNotificationDebugging(false)

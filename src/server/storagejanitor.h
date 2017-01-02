@@ -38,7 +38,7 @@ class StorageJanitor : public AkThread
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.Janitor")
 
 public:
-    explicit StorageJanitor(QObject *parent = Q_NULLPTR);
+    explicit StorageJanitor(QObject *parent = nullptr);
     ~StorageJanitor();
 
 public Q_SLOTS:

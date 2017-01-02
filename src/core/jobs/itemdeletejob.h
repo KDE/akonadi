@@ -77,7 +77,7 @@ public:
      * @param item The item to delete.
      * @param parent The parent object.
      */
-    explicit ItemDeleteJob(const Item &item, QObject *parent = Q_NULLPTR);
+    explicit ItemDeleteJob(const Item &item, QObject *parent = nullptr);
 
     /**
      * Creates a new item delete job that deletes all items in the list
@@ -95,7 +95,7 @@ public:
      *
      * @since 4.3
      */
-    explicit ItemDeleteJob(const Item::List &items, QObject *parent = Q_NULLPTR);
+    explicit ItemDeleteJob(const Item::List &items, QObject *parent = nullptr);
 
     /**
      * Creates a new item delete job that deletes all items in the collection
@@ -112,7 +112,7 @@ public:
      *
      * @since 4.3
      */
-    explicit ItemDeleteJob(const Collection &collection, QObject *parent = Q_NULLPTR);
+    explicit ItemDeleteJob(const Collection &collection, QObject *parent = nullptr);
 
     /**
      * Creates a new item delete job that deletes all items that have assigned
@@ -123,7 +123,7 @@ public:
      *
      * @since 4.14
      */
-    explicit ItemDeleteJob(const Tag &tag, QObject *parent = Q_NULLPTR);
+    explicit ItemDeleteJob(const Tag &tag, QObject *parent = nullptr);
 
     /**
      * Destroys the item delete job.

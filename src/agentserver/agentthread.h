@@ -39,7 +39,7 @@ public:
      * @param factory The factory object that creates the agent instance.
      * @param parent The parent object.
      */
-    AgentThread(const QString &identifier, QObject *factory, QObject *parent = Q_NULLPTR);
+    AgentThread(const QString &identifier, QObject *factory, QObject *parent = nullptr);
 
     /**
      * Configures the agent.

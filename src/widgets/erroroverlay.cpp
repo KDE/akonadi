@@ -71,14 +71,14 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     // check existing overlays to detect cascading
     for (QVector<QPair< QPointer<QWidget>, QPointer<QWidget> > >::Iterator it = sInstanceOverlay->baseWidgets.begin();
             it != sInstanceOverlay->baseWidgets.end();) {
-        if ((*it).first == Q_NULLPTR || (*it).second == Q_NULLPTR) {
+        if ((*it).first == nullptr || (*it).second == nullptr) {
             // garbage collection
             it = sInstanceOverlay->baseWidgets.erase(it);
             continue;
         }
         if (isParentOf((*it).first, baseWidget)) {
             // parent already has an overlay, kill ourselves
-            mBaseWidget = Q_NULLPTR;
+            mBaseWidget = nullptr;
             hide();
             deleteLater();
             return;

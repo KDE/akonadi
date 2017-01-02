@@ -29,7 +29,7 @@
 
 using namespace Akonadi::Server;
 
-ResourceManager *ResourceManager::mSelf = Q_NULLPTR;
+ResourceManager *ResourceManager::mSelf = nullptr;
 
 ResourceManager::ResourceManager(QObject *parent)
     : QObject(parent)

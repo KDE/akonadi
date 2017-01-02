@@ -39,9 +39,9 @@ class Q_DECL_HIDDEN CollectionRequester::Private
 public:
     Private(CollectionRequester *parent)
         : q(parent)
-        , edit(Q_NULLPTR)
-        , button(Q_NULLPTR)
-        , collectionDialog(Q_NULLPTR)
+        , edit(nullptr)
+        , button(nullptr)
+        , collectionDialog(nullptr)
     {
     }
 

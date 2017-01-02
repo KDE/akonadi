@@ -62,7 +62,7 @@
 
 using namespace Akonadi;
 
-static AgentBase *sAgentBase = Q_NULLPTR;
+static AgentBase *sAgentBase = nullptr;
 
 AgentBase::Observer::Observer()
 {
@@ -338,21 +338,21 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mNeedsNetwork(false)
     , mOnline(false)
     , mDesiredOnlineState(false)
-    , mSettings(Q_NULLPTR)
-    , mChangeRecorder(Q_NULLPTR)
-    , mTracer(Q_NULLPTR)
-    , mObserver(Q_NULLPTR)
-    , mPowerInterface(Q_NULLPTR)
-    , mTemporaryOfflineTimer(Q_NULLPTR)
-    , mEventLoopLocker(Q_NULLPTR)
-    , mNetworkManager(Q_NULLPTR)
+    , mSettings(nullptr)
+    , mChangeRecorder(nullptr)
+    , mTracer(nullptr)
+    , mObserver(nullptr)
+    , mPowerInterface(nullptr)
+    , mTemporaryOfflineTimer(nullptr)
+    , mEventLoopLocker(nullptr)
+    , mNetworkManager(nullptr)
 {
     Internal::setClientType(Internal::Agent);
 }
 
 AgentBasePrivate::~AgentBasePrivate()
 {
-    mChangeRecorder->setConfig(Q_NULLPTR);
+    mChangeRecorder->setConfig(nullptr);
     delete mSettings;
 }
 
@@ -434,7 +434,7 @@ void AgentBasePrivate::init()
                 q, SLOT(slotResumedFromSuspend()));
     } else {
         delete mPowerInterface;
-        mPowerInterface = Q_NULLPTR;
+        mPowerInterface = nullptr;
     }
 
     // Use reference counting to allow agents to finish internal jobs when the
@@ -717,7 +717,7 @@ void AgentBasePrivate::collectionAdded(const Akonadi::Collection &collection, co
 void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection)
 {
     AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
-    if (mObserver && observer2 == Q_NULLPTR) {   // For ObserverV2 we use the variant with the part identifiers
+    if (mObserver && observer2 == nullptr) {   // For ObserverV2 we use the variant with the part identifiers
         mObserver->collectionChanged(collection);
     }
 }
@@ -1108,12 +1108,12 @@ void AgentBase::quit()
     aboutToQuit();
 
     if (d->mSettings) {
-        d->mChangeRecorder->setConfig(Q_NULLPTR);
+        d->mChangeRecorder->setConfig(nullptr);
         d->mSettings->sync();
     }
 
     delete d->mEventLoopLocker;
-    d->mEventLoopLocker = Q_NULLPTR;
+    d->mEventLoopLocker = nullptr;
 }
 
 void AgentBase::aboutToQuit()
@@ -1134,9 +1134,9 @@ void AgentBase::cleanup()
     /*
      * First destroy the settings object...
      */
-    d->mChangeRecorder->setConfig(Q_NULLPTR);
+    d->mChangeRecorder->setConfig(nullptr);
     delete d->mSettings;
-    d->mSettings = Q_NULLPTR;
+    d->mSettings = nullptr;
 
     /*
      * ... then remove the file from hd.
@@ -1155,7 +1155,7 @@ void AgentBase::cleanup()
     QFile::remove(configFile);
 
     delete d->mEventLoopLocker;
-    d->mEventLoopLocker = Q_NULLPTR;
+    d->mEventLoopLocker = nullptr;
 }
 
 void AgentBase::registerObserver(Observer *observer)
@@ -1163,8 +1163,8 @@ void AgentBase::registerObserver(Observer *observer)
     // TODO in theory we should re-connect change recorder signals here that we disconnected previously
     d_ptr->mObserver = observer;
 
-    const bool hasObserverV3 = (dynamic_cast<AgentBase::ObserverV3 *>(d_ptr->mObserver) != Q_NULLPTR);
-    const bool hasObserverV4 = (dynamic_cast<AgentBase::ObserverV4 *>(d_ptr->mObserver) != Q_NULLPTR);
+    const bool hasObserverV3 = (dynamic_cast<AgentBase::ObserverV3 *>(d_ptr->mObserver) != nullptr);
+    const bool hasObserverV4 = (dynamic_cast<AgentBase::ObserverV4 *>(d_ptr->mObserver) != nullptr);
 
     disconnect(d_ptr->mChangeRecorder, &Monitor::tagAdded,
                d_ptr, &AgentBasePrivate::tagAdded);

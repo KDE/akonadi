@@ -55,7 +55,7 @@ static const bool enableAgentServerDefault = false;
 
 AgentManager::AgentManager(bool verbose, QObject *parent)
     : QObject(parent)
-    , mAgentServer(Q_NULLPTR)
+    , mAgentServer(nullptr)
 #ifndef QT_NO_DEBUG
     , mAgentWatcher(new QFileSystemWatcher(this))
 #endif
@@ -169,10 +169,10 @@ void AgentManager::cleanup()
     }
 
     delete mStorageController;
-    mStorageController = Q_NULLPTR;
+    mStorageController = nullptr;
 
     delete mAgentServer;
-    mAgentServer = Q_NULLPTR;
+    mAgentServer = nullptr;
 }
 
 QStringList AgentManager::agentTypes() const

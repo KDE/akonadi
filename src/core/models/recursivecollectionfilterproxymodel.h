@@ -46,7 +46,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit RecursiveCollectionFilterProxyModel(QObject *parent = Q_NULLPTR);
+    explicit RecursiveCollectionFilterProxyModel(QObject *parent = nullptr);
 
     /**
      * Destroys the recursive collection filter proxy model.

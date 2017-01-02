@@ -38,8 +38,8 @@ class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
 public:
     CollectionAttributesSynchronizationJobPrivate(CollectionAttributesSynchronizationJob *parent)
         : q(parent)
-        , interface(Q_NULLPTR)
-        , safetyTimer(Q_NULLPTR)
+        , interface(nullptr)
+        , safetyTimer(nullptr)
         , timeoutCount(0)
     {
     }

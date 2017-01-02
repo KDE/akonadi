@@ -30,7 +30,7 @@ class AKONADICORE_EXPORT RelationSync : public Akonadi::Job
 {
     Q_OBJECT
 public:
-    explicit RelationSync(QObject *parent = Q_NULLPTR);
+    explicit RelationSync(QObject *parent = nullptr);
     virtual ~RelationSync();
 
     void setRemoteRelations(const Akonadi::Relation::List &relations);

@@ -59,7 +59,7 @@ public:
      * @param destination The destination collection where @p collection should be moved to.
      * @param parent The parent object.
      */
-    CollectionMoveJob(const Collection &collection, const Collection &destination, QObject *parent = Q_NULLPTR);
+    CollectionMoveJob(const Collection &collection, const Collection &destination, QObject *parent = nullptr);
 
 protected:
     void doStart() Q_DECL_OVERRIDE;

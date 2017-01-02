@@ -38,7 +38,7 @@
 
 using namespace Akonadi;
 
-static QDBusAbstractInterface *s_jobtracker = Q_NULLPTR;
+static QDBusAbstractInterface *s_jobtracker = nullptr;
 
 //@cond PRIVATE
 void JobPrivate::handleResponse(qint64 tag, const Protocol::Command &response)
@@ -119,7 +119,7 @@ void JobPrivate::init(QObject *parent)
                 s_jobtracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole"),
                                                   QStringLiteral("/jobtracker"),
                                                   QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
-                                                  KDBusConnectionPool::threadConnection(), Q_NULLPTR);
+                                                  KDBusConnectionPool::threadConnection(), nullptr);
             } else {
                 s_lastTime.restart();
             }
@@ -201,7 +201,7 @@ void JobPrivate::lostConnection()
 
 void JobPrivate::slotSubJobAboutToStart(Job *job)
 {
-    Q_ASSERT(mCurrentSubJob == Q_NULLPTR);
+    Q_ASSERT(mCurrentSubJob == nullptr);
     mCurrentSubJob = job;
 }
 
@@ -361,7 +361,7 @@ bool Job::removeSubjob(KJob *job)
 {
     bool rv = KCompositeJob::removeSubjob(job);
     if (job == d_ptr->mCurrentSubJob) {
-        d_ptr->mCurrentSubJob = Q_NULLPTR;
+        d_ptr->mCurrentSubJob = nullptr;
         QTimer::singleShot(0, this, SLOT(startNext()));
     }
     return rv;
@@ -380,7 +380,7 @@ void Job::slotResult(KJob *job)
 {
     if (d_ptr->mCurrentSubJob == job) {
         // current job finished, start the next one
-        d_ptr->mCurrentSubJob = Q_NULLPTR;
+        d_ptr->mCurrentSubJob = nullptr;
         KCompositeJob::slotResult(job);
         if (!job->error()) {
             QTimer::singleShot(0, this, SLOT(startNext()));
