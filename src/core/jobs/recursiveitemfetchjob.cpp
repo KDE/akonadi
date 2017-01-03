@@ -67,7 +67,8 @@ public:
             const ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
 
             if (!mMimeTypes.isEmpty()) {
-                foreach (const Item &item, fetchJob->items()) {
+                const Akonadi::Item::List lstItems = fetchJob->items();
+                for (const Item &item : lstItems) {
                     if (mMimeTypes.contains(item.mimeType())) {
                         mItems << item;
                     }

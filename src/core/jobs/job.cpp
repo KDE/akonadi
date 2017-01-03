@@ -138,12 +138,11 @@ void JobPrivate::signalCreationToJobTracker()
         // xml interface document. Since this is purely a debugging aid, that seems preferable to
         // publishing something not intended for public consumption.
         // WARNING: for any signature change here, apply it to resourcescheduler.cpp too
-        QList<QVariant> argumentList;
-        argumentList << QLatin1String(mSession->sessionId())
-                     << QString::number(reinterpret_cast<quintptr>(q), 16)
-                     << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
-                     << QString::fromLatin1(q->metaObject()->className())
-                     << jobDebuggingString();
+        const QList<QVariant> argumentList = QList<QVariant>() << QLatin1String(mSession->sessionId())
+                                                               << QString::number(reinterpret_cast<quintptr>(q), 16)
+                                                               << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
+                                                               << QString::fromLatin1(q->metaObject()->className())
+                                                               << jobDebuggingString();
         s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobCreated"), argumentList);
     }
 }
@@ -153,8 +152,7 @@ void JobPrivate::signalStartedToJobTracker()
     Q_Q(Job);
     if (s_jobtracker) {
         // if there's a job tracker running, tell it a job started
-        QList<QVariant> argumentList;
-        argumentList << QString::number(reinterpret_cast<quintptr>(q), 16);
+        const QList<QVariant> argumentList = { QString::number(reinterpret_cast<quintptr>(q), 16) };
         s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobStarted"), argumentList);
     }
 }
@@ -298,9 +296,7 @@ Job::~Job()
 
     // if there is a job tracer listening, tell it the job is done now
     if (s_jobtracker) {
-        QList<QVariant> argumentList;
-        argumentList << QString::number(reinterpret_cast<quintptr>(this), 16)
-                     << errorString();
+        const QList<QVariant> argumentList = {QString::number(reinterpret_cast<quintptr>(this), 16), errorString()};
         s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobEnded"), argumentList);
     }
 }

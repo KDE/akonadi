@@ -74,8 +74,8 @@ public:
 };
 
 CollectionFetchScope::CollectionFetchScope()
+    : d(new CollectionFetchScopePrivate())
 {
-    d = new CollectionFetchScopePrivate();
 }
 
 CollectionFetchScope::CollectionFetchScope(const CollectionFetchScope &other)

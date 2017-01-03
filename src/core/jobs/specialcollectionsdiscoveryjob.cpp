@@ -68,7 +68,8 @@ void Akonadi::SpecialCollectionsDiscoveryJob::slotResult(KJob *job)
         return;
     }
     Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
-    foreach (const Akonadi::Collection &collection, fetchJob->collections()) {
+    const Akonadi::Collection::List lstCollections = fetchJob->collections();
+    for (const Akonadi::Collection &collection : lstCollections) {
         if (collection.hasAttribute<SpecialCollectionAttribute>()) {
             d->mSpecialCollections->registerCollection(collection.attribute<SpecialCollectionAttribute>()->collectionType(), collection);
         }
