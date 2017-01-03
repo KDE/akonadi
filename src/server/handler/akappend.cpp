@@ -82,12 +82,12 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
 bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                           const Collection &parentCol)
 {
-    if (!item.insert()) {
-        return failureResponse("Failed to append item");
-    }
-
     if (!item.datetime().isValid()) {
         item.setDatetime(QDateTime::currentDateTimeUtc());
+    }
+
+    if (!item.insert()) {
+        return failureResponse("Failed to append item");
     }
 
     // set message flags
@@ -179,6 +179,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         currentItem.setDatetime(newItem.datetime());
         needsUpdate = true;
     }
+
     if (newItem.size() > 0 && newItem.size() != currentItem.size()) {
         currentItem.setSize(newItem.size());
         needsUpdate = true;
