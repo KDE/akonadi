@@ -1,6 +1,8 @@
-project(Akonadi)
+cmake_minimum_required(VERSION 3.0)
 
-cmake_minimum_required(VERSION 2.8.12)
+set(PIM_VERSION "5.4.41")
+project(Akonadi VERSION ${PIM_VERSION})
+
 
 # ECM setup
 set(KF5_VERSION "5.28.0")
@@ -10,7 +12,7 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modul
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)
 include(ECMGeneratePriFile)
-include(ECMPackageConfigHelpers)
+include(CMakePackageConfigHelpers)
 include(ECMSetupVersion)
 include(FeatureSummary)
 include(KDEInstallDirs)
@@ -24,12 +26,12 @@ include(ECMCoverageOption)
 
 include(AkonadiMacros)
 
-set(PIM_VERSION "5.4.41")
+
 
 set(QT_REQUIRED_VERSION "5.6.0")
 set(AKONADI_VERSION ${PIM_VERSION})
 
-ecm_setup_version(${AKONADI_VERSION}
+ecm_setup_version(PROJECT
     VARIABLE_PREFIX AKONADI
     VERSION_HEADER "${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h"
     PACKAGE_VERSION_FILE "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfigVersion.cmake"
@@ -271,7 +273,7 @@ feature_summary(WHAT ALL FATAL_ON_MISSING_REQUIRED_PACKAGES)
 
 set(CMAKECONFIG_INSTALL_DIR "${KDE_INSTALL_CMAKEPACKAGEDIR}/KF5Akonadi")
 
-ecm_configure_package_config_file(
+configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
