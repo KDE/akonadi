@@ -127,7 +127,7 @@ void ChangeRecorderPrivate::loadNotifications()
     notificationsLoaded();
 }
 
-static const quint64 s_currentVersion = Q_UINT64_C(0x000500000000);
+static const quint64 s_currentVersion = Q_UINT64_C(0x000600000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
@@ -725,7 +725,14 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadRelationNotification(QDa
             }
         }
         stream >> dummyBa;
-        stream >> dummyBa;
+        if (version == 5) {
+            // there was a bug in version 5 serializer that serialized this
+            // field as qint64 (8 bytes) instead of empty QByteArray (which is
+            // 4 bytes)
+            stream >> dummyI;
+        } else {
+            stream >> dummyBa;
+        }
         stream >> dummyI;
         stream >> dummyI;
         stream >> itemParts;
@@ -775,7 +782,7 @@ void Akonadi::ChangeRecorderPrivate::saveRelationNotification(QDataStream& strea
     stream << QString();
     stream << QString();
     stream << QByteArray();
-    stream << qint64(0);
+    stream << QByteArray();
     stream << qint64(0);
     stream << qint64(0);
     stream << rv;
