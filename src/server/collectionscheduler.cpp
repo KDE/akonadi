@@ -21,7 +21,7 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include "akonadiserver_debug.h"
-
+#include "utils.h"
 #include <private/tristate_p.h>
 
 #include <QDateTime>
@@ -155,7 +155,7 @@ void CollectionScheduler::collectionAdded(qint64 collectionId)
 void CollectionScheduler::collectionChanged(qint64 collectionId)
 {
     QMutexLocker locker(&mScheduleLock);
-    Q_FOREACH (const Collection &collection, mSchedule) {
+    for (const Collection &collection : qAsConst(mSchedule)) {
         if (collection.id() == collectionId) {
             Collection changed = Collection::retrieveById(collectionId);
             DataStore::self()->activeCachePolicy(changed);
@@ -182,7 +182,7 @@ void CollectionScheduler::collectionChanged(qint64 collectionId)
 void CollectionScheduler::collectionRemoved(qint64 collectionId)
 {
     QMutexLocker locker(&mScheduleLock);
-    Q_FOREACH (const Collection &collection, mSchedule) {
+    for (const Collection &collection : qAsConst(mSchedule)) {
         if (collection.id() == collectionId) {
             const uint key = mSchedule.key(collection);
             const bool reschedule = (key == mSchedule.constBegin().key());

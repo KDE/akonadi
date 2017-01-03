@@ -64,7 +64,7 @@ void ResourceManager::removeResourceInstance(const QString &name)
     Resource resource = Resource::retrieveByName(name);
     if (resource.isValid()) {
         const QVector<Collection> collections = resource.collections();
-        Q_FOREACH (/*sic!*/ Collection collection, collections) { // krazy:exclude=foreach
+        for (/*sic!*/ Collection collection : collections) { // krazy:exclude=foreach
             db->cleanupCollection(collection);
         }
 

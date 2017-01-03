@@ -20,6 +20,7 @@
 #include "list.h"
 #include "akonadiserver_debug.h"
 
+#include "utils.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "collectionreferencemanager.h"
@@ -300,7 +301,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 qb.addJoin(QueryBuilder::LeftJoin, CollectionMimeTypeRelation::tableName(), CollectionMimeTypeRelation::leftColumn(), Collection::idFullColumnName());
                 QVariantList mimeTypeFilter;
                 mimeTypeFilter.reserve(mMimeTypes.size());
-                Q_FOREACH(MimeType::Id mtId, mMimeTypes) {
+                for (MimeType::Id mtId : qAsConst(mMimeTypes)) {
                     mimeTypeFilter << mtId;
                 }
                 qb.addValueCondition(CollectionMimeTypeRelation::rightColumn(), Query::In, mimeTypeFilter);
@@ -393,7 +394,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
 
     QSet<qint64> missingCollections;
     if (depth > 0) {
-        Q_FOREACH (const Collection &col, mCollections) {
+        for (const Collection &col : qAsConst(mCollections)) {
             if (col.parentId() != parentId && !mCollections.contains(col.parentId())) {
             missingCollections.insert(col.parentId());
         }
@@ -414,7 +415,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         SelectQueryBuilder<Collection> qb;
         QVariantList ids;
         ids.reserve(missingCollections.size());
-        Q_FOREACH (qint64 id, missingCollections) {
+        for (qint64 id : qAsConst(missingCollections)) {
             ids << id;
         }
         qb.addValueCondition(Collection::idFullColumnName(), Query::In, ids);

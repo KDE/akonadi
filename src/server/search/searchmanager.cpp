@@ -32,6 +32,7 @@
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
 #include "handler/searchhelper.h"
+#include "utils.h"
 
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>
@@ -87,7 +88,7 @@ void SearchManager::init()
     AkThread::init();
 
     mEngines.reserve(mEngineNames.size());
-    Q_FOREACH (const QString &engineName, mEngineNames) {
+    for (const QString &engineName : qAsConst(mEngineNames)) {
         if (engineName == QLatin1String("Agent")) {
             mEngines.append(new AgentSearchEngine);
         } else {

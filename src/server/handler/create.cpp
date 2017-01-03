@@ -23,6 +23,7 @@
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
+#include "utils.h"
 
 #include <private/scope_p.h>
 
@@ -52,7 +53,7 @@ bool Create::parseStream()
         // check if parent can contain a sub-folder
         parentContentTypes = parent.mimeTypes();
         bool found = false, foundVirtual = false;
-        Q_FOREACH (const MimeType &mt, parentContentTypes) {
+        for (const MimeType &mt : qAsConst(parentContentTypes)) {
             if (mt.name() == QLatin1String("inode/directory")) {
                 found = true;
             } else if (mt.name() == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
@@ -114,7 +115,7 @@ bool Create::parseStream()
     QStringList effectiveMimeTypes = cmd.mimeTypes();
     if (effectiveMimeTypes.isEmpty()) {
         effectiveMimeTypes.reserve(parentContentTypes.count());
-        Q_FOREACH (const MimeType &mt, parentContentTypes) {
+        for (const MimeType &mt : qAsConst(parentContentTypes)) {
             effectiveMimeTypes << mt.name();
         }
     }

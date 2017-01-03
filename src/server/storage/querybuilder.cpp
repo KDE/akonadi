@@ -19,6 +19,7 @@
 
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
+#include "utils.h"
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -212,7 +213,7 @@ void QueryBuilder::buildQuery(QString *statement)
         appendJoined(statement, mColumns);
         *statement += QLatin1String(" FROM ");
         *statement += mTable;
-        Q_FOREACH (const QString &joinedTable, mJoinedTables) {
+        for (const QString &joinedTable : qAsConst(mJoinedTables)) {
             const QPair<JoinType, Query::Condition> &join = mJoins.value(joinedTable);
             switch (join.first) {
             case LeftJoin:
@@ -253,7 +254,7 @@ void QueryBuilder::buildQuery(QString *statement)
     case Update: {
         // put the ON condition into the WHERE part of the UPDATE query
         if (mDatabaseType != DbType::Sqlite) {
-            Q_FOREACH (const QString &table, mJoinedTables) {
+            for (const QString &table : qAsConst(mJoinedTables)) {
                 const QPair< JoinType, Query::Condition > &join = mJoins.value(table);
                 Q_ASSERT(join.first == InnerJoin);
                 whereCondition.addCondition(join.second);

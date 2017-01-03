@@ -19,6 +19,7 @@
 
 #include "searchpersistent.h"
 
+#include "utils.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "storage/datastore.h"
@@ -58,7 +59,7 @@ bool SearchPersistent::parseStream()
     QVector<qint64> queryColIds = cmd.queryCollections();
     qSort(queryColIds);
     queryCollections.reserve(queryColIds.size());
-    Q_FOREACH (qint64 col, queryColIds) {
+    for (qint64 col : qAsConst(queryColIds)) {
         queryCollections.append(QString::number(col));
     }
 

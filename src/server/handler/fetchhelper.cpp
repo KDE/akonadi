@@ -36,6 +36,7 @@
 #include "dbusconnectionpool.h"
 #include "tagfetchhelper.h"
 #include "relationfetch.h"
+#include "utils.h"
 #include "akonadiserver_debug.h"
 
 #include <private/scope_p.h>
@@ -107,7 +108,7 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
 
         if (!partList.isEmpty() || allPayload || allAttrs) {
             Query::Condition cond(Query::Or);
-            Q_FOREACH (const QByteArray &b, partList) {
+            for (const QByteArray &b : qAsConst(partList)) {
                 if (b.startsWith("PLD") || b.startsWith("ATR")) {
                     cond.addValueCondition(Part::partTypeIdFullColumnName(), Query::Equals, PartTypeHelper::fromFqName(b).id());
                 }
@@ -486,11 +487,11 @@ bool FetchHelper::fetchItems()
 
             tags.reserve(tagIds.count());
             if (!fullTagsRequested) {
-                Q_FOREACH (qint64 tagId, tagIds) {
+                for (qint64 tagId : qAsConst(tagIds)) {
                     tags << Protocol::FetchTagsResponse(tagId);
                 }
             } else {
-                Q_FOREACH (qint64 tagId, tagIds) {
+                for (qint64 tagId : qAsConst(tagIds)) {
                     tags << HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId));
                 }
             }
