@@ -54,7 +54,7 @@ class QSQLiteDriverPlugin : public QSqlDriverPlugin
 public:
     QSQLiteDriverPlugin();
 
-    QSqlDriver* create(const QString &);
+    QSqlDriver* create(const QString &) Q_DECL_OVERRIDE;
 };
 
 QSQLiteDriverPlugin::QSQLiteDriverPlugin()

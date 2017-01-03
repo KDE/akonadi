@@ -28,7 +28,7 @@
 #include "std_exception.h"
 
 #include "akonadicore_export.h"
-
+#include <QObject>
 class QByteArray;
 class QString;
 
@@ -74,7 +74,7 @@ public:
     /**
       Returns the error message associated with this exception.
     */
-    const char *what() const throw();
+    const char *what() const throw() Q_DECL_OVERRIDE;
 
     /**
       Returns the type of this exception.
@@ -103,7 +103,7 @@ private:
         { \
         } \
         ~classname() throw(); \
-        QByteArray type() const throw(); \
+        QByteArray type() const throw() Q_DECL_OVERRIDE; \
     }
 
 AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(PayloadException);

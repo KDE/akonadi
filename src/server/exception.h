@@ -58,7 +58,7 @@ public:
     {
     }
 
-    const char *what() const throw()
+    const char *what() const throw() Q_DECL_OVERRIDE
     {
         return mWhat.constData();
     }
@@ -87,7 +87,7 @@ public: \
         : Akonadi::Server::Exception( what ) \
     { \
     } \
-    const char *type() const throw() \
+    const char *type() const throw() Q_DECL_OVERRIDE \
     { \
         return "" #classname; \
     } \
