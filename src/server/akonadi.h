@@ -30,7 +30,6 @@ namespace Akonadi {
 namespace Server {
 
 class Connection;
-class SearchManagerThread;
 class ItemRetrievalManager;
 class SearchTaskManager;
 class SearchManager;

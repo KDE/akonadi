@@ -27,12 +27,10 @@
 
 namespace Akonadi {
 
-class ImapSet;
 
 namespace Server {
 
 class Connection;
-class Response;
 
 class TagFetchHelper : public QObject
 {

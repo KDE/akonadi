@@ -37,7 +37,6 @@ Q_DECLARE_LOGGING_CATEGORY(DebugETM)
 
 namespace Akonadi
 {
-class ItemFetchJob;
 class Monitor;
 class AgentInstance;
 }

@@ -37,7 +37,6 @@ namespace Akonadi {
 namespace Server {
 
 class Connection;
-class Response;
 
 class FetchHelper : public QObject
 {

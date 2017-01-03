@@ -25,10 +25,6 @@
 #include <QVariantMap>
 #include <QHash>
 
-namespace Akonadi {
-class ProcessControl;
-}
-
 class AgentManager;
 class QSettings;
 

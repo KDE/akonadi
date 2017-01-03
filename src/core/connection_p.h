@@ -29,7 +29,6 @@
 
 #include "akonadicore_export.h"
 
-class QAbstractSocket;
 class QFile;
 
 namespace Akonadi

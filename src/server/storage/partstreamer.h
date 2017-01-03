@@ -36,7 +36,6 @@ namespace Server {
 class PimItem;
 class Part;
 class Connection;
-class Response;
 
 class PartStreamer : public  QObject
 {

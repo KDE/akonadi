@@ -32,7 +32,6 @@
 #include <QMetaObject>
 #include <QFile>
 
-class QIODevice;
 
 namespace Akonadi
 {

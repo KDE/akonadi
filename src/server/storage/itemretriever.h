@@ -36,7 +36,6 @@ namespace Akonadi {
 namespace Server {
 
 class Connection;
-class QueryBuilder;
 
 /**
   Helper class for retrieving missing items parts from remote resources.

@@ -22,7 +22,6 @@
 
 #include "dbconfig.h"
 
-class QProcess;
 
 namespace Akonadi {
 namespace Server {

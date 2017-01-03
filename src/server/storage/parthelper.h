@@ -26,7 +26,6 @@
 
 class QString;
 class QVariant;
-class QFile;
 
 namespace Akonadi {
 namespace Server {

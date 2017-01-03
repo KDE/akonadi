@@ -38,7 +38,6 @@ class AbstractSearchPlugin;
 
 namespace Server {
 
-class NotificationCollector;
 class AbstractSearchEngine;
 class Collection;
 

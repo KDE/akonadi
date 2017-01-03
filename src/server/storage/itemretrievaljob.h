@@ -22,7 +22,6 @@
 
 #include <QObject>
 
-class QDBusError;
 class QDBusPendingCallWatcher;
 class OrgFreedesktopAkonadiResourceInterface;
 

@@ -28,7 +28,6 @@
 #include <QPointer>
 
 class NotificationManagerTest;
-class QLocalSocket;
 class QThreadPool;
 
 namespace Akonadi {

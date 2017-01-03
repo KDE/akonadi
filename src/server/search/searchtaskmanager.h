@@ -36,10 +36,8 @@ namespace Server {
 
 class AkonadiServer;
 class Connection;
-class SearchRequest;
 class AgentSearchInstance;
 
-class SearchResultsRetriever;
 
 class SearchTask
 {

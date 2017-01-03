@@ -38,6 +38,7 @@ class QEventLoop;
 namespace Akonadi {
 namespace Server {
 
+class NotificationCollector;
 class FakeSearchManager;
 class FakeDataStore;
 class FakeConnection;
