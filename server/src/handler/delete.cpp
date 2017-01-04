@@ -52,7 +52,14 @@ bool Delete::deleteRecursive( Collection &col )
     }
   }
   DataStore *db = connection()->storageBackend();
-  return db->cleanupCollection( col );
+  Transaction transaction( db );
+  if (!db->cleanupCollection( col )) {
+      return false;
+  }
+  if ( !transaction.commit() ) {
+      return failureResponse( "Unable to commit transaction" );
+  }
+  return true;
 }
 
 bool Delete::parseStream()
@@ -74,7 +81,6 @@ bool Delete::parseStream()
 
   // check if collection exists
   DataStore *db = connection()->storageBackend();
-  Transaction transaction( db );
 
   Collection collection = collections.first();
   if ( !collection.isValid() ) {
@@ -91,10 +97,6 @@ bool Delete::parseStream()
 
   if ( !deleteRecursive( collection ) ) {
     return failureResponse( "Unable to delete collection" );
-  }
-
-  if ( !transaction.commit() ) {
-    return failureResponse( "Unable to commit transaction." );
   }
 
   Response response;
