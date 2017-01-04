@@ -202,7 +202,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
             changedParts.insert(AKONADI_PARAM_FLAGS);
             needsUpdate = true;
         }
-    } else if (!cmd.flags().isEmpty()) {
+    } else {
         bool flagsChanged = false;
         QSet<QByteArray> flagNames = cmd.flags();
 
@@ -242,7 +242,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
             changedParts.insert(AKONADI_PARAM_TAGS);
             needsUpdate = true;
         }
-    } else if (!cmd.tags().isEmpty()) {
+    } else {
         bool tagsChanged = false;
         const Tag::List tags = HandlerHelper::tagsFromScope(cmd.tags(), connection());
         DataStore::self()->setItemsTags(PimItem::List() << currentItem, tags,
