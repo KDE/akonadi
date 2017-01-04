@@ -195,13 +195,13 @@ static QSqlQuery getAttributeQuery(const QVariantList &ids, const QSet<QByteArra
             attributes << type;
         }
         qb.addValueCondition(CollectionAttribute::typeFullColumnName(), Query::In, attributes);
-        }
+    }
 
     qb.addSortColumn(CollectionAttribute::collectionIdFullColumnName(), Query::Ascending);
 
     if (!qb.exec()) {
         throw HandlerException("Unable to retrieve attributes for listing");
-            }
+    }
     return qb.query();
 }
 
@@ -221,8 +221,8 @@ void List::retrieveAttributes(const QVariantList &collectionIds)
             mCollectionAttributes.insert(attributeQuery.value(0).toLongLong(), attr);
         }
         start += size;
-        }
     }
+}
 
 static QSqlQuery getMimeTypeQuery(const QVariantList &ids)
 {
@@ -396,9 +396,9 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     if (depth > 0) {
         for (const Collection &col : qAsConst(mCollections)) {
             if (col.parentId() != parentId && !mCollections.contains(col.parentId())) {
-            missingCollections.insert(col.parentId());
+                missingCollections.insert(col.parentId());
+            }
         }
-    }
     }
 
     /*
@@ -613,7 +613,7 @@ bool List::parseStream()
     } else { //Root folder listing
         if (depth != 0) {
             retrieveCollections(Collection(), depth);
-    }
+        }
     }
 
     return successResponse<Protocol::FetchCollectionsResponse>();
