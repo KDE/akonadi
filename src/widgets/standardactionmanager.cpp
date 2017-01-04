@@ -1407,7 +1407,7 @@ public:
             }
 
             QString label = model->data(index).toString();
-            label.replace(QStringLiteral("&"), QStringLiteral("&&"));
+            label.replace(QLatin1Char('&'), QStringLiteral("&&"));
 
             const QIcon icon = model->data(index, Qt::DecorationRole).value<QIcon>();
 

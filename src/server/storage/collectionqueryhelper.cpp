@@ -127,7 +127,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID(const QVector<Scope::HR
         if (!qb.exec()) {
             throw HandlerException("Unable to execute query");
         }
-        Collection::List results = qb.result();
+        const Collection::List results = qb.result();
         if (results.size() == 0) {
             throw HandlerException("Hierarchical RID does not specify an existing collection");
         } else if (results.size() > 1) {
@@ -158,8 +158,7 @@ Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, 
     const Collection::List cols = qb.result();
     if (cols.isEmpty()) {
         throw HandlerException("No collection found");
-    }
-    if (cols.size() > 1) {
+    } else if (cols.size() > 1) {
         throw HandlerException("Collection cannot be uniquely identified");
     }
     return cols.first();

@@ -78,7 +78,7 @@ QString HandlerHelper::pathForCollection(const Collection &col)
         parts.prepend(current.name());
         current = current.parent();
     }
-    return parts.join(QStringLiteral("/"));
+    return parts.join(QLatin1Char('/'));
 }
 
 Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection& col)

@@ -29,6 +29,7 @@
 #include "entities.h" // Akonadi::Server::PimItem
 #include "storage/datastore.h"
 #include "tracer.h"
+#include "utils.h"
 #include "collectionreferencemanager.h"
 
 #include "preprocessormanageradaptor.h"
@@ -122,7 +123,7 @@ bool PreprocessorManager::isActive()
 
 PreprocessorInstance *PreprocessorManager::lockedFindInstance(const QString &id)
 {
-    Q_FOREACH (PreprocessorInstance *instance, mPreprocessorChain) {
+    for (PreprocessorInstance *instance : qAsConst(mPreprocessorChain)) {
         if (instance->id() == id) {
             return instance;
         }
@@ -422,7 +423,7 @@ void PreprocessorManager::heartbeat()
 
     QList< PreprocessorInstance *> firedPreprocessors;
 
-    Q_FOREACH (PreprocessorInstance *instance, mPreprocessorChain) {
+    for (PreprocessorInstance *instance : qAsConst(mPreprocessorChain)) {
         // In this loop we check for "stuck" preprocessors.
 
         int elapsedTime = instance->currentProcessingTime();
@@ -480,7 +481,7 @@ void PreprocessorManager::heartbeat()
     }
 
     // Kill the fired preprocessors, if any.
-    Q_FOREACH (PreprocessorInstance *instance, firedPreprocessors) {
+    for (PreprocessorInstance *instance : qAsConst(firedPreprocessors)) {
         lockedUnregisterInstance(instance->id());
     }
 }

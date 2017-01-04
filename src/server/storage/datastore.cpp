@@ -1316,7 +1316,7 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
             copiedQuery.prepare(query.executedQuery());
             const QMap<QString, QVariant> boundValues = query.boundValues();
             int i = 0;
-            Q_FOREACH (const QVariant &value, boundValues) {
+            for (const QVariant &value : boundValues) {
                 copiedQuery.bindValue(i, value);
                 ++i;
             }

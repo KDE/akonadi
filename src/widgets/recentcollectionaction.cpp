@@ -91,7 +91,7 @@ void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager
 QString RecentCollectionAction::actionName(QModelIndex index)
 {
     QString name = index.data().toString();
-    name.replace(QStringLiteral("&"), QStringLiteral("&&"));
+    name.replace(QLatin1Char('&'), QStringLiteral("&&"));
 
     index = index.parent();
     QString topLevelName;
@@ -102,7 +102,7 @@ QString RecentCollectionAction::actionName(QModelIndex index)
     if (topLevelName.isEmpty()) {
         return QStringLiteral("%1").arg(name);
     } else {
-        topLevelName.replace(QStringLiteral("&"), QStringLiteral("&&"));
+        topLevelName.replace(QLatin1Char('&'), QStringLiteral("&&"));
         return QStringLiteral("%1 - %2").arg(name, topLevelName);
     }
 }
