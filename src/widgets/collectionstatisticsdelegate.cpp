@@ -269,7 +269,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
             unread = QStringLiteral(" (%1)").arg(unreadCount);
         } else if (!expanded) {
             if (unreadCount != unreadRecursiveCount) {
-                unread = QStringLiteral(" (%1 + %2)").arg(unreadCount, unreadRecursiveCount - unreadCount);
+                unread = QStringLiteral(" (%1 + %2)").arg(unreadCount).arg(unreadRecursiveCount - unreadCount);
             } else if (unreadCount > 0) {
                 unread = QStringLiteral(" (%1)").arg(unreadCount);
             }
