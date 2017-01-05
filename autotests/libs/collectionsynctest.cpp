@@ -114,7 +114,7 @@ private:
             const Collection col = createCollection(QString::fromLatin1("Shared Col %1").arg(i), QString::fromLatin1("/shared%1").arg(i), shared);
             collections << col;
             for (int j = 0; j < 6; ++j) {
-                collections << createCollection(QString::fromLatin1("Shared Subcol %1-%2").arg(i).arg(j), QString::fromLatin1("/shared%1-%2").arg(i).arg(j), col);
+                collections << createCollection(QString::fromLatin1("Shared Subcol %1-%2").arg(i, j), QString::fromLatin1("/shared%1-%2").arg(i, j), col);
             }
         }
         return collections;
