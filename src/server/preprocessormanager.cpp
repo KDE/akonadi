@@ -104,9 +104,6 @@ bool PreprocessorManager::init()
 
 void PreprocessorManager::done()
 {
-    if (!mSelf) {
-        return;
-    }
     delete mSelf;
     mSelf = nullptr;
 }
