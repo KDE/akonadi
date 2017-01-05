@@ -137,7 +137,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
         QVector<qint64> searchCols;
         const QStringList searchColIds = col.queryCollections().split(QLatin1Char(' '));
         searchCols.reserve(searchColIds.size());
-        Q_FOREACH (const QString &searchColId, searchColIds) {
+        for (const QString &searchColId : searchColIds) {
             searchCols << searchColId.toLongLong();
         }
         response.setSearchCollections(searchCols);

@@ -23,6 +23,7 @@
 #include "storage/notificationcollector.h"
 #include "tracer.h"
 #include "akonadiserver_debug.h"
+#include "utils.h"
 
 #include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
@@ -147,7 +148,7 @@ public:
 
     void run() Q_DECL_OVERRIDE
     {
-        Q_FOREACH (const auto &ntf, mNotifications) {
+        for (const auto &ntf : qAsConst(mNotifications)) {
             if (mSubscriber) {
                 mSubscriber->notify(ntf);
             } else {
@@ -170,13 +171,13 @@ void NotificationManager::emitPendingNotifications()
     }
 
     if (mDebugNotifications == 0) {
-        Q_FOREACH (NotificationSubscriber *subscriber, mSubscribers) {
+        for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
             mNotifyThreadPool->start(new NotifyRunnable(subscriber, mNotifications));
         }
     } else {
         // When debugging notification we have to use a non-threaded approach
         // so that we can work with return value of notify()
-        Q_FOREACH (const auto &notification, mNotifications) {
+        for (const auto &notification : qAsConst(mNotifications)) {
             QVector<QByteArray> listeners;
             Q_FOREACH (NotificationSubscriber *subscriber, mSubscribers) {
                 if (subscriber->notify(notification)) {
@@ -198,7 +199,7 @@ void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificati
     debugNtf.setNotification(ntf);
     debugNtf.setListeners(listeners);
     debugNtf.setTimestamp(QDateTime::currentMSecsSinceEpoch());
-    Q_FOREACH (NotificationSubscriber *subscriber, mSubscribers) {
+    for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
         mNotifyThreadPool->start(new NotifyRunnable(subscriber, { debugNtf }));
     }
 }
