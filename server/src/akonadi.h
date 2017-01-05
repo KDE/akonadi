@@ -77,6 +77,7 @@ class AkonadiServer : public QLocalServer
     void startDatabaseProcess();
     void createDatabase();
     void stopDatabaseProcess();
+    void cleanOrphanCollections();
 
   protected:
     AkonadiServer( QObject *parent = 0 );

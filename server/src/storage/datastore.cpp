@@ -649,6 +649,17 @@ bool DataStore::appendCollection( Collection &collection )
   return true;
 }
 
+bool DataStore::cleanupCollectionsRecursively( Collection &collection )
+{
+  Q_FOREACH ( Collection col, collection.children() ) {
+    if ( !cleanupCollectionsRecursively( col ) ) {
+      return false;
+    }
+  }
+
+  return cleanupCollection( collection );
+}
+
 bool DataStore::cleanupCollection( Collection &collection )
 {
   if ( !s_hasForeignKeyConstraints ) {
@@ -688,6 +699,7 @@ bool DataStore::cleanupCollection( Collection &collection )
   }
 
   // delete the collection itself, referential actions will do the rest
+
   mNotificationCollector->collectionRemoved( collection );
   return collection.remove();
 }

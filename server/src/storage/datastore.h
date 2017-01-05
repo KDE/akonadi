@@ -146,6 +146,8 @@ class DataStore : public QObject
     /// same as the above but for database backends without working referential actions on foreign keys
     virtual bool cleanupCollection_slow( Collection &collection );
 
+    virtual bool cleanupCollectionsRecursively( Collection &collection );
+
     /// moves the collection @p collection to @p newParent.
     virtual bool moveCollection( Collection &collection, const Collection &newParent );
 

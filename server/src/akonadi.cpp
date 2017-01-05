@@ -36,6 +36,7 @@
 #include "debuginterface.h"
 #include "storage/itemretrievalthread.h"
 #include "storage/collectionstatistics.h"
+#include "storage/selectquerybuilder.h"
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
 #include "search/searchtaskmanagerthread.h"
@@ -228,6 +229,9 @@ bool AkonadiServer::init()
     // Cleanup referenced collections from the last run
     CollectionReferenceManager::cleanup();
 
+    // Make sure we don't have any collections trees that are not owned by any resource
+    cleanOrphanCollections();
+
     // We are ready, now register org.freedesktop.Akonadi service to DBus and
     // the fun can begin
     if ( !QDBusConnection::sessionBus().registerService( AkDBus::serviceName( AkDBus::Server ) ) ) {
@@ -403,3 +407,50 @@ IntervalCheck* AkonadiServer::intervalChecker()
     return mIntervalChecker;
 }
 
+void AkonadiServer::cleanOrphanCollections()
+{
+    // We can't talk to akonadi_control, because it might not be on DBus yet
+    // at this stage
+    QSettings settings( AkStandardDirs::agentConfigFile( XdgBaseDirs::ReadOnly ), QSettings::IniFormat );
+    settings.beginGroup( QLatin1String( "Instances" ) );
+    const QStringList instances = settings.childGroups();
+    settings.endGroup();
+
+    SelectQueryBuilder<Collection> qb;
+
+    qb.addValueCondition(Collection::parentIdColumn(), Query::Is, QVariant());
+    if ( !qb.exec() ) {
+        akError() << "Failed to query root collections!";
+        akError() << qb.query().lastError().driverText();
+        return;
+    }
+
+    const QVector<Collection> cols = qb.result();
+
+    QVector<Collection> toDelete;
+    Q_FOREACH ( /* sic! */ Collection col, cols ) {
+        const Resource &res = col.resource();
+        // Collection refers to an non-existent Resource. Should really not
+        // happen since that violates the DB constraints, but there might be
+        // inconsistencies from the past.
+        if ( !res.isValid() ) {
+            akDebug() << "Found Collection" << col.id() << "with an invalid parent resource, cleaning up...";
+            DataStore::self()->cleanupCollectionsRecursively( col );
+            continue;
+        }
+
+        // Virtual resources are not tracked by AgentManager.
+        if ( res.isVirtual() ) {
+            continue;
+        }
+
+        // We have a collection tree owned by resource that is no longer registered
+        // in agentsrc, so remove it.
+        if ( !instances.contains( res.name() ) ) {
+            akDebug() << "Found Collection" << col.id() << "with unregistered parent resource" << res.name() << ", cleaning up...";
+            ResourceManager::self()->removeResourceInstance( res.name() );
+        }
+    }
+
+    akDebug() << "Orphan collection cleanup done";
+}
