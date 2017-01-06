@@ -189,7 +189,7 @@ bool Modify::parseStream()
         cols.reserve(cmd.persistentSearchCollections().size());
         QVector<qint64> inCols = cmd.persistentSearchCollections();
         qSort(inCols);
-        Q_FOREACH (qint64 col, cmd.persistentSearchCollections()) {
+        Q_FOREACH (qint64 col, inCols) {
             cols.append(QString::number(col));
         }
         const QString colStr = cols.join(QLatin1Char(' '));
