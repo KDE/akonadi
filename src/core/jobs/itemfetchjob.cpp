@@ -89,7 +89,18 @@ public:
 
         } else {
             try {
-                return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
+                QString itemStr = QStringLiteral("items id: ");
+                bool firstItem = true;
+                Q_FOREACH(const Akonadi::Item &item, mRequestedItems) {
+                    if (firstItem) {
+                        firstItem = false;
+                    } else {
+                        itemStr += QStringLiteral(", ");
+                    }
+                    itemStr += QString::number(item.id()) + QStringLiteral(" from collection %1").arg(item.parentCollection().id());
+                }
+                return itemStr;
+                //return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
             } catch (const Exception &e) {
                 return QString::fromUtf8(e.what());
             }
