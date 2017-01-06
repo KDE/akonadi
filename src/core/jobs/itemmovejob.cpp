@@ -37,6 +37,27 @@ public:
     {
     }
 
+    QString jobDebuggingString() const Q_DECL_OVERRIDE
+    {
+        QString str = QStringLiteral("Move item");
+        if (source.isValid()) {
+            str += QStringLiteral("from collection %1").arg(source.id());
+        }
+        str += QStringLiteral(" to collection %1. ").arg(destination.id());
+        if (items.isEmpty()) {
+            str += QStringLiteral("No Items defined.");
+        } else {
+            str += QStringLiteral("Items: ");
+            for (int i = 0; i < items.count(); ++i) {
+                if (i != 0) {
+                    str += QStringLiteral(", ");
+                }
+                str += QString::number(items.at(i).id());
+            }
+        }
+        return str;
+    }
+
     Item::List items;
     Collection destination;
     Collection source;
