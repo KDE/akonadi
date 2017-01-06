@@ -35,7 +35,6 @@
 
 #include <KLocalizedString>
 
-
 using namespace Akonadi;
 
 class Akonadi::ItemCreateJobPrivate : public JobPrivate

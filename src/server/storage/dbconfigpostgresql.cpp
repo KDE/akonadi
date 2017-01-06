@@ -336,7 +336,8 @@ void DbConfigPostgresql::stopInternalServer()
     // first, try a FAST shutdown
     execute(mServerPath, { QStringLiteral("stop"),
                            QStringLiteral("--pgdata=%1").arg(mPgData),
-                           QStringLiteral("--mode=fast") });
+                           QStringLiteral("--mode=fast")
+                         });
     if (!checkServerIsRunning()) {
         return;
     }
@@ -344,7 +345,8 @@ void DbConfigPostgresql::stopInternalServer()
     // second, try an IMMEDIATE shutdown
     execute(mServerPath, { QStringLiteral("stop"),
                            QStringLiteral("--pgdata=%1").arg(mPgData),
-                           QStringLiteral("--mode=immediate") });
+                           QStringLiteral("--mode=immediate")
+                         });
     if (!checkServerIsRunning()) {
         return;
     }
@@ -361,7 +363,8 @@ void DbConfigPostgresql::stopInternalServer()
 
         execute(mServerPath, { QStringLiteral("kill"),
                                QStringLiteral("ABRT"),
-                               postmasterPid });
+                               postmasterPid
+                             });
     }
 }
 

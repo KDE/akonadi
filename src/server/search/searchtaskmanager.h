@@ -31,13 +31,14 @@
 #include "exception.h"
 #include "agentmanagerinterface.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class AkonadiServer;
 class Connection;
 class AgentSearchInstance;
-
 
 class SearchTask
 {

@@ -153,7 +153,6 @@ void Firstrun::instanceCreated(KJob *job)
         instance.setName(agentName);
     }
 
-
     QDBusInterface *iface = new QDBusInterface(QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
             QStringLiteral("/Settings"), QString(),
             KDBusConnectionPool::threadConnection(), this);

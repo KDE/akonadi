@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include "changenotification.h"
 #include "private/protocol_p.h"
 

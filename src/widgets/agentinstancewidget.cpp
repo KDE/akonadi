@@ -267,7 +267,6 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     const QRect nameTextRect(decorationRect.topRight() + QPoint(4, 0), innerRect.topRight() + QPoint(0, innerRect.height() / 2));
     const QRect statusTextRect(decorationRect.bottomRight() + QPoint(4, - innerRect.height() / 2), innerRect.bottomRight());
 
-
     QPalette::ColorGroup cg = option.state & QStyle::State_Enabled ? QPalette::Normal : QPalette::Disabled;
     if (cg == QPalette::Normal && !(option.state & QStyle::State_Active)) {
         cg = QPalette::Inactive;

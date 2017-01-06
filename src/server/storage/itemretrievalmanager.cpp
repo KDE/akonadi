@@ -41,12 +41,10 @@ ItemRetrievalManager *ItemRetrievalManager::sInstance = nullptr;
 
 class ItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
 {
-    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) Q_DECL_OVERRIDE
-    {
+    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) Q_DECL_OVERRIDE {
         return new ItemRetrievalJob(request, parent);
     }
 };
-
 
 ItemRetrievalManager::ItemRetrievalManager(QObject *parent)
     : ItemRetrievalManager(new ItemRetrievalJobFactory, parent)
@@ -125,12 +123,12 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
 
     delete iface;
     iface = new org::freedesktop::Akonadi::Resource(DBus::agentServiceName(id, DBus::Resource),
-                                                    QStringLiteral("/"),
-                                                    DBusConnectionPool::threadConnection(),
-                                                    this);
+            QStringLiteral("/"),
+            DBusConnectionPool::threadConnection(),
+            this);
     if (!iface || !iface->isValid()) {
         qCCritical(AKONADISERVER_LOG) << QStringLiteral("Cannot connect to agent instance with identifier '%1', error message: '%2'")
-                  .arg(id, iface ? iface->lastError().message() : QString());
+                                      .arg(id, iface ? iface->lastError().message() : QString());
         delete iface;
         return nullptr;
     }
@@ -145,8 +143,8 @@ void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
 {
     mLock->lockForWrite();
     qCDebug(AKONADISERVER_LOG) << "posting retrieval request for items" << req->ids << " there are "
-              << mPendingRequests.size() << " queues and "
-              << mPendingRequests[req->resourceId].size() << " items in mine";
+                               << mPendingRequests.size() << " queues and "
+                               << mPendingRequests[req->resourceId].size() << " items in mine";
     mPendingRequests[req->resourceId].append(req);
     mLock->unlock();
 
@@ -211,7 +209,7 @@ void ItemRetrievalManager::processRequest()
     }
 
     for (auto it = newJobs.constBegin(), end = newJobs.constEnd(); it != end; ++it) {
-        if (ItemRetrievalJob *j = qobject_cast<ItemRetrievalJob*>((*it).first)) {
+        if (ItemRetrievalJob *j = qobject_cast<ItemRetrievalJob *>((*it).first)) {
             j->setInterface(resourceInterface((*it).second));
         }
         (*it).first->start();

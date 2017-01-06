@@ -32,8 +32,10 @@
 
 class DbInitializerTest;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Schema;
 

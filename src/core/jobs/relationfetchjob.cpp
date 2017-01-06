@@ -24,7 +24,6 @@
 #include "private/protocol_p.h"
 #include <QTimer>
 
-
 using namespace Akonadi;
 
 class Akonadi::RelationFetchJobPrivate : public JobPrivate

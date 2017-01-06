@@ -132,7 +132,6 @@ void SearchManager::quit()
     AkThread::quit();
 }
 
-
 SearchManager::~SearchManager()
 {
     quitThread();
@@ -196,7 +195,7 @@ void SearchManager::loadSearchPlugins()
                     continue;
                 }
 
-            // When there's no override, only load plugins enabled by default
+                // When there's no override, only load plugins enabled by default
             } else if (metadata.value(QStringLiteral("X-Akonadi-LoadByDefault"), true).toBool() == false) {
                 continue;
             }
@@ -274,7 +273,7 @@ void SearchManager::updateSearch(const Collection &collection)
     QMetaObject::invokeMethod(this, "updateSearchImpl",
                               Qt::QueuedConnection,
                               Q_ARG(Collection, collection),
-                              Q_ARG(QSemaphore*, &sem));
+                              Q_ARG(QSemaphore *, &sem));
 
     // Now wait for updateSearchImpl to wake us.
     if (!sem.tryAcquire()) {
@@ -288,9 +287,9 @@ void SearchManager::updateSearch(const Collection &collection)
 }
 
 #define wakeUpCaller(cond) \
-  if (cond) { \
-    cond->release(); \
-  }
+    if (cond) { \
+        cond->release(); \
+    }
 
 void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *cond)
 {
@@ -452,7 +451,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
         SelectQueryBuilder<PimItem> qb;
         qb.addValueCondition(PimItem::idFullColumnName(), Query::In, newMatchesVariant);
         if (!qb.exec()) {
-            return ;
+            return;
         }
         const QVector<PimItem> newItems = qb.result();
         DataStore::self()->notificationCollector()->itemsLinked(newItems, collection);

@@ -23,7 +23,8 @@
 #include <QObject>
 #include <QProcess>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * This class starts and observes a process. Depending on the
@@ -82,7 +83,8 @@ public:
     /**
      * Restart the application the next time it exits normally.
      */
-    void restartOnceWhenFinished() {
+    void restartOnceWhenFinished()
+    {
         mRestartOnceOnExit = true;
     }
 

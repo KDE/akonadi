@@ -218,7 +218,7 @@ ImapSet::ImapSet(const QList<qint64> &ids)
 }
 
 ImapSet::ImapSet(const ImapInterval &interval)
-    :d (new Private)
+    : d(new Private)
 {
     add(interval);
 }
@@ -305,13 +305,13 @@ bool ImapSet::isEmpty() const
 Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapInterval &interval)
 {
     return stream << interval.d->begin
-                  << interval.d->end;
+           << interval.d->end;
 }
 
 Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapInterval &interval)
 {
     return stream >> interval.d->begin
-                  >> interval.d->end;
+           >> interval.d->end;
 }
 
 Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::ImapSet &set)
@@ -327,7 +327,6 @@ Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::ImapSet 
 } // namespace Akonadi
 
 using namespace Akonadi;
-
 
 QDebug operator<<(QDebug d, const Akonadi::ImapInterval &interval)
 {

@@ -40,7 +40,6 @@ namespace Protocol
 class DataStream;
 }
 
-
 class ScopePrivate;
 class AKONADIPRIVATE_EXPORT Scope
 {
@@ -53,7 +52,8 @@ public:
         Gid = 1 << 3
     };
 
-    class AKONADIPRIVATE_EXPORT HRID {
+    class AKONADIPRIVATE_EXPORT HRID
+    {
     public:
         HRID();
         explicit HRID(qint64 id, const QString &remoteId = QString());

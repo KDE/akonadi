@@ -158,9 +158,9 @@ public:
         Container<T> objects(_objects);
         using namespace std::placeholders;
         std::sort(objects.begin(), objects.end(),
-                  [](const T &a, const T &b) -> bool {
-                      return a.id() < b.id();
-                  });
+        [](const T & a, const T & b) -> bool {
+            return a.id() < b.id();
+        });
         if (objects.at(0).isValid()) {
             QVector<typename T::Id>  uids;
             uids.reserve(objects.size());
@@ -278,10 +278,10 @@ private:
     bool entitySetHasRemoteIdentifier(const Container<T> &objects, const RIDFunc &ridFunc)
     {
         return std::find_if(objects.constBegin(), objects.constEnd(),
-                            [=](const T &obj) {
-                                return ridFunc(obj).isEmpty();
-                            })
-               == objects.constEnd();
+        [ = ](const T & obj) {
+            return ridFunc(obj).isEmpty();
+        })
+        == objects.constEnd();
     }
 
     template<typename T, template<typename> class Container, typename RIDFunc>
@@ -292,9 +292,9 @@ private:
         QStringList rids;
         rids.reserve(objects.size());
         std::transform(objects.cbegin(), objects.cend(),
-                       std::back_inserter(rids), [=](const T &obj) -> QString {
-                            return ridFunc(obj);
-                       });
+        std::back_inserter(rids), [ = ](const T & obj) -> QString {
+            return ridFunc(obj);
+        });
         return Scope(scope, rids);
     }
 
@@ -306,23 +306,23 @@ private:
         QStringList rids;
         rids.reserve(objects.size());
         std::transform(objects.cbegin(), objects.cend(),
-                       std::back_inserter(rids), [=](const T &obj) -> QString {
-                           return QString::fromLatin1(ridFunc(obj));
-                       });
+        std::back_inserter(rids), [ = ](const T & obj) -> QString {
+            return QString::fromLatin1(ridFunc(obj));
+        });
         return Scope(scope, rids);
     }
 
     template<typename T, template<typename> class Container>
     inline static
-    typename std::enable_if<!std::is_same<T, Tag>::value, bool>::type
+    typename std::enable_if < !std::is_same<T, Tag>::value, bool >::type
     entitySetHasHRID(const Container<T> &objects)
     {
         return objects.size() == 1 &&
                std::find_if(objects.constBegin(), objects.constEnd(),
-                            [](const T &obj) -> bool {
-                                return !CollectionUtils::hasValidHierarchicalRID(obj);
-                            })
-               == objects.constEnd();  // ### HRID sets are not yet specified
+        [](const T & obj) -> bool {
+            return !CollectionUtils::hasValidHierarchicalRID(obj);
+        })
+        == objects.constEnd();  // ### HRID sets are not yet specified
     }
 
     template<typename T, template<typename> class Container>

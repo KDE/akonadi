@@ -54,7 +54,6 @@
 
 #include "storage/querybuilder.h"
 
-
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -107,11 +106,9 @@ Protocol::Command Handler::command() const
     return m_command;
 }
 
-
 Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd)
 {
-    switch (cmd)
-    {
+    switch (cmd) {
     case Protocol::Command::Invalid:
         Q_ASSERT_X(cmd != Protocol::Command::Invalid, __FUNCTION__,
                    "Invalid command is not allowed");

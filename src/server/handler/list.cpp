@@ -134,10 +134,10 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
     db->activeCachePolicy(dummy);
 
     sendResponse(HandlerHelper::fetchCollectionsResponse(dummy, attributes, mIncludeStatistics,
-                                                         mAncestorDepth, ancestors,
-                                                         ancestorAttributes,
-                                                         isReferencedFromSession || resourceIsSynchronizing,
-                                                         mimeTypes));
+                 mAncestorDepth, ancestors,
+                 ancestorAttributes,
+                 isReferencedFromSession || resourceIsSynchronizing,
+                 mimeTypes));
 }
 
 static Query::Condition filterCondition(const QString &column)
@@ -160,19 +160,19 @@ bool List::checkFilterCondition(const Collection &col) const
     }
     //Don't include the collection when only looking for collections to display/index/sync
     if (mCollectionsToDisplay &&
-        (((col.displayPref() == Tristate::Undefined) && !col.enabled()) ||
-         (col.displayPref() == Tristate::False))) {
+            (((col.displayPref() == Tristate::Undefined) && !col.enabled()) ||
+             (col.displayPref() == Tristate::False))) {
         return false;
     }
     if (mCollectionsToIndex &&
-        (((col.indexPref() == Tristate::Undefined) && !col.enabled()) ||
-         (col.indexPref() == Tristate::False))) {
+            (((col.indexPref() == Tristate::Undefined) && !col.enabled()) ||
+             (col.indexPref() == Tristate::False))) {
         return false;
     }
     //Single collection sync will still work since that is using a base fetch
     if (mCollectionsToSynchronize &&
-        (((col.syncPref() == Tristate::Undefined) && !col.enabled()) ||
-         (col.syncPref() == Tristate::False))) {
+            (((col.syncPref() == Tristate::Undefined) && !col.enabled()) ||
+             (col.syncPref() == Tristate::False))) {
         return false;
     }
     return true;
@@ -250,8 +250,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
      * * First all collections that match the given criteria are queried
      * * We then filter the false positives:
      * ** all collections out that are not part of the tree we asked for are filtered
-     * ** all collections that are referenced but not by this session or by the owning resource are filtered 
-     * * Finally we complete the tree by adding missing collections 
+     * ** all collections that are referenced but not by this session or by the owning resource are filtered
+     * * Finally we complete the tree by adding missing collections
      *
      * Mimetypes and attributes are also retrieved in single queries to avoid spawning two queries per collection (the N+1 problem).
      * Note that we're not querying attributes and mimetypes for the collections that are only included to complete the tree,
@@ -283,7 +283,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             if (mCollectionsToSynchronize) {
                 qb.addCondition(filterCondition(Collection::syncPrefFullColumnName()));
             } else if (mCollectionsToDisplay) {
-                    qCDebug(AKONADISERVER_LOG) << "only display";
+                qCDebug(AKONADISERVER_LOG) << "only display";
                 qb.addCondition(filterCondition(Collection::displayPrefFullColumnName()));
             } else if (mCollectionsToIndex) {
                 qb.addCondition(filterCondition(Collection::indexPrefFullColumnName()));

@@ -36,8 +36,10 @@ class QMutex;
 
 #include "preprocessorinstance.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class PimItem;
 class DataStore;

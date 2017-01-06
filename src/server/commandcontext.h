@@ -17,20 +17,21 @@
  *
  */
 
-
 #ifndef COMMANDCONTEXT_H
 #define COMMANDCONTEXT_H
 
 #include "entities.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 namespace Protocol
 {
 class ScopeContext;
 }
 
-namespace Server {
+namespace Server
+{
 
 class CommandContext
 {

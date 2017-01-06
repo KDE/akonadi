@@ -25,8 +25,10 @@
 
 template <typename T> class QStack;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   @ingroup akonadi_server_handler

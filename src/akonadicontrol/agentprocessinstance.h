@@ -23,7 +23,8 @@
 
 #include "agentinstance.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ProcessControl;
 

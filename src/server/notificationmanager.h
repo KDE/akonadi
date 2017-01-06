@@ -30,8 +30,10 @@
 class NotificationManagerTest;
 class QThreadPool;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class NotificationCollector;
 class NotificationSubscriber;

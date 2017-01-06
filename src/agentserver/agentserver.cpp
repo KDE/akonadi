@@ -38,7 +38,7 @@ AgentServer::AgentServer(QObject *parent)
     , m_quiting(false)
 {
     QDBusConnection::sessionBus().registerObject(QStringLiteral(AKONADI_DBUS_AGENTSERVER_PATH),
-                                                 this, QDBusConnection::ExportScriptableSlots);
+            this, QDBusConnection::ExportScriptableSlots);
 }
 
 AgentServer::~AgentServer()

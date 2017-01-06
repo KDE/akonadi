@@ -23,13 +23,15 @@
 #include "xdgbasedirs_p.h"
 #include "akonadiprivate_export.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * Convenience wrappers on top of XdgBaseDirs that are instance namespace aware.
  * @since 1.7
  */
-namespace StandardDirs {
+namespace StandardDirs
+{
 /**
  * Returns path to the config file @p configFile.
  */

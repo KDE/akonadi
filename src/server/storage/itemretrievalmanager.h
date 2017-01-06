@@ -32,8 +32,10 @@ class QReadWriteLock;
 class QWaitCondition;
 class OrgFreedesktopAkonadiResourceInterface;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Collection;
 class ItemRetrievalJob;

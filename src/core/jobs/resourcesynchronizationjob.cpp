@@ -88,8 +88,6 @@ int ResourceSynchronizationJob::timeoutCountLimit() const
     return d->timeoutCountLimit;
 }
 
-
-
 bool ResourceSynchronizationJob::collectionTreeOnly() const
 {
     return d->collectionTreeOnly;

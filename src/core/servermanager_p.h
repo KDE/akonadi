@@ -22,7 +22,6 @@
 
 #include "akonadicore_export.h"
 
-
 namespace Akonadi
 {
 

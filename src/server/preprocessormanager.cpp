@@ -34,8 +34,10 @@
 
 #include "preprocessormanageradaptor.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 const int gHeartbeatTimeoutInMSecs = 30000; // 30 sec heartbeat
 

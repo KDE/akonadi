@@ -1015,7 +1015,7 @@ void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
     auto fetch = new ItemFetchJob(item, this);
     // we always need at least parent so we can use ItemCreateJob to merge
     fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent,
-                                                  q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
+            q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
     fetch->fetchScope().setFetchRemoteIdentification(true);
 
@@ -1055,7 +1055,7 @@ void ResourceBasePrivate::slotPrepareItemsRetrieval(const QVector<Item> &items)
     ItemFetchJob *fetch = new ItemFetchJob(items, this);
     // we always need at least parent so we can use ItemCreateJob to merge
     fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent,
-                                                  q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
+            q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
     fetch->fetchScope().setCacheOnly(true);
     fetch->fetchScope().setFetchRemoteIdentification(true);
     // It's possible that one or more items were removed before this task was
@@ -1454,7 +1454,7 @@ bool ResourceBase::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray
     return false;
 }
 
-bool ResourceBase::retrieveItems(const Akonadi::Item::List& items, const QSet<QByteArray>& parts)
+bool ResourceBase::retrieveItems(const Akonadi::Item::List &items, const QSet<QByteArray> &parts)
 {
     Q_D(ResourceBase);
 
@@ -1469,7 +1469,6 @@ bool ResourceBase::retrieveItems(const Akonadi::Item::List& items, const QSet<QB
     taskDone();
     return true;
 }
-
 
 void Akonadi::ResourceBase::abortActivity()
 {

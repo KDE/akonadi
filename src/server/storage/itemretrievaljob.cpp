@@ -37,7 +37,6 @@ AbstractItemRetrievalJob::~AbstractItemRetrievalJob()
 {
 }
 
-
 ItemRetrievalJob::~ItemRetrievalJob()
 {
     Q_ASSERT(!m_active);

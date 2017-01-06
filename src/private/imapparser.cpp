@@ -64,7 +64,8 @@ public:
     }
 };
 
-namespace {
+namespace
+{
 
 template <typename T>
 int parseParenthesizedListHelper(const QByteArray &data, T &result, int start)

@@ -28,8 +28,10 @@
 class QDomElement;
 class DbUpdaterTest;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * @short A helper class that contains an update set.

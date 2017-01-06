@@ -24,10 +24,11 @@
 
 #include <private/scope_p.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-
-namespace Server {
+namespace Server
+{
 
 class Connection;
 class QueryBuilder;
@@ -35,7 +36,8 @@ class QueryBuilder;
 /**
   Helper methods to generate WHERE clauses for collection queries based on a Scope object.
 */
-namespace CollectionQueryHelper {
+namespace CollectionQueryHelper
+{
 
 /**
   Add conditions to @p qb for the given remote identifier @p rid.

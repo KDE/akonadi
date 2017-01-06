@@ -34,8 +34,10 @@ class QTimer;
 #include "entities.h"
 #include "notificationcollector.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class NotificationCollector;
 
@@ -139,7 +141,7 @@ public:
                                  const Collection &col = Collection(), bool silent = false);
     virtual bool removeItemsTags(const PimItem::List &items, const Tag::List &tags,
                                  bool *tagsChanged = 0, bool silent = false);
-    virtual bool removeTags( const Tag::List &tags, bool silent = false );
+    virtual bool removeTags(const Tag::List &tags, bool silent = false);
 
     /* --- ItemParts ----------------------------------------------------- */
     virtual bool removeItemParts(const PimItem &item, const QSet<QByteArray> &parts);
@@ -272,7 +274,10 @@ public:
     /**
       Returns if the database is currently open
       */
-    bool isOpened() const { return m_dbOpened ; }
+    bool isOpened() const
+    {
+        return m_dbOpened;
+    }
 
 Q_SIGNALS:
     /**

@@ -27,8 +27,10 @@
 
 class QSettings;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * The global tracer instance where all akonadi components can

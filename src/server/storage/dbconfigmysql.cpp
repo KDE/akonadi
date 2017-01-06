@@ -232,12 +232,11 @@ bool DbConfigMysql::startInternalServer()
     qCDebug(AKONADISERVER_LOG).nospace() << "mysqld reports version " << (localVersion >> 16) << "." << ((localVersion >> 8) & 0x0000FF) << "." << (localVersion & 0x0000FF)
                                          << " (" << (isMariaDB ? "MariaDB" : "Oracle MySQL") << ")";
 
-
     bool confUpdate = false;
     QFile actualFile(actualConfig);
     // update conf only if either global (or local) is newer than actual
     if ((QFileInfo(globalConfig).lastModified() > QFileInfo(actualFile).lastModified()) ||
-        (QFileInfo(localConfig).lastModified()  > QFileInfo(actualFile).lastModified())) {
+            (QFileInfo(localConfig).lastModified()  > QFileInfo(actualFile).lastModified())) {
         QFile globalFile(globalConfig);
         QFile localFile(localConfig);
         if (globalFile.open(QFile::ReadOnly) && actualFile.open(QFile::WriteOnly)) {
@@ -348,14 +347,14 @@ bool DbConfigMysql::startInternalServer()
             return false;
         }
 
-    #ifndef Q_OS_WIN
+#ifndef Q_OS_WIN
         // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
         QString socketFile = QStringLiteral("%1/mysql.socket").arg(socketDirectory);
         int counter = 50;  // avoid an endless loop in case mysqld terminated
         while ((counter-- > 0) && !QFileInfo::exists(socketFile)) {
             QThread::msleep(100);
         }
-    #endif
+#endif
     } else {
         qCDebug(AKONADISERVER_LOG) << "Found mysql.socket file, reconnecting to the database";
         mDatabaseProcess = new QProcess();
@@ -427,8 +426,8 @@ bool DbConfigMysql::startInternalServer()
                     return false;
                 } else {
                     qCDebug(AKONADISERVER_LOG) << "MySQL version OK"
-                              << "(required" << QStringLiteral("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR)
-                              << ", available" << QStringLiteral("%1.%2").arg(versions[0], versions[1]) << ")";
+                                               << "(required" << QStringLiteral("%1.%2").arg(MYSQL_MIN_MAJOR).arg(MYSQL_MIN_MINOR)
+                                               << ", available" << QStringLiteral("%1.%2").arg(versions[0], versions[1]) << ")";
                 }
             }
 
@@ -509,11 +508,12 @@ bool DbConfigMysql::initializeMariaDBDatabase(const QString &confFile, const QSt
     QDir dir = fi.dir();
     dir.cdUp();
     const QString baseDir = dir.absolutePath();
-    return 0 == execute(mMysqlInstallDbPath,
-                        { QStringLiteral("--defaults-file=%1").arg(confFile),
-                          QStringLiteral("--force"),
-                          QStringLiteral("--basedir=%1").arg(baseDir),
-                          QStringLiteral("--datadir=%1/").arg(dataDir) });
+    return 0 == execute(mMysqlInstallDbPath, {
+        QStringLiteral("--defaults-file=%1").arg(confFile),
+        QStringLiteral("--force"),
+        QStringLiteral("--basedir=%1").arg(baseDir),
+        QStringLiteral("--datadir=%1/").arg(dataDir)
+    });
 }
 
 /**
@@ -522,10 +522,11 @@ bool DbConfigMysql::initializeMariaDBDatabase(const QString &confFile, const QSt
  */
 bool DbConfigMysql::initializeMySQL5_7_6Database(const QString &confFile, const QString &dataDir) const
 {
-    return 0 == execute(mMysqldPath,
-                        { QStringLiteral("--defaults-file=%1").arg(confFile),
-                          QStringLiteral("--initialize"),
-                          QStringLiteral("--datadir=%1/").arg(dataDir) });
+    return 0 == execute(mMysqldPath, {
+        QStringLiteral("--defaults-file=%1").arg(confFile),
+        QStringLiteral("--initialize"),
+        QStringLiteral("--datadir=%1/").arg(dataDir)
+    });
 }
 
 bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QString &dataDir) const
@@ -536,8 +537,9 @@ bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QStri
     const QString baseDir = dir.absolutePath();
 
     // Don't use --force, it has been removed in MySQL 5.7.5
-    return 0 == execute(mMysqlInstallDbPath,
-                        {  QStringLiteral("--defaults-file=%1").arg(confFile),
-                           QStringLiteral("--basedir=%1").arg(baseDir),
-                           QStringLiteral("--datadir=%1/").arg(dataDir) });
+    return 0 == execute(mMysqlInstallDbPath, {
+        QStringLiteral("--defaults-file=%1").arg(confFile),
+        QStringLiteral("--basedir=%1").arg(baseDir),
+        QStringLiteral("--datadir=%1/").arg(dataDir)
+    });
 }

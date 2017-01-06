@@ -26,8 +26,10 @@
 #include <QStringList>
 #include <QVector>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   * @short A helper class that describes a column of a table for the DbInitializer

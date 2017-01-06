@@ -40,10 +40,10 @@ AgentThread::AgentThread(const QString &identifier, QObject *factory, QObject *p
 void AgentThread::run()
 {
     const bool invokeSucceeded = QMetaObject::invokeMethod(m_factory,
-                                                           "createInstance",
-                                                           Qt::DirectConnection,
-                                                           Q_RETURN_ARG(QObject *, m_instance),
-                                                           Q_ARG(QString, m_identifier));
+                                 "createInstance",
+                                 Qt::DirectConnection,
+                                 Q_RETURN_ARG(QObject *, m_instance),
+                                 Q_ARG(QString, m_identifier));
     if (invokeSucceeded) {
         qCDebug(AKONADIAGENTSERVER_LOG) << Q_FUNC_INFO << "agent instance created: " << m_instance;
     } else {

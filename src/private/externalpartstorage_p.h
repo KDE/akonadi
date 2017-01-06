@@ -32,7 +32,8 @@ class QString;
 class QByteArray;
 class QThread;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AKONADIPRIVATE_EXPORT ExternalPartStorageTransaction
 {
@@ -73,8 +74,7 @@ public:
 private:
     friend class ExternalPartStorageTransaction;
 
-    struct Operation
-    {
+    struct Operation {
         enum Type {
             Create,
             Delete
@@ -98,7 +98,7 @@ private:
     static ExternalPartStorage *sInstance;
 
     mutable QMutex mTransactionLock;
-    QHash<QThread*, QVector<Operation>> mTransactions;
+    QHash<QThread *, QVector<Operation>> mTransactions;
 };
 
 }

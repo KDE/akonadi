@@ -25,10 +25,11 @@
 
 #include <private/scope_p.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-
-namespace Server {
+namespace Server
+{
 
 class Connection;
 

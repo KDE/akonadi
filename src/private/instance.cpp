@@ -25,17 +25,17 @@ using namespace Akonadi;
 
 namespace
 {
-    static QString sIdentifier;
+static QString sIdentifier;
 
-    static void loadIdentifier()
-    {
-        sIdentifier = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
-        if (sIdentifier.isNull()) {
-            // QString is null by default, which means it wasn't initialized
-            // yet. Set it to empty when it is initialized
-            sIdentifier = QStringLiteral("");
-        }
+static void loadIdentifier()
+{
+    sIdentifier = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
+    if (sIdentifier.isNull()) {
+        // QString is null by default, which means it wasn't initialized
+        // yet. Set it to empty when it is initialized
+        sIdentifier = QStringLiteral("");
     }
+}
 }
 
 bool Instance::hasIdentifier()

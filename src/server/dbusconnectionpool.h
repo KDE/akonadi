@@ -22,9 +22,12 @@
 
 #include <QDBusConnection>
 
-namespace Akonadi {
-namespace Server {
-namespace DBusConnectionPool {
+namespace Akonadi
+{
+namespace Server
+{
+namespace DBusConnectionPool
+{
 
 /**
  * Returns a new QDBusConnection for each thread, because QDBusConnection is

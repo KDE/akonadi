@@ -22,11 +22,14 @@
 
 #include <QSqlDatabase>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /** Helper methods for checking the database system we are dealing with. */
-namespace DbType {
+namespace DbType
+{
 
 /** Supported database types. */
 enum Type {

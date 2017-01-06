@@ -24,8 +24,10 @@
 
 class QSqlQuery;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /** Exception for reporting SQL errors. */
 class DbException : public Exception

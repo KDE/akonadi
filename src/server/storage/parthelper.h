@@ -27,8 +27,10 @@
 class QString;
 class QVariant;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(PartHelperException);
 
@@ -40,7 +42,8 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(PartHelperException);
  * @todo Use exceptions for error handling in all these methods. Requires that all callers
  * can handle that first though.
  */
-namespace PartHelper {
+namespace PartHelper
+{
 /**
  * Update payload of an existing part @p part to @p data and size @p dataSize.
  * Automatically decides whether or not the data should be stored in the database

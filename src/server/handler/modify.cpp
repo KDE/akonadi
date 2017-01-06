@@ -49,7 +49,7 @@ bool Modify::parseStream()
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::ParentID) {
         const Collection newParent = Collection::retrieveById(cmd.parentId());
         if (newParent.isValid() && collection.parentId() != newParent.id()
-            && collection.resourceId() != newParent.resourceId()) {
+                && collection.resourceId() != newParent.resourceId()) {
             inhibitor.inhibit();
             ItemRetriever retriever(connection());
             retriever.setCollection(collection, true);
@@ -138,7 +138,6 @@ bool Modify::parseStream()
             changes.append(AKONADI_PARAM_PARENT);
         }
     }
-
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::RemoteID) {
         if (cmd.remoteId() != collection.remoteId()) {
@@ -255,7 +254,6 @@ bool Modify::parseStream()
             if (!qb.exec()) {
                 return failureResponse("Unable to retrieve collection attribute");
             }
-
 
             const CollectionAttribute::List attrs = qb.result();
             if (attrs.isEmpty()) {

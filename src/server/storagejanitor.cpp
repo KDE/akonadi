@@ -98,7 +98,9 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
     inform("Checking collection tree consistency...");
     const Collection::List cols = Collection::retrieveAll();
-    std::for_each(cols.begin(), cols.end(), [this](const Collection &col) { checkPathToRoot(col); });
+    std::for_each(cols.begin(), cols.end(), [this](const Collection & col) {
+        checkPathToRoot(col);
+    });
 
     inform("Looking for items not belonging to a valid collection...");
     findOrphanedItems();
@@ -502,12 +504,12 @@ void StorageJanitor::findRIDDuplicates()
     qb.addColumn(Collection::idColumn());
     qb.addColumn(Collection::nameColumn());
     qb.exec();
-  
+
     while (qb.query().next()) {
         const Collection::Id id = qb.query().value(0).value<Collection::Id>();
         const QString name = qb.query().value(1).toString();
         inform(QStringLiteral("Checking ") + name);
-    
+
         QueryBuilder duplicates(PimItem::tableName(), QueryBuilder::Select);
         duplicates.addColumn(PimItem::remoteIdColumn());
         duplicates.addColumn(QStringLiteral("count(") + PimItem::idColumn() + QStringLiteral(") as cnt"));
@@ -516,7 +518,7 @@ void StorageJanitor::findRIDDuplicates()
         duplicates.addGroupColumn(PimItem::remoteIdColumn());
         duplicates.addValueCondition(QStringLiteral("count(") + PimItem::idColumn() + QStringLiteral(")"), Query::Greater, 1, QueryBuilder::HavingCondition);
         duplicates.exec();
-    
+
         Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(id);
         const QVector<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes();
         QVariantList contentMimeTypesVariantList;
@@ -526,7 +528,7 @@ void StorageJanitor::findRIDDuplicates()
         while (duplicates.query().next()) {
             const QString rid = duplicates.query().value(0).toString();
             inform(QStringLiteral("Found duplicates ") + rid);
-    
+
             QueryBuilder items(PimItem::tableName(), QueryBuilder::Delete);
             items.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, rid);
             items.addValueCondition(PimItem::mimeTypeIdColumn(), Query::NotIn, contentMimeTypesVariantList);
@@ -700,7 +702,6 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
         }
     }
 }
-
 
 void StorageJanitor::inform(const char *msg)
 {

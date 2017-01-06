@@ -138,7 +138,6 @@ bool Create::parseStream()
 
     db->activeCachePolicy(collection);
 
-
     sendResponse<Protocol::FetchCollectionsResponse>(
         HandlerHelper::fetchCollectionsResponse(collection));
 

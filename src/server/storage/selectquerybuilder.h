@@ -22,8 +22,10 @@
 
 #include "storage/querybuilder.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   Helper class for creating and executing database SELECT queries.

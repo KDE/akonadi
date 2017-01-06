@@ -25,8 +25,10 @@
 class QDBusPendingCallWatcher;
 class OrgFreedesktopAkonadiResourceInterface;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class ItemRetrievalRequest;
 
@@ -46,7 +48,6 @@ Q_SIGNALS:
 protected:
     ItemRetrievalRequest *m_request;
 };
-
 
 /// Async D-Bus retrieval, no modification of the request (thus no need for locking)
 class ItemRetrievalJob : public AbstractItemRetrievalJob

@@ -28,8 +28,10 @@
 #include <QIODevice>
 #include <QTimeZone>
 
-namespace Akonadi {
-namespace Protocol {
+namespace Akonadi
+{
+namespace Protocol
+{
 
 class DataStream
 {
@@ -56,7 +58,6 @@ public:
     inline DataStream &operator<<(const QByteArray &data);
     inline DataStream &operator<<(const QDateTime &dt);
 
-
     template<typename T>
     inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
     &operator>>(T &val);
@@ -67,7 +68,6 @@ public:
     inline DataStream &operator>>(QByteArray &data);
     inline DataStream &operator>>(QDateTime &dt);
 
-
     void writeRawData(const char *data, int len);
     void writeBytes(const char *bytes, int len);
 
@@ -75,7 +75,6 @@ public:
 
     void waitForData(quint32 size);
 private:
-
 
     Q_DISABLE_COPY(DataStream)
 
@@ -136,9 +135,6 @@ inline DataStream &DataStream::operator<<(const QDateTime &dt)
     return *this;
 }
 
-
-
-
 template<typename T>
 inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
 &DataStream::operator>>(T &val)
@@ -171,7 +167,6 @@ inline DataStream &DataStream::operator>>(QString &str)
         str = QString(QLatin1String(""));
         return *this;
     }
-
 
     if (bytes & 0x1) {
         str.clear();
@@ -253,7 +248,6 @@ inline DataStream &DataStream::operator>>(QDateTime &dt)
 } // namespace Protocol
 } // namespace Akonadi
 
-
 // Inline functions
 
 template<typename T>
@@ -310,10 +304,12 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
     return stream >> static_cast<QList<QString>&>(list);
 }
 
-
-namespace Akonadi {
-namespace Protocol {
-namespace Private {
+namespace Akonadi
+{
+namespace Protocol
+{
+namespace Private
+{
 template<typename Key, typename Value, template<typename, typename> class Container>
 inline void container_reserve(Container<Key, Value> &container, int size)
 {
@@ -328,7 +324,6 @@ inline void container_reserve(QMap<Key, Value> &, int)
 } // namespace Private
 } // namespace Protocol
 } // namespace Akonadi
-
 
 // Generic streaming for all Qt dictionary-based containers
 template<typename Key, typename Value, template<typename, typename> class Container>

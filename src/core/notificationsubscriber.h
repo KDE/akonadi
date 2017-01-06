@@ -25,7 +25,8 @@
 #include "monitor.h"
 #include <QSet>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AKONADICORE_EXPORT NotificationSubscriber
 {

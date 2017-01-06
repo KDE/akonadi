@@ -23,14 +23,17 @@
 class QString;
 class QSqlQuery;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * A per-thread cache (should be per session, but that'S the same for us) prepared
  * query cache.
  */
-namespace QueryCache {
+namespace QueryCache
+{
 /// Check whether the query @p queryStatement is cached already.
 bool contains(const QString &queryStatement);
 

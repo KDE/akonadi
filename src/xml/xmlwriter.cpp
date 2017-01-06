@@ -64,7 +64,6 @@ void XmlWriter::writeAttributes(const Collection &collection, QDomElement &paren
     writeAttributesImpl(collection, parentElem);
 }
 
-
 QDomElement XmlWriter::collectionToElement(const Akonadi::Collection &collection, QDomDocument &document)
 {
     if (document.isNull()) {

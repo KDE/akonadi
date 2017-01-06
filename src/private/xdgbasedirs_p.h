@@ -29,7 +29,8 @@
 // forward declarations
 class QString;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class XdgBaseDirsPrivate;
 
@@ -308,8 +309,7 @@ public:
     * @return the path of the data connection config file, suitable for \p openMode
     */
     static QString akonadiConnectionConfigFile(FileAccessMode openMode = ReadOnly,
-                                               const QString &relPath = QString());
-
+            const QString &relPath = QString());
 
     /**
      * @brief Overrides the lookup path to the "config" resource

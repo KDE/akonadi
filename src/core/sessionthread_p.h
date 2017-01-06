@@ -40,7 +40,7 @@ public:
 
 private:
     Q_INVOKABLE Akonadi::Connection *doCreateConnection(Akonadi::Connection::ConnectionType connType,
-                                                        const QByteArray &sessionId);
+            const QByteArray &sessionId);
 
     Q_INVOKABLE void doThreadQuit();
 
@@ -49,6 +49,5 @@ private:
 };
 
 }
-
 
 #endif

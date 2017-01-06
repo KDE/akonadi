@@ -36,7 +36,6 @@
 #include "statusadaptor.h"
 #include "private/standarddirs_p.h"
 
-
 #include "akonadiagentbase_debug.h"
 
 #include <KLocalizedString>
@@ -466,7 +465,7 @@ void AgentBasePrivate::setProgramName()
     // ugly, really ugly, if you find another solution, change it and blame me for this code (Andras)
     QString programName = mResourceTypeName;
     if (!mName.isEmpty()) {
-        programName = i18nc("Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName) ;
+        programName = i18nc("Name and type of Akonadi resource", "%1 of type %2", mName, mResourceTypeName);
     }
 
     QGuiApplication::setApplicationDisplayName(programName);

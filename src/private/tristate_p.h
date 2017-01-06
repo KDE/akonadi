@@ -28,8 +28,7 @@
 namespace Akonadi
 {
 
-enum class Tristate : qint8
-{
+enum class Tristate : qint8 {
     False     = 0,
     True      = 1,
     Undefined = 2

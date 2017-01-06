@@ -44,11 +44,11 @@ private:
         }
         auto freedom = new QTimer(qApp);
         QObject::connect(freedom, &QTimer::timeout,
-                         freedom, []() {
-                            // They may take our lives, but they will never
-                            // take our memory!
-                            malloc_trim(50 * 1024 * 1024);
-                        });
+        freedom, []() {
+            // They may take our lives, but they will never
+            // take our memory!
+            malloc_trim(50 * 1024 * 1024);
+        });
         // Fight for freedom every 15 minutes
         freedom->start(15 * 60 * 1000);
         qApp->setProperty("__Akonadi__Braveheart", true);
@@ -67,7 +67,8 @@ public:
     }
 };
 
-namespace {
+namespace
+{
 
 Braveheart Wallace;
 

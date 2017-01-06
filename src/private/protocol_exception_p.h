@@ -28,7 +28,8 @@
 
 #include <QByteArray>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AKONADIPRIVATE_EXPORT ProtocolException : public std::exception
 {
@@ -38,8 +39,7 @@ public:
         , mWhat(what)
     {}
 
-    const char *what() const throw() Q_DECL_OVERRIDE
-    {
+    const char *what() const throw() Q_DECL_OVERRIDE {
         return mWhat.constData();
     }
 

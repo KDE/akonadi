@@ -69,7 +69,7 @@ QString DBus::parseAgentServiceName(const QString &serviceName, DBus::AgentType 
     }
     const QStringList parts = serviceName.mid(24).split(QLatin1Char('.'));
     if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
-        || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
+            || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
         // switch on parts.at( 0 )
         if (parts.first() == QLatin1String("Agent")) {
             agentType = Agent;

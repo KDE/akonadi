@@ -52,9 +52,6 @@ bool ExternalPartStorageTransaction::rollback()
     return ExternalPartStorage::self()->rollbackTransaction();
 }
 
-
-
-
 ExternalPartStorage::ExternalPartStorage()
 {
 }
@@ -96,11 +93,11 @@ QString ExternalPartStorage::resolveAbsolutePath(const QString &filename, bool *
     // PartID is encoded in filename as "PARTID_rX".
     const int revPos = filename.indexOf(QLatin1Char('_'));
     const QString path = basePath
-                        + QDir::separator()
-                            + (revPos > 1 ? filename[revPos - 2] : QLatin1Char('0'))
-                            + filename[revPos - 1]
-                        + QDir::separator()
-                            + filename;
+                         + QDir::separator()
+                         + (revPos > 1 ? filename[revPos - 2] : QLatin1Char('0'))
+                         + filename[revPos - 1]
+                         + QDir::separator()
+                         + filename;
     // If legacy fallback is disabled, return it in any case
     if (!legacyFallback) {
         QFileInfo finfo(path);
@@ -133,7 +130,7 @@ QString ExternalPartStorage::resolveAbsolutePath(const QString &filename, bool *
 }
 
 bool ExternalPartStorage::createPartFile(const QByteArray &data, qint64 partId,
-                                        QByteArray &partFileName)
+        QByteArray &partFileName)
 {
     bool exists = false;
     partFileName = updateFileNameRevision(QByteArray::number(partId));
@@ -162,7 +159,7 @@ bool ExternalPartStorage::createPartFile(const QByteArray &data, qint64 partId,
 }
 
 bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteArray &partFile,
-                                        QByteArray &newPartFile)
+        QByteArray &newPartFile)
 {
     bool exists = false;
     const QString currentPartPath = resolveAbsolutePath(partFile, &exists);
@@ -194,7 +191,8 @@ bool ExternalPartStorage::updatePartFile(const QByteArray &newData, const QByteA
 
     if (inTransaction()) {
         addToTransaction({ { Operation::Create, newPartPath },
-                           { Operation::Delete, currentPartPath } });
+            { Operation::Delete, currentPartPath }
+        });
     } else {
         if (!QFile::remove(currentPartPath)) {
             // Not a reason to fail the operation

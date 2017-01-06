@@ -109,7 +109,7 @@ void EntityTreeModelPrivate::init(Monitor *monitor)
 
     m_rootCollectionDisplayName = QStringLiteral("[*]");
 
-    if (Akonadi::ChangeRecorder *cr = qobject_cast<Akonadi::ChangeRecorder*>(m_monitor)) {
+    if (Akonadi::ChangeRecorder *cr = qobject_cast<Akonadi::ChangeRecorder *>(m_monitor)) {
         cr->setChangeRecordingEnabled(false);
     }
 

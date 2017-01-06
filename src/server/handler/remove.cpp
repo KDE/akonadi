@@ -46,7 +46,6 @@ bool Remove::parseStream()
         return failureResponse("Unable to execute query");
     }
 
-
     const QVector<PimItem> items = qb.result();
     if (items.isEmpty()) {
         return failureResponse("No items found");

@@ -25,7 +25,6 @@
 
 #include "akonadiprivate_export.h"
 
-
 #include <QFlags>
 #include <QSharedDataPointer>
 #include <QDebug>
@@ -59,9 +58,9 @@ namespace Protocol
 // NOTE: Q_DECLARE_PRIVATE does not work with QSharedDataPointer<T> when T is incomplete
 #ifndef AKONADI_DECLARE_PRIVATE
 #define AKONADI_DECLARE_PRIVATE(Class) \
-Class##Private* d_func(); \
-const Class##Private* d_func() const; \
-friend class Class##Private;
+    Class##Private* d_func(); \
+    const Class##Private* d_func() const; \
+    friend class Class##Private;
 #endif
 
 typedef QMap<QByteArray, QByteArray> Attributes;
@@ -170,10 +169,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Command &command);
 };
 
-
-
-
-
 class ResponsePrivate;
 class AKONADIPRIVATE_EXPORT Response : public Command
 {
@@ -196,10 +191,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Response &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT Factory
 {
 public:
@@ -207,15 +198,8 @@ public:
     static Response response(Command::Type type);
 };
 
-
-
 AKONADIPRIVATE_EXPORT void serialize(QIODevice *device, const Command &command);
 AKONADIPRIVATE_EXPORT Command deserialize(QIODevice *device);
-
-
-
-
-
 
 class AncestorPrivate;
 class AKONADIPRIVATE_EXPORT Ancestor
@@ -259,10 +243,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::Ancestor &ancestor);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Ancestor &ancestor);
 };
-
-
-
-
 
 class FetchScopePrivate;
 class AKONADIPRIVATE_EXPORT FetchScope
@@ -337,9 +317,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchScope &scope);
 };
 
-
-
-
 class ScopeContextPrivate;
 class AKONADIPRIVATE_EXPORT ScopeContext
 {
@@ -383,8 +360,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ScopeContext &context);
 };
 
-
-
 class PartMetaDataPrivate;
 class AKONADIPRIVATE_EXPORT PartMetaData
 {
@@ -422,9 +397,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::PartMetaData &part);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::PartMetaData &part);
 };
-
-
-
 
 class CachePolicyPrivate;
 class AKONADIPRIVATE_EXPORT CachePolicy
@@ -464,8 +436,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CachePolicy &policy);
 };
 
-
-
 class HelloResponsePrivate;
 class AKONADIPRIVATE_EXPORT HelloResponse : public Response
 {
@@ -492,9 +462,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::HelloResponse &command);
 };
 
-
-
-
 class LoginCommandPrivate;
 class AKONADIPRIVATE_EXPORT LoginCommand : public Command
 {
@@ -513,19 +480,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::LoginCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT LoginResponse : public Response
 {
 public:
     explicit LoginResponse();
     LoginResponse(const Command &command);
 };
-
-
-
 
 class AKONADIPRIVATE_EXPORT LogoutCommand : public Command
 {
@@ -534,19 +494,12 @@ public:
     LogoutCommand(const Command &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT LogoutResponse : public Response
 {
 public:
     explicit LogoutResponse();
     LogoutResponse(const Command &command);
 };
-
-
-
 
 class TransactionCommandPrivate;
 class AKONADIPRIVATE_EXPORT TransactionCommand : public Command
@@ -573,19 +526,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::TransactionCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT TransactionResponse : public Response
 {
 public:
     explicit TransactionResponse();
     TransactionResponse(const Command &command);
 };
-
-
-
 
 class CreateItemCommandPrivate;
 class AKONADIPRIVATE_EXPORT CreateItemCommand : public Command
@@ -653,17 +599,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateItemCommand &command);
 };
 
-
-
-
 class AKONADIPRIVATE_EXPORT CreateItemResponse : public Response
 {
 public:
     explicit CreateItemResponse();
     CreateItemResponse(const Command &command);
 };
-
-
 
 class CopyItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT CopyItemsCommand : public Command
@@ -685,19 +626,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CopyItemsCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT CopyItemsResponse : public Response
 {
 public:
     explicit CopyItemsResponse();
     CopyItemsResponse(const Command &command);
 };
-
-
-
 
 class DeleteItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT DeleteItemsCommand : public Command
@@ -717,20 +651,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::DeleteItemsCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT DeleteItemsResponse : public Response
 {
 public:
     explicit DeleteItemsResponse();
     DeleteItemsResponse(const Command &command);
 };
-
-
-
-
 
 class FetchRelationsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchRelationsCommand : public Command
@@ -765,9 +691,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchRelationsCommand &command);
 };
 
-
-
-
 class FetchRelationsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchRelationsResponse : public Response
 {
@@ -793,9 +716,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchRelationsResponse &command);
 };
 
-
-
-
 class FetchTagsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchTagsCommand : public Command
 {
@@ -818,9 +738,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchTagsCommand &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchTagsCommand &command);
 };
-
-
-
 
 class FetchTagsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchTagsResponse : public Response
@@ -858,9 +775,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchTagsResponse &command);
 };
 
-
-
-
 class FetchItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchItemsCommand : public Command
 {
@@ -882,8 +796,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchItemsCommand &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchItemsCommand &command);
 };
-
-
 
 class StreamPayloadResponse;
 class FetchItemsResponsePrivate;
@@ -948,10 +860,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchItemsResponse &command);
 };
 
-
-
-
-
 class LinkItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT LinkItemsCommand : public Command
 {
@@ -976,19 +884,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::LinkItemsCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT LinkItemsResponse : public Response
 {
 public:
     explicit LinkItemsResponse();
     LinkItemsResponse(const Command &command);
 };
-
-
-
 
 class ModifyItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifyItemsCommand : public Command
@@ -1077,9 +978,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyItemsCommand &command);
 };
 
-
-
-
 class ModifyItemsResponsePrivate;
 class AKONADIPRIVATE_EXPORT ModifyItemsResponse : public Response
 {
@@ -1099,9 +997,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifyItemsResponse &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyItemsResponse &command);
 };
-
-
-
 
 class MoveItemsCommandPrivate;
 class AKONADIPRIVATE_EXPORT MoveItemsCommand : public Command
@@ -1123,19 +1018,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::MoveItemsCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT MoveItemsResponse : public Response
 {
 public:
     explicit MoveItemsResponse();
     MoveItemsResponse(const Command &command);
 };
-
-
-
 
 class CreateCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT CreateCollectionCommand : public Command
@@ -1187,19 +1075,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateCollectionCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT CreateCollectionResponse : public Response
 {
 public:
     explicit CreateCollectionResponse();
     CreateCollectionResponse(const Command &command);
 };
-
-
-
 
 class CopyCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT CopyCollectionCommand : public Command
@@ -1219,19 +1100,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CopyCollectionCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT CopyCollectionResponse : public Response
 {
 public:
     explicit CopyCollectionResponse();
     CopyCollectionResponse(const Command &command);
 };
-
-
-
 
 class DeleteCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT DeleteCollectionCommand : public Command
@@ -1250,19 +1124,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::DeleteCollectionCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT DeleteCollectionResponse : public Response
 {
 public:
     explicit DeleteCollectionResponse();
     DeleteCollectionResponse(const Command &command);
 };
-
-
-
 
 class FetchCollectionStatsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionStatsCommand : public Command
@@ -1280,10 +1147,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchCollectionStatsCommand &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchCollectionStatsCommand &command);
 };
-
-
-
-
 
 class FetchCollectionStatsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionStatsResponse : public Response
@@ -1303,9 +1166,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchCollectionStatsResponse &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchCollectionStatsResponse &command);
 };
-
-
-
 
 class FetchCollectionsCommandPrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionsCommand : public Command
@@ -1359,10 +1219,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchCollectionsCommand &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchCollectionsCommand &command);
 };
-
-
-
-
 
 class FetchCollectionsResponsePrivate;
 class AKONADIPRIVATE_EXPORT FetchCollectionsResponse : public Response
@@ -1435,10 +1291,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::FetchCollectionsResponse &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::FetchCollectionsResponse &command);
 };
-
-
-
-
 
 class ModifyCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifyCollectionCommand : public Command
@@ -1526,20 +1378,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyCollectionCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT ModifyCollectionResponse : public Response
 {
 public:
     explicit ModifyCollectionResponse();
     ModifyCollectionResponse(const Command &command);
 };
-
-
-
-
 
 class MoveCollectionCommandPrivate;
 class AKONADIPRIVATE_EXPORT MoveCollectionCommand : public Command
@@ -1559,19 +1403,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::MoveCollectionCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT MoveCollectionResponse : public Response
 {
 public:
     explicit MoveCollectionResponse();
     MoveCollectionResponse(const Command &command);
 };
-
-
-
 
 class SearchCommandPrivate;
 class AKONADIPRIVATE_EXPORT SearchCommand : public Command
@@ -1605,20 +1442,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SearchCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT SearchResponse : public Response
 {
 public:
     explicit SearchResponse();
     SearchResponse(const Command &command);
 };
-
-
-
-
 
 class SearchResultCommandPrivate;
 class AKONADIPRIVATE_EXPORT SearchResultCommand : public Command
@@ -1639,19 +1468,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SearchResultCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT SearchResultResponse : public Response
 {
 public:
     explicit SearchResultResponse();
     SearchResultResponse(const Command &command);
 };
-
-
-
 
 class StoreSearchCommandPrivate;
 class AKONADIPRIVATE_EXPORT StoreSearchCommand : public Command
@@ -1685,19 +1507,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::StoreSearchCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT StoreSearchResponse : public Response
 {
 public:
     explicit StoreSearchResponse();
     StoreSearchResponse(const Command &command);
 };
-
-
-
 
 class CreateTagCommandPrivate;
 class AKONADIPRIVATE_EXPORT CreateTagCommand : public Command
@@ -1731,20 +1546,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateTagCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT CreateTagResponse : public Response
 {
 public:
     explicit CreateTagResponse();
     CreateTagResponse(const Command &command);
 };
-
-
-
-
 
 class DeleteTagCommandPrivate;
 class AKONADIPRIVATE_EXPORT DeleteTagCommand : public Command
@@ -1763,20 +1570,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::DeleteTagCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT DeleteTagResponse : public Response
 {
 public:
     explicit DeleteTagResponse();
     DeleteTagResponse(const Command &command);
 };
-
-
-
-
 
 class ModifyTagCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifyTagCommand : public Command
@@ -1822,19 +1621,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyTagCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT ModifyTagResponse : public Response
 {
 public:
     explicit ModifyTagResponse();
     ModifyTagResponse(const Command &command);
 };
-
-
-
 
 class ModifyRelationCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifyRelationCommand : public Command
@@ -1864,19 +1656,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifyRelationCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT ModifyRelationResponse : public Response
 {
 public:
     explicit ModifyRelationResponse();
     ModifyRelationResponse(const Command &command);
 };
-
-
-
 
 class RemoveRelationsCommandPrivate;
 class AKONADIPRIVATE_EXPORT RemoveRelationsCommand : public Command
@@ -1902,19 +1687,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::RemoveRelationsCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT RemoveRelationsResponse : public Response
 {
 public:
     explicit RemoveRelationsResponse();
     RemoveRelationsResponse(const Command &command);
 };
-
-
-
 
 class SelectResourceCommandPrivate;
 class AKONADIPRIVATE_EXPORT SelectResourceCommand : public Command
@@ -1933,19 +1711,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SelectResourceCommand &command);
 };
 
-
-
-
-
 class AKONADIPRIVATE_EXPORT SelectResourceResponse : public Response
 {
 public:
     explicit SelectResourceResponse();
     SelectResourceResponse(const Command &command);
 };
-
-
-
 
 class StreamPayloadCommandPrivate;
 class AKONADIPRIVATE_EXPORT StreamPayloadCommand : public Command
@@ -1977,9 +1748,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::StreamPayloadCommand &command);
 };
 
-
-
-
 class StreamPayloadResponsePrivate;
 class AKONADIPRIVATE_EXPORT StreamPayloadResponse : public Response
 {
@@ -2010,7 +1778,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::StreamPayloadResponse &command);
 };
 
-
 class ChangeNotificationPrivate;
 class AKONADIPRIVATE_EXPORT ChangeNotification : public Command
 {
@@ -2037,8 +1804,6 @@ protected:
 private:
     AKONADI_DECLARE_PRIVATE(ChangeNotification)
 };
-
-
 
 class ItemChangeNotificationPrivate;
 class AKONADIPRIVATE_EXPORT ItemChangeNotification : public ChangeNotification
@@ -2174,8 +1939,6 @@ inline uint qHash(const ItemChangeNotification::Relation &rel)
     return ::qHash(rel.leftId + rel.rightId);
 }
 
-
-
 class CollectionChangeNotificationPrivate;
 class AKONADIPRIVATE_EXPORT CollectionChangeNotification : public ChangeNotification
 {
@@ -2193,7 +1956,7 @@ public:
     };
 
     explicit CollectionChangeNotification();
-    CollectionChangeNotification(const Command& other);
+    CollectionChangeNotification(const Command &other);
 
     bool isValid() const;
 
@@ -2237,8 +2000,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CollectionChangeNotification &command);
 };
 
-
-
 class TagChangeNotificationPrivate;
 class AKONADIPRIVATE_EXPORT TagChangeNotification : public ChangeNotification
 {
@@ -2253,7 +2014,7 @@ public:
     };
 
     explicit TagChangeNotification();
-    TagChangeNotification(const Command& other);
+    TagChangeNotification(const Command &other);
 
     bool isValid() const;
 
@@ -2275,8 +2036,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::TagChangeNotification &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::TagChangeNotification &command);
 };
-
-
 
 class RelationChangeNotificationPrivate;
 class AKONADIPRIVATE_EXPORT RelationChangeNotification : public ChangeNotification
@@ -2315,9 +2074,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::RelationChangeNotification &command);
 };
 
-
-
-
 class CreateSubscriptionCommandPrivate;
 class AKONADIPRIVATE_EXPORT CreateSubscriptionCommand : public Command
 {
@@ -2340,16 +2096,12 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::CreateSubscriptionCommand &command);
 };
 
-
 class AKONADIPRIVATE_EXPORT CreateSubscriptionResponse : public Response
 {
 public:
     explicit CreateSubscriptionResponse();
     CreateSubscriptionResponse(const Command &other);
 };
-
-
-
 
 class ModifySubscriptionCommandPrivate;
 class AKONADIPRIVATE_EXPORT ModifySubscriptionCommand : public Command
@@ -2445,7 +2197,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifySubscriptionCommand &command);
 };
 
-
 class ModifySubscriptionResponse;
 class AKONADIPRIVATE_EXPORT ModifySubscriptionResponse : public Response
 {
@@ -2457,9 +2208,6 @@ private:
     friend DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ModifySubscriptionResponse &command);
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ModifySubscriptionResponse &command);
 };
-
-
-
 
 class SubscriptionChangeNotificationPrivate;
 class AKONADIPRIVATE_EXPORT SubscriptionChangeNotification : public ChangeNotification
@@ -2515,8 +2263,6 @@ private:
     friend DataStream &operator>>(DataStream &stream, Akonadi::Protocol::SubscriptionChangeNotification &ntf);
 };
 
-
-
 class DebugChangeNotificationPrivate;
 class AKONADIPRIVATE_EXPORT DebugChangeNotification : public ChangeNotification
 {
@@ -2552,7 +2298,6 @@ Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotification::List)
 AKONADIPRIVATE_EXPORT DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Command::Type &type);
 AKONADIPRIVATE_EXPORT DataStream &operator<<(DataStream &stream, Akonadi::Protocol::Command::Type type);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Akonadi::Protocol::Command::Type type);
-
 
 // Command parameters
 #define AKONADI_PARAM_ATR                          "ATR:"

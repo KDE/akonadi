@@ -22,8 +22,10 @@
 
 #include "abstractsearchengine.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /** Search engine for distributing searches to agents. */
 class AgentSearchEngine : public AbstractSearchEngine

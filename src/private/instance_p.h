@@ -24,13 +24,14 @@
 
 class QString;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 namespace Instance
 {
-    AKONADIPRIVATE_EXPORT bool hasIdentifier();
-    AKONADIPRIVATE_EXPORT void setIdentifier(const QString &identifier);
-    AKONADIPRIVATE_EXPORT QString identifier();
+AKONADIPRIVATE_EXPORT bool hasIdentifier();
+AKONADIPRIVATE_EXPORT void setIdentifier(const QString &identifier);
+AKONADIPRIVATE_EXPORT QString identifier();
 }
 }
 

@@ -227,16 +227,16 @@ void ChangeRecorderPrivate::addToStream(QDataStream &stream, const Protocol::Cha
     stream << int(mapToLegacyType(msg.type()));
     switch (msg.type()) {
     case Protocol::Command::ItemChangeNotification:
-        saveItemNotification(stream, static_cast<const Protocol::ItemChangeNotification&>(msg));
+        saveItemNotification(stream, static_cast<const Protocol::ItemChangeNotification &>(msg));
         break;
     case Protocol::Command::CollectionChangeNotification:
-        saveCollectionNotification(stream, static_cast<const Protocol::CollectionChangeNotification&>(msg));
+        saveCollectionNotification(stream, static_cast<const Protocol::CollectionChangeNotification &>(msg));
         break;
     case Protocol::Command::TagChangeNotification:
-        saveTagNotification(stream, static_cast<const Protocol::TagChangeNotification&>(msg));
+        saveTagNotification(stream, static_cast<const Protocol::TagChangeNotification &>(msg));
         break;
     case Protocol::Command::RelationChangeNotification:
-        saveRelationNotification(stream, static_cast<const Protocol::RelationChangeNotification&>(msg));
+        saveRelationNotification(stream, static_cast<const Protocol::RelationChangeNotification &>(msg));
         break;
     default:
         qWarning() << "Unexpected type?";
@@ -317,8 +317,8 @@ void ChangeRecorderPrivate::notificationsEnqueued(int count)
         m_lastKnownNotificationsCount += count;
         if (m_lastKnownNotificationsCount != pendingNotifications.count()) {
             qCWarning(AKONADICORE_LOG) << this << "The number of pending notifications changed without telling us! Expected"
-                       << m_lastKnownNotificationsCount << "but got" << pendingNotifications.count()
-                       << "Caller just added" << count;
+                                       << m_lastKnownNotificationsCount << "but got" << pendingNotifications.count()
+                                       << "Caller just added" << count;
             Q_ASSERT(pendingNotifications.count() == m_lastKnownNotificationsCount);
         }
 
@@ -373,8 +373,7 @@ bool ChangeRecorderPrivate::emitNotification(const Protocol::ChangeNotification 
     return someoneWasListening;
 }
 
-
-Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QSettings* settings) const
+Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QSettings *settings) const
 {
     Protocol::ItemChangeNotification msg;
     msg.setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
@@ -395,8 +394,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QSettin
     return msg;
 }
 
-
-Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(QSettings* settings) const
+Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(QSettings *settings) const
 {
     Protocol::CollectionChangeNotification msg;
     msg.setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
@@ -436,7 +434,6 @@ QSet<Protocol::ItemChangeNotification::Relation> ChangeRecorderPrivate::extractR
 
     return relations;
 }
-
 
 Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QDataStream &stream, quint64 version) const
 {
@@ -600,7 +597,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(Q
     return msg;
 }
 
-void Akonadi::ChangeRecorderPrivate::saveCollectionNotification(QDataStream& stream, const Protocol::CollectionChangeNotification &msg)
+void Akonadi::ChangeRecorderPrivate::saveCollectionNotification(QDataStream &stream, const Protocol::CollectionChangeNotification &msg)
 {
     stream << int(msg.operation());
     stream << int(1);
@@ -678,7 +675,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadTagNotification(QDataStr
     return msg;
 }
 
-void Akonadi::ChangeRecorderPrivate::saveTagNotification(QDataStream& stream, const Protocol::TagChangeNotification &msg)
+void Akonadi::ChangeRecorderPrivate::saveTagNotification(QDataStream &stream, const Protocol::TagChangeNotification &msg)
 {
     stream << int(msg.operation());
     stream << int(1);
@@ -767,7 +764,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadRelationNotification(QDa
     return msg;
 }
 
-void Akonadi::ChangeRecorderPrivate::saveRelationNotification(QDataStream& stream, const Protocol::RelationChangeNotification &msg)
+void Akonadi::ChangeRecorderPrivate::saveRelationNotification(QDataStream &stream, const Protocol::RelationChangeNotification &msg)
 {
     QSet<QByteArray> rv;
     rv.insert("LEFT " + QByteArray::number(msg.leftItem()));

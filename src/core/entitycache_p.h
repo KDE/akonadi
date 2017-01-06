@@ -457,9 +457,9 @@ private:
         return job;
     }
 
-    void processResult(KJob *job) Q_DECL_OVERRIDE
-    {
-        if (job->error()) {
+    void processResult(KJob *job) Q_DECL_OVERRIDE {
+        if (job->error())
+        {
             qWarning() << job->errorString();
         }
         const QList<typename T::Id> ids = job->property("EntityListCacheIds").value<QList<typename T::Id>>();

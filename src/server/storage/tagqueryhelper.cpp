@@ -34,7 +34,7 @@ using namespace Akonadi::Server;
 void TagQueryHelper::remoteIdToQuery(const QStringList &rids, CommandContext *context, QueryBuilder &qb)
 {
     qb.addJoin(QueryBuilder::InnerJoin, TagRemoteIdResourceRelation::tableName(),
-                Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
+               Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
     qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
 
     if (rids.size() == 1) {
@@ -48,7 +48,7 @@ void TagQueryHelper::gidToQuery(const QStringList &gids, CommandContext *context
 {
     if (context->resource().isValid()) {
         qb.addJoin(QueryBuilder::InnerJoin, TagRemoteIdResourceRelation::tableName(),
-                    Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
+                   Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
         qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
     }
 

@@ -35,20 +35,23 @@
 
 #undef AKONADI_DECLARE_PRIVATE
 #define AKONADI_DECLARE_PRIVATE(Class) \
-inline Class##Private* Class::d_func() {\
-    return reinterpret_cast<Class##Private*>(d_ptr.data()); \
-} \
-inline const Class##Private* Class::d_func() const {\
-    return reinterpret_cast<const Class##Private*>(d_ptr.constData()); \
-}
+    inline Class##Private* Class::d_func() {\
+        return reinterpret_cast<Class##Private*>(d_ptr.data()); \
+    } \
+    inline const Class##Private* Class::d_func() const {\
+        return reinterpret_cast<const Class##Private*>(d_ptr.constData()); \
+    }
 
 #define COMPARE(prop) \
     (prop == ((decltype(this)) other)->prop)
 
-namespace Akonadi {
-namespace Protocol {
+namespace Akonadi
+{
+namespace Protocol
+{
 
-int version() {
+int version()
+{
     return 56;
 }
 
@@ -59,8 +62,7 @@ QDebug operator<<(QDebug _dbg, Akonadi::Protocol::Command::Type type)
 {
     QDebug dbg(_dbg.noquote());
 
-    switch (type)
-    {
+    switch (type) {
     case Akonadi::Protocol::Command::Invalid:
         return dbg << "Invalid";
 
@@ -229,15 +231,12 @@ private:
 }
 }
 
-
 /******************************************************************************/
-
 
 namespace Akonadi
 {
 namespace Protocol
 {
-
 
 class CommandPrivate : public QSharedData
 {
@@ -258,7 +257,7 @@ public:
     virtual bool compare(const CommandPrivate *other) const
     {
         return typeid(*this) == typeid(*other)
-            && COMPARE(commandType);
+               && COMPARE(commandType);
     }
 
     virtual DataStream &serialize(DataStream &stream) const
@@ -293,12 +292,10 @@ Akonadi::Protocol::CommandPrivate *QSharedDataPointer<Akonadi::Protocol::Command
     return d->clone();
 }
 
-
 namespace Akonadi
 {
 namespace Protocol
 {
-
 
 AKONADI_DECLARE_PRIVATE(Command)
 
@@ -326,13 +323,13 @@ Command::~Command()
 {
 }
 
-Command& Command::operator=(Command &&other)
+Command &Command::operator=(Command &&other)
 {
     d_ptr.swap(other.d_ptr);
     return *this;
 }
 
-Command& Command::operator=(const Command &other)
+Command &Command::operator=(const Command &other)
 {
     d_ptr = other.d_ptr;
     return *this;
@@ -388,13 +385,7 @@ DataStream &operator>>(DataStream &stream, Akonadi::Protocol::Command &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /******************************************************************************/
-
-
-
-
 
 class ResponsePrivate : public CommandPrivate
 {
@@ -416,22 +407,21 @@ public:
     virtual bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(errorMsg)
-            && COMPARE(errorCode);
+               && COMPARE(errorMsg)
+               && COMPARE(errorCode);
     }
 
     virtual DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-                << errorCode
-                << errorMsg;
+               << errorCode
+               << errorMsg;
     }
 
-    virtual DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    virtual DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
                 >> errorCode
-                >> errorMsg;
+        >> errorMsg;
     }
 
     virtual CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -449,9 +439,6 @@ public:
     QString errorMsg;
     int errorCode;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(Response)
 
@@ -502,21 +489,13 @@ DataStream &operator>>(DataStream &stream, Response &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
-
 /******************************************************************************/
-
-
-
-
 
 class FactoryPrivate
 {
 public:
-    typedef Command (*CommandFactoryFunc)();
-    typedef Response (*ResponseFactoryFunc)();
+    typedef Command(*CommandFactoryFunc)();
+    typedef Response(*ResponseFactoryFunc)();
 
     FactoryPrivate()
     {
@@ -593,8 +572,9 @@ private:
         return T();
     }
 
-    template<Command::Type T,typename CmdType, typename RespType>
-    void registerType() {
+    template<Command::Type T, typename CmdType, typename RespType>
+    void registerType()
+    {
         CommandFactoryFunc cmdFunc = &commandFactoryFunc<CmdType>;
         ResponseFactoryFunc respFunc = &responseFactoryFunc<RespType>;
         registrar.insert(T, qMakePair<CommandFactoryFunc, ResponseFactoryFunc>(cmdFunc, respFunc));
@@ -621,14 +601,7 @@ Response Factory::response(Command::Type type)
     return iter.value().second();
 }
 
-
-
-
-
-
 /******************************************************************************/
-
-
 
 void serialize(QIODevice *device, const Command &command)
 {
@@ -637,7 +610,7 @@ void serialize(QIODevice *device, const Command &command)
 
 #if 0
     QLocalSocket *socket
-    if ((socket == qobject_cast<QLocalSocket*>(device))) {
+    if ((socket == qobject_cast<QLocalSocket *>(device))) {
         socket->flush();
     }
 #endif
@@ -664,13 +637,7 @@ Command deserialize(QIODevice *device)
     return cmd;
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 class FetchScopePrivate : public QSharedData
 {
@@ -687,14 +654,10 @@ public:
     Ancestor::Depth ancestorDepth;
 };
 
-
-
-
 FetchScope::FetchScope()
     : d(new FetchScopePrivate)
 {
 }
-
 
 FetchScope::FetchScope(FetchScope &&other)
 {
@@ -725,11 +688,11 @@ FetchScope &FetchScope::operator=(const FetchScope &other)
 bool FetchScope::operator==(const FetchScope &other) const
 {
     return (d == other.d)
-        || (d->requestedParts == other.d->requestedParts
-            && d->changedSince == other.d->changedSince
-            && d->tagFetchScope == other.d->tagFetchScope
-            && d->ancestorDepth == other.d->ancestorDepth
-            && d->fetchFlags == other.d->fetchFlags);
+           || (d->requestedParts == other.d->requestedParts
+               && d->changedSince == other.d->changedSince
+               && d->tagFetchScope == other.d->tagFetchScope
+               && d->ancestorDepth == other.d->ancestorDepth
+               && d->fetchFlags == other.d->fetchFlags);
 }
 
 bool FetchScope::operator!=(const FetchScope &other) const
@@ -752,7 +715,9 @@ QVector<QByteArray> FetchScope::requestedPayloads() const
     QVector<QByteArray> rv;
     std::copy_if(d->requestedParts.begin(), d->requestedParts.end(),
                  std::back_inserter(rv),
-                 [](const QByteArray &ba) { return ba.startsWith("PLD:"); });
+    [](const QByteArray & ba) {
+        return ba.startsWith("PLD:");
+    });
     return rv;
 }
 
@@ -858,7 +823,6 @@ void FetchScope::setFetch(FetchFlags attributes, bool fetch)
     }
 }
 
-
 bool FetchScope::fetch(FetchFlags flags) const
 {
     if (flags == None) {
@@ -880,24 +844,22 @@ void FetchScope::debugString(DebugBlock &blck) const
 DataStream &operator<<(DataStream &stream, const FetchScope &scope)
 {
     return stream << scope.d->requestedParts
-                  << scope.d->changedSince
-                  << scope.d->tagFetchScope
-                  << scope.d->ancestorDepth
-                  << scope.d->fetchFlags;
+           << scope.d->changedSince
+           << scope.d->tagFetchScope
+           << scope.d->ancestorDepth
+           << scope.d->fetchFlags;
 }
 
 DataStream &operator>>(DataStream &stream, FetchScope &scope)
 {
     return stream >> scope.d->requestedParts
-                  >> scope.d->changedSince
-                  >> scope.d->tagFetchScope
-                  >> scope.d->ancestorDepth
-                  >> scope.d->fetchFlags;
+           >> scope.d->changedSince
+           >> scope.d->tagFetchScope
+           >> scope.d->ancestorDepth
+           >> scope.d->fetchFlags;
 }
 
 /******************************************************************************/
-
-
 
 class ScopeContextPrivate : public QSharedData
 {
@@ -948,7 +910,6 @@ public:
     QVariant tagCtx;
 };
 
-
 ScopeContext::ScopeContext()
     : d(new ScopeContextPrivate)
 {
@@ -993,8 +954,8 @@ ScopeContext &ScopeContext::operator=(ScopeContext &&other)
 bool ScopeContext::operator==(const ScopeContext &other) const
 {
     return d == other.d ||
-        (d->collectionCtx == other.d->collectionCtx &&
-         d->tagCtx == other.d->tagCtx);
+           (d->collectionCtx == other.d->collectionCtx &&
+            d->tagCtx == other.d->tagCtx);
 }
 
 bool ScopeContext::operator!=(const ScopeContext &other) const
@@ -1078,7 +1039,9 @@ DataStream &operator>>(DataStream &stream, ScopeContext &context)
     qint64 id;
     QString rid;
 
-    for (ScopeContext::Type type : { ScopeContext::Collection, ScopeContext::Tag }) {
+    for (ScopeContext::Type type : {
+                ScopeContext::Collection, ScopeContext::Tag
+            }) {
         stream >> vType;
         if (vType == QVariant::LongLong) {
             stream >> id;
@@ -1094,9 +1057,7 @@ DataStream &operator>>(DataStream &stream, ScopeContext &context)
 
 #undef CTX
 
-
 /******************************************************************************/
-
 
 class PartMetaDataPrivate : public QSharedData
 {
@@ -1123,9 +1084,6 @@ public:
     int version;
     bool external;
 };
-
-
-
 
 PartMetaData::PartMetaData()
     : d(new PartMetaDataPrivate)
@@ -1166,10 +1124,10 @@ PartMetaData &PartMetaData::operator=(const PartMetaData &other)
 bool PartMetaData::operator==(const PartMetaData &other) const
 {
     return (d == other.d)
-        || (d->name == other.d->name
-            && d->size == other.d->size
-            && d->version == other.d->version
-            && d->external == other.d->external);
+           || (d->name == other.d->name
+               && d->size == other.d->size
+               && d->version == other.d->version
+               && d->external == other.d->external);
 }
 
 bool PartMetaData::operator!=(const PartMetaData &other) const
@@ -1221,24 +1179,20 @@ bool PartMetaData::isExternal() const
 DataStream &operator<<(DataStream &stream, const PartMetaData &part)
 {
     return stream << part.d->name
-                  << part.d->size
-                  << part.d->version
-                  << part.d->external;
+           << part.d->size
+           << part.d->version
+           << part.d->external;
 }
 
 DataStream &operator>>(DataStream &stream, PartMetaData &part)
 {
     return stream >> part.d->name
-                  >> part.d->size
-                  >> part.d->version
-                  >> part.d->external;
+           >> part.d->size
+           >> part.d->version
+           >> part.d->external;
 }
 
-
-
 /******************************************************************************/
-
-
 
 class CachePolicyPrivate : public QSharedData
 {
@@ -1256,9 +1210,6 @@ public:
     int interval;
     int cacheTimeout;
 };
-
-
-
 
 CachePolicy::CachePolicy()
     : d(new CachePolicyPrivate)
@@ -1294,11 +1245,11 @@ CachePolicy &CachePolicy::operator=(const CachePolicy &other)
 bool CachePolicy::operator==(const CachePolicy &other) const
 {
     return (d == other.d)
-        || (d->localParts == other.d->localParts
-            && d->interval == other.d->interval
-            && d->cacheTimeout == other.d->cacheTimeout
-            && d->syncOnDemand == other.d->syncOnDemand
-            && d->inherit == other.d->inherit);
+           || (d->localParts == other.d->localParts
+               && d->interval == other.d->interval
+               && d->cacheTimeout == other.d->cacheTimeout
+               && d->syncOnDemand == other.d->syncOnDemand
+               && d->inherit == other.d->inherit);
 }
 
 bool CachePolicy::operator!=(const CachePolicy &other) const
@@ -1363,27 +1314,22 @@ void CachePolicy::debugString(DebugBlock &blck) const
 DataStream &operator<<(DataStream &stream, const CachePolicy &policy)
 {
     return stream << policy.d->inherit
-                  << policy.d->interval
-                  << policy.d->cacheTimeout
-                  << policy.d->syncOnDemand
-                  << policy.d->localParts;
+           << policy.d->interval
+           << policy.d->cacheTimeout
+           << policy.d->syncOnDemand
+           << policy.d->localParts;
 }
 
 DataStream &operator>>(DataStream &stream, CachePolicy &policy)
 {
     return stream >> policy.d->inherit
-                  >> policy.d->interval
-                  >> policy.d->cacheTimeout
-                  >> policy.d->syncOnDemand
-                  >> policy.d->localParts;
+           >> policy.d->interval
+           >> policy.d->cacheTimeout
+           >> policy.d->syncOnDemand
+           >> policy.d->localParts;
 }
 
-
-
 /******************************************************************************/
-
-
-
 
 class AncestorPrivate : public QSharedData
 {
@@ -1398,10 +1344,6 @@ public:
     QString name;
     Attributes attrs;
 };
-
-
-
-
 
 Ancestor::Ancestor()
     : d(new AncestorPrivate)
@@ -1447,10 +1389,10 @@ Ancestor &Ancestor::operator=(const Ancestor &other)
 bool Ancestor::operator==(const Ancestor &other) const
 {
     return (d == other.d)
-        || (d->id == other.d->id
-            && d->remoteId == other.d->remoteId
-            && d->name == other.d->name
-            && d->attrs == other.d->attrs);
+           || (d->id == other.d->id
+               && d->remoteId == other.d->remoteId
+               && d->name == other.d->name
+               && d->attrs == other.d->attrs);
 }
 
 bool Ancestor::operator!=(const Ancestor &other) const
@@ -1505,27 +1447,20 @@ void Ancestor::debugString(DebugBlock &blck) const
 DataStream &operator<<(DataStream &stream, const Ancestor &ancestor)
 {
     return stream << ancestor.d->id
-                  << ancestor.d->remoteId
-                  << ancestor.d->name
-                  << ancestor.d->attrs;
+           << ancestor.d->remoteId
+           << ancestor.d->name
+           << ancestor.d->attrs;
 }
 
 DataStream &operator>>(DataStream &stream, Ancestor &ancestor)
 {
     return stream >> ancestor.d->id
-                  >> ancestor.d->remoteId
-                  >> ancestor.d->name
-                  >> ancestor.d->attrs;
+           >> ancestor.d->remoteId
+           >> ancestor.d->name
+           >> ancestor.d->attrs;
 }
 
-
-
-
 /******************************************************************************/
-
-
-
-
 
 class HelloResponsePrivate : public ResponsePrivate
 {
@@ -1547,10 +1482,10 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(server)
-            && COMPARE(message)
-            && COMPARE(protocol)
-            && COMPARE(generation);
+               && COMPARE(server)
+               && COMPARE(message)
+               && COMPARE(protocol)
+               && COMPARE(generation);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -1562,13 +1497,12 @@ public:
                << generation;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ResponsePrivate::deserialize(stream)
-               >> server
-               >> message
-               >> protocol
-               >> generation;
+                >> server
+        >> message
+        >> protocol
+        >> generation;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -1591,15 +1525,12 @@ public:
     uint generation;
 };
 
-
-
 #define checkCopyInvariant(_cmdType) \
     if (std::is_base_of<Response, std::remove_pointer<decltype(this)>::type>::value) { \
         assert(d_func()->commandType == Command::Invalid || d_func()->commandType == (_cmdType | Command::_ResponseBit)); \
     } else { \
         assert(d_func()->commandType == Command::Invalid || d_func()->commandType == _cmdType); \
     }
-
 
 AKONADI_DECLARE_PRIVATE(HelloResponse)
 
@@ -1664,13 +1595,7 @@ DataStream &operator>>(DataStream &stream, HelloResponse &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 class LoginCommandPrivate : public CommandPrivate
 {
@@ -1689,17 +1614,16 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(sessionId);
+               && COMPARE(sessionId);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-                << sessionId;
+               << sessionId;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
                 >> sessionId;
     }
@@ -1717,9 +1641,6 @@ public:
 
     QByteArray sessionId;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(LoginCommand)
 
@@ -1759,13 +1680,7 @@ DataStream &operator>>(DataStream &stream, LoginCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 LoginResponse::LoginResponse()
     : Response(new ResponsePrivate(Command::Login))
@@ -1778,13 +1693,7 @@ LoginResponse::LoginResponse(const Command &other)
     checkCopyInvariant(Command::Login);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 LogoutCommand::LogoutCommand()
     : Command(new CommandPrivate(Command::Logout))
@@ -1797,11 +1706,7 @@ LogoutCommand::LogoutCommand(const Command &other)
     checkCopyInvariant(Command::Logout);
 }
 
-
-
 /******************************************************************************/
-
-
 
 LogoutResponse::LogoutResponse()
     : Response(new ResponsePrivate(Command::Logout))
@@ -1814,13 +1719,7 @@ LogoutResponse::LogoutResponse(const Command &other)
     checkCopyInvariant(Command::Logout);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 class TransactionCommandPrivate : public CommandPrivate
 {
@@ -1838,7 +1737,7 @@ public:
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         CommandPrivate::debugString(blck);
-        blck.write("Mode", [this]() -> const char* {
+        blck.write("Mode", [this]() -> const char * {
             switch (mode) {
             case TransactionCommand::Begin:
                 return "Begin";
@@ -1855,17 +1754,16 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(mode);
+               && COMPARE(mode);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-                << mode;
+               << mode;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
                 >> mode;
     }
@@ -1877,9 +1775,6 @@ public:
 
     TransactionCommand::Mode mode;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(TransactionCommand)
 
@@ -1919,12 +1814,7 @@ DataStream &operator>>(DataStream &stream, TransactionCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /******************************************************************************/
-
-
-
 
 TransactionResponse::TransactionResponse()
     : Response(new ResponsePrivate(Command::Transaction))
@@ -1937,13 +1827,7 @@ TransactionResponse::TransactionResponse(const Command &other)
     checkCopyInvariant(Command::Transaction);
 }
 
-
-
 /******************************************************************************/
-
-
-
-
 
 class CreateItemCommandPrivate : public CommandPrivate
 {
@@ -1977,22 +1861,22 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(mergeMode)
-            && COMPARE(itemSize)
-            && COMPARE(collection)
-            && COMPARE(mimeType)
-            && COMPARE(gid)
-            && COMPARE(remoteId)
-            && COMPARE(remoteRev)
-            && COMPARE(dateTime)
-            && COMPARE(tags)
-            && COMPARE(addedTags)
-            && COMPARE(removedTags)
-            && COMPARE(flags)
-            && COMPARE(addedFlags)
-            && COMPARE(removedFlags)
-            && COMPARE(attributes)
-            && COMPARE(parts);
+               && COMPARE(mergeMode)
+               && COMPARE(itemSize)
+               && COMPARE(collection)
+               && COMPARE(mimeType)
+               && COMPARE(gid)
+               && COMPARE(remoteId)
+               && COMPARE(remoteRev)
+               && COMPARE(dateTime)
+               && COMPARE(tags)
+               && COMPARE(addedTags)
+               && COMPARE(removedTags)
+               && COMPARE(flags)
+               && COMPARE(addedFlags)
+               && COMPARE(removedFlags)
+               && COMPARE(attributes)
+               && COMPARE(parts);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -2016,25 +1900,24 @@ public:
                << parts;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> mergeMode
-               >> collection
-               >> itemSize
-               >> mimeType
-               >> gid
-               >> remoteId
-               >> remoteRev
-               >> dateTime
-               >> flags
-               >> addedFlags
-               >> removedFlags
-               >> tags
-               >> addedTags
-               >> removedTags
-               >> attributes
-               >> parts;
+                >> mergeMode
+        >> collection
+        >> itemSize
+        >> mimeType
+        >> gid
+        >> remoteId
+        >> remoteRev
+        >> dateTime
+        >> flags
+        >> addedFlags
+        >> removedFlags
+        >> tags
+        >> addedTags
+        >> removedTags
+        >> attributes
+        >> parts;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -2100,9 +1983,6 @@ public:
     CreateItemCommand::MergeModes mergeMode;
     qint64 itemSize;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(CreateItemCommand)
 
@@ -2266,13 +2146,7 @@ DataStream &operator>>(DataStream &stream, CreateItemCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 CreateItemResponse::CreateItemResponse()
     : Response(new ResponsePrivate(Command::CreateItem))
@@ -2285,13 +2159,7 @@ CreateItemResponse::CreateItemResponse(const Command &other)
     checkCopyInvariant(Command::CreateItem);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 class CopyItemsCommandPrivate : public CommandPrivate
 {
@@ -2313,8 +2181,8 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(items)
-            && COMPARE(dest);
+               && COMPARE(items)
+               && COMPARE(dest);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -2324,11 +2192,10 @@ public:
                << dest;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> items
-               >> dest;
+                >> items
+        >> dest;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -2346,9 +2213,6 @@ public:
     Scope items;
     Scope dest;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(CopyItemsCommand)
 
@@ -2398,13 +2262,7 @@ DataStream &operator>>(DataStream &stream, CopyItemsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 CopyItemsResponse::CopyItemsResponse()
     : Response(new ResponsePrivate(Command::CopyItems))
@@ -2417,12 +2275,7 @@ CopyItemsResponse::CopyItemsResponse(const Command &other)
     checkCopyInvariant(Command::CopyItems);
 }
 
-
-
 /******************************************************************************/
-
-
-
 
 class DeleteItemsCommandPrivate : public CommandPrivate
 {
@@ -2436,22 +2289,21 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(items)
-            && COMPARE(context);
+               && COMPARE(items)
+               && COMPARE(context);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-                << items
-                << context;
+               << items
+               << context;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
                 >> items
-                >> context;
+        >> context;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -2471,9 +2323,6 @@ public:
     Scope items;
     ScopeContext context;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(DeleteItemsCommand)
 
@@ -2513,13 +2362,7 @@ DataStream &operator>>(DataStream &stream, DeleteItemsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 DeleteItemsResponse::DeleteItemsResponse()
     : Response(new ResponsePrivate(Command::DeleteItems))
@@ -2532,14 +2375,7 @@ DeleteItemsResponse::DeleteItemsResponse(const Command &other)
     checkCopyInvariant(Command::DeleteItems);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
-
 
 class FetchRelationsCommandPrivate : public CommandPrivate
 {
@@ -2566,11 +2402,11 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(left)
-            && COMPARE(right)
-            && COMPARE(side)
-            && COMPARE(types)
-            && COMPARE(resource);
+               && COMPARE(left)
+               && COMPARE(right)
+               && COMPARE(side)
+               && COMPARE(types)
+               && COMPARE(resource);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -2583,14 +2419,13 @@ public:
                << resource;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> left
-               >> right
-               >> side
-               >> types
-               >> resource;
+                >> left
+        >> right
+        >> side
+        >> types
+        >> resource;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -2615,9 +2450,6 @@ public:
     QString resource;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(FetchRelationsCommand)
 
 FetchRelationsCommand::FetchRelationsCommand()
@@ -2626,14 +2458,14 @@ FetchRelationsCommand::FetchRelationsCommand()
 }
 
 FetchRelationsCommand::FetchRelationsCommand(qint64 side, const QVector<QByteArray> &types,
-                                             const QString &resource)
+        const QString &resource)
     : Command(new FetchRelationsCommandPrivate(-1, -1, side, types, resource))
 {
 }
 
 FetchRelationsCommand::FetchRelationsCommand(qint64 left, qint64 right,
-                                             const QVector<QByteArray> &types,
-                                             const QString &resource)
+        const QVector<QByteArray> &types,
+        const QString &resource)
     : Command(new FetchRelationsCommandPrivate(left, right, -1, types, resource))
 {
 }
@@ -2699,13 +2531,7 @@ DataStream &operator>>(DataStream &stream, FetchRelationsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /*****************************************************************************/
-
-
-
 
 class FetchRelationsResponsePrivate : public ResponsePrivate
 {
@@ -2732,15 +2558,15 @@ public:
         , remoteId(other.remoteId)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(left)
-            && COMPARE(leftMimeType)
-            && COMPARE(right)
-            && COMPARE(rightMimeType)
-            && COMPARE(type)
-            && COMPARE(remoteId);
+               && COMPARE(left)
+               && COMPARE(leftMimeType)
+               && COMPARE(right)
+               && COMPARE(rightMimeType)
+               && COMPARE(type)
+               && COMPARE(remoteId);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -2754,15 +2580,14 @@ public:
                << remoteId;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ResponsePrivate::deserialize(stream)
-               >> left
-               >> leftMimeType
-               >> right
-               >> rightMimeType
-               >> type
-               >> remoteId;
+                >> left
+        >> leftMimeType
+        >> right
+        >> rightMimeType
+        >> type
+        >> remoteId;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -2789,9 +2614,6 @@ public:
     QByteArray remoteId;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(FetchRelationsResponse)
 
 FetchRelationsResponse::FetchRelationsResponse()
@@ -2800,9 +2622,9 @@ FetchRelationsResponse::FetchRelationsResponse()
 }
 
 FetchRelationsResponse::FetchRelationsResponse(qint64 left, const QByteArray &leftMimeType,
-                                               qint64 right, const QByteArray &rightMimeType,
-                                               const QByteArray &type,
-                                               const QByteArray &remoteId)
+        qint64 right, const QByteArray &rightMimeType,
+        const QByteArray &type,
+        const QByteArray &remoteId)
     : Response(new FetchRelationsResponsePrivate(left, leftMimeType, right, rightMimeType, type, remoteId))
 {
 }
@@ -2852,13 +2674,7 @@ DataStream &operator>>(DataStream &stream, FetchRelationsResponse &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /******************************************************************************/
-
-
-
 
 class FetchTagsCommandPrivate : public CommandPrivate
 {
@@ -2875,12 +2691,12 @@ public:
         , idOnly(other.idOnly)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(idOnly)
-            && COMPARE(scope)
-            && COMPARE(attributes);
+               && COMPARE(idOnly)
+               && COMPARE(scope)
+               && COMPARE(attributes);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -2891,12 +2707,11 @@ public:
                << idOnly;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> scope
-               >> attributes
-               >> idOnly;
+                >> scope
+        >> attributes
+        >> idOnly;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -2916,9 +2731,6 @@ public:
     QSet<QByteArray> attributes;
     bool idOnly;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(FetchTagsCommand)
 
@@ -2971,12 +2783,7 @@ DataStream &operator>>(DataStream &stream, FetchTagsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /*****************************************************************************/
-
-
 
 class FetchTagsResponsePrivate : public ResponsePrivate
 {
@@ -3004,15 +2811,15 @@ public:
         , attributes(other.attributes)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(id)
-            && COMPARE(parentId)
-            && COMPARE(gid)
-            && COMPARE(type)
-            && COMPARE(remoteId)
-            && COMPARE(attributes);
+               && COMPARE(id)
+               && COMPARE(parentId)
+               && COMPARE(gid)
+               && COMPARE(type)
+               && COMPARE(remoteId)
+               && COMPARE(attributes);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -3026,15 +2833,14 @@ public:
                << attributes;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ResponsePrivate::deserialize(stream)
-               >> id
-               >> parentId
-               >> gid
-               >> type
-               >> remoteId
-               >> attributes;
+                >> id
+        >> parentId
+        >> gid
+        >> type
+        >> remoteId
+        >> attributes;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -3060,9 +2866,6 @@ public:
     QByteArray remoteId;
     Attributes attributes;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(FetchTagsResponse)
 
@@ -3149,13 +2952,7 @@ DataStream &operator>>(DataStream &stream, FetchTagsResponse &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /*****************************************************************************/
-
-
-
 
 class FetchItemsCommandPrivate : public CommandPrivate
 {
@@ -3176,12 +2973,12 @@ public:
         , fetchScope(other.fetchScope)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(scope)
-            && COMPARE(scopeContext)
-            && COMPARE(fetchScope);
+               && COMPARE(scope)
+               && COMPARE(scopeContext)
+               && COMPARE(fetchScope);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -3192,12 +2989,11 @@ public:
                << fetchScope;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> scope
-               >> scopeContext
-               >> fetchScope;
+                >> scope
+        >> scopeContext
+        >> fetchScope;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -3221,9 +3017,6 @@ public:
     ScopeContext scopeContext;
     FetchScope fetchScope;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(FetchItemsCommand)
 
@@ -3279,14 +3072,7 @@ DataStream &operator>>(DataStream &stream, FetchItemsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
-
 
 class FetchItemsResponsePrivate : public ResponsePrivate
 {
@@ -3318,25 +3104,25 @@ public:
         , revision(other.revision)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(id)
-            && COMPARE(collectionId)
-            && COMPARE(size)
-            && COMPARE(revision)
-            && COMPARE(remoteId)
-            && COMPARE(remoteRev)
-            && COMPARE(gid)
-            && COMPARE(mimeType)
-            && COMPARE(time)
-            && COMPARE(flags)
-            && COMPARE(tags)
-            && COMPARE(virtRefs)
-            && COMPARE(relations)
-            && COMPARE(ancestors)
-            && COMPARE(parts)
-            && COMPARE(cachedParts);
+               && COMPARE(id)
+               && COMPARE(collectionId)
+               && COMPARE(size)
+               && COMPARE(revision)
+               && COMPARE(remoteId)
+               && COMPARE(remoteRev)
+               && COMPARE(gid)
+               && COMPARE(mimeType)
+               && COMPARE(time)
+               && COMPARE(flags)
+               && COMPARE(tags)
+               && COMPARE(virtRefs)
+               && COMPARE(relations)
+               && COMPARE(ancestors)
+               && COMPARE(parts)
+               && COMPARE(cachedParts);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -3360,25 +3146,24 @@ public:
                << cachedParts;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ResponsePrivate::deserialize(stream)
-               >> id
-               >> revision
-               >> collectionId
-               >> remoteId
-               >> remoteRev
-               >> gid
-               >> size
-               >> mimeType
-               >> time
-               >> flags
-               >> tags
-               >> virtRefs
-               >> relations
-               >> ancestors
-               >> parts
-               >> cachedParts;
+                >> id
+        >> revision
+        >> collectionId
+        >> remoteId
+        >> remoteRev
+        >> gid
+        >> size
+        >> mimeType
+        >> time
+        >> flags
+        >> tags
+        >> virtRefs
+        >> relations
+        >> ancestors
+        >> parts
+        >> cachedParts;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -3451,9 +3236,6 @@ public:
     qint64 size;
     int revision;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(FetchItemsResponse)
 
@@ -3623,13 +3405,7 @@ DataStream &operator>>(DataStream &stream, FetchItemsResponse &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /*****************************************************************************/
-
-
-
 
 class LinkItemsCommandPrivate : public CommandPrivate
 {
@@ -3649,12 +3425,12 @@ public:
         , action(other.action)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(action)
-            && COMPARE(items)
-            && COMPARE(dest);
+               && COMPARE(action)
+               && COMPARE(items)
+               && COMPARE(dest);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -3665,12 +3441,11 @@ public:
                << dest;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> action
-               >> items
-               >> dest;
+                >> action
+        >> items
+        >> dest;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -3690,9 +3465,6 @@ public:
     Scope dest;
     LinkItemsCommand::Action action;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(LinkItemsCommand)
 
@@ -3735,13 +3507,7 @@ DataStream &operator>>(DataStream &stream, LinkItemsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 LinkItemsResponse::LinkItemsResponse()
     : Response(new ResponsePrivate(Command::LinkItems))
@@ -3754,13 +3520,7 @@ LinkItemsResponse::LinkItemsResponse(const Command &other)
     checkCopyInvariant(Command::LinkItems);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 class ModifyItemsCommandPrivate : public CommandPrivate
 {
@@ -3800,36 +3560,36 @@ public:
         , modifiedParts(other.modifiedParts)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(modifiedParts)
-            && COMPARE(size)
-            && COMPARE(oldRevision)
-            && COMPARE(dirty)
-            && COMPARE(invalidate)
-            && COMPARE(noResponse)
-            && COMPARE(notify)
-            && COMPARE(items)
-            && COMPARE(flags) && COMPARE(addedFlags) && COMPARE(removedFlags)
-            && COMPARE(tags) && COMPARE(addedTags) && COMPARE(removedTags)
-            && COMPARE(remoteId)
-            && COMPARE(remoteRev)
-            && COMPARE(gid)
-            && COMPARE(removedParts) && COMPARE(parts)
-            && COMPARE(attributes);
+               && COMPARE(modifiedParts)
+               && COMPARE(size)
+               && COMPARE(oldRevision)
+               && COMPARE(dirty)
+               && COMPARE(invalidate)
+               && COMPARE(noResponse)
+               && COMPARE(notify)
+               && COMPARE(items)
+               && COMPARE(flags) && COMPARE(addedFlags) && COMPARE(removedFlags)
+               && COMPARE(tags) && COMPARE(addedTags) && COMPARE(removedTags)
+               && COMPARE(remoteId)
+               && COMPARE(remoteRev)
+               && COMPARE(gid)
+               && COMPARE(removedParts) && COMPARE(parts)
+               && COMPARE(attributes);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         CommandPrivate::serialize(stream)
-               << items
-               << oldRevision
-               << modifiedParts
-               << dirty
-               << invalidate
-               << noResponse
-               << notify;
+                << items
+                << oldRevision
+                << modifiedParts
+                << dirty
+                << invalidate
+                << noResponse
+                << notify;
 
         if (modifiedParts & ModifyItemsCommand::Flags) {
             stream << flags;
@@ -3873,54 +3633,66 @@ public:
         return stream;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         CommandPrivate::deserialize(stream)
-               >> items
-               >> oldRevision
-               >> modifiedParts
-               >> dirty
-               >> invalidate
-               >> noResponse
-               >> notify;
+                >> items
+        >> oldRevision
+        >> modifiedParts
+        >> dirty
+        >> invalidate
+        >> noResponse
+        >> notify;
 
-        if (modifiedParts & ModifyItemsCommand::Flags) {
+        if (modifiedParts & ModifyItemsCommand::Flags)
+        {
             stream >> flags;
         }
-        if (modifiedParts & ModifyItemsCommand::AddedFlags) {
+        if (modifiedParts & ModifyItemsCommand::AddedFlags)
+        {
             stream >> addedFlags;
         }
-        if (modifiedParts & ModifyItemsCommand::RemovedFlags) {
+        if (modifiedParts & ModifyItemsCommand::RemovedFlags)
+        {
             stream >> removedFlags;
         }
-        if (modifiedParts & ModifyItemsCommand::Tags) {
+        if (modifiedParts & ModifyItemsCommand::Tags)
+        {
             stream >> tags;
         }
-        if (modifiedParts & ModifyItemsCommand::AddedTags) {
+        if (modifiedParts & ModifyItemsCommand::AddedTags)
+        {
             stream >> addedTags;
         }
-        if (modifiedParts & ModifyItemsCommand::RemovedTags) {
+        if (modifiedParts & ModifyItemsCommand::RemovedTags)
+        {
             stream >> removedTags;
         }
-        if (modifiedParts & ModifyItemsCommand::RemoteID) {
+        if (modifiedParts & ModifyItemsCommand::RemoteID)
+        {
             stream >> remoteId;
         }
-        if (modifiedParts & ModifyItemsCommand::RemoteRevision) {
+        if (modifiedParts & ModifyItemsCommand::RemoteRevision)
+        {
             stream >> remoteRev;
         }
-        if (modifiedParts & ModifyItemsCommand::GID) {
+        if (modifiedParts & ModifyItemsCommand::GID)
+        {
             stream >> gid;
         }
-        if (modifiedParts & ModifyItemsCommand::Size) {
+        if (modifiedParts & ModifyItemsCommand::Size)
+        {
             stream >> size;
         }
-        if (modifiedParts & ModifyItemsCommand::Parts) {
+        if (modifiedParts & ModifyItemsCommand::Parts)
+        {
             stream >> parts;
         }
-        if (modifiedParts & ModifyItemsCommand::RemovedParts) {
+        if (modifiedParts & ModifyItemsCommand::RemovedParts)
+        {
             stream >> removedParts;
         }
-        if (modifiedParts & ModifyItemsCommand::Attributes) {
+        if (modifiedParts & ModifyItemsCommand::Attributes)
+        {
             stream >> attributes;
         }
         return stream;
@@ -4050,9 +3822,6 @@ public:
 
     ModifyItemsCommand::ModifiedParts modifiedParts;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(ModifyItemsCommand)
 
@@ -4271,12 +4040,7 @@ DataStream &operator>>(DataStream &stream, ModifyItemsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class ModifyItemsResponsePrivate : public ResponsePrivate
 {
@@ -4294,12 +4058,12 @@ public:
         , modificationDt(other.modificationDt)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(id)
-            && COMPARE(newRevision)
-            && COMPARE(modificationDt);
+               && COMPARE(id)
+               && COMPARE(newRevision)
+               && COMPARE(modificationDt);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -4310,12 +4074,11 @@ public:
                << modificationDt;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ResponsePrivate::deserialize(stream)
-               >> id
-               >> newRevision
-               >> modificationDt;
+                >> id
+        >> newRevision
+        >> modificationDt;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -4335,9 +4098,6 @@ public:
     int newRevision;
     QDateTime modificationDt;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(ModifyItemsResponse)
 
@@ -4386,11 +4146,7 @@ DataStream &operator>>(DataStream &stream, ModifyItemsResponse &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
 
 class MoveItemsCommandPrivate : public CommandPrivate
 {
@@ -4410,12 +4166,12 @@ public:
         , context(other.context)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(items)
-            && COMPARE(dest)
-            && COMPARE(context);
+               && COMPARE(items)
+               && COMPARE(dest)
+               && COMPARE(context);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -4426,12 +4182,11 @@ public:
                << context;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> items
-               >> dest
-               >> context;
+                >> items
+        >> dest
+        >> context;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -4453,9 +4208,6 @@ public:
     Scope dest;
     ScopeContext context;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(MoveItemsCommand)
 
@@ -4506,11 +4258,7 @@ DataStream &operator>>(DataStream &stream, MoveItemsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
 
 MoveItemsResponse::MoveItemsResponse()
     : Response(new ResponsePrivate(Command::MoveItems))
@@ -4523,12 +4271,7 @@ MoveItemsResponse::MoveItemsResponse(const Command &other)
     checkCopyInvariant(Command::MoveItems);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class CreateCollectionCommandPrivate : public CommandPrivate
 {
@@ -4574,38 +4317,37 @@ public:
                << isVirtual;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> parent
-               >> name
-               >> remoteId
-               >> remoteRev
-               >> mimeTypes
-               >> cachePolicy
-               >> attributes
-               >> enabled
-               >> sync
-               >> display
-               >> index
-               >> isVirtual;
+                >> parent
+        >> name
+        >> remoteId
+        >> remoteRev
+        >> mimeTypes
+        >> cachePolicy
+        >> attributes
+        >> enabled
+        >> sync
+        >> display
+        >> index
+        >> isVirtual;
     }
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(sync)
-            && COMPARE(display)
-            && COMPARE(index)
-            && COMPARE(enabled)
-            && COMPARE(isVirtual)
-            && COMPARE(parent)
-            && COMPARE(name)
-            && COMPARE(remoteId)
-            && COMPARE(remoteRev)
-            && COMPARE(mimeTypes)
-            && COMPARE(cachePolicy)
-            && COMPARE(attributes);
+               && COMPARE(sync)
+               && COMPARE(display)
+               && COMPARE(index)
+               && COMPARE(enabled)
+               && COMPARE(isVirtual)
+               && COMPARE(parent)
+               && COMPARE(name)
+               && COMPARE(remoteId)
+               && COMPARE(remoteRev)
+               && COMPARE(mimeTypes)
+               && COMPARE(cachePolicy)
+               && COMPARE(attributes);
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -4645,9 +4387,6 @@ public:
     bool enabled;
     bool isVirtual;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(CreateCollectionCommand)
 
@@ -4780,13 +4519,7 @@ DataStream &operator>>(DataStream &stream, CreateCollectionCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 CreateCollectionResponse::CreateCollectionResponse()
     : Response(new ResponsePrivate(Command::CreateCollection))
@@ -4799,12 +4532,7 @@ CreateCollectionResponse::CreateCollectionResponse(const Command &other)
     checkCopyInvariant(Command::CreateCollection);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class CopyCollectionCommandPrivate : public CommandPrivate
 {
@@ -4821,11 +4549,11 @@ public:
         , dest(other.dest)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(collection)
-            && COMPARE(dest);
+               && COMPARE(collection)
+               && COMPARE(dest);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -4835,11 +4563,10 @@ public:
                << dest;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> collection
-               >> dest;
+                >> collection
+        >> dest;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -4858,9 +4585,6 @@ public:
     Scope dest;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(CopyCollectionCommand)
 
 CopyCollectionCommand::CopyCollectionCommand()
@@ -4869,7 +4593,7 @@ CopyCollectionCommand::CopyCollectionCommand()
 }
 
 CopyCollectionCommand::CopyCollectionCommand(const Scope &collection,
-                                             const Scope &destination)
+        const Scope &destination)
     : Command(new CopyCollectionCommandPrivate(collection, destination))
 {
 }
@@ -4899,12 +4623,7 @@ DataStream &operator>>(DataStream &stream, CopyCollectionCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 CopyCollectionResponse::CopyCollectionResponse()
     : Response(new ResponsePrivate(Command::CopyCollection))
@@ -4917,12 +4636,7 @@ CopyCollectionResponse::CopyCollectionResponse(const Command &other)
     checkCopyInvariant(Command::CopyCollection);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class DeleteCollectionCommandPrivate : public CommandPrivate
 {
@@ -4936,10 +4650,10 @@ public:
         , collection(other.collection)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(collection);
+               && COMPARE(collection);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -4948,10 +4662,9 @@ public:
                << collection;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> collection;
+                >> collection;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -4967,9 +4680,6 @@ public:
 
     Scope collection;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(DeleteCollectionCommand)
 
@@ -5004,12 +4714,7 @@ DataStream &operator>>(DataStream &stream, DeleteCollectionCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 DeleteCollectionResponse::DeleteCollectionResponse()
     : Response(new ResponsePrivate(Command::DeleteCollection))
@@ -5022,12 +4727,7 @@ DeleteCollectionResponse::DeleteCollectionResponse(const Command &other)
     checkCopyInvariant(Command::DeleteCollection);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class FetchCollectionStatsCommandPrivate : public CommandPrivate
 {
@@ -5041,10 +4741,10 @@ public:
         , collection(other.collection)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(collection);
+               && COMPARE(collection);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -5053,10 +4753,9 @@ public:
                << collection;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> collection;
+                >> collection;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -5072,9 +4771,6 @@ public:
 
     Scope collection;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(FetchCollectionStatsCommand)
 
@@ -5109,12 +4805,7 @@ DataStream &operator>>(DataStream &stream, FetchCollectionStatsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class FetchCollectionStatsResponsePrivate : public ResponsePrivate
 {
@@ -5134,12 +4825,12 @@ public:
         , size(other.size)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(count)
-            && COMPARE(unseen)
-            && COMPARE(size);
+               && COMPARE(count)
+               && COMPARE(unseen)
+               && COMPARE(size);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -5150,12 +4841,11 @@ public:
                << size;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ResponsePrivate::deserialize(stream)
-               >> count
-               >> unseen
-               >> size;
+                >> count
+        >> unseen
+        >> size;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -5176,9 +4866,6 @@ public:
     qint64 size;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(FetchCollectionStatsResponse)
 
 FetchCollectionStatsResponse::FetchCollectionStatsResponse()
@@ -5187,8 +4874,8 @@ FetchCollectionStatsResponse::FetchCollectionStatsResponse()
 }
 
 FetchCollectionStatsResponse::FetchCollectionStatsResponse(qint64 count,
-                                                           qint64 unseen,
-                                                           qint64 size)
+        qint64 unseen,
+        qint64 size)
     : Response(new FetchCollectionStatsResponsePrivate(count, unseen, size))
 {
 }
@@ -5222,13 +4909,7 @@ DataStream &operator>>(DataStream &stream, FetchCollectionStatsResponse &command
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 class FetchCollectionsCommandPrivate : public CommandPrivate
 {
@@ -5259,20 +4940,20 @@ public:
         , stats(other.stats)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(depth)
-            && COMPARE(ancestorsDepth)
-            && COMPARE(enabled)
-            && COMPARE(sync)
-            && COMPARE(display)
-            && COMPARE(index)
-            && COMPARE(stats)
-            && COMPARE(collections)
-            && COMPARE(resource)
-            && COMPARE(mimeTypes)
-            && COMPARE(ancestorsAttributes);
+               && COMPARE(depth)
+               && COMPARE(ancestorsDepth)
+               && COMPARE(enabled)
+               && COMPARE(sync)
+               && COMPARE(display)
+               && COMPARE(index)
+               && COMPARE(stats)
+               && COMPARE(collections)
+               && COMPARE(resource)
+               && COMPARE(mimeTypes)
+               && COMPARE(ancestorsAttributes);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -5291,20 +4972,19 @@ public:
                << stats;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> collections
-               >> resource
-               >> mimeTypes
-               >> depth
-               >> ancestorsDepth
-               >> ancestorsAttributes
-               >> enabled
-               >> sync
-               >> display
-               >> index
-               >> stats;
+                >> collections
+        >> resource
+        >> mimeTypes
+        >> depth
+        >> ancestorsDepth
+        >> ancestorsAttributes
+        >> enabled
+        >> sync
+        >> display
+        >> index
+        >> stats;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -5340,9 +5020,6 @@ public:
     bool index;
     bool stats;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(FetchCollectionsCommand)
 
@@ -5467,11 +5144,7 @@ DataStream &operator>>(DataStream &stream, FetchCollectionsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
 
 class FetchCollectionsResponsePrivate : public ResponsePrivate
 {
@@ -5510,22 +5183,22 @@ public:
         , enabled(other.enabled)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(id)
-            && COMPARE(parentId)
-            && COMPARE(display) && COMPARE(sync) && COMPARE(index)
-            && COMPARE(isVirtual) && COMPARE(referenced) && COMPARE(enabled)
-            && COMPARE(name)
-            && COMPARE(remoteId) && COMPARE(remoteRev)
-            && COMPARE(resource)
-            && COMPARE(mimeTypes)
-            && COMPARE(stats)
-            && COMPARE(searchQuery) && COMPARE(searchCols)
-            && COMPARE(ancestors)
-            && COMPARE(cachePolicy)
-            && COMPARE(attributes);
+               && COMPARE(id)
+               && COMPARE(parentId)
+               && COMPARE(display) && COMPARE(sync) && COMPARE(index)
+               && COMPARE(isVirtual) && COMPARE(referenced) && COMPARE(enabled)
+               && COMPARE(name)
+               && COMPARE(remoteId) && COMPARE(remoteRev)
+               && COMPARE(resource)
+               && COMPARE(mimeTypes)
+               && COMPARE(stats)
+               && COMPARE(searchQuery) && COMPARE(searchCols)
+               && COMPARE(ancestors)
+               && COMPARE(cachePolicy)
+               && COMPARE(attributes);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -5552,28 +5225,27 @@ public:
                << enabled;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ResponsePrivate::deserialize(stream)
-               >> id
-               >> parentId
-               >> name
-               >> mimeTypes
-               >> remoteId
-               >> remoteRev
-               >> resource
-               >> stats
-               >> searchQuery
-               >> searchCols
-               >> ancestors
-               >> cachePolicy
-               >> attributes
-               >> display
-               >> sync
-               >> index
-               >> isVirtual
-               >> referenced
-               >> enabled;
+                >> id
+        >> parentId
+        >> name
+        >> mimeTypes
+        >> remoteId
+        >> remoteRev
+        >> resource
+        >> stats
+        >> searchQuery
+        >> searchCols
+        >> ancestors
+        >> cachePolicy
+        >> attributes
+        >> display
+        >> sync
+        >> index
+        >> isVirtual
+        >> referenced
+        >> enabled;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -5637,9 +5309,6 @@ public:
     bool referenced;
     bool enabled;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(FetchCollectionsResponse)
 
@@ -5841,12 +5510,7 @@ DataStream &operator>>(DataStream &stream, FetchCollectionsResponse &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class ModifyCollectionCommandPrivate : public CommandPrivate
 {
@@ -5887,28 +5551,28 @@ public:
         , modifiedParts(other.modifiedParts)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(modifiedParts)
-            && COMPARE(parentId)
-            && COMPARE(sync) && COMPARE(display) && COMPARE(index)
-            && COMPARE(enabled) && COMPARE(referenced)
-            && COMPARE(persistentSearchRemote) && COMPARE(persistentSearchRecursive)
-            && COMPARE(collection)
-            && COMPARE(mimeTypes)
-            && COMPARE(cachePolicy)
-            && COMPARE(name)
-            && COMPARE(remoteId) && COMPARE(remoteRev)
-            && COMPARE(persistentSearchQuery) && COMPARE(persistentSearchCols)
-            && COMPARE(removedAttributes) && COMPARE(attributes);
+               && COMPARE(modifiedParts)
+               && COMPARE(parentId)
+               && COMPARE(sync) && COMPARE(display) && COMPARE(index)
+               && COMPARE(enabled) && COMPARE(referenced)
+               && COMPARE(persistentSearchRemote) && COMPARE(persistentSearchRecursive)
+               && COMPARE(collection)
+               && COMPARE(mimeTypes)
+               && COMPARE(cachePolicy)
+               && COMPARE(name)
+               && COMPARE(remoteId) && COMPARE(remoteRev)
+               && COMPARE(persistentSearchQuery) && COMPARE(persistentSearchCols)
+               && COMPARE(removedAttributes) && COMPARE(attributes);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         CommandPrivate::serialize(stream)
-               << collection
-               << modifiedParts;
+                << collection
+                << modifiedParts;
 
         if (modifiedParts & ModifyCollectionCommand::Name) {
             stream << name;
@@ -5952,49 +5616,59 @@ public:
         return stream;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         CommandPrivate::deserialize(stream)
-               >> collection
-               >> modifiedParts;
+                >> collection
+        >> modifiedParts;
 
-        if (modifiedParts & ModifyCollectionCommand::Name) {
+        if (modifiedParts & ModifyCollectionCommand::Name)
+        {
             stream >> name;
         }
-        if (modifiedParts & ModifyCollectionCommand::RemoteID) {
+        if (modifiedParts & ModifyCollectionCommand::RemoteID)
+        {
             stream >> remoteId;
         }
-        if (modifiedParts & ModifyCollectionCommand::RemoteRevision) {
+        if (modifiedParts & ModifyCollectionCommand::RemoteRevision)
+        {
             stream >> remoteRev;
         }
-        if (modifiedParts & ModifyCollectionCommand::ParentID) {
+        if (modifiedParts & ModifyCollectionCommand::ParentID)
+        {
             stream >> parentId;
         }
-        if (modifiedParts & ModifyCollectionCommand::MimeTypes) {
+        if (modifiedParts & ModifyCollectionCommand::MimeTypes)
+        {
             stream >> mimeTypes;
         }
-        if (modifiedParts & ModifyCollectionCommand::CachePolicy) {
+        if (modifiedParts & ModifyCollectionCommand::CachePolicy)
+        {
             stream >> cachePolicy;
         }
-        if (modifiedParts & ModifyCollectionCommand::PersistentSearch) {
+        if (modifiedParts & ModifyCollectionCommand::PersistentSearch)
+        {
             stream >> persistentSearchQuery
-                   >> persistentSearchCols
-                   >> persistentSearchRemote
-                   >> persistentSearchRecursive;
+            >> persistentSearchCols
+            >> persistentSearchRemote
+            >> persistentSearchRecursive;
         }
-        if (modifiedParts & ModifyCollectionCommand::RemovedAttributes) {
+        if (modifiedParts & ModifyCollectionCommand::RemovedAttributes)
+        {
             stream >> removedAttributes;
         }
-        if (modifiedParts & ModifyCollectionCommand::Attributes) {
+        if (modifiedParts & ModifyCollectionCommand::Attributes)
+        {
             stream >> attributes;
         }
-        if (modifiedParts & ModifyCollectionCommand::ListPreferences) {
+        if (modifiedParts & ModifyCollectionCommand::ListPreferences)
+        {
             stream >> enabled
-                   >> sync
-                   >> display
-                   >> index;
+            >> sync
+            >> display
+            >> index;
         }
-        if (modifiedParts & ModifyCollectionCommand::Referenced) {
+        if (modifiedParts & ModifyCollectionCommand::Referenced)
+        {
             stream >> referenced;
         }
         return stream;
@@ -6112,9 +5786,6 @@ public:
 
     ModifyCollectionCommand::ModifiedParts modifiedParts;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(ModifyCollectionCommand)
 
@@ -6324,12 +5995,7 @@ DataStream &operator>>(DataStream &stream, ModifyCollectionCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /****************************************************************************/
-
-
 
 ModifyCollectionResponse::ModifyCollectionResponse()
     : Response(new ResponsePrivate(Command::ModifyCollection))
@@ -6342,12 +6008,7 @@ ModifyCollectionResponse::ModifyCollectionResponse(const Command &other)
     checkCopyInvariant(Command::ModifyCollection);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class MoveCollectionCommandPrivate : public CommandPrivate
 {
@@ -6364,11 +6025,11 @@ public:
         , dest(other.dest)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(collection)
-            && COMPARE(dest);
+               && COMPARE(collection)
+               && COMPARE(dest);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -6378,11 +6039,10 @@ public:
                << dest;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> collection
-               >> dest;
+                >> collection
+        >> dest;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -6401,9 +6061,6 @@ public:
     Scope dest;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(MoveCollectionCommand)
 
 MoveCollectionCommand::MoveCollectionCommand()
@@ -6412,7 +6069,7 @@ MoveCollectionCommand::MoveCollectionCommand()
 }
 
 MoveCollectionCommand::MoveCollectionCommand(const Scope &collection,
-                                             const Scope &destination)
+        const Scope &destination)
     : Command(new MoveCollectionCommandPrivate(collection, destination))
 {
 }
@@ -6442,12 +6099,7 @@ DataStream &operator>>(DataStream &stream, MoveCollectionCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 MoveCollectionResponse::MoveCollectionResponse()
     : Response(new ResponsePrivate(Command::MoveCollection))
@@ -6460,12 +6112,7 @@ MoveCollectionResponse::MoveCollectionResponse(const Command &other)
     checkCopyInvariant(Command::MoveCollection);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class SearchCommandPrivate : public CommandPrivate
 {
@@ -6485,14 +6132,14 @@ public:
         , remote(other.remote)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(recursive) && COMPARE(remote)
-            && COMPARE(mimeTypes)
-            && COMPARE(collections)
-            && COMPARE(query)
-            && COMPARE(fetchScope);
+               && COMPARE(recursive) && COMPARE(remote)
+               && COMPARE(mimeTypes)
+               && COMPARE(collections)
+               && COMPARE(query)
+               && COMPARE(fetchScope);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -6506,15 +6153,14 @@ public:
                << remote;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> mimeTypes
-               >> collections
-               >> query
-               >> fetchScope
-               >> recursive
-               >> remote;
+                >> mimeTypes
+        >> collections
+        >> query
+        >> fetchScope
+        >> recursive
+        >> remote;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -6542,9 +6188,6 @@ public:
     bool recursive;
     bool remote;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(SearchCommand)
 
@@ -6623,11 +6266,7 @@ DataStream &operator>>(DataStream &stream, SearchCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
 
 SearchResponse::SearchResponse()
     : Response(new ResponsePrivate(Command::Search))
@@ -6640,12 +6279,7 @@ SearchResponse::SearchResponse(const Command &other)
     checkCopyInvariant(Command::Search);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class SearchResultCommandPrivate : public CommandPrivate
 {
@@ -6665,12 +6299,12 @@ public:
         , collectionId(other.collectionId)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(searchId)
-            && COMPARE(collectionId)
-            && COMPARE(result);
+               && COMPARE(searchId)
+               && COMPARE(collectionId)
+               && COMPARE(result);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -6681,12 +6315,11 @@ public:
                << result;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> searchId
-               >> collectionId
-               >> result;
+                >> searchId
+        >> collectionId
+        >> result;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -6707,9 +6340,6 @@ public:
     qint64 collectionId;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(SearchResultCommand)
 
 SearchResultCommand::SearchResultCommand()
@@ -6718,8 +6348,8 @@ SearchResultCommand::SearchResultCommand()
 }
 
 SearchResultCommand::SearchResultCommand(const QByteArray &searchId,
-                                         qint64 collectionId,
-                                         const Scope &result)
+        qint64 collectionId,
+        const Scope &result)
     : Command(new SearchResultCommandPrivate(searchId, collectionId, result))
 {
 }
@@ -6755,13 +6385,7 @@ DataStream &operator>>(DataStream &stream, SearchResultCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 SearchResultResponse::SearchResultResponse()
     : Response(new ResponsePrivate(Command::SearchResult))
@@ -6774,12 +6398,7 @@ SearchResultResponse::SearchResultResponse(const Command &other)
     checkCopyInvariant(Command::SearchResult);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class StoreSearchCommandPrivate : public CommandPrivate
 {
@@ -6799,14 +6418,14 @@ public:
         , recursive(other.recursive)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(remote) && COMPARE(recursive)
-            && COMPARE(name)
-            && COMPARE(query)
-            && COMPARE(mimeTypes)
-            && COMPARE(queryCols);
+               && COMPARE(remote) && COMPARE(recursive)
+               && COMPARE(name)
+               && COMPARE(query)
+               && COMPARE(mimeTypes)
+               && COMPARE(queryCols);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -6820,15 +6439,14 @@ public:
                << recursive;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> name
-               >> query
-               >> mimeTypes
-               >> queryCols
-               >> remote
-               >> recursive;
+                >> name
+        >> query
+        >> mimeTypes
+        >> queryCols
+        >> remote
+        >> recursive;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -6854,9 +6472,6 @@ public:
     bool remote;
     bool recursive;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(StoreSearchCommand)
 
@@ -6935,12 +6550,7 @@ DataStream &operator>>(DataStream &stream, StoreSearchCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 StoreSearchResponse::StoreSearchResponse()
     : Response(new ResponsePrivate(Command::StoreSearch))
@@ -6953,12 +6563,7 @@ StoreSearchResponse::StoreSearchResponse(const Command &other)
     checkCopyInvariant(Command::StoreSearch);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class CreateTagCommandPrivate : public CommandPrivate
 {
@@ -6978,15 +6583,15 @@ public:
         , merge(other.merge)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(parentId)
-            && COMPARE(merge)
-            && COMPARE(gid)
-            && COMPARE(remoteId)
-            && COMPARE(type)
-            && COMPARE(attributes);
+               && COMPARE(parentId)
+               && COMPARE(merge)
+               && COMPARE(gid)
+               && COMPARE(remoteId)
+               && COMPARE(type)
+               && COMPARE(attributes);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -7000,15 +6605,14 @@ public:
                << merge;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> gid
-               >> remoteId
-               >> type
-               >> attributes
-               >> parentId
-               >> merge;
+                >> gid
+        >> remoteId
+        >> type
+        >> attributes
+        >> parentId
+        >> merge;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -7034,9 +6638,6 @@ public:
     qint64 parentId;
     bool merge;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(CreateTagCommand)
 
@@ -7115,12 +6716,7 @@ DataStream &operator>>(DataStream &stream, CreateTagCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 CreateTagResponse::CreateTagResponse()
     : Response(new ResponsePrivate(Command::CreateTag))
@@ -7133,13 +6729,7 @@ CreateTagResponse::CreateTagResponse(const Command &other)
     checkCopyInvariant(Command::CreateTag);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 class DeleteTagCommandPrivate : public CommandPrivate
 {
@@ -7153,10 +6743,10 @@ public:
         , tag(other.tag)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(tag);
+               && COMPARE(tag);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -7165,10 +6755,9 @@ public:
                << tag;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> tag;
+                >> tag;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -7184,9 +6773,6 @@ public:
 
     Scope tag;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(DeleteTagCommand)
 
@@ -7221,12 +6807,7 @@ DataStream &operator>>(DataStream &stream, DeleteTagCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 DeleteTagResponse::DeleteTagResponse()
     : Response(new ResponsePrivate(Command::DeleteTag))
@@ -7239,14 +6820,7 @@ DeleteTagResponse::DeleteTagResponse(const Command &other)
     checkCopyInvariant(Command::DeleteTag);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
-
 
 class ModifyTagCommandPrivate : public CommandPrivate
 {
@@ -7268,22 +6842,22 @@ public:
         , modifiedParts(other.modifiedParts)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(modifiedParts)
-            && COMPARE(parentId)
-            && COMPARE(tagId)
-            && COMPARE(type)
-            && COMPARE(remoteId)
-            && COMPARE(removedAttributes);
+               && COMPARE(modifiedParts)
+               && COMPARE(parentId)
+               && COMPARE(tagId)
+               && COMPARE(type)
+               && COMPARE(remoteId)
+               && COMPARE(removedAttributes);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         CommandPrivate::serialize(stream)
-               << tagId
-               << modifiedParts;
+                << tagId
+                << modifiedParts;
         if (modifiedParts & ModifyTagCommand::ParentId) {
             stream << parentId;
         }
@@ -7302,24 +6876,28 @@ public:
         return stream;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         CommandPrivate::deserialize(stream)
-               >> tagId
-               >> modifiedParts;
-        if (modifiedParts & ModifyTagCommand::ParentId) {
+                >> tagId
+        >> modifiedParts;
+        if (modifiedParts & ModifyTagCommand::ParentId)
+        {
             stream >> parentId;
         }
-        if (modifiedParts & ModifyTagCommand::Type) {
+        if (modifiedParts & ModifyTagCommand::Type)
+        {
             stream >> type;
         }
-        if (modifiedParts & ModifyTagCommand::RemoteId) {
+        if (modifiedParts & ModifyTagCommand::RemoteId)
+        {
             stream >> remoteId;
         }
-        if (modifiedParts & ModifyTagCommand::RemovedAttributes) {
+        if (modifiedParts & ModifyTagCommand::RemovedAttributes)
+        {
             stream >> removedAttributes;
         }
-        if (modifiedParts & ModifyTagCommand::Attributes) {
+        if (modifiedParts & ModifyTagCommand::Attributes)
+        {
             stream >> attributes;
         }
         return stream;
@@ -7377,9 +6955,6 @@ public:
     qint64 parentId;
     ModifyTagCommand::ModifiedParts modifiedParts;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(ModifyTagCommand)
 
@@ -7469,13 +7044,7 @@ DataStream &operator>>(DataStream &stream, ModifyTagCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 ModifyTagResponse::ModifyTagResponse()
     : Response(new ResponsePrivate(Command::ModifyTag))
@@ -7488,13 +7057,7 @@ ModifyTagResponse::ModifyTagResponse(const Command &other)
     checkCopyInvariant(Command::ModifyTag);
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 class ModifyRelationCommandPrivate : public CommandPrivate
 {
@@ -7516,13 +7079,13 @@ public:
         , right(other.right)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(left)
-            && COMPARE(right)
-            && COMPARE(type)
-            && COMPARE(remoteId);
+               && COMPARE(left)
+               && COMPARE(right)
+               && COMPARE(type)
+               && COMPARE(remoteId);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -7534,13 +7097,12 @@ public:
                << remoteId;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> left
-               >> right
-               >> type
-               >> remoteId;
+                >> left
+        >> right
+        >> type
+        >> remoteId;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -7563,9 +7125,6 @@ public:
     qint64 right;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(ModifyRelationCommand)
 
 ModifyRelationCommand::ModifyRelationCommand()
@@ -7574,8 +7133,8 @@ ModifyRelationCommand::ModifyRelationCommand()
 }
 
 ModifyRelationCommand::ModifyRelationCommand(qint64 left, qint64 right,
-                                             const QByteArray &type,
-                                             const QByteArray &remoteId)
+        const QByteArray &type,
+        const QByteArray &remoteId)
     : Command(new ModifyRelationCommandPrivate(left, right, type, remoteId))
 {
 }
@@ -7632,12 +7191,7 @@ DataStream &operator>>(DataStream &stream, ModifyRelationCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 ModifyRelationResponse::ModifyRelationResponse()
     : Response(new ResponsePrivate(Command::ModifyRelation))
@@ -7650,12 +7204,7 @@ ModifyRelationResponse::ModifyRelationResponse(const Command &other)
     checkCopyInvariant(Command::ModifyRelation);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class RemoveRelationsCommandPrivate : public CommandPrivate
 {
@@ -7674,12 +7223,12 @@ public:
         , type(other.type)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(left)
-            && COMPARE(right)
-            && COMPARE(type);
+               && COMPARE(left)
+               && COMPARE(right)
+               && COMPARE(type);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -7690,12 +7239,11 @@ public:
                << type;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> left
-               >> right
-               >> type;
+                >> left
+        >> right
+        >> type;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -7715,9 +7263,6 @@ public:
     qint64 right;
     QByteArray type;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(RemoveRelationsCommand)
 
@@ -7774,12 +7319,7 @@ DataStream &operator>>(DataStream &stream, RemoveRelationsCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 RemoveRelationsResponse::RemoveRelationsResponse()
     : Response(new ResponsePrivate(Command::RemoveRelations))
@@ -7792,12 +7332,7 @@ RemoveRelationsResponse::RemoveRelationsResponse(const Command &other)
     checkCopyInvariant(Command::RemoveRelations);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class SelectResourceCommandPrivate : public CommandPrivate
 {
@@ -7811,10 +7346,10 @@ public:
         , resourceId(other.resourceId)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(resourceId);
+               && COMPARE(resourceId);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -7823,10 +7358,9 @@ public:
                << resourceId;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> resourceId;
+                >> resourceId;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -7842,9 +7376,6 @@ public:
 
     QString resourceId;
 };
-
-
-
 
 AKONADI_DECLARE_PRIVATE(SelectResourceCommand)
 
@@ -7879,12 +7410,7 @@ DataStream &operator>>(DataStream &stream, SelectResourceCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 SelectResourceResponse::SelectResourceResponse()
     : Response(new ResponsePrivate(Command::SelectResource))
@@ -7897,12 +7423,7 @@ SelectResourceResponse::SelectResourceResponse(const Command &other)
     checkCopyInvariant(Command::SelectResource);
 }
 
-
-
 /****************************************************************************/
-
-
-
 
 class StreamPayloadCommandPrivate : public CommandPrivate
 {
@@ -7922,12 +7443,12 @@ public:
         , request(other.request)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(request)
-            && COMPARE(payloadName)
-            && COMPARE(dest);
+               && COMPARE(request)
+               && COMPARE(payloadName)
+               && COMPARE(dest);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -7938,12 +7459,11 @@ public:
                << dest;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> payloadName
-               >> request
-               >> dest;
+                >> payloadName
+        >> request
+        >> dest;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -7964,9 +7484,6 @@ public:
     StreamPayloadCommand::Request request;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(StreamPayloadCommand)
 
 StreamPayloadCommand::StreamPayloadCommand()
@@ -7975,7 +7492,7 @@ StreamPayloadCommand::StreamPayloadCommand()
 }
 
 StreamPayloadCommand::StreamPayloadCommand(const QByteArray &name, Request request,
-                                           const QString &dest)
+        const QString &dest)
     : Command(new StreamPayloadCommandPrivate(name, request, dest))
 {
 }
@@ -8025,13 +7542,7 @@ DataStream &operator>>(DataStream &stream, StreamPayloadCommand &command)
     return stream;
 }
 
-
-
-
 /****************************************************************************/
-
-
-
 
 class StreamPayloadResponsePrivate : public ResponsePrivate
 {
@@ -8051,12 +7562,12 @@ public:
         , metaData(other.metaData)
     {}
 
-    bool compare(const CommandPrivate* other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ResponsePrivate::compare(other)
-            && COMPARE(metaData)
-            && COMPARE(payloadName)
-            && COMPARE(data);
+               && COMPARE(metaData)
+               && COMPARE(payloadName)
+               && COMPARE(data);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -8067,12 +7578,11 @@ public:
                << data;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ResponsePrivate::deserialize(stream)
-               >> payloadName
-               >> metaData
-               >> data;
+                >> payloadName
+        >> metaData
+        >> data;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -8096,9 +7606,6 @@ public:
     PartMetaData metaData;
 };
 
-
-
-
 AKONADI_DECLARE_PRIVATE(StreamPayloadResponse)
 
 StreamPayloadResponse::StreamPayloadResponse()
@@ -8107,20 +7614,20 @@ StreamPayloadResponse::StreamPayloadResponse()
 }
 
 StreamPayloadResponse::StreamPayloadResponse(const QByteArray &payloadName,
-                                             const PartMetaData &metaData)
+        const PartMetaData &metaData)
     : Response(new StreamPayloadResponsePrivate(payloadName, metaData))
 {
 }
 
 StreamPayloadResponse::StreamPayloadResponse(const QByteArray &payloadName,
-                                             const QByteArray &data)
+        const QByteArray &data)
     : Response(new StreamPayloadResponsePrivate(payloadName, PartMetaData(), data))
 {
 }
 
 StreamPayloadResponse::StreamPayloadResponse(const QByteArray &payloadName,
-                                             const PartMetaData &metaData,
-                                             const QByteArray &data)
+        const PartMetaData &metaData,
+        const QByteArray &data)
     : Response(new StreamPayloadResponsePrivate(payloadName, metaData, data))
 {
 }
@@ -8166,11 +7673,7 @@ DataStream &operator>>(DataStream &stream, StreamPayloadResponse &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 /******************************************************************************/
-
 
 class ChangeNotificationPrivate : public CommandPrivate
 {
@@ -8190,7 +7693,7 @@ public:
     virtual bool compare(const Akonadi::Protocol::CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(sessionId);
+               && COMPARE(sessionId);
     }
 
     virtual DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -8199,14 +7702,12 @@ public:
                << sessionId;
     }
 
-    virtual DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    virtual DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-               >> sessionId;
+                >> sessionId;
     }
 
     QByteArray sessionId;
-
 
     // For internal use only: Akonadi server can add some additional information
     // that might be useful when evaluating the notification for example, but
@@ -8237,15 +7738,15 @@ bool ChangeNotification::isRemove() const
     case Command::Invalid:
         return false;
     case Command::ItemChangeNotification:
-        return static_cast<const Protocol::ItemChangeNotification*>(this)->operation() == ItemChangeNotification::Remove;
+        return static_cast<const Protocol::ItemChangeNotification *>(this)->operation() == ItemChangeNotification::Remove;
     case Command::CollectionChangeNotification:
-        return static_cast<const Protocol::CollectionChangeNotification*>(this)->operation() == CollectionChangeNotification::Remove;
+        return static_cast<const Protocol::CollectionChangeNotification *>(this)->operation() == CollectionChangeNotification::Remove;
     case Command::TagChangeNotification:
-        return static_cast<const Protocol::TagChangeNotification*>(this)->operation() == TagChangeNotification::Remove;
+        return static_cast<const Protocol::TagChangeNotification *>(this)->operation() == TagChangeNotification::Remove;
     case Command::RelationChangeNotification:
-        return static_cast<const Protocol::RelationChangeNotification*>(this)->operation() == RelationChangeNotification::Remove;
+        return static_cast<const Protocol::RelationChangeNotification *>(this)->operation() == RelationChangeNotification::Remove;
     case Command::SubscriptionChangeNotification:
-        return static_cast<const Protocol::SubscriptionChangeNotification*>(this)->operation() == SubscriptionChangeNotification::Remove;
+        return static_cast<const Protocol::SubscriptionChangeNotification *>(this)->operation() == SubscriptionChangeNotification::Remove;
     case Command::DebugChangeNotification:
         return false;
     default:
@@ -8261,9 +7762,9 @@ bool ChangeNotification::isMove() const
     case Command::Invalid:
         return false;
     case Command::ItemChangeNotification:
-        return static_cast<const Protocol::ItemChangeNotification*>(this)->operation() == ItemChangeNotification::Move;
+        return static_cast<const Protocol::ItemChangeNotification *>(this)->operation() == ItemChangeNotification::Move;
     case Command::CollectionChangeNotification:
-        return static_cast<const Protocol::CollectionChangeNotification*>(this)->operation() == CollectionChangeNotification::Move;
+        return static_cast<const Protocol::CollectionChangeNotification *>(this)->operation() == CollectionChangeNotification::Move;
     case Command::TagChangeNotification:
     case Command::RelationChangeNotification:
     case Command::SubscriptionChangeNotification:
@@ -8301,9 +7802,6 @@ QVector<QByteArray> ChangeNotification::metadata() const
     return d_func()->metadata;
 }
 
-
-
-
 class ItemChangeNotificationPrivate : public ChangeNotificationPrivate
 {
 public:
@@ -8334,19 +7832,19 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ChangeNotificationPrivate::compare(other)
-             && COMPARE(operation)
-             && COMPARE(parts)
-             && COMPARE(addedFlags)
-             && COMPARE(removedFlags)
-             && COMPARE(addedTags)
-             && COMPARE(removedTags)
-             && COMPARE(addedRelations)
-             && COMPARE(removedRelations)
-             && COMPARE(items)
-             && COMPARE(resource)
-             && COMPARE(destResource)
-             && COMPARE(parentCollection)
-             && COMPARE(parentDestCollection);
+               && COMPARE(operation)
+               && COMPARE(parts)
+               && COMPARE(addedFlags)
+               && COMPARE(removedFlags)
+               && COMPARE(addedTags)
+               && COMPARE(removedTags)
+               && COMPARE(addedRelations)
+               && COMPARE(removedRelations)
+               && COMPARE(items)
+               && COMPARE(resource)
+               && COMPARE(destResource)
+               && COMPARE(parentCollection)
+               && COMPARE(parentDestCollection);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -8372,28 +7870,28 @@ public:
                << parentDestCollection;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ChangeNotificationPrivate::deserialize(stream)
-               >> operation
-               >> items
-               >> resource
-               >> destResource
-               >> parts
-               >> addedFlags
-               >> removedFlags
-               >> addedTags
-               >> removedTags
-               >> addedRelations
-               >> removedRelations
-               >> parentCollection
-               >> parentDestCollection;
+                >> operation
+        >> items
+        >> resource
+        >> destResource
+        >> parts
+        >> addedFlags
+        >> removedFlags
+        >> addedTags
+        >> removedTags
+        >> addedRelations
+        >> removedRelations
+        >> parentCollection
+        >> parentDestCollection;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         blck.write("Operation", [this]() -> QString {
-            switch (operation) {
+            switch (operation)
+            {
             case ItemChangeNotification::Add:
                 return QStringLiteral("Add");
             case ItemChangeNotification::Modify:
@@ -8459,7 +7957,6 @@ public:
 
 AKONADI_DECLARE_PRIVATE(ItemChangeNotification)
 
-
 ItemChangeNotification::ItemChangeNotification()
     : ChangeNotification(new ItemChangeNotificationPrivate)
 {
@@ -8475,7 +7972,7 @@ bool ItemChangeNotification::isValid() const
 {
     Q_D(const ItemChangeNotification);
     return d->commandType == Command::ItemChangeNotification
-        && d->operation != InvalidOp;
+           && d->operation != InvalidOp;
 }
 
 void ItemChangeNotification::addItem(Id id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType)
@@ -8635,31 +8132,31 @@ void ItemChangeNotification::setRemovedRelations(const QSet<Relation> &relations
 DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ItemChangeNotification::Item &item)
 {
     return stream << item.id
-                  << item.remoteId
-                  << item.remoteRevision
-                  << item.mimeType;
+           << item.remoteId
+           << item.remoteRevision
+           << item.mimeType;
 }
 
 DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ItemChangeNotification::Item &item)
 {
     return stream >> item.id
-                  >> item.remoteId
-                  >> item.remoteRevision
-                  >> item.mimeType;
+           >> item.remoteId
+           >> item.remoteRevision
+           >> item.mimeType;
 }
 
 DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ItemChangeNotification::Relation &relation)
 {
     return stream << relation.leftId
-                  << relation.rightId
-                  << relation.type;
+           << relation.rightId
+           << relation.type;
 }
 
 DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ItemChangeNotification::Relation &relation)
 {
     return stream >> relation.leftId
-                  >> relation.rightId
-                  >> relation.type;
+           >> relation.rightId
+           >> relation.type;
 }
 
 DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::ItemChangeNotification &command)
@@ -8671,10 +8168,6 @@ DataStream &operator>>(DataStream &stream, Akonadi::Protocol::ItemChangeNotifica
 {
     return command.d_func()->deserialize(stream);
 }
-
-
-
-
 
 class CollectionChangeNotificationPrivate : public ChangeNotificationPrivate
 {
@@ -8714,9 +8207,9 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ChangeNotificationPrivate::compare(other)
-             && COMPARE(operation)
-             && COMPARE(changedParts)
-             && compareWithoutOpAndParts(static_cast<const CollectionChangeNotificationPrivate*>(other));
+               && COMPARE(operation)
+               && COMPARE(changedParts)
+               && compareWithoutOpAndParts(static_cast<const CollectionChangeNotificationPrivate *>(other));
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -8738,24 +8231,24 @@ public:
                << parentDestCollection;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ChangeNotificationPrivate::deserialize(stream)
-               >> operation
-               >> id
-               >> remoteId
-               >> remoteRevision
-               >> resource
-               >> destResource
-               >> changedParts
-               >> parentCollection
-               >> parentDestCollection;
+                >> operation
+        >> id
+        >> remoteId
+        >> remoteRevision
+        >> resource
+        >> destResource
+        >> changedParts
+        >> parentCollection
+        >> parentDestCollection;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         blck.write("Operation", [this]() -> QString {
-            switch (operation) {
+            switch (operation)
+            {
             case CollectionChangeNotification::Add:
                 return QStringLiteral("Add");
             case CollectionChangeNotification::Modify:
@@ -8797,7 +8290,6 @@ public:
 
 AKONADI_DECLARE_PRIVATE(CollectionChangeNotification)
 
-
 CollectionChangeNotification::CollectionChangeNotification()
     : ChangeNotification(new CollectionChangeNotificationPrivate)
 {
@@ -8813,7 +8305,7 @@ bool CollectionChangeNotification::isValid() const
 {
     Q_D(const CollectionChangeNotification);
     return d->commandType == Command::CollectionChangeNotification
-        && d->operation != InvalidOp;
+           && d->operation != InvalidOp;
 }
 
 CollectionChangeNotification::Id CollectionChangeNotification::id() const
@@ -8926,9 +8418,9 @@ bool CollectionChangeNotification::appendAndCompress(ChangeNotification::List &l
     if (msg.operation() == Modify) {
         // We are iterating from end, since there's higher probability of finding
         // matching notification
-        for (auto iter = list.end(), begin = list.begin(); iter != begin; ) {
+        for (auto iter = list.end(), begin = list.begin(); iter != begin;) {
             --iter;
-            CollectionChangeNotification &it = static_cast<CollectionChangeNotification&>(*iter);
+            CollectionChangeNotification &it = static_cast<CollectionChangeNotification &>(*iter);
             if (msg.d_func()->compareWithoutOpAndParts(it.d_func())) {
                 // both are modifications, merge them together and drop the new one
                 if (msg.operation() == Modify && it.operation() == Modify) {
@@ -8953,8 +8445,6 @@ bool CollectionChangeNotification::appendAndCompress(ChangeNotification::List &l
     return true;
 }
 
-
-
 class TagChangeNotificationPrivate : public ChangeNotificationPrivate
 {
 public:
@@ -8974,10 +8464,10 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ChangeNotificationPrivate::compare(other)
-             && COMPARE(operation)
-             && COMPARE(id)
-             && COMPARE(remoteId)
-             && COMPARE(resource);
+               && COMPARE(operation)
+               && COMPARE(id)
+               && COMPARE(remoteId)
+               && COMPARE(resource);
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -8994,19 +8484,19 @@ public:
                << resource;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ChangeNotificationPrivate::deserialize(stream)
-               >> operation
-               >> id
-               >> remoteId
-               >> resource;
+                >> operation
+        >> id
+        >> remoteId
+        >> resource;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         blck.write("Operation", [this]() -> QString {
-            switch (operation) {
+            switch (operation)
+            {
             case TagChangeNotification::Add:
                 return QStringLiteral("Add");
             case TagChangeNotification::Modify:
@@ -9025,8 +8515,6 @@ public:
         blck.write("Resource", resource);
     }
 
-
-
     QByteArray resource;
     QString remoteId;
     TagChangeNotification::Id id;
@@ -9034,7 +8522,6 @@ public:
 };
 
 AKONADI_DECLARE_PRIVATE(TagChangeNotification)
-
 
 TagChangeNotification::TagChangeNotification()
     : ChangeNotification(new TagChangeNotificationPrivate)
@@ -9051,7 +8538,7 @@ bool TagChangeNotification::isValid() const
 {
     Q_D(const TagChangeNotification);
     return d->commandType == Command::TagChangeNotification
-        && d->operation != InvalidOp;
+           && d->operation != InvalidOp;
 }
 
 void TagChangeNotification::setId(Id id)
@@ -9104,8 +8591,6 @@ DataStream &operator>>(DataStream &stream, Akonadi::Protocol::TagChangeNotificat
     return command.d_func()->deserialize(stream);
 }
 
-
-
 class RelationChangeNotificationPrivate : public ChangeNotificationPrivate
 {
 
@@ -9131,17 +8616,18 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ChangeNotificationPrivate::compare(other)
-            && COMPARE(operation)
-            && COMPARE(left)
-            && COMPARE(right)
-            && COMPARE(remoteId)
-            && COMPARE(type);
+               && COMPARE(operation)
+               && COMPARE(left)
+               && COMPARE(right)
+               && COMPARE(remoteId)
+               && COMPARE(type);
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
     {
         blck.write("Operation", [this]() -> QString {
-            switch (operation) {
+            switch (operation)
+            {
             case RelationChangeNotification::Add:
                 return QStringLiteral("Add");
             case RelationChangeNotification::Remove:
@@ -9158,24 +8644,23 @@ public:
         blck.write("Type", type);
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return ChangeNotificationPrivate::deserialize(stream)
-            >> operation
-            >> left
-            >> right
-            >> remoteId
-            >> type;
+                >> operation
+        >> left
+        >> right
+        >> remoteId
+        >> type;
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return ChangeNotificationPrivate::serialize(stream)
-            << operation
-            << left
-            << right
-            << remoteId
-            << type;
+               << operation
+               << left
+               << right
+               << remoteId
+               << type;
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -9253,7 +8738,6 @@ void RelationChangeNotification::setType(const QString &type)
     d_func()->type = type;
 }
 
-
 DataStream &operator<<(DataStream &stream, const Akonadi::Protocol::RelationChangeNotification &command)
 {
     return command.d_func()->serialize(stream);
@@ -9277,8 +8761,8 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(subscriberName)
-            && COMPARE(session);
+               && COMPARE(subscriberName)
+               && COMPARE(session);
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -9287,18 +8771,17 @@ public:
         blck.write("Session", session);
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         return CommandPrivate::deserialize(stream)
-            >> subscriberName
-            >> session;
+                >> subscriberName
+        >> session;
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::serialize(stream)
-            << subscriberName
-            << session;
+               << subscriberName
+               << session;
     }
 
     CommandPrivate *clone() const Q_DECL_OVERRIDE
@@ -9318,7 +8801,7 @@ CreateSubscriptionCommand::CreateSubscriptionCommand()
 }
 
 CreateSubscriptionCommand::CreateSubscriptionCommand(const QByteArray &subscriberName,
-                                                     const QByteArray &session)
+        const QByteArray &session)
     : Command(new CreateSubscriptionCommandPrivate(subscriberName, session))
 {
 }
@@ -9359,9 +8842,6 @@ DataStream &operator>>(DataStream &stream, CreateSubscriptionCommand &command)
     return command.d_func()->deserialize(stream);
 }
 
-
-
-
 CreateSubscriptionResponse::CreateSubscriptionResponse()
     : Response(new ResponsePrivate(Command::CreateSubscription))
 {
@@ -9372,9 +8852,6 @@ CreateSubscriptionResponse::CreateSubscriptionResponse(const Command &other)
 {
     checkCopyInvariant(Command::CreateSubscription);
 }
-
-
-
 
 class ModifySubscriptionCommandPrivate : public CommandPrivate
 {
@@ -9414,24 +8891,24 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return CommandPrivate::compare(other)
-            && COMPARE(subscriberName)
-            && COMPARE(modifiedParts)
-            && COMPARE(startCollections)
-            && COMPARE(stopCollections)
-            && COMPARE(startItems)
-            && COMPARE(stopItems)
-            && COMPARE(startTags)
-            && COMPARE(stopTags)
-            && COMPARE(startTypes)
-            && COMPARE(stopTypes)
-            && COMPARE(startResources)
-            && COMPARE(stopResources)
-            && COMPARE(startMimeTypes)
-            && COMPARE(stopMimeTypes)
-            && COMPARE(startSessions)
-            && COMPARE(stopSessions)
-            && COMPARE(monitorAll)
-            && COMPARE(exclusive);
+               && COMPARE(subscriberName)
+               && COMPARE(modifiedParts)
+               && COMPARE(startCollections)
+               && COMPARE(stopCollections)
+               && COMPARE(startItems)
+               && COMPARE(stopItems)
+               && COMPARE(startTags)
+               && COMPARE(stopTags)
+               && COMPARE(startTypes)
+               && COMPARE(stopTypes)
+               && COMPARE(startResources)
+               && COMPARE(stopResources)
+               && COMPARE(startMimeTypes)
+               && COMPARE(stopMimeTypes)
+               && COMPARE(startSessions)
+               && COMPARE(stopSessions)
+               && COMPARE(monitorAll)
+               && COMPARE(exclusive);
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -9493,8 +8970,8 @@ public:
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         CommandPrivate::serialize(stream)
-            << subscriberName
-            << modifiedParts;
+                << subscriberName
+                << modifiedParts;
         if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Add)) {
             stream << startCollections;
         }
@@ -9546,57 +9023,72 @@ public:
         return stream;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         CommandPrivate::deserialize(stream)
-               >> subscriberName
-               >> modifiedParts;
-        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Add)) {
+                >> subscriberName
+        >> modifiedParts;
+        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Add))
+        {
             stream >> startCollections;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Remove)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Collections | ModifySubscriptionCommand::Remove))
+        {
             stream >> stopCollections;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Add)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Add))
+        {
             stream >> startItems;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Remove)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Items | ModifySubscriptionCommand::Remove))
+        {
             stream >> stopItems;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Add)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Add))
+        {
             stream >> startTags;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Remove)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Tags | ModifySubscriptionCommand::Remove))
+        {
             stream >> stopTags;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Add)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Add))
+        {
             stream >> startTypes;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Remove)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Types | ModifySubscriptionCommand::Remove))
+        {
             stream >> stopTypes;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Add)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Add))
+        {
             stream >> startResources;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Remove)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Resources | ModifySubscriptionCommand::Remove))
+        {
             stream >> stopResources;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Add)) {
+        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Add))
+        {
             stream >> startMimeTypes;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Remove)) {
+        if (modifiedParts & (ModifySubscriptionCommand::MimeTypes | ModifySubscriptionCommand::Remove))
+        {
             stream >> stopMimeTypes;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Add)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Add))
+        {
             stream >> startSessions;
         }
-        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Remove)) {
+        if (modifiedParts & (ModifySubscriptionCommand::Sessions | ModifySubscriptionCommand::Remove))
+        {
             stream >> stopSessions;
         }
-        if (modifiedParts & ModifySubscriptionCommand::AllFlag) {
+        if (modifiedParts & ModifySubscriptionCommand::AllFlag)
+        {
             stream >> monitorAll;
         }
-        if (modifiedParts & ModifySubscriptionCommand::ExclusiveFlag) {
+        if (modifiedParts & ModifySubscriptionCommand::ExclusiveFlag)
+        {
             stream >> exclusive;
         }
         return stream;
@@ -9856,8 +9348,6 @@ DataStream &operator>>(DataStream &stream, ModifySubscriptionCommand &command)
     return command.d_ptr->deserialize(stream);
 }
 
-
-
 ModifySubscriptionResponse::ModifySubscriptionResponse()
     : Response(new ResponsePrivate(Command::ModifySubscription))
 {
@@ -9868,8 +9358,6 @@ ModifySubscriptionResponse::ModifySubscriptionResponse(const Command &other)
 {
     checkCopyInvariant(Command::ModifySubscription);
 }
-
-
 
 class SubscriptionChangeNotificationPrivate : public ChangeNotificationPrivate
 {
@@ -9899,17 +9387,17 @@ public:
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ChangeNotificationPrivate::compare(other)
-            && COMPARE(operation)
-            && COMPARE(subscriber)
-            && COMPARE(collections)
-            && COMPARE(items)
-            && COMPARE(tags)
-            && COMPARE(types)
-            && COMPARE(mimeTypes)
-            && COMPARE(resources)
-            && COMPARE(ignoredSessions)
-            && COMPARE(isAllMonitored)
-            && COMPARE(isExclusive);
+               && COMPARE(operation)
+               && COMPARE(subscriber)
+               && COMPARE(collections)
+               && COMPARE(items)
+               && COMPARE(tags)
+               && COMPARE(types)
+               && COMPARE(mimeTypes)
+               && COMPARE(resources)
+               && COMPARE(ignoredSessions)
+               && COMPARE(isAllMonitored)
+               && COMPARE(isExclusive);
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -9931,34 +9419,33 @@ public:
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         ChangeNotificationPrivate::serialize(stream)
-            << subscriber
-            << operation
-            << collections
-            << items
-            << tags
-            << types
-            << mimeTypes
-            << resources
-            << ignoredSessions
-            << isAllMonitored
-            << isExclusive;
+                << subscriber
+                << operation
+                << collections
+                << items
+                << tags
+                << types
+                << mimeTypes
+                << resources
+                << ignoredSessions
+                << isAllMonitored
+                << isExclusive;
         return stream;
     }
 
-    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         ChangeNotificationPrivate::deserialize(stream)
-            >> subscriber
-            >> operation
-            >> collections
-            >> items
-            >> tags
-            >> types
-            >> mimeTypes
-            >> resources
-            >> ignoredSessions
-            >> isAllMonitored
-            >> isExclusive;
+                >> subscriber
+        >> operation
+        >> collections
+        >> items
+        >> tags
+        >> types
+        >> mimeTypes
+        >> resources
+        >> ignoredSessions
+        >> isAllMonitored
+        >> isExclusive;
         return stream;
     }
 
@@ -10113,7 +9600,6 @@ DataStream &operator>>(DataStream &stream, SubscriptionChangeNotification &ntf)
     return ntf.d_func()->deserialize(stream);
 }
 
-
 class DebugChangeNotificationPrivate : public ChangeNotificationPrivate
 {
 public:
@@ -10131,12 +9617,12 @@ public:
     {
     }
 
-    bool compare(const CommandPrivate * other) const Q_DECL_OVERRIDE
+    bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
     {
         return ChangeNotificationPrivate::compare(other)
-            || COMPARE(notification)
-            || COMPARE(listeners)
-            || COMPARE(timestamp);
+               || COMPARE(notification)
+               || COMPARE(listeners)
+               || COMPARE(timestamp);
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -10148,30 +9634,29 @@ public:
         blck.write("Timestamp", timestamp);
     }
 
-    DataStream & deserialize(DataStream &stream) Q_DECL_OVERRIDE
-    {
+    DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
         Command::Type type;
         ChangeNotificationPrivate::deserialize(stream)
-            >> type;
+                >> type;
         auto ntf = Factory::command(type);
         stream >> ntf
-               >> listeners
-               >> timestamp;
+        >> listeners
+        >> timestamp;
         notification = ntf;
         return stream;
     }
 
-    DataStream & serialize(DataStream &stream) const Q_DECL_OVERRIDE
+    DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
     {
         ChangeNotificationPrivate::serialize(stream)
-            << notification.type()
-            << notification
-            << listeners
-            << timestamp;
+                << notification.type()
+                << notification
+                << listeners
+                << timestamp;
         return stream;
     }
 
-    CommandPrivate * clone() const Q_DECL_OVERRIDE
+    CommandPrivate *clone() const Q_DECL_OVERRIDE
     {
         return new DebugChangeNotificationPrivate(*this);
     }
@@ -10233,8 +9718,6 @@ DataStream &operator>>(DataStream &stream, DebugChangeNotification &ntf)
 {
     return ntf.d_func()->deserialize(stream);
 }
-
-
 
 } // namespace Protocol
 } // namespace Akonadi

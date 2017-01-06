@@ -73,7 +73,6 @@ Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partN
     return Protocol::StreamPayloadResponse(cmd).metaData();
 }
 
-
 bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
 {
     Protocol::PartMetaData metaPart = requestPartMetaData(partName);

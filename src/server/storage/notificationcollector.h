@@ -29,8 +29,10 @@
 #include <QObject>
 #include <QString>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class DataStore;
 
@@ -232,7 +234,7 @@ private:
                           const QSet<qint64> &addedTags = QSet<qint64>(),
                           const QSet<qint64> &removedTags = QSet<qint64>(),
                           const Relation::List &addedRelations = Relation::List(),
-                          const Relation::List &removedRelations = Relation::List() );
+                          const Relation::List &removedRelations = Relation::List());
     void itemNotification(Protocol::ItemChangeNotification::Operation op,
                           const PimItem &item,
                           const Collection &collection,
@@ -246,9 +248,9 @@ private:
                                 const QSet<QByteArray> &changes = QSet<QByteArray>(),
                                 const QByteArray &destResource = QByteArray());
     void tagNotification(Protocol::TagChangeNotification::Operation op,
-                          const Tag &tag,
-                          const QByteArray &resource = QByteArray(),
-                          const QString &remoteId = QString());
+                         const Tag &tag,
+                         const QByteArray &resource = QByteArray(),
+                         const QString &remoteId = QString());
     void relationNotification(Protocol::RelationChangeNotification::Operation op,
                               const Relation &relation);
     void dispatchNotification(const Protocol::ChangeNotification &msg);

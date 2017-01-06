@@ -82,7 +82,7 @@ int main(int argc, char **argv)
     QGuiApplication::setFallbackSessionManagementEnabled(false);
 
     // akonadi_control is started on-demand, no need to auto restart by session.
-    auto disableSessionManagement = [](QSessionManager &sm) {
+    auto disableSessionManagement = [](QSessionManager & sm) {
         sm.setRestartHint(QSessionManager::RestartNever);
     };
     QObject::connect(qApp, &QGuiApplication::commitDataRequest, disableSessionManagement);

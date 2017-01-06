@@ -34,13 +34,13 @@ class AKONADI_TESTS_EXPORT ItemChangeLog
 public:
     static ItemChangeLog *instance();
 
-    Item::Flags& addedFlags(const ItemPrivate *priv);
-    Item::Flags& deletedFlags(const ItemPrivate *priv);
+    Item::Flags &addedFlags(const ItemPrivate *priv);
+    Item::Flags &deletedFlags(const ItemPrivate *priv);
 
-    Tag::List& addedTags(const ItemPrivate *priv);
-    Tag::List& deletedTags(const ItemPrivate *priv);
+    Tag::List &addedTags(const ItemPrivate *priv);
+    Tag::List &deletedTags(const ItemPrivate *priv);
 
-    QSet<QByteArray>& deletedAttributes(const ItemPrivate *priv);
+    QSet<QByteArray> &deletedAttributes(const ItemPrivate *priv);
 
     void clearItemChangelog(const ItemPrivate *priv);
 
@@ -49,11 +49,11 @@ private:
 
     static ItemChangeLog *sInstance;
 
-    QHash<ItemPrivate*, Item::Flags> m_addedFlags;
-    QHash<ItemPrivate*, Item::Flags> m_deletedFlags;
-    QHash<ItemPrivate*, Tag::List> m_addedTags;
-    QHash<ItemPrivate*, Tag::List> m_deletedTags;
-    QHash<ItemPrivate*, QSet<QByteArray>> m_deletedAttributes;
+    QHash<ItemPrivate *, Item::Flags> m_addedFlags;
+    QHash<ItemPrivate *, Item::Flags> m_deletedFlags;
+    QHash<ItemPrivate *, Tag::List> m_addedTags;
+    QHash<ItemPrivate *, Tag::List> m_deletedTags;
+    QHash<ItemPrivate *, QSet<QByteArray>> m_deletedAttributes;
 };
 
 } // namespace Akonadi

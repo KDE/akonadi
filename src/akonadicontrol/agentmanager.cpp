@@ -157,14 +157,14 @@ void AgentManager::cleanup()
     mStorageController->setCrashPolicy(ProcessControl::StopOnCrash);
     org::freedesktop::Akonadi::Server *serverIface =
         new org::freedesktop::Akonadi::Server(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/Server"),
-                                              QDBusConnection::sessionBus(), this);
+                QDBusConnection::sessionBus(), this);
     serverIface->quit();
 
     if (mAgentServer) {
         mAgentServer->setCrashPolicy(ProcessControl::StopOnCrash);
         org::freedesktop::Akonadi::AgentServer *agentServerIface =
             new org::freedesktop::Akonadi::AgentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
-                                                       QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
+                    QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
         agentServerIface->quit();
     }
 
@@ -635,7 +635,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 
     if ((name == Akonadi::DBus::serviceName(Akonadi::DBus::Server) || name == Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)) && !newOwner.isEmpty()) {
         if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))
-            && (!mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)))) {
+                && (!mAgentServer || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)))) {
             // server is operational, start agents
             continueStartup();
         }
@@ -681,61 +681,61 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
         break;
     }
     case Akonadi::DBus::Preprocessor: {
-       // A preprocessor service went up or down
+        // A preprocessor service went up or down
 
-       // If the preprocessor is going up then the org.freedesktop.Akonadi.Agent.* interface
-       // should be already up (as it's registered before the preprocessor one).
-       // So if we don't know about the preprocessor as agent instance
-       // then it's not our preprocessor.
+        // If the preprocessor is going up then the org.freedesktop.Akonadi.Agent.* interface
+        // should be already up (as it's registered before the preprocessor one).
+        // So if we don't know about the preprocessor as agent instance
+        // then it's not our preprocessor.
 
-       // If the preprocessor is going down then either the agent interface already
-       // went down (and it has been already unregistered on the manager side)
-       // or it's still registered as agent and WE have to unregister it.
-       // The order of interface deletions depends on Qt but we handle both cases.
+        // If the preprocessor is going down then either the agent interface already
+        // went down (and it has been already unregistered on the manager side)
+        // or it's still registered as agent and WE have to unregister it.
+        // The order of interface deletions depends on Qt but we handle both cases.
 
-       // Check if we "know" about it.
-       qCDebug(AKONADICONTROL_LOG) << "Preprocessor " << agentIdentifier << " is going up or down...";
+        // Check if we "know" about it.
+        qCDebug(AKONADICONTROL_LOG) << "Preprocessor " << agentIdentifier << " is going up or down...";
 
-       if (!mAgentInstances.contains(agentIdentifier)) {
-           qCDebug(AKONADICONTROL_LOG) << "But it isn't registered as agent... not mine (anymore?)";
-           return; // not our agent (?)
-       }
+        if (!mAgentInstances.contains(agentIdentifier)) {
+            qCDebug(AKONADICONTROL_LOG) << "But it isn't registered as agent... not mine (anymore?)";
+            return; // not our agent (?)
+        }
 
-       org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
-           Akonadi::DBus::serviceName(Akonadi::DBus::Server),
-           QStringLiteral("/PreprocessorManager"),
-           QDBusConnection::sessionBus(),
-           this);
+        org::freedesktop::Akonadi::PreprocessorManager preProcessorManager(
+            Akonadi::DBus::serviceName(Akonadi::DBus::Server),
+            QStringLiteral("/PreprocessorManager"),
+            QDBusConnection::sessionBus(),
+            this);
 
-       if (!preProcessorManager.isValid()) {
-           qCWarning(AKONADICONTROL_LOG) << "Could not connect to PreprocessorManager via D-Bus:" << preProcessorManager.lastError().message();
-       } else {
-           if (newOwner.isEmpty()) {
-               // The preprocessor went down. Unregister it on server side.
+        if (!preProcessorManager.isValid()) {
+            qCWarning(AKONADICONTROL_LOG) << "Could not connect to PreprocessorManager via D-Bus:" << preProcessorManager.lastError().message();
+        } else {
+            if (newOwner.isEmpty()) {
+                // The preprocessor went down. Unregister it on server side.
 
-               preProcessorManager.unregisterInstance(agentIdentifier);
+                preProcessorManager.unregisterInstance(agentIdentifier);
 
-           } else {
+            } else {
 
-               // The preprocessor went up. Register it on server side.
+                // The preprocessor went up. Register it on server side.
 
-               if (!mAgentInstances.value(agentIdentifier)->obtainPreprocessorInterface()) {
-                   // Hm.. couldn't hook up its preprocessor interface..
-                   // Make sure we don't have it in the preprocessor chain
-                   qCWarning(AKONADICONTROL_LOG) << "Couldn't obtain preprocessor interface for instance" << agentIdentifier;
+                if (!mAgentInstances.value(agentIdentifier)->obtainPreprocessorInterface()) {
+                    // Hm.. couldn't hook up its preprocessor interface..
+                    // Make sure we don't have it in the preprocessor chain
+                    qCWarning(AKONADICONTROL_LOG) << "Couldn't obtain preprocessor interface for instance" << agentIdentifier;
 
-                   preProcessorManager.unregisterInstance(agentIdentifier);
-                   return;
-               }
+                    preProcessorManager.unregisterInstance(agentIdentifier);
+                    return;
+                }
 
-               qCDebug(AKONADICONTROL_LOG) << "Registering preprocessor instance" << agentIdentifier;
+                qCDebug(AKONADICONTROL_LOG) << "Registering preprocessor instance" << agentIdentifier;
 
-               // Add to the preprocessor chain
-               preProcessorManager.registerInstance(agentIdentifier);
-           }
-       }
+                // Add to the preprocessor chain
+                preProcessorManager.registerInstance(agentIdentifier);
+            }
+        }
 
-       break;
+        break;
     }
     default:
         break;
@@ -764,7 +764,7 @@ bool AgentManager::checkResourceInterface(const QString &identifier, const QStri
 
     if (!mAgentInstances[identifier]->hasResourceInterface()) {
         qCWarning(AKONADICONTROL_LOG) << QLatin1String("AgentManager::") + method << " Agent instance "
-                   << identifier << " has no resource interface!";
+                                      << identifier << " has no resource interface!";
         return false;
     }
 
@@ -802,10 +802,10 @@ void AgentManager::ensureAutoStart(const AgentType &info)
     }
 
     org::freedesktop::Akonadi::AgentServer agentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
-                                                       QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
+            QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
 
     if (mAgentInstances.contains(info.identifier) ||
-        (agentServer.isValid() && agentServer.started(info.identifier))) {
+            (agentServer.isValid() && agentServer.started(info.identifier))) {
         return; // already running
     }
 
@@ -840,8 +840,8 @@ void AgentManager::registerAgentAtServer(const QString &agentIdentifier, const A
     if (type.capabilities.contains(AgentType::CapabilityResource)) {
         QScopedPointer<org::freedesktop::Akonadi::ResourceManager> resmanager(
             new org::freedesktop::Akonadi::ResourceManager(Akonadi::DBus::serviceName(Akonadi::DBus::Server),
-                                                           QStringLiteral("/ResourceManager"),
-                                                           QDBusConnection::sessionBus(), this));
+                    QStringLiteral("/ResourceManager"),
+                    QDBusConnection::sessionBus(), this));
         resmanager->addResourceInstance(agentIdentifier, type.capabilities);
     }
 }

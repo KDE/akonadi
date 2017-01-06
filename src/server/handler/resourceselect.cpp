@@ -24,7 +24,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-
 bool ResourceSelect::parseStream()
 {
     Protocol::SelectResourceCommand cmd(m_command);

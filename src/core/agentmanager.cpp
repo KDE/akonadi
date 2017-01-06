@@ -31,7 +31,6 @@
 #include <QDBusServiceWatcher>
 #include <QWidget>
 
-
 using namespace Akonadi;
 
 // @cond PRIVATE

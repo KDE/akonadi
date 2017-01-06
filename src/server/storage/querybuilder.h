@@ -34,8 +34,10 @@
 class QueryBuilderTest;
 #endif
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   Helper class to construct arbitrary SQL queries.

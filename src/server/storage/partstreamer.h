@@ -24,14 +24,17 @@
 
 #include "entities.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace Protocol {
+namespace Protocol
+{
 class PartMetaData;
 class Command;
 }
 
-namespace Server {
+namespace Server
+{
 
 class PimItem;
 class Part;

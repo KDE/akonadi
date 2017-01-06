@@ -30,15 +30,15 @@ class QString;
  * @since 1.7
  */
 
-
-
 #define AKONADI_DBUS_AGENTMANAGER_PATH   "/AgentManager"
 #define AKONADI_DBUS_AGENTSERVER_PATH    "/AgentServer"
 #define AKONADI_DBUS_STORAGEJANITOR_PATH "/Janitor"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace DBus {
+namespace DBus
+{
 
 /** D-Bus service types used by the Akonadi server processes. */
 enum ServiceType {

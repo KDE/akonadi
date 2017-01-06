@@ -269,7 +269,7 @@ void SelfTestDialog::testMySQLServerLog()
     }
 
     const QString logFileName = StandardDirs::saveDir("data", QStringLiteral("db_data"))
-                                    + QDir::separator() + QLatin1String("mysql.err");
+                                + QDir::separator() + QLatin1String("mysql.err");
     const QFileInfo logFileInfo(logFileName);
     if (!logFileInfo.exists() || logFileInfo.size() == 0) {
         report(Success, ki18n("No current MySQL error log found."),

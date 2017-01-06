@@ -30,7 +30,7 @@ SessionThread::SessionThread(QObject *parent)
     : QObject(parent)
 {
     qRegisterMetaType<Connection::ConnectionType>();
-    qRegisterMetaType<Connection*>();
+    qRegisterMetaType<Connection *>();
 
     QThread *thread = new QThread();
     moveToThread(thread);
@@ -49,32 +49,31 @@ SessionThread::~SessionThread()
 }
 
 Connection *SessionThread::createConnection(Connection::ConnectionType connectionType,
-                                            const QByteArray &sessionId)
+        const QByteArray &sessionId)
 {
     Connection *conn = nullptr;
     const bool invoke = QMetaObject::invokeMethod(this, "doCreateConnection",
-                                                  Qt::BlockingQueuedConnection,
-                                                  Q_RETURN_ARG(Akonadi::Connection*, conn),
-                                                  Q_ARG(Akonadi::Connection::ConnectionType, connectionType),
-                                                  Q_ARG(QByteArray, sessionId));
+                        Qt::BlockingQueuedConnection,
+                        Q_RETURN_ARG(Akonadi::Connection *, conn),
+                        Q_ARG(Akonadi::Connection::ConnectionType, connectionType),
+                        Q_ARG(QByteArray, sessionId));
     Q_ASSERT(invoke); Q_UNUSED(invoke);
     return conn;
 }
 
 Connection *SessionThread::doCreateConnection(Connection::ConnectionType connType,
-                                              const QByteArray& sessionId)
+        const QByteArray &sessionId)
 {
     Q_ASSERT(thread() == QThread::currentThread());
 
     Connection *conn = new Connection(connType, sessionId);
     conn->moveToThread(thread());
     connect(conn, &QObject::destroyed,
-            this, [this](QObject *obj) {
-                mConnections.removeOne(static_cast<Connection*>(obj));
-            });
+    this, [this](QObject * obj) {
+        mConnections.removeOne(static_cast<Connection *>(obj));
+    });
     return conn;
 }
-
 
 void SessionThread::doThreadQuit()
 {

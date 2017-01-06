@@ -24,8 +24,10 @@
 #include <QString>
 #include <QList>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /// Details of a single item retrieval request
 class ItemRetrievalRequest

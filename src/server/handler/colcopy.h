@@ -23,8 +23,10 @@
 #include "handler/copy.h"
 #include "entities.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   @ingroup akonadi_server_handler

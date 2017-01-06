@@ -125,7 +125,7 @@ void ResourceScheduler::scheduleAttributesSync(const Collection &collection)
 }
 
 void ResourceScheduler::scheduleItemFetch(const Akonadi::Item &item, const QSet<QByteArray> &parts,
-                                          const QList<QDBusMessage> &msgs, qint64 parentId)
+        const QList<QDBusMessage> &msgs, qint64 parentId)
 
 {
     Task t;
@@ -141,7 +141,6 @@ void ResourceScheduler::scheduleItemFetch(const Akonadi::Item &item, const QSet<
     signalTaskToTracker(t, "FetchItem", QString::number(item.id()));
     scheduleNext();
 }
-
 
 void ResourceScheduler::scheduleItemsFetch(const Item::List &items, const QSet<QByteArray> &parts, const QDBusMessage &msg)
 {
@@ -341,7 +340,6 @@ void ResourceScheduler::itemFetchDone(const QString &msg)
 
     taskDone();
 }
-
 
 void ResourceScheduler::deferTask()
 {

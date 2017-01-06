@@ -64,28 +64,23 @@ static QStringList splitPathList(const QString &pathList)
 static QMap<QString, QString> getEnvironment()
 {
     QMap<QString, QString> ret;
-    Q_FOREACH(const QString& str, QProcessEnvironment::systemEnvironment().toStringList())
-    {
+    Q_FOREACH (const QString &str, QProcessEnvironment::systemEnvironment().toStringList()) {
         const int p = str.indexOf(QLatin1Char('='));
         ret[str.left(p)] = str.mid(p + 1);
     }
     return ret;
 }
 
-QString expandEnvironmentVariables(const QString& str)
+QString expandEnvironmentVariables(const QString &str)
 {
     static QMap<QString, QString> envVars = getEnvironment();
     static QRegExp possibleVars(QLatin1String("((\\{|%)(\\w+)(\\}|%))"));
     QString ret = str;
-    while(possibleVars.indexIn(ret) != -1)
-    {
+    while (possibleVars.indexIn(ret) != -1) {
         QStringList caps = possibleVars.capturedTexts();
-        if(caps[2] == QLatin1String("{"))
-        {
+        if (caps[2] == QLatin1String("{")) {
             ret.replace(QLatin1String("$") + caps[1], envVars[caps[3]]);
-        }
-        else
-        {
+        } else {
             ret.replace(caps[1], envVars[caps[3]]);
         }
         QString key = possibleVars.cap();
@@ -94,24 +89,22 @@ QString expandEnvironmentVariables(const QString& str)
     return ret;
 }
 
-static QSettings* getKdeConf()
+static QSettings *getKdeConf()
 {
-    WCHAR wPath[MAX_PATH+1];
+    WCHAR wPath[MAX_PATH + 1];
     GetModuleFileNameW(NULL, wPath, MAX_PATH);
     QString kdeconfPath = QString::fromUtf16((const ushort *) wPath);
     kdeconfPath = kdeconfPath.left(kdeconfPath.lastIndexOf(QLatin1Char('\\'))).replace(QLatin1Char('\\'), QLatin1Char('/'));
-    if(QFile::exists(kdeconfPath + QString::fromLatin1("/kde.conf")))
-    {
+    if (QFile::exists(kdeconfPath + QString::fromLatin1("/kde.conf"))) {
         return new QSettings(kdeconfPath + QString::fromLatin1("/kde.conf"), QSettings::IniFormat);
-    }
-    else
-    {
+    } else {
         return 0;
     }
 }
 #endif
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class XdgBaseDirsPrivate
 {
@@ -161,41 +154,43 @@ XdgBaseDirs::~XdgBaseDirs()
 QString XdgBaseDirs::homePath(const char *resource)
 {
 #ifdef Q_OS_WIN
-    static QSettings* kdeconf = getKdeConf();
+    static QSettings *kdeconf = getKdeConf();
 #endif
     if (qstrncmp("data", resource, 4) == 0) {
         if (instance()->mDataHome.isEmpty()) {
 #ifdef Q_OS_WIN
-            if(kdeconf) {
+            if (kdeconf) {
                 kdeconf->beginGroup(QLatin1String("XDG"));
-                if(kdeconf->childKeys().contains(QLatin1String("XDG_DATA_HOME")))
+                if (kdeconf->childKeys().contains(QLatin1String("XDG_DATA_HOME"))) {
                     instance()->mDataHome = expandEnvironmentVariables(kdeconf->value(QLatin1String("XDG_DATA_HOME")).toString());
-                else
+                } else {
                     instance()->mDataHome = instance()->homePath("XDG_DATA_HOME", ".local/share");
+                }
                 kdeconf->endGroup();
             } else {
 #else
             {
 #endif
-                instance()->mDataHome = instance()->homePath( "XDG_DATA_HOME", ".local/share" );
+                instance()->mDataHome = instance()->homePath("XDG_DATA_HOME", ".local/share");
             }
         }
         return instance()->mDataHome;
     } else if (qstrncmp("config", resource, 6) == 0) {
         if (instance()->mConfigHome.isEmpty()) {
 #ifdef Q_OS_WIN
-            if(kdeconf) {
+            if (kdeconf) {
                 kdeconf->beginGroup(QLatin1String("XDG"));
-                if(kdeconf->childKeys().contains(QLatin1String("XDG_CONFIG_HOME")))
+                if (kdeconf->childKeys().contains(QLatin1String("XDG_CONFIG_HOME"))) {
                     instance()->mConfigHome = expandEnvironmentVariables(kdeconf->value(QLatin1String("XDG_CONFIG_HOME")).toString());
-                else
-                    instance()->mConfigHome = instance()->homePath( "XDG_CONFIG_HOME", ".config" );
+                } else {
+                    instance()->mConfigHome = instance()->homePath("XDG_CONFIG_HOME", ".config");
+                }
                 kdeconf->endGroup();
             } else {
 #else
             {
 #endif
-                instance()->mConfigHome = instance()->homePath( "XDG_CONFIG_HOME", ".config" );
+                instance()->mConfigHome = instance()->homePath("XDG_CONFIG_HOME", ".config");
             }
         }
         return instance()->mConfigHome;
@@ -207,28 +202,28 @@ QString XdgBaseDirs::homePath(const char *resource)
 QStringList XdgBaseDirs::systemPathList(const char *resource)
 {
 #ifdef Q_OS_WIN
-    static QSettings* kdeconf = getKdeConf();
+    static QSettings *kdeconf = getKdeConf();
 #endif
     if (qstrncmp("data", resource, 4) == 0) {
         if (instance()->mDataDirs.isEmpty()) {
 #ifdef Q_OS_WIN
             QStringList dataDirs;
-            if(kdeconf) {
+            if (kdeconf) {
                 kdeconf->beginGroup(QLatin1String("XDG"));
-                if(kdeconf->childKeys().contains(QLatin1String("XDG_DATA_DIRS"))) {
-                dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", expandEnvironmentVariables(kdeconf->value(QLatin1String("XDG_DATA_DIRS")).toString()).toLocal8Bit().constData() );
+                if (kdeconf->childKeys().contains(QLatin1String("XDG_DATA_DIRS"))) {
+                    dataDirs = instance()->systemPathList("XDG_DATA_DIRS", expandEnvironmentVariables(kdeconf->value(QLatin1String("XDG_DATA_DIRS")).toString()).toLocal8Bit().constData());
                 } else {
                     QDir dir(QCoreApplication::applicationDirPath());
                     dir.cdUp();
                     const QString defaultPathList = dir.absoluteFilePath(QLatin1String("share"));
-                    dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", defaultPathList.toLocal8Bit().constData() );
+                    dataDirs = instance()->systemPathList("XDG_DATA_DIRS", defaultPathList.toLocal8Bit().constData());
                 }
                 kdeconf->endGroup();
             } else {
-                QDir dir( QCoreApplication::applicationDirPath() );
+                QDir dir(QCoreApplication::applicationDirPath());
                 dir.cdUp();
-                const QString defaultPathList = dir.absoluteFilePath( QLatin1String( "share" ) );
-                dataDirs = instance()->systemPathList( "XDG_DATA_DIRS", defaultPathList.toLocal8Bit().constData() );
+                const QString defaultPathList = dir.absoluteFilePath(QLatin1String("share"));
+                dataDirs = instance()->systemPathList("XDG_DATA_DIRS", defaultPathList.toLocal8Bit().constData());
             }
 #else
             QStringList dataDirs = instance()->systemPathList("XDG_DATA_DIRS", "/usr/local/share:/usr/share");
@@ -269,22 +264,22 @@ QStringList XdgBaseDirs::systemPathList(const char *resource)
         if (instance()->mConfigDirs.isEmpty()) {
 #ifdef Q_OS_WIN
             QStringList configDirs;
-            if(kdeconf) {
+            if (kdeconf) {
                 kdeconf->beginGroup(QLatin1String("XDG"));
-                if(kdeconf->childKeys().contains(QLatin1String("XDG_CONFIG_DIRS"))) {
-                    configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", expandEnvironmentVariables(kdeconf->value(QLatin1String("XDG_CONFIG_DIRS")).toString()).toLocal8Bit().constData() );
+                if (kdeconf->childKeys().contains(QLatin1String("XDG_CONFIG_DIRS"))) {
+                    configDirs = instance()->systemPathList("XDG_CONFIG_DIRS", expandEnvironmentVariables(kdeconf->value(QLatin1String("XDG_CONFIG_DIRS")).toString()).toLocal8Bit().constData());
                 } else {
                     QDir dir(QCoreApplication::applicationDirPath());
                     dir.cdUp();
                     const QString defaultPathList = dir.absoluteFilePath(QLatin1String("etc")) + QLatin1Char(';') + dir.absoluteFilePath(QLatin1String("share/config"));
-                    configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", defaultPathList.toLocal8Bit().constData() );
+                    configDirs = instance()->systemPathList("XDG_CONFIG_DIRS", defaultPathList.toLocal8Bit().constData());
                 }
                 kdeconf->endGroup();
             } else {
-                QDir dir( QCoreApplication::applicationDirPath() );
+                QDir dir(QCoreApplication::applicationDirPath());
                 dir.cdUp();
-                const QString defaultPathList = dir.absoluteFilePath( QLatin1String( "etc" ) ) + QLatin1Char( ';' ) + dir.absoluteFilePath( QLatin1String( "share/config" ) );
-                configDirs = instance()->systemPathList( "XDG_CONFIG_DIRS", defaultPathList.toLocal8Bit().constData() );
+                const QString defaultPathList = dir.absoluteFilePath(QLatin1String("etc")) + QLatin1Char(';') + dir.absoluteFilePath(QLatin1String("share/config"));
+                configDirs = instance()->systemPathList("XDG_CONFIG_DIRS", defaultPathList.toLocal8Bit().constData());
             }
 #else
             QStringList configDirs = instance()->systemPathList("XDG_CONFIG_DIRS", "/etc/xdg");

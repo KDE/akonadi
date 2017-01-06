@@ -24,8 +24,10 @@
 #include <QObject>
 class QFile;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * A tracer which forwards all tracing information to a

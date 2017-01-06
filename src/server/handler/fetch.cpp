@@ -27,7 +27,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-
 bool Fetch::parseStream()
 {
     Protocol::FetchItemsCommand cmd(m_command);

@@ -49,7 +49,9 @@ ItemRetriever::ItemRetriever(Connection *connection)
     , mCanceled(false)
 {
     connect(mConnection, &Connection::disconnected,
-            this, [this]() { mCanceled = true; });
+    this, [this]() {
+        mCanceled = true;
+    });
 }
 
 Connection *ItemRetriever::connection() const
@@ -139,7 +141,6 @@ enum QueryColumns {
     PartDatasizeColumn
 };
 
-
 QSqlQuery ItemRetriever::buildQuery() const
 {
     QueryBuilder qb(PimItem::tableName());
@@ -193,7 +194,8 @@ QSqlQuery ItemRetriever::buildQuery() const
     return qb.query();
 }
 
-namespace {
+namespace
+{
 static bool hasAllParts(ItemRetrievalRequest *req, const QSet<QByteArray> &availableParts)
 {
     Q_FOREACH (const auto &part, req->parts) {
@@ -223,8 +225,8 @@ bool ItemRetriever::exec()
 
     QHash<qint64, QString> resourceIdNameCache;
     QVector<ItemRetrievalRequest *> requests;
-    QHash<qint64 /* collection */, ItemRetrievalRequest*> colRequests;
-    QHash<qint64 /* item */, ItemRetrievalRequest*> itemRequests;
+    QHash<qint64 /* collection */, ItemRetrievalRequest *> colRequests;
+    QHash<qint64 /* item */, ItemRetrievalRequest *> itemRequests;
     QVector<qint64> readyItems;
     qint64 prevPimItemId = -1;
     QSet<QByteArray> availableParts;
@@ -323,20 +325,20 @@ bool ItemRetriever::exec()
 
     QEventLoop eventLoop;
     connect(ItemRetrievalManager::instance(), &ItemRetrievalManager::requestFinished,
-            this, [&](ItemRetrievalRequest *finishedRequest) {
-                if (mCanceled) {
-                    eventLoop.exit(1);
-                } else if (!finishedRequest->errorMsg.isEmpty()) {
-                    mLastError = finishedRequest->errorMsg.toUtf8();
-                    eventLoop.exit(1);
-                } else {
-                    requests.removeOne(finishedRequest);
-                    Q_EMIT itemsRetrieved(finishedRequest->ids);
-                    if (requests.isEmpty()) {
-                        eventLoop.quit();
-                    }
-                }
-            }, Qt::UniqueConnection);
+    this, [&](ItemRetrievalRequest * finishedRequest) {
+        if (mCanceled) {
+            eventLoop.exit(1);
+        } else if (!finishedRequest->errorMsg.isEmpty()) {
+            mLastError = finishedRequest->errorMsg.toUtf8();
+            eventLoop.exit(1);
+        } else {
+            requests.removeOne(finishedRequest);
+            Q_EMIT itemsRetrieved(finishedRequest->ids);
+            if (requests.isEmpty()) {
+                eventLoop.quit();
+            }
+        }
+    }, Qt::UniqueConnection);
 
     auto it = requests.begin();
     while (it != requests.end()) {

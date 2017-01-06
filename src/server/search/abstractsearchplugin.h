@@ -24,7 +24,8 @@
 #include <QObject>
 #include <QStringList>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
  * @class AbstractSearchPlugin

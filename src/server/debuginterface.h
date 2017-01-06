@@ -22,8 +22,10 @@
 
 #include <QObject>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * Interface to configure and query debugging options.

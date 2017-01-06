@@ -53,7 +53,6 @@ static bool payloadChanged(const QSet<QByteArray> &changes)
     return false;
 }
 
-
 bool Store::replaceFlags(const PimItem::List &item, const QSet<QByteArray> &flags, bool &flagsChanged)
 {
     Flag::List flagList = HandlerHelper::resolveFlags(flags);
@@ -169,9 +168,9 @@ bool Store::parseStream()
                 if (pimItem.dirty()) {
                     const QString error = QStringLiteral("[LRCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with dirty payload, aborting STORE.");
                     return failureResponse(
-                        error.arg(pimItem.collection().resource().name())
-                             .arg(pimItem.id())
-                             .arg(pimItem.remoteId()).arg(pimItem.collectionId()));
+                               error.arg(pimItem.collection().resource().name())
+                               .arg(pimItem.id())
+                               .arg(pimItem.remoteId()).arg(pimItem.collectionId()));
                 }
             }
 
@@ -325,7 +324,7 @@ bool Store::parseStream()
         const bool onlyRemoteIdChanged = (changes.size() == 1 && changes.contains(AKONADI_PARAM_REMOTEID));
         const bool onlyRemoteRevisionChanged = (changes.size() == 1 && changes.contains(AKONADI_PARAM_REMOTEREVISION));
         const bool onlyRemoteIdAndRevisionChanged = (changes.size() == 2 && changes.contains(AKONADI_PARAM_REMOTEID)
-                                                     && changes.contains(AKONADI_PARAM_REMOTEREVISION));
+                && changes.contains(AKONADI_PARAM_REMOTEREVISION));
         const bool onlyFlagsChanged = (changes.size() == 1 && changes.contains(AKONADI_PARAM_FLAGS));
         const bool onlyGIDChanged = (changes.size() == 1 && changes.contains(AKONADI_PARAM_GID));
         // If only the remote id and/or the remote revision changed, we don't have to increase the REV,

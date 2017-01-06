@@ -28,7 +28,8 @@
 #include <QList>
 #include <QVarLengthArray>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
   Parser for IMAP messages.

@@ -37,27 +37,27 @@ ItemChangeLog::ItemChangeLog()
 {
 }
 
-Item::Flags& ItemChangeLog::addedFlags(const ItemPrivate *priv)
+Item::Flags &ItemChangeLog::addedFlags(const ItemPrivate *priv)
 {
     return m_addedFlags[const_cast<ItemPrivate *>(priv)];
 }
 
-Item::Flags& ItemChangeLog::deletedFlags(const ItemPrivate *priv)
+Item::Flags &ItemChangeLog::deletedFlags(const ItemPrivate *priv)
 {
     return m_deletedFlags[const_cast<ItemPrivate *>(priv)];
 }
 
-Tag::List& ItemChangeLog::addedTags(const ItemPrivate *priv)
+Tag::List &ItemChangeLog::addedTags(const ItemPrivate *priv)
 {
     return m_addedTags[const_cast<ItemPrivate *>(priv)];
 }
 
-Tag::List& ItemChangeLog::deletedTags(const ItemPrivate *priv)
+Tag::List &ItemChangeLog::deletedTags(const ItemPrivate *priv)
 {
     return m_deletedTags[const_cast<ItemPrivate *>(priv)];
 }
 
-QSet<QByteArray>& ItemChangeLog::deletedAttributes(const ItemPrivate *priv)
+QSet<QByteArray> &ItemChangeLog::deletedAttributes(const ItemPrivate *priv)
 {
     return m_deletedAttributes[const_cast<ItemPrivate *>(priv)];
 }

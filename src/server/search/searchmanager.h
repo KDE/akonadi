@@ -32,11 +32,13 @@ class QSemaphore;
 class QTimer;
 class QPluginLoader;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AbstractSearchPlugin;
 
-namespace Server {
+namespace Server
+{
 
 class AbstractSearchEngine;
 class Collection;

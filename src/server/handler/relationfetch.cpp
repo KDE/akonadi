@@ -78,9 +78,9 @@ bool RelationFetch::parseStream()
     const Relation::List existingRelations = relationQuery.result();
     for (const Relation &relation : existingRelations) {
         sendResponse(Protocol::FetchRelationsResponse(relation.leftId(), relation.left().mimeType().name().toUtf8(),
-                                                      relation.rightId(), relation.right().mimeType().name().toUtf8(),
-                                                      relation.relationType().name().toUtf8(),
-                                                      relation.remoteId().toUtf8()));
+                     relation.rightId(), relation.right().mimeType().name().toUtf8(),
+                     relation.relationType().name().toUtf8(),
+                     relation.remoteId().toUtf8()));
     }
 
     return successResponse<Protocol::FetchRelationsResponse>();

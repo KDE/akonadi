@@ -23,8 +23,10 @@
 #include <QSettings>
 #include <QSqlDatabase>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * A base class that provides an unique access layer to configuration

@@ -19,8 +19,10 @@
 #ifndef GLOBAL_H
 #define GLOBAL_H
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 // rfc1730 section 3
 /** The state of the client

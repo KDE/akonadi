@@ -110,8 +110,8 @@ private:
     QString footer() const
     {
         return QStringLiteral("</table></center>"
-                             "</body>"
-                             "</html>");
+                              "</body>"
+                              "</html>");
     }
 
     QString mContent;

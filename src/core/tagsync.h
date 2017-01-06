@@ -25,7 +25,8 @@
 #include "tag.h"
 #include "item.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AKONADICORE_EXPORT TagSync : public Akonadi::Job
 {

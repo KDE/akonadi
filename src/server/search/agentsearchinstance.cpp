@@ -55,9 +55,9 @@ bool AgentSearchInstance::init()
     }
 
     mServiceWatcher = new QDBusServiceWatcher(DBus::agentServiceName(mId, DBus::Agent),
-                                              DBusConnectionPool::threadConnection(),
-                                              QDBusServiceWatcher::WatchForOwnerChange,
-                                              this);
+            DBusConnectionPool::threadConnection(),
+            QDBusServiceWatcher::WatchForOwnerChange,
+            this);
     connect(mServiceWatcher, &QDBusServiceWatcher::serviceOwnerChanged,
             this, &AgentSearchInstance::serviceOwnerChanged);
 

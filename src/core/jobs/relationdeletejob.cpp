@@ -25,7 +25,6 @@
 #include "akonadicore_debug.h"
 #include <KLocalizedString>
 
-
 using namespace Akonadi;
 
 class Akonadi::RelationDeleteJobPrivate : public JobPrivate

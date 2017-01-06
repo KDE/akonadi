@@ -26,8 +26,10 @@
 
 class QProcess;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Connection;
 class ItemRetrievalManager;
@@ -85,7 +87,6 @@ private:
     bool createDatabase();
     void stopDatabaseProcess();
     uint userId() const;
-
 
 protected:
     AkonadiServer(QObject *parent = nullptr);

@@ -323,7 +323,7 @@ void ItemSyncPrivate::slotLocalListDone(KJob *job)
     checkDone();
 }
 
-QString ItemSyncPrivate::jobDebuggingString() const 
+QString ItemSyncPrivate::jobDebuggingString() const
 {
     // TODO: also print out mIncremental and mTotalItemsProcessed, but they are set after the job
     // started, so this requires passing jobDebuggingString to jobEnded().

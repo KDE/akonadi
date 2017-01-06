@@ -28,8 +28,10 @@
 class QVariant;
 class QSqlDatabase;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   Base class for classes representing database records. It also contains
@@ -137,7 +139,8 @@ private:
     qint64 m_id;
 };
 
-namespace _detail {
+namespace _detail
+{
 
 /*!
   Binary predicate to sort collections of Entity subclasses by
@@ -157,8 +160,7 @@ namespace _detail {
   \end
 */
 template <template <typename U> class Op>
-struct ById
-{
+struct ById {
     typedef bool result_type;
     bool operator()(Entity::Id lhs, Entity::Id rhs) const
     {
@@ -184,6 +186,5 @@ struct ById
 
 } // namespace Server
 } // namespace Akonadi
-
 
 #endif

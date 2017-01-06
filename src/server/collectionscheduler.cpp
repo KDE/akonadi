@@ -27,8 +27,10 @@
 #include <QDateTime>
 #include <QCoreApplication>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * @warning: QTimer's methods are not virtual, so it's necessary to always call

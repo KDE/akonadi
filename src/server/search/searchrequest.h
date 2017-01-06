@@ -25,8 +25,10 @@
 #include <QSet>
 #include <QStringList>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Connection;
 

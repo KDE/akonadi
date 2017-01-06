@@ -71,11 +71,11 @@ QThreadStorage<DataStore *> DataStore::sInstances;
 #define TRANSACTION_MUTEX_UNLOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.unlock()
 
 #define setBoolPtr(ptr, val) \
-{ \
-    if ((ptr)) { \
-        *(ptr) = (val); \
-    } \
-}
+    { \
+        if ((ptr)) { \
+            *(ptr) = (val); \
+        } \
+    }
 
 /***************************************************************************
  *   DataStore                                                           *
@@ -334,7 +334,7 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
 
     if (!silent) {
         mNotificationCollector->itemsFlagsChanged(appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
-                                                  QSet<QByteArray>(), col);
+                QSet<QByteArray>(), col);
     }
 
     return true;
@@ -538,7 +538,7 @@ bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag,
 
     if (!silent) {
         mNotificationCollector->itemsTagsChanged(appendItems, QSet<qint64>() << tag.id(),
-                                                 QSet<qint64>(), col);
+                QSet<qint64>(), col);
     }
 
     return true;
@@ -631,7 +631,7 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
         }
     }
 
-  return true;
+    return true;
 }
 
 bool DataStore::removeTags(const Tag::List &tags, bool silent)
@@ -668,7 +668,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
         QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Select);
         qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
         qb.addJoin(QueryBuilder::InnerJoin, Resource::tableName(),
-                    TagRemoteIdResourceRelation::resourceIdFullColumnName(), Resource::idFullColumnName());
+                   TagRemoteIdResourceRelation::resourceIdFullColumnName(), Resource::idFullColumnName());
         qb.addColumn(Resource::nameFullColumnName());
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(), Query::Equals, tag.id());
         if (!qb.exec()) {
@@ -699,7 +699,6 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
 
     return true;
 }
-
 
 /* --- ItemParts ----------------------------------------------------- */
 
@@ -976,7 +975,7 @@ QVector<Collection> DataStore::virtualCollections(const PimItem &item)
 
     if (!qb.exec()) {
         qCDebug(AKONADISERVER_LOG) << "Error during selection of records from table CollectionPimItemRelation"
-                  << qb.query().lastError().text();
+                                   << qb.query().lastError().text();
         return QVector<Collection>();
     }
 
@@ -1010,7 +1009,7 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
 
     if (!qb.exec()) {
         qCDebug(AKONADISERVER_LOG) << "Error during selection of records from table CollectionPimItemRelation"
-                  << qb.query().lastError().text();
+                                   << qb.query().lastError().text();
         return QMap<Entity::Id, QList<PimItem> >();
     }
 
@@ -1085,7 +1084,7 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
     bool seen = false;
     Q_FOREACH (const Flag &flag, flags) {
         seen |= (flag.name() == QLatin1String(AKONADI_FLAG_SEEN)
-                || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
+                 || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
         if (!pimItem.addFlag(flag)) {
             return false;
         }

@@ -22,11 +22,13 @@
 
 #include "entities.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Scope;
 
-namespace Server {
+namespace Server
+{
 
 class CommandContext;
 class QueryBuilder;
@@ -35,7 +37,8 @@ class QueryBuilder;
   Helper methods to generate WHERE clauses for item queries based on the item set
   used in the protocol.
 */
-namespace TagQueryHelper {
+namespace TagQueryHelper
+{
 
 /**
   Add conditions to @p qb for the given remote identifier @p rid.

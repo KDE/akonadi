@@ -32,8 +32,10 @@
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(ItemRetrieverException);
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Connection;
 

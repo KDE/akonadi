@@ -90,15 +90,15 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
     NotificationSubscriber *subscriber = new NotificationSubscriber(this, socketDescriptor);
     qCDebug(AKONADISERVER_LOG) << "New notification connection (registered as" << subscriber << ")";
     connect(subscriber, &NotificationSubscriber::notificationDebuggingChanged,
-            this, [this](bool enabled) {
-                if (enabled) {
-                    ++mDebugNotifications;
-                } else {
-                    --mDebugNotifications;
-                }
-                Q_ASSERT(mDebugNotifications >= 0);
-                Q_ASSERT(mDebugNotifications <= mSubscribers.count());
-            });
+    this, [this](bool enabled) {
+        if (enabled) {
+            ++mDebugNotifications;
+        } else {
+            --mDebugNotifications;
+        }
+        Q_ASSERT(mDebugNotifications >= 0);
+        Q_ASSERT(mDebugNotifications <= mSubscribers.count());
+    });
 
     mSubscribers.push_back(subscriber);
 }
@@ -146,9 +146,9 @@ public:
     {
     }
 
-    void run() Q_DECL_OVERRIDE
-    {
-        for (const auto &ntf : qAsConst(mNotifications)) {
+    void run() Q_DECL_OVERRIDE {
+        for (const auto &ntf : qAsConst(mNotifications))
+        {
             if (mSubscriber) {
                 mSubscriber->notify(ntf);
             } else {
@@ -193,7 +193,7 @@ void NotificationManager::emitPendingNotifications()
 }
 
 void NotificationManager::emitDebugNotification(const Protocol::ChangeNotification &ntf,
-                                                const QVector<QByteArray> &listeners)
+        const QVector<QByteArray> &listeners)
 {
     Protocol::DebugChangeNotification debugNtf;
     debugNtf.setNotification(ntf);

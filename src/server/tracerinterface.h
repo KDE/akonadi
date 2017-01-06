@@ -23,8 +23,10 @@
 class QByteArray;
 class QString;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * This interface can be reimplemented to deliver tracing information

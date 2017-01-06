@@ -53,7 +53,7 @@ StorageDebugger::StorageDebugger()
     qDBusRegisterMetaType<QList< QList<QVariant> > >();
     new StorageDebuggerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/storageDebug"),
-                                                 this, QDBusConnection::ExportAdaptors);
+            this, QDBusConnection::ExportAdaptors);
 }
 
 StorageDebugger::~StorageDebugger()
@@ -69,7 +69,7 @@ void StorageDebugger::enableSQLDebugging(bool enable)
     mEnabled = enable;
 }
 
-void StorageDebugger::writeToFile( const QString &file )
+void StorageDebugger::writeToFile(const QString &file)
 {
     delete mFile;
     mFile = new QFile(file);

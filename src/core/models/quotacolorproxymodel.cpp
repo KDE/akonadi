@@ -99,11 +99,10 @@ QVariant QuotaColorProxyModel::data(const QModelIndex &index, int role) const
     return QIdentityProxyModel::data(index, role);
 }
 
-QHash<int,QByteArray> QuotaColorProxyModel::roleNames() const
+QHash<int, QByteArray> QuotaColorProxyModel::roleNames() const
 {
     QHash<int, QByteArray> names = QIdentityProxyModel::roleNames();
     names.insert(qmlForegroundRole, "foreground");
     return names;
 }
-
 

@@ -45,6 +45,6 @@ bool Status::parseStream()
     }
 
     return successResponse(Protocol::FetchCollectionStatsResponse(stats.count,
-                                                                  stats.count - stats.read,
-                                                                  stats.size));
+                           stats.count - stats.read,
+                           stats.size));
 }

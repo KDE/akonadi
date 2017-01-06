@@ -40,7 +40,6 @@ static const char CONTENTMIMETYPES[] = "CONTENTMIMETYPES";
 
 static const char ROOTPARENTRID[] = "AKONADI_ROOT_COLLECTION";
 
-
 class RemoteId
 {
 public:
@@ -217,8 +216,8 @@ public:
 
         // Iterate over the list of local children of localParent
         Collection::List::Iterator localIter, localEnd,
-              removedIter, removedEnd,
-              remoteIter, remoteEnd;
+                   removedIter, removedEnd,
+                   remoteIter, remoteEnd;
 
         for (localIter = localChildren.begin(), localEnd = localChildren.end(); localIter != localEnd;) {
             const Collection localCollection = *localIter;
@@ -231,8 +230,9 @@ public:
 
                 if (matchLocalAndRemoteCollection(localCollection, removedCollection)) {
                     matched = true;
-                    if (!localCollection.remoteId().isEmpty())
+                    if (!localCollection.remoteId().isEmpty()) {
                         localCollectionsToRemove.append(localCollection);
+                    }
                     // Remove the matched removed collection from the list so that
                     // we don't have to iterate over it again next time.
                     removedIter = removedChildren.erase(removedIter);
@@ -330,8 +330,9 @@ public:
         // At this point localChildren contains collections that don't exist remotely anymore
         if (!localChildren.isEmpty() && !incremental) {
             for (const auto &c : localChildren) {
-                if (!c.remoteId().isEmpty())
+                if (!c.remoteId().isEmpty()) {
                     localCollectionsToRemove.push_back(c);
+                }
             }
         }
 
@@ -650,10 +651,10 @@ public:
                 // while there is still a Transaction job running
                 KJob *subjob = q->subjobs().at(0);
                 connect(subjob, &KJob::result,
-                        q, [this](KJob*) {
-                            emitResult();
-                        },
-                        Qt::QueuedConnection);
+                q, [this](KJob *) {
+                    emitResult();
+                },
+                Qt::QueuedConnection);
             } else {
                 resultEmitted = true;
                 q->emitResult();

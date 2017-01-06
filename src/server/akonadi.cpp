@@ -239,7 +239,7 @@ bool AkonadiServer::init()
     mAgentSearchManager = new SearchTaskManager();
 
     const QStringList searchManagers = settings.value(QStringLiteral("Search/Manager"),
-                                                      QStringList() << QStringLiteral("Agent")).toStringList();
+                                       QStringList() << QStringLiteral("Agent")).toStringList();
     mSearchManager = new SearchManager(searchManagers);
 
     new ServerAdaptor(this);
@@ -251,8 +251,8 @@ bool AkonadiServer::init()
     }
 
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(DBus::serviceName(DBus::Control),
-                                                           QDBusConnection::sessionBus(),
-                                                           QDBusServiceWatcher::WatchForOwnerChange, this);
+            QDBusConnection::sessionBus(),
+            QDBusServiceWatcher::WatchForOwnerChange, this);
 
     connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged,
             this, &AkonadiServer::serviceOwnerChanged);
@@ -356,7 +356,7 @@ void AkonadiServer::newCmdConnection(quintptr socketDescriptor)
 
 void AkonadiServer::connectionDisconnected()
 {
-    auto conn = qobject_cast<Connection*>(sender());
+    auto conn = qobject_cast<Connection *>(sender());
     mConnections.removeOne(conn);
     delete conn;
 }

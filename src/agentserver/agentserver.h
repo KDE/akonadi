@@ -26,7 +26,8 @@
 #include <QObject>
 #include <QQueue>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentThread;
 

@@ -30,8 +30,11 @@
 #include "storage/dbtype.h"
 
 #if QT_VERSION < QT_VERSION_CHECK(5,7,0)
-namespace QtPrivate {
-template <typename T> struct QAddConst { typedef const T Type; };
+namespace QtPrivate
+{
+template <typename T> struct QAddConst {
+    typedef const T Type;
+};
 }
 
 // this adds const to non-const objects (like std::as_const)
@@ -42,9 +45,12 @@ template <typename T>
 void qAsConst(const T &&) Q_DECL_EQ_DELETE;
 #endif
 
-namespace Akonadi {
-namespace Server {
-namespace Utils {
+namespace Akonadi
+{
+namespace Server
+{
+namespace Utils
+{
 
 /**
  * Converts a QVariant to a QString depending on its internal type.

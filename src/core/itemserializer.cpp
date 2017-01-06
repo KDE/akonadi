@@ -211,7 +211,7 @@ Item ItemSerializer::convert(const Item &item, int mtid)
         serialize(item, Item::FullPayload, buffer, version);
         buffer.seek(0);
         qCDebug(AKONADICORE_LOG) << "    -> serialized payload into" << buffer.size() << "bytes" << endl
-                 << "  -> going to deserialize";
+                                 << "  -> going to deserialize";
         Item newItem;
         if (plugin->deserialize(newItem, Item::FullPayload, buffer, version)) {
             qCDebug(AKONADICORE_LOG) << "    -> conversion successful";

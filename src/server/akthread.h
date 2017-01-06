@@ -23,8 +23,10 @@
 #include <QObject>
 #include <QThread>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class AkThread : public QObject
 {

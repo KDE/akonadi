@@ -66,7 +66,6 @@ Protocol::CachePolicy ProtocolHelper::cachePolicyToProtocol(const CachePolicy &p
     return proto;
 }
 
-
 template<typename T>
 inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T *entity)
 {
@@ -83,8 +82,8 @@ inline static void parseAttributesImpl(const Protocol::Attributes &attributes, T
 
 template<typename T>
 inline static void parseAncestorsCachedImpl(const QVector<Protocol::Ancestor> &ancestors, T *entity,
-                                            Collection::Id parentCollection,
-                                            ProtocolHelperValuePool *pool)
+        Collection::Id parentCollection,
+        ProtocolHelperValuePool *pool)
 {
     if (!pool || parentCollection == -1) {
         // if no pool or parent collection id is provided we can't cache anything, so continue as usual
@@ -114,15 +113,15 @@ inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, boo
 }
 
 void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
-                                          Item *item, Collection::Id parentCollection,
-                                          ProtocolHelperValuePool *pool)
+        Item *item, Collection::Id parentCollection,
+        ProtocolHelperValuePool *pool)
 {
     parseAncestorsCachedImpl(ancestors, item, parentCollection, pool);
 }
 
 void ProtocolHelper::parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
-                                          Collection *collection, Collection::Id parentCollection,
-                                          ProtocolHelperValuePool *pool)
+        Collection *collection, Collection::Id parentCollection,
+        ProtocolHelperValuePool *pool)
 {
     parseAncestorsCachedImpl(ancestors, collection, parentCollection, pool);
 }

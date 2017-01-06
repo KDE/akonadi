@@ -86,7 +86,6 @@ void AkApplicationBase::parseCommandLine()
                                            QStringLiteral("Make Akonadi very chatty"));
     mCmdLineParser.addOption(verboseOption);
 
-
     mCmdLineParser.process(QCoreApplication::arguments());
 
     if (mCmdLineParser.isSet(instanceOption)) {

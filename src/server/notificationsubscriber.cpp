@@ -47,7 +47,6 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
 {
 }
 
-
 NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor)
     : NotificationSubscriber(manager)
 {
@@ -179,22 +178,22 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
 
     const auto modifiedParts = command.modifiedParts();
 
-    #define START_MONITORING(type) \
-        (modifiedParts & Protocol::ModifySubscriptionCommand::ModifiedParts( \
+#define START_MONITORING(type) \
+    (modifiedParts & Protocol::ModifySubscriptionCommand::ModifiedParts( \
             Protocol::ModifySubscriptionCommand::type | Protocol::ModifySubscriptionCommand::Add))
-    #define STOP_MONITORING(type) \
-        (modifiedParts & Protocol::ModifySubscriptionCommand::ModifiedParts( \
+#define STOP_MONITORING(type) \
+    (modifiedParts & Protocol::ModifySubscriptionCommand::ModifiedParts( \
             Protocol::ModifySubscriptionCommand::type | Protocol::ModifySubscriptionCommand::Remove))
 
-    #define APPEND(set, newItems) \
-        Q_FOREACH (const auto &entity, newItems) { \
-            set.insert(entity); \
-        }
+#define APPEND(set, newItems) \
+    Q_FOREACH (const auto &entity, newItems) { \
+        set.insert(entity); \
+    }
 
-    #define REMOVE(set, items) \
-        Q_FOREACH (const auto &entity, items) { \
-            set.remove(entity); \
-        }
+#define REMOVE(set, items) \
+    Q_FOREACH (const auto &entity, items) { \
+        set.remove(entity); \
+    }
 
     if (START_MONITORING(Types)) {
         APPEND(mMonitoredTypes, command.startMonitoringTypes())
@@ -278,10 +277,10 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         mManager->slotNotify({ changeNtf });
     }
 
-    #undef START_MONITORING
-    #undef STOP_MONITORING
-    #undef APPEND
-    #undef REMOVE
+#undef START_MONITORING
+#undef STOP_MONITORING
+#undef APPEND
+#undef REMOVE
 }
 
 Protocol::ChangeNotification NotificationSubscriber::toChangeNotification() const
@@ -303,8 +302,6 @@ Protocol::ChangeNotification NotificationSubscriber::toChangeNotification() cons
     ntf.setExclusive(mExclusive);
     return ntf;
 }
-
-
 
 bool NotificationSubscriber::isCollectionMonitored(Entity::Id id) const
 {
@@ -358,7 +355,6 @@ bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::
     return mMonitoredResources.contains(msg.destinationResource());
 }
 
-
 bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeNotification &notification) const
 {
     // Assumes mLock being locked by caller
@@ -371,18 +367,17 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
         //We always want notifications that affect the parent resource (like an item added to a referenced collection)
         const bool notificationForParentResource = (mSession == notification.resource());
         const bool accepts = mExclusive
-            || isCollectionMonitored(notification.parentCollection())
-            || isMoveDestinationResourceMonitored(notification)
-            || notificationForParentResource;
+                             || isCollectionMonitored(notification.parentCollection())
+                             || isMoveDestinationResourceMonitored(notification)
+                             || notificationForParentResource;
         TRACE_NTF("ACCEPTS ITEM: parent col referenced"
-                    << "exclusive:" << mExclusive << ","
-                    << "parent monitored:" << isCollectionMonitored(notification.parentCollection()) << ","
-                    << "destination monitored:" << isMoveDestinationResourceMonitored(notification) << ","
-                    << "ntf for parent resource:" << notificationForParentResource << ":"
-                    << "ACCEPTED:" << accepts);
+                  << "exclusive:" << mExclusive << ","
+                  << "parent monitored:" << isCollectionMonitored(notification.parentCollection()) << ","
+                  << "destination monitored:" << isMoveDestinationResourceMonitored(notification) << ","
+                  << "ntf for parent resource:" << notificationForParentResource << ":"
+                  << "ACCEPTED:" << accepts);
         return accepts;
     }
-
 
     if (mAllMonitored) {
         TRACE_NTF("ACCEPTS ITEM: all monitored");
@@ -491,7 +486,7 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
     // we have a resource filter
     if (!mMonitoredResources.isEmpty()) {
         const bool resourceMatches = mMonitoredResources.contains(notification.resource())
-                                        || isMoveDestinationResourceMonitored(notification);
+                                     || isMoveDestinationResourceMonitored(notification);
 
         // a bit hacky, but match the behaviour from the item case,
         // if resource is the only thing we are filtering on, stop here, and if the resource filter matched, of course
@@ -507,7 +502,7 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
     }
 
     return isCollectionMonitored(notification.parentCollection())
-            || isCollectionMonitored(notification.parentDestCollection());
+           || isCollectionMonitored(notification.parentDestCollection());
 
 }
 
@@ -615,7 +610,6 @@ bool NotificationSubscriber::acceptsDebugChangeNotification(const Protocol::Debu
     return mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::ChangeNotifications);
 }
 
-
 bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotification &notification) const
 {
     // Assumes mLock being locked
@@ -662,7 +656,7 @@ bool NotificationSubscriber::notify(const Protocol::ChangeNotification &notifica
 
     if (acceptsNotification(notification)) {
         QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
-                                    Q_ARG(Akonadi::Protocol::ChangeNotification, notification));
+                                  Q_ARG(Akonadi::Protocol::ChangeNotification, notification));
         return true;
     }
     return false;
@@ -674,7 +668,7 @@ void NotificationSubscriber::writeNotification(const Protocol::ChangeNotificatio
     writeCommand(4, notification);
 }
 
-void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::Command& cmd)
+void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::Command &cmd)
 {
     Q_ASSERT(QThread::currentThread() == thread());
 

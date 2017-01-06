@@ -22,8 +22,10 @@
 
 #include "handler.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class TagStore : public Handler
 {

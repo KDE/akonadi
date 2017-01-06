@@ -172,16 +172,16 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
                 if (!existingForeignKey.column.isEmpty()) {
                     // there's a constraint on this column, check if it's the correct one
                     if (QString::compare(existingForeignKey.refTable, column.refTable + QLatin1Literal("table"), Qt::CaseInsensitive) == 0
-                        && QString::compare(existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive) == 0
-                        && QString::compare(existingForeignKey.onUpdate, referentialActionToString(column.onUpdate), Qt::CaseInsensitive) == 0
-                        && QString::compare(existingForeignKey.onDelete, referentialActionToString(column.onDelete), Qt::CaseInsensitive) == 0) {
+                            && QString::compare(existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive) == 0
+                            && QString::compare(existingForeignKey.onUpdate, referentialActionToString(column.onUpdate), Qt::CaseInsensitive) == 0
+                            && QString::compare(existingForeignKey.onDelete, referentialActionToString(column.onDelete), Qt::CaseInsensitive) == 0) {
                         continue; // all good
                     }
 
                     const QString statement = buildRemoveForeignKeyConstraintStatement(existingForeignKey, tableDescription);
                     if (!statement.isEmpty()) {
                         qCDebug(AKONADISERVER_LOG) << "Found existing foreign constraint that doesn't match the schema:" << existingForeignKey.name
-                                  << existingForeignKey.column << existingForeignKey.refTable << existingForeignKey.refColumn;
+                                                   << existingForeignKey.column << existingForeignKey.refTable << existingForeignKey.refColumn;
                         m_removedForeignKeys << statement;
                     }
                 }
@@ -199,7 +199,7 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
                 const QString statement = buildRemoveForeignKeyConstraintStatement(existingForeignKey, tableDescription);
                 if (!statement.isEmpty()) {
                     qCDebug(AKONADISERVER_LOG) << "Found unexpected foreign key constraint:" << existingForeignKey.name << existingForeignKey.column
-                              << existingForeignKey.refTable << existingForeignKey.refColumn;
+                                               << existingForeignKey.refTable << existingForeignKey.refColumn;
                     m_removedForeignKeys << statement;
                 }
             }
@@ -350,9 +350,9 @@ QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDe
         columns.reserve(indexDescription.columns.count());
         std::transform(indexDescription.columns.cbegin(), indexDescription.columns.cend(),
                        std::back_insert_iterator<QStringList>(columns),
-                       [&indexDescription](const QString &column) {
-                            return QStringLiteral("%1 %2").arg(column, indexDescription.sort);
-                       });
+        [&indexDescription](const QString & column) {
+            return QStringLiteral("%1 %2").arg(column, indexDescription.sort);
+        });
     }
 
     return QStringLiteral("CREATE %1 INDEX %2 ON %3 (%4)")

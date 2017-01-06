@@ -23,8 +23,10 @@
 #include <QVector>
 #include <QStringList>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class SearchHelper
 {

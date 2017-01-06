@@ -40,7 +40,7 @@ bool Search::parseStream()
     QVector<qint64> collectionIds;
     bool recursive = cmd.recursive();
 
-    if (cmd.collections().isEmpty() || cmd.collections() == QVector<qint64>{ 0ll }) {
+    if (cmd.collections().isEmpty() || cmd.collections() == QVector<qint64> { 0ll }) {
         collectionIds << 0;
         recursive = true;
     }

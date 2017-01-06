@@ -196,14 +196,14 @@ bool MonitorPrivate::isLazilyIgnored(const Protocol::ChangeNotification &msg, bo
     }
 
     if (msg.type() == Protocol::Command::TagChangeNotification) {
-        const auto op = static_cast<const Protocol::TagChangeNotification&>(msg).operation();
+        const auto op = static_cast<const Protocol::TagChangeNotification &>(msg).operation();
         return ((op == Protocol::TagChangeNotification::Add && q_ptr->receivers(SIGNAL(tagAdded(Akonadi::Tag))) == 0)
-            || (op == Protocol::TagChangeNotification::Modify && q_ptr->receivers(SIGNAL(tagChanged(Akonadi::Tag))) == 0)
-            || (op == Protocol::TagChangeNotification::Remove && q_ptr->receivers(SIGNAL(tagRemoved(Akonadi::Tag))) == 0));
+                || (op == Protocol::TagChangeNotification::Modify && q_ptr->receivers(SIGNAL(tagChanged(Akonadi::Tag))) == 0)
+                || (op == Protocol::TagChangeNotification::Remove && q_ptr->receivers(SIGNAL(tagRemoved(Akonadi::Tag))) == 0));
     }
 
     if (!fetchCollectionStatistics && msg.type() == Protocol::Command::ItemChangeNotification) {
-        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification&>(msg);
+        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification &>(msg);
         const auto op = itemNtf.operation();
         if ((op == Protocol::ItemChangeNotification::Add && q_ptr->receivers(SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection))) == 0)
                 || (op == Protocol::ItemChangeNotification::Remove && q_ptr->receivers(SIGNAL(itemRemoved(Akonadi::Item))) == 0
@@ -263,7 +263,7 @@ void MonitorPrivate::checkBatchSupport(const Protocol::ChangeNotification &msg, 
         return;
     }
 
-    const auto itemNtf = static_cast<const Protocol::ItemChangeNotification*>(&msg);
+    const auto itemNtf = static_cast<const Protocol::ItemChangeNotification *>(&msg);
     const bool isBatch = (itemNtf->items().count() > 1);
 
     switch (itemNtf->operation()) {
@@ -361,7 +361,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
     bool allCached = true;
 
     if (msg.type() == Protocol::Command::TagChangeNotification) {
-        return tagCache->ensureCached({ static_cast<const Protocol::TagChangeNotification&>(msg).id() }, mTagFetchScope);
+        return tagCache->ensureCached({ static_cast<const Protocol::TagChangeNotification &>(msg).id() }, mTagFetchScope);
     }
     if (msg.type() == Protocol::Command::RelationChangeNotification) {
         return true;
@@ -376,17 +376,17 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
     }
 
     if (msg.type() == Protocol::Command::CollectionChangeNotification
-            && static_cast<const Protocol::CollectionChangeNotification&>(msg).operation() == Protocol::CollectionChangeNotification::Remove) {
+            && static_cast<const Protocol::CollectionChangeNotification &>(msg).operation() == Protocol::CollectionChangeNotification::Remove) {
         //For collection removals the collection is gone anyways, so we can't fetch it. Rid will be set later on instead.
         return true;
     }
 
     if (fetchCollections()) {
         const qint64 parentCollection = (msg.type() == Protocol::Command::ItemChangeNotification) ?
-                                            static_cast<const Protocol::ItemChangeNotification&>(msg).parentCollection() :
+                                        static_cast<const Protocol::ItemChangeNotification &>(msg).parentCollection() :
                                         (msg.type() == Protocol::Command::CollectionChangeNotification) ?
-                                            static_cast<const Protocol::CollectionChangeNotification&>(msg).parentCollection() :
-                                            -1;
+                                        static_cast<const Protocol::CollectionChangeNotification &>(msg).parentCollection() :
+                                        -1;
         if (parentCollection > -1 && !collectionCache->ensureCached(parentCollection, mCollectionFetchScope)) {
             allCached = false;
         }
@@ -394,11 +394,11 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
         qint64 parentDestCollection = -1;
 
         if ((msg.type() == Protocol::Command::ItemChangeNotification)
-                && (static_cast<const Protocol::ItemChangeNotification&>(msg).operation() == Protocol::ItemChangeNotification::Move)) {
-            parentDestCollection = static_cast<const Protocol::ItemChangeNotification&>(msg).parentDestCollection();
+                && (static_cast<const Protocol::ItemChangeNotification &>(msg).operation() == Protocol::ItemChangeNotification::Move)) {
+            parentDestCollection = static_cast<const Protocol::ItemChangeNotification &>(msg).parentDestCollection();
         } else if ((msg.type() == Protocol::Command::CollectionChangeNotification)
-                && (static_cast<const Protocol::CollectionChangeNotification&>(msg).operation() == Protocol::CollectionChangeNotification::Move)) {
-            parentDestCollection = static_cast<const Protocol::CollectionChangeNotification&>(msg).parentDestCollection();
+                   && (static_cast<const Protocol::CollectionChangeNotification &>(msg).operation() == Protocol::CollectionChangeNotification::Move)) {
+            parentDestCollection = static_cast<const Protocol::CollectionChangeNotification &>(msg).parentDestCollection();
         }
         if (parentDestCollection > -1 && !collectionCache->ensureCached(parentDestCollection, mCollectionFetchScope)) {
             allCached = false;
@@ -412,7 +412,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
 
     if (msg.type() == Protocol::Command::ItemChangeNotification && fetchItems()) {
         ItemFetchScope scope(mItemFetchScope);
-        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification&>(msg);
+        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification &>(msg);
         if (mFetchChangedOnly && (itemNtf.operation() == Protocol::ItemChangeNotification::Modify || itemNtf.operation() == Protocol::ItemChangeNotification::ModifyFlags)) {
             bool fullPayloadWasRequested = scope.fullPayload();
             scope.fetchFullPayload(false);
@@ -452,7 +452,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
         }
 
     } else if (msg.type() == Protocol::Command::CollectionChangeNotification && fetchCollections()) {
-        const qint64 colId = static_cast<const Protocol::CollectionChangeNotification&>(msg).id();
+        const qint64 colId = static_cast<const Protocol::CollectionChangeNotification &>(msg).id();
         if (!collectionCache->ensureCached(colId, mCollectionFetchScope)) {
             allCached = false;
         }
@@ -465,12 +465,12 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
 {
     bool someoneWasListening = false;
     if (msg.type() == Protocol::Command::TagChangeNotification) {
-        const auto &tagNtf = static_cast<const Protocol::TagChangeNotification&>(msg);
+        const auto &tagNtf = static_cast<const Protocol::TagChangeNotification &>(msg);
         //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
         const Tag::List tags = tagCache->retrieve({ tagNtf.id() });
         someoneWasListening = emitTagNotification(tagNtf, tags.isEmpty() ? Tag() : tags[0]);
     } else if (msg.type() == Protocol::Command::RelationChangeNotification) {
-        const auto &relNtf = static_cast<const Protocol::RelationChangeNotification&>(msg);
+        const auto &relNtf = static_cast<const Protocol::RelationChangeNotification &>(msg);
         Relation rel;
         rel.setLeft(Akonadi::Item(relNtf.leftItem()));
         rel.setRight(Akonadi::Item(relNtf.rightItem()));
@@ -478,7 +478,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
         rel.setRemoteId(relNtf.remoteId().toLatin1());
         someoneWasListening = emitRelationNotification(relNtf, rel);
     } else if (msg.type() == Protocol::Command::CollectionChangeNotification) {
-        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification&>(msg);
+        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification &>(msg);
         const Collection parent = collectionCache->retrieve(colNtf.parentCollection());
         Collection destParent;
         if (colNtf.operation() == Protocol::CollectionChangeNotification::Move) {
@@ -493,7 +493,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
             someoneWasListening = emitCollectionNotification(msg, col, parent, destParent);
         }
     } else if (msg.type() == Protocol::Command::ItemChangeNotification) {
-        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification&>(msg);
+        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification &>(msg);
         const Collection parent = collectionCache->retrieve(itemNtf.parentCollection());
         Collection destParent;
         if (itemNtf.operation() == Protocol::ItemChangeNotification::Move) {
@@ -507,7 +507,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
             someoneWasListening = emitItemsNotification(msg, items, parent, destParent);
         }
     } else if (msg.type() == Protocol::Command::SubscriptionChangeNotification) {
-        const auto &subNtf = static_cast<const Protocol::SubscriptionChangeNotification&>(msg);
+        const auto &subNtf = static_cast<const Protocol::SubscriptionChangeNotification &>(msg);
         NotificationSubscriber subscriber;
         subscriber.setSubscriber(subNtf.subscriber());
         subscriber.setSessionId(subNtf.sessionId());
@@ -526,7 +526,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
         subscriber.setIsExclusive(subNtf.isExclusive());
         someoneWasListening = emitSubscriptionChangeNotification(subNtf, subscriber);
     } else if (msg.type() == Protocol::Command::DebugChangeNotification) {
-        const auto &changeNtf = static_cast<const Protocol::DebugChangeNotification&>(msg);
+        const auto &changeNtf = static_cast<const Protocol::DebugChangeNotification &>(msg);
         ChangeNotification notification;
         notification.setListeners(changeNtf.listeners());
         notification.setTimestamp(QDateTime::fromMSecsSinceEpoch(changeNtf.timestamp()));
@@ -561,12 +561,12 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotification &msg)
 void MonitorPrivate::updatePendingStatistics(const Protocol::ChangeNotification &msg)
 {
     if (msg.type() == Protocol::Command::ItemChangeNotification) {
-        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification&>(msg);
+        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification &>(msg);
         notifyCollectionStatisticsWatchers(itemNtf.parentCollection(), itemNtf.resource());
         // FIXME use the proper resource of the target collection, for cross resource moves
         notifyCollectionStatisticsWatchers(itemNtf.parentDestCollection(), itemNtf.destinationResource());
     } else if (msg.type() == Protocol::Command::CollectionChangeNotification) {
-        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification&>(msg);
+        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification &>(msg);
         if (colNtf.operation() == Protocol::CollectionChangeNotification::Remove) {
             // no need for statistics updates anymore
             recentlyChangedCollections.remove(colNtf.id());
@@ -614,7 +614,7 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotification> &n
 {
     // Always handle tags and relations
     if (msg.type() == Protocol::Command::TagChangeNotification
-        || msg.type() == Protocol::Command::RelationChangeNotification) {
+            || msg.type() == Protocol::Command::RelationChangeNotification) {
         notificationQueue.enqueue(msg);
         return 1;
     }
@@ -626,12 +626,11 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotification> &n
         return 1;
     }
 
-
     bool sourceWatched = false;
     bool destWatched = false;
 
     if (msg.type() == Protocol::Command::ItemChangeNotification) {
-        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification&>(msg);
+        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification &>(msg);
         if (useRefCounting) {
             sourceWatched = isMonitored(itemNtf.parentCollection());
             destWatched = isMonitored(itemNtf.parentDestCollection());
@@ -648,7 +647,7 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotification> &n
             }
         }
     } else if (msg.type() == Protocol::Command::CollectionChangeNotification) {
-        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification&>(msg);
+        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification &>(msg);
         if (!resources.isEmpty()) {
             sourceWatched = resources.contains(colNtf.resource());
             destWatched = isMoveDestinationResourceMonitored(colNtf);
@@ -751,7 +750,7 @@ void MonitorPrivate::commandReceived(qint64 tag, const Protocol::Command &comman
             break;
 
         default:
-            qCWarning(AKONADICORE_LOG) << "Received an unexpected response on Notification stream: "<< command.debugString();
+            qCWarning(AKONADICORE_LOG) << "Received an unexpected response on Notification stream: " << command.debugString();
             break;
         }
     } else {
@@ -798,7 +797,7 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
     checkBatchSupport(msg, needsSplit, supportsBatch);
 
     const bool isModifyFlags = (msg.type() == Protocol::Command::ItemChangeNotification
-                                && static_cast<const Protocol::ItemChangeNotification&>(msg).operation() == Protocol::ItemChangeNotification::ModifyFlags);
+                                && static_cast<const Protocol::ItemChangeNotification &>(msg).operation() == Protocol::ItemChangeNotification::ModifyFlags);
     if (supportsBatch
             || (!needsSplit && !supportsBatch && !isModifyFlags)
             || msg.type() == Protocol::Command::CollectionChangeNotification) {
@@ -820,7 +819,7 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
         // If it's not queued at least make sure we fetch all the items from split
         // notifications in one go.
         if (msg.type() == Protocol::Command::ItemChangeNotification) {
-            itemCache->ensureCached(static_cast<const Protocol::ItemChangeNotification&>(msg).uids(), mItemFetchScope);
+            itemCache->ensureCached(static_cast<const Protocol::ItemChangeNotification &>(msg).uids(), mItemFetchScope);
         }
     }
 
@@ -833,8 +832,8 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotification &msg)
         // Make sure inter-resource move notifications are translated into
         // Add/Remove notifications
         if (msg.type() == Protocol::Command::ItemChangeNotification
-            && static_cast<const Protocol::ItemChangeNotification&>(msg).type() == Protocol::Command::MoveItems
-            && static_cast<const Protocol::ItemChangeNotification&>(msg).resource() != static_cast<const Protocol::ItemChangeNotification&>(msg).destinationResource()) {
+                && static_cast<const Protocol::ItemChangeNotification &>(msg).type() == Protocol::Command::MoveItems
+                && static_cast<const Protocol::ItemChangeNotification &>(msg).resource() != static_cast<const Protocol::ItemChangeNotification &>(msg).destinationResource()) {
             if (needsSplit) {
                 const Protocol::ChangeNotification::List split = splitMessage(msg, !supportsBatch);
                 for (const auto &splitMsg : split) {
@@ -1233,7 +1232,7 @@ bool MonitorPrivate::emitRelationNotification(const Protocol::RelationChangeNoti
 }
 
 bool MonitorPrivate::emitSubscriptionChangeNotification(const Protocol::SubscriptionChangeNotification &msg,
-                                                        const Akonadi::NotificationSubscriber &subscriber)
+        const Akonadi::NotificationSubscriber &subscriber)
 {
     if (!subscriber.isValid()) {
         return false;
@@ -1266,7 +1265,7 @@ bool MonitorPrivate::emitSubscriptionChangeNotification(const Protocol::Subscrip
 }
 
 bool MonitorPrivate::emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg,
-                                                 const ChangeNotification &ntf)
+        const ChangeNotification &ntf)
 {
     Q_UNUSED(msg);
 
@@ -1281,8 +1280,6 @@ bool MonitorPrivate::emitDebugChangeNotification(const Protocol::DebugChangeNoti
     return true;
 }
 
-
-
 void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)
 {
     // remove invalidates
@@ -1290,7 +1287,7 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)
     // And subscription modify the visibility of the collection by the collectionFetchScope.
     switch (msg.type()) {
     case Protocol::Command::CollectionChangeNotification: {
-        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification&>(msg);
+        const auto &colNtf = static_cast<const Protocol::CollectionChangeNotification &>(msg);
         switch (colNtf.operation()) {
         case Protocol::CollectionChangeNotification::Modify:
         case Protocol::CollectionChangeNotification::Move:
@@ -1305,7 +1302,7 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)
         }
     } break;
     case Protocol::Command::ItemChangeNotification: {
-        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification&>(msg);
+        const auto &itemNtf = static_cast<const Protocol::ItemChangeNotification &>(msg);
         switch (itemNtf.operation()) {
         case Protocol::ItemChangeNotification::Modify:
         case Protocol::ItemChangeNotification::ModifyFlags:
@@ -1322,7 +1319,7 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotification &msg)
         }
     } break;
     case Protocol::Command::TagChangeNotification: {
-        const auto &tagNtf = static_cast<const Protocol::TagChangeNotification&>(msg);
+        const auto &tagNtf = static_cast<const Protocol::TagChangeNotification &>(msg);
         switch (tagNtf.operation()) {
         case Protocol::TagChangeNotification::Modify:
             tagCache->update({ tagNtf.id() }, mTagFetchScope);

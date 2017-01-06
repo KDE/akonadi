@@ -37,7 +37,6 @@
 #include <private/datastream_p_p.h>
 #include <private/standarddirs_p.h>
 
-
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -52,8 +51,8 @@ Connection::Connection(QObject *parent)
     , m_backend(nullptr)
     , m_verifyCacheOnRetrieval(false)
     , m_idleTimer(nullptr)
-    , m_totalTime( 0 )
-    , m_reportTime( false )
+    , m_totalTime(0)
+    , m_reportTime(false)
 {
 }
 
@@ -76,8 +75,8 @@ void Connection::init()
 
     if (!socket->setSocketDescriptor(m_socketDescriptor)) {
         qCWarning(AKONADISERVER_LOG) << "Connection(" << m_identifier
-                   << ")::run: failed to set socket descriptor: "
-                   << socket->error() << "(" << socket->errorString() << ")";
+                                     << ")::run: failed to set socket descriptor: "
+                                     << socket->error() << "(" << socket->errorString() << ")";
         delete socket;
         return;
     }
@@ -156,7 +155,7 @@ Connection::~Connection()
 void Connection::slotConnectionIdle()
 {
     Q_ASSERT(m_currentHandler == nullptr);
-    if (m_backend && m_backend->isOpened() ) {
+    if (m_backend && m_backend->isOpened()) {
         if (m_backend->inTransaction()) {
             // This is a programming error, the timer should not have fired.
             // But it is safer to abort and leave the connection open, until
@@ -381,7 +380,7 @@ void Connection::stopTime(const QString &identifier)
     m_totalTime += elapsed;
     m_totalTimeByHandler[identifier] += elapsed;
     m_executionsByHandler[identifier]++;
-    qCDebug(AKONADISERVER_LOG) << identifier <<" time : " << elapsed << " total: " << m_totalTime;
+    qCDebug(AKONADISERVER_LOG) << identifier << " time : " << elapsed << " total: " << m_totalTime;
 }
 
 void Connection::reportTime() const
@@ -390,7 +389,7 @@ void Connection::reportTime() const
     qCDebug(AKONADISERVER_LOG) << " total: " << m_totalTime;
     for (auto it = m_totalTimeByHandler.cbegin(), end = m_totalTimeByHandler.cend(); it != end; ++it) {
         const QString &handler = it.key();
-        qCDebug(AKONADISERVER_LOG) << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler)/m_executionsByHandler.value(handler);
+        qCDebug(AKONADISERVER_LOG) << "handler : " << handler << " time: " << m_totalTimeByHandler.value(handler) << " executions " << m_executionsByHandler.value(handler) << " avg: " << m_totalTimeByHandler.value(handler) / m_executionsByHandler.value(handler);
     }
 }
 

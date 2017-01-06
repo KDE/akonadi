@@ -60,7 +60,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, CommandContext *context
         //When querying for items by tag, only return matches from that resource
         if (context->resource().isValid()) {
             qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
-                        PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
+                       PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
             qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id());
         }
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
@@ -104,7 +104,7 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
         //When querying for items by tag, only return matches from that resource
         if (context->resource().isValid()) {
             qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
-                        PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
+                       PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
             qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id());
         }
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),

@@ -54,7 +54,7 @@ class QSQLiteDriverPlugin : public QSqlDriverPlugin
 public:
     QSQLiteDriverPlugin();
 
-    QSqlDriver* create(const QString &) Q_DECL_OVERRIDE;
+    QSqlDriver *create(const QString &) Q_DECL_OVERRIDE;
 };
 
 QSQLiteDriverPlugin::QSQLiteDriverPlugin()
@@ -62,10 +62,10 @@ QSQLiteDriverPlugin::QSQLiteDriverPlugin()
 {
 }
 
-QSqlDriver* QSQLiteDriverPlugin::create(const QString &name)
+QSqlDriver *QSQLiteDriverPlugin::create(const QString &name)
 {
     if (name == QLatin1String("QSQLITE3")) {
-        QSQLiteDriver* driver = new QSQLiteDriver();
+        QSQLiteDriver *driver = new QSQLiteDriver();
         return driver;
     }
     return nullptr;

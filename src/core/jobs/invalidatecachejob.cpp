@@ -87,7 +87,7 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
 
     ItemModifyJob *modJob = nullptr;
     const Akonadi::Item::List itemsLst = fetchJob->items();
-    for (Item item : itemsLst ) {    //krazy:exclude=foreach, item cannot be const
+    for (Item item : itemsLst) {     //krazy:exclude=foreach, item cannot be const
         item.clearPayload();
         modJob = new ItemModifyJob(item, q);
     }

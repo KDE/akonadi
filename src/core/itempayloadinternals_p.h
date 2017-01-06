@@ -57,18 +57,14 @@ namespace Internal
 {
 
 template <typename T>
-struct has_clone_method
-{
+struct has_clone_method {
 private:
     template <typename S, S * (S::*)() const>
-    struct sfinae
-    {
+    struct sfinae {
     };
-    struct No
-    {
+    struct No {
     };
-    struct Yes
-    {
+    struct Yes {
         No no[2];
     };
     template <typename S>
@@ -76,12 +72,11 @@ private:
     template <typename S>
     static Yes test(sfinae<S, &S::clone> *);
 public:
-    static const bool value = sizeof(test<T>(0)) == sizeof(Yes) ;
+    static const bool value = sizeof(test<T>(0)) == sizeof(Yes);
 };
 
 template <typename T, bool b>
-struct clone_traits_helper
-{
+struct clone_traits_helper {
     // runtime error (commented in) or compiletime error (commented out)?
     // ### runtime error, until we check has_clone_method in the
     // ### Item::payload<T> impl directly...
@@ -93,34 +88,29 @@ struct clone_traits_helper
 };
 
 template <typename T>
-struct clone_traits_helper<T, true>
-{
+struct clone_traits_helper<T, true> {
     static T *clone(T *t)
     {
-        return t ? t->clone() : 0 ;
+        return t ? t->clone() : 0;
     }
 };
 
 template <typename T>
-struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value>
-{
+struct clone_traits : clone_traits_helper<T, has_clone_method<T>::value> {
 };
 
 template <typename T>
-struct shared_pointer_traits
-{
+struct shared_pointer_traits {
     static const bool defined = false;
 };
 
 template <typename T>
-struct shared_pointer_traits<boost::shared_ptr<T>>
-{
+struct shared_pointer_traits<boost::shared_ptr<T>> {
     static const bool defined = true;
     typedef T element_type;
 
     template <typename S>
-    struct make
-    {
+    struct make {
         typedef boost::shared_ptr<S> type;
     };
 
@@ -128,8 +118,7 @@ struct shared_pointer_traits<boost::shared_ptr<T>>
 };
 
 template <typename T>
-struct shared_pointer_traits<QSharedPointer<T>>
-{
+struct shared_pointer_traits<QSharedPointer<T>> {
     static const bool defined = true;
     typedef T element_type;
 
@@ -142,8 +131,7 @@ struct shared_pointer_traits<QSharedPointer<T>>
 };
 
 template <typename T>
-struct shared_pointer_traits<std::shared_ptr<T>>
-{
+struct shared_pointer_traits<std::shared_ptr<T>> {
     static const bool defined = true;
     typedef T element_type;
 
@@ -156,14 +144,12 @@ struct shared_pointer_traits<std::shared_ptr<T>>
 };
 
 template <typename T>
-struct is_shared_pointer
-{
+struct is_shared_pointer {
     static const bool value = shared_pointer_traits<T>::defined;
 };
 
 template <typename T>
-struct identity
-{
+struct identity {
     typedef T type;
 };
 
@@ -171,35 +157,29 @@ template <typename T>
 struct get_hierarchy_root;
 
 template <typename T, typename S>
-struct get_hierarchy_root_recurse : get_hierarchy_root<S>
-{
+struct get_hierarchy_root_recurse : get_hierarchy_root<S> {
 };
 
 template <typename T>
-struct get_hierarchy_root_recurse<T, T> : identity<T>
-{
+struct get_hierarchy_root_recurse<T, T> : identity<T> {
 };
 
 template <typename T>
-struct get_hierarchy_root : get_hierarchy_root_recurse<T, typename Akonadi::SuperClass<T>::Type>
-{
+struct get_hierarchy_root : get_hierarchy_root_recurse<T, typename Akonadi::SuperClass<T>::Type> {
 };
 
 template <typename T>
-struct get_hierarchy_root<boost::shared_ptr<T>>
-{
+struct get_hierarchy_root<boost::shared_ptr<T>> {
     typedef boost::shared_ptr<typename get_hierarchy_root<T>::type> type;
 };
 
 template <typename T>
-struct get_hierarchy_root<QSharedPointer<T>>
-{
+struct get_hierarchy_root<QSharedPointer<T>> {
     typedef QSharedPointer<typename get_hierarchy_root<T>::type> type;
 };
 
 template <typename T>
-struct get_hierarchy_root<std::shared_ptr<T>>
-{
+struct get_hierarchy_root<std::shared_ptr<T>> {
     typedef std::shared_ptr<typename get_hierarchy_root<T>::type> type;
 };
 
@@ -210,8 +190,7 @@ struct get_hierarchy_root<std::shared_ptr<T>>
   implementations to make the compiler happy (in practice it will always optimized away anyway).
 */
 template <typename T>
-struct PayloadTrait
-{
+struct PayloadTrait {
     /// type of the payload object contained inside a shared pointer
     typedef T ElementType;
     // the metatype id for the element type, or for pointer-to-element
@@ -272,8 +251,7 @@ struct PayloadTrait
   for documentation of the various members, see above
 */
 template <typename T>
-struct PayloadTrait<boost::shared_ptr<T>>
-{
+struct PayloadTrait<boost::shared_ptr<T>> {
     typedef T ElementType;
     static int elementMetaTypeId()
     {
@@ -333,8 +311,7 @@ struct PayloadTrait<boost::shared_ptr<T>>
   for documentation of the various members, see above
 */
 template <typename T>
-struct PayloadTrait<QSharedPointer<T>>
-{
+struct PayloadTrait<QSharedPointer<T>> {
     typedef T ElementType;
     static int elementMetaTypeId()
     {
@@ -394,8 +371,7 @@ struct PayloadTrait<QSharedPointer<T>>
   for documentation of the various members, see above
 */
 template <typename T>
-struct PayloadTrait<std::shared_ptr<T>>
-{
+struct PayloadTrait<std::shared_ptr<T>> {
     typedef T ElementType;
     static int elementMetaTypeId()
     {
@@ -449,13 +425,11 @@ struct PayloadTrait<std::shared_ptr<T>>
     static const unsigned int sharedPointerId = 3;
 };
 
-
 /**
  * @internal
  * Non-template base class for the payload container.
  */
-struct PayloadBase
-{
+struct PayloadBase {
     virtual ~PayloadBase()
     {
     }
@@ -468,8 +442,7 @@ struct PayloadBase
  * Container for the actual payload object.
  */
 template <typename T>
-struct Payload : public PayloadBase
-{
+struct Payload : public PayloadBase {
     Payload()
     {
     }
@@ -496,8 +469,7 @@ struct Payload : public PayloadBase
  * abstract, will therefore always fail to compile for pointer payloads
  */
 template <typename T>
-struct Payload<T *> : public PayloadBase
-{
+struct Payload<T *> : public PayloadBase {
 };
 
 /**

@@ -32,7 +32,6 @@
 #include <QMetaObject>
 #include <QFile>
 
-
 namespace Akonadi
 {
 class SessionThread;
@@ -55,7 +54,10 @@ public:
 
     virtual void init(const QByteArray &sessionId);
 
-    SessionThread *sessionThread() const { return mSessionThread; }
+    SessionThread *sessionThread() const
+    {
+        return mSessionThread;
+    }
 
     void startNext();
     /// Disconnects a previously existing connection and tries to reconnect

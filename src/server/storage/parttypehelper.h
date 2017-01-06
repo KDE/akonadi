@@ -23,8 +23,10 @@
 #include "exception.h"
 #include "query.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class PartType;
 
@@ -33,7 +35,8 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(PartTypeException);
 /**
  * Methods for dealing with the PartType table.
  */
-namespace PartTypeHelper {
+namespace PartTypeHelper
+{
 /**
  * Retrieve (or create) PartType for the given fully qualified name.
  * @param fqName Fully qualified name (NS:NAME).

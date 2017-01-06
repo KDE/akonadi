@@ -34,7 +34,6 @@
 
 #include "tracer.h"
 
-
 #include <private/dbus_p.h>
 
 #include <QTimer>

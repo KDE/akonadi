@@ -50,7 +50,7 @@ struct ByTypeId {
     bool operator()(const std::shared_ptr<Internal::PayloadBase> &lhs,
                     const std::shared_ptr<Internal::PayloadBase> &rhs) const
     {
-        return strcmp(lhs->typeName(), rhs->typeName()) < 0 ;
+        return strcmp(lhs->typeName(), rhs->typeName()) < 0;
     }
 };
 
@@ -120,14 +120,14 @@ private:
 }
 
 static std::shared_ptr<const std::pair<int, int>> lookupLegacyMapping(const QString &mimeType,
-                                                                      Internal::PayloadBase *p)
+        Internal::PayloadBase *p)
 {
     MyReadLocker locker(legacyMapLock());
     const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind(mimeType);
     if (hit == typeInfoToMetaTypeIdMap()->constEnd()) {
         return std::shared_ptr<const std::pair<int, int>>();
     }
-    const std::shared_ptr<Internal::PayloadBase> sp(p, [=](Internal::PayloadBase *) {
+    const std::shared_ptr<Internal::PayloadBase> sp(p, [ = ](Internal::PayloadBase *) {
         /*noop*/
     });
     const LegacyMap::mapped_type::const_iterator it = hit->find(sp);
@@ -550,7 +550,7 @@ Internal::PayloadBase *Item::payloadBase() const
 void ItemPrivate::tryEnsureLegacyPayload() const
 {
     if (!mLegacyPayload) {
-        for (PayloadContainer::const_iterator it = mPayloads.begin(), end = mPayloads.end() ; it != end ; ++it) {
+        for (PayloadContainer::const_iterator it = mPayloads.begin(), end = mPayloads.end(); it != end; ++it) {
             if (lookupLegacyMapping(mMimeType, it->payload.get())) {
                 mLegacyPayload = it->payload; // clones
             }
@@ -627,7 +627,7 @@ static QString format_types(const PayloadContainer &c)
 {
     QStringList result;
     result.reserve(c.size());
-    for (PayloadContainer::const_iterator it = c.begin(), end = c.end() ; it != end ; ++it) {
+    for (PayloadContainer::const_iterator it = c.begin(), end = c.end(); it != end; ++it) {
         result.push_back(format_type(it->sharedPointerId, it->metaTypeId));
     }
     return result.join(QStringLiteral(", "));
@@ -705,7 +705,7 @@ QVector<int> Item::availablePayloadMetaTypeIds() const
     QVector<int> result;
     result.reserve(d_ptr->mPayloads.size());
     // Stable Insertion Sort - N is typically _very_ low (1 or 2).
-    for (PayloadContainer::const_iterator it = d_ptr->mPayloads.begin(), end = d_ptr->mPayloads.end() ; it != end ; ++it) {
+    for (PayloadContainer::const_iterator it = d_ptr->mPayloads.begin(), end = d_ptr->mPayloads.end(); it != end; ++it) {
         result.insert(std::upper_bound(result.begin(), result.end(), it->metaTypeId), it->metaTypeId);
     }
     return result;

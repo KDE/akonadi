@@ -36,8 +36,8 @@ void AgentSearchEngine::addSearch(const Collection &collection)
                             QStringLiteral("org.freedesktop.Akonadi.AgentManagerInternal"));
     if (agentMgr.isValid()) {
         const QList<QVariant> args = QList<QVariant>() << collection.queryString()
-                                                       << QLatin1String("")
-                                                       << collection.id();
+                                     << QLatin1String("")
+                                     << collection.id();
         agentMgr.callWithArgumentList(QDBus::NoBlock, QStringLiteral("addSearch"), args);
         return;
     }

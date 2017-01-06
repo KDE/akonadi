@@ -23,8 +23,7 @@ using namespace Akonadi;
 
 QDebug operator<<(QDebug dbg, Tristate tristate)
 {
-    switch (tristate)
-    {
+    switch (tristate) {
     case Tristate::True:
         return dbg << "True";
     case Tristate::False:

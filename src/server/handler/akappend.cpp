@@ -38,10 +38,10 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 static QVector<QByteArray> localFlagsToPreserve = QVector<QByteArray>() << "$ATTACHMENT"
-                                                                        << "$INVITATION"
-                                                                        << "$ENCRYPTED"
-                                                                        << "$SIGNED"
-                                                                        << "$WATCHED";
+        << "$INVITATION"
+        << "$ENCRYPTED"
+        << "$SIGNED"
+        << "$WATCHED";
 
 bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                             Collection &parentCol)
@@ -124,9 +124,9 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     }
     const Protocol::Attributes attrs = cmd.attributes();
     for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
-       if (!streamer.streamAttribute(true, iter.key(), iter.value())) {
-           return failureResponse(streamer.error());
-       }
+        if (!streamer.streamAttribute(true, iter.key(), iter.value())) {
+            return failureResponse(streamer.error());
+        }
     }
 
     // TODO: Try to avoid this addition query
@@ -255,7 +255,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     const Part::List existingParts = Part::retrieveFiltered(Part::pimItemIdColumn(), currentItem.id());
     QMap<QByteArray, qint64> partsSizes;
-    for (const Part &part : existingParts ) {
+    for (const Part &part : existingParts) {
         partsSizes.insert(PartTypeHelper::fullName(part.partType()).toLatin1(), part.datasize());
     }
 
@@ -301,7 +301,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     return true;
 }
 
-bool AkAppend::sendResponse(const PimItem& item, Protocol::CreateItemCommand::MergeModes mergeModes)
+bool AkAppend::sendResponse(const PimItem &item, Protocol::CreateItemCommand::MergeModes mergeModes)
 {
     if (mergeModes & Protocol::CreateItemCommand::Silent || mergeModes & Protocol::CreateItemCommand::None) {
         Protocol::FetchItemsResponse resp(item.id());
@@ -337,7 +337,6 @@ bool AkAppend::sendResponse(const PimItem& item, Protocol::CreateItemCommand::Me
     return true;
 }
 
-
 bool AkAppend::notify(const PimItem &item, bool seen, const Collection &collection)
 {
     DataStore::self()->notificationCollector()->itemAdded(item, seen, collection);
@@ -357,7 +356,6 @@ bool AkAppend::notify(const PimItem &item, const Collection &collection,
     }
     return true;
 }
-
 
 bool AkAppend::parseStream()
 {

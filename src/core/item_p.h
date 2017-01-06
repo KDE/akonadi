@@ -99,8 +99,7 @@ public:
     }
 
 private:
-    struct _save_bool
-    {
+    struct _save_bool {
         void f()
         {
         }
@@ -224,8 +223,7 @@ public:
     }
 };
 
-struct TypedPayload
-{
+struct TypedPayload {
     clone_ptr<Internal::PayloadBase> payload;
     int sharedPointerId;
     int metaTypeId;
@@ -242,7 +240,7 @@ struct BySharedPointerAndMetaTypeID : std::unary_function<TypedPayload, bool> {
     bool operator()(const TypedPayload &tp) const
     {
         return (mtid == -1 || mtid == tp.metaTypeId)
-               && (spid == -1 || spid == tp.sharedPointerId) ;
+               && (spid == -1 || spid == tp.sharedPointerId);
     }
 };
 
@@ -254,7 +252,7 @@ namespace std
 {
 template <>
 inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload &lhs,
-                                                 Akonadi::_detail::TypedPayload &rhs)
+        Akonadi::_detail::TypedPayload &rhs)
 {
     lhs.payload.swap(rhs.payload);
     swap(lhs.sharedPointerId, rhs.sharedPointerId);
@@ -367,8 +365,8 @@ public:
     Internal::PayloadBase *payloadBaseImpl(int spid, int mtid) const
     {
         auto it = std::find_if(mPayloads.cbegin(), mPayloads.cend(),
-                                _detail::BySharedPointerAndMetaTypeID(spid, mtid));
-        return it == mPayloads.cend() ? 0 : it->payload.get() ;
+                               _detail::BySharedPointerAndMetaTypeID(spid, mtid));
+        return it == mPayloads.cend() ? 0 : it->payload.get();
     }
 
     bool movePayloadFrom(ItemPrivate *other, int mtid) const    /*sic!*/
@@ -382,13 +380,13 @@ public:
         using namespace std; // for swap()
         for (PayloadContainer::iterator
                 dst = mPayloads.begin() + oldSize,
-                src = oPayloads.begin(), end = oPayloads.end() ; src != end ; ++src) {
+                src = oPayloads.begin(), end = oPayloads.end(); src != end; ++src) {
             if (matcher(*src)) {
                 swap(*dst, *src);
                 ++dst;
             }
         }
-        return numMatching > 0 ;
+        return numMatching > 0;
     }
 
 #if 0

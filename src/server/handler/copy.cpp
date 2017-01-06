@@ -61,7 +61,7 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
     return true;
 }
 
-void Copy::itemsRetrieved(const QList<qint64>& ids)
+void Copy::itemsRetrieved(const QList<qint64> &ids)
 {
     SelectQueryBuilder<PimItem> qb;
     ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
@@ -87,7 +87,6 @@ void Copy::itemsRetrieved(const QList<qint64>& ids)
         return;
     }
 }
-
 
 bool Copy::parseStream()
 {

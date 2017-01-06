@@ -23,8 +23,10 @@
 
 #include "storage/dbinitializer.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class DbInitializerMySql : public DbInitializer
 {

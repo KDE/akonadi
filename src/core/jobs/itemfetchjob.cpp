@@ -91,7 +91,7 @@ public:
             try {
                 QString itemStr = QStringLiteral("items id: ");
                 bool firstItem = true;
-                Q_FOREACH(const Akonadi::Item &item, mRequestedItems) {
+                Q_FOREACH (const Akonadi::Item &item, mRequestedItems) {
                     if (firstItem) {
                         firstItem = false;
                     } else {

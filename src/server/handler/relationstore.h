@@ -17,15 +17,15 @@
     02110-1301, USA.
 */
 
-
 #ifndef AKONADI_RELATIONSTORE_H
 #define AKONADI_RELATIONSTORE_H
 
 #include "handler.h"
 
-
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Relation;
 

@@ -33,8 +33,10 @@
 
 #include <private/protocol_p.h>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Handler;
 class Response;
@@ -127,7 +129,5 @@ private:
 
 } // namespace Server
 } // namespace Akonadi
-
-
 
 #endif

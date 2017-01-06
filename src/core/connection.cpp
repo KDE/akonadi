@@ -83,7 +83,7 @@ void Connection::doReconnect()
     Q_ASSERT(QThread::currentThread() == thread());
 
     if (mSocket && (mSocket->state() == QLocalSocket::ConnectedState
-                        || mSocket->state() == QLocalSocket::ConnectingState)) {
+                    || mSocket->state() == QLocalSocket::ConnectingState)) {
         // nothing to do, we are still/already connected
         return;
     }
@@ -119,9 +119,9 @@ void Connection::doReconnect()
         const QFileInfo fileInfo(connectionConfigFile);
         if (!fileInfo.exists()) {
             qCDebug(AKONADICORE_LOG) << "Akonadi Client Session: connection config file '"
-                                        "akonadi/akonadiconnectionrc' can not be found in"
-                                    << XdgBaseDirs::homePath("config") << "nor in any of"
-                                    << XdgBaseDirs::systemPathList("config");
+                                     "akonadi/akonadiconnectionrc' can not be found in"
+                                     << XdgBaseDirs::homePath("config") << "nor in any of"
+                                     << XdgBaseDirs::systemPathList("config");
         }
         const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
         const QString defaultSocketDir = StandardDirs::saveDir("data");
@@ -140,11 +140,11 @@ void Connection::doReconnect()
     if (!mSocket) {
         mSocket = new QLocalSocket(this);
         connect(mSocket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
-                [this](QLocalSocket::LocalSocketError) {
-                    qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
-                    Q_EMIT socketError(mSocket->errorString());
-                    Q_EMIT socketDisconnected();
-                });
+        [this](QLocalSocket::LocalSocketError) {
+            qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
+            Q_EMIT socketError(mSocket->errorString());
+            Q_EMIT socketDisconnected();
+        });
         connect(mSocket, &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
         connect(mSocket, &QLocalSocket::readyRead, this, &Connection::dataReceived);
     }
@@ -159,7 +159,7 @@ void Connection::doReconnect()
 void Connection::forceReconnect()
 {
     const bool ok = QMetaObject::invokeMethod(this, "doForceReconnect",
-                                              Qt::QueuedConnection);
+                    Qt::QueuedConnection);
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }
@@ -225,8 +225,9 @@ void Connection::dataReceived()
             mLogFile->flush();
         }
 
-        if (cmd.type() == Protocol::Command::Hello)
+        if (cmd.type() == Protocol::Command::Hello) {
             Q_ASSERT(cmd.isResponse());
+        }
 
         Q_EMIT commandReceived(tag, cmd);
         /*
@@ -256,9 +257,9 @@ void Connection::dataReceived()
 void Connection::sendCommand(qint64 tag, const Protocol::Command &cmd)
 {
     const bool ok = QMetaObject::invokeMethod(this, "doSendCommand",
-                                              Qt::QueuedConnection,
-                                              Q_ARG(qint64, tag),
-                                              Q_ARG(Akonadi::Protocol::Command, cmd));
+                    Qt::QueuedConnection,
+                    Q_ARG(qint64, tag),
+                    Q_ARG(Akonadi::Protocol::Command, cmd));
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }

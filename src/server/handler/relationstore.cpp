@@ -29,7 +29,7 @@ using namespace Akonadi::Server;
 
 Relation RelationStore::fetchRelation(qint64 leftId, qint64 rightId, qint64 typeId)
 {
-   SelectQueryBuilder<Relation> relationQuery;
+    SelectQueryBuilder<Relation> relationQuery;
     relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, leftId);
     relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, rightId);
     relationQuery.addValueCondition(Relation::typeIdFullColumnName(), Query::Equals, typeId);

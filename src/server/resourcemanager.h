@@ -22,8 +22,10 @@
 
 #include <QObject>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   Listens to agent instance added/removed signals and creates/removes

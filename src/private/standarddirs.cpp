@@ -21,7 +21,6 @@
 #include "xdgbasedirs_p.h"
 #include "instance_p.h"
 
-
 #include <QFile>
 
 using namespace Akonadi;

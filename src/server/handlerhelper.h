@@ -27,12 +27,14 @@
 #include <QString>
 #include <QStack>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class Scope;
 class ImapSet;
 
-namespace Protocol {
+namespace Protocol
+{
 class Ancestor;
 class CachePolicy;
 class FetchCollectionsResponse;
@@ -40,7 +42,8 @@ class FetchTagsResponse;
 class FetchRelationsResponse;
 }
 
-namespace Server {
+namespace Server
+{
 
 class CommandContext;
 class Connection;
@@ -80,24 +83,24 @@ public:
       the effective cache policy
     */
     static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col,
-                                                                       const CollectionAttribute::List &attributeList,
-                                                                       bool includeStatistics = false,
-                                                                       int ancestorDepth = 0,
-                                                                       const QStack<Collection> &ancestors = QStack<Collection>(),
-                                                                       const QStack<CollectionAttribute::List> &ancestorAttributes = QStack<CollectionAttribute::List>(),
-                                                                       bool isReferenced = false,
-                                                                       const QStringList &mimeTypes = QStringList());
+            const CollectionAttribute::List &attributeList,
+            bool includeStatistics = false,
+            int ancestorDepth = 0,
+            const QStack<Collection> &ancestors = QStack<Collection>(),
+            const QStack<CollectionAttribute::List> &ancestorAttributes = QStack<CollectionAttribute::List>(),
+            bool isReferenced = false,
+            const QStringList &mimeTypes = QStringList());
 
     /**
       Returns the protocol representation of a collection ancestor chain.
     */
     static QVector<Protocol::Ancestor> ancestorsResponse(int ancestorDepth,
-                                                         const QStack<Collection> &ancestors,
-                                                         const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
+            const QStack<Collection> &ancestors,
+            const QStack<CollectionAttribute::List> &_ancestorsAttributes = QStack<CollectionAttribute::List>());
 
     static Protocol::FetchTagsResponse fetchTagsResponse(const Tag &tag,
-                                                         bool withRID = false,
-                                                         Connection *connection = nullptr);
+            bool withRID = false,
+            Connection *connection = nullptr);
 
     static Protocol::FetchRelationsResponse fetchRelationsResponse(const Relation &relation);
 

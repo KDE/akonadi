@@ -29,38 +29,38 @@
 #include <QTest>
 
 #define AKTEST_MAIN(TestObject) \
-int main(int argc, char **argv) \
-{ \
-    qputenv("XDG_DATA_HOME", ".local-unit-test/share"); \
-    qputenv("XDG_CONFIG_HOME", ".config-unit-test"); \
-    AkCoreApplication app(argc, argv); \
-    app.parseCommandLine(); \
-    TestObject tc; \
-    return QTest::qExec(&tc, argc, argv); \
-}
+    int main(int argc, char **argv) \
+    { \
+        qputenv("XDG_DATA_HOME", ".local-unit-test/share"); \
+        qputenv("XDG_CONFIG_HOME", ".config-unit-test"); \
+        AkCoreApplication app(argc, argv); \
+        app.parseCommandLine(); \
+        TestObject tc; \
+        return QTest::qExec(&tc, argc, argv); \
+    }
 
 #define AKTEST_FAKESERVER_MAIN(TestObject) \
-int main(int argc, char **argv) \
-{ \
-    FakeAkonadiServer::instance(); \
-    AkCoreApplication app(argc, argv); \
-    app.addCommandLineOptions(QCommandLineOption( \
-        QLatin1String("no-cleanup"), QLatin1String("Don't clean up the temporary runtime environment"))); \
-    TestObject tc; \
-    return QTest::qExec(&tc, argc, argv); \
-}
+    int main(int argc, char **argv) \
+    { \
+        FakeAkonadiServer::instance(); \
+        AkCoreApplication app(argc, argv); \
+        app.addCommandLineOptions(QCommandLineOption( \
+                                  QLatin1String("no-cleanup"), QLatin1String("Don't clean up the temporary runtime environment"))); \
+        TestObject tc; \
+        return QTest::qExec(&tc, argc, argv); \
+    }
 
 #define AKCOMPARE(actual, expected) \
-do {\
-    if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
-        return false;\
-} while (0)
+    do {\
+        if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
+            return false;\
+    } while (0)
 
 #define AKVERIFY(statement) \
-do {\
-    if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
-        return false;\
-} while (0)
+    do {\
+        if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
+            return false;\
+    } while (0)
 
 inline void akTestSetInstanceIdentifier(const QString &instanceId)
 {
@@ -69,7 +69,8 @@ inline void akTestSetInstanceIdentifier(const QString &instanceId)
 
 #include <private/protocol_p.h>
 
-namespace QTest {
+namespace QTest
+{
 template<>
 char *toString(const Akonadi::Protocol::ItemChangeNotification &msg)
 {
@@ -77,7 +78,8 @@ char *toString(const Akonadi::Protocol::ItemChangeNotification &msg)
 }
 }
 
-namespace AkTest {
+namespace AkTest
+{
 enum NtfField {
     NtfType                   = (1 << 0),
     NtfOperation              = (1 << 1),

@@ -81,7 +81,7 @@ QString HandlerHelper::pathForCollection(const Collection &col)
     return parts.join(QLatin1Char('/'));
 }
 
-Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection& col)
+Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
 {
     Protocol::CachePolicy cachePolicy;
     cachePolicy.setInherit(col.cachePolicyInherit());
@@ -105,13 +105,13 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
 }
 
 Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col,
-                                                                           const CollectionAttribute::List &attrs,
-                                                                           bool includeStatistics,
-                                                                           int ancestorDepth,
-                                                                           const QStack<Collection> &ancestors,
-                                                                           const QStack<CollectionAttribute::List> &ancestorAttributes,
-                                                                           bool isReferenced,
-                                                                           const QStringList &mimeTypes)
+        const CollectionAttribute::List &attrs,
+        bool includeStatistics,
+        int ancestorDepth,
+        const QStack<Collection> &ancestors,
+        const QStack<CollectionAttribute::List> &ancestorAttributes,
+        bool isReferenced,
+        const QStringList &mimeTypes)
 {
     Protocol::FetchCollectionsResponse response(col.id());
     response.setParentId(col.parentId());
@@ -126,8 +126,8 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
         const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
         if (stats.count > -1) {
             Protocol::FetchCollectionStatsResponse statsResponse(stats.count,
-                                                                 stats.count - stats.read,
-                                                                 stats.size);
+                    stats.count - stats.read,
+                    stats.size);
             response.setStatistics(statsResponse);
         }
     }
@@ -168,8 +168,8 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
 }
 
 QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
-                                                             const QStack<Collection> &_ancestors,
-                                                             const QStack<CollectionAttribute::List> &_ancestorsAttributes)
+        const QStack<Collection> &_ancestors,
+        const QStack<CollectionAttribute::List> &_ancestorsAttributes)
 {
     QVector<Protocol::Ancestor> rv;
     if (ancestorDepth  > 0) {
@@ -200,8 +200,8 @@ QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
 }
 
 Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
-                                                             bool withRID,
-                                                             Connection *connection)
+        bool withRID,
+        Connection *connection)
 {
     Protocol::FetchTagsResponse response(tag.id());
     response.setType(tag.tagType().name().toUtf8());
@@ -244,7 +244,6 @@ Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Rel
                                             relation.right().mimeType().name().toUtf8(),
                                             relation.relationType().name().toUtf8());
 }
-
 
 Flag::List HandlerHelper::resolveFlags(const QSet<QByteArray> &flagNames)
 {
@@ -385,7 +384,7 @@ Collection HandlerHelper::collectionFromScope(const Scope &scope, Connection *co
     }
 }
 
-Tag::List HandlerHelper::tagsFromScope(const Scope &scope, Connection* connection)
+Tag::List HandlerHelper::tagsFromScope(const Scope &scope, Connection *connection)
 {
     if (scope.scope() == Scope::Invalid || scope.scope() == Scope::HierarchicalRid) {
         throw HandlerException("Invalid tag scope");

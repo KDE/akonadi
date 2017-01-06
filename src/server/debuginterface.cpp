@@ -30,7 +30,7 @@ DebugInterface::DebugInterface(QObject *parent)
 {
     new DebugInterfaceAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/debug"),
-                                                 this, QDBusConnection::ExportAdaptors);
+            this, QDBusConnection::ExportAdaptors);
 }
 
 QString DebugInterface::tracer() const

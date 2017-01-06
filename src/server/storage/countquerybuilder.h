@@ -25,8 +25,10 @@
 
 #include <QSqlError>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   Helper class for creating queries to count elements in a database.

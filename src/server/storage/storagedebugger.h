@@ -32,7 +32,6 @@
 #include <QAtomicInt>
 #endif
 
-
 #ifdef Q_ATOMC_INT64_IS_SUPPORTED
 #include <QAtomicInteger>
 #else
@@ -41,8 +40,10 @@
 
 class QSqlQuery;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class StorageDebugger : public QObject
 {

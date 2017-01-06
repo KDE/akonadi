@@ -24,8 +24,10 @@
 #include <QVariant>
 #include <QVector>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class QueryBuilder;
 
@@ -33,7 +35,8 @@ class QueryBuilder;
   Building blocks for SQL queries.
   @see QueryBuilder
 */
-namespace Query {
+namespace Query
+{
 
 /**
   Compare operators to be used in query conditions.

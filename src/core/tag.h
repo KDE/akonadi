@@ -204,9 +204,7 @@ private:
     //@endcond
 };
 
-
 AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
-
 
 template <typename T>
 inline T *Tag::attribute(CreateOption option)
@@ -221,7 +219,7 @@ inline T *Tag::attribute(CreateOption option)
         }
         //reuse 5250
         qWarning() << "Found attribute of unknown type" << dummy.type()
-                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
     T *attr = new T();
@@ -240,7 +238,7 @@ inline T *Tag::attribute() const
         }
         //Reuse 5250
         qWarning() << "Found attribute of unknown type" << dummy.type()
-                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
     return 0;
@@ -259,7 +257,6 @@ inline bool Tag::hasAttribute() const
     const T dummy;
     return hasAttribute(dummy.type());
 }
-
 
 } // namespace Akonadi
 

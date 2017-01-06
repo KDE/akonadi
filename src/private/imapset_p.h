@@ -28,13 +28,16 @@
 #include <QMetaType>
 #include <QSharedDataPointer>
 
-namespace Akonadi {
-namespace Protocol {
+namespace Akonadi
+{
+namespace Protocol
+{
 class DataStream;
 }
 }
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 /**
   Represents a single interval in an ImapSet.

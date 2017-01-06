@@ -24,8 +24,10 @@
 #include <QString>
 #include <exception>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
   Base class for exception used internally by the Akonadi server.
@@ -58,8 +60,7 @@ public:
     {
     }
 
-    const char *what() const throw() Q_DECL_OVERRIDE
-    {
+    const char *what() const throw() Q_DECL_OVERRIDE {
         return mWhat.constData();
     }
 
@@ -72,26 +73,26 @@ protected:
 };
 
 #define AKONADI_EXCEPTION_MAKE_INSTANCE( classname ) \
-class classname : public Akonadi::Server::Exception \
-{ \
-public: \
-    classname ( const char *what ) throw() \
-        : Akonadi::Server::Exception( what ) \
+    class classname : public Akonadi::Server::Exception \
     { \
-    } \
-    classname ( const QByteArray &what ) throw() \
-        : Akonadi::Server::Exception( what ) \
-    { \
-    } \
-    classname ( const QString &what ) throw() \
-        : Akonadi::Server::Exception( what ) \
-    { \
-    } \
-    const char *type() const throw() Q_DECL_OVERRIDE \
-    { \
-        return "" #classname; \
-    } \
-}
+    public: \
+        classname ( const char *what ) throw() \
+            : Akonadi::Server::Exception( what ) \
+        { \
+        } \
+        classname ( const QByteArray &what ) throw() \
+            : Akonadi::Server::Exception( what ) \
+        { \
+        } \
+        classname ( const QString &what ) throw() \
+            : Akonadi::Server::Exception( what ) \
+        { \
+        } \
+        const char *type() const throw() Q_DECL_OVERRIDE \
+        { \
+            return "" #classname; \
+        } \
+    }
 
 } // namespace Server
 } // namespace Akonadi

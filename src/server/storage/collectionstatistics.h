@@ -25,8 +25,10 @@ class QMutex;
 #include <QHash>
 #include <QMutex>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Collection;
 
@@ -44,8 +46,7 @@ class Collection;
 class CollectionStatistics
 {
 public:
-    struct Statistics
-    {
+    struct Statistics {
         qint64 count;
         qint64 size;
         qint64 read;

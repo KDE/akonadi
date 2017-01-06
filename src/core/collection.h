@@ -570,7 +570,7 @@ inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
         }
         //Reuse 5250
         qWarning() << "Found attribute of unknown type" << dummy.type()
-                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
     T *attr = new T();
@@ -589,7 +589,7 @@ inline T *Akonadi::Collection::attribute() const
         }
         //reuse 5250
         qWarning() << "Found attribute of unknown type" << dummy.type()
-                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
     return 0;

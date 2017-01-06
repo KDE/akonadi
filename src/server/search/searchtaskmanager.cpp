@@ -129,7 +129,7 @@ void SearchTaskManager::addTask(SearchTask *task)
     mInstancesLock.lock();
 
     org::freedesktop::Akonadi::AgentManager agentManager(DBus::serviceName(DBus::Control), QStringLiteral("/AgentManager"),
-                                                         DBusConnectionPool::threadConnection());
+            DBusConnectionPool::threadConnection());
     do {
         const QString resourceId = query.value(1).toString();
         if (!mInstances.contains(resourceId)) {

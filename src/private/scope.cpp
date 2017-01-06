@@ -94,8 +94,6 @@ bool Scope::HRID::operator==(const HRID &other) const
     return id == other.id && remoteId == other.remoteId;
 }
 
-
-
 Scope::Scope()
     : d(new ScopePrivate)
 {
@@ -222,7 +220,6 @@ bool Scope::isEmpty() const
     return true;
 }
 
-
 void Scope::setUidSet(const ImapSet &uidSet)
 {
     d->scope = Uid;
@@ -270,7 +267,7 @@ QStringList Scope::gidSet() const
 qint64 Scope::uid() const
 {
     if (d->uidSet.intervals().size() == 1 &&
-        d->uidSet.intervals().at(0).size() == 1) {
+            d->uidSet.intervals().at(0).size() == 1) {
         return d->uidSet.intervals().at(0).begin();
     }
 
@@ -339,7 +336,7 @@ Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::Scope &s
     scope.d->hridChain.clear();
     scope.d->gidSet.clear();
 
-    stream >> reinterpret_cast<quint8&>(scope.d->scope);
+    stream >> reinterpret_cast<quint8 &>(scope.d->scope);
     switch (scope.d->scope) {
     case Scope::Invalid:
         return stream;

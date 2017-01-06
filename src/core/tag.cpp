@@ -33,7 +33,6 @@ uint Akonadi::qHash(const Tag &tag)
     return ::qHash(tag.id());
 }
 
-
 Tag::Tag()
     : d_ptr(new TagPrivate)
 {

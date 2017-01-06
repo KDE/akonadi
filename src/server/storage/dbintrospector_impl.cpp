@@ -108,27 +108,27 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
 
     Query::Condition keyColumnUsageCondition(Query::And);
     keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_catalog"), Query::Equals,
-                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_catalog"));
+            QStringLiteral(KEY_COLUMN_USAGE ".constraint_catalog"));
     keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_schema"), Query::Equals,
-                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_schema"));
+            QStringLiteral(KEY_COLUMN_USAGE ".constraint_schema"));
     keyColumnUsageCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"), Query::Equals,
-                                               QStringLiteral(KEY_COLUMN_USAGE ".constraint_name"));
+            QStringLiteral(KEY_COLUMN_USAGE ".constraint_name"));
 
     Query::Condition referentialConstraintsCondition(Query::And);
     referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_catalog"), Query::Equals,
-                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_catalog"));
+            QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_catalog"));
     referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_schema"), Query::Equals,
-                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_schema"));
+            QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_schema"));
     referentialConstraintsCondition.addColumnCondition(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"), Query::Equals,
-                                                       QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_name"));
+            QStringLiteral(REFERENTIAL_CONSTRAINTS ".constraint_name"));
 
     Query::Condition constraintColumnUsageCondition(Query::And);
     constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_catalog"), Query::Equals,
-                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_catalog"));
+            QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_catalog"));
     constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_schema"), Query::Equals,
-                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_schema"));
+            QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_schema"));
     constraintColumnUsageCondition.addColumnCondition(QStringLiteral(REFERENTIAL_CONSTRAINTS ".unique_constraint_name"), Query::Equals,
-                                                      QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_name"));
+            QStringLiteral(CONSTRAINT_COLUMN_USAGE ".constraint_name"));
 
     QueryBuilder qb(QStringLiteral(TABLE_CONSTRAINTS), QueryBuilder::Select);
     qb.addColumn(QStringLiteral(TABLE_CONSTRAINTS ".constraint_name"));

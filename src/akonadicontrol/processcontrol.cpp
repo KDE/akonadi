@@ -131,7 +131,7 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
     } else {
         if (exitCode != 0) {
             qCWarning(AKONADICONTROL_LOG, "ProcessControl: Application '%s' returned with exit code %d (%s)",
-                     qPrintable(mApplication), exitCode, qPrintable(mProcess.errorString()));
+                      qPrintable(mApplication), exitCode, qPrintable(mProcess.errorString()));
             if (mPolicy == RestartOnCrash) {
                 if (mCrashCount > s_maxCrashCount) {
                     qCWarning(AKONADICONTROL_LOG) << mApplication << "crashed too often and will not be restarted!";

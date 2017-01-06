@@ -37,7 +37,7 @@ static QString dataDir()
     QString akonadiHomeDir = StandardDirs::saveDir("data");
     if (akonadiHomeDir.isEmpty()) {
         qCCritical(AKONADISERVER_LOG) << "Unable to create directory 'akonadi' in " << XdgBaseDirs::homePath("data")
-                  << "during database initialization";
+                                      << "during database initialization";
         return QString();
     }
 
@@ -148,9 +148,9 @@ void DbConfigSqlite::setup()
 
         if (!db.isValid()) {
             qCDebug(AKONADISERVER_LOG) << "Invalid database for "
-                    << mDatabaseName
-                    << " with driver "
-                    << driverName();
+                                       << mDatabaseName
+                                       << " with driver "
+                                       << driverName();
             return;
         }
 
@@ -160,7 +160,7 @@ void DbConfigSqlite::setup()
             dir.mkpath(finfo.path());
         }
 
-    #ifdef Q_OS_LINUX
+#ifdef Q_OS_LINUX
         QFile dbFile(mDatabaseName);
         // It is recommended to disable CoW feature when running on Btrfs to improve
         // database performance. It does not have any effect on non-empty files, so
@@ -170,15 +170,15 @@ void DbConfigSqlite::setup()
                 Utils::disableCoW(mDatabaseName);
             }
         }
-    #endif
+#endif
 
         db.setDatabaseName(mDatabaseName);
         if (!db.open()) {
             qCDebug(AKONADISERVER_LOG) << "Could not open sqlite database "
-                    << mDatabaseName
-                    << " with driver "
-                    << driverName()
-                    << " for initialization";
+                                       << mDatabaseName
+                                       << " with driver "
+                                       << driverName()
+                                       << " for initialization";
             db.close();
             return;
         }

@@ -75,7 +75,7 @@ int Entity::countImpl(const QString &tableName, const QString &column, const QVa
 
     if (!builder.exec()) {
         qCDebug(AKONADISERVER_LOG) << "Error during counting records in table" << tableName
-                  << builder.query().lastError().text();
+                                   << builder.query().lastError().text();
         return -1;
     }
 
@@ -94,7 +94,7 @@ bool Entity::removeImpl(const QString &tableName, const QString &column, const Q
 
     if (!builder.exec()) {
         qCDebug(AKONADISERVER_LOG) << "Error during deleting records from table"
-                  << tableName << builder.query().lastError().text();
+                                   << tableName << builder.query().lastError().text();
         return false;
     }
     return true;
@@ -113,7 +113,7 @@ bool Entity::relatesToImpl(const QString &tableName, const QString &leftColumn, 
 
     if (!builder.exec()) {
         qCDebug(AKONADISERVER_LOG) << "Error during counting records in table" << tableName
-                  << builder.query().lastError().text();
+                                   << builder.query().lastError().text();
         return false;
     }
 
@@ -137,7 +137,7 @@ bool Entity::addToRelationImpl(const QString &tableName, const QString &leftColu
 
     if (!qb.exec()) {
         qCDebug(AKONADISERVER_LOG) << "Error during adding a record to table" << tableName
-                  << qb.query().lastError().text();
+                                   << qb.query().lastError().text();
         return false;
     }
 
@@ -157,7 +157,7 @@ bool Entity::removeFromRelationImpl(const QString &tableName, const QString &lef
 
     if (!builder.exec()) {
         qCDebug(AKONADISERVER_LOG) << "Error during removing a record from relation table" << tableName
-                  << builder.query().lastError().text();
+                                   << builder.query().lastError().text();
         return false;
     }
 
@@ -184,7 +184,7 @@ bool Entity::clearRelationImpl(const QString &tableName, const QString &leftColu
     }
     if (!builder.exec()) {
         qCDebug(AKONADISERVER_LOG) << "Error during clearing relation table" << tableName
-                  << "for id" << id << builder.query().lastError().text();
+                                   << "for id" << id << builder.query().lastError().text();
         return false;
     }
 

@@ -139,10 +139,10 @@ void JobPrivate::signalCreationToJobTracker()
         // publishing something not intended for public consumption.
         // WARNING: for any signature change here, apply it to resourcescheduler.cpp too
         const QList<QVariant> argumentList = QList<QVariant>() << QLatin1String(mSession->sessionId())
-                                                               << QString::number(reinterpret_cast<quintptr>(q), 16)
-                                                               << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
-                                                               << QString::fromLatin1(q->metaObject()->className())
-                                                               << jobDebuggingString();
+                                             << QString::number(reinterpret_cast<quintptr>(q), 16)
+                                             << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
+                                             << QString::fromLatin1(q->metaObject()->className())
+                                             << jobDebuggingString();
         s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobCreated"), argumentList);
     }
 }

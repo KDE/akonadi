@@ -23,7 +23,8 @@
 #include <QVector>
 #include <QSet>
 
-namespace Akonadi {
+namespace Akonadi
+{
 template<typename Key, typename Value, template<typename, typename> class Container>
 QVector<Value> valuesToVector(const Container<Key, Value> &container)
 {

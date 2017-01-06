@@ -27,7 +27,6 @@
 
 #include <shared/akapplication.h>
 
-
 #include "controlmanagerinterface.h"
 #include "janitorinterface.h"
 #include "akonadistarter.h"
@@ -49,7 +48,7 @@
 static bool startServer(bool verbose)
 {
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control))
-        || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
+            || QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))) {
         std::cerr << "Akonadi is already running." << std::endl;
         return false;
     }
@@ -60,8 +59,8 @@ static bool startServer(bool verbose)
 static bool stopServer()
 {
     org::freedesktop::Akonadi::ControlManager iface(Akonadi::DBus::serviceName(Akonadi::DBus::Control),
-                                                    QStringLiteral("/ControlManager"),
-                                                    QDBusConnection::sessionBus(), nullptr);
+            QStringLiteral("/ControlManager"),
+            QDBusConnection::sessionBus(), nullptr);
     if (!iface.isValid()) {
         std::cerr << "Akonadi is not running." << std::endl;
         return false;
@@ -159,16 +158,16 @@ static bool statusServer()
 static void runJanitor(const QString &operation)
 {
     org::freedesktop::Akonadi::Janitor janitor(Akonadi::DBus::serviceName(Akonadi::DBus::StorageJanitor),
-                                               QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH),
-                                               QDBusConnection::sessionBus());
+            QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH),
+            QDBusConnection::sessionBus());
     QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::information,
-                        [](const QString &msg) {
-                            std::cerr << msg.toStdString() << std::endl;
-                        });
+    [](const QString & msg) {
+        std::cerr << msg.toStdString() << std::endl;
+    });
     QObject::connect(&janitor, &org::freedesktop::Akonadi::Janitor::done,
-                     []() {
-                         qApp->exit();
-                     });
+    []() {
+        qApp->exit();
+    });
     janitor.asyncCall(operation);
     qApp->exec();
 }
@@ -178,16 +177,15 @@ int main(int argc, char **argv)
     AkCoreApplication app(argc, argv);
 
     app.setDescription(QStringLiteral("Akonadi server manipulation tool\n\n"
-                                     "Commands:\n"
-                                     "  start          Starts the Akonadi server with all its processes\n"
-                                     "  stop           Stops the Akonadi server and all its processes cleanly\n"
-                                     "  restart        Restart Akonadi server with all its processes\n"
-                                     "  status         Shows a status overview of the Akonadi server\n"
-                                     "  vacuum         Vacuum internal storage (WARNING: needs a lot of time and disk\n"
-                                     "                 space!)\n"
-                                     "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
-                                     "                 (can take some time)"));
-
+                                      "Commands:\n"
+                                      "  start          Starts the Akonadi server with all its processes\n"
+                                      "  stop           Stops the Akonadi server and all its processes cleanly\n"
+                                      "  restart        Restart Akonadi server with all its processes\n"
+                                      "  status         Shows a status overview of the Akonadi server\n"
+                                      "  vacuum         Vacuum internal storage (WARNING: needs a lot of time and disk\n"
+                                      "                 space!)\n"
+                                      "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
+                                      "                 (can take some time)"));
 
     app.addPositionalCommandLineOption(QStringLiteral("command"), QStringLiteral("Command to execute"),
                                        QStringLiteral("start|stop|restart|status|vacuum|fsck"));

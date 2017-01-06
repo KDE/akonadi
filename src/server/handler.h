@@ -28,10 +28,11 @@
 
 #include <private/protocol_p.h>
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-
-namespace Server {
+namespace Server
+{
 
 class Response;
 class Connection;
@@ -104,8 +105,7 @@ public:
 
     template<typename T>
     typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
-    sendResponse(const T&response = T());
-
+    sendResponse(const T &response = T());
 
     /**
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
@@ -147,7 +147,7 @@ template<typename T>
 typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
 Handler::sendResponse(const T &response)
 {
-    sendResponse(static_cast<const Protocol::Command&>(response));
+    sendResponse(static_cast<const Protocol::Command &>(response));
 }
 
 } // namespace Server

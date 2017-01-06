@@ -22,18 +22,21 @@
 
 class QString;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ImapSet;
 
-namespace Server {
+namespace Server
+{
 
 class QueryBuilder;
 
 /**
   Helper methods for common query tasks.
 */
-namespace QueryHelper {
+namespace QueryHelper
+{
 /**
   Add conditions to @p qb for the given uid set @p set applied to @p column.
 */

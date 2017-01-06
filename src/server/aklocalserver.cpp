@@ -21,7 +21,7 @@
 
 using namespace Akonadi::Server;
 
-AkLocalServer::AkLocalServer(QObject* parent)
+AkLocalServer::AkLocalServer(QObject *parent)
     : QLocalServer(parent)
 {
 }

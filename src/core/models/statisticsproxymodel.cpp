@@ -166,7 +166,7 @@ public:
                               "      <img src=\"%1\" width=\"%2\" height=\"32\">\n"
                               "      </td></tr></table>\n"
                               "    </td>\n"
-                          ).arg(iconPath).arg(icon_size_found) ;
+                          ).arg(iconPath).arg(icon_size_found);
 
         if (QApplication::layoutDirection() == Qt::LeftToRight) {
             tip += tipInfo + QStringLiteral("</td><td align=\"%3\" valign=\"top\">").arg(textDirection) + tipIcon;
@@ -214,7 +214,7 @@ void StatisticsProxyModel::setSourceModel(QAbstractItemModel *model)
         disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
                    this, SLOT(_q_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
         connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-                   this, SLOT(_k_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+                this, SLOT(_k_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
     }
 }
 
@@ -242,8 +242,9 @@ bool StatisticsProxyModel::isToolTipEnabled() const
 
 void StatisticsProxyModel::setExtraColumnsEnabled(bool enable)
 {
-    if (d->mExtraColumnsEnabled == enable)
+    if (d->mExtraColumnsEnabled == enable) {
         return;
+    }
     d->mExtraColumnsEnabled = enable;
     if (enable) {
         KExtraColumnsProxyModel::appendColumn(i18nc("number of unread entities in the collection", "Unread"));
@@ -285,7 +286,7 @@ QVariant StatisticsProxyModel::extraColumnData(const QModelIndex &parent, int ro
             }
         }
     }
-        break;
+    break;
     case Qt::TextAlignmentRole: {
         return Qt::AlignRight;
     }

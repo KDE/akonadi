@@ -30,8 +30,10 @@
 
 class QLocalSocket;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class NotificationManager;
 
@@ -43,7 +45,8 @@ public:
     explicit NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor);
     ~NotificationSubscriber();
 
-    inline QByteArray subscriber() const {
+    inline QByteArray subscriber() const
+    {
         return mSubscriber;
     }
 
@@ -107,6 +110,5 @@ protected:
 
 } // namespace Server
 } // namespace Akonadi
-
 
 #endif

@@ -100,7 +100,7 @@ void SessionPrivate::socketDisconnected()
 
 bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
 {
-   // Handle Hello response -> send Login
+    // Handle Hello response -> send Login
     if (cmd.type() == Protocol::Command::Hello) {
         Protocol::HelloResponse hello(cmd);
         if (hello.isError()) {
@@ -118,7 +118,6 @@ bool SessionPrivate::handleCommand(qint64 tag, const Protocol::Command &cmd)
         protocolVersion = hello.protocolVersion();
         Internal::setServerProtocolVersion(protocolVersion);
         Internal::setGeneration(hello.generation());
-
 
         Protocol::LoginCommand login(sessionId);
         sendCommand(nextTag(), login);
@@ -193,13 +192,13 @@ void SessionPrivate::startJob(Job *job)
                                    "If you updated your system recently please restart the Akonadi server.",
                                    protocolVersion, Protocol::version()));
             qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
-                       "If you updated your system recently please restart the Akonadi server.";
+                                       "If you updated your system recently please restart the Akonadi server.";
         } else {
             job->setErrorText(i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
                                    "If you updated your system recently please restart all KDE PIM applications.",
                                    protocolVersion, Protocol::version()));
             qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
-                       "If you updated your system recently please restart all KDE PIM applications.";
+                                       "If you updated your system recently please restart all KDE PIM applications.";
         }
         job->emitResult();
     } else {
@@ -304,10 +303,10 @@ SessionPrivate::SessionPrivate(Session *parent)
     // thread()->wait() mechanism in Connection dtor crashes sometimes
     // when called from QApplication destructor
     connThreadCleanUp = QObject::connect(qApp, &QCoreApplication::aboutToQuit,
-                                         [this]() {
-                                             delete mSessionThread;
-                                             mSessionThread = nullptr;
-                                         });
+    [this]() {
+        delete mSessionThread;
+        mSessionThread = nullptr;
+    });
 }
 
 SessionPrivate::~SessionPrivate()
@@ -411,11 +410,11 @@ Session *Session::defaultSession()
 
 void Session::clear()
 {
-    Q_FOREACH(Job *job, d->queue) {
+    Q_FOREACH (Job *job, d->queue) {
         job->kill(KJob::EmitResult);   // safe, not started yet
     }
     d->queue.clear();
-    Q_FOREACH(Job *job, d->pipeline) {
+    Q_FOREACH (Job *job, d->pipeline) {
         job->d_ptr->mStarted = false; // avoid killing/reconnect loops
         job->kill(KJob::EmitResult);
     }

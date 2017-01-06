@@ -76,7 +76,7 @@ bool TagStore::parseStream()
         //Simply using remove() doesn't work since we need two arguments
         QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Delete);
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, cmd.tagId());
-        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals,connection()->context()->resource().id());
+        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, connection()->context()->resource().id());
         qb.exec();
 
         if (!cmd.remoteId().isEmpty()) {

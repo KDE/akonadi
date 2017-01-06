@@ -22,8 +22,10 @@
 
 #include "tracerinterface.h"
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * A tracer which forwards all tracing information to /dev/null ;)
@@ -35,44 +37,37 @@ public:
     {
     }
 
-    void beginConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE
-    {
+    void beginConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE {
         Q_UNUSED(identifier);
         Q_UNUSED(msg);
     }
 
-    void endConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE
-    {
+    void endConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE {
         Q_UNUSED(identifier);
         Q_UNUSED(msg);
     }
 
-    void connectionInput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE
-    {
+    void connectionInput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE {
         Q_UNUSED(identifier);
         Q_UNUSED(msg);
     }
 
-    void connectionOutput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE
-    {
+    void connectionOutput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE {
         Q_UNUSED(identifier);
         Q_UNUSED(msg);
     }
 
-    void signal(const QString &signalName, const QString &msg) Q_DECL_OVERRIDE
-    {
+    void signal(const QString &signalName, const QString &msg) Q_DECL_OVERRIDE {
         Q_UNUSED(signalName);
         Q_UNUSED(msg);
     }
 
-    void warning(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE
-    {
+    void warning(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE {
         Q_UNUSED(componentName);
         Q_UNUSED(msg);
     }
 
-    void error(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE
-    {
+    void error(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE {
         Q_UNUSED(componentName);
         Q_UNUSED(msg);
     }

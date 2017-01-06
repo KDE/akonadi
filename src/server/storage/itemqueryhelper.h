@@ -22,12 +22,14 @@
 
 #include "entities.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class ImapSet;
 class Scope;
 
-namespace Server {
+namespace Server
+{
 
 class CommandContext;
 class QueryBuilder;
@@ -36,7 +38,8 @@ class QueryBuilder;
   Helper methods to generate WHERE clauses for item queries based on the item set
   used in the protocol.
 */
-namespace ItemQueryHelper {
+namespace ItemQueryHelper
+{
 /**
   Add conditions to @p qb for the given item set @p set. If @p collection is valid,
   only items in this collection are considered.

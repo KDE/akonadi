@@ -210,7 +210,7 @@ void AgentInstance::refreshResourceStatus()
 void AgentInstance::errorHandler(const QDBusError &error)
 {
     //avoid using the server tracer, can result in D-BUS lockups
-    qCCritical(AKONADICONTROL_LOG) <<  QStringLiteral("D-Bus communication error '%1': '%2'").arg(error.name(), error.message()) ;
+    qCCritical(AKONADICONTROL_LOG) <<  QStringLiteral("D-Bus communication error '%1': '%2'").arg(error.name(), error.message());
     // TODO try again after some time, esp. on timeout errors
 }
 

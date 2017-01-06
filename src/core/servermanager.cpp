@@ -198,7 +198,7 @@ bool ServerManager::start()
         QDBusReply<void> reply = KDBusConnectionPool::threadConnection().interface()->startService(ServerManager::serviceName(ServerManager::Control));
         if (!reply.isValid()) {
             qCDebug(AKONADICORE_LOG) << "Akonadi server could not be started via D-Bus either: "
-                     << reply.error().message();
+                                     << reply.error().message();
             return false;
         }
     }
@@ -335,9 +335,9 @@ QString ServerManager::serverConfigFilePath(OpenMode openMode)
         relPath = QStringLiteral("instance/%1").arg(ServerManager::instanceIdentifier());
     }
     return XdgBaseDirs::akonadiServerConfigFile(openMode == Akonadi::ServerManager::ReadOnly
-                                                    ? XdgBaseDirs::ReadOnly
-                                                    : XdgBaseDirs::ReadWrite,
-                                                relPath);
+            ? XdgBaseDirs::ReadOnly
+            : XdgBaseDirs::ReadWrite,
+            relPath);
 }
 
 QString ServerManager::agentConfigFilePath(const QString &identifier)
@@ -395,7 +395,5 @@ void Internal::setClientType(ClientType type)
 {
     ServerManagerPrivate::clientType = type;
 }
-
-
 
 #include "moc_servermanager.cpp"

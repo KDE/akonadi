@@ -58,18 +58,18 @@ using namespace Akonadi::Server;
 
 #define ENABLE_FETCH_PROFILING 0
 #if ENABLE_FETCH_PROFILING
-    #define BEGIN_TIMER(name) \
-        QElapsedTimer name##Timer; \
-        name##Timer.start();
+#define BEGIN_TIMER(name) \
+    QElapsedTimer name##Timer; \
+    name##Timer.start();
 
-    #define END_TIMER(name) \
-        const double name##Elapsed = name##Timer.nsecsElapsed() / 1000000.0;
-    #define PROF_INC(name) \
-        ++name;
+#define END_TIMER(name) \
+    const double name##Elapsed = name##Timer.nsecsElapsed() / 1000000.0;
+#define PROF_INC(name) \
+    ++name;
 #else
-    #define BEGIN_TIMER(name)
-    #define END_TIMER(name)
-    #define PROF_INC(name)
+#define BEGIN_TIMER(name)
+#define END_TIMER(name)
+#define PROF_INC(name)
 #endif
 
 FetchHelper::FetchHelper(Connection *connection, const Scope &scope,
@@ -297,8 +297,8 @@ bool FetchHelper::isScopeLocal(const Scope &scope)
     const QString resourceName = query.value(0).toString();
 
     org::freedesktop::Akonadi::AgentManager manager(DBus::serviceName(DBus::Control),
-                                                    QStringLiteral("/AgentManager"),
-                                                    DBusConnectionPool::threadConnection());
+            QStringLiteral("/AgentManager"),
+            DBusConnectionPool::threadConnection());
     const QString typeIdentifier = manager.agentInstanceType(resourceName);
     const QVariantMap properties = manager.agentCustomProperties(typeIdentifier);
     return properties.value(QStringLiteral("HasLocalStorage"), false).toBool();
@@ -317,13 +317,13 @@ bool FetchHelper::fetchItems()
     // messages, not all of them. In the long term, we need a better way to do this.
     BEGIN_TIMER(itemRetriever)
     BEGIN_TIMER(scopeLocal)
-    #if ENABLE_FETCH_PROFILING
+#if ENABLE_FETCH_PROFILING
     double scopeLocalElapsed = 0;
-    #endif
+#endif
     if (!mFetchScope.cacheOnly() || isScopeLocal(mScope)) {
-        #if ENABLE_FETCH_PROFILING
+#if ENABLE_FETCH_PROFILING
         scopeLocalElapsed = scopeLocalTimer.elapsed();
-        #endif
+#endif
 
         // trigger a collection sync if configured to do so
         triggerOnDemandFetch();
@@ -402,13 +402,13 @@ bool FetchHelper::fetchItems()
     }
     END_TIMER(vRefs)
 
-    #if ENABLE_FETCH_PROFILING
+#if ENABLE_FETCH_PROFILING
     int itemsCount = 0;
     int flagsCount = 0;
     int partsCount = 0;
     int tagsCount = 0;
     int vRefsCount = 0;
-    #endif
+#endif
 
     BEGIN_TIMER(processing)
     QHash<qint64, QByteArray> flagIdNameCache;
@@ -619,7 +619,7 @@ bool FetchHelper::fetchItems()
     END_TIMER(aTime)
 
     END_TIMER(fetch)
-    #if ENABLE_FETCH_PROFILING
+#if ENABLE_FETCH_PROFILING
     qCDebug(AKONADISERVER_LOG) << "FetchHelper execution stats:";
     qCDebug(AKONADISERVER_LOG) << "\tItems query:" << itemsElapsed << "ms," << itemsCount << " items in total";
     qCDebug(AKONADISERVER_LOG) << "\tFlags query:" << flagsElapsed << "ms, " << flagsCount << " flags in total";
@@ -635,7 +635,7 @@ bool FetchHelper::fetchItems()
     qCDebug(AKONADISERVER_LOG) << "\tTotal FETCH:" << fetchElapsed << "ms";
     qCDebug(AKONADISERVER_LOG);
     qCDebug(AKONADISERVER_LOG);
-    #endif
+#endif
 
     return true;
 }

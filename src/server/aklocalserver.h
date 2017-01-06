@@ -22,8 +22,10 @@
 
 #include <QLocalServer>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class AkLocalServer : public QLocalServer
 {
@@ -37,7 +39,6 @@ Q_SIGNALS:
 protected:
     void incomingConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
 };
-
 
 } // namespace Server
 } // namespace Akonadi

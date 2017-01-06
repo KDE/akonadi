@@ -32,9 +32,11 @@
 
 class FetchHelperTest;
 
-namespace Akonadi {
+namespace Akonadi
+{
 
-namespace Server {
+namespace Server
+{
 
 class Connection;
 

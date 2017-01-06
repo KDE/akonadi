@@ -25,7 +25,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-
 using namespace Akonadi;
 
 class SearchTerm::Private : public QSharedData

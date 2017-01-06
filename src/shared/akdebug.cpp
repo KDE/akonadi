@@ -49,18 +49,16 @@ public:
     {
         return true;
     }
-    qint64 readData(char *, qint64) Q_DECL_OVERRIDE
-    {
+    qint64 readData(char *, qint64) Q_DECL_OVERRIDE {
         return 0;
     }
-    qint64 readLineData(char *, qint64) Q_DECL_OVERRIDE
-    {
+    qint64 readLineData(char *, qint64) Q_DECL_OVERRIDE {
         return 0;
     }
 
-    qint64 writeData(const char *data, qint64 len) Q_DECL_OVERRIDE
-    {
-        if (!mFileName.isEmpty()) {
+    qint64 writeData(const char *data, qint64 len) Q_DECL_OVERRIDE {
+        if (!mFileName.isEmpty())
+        {
             QFile outputFile(mFileName);
             outputFile.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered);
             outputFile.write(data, len);
@@ -173,7 +171,7 @@ void akMessageHandler(QtMsgType type, const QMessageLogContext &context, const Q
 void akCategoryFilter(QLoggingCategory *category)
 {
     if ((qstrcmp(category->categoryName(), sInstance()->loggingCategory) == 0) ||
-        (qstrcmp(category->categoryName(), "org.kde.pim.akonadiprivate") == 0)) {
+            (qstrcmp(category->categoryName(), "org.kde.pim.akonadiprivate") == 0)) {
         category->setEnabled(QtDebugMsg, true);
         category->setEnabled(QtInfoMsg, true);
         category->setEnabled(QtWarningMsg, true);

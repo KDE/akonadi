@@ -147,7 +147,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
     int line, column;
     if (!document.setContent(&file, &errorMsg, &line, &column)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to parse update description file" << m_filename << ":"
-                  << errorMsg << "at line" << line << "column" << column;
+                                      << errorMsg << "at line" << line << "column" << column;
         return false;
     }
 
@@ -367,23 +367,23 @@ bool DbUpdater::complexUpdate_25()
         QString queryString;
         if (dbType == DbType::PostgreSQL) {
             queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
-                                        "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
-                                        "       PartTable.datasize, PartTable.version, PartTable.external "
-                                        "FROM PartTable "
-                                        "LEFT JOIN PartTypeTable ON "
-                                        "          PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
+                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                                         "       PartTable.datasize, PartTable.version, PartTable.external "
+                                         "FROM PartTable "
+                                         "LEFT JOIN PartTypeTable ON "
+                                         "          PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
         } else if (dbType == DbType::MySQL) {
             queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
-                                        "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
-                                        "PartTable.datasize, PartTable.version, PartTable.external "
-                                        "FROM PartTable "
-                                        "LEFT JOIN PartTypeTable ON PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
+                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                                         "PartTable.datasize, PartTable.version, PartTable.external "
+                                         "FROM PartTable "
+                                         "LEFT JOIN PartTypeTable ON PartTable.name = CONCAT(PartTypeTable.ns, ':', PartTypeTable.name)");
         } else if (dbType == DbType::Sqlite) {
             queryString = QStringLiteral("INSERT INTO PartTable_new (id, pimItemId, partTypeId, data, datasize, version, external) "
-                                        "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
-                                        "PartTable.datasize, PartTable.version, PartTable.external "
-                                        "FROM PartTable "
-                                        "LEFT JOIN PartTypeTable ON PartTable.name = PartTypeTable.ns || ':' || PartTypeTable.name");
+                                         "SELECT PartTable.id, PartTable.pimItemId, PartTypeTable.id, PartTable.data, "
+                                         "PartTable.datasize, PartTable.version, PartTable.external "
+                                         "FROM PartTable "
+                                         "LEFT JOIN PartTypeTable ON PartTable.name = PartTypeTable.ns || ':' || PartTypeTable.name");
         }
 
         if (!query.exec(queryString)) {
@@ -423,7 +423,7 @@ bool DbUpdater::complexUpdate_25()
             }
         } else { // MySQL cannot do rename in transaction, but supports atomic renames
             if (!query.exec(QStringLiteral("RENAME TABLE PartTable TO PartTable_old,"
-                                          "             PartTable_new TO PartTable"))) {
+                                           "             PartTable_new TO PartTable"))) {
                 qCCritical(AKONADISERVER_LOG) << query.lastError().text();
                 return false;
             }

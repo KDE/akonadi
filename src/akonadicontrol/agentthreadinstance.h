@@ -22,7 +22,8 @@
 #include "agentinstance.h"
 #include "agenttype.h"
 
-namespace Akonadi {
+namespace Akonadi
+{
 
 class AgentThreadInstance : public AgentInstance
 {

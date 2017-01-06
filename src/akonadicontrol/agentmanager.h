@@ -33,7 +33,8 @@ class QDir;
 class QFileSystemWatcher;
 #endif
 
-namespace Akonadi {
+namespace Akonadi
+{
 class ProcessControl;
 }
 

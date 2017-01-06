@@ -26,7 +26,6 @@
 
 #include <KLocalizedString>
 
-
 using namespace Akonadi;
 
 class Akonadi::CollectionMoveJobPrivate : public JobPrivate

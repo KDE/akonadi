@@ -44,10 +44,10 @@ int main(int argc, char *argv[])
 
     QObject *instance = nullptr;
     const bool invokeSucceeded = QMetaObject::invokeMethod(factory->instance(),
-                                                           "createInstance",
-                                                           Qt::DirectConnection,
-                                                           Q_RETURN_ARG(QObject *, instance),
-                                                           Q_ARG(QString, agentIdentifier));
+                                 "createInstance",
+                                 Qt::DirectConnection,
+                                 Q_RETURN_ARG(QObject *, instance),
+                                 Q_ARG(QString, agentIdentifier));
     if (invokeSucceeded) {
         qCDebug(AKONADIAGENTSERVER_LOG) << "Agent instance created in separate process.";
     } else {

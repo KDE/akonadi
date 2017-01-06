@@ -27,8 +27,10 @@
 
 class DbIntrospectorTest;
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 /**
  * Methods for introspecting the current state of a database schema.

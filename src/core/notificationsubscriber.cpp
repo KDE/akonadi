@@ -87,7 +87,6 @@ bool NotificationSubscriber::isValid() const
     return !d->subscriber.isEmpty();
 }
 
-
 QByteArray NotificationSubscriber::subscriber() const
 {
     return d->subscriber;

@@ -22,9 +22,10 @@
 
 #include "dbconfig.h"
 
-
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class DbConfigSqlite : public DbConfig
 {

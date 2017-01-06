@@ -24,8 +24,10 @@
 
 #include <QMutex>
 
-namespace Akonadi {
-namespace Server {
+namespace Akonadi
+{
+namespace Server
+{
 
 class Collection;
 

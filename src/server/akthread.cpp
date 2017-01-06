@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-
 #include "akthread.h"
 #include "storage/datastore.h"
 #include "akonadiserver_debug.h"
@@ -83,5 +82,4 @@ void AkThread::quit()
 
     thread()->quit();
 }
-
 

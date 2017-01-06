@@ -93,9 +93,9 @@ void ItemMoveJob::doStart()
 
     try {
         d->sendCommand(Protocol::MoveItemsCommand(
-                        ProtocolHelper::entitySetToScope(d->items),
-                        ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
-                        ProtocolHelper::entityToScope(d->destination)));
+                           ProtocolHelper::entitySetToScope(d->items),
+                           ProtocolHelper::commandContextToProtocol(d->source, Tag(), d->items),
+                           ProtocolHelper::entityToScope(d->destination)));
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));
