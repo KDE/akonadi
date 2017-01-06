@@ -97,7 +97,11 @@ public:
                     } else {
                         itemStr += QStringLiteral(", ");
                     }
-                    itemStr += QString::number(item.id()) + QStringLiteral(" from collection %1").arg(item.parentCollection().id());
+                    itemStr += QString::number(item.id());
+                    const Akonadi::Collection parentCollection = item.parentCollection();
+                    if (parentCollection.isValid()) {
+                        itemStr += QStringLiteral(" from collection %1").arg(parentCollection.id());
+                    }
                 }
                 return itemStr;
                 //return QString(); //QString::fromLatin1(ProtocolHelper::entitySetToScope(mRequestedItems));
