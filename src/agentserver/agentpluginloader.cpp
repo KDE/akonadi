@@ -42,10 +42,11 @@ QPluginLoader *AgentPluginLoader::load(const QString &pluginName)
         return nullptr;
     }
 
-    if (m_pluginLoaders.contains(pluginFile)) {
-        return m_pluginLoaders.value(pluginFile);
+    QPluginLoader *loader = m_pluginLoaders.value(pluginFile);
+    if (loader) {
+        return loader;
     } else {
-        QPluginLoader *loader = new QPluginLoader(pluginFile);
+        loader = new QPluginLoader(pluginFile);
         if (!loader->load()) {
             qCWarning(AKONADIAGENTSERVER_LOG) << "Failed to load agent: " << loader->errorString();
             delete loader;
