@@ -293,12 +293,12 @@ QString AgentManager::createAgentInstance(const QString &identifier)
 
 void AgentManager::removeAgentInstance(const QString &identifier)
 {
-    if (!mAgentInstances.contains(identifier)) {
+    const AgentInstance::Ptr instance = mAgentInstances.value(identifier);
+    if (!instance) {
         qCWarning(AKONADICONTROL_LOG) << Q_FUNC_INFO << "Agent instance with identifier" << identifier << "does not exist";
         return;
     }
 
-    const AgentInstance::Ptr instance = mAgentInstances.value(identifier);
     if (instance->hasAgentInterface()) {
         instance->cleanup();
     } else {
@@ -333,12 +333,13 @@ void AgentManager::removeAgentInstance(const QString &identifier)
 
 QString AgentManager::agentInstanceType(const QString &identifier)
 {
-    if (!mAgentInstances.contains(identifier)) {
+    const AgentInstance::Ptr agent = mAgentInstances.value(identifier);
+    if (!agent) {
         qCWarning(AKONADICONTROL_LOG) << "Agent instance with identifier" << identifier << "does not exist";
         return QString();
     }
 
-    return mAgentInstances.value(identifier)->agentType();
+    return agent->agentType();
 }
 
 QStringList AgentManager::agentInstances() const
