@@ -78,7 +78,7 @@ public:
         }
     }
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE /*Q_DECL_OVERRIDE*/
+    QString jobDebuggingString() const Q_DECL_OVERRIDE
     {
         if (mRequestedItems.isEmpty()) {
             QString str = QStringLiteral("All items from collection %1").arg(mCollection.id());
