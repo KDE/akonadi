@@ -23,7 +23,7 @@
 #include "collectionstatistics.h"
 #include "item_p.h"
 #include "collection_p.h"
-#include "exception.h"
+#include "exceptionbase.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
 #include "servermanager.h"

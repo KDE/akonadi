@@ -95,7 +95,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     EntityDeletedAttribute
     EntityDisplayAttribute
     EntityHiddenAttribute
-    Exception
+    ExceptionBase
     GidExtractorInterface
     IndexPolicyAttribute
     Item

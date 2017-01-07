@@ -23,7 +23,7 @@
 
 #include "akonadicore_export.h"
 #include "attribute.h"
-#include "exception.h"
+#include "exceptionbase.h"
 #include "tag.h"
 #include "collection.h"
 #include "relation.h"

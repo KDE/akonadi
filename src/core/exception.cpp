@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "exception.h"
+#include "exceptionbase.h"
 
 #include <QString>
 
