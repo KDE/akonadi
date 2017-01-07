@@ -953,6 +953,13 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
                 it.setRemoteId(msgItem.remoteId);
                 it.setRemoteRevision(msgItem.remoteRevision);
                 it.setMimeType(msgItem.mimeType);
+            } else if (msg.operation() == Protocol::ItemChangeNotification::Move) {
+                // For moves we remove the RID from the PimItemTable to prevent
+                // RID conflict during merge (see T3904 in Phab), so restore the
+                // RID from notification.
+                // TODO: Should we do this for all items with empty RID? Right now
+                // I only know about this usecase.
+                it.setRemoteId(msgItem.remoteId);
             }
 
             if (!it.parentCollection().isValid()) {
