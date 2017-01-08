@@ -427,35 +427,54 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
     qCDebug(AKONADISERVER_LOG) << "Got" << newMatches.count() << "results, out of which" << existingMatches.count() << "are already in the collection";
 
     newMatches = newMatches - existingMatches;
+    if (newMatches.isEmpty()) {
+        qCDebug(AKONADISERVER_LOG) << "Added results: 0 (fast path)";
+        return;
+    }
 
     const bool existingTransaction = DataStore::self()->inTransaction();
     if (!existingTransaction) {
         DataStore::self()->beginTransaction();
     }
 
+    // First query all the IDs we got from search plugin/agent against the DB.
+    // This will remove IDs that no longer exist in the DB.
     QVariantList newMatchesVariant;
     newMatchesVariant.reserve(newMatches.count());
     Q_FOREACH (qint64 id, newMatches) {
         newMatchesVariant << id;
-        Collection::addPimItem(collection.id(), id);
     }
 
-    qCDebug(AKONADISERVER_LOG) << "Added" << newMatches.count();
+    SelectQueryBuilder<PimItem> qb;
+    qb.addValueCondition(PimItem::idFullColumnName(), Query::In, newMatchesVariant);
+    if (!qb.exec()) {
+        return;
+    }
+
+    const auto items = qb.result();
+    if (items.count() != newMatches.count()) {
+        qCDebug(AKONADISERVER_LOG) << "Search backend returned" << (newMatches.count() - items.count()) << "results that no longer exist in Akonadi.";
+        qCDebug(AKONADISERVER_LOG) << "Please reindex collection" << collection.id();
+        // TODO: Request the reindexing directly from here
+    }
+
+    if (items.isEmpty()) {
+        qCDebug(AKONADISERVER_LOG) << "Added results: 0";
+        return;
+    }
+
+    for (const auto item : items) {
+        Collection::addPimItem(collection.id(), item.id());
+    }
 
     if (!existingTransaction && !DataStore::self()->commitTransaction()) {
         qCDebug(AKONADISERVER_LOG) << "Failed to commit transaction";
         return;
     }
 
-    if (!newMatchesVariant.isEmpty()) {
-        SelectQueryBuilder<PimItem> qb;
-        qb.addValueCondition(PimItem::idFullColumnName(), Query::In, newMatchesVariant);
-        if (!qb.exec()) {
-            return ;
-        }
-        const QVector<PimItem> newItems = qb.result();
-        DataStore::self()->notificationCollector()->itemsLinked(newItems, collection);
-        // Force collector to dispatch the notification now
-        DataStore::self()->notificationCollector()->dispatchNotifications();
-    }
+    DataStore::self()->notificationCollector()->itemsLinked(items, collection);
+    // Force collector to dispatch the notification now
+    DataStore::self()->notificationCollector()->dispatchNotifications();
+
+    qCDebug(AKONADISERVER_LOG) << "Added results:" << items.count();
 }
