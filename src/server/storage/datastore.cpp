@@ -1292,7 +1292,6 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
     }
     m_transactionLevel = oldTransactionLevel;
 
-    QSqlQuery ret;
     typedef QPair<QSqlQuery, bool> QueryBoolPair;
     QMutableVectorIterator<QueryBoolPair> iter(m_transactionQueries);
     while (iter.hasNext()) {
