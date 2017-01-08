@@ -34,7 +34,13 @@ public:
     }
 
     QString resourceId;
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
 };
+
+QString Akonadi::ResourceSelectJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("Select Resource %1").arg(resourceId);
+}
 
 ResourceSelectJob::ResourceSelectJob(const QString &identifier, QObject *parent)
     : Job(new ResourceSelectJobPrivate(this), parent)
