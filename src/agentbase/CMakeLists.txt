@@ -16,6 +16,7 @@ ecm_generate_headers(AkonadiAgentBase_HEADERS
     HEADER_NAMES
     AgentBase
     AgentSearchInterface
+    PreprocessorBase
     ResourceBase
     ResourceSettings
     TransportResourceBase
