@@ -325,7 +325,7 @@ bool AkonadiServer::quit()
         stopDatabaseProcess();
     }
 
-    QSettings settings(StandardDirs::serverConfigFile(), QSettings::IniFormat);
+    //QSettings settings(StandardDirs::serverConfigFile(), QSettings::IniFormat);
     const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
 
     if (!QDir::home().remove(connectionSettingsFile)) {

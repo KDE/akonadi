@@ -326,7 +326,8 @@ bool NotificationSubscriber::isMimeTypeMonitored(const QString &mimeType) const
         return true;
     }
 
-    Q_FOREACH (const QString &alias, mt.aliases()) {
+    const QStringList lst = mt.aliases();
+    for (const QString &alias : lst) {
         if (mMonitoredMimeTypes.contains(alias)) {
             return true;
         }

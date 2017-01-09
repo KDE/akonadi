@@ -59,7 +59,8 @@ void CollectionReferenceManager::referenceCollection(const QByteArray &sessionId
 void CollectionReferenceManager::removeSession(const QByteArray &sessionId)
 {
     QMutexLocker locker(&mReferenceLock);
-    Q_FOREACH (Collection::Id col, mReferenceMap.keys(sessionId)) {
+    const QList<Collection::Id> lstCol = mReferenceMap.keys(sessionId);
+    for (Collection::Id col : lstCol ) {
         mReferenceMap.remove(col, sessionId);
         expireCollectionIfNecessary(col);
         if (!isReferenced(col)) {
@@ -100,7 +101,8 @@ void CollectionReferenceManager::cleanup()
         qCCritical(AKONADISERVER_LOG) << "Failed to execute  collection reference cleanup query.";
         return;
     }
-    Q_FOREACH (Collection col, qb.result()) {   // krazy:exclude=foreach
+    const QVector<Collection> colVect = qb.result();
+    for (Collection col : colVect) {   // krazy:exclude=foreach
         col.setReferenced(false);
         col.update();
         if (AkonadiServer::instance()->cacheCleaner()) {
