@@ -36,11 +36,18 @@ public:
     {
     }
 
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
     Collection destination;
     Collection collection;
 
     Q_DECLARE_PUBLIC(CollectionMoveJob)
+
 };
+
+QString Akonadi::CollectionMoveJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("Move collection from %1 to %2").arg(collection.id()).arg(destination.id());
+}
 
 CollectionMoveJob::CollectionMoveJob(const Collection &collection, const Collection &destination, QObject *parent)
     : Job(new CollectionMoveJobPrivate(this), parent)

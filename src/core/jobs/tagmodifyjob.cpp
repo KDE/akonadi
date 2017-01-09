@@ -34,8 +34,15 @@ public:
     {
     }
 
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
     Tag mTag;
+
 };
+
+QString Akonadi::TagModifyJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("Modify Tag: %1").arg(mTag.name());
+}
 
 TagModifyJob::TagModifyJob(const Akonadi::Tag &tag, QObject *parent)
     : Job(new TagModifyJobPrivate(this), parent)

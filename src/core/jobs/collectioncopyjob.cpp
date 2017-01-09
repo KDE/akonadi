@@ -37,7 +37,14 @@ public:
 
     Collection mSource;
     Collection mTarget;
+
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
 };
+
+QString Akonadi::CollectionCopyJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("copy collection from %1 to %2").arg(mSource.id(), mTarget.id());
+}
 
 CollectionCopyJob::CollectionCopyJob(const Collection &source, const Collection &target, QObject *parent)
     : Job(new CollectionCopyJobPrivate(this), parent)

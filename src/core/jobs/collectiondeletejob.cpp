@@ -34,9 +34,16 @@ public:
         : JobPrivate(parent)
     {
     }
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
 
     Collection mCollection;
+
 };
+
+QString Akonadi::CollectionDeleteJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("Delete Collection id: %1").arg(mCollection.id());
+}
 
 CollectionDeleteJob::CollectionDeleteJob(const Collection &collection, QObject *parent)
     : Job(new CollectionDeleteJobPrivate(this), parent)
