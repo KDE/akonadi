@@ -50,7 +50,7 @@ public:
       Create a new notification collector that is not attached to
       a DataStore and just collects notifications until you emit them manually.
     */
-    explicit NotificationCollector(QObject *parent = Q_NULLPTR);
+    explicit NotificationCollector(QObject *parent = nullptr);
 
     /**
       Create a new notification collector for the given DataStore @p db.

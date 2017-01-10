@@ -57,7 +57,7 @@ void update(Part *part, const QByteArray &data, qint64 dataSize);
  * @p part must not be in the database yet (ie. valid() == false) and must have
  * a data size set.
  */
-bool insert(Part *part, qint64 *insertId = Q_NULLPTR);
+bool insert(Part *part, qint64 *insertId = nullptr);
 
 /** Deletes @p part from the database and also removes existing filesystem data if needed. */
 bool remove(Part *part);

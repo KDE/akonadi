@@ -64,7 +64,7 @@ public:
     /**
       Returns an initializer instance for a given backend.
     */
-    static DbInitializer::Ptr createInstance(const QSqlDatabase &database, Schema *schema = Q_NULLPTR);
+    static DbInitializer::Ptr createInstance(const QSqlDatabase &database, Schema *schema = nullptr);
 
     /**
      * Destroys the database initializer.
