@@ -538,13 +538,13 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
     }
 
     if (s_resourcetracker) {
-        QList<QVariant> argumentList;
-        argumentList << static_cast<AgentBase *>(parent())->identifier()   // "session" (in our case resource)
-                     << QString::number(task.serial)                       // "job"
-                     << QString()                                          // "parent job"
-                     << QString::fromLatin1(taskType)                      // "job type"
-                     << debugString                                        // "job debugging string"
-                     ;
+        const QList<QVariant> argumentList = QList<QVariant>()
+                << static_cast<AgentBase *>(parent())->identifier()   // "session" (in our case resource)
+                << QString::number(task.serial)                       // "job"
+                << QString()                                          // "parent job"
+                << QString::fromLatin1(taskType)                      // "job type"
+                << debugString                                        // "job debugging string"
+                   ;
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);
     }
 }

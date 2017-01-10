@@ -126,7 +126,8 @@ void AgentSearchInterface::searchFinished(const ImapSet &result, ResultScope sco
 {
     if (scope == Akonadi::AgentSearchInterface::Rid) {
         QVector<QByteArray> rids;
-        Q_FOREACH (const ImapInterval &interval, result.intervals()) {
+        const ImapInterval::List lstInterval = result.intervals();
+        for (const ImapInterval &interval : lstInterval) {
             const int endInterval(interval.end());
             for (int i = interval.begin(); i <= endInterval; ++i) {
                 rids << QByteArray::number(i);

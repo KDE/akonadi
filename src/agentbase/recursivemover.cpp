@@ -64,7 +64,8 @@ void RecursiveMover::collectionListResult(KJob *job)
     // while we are iterating anyway, also fill m_collections here
     CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
     QHash<Collection::Id, Collection::List> colTree;
-    foreach (const Collection &col, fetchJob->collections()) {
+    const Akonadi::Collection::List lstCol = fetchJob->collections();
+    for (const Collection &col : lstCol) {
         colTree[col.parentCollection().id()] << col;
         m_collections.insert(col.id(), col);
     }
@@ -118,8 +119,8 @@ void RecursiveMover::itemListResult(KJob *job)
     if (job->error()) {
         return; // error handling is in the base class
     }
-
-    foreach (const Item &item, qobject_cast<ItemFetchJob *>(job)->items()) {
+    const Akonadi::Item::List lstItems = qobject_cast<ItemFetchJob *>(job)->items();
+    for (const Item &item : lstItems) {
         if (item.remoteId().isEmpty()) {
             m_pendingItems.push_back(item);
         }
