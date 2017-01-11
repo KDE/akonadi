@@ -33,10 +33,23 @@ public:
         : JobPrivate(parent)
     {
     }
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
 
     Item::List mItems;
     Collection mTarget;
 };
+
+QString Akonadi::ItemCopyJobPrivate::jobDebuggingString() const
+{
+    QString str = QStringLiteral("Copy items : ");
+    for (int i = 0; i < mItems.count(); ++i) {
+        if (i != 0) {
+            str += QLatin1Char(',');
+        }
+        str += QString::number(mItems.at(i).id());
+    }
+    return str + QStringLiteral(" to collection %1").arg(mTarget.id());
+}
 
 ItemCopyJob::ItemCopyJob(const Item &item, const Collection &target, QObject *parent)
     : Job(new ItemCopyJobPrivate(this), parent)
