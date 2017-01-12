@@ -113,7 +113,7 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
 void ItemSerializer::deserialize(Item &item, const QByteArray &label, QIODevice &data, int version)
 {
     if (!TypePluginLoader::defaultPluginForMimeType(item.mimeType())->deserialize(item, label, data, version)) {
-        qCWarning(AKONADICORE_LOG) << "Unable to deserialize payload part:" << label;
+        qCWarning(AKONADICORE_LOG) << "Unable to deserialize payload part:" << label << "in item" << item.id() << "collection" << item.parentCollection().id();
         data.seek(0);
         qCWarning(AKONADICORE_LOG) << "Payload data was: " << data.readAll();
     }
