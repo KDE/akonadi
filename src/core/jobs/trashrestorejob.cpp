@@ -23,6 +23,7 @@
 #include "entitydeletedattribute.h"
 #include "item.h"
 #include "job_p.h"
+#include "helper_p.h"
 #include "trashsettings.h"
 
 #include <KLocalizedString>
@@ -162,7 +163,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived(const Akonadi::Item:
     mItems = items;
 
     //Sort by restore collection
-    foreach (const Item &item, mItems) {
+    for (const Item &item : qAsConst(mItems)) {
         if (!item.hasAttribute<Akonadi::EntityDeletedAttribute>()) {
             continue;
         }

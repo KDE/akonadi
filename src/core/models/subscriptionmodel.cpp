@@ -25,6 +25,7 @@
 #include "entityhiddenattribute.h"
 
 #include "akonadicore_debug.h"
+#include "helper_p.h"
 
 #include <QStringList>
 #include <QFont>
@@ -46,7 +47,7 @@ public:
     Collection::List changedSubscriptions(bool subscribed)
     {
         Collection::List list;
-        foreach (Collection::Id id, changes) {
+        for (Collection::Id id : qAsConst(changes)) {
             if (subscriptions.value(id) == subscribed) {
                 list << Collection(id);
             }

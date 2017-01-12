@@ -26,6 +26,7 @@
 #include "protocolhelper_p.h"
 #include "session_p.h"
 #include "private/protocol_p.h"
+#include "helper_p.h"
 
 #include <qdebug.h>
 
@@ -91,7 +92,7 @@ public:
             try {
                 QString itemStr = QStringLiteral("items id: ");
                 bool firstItem = true;
-                Q_FOREACH (const Akonadi::Item &item, mRequestedItems) {
+                for (const Akonadi::Item &item : qAsConst(mRequestedItems)) {
                     if (firstItem) {
                         firstItem = false;
                     } else {

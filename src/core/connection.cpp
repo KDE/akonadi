@@ -97,7 +97,8 @@ void Connection::doReconnect()
         const int pos = serverAddressEnvVar.indexOf(':');
         const QByteArray protocol = serverAddressEnvVar.left(pos);
         QMap<QString, QString> options;
-        Q_FOREACH (const QString &entry, QString::fromLatin1(serverAddressEnvVar.mid(pos + 1)).split(QLatin1Char(','))) {
+        const QStringList lst = QString::fromLatin1(serverAddressEnvVar.mid(pos + 1)).split(QLatin1Char(','));
+        for (const QString &entry : lst) {
             const QStringList pair = entry.split(QLatin1Char('='));
             if (pair.size() != 2) {
                 continue;

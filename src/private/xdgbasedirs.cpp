@@ -450,7 +450,8 @@ QString XdgBaseDirs::findResourceDir(const char *resource, const QString &relPat
         return fullPath;
     }
 
-    Q_FOREACH (const QString &path, systemPathList(resource)) {
+    const QStringList sysPathList = systemPathList(resource);
+    for (const QString &path : sysPathList) {
         fileInfo = QFileInfo(path + QLatin1Char('/') + relPath);
         if (fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable()) {
             return fileInfo.absoluteFilePath();
@@ -471,7 +472,8 @@ QStringList XdgBaseDirs::findAllResourceDirs(const char *resource, const QString
         resultList << fileInfo.absoluteFilePath();
     }
 
-    Q_FOREACH (const QString &path, systemPathList(resource)) {
+    const QStringList sysPathList = systemPathList(resource);
+    for (const QString &path : sysPathList) {
         fileInfo = QFileInfo(path + QLatin1Char('/') + relPath);
         if (fileInfo.exists() && fileInfo.isDir() && fileInfo.isReadable()) {
             const QString absPath = fileInfo.absoluteFilePath();

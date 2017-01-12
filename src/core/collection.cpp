@@ -25,6 +25,7 @@
 #include "collectionrightsattribute_p.h"
 #include "collectionstatistics.h"
 #include "entitydisplayattribute.h"
+#include "helper_p.h"
 
 #include <QDebug>
 #include <QHash>
@@ -196,7 +197,7 @@ Attribute::List Collection::attributes() const
 
 void Akonadi::Collection::clearAttributes()
 {
-    Q_FOREACH (Attribute *attr, d_ptr->mAttributes) {
+    for (Attribute *attr : qAsConst(d_ptr->mAttributes)) {
         d_ptr->mDeletedAttributes.insert(attr->type());
         delete attr;
     }

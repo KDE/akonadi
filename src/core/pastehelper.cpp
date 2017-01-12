@@ -320,7 +320,7 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
     const QList<QUrl> urls = mimeData->urls();
     Collection::List collections;
     Item::List items;
-    foreach (const QUrl &url, urls) {
+    for (const QUrl &url : urls) {
         const QUrlQuery query(url);
         const Collection collection = Collection::fromUrl(url);
         if (collection.isValid()) {

@@ -28,6 +28,7 @@
 #include "private/protocol_p.h"
 
 #include "akonadicore_debug.h"
+#include "helper_p.h"
 
 #include <KLocalizedString>
 
@@ -213,14 +214,14 @@ void CollectionFetchJob::doStart()
             // result needs to be filtered through filterDescendants before it is useful.
             new CollectionFetchJob(d->mBaseList, NonOverlappingRoots, this);
         } else if (d->mType == NonOverlappingRoots) {
-            foreach (const Collection &col, d->mBaseList) {
+            for (const Collection &col : qAsConst(d->mBaseList)) {
                 // No need to connect to the collectionsReceived signal here. This job is internal. The (aggregated)
                 // result needs to be filtered through filterDescendants before it is useful.
                 CollectionFetchJob *subJob = new CollectionFetchJob(col, Base, this);
                 subJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
             }
         } else {
-            foreach (const Collection &col, d->mBaseList) {
+            for (const Collection &col : qAsConst(d->mBaseList)) {
                 CollectionFetchJob *subJob = new CollectionFetchJob(col, d->mType, this);
                 connect(subJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(subJobCollectionReceived(Akonadi::Collection::List)));
                 subJob->setFetchScope(fetchScope());

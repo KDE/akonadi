@@ -27,6 +27,7 @@
 #include "item_p.h"
 #include "itemserializer_p.h"
 #include "job_p.h"
+#include "helper_p.h"
 #include "protocolhelper_p.h"
 #include "gidextractor_p.h"
 
@@ -145,7 +146,7 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     Protocol::ModifyItemsCommand cmd;
 
     const Akonadi::Item item = mItems.first();
-    foreach (int op, mOperations) {
+    for (int op : qAsConst(mOperations)) {
         switch (op) {
         case ItemModifyJobPrivate::RemoteId:
             if (!item.remoteId().isNull()) {
@@ -206,7 +207,7 @@ Protocol::Command ItemModifyJobPrivate::fullCommand() const
     if (!mParts.isEmpty()) {
         QSet<QByteArray> parts;
         parts.reserve(mParts.size());
-        Q_FOREACH (const QByteArray &part, mParts) {
+        for (const QByteArray &part : qAsConst(mParts)) {
             parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
         }
         cmd.setParts(parts);
@@ -331,7 +332,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::Command &respon
             return false;
         }
 
-        Q_FOREACH (const Item &item, d->mItems) {
+        for (const Item &item : qAsConst(d->mItems)) {
             ChangeMediator::invalidateItem(item);
         }
 

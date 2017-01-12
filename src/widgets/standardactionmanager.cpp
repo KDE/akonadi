@@ -733,7 +733,7 @@ public:
         const QModelIndexList indexes = safeSelectedRows(itemSelectionModel);
         items.reserve(indexes.count());
 
-        foreach (const QModelIndex &index, indexes) {
+        for (const QModelIndex &index : indexes) {
             Q_ASSERT(index.isValid());
             const Item item = index.data(ItemModel::ItemRole).value<Item>();
             Q_ASSERT(item.isValid());
@@ -934,7 +934,7 @@ public:
         Item::List items;
         const QModelIndexList indexes = safeSelectedRows(itemSelectionModel);
         items.reserve(indexes.count());
-        foreach (const QModelIndex &index, indexes) {
+        for (const QModelIndex &index : indexes) {
             bool ok;
             const qlonglong id = index.data(ItemModel::IdRole).toLongLong(&ok);
             Q_ASSERT(ok);
@@ -982,7 +982,7 @@ public:
             return;
         }
 
-        foreach (const QModelIndex &index, list) {
+        for (const QModelIndex &index : list) {
             Q_ASSERT(index.isValid());
             const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
@@ -1002,7 +1002,7 @@ public:
             return;
         }
 
-        foreach (const QModelIndex &index, list) {
+        for (const QModelIndex &index : list) {
             Q_ASSERT(index.isValid());
             const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());

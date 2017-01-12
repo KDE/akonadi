@@ -691,7 +691,7 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
 
 void EntityTreeModelPrivate::ancestorsFetched(const Akonadi::Collection::List &collectionList)
 {
-    foreach (const Collection &collection, collectionList) {
+    for (const Collection &collection : collectionList) {
         m_collections[collection.id()] = collection;
 
         const QModelIndex index = indexForCollection(collection);

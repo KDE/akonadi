@@ -21,6 +21,7 @@
 
 #include "agenttypemodel.h"
 #include "agentinstancemodel.h"
+#include "helper_p.h"
 
 #include <qdebug.h>
 
@@ -108,13 +109,14 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
     if (!d->mimeTypes.isEmpty()) {
         QMimeDatabase mimeDb;
         bool found = false;
-        foreach (const QString &mimeType, index.data(AgentTypeModel::MimeTypesRole).toStringList()) {
+        const QStringList lst = index.data(AgentTypeModel::MimeTypesRole).toStringList();
+        for (const QString &mimeType : lst) {
             if (d->mimeTypes.contains(mimeType)) {
                 found = true;
             } else {
                 const QMimeType mt = mimeDb.mimeTypeForName(mimeType);
                 if (mt.isValid()) {
-                    foreach (const QString &type, d->mimeTypes) {
+                    for (const QString &type : qAsConst(d->mimeTypes)) {
                         if (mt.inherits(type)) {
                             found = true;
                             break;
@@ -135,7 +137,8 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
 
     if (!d->capabilities.isEmpty()) {
         bool found = false;
-        foreach (const QString &capability, index.data(AgentTypeModel::CapabilitiesRole).toStringList()) {
+        const QStringList lst = index.data(AgentTypeModel::CapabilitiesRole).toStringList();
+        for (const QString &capability : lst) {
             if (d->capabilities.contains(capability)) {
                 found = true;
                 break;
@@ -147,7 +150,8 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
         }
 
         if (found && !d->excludeCapabilities.isEmpty()) {
-            foreach (const QString &capability, index.data(AgentTypeModel::CapabilitiesRole).toStringList()) {
+            const QStringList lst = index.data(AgentTypeModel::CapabilitiesRole).toStringList();
+            for (const QString &capability : lst) {
                 if (d->excludeCapabilities.contains(capability)) {
                     found = false;
                     break;

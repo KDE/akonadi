@@ -85,12 +85,13 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
 {
     // check if all requested folders are known already
     if (mRequestingDefaultFolders) {
-        QHashIterator<QByteArray, bool> it(mDefaultFolders);
-        while (it.hasNext()) {
-            it.next();
+        QHash<QByteArray, bool>::const_iterator it = mDefaultFolders.constBegin();
+        const QHash<QByteArray, bool>::const_iterator end = mDefaultFolders.constEnd();
+        while (it != end) {
             if (it.value() && !mSpecialCollections->hasDefaultCollection(it.key())) {
                 return false;
             }
+            it++;
         }
     }
 

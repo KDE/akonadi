@@ -22,6 +22,7 @@
 #include "collectionfetchscope.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "helper_p.h"
 
 #include <QStringList>
 #include <QVariant>
@@ -51,7 +52,7 @@ public:
         Collection::List collections = fetchJob->collections();
         collections.prepend(mCollection);
 
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : qAsConst(collections)) {
             ItemFetchJob *itemFetchJob = new ItemFetchJob(collection, mParent);
             itemFetchJob->setFetchScope(mFetchScope);
             mParent->connect(itemFetchJob, SIGNAL(result(KJob*)),

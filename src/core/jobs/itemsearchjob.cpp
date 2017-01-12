@@ -24,6 +24,7 @@
 #include "protocolhelper_p.h"
 #include "searchquery.h"
 #include "private/protocol_p.h"
+#include "helper_p.h"
 
 #include <QCoreApplication>
 #include <QTimer>
@@ -220,7 +221,7 @@ void ItemSearchJob::doStart()
     if (!d->mCollections.isEmpty()) {
         QVector<qint64> ids;
         ids.reserve(d->mCollections.size());
-        Q_FOREACH (const Collection &col, d->mCollections) {
+        for (const Collection &col : qAsConst(d->mCollections)) {
             ids << col.id();
         }
         cmd.setCollections(ids);

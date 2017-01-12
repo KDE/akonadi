@@ -19,6 +19,7 @@
 
 #include "searchresultjob_p.h"
 #include "job_p.h"
+#include "helper_p.h"
 #include "protocolhelper_p.h"
 #include "private/protocol_p.h"
 
@@ -100,7 +101,7 @@ void SearchResultJob::doStart()
     if (!d->rid.isEmpty()) {
         QStringList ridSet;
         ridSet.reserve(d->rid.size());
-        Q_FOREACH (const QByteArray &rid, d->rid) {
+        for (const QByteArray &rid : qAsConst(d->rid)) {
             ridSet << QString::fromUtf8(rid);
         }
         scope.setRidSet(ridSet);

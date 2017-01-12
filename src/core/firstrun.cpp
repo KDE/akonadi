@@ -119,7 +119,8 @@ void Firstrun::setupNext()
         return;
     }
     if (type.capabilities().contains(QStringLiteral("Unique"))) {
-        Q_FOREACH (const AgentInstance &agent, AgentManager::self()->instances()) {
+        const Akonadi::AgentInstance::List lstAgents = AgentManager::self()->instances();
+        for (const AgentInstance &agent : lstAgents) {
             if (agent.type() == type) {
                 // remember we set this one up already
                 KConfigGroup cfg(mConfig, "ProcessedDefaults");
@@ -165,7 +166,8 @@ void Firstrun::instanceCreated(KJob *job)
     // agent specific settings, using the D-Bus <-> KConfigXT bridge
     const KConfigGroup settings = KConfigGroup(mCurrentDefault, "Settings");
 
-    foreach (const QString &setting, settings.keyList()) {
+    const QStringList lstSettings = settings.keyList();
+    for (const QString &setting : lstSettings) {
         qCDebug(AKONADICORE_LOG) << "Setting up " << setting << " for agent " << instance.identifier();
         const QString methodName = QStringLiteral("set%1").arg(setting);
         const QVariant::Type argType = argumentType(iface->metaObject(), methodName);

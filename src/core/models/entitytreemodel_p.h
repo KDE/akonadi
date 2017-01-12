@@ -189,7 +189,7 @@ public:
     int indexOf(const QList<Node *> &nodes, Node::Id id) const
     {
         int i = 0;
-        Q_FOREACH (const Node *node, nodes) {
+        for (const Node *node : nodes) {
             if (node->id == id && node->type == Type) {
                 return i;
             }

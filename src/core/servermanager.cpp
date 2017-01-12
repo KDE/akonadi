@@ -256,8 +256,8 @@ ServerManager::State ServerManager::state()
         // AgentManager is dangerous to use for agents themselves
         if (Internal::clientType() == Internal::User) {
             // besides the running server processes we also need at least one resource to be operational
-            AgentType::List agentTypes = AgentManager::self()->types();
-            foreach (const AgentType &type, agentTypes) {
+            const AgentType::List agentTypes = AgentManager::self()->types();
+            for (const AgentType &type : agentTypes) {
                 if (type.capabilities().contains(QStringLiteral("Resource"))) {
                     return Running;
                 }

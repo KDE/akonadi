@@ -25,6 +25,7 @@
 #include "protocolhelper_p.h"
 #include "job_p.h"
 #include "searchquery.h"
+#include "helper_p.h"
 #include "private/protocol_p.h"
 
 using namespace Akonadi;
@@ -120,7 +121,7 @@ void SearchCreateJob::doStart()
     if (!d->mCollections.isEmpty()) {
         QVector<qint64> ids;
         ids.reserve(d->mCollections.size());
-        Q_FOREACH (const Collection &col, d->mCollections) {
+        for (const Collection &col : qAsConst(d->mCollections)) {
             ids << col.id();
         }
         cmd.setQueryCollections(ids);

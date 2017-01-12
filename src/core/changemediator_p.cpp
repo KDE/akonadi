@@ -28,6 +28,7 @@
 #include "itemmovejob.h"
 #include "collection.h"
 #include "item.h"
+#include "helper_p.h"
 
 //static const char mediatorSessionId[] = "MediatorSession"; TODO: remove?
 
@@ -94,21 +95,21 @@ void ChangeMediator::do_unregisterMonitor(QObject *monitor)
 
 void ChangeMediator::do_invalidateCollection(const Akonadi::Collection &collection)
 {
-    foreach (QObject *monitor, m_monitors) {
+    for (QObject *monitor : qAsConst(m_monitors)) {
         QMetaObject::invokeMethod(monitor, "invalidateCollectionCache", Qt::AutoConnection, Q_ARG(qint64, collection.id()));
     }
 }
 
 void ChangeMediator::do_invalidateItem(const Akonadi::Item &item)
 {
-    foreach (QObject *monitor, m_monitors) {
+    for (QObject *monitor : qAsConst(m_monitors)) {
         QMetaObject::invokeMethod(monitor, "invalidateItemCache", Qt::AutoConnection, Q_ARG(qint64, item.id()));
     }
 }
 
 void ChangeMediator::do_invalidateTag(const Tag &tag)
 {
-    foreach (QObject *monitor, m_monitors) {
+    for (QObject *monitor : qAsConst(m_monitors)) {
         QMetaObject::invokeMethod(monitor, "invalidateTagCache", Qt::AutoConnection, Q_ARG(qint64, tag.id()));
     }
 }

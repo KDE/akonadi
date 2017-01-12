@@ -40,6 +40,7 @@
 #include "itemmodifyjob.h"
 #include "session.h"
 #include "collectionfetchscope.h"
+#include "helper_p.h"
 
 #include "collectionutils.h"
 
@@ -68,7 +69,7 @@ EntityTreeModel::~EntityTreeModel()
 {
     Q_D(EntityTreeModel);
 
-    foreach (const QList<Node *> &list, d->m_childEntities) {
+    for (const QList<Node *> &list : qAsConst(d->m_childEntities)) {
         QList<Node *>::const_iterator it = list.constBegin();
         const QList<Node *>::const_iterator end = list.constEnd();
         for (; it != end; ++it) {
@@ -100,10 +101,11 @@ void EntityTreeModel::setCollectionsMonitored(const Collection::List &collection
 {
     Q_D(EntityTreeModel);
     d->beginResetModel();
-    foreach (const Akonadi::Collection &col, d->m_monitor->collectionsMonitored()) {
+    const Akonadi::Collection::List lstCols = d->m_monitor->collectionsMonitored();
+    for (const Akonadi::Collection &col : lstCols) {
         d->m_monitor->setCollectionMonitored(col, false);
     }
-    foreach (const Akonadi::Collection &col, collections) {
+    for (const Akonadi::Collection &col : collections) {
         d->m_monitor->setCollectionMonitored(col, true);
     }
     d->endResetModel();

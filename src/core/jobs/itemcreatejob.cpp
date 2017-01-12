@@ -29,6 +29,7 @@
 #include "protocolhelper_p.h"
 #include "gidextractor_p.h"
 #include "private/protocol_p.h"
+#include "helper_p.h"
 
 #include <QDateTime>
 #include <QFile>
@@ -148,7 +149,7 @@ void ItemCreateJob::doStart()
     cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mItem));
     QSet<QByteArray> parts;
     parts.reserve(d->mParts.size());
-    Q_FOREACH (const QByteArray &part, d->mParts) {
+    for (const QByteArray &part : qAsConst(d->mParts)) {
         parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
     }
     cmd.setParts(parts);

@@ -112,7 +112,8 @@ void XmlWriteJobPrivate::itemFetchResult(KJob *job)
     }
     ItemFetchJob *fetch = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetch);
-    foreach (const Item &item, fetch->items()) {
+    const Akonadi::Item::List lstItems = fetch->items();
+    for (const Item &item : lstItems) {
         XmlWriter::writeItem(item, elementStack.top());
     }
     pendingSiblings.top().removeFirst();

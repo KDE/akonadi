@@ -20,6 +20,7 @@
 #include "subscriptionjob_p.h"
 
 #include "job_p.h"
+#include "helper_p.h"
 #include "collectionmodifyjob.h"
 
 using namespace Akonadi;
@@ -69,11 +70,11 @@ void SubscriptionJob::doStart()
         return;
     }
 
-    Q_FOREACH (Collection col, d->mSub) {   //krazy:exclude=foreach
+    for (Collection col : qAsConst(d->mSub)) {   //krazy:exclude=foreach
         col.setEnabled(true);
         new CollectionModifyJob(col, this);
     }
-    Q_FOREACH (Collection col, d->mUnsub) { //krazy:exclude=foreach
+    for (Collection col : qAsConst(d->mUnsub)) { //krazy:exclude=foreach
         col.setEnabled(false);
         new CollectionModifyJob(col, this);
     }

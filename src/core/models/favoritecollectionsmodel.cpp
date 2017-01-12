@@ -201,7 +201,7 @@ public:
     void set(const QList<Collection::Id> &collections)
     {
         QList<Collection::Id> colIds = collectionIds;
-        foreach (const Collection::Id &col, collections) {
+        for (const Collection::Id &col : collections) {
             const int removed = colIds.removeAll(col);
             const bool isNewCollection = removed <= 0;
             if (isNewCollection) {
