@@ -57,7 +57,7 @@ void Config::readConfiguration(const QString &configfile)
 
     QString errorMsg;
     if (!doc.setContent(&file, &errorMsg)) {
-        qFatal("unable to parse config file: %s", qPrintable(errorMsg));
+        qFatal("unable to parse config file %s: %s", qPrintable(configfile), qPrintable(errorMsg));
     }
 
     const QDomElement root = doc.documentElement();
