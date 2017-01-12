@@ -94,7 +94,6 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
         }
     }
 
-    const QStringList resourceIds = mFoldersForResource.keys();
     QHashIterator<QString, QHash<QByteArray, bool> > resourceIt(mFoldersForResource);
     while (resourceIt.hasNext()) {
         resourceIt.next();
