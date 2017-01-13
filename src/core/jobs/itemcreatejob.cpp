@@ -50,6 +50,7 @@ public:
 
     Protocol::PartMetaData preparePart(const QByteArray &part);
 
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
     Collection mCollection;
     Item mItem;
     QSet<QByteArray> mParts;
@@ -58,7 +59,13 @@ public:
     QByteArray mPendingData;
     ItemCreateJob::MergeOptions mMergeOptions;
     bool mItemReceived;
+
 };
+
+QString Akonadi::ItemCreateJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("Create Item %1 from col %2").arg(mItem.id()).arg(mCollection.id());
+}
 
 Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partName)
 {
