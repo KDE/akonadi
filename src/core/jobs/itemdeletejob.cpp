@@ -36,11 +36,29 @@ public:
     }
 
     Q_DECLARE_PUBLIC(ItemDeleteJob)
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
 
     Item::List mItems;
     Collection mCollection;
     Tag mTag;
+
 };
+
+QString Akonadi::ItemDeleteJobPrivate::jobDebuggingString() const
+{
+    QString itemStr = QStringLiteral("items id: ");
+    bool firstItem = true;
+    foreach (const Akonadi::Item &item, mItems) {
+        if (firstItem) {
+            firstItem = false;
+        } else {
+            itemStr += QStringLiteral(", ");
+        }
+        itemStr += QString::number(item.id());
+    }
+
+    return QStringLiteral("Remove %1 from collection id %2").arg(itemStr).arg(mCollection.id());
+}
 
 ItemDeleteJob::ItemDeleteJob(const Item &item, QObject *parent)
     : Job(new ItemDeleteJobPrivate(this), parent)

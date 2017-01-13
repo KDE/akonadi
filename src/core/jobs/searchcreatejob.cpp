@@ -49,6 +49,7 @@ public:
     bool mRecursive;
     bool mRemote;
     Collection mCreatedCollection;
+
 };
 
 SearchCreateJob::SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent)

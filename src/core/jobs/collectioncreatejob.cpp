@@ -34,8 +34,15 @@ public:
     {
     }
 
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
     Collection mCollection;
+
 };
+
+QString Akonadi::CollectionCreateJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("Create collection: %1").arg(mCollection.id());
+}
 
 CollectionCreateJob::CollectionCreateJob(const Collection &collection, QObject *parent)
     : Job(new CollectionCreateJobPrivate(this), parent)
