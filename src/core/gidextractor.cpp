@@ -22,8 +22,7 @@
 #include "item.h"
 #include "typepluginloader_p.h"
 
-namespace Akonadi
-{
+using namespace Akonadi;
 
 QString GidExtractor::extractGid(const Item &item)
 {
@@ -47,6 +46,4 @@ QString GidExtractor::getGid(const Item &item)
         return QString();
     }
     return extractGid(item);
-}
-
 }
