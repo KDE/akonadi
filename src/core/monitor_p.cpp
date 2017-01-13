@@ -377,8 +377,10 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotification &msg
 
     if (msg.type() == Protocol::Command::CollectionChangeNotification
             && static_cast<const Protocol::CollectionChangeNotification&>(msg).operation() == Protocol::CollectionChangeNotification::Remove) {
-        //For collection removals the collection is gone anyways, so we can't fetch it. Rid will be set later on instead.
-        return true;
+        // For collection removals the collection is gone already, so we can't fetch it,
+        // but we have to at least obtain the ancestor chain.
+        const qint64 parentCollection = static_cast<const Protocol::CollectionChangeNotification &>(msg).parentCollection();
+        return parentCollection <= -1 || collectionCache->ensureCached(parentCollection, mCollectionFetchScope);
     }
 
     if (fetchCollections()) {
