@@ -19,6 +19,7 @@
 
 #include "changerecorder_p.h"
 #include "akonadicore_debug.h"
+#include "helper_p.h"
 
 #include <QFile>
 #include <QDir>
@@ -746,7 +747,7 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadRelationNotification(QDa
     } else {
         msg.setOperation(mapRelationOperation(static_cast<LegacyOp>(operation)));
     }
-    Q_FOREACH (const QByteArray &part, itemParts) {
+    for (const QByteArray &part : qAsConst(itemParts)) {
         const QByteArrayList p = part.split(' ');
         if (p.size() < 2) {
             continue;

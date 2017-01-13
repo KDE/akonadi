@@ -23,6 +23,7 @@
 #include "specialcollectionattribute.h"
 #include "specialcollections.h"
 #include "servermanager.h"
+#include "helper_p.h"
 
 #include "agentinstance.h"
 #include "agentinstancecreatejob.h"
@@ -136,7 +137,8 @@ void ResourceScanJob::Private::fetchResult(KJob *job)
 
     Q_ASSERT(!mRootCollection.isValid());
     Q_ASSERT(mSpecialCollections.isEmpty());
-    foreach (const Collection &collection, fetchJob->collections()) {
+    const Akonadi::Collection::List lstCols = fetchJob->collections();
+    for (const Collection &collection : lstCols) {
         if (collection.parentCollection() == Collection::root()) {
             if (mRootCollection.isValid()) {
                 qCWarning(AKONADICORE_LOG) << "Resource has more than one root collection. I don't know what to do.";
@@ -277,7 +279,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
         //             without updating the config file, in this case search for a resource
         //             of the same type and the default name
         const AgentInstance::List resources = AgentManager::self()->instances();
-        foreach (const AgentInstance &resource, resources) {
+        for (const AgentInstance &resource : resources) {
             if (resource.type().identifier() == mDefaultResourceType) {
                 if (resource.name() == mDefaultResourceOptions.value(QStringLiteral("Name")).toString()) {
                     // found a matching one...
@@ -427,14 +429,14 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
     }
 
     // Find all children of the resource collection.
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : qAsConst(collections)) {
         if (collection.parentCollection() == resourceCollection) {
             toRecover.append(collection);
         }
     }
 
     QHash<QString, QByteArray> typeForName;
-    foreach (const QByteArray &type, mKnownTypes) {
+    for (const QByteArray &type : qAsConst(mKnownTypes)) {
         const QString displayName = mNameForTypeMap.value(type);
         typeForName[displayName] = type;
     }
@@ -442,7 +444,7 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
     // These collections have been created by the maildir resource, when it
     // found the folders on disk. So give them the necessary attributes now.
     Q_ASSERT(mPendingModifyJobs == 0);
-    foreach (Collection collection, toRecover) {             // krazy:exclude=foreach
+    for (Collection collection : qAsConst(toRecover)) {             // krazy:exclude=foreach
 
         if (collection.hasAttribute<SpecialCollectionAttribute>()) {
             continue;

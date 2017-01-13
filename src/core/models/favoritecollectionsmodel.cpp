@@ -19,6 +19,7 @@
 
 #include "favoritecollectionsmodel.h"
 #include "akonadicore_debug.h"
+#include "helper_p.h"
 #include <QItemSelectionModel>
 #include <QMimeData>
 
@@ -91,7 +92,7 @@ public:
     void reload()
     {
         //don't clear the selection model here. Otherwise we mess up the users selection as collections get removed and re-inserted.
-        foreach (const Collection::Id &collectionId, collectionIds) {
+        for (const Collection::Id &collectionId : qAsConst(collectionIds)) {
             insertIfAvailable(collectionId);
         }
         //TODO remove what's no longer here
@@ -171,7 +172,7 @@ public:
 
     void clearReferences()
     {
-        foreach (const Collection::Id &collectionId, referencedCollections) {
+        for (const Collection::Id &collectionId : qAsConst(referencedCollections)) {
             dereference(collectionId);
         }
     }
@@ -209,7 +210,7 @@ public:
             }
         }
         //Remove what's left
-        foreach (Akonadi::Collection::Id colId, colIds) {
+        for (Akonadi::Collection::Id colId : qAsConst(colIds)) {
             remove(colId);
         }
     }
@@ -241,7 +242,7 @@ public:
     {
         QStringList labels;
         labels.reserve(collectionIds.count());
-        foreach (const Collection::Id &collectionId, collectionIds) {
+        for (const Collection::Id &collectionId : qAsConst(collectionIds)) {
             labels << labelForCollection(collectionId);
         }
 
@@ -305,7 +306,7 @@ Akonadi::Collection::List FavoriteCollectionsModel::collections() const
 {
     Collection::List cols;
     cols.reserve(d->collectionIds.count());
-    foreach (const Collection::Id &colId, d->collectionIds) {
+    for (const Collection::Id &colId : qAsConst(d->collectionIds)) {
         const QModelIndex idx = EntityTreeModel::modelIndexForCollection(sourceModel(), Collection(colId));
         const Collection collection = sourceModel()->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
         cols << collection;

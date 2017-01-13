@@ -195,7 +195,8 @@ void AgentManagerPrivate::readAgentTypes()
 {
     const QDBusReply<QStringList> types = mManager->agentTypes();
     if (types.isValid()) {
-        foreach (const QString &type, types.value()) {
+        const QStringList lst = types.value();
+        for (const QString &type : lst) {
             const AgentType agentType = fillAgentType(type);
             if (agentType.isValid()) {
                 mTypes.insert(type, agentType);
@@ -209,7 +210,8 @@ void AgentManagerPrivate::readAgentInstances()
 {
     const QDBusReply<QStringList> instances = mManager->agentInstances();
     if (instances.isValid()) {
-        foreach (const QString &instance, instances.value()) {
+        const QStringList lst = instances.value();
+        for (const QString &instance : lst) {
             const AgentInstance agentInstance = fillAgentInstance(instance);
             if (agentInstance.isValid()) {
                 mInstances.insert(instance, agentInstance);
