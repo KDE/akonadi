@@ -32,10 +32,8 @@
 #include <KLocalizedString>
 #include <KFormat>
 
-#include <QItemSelection>
 #include <QApplication>
 #include <QPalette>
-#include <QIcon>
 #include <QMetaMethod>
 
 using namespace Akonadi;

@@ -26,7 +26,6 @@
 
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-#include <QDBusError>
 #include <QApplication>
 
 int main(int argc, char **argv)

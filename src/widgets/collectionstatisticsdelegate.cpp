@@ -30,7 +30,6 @@
 #include <QStyleOptionViewItem>
 #include <QAbstractItemView>
 #include <QTreeView>
-#include <QAbstractProxyModel>
 
 #include "entitytreemodel.h"
 #include "collectionstatistics.h"

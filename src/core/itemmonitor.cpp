@@ -22,7 +22,6 @@
 
 #include "itemfetchscope.h"
 
-#include <QStringList>
 
 using namespace Akonadi;
 

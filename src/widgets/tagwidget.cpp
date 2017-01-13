@@ -30,7 +30,6 @@
 #include <KLocalizedString>
 
 #include <QHBoxLayout>
-#include <QLabel>
 #include <QToolButton>
 #include <QMenu>
 #include <QContextMenuEvent>

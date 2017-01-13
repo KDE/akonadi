@@ -23,7 +23,6 @@
 
 #include <QList>
 #include <QObject>
-#include <QSet>
 
 #include "item.h"
 

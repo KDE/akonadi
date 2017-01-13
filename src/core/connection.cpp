@@ -25,7 +25,6 @@
 #include <QDataStream>
 #include <QFile>
 #include <QAbstractEventDispatcher>
-#include <QTimer>
 #include <QFileInfo>
 #include <QSettings>
 #include <QElapsedTimer>

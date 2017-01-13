@@ -34,13 +34,9 @@
 #include "private/xdgbasedirs_p.h"
 #include "private/externalpartstorage_p.h"
 
-#include <QDateTime>
 #include <QFile>
 #include <QVarLengthArray>
-#include <QFileInfo>
-#include <QDir>
 
-#include <KLocalizedString>
 
 using namespace Akonadi;
 

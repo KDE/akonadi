@@ -22,7 +22,6 @@
 
 #include "handler.h"
 
-#include <QVector>
 #include <QSet>
 
 namespace Akonadi

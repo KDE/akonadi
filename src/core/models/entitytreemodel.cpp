@@ -24,7 +24,6 @@
 
 #include <QHash>
 #include <QMimeData>
-#include <QTimer>
 #include <QAbstractProxyModel>
 #include <QMessageBox>
 

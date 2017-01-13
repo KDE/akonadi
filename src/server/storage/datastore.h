@@ -22,9 +22,7 @@
 
 #include <QObject>
 #include <QList>
-#include <QMutex>
 #include <QVector>
-#include <QWaitCondition>
 #include <QThreadStorage>
 #include <QSqlDatabase>
 

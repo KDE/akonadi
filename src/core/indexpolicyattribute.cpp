@@ -21,7 +21,6 @@
 
 #include "private/imapparser_p.h"
 
-#include <QString>
 
 using namespace Akonadi;
 

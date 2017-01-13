@@ -33,7 +33,6 @@
 
 #include <private/protocol_p.h>
 
-#include <QMetaObject>
 #include <QEventLoop>
 
 #include "akonadiserver_debug.h"

@@ -20,7 +20,6 @@
 #include "agentpluginloader.h"
 #include "akonadiagentserver_debug.h"
 
-#include <QStringList>
 #include <QApplication>
 
 int main(int argc, char *argv[])

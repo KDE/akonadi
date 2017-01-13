@@ -26,14 +26,9 @@
 #include "entities.h"
 #include "akonadiserver_debug.h"
 
-#include <QFile>
-#include <QPair>
 #include <QStringList>
-#include <QVariant>
-#include <QSqlField>
-#include <QSqlRecord>
 #include <QSqlQuery>
-#include <QSqlError>
+#include <QDateTime>
 
 #include <algorithm>
 

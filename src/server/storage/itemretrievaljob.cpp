@@ -23,7 +23,6 @@
 #include "akonadiserver_debug.h"
 
 #include <QDBusPendingCallWatcher>
-#include <QDBusError>
 
 using namespace Akonadi::Server;
 

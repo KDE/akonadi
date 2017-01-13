@@ -21,7 +21,6 @@
 #define AKONADI_ITEM_P_H
 
 #include <QDateTime>
-#include <QMap>
 #include <QVarLengthArray>
 
 #include "itempayloadinternals_p.h"

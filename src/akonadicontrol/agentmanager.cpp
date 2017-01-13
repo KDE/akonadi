@@ -47,7 +47,6 @@
 #include <QScopedPointer>
 #include <QSettings>
 #include <QDBusConnection>
-#include <QDBusError>
 
 using Akonadi::ProcessControl;
 

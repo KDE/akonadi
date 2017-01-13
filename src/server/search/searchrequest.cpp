@@ -19,7 +19,6 @@
 
 #include "searchrequest.h"
 
-#include <QPluginLoader>
 
 #include "searchtaskmanager.h"
 #include "abstractsearchplugin.h"

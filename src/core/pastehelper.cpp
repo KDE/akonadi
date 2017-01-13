@@ -39,8 +39,6 @@
 
 #include <QByteArray>
 #include <QMimeData>
-#include <QStringList>
-#include <QMutexLocker>
 
 #include <functional>
 

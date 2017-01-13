@@ -24,16 +24,13 @@
 
 #include <private/dbus_p.h>
 
-#include <QCoreApplication>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
-#include <QDBusError>
 #include <QTimer>
 
 #include <cstdlib>
 
 #ifdef QT_STATICPLUGIN
-#include <QtPlugin>
 
 Q_IMPORT_PLUGIN(qsqlite3)
 #endif

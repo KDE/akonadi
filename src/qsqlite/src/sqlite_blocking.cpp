@@ -27,7 +27,6 @@
 #include "qdebug.h"
 #include "qstringbuilder.h"
 #include "qthread.h"
-#include <QDateTime>
 
 QString debugString()
 {

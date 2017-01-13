@@ -30,9 +30,7 @@
 
 #include <KLocalizedString>
 
-#include <QEventLoop>
 #include <QTimer>
-#include <QTextStream>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 

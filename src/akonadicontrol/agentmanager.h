@@ -22,7 +22,6 @@
 #define AGENTMANAGER_H
 
 #include <QHash>
-#include <QMap>
 #include <QStringList>
 
 #include "agenttype.h"

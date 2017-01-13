@@ -30,7 +30,6 @@ class Item;
 #include "jobs/relationcreatejob.h"
 #include "jobs/relationdeletejob.h"
 
-#include <QStringList>
 
 using namespace Akonadi;
 

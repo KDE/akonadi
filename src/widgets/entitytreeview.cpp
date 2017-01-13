@@ -23,7 +23,6 @@
 
 #include "dragdropmanager_p.h"
 
-#include <QDebug>
 #include <QTimer>
 #include <QApplication>
 #include <QDragMoveEvent>

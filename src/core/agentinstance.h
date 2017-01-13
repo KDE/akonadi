@@ -22,7 +22,6 @@
 
 #include "akonadicore_export.h"
 
-#include <QList>
 #include <QMetaType>
 #include <QSharedDataPointer>
 

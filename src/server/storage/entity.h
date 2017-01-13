@@ -20,8 +20,6 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include <QDateTime>
-#include <QDebug>
 #include <QString>
 #include <QStringList>
 

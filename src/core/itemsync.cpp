@@ -34,7 +34,6 @@
 
 #include "akonadicore_debug.h"
 
-#include <QStringList>
 
 using namespace Akonadi;
 

@@ -23,7 +23,6 @@
 #include "entities.h"
 
 #include <QByteArray>
-#include <QList>
 #include <QString>
 #include <QStack>
 

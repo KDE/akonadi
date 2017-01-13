@@ -22,7 +22,6 @@
 #include "agentinstance.h"
 #include "agentmanager.h"
 
-#include <QStringList>
 #include <QIcon>
 
 #include <KLocalizedString>

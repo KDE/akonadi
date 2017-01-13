@@ -21,6 +21,7 @@
 #define ITEMRETRIEVER_H
 
 #include <QObject>
+#include <QDateTime>
 
 #include "../exception.h"
 #include "entities.h"
@@ -28,7 +29,6 @@
 #include <private/scope_p.h>
 #include <private/imapset_p.h>
 
-#include <QStringList>
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(ItemRetrieverException);
 

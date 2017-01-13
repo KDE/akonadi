@@ -28,6 +28,8 @@
 
 #include <private/protocol_p.h>
 
+#include <QDateTime>
+
 using namespace Akonadi::Server;
 
 QMutex CacheCleanerInhibitor::sLock;

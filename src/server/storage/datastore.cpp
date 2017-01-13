@@ -43,9 +43,6 @@
 #include <private/externalpartstorage_p.h>
 
 #include <QCoreApplication>
-#include <QDir>
-#include <QEventLoop>
-#include <QSettings>
 #include <QString>
 #include <QStringList>
 #include <QThread>
@@ -55,9 +52,8 @@
 #include <QVariant>
 #include <QSqlDatabase>
 #include <QSqlDriver>
-#include <QSqlError>
-#include <QSqlField>
 #include <QSqlQuery>
+#include <QFile>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

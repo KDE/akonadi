@@ -24,7 +24,6 @@
 #include <QMimeDatabase>
 
 #include <QSet>
-#include <QStringList>
 
 namespace Akonadi
 {

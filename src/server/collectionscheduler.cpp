@@ -26,6 +26,7 @@
 
 #include <QDateTime>
 #include <QCoreApplication>
+#include <QTimer>
 
 namespace Akonadi
 {

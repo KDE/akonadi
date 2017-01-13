@@ -25,10 +25,8 @@
 
 #include "akonadiprivate_export.h"
 
-#include <QFlags>
 #include <QSharedDataPointer>
 #include <QDebug>
-#include <QDBusArgument>
 
 #include "tristate_p.h"
 

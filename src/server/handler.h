@@ -20,7 +20,6 @@
 #define AKONADIHANDLER_H
 
 #include <QObject>
-#include <QDataStream>
 
 #include "global.h"
 #include "exception.h"

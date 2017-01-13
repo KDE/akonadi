@@ -20,8 +20,6 @@
 #include "agentthread.h"
 #include "akonadiagentserver_debug.h"
 
-#include <QCoreApplication>
-#include <QPluginLoader>
 #include <QWidget> // Needed for WId
 
 #include <shared/akdebug.h>

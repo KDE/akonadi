@@ -59,7 +59,6 @@
 #include <QClipboard>
 #include <QItemSelectionModel>
 #include <QPointer>
-#include <QWeakPointer>
 #include <QInputDialog>
 
 using namespace Akonadi;

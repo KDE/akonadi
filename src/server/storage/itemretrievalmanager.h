@@ -24,9 +24,7 @@
 #include "akthread.h"
 
 #include <QHash>
-#include <QStringList>
 #include <QObject>
-#include <QDBusConnection>
 
 class QReadWriteLock;
 class QWaitCondition;

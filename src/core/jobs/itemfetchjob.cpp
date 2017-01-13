@@ -30,7 +30,6 @@
 
 #include <qdebug.h>
 
-#include <QStringList>
 #include <QTimer>
 
 using namespace Akonadi;

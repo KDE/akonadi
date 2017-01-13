@@ -26,7 +26,6 @@
 #include "resourcebase.h"
 
 #include <QObject>
-#include <QStringList>
 #include <QDBusMessage>
 
 namespace Akonadi

@@ -25,7 +25,6 @@
 #include <private/dbus_p.h>
 
 #include <QCoreApplication>
-#include <QDebug>
 #include <QPluginLoader>
 #include <QTimer>
 #include <QDBusConnection>

@@ -25,7 +25,6 @@
 #include "job.h"
 #include "collection.h"
 
-#include <QUrl>
 
 namespace Akonadi
 {

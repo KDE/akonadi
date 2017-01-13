@@ -20,7 +20,6 @@
 #include "imapparser_p.h"
 
 #include <QDateTime>
-#include <QDebug>
 
 #include <ctype.h>
 

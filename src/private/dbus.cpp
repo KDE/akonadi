@@ -21,7 +21,6 @@
 #include "instance_p.h"
 
 #include <QString>
-#include <QStringBuilder>
 #include <QStringList>
 
 using namespace Akonadi;

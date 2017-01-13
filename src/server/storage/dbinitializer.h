@@ -24,8 +24,6 @@
 #include "schematypes.h"
 
 #include <QHash>
-#include <QPair>
-#include <QVector>
 #include <QStringList>
 #include <QSharedPointer>
 #include <QSqlDatabase>

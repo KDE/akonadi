@@ -20,7 +20,6 @@
 #ifndef AKONADI_FETCHHELPER_H
 #define AKONADI_FETCHHELPER_H
 
-#include <QStack>
 
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"

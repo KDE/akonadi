@@ -34,7 +34,6 @@
 
 #include <QObject>
 #include <QHash>
-#include <QStringList>
 #include <QTimer>
 
 using namespace Akonadi;

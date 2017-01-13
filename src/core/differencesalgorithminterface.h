@@ -21,7 +21,6 @@
 #ifndef DIFFERENCESALGORITHMINTERFACE_P_H
 #define DIFFERENCESALGORITHMINTERFACE_P_H
 
-#include <QObject>
 
 namespace Akonadi
 {

@@ -43,7 +43,6 @@
 
 #include <Kdelibs4ConfigMigrator>
 
-#include <QDir>
 #include <QSettings>
 #include <QTimer>
 #include <QDBusConnection>

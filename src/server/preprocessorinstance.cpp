@@ -36,7 +36,6 @@
 
 #include <private/dbus_p.h>
 
-#include <QTimer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

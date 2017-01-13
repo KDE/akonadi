@@ -26,7 +26,6 @@
 #include <QVector>
 #include <QSet>
 #include <QMutex>
-#include <QDBusConnection>
 
 class QSemaphore;
 class QTimer;

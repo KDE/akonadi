@@ -21,7 +21,6 @@
 #define ITEMFETCHSCOPE_P_H
 
 #include <QSet>
-#include <QString>
 #include <QDateTime>
 #include "itemfetchscope.h"
 #include "tagfetchscope.h"

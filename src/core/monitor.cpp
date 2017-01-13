@@ -27,10 +27,7 @@
 
 #include <qdebug.h>
 
-#include <QDBusInterface>
-#include <QDBusConnection>
 
-#include <QTimer>
 #include <iterator>
 
 using namespace Akonadi;

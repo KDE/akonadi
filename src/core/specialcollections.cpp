@@ -33,7 +33,6 @@
 
 #include <QHash>
 #include <QObject>
-#include <QSet>
 
 using namespace Akonadi;
 

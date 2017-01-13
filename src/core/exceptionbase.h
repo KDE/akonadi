@@ -21,7 +21,6 @@
 #define AKONADI_EXCEPTION_H
 
 #include "akonadicore_export.h"
-#include <QObject>
 #include <QByteArray>
 #include <exception>
 

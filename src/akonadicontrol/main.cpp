@@ -29,7 +29,6 @@
 #include <QGuiApplication>
 #include <QSessionManager>
 #include <QDBusConnection>
-#include <QDBusError>
 
 #include <KCrash/KCrash>
 

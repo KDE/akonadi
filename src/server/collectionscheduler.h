@@ -21,7 +21,6 @@
 #define AKONADI_SERVER_COLLECTIONSCHEDULER_H
 
 #include <QThread>
-#include <QTimer>
 #include <QMultiMap>
 #include <QMutex>
 

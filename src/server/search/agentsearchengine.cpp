@@ -24,7 +24,6 @@
 #include <private/dbus_p.h>
 
 #include <QDBusInterface>
-#include <QDBusError>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

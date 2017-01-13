@@ -31,7 +31,6 @@
 #include <KConfig>
 #include <KConfigGroup>
 
-#include <QDBusConnection>
 #include <QDBusInterface>
 #include <QDBusReply>
 #include <QDir>

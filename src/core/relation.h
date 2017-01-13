@@ -31,7 +31,6 @@ AKONADICORE_EXPORT unsigned int qHash(const Akonadi::Relation &);
 
 #include <QSharedPointer>
 #include <QByteArray>
-#include <QList>
 #include <QDebug>
 
 namespace Akonadi

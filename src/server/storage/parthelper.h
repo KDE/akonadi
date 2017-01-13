@@ -20,7 +20,6 @@
 #ifndef PARTHELPER_H
 #define PARTHELPER_H
 
-#include <QtGlobal>
 #include "entities.h"
 #include "../exception.h"
 

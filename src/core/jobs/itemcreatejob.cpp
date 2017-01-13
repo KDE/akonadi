@@ -32,7 +32,6 @@
 #include "helper_p.h"
 
 #include <QDateTime>
-#include <QFile>
 
 #include <KLocalizedString>
 

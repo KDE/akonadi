@@ -32,8 +32,6 @@
 #include "storage/partstreamer.h"
 #include <private/externalpartstorage_p.h>
 
-#include <QLocale>
-#include <QFile>
 
 #include "akonadiserver_debug.h"
 

@@ -28,7 +28,6 @@
 #include "akonadi.h"
 #include "handler/search.h"
 
-#include <QDebug>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

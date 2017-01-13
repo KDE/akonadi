@@ -28,9 +28,7 @@
 #include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
 
-#include <QLocalSocket>
 #include <QSettings>
-#include <QCoreApplication>
 #include <QThreadPool>
 #include <QPointer>
 #include <QDateTime>

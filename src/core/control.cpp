@@ -23,7 +23,6 @@
 
 #include <QEventLoop>
 #include <QCoreApplication>
-#include <QTimer>
 #include <QPointer>
 
 using namespace Akonadi;

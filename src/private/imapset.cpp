@@ -21,7 +21,6 @@
 #include "datastream_p_p.h"
 
 #include <QSharedData>
-#include <QDataStream>
 
 #include <limits>
 

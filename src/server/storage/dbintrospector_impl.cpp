@@ -23,7 +23,6 @@
 #include "querybuilder.h"
 
 #include "akonadiserver_debug.h"
-#include <QSqlQuery>
 
 using namespace Akonadi::Server;
 

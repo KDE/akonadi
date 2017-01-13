@@ -25,7 +25,6 @@
 #include "item.h"
 #include "servermanager.h"
 
-#include <QLocalSocket>
 
 #include <QQueue>
 #include <QThreadStorage>

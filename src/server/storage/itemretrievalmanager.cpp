@@ -27,7 +27,6 @@
 
 #include <private/dbus_p.h>
 
-#include <QCoreApplication>
 #include <QReadWriteLock>
 #include <QScopedPointer>
 #include <QWaitCondition>

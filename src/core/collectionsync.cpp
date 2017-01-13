@@ -30,8 +30,6 @@
 #include "cachepolicy.h"
 
 #include <KLocalizedString>
-#include <QVariant>
-#include <QTime>
 #include <QHash>
 
 using namespace Akonadi;

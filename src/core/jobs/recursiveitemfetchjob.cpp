@@ -25,7 +25,6 @@
 #include "helper_p.h"
 
 #include <QStringList>
-#include <QVariant>
 
 using namespace Akonadi;
 

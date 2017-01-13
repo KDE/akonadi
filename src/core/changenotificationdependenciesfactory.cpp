@@ -25,7 +25,6 @@
 #include "akonadicore_debug.h"
 #include "session_p.h"
 
-#include <KRandom>
 #include <qdbusextratypes.h>
 
 using namespace Akonadi;

@@ -26,7 +26,6 @@
 #include <QIcon>
 #include <KIconLoader>
 
-#include <QUrl>
 #include <QApplication>
 #include <QHBoxLayout>
 #include <QListView>

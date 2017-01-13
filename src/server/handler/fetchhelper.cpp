@@ -42,13 +42,9 @@
 #include <private/scope_p.h>
 #include <private/dbus_p.h>
 
-#include <QLocale>
 #include <QStringList>
-#include <QUuid>
 #include <QVariant>
 #include <QDateTime>
-#include <QSqlDatabase>
-#include <QSqlError>
 #include <QSqlQuery>
 
 #include <QElapsedTimer>

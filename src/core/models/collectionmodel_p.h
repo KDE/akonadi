@@ -25,7 +25,6 @@
 #include <KLocalizedString>
 
 #include <QHash>
-#include <QList>
 #include <QModelIndex>
 #include <QStringList>
 #include <QIcon>

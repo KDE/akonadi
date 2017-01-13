@@ -35,9 +35,6 @@
 #include <kdescendantsproxymodel.h>
 
 #include <QAbstractItemModel>
-#include <QEvent>
-#include <QPointer>
-#include <QMouseEvent>
 
 using namespace Akonadi;
 

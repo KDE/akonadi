@@ -23,7 +23,6 @@
 #include <QVariant>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QJsonArray>
 
 using namespace Akonadi;
 

@@ -26,10 +26,7 @@
 
 #include <private/externalpartstorage_p.h>
 
-#include <QDir>
 #include <QFile>
-#include <QFileInfo>
-#include <QSqlError>
 
 #include "akonadiserver_debug.h"
 

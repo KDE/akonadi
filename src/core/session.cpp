@@ -34,15 +34,10 @@
 #include <KLocalizedString>
 
 #include <QCoreApplication>
-#include <QDir>
-#include <QQueue>
 #include <QThreadStorage>
 #include <QTimer>
 #include <QThread>
-#include <QSettings>
 
-#include <QLocalSocket>
-#include <QTcpSocket>
 #include <QHostAddress>
 #include <QApplication>
 

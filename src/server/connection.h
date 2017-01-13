@@ -24,7 +24,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QLocalSocket>
-#include <QDataStream>
+#include <QTime>
 
 #include "akthread.h"
 #include "entities.h"

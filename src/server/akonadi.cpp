@@ -55,7 +55,6 @@
 #include <QSettings>
 #include <QTimer>
 #include <QDBusServiceWatcher>
-#include <QLocalServer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

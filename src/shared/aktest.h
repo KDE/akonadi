@@ -24,8 +24,6 @@
 #include "akapplication.h"
 #include <private/instance_p.h>
 
-#include <QDebug>
-#include <QBuffer>
 #include <QTest>
 
 #define AKTEST_MAIN(TestObject) \

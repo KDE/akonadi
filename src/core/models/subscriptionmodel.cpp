@@ -27,7 +27,6 @@
 #include "akonadicore_debug.h"
 #include "helper_p.h"
 
-#include <QStringList>
 #include <QFont>
 
 using namespace Akonadi;

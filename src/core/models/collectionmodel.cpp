@@ -28,7 +28,6 @@
 #include "session.h"
 
 #include <qdebug.h>
-#include <QIcon>
 #include <QUrl>
 
 #include <QMimeData>

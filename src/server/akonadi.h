@@ -21,7 +21,6 @@
 #define AKONADISERVER_H
 
 #include <QObject>
-#include <QPointer>
 #include <QVector>
 
 class QProcess;

@@ -31,7 +31,6 @@
 #include <QDBusError>
 #include <QSharedPointer>
 #include <QString>
-#include <QStringList>
 
 class AgentManager;
 class AgentType;
