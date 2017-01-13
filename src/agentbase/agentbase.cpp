@@ -1140,18 +1140,24 @@ void AgentBase::cleanup()
     /*
      * ... then remove the file from hd.
      */
-    QFile::remove(fileName);
+    if (!QFile::remove(fileName)) {
+        qCWarning(AKONADIAGENTBASE_LOG) << "Impossible to remove " << fileName;
+    }
 
     /*
      * ... and remove the changes file from hd.
      */
-    QFile::remove(fileName + QStringLiteral("_changes.dat"));
+    if (!QFile::remove(fileName + QStringLiteral("_changes.dat"))) {
+        qCWarning(AKONADIAGENTBASE_LOG) << "Impossible to remove " << fileName + QStringLiteral("_changes.dat");
+    }
 
     /*
      * ... and also remove the agent configuration file if there is one.
      */
     QString configFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + config()->name();
-    QFile::remove(configFile);
+    if (!QFile::remove(configFile)) {
+        qCWarning(AKONADIAGENTBASE_LOG) << "Impossible to remove config file " << configFile;
+    }
 
     delete d->mEventLoopLocker;
     d->mEventLoopLocker = nullptr;
