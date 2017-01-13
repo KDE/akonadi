@@ -39,12 +39,18 @@ public:
     }
     Collection collection;
 
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
     void collectionFetchResult(KJob *job);
     void itemFetchResult(KJob *job);
     void itemStoreResult(KJob *job);
 
     Q_DECLARE_PUBLIC(InvalidateCacheJob)
 };
+
+QString InvalidateCacheJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("Invalidate Cache from collection id: %1").arg(collection.id());
+}
 
 }
 
