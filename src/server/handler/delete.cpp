@@ -73,5 +73,4 @@ bool Delete::parseStream()
     }
 
     return successResponse<Protocol::DeleteCollectionResponse>();
-    return true;
 }

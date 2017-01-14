@@ -120,5 +120,4 @@ bool Copy::parseStream()
     }
 
     return successResponse<Protocol::CopyItemsResponse>();
-    return true;
 }
