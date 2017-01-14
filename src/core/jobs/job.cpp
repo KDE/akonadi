@@ -25,6 +25,7 @@
 #include "KDBusConnectionPool"
 #include <QTime>
 #include "private/protocol_p.h"
+#include "private/instance_p.h"
 #include "session.h"
 #include "session_p.h"
 
@@ -113,8 +114,9 @@ void JobPrivate::init(QObject *parent)
             if (s_lastTime.isNull()) {
                 s_lastTime.start();
             }
-            if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole"))) {
-                s_jobtracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole"),
+            const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
+            if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
+                s_jobtracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole") + suffix,
                                                   QStringLiteral("/jobtracker"),
                                                   QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
                                                   KDBusConnectionPool::threadConnection(), nullptr);

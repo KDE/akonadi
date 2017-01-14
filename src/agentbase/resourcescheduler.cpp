@@ -23,6 +23,7 @@
 #include "recursivemover_p.h"
 
 #include "akonadiagentbase_debug.h"
+#include "private/instance_p.h"
 #include <KLocalizedString>
 
 #include <QTimer>
@@ -530,11 +531,14 @@ void ResourceScheduler::setOnline(bool state)
 void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &taskType, const QString &debugString)
 {
     // if there's a job tracer running, tell it about the new job
-    if (!s_resourcetracker && KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole"))) {
-        s_resourcetracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole"),
-                                               QStringLiteral("/resourcesJobtracker"),
-                                               QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
-                                               KDBusConnectionPool::threadConnection(), nullptr);
+    if (!s_resourcetracker) {
+        const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
+        if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
+            s_resourcetracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole") + suffix,
+                                                   QStringLiteral("/resourcesJobtracker"),
+                                                   QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
+                                                   KDBusConnectionPool::threadConnection(), nullptr);
+        }
     }
 
     if (s_resourcetracker) {
