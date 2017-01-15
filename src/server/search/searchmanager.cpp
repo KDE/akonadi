@@ -365,7 +365,7 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
         return;
     }
 
-    DataStore::self()->beginTransaction();
+    Transaction transaction(DataStore::self());
 
     // Unlink all items that were not in search results from the collection
     QVariantList toRemove;
@@ -377,7 +377,7 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
         }
     }
 
-    if (!DataStore::self()->commitTransaction()) {
+    if (!transaction.commit()) {
         wakeUpCaller(cond);
         return;
     }
@@ -432,10 +432,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
         return;
     }
 
-    const bool existingTransaction = DataStore::self()->inTransaction();
-    if (!existingTransaction) {
-        DataStore::self()->beginTransaction();
-    }
+    Transaction transaction(DataStore::self(), !DataStore::self()->inTransaction());
 
     // First query all the IDs we got from search plugin/agent against the DB.
     // This will remove IDs that no longer exist in the DB.
@@ -459,7 +456,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
     }
 
     if (items.isEmpty()) {
-        qCDebug(AKONADISERVER_LOG) << "Added results: 0";
+        qCDebug(AKONADISERVER_LOG) << "Added results: 0 (no existing result)";
         return;
     }
 
@@ -467,7 +464,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
         Collection::addPimItem(collection.id(), item.id());
     }
 
-    if (!existingTransaction && !DataStore::self()->commitTransaction()) {
+    if (!transaction.commit()) {
         qCDebug(AKONADISERVER_LOG) << "Failed to commit transaction";
         return;
     }
