@@ -55,6 +55,7 @@ StorageJanitor::StorageJanitor(QObject *parent)
     , m_lostFoundCollectionId(-1)
 {
     setObjectName(QStringLiteral("StorageJanitor"));
+    thread()->setObjectName(QStringLiteral("StorageJanitor-Thread"));
 }
 
 StorageJanitor::~StorageJanitor()

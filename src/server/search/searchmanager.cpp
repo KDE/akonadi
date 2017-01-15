@@ -61,6 +61,7 @@ SearchManager::SearchManager(const QStringList &searchEngines, QObject *parent)
     , mEngineNames(searchEngines)
 {
     setObjectName(QStringLiteral("SearchManager"));
+    thread()->setObjectName(QStringLiteral("SearchManager-Thread"));
 
     qRegisterMetaType<QSet<qint64>>();
     qRegisterMetaType<Collection>();

@@ -62,6 +62,7 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     m_socketDescriptor = socketDescriptor;
     m_identifier.sprintf("%p", static_cast<void *>(this));
     setObjectName(m_identifier);
+    thread()->setObjectName(m_identifier + QStringLiteral("-Thread"));
 
     const QSettings settings(Akonadi::StandardDirs::serverConfigFile(), QSettings::IniFormat);
     m_verifyCacheOnRetrieval = settings.value(QStringLiteral("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
@@ -332,6 +333,7 @@ void Connection::setSessionId(const QByteArray &id)
 
     m_sessionId = id;
     setObjectName(QString::fromLatin1(id));
+    thread()->setObjectName(objectName() + QStringLiteral("-Thread"));
     storageBackend()->setSessionId(id);
     storageBackend()->notificationCollector()->setSessionId(id);
 }

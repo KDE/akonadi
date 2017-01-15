@@ -57,6 +57,7 @@ ItemRetrievalManager::ItemRetrievalManager(AbstractItemRetrievalJobFactory *fact
     qDBusRegisterMetaType<QByteArrayList>();
 
     setObjectName(QStringLiteral("ItemRetrievalManager"));
+    thread()->setObjectName(QStringLiteral("ItemRetrievalManager-Thread"));
 
     Q_ASSERT(sInstance == nullptr);
     sInstance = this;

@@ -89,6 +89,7 @@ CacheCleaner::CacheCleaner(QObject *parent)
     : CollectionScheduler(QThread::IdlePriority, parent)
 {
     setObjectName(QStringLiteral("CacheCleaner"));
+    thread()->setObjectName(QStringLiteral("CacheCleaner-Thread"));
     setMinimumInterval(5);
 }
 

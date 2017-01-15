@@ -32,6 +32,7 @@ IntervalCheck::IntervalCheck(QObject *parent)
     : CollectionScheduler(QThread::IdlePriority, parent)
 {
     setObjectName(QStringLiteral("IntervalCheck"));
+    thread()->setObjectName(QStringLiteral("IntervalCheck-Thread"));
 }
 
 IntervalCheck::~ IntervalCheck()

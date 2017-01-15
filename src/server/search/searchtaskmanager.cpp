@@ -41,6 +41,7 @@ SearchTaskManager::SearchTaskManager()
     , mShouldStop(false)
 {
     setObjectName(QStringLiteral("SearchTaskManager"));
+    thread()->setObjectName(QStringLiteral("SearchTaskManager-Thread"));
     sInstance = this;
 
     QTimer::singleShot(0, this, &SearchTaskManager::searchLoop);

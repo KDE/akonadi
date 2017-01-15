@@ -43,6 +43,7 @@ NotificationManager::NotificationManager()
     , mDebugNotifications(0)
 {
     setObjectName(QStringLiteral("NotificationManager"));
+    thread()->setObjectName(QStringLiteral("NotificationManager-Thread"));
 }
 
 NotificationManager::~NotificationManager()
