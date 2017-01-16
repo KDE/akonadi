@@ -25,6 +25,7 @@
 #include "agentmanager.h"
 #include "agenttypedialog.h"
 #include "metatypes.h"
+#include "helper_p.h"
 
 #include <QAction>
 #include <QIcon>
@@ -142,7 +143,8 @@ public:
             return instances;
         }
 
-        foreach (const QModelIndex &index, mSelectionModel->selectedRows()) {
+        const QModelIndexList lstModelIndex = mSelectionModel->selectedRows();
+        for (const QModelIndex &index : lstModelIndex ) {
             const AgentInstance instance =
                 index.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
             if (instance.isValid()) {
@@ -159,11 +161,11 @@ public:
         dlg->setWindowTitle(contextText(AgentActionManager::CreateAgentInstance,
                                         AgentActionManager::DialogTitle));
 
-        foreach (const QString &mimeType, mMimeTypeFilter) {
+        for (const QString &mimeType : qAsConst(mMimeTypeFilter)) {
             dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
         }
 
-        foreach (const QString &capability, mCapabilityFilter) {
+        for (const QString &capability : qAsConst(mCapabilityFilter)) {
             dlg->agentFilterProxyModel()->addCapabilityFilter(capability);
         }
 

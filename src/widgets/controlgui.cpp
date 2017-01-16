@@ -23,6 +23,7 @@
 #include "selftestdialog.h"
 #include "erroroverlay_p.h"
 #include "akonadiwidgets_debug.h"
+#include "helper_p.h"
 
 #include <KLocalizedString>
 
@@ -107,7 +108,7 @@ public:
 
     void createErrorOverlays()
     {
-        foreach (QWidget *widget, mPendingOverlays) {
+        for (QWidget *widget : qAsConst(mPendingOverlays)) {
             if (widget) {
                 new ErrorOverlay(widget);
             }

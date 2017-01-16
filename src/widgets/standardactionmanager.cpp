@@ -692,7 +692,7 @@ public:
             return;
         }
 
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             CollectionDeleteJob *job = new CollectionDeleteJob(collection, q);
             q->connect(job, SIGNAL(result(KJob*)), q, SLOT(collectionDeletionResult(KJob*)));
         }
@@ -705,7 +705,7 @@ public:
             return;
         }
 
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             TrashJob *job = new TrashJob(collection, q);
             q->connect(job, SIGNAL(result(KJob*)), q, SLOT(moveCollectionToTrashResult(KJob*)));
         }

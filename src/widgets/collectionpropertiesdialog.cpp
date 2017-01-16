@@ -26,6 +26,7 @@
 #include "collectionmodifyjob.h"
 
 #include "akonadiwidgets_debug.h"
+#include "helper_p.h"
 
 #include <ksharedconfig.h>
 #include <KConfigGroup>
@@ -157,7 +158,7 @@ void CollectionPropertiesDialog::Private::init()
             }
         }
 
-        foreach (const QString &pageName, mPageNames) {
+        for (const QString &pageName : qAsConst(mPageNames)) {
             CollectionPropertiesPage *page = pages.value(pageName);
             if (page) {
                 mTabWidget->addTab(page, page->pageTitle());

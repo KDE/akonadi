@@ -600,7 +600,8 @@ QString SelfTestDialog::createReport()
                 s << "Directory listing of '" << path << "':" << endl;
                 QDir dir(path);
                 dir.setFilter(QDir::AllEntries | QDir::NoDotAndDotDot);
-                foreach (const QString &entry, dir.entryList()) {
+                const QStringList listEntries(dir.entryList());
+                for (const QString &entry : listEntries) {
                     s << entry << endl;
                 }
             }

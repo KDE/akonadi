@@ -24,6 +24,7 @@
 #include "agenttypedialog.h"
 #include "agentfilterproxymodel.h"
 #include "agentmanager.h"
+#include "helper_p.h"
 #include "ui_manageaccountwidget.h"
 
 #include <KMessageBox>
@@ -116,13 +117,13 @@ void ManageAccountWidget::slotAddAccount()
     Akonadi::AgentTypeDialog dlg(this);
 
     Akonadi::AgentFilterProxyModel *filter = dlg.agentFilterProxyModel();
-    Q_FOREACH (const QString &filterStr, d->mMimeTypeFilter) {
+    for (const QString &filterStr : qAsConst(d->mMimeTypeFilter)) {
         filter->addMimeTypeFilter(filterStr);
     }
-    Q_FOREACH (const QString &capa, d->mCapabilityFilter) {
+    for (const QString &capa : qAsConst(d->mCapabilityFilter)) {
         filter->addCapabilityFilter(capa);
     }
-    Q_FOREACH (const QString &capa, d->mExcludeCapabilities) {
+    for (const QString &capa : qAsConst(d->mExcludeCapabilities)) {
         filter->excludeCapabilities(capa);
     }
     if (dlg.exec()) {
@@ -160,7 +161,7 @@ QStringList ManageAccountWidget::capabilityFilter() const
 void ManageAccountWidget::setCapabilityFilter(const QStringList &capabilityFilter)
 {
     d->mCapabilityFilter = capabilityFilter;
-    Q_FOREACH (const QString &capability, d->mCapabilityFilter) {
+    for (const QString &capability : qAsConst(d->mCapabilityFilter)) {
         d->ui->mAccountList->agentFilterProxyModel()->addCapabilityFilter(capability);
     }
 }
@@ -173,7 +174,7 @@ QStringList ManageAccountWidget::mimeTypeFilter() const
 void ManageAccountWidget::setMimeTypeFilter(const QStringList &mimeTypeFilter)
 {
     d->mMimeTypeFilter = mimeTypeFilter;
-    Q_FOREACH (const QString &mimeType, d->mMimeTypeFilter) {
+    for (const QString &mimeType : qAsConst(d->mMimeTypeFilter)) {
         d->ui->mAccountList->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
     }
 }
