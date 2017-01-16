@@ -79,7 +79,8 @@ void CollectionCreateJob::doStart()
     cmd.setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
     cmd.setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
     Protocol::Attributes attrs;
-    Q_FOREACH (Attribute *attr, d->mCollection.attributes()) {
+    const Akonadi::Attribute::List attrList = d->mCollection.attributes();
+    for (Attribute *attr : attrList) {
         attrs.insert(attr->type(), attr->serialized());
     }
     cmd.setAttributes(attrs);

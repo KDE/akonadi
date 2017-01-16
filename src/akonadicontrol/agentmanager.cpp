@@ -113,9 +113,9 @@ void AgentManager::continueStartup()
         Q_EMIT agentTypeAdded(info.identifier);
     }
 
-    const QStringList pathList = pluginInfoPathList();
 
 #ifndef QT_NO_DEBUG
+    const QStringList pathList = pluginInfoPathList();
     for (const QString &path : pathList) {
         QFileSystemWatcher *watcher = new QFileSystemWatcher(this);
         watcher->addPath(path);
@@ -268,7 +268,8 @@ QString AgentManager::createAgentInstance(const QString &identifier)
         instance->setIdentifier(QStringLiteral("%1_%2").arg(identifier, QString::number(agentInfo.instanceCounter)));
     }
 
-    if (mAgentInstances.contains(instance->identifier())) {
+    const QString instanceIdentifier = instance->identifier();
+    if (mAgentInstances.contains(instanceIdentifier)) {
         qCWarning(AKONADICONTROL_LOG) << "Cannot create another instance of agent" << identifier;
         return QString();
     }
@@ -276,18 +277,18 @@ QString AgentManager::createAgentInstance(const QString &identifier)
     // Return from this dbus call before we do the next. Otherwise dbus brakes for
     // this process.
     if (calledFromDBus()) {
-        connection().send(message().createReply(instance->identifier()));
+        connection().send(message().createReply(instanceIdentifier));
     }
 
     if (!instance->start(agentInfo)) {
         return QString();
     }
 
-    mAgentInstances.insert(instance->identifier(), instance);
-    registerAgentAtServer(instance->identifier(), agentInfo);
+    mAgentInstances.insert(instanceIdentifier, instance);
+    registerAgentAtServer(instanceIdentifier, agentInfo);
     save();
 
-    return instance->identifier();
+    return instanceIdentifier;
 }
 
 void AgentManager::removeAgentInstance(const QString &identifier)

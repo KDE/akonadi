@@ -66,7 +66,8 @@ void AgentServer::startAgent(const QString &identifier, const QString &typeIdent
     qCDebug(AKONADIAGENTSERVER_LOG) << identifier << typeIdentifier << fileName;
 
     //First try to load it staticly
-    Q_FOREACH (QObject *plugin, QPluginLoader::staticInstances()) {
+    const QObjectList objList = QPluginLoader::staticInstances();
+    for (QObject *plugin : objList) {
         if (plugin->objectName() == fileName) {
             AgentThread *thread = new AgentThread(identifier, plugin, this);
             m_agents.insert(identifier, thread);
@@ -89,14 +90,12 @@ void AgentServer::startAgent(const QString &identifier, const QString &typeIdent
 
 void AgentServer::stopAgent(const QString &identifier)
 {
-    if (!m_agents.contains(identifier)) {
-        return;
-    }
-
     AgentThread *thread = m_agents.take(identifier);
-    thread->quit();
-    thread->wait();
-    delete thread;
+    if (thread) {
+        thread->quit();
+        thread->wait();
+        delete thread;
+    }
 }
 
 void AgentServer::quit()
@@ -106,8 +105,7 @@ void AgentServer::quit()
 
     QMutableHashIterator<QString, AgentThread *> it(m_agents);
     while (it.hasNext()) {
-        it.next();
-        stopAgent(it.key());
+        stopAgent(it.next().key());
     }
 
     QCoreApplication::instance()->quit();
