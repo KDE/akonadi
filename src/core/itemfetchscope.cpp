@@ -47,7 +47,7 @@ ItemFetchScope &ItemFetchScope::operator=(const ItemFetchScope &other)
     return *this;
 }
 
-QSet< QByteArray > ItemFetchScope::payloadParts() const
+QSet<QByteArray> ItemFetchScope::payloadParts() const
 {
     return d->mPayloadParts;
 }
@@ -71,7 +71,7 @@ void ItemFetchScope::fetchFullPayload(bool fetch)
     d->mFullPayload = fetch;
 }
 
-QSet< QByteArray > ItemFetchScope::attributes() const
+QSet<QByteArray> ItemFetchScope::attributes() const
 {
     return d->mAttributes;
 }

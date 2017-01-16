@@ -171,7 +171,7 @@ void AgentBase::ObserverV2::collectionChanged(const Akonadi::Collection &collect
     collectionChanged(collection);
 }
 
-void AgentBase::ObserverV3::itemsFlagsChanged(const Akonadi::Item::List &items, const QSet< QByteArray > &addedFlags, const QSet< QByteArray > &removedFlags)
+void AgentBase::ObserverV3::itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags)
 {
     Q_UNUSED(items);
     Q_UNUSED(addedFlags);

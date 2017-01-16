@@ -234,7 +234,7 @@ protected Q_SLOTS:
         AgentBasePrivate::itemAdded(item, collection);
     }
 
-    void itemChanged(const Akonadi::Item &item, const QSet< QByteArray > &partIdentifiers) Q_DECL_OVERRIDE {
+    void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers) Q_DECL_OVERRIDE {
         if (item.remoteId().isEmpty())
         {
             changeProcessed();
@@ -243,8 +243,8 @@ protected Q_SLOTS:
         AgentBasePrivate::itemChanged(item, partIdentifiers);
     }
 
-    void itemsFlagsChanged(const Item::List &items, const QSet< QByteArray > &addedFlags,
-                           const QSet< QByteArray > &removedFlags) Q_DECL_OVERRIDE {
+    void itemsFlagsChanged(const Item::List &items, const QSet<QByteArray> &addedFlags,
+                           const QSet<QByteArray> &removedFlags) Q_DECL_OVERRIDE {
         if (addedFlags.isEmpty() && removedFlags.isEmpty())
         {
             changeProcessed();
@@ -367,7 +367,7 @@ protected Q_SLOTS:
         AgentBasePrivate::collectionChanged(collection);
     }
 
-    void collectionChanged(const Akonadi::Collection &collection, const QSet< QByteArray > &partIdentifiers) Q_DECL_OVERRIDE {
+    void collectionChanged(const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers) Q_DECL_OVERRIDE {
         if (collection.remoteId().isEmpty())
         {
             changeProcessed();
@@ -1279,9 +1279,9 @@ void ResourceBase::synchronizeCollectionAttributes(qint64 collectionId)
 void ResourceBasePrivate::slotCollectionListForAttributesDone(KJob *job)
 {
     if (!job->error()) {
-        Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
+        const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
         if (!list.isEmpty()) {
-            Collection col = list.first();
+            const Collection col = list.first();
             scheduler->scheduleAttributesSync(col);
         }
     }

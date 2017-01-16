@@ -70,8 +70,8 @@ void NotificationCollector::itemChanged(const PimItem &item,
 }
 
 void NotificationCollector::itemsFlagsChanged(const PimItem::List &items,
-        const QSet< QByteArray > &addedFlags,
-        const QSet< QByteArray > &removedFlags,
+        const QSet<QByteArray> &addedFlags,
+        const QSet<QByteArray> &removedFlags,
         const Collection &collection,
         const QByteArray &resource)
 {
