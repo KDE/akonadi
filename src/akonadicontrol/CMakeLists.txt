@@ -41,6 +41,7 @@ endif()
 target_link_libraries(akonadi_control
     akonadi_shared
     KF5AkonadiPrivate
+    KF5::CoreAddons
     KF5::ConfigCore
     Qt5::Core
     Qt5::DBus

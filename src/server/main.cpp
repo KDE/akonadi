@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "akonadi.h"
+#include "akonadi_version.h"
 #include "akonadiserver_debug.h"
 
 #include <shared/akapplication.h>
@@ -29,6 +30,8 @@
 #include <QDBusConnectionInterface>
 #include <QDBusError>
 #include <QTimer>
+
+#include <KAboutData>
 
 #include <cstdlib>
 
@@ -43,6 +46,14 @@ int main(int argc, char **argv)
     Q_INIT_RESOURCE(akonadidb);
     AkCoreApplication app(argc, argv, AKONADISERVER_LOG());
     app.setDescription(QStringLiteral("Akonadi Server\nDo not run manually, use 'akonadictl' instead to start/stop Akonadi."));
+
+    // Set KAboutData so that DrKonqi can report bugs
+    KAboutData aboutData(QStringLiteral("akonadiserver"),
+                         QStringLiteral("Akonadi Server"), // we don't have any localization in the server
+                         QStringLiteral(AKONADI_VERSION_STRING),
+                         QStringLiteral("Akonadi Server"), // we don't have any localization in the server
+                         KAboutLicense::LGPL_V2);
+    KAboutData::setApplicationData(aboutData);
 
 #if !defined(NDEBUG)
     const QCommandLineOption startWithoutControlOption(
