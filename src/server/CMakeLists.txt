@@ -171,6 +171,7 @@ add_executable(akonadiserver ${akonadiserver_SRCS})
 set_target_properties(akonadiserver PROPERTIES OUTPUT_NAME akonadiserver)
 target_link_libraries(akonadiserver
     libakonadiserver
+    KF5::CoreAddons
 )
 
 install(TARGETS akonadiserver

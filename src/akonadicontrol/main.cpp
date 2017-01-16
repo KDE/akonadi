@@ -21,6 +21,7 @@
 #include "controlmanager.h"
 #include "processcontrol.h"
 #include "akonadicontrol_debug.h"
+#include "akonadi_version.h"
 
 #include <shared/akapplication.h>
 
@@ -31,6 +32,7 @@
 #include <QDBusConnection>
 
 #include <KCrash/KCrash>
+#include <KAboutData>
 
 #include <stdlib.h>
 #ifdef HAVE_UNISTD_H
@@ -52,6 +54,14 @@ int main(int argc, char **argv)
 {
     AkGuiApplication app(argc, argv, AKONADICONTROL_LOG());
     app.setDescription(QStringLiteral("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
+
+    KAboutData aboutData(QStringLiteral("akonadi_control"),
+                         QStringLiteral("Akonadi Control"),
+                         QStringLiteral(AKONADI_VERSION_STRING),
+                         QStringLiteral("Akonadi Control"),
+                         KAboutLicense::LGPL_V2);
+    KAboutData::setApplicationData(aboutData);
+
     app.parseCommandLine();
 
     // try to acquire the lock first, that means there is no second instance trying to start up at the same time

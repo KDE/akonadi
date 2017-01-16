@@ -25,11 +25,15 @@
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 
+#include <KAboutData>
+
 #include <shared/akapplication.h>
 
 #include "controlmanagerinterface.h"
 #include "janitorinterface.h"
 #include "akonadistarter.h"
+#include "akonadi_version.h"
+
 #include <QSettings>
 
 #include <private/protocol_p.h>
@@ -186,6 +190,13 @@ int main(int argc, char **argv)
                                       "                 space!)\n"
                                       "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
                                       "                 (can take some time)"));
+
+    KAboutData aboutData(QStringLiteral("akonadictl"),
+                         QStringLiteral("akonadictl"),
+                         QStringLiteral(AKONADI_VERSION_STRING),
+                         QStringLiteral("akonadictl"),
+                         KAboutLicense::LGPL_V2);
+    KAboutData::setApplicationData(aboutData);
 
     app.addPositionalCommandLineOption(QStringLiteral("command"), QStringLiteral("Command to execute"),
                                        QStringLiteral("start|stop|restart|status|vacuum|fsck"));
