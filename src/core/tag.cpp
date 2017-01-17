@@ -120,16 +120,17 @@ QUrl Tag::url() const
 
 void Tag::addAttribute(Attribute *attr)
 {
-    if (d_ptr->mAttributes.contains(attr->type())) {
-        Attribute *existing = d_ptr->mAttributes.value(attr->type());
+    const QByteArray typeAttr = attr->type();
+    Attribute *existing = d_ptr->mAttributes.value(typeAttr);
+    if (existing) {
         if (attr == existing) {
             return;
         }
-        d_ptr->mAttributes.remove(attr->type());
+        d_ptr->mAttributes.remove(typeAttr);
         delete existing;
     }
-    d_ptr->mAttributes.insert(attr->type(), attr);
-    d_ptr->mDeletedAttributes.remove(attr->type());
+    d_ptr->mAttributes.insert(typeAttr, attr);
+    d_ptr->mDeletedAttributes.remove(typeAttr);
 }
 
 void Tag::removeAttribute(const QByteArray &type)
@@ -159,10 +160,7 @@ void Tag::clearAttributes()
 
 Attribute *Tag::attribute(const QByteArray &type) const
 {
-    if (d_ptr->mAttributes.contains(type)) {
-        return d_ptr->mAttributes.value(type);
-    }
-    return nullptr;
+    return d_ptr->mAttributes.value(type);
 }
 
 void Tag::setId(Tag::Id identifier)

@@ -114,11 +114,7 @@ QObject *PluginLoader::createForName(const QString &name)
 
 PluginMetaData PluginLoader::infoForName(const QString &name) const
 {
-    if (!mPluginInfos.contains(name)) {
-        return PluginMetaData();
-    }
-
-    return mPluginInfos.value(name);
+    return mPluginInfos.value(name, PluginMetaData());
 }
 
 void PluginLoader::scan()

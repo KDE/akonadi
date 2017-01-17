@@ -108,15 +108,15 @@ void CollectionModelPrivate::collectionStatisticsChanged(Collection::Id collecti
 {
     Q_Q(CollectionModel);
 
-    if (!collections.contains(collection)) {
-        qCWarning(AKONADICORE_LOG) << "Got statistics response for non-existing collection:" << collection;
-    } else {
+    if (collections.contains(collection)) {
         collections[collection].setStatistics(statistics);
 
         Collection col = collections.value(collection);
         QModelIndex startIndex = indexForId(col.id());
         QModelIndex endIndex = indexForId(col.id(), q->columnCount(q->parent(startIndex)) - 1);
         emit q->dataChanged(startIndex, endIndex);
+    } else {
+        qCWarning(AKONADICORE_LOG) << "Got statistics response for non-existing collection:" << collection;
     }
 }
 
