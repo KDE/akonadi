@@ -63,7 +63,12 @@ public:
 
 QString Akonadi::ItemCreateJobPrivate::jobDebuggingString() const
 {
-    return QStringLiteral("Create Item %1 from col %2").arg(mItem.id()).arg(mCollection.id());
+    const QString collectionName = mCollection.name();
+    QString str = QStringLiteral("Create Item %1 from col %2").arg(mItem.id()).arg(mCollection.id());
+    if (!collectionName.isEmpty()) {
+        str += QStringLiteral(" (%1)").arg(collectionName);
+    }
+    return str;
 }
 
 Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partName)
