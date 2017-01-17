@@ -68,7 +68,15 @@ public:
         Q_UNUSED(job);
         q->emitResult();
     }
+
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
 };
+
+QString Akonadi::TransactionSequencePrivate::jobDebuggingString() const
+{
+    //TODO add state
+    return QStringLiteral("autocommit %1").arg(mAutoCommit);
+}
 
 TransactionSequence::TransactionSequence(QObject *parent)
     : Job(new TransactionSequencePrivate(this), parent)
