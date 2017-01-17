@@ -52,6 +52,23 @@ using Akonadi::ProcessControl;
 
 static const bool enableAgentServerDefault = false;
 
+#if QT_VERSION < QT_VERSION_CHECK(5,7,0)
+namespace QtPrivate
+{
+template <typename T> struct QAddConst {
+    typedef const T Type;
+};
+}
+
+// this adds const to non-const objects (like std::as_const)
+template <typename T>
+Q_DECL_CONSTEXPR typename QtPrivate::QAddConst<T>::Type &qAsConst(T &t) Q_DECL_NOTHROW { return t; }
+// prevent rvalue arguments:
+template <typename T>
+void qAsConst(const T &&) Q_DECL_EQ_DELETE;
+#endif
+
+
 AgentManager::AgentManager(bool verbose, QObject *parent)
     : QObject(parent)
     , mAgentServer(nullptr)
@@ -109,7 +126,7 @@ void AgentManager::continueStartup()
     first = false;
 
     readPluginInfos();
-    Q_FOREACH (const AgentType &info, mAgents) {
+    for (const AgentType &info : qAsConst(mAgents)) {
         Q_EMIT agentTypeAdded(info.identifier);
     }
 
@@ -126,7 +143,7 @@ void AgentManager::continueStartup()
 #endif
 
     load();
-    Q_FOREACH (const AgentType &info, mAgents) {
+    for (const AgentType &info : qAsConst(mAgents)) {
         ensureAutoStart(info);
     }
 
@@ -147,7 +164,7 @@ AgentManager::~AgentManager()
 
 void AgentManager::cleanup()
 {
-    Q_FOREACH (const AgentInstance::Ptr &instance, mAgentInstances) {
+    for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
         instance->quit();
     }
 
@@ -488,7 +505,7 @@ void AgentManager::updatePluginInfos()
         }
     }
 
-    Q_FOREACH (const AgentType &newInfo, mAgents) {
+    for (const AgentType &newInfo : qAsConst(mAgents)) {
         if (!oldInfos.contains(newInfo.identifier)) {
             Q_EMIT agentTypeAdded(newInfo.identifier);
             ensureAutoStart(newInfo);
@@ -611,13 +628,13 @@ void AgentManager::save()
 {
     QSettings file(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::WriteOnly), QSettings::IniFormat);
 
-    Q_FOREACH (const AgentType &info, mAgents) {
+    for (const AgentType &info : qAsConst(mAgents)) {
         info.save(&file);
     }
 
     file.beginGroup(QStringLiteral("Instances"));
     file.remove(QString());
-    Q_FOREACH (const AgentInstance::Ptr &instance, mAgentInstances) {
+    for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
         file.beginGroup(instance->identifier());
         file.setValue(QStringLiteral("AgentType"), instance->agentType());
         file.endGroup();
@@ -825,9 +842,9 @@ void AgentManager::agentExeChanged(const QString &fileName)
         return;
     }
 
-    Q_FOREACH (const AgentType &type, mAgents) {
+    for (const AgentType &type : qAsConst(mAgents)) {
         if (fileName.endsWith(type.exec)) {
-            Q_FOREACH (const AgentInstance::Ptr &instance, mAgentInstances) {
+            for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
                 if (instance->agentType() == type.identifier) {
                     instance->restartWhenIdle();
                 }
@@ -850,7 +867,7 @@ void AgentManager::registerAgentAtServer(const QString &agentIdentifier, const A
 void AgentManager::addSearch(const QString &query, const QString &queryLanguage, qint64 resultCollectionId)
 {
     qCDebug(AKONADICONTROL_LOG) << "AgentManager::addSearch" << query << queryLanguage << resultCollectionId;
-    Q_FOREACH (const AgentInstance::Ptr &instance, mAgentInstances) {
+    for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
         const AgentType type = mAgents.value(instance->agentType());
         if (type.capabilities.contains(AgentType::CapabilitySearch) && instance->searchInterface()) {
             instance->searchInterface()->addSearch(query, queryLanguage, resultCollectionId);
@@ -861,7 +878,7 @@ void AgentManager::addSearch(const QString &query, const QString &queryLanguage,
 void AgentManager::removeSearch(quint64 resultCollectionId)
 {
     qCDebug(AKONADICONTROL_LOG) << "AgentManager::removeSearch" << resultCollectionId;
-    Q_FOREACH (const AgentInstance::Ptr &instance, mAgentInstances) {
+    for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
         const AgentType type = mAgents.value(instance->agentType());
         if (type.capabilities.contains(AgentType::CapabilitySearch) && instance->searchInterface()) {
             instance->searchInterface()->removeSearch(resultCollectionId);

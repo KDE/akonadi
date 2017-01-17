@@ -65,7 +65,7 @@ CachePolicy::CachePolicy(const CachePolicy &other)
 {
 }
 
-CachePolicy::~ CachePolicy()
+CachePolicy::~CachePolicy()
 {
 }
 

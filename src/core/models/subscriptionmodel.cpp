@@ -97,7 +97,7 @@ SubscriptionModel::SubscriptionModel(QObject *parent) :
     connect(job, SIGNAL(result(KJob*)), this, SLOT(listResult(KJob*)));
 }
 
-SubscriptionModel::~ SubscriptionModel()
+SubscriptionModel::~SubscriptionModel()
 {
     delete d;
 }

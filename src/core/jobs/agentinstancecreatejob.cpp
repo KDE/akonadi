@@ -154,7 +154,7 @@ AgentInstanceCreateJob::AgentInstanceCreateJob(const QString &typeId, QObject *p
     d->agentTypeId = typeId;
 }
 
-AgentInstanceCreateJob::~ AgentInstanceCreateJob()
+AgentInstanceCreateJob::~AgentInstanceCreateJob()
 {
     delete d;
 }

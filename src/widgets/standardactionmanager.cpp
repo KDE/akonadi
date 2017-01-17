@@ -1581,7 +1581,7 @@ StandardActionManager::StandardActionManager(KActionCollection *actionCollection
 #endif
 }
 
-StandardActionManager::~ StandardActionManager()
+StandardActionManager::~StandardActionManager()
 {
     delete d;
 }

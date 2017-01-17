@@ -35,7 +35,7 @@ IntervalCheck::IntervalCheck(QObject *parent)
     thread()->setObjectName(QStringLiteral("IntervalCheck-Thread"));
 }
 
-IntervalCheck::~ IntervalCheck()
+IntervalCheck::~IntervalCheck()
 {
     quitThread();
 }

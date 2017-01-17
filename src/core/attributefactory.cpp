@@ -129,7 +129,7 @@ AttributeFactory::AttributeFactory()
 {
 }
 
-AttributeFactory::~ AttributeFactory()
+AttributeFactory::~AttributeFactory()
 {
     qDeleteAll(d->attributes);
     delete d;

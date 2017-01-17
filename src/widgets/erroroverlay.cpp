@@ -128,7 +128,7 @@ ErrorOverlay::ErrorOverlay(QWidget *baseWidget, QWidget *parent)
     reposition();
 }
 
-ErrorOverlay::~ ErrorOverlay()
+ErrorOverlay::~ErrorOverlay()
 {
     if (mBaseWidget && !mBaseWidgetIsParent) {
         mBaseWidget->setEnabled(mPreviousState);

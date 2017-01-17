@@ -42,7 +42,7 @@ EntityDisplayAttribute::EntityDisplayAttribute()
 {
 }
 
-EntityDisplayAttribute::~ EntityDisplayAttribute()
+EntityDisplayAttribute::~EntityDisplayAttribute()
 {
     delete d;
 }
