@@ -322,7 +322,7 @@ public:
     {
         typename T::List list;
 
-        Q_FOREACH (typename T::Id id, ids) {
+        for (typename T::Id id : ids) {
             EntityListCacheNode<T> *node = mCache.value(id);
             if (!node || node->pending || node->invalid) {
                 return typename T::List();
@@ -340,7 +340,7 @@ public:
         QList<typename T::Id> toRequest;
         bool result = true;
 
-        Q_FOREACH (typename T::Id id, ids) {
+        for (typename T::Id id : ids) {
             EntityListCacheNode<T> *node = mCache.value(id);
             if (!node) {
                 toRequest << id;
@@ -363,7 +363,7 @@ public:
     /** Marks the cache entry as invalid, use in case the object has been deleted on the server. */
     void invalidate(const QList<typename T::Id> &ids)
     {
-        Q_FOREACH (typename T::Id id, ids) {
+        for (typename T::Id id : ids) {
             EntityListCacheNode<T> *node = mCache.value(id);
             if (node) {
                 node->invalid = true;
@@ -376,7 +376,7 @@ public:
     {
         QList<typename T::Id> toRequest;
 
-        Q_FOREACH (typename T::Id id, ids) {
+        for (typename T::Id id : ids) {
             EntityListCacheNode<T> *node = mCache.value(id);
             if (node) {
                 mCache.remove(id);
@@ -402,7 +402,7 @@ public:
     {
         Q_ASSERT(isNotRequested(ids));
         shrinkCache(preserveIds);
-        Q_FOREACH (typename T::Id id, ids) {
+        for (typename T::Id id : ids) {
             EntityListCacheNode<T> *node = new EntityListCacheNode<T>(id);
             mCache.insert(id, node);
         }
@@ -413,7 +413,7 @@ public:
 
     bool isNotRequested(const QList<typename T::Id> &ids) const
     {
-        Q_FOREACH (typename T::Id id, ids) {
+        for (typename T::Id id : ids) {
             if (mCache.contains(id)) {
                 return false;
             }
@@ -425,7 +425,7 @@ public:
     /** Object is available in the cache and can be retrieved. */
     bool isCached(const QList<typename T::Id> &ids) const
     {
-        Q_FOREACH (typename T::Id id, ids) {
+        for (typename T::Id id : ids) {
             EntityListCacheNode<T> *node = mCache.value(id);
             if (!node || node->pending) {
                 return false;
@@ -467,7 +467,7 @@ private:
         typename T::List entities;
         extractResults(job, entities);
 
-        Q_FOREACH (typename T::Id id, ids)
+        for (typename T::Id id : ids)
         {
             EntityListCacheNode<T> *node = mCache.value(id);
             if (!node) {

@@ -26,6 +26,7 @@
 #include "collectionmodifyjob.h"
 #include "collectionfetchscope.h"
 #include "collectionmovejob.h"
+#include "helper_p.h"
 
 #include "cachepolicy.h"
 
@@ -394,7 +395,8 @@ public:
         }
 
         // CollectionModifyJob adds the remote attributes to the local collection
-        Q_FOREACH (const Attribute *attr, remoteCollection.attributes()) {
+        const Akonadi::Attribute::List lstAttr = remoteCollection.attributes();
+        for (const Attribute *attr : lstAttr) {
             const Attribute *localAttr = localCollection.attribute(attr->type());
             if (localAttr && ignoreAttributeChanges(remoteCollection, attr->type())) {
                 continue;
@@ -481,7 +483,7 @@ public:
         if (collectionsToCreate.isEmpty() && !hierarchicalRIDs) {
             collectionsToCreate = remoteCollections.take(RemoteId(newLocal.remoteId()));
         }
-        Q_FOREACH (Collection col, collectionsToCreate) {   //krazy:exclude=foreach
+        for (Collection col : qAsConst(collectionsToCreate)) {   //krazy:exclude=foreach
             col.setParentCollection(newLocal);
             remoteCollectionsToCreate.append(col);
         }
@@ -529,7 +531,7 @@ public:
         }
 
         typedef QPair<Collection, Collection> CollectionPair;
-        Q_FOREACH (const CollectionPair &pair, remoteCollectionsToUpdate) {
+        for (const CollectionPair &pair : qAsConst(remoteCollectionsToUpdate)) {
             const Collection local = pair.first;
             const Collection remote = pair.second;
             Collection upd(remote);
@@ -594,7 +596,7 @@ public:
             return;
         }
 
-        Q_FOREACH (const Collection &col, localCollectionsToRemove) {
+        for (const Collection &col : qAsConst(localCollectionsToRemove)) {
             Q_ASSERT(!col.remoteId().isEmpty());   // empty RID -> stuff we haven't even written to the remote side yet
 
             ++pendingJobs;

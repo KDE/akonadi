@@ -24,6 +24,7 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "helper_p.h"
 
 using namespace Akonadi;
 
@@ -48,7 +49,7 @@ QString Akonadi::ItemDeleteJobPrivate::jobDebuggingString() const
 {
     QString itemStr = QStringLiteral("items id: ");
     bool firstItem = true;
-    foreach (const Akonadi::Item &item, mItems) {
+    for (const Akonadi::Item &item : qAsConst(mItems)) {
         if (firstItem) {
             firstItem = false;
         } else {

@@ -27,6 +27,7 @@
 #include "agentmanager.h"
 #include "collectioncreatejob.h"
 #include "entitydisplayattribute.h"
+#include "helper_p.h"
 
 #include "akonadicore_debug.h"
 
@@ -153,13 +154,13 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         mSpecialCollections->d->beginBatchRegister();
 
         // Forget everything we knew before about these resources.
-        foreach (const QString &resourceId, mToForget) {
+        for (const QString &resourceId : qAsConst(mToForget)) {
             mSpecialCollections->d->forgetFoldersForResource(resourceId);
         }
 
         // Register all the collections that we fetched / created.
         typedef QPair<Collection, QByteArray> RegisterPair;
-        foreach (const RegisterPair &pair, mToRegister) {
+        for (const RegisterPair &pair : qAsConst(mToRegister)) {
             const bool ok = mSpecialCollections->registerCollection(pair.second, pair.first);
             Q_ASSERT(ok);
             Q_UNUSED(ok);
@@ -216,7 +217,8 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
         QHash<QByteArray, bool> &requestedFolders)
 {
     // Remove from the request list the folders which already exist.
-    foreach (const Collection &collection, scanJob->specialCollections()) {
+    const Akonadi::Collection::List lstSpecialCols = scanJob->specialCollections();
+    for (const Collection &collection : lstSpecialCols) {
         Q_ASSERT(collection.hasAttribute<SpecialCollectionAttribute>());
         const SpecialCollectionAttribute *attr = collection.attribute<SpecialCollectionAttribute>();
         const QByteArray type = attr->collectionType();

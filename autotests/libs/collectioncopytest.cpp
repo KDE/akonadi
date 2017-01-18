@@ -83,7 +83,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(list);
         cols = list->collections();
         QCOMPARE(cols.count(), referenceData.count());
-        for (QMap<Collection, Item::List>::ConstIterator it = referenceData.constBegin(); it != referenceData.constEnd(); ++it) {
+        for (QMap<Collection, Item::List>::ConstIterator it = referenceData.constBegin(), end = referenceData.constEnd(); it != end; ++it) {
             QVERIFY(!cols.contains(it.key()));
             Collection col;
             foreach (const Collection &c, cols) {

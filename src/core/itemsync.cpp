@@ -31,6 +31,7 @@
 #include "itemmodifyjob.h"
 #include "transactionsequence.h"
 #include "itemfetchscope.h"
+#include "helper_p.h"
 
 #include "akonadicore_debug.h"
 
@@ -388,7 +389,7 @@ void ItemSyncPrivate::processItems()
 {
     Q_Q(ItemSync);
     // added / updated
-    foreach (const Item &remoteItem, mCurrentBatchRemoteItems) {
+    for (const Item &remoteItem : qAsConst(mCurrentBatchRemoteItems)) {
         if (remoteItem.remoteId().isEmpty()) {
             qCWarning(AKONADICORE_LOG) << "Item " << remoteItem.id() << " does not have a remote identifier";
             continue;

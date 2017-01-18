@@ -22,6 +22,7 @@
 #include "akonadicore_debug.h"
 #include "itemserializer_p.h"
 #include "private/protocol_p.h"
+#include "helper_p.h"
 
 #include <QUrl>
 #include <QUrlQuery>
@@ -261,7 +262,7 @@ void Akonadi::Item::clearAttributes()
 {
     ItemChangeLog *changelog = ItemChangeLog::instance();
     QSet<QByteArray> &deletedAttributes = changelog->deletedAttributes(d_ptr);
-    Q_FOREACH (Attribute *attr, d_ptr->mAttributes) {
+    for (Attribute *attr : qAsConst(d_ptr->mAttributes)) {
         deletedAttributes.insert(attr->type());
         delete attr;
     }
@@ -731,7 +732,8 @@ void Item::apply(const Item &other)
 
     QList<QByteArray> attrs;
     attrs.reserve(other.attributes().count());
-    Q_FOREACH (Attribute *attribute, other.attributes()) {
+    const Akonadi::Attribute::List lstAttrs = other.attributes();
+    for (Attribute *attribute : lstAttrs) {
         addAttribute(attribute->clone());
         attrs.append(attribute->type());
     }
