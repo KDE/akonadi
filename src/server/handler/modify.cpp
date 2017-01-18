@@ -70,8 +70,8 @@ bool Modify::parseStream()
         const MimeType::List currentMts = collection.mimeTypes();
         bool equal = true;
         for (const MimeType &currentMt : currentMts) {
-            if (mts.contains(currentMt.name())) {
-                mts.removeAll(currentMt.name());
+            const int removeMts = mts.removeAll(currentMt.name());
+            if (removeMts > 0) {
                 continue;
             }
             equal = false;
