@@ -114,7 +114,8 @@ bool ItemModel::Private::collectionIsCompatible() const
     }
     // if the model's mime types are more specific, limit to those
     // collections that have matching types
-    Q_FOREACH (const QString &type, mParent->mimeTypes()) {
+    const QStringList lstMimetypes = mParent->mimeTypes();
+    for (const QString &type : lstMimetypes ) {
         if (collection.contentMimeTypes().contains(type)) {
             return true;
         }
