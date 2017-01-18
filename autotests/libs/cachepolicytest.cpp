@@ -34,7 +34,12 @@ CachePolicyTest::~CachePolicyTest()
 
 void CachePolicyTest::shouldHaveDefaultValue()
 {
-    //TODO
+    Akonadi::CachePolicy c;
+    QVERIFY(c.inheritFromParent());
+    QCOMPARE(c.intervalCheckTime(), -1);
+    QCOMPARE(c.cacheTimeout(), -1);
+    QVERIFY(!c.syncOnDemand());
+    QVERIFY(c.localParts().isEmpty());
 }
 
 QTEST_MAIN(CachePolicyTest)
