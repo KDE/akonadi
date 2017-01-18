@@ -88,7 +88,7 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
         }
     }
 
-    for (auto iter = candidateCollections.begin(); iter != candidateCollections.end(); ++iter) {
+    for (auto iter = candidateCollections.begin(), iterEnd = candidateCollections.end() ; iter != iterEnd ; ++iter) {
         // Traverse the collection chain up to root
         qint64 parentId = iter.key();
         while (!ancestors.contains(parentId) && parentId > 0) {

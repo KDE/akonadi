@@ -68,7 +68,8 @@ bool ColCopy::copyCollection(const Collection &source, const Collection &target)
     }
 
     // copy sub-collections
-    Q_FOREACH (const Collection &child, source.children()) {
+    const Collection::List lstCols = source.children();
+    for (const Collection &child : lstCols) {
         if (!copyCollection(child, col)) {
             return false;
         }

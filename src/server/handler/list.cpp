@@ -36,7 +36,7 @@ using namespace Akonadi::Server;
 template <typename T>
 static bool intersect(const QVector<typename T::Id> &l1, const QVector<T> &l2)
 {
-    Q_FOREACH (const T &e2, l2) {
+    for (const T &e2 : l2) {
         if (l1.contains(e2.id())) {
             return true;
         }

@@ -203,8 +203,7 @@ QString DbInitializerSqlite::sqlValue(const QString &type, const QString &value)
     if (type == QLatin1String("bool")) {
         if (value == QLatin1String("false")) {
             return QStringLiteral("0");
-        }
-        if (value == QLatin1String("true")) {
+        } else if (value == QLatin1String("true")) {
             return QStringLiteral("1");
         }
         return value;
@@ -226,11 +225,9 @@ QString DbInitializerPostgreSql::sqlType(const QString &type, int size) const
 {
     if (type == QLatin1String("qint64")) {
         return QStringLiteral("int8");
-    }
-    if (type == QLatin1String("QByteArray")) {
+    } else if (type == QLatin1String("QByteArray")) {
         return QStringLiteral("BYTEA");
-    }
-    if (type == QLatin1String("Tristate")) {
+    } else if (type == QLatin1String("Tristate")) {
         return QStringLiteral("SMALLINT");
     }
 

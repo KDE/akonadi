@@ -55,7 +55,8 @@ bool SearchResult::parseStream()
         }
     } else if (cmd.result().scope() == Scope::Uid && !cmd.result().isEmpty()) {
         const ImapSet result = cmd.result().uidSet();
-        Q_FOREACH (const ImapInterval &interval, result.intervals()) {
+        const ImapInterval::List lstInterval = result.intervals();
+        for (const ImapInterval &interval : lstInterval) {
             for (qint64 i = interval.begin(), end = interval.end(); i <= end; ++i) {
                 ids.insert(i);
             }

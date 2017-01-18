@@ -283,13 +283,12 @@ AkonadiServer::~AkonadiServer()
 
 template <typename T> static void quitThread(T &thread)
 {
-    if (!thread) {
-        return;
+    if (thread) {
+        thread->quit();
+        thread->wait();
+        delete thread;
+        thread = nullptr;
     }
-    thread->quit();
-    thread->wait();
-    delete thread;
-    thread = 0;
 }
 
 bool AkonadiServer::quit()
