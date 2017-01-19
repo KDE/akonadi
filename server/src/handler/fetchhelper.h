@@ -73,7 +73,7 @@ class FetchHelper : public QObject
     QSqlQuery buildTagQuery();
     QSqlQuery buildVRefQuery();
     QStack<Collection> ancestorsForItem( Collection::Id parentColId );
-    static bool needsAccessTimeUpdate( const QVector<QByteArray> &parts );
+    bool needsAccessTimeUpdate( const QVector<QByteArray> &parts ) const;
     QVariant extractQueryResult( const QSqlQuery &query, ItemQueryColumns column ) const;
     bool isScopeLocal( const Scope &scope );
     static QByteArray tagsToByteArray(const Tag::List &tags);

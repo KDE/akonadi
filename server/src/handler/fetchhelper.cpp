@@ -36,6 +36,7 @@
 #include "storage/parthelper.h"
 #include <storage/parttypehelper.h>
 #include "storage/transaction.h"
+#include "storage/datastore.h"
 #include "utils.h"
 #include "intervalcheck.h"
 #include "agentmanagerinterface.h"
@@ -591,12 +592,33 @@ bool FetchHelper::fetchItems( const QByteArray &responseIdentifier )
   return true;
 }
 
-bool FetchHelper::needsAccessTimeUpdate( const QVector<QByteArray> &parts )
+bool FetchHelper::needsAccessTimeUpdate( const QVector<QByteArray> &parts ) const
 {
   // TODO technically we should compare the part list with the cache policy of
   // the parent collection of the retrieved items, but that's kinda expensive
   // Only updating the atime if the full payload was requested is a good
   // approximation though.
+
+  // see ItemQueryHelper::scopeToQuery - if mScope is none and we have a collection
+  // in context, then we are doing a full collection retrieval. In that case we
+  // can check if it makes sense to update Item's atime, because it is only
+  // relevant if we want to expire it in the future.
+  // This check is not performed for per-item retrievals, because that would be
+  // too expensive, as stated in the TODO above.
+  if ( mScope.scope() == Scope::None && mConnection->context()->collectionId() > 0 ) {
+    // Optimize even further: if only non-expiratory parts were requested, then
+    // we don't need to update atime at all.
+    if ( !parts.contains (AKONADI_PARAM_PLD_RFC822 ) ) {
+      return false;
+    }
+
+    Collection col = mConnection->context()->collection();
+    DataStore::self()->activeCachePolicy(col);
+    // Based on CacheCleaner::shouldScheduleCollection()
+    return !col.cachePolicyLocalParts().contains( QLatin1String("ALL") )
+             && col.cachePolicyCacheTimeout() > -1;
+  }
+
   return parts.contains( AKONADI_PARAM_PLD_RFC822 );
 }
 
