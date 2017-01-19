@@ -18,6 +18,7 @@
 */
 
 #include "sessionthread_p.h"
+#include "helper_p.h"
 
 #include <QThread>
 
@@ -77,7 +78,7 @@ Connection *SessionThread::doCreateConnection(Connection::ConnectionType connTyp
 
 void SessionThread::doThreadQuit()
 {
-    Q_FOREACH (Connection *conn, mConnections) {
+    for (Connection *conn : qAsConst(mConnections)) {
         conn->closeConnection();
         delete conn;
     }

@@ -24,6 +24,7 @@ class Item;
 #include "relationsync.h"
 #include "akonadicore_debug.h"
 #include "itemfetchscope.h"
+#include "helper_p.h"
 
 #include "jobs/itemfetchjob.h"
 #include "jobs/relationfetchjob.h"
@@ -75,13 +76,13 @@ void RelationSync::diffRelations()
     }
 
     QHash<QByteArray, Akonadi::Relation> relationByRid;
-    Q_FOREACH (const Akonadi::Relation &localRelation, mLocalRelations) {
+    for (const Akonadi::Relation &localRelation : qAsConst(mLocalRelations)) {
         if (!localRelation.remoteId().isEmpty()) {
             relationByRid.insert(localRelation.remoteId(), localRelation);
         }
     }
 
-    Q_FOREACH (const Akonadi::Relation &remoteRelation, mRemoteRelations) {
+    for (const Akonadi::Relation &remoteRelation : qAsConst(mRemoteRelations)) {
         if (relationByRid.contains(remoteRelation.remoteId())) {
             relationByRid.remove(remoteRelation.remoteId());
         } else {
@@ -91,7 +92,7 @@ void RelationSync::diffRelations()
         }
     }
 
-    Q_FOREACH (const Akonadi::Relation &removedRelation, relationByRid) {
+    for (const Akonadi::Relation &removedRelation : qAsConst(relationByRid)) {
         //Removed remotely, remove locally
         RelationDeleteJob *removeJob = new RelationDeleteJob(removedRelation, this);
         connect(removeJob, &KJob::result, this, &RelationSync::checkDone);

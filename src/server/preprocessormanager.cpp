@@ -117,7 +117,7 @@ bool PreprocessorManager::isActive()
     if (!mEnabled) {
         return false;
     }
-    return mPreprocessorChain.count() > 0;
+    return !mPreprocessorChain.isEmpty();
 }
 
 PreprocessorInstance *PreprocessorManager::lockedFindInstance(const QString &id)
