@@ -56,7 +56,8 @@ public:
             page->save(mCollection);
         }
 
-        CollectionModifyJob *job = new CollectionModifyJob(mCollection, q);
+        // We use WA_DeleteOnClose => Don't use dialog as parent otherwise we can't save modified collection.
+        CollectionModifyJob *job = new CollectionModifyJob(mCollection);
         connect(job, SIGNAL(result(KJob*)), q, SLOT(saveResult(KJob*)));
     }
 
@@ -66,7 +67,6 @@ public:
             // TODO
             qCWarning(AKONADIWIDGETS_LOG) << job->errorString();
         }
-        q->deleteLater();
     }
 
     void setCurrentPage(const QString &name)
