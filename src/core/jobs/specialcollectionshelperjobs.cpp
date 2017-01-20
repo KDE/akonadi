@@ -342,9 +342,9 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
             return;
         }
 
-        QMapIterator<QString, QVariant> it(mDefaultResourceOptions);
-        while (it.hasNext()) {
-            it.next();
+        QMap<QString, QVariant>::const_iterator it = mDefaultResourceOptions.cbegin();
+        const QMap<QString, QVariant>::const_iterator itEnd = mDefaultResourceOptions.cend();
+        for (;it != itEnd; ++it) {
 
             if (it.key() == QLatin1String("Name")) {
                 continue;

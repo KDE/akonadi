@@ -101,9 +101,9 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
         resourceIt.next();
 
         const QHash<QByteArray, bool> &requested = resourceIt.value();
-        QHashIterator<QByteArray, bool> it(requested);
-        while (it.hasNext()) {
-            it.next();
+        QHash<QByteArray, bool>::const_iterator it = requested.cbegin();
+        const QHash<QByteArray, bool>::const_iterator itEnd = requested.cend();
+        for (;it != itEnd; ++it) {
             if (it.value() && !mSpecialCollections->hasCollection(it.key(), AgentManager::self()->instance(resourceIt.key()))) {
                 return false;
             }
