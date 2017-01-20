@@ -663,7 +663,7 @@ public:
         const QModelIndexList indexes = safeSelectedRows(collectionSelectionModel);
         collections.reserve(indexes.count());
 
-        foreach (const QModelIndex &index, indexes) {
+        for (const QModelIndex &index : indexes) {
             Q_ASSERT(index.isValid());
             const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
@@ -1092,8 +1092,8 @@ public:
         if (collectionSelectionModel->selection().indexes().isEmpty()) {
             return instances;
         }
-
-        foreach (const QModelIndex &index, collectionSelectionModel->selection().indexes()) {
+        const QModelIndexList lstIndexes = collectionSelectionModel->selection().indexes();
+        for (const QModelIndex &index : lstIndexes) {
             Q_ASSERT(index.isValid());
             const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
@@ -1159,7 +1159,7 @@ public:
             return;
         }
 
-        foreach (const AgentInstance &instance, instances) {
+        for (const AgentInstance &instance : instances) {
             AgentManager::self()->removeInstance(instance);
         }
     }
@@ -1171,7 +1171,7 @@ public:
             return;
         }
 
-        foreach (AgentInstance instance, instances) {    //krazy:exclude=foreach
+        for (AgentInstance instance : instances) {    //krazy:exclude=foreach
             instance.synchronize();
         }
     }
@@ -1183,7 +1183,7 @@ public:
             return;
         }
 
-        foreach (AgentInstance instance, instances) {    //krazy:exclude=foreach
+        for (AgentInstance instance : instances) {    //krazy:exclude=foreach
             instance.synchronizeCollectionTree();
         }
     }
@@ -1202,8 +1202,8 @@ public:
     {
         setWorkOffline(offline);
 
-        AgentInstance::List instances = AgentManager::self()->instances();
-        foreach (AgentInstance instance, instances) {    //krazy:exclude=foreach
+        const AgentInstance::List instances = AgentManager::self()->instances();
+        for (AgentInstance instance : instances) {
             instance.setIsOnline(!offline);
         }
     }
@@ -1748,7 +1748,8 @@ Akonadi::Collection::List StandardActionManager::selectedCollections() const
         return collections;
     }
 
-    foreach (const QModelIndex &index, safeSelectedRows(d->collectionSelectionModel)) {
+    const QModelIndexList lst = safeSelectedRows(d->collectionSelectionModel);
+    for (const QModelIndex &index : lst) {
         const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         if (collection.isValid()) {
             collections << collection;
@@ -1765,8 +1766,8 @@ Item::List StandardActionManager::selectedItems() const
     if (!d->itemSelectionModel) {
         return items;
     }
-
-    foreach (const QModelIndex &index, safeSelectedRows(d->itemSelectionModel)) {
+    const QModelIndexList lst = safeSelectedRows(d->itemSelectionModel);
+    for (const QModelIndex &index : lst) {
         const Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
         if (item.isValid()) {
             items << item;

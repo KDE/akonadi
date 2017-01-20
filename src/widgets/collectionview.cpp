@@ -190,7 +190,7 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
                 break;
             }
         } else {
-            QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
+            const QList<QPair<QString, QString> > query = QUrlQuery(url).queryItems();
             const int numberOfQuery(query.count());
             for (int i = 0; i < numberOfQuery; ++i) {
                 if (query.at(i).first == QLatin1String("type")) {
