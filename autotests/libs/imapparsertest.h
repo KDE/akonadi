@@ -44,6 +44,9 @@ private Q_SLOTS:
     void testBulkParser();
     void testJoin_data();
     void testJoin();
+
+    void benchParseQuotedString_data();
+    void benchParseQuotedString();
 };
 
 #endif

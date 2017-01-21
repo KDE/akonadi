@@ -582,3 +582,31 @@ void ImapParserTest::testJoin()
     QCOMPARE(ImapParser::join(list, " "), joined);
 }
 
+void ImapParserTest::benchParseQuotedString_data()
+{
+    QTest::addColumn<QByteArray>("data");
+    QTest::addColumn<QByteArray>("expectedResult");
+    QTest::addColumn<int>("expectedConsumed");
+
+    QTest::newRow("quoted") << QByteArray("\"foo bar asdf\"") << QByteArray("foo bar asdf") << 14;
+    QTest::newRow("unquoted") << QByteArray("foo bar asdf") << QByteArray("foo") << 3;
+}
+
+void ImapParserTest::benchParseQuotedString()
+{
+    QFETCH(QByteArray, data);
+    QFETCH(QByteArray, expectedResult);
+    QFETCH(int, expectedConsumed);
+
+    QByteArray result;
+    QBENCHMARK {
+        int consumed = ImapParser::parseQuotedString(data, result, 0);
+        // use data, to prevent it from getting optimized away
+        if (consumed != expectedConsumed || result != expectedResult) {
+            // NOTE: don't use QCOMPARE in the outer hot loop, it's quite slow
+            //       just do it when something fails
+            QCOMPARE(result, expectedResult);
+            QCOMPARE(consumed, expectedConsumed);
+        }
+    }
+}
