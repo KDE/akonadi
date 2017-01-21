@@ -21,16 +21,18 @@
 #define DBCONFIGMYSQL_H
 
 #include "dbconfig.h"
-
-class QProcess;
+#include <QObject>
+#include <QProcess>
 
 namespace Akonadi
 {
 namespace Server
 {
 
-class DbConfigMysql : public DbConfig
+class DbConfigMysql : public QObject, public DbConfig
 {
+    Q_OBJECT
+
 public:
     DbConfigMysql();
 
@@ -76,6 +78,9 @@ public:
 
     /// reimpl
     void initSession(const QSqlDatabase &database) Q_DECL_OVERRIDE;
+
+private Q_SLOTS:
+    void processFinished(int exitCode, QProcess::ExitStatus exitStatus);
 
 private:
     int parseCommandLineToolsVersion() const;

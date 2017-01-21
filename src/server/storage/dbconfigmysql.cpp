@@ -32,6 +32,7 @@
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QCoreApplication>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -190,6 +191,8 @@ bool DbConfigMysql::startInternalServer()
     const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("db_data"));
 #ifndef Q_OS_WIN
     const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
+    const QString socketFile = QStringLiteral("%1/mysql.socket").arg(socketDirectory);
+    const QString pidFileName = QStringLiteral("%1/mysql.pid").arg(socketDirectory);
 #endif
 
     // generate config file
@@ -288,6 +291,39 @@ bool DbConfigMysql::startInternalServer()
         qCCritical(AKONADISERVER_LOG) << "MySQL cannot deal with a socket path this long. Path was: " << socketDirectory;
         return false;
     }
+
+    // If mysql.socket file exists, check if also the server process is still running,
+    // else we can safely remove the socket file (cleanup after a system crash, etc.)
+    QFile pidFile(pidFileName);
+    if (QFile::exists(socketFile) && pidFile.open(QIODevice::ReadOnly)) {
+        qCDebug(AKONADISERVER_LOG) << "Found a mysqld pid file, checking whether the server is still running...";
+        QByteArray pid = pidFile.readLine().trimmed();
+        QFile proc(QString::fromLatin1("/proc/" + pid + "/stat"));
+        // Check whether the process with the PID from pidfile still exists and whether
+        // it's actually still mysqld or, whether the PID has been recycled in the meanwhile.
+        bool serverIsRunning = false;
+        if (proc.open(QIODevice::ReadOnly)) {
+            const QByteArray stat = proc.readAll();
+            const QList<QByteArray> stats = stat.split(' ');
+            if (stats.count() > 1) {
+                // Make sure the PID actually belongs to mysql process
+                if (stats[1] == "(mysqld)") {
+                    // Yup, our mysqld is actually running, so pretend we started the server
+                    // and try to connect to it
+                    qCWarning(AKONADISERVER_LOG) << "mysqld for Akonadi is already running, trying to connect to it.";
+                    serverIsRunning = true;
+                }
+            }
+            proc.close();
+        }
+
+        if (!serverIsRunning) {
+            qCDebug(AKONADISERVER_LOG) << "No mysqld process with specified PID is running. Removing the pidfile and starting a new instance...";
+            pidFile.close();
+            pidFile.remove();
+            QFile::remove(socketFile);
+        }
+    }
 #endif
 
     // synthesize the mysqld command
@@ -295,14 +331,15 @@ bool DbConfigMysql::startInternalServer()
     arguments << QStringLiteral("--defaults-file=%1/mysql.conf").arg(akDir);
     arguments << QStringLiteral("--datadir=%1/").arg(dataDir);
 #ifndef Q_OS_WIN
-    arguments << QStringLiteral("--socket=%1/mysql.socket").arg(socketDirectory);
+    arguments << QStringLiteral("--socket=%1").arg(socketFile);
+    arguments << QStringLiteral("--pid-file=%1").arg(pidFileName);
 #else
     arguments << QString::fromLatin1("--shared-memory");
 #endif
 
     // If mysql.socket file does not exists, then we must start the server,
     // otherwise we reconnect to it
-    if (!QFile::exists(QStringLiteral("%1/mysql.socket").arg(socketDirectory))) {
+    if (!QFile::exists(socketFile)) {
         // move mysql error log file out of the way
         const QFileInfo errorLog(dataDir + QDir::separator() + QLatin1String("mysql.err"));
         if (errorLog.exists()) {
@@ -347,9 +384,11 @@ bool DbConfigMysql::startInternalServer()
             return false;
         }
 
+        connect(mDatabaseProcess, static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished),
+                this, &DbConfigMysql::processFinished);
+
 #ifndef Q_OS_WIN
         // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
-        QString socketFile = QStringLiteral("%1/mysql.socket").arg(socketDirectory);
         int counter = 50;  // avoid an endless loop in case mysqld terminated
         while ((counter-- > 0) && !QFileInfo::exists(socketFile)) {
             QThread::msleep(100);
@@ -357,7 +396,6 @@ bool DbConfigMysql::startInternalServer()
 #endif
     } else {
         qCDebug(AKONADISERVER_LOG) << "Found mysql.socket file, reconnecting to the database";
-        mDatabaseProcess = new QProcess();
     }
 
     const QLatin1String initCon("initConnection");
@@ -377,7 +415,7 @@ bool DbConfigMysql::startInternalServer()
             if (opened) {
                 break;
             }
-            if (mDatabaseProcess->waitForFinished(500)) {
+            if (mDatabaseProcess && mDatabaseProcess->waitForFinished(500)) {
                 qCCritical(AKONADISERVER_LOG) << "Database process exited unexpectedly during initial connection!";
                 qCCritical(AKONADISERVER_LOG) << "executable:" << mMysqldPath;
                 qCCritical(AKONADISERVER_LOG) << "arguments:" << arguments;
@@ -458,11 +496,32 @@ bool DbConfigMysql::startInternalServer()
     return success;
 }
 
+void DbConfigMysql::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
+{
+    Q_UNUSED(exitCode);
+    Q_UNUSED(exitStatus);
+
+    qCCritical(AKONADISERVER_LOG) << "database server stopped unexpectedly";
+
+#ifndef Q_OS_WIN
+    // when the server stopped unexpectedly, make sure to remove the stale socket file since otherwise
+    // it can not be started again
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
+    const QString socketFile = QStringLiteral("%1/mysql.socket").arg(socketDirectory);
+    QFile::remove(socketFile);
+#endif
+
+    QCoreApplication::quit();
+}
+
 void DbConfigMysql::stopInternalServer()
 {
     if (!mDatabaseProcess) {
         return;
     }
+
+    disconnect(mDatabaseProcess, static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished),
+               this, &DbConfigMysql::processFinished);
 
     // first, try the nicest approach
     if (!mCleanServerShutdownCommand.isEmpty()) {
