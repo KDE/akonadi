@@ -516,9 +516,7 @@ void ResourceScheduler::setOnline(bool state)
                 lastTask = (*it);
                 it = itemFetchQueue.erase(it);
                 if (s_resourcetracker) {
-                    QList<QVariant> argumentList;
-                    argumentList << QString::number(mCurrentTask.serial)
-                                 << i18nc("@info", "Job canceled.");
+                    const QList<QVariant> argumentList = { QString::number(mCurrentTask.serial), i18nc("@info", "Job canceled.")};
                     s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
                 }
             } else {
@@ -623,7 +621,7 @@ QString ResourceScheduler::dumpToString() const
             str << " queue " << i << " is empty" << endl;
         } else {
             str << " queue " << i << " " << queue.size() << " tasks:" << endl;
-            QList<Task>::const_iterator queueEnd(queue.constEnd());
+            const QList<Task>::const_iterator queueEnd(queue.constEnd());
             for (QList<Task>::const_iterator it = queue.constBegin(); it != queueEnd; ++it) {
                 str << "  " << (*it) << endl;
             }
