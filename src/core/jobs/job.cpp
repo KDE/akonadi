@@ -238,7 +238,7 @@ void JobPrivate::sendCommand(qint64 tag, const Protocol::Command &cmd)
         mParentJob->d_ptr->sendCommand(tag, cmd);
     } else {
         mSession->d->sendCommand(tag, cmd);
-    };
+    }
 }
 
 void JobPrivate::sendCommand(const Protocol::Command &cmd)
