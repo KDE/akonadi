@@ -340,17 +340,15 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
                                  bool *flagsChanged, bool checkIfExists,
                                  const Collection &col, bool silent)
 {
-    QSet<QByteArray> added;
-
     QVariantList itemsIds;
     itemsIds.reserve(items.count());
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         itemsIds.append(item.id());
     }
 
     setBoolPtr(flagsChanged, false);
 
-    Q_FOREACH (const Flag &flag, flags) {
+    for (const Flag &flag : flags) {
         QSet<PimItem::Id> existing;
         if (checkIfExists) {
             QueryBuilder qb(PimItemFlagRelation::tableName(), QueryBuilder::Select);
@@ -403,7 +401,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
     setBoolPtr(flagsChanged, false);
     itemsIds.reserve(items.count());
 
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         itemsIds << item.id();
         if (col.id() == -1) {
             col.setId(item.collectionId());
@@ -509,7 +507,7 @@ bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag,
     QVariantList tagIds;
     QVariantList appendIds;
     PimItem::List appendItems;
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         if (existing.contains(item.id())) {
             continue;
         }
@@ -544,17 +542,15 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
                                 bool *tagsChanged, bool checkIfExists,
                                 const Collection &col, bool silent)
 {
-    QSet<QByteArray> added;
-
     QVariantList itemsIds;
     itemsIds.reserve(items.count());
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         itemsIds.append(item.id());
     }
 
     setBoolPtr(tagsChanged, false);
 
-    Q_FOREACH (const Tag &tag, tags) {
+    for (const Tag &tag : tags) {
         QSet<PimItem::Id> existing;
         if (checkIfExists) {
             QueryBuilder qb(PimItemTagRelation::tableName(), QueryBuilder::Select);
@@ -734,7 +730,7 @@ bool DataStore::invalidateItemCache(const PimItem &item)
 
     const Part::List parts = qb.result();
     // clear data field
-    Q_FOREACH (Part part, parts) { //krazy:exclude=foreach
+    for (Part part : parts) {
         if (!PartHelper::truncate(part)) {
             return false;
         }
@@ -809,7 +805,7 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
     const QByteArray resource = collection.resource().name().toLatin1();
     mNotificationCollector->itemsRemoved(items, collection, resource);
 
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         if (!item.clearFlags()) {   // TODO: move out of loop and use only a single query
             return false;
         }
@@ -924,7 +920,7 @@ bool DataStore::appendMimeTypeForCollection(qint64 collectionId, const QStringLi
         return true;
     }
 
-    Q_FOREACH (const QString &mimeType, mimeTypes) {
+    for (const QString &mimeType : mimeTypes) {
         const auto &mt = MimeType::retrieveByNameOrCreate(mimeType);
         if (!mt.isValid()) {
             return false;
