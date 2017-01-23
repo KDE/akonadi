@@ -43,5 +43,5 @@ int main(int argc, char **argv)
     Akonadi::SubscriptionDialog *dlg = new Akonadi::SubscriptionDialog();
     QObject::connect(dlg, &Akonadi::SubscriptionDialog::destroyed, &app, &QApplication::quit);
     dlg->show();
-    app.exec();
+    return app.exec();
 }
