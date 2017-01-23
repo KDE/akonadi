@@ -20,6 +20,7 @@
 
 #include "resourcebase.h"
 #include "agentbase_p.h"
+#include "helper_p.h"
 
 #include "resourceadaptor.h"
 #include "collectiondeletejob.h"
@@ -1370,7 +1371,7 @@ void ResourceBasePrivate::slotDelayedEmitProgress()
     if (mAutomaticProgressReporting) {
         emit q->percent(mUnemittedProgress);
 
-        Q_FOREACH (const QVariantMap &statusMap, mUnemittedAdvancedStatus) {
+        for (const QVariantMap &statusMap : qAsConst(mUnemittedAdvancedStatus)) {
             emit q->advancedStatus(statusMap);
         }
     }
