@@ -38,6 +38,7 @@
 #include "querycache.h"
 #include "queryhelper.h"
 #include "akonadiserver_debug.h"
+#include "storagedebugger.h"
 #include <utils.h>
 
 #include <private/externalpartstorage_p.h>
@@ -54,6 +55,7 @@
 #include <QSqlDriver>
 #include <QSqlQuery>
 #include <QFile>
+#include <QElapsedTimer>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -124,6 +126,16 @@ void DataStore::open()
         qCDebug(AKONADISERVER_LOG) << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
     }
 
+    StorageDebugger::instance()->addConnection(reinterpret_cast<qint64>(this),
+                                               QThread::currentThread()->objectName());
+    connect(QThread::currentThread(), &QThread::objectNameChanged,
+            this, [this](const QString &name) {
+                if (!name.isEmpty()) {
+                    StorageDebugger::instance()->changeConnection(reinterpret_cast<qint64>(this),
+                                                                  name);
+                }
+            });
+
     DbConfig::configuredDatabase()->initSession(m_database);
 }
 
@@ -157,6 +169,8 @@ void DataStore::close()
     m_database.close();
     m_database = QSqlDatabase();
     QSqlDatabase::removeDatabase(m_connectionName);
+
+    StorageDebugger::instance()->removeConnection(reinterpret_cast<qint64>(this));
 
     m_dbOpened = false;
 }
@@ -1343,18 +1357,29 @@ bool DataStore::beginTransaction()
     }
 
     if (m_transactionLevel == 0) {
+        QElapsedTimer timer;
+        timer.start();
         TRANSACTION_MUTEX_LOCK;
         if (DbType::type(m_database) == DbType::Sqlite) {
             m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
+            StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this),
+                                                        timer.elapsed(),
+                                                        m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction (SQLITE)");
                 TRANSACTION_MUTEX_UNLOCK;
                 return false;
             }
-        } else if (!m_database.driver()->beginTransaction()) {
-            debugLastDbError("DataStore::beginTransaction");
-            TRANSACTION_MUTEX_UNLOCK;
-            return false;
+        } else {
+            m_database.driver()->beginTransaction();
+            StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this),
+                                                        timer.elapsed(),
+                                                        m_database.lastError().text());
+            if (m_database.lastError().isValid()) {
+                debugLastDbError("DataStore::beginTransaction");
+                TRANSACTION_MUTEX_UNLOCK;
+                return false;
+            }
         }
 
         if (DbType::type(m_database) == DbType::PostgreSQL) {
@@ -1387,7 +1412,12 @@ bool DataStore::rollbackTransaction()
     if (m_transactionLevel == 0) {
         QSqlDriver *driver = m_database.driver();
         Q_EMIT transactionRolledBack();
-        if (!driver->rollbackTransaction()) {
+        QElapsedTimer timer; timer.start();
+        driver->rollbackTransaction();
+        StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
+                                                       false, timer.elapsed(),
+                                                       m_database.lastError().text());
+        if (m_database.lastError().isValid()) {
             TRANSACTION_MUTEX_UNLOCK;
             debugLastDbError("DataStore::rollbackTransaction");
             return false;
@@ -1413,7 +1443,12 @@ bool DataStore::commitTransaction()
 
     if (m_transactionLevel == 1) {
         QSqlDriver *driver = m_database.driver();
-        if (!driver->commitTransaction()) {
+        QElapsedTimer timer; timer.start();
+        driver->commitTransaction();
+        StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
+                                                       true, timer.elapsed(),
+                                                       m_database.lastError().text());
+        if (m_database.lastError().isValid()) {
             debugLastDbError("DataStore::commitTransaction");
             rollbackTransaction();
             return false;

@@ -25,6 +25,7 @@
 #include <QMap>
 #include <QVariant>
 #include <QFile>
+#include <QVector>
 
 #ifdef QT5_BUILD
 #include <QAtomicInteger>
@@ -39,6 +40,17 @@
 #endif
 
 class QSqlQuery;
+class QDBusArgument;
+
+struct DbConnection {
+    qint64 id;
+    QString name;
+    qint64 start;
+    qint64 transactionStart;
+};
+
+QDBusArgument &operator<<(QDBusArgument &arg, const DbConnection &con);
+QDBusArgument &operator>>(QDBusArgument &arg, DbConnection &con);
 
 namespace Akonadi
 {
@@ -54,13 +66,19 @@ public:
 
     ~StorageDebugger();
 
+    void addConnection(qint64 id, const QString &name);
+    void removeConnection(qint64 id);
+    void changeConnection(qint64 id, const QString &name);
+    void addTransaction(qint64 connectionId, uint duration, const QString &error);
+    void removeTransaction(qint64 connectionId, bool commit, uint duration, const QString &error);
+
     void enableSQLDebugging(bool enable);
     inline bool isSQLDebuggingEnabled() const
     {
         return mEnabled;
     }
 
-    void queryExecuted(const QSqlQuery &query, int duration);
+    void queryExecuted(qint64 connectionId, const QSqlQuery &query, int duration);
 
     void incSequence()
     {
@@ -69,11 +87,20 @@ public:
 
     void writeToFile(const QString &file);
 
+    Q_SCRIPTABLE QVector<DbConnection> connections() const;
+
 Q_SIGNALS:
-    void queryExecuted(double sequence, uint duration, const QString &query,
-                       const QMap<QString, QVariant> &values,
-                       int resultsCount,
-                       const QList<QList<QVariant> > &result,
+    void connectionOpened(qint64 id, qint64 timestamp, const QString &name);
+    void connectionChanged(qint64 id, const QString &name);
+    void connectionClosed(qint64 id, qint64 timestamp);
+
+    void transactionStarted(qint64 connectionId, qint64 timestamp, uint duration, const QString &error);
+    void transactionFinished(qint64 connectionId, bool commit, qint64 timestamp, uint duration,
+                             const QString &error);
+
+    void queryExecuted(double sequence, qint64 connectionId, qint64 timestamp,
+                       uint duration, const QString &query, const QMap<QString, QVariant> &values,
+                       int resultsCount, const QList<QList<QVariant> > &result,
                        const QString &error);
 
 private:
@@ -90,6 +117,7 @@ private:
 #else
     QAtomicInt mSequence;
 #endif
+    QVector<DbConnection> mConnections;
 
 };
 
