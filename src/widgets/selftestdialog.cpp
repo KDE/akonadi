@@ -194,7 +194,7 @@ bool SelfTestDialog::runProcess(const QString &app, const QStringList &args, QSt
     proc.start(app, args);
     const bool rv = proc.waitForFinished();
     result.clear();
-    result += QString::fromLocal8Bit(proc.readAllStandardError());
+    result = QString::fromLocal8Bit(proc.readAllStandardError());
     result += QString::fromLocal8Bit(proc.readAllStandardOutput());
     return rv;
 }

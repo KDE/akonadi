@@ -181,8 +181,7 @@ QByteArray Akonadi::ImapInterval::toImapSequence() const
         return QByteArray::number(d->begin);
     }
 
-    QByteArray rv;
-    rv += QByteArray::number(d->begin) + ':';
+    QByteArray rv = QByteArray::number(d->begin) + ':';
 
     if (hasDefinedEnd()) {
         rv += QByteArray::number(d->end);
