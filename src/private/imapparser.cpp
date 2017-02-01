@@ -572,10 +572,10 @@ int ImapParser::parseDateTime(const QByteArray &data, QDateTime &dateTime, int s
 
 void ImapParser::splitVersionedKey(const QByteArray &data, QByteArray &key, int &version)
 {
-    if (data.contains('[') && data.contains(']')) {
-        const int startPos = data.indexOf('[');
-        const int endPos = data.indexOf(']');
-        if (startPos != -1 && endPos != -1 && endPos > startPos) {
+    const int startPos = data.indexOf('[');
+    const int endPos = data.indexOf(']');
+    if (startPos != -1 && endPos != -1) {
+        if (endPos > startPos) {
             bool ok = false;
 
             version = data.mid(startPos + 1, endPos - startPos - 1).toInt(&ok);

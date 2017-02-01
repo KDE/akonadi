@@ -158,7 +158,7 @@ void TagSync::onCreateTagDone(KJob *job)
 
     Akonadi::Tag tag = static_cast<Akonadi::TagCreateJob *>(job)->tag();
     const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
-    Q_FOREACH (Item item, remoteMembers) {  //krazy:exclude=foreach
+    for (Item item : remoteMembers) {
         item.setTag(tag);
         ItemModifyJob *modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);

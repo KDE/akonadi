@@ -19,6 +19,7 @@
 
 #include "session.h"
 #include "session_p.h"
+#include "helper_p.h"
 
 #include "job.h"
 #include "job_p.h"
@@ -266,7 +267,7 @@ void SessionPrivate::serverStateChanged(ServerManager::State state)
     } else if (!connected && state == ServerManager::Broken) {
         // If the server is broken, cancel all pending jobs, otherwise they will be
         // blocked forever and applications waiting for them to finish would be stuck
-        Q_FOREACH (Job *job, queue) {
+        for (Job *job : qAsConst(queue)) {
             job->setError(Job::ConnectionFailed);
             job->kill(KJob::EmitResult);
         }
@@ -280,7 +281,7 @@ void SessionPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevisi
 {
     // only deal with the queue, for the guys in the pipeline it's too late already anyway
     // and they shouldn't have gotten there if they depend on a preceding job anyway.
-    Q_FOREACH (Job *job, queue) {
+    for (Job *job : qAsConst(queue)) {
         job->d_ptr->updateItemRevision(itemId, oldRevision, newRevision);
     }
 }
@@ -405,11 +406,11 @@ Session *Session::defaultSession()
 
 void Session::clear()
 {
-    Q_FOREACH (Job *job, d->queue) {
+    for (Job *job : qAsConst(d->queue)) {
         job->kill(KJob::EmitResult);   // safe, not started yet
     }
     d->queue.clear();
-    Q_FOREACH (Job *job, d->pipeline) {
+    for (Job *job : qAsConst(d->pipeline)) {
         job->d_ptr->mStarted = false; // avoid killing/reconnect loops
         job->kill(KJob::EmitResult);
     }

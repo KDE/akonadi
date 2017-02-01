@@ -19,6 +19,7 @@
 
 #include "persistentsearchattribute.h"
 #include "collection.h"
+#include "helper_p.h"
 
 #include "private/imapparser_p.h"
 
@@ -121,7 +122,7 @@ QByteArray PersistentSearchAttribute::serialized() const
 {
     QStringList cols;
     cols.reserve(d->queryCollections.count());
-    Q_FOREACH (qint64 colId, d->queryCollections) {
+    for (qint64 colId : qAsConst(d->queryCollections)) {
         cols << QString::number(colId);
     }
 
@@ -158,7 +159,7 @@ void PersistentSearchAttribute::deserialize(const QByteArray &data)
             ImapParser::parseParenthesizedList(l.at(i + 1), ids);
             d->queryCollections.clear();
             d->queryCollections.reserve(ids.count());
-            Q_FOREACH (const QByteArray &id, ids) {
+            for (const QByteArray &id : qAsConst(ids)) {
                 d->queryCollections << id.toLongLong();
             }
             ++i;

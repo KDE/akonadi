@@ -18,6 +18,7 @@
 */
 
 #include "pastehelper_p.h"
+#include "helper_p.h"
 
 #include "collectioncopyjob.h"
 #include "collectionmovejob.h"
@@ -202,12 +203,12 @@ void PasteHelperJob::runCollectionsActions()
 
     switch (mAction) {
     case Qt::CopyAction:
-        foreach (const Collection &col, mCollections) {   // FIXME: remove once we have a batch job for collections as well
+        for (const Collection &col : qAsConst(mCollections)) {   // FIXME: remove once we have a batch job for collections as well
             new CollectionCopyJob(col, mDestCollection, this);
         }
         break;
     case Qt::MoveAction:
-        foreach (const Collection &col, mCollections) {   // FIXME: remove once we have a batch job for collections as well
+        for (const Collection &col : qAsConst(mCollections)) {   // FIXME: remove once we have a batch job for collections as well
             new CollectionMoveJob(col, mDestCollection, this);
         }
         break;
@@ -246,7 +247,7 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
         // check that the target collection supports the mime types of the
         // items/collections that shall be pasted
         bool supportsMimeTypes = true;
-        foreach (const QUrl &url, urls) {
+        for (const QUrl &url : qAsConst(urls)) {
             const QUrlQuery query(url);
             // collections do not provide mimetype information, so ignore this check
             if (query.hasQueryItem(QStringLiteral("collection"))) {
@@ -278,7 +279,8 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
 
     // we try to drop data not coming with the akonadi:// url
     // find a type the target collection supports
-    foreach (const QString &type, mimeData->formats()) {
+    const QStringList lstFormats = mimeData->formats();
+    for (const QString &type : lstFormats) {
         if (!collection.contentMimeTypes().contains(type)) {
             continue;
         }

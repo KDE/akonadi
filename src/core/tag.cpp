@@ -19,6 +19,7 @@
 
 #include "tag.h"
 #include "tag_p.h"
+#include "helper_p.h"
 #include "tagattribute.h"
 #include <QUuid>
 #include <QUrlQuery>
@@ -151,7 +152,7 @@ Attribute::List Tag::attributes() const
 
 void Tag::clearAttributes()
 {
-    Q_FOREACH (Attribute *attr, d_ptr->mAttributes) {
+    for (Attribute *attr : qAsConst(d_ptr->mAttributes)) {
         d_ptr->mDeletedAttributes.insert(attr->type());
         delete attr;
     }

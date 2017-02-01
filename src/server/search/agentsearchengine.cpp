@@ -50,8 +50,7 @@ void AgentSearchEngine::removeSearch(qint64 id)
                             QStringLiteral(AKONADI_DBUS_AGENTMANAGER_PATH),
                             QStringLiteral("org.freedesktop.Akonadi.AgentManagerInternal"));
     if (agentMgr.isValid()) {
-        QList<QVariant> args;
-        args << id;
+        const QList<QVariant> args = {id};
         agentMgr.callWithArgumentList(QDBus::NoBlock, QStringLiteral("removeSearch"), args);
         return;
     }
