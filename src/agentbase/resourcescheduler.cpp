@@ -21,7 +21,7 @@
 
 #include "KDBusConnectionPool"
 #include "recursivemover_p.h"
-
+#include "helper_p.h"
 #include "akonadiagentbase_debug.h"
 #include "private/instance_p.h"
 #include <KLocalizedString>
@@ -349,9 +349,7 @@ void ResourceScheduler::deferTask()
     }
 
     if (s_resourcetracker) {
-        QList<QVariant> argumentList;
-        argumentList << QString::number(mCurrentTask.serial)
-                     << QString();
+        const QList<QVariant> argumentList = {QString::number(mCurrentTask.serial), QString()};
         s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
     }
 
@@ -569,7 +567,7 @@ void ResourceScheduler::collectionRemoved(const Akonadi::Collection &collection)
 
 void ResourceScheduler::Task::sendDBusReplies(const QString &errorMsg)
 {
-    Q_FOREACH (const QDBusMessage &msg, dbusMsgs) {
+    for (const QDBusMessage &msg : qAsConst(dbusMsgs)) {
         QDBusMessage reply(msg.createReply());
         const QString methodName = msg.member();
         if (methodName == QLatin1String("requestItemDelivery")) {
@@ -685,7 +683,7 @@ QTextStream &Akonadi::operator<<(QTextStream &d, const ResourceScheduler::Task &
         if (!task.items.isEmpty()) {
             QStringList ids;
             ids.reserve(task.items.size());
-            for (const auto &item : task.items) {
+            for (const auto &item : qAsConst(task.items)) {
                 ids.push_back(QString::number(item.id()));
             }
             d << "items " << ids.join(QStringLiteral(", ")) << " ";

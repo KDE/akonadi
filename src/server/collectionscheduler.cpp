@@ -119,6 +119,7 @@ CollectionScheduler::~CollectionScheduler()
 void CollectionScheduler::quit()
 {
     delete mScheduler;
+    mScheduler = nullptr;
 
     AkThread::quit();
 }

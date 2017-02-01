@@ -50,6 +50,7 @@ void AgentThread::run()
 
     exec();
     delete m_instance;
+    m_instance = nullptr;
 }
 
 void AgentThread::configure(qlonglong windowId)
