@@ -129,7 +129,7 @@ void AgentSearchInterface::searchFinished(const ImapSet &result, ResultScope sco
         const ImapInterval::List lstInterval = result.intervals();
         for (const ImapInterval &interval : lstInterval) {
             const int endInterval(interval.end());
-            for (int i = interval.begin(); i != endInterval; ++i) {
+            for (int i = interval.begin(); i <= endInterval; ++i) {
                 rids << QByteArray::number(i);
             }
         }
