@@ -1006,6 +1006,7 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
 
     } else {
         delete d->mNetworkManager;
+        d->mNetworkManager = nullptr;
         setOnlineInternal(d->mDesiredOnlineState);
     }
 }
