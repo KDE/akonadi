@@ -50,7 +50,23 @@ public:
     bool mRemote;
     Collection mCreatedCollection;
 
+
+    // JobPrivate interface
+public:
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
 };
+
+QString Akonadi::SearchCreateJobPrivate::jobDebuggingString() const
+{
+    QString str = QStringLiteral("Name :%1 ").arg(mName);
+    if (mRecursive) {
+        str += QStringLiteral("Recursive ");
+    }
+    if (mRemote) {
+        str += QStringLiteral("Remote ");
+    }
+    return str;
+}
 
 SearchCreateJob::SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent)
     : Job(new SearchCreateJobPrivate(name, searchQuery, this), parent)

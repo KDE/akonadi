@@ -35,7 +35,16 @@ public:
     Collection collection;
     ImapSet uid;
     QVector<QByteArray> rid;
+
+    // JobPrivate interface
+public:
+    QString jobDebuggingString() const Q_DECL_OVERRIDE;
 };
+
+QString SearchResultJobPrivate::jobDebuggingString() const
+{
+    return QStringLiteral("Collection id: %1 Search id: %2").arg(collection.id()).arg(QString::fromLatin1(searchId));
+}
 
 SearchResultJobPrivate::SearchResultJobPrivate(SearchResultJob *parent)
     : JobPrivate(parent)
