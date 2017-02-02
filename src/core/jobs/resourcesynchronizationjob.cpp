@@ -40,6 +40,7 @@ public:
         , safetyTimer(nullptr)
         , timeoutCount(60)
         , collectionTreeOnly(false)
+        , timeoutCountLimit(0)
     {
     }
 
