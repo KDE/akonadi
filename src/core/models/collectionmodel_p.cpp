@@ -234,7 +234,7 @@ QModelIndex CollectionModelPrivate::indexForId(Collection::Id id, int column) co
         return QModelIndex();
     }
 
-    QVector<Collection::Id> list = childCollections.value(parentId);
+    const QVector<Collection::Id> list = childCollections.value(parentId);
     int row = list.indexOf(id);
 
     if (row >= 0) {
@@ -280,7 +280,7 @@ bool CollectionModelPrivate::supportsContentType(const QModelIndex &index, const
     if (!index.isValid()) {
         return false;
     }
-    Collection col = collections.value(index.internalId());
+    const Collection col = collections.value(index.internalId());
     Q_ASSERT(col.isValid());
     const QStringList ct = col.contentMimeTypes();
     for (const QString &a : ct) {

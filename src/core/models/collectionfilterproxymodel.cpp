@@ -123,7 +123,7 @@ CollectionFilterProxyModel::~CollectionFilterProxyModel()
 
 void CollectionFilterProxyModel::addMimeTypeFilters(const QStringList &typeList)
 {
-    QStringList mimeTypes = d->mimeChecker.wantedMimeTypes() + typeList;
+    const QStringList mimeTypes = d->mimeChecker.wantedMimeTypes() + typeList;
     d->mimeChecker.setWantedMimeTypes(mimeTypes);
     invalidateFilter();
 }

@@ -229,8 +229,7 @@ void ItemModel::Private::itemsAdded(const Akonadi::Item::List &list)
 
 void ItemModel::Private::itemAdded(const Akonadi::Item &item)
 {
-    Item::List l;
-    l << item;
+    const Item::List l = {item};
     itemsAdded(l);
 }
 
