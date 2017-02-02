@@ -71,6 +71,7 @@ void AgentInstanceModel::Private::instanceChanged(const AgentInstance &instance)
     const int numberOfInstance(mInstances.count());
     for (int i = 0; i < numberOfInstance; ++i) {
         if (mInstances[i] == instance) {
+            //TODO why reassign it if equals ?
             mInstances[i] = instance;
 
             const QModelIndex idx = mParent->index(i, 0);
