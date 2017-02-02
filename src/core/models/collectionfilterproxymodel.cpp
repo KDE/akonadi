@@ -167,7 +167,7 @@ Qt::ItemFlags CollectionFilterProxyModel::flags(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         // Don't crash
-        return nullptr;
+        return 0;
     }
 
     const Collection collection = sourceModel()->data(mapToSource(index), EntityTreeModel::CollectionRole).value<Collection>();

@@ -213,7 +213,7 @@ Qt::ItemFlags CollectionModel::flags(const QModelIndex &index) const
 
     // Pass modeltest.
     if (!index.isValid()) {
-        return nullptr;
+        return 0;
     }
 
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
