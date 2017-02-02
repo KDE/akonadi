@@ -31,6 +31,8 @@ static int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
 IntervalCheck::IntervalCheck( QObject *parent )
   : CollectionScheduler( parent )
 {
+  setObjectName( QLatin1String("IntervalCheck" ) );
+  thread()->setObjectName( QLatin1String( "IntervalCheck-Thread" ) );
 }
 
 IntervalCheck::~ IntervalCheck()

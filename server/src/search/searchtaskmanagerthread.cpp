@@ -29,6 +29,7 @@ SearchTaskManagerThread::SearchTaskManagerThread( QObject *parent )
 {
   // make sure we are created from the main thread, ie. before all other threads start to potentially use us
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
+  setObjectName( QLatin1String( "SearchTaskManager-Thread" ) );
 }
 
 void SearchTaskManagerThread::run()

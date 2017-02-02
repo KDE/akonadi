@@ -47,6 +47,7 @@ ItemRetrievalManager::ItemRetrievalManager( QObject *parent )
   Q_ASSERT( QThread::currentThread() != QCoreApplication::instance()->thread() );
   Q_ASSERT( sInstance == 0 );
   sInstance = this;
+  setObjectName( QLatin1String( "ItemRetrievalManager") );
 
   mLock = new QReadWriteLock();
   mWaitCondition = new QWaitCondition();

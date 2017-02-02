@@ -39,6 +39,7 @@ SearchTaskManager::SearchTaskManager()
   , mShouldStop( false )
 {
   sInstance = this;
+  setObjectName( QLatin1String( "SearchTaskManager" ) );
 
   QTimer::singleShot(0, this, SLOT(searchLoop()) );
 }

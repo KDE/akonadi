@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 2.8.9)
 project(Akonadi)
 
-
 # where to look first for cmake modules, before ${CMAKE_ROOT}/Modules/ is checked
 set(CMAKE_MODULE_PATH "${Akonadi_SOURCE_DIR}/cmake/modules")
 

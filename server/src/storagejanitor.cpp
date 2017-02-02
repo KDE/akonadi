@@ -54,6 +54,7 @@ using namespace Akonadi::Server;
 StorageJanitorThread::StorageJanitorThread( QObject *parent )
   : QThread( parent )
 {
+  setObjectName( QLatin1String( "StorageJanitor-Thread" ) );
 }
 
 void StorageJanitorThread::run()
@@ -68,6 +69,7 @@ StorageJanitor::StorageJanitor( QObject *parent )
   , m_connection( DBusConnectionPool::threadConnection() )
   , m_lostFoundCollectionId( -1 )
 {
+  setObjectName( QLatin1String( "StorageJanitor" ) );
   DataStore::self();
   m_connection.registerService( AkDBus::serviceName( AkDBus::StorageJanitor ) );
   m_connection.registerObject( QLatin1String( AKONADI_DBUS_STORAGEJANITOR_PATH ), this, QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals );

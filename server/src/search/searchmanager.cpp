@@ -59,6 +59,7 @@ SearchManagerThread::SearchManagerThread( const QStringList &searchEngines, QObj
   , mSearchEngines( searchEngines )
 {
   Q_ASSERT( QThread::currentThread() == QCoreApplication::instance()->thread() );
+  setObjectName( QLatin1String( "SearchManager-Thread" ) );
 }
 
 SearchManagerThread::~SearchManagerThread()
@@ -82,6 +83,7 @@ SearchManager::SearchManager( QObject *parent )
 
   Q_ASSERT( sInstance == 0 );
   sInstance = this;
+  setObjectName( QLatin1String( "SearchManager" ) );
 
   DataStore::self();
 }

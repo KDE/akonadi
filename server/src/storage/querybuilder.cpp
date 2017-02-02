@@ -381,7 +381,8 @@ bool QueryBuilder::exec()
     } else {
       ret = mQuery.exec();
     }
-    StorageDebugger::instance()->queryExecuted( mQuery, t.elapsed() );
+    StorageDebugger::instance()->queryExecuted( reinterpret_cast<qint64>(DataStore::self()),
+                                                mQuery, t.elapsed() );
   } else {
     StorageDebugger::instance()->incSequence();
     if ( isBatch ) {

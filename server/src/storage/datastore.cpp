@@ -38,6 +38,7 @@
 #include "akonadischema.h"
 #include "parttypehelper.h"
 #include "querycache.h"
+#include "storagedebugger.h"
 
 #include <QtCore/QCoreApplication>
 #include <QtCore/QDir>
@@ -50,6 +51,7 @@
 #include <QtCore/QTimer>
 #include <QtCore/QUuid>
 #include <QtCore/QVariant>
+#include <QtCore/QElapsedTimer>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlDriver>
 #include <QtSql/QSqlError>
@@ -117,11 +119,8 @@ void DataStore::open()
   }
   m_dbOpened = m_database.open();
 
-  if ( !m_dbOpened ) {
-    debugLastDbError( "Cannot open database." );
-  } else {
-    akDebug() << "Database" << m_database.databaseName() << "opened using driver" << m_database.driverName();
-  }
+  StorageDebugger::instance()->addConnection( reinterpret_cast<qint64>( this ),
+                                              QThread::currentThread()->objectName() );
 
   DbConfig::configuredDatabase()->initSession( m_database );
 }
@@ -148,6 +147,8 @@ void DataStore::close()
   m_database.close();
   m_database = QSqlDatabase();
   QSqlDatabase::removeDatabase( m_connectionName );
+
+  StorageDebugger::instance()->removeConnection( reinterpret_cast<qint64>(this) );
 
   m_dbOpened = false;
 }
@@ -1256,18 +1257,29 @@ bool DataStore::beginTransaction()
   }
 
   if ( m_transactionLevel == 0 ) {
+    QElapsedTimer timer;
+    timer.start();
     TRANSACTION_MUTEX_LOCK;
     if ( DbType::type( m_database ) == DbType::Sqlite ) {
       m_database.exec( QLatin1String( "BEGIN IMMEDIATE TRANSACTION" ) );
+      StorageDebugger::instance()->addTransaction( reinterpret_cast<qint64>(this),
+                                                  timer.elapsed(),
+                                                  m_database.lastError().text() );
       if ( m_database.lastError().isValid() ) {
         debugLastDbError( "DataStore::beginTransaction (SQLITE)" );
         TRANSACTION_MUTEX_UNLOCK;
         return false;
       }
-    } else if ( !m_database.driver()->beginTransaction() ) {
-      debugLastDbError( "DataStore::beginTransaction" );
-      TRANSACTION_MUTEX_UNLOCK;
-      return false;
+    } else {
+      m_database.driver()->beginTransaction();
+      StorageDebugger::instance()->addTransaction( reinterpret_cast<qint64>(this),
+                                                   timer.elapsed(),
+                                                   m_database.lastError().text() );
+      if ( m_database.lastError().isValid() ) {
+        debugLastDbError( "DataStore::beginTransaction" );
+        TRANSACTION_MUTEX_UNLOCK;
+        return false;
+      }
     }
   }
 
@@ -1292,7 +1304,12 @@ bool DataStore::rollbackTransaction()
   if ( m_transactionLevel == 0 ) {
     QSqlDriver *driver = m_database.driver();
     Q_EMIT transactionRolledBack();
-    if ( !driver->rollbackTransaction() ) {
+    QElapsedTimer timer; timer.start();
+    driver->rollbackTransaction();
+    StorageDebugger::instance()->removeTransaction( reinterpret_cast<qint64>(this),
+                                                    false, timer.elapsed(),
+                                                    m_database.lastError().text() );
+    if ( m_database.lastError().isValid() ) {
       TRANSACTION_MUTEX_UNLOCK;
       debugLastDbError( "DataStore::rollbackTransaction" );
       return false;
@@ -1318,7 +1335,12 @@ bool DataStore::commitTransaction()
 
   if ( m_transactionLevel == 1 ) {
     QSqlDriver *driver = m_database.driver();
-    if ( !driver->commitTransaction() ) {
+    QElapsedTimer timer; timer.start();
+    driver->commitTransaction();
+    StorageDebugger::instance()->removeTransaction( reinterpret_cast<qint64>(this),
+                                                    true, timer.elapsed(),
+                                                    m_database.lastError().text() );
+    if ( m_database.lastError().isValid()) {
       debugLastDbError( "DataStore::commitTransaction" );
       rollbackTransaction();
       return false;

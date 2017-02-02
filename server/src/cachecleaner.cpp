@@ -87,6 +87,8 @@ CacheCleaner::CacheCleaner( QObject *parent )
   : CollectionScheduler( parent )
 {
   setMinimumInterval( 5 );
+  setObjectName( QLatin1String( "CacheCleaner" ) );
+  thread()->setObjectName( QLatin1String( "CacheCleaner-Thread" ) );
 }
 
 CacheCleaner::~CacheCleaner()

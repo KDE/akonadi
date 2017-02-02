@@ -25,6 +25,7 @@
 #include <QSettings>
 
 #include "storage/datastore.h"
+#include "storage/storagedebugger.h"
 #include "handler.h"
 #include "response.h"
 #include "tracer.h"
@@ -298,8 +299,11 @@ void Connection::setSessionId( const QByteArray &id )
 
   m_sessionId = id;
   setObjectName( QString::fromLatin1( id ) );
+  thread()->setObjectName( QString::fromLatin1( id ) + QLatin1String( "-Thread" ) );
   storageBackend()->setSessionId( id );
   storageBackend()->notificationCollector()->setSessionId( id );
+  StorageDebugger::instance()->changeConnection( reinterpret_cast<qint64>( storageBackend() ),
+                                                 objectName() );
 }
 
 QByteArray Connection::sessionId() const

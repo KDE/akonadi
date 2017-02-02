@@ -8,14 +8,52 @@
       <arg type="b" direction="out" />
     </method>
 
+    <signal name="connectionOpened">
+      <arg type="x" name="id" direction="out" />
+      <arg type="s" name="name" direction="out" />
+      <arg type="x" name="timestamp" direction="out" />
+    </signal>
+
+    <signal name="connectionChanged">
+      <arg type="x" name="id" direction="out" />
+      <arg type="s" name="name" direction="out" />
+    </signal>
+
+    <signal name="connectionClosed">
+      <arg type="x" name="id" direction="out" />
+      <arg type="x" name="timestamp" direction="out" />
+    </signal>
+
+    <signal name="transactionStarted">
+      <arg type="x" name="connectionId" direction="out" />
+      <arg type="x" name="timestamp" direction="out" />
+      <arg type="u" name="duration" direction="out" />
+      <arg type="s" name="error" direction="out" />
+    </signal>
+
+    <signal name="transactionFinished">
+      <arg type="x" name="connectionId" direction="out" />
+      <arg type="b" name="commit" direction="out" />
+      <arg type="x" name="timestamp" direction="out" />
+      <arg type="u" name="duration" direction="out" />
+      <arg type="s" name="error" direction="out" />
+    </signal>
+
+    <method name="connections">
+        <arg type="a(xsxx)" direction="out" />
+        <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;DbConnection&gt;"/>
+    </method>
+
     <signal name="queryExecuted">
       <arg type="d" name="sequence" direction="out" />
+      <arg type="x" name="connectionId" direction="out" />
+      <arg type="x" name="timestamp" direction="out" />
       <arg type="u" name="duration" direction="out" />
       <arg type="s" name="query" direction="out" />
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In3" value="const QMap&lt;QString,QVariant&gt; &amp;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In5" value="const QMap&lt;QString,QVariant&gt; &amp;"/>
       <arg type="{sv}" name="values" direction="out" />
       <arg type="i" name="resultsCount" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In5" value="const QList&lt;QList&lt;QVariant&gt; &gt; &amp;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In7" value="const QList&lt;QList&lt;QVariant&gt; &gt; &amp;"/>
       <arg type="aav" name="result" direction="out" />
       <arg type="s" name="error" direction="out"/>
     </signal>

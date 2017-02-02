@@ -24,6 +24,7 @@
 #include <QtCore/QMutex>
 #include <QtCore/QMap>
 #include <QtCore/QVariant>
+#include <QtCore/QVector>
 
 #ifdef QT5_BUILD
 #include <QAtomicInteger>
@@ -33,6 +34,17 @@
 
 
 class QSqlQuery;
+class QDBusArgument;
+
+struct DbConnection {
+    qint64 id;
+    QString name;
+    qint64 start;
+    qint64 transactionStart;
+};
+
+QDBusArgument &operator<<(QDBusArgument &arg, const DbConnection &con);
+QDBusArgument &operator>>(QDBusArgument &arg, DbConnection &con);
 
 namespace Akonadi {
 namespace Server {
@@ -46,21 +58,39 @@ class StorageDebugger : public QObject
 
     ~StorageDebugger();
 
-    void enableSQLDebugging( bool enable );
-    inline bool isSQLDebuggingEnabled() const { return mEnabled; }
+    void addConnection( qint64 id, const QString &name );
+    void removeConnection( qint64 id );
+    void changeConnection( qint64 id, const QString &name );
+    void addTransaction( qint64 connectionId, uint duration, const QString &error );
+    void removeTransaction( qint64 connectionId, bool commit, uint duration, const QString &error );
 
-    void queryExecuted( const QSqlQuery &query, int duration );
+    void enableSQLDebugging( bool enable );
+    inline bool isSQLDebuggingEnabled() const
+    {
+        return mEnabled;
+    }
+
+    void queryExecuted( qint64 connectionId, const QSqlQuery &query, int duration );
 
     void incSequence() { mSequence.ref(); }
 
-  Q_SIGNALS:
-    void queryExecuted( double sequence, uint duration, const QString &query,
-                        const QMap<QString,QVariant> &values,
-                        int resultsCount,
-                        const QList<QList<QVariant> > &result,
+    Q_SCRIPTABLE QVector<DbConnection> connections() const;
+
+Q_SIGNALS:
+    void connectionOpened( qlonglong id, const QString &name, qlonglong timestamp );
+    void connectionChanged( qlonglong id, const QString &name );
+    void connectionClosed( qlonglong id, qlonglong timestamp );
+
+    void transactionStarted( qlonglong connectionId, qlonglong timestamp, uint duration, const QString &error );
+    void transactionFinished( qlonglong connectionId, bool commit, qlonglong timestamp, uint duration,
+                             const QString &error );
+
+    void queryExecuted( double sequence, qlonglong connectionId, qlonglong timestamp,
+                        uint duration, const QString &query, const QMap<QString, QVariant> &values,
+                        int resultsCount, const QList<QList<QVariant> > &result,
                         const QString &error );
 
-  private:
+private:
     StorageDebugger();
 
     static StorageDebugger *mSelf;
@@ -72,6 +102,7 @@ class StorageDebugger : public QObject
 #else
     QAtomicInt mSequence;
 #endif
+    QVector<DbConnection> mConnections;
 
 };
 
