@@ -20,6 +20,7 @@
 */
 
 #include "progressspinnerdelegate_p.h"
+#include "helper_p.h"
 
 #include "entitytreemodel.h"
 
@@ -63,7 +64,7 @@ void DelegateAnimator::timerEvent(QTimerEvent *event)
     }
 
     QRegion region;
-    foreach (const Animation &animation, m_animations) {
+    for (const Animation &animation : qAsConst(m_animations)) {
         // Check if loading is finished (we might not be notified, if the index is scrolled out of view)
         const QVariant fetchState = animation.index.data(Akonadi::EntityTreeModel::FetchStateRole);
         if (fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState) {
@@ -85,7 +86,7 @@ void DelegateAnimator::timerEvent(QTimerEvent *event)
 
 QPixmap DelegateAnimator::sequenceFrame(const QModelIndex &index)
 {
-    foreach (const Animation &animation, m_animations) {
+    for (const Animation &animation : qAsConst(m_animations)) {
         if (animation.index == index) {
             return m_pixmapSequence.frameAt(animation.frame);
         }

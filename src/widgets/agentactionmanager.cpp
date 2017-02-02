@@ -103,8 +103,8 @@ public:
     void enableAction(AgentActionManager::Type type, bool enable)
     {
         Q_ASSERT(type >= 0 && type < AgentActionManager::LastType);
-        if (mActions[type]) {
-            mActions[type]->setEnabled(enable);
+        if (QAction *act = mActions[type]) {
+            act->setEnabled(enable);
         }
     }
 
@@ -235,7 +235,6 @@ public:
     void setContextText(AgentActionManager::Type type,
                         AgentActionManager::TextContext context, const KLocalizedString &data)
     {
-
         mContextTexts[type].insert(context, data.toString());
     }
 
@@ -293,8 +292,8 @@ QAction *AgentActionManager::createAction(Type type)
 {
     Q_ASSERT(type >= 0 && type < LastType);
     Q_ASSERT(agentActionData[type].name);
-    if (d->mActions[type]) {
-        return d->mActions[type];
+    if (QAction *act = d->mActions[type]) {
+        return act;
     }
 
     QAction *action = new QAction(d->mParentWidget);

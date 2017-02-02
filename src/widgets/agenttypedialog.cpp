@@ -69,16 +69,16 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
 {
     QVBoxLayout *layout = new QVBoxLayout(this);
 
-    d->Widget = new Akonadi::AgentTypeWidget;
+    d->Widget = new Akonadi::AgentTypeWidget(this);
     connect(d->Widget, &AgentTypeWidget::activated, this, &AgentTypeDialog::accept);
 
-    KFilterProxySearchLine *searchLine = new KFilterProxySearchLine;
+    KFilterProxySearchLine *searchLine = new KFilterProxySearchLine(this);
     layout->addWidget(searchLine);
     searchLine->setProxy(d->Widget->agentFilterProxyModel());
 
     layout->addWidget(d->Widget);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentTypeDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentTypeDialog::reject);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);

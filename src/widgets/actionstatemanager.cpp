@@ -18,7 +18,7 @@
 */
 
 #include "actionstatemanager_p.h"
-
+#include "helper_p.h"
 #include "agentmanager.h"
 #include "collectionutils.h"
 #include "pastehelper_p.h"
@@ -89,7 +89,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     const bool listOfCollectionNotEmpty = collections.isEmpty() ? false : true;
     bool canDeleteCollections = listOfCollectionNotEmpty;
     if (canDeleteCollections) {
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             // do we have the necessary rights?
             if (!(collection.rights() &Collection::CanDeleteCollection)) {
                 canDeleteCollections = false;
@@ -109,7 +109,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     }
 
     bool canCutCollections = canDeleteCollections; // we must be able to delete for cutting
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         if (isSpecialCollection(collection)) {
             canCutCollections = false;
             break;
@@ -125,7 +125,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
 
     bool canCopyCollections = listOfCollectionNotEmpty;
     if (canCopyCollections) {
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             if (isRootCollection(collection)) {
                 canCopyCollections = false;
                 break;
@@ -139,7 +139,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     }
     bool canAddToFavoriteCollections = listOfCollectionNotEmpty;
     if (canAddToFavoriteCollections) {
-        foreach (const Collection &collection, collections) {
+        for (const Collection &collection : collections) {
             if (isRootCollection(collection)) {
                 canAddToFavoriteCollections = false;
                 break;
@@ -162,7 +162,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
         }
     }
     bool canRemoveFromFavoriteCollections = listOfCollectionNotEmpty;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         if (!isFavoriteCollection(collection)) {
             canRemoveFromFavoriteCollections = false;
             break;
@@ -171,7 +171,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
 
     bool collectionsAreFolders = listOfCollectionNotEmpty;
 
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         if (!isFolderCollection(collection)) {
             collectionsAreFolders = false;
             break;
@@ -179,7 +179,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     }
 
     bool collectionsAreInTrash = false;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         if (collection.hasAttribute<EntityDeletedAttribute>()) {
             collectionsAreInTrash = true;
             break;
@@ -187,7 +187,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     }
 
     bool atLeastOneCollectionCanHaveItems = false;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         if (collectionCanHaveItems(collection)) {
             atLeastOneCollectionCanHaveItems = true;
             break;
@@ -245,7 +245,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     bool canDeleteResources = true;
     bool canConfigureResource = true;
     bool canSynchronizeResources = true;
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         if (isResourceCollection(collection)) {
             resourceCollectionCount++;
 
@@ -284,7 +284,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
 
     // item specific actions
     bool canDeleteItems = (!items.isEmpty());   //TODO: fixme
-    foreach (const Item &item, items) {
+    for (const Item &item : qAsConst(items)) {
         const Collection parentCollection = item.parentCollection();
         if (!parentCollection.isValid()) {
             continue;
@@ -294,7 +294,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     }
 
     bool itemsAreInTrash = false;
-    foreach (const Item &item, items) {
+    for (const Item &item : qAsConst(items)) {
         if (item.hasAttribute<EntityDeletedAttribute>()) {
             itemsAreInTrash = true;
             break;

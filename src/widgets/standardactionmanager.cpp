@@ -18,7 +18,7 @@
 */
 
 #include "standardactionmanager.h"
-
+#include "helper_p.h"
 #include "actionstatemanager_p.h"
 #include "agentfilterproxymodel.h"
 #include "agentinstancecreatejob.h"
@@ -1123,11 +1123,11 @@ public:
         QPointer<Akonadi::AgentTypeDialog> dlg(new Akonadi::AgentTypeDialog(parentWidget));
         dlg->setWindowTitle(contextText(StandardActionManager::CreateResource, StandardActionManager::DialogTitle));
 
-        foreach (const QString &mimeType, mMimeTypeFilter) {
+        for (const QString &mimeType : qAsConst(mMimeTypeFilter)) {
             dlg->agentFilterProxyModel()->addMimeTypeFilter(mimeType);
         }
 
-        foreach (const QString &capability, mCapabilityFilter) {
+        for (const QString &capability : qAsConst(mCapabilityFilter)) {
             dlg->agentFilterProxyModel()->addCapabilityFilter(capability);
         }
 
@@ -1171,7 +1171,7 @@ public:
             return;
         }
 
-        for (AgentInstance instance : instances) {    //krazy:exclude=foreach
+        for (AgentInstance instance : instances) {
             instance.synchronize();
         }
     }
@@ -1183,7 +1183,7 @@ public:
             return;
         }
 
-        for (AgentInstance instance : instances) {    //krazy:exclude=foreach
+        for (AgentInstance instance : instances) {
             instance.synchronizeCollectionTree();
         }
     }
@@ -1343,14 +1343,14 @@ public:
         if (isItemAction) {
             list = safeSelectedRows(itemSelectionModel);
             mimeTypes.reserve(list.count());
-            foreach (const QModelIndex &index, list) {
+            for (const QModelIndex &index : qAsConst(list)) {
                 mimeTypes << index.data(EntityTreeModel::MimeTypeRole).toString();
             }
         }
 
         if (isCollectionAction) {
             list = safeSelectedRows(collectionSelectionModel);
-            foreach (const QModelIndex &index, list) {
+            for (const QModelIndex &index : qAsConst(list)) {
                 const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
 
                 // The mimetypes that the selected collection can possibly contain
