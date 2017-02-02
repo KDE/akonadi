@@ -42,7 +42,8 @@ public:
 QString Akonadi::ItemCopyJobPrivate::jobDebuggingString() const
 {
     QString str = QStringLiteral("Copy items : ");
-    for (int i = 0; i < mItems.count(); ++i) {
+    const int nbItems = mItems.count();
+    for (int i = 0; i < nbItems; ++i) {
         if (i != 0) {
             str += QLatin1Char(',');
         }

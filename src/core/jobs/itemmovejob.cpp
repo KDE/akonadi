@@ -48,7 +48,8 @@ public:
             str += QStringLiteral("No Items defined.");
         } else {
             str += QStringLiteral("Items: ");
-            for (int i = 0; i < items.count(); ++i) {
+            const int nbItems = items.count();
+            for (int i = 0; i < nbItems; ++i) {
                 if (i != 0) {
                     str += QStringLiteral(", ");
                 }
