@@ -162,7 +162,7 @@ protected Q_SLOTS:
     void errorHandler(const QDBusError &error);
 
 private:
-    template <typename T> T *findInterface(Akonadi::DBus::AgentType agentType, const char *path = 0);
+    template <typename T> T *findInterface(Akonadi::DBus::AgentType agentType, const char *path = nullptr);
 
 protected:
     void setAgentType(const QString &agentType)
