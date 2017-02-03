@@ -64,7 +64,8 @@ void DelegateAnimator::timerEvent(QTimerEvent *event)
     }
 
     QRegion region;
-    for (const Animation &animation : qAsConst(m_animations)) {
+    // Do no port this to for(:)! The pop() inside the loop invalidates (even implicit) iterators.
+    foreach (const Animation &animation, m_animations) {
         // Check if loading is finished (we might not be notified, if the index is scrolled out of view)
         const QVariant fetchState = animation.index.data(Akonadi::EntityTreeModel::FetchStateRole);
         if (fetchState.toInt() != Akonadi::EntityTreeModel::FetchingState) {
