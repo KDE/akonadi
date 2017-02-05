@@ -34,7 +34,7 @@ bool TransactionHandler::parseStream()
     case Protocol::TransactionCommand::Invalid:
         return failureResponse("Invalid operation");
     case Protocol::TransactionCommand::Begin:
-        if (!store->beginTransaction()) {
+        if (!store->beginTransaction(QStringLiteral("CLIENT TRANSACTION"))) {
             return failureResponse("Unable to begin transaction.");
         }
         break;

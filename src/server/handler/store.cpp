@@ -135,7 +135,7 @@ bool Store::parseStream()
     //parseCommand();
 
     DataStore *store = connection()->storageBackend();
-    Transaction transaction(store);
+    Transaction transaction(store, QStringLiteral("STORE"));
     ExternalPartStorageTransaction storageTrx;
     // Set the same modification time for each item.
     QDateTime modificationtime = QDateTime::currentDateTimeUtc();

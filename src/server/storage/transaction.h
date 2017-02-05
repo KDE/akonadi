@@ -20,7 +20,7 @@
 #ifndef AKONADI_TRANSACTION_H
 #define AKONADI_TRANSACTION_H
 
-#include <qglobal.h>
+#include <QString>
 
 namespace Akonadi
 {
@@ -44,9 +44,10 @@ public:
       instead of creating a new one.
       @param db The corresponding DataStore. You must not delete @p db during
       the lifetime of a Transaction object.
+      @param name A name of the transaction. Used for debugging.
       @param beginTransaction if false, the transaction won't be started, until begin is explicitly called. The default is to begin the transaction right away.
     */
-    explicit Transaction(DataStore *db, bool beginTransaction = true);
+    explicit Transaction(DataStore *db, const QString &name, bool beginTransaction = true);
 
     /**
       Rolls back the transaction if it hasn't been committed explicitly.
@@ -66,6 +67,7 @@ public:
 private:
     Q_DISABLE_COPY(Transaction)
     DataStore *mDb;
+    QString mName;
     bool mCommitted;
 };
 

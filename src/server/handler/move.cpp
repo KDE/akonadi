@@ -35,7 +35,7 @@ using namespace Akonadi::Server;
 void Move::itemsRetrieved(const QList<qint64> &ids)
 {
     DataStore *store = connection()->storageBackend();
-    Transaction transaction(store);
+    Transaction transaction(store, QStringLiteral("MOVE"));
 
     SelectQueryBuilder<PimItem> qb;
     ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);

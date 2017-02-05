@@ -400,7 +400,7 @@ bool DbUpdater::complexUpdate_25()
 
         if (dbType == DbType::PostgreSQL  || dbType == DbType::Sqlite) {
             if (dbType == DbType::PostgreSQL) {
-                DataStore::self()->beginTransaction();
+                DataStore::self()->beginTransaction(QStringLiteral("DBUPDATER (r25)"));
             }
 
             if (!query.exec(QStringLiteral("ALTER TABLE PartTable RENAME TO PartTable_old"))) {

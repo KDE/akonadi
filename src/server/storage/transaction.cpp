@@ -22,12 +22,13 @@
 
 using namespace Akonadi::Server;
 
-Transaction::Transaction(DataStore *db, bool beginTransaction)
+Transaction::Transaction(DataStore *db, const QString &name, bool beginTransaction)
     : mDb(db)
+    , mName(name)
     , mCommitted(false)
 {
     if (beginTransaction) {
-        mDb->beginTransaction();
+        mDb->beginTransaction(mName);
     }
 }
 
@@ -46,5 +47,5 @@ bool Transaction::commit()
 
 void Transaction::begin()
 {
-    mDb->beginTransaction();
+    mDb->beginTransaction(mName);
 }

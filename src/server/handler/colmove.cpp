@@ -65,7 +65,7 @@ bool ColMove::parseStream()
     }
 
     DataStore *store = connection()->storageBackend();
-    Transaction transaction(store);
+    Transaction transaction(store, QStringLiteral("COLMOVE"));
 
     if (!store->moveCollection(source, target)) {
         return failureResponse("Unable to reparent collection");

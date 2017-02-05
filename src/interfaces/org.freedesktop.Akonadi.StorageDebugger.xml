@@ -26,6 +26,7 @@
 
     <signal name="transactionStarted">
       <arg type="x" name="connectionId" direction="out" />
+      <arg type="s" name="name" direction="out" />
       <arg type="x" name="timestamp" direction="out" />
       <arg type="u" name="duration" direction="out" />
       <arg type="s" name="error" direction="out" />
@@ -40,7 +41,7 @@
     </signal>
 
     <method name="connections">
-        <arg type="a(xsx)" direction="out" />
+        <arg type="a(xsxsx)" direction="out" />
         <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVector&lt;DbConnection&gt;"/>
     </method>
 

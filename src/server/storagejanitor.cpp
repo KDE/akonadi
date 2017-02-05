@@ -148,7 +148,7 @@ qint64 StorageJanitor::lostAndFoundCollection()
         return m_lostFoundCollectionId;
     }
 
-    Transaction transaction(DataStore::self());
+    Transaction transaction(DataStore::self(), QStringLiteral("JANITOR LOST+FOUND"));
     Resource lfRes = Resource::retrieveByName(QStringLiteral("akonadi_lost+found_resource"));
     if (!lfRes.isValid()) {
         lfRes.setName(QStringLiteral("akonadi_lost+found_resource"));
@@ -294,7 +294,7 @@ void StorageJanitor::findOrphanedItems()
     if (!orphans.isEmpty()) {
         inform(QLatin1Literal("Found ") + QString::number(orphans.size()) + QLatin1Literal(" orphan items."));
         // Attach to lost+found collection
-        Transaction transaction(DataStore::self());
+        Transaction transaction(DataStore::self(), QStringLiteral("JANITOR ORPHANS"));
         QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
         qint64 col = lostAndFoundCollection();
         if (col == -1) {
@@ -583,7 +583,7 @@ void StorageJanitor::checkSizeTreshold()
         inform(QStringLiteral("Found %1 parts to be moved to external files").arg(query.size()));
 
         while (query.next()) {
-            Transaction transaction(DataStore::self());
+            Transaction transaction(DataStore::self(), QStringLiteral("JANITOR CHECK SIZE THRESHOLD"));
             Part part = Part::retrieveById(query.value(0).toLongLong());
             const QByteArray name = ExternalPartStorage::nameForPartId(part.id());
             const QString partPath = ExternalPartStorage::resolveAbsolutePath(name);
@@ -629,7 +629,7 @@ void StorageJanitor::checkSizeTreshold()
         inform(QStringLiteral("Found %1 parts to be moved to database").arg(query.size()));
 
         while (query.next()) {
-            Transaction transaction(DataStore::self());
+            Transaction transaction(DataStore::self(), QStringLiteral("JANITOR CHECK SIZE THRESHOLD 2"));
             Part part = Part::retrieveById(query.value(0).toLongLong());
             const QString partPath = ExternalPartStorage::resolveAbsolutePath(part.data());
             QFile f(partPath);

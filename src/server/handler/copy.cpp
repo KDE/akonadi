@@ -73,7 +73,7 @@ void Copy::itemsRetrieved(const QList<qint64> &ids)
     qb.query().finish();
 
     DataStore *store = connection()->storageBackend();
-    Transaction transaction(store);
+    Transaction transaction(store, QStringLiteral("COPY"));
 
     for (const PimItem &item : items) {
         if (!copyItem(item, mTargetCollection)) {

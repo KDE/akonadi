@@ -72,12 +72,12 @@ bool Link::parseStream()
     }
 
     const PimItem::List items = qb.result();
+    const bool createLinks = (cmd.action() == Protocol::LinkItemsCommand::Link);
 
     DataStore *store = connection()->storageBackend();
-    Transaction transaction(store);
+    Transaction transaction(store, createLinks ? QStringLiteral("LINK") : QStringLiteral("UNLINK"));
 
     PimItem::List toLink, toUnlink;
-    const bool createLinks = (cmd.action() == Protocol::LinkItemsCommand::Link);
     for (const PimItem &item : items) {
         const bool alreadyLinked = collection.relatesToPimItem(item);
         bool result = true;

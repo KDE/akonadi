@@ -105,7 +105,7 @@ bool Create::parseStream()
     collection.setCachePolicySyncOnDemand(cp.syncOnDemand());
 
     DataStore *db = connection()->storageBackend();
-    Transaction transaction(db);
+    Transaction transaction(db, QStringLiteral("CREATE"));
 
     if (!db->appendCollection(collection)) {
         return failureResponse(QStringLiteral("Could not create collection ") % cmd.name()

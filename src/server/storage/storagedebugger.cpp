@@ -42,6 +42,7 @@ QDBusArgument &operator<<(QDBusArgument &arg, const DbConnection &con)
     arg << con.id
         << con.name
         << con.start
+        << con.trxName
         << con.transactionStart;
     arg.endStructure();
     return arg;
@@ -53,6 +54,7 @@ const QDBusArgument &operator>>(const QDBusArgument &arg, DbConnection &con)
     arg >> con.id
         >> con.name
         >> con.start
+        >> con.trxName
         >> con.transactionStart;
     arg.endStructure();
     return arg;
@@ -118,7 +120,7 @@ void StorageDebugger::addConnection(qint64 id, const QString &name)
 {
     QMutexLocker locker(&mMutex);
     const qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-    mConnections.push_back({ id, name, timestamp, 0ll });
+    mConnections.push_back({ id, name, timestamp, QString(), 0ll });
     if (mEnabled) {
         Q_EMIT connectionOpened(id, timestamp, name);
     }
@@ -154,18 +156,19 @@ void StorageDebugger::changeConnection(qint64 id, const QString &name)
 
 }
 
-void StorageDebugger::addTransaction(qint64 connectionId, uint duration,
-                                     const QString &error)
+void StorageDebugger::addTransaction(qint64 connectionId, const QString &name,
+                                     uint duration, const QString &error)
 {
     QMutexLocker locker(&mMutex);
     auto con = findConnection(mConnections, connectionId);
     if (con == mConnections.end()) {
         return;
     }
+    con->trxName = name;
     con->transactionStart = QDateTime::currentMSecsSinceEpoch();
 
     if (mEnabled) {
-        Q_EMIT transactionStarted(connectionId, con->transactionStart, duration, error);
+        Q_EMIT transactionStarted(connectionId, name, con->transactionStart, duration, error);
     }
 
 }
@@ -179,6 +182,7 @@ void StorageDebugger::removeTransaction(qint64 connectionId, bool commit,
     if (con == mConnections.end()) {
         return;
     }
+    con->trxName.clear();
     con->transactionStart = 0;
 
     if (mEnabled) {

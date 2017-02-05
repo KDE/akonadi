@@ -44,7 +44,7 @@ bool SearchPersistent::parseStream()
     }
 
     DataStore *db = connection()->storageBackend();
-    Transaction transaction(db);
+    Transaction transaction(db, QStringLiteral("SEARCH PERSISTENT"));
 
     QStringList queryAttributes;
 

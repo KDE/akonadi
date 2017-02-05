@@ -647,7 +647,7 @@ bool FetchHelper::needsAccessTimeUpdate(const QVector<QByteArray> &parts)
 
 void FetchHelper::updateItemAccessTime()
 {
-    Transaction transaction(mConnection->storageBackend());
+    Transaction transaction(mConnection->storageBackend(), QStringLiteral("update atime"));
     QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
     qb.setColumnValue(PimItem::atimeColumn(), QDateTime::currentDateTimeUtc());
     ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);

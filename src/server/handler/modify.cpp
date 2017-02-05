@@ -61,7 +61,7 @@ bool Modify::parseStream()
     }
 
     DataStore *db = connection()->storageBackend();
-    Transaction transaction(db);
+    Transaction transaction(db, QStringLiteral("MODIFY"));
     QList<QByteArray> changes;
     bool referencedChanged = false;
 

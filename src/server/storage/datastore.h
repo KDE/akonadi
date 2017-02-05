@@ -229,7 +229,7 @@ public:
       no notification signal will be emitted unless you call commitTransaction().
       @return @c true if successful.
     */
-    virtual bool beginTransaction();
+    virtual bool beginTransaction(const QString &name);
 
     /**
       Reverts all changes within the current transaction.

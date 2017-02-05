@@ -855,7 +855,7 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
 
 static bool recursiveSetResourceId(const Collection &collection, qint64 resourceId)
 {
-    Transaction transaction(DataStore::self());
+    Transaction transaction(DataStore::self(), QStringLiteral("RECURSIVE SET RESOURCEID"));
 
     QueryBuilder qb(Collection::tableName(), QueryBuilder::Update);
     qb.addValueCondition(Collection::parentIdColumn(), Query::Equals, collection.id());
@@ -1293,7 +1293,7 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
     // because this has to be completely transparent to the original caller
     const int oldTransactionLevel = m_transactionLevel;
     m_transactionLevel = 0;
-    if (!beginTransaction()) {
+    if (!beginTransaction(QStringLiteral("RETRY LAST TRX"))) {
         m_transactionLevel = oldTransactionLevel;
         return QSqlQuery();
     }
@@ -1351,7 +1351,7 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
     return m_transactionQueries.last().first;
 }
 
-bool DataStore::beginTransaction()
+bool DataStore::beginTransaction(const QString &name)
 {
     if (!m_dbOpened) {
         return false;
@@ -1364,7 +1364,7 @@ bool DataStore::beginTransaction()
         if (DbType::type(m_database) == DbType::Sqlite) {
             m_database.exec(QStringLiteral("BEGIN IMMEDIATE TRANSACTION"));
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this),
-                                                        timer.elapsed(),
+                                                        name, timer.elapsed(),
                                                         m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction (SQLITE)");
@@ -1374,7 +1374,7 @@ bool DataStore::beginTransaction()
         } else {
             m_database.driver()->beginTransaction();
             StorageDebugger::instance()->addTransaction(reinterpret_cast<qint64>(this),
-                                                        timer.elapsed(),
+                                                        name, timer.elapsed(),
                                                         m_database.lastError().text());
             if (m_database.lastError().isValid()) {
                 debugLastDbError("DataStore::beginTransaction");

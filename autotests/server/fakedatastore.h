@@ -111,7 +111,7 @@ public:
     virtual bool removeCollectionAttribute(const Collection &col,
                                            const QByteArray &key) Q_DECL_OVERRIDE;
 
-    virtual bool beginTransaction() Q_DECL_OVERRIDE;
+    virtual bool beginTransaction(const QString &name = QString()) Q_DECL_OVERRIDE;
     virtual bool rollbackTransaction() Q_DECL_OVERRIDE;
     virtual bool commitTransaction() Q_DECL_OVERRIDE;
 

@@ -40,7 +40,7 @@ bool Remove::parseStream()
     ItemQueryHelper::scopeToQuery(cmd.items(), connection()->context(), qb);
 
     DataStore *store = connection()->storageBackend();
-    Transaction transaction(store);
+    Transaction transaction(store, QStringLiteral("REMOVE"));
 
     if (!qb.exec()) {
         return failureResponse("Unable to execute query");

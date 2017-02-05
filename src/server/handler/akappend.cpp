@@ -366,7 +366,7 @@ bool AkAppend::parseStream()
     // and try to insert Parts independently? In case we fail to insert a part,
     // it's not a problem as it can be re-fetched at any time, except for attributes.
     DataStore *db = DataStore::self();
-    Transaction transaction(db);
+    Transaction transaction(db, QStringLiteral("AKAPPEND"));
     ExternalPartStorageTransaction storageTrx;
 
     PimItem item;

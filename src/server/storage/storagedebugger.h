@@ -46,6 +46,7 @@ struct DbConnection {
     qint64 id;
     QString name;
     qint64 start;
+    QString trxName;
     qint64 transactionStart;
 };
 
@@ -69,7 +70,7 @@ public:
     void addConnection(qint64 id, const QString &name);
     void removeConnection(qint64 id);
     void changeConnection(qint64 id, const QString &name);
-    void addTransaction(qint64 connectionId, uint duration, const QString &error);
+    void addTransaction(qint64 connectionId, const QString &name, uint duration, const QString &error);
     void removeTransaction(qint64 connectionId, bool commit, uint duration, const QString &error);
 
     void enableSQLDebugging(bool enable);
@@ -94,7 +95,8 @@ Q_SIGNALS:
     void connectionChanged(qint64 id, const QString &name);
     void connectionClosed(qint64 id, qint64 timestamp);
 
-    void transactionStarted(qint64 connectionId, qint64 timestamp, uint duration, const QString &error);
+    void transactionStarted(qint64 connectionId, const QString &name, qint64 timestamp,
+                            uint duration, const QString &error);
     void transactionFinished(qint64 connectionId, bool commit, qint64 timestamp, uint duration,
                              const QString &error);
 

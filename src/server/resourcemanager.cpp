@@ -40,7 +40,7 @@ ResourceManager::ResourceManager(QObject *parent)
 
 void ResourceManager::addResourceInstance(const QString &name, const QStringList &capabilities)
 {
-    Transaction transaction(DataStore::self());
+    Transaction transaction(DataStore::self(), QStringLiteral("ADD RESOURCE INSTANCE"));
     Resource resource = Resource::retrieveByName(name);
     if (resource.isValid()) {
         Tracer::self()->error("ResourceManager", QStringLiteral("Resource '%1' already exists.").arg(name));

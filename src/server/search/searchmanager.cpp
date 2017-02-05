@@ -364,7 +364,7 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
         return;
     }
 
-    Transaction transaction(DataStore::self());
+    Transaction transaction(DataStore::self(), QStringLiteral("UPDATE SEARCH"));
 
     // Unlink all items that were not in search results from the collection
     QVariantList toRemove;
@@ -431,7 +431,8 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
         return;
     }
 
-    Transaction transaction(DataStore::self(), !DataStore::self()->inTransaction());
+    Transaction transaction(DataStore::self(), QStringLiteral("PUSH SEARCH RESULTS"),
+                            !DataStore::self()->inTransaction());
 
     // First query all the IDs we got from search plugin/agent against the DB.
     // This will remove IDs that no longer exist in the DB.

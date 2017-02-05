@@ -110,7 +110,7 @@ bool ColCopy::parseStream()
     }
 
     DataStore *store = connection()->storageBackend();
-    Transaction transaction(store);
+    Transaction transaction(store, QStringLiteral("COLCOPY"));
 
     if (!copyCollection(source, target)) {
         return failureResponse("Failed to copy collection");

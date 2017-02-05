@@ -291,10 +291,10 @@ bool FakeDataStore::removeCollectionAttribute(const Collection &col,
     return DataStore::removeCollectionAttribute(col, key);
 }
 
-bool FakeDataStore::beginTransaction()
+bool FakeDataStore::beginTransaction(const QString &name)
 {
-    mChanges.insert(QStringLiteral("beginTransaction"), QVariantList());
-    return DataStore::beginTransaction();
+    mChanges.insert(QStringLiteral("beginTransaction"), QVariantList() << name);
+    return DataStore::beginTransaction(name);
 }
 
 bool FakeDataStore::commitTransaction()
