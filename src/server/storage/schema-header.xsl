@@ -33,8 +33,8 @@ namespace Server {
 class <xsl:value-of select="$className"/> : public Schema
 {
   public:
-    QVector&lt;TableDescription&gt; tables() /*override*/;
-    QVector&lt;RelationDescription&gt; relations() /*override*/;
+    QVector&lt;TableDescription&gt; tables() Q_DECL_OVERRIDE;
+    QVector&lt;RelationDescription&gt; relations() Q_DECL_OVERRIDE;
 };
 
 } // namespace Server
