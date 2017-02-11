@@ -1147,14 +1147,15 @@ void AgentBase::cleanup()
     /*
      * ... and remove the changes file from hd.
      */
-    if (!QFile::remove(fileName + QStringLiteral("_changes.dat"))) {
-        qCWarning(AKONADIAGENTBASE_LOG) << "Impossible to remove " << fileName + QStringLiteral("_changes.dat");
+    const QString changeDataFileName = fileName + QStringLiteral("_changes.dat");
+    if (!QFile::remove(changeDataFileName)) {
+        qCWarning(AKONADIAGENTBASE_LOG) << "Impossible to remove " << changeDataFileName;
     }
 
     /*
      * ... and also remove the agent configuration file if there is one.
      */
-    QString configFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + config()->name();
+    const QString configFile = QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QLatin1Char('/') + config()->name();
     if (!QFile::remove(configFile)) {
         qCWarning(AKONADIAGENTBASE_LOG) << "Impossible to remove config file " << configFile;
     }
