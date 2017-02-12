@@ -34,7 +34,6 @@ set(common_SRCS
     dbinitializer.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
 )
-ecm_qt_declare_logging_category(common_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME org.kde.pim.akonadiserver)
 
 add_library(akonadi_unittest_common STATIC ${common_SRCS})
 target_link_libraries(akonadi_unittest_common
