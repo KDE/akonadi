@@ -118,8 +118,6 @@ protected:
 private:
     explicit FakeAkonadiServer();
 
-    bool deleteDirectory(const QString &path);
-
     FakeDataStore *mDataStore;
     FakeSearchManager *mSearchManager;
     FakeConnection *mConnection;

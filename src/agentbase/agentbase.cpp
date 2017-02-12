@@ -400,6 +400,7 @@ void AgentBasePrivate::init()
             mSettings->setValue(QStringLiteral("Agent/Name"), mName);
         }
     }
+    Q_ASSERT(mName != QLatin1String("IMAP E-Mail Server"));
 
     connect(mChangeRecorder, &Monitor::itemAdded,
             this, &AgentBasePrivate::itemAdded);
@@ -1236,6 +1237,7 @@ QString AgentBase::identifier() const
 void AgentBase::setAgentName(const QString &name)
 {
     Q_D(AgentBase);
+    Q_ASSERT(name != QLatin1String("IMAP E-Mail Server"));
     if (name == d->mName) {
         return;
     }
@@ -1261,8 +1263,10 @@ QString AgentBase::agentName() const
 {
     Q_D(const AgentBase);
     if (d->mName.isEmpty()) {
+        Q_ASSERT(d->mId != QLatin1String("IMAP E-Mail Server"));
         return d->mId;
     } else {
+        Q_ASSERT(d->mName != QLatin1String("IMAP E-Mail Server"));
         return d->mName;
     }
 }
