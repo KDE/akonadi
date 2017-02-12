@@ -46,6 +46,7 @@ int main(int argc, char **argv) \
     AkCoreApplication app(argc, argv); \
     app.addCommandLineOptions(QCommandLineOption( \
         QLatin1String("no-cleanup"), QLatin1String("Don't clean up the temporary runtime environment"))); \
+    app.parseCommandLine(); \
     TestObject tc; \
     return QTest::qExec(&tc, argc, argv); \
 }
