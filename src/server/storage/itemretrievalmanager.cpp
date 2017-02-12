@@ -220,7 +220,7 @@ void ItemRetrievalManager::processRequest()
 
 void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, const QString &errorMsg)
 {
-    qDebug() << "ItemRetrievalJob finished for request" << request << ", error:" << errorMsg;
+    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalJob finished for request" << request << ", error:" << errorMsg;
     mLock->lockForWrite();
     request->errorMsg = errorMsg;
     request->processed = true;
