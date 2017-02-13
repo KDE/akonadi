@@ -243,29 +243,6 @@ bool FakeAkonadiServer::init()
     return true;
 }
 
-bool FakeAkonadiServer::deleteDirectory(const QString &path)
-{
-    // TODO: Qt 5: Use QDir::removeRecursively
-
-    Q_ASSERT(path.startsWith(basePath()));
-    QDir dir(path);
-    dir.setFilter(QDir::Dirs | QDir::Files | QDir::NoDotAndDotDot | QDir::Hidden);
-
-    const QFileInfoList list = dir.entryInfoList();
-    for (int i = 0; i < list.size(); ++i) {
-        if (list.at(i).isDir() && !list.at(i).isSymLink()) {
-            deleteDirectory(list.at(i).absoluteFilePath());
-            const QDir tmpDir(list.at(i).absoluteDir());
-            tmpDir.rmdir(list.at(i).fileName());
-        } else {
-            QFile::remove(list.at(i).absoluteFilePath());
-        }
-    }
-    dir.cdUp();
-    dir.rmdir(path);
-    return true;
-}
-
 bool FakeAkonadiServer::quit()
 {
     qDebug() << "==== Fake Akonadi Server shutting down ====";
@@ -277,8 +254,8 @@ bool FakeAkonadiServer::quit()
 
     const QCommandLineParser &args = AkApplicationBase::instance()->commandLineArguments();
     if (!args.isSet(QLatin1String("no-cleanup"))) {
-        deleteDirectory(basePath());
-        qDebug() << "Cleaned up" << basePath();
+        bool ok = QDir(basePath()).removeRecursively();
+        qDebug() << "Cleaned up" << basePath() << "success=" << ok;
     } else {
         qDebug() << "Skipping clean up of" << basePath();
     }
