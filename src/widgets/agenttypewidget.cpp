@@ -194,7 +194,7 @@ void AgentTypeWidgetDelegate::paint(QPainter *painter, const QStyleOptionViewIte
     QApplication::style()->drawPrimitive(QStyle::PE_PanelItemViewItem, &opt, painter);
 
     QPen pen = painter->pen();
-    QPalette::ColorGroup cg = option.state & QStyle::State_Enabled
+    QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled)
                               ? QPalette::Normal : QPalette::Disabled;
     if (cg == QPalette::Normal && !(option.state & QStyle::State_Active)) {
         cg = QPalette::Inactive;
