@@ -37,13 +37,11 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 NotificationManager::NotificationManager()
-    : AkThread()
+    : AkThread(QStringLiteral("NotificationManager"))
     , mTimer(nullptr)
     , mNotifyThreadPool(nullptr)
     , mDebugNotifications(0)
 {
-    setObjectName(QStringLiteral("NotificationManager"));
-    thread()->setObjectName(QStringLiteral("NotificationManager-Thread"));
 }
 
 NotificationManager::~NotificationManager()

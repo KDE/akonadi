@@ -105,8 +105,8 @@ private:
 
 using namespace Akonadi::Server;
 
-CollectionScheduler::CollectionScheduler(QThread::Priority priority, QObject *parent)
-    : AkThread(priority, parent)
+CollectionScheduler::CollectionScheduler(const QString &threadName, QThread::Priority priority, QObject *parent)
+    : AkThread(threadName, priority, parent)
     , mScheduler(nullptr)
     , mMinInterval(5)
 {

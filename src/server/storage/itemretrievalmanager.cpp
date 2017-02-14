@@ -51,13 +51,10 @@ ItemRetrievalManager::ItemRetrievalManager(QObject *parent)
 }
 
 ItemRetrievalManager::ItemRetrievalManager(AbstractItemRetrievalJobFactory *factory, QObject *parent)
-    : AkThread(QThread::HighPriority, parent)
+    : AkThread(QStringLiteral("ItemRetrievalManager"), QThread::HighPriority, parent)
     , mJobFactory(factory)
 {
     qDBusRegisterMetaType<QByteArrayList>();
-
-    setObjectName(QStringLiteral("ItemRetrievalManager"));
-    thread()->setObjectName(QStringLiteral("ItemRetrievalManager-Thread"));
 
     Q_ASSERT(sInstance == nullptr);
     sInstance = this;

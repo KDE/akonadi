@@ -26,10 +26,12 @@
 
 using namespace Akonadi::Server;
 
-AkThread::AkThread(StartMode startMode, QThread::Priority priority, QObject *parent)
+AkThread::AkThread(const QString &objectName, StartMode startMode, QThread::Priority priority, QObject *parent)
     : QObject(parent)
 {
+    setObjectName(objectName);
     QThread *thread = new QThread();
+    thread->setObjectName(objectName + QStringLiteral("-Thread"));
     moveToThread(thread);
     thread->start(priority);
 
@@ -38,8 +40,8 @@ AkThread::AkThread(StartMode startMode, QThread::Priority priority, QObject *par
     }
 }
 
-AkThread::AkThread(QThread::Priority priority, QObject *parent)
-    : AkThread(AutoStart, priority, parent)
+AkThread::AkThread(const QString &objectName, QThread::Priority priority, QObject *parent)
+    : AkThread(objectName, AutoStart, priority, parent)
 {
 }
 

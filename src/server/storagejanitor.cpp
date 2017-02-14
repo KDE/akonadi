@@ -51,11 +51,9 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 StorageJanitor::StorageJanitor(QObject *parent)
-    : AkThread(QThread::IdlePriority, parent)
+    : AkThread(QStringLiteral("StorageJanitor"), QThread::IdlePriority, parent)
     , m_lostFoundCollectionId(-1)
 {
-    setObjectName(QStringLiteral("StorageJanitor"));
-    thread()->setObjectName(QStringLiteral("StorageJanitor-Thread"));
 }
 
 StorageJanitor::~StorageJanitor()

@@ -42,8 +42,14 @@ using namespace Akonadi::Server;
 
 #define IDLE_TIMER_TIMEOUT 180000 // 3 min
 
+static QString connectionIdentifier(Connection *c) {
+    QString id;
+    id.sprintf("%p", static_cast<void *>(c));
+    return id;
+}
+
 Connection::Connection(QObject *parent)
-    : AkThread(QThread::InheritPriority, parent)
+    : AkThread(connectionIdentifier(this), QThread::InheritPriority, parent)
     , m_socketDescriptor(0)
     , m_socket(nullptr)
     , m_currentHandler(nullptr)
@@ -60,9 +66,7 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     : Connection(parent)
 {
     m_socketDescriptor = socketDescriptor;
-    m_identifier.sprintf("%p", static_cast<void *>(this));
-    setObjectName(m_identifier);
-    thread()->setObjectName(m_identifier + QStringLiteral("-Thread"));
+    m_identifier = connectionIdentifier(this); // same as objectName()
 
     const QSettings settings(Akonadi::StandardDirs::serverConfigFile(), QSettings::IniFormat);
     m_verifyCacheOnRetrieval = settings.value(QStringLiteral("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
@@ -333,7 +337,8 @@ void Connection::setSessionId(const QByteArray &id)
 
     m_sessionId = id;
     setObjectName(QString::fromLatin1(id));
-    thread()->setObjectName(objectName() + QStringLiteral("-Thread"));
+    // this races with the use of objectName() in QThreadPrivate::start
+    //thread()->setObjectName(objectName() + QStringLiteral("-Thread"));
     storageBackend()->setSessionId(id);
     storageBackend()->notificationCollector()->setSessionId(id);
 }

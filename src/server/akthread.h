@@ -37,9 +37,9 @@ public:
         ManualStart
     };
 
-    explicit AkThread(QThread::Priority priority = QThread::InheritPriority,
+    explicit AkThread(const QString &objectName, QThread::Priority priority = QThread::InheritPriority,
                       QObject *parent = nullptr);
-    explicit AkThread(StartMode startMode,
+    explicit AkThread(const QString &objectName, StartMode startMode,
                       QThread::Priority priority = QThread::InheritPriority,
                       QObject *parent = nullptr);
     virtual ~AkThread();

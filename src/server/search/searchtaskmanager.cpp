@@ -37,11 +37,9 @@ using namespace Akonadi::Server;
 SearchTaskManager *SearchTaskManager::sInstance = nullptr;
 
 SearchTaskManager::SearchTaskManager()
-    : AkThread()
+    : AkThread(QStringLiteral("SearchTaskManager"))
     , mShouldStop(false)
 {
-    setObjectName(QStringLiteral("SearchTaskManager"));
-    thread()->setObjectName(QStringLiteral("SearchTaskManager-Thread"));
     sInstance = this;
 
     QTimer::singleShot(0, this, &SearchTaskManager::searchLoop);

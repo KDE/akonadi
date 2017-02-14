@@ -57,12 +57,9 @@ Q_DECLARE_METATYPE(QSet<qint64>)
 Q_DECLARE_METATYPE(QSemaphore *)
 
 SearchManager::SearchManager(const QStringList &searchEngines, QObject *parent)
-    : AkThread(AkThread::ManualStart, QThread::InheritPriority, parent)
+    : AkThread(QStringLiteral("SearchManager"), AkThread::ManualStart, QThread::InheritPriority, parent)
     , mEngineNames(searchEngines)
 {
-    setObjectName(QStringLiteral("SearchManager"));
-    thread()->setObjectName(QStringLiteral("SearchManager-Thread"));
-
     qRegisterMetaType<QSet<qint64>>();
     qRegisterMetaType<Collection>();
     qRegisterMetaType<QSemaphore *>();
