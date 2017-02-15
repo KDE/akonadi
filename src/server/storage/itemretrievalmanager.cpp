@@ -232,6 +232,7 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
             qCDebug(AKONADISERVER_LOG) << "someone else requested item" << request->ids << "as well, marking as processed";
             (*it)->errorMsg = errorMsg;
             (*it)->processed = true;
+            Q_EMIT requestFinished(*it);
             it = mPendingRequests[request->resourceId].erase(it);
         } else {
             ++it;

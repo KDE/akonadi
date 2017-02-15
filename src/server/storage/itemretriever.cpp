@@ -317,17 +317,18 @@ bool ItemRetriever::exec()
     QEventLoop eventLoop;
     connect(ItemRetrievalManager::instance(), &ItemRetrievalManager::requestFinished,
             this, [&](ItemRetrievalRequest *finishedRequest) {
-                if (!finishedRequest->errorMsg.isEmpty()) {
-                    mLastError = finishedRequest->errorMsg.toUtf8();
-                    eventLoop.exit(1);
-                } else {
-                    requests.removeOne(finishedRequest);
-                    Q_EMIT itemsRetrieved(finishedRequest->ids);
-                    if (requests.isEmpty()) {
-                        eventLoop.quit();
-                    }
+        if (requests.removeOne(finishedRequest)) {
+            if (!finishedRequest->errorMsg.isEmpty()) {
+                mLastError = finishedRequest->errorMsg.toUtf8();
+                eventLoop.exit(1);
+            } else {
+                Q_EMIT itemsRetrieved(finishedRequest->ids);
+                if (requests.isEmpty()) {
+                    eventLoop.quit();
                 }
-            }, Qt::UniqueConnection);
+            }
+        }
+    }, Qt::UniqueConnection);
 
     auto it = requests.begin();
     while (it != requests.end()) {
