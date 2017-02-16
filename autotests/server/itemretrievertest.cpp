@@ -20,6 +20,7 @@
 #include <QObject>
 #include <QTest>
 #include <QTimer>
+#include <QMutex>
 
 #include "storage/itemretriever.h"
 #include "storage/itemretrievaljob.h"
@@ -144,6 +145,52 @@ private:
     QMultiHash<qint64, JobResult> mJobResults;
 };
 
+using RequestedParts = QVector<QByteArray /* FQ name */>;
+
+class ClientThread : public QThread
+{
+public:
+    ClientThread(Entity::Id itemId, const RequestedParts &requestedParts)
+        : m_itemId(itemId), m_requestedParts(requestedParts)
+    {}
+
+    void run() Q_DECL_OVERRIDE
+    {
+        // ItemRetriever should...
+        ItemRetriever retriever;
+        retriever.setItem(m_itemId);
+        retriever.setRetrieveParts(m_requestedParts);
+        QSignalSpy spy(&retriever, &ItemRetriever::itemsRetrieved);
+
+        const bool success = retriever.exec();
+
+        QMutexLocker lock(&m_mutex);
+        m_results.success = success;
+        m_results.signalsCount = spy.count();
+        if (m_results.signalsCount > 0) {
+            m_results.emittedItems = spy.at(0).at(0).value<QList<qint64>>();
+        }
+    }
+
+    struct Results
+    {
+        bool success;
+        int signalsCount;
+        QList<qint64> emittedItems;
+    };
+    Results results() const {
+        QMutexLocker lock(&m_mutex);
+        return m_results;
+    }
+
+private:
+    const Entity::Id m_itemId;
+    const RequestedParts m_requestedParts;
+
+    mutable QMutex m_mutex; // protects results below
+    Results m_results;
+};
+
 class ItemRetrieverTest : public QObject
 {
     Q_OBJECT
@@ -151,7 +198,6 @@ class ItemRetrieverTest : public QObject
 
     using ExistingParts = QVector<QPair<QByteArray /* name */, QByteArray /* data */>>;
     using AvailableParts = QVector<QPair<QByteArray /* name */, QByteArray /* data */>>;
-    using RequestedParts = QVector<QByteArray /* FQ name */>;
 
 public:
     ItemRetrieverTest()
@@ -252,63 +298,89 @@ private Q_SLOTS:
 
 
         // Setup
-        DbInitializer dbInitializer;
-        FakeItemRetrievalJobFactory factory(dbInitializer);
-        ItemRetrievalManager mgr(&factory);
-        QTest::qWait(100);
+        for (int step = 0; step < 2; ++step) {
+            DbInitializer dbInitializer;
+            FakeItemRetrievalJobFactory factory(dbInitializer);
+            ItemRetrievalManager mgr(&factory);
+            QTest::qWait(100);
 
-        // Given a PimItem with existing parts
-        Resource res = dbInitializer.createResource("testresource");
-        Collection col = dbInitializer.createCollection("col1");
-        PimItem item = dbInitializer.createItem("1", col);
-        Q_FOREACH (const auto &existingPart, existingParts) {
-            dbInitializer.createPart(item.id(), existingPart.first, existingPart.second);
-        }
+            // Given a PimItem with existing parts
+            Resource res = dbInitializer.createResource("testresource");
+            Collection col = dbInitializer.createCollection("col1");
 
-        Q_FOREACH (const auto &availablePart, availableParts) {
-            factory.addJobResult(item.id(), availablePart.first, availablePart.second);
-        }
-
-        // ItemRetriever should...
-        ItemRetriever retriever;
-        retriever.setItem(item.id());
-        retriever.setRetrieveParts(requestedParts);
-        QSignalSpy spy(&retriever, &ItemRetriever::itemsRetrieved);
-
-        // Succeed
-        QVERIFY(retriever.exec());
-        // Run exactly one retrieval job
-        QCOMPARE(factory.jobsCount(), expectedRetrievalJobs);
-        // Emit exactly one signal ...
-        QCOMPARE(spy.count(), expectedSignals);
-        // ... with that one item
-        if (expectedSignals > 0) {
-            QCOMPARE(spy.at(0).at(0).value<QList<qint64>>(), QList<qint64>{ item.id() });
-        }
-
-        // and the part exists in the DB
-        const auto parts = item.parts();
-        QCOMPARE(parts.count(), expectedParts);
-        Q_FOREACH (const Part &dbPart, item.parts()) {
-            const QString fqname = dbPart.partType().ns() + QLatin1Char(':') + dbPart.partType().name();
-            if (!requestedParts.contains(fqname.toLatin1())) {
-                continue;
+            // step 0: do it in the main thread, for easier debugging
+            PimItem item = dbInitializer.createItem("1", col);
+            Q_FOREACH (const auto &existingPart, existingParts) {
+                dbInitializer.createPart(item.id(), existingPart.first, existingPart.second);
             }
 
-            auto it = std::find_if(availableParts.constBegin(), availableParts.constEnd(),
-                                   [dbPart](const QPair<QByteArray, QByteArray> &p) {
-                                       return dbPart.partType().name().toLatin1() == p.first;
-                                   });
-            if (it == availableParts.constEnd()) {
-                it = std::find_if(existingParts.constBegin(), existingParts.constEnd(),
-                                  [fqname](const QPair<QByteArray, QByteArray> &p) {
-                                      return fqname.toLatin1() == p.first;
-                                  });
-                QVERIFY(it != existingParts.constEnd());
+            Q_FOREACH (const auto &availablePart, availableParts) {
+                factory.addJobResult(item.id(), availablePart.first, availablePart.second);
             }
 
-            QCOMPARE(dbPart.data(), it->second);
-            QCOMPARE(dbPart.datasize(), it->second.size());
+            if (step == 0) {
+                ClientThread thread(item.id(), requestedParts);
+                thread.run();
+
+                const ClientThread::Results results = thread.results();
+                // ItemRetriever should ... succeed
+                QVERIFY(results.success);
+                // Emit exactly one signal ...
+                QCOMPARE(results.signalsCount, expectedSignals);
+                // ... with that one item
+                if (expectedSignals > 0) {
+                    QCOMPARE(results.emittedItems, QList<qint64>{ item.id() });
+                }
+
+                // Check that the factory had exactly one retrieval job
+                QCOMPARE(factory.jobsCount(), expectedRetrievalJobs);
+
+            } else {
+                QVector<ClientThread *> threads;
+                for (int i = 0; i < 20; ++i) {
+                    threads.append(new ClientThread(item.id(), requestedParts));
+                }
+                for (int i = 0; i < threads.size(); ++i) {
+                    threads.at(i)->start();
+                }
+                for (int i = 0; i < threads.size(); ++i) {
+                    threads.at(i)->wait();
+                }
+                for (int i = 0; i < threads.size(); ++i) {
+                    const ClientThread::Results results = threads.at(i)->results();
+                    QVERIFY(results.success);
+                    QCOMPARE(results.signalsCount, expectedSignals);
+                    if (expectedSignals > 0) {
+                        QCOMPARE(results.emittedItems, QList<qint64>{ item.id() });
+                    }
+                }
+                qDeleteAll(threads);
+            }
+
+            // Check that the parts now exist in the DB
+            const auto parts = item.parts();
+            QCOMPARE(parts.count(), expectedParts);
+            Q_FOREACH (const Part &dbPart, item.parts()) {
+                const QString fqname = dbPart.partType().ns() + QLatin1Char(':') + dbPart.partType().name();
+                if (!requestedParts.contains(fqname.toLatin1())) {
+                    continue;
+                }
+
+                auto it = std::find_if(availableParts.constBegin(), availableParts.constEnd(),
+                        [dbPart](const QPair<QByteArray, QByteArray> &p) {
+                        return dbPart.partType().name().toLatin1() == p.first;
+                        });
+                if (it == availableParts.constEnd()) {
+                    it = std::find_if(existingParts.constBegin(), existingParts.constEnd(),
+                            [fqname](const QPair<QByteArray, QByteArray> &p) {
+                            return fqname.toLatin1() == p.first;
+                            });
+                    QVERIFY(it != existingParts.constEnd());
+                }
+
+                QCOMPARE(dbPart.data(), it->second);
+                QCOMPARE(dbPart.datasize(), it->second.size());
+            }
         }
     }
 };
