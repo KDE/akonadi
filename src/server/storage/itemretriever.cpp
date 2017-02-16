@@ -324,7 +324,7 @@ bool ItemRetriever::exec()
 
     QEventLoop eventLoop;
     connect(ItemRetrievalManager::instance(), &ItemRetrievalManager::requestFinished,
-            this, [&](ItemRetrievalRequest * finishedRequest) {
+            this, [&](ItemRetrievalRequest *finishedRequest) {
         if (requests.removeOne(finishedRequest)) {
             if (mCanceled) {
                 eventLoop.exit(1);
