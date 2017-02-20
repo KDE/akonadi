@@ -27,8 +27,6 @@
 #include "../src/widgets/actionstatemanager.cpp"
 #undef QT_NO_CLIPBOARD
 
-#include "../src/core/pastehelper.cpp"
-
 typedef QHash<Akonadi::StandardActionManager::Type, bool> StateMap;
 Q_DECLARE_METATYPE(StateMap)
 
