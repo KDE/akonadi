@@ -77,7 +77,13 @@ set_package_properties(Boost PROPERTIES
     TYPE REQUIRED
 )
 
-set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
+# Some more strictness not enforced by ECM
+add_definitions(-DQT_STRICT_ITERATORS)
+
+
+if(BUILD_TESTING)
+    set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
+endif()
 configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
 
 # Make sure the KF5Akonadi_DATA_DIR is absolute before passing it to KF5AkonadiConfig.cmake.in
