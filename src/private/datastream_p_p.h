@@ -75,8 +75,14 @@ public:
 
     void waitForData(quint32 size);
 private:
-
     Q_DISABLE_COPY(DataStream)
+
+    inline void checkDevice() const
+    {
+        if (Q_UNLIKELY(!mDev)) {
+            throw ProtocolException("Device does not exist");
+        }
+    }
 
     QIODevice *mDev;
     int mWaitTimeout;
@@ -86,7 +92,7 @@ template<typename T>
 inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
 &DataStream::operator<<(T val)
 {
-    Q_ASSERT(mDev);
+    checkDevice();
     if (mDev->write((char *)&val, sizeof(T)) != sizeof(T)) {
         throw Akonadi::ProtocolException("Failed to write data to stream");
     }
@@ -102,7 +108,6 @@ inline typename std::enable_if<std::is_enum<T>::value, DataStream>::type
 
 inline DataStream &DataStream::operator<<(const QString &str)
 {
-    Q_ASSERT(mDev);
     if (str.isNull()) {
         *this << (quint32) 0xffffffff;
     } else {
@@ -113,7 +118,6 @@ inline DataStream &DataStream::operator<<(const QString &str)
 
 inline DataStream &DataStream::operator<<(const QByteArray &data)
 {
-    Q_ASSERT(mDev);
     if (data.isNull()) {
         *this << (quint32) 0xffffffff;
     } else {
@@ -139,7 +143,8 @@ template<typename T>
 inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
 &DataStream::operator>>(T &val)
 {
-    Q_ASSERT(mDev);
+    checkDevice();
+
     waitForData(sizeof(T));
 
     if (mDev->read((char *)&val, sizeof(T)) != sizeof(T)) {
