@@ -8449,6 +8449,7 @@ class TagChangeNotificationPrivate : public ChangeNotificationPrivate
 public:
     TagChangeNotificationPrivate()
         : ChangeNotificationPrivate(Command::TagChangeNotification)
+        , id(-1)
         , operation(TagChangeNotification::InvalidOp)
     {}
 
