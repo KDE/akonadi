@@ -375,7 +375,7 @@ Collection HandlerHelper::collectionFromScope(const Scope &scope, Connection *co
     }
 
     const Collection::List c = qb.result();
-    if (c.count() == 0) {
+    if (c.isEmpty()) {
         return Collection();
     } else if (c.count() == 1) {
         return c.at(0);

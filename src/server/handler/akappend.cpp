@@ -399,7 +399,7 @@ bool AkAppend::parseStream()
         }
 
         const QVector<PimItem> result = qb.result();
-        if (result.count() == 0) {
+        if (result.isEmpty()) {
             // No item with such GID/RID exists, so call AkAppend::insert() and behave
             // like if this was a new item
             if (!insertItem(cmd, item, parentCol)) {
