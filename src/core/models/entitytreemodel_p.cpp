@@ -80,6 +80,7 @@ EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     , m_includeStatistics(false)
     , m_showRootCollection(false)
     , m_collectionTreeFetched(false)
+    , m_session(nullptr)
     , m_showSystemEntities(false)
 {
     // using collection as a parameter of a queued call in runItemFetchJob()

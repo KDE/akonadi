@@ -53,7 +53,6 @@ public:
     Collection mCollection;
     Item mItem;
     QSet<QByteArray> mParts;
-    Item::Id mUid;
     QDateTime mDatetime;
     QByteArray mPendingData;
     ItemCreateJob::MergeOptions mMergeOptions;

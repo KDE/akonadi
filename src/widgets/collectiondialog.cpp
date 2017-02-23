@@ -54,6 +54,7 @@ public:
     Private(QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options)
         : mParent(parent)
         , mMonitor(nullptr)
+        , mNewSubfolderButton(nullptr)
     {
         // setup GUI
         QVBoxLayout *layout = new QVBoxLayout(mParent);
