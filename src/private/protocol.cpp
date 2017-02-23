@@ -8260,7 +8260,7 @@ public:
                 return QStringLiteral("Subscribe");
             case CollectionChangeNotification::Unsubscribe:
                 return QStringLiteral("Unsubscribe");
-            case ItemChangeNotification::InvalidOp:
+            case CollectionChangeNotification::InvalidOp:
                 return QStringLiteral("*INVALID OPERATION*");
             }
             Q_ASSERT(false);
