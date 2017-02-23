@@ -59,6 +59,8 @@ void DataStream::setWaitTimeout(int timeout)
 
 void DataStream::waitForData(quint32 size)
 {
+    checkDevice();
+
     while (mDev->bytesAvailable() < size) {
         if (!mDev->waitForReadyRead(mWaitTimeout)) {
             throw ProtocolException("Timeout while waiting for data");
@@ -68,7 +70,7 @@ void DataStream::waitForData(quint32 size)
 
 void DataStream::writeRawData(const char *data, int len)
 {
-    Q_ASSERT(mDev);
+    checkDevice();
 
     int ret = mDev->write(data, len);
     if (ret != len) {
@@ -87,6 +89,7 @@ void DataStream::writeBytes(const char *bytes, int len)
 
 int DataStream::readRawData(char *buffer, int len)
 {
-    Q_ASSERT(mDev);
+    checkDevice();
+
     return mDev->read(buffer, len);
 }
