@@ -168,6 +168,7 @@ void DataStore::close()
     QueryCache::clear();
     m_database.close();
     m_database = QSqlDatabase();
+    m_transactionQueries.clear();
     QSqlDatabase::removeDatabase(m_connectionName);
 
     StorageDebugger::instance()->removeConnection(reinterpret_cast<qint64>(this));
