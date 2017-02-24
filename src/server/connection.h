@@ -77,6 +77,7 @@ public Q_SLOTS:
 
 Q_SIGNALS:
     void disconnected();
+    void connectionClosing();
 
 protected Q_SLOTS:
     /**
@@ -113,6 +114,8 @@ protected:
     qint64 m_totalTime;
     QHash<QString, qint64> m_totalTimeByHandler;
     QHash<QString, qint64> m_executionsByHandler;
+
+    bool m_connectionClosing;
 
 private:
     void sendResponse(qint64 tag, const Protocol::Command &response);

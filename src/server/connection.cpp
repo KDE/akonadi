@@ -31,7 +31,8 @@
 #include "tracer.h"
 #include "collectionreferencemanager.h"
 
-#include <assert.h>
+#include <cassert>
+#include <cxxabi.h>
 
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
@@ -53,6 +54,7 @@ Connection::Connection(QObject *parent)
     , m_verifyCacheOnRetrieval(false)
     , m_idleTimer(Q_NULLPTR)
     , m_totalTime( 0 )
+    , m_connectionClosing(false)
     , m_reportTime( false )
 {
 }
@@ -107,6 +109,12 @@ void Connection::init()
 
 void Connection::quit()
 {
+    if (QThread::currentThread()->loopLevel() > 1) {
+        m_connectionClosing = true;
+        Q_EMIT connectionClosing();
+        return;
+    }
+
     Tracer::self()->endConnection(m_identifier, QString());
     collectionReferenceManager()->removeSession(m_sessionId);
 
@@ -255,6 +263,15 @@ void Connection::slotNewData()
             if (m_currentHandler) {
                 m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
             }
+        } catch (abi::__forced_unwind&) {
+            // HACK: NPTL throws __forced_unwind during thread cancellation and
+            // we *must* rethrow it otherwise the program aborts. Due to the issue
+            // described in #376385 we might end up destroying (cancelling) the
+            // thread from a nested loop executed inside parseStream() above,
+            // so the exception raised in there gets caught by this try..catch
+            // statement and it must be rethrown at all cost. Remove this hack
+            // once the root problem is fixed.
+            throw;
         } catch (...) {
             qCCritical(AKONADISERVER_LOG) << "Unknown exception caught in Connection for session" << m_sessionId;
             if (m_currentHandler) {
@@ -269,6 +286,12 @@ void Connection::slotNewData()
 
         if (m_socket->state() != QLocalSocket::ConnectedState) {
             Q_EMIT disconnected();
+            return;
+        }
+
+        if (m_connectionClosing) {
+            m_socket->disconnect(this);
+            QTimer::singleShot(0, this, &Connection::quit);
             return;
         }
     }
