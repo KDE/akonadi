@@ -291,7 +291,7 @@ private:
             return false;
         }
 
-        foreach (const QString &mt, mimetypes) {
+        for (const QString &mt : mimetypes) {
             if (mimeType.inherits(mt)) {
                 return true;
             }

@@ -1163,11 +1163,11 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
     }
 
     const QModelIndexList indexes = indexesForItem(item);
-    foreach (const QModelIndex &index, indexes) {
-        if (!index.isValid()) {
-            qCWarning(AKONADICORE_LOG) << "item has invalid index:" << item.id() << item.remoteId();
-        } else {
+    for (const QModelIndex &index : indexes) {
+        if (index.isValid()) {
             dataChanged(index, index);
+        } else {
+            qCWarning(AKONADICORE_LOG) << "item has invalid index:" << item.id() << item.remoteId();
         }
     }
 }
@@ -1411,7 +1411,7 @@ void EntityTreeModelPrivate::updateJobDone(KJob *job)
         m_items[item.id()].apply(item);
         const QModelIndexList list = indexesForItem(item);
 
-        foreach (const QModelIndex &index, list) {
+        for (const QModelIndex &index : list) {
             dataChanged(index, index);
         }
     }
@@ -1779,7 +1779,7 @@ QModelIndexList EntityTreeModelPrivate::indexesForItem(const Item &item) const
     const Collection::List collections = getParentCollections(item);
 
     indexes.reserve(collections.size());
-    foreach (const Collection &collection, collections) {
+    for (const Collection &collection : collections) {
         const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
         Q_ASSERT(row >= 0);
         Q_ASSERT(m_childEntities.contains(collection.id()));

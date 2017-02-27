@@ -1210,7 +1210,7 @@ bool DataStore::removeCollectionAttribute(const Collection &col, const QByteArra
     }
 
     const QVector<CollectionAttribute> result = qb.result();
-    Q_FOREACH (CollectionAttribute attr, result) {  //krazy:exclude=foreach
+    for (CollectionAttribute attr : result) {
         if (!attr.remove()) {
             throw HandlerException("Unable to remove collection attribute");
         }
