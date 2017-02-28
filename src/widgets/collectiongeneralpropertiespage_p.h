@@ -35,7 +35,7 @@ class CollectionGeneralPropertiesPage : public CollectionPropertiesPage
 {
     Q_OBJECT
 public:
-    explicit CollectionGeneralPropertiesPage(QWidget *parent = 0);
+    explicit CollectionGeneralPropertiesPage(QWidget *parent = nullptr);
 
     void load(const Collection &collection) Q_DECL_OVERRIDE;
     void save(Collection &collection) Q_DECL_OVERRIDE;

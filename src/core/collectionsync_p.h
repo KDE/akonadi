@@ -62,7 +62,7 @@ public:
       @param resourceId The identifier of the resource we are syncing.
       @param parent The parent object.
     */
-    explicit CollectionSync(const QString &resourceId, QObject *parent = 0);
+    explicit CollectionSync(const QString &resourceId, QObject *parent = nullptr);
 
     /**
       Destroys this job.

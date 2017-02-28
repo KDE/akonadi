@@ -49,7 +49,7 @@ public:
      * @p baseWidget must not be null.
      * @p parent must not be equal to @p baseWidget
      */
-    explicit ErrorOverlay(QWidget *baseWidget, QWidget *parent = 0);
+    explicit ErrorOverlay(QWidget *baseWidget, QWidget *parent = nullptr);
     ~ErrorOverlay();
 
 protected:

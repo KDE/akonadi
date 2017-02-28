@@ -57,7 +57,7 @@ public:
     ItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent)
         : AbstractItemRetrievalJob(req, parent)
         , m_active(false)
-        , m_interface(0)
+        , m_interface(nullptr)
     {
     }
 

@@ -333,7 +333,7 @@ QString XdgBaseDirs::findExecutableFile(const QString &relPath, const QStringLis
             executableDirs << prefixExecutableDir;
         }
 
-        if (QCoreApplication::instance() != 0) {
+        if (QCoreApplication::instance() != nullptr) {
             const QString appExecutableDir = QCoreApplication::instance()->applicationDirPath();
             if (!executableDirs.contains(appExecutableDir)) {
                 executableDirs << appExecutableDir;
@@ -400,7 +400,7 @@ QStringList XdgBaseDirs::findPluginDirs()
 {
     if (instance()->mPluginDirs.isEmpty()) {
         QStringList pluginDirs = instance()->systemPathList("QT_PLUGIN_PATH", AKONADILIB ":" AKONADILIB "/qt5/plugins/:" AKONADILIB "/kf5/:" AKONADILIB "/kf5/plugins/:/usr/lib/qt5/plugins/");
-        if (QCoreApplication::instance() != 0) {
+        if (QCoreApplication::instance() != nullptr) {
             Q_FOREACH (const QString &libraryPath, QCoreApplication::instance()->libraryPaths()) {
                 if (!pluginDirs.contains(libraryPath)) {
                     pluginDirs << libraryPath;

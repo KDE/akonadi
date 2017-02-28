@@ -42,7 +42,7 @@ class AgentManagerPrivate
 public:
     explicit AgentManagerPrivate(AgentManager *parent)
         : mParent(parent)
-        , mManager(0)
+        , mManager(nullptr)
     {
     }
 
