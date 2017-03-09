@@ -515,7 +515,7 @@ void StorageJanitor::findRIDDuplicates()
         duplicates.addValueCondition(PimItem::remoteIdColumn(), Query::IsNot, QVariant());
         duplicates.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, id);
         duplicates.addGroupColumn(PimItem::remoteIdColumn());
-        duplicates.addValueCondition(QStringLiteral("count(") + PimItem::idColumn() + QStringLiteral(")"), Query::Greater, 1, QueryBuilder::HavingCondition);
+        duplicates.addValueCondition(QStringLiteral("count(") + PimItem::idColumn() + QLatin1Char(')'), Query::Greater, 1, QueryBuilder::HavingCondition);
         duplicates.exec();
 
         Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(id);

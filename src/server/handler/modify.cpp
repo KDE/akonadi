@@ -181,7 +181,7 @@ bool Modify::parseStream()
             changed = true;
         }
         if (changed) {
-            collection.setQueryAttributes(QString::fromLatin1(queryAttributes.join(" ")));
+            collection.setQueryAttributes(QString::fromLatin1(queryAttributes.join(' ')));
         }
 
         QStringList cols;
