@@ -265,11 +265,17 @@ namespace Akonadi
 typedef std::vector<_detail::TypedPayload> PayloadContainer;
 }
 
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0) // see qtbase e5e2629
+namespace QtPrivate {
+#endif
 // disable Q_FOREACH on PayloadContainer (b/c it likes to take copies and clone_ptr doesn't like that)
 template <>
 class QForeachContainer<Akonadi::PayloadContainer>
 {
 };
+#if QT_VERSION >= QT_VERSION_CHECK(5, 9, 0)
+}
+#endif
 
 namespace Akonadi
 {
