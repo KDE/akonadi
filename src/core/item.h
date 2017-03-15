@@ -789,7 +789,7 @@ inline T *Item::attribute() const
                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
-    return 0;
+    return nullptr;
 }
 
 template <typename T>

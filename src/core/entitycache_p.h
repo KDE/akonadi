@@ -187,7 +187,7 @@ private:
                 return *it;
             }
         }
-        return 0;
+        return nullptr;
     }
 
     void processResult(KJob *job) Q_DECL_OVERRIDE {
