@@ -95,6 +95,7 @@ void ChangeRecorderPrivate::loadNotifications()
                 break;
             case Collection:
                 msg = loadCollectionNotification(settings);
+                break;
             case Tag:
             case Relation:
             case InvalidType:

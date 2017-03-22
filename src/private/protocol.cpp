@@ -7532,13 +7532,11 @@ QString StreamPayloadCommand::destination() const
 DataStream &operator<<(DataStream &stream, const StreamPayloadCommand &command)
 {
     return command.d_func()->serialize(stream);
-    return stream;
 }
 
 DataStream &operator>>(DataStream &stream, StreamPayloadCommand &command)
 {
     return command.d_func()->deserialize(stream);
-    return stream;
 }
 
 /****************************************************************************/
