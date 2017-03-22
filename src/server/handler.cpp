@@ -213,9 +213,11 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
     case Protocol::Command::SubscriptionChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::SubscriptionChangeNotification, __FUNCTION__,
                    "SubscriptionChangeNotification command is not allowed on this connection");
+        return nullptr;
     case Protocol::Command::DebugChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::DebugChangeNotification, __FUNCTION__,
                    "DebugChangeNotification command is not allowed on this connection");
+        return nullptr;
     case Protocol::Command::ModifySubscription:
         Q_ASSERT_X(cmd != Protocol::Command::ModifySubscription, __FUNCTION__,
                    "ModifySubscription command is not allowed on this connection");
