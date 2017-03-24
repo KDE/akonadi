@@ -267,6 +267,7 @@ void Connection::slotNewData()
             if (m_currentHandler) {
                 m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
             }
+#if defined(Q_OS_LINUX)
         } catch (abi::__forced_unwind&) {
             // HACK: NPTL throws __forced_unwind during thread cancellation and
             // we *must* rethrow it otherwise the program aborts. Due to the issue
@@ -276,6 +277,7 @@ void Connection::slotNewData()
             // statement and it must be rethrown at all cost. Remove this hack
             // once the root problem is fixed.
             throw;
+#endif
         } catch (...) {
             qCCritical(AKONADISERVER_LOG) << "Unknown exception caught in Connection for session" << m_sessionId;
             if (m_currentHandler) {
