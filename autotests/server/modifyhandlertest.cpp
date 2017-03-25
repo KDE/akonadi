@@ -167,11 +167,11 @@ private Q_SLOTS:
             }
             if (!notification.changedParts().intersect({ "ENABLED", "SYNC", "DISPLAY", "INDEX" }).isEmpty()) {
                 Collection col = Collection::retrieveById(notification.id());
-                const bool sync = col.syncPref() == Tristate::Undefined ? col.enabled() : col.syncPref() == Tristate::True;
+                const bool sync = col.syncPref() == Collection::Undefined ? col.enabled() : col.syncPref() == Collection::True;
                 QCOMPARE(sync, newValue.toBool());
-                const bool display = col.displayPref() == Tristate::Undefined ? col.enabled() : col.displayPref() == Tristate::True;
+                const bool display = col.displayPref() == Collection::Undefined ? col.enabled() : col.displayPref() == Collection::True;
                 QCOMPARE(display, newValue.toBool());
-                const bool index = col.indexPref() == Tristate::Undefined ? col.enabled() : col.indexPref() == Tristate::True;
+                const bool index = col.indexPref() == Collection::Undefined ? col.enabled() : col.indexPref() == Collection::True;
                 QCOMPARE(index, newValue.toBool());
             }
         }

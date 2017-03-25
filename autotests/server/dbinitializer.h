@@ -32,7 +32,7 @@ public:
     Akonadi::Server::PimItem createItem(const char *name, const Akonadi::Server::Collection &parent);
     Akonadi::Server::Part createPart(qint64 pimitemId, const QByteArray &partname, const QByteArray &data);
     QByteArray toByteArray(bool enabled);
-    QByteArray toByteArray(Akonadi::Tristate tristate);
+    QByteArray toByteArray(Akonadi::Server::Collection::Tristate tristate);
     Akonadi::Protocol::FetchCollectionsResponse listResponse(const Akonadi::Server::Collection &col,
                                                              bool ancestors = false,
                                                              bool mimetypes = true,

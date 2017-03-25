@@ -116,9 +116,9 @@ protected:
      * @param type Name of the C++ type.
      * @param size Optional size hint for the column, if -1 use the default SQL type for @p type.
      */
-    virtual QString sqlType(const QString &type, int size) const;
+    virtual QString sqlType(const ColumnDescription &col, int size) const;
     /** Overwrite in backend-specific sub-classes to return the SQL value for a given C++ value. */
-    virtual QString sqlValue(const QString &type, const QString &value) const;
+    virtual QString sqlValue(const ColumnDescription &col, const QString &value) const;
 
     virtual QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const = 0;
     virtual QString buildAddColumnStatement(const TableDescription &tableDescription, const ColumnDescription &columnDescription) const;

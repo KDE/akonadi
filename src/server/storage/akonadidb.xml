@@ -79,6 +79,12 @@
   </table>
 
   <table name="Collection">
+    <enum name="Tristate">
+      <value name="False"/>
+      <value name="True"/>
+      <value name="Undefined"/>
+    </enum>
+
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
@@ -86,9 +92,9 @@
     <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" allowNull="false"/>
     <column name="enabled" type="bool" default="true" allowNull="false"/>
-    <column name="syncPref" type="Tristate" default="Tristate::Undefined"/>
-    <column name="displayPref" type="Tristate" default="Tristate::Undefined"/>
-    <column name="indexPref" type="Tristate" default="Tristate::Undefined"/>
+    <column name="syncPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
+    <column name="displayPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
+    <column name="indexPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
     <column name="referenced" type="bool" default="false" allowNull="false"/>
     <column name="cachePolicyInherit" type="bool" default="true" allowNull="false"/>
     <column name="cachePolicyCheckInterval" type="int" default="-1" allowNull="false"/>

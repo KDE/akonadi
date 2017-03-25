@@ -29,12 +29,12 @@ DbInitializerMySql::DbInitializerMySql(const QSqlDatabase &database)
 {
 }
 
-QString DbInitializerMySql::sqlType(const QString &type, int size) const
+QString DbInitializerMySql::sqlType(const ColumnDescription &col, int size) const
 {
-    if (type == QLatin1String("QString")) {
+    if (col.type == QLatin1String("QString")) {
         return QLatin1Literal("VARBINARY(") + QString::number(size <= 0 ? 255 : size) + QLatin1Literal(")");
     } else {
-        return DbInitializer::sqlType(type, size);
+        return DbInitializer::sqlType(col, size);
     }
 }
 
@@ -67,7 +67,7 @@ QString DbInitializerMySql::buildColumnStatement(const ColumnDescription &column
 {
     QString column = columnDescription.name;
 
-    column += QLatin1Char(' ') + sqlType(columnDescription.type, columnDescription.size);
+    column += QLatin1Char(' ') + sqlType(columnDescription, columnDescription.size);
 
     if (!columnDescription.allowNull) {
         column += QLatin1String(" NOT NULL");
@@ -86,7 +86,7 @@ QString DbInitializerMySql::buildColumnStatement(const ColumnDescription &column
     }
 
     if (!columnDescription.defaultValue.isEmpty()) {
-        const QString defaultValue = sqlValue(columnDescription.type, columnDescription.defaultValue);
+        const QString defaultValue = sqlValue(columnDescription, columnDescription.defaultValue);
 
         if (!defaultValue.isEmpty()) {
             column += QStringLiteral(" DEFAULT %1").arg(defaultValue);
@@ -154,7 +154,7 @@ QString DbInitializerSqlite::buildColumnStatement(const ColumnDescription &colum
     if (columnDescription.isAutoIncrement) {
         column += QLatin1String("INTEGER");
     } else {
-        column += sqlType(columnDescription.type, columnDescription.size);
+        column += sqlType(columnDescription, columnDescription.size);
     }
 
     if (columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1) {
@@ -172,7 +172,7 @@ QString DbInitializerSqlite::buildColumnStatement(const ColumnDescription &colum
     }
 
     if (!columnDescription.defaultValue.isEmpty()) {
-        const QString defaultValue = sqlValue(columnDescription.type, columnDescription.defaultValue);
+        const QString defaultValue = sqlValue(columnDescription, columnDescription.defaultValue);
 
         if (!defaultValue.isEmpty()) {
             column += QStringLiteral(" DEFAULT %1").arg(defaultValue);
@@ -198,9 +198,9 @@ QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &
                 QStringList(data.values()).join(QLatin1Char(',')));
 }
 
-QString DbInitializerSqlite::sqlValue(const QString &type, const QString &value) const
+QString DbInitializerSqlite::sqlValue(const ColumnDescription &col, const QString &value) const
 {
-    if (type == QLatin1String("bool")) {
+    if (col.type == QLatin1String("bool")) {
         if (value == QLatin1String("false")) {
             return QStringLiteral("0");
         } else if (value == QLatin1String("true")) {
@@ -209,7 +209,7 @@ QString DbInitializerSqlite::sqlValue(const QString &type, const QString &value)
         return value;
     }
 
-    return Akonadi::Server::DbInitializer::sqlValue(type, value);
+    return Akonadi::Server::DbInitializer::sqlValue(col, value);
 }
 
 //END Sqlite
@@ -221,17 +221,17 @@ DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase &database)
 {
 }
 
-QString DbInitializerPostgreSql::sqlType(const QString &type, int size) const
+QString DbInitializerPostgreSql::sqlType(const ColumnDescription &col, int size) const
 {
-    if (type == QLatin1String("qint64")) {
+    if (col.type == QLatin1String("qint64")) {
         return QStringLiteral("int8");
-    } else if (type == QLatin1String("QByteArray")) {
+    } else if (col.type == QLatin1String("QByteArray")) {
         return QStringLiteral("BYTEA");
-    } else if (type == QLatin1String("Tristate")) {
+    } else if (col.isEnum) {
         return QStringLiteral("SMALLINT");
     }
 
-    return DbInitializer::sqlType(type, size);
+    return DbInitializer::sqlType(col, size);
 }
 
 QString DbInitializerPostgreSql::buildCreateTableStatement(const TableDescription &tableDescription) const
@@ -257,7 +257,7 @@ QString DbInitializerPostgreSql::buildColumnStatement(const ColumnDescription &c
     if (columnDescription.isAutoIncrement) {
         column += QLatin1String("SERIAL");
     } else {
-        column += sqlType(columnDescription.type, columnDescription.size);
+        column += sqlType(columnDescription, columnDescription.size);
     }
 
     if (columnDescription.isPrimaryKey && tableDescription.primaryKeyColumnCount() == 1) {
@@ -271,7 +271,7 @@ QString DbInitializerPostgreSql::buildColumnStatement(const ColumnDescription &c
     }
 
     if (!columnDescription.defaultValue.isEmpty()) {
-        const QString defaultValue = sqlValue(columnDescription.type, columnDescription.defaultValue);
+        const QString defaultValue = sqlValue(columnDescription, columnDescription.defaultValue);
 
         if (!defaultValue.isEmpty()) {
             column += QStringLiteral(" DEFAULT %1").arg(defaultValue);

@@ -154,9 +154,9 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
 
     response.setReferenced(isReferenced);
     response.setEnabled(col.enabled());
-    response.setDisplayPref(col.displayPref());
-    response.setSyncPref(col.syncPref());
-    response.setIndexPref(col.indexPref());
+    response.setDisplayPref(static_cast<Tristate>(col.displayPref()));
+    response.setSyncPref(static_cast<Tristate>(col.syncPref()));
+    response.setIndexPref(static_cast<Tristate>(col.indexPref()));
 
     QMap<QByteArray, QByteArray> ra;
     for (const CollectionAttribute &attr : attrs) {

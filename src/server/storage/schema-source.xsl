@@ -21,6 +21,13 @@
                 version="1.0">
 <xsl:output method="text" encoding="utf-8"/>
 
+<xsl:template name="data-type">
+  <xsl:choose>
+  <xsl:when test="@type = 'enum'"><xsl:value-of select="@enumType"/></xsl:when>
+  <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
 <xsl:template name="schema-source">
 #include "<xsl:value-of select="$fileName"/>.h"
 
@@ -40,7 +47,7 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
     {
       ColumnDescription c;
       c.name = QStringLiteral("<xsl:value-of select="@name"/>");
-      c.type = QStringLiteral("<xsl:value-of select="@type"/>");
+      c.type = QStringLiteral("<xsl:call-template name="data-type"/>");
       <xsl:if test="@size">
       c.size = <xsl:value-of select="@size"/>;
       </xsl:if>
@@ -55,6 +62,9 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
       </xsl:if>
       <xsl:if test="@isUnique">
       c.isUnique = <xsl:value-of select="@isUnique"/>;
+      </xsl:if>
+      <xsl:if test="@type = 'enum'">
+      c.isEnum = true;
       </xsl:if>
       <xsl:if test="@refTable">
       c.refTable = QStringLiteral("<xsl:value-of select="@refTable"/>");
@@ -73,6 +83,20 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
       </xsl:if>
       <xsl:if test="@noUpdate">
       c.noUpdate = <xsl:value-of select="@noUpdate"/>;
+      </xsl:if>
+
+      <xsl:if test="@type = 'enum'">
+      c.enumValueMap = {
+      <xsl:for-each select="../enum">
+        <xsl:for-each select="value">
+        { QStringLiteral("<xsl:value-of select="../@name"/>::<xsl:value-of select="@name"/>"),
+            <xsl:choose>
+             <xsl:when test="@value"><xsl:value-of select="@value"/></xsl:when>
+             <xsl:otherwise><xsl:value-of select="position() - 1"/></xsl:otherwise>
+            </xsl:choose> }<xsl:if test="position() != last()">,</xsl:if>
+        </xsl:for-each>
+      </xsl:for-each>
+      };
       </xsl:if>
 
       t.columns.push_back(c);

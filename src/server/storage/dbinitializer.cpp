@@ -282,51 +282,43 @@ void DbInitializer::execPendingQueries(const QStringList &queries)
     }
 }
 
-QString DbInitializer::sqlType(const QString &type, int size) const
+QString DbInitializer::sqlType(const ColumnDescription &col, int size) const
 {
     Q_UNUSED(size);
-    if (type == QLatin1String("int")) {
+    if (col.type == QLatin1String("int")) {
         return QStringLiteral("INTEGER");
     }
-    if (type == QLatin1String("qint64")) {
+    if (col.type == QLatin1String("qint64")) {
         return QStringLiteral("BIGINT");
     }
-    if (type == QLatin1String("QString")) {
+    if (col.type == QLatin1String("QString")) {
         return QStringLiteral("TEXT");
     }
-    if (type == QLatin1String("QByteArray")) {
+    if (col.type == QLatin1String("QByteArray")) {
         return QStringLiteral("LONGBLOB");
     }
-    if (type == QLatin1String("QDateTime")) {
+    if (col.type == QLatin1String("QDateTime")) {
         return QStringLiteral("TIMESTAMP");
     }
-    if (type == QLatin1String("bool")) {
+    if (col.type == QLatin1String("bool")) {
         return QStringLiteral("BOOL");
     }
-    if (type == QLatin1String("Tristate")) {
+    if (col.isEnum) {
         return QStringLiteral("TINYINT");
     }
 
-    qCDebug(AKONADISERVER_LOG) << "Invalid type" << type;
+    qCDebug(AKONADISERVER_LOG) << "Invalid type" << col.type;
     Q_ASSERT(false);
     return QString();
 }
 
-QString DbInitializer::sqlValue(const QString &type, const QString &value) const
+QString DbInitializer::sqlValue(const ColumnDescription &col, const QString &value) const
 {
-    if (type == QLatin1String("QDateTime") && value == QLatin1String("QDateTime::currentDateTime()")) {
+    if (col.type == QLatin1String("QDateTime") && value == QLatin1String("QDateTime::currentDateTime()")) {
         return QStringLiteral("CURRENT_TIMESTAMP");
+    } else if (col.isEnum) {
+        return QString::number(col.enumValueMap[value]);
     }
-    if (type == QLatin1String("Tristate")) {
-        if (value == QLatin1String("False")) {
-            return QString::number((int)Akonadi::Tristate::False);
-        }
-        if (value == QLatin1String("True")) {
-            return QString::number((int)Akonadi::Tristate::True);
-        }
-        return QString::number((int)Akonadi::Tristate::Undefined);
-    }
-
     return value;
 }
 

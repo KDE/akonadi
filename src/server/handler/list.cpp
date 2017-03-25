@@ -143,9 +143,9 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
 static Query::Condition filterCondition(const QString &column)
 {
     Query::Condition orCondition(Query::Or);
-    orCondition.addValueCondition(column, Query::Equals, (int)Tristate::True);
+    orCondition.addValueCondition(column, Query::Equals, (int)Collection::True);
     Query::Condition andCondition(Query::And);
-    andCondition.addValueCondition(column, Query::Equals, (int)Tristate::Undefined);
+    andCondition.addValueCondition(column, Query::Equals, (int)Collection::Undefined);
     andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
     orCondition.addCondition(andCondition);
     orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
@@ -160,19 +160,19 @@ bool List::checkFilterCondition(const Collection &col) const
     }
     //Don't include the collection when only looking for collections to display/index/sync
     if (mCollectionsToDisplay &&
-            (((col.displayPref() == Tristate::Undefined) && !col.enabled()) ||
-             (col.displayPref() == Tristate::False))) {
+            (((col.displayPref() == Collection::Undefined) && !col.enabled()) ||
+             (col.displayPref() == Collection::False))) {
         return false;
     }
     if (mCollectionsToIndex &&
-            (((col.indexPref() == Tristate::Undefined) && !col.enabled()) ||
-             (col.indexPref() == Tristate::False))) {
+            (((col.indexPref() == Collection::Undefined) && !col.enabled()) ||
+             (col.indexPref() == Collection::False))) {
         return false;
     }
     //Single collection sync will still work since that is using a base fetch
     if (mCollectionsToSynchronize &&
-            (((col.syncPref() == Tristate::Undefined) && !col.enabled()) ||
-             (col.syncPref() == Tristate::False))) {
+            (((col.syncPref() == Collection::Undefined) && !col.enabled()) ||
+             (col.syncPref() == Collection::False))) {
         return false;
     }
     return true;

@@ -94,9 +94,9 @@ bool Create::parseStream()
     collection.setRemoteRevision(cmd.remoteRevision());
     collection.setIsVirtual(cmd.isVirtual() || forceVirtual);
     collection.setEnabled(cmd.enabled());
-    collection.setSyncPref(cmd.syncPref());
-    collection.setDisplayPref(cmd.displayPref());
-    collection.setIndexPref(cmd.indexPref());
+    collection.setSyncPref(static_cast<Collection::Tristate>(cmd.syncPref()));
+    collection.setDisplayPref(static_cast<Collection::Tristate>(cmd.displayPref()));
+    collection.setIndexPref(static_cast<Collection::Tristate>(cmd.indexPref()));
     const Protocol::CachePolicy &cp = cmd.cachePolicy();
     collection.setCachePolicyCacheTimeout(cp.cacheTimeout());
     collection.setCachePolicyCheckInterval(cp.checkInterval());

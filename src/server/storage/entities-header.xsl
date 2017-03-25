@@ -50,6 +50,14 @@ class <xsl:value-of select="$className"/> : private Entity
     using Entity::addToRelation;
     using Entity::removeFromRelation;
 
+    <xsl:for-each select="enum">
+    enum <xsl:value-of select="@name"/> {
+      <xsl:for-each select="value">
+      <xsl:value-of select="@name"/><xsl:if test="@value"> = <xsl:value-of select="@value"/></xsl:if>,
+      </xsl:for-each>
+    };
+    </xsl:for-each>
+
     // constructor
     <xsl:value-of select="$className"/>();
     explicit <xsl:value-of select="$className"/>(
@@ -79,7 +87,7 @@ class <xsl:value-of select="$className"/> : private Entity
       Returns the value of the <xsl:value-of select="@name"/> column of this record.
       <xsl:value-of select="comment"/>
     */
-    <xsl:value-of select="@type"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>() const;
+    <xsl:call-template name="data-type"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>() const;
     /**
       Sets the value of the <xsl:value-of select="@name"/> column of this record.
       <xsl:value-of select="comment"/>
