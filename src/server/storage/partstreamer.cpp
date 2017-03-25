@@ -101,7 +101,7 @@ bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
 bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart)
 {
     // If the part WAS external previously, remove data file
-    if (part.external()) {
+    if (part.storage() == Part::External) {
         ExternalPartStorage::self()->removePartFile(
             ExternalPartStorage::resolveAbsolutePath(part.data()));
     }
@@ -147,7 +147,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
 
     QByteArray filename;
     if (part.isValid()) {
-        if (part.external()) {
+        if (part.storage() == Part::External) {
             // Part was external and is still external
             filename = part.data();
             ExternalPartStorage::self()->removePartFile(
@@ -164,7 +164,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         }
     }
 
-    part.setExternal(true);
+    part.setStorage(Part::External);
     part.setDatasize(metaPart.size());
     part.setData(filename);
 

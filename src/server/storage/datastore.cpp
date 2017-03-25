@@ -790,7 +790,7 @@ bool DataStore::cleanupCollection(Collection &collection)
     qb.addJoin(QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName());
     qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(), PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
     qb.addValueCondition(Collection::idFullColumnName(), Query::Equals, collection.id());
-    qb.addValueCondition(Part::externalFullColumnName(), Query::Equals, true);
+    qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
     if (!qb.exec()) {
         return false;

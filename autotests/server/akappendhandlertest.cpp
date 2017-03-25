@@ -84,18 +84,18 @@ public:
 
     struct PartHelper
     {
-        PartHelper(const QString &type_, const QByteArray &data_, int size_, bool external_ = false, int version_ = 0)
+        PartHelper(const QString &type_, const QByteArray &data_, int size_, Part::Storage storage_ = Part::Internal, int version_ = 0)
             : type(type_)
             , data(data_)
             , size(size_)
-            , external(external_)
+            , storage(storage_)
             , version(version_)
         {
         }
         QString type;
         QByteArray data;
         int size;
-        bool external;
+        Part::Storage storage;
         int version;
     };
 
@@ -110,7 +110,7 @@ public:
             part.setPartType(PartType(types[1], types[0]));
             part.setData(helper.data);
             part.setDatasize(helper.size);
-            part.setExternal(helper.external);
+            part.setStorage(helper.storage);
             part.setVersion(helper.version);
             parts << part;
         }
@@ -760,7 +760,7 @@ private Q_SLOTS:
                 QCOMPARE(QString::fromUtf8(actualPart.data()), QString::fromUtf8(part.data()));
                 QCOMPARE(actualPart.data(), part.data());
                 QCOMPARE(actualPart.datasize(), part.datasize());
-                QCOMPARE(actualPart.external(), part.external());
+                QCOMPARE(actualPart.storage(), part.storage());
             }
         }
     }

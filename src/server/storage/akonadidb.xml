@@ -67,7 +67,7 @@
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
     <column name="generation" type="int" default="0" allowNull="false" />
-    <data columns="version" values="34"/>
+    <data columns="version" values="35"/>
   </table>
 
   <table name="Resource">
@@ -166,13 +166,17 @@
  </table>
 
   <table name="Part">
+    <enum name="Storage">
+      <value name="Internal"/>
+      <value name="External"/>
+    </enum>
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
     <column name="partTypeId" type="qint64" refTable="PartType" refColumn="id" allowNull="false" noUpdate="true" />
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="qint64" allowNull="false"/>
     <column name="version" type="int" default="0"/>
-    <column name="external" type="bool" default="false" />
+    <column name="storage" type="enum" enumType="Part::Storage" default="Part::Internal"/>
     <index name="pimItemIdTypeIndex" columns="pimItemId,partTypeId" unique="true"/>
     <index name="pimItemIdSortIndex" columns="pimItemId" unique="false" sort="DESC"/>
   </table>

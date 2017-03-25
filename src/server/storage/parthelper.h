@@ -64,7 +64,7 @@ bool remove(Part *part);
 bool remove(const QString &column, const QVariant &value);
 
 /** Returns the payload data. */
-QByteArray translateData(const QByteArray &data, bool isExternal);
+QByteArray translateData(const QByteArray &data, Part::Storage storageType);
 /** Convenience overload of the above. */
 QByteArray translateData(const Part &part);
 

@@ -1062,12 +1062,12 @@ class PartMetaDataPrivate : public QSharedData
 {
 public:
     PartMetaDataPrivate(const QByteArray &name = QByteArray(), qint64 size = 0,
-                        int version = 0, bool external = false)
+                        int version = 0, PartMetaData::StorageType storageType = PartMetaData::Internal)
         : QSharedData()
         , name(name)
         , size(size)
         , version(version)
-        , external(external)
+        , storageType(storageType)
     {}
 
     PartMetaDataPrivate(const PartMetaDataPrivate &other)
@@ -1075,13 +1075,13 @@ public:
         , name(other.name)
         , size(other.size)
         , version(other.version)
-        , external(other.external)
+        , storageType(other.storageType)
     {}
 
     QByteArray name;
     qint64 size;
     int version;
-    bool external;
+    PartMetaData::StorageType storageType;
 };
 
 PartMetaData::PartMetaData()
@@ -1089,8 +1089,9 @@ PartMetaData::PartMetaData()
 {
 }
 
-PartMetaData::PartMetaData(const QByteArray &name, qint64 size, int version, bool external)
-    : d(new PartMetaDataPrivate(name, size, version, external))
+PartMetaData::PartMetaData(const QByteArray &name, qint64 size, int version,
+                           StorageType storageType)
+    : d(new PartMetaDataPrivate(name, size, version, storageType))
 {
 }
 
@@ -1126,7 +1127,7 @@ bool PartMetaData::operator==(const PartMetaData &other) const
            || (d->name == other.d->name
                && d->size == other.d->size
                && d->version == other.d->version
-               && d->external == other.d->external);
+               && d->storageType == other.d->storageType);
 }
 
 bool PartMetaData::operator!=(const PartMetaData &other) const
@@ -1166,13 +1167,14 @@ int PartMetaData::version() const
     return d->version;
 }
 
-void PartMetaData::setIsExternal(bool external)
+void PartMetaData::setStorageType(StorageType storageType)
 {
-    d->external = external;
+    d->storageType = storageType;
 }
-bool PartMetaData::isExternal() const
+
+PartMetaData::StorageType PartMetaData::storageType() const
 {
-    return d->external;
+    return d->storageType;
 }
 
 DataStream &operator<<(DataStream &stream, const PartMetaData &part)
@@ -1180,7 +1182,7 @@ DataStream &operator<<(DataStream &stream, const PartMetaData &part)
     return stream << part.d->name
            << part.d->size
            << part.d->version
-           << part.d->external;
+           << part.d->storageType;
 }
 
 DataStream &operator>>(DataStream &stream, PartMetaData &part)
@@ -1188,7 +1190,7 @@ DataStream &operator>>(DataStream &stream, PartMetaData &part)
     return stream >> part.d->name
            >> part.d->size
            >> part.d->version
-           >> part.d->external;
+           >> part.d->storageType;
 }
 
 /******************************************************************************/
@@ -3205,7 +3207,13 @@ public:
         Q_FOREACH (const StreamPayloadResponse &part, parts) {
             blck.beginBlock(part.payloadName());
             blck.write("Size", part.metaData().size());
-            blck.write("External", part.metaData().isExternal());
+            blck.write("External", [](PartMetaData::StorageType storage) {
+                switch (storage) {
+                case PartMetaData::Internal: return QStringLiteral("Internal");
+                case PartMetaData::External: return QStringLiteral("External");
+                case PartMetaData::Foreign: return QStringLiteral("Foreign");
+                }; Q_UNREACHABLE();
+            }(part.metaData().storageType()));
             blck.write("Version", part.metaData().version());
             blck.write("Data", part.data());
             blck.endBlock();

@@ -320,4 +320,9 @@
     <raw-sql backends="psql">SELECT setval('tagtypetable_id_seq', (SELECT max(id) FROM TagTypeTable))</raw-sql>
     <raw-sql backends="psql">SELECT setval('relationtypetable_id_seq', (SELECT max(id) FROM RelationTypeTable))</raw-sql>
   </update>
+
+  <update version="35" abortOnFailure="true">
+    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET storage = external;</raw-sql>
+    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PartTable DROP COLUMN external;</raw-sql>
+  </update>
 </updates>

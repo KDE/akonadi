@@ -48,7 +48,7 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
     parts.reserve(item.parts().count());
     Q_FOREACH (const Part &part, item.parts()) {
         Part newPart(part);
-        newPart.setData(PartHelper::translateData(newPart.data(), part.external()));
+        newPart.setData(PartHelper::translateData(newPart.data(), part.storage()));
         newPart.setPimItemId(-1);
         parts << newPart;
     }

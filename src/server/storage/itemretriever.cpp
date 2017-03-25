@@ -398,7 +398,7 @@ void ItemRetriever::verifyCache()
 
     SelectQueryBuilder<Part> qb;
     qb.addJoin(QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdFullColumnName(), PimItem::idFullColumnName());
-    qb.addValueCondition(Part::externalFullColumnName(), Query::Equals, true);
+    qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
     if (mScope.scope() != Scope::Invalid) {
         ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
