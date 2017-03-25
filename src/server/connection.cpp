@@ -20,7 +20,7 @@
 #include "connection.h"
 #include "akonadiserver_debug.h"
 
-#include <QLatin1String>
+
 #include <QSettings>
 #include <QDataStream>
 
