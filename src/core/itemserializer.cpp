@@ -88,24 +88,32 @@ void StdStringItemSerializerPlugin::serialize(const Item &item, const QByteArray
 }
 
 /*static*/
-void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version, bool external)
+void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByteArray &data,
+                                 int version, PayloadStorage storage)
 {
-    if (external) {
-        const QString fileName = ExternalPartStorage::resolveAbsolutePath(data);
-        QFile file(fileName);
-        if (file.open(QIODevice::ReadOnly)) {
-            deserialize(item, label, file, version);
-            file.close();
-        } else {
-            qCWarning(AKONADICORE_LOG) << "Failed to open external payload:" << fileName << file.errorString();
-        }
-    } else {
+    if (storage == Internal) {
         QBuffer buffer;
         buffer.setData(data);
         buffer.open(QIODevice::ReadOnly);
         buffer.seek(0);
         deserialize(item, label, buffer, version);
         buffer.close();
+    } else {
+        QFile file;
+        if (storage == External) {
+            file.setFileName(ExternalPartStorage::resolveAbsolutePath(data));
+        } else {
+            file.setFileName(QString::fromUtf8(data));
+        }
+
+        if (file.open(QIODevice::ReadOnly)) {
+            deserialize(item, label, file, version);
+            file.close();
+        } else {
+            qCWarning(AKONADICORE_LOG) << "Failed to to open"
+                    << ((storage == External) ? "external" : "foreign") << "payload:"
+                    << file.fileName() << file.errorString();
+        }
     }
 }
 

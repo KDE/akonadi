@@ -25,8 +25,10 @@
 #include <itemcopyjob.h>
 #include <itemfetchjob.h>
 #include <itemfetchscope.h>
+#include <itemcreatejob.h>
 
 #include <QObject>
+#include <QTemporaryFile>
 
 #include "test_utils.h"
 #include <qtest_akonadi.h>
@@ -93,6 +95,38 @@ private Q_SLOTS:
         // non-existing source
         copy = new ItemCopyJob(Item(INT_MAX), Collection::root());
         QVERIFY(!copy->exec());
+    }
+
+    void testCopyForeign()
+    {
+        QTemporaryFile file;
+        QVERIFY(file.open());
+        file.write("123456789");
+        file.close();
+
+        const Collection source(collectionIdFromPath(QStringLiteral("res2")));
+
+        Item item(QStringLiteral("application/octet-stream"));
+        item.setPayloadPath(file.fileName());
+
+        auto create = new ItemCreateJob(item, source, this);
+        AKVERIFYEXEC(create);
+        item = create->item();
+
+        const Collection target(collectionIdFromPath(QStringLiteral("res2/space folder")));
+        auto copy = new ItemCopyJob(item, target, this);
+        AKVERIFYEXEC(copy);
+
+        auto fetch = new ItemFetchJob(target, this);
+        fetch->fetchScope().fetchFullPayload(true);
+        AKVERIFYEXEC(fetch);
+        QCOMPARE(fetch->items().size(), 1);
+        auto copiedItem = fetch->items().at(0);
+
+        // Copied payload should be completely stored inside Akondai
+        QVERIFY(copiedItem.payloadPath().isEmpty());
+        QVERIFY(copiedItem.hasPayload<QByteArray>());
+        QCOMPARE(copiedItem.payload<QByteArray>(), item.payload<QByteArray>());
     }
 
 };

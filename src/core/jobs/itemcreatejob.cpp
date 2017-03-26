@@ -32,6 +32,7 @@
 #include "helper_p.h"
 
 #include <QDateTime>
+#include <QFile>
 
 #include <KLocalizedString>
 
@@ -79,11 +80,16 @@ Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partN
         return Protocol::PartMetaData();
     }
 
-    mPendingData.clear();
     int version = 0;
-    ItemSerializer::serialize(mItem, partLabel, mPendingData, version);
-
-    return Protocol::PartMetaData(partName, mPendingData.size(), version);
+    if (!mItem.d_ptr->mPayloadPath.isEmpty()) {
+        mPendingData = mItem.d_ptr->mPayloadPath.toUtf8();
+        const auto size = QFile(mItem.d_ptr->mPayloadPath).size();
+        return Protocol::PartMetaData(partName, size, version, Protocol::PartMetaData::Foreign);
+    } else {
+        mPendingData.clear();
+        ItemSerializer::serialize(mItem, partLabel, mPendingData, version);
+        return Protocol::PartMetaData(partName, mPendingData.size(), version);
+    }
 }
 
 ItemCreateJob::ItemCreateJob(const Item &item, const Collection &collection, QObject *parent)

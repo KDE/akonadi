@@ -425,7 +425,7 @@ QByteArray Item::payloadData() const
 
 void Item::setPayloadFromData(const QByteArray &data)
 {
-    ItemSerializer::deserialize(*this, FullPayload, data, 0, false);
+    ItemSerializer::deserialize(*this, FullPayload, data, 0, ItemSerializer::Internal);
 }
 
 void Item::clearPayload()
@@ -712,6 +712,20 @@ QVector<int> Item::availablePayloadMetaTypeIds() const
     return result;
 }
 
+void Item::setPayloadPath(const QString &filePath)
+{
+    // Load payload from the external file, so that it's accessible via
+    // Item::payload(). It internally calls setPayload(), which will clear
+    // mPayloadPath, so we call it afterwards
+    ItemSerializer::deserialize(*this, "RFC822", filePath.toUtf8(), 0, ItemSerializer::Foreign);
+    d_ptr->mPayloadPath = filePath;
+}
+
+QString Item::payloadPath() const
+{
+    return d_ptr->mPayloadPath;
+}
+
 void Item::apply(const Item &other)
 {
     if (mimeType() != other.mimeType() || id() != other.id()) {
@@ -749,4 +763,7 @@ void Item::apply(const Item &other)
 
     ItemSerializer::apply(*this, other);
     d_ptr->resetChangeLog();
+
+    // Must happen after payload update
+    d_ptr->mPayloadPath = other.payloadPath();
 }

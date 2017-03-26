@@ -311,6 +311,7 @@ public:
         mId = other.mId;
         mRemoteId = other.mRemoteId;
         mRemoteRevision = other.mRemoteRevision;
+        mPayloadPath = other.mPayloadPath;
         Q_FOREACH (Attribute *attr, other.mAttributes) {
             mAttributes.insert(attr->type(), attr->clone());
         }
@@ -426,6 +427,7 @@ public:
 
         // if !add, delete all payload variants
         // (they're conversions of each other)
+        mPayloadPath.clear();
         mPayloads.resize(add ? mPayloads.size() + 1 : 1);
         _detail::TypedPayload &tp = mPayloads.back();
         tp.payload.reset(p.release());
@@ -441,6 +443,7 @@ public:
     Item::Id mId;
     QString mRemoteId;
     QString mRemoteRevision;
+    mutable QString mPayloadPath;
     QHash<QByteArray, Attribute *> mAttributes;
     mutable Collection *mParent;
     mutable _detail::clone_ptr<Internal::PayloadBase> mLegacyPayload;

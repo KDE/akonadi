@@ -32,6 +32,7 @@
 
 #include <QTest>
 #include <QSettings>
+#include <QDir>
 
 #include <private/scope_p.h>
 
@@ -178,6 +179,24 @@ private Q_SLOTS:
 
             QTest::newRow("item 1, internal, no change") << scenarios << QByteArray("PLD:DATA") << QByteArray("1234") << QByteArray() << 4ll << false << Part::Internal << item;
         }
+
+        // Insert new item
+        PimItem item2 = item;
+        QVERIFY(item2.insert());
+
+        const QString foreignPath = FakeAkonadiServer::basePath() + QStringLiteral("/tmp/foreignPayloadFile");
+        {
+            TestScenario::List scenarios;
+            scenarios << FakeAkonadiServer::loginScenario()
+                      << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item2))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 3, 0, Protocol::PartMetaData::Foreign)))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommand("PLD:DATA", Protocol::StreamPayloadCommand::Data))
+                      << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponse("PLD:DATA", foreignPath.toUtf8()))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponse(item2.id(), 1));
+
+            QTest::newRow("item 2, new foreign part") << scenarios << QByteArray("PLD:DATA") << foreignPath.toUtf8() << QByteArray("123") << 3ll << false << Part::Foreign << item2;
+        }
     }
 
     void testStreamer()
@@ -194,6 +213,13 @@ private Q_SLOTS:
             // Create the payload file now, since don't have means to react
             // directly to the streaming command
             QFile file(ExternalPartStorage::resolveAbsolutePath(expectedPartData));
+            file.open(QIODevice::WriteOnly);
+            file.write(expectedFileData);
+            file.close();
+        } else if (storage == Part::Foreign) {
+            // Create the foreign payload file
+            QDir().mkpath(FakeAkonadiServer::basePath() + QStringLiteral("/tmp"));
+            QFile file(QString::fromUtf8(expectedPartData));
             file.open(QIODevice::WriteOnly);
             file.write(expectedFileData);
             file.close();
@@ -227,6 +253,15 @@ private Q_SLOTS:
                 const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
                 QVERIFY(!QFile::exists(filePath));
             }
+        } else if (storage == Part::Foreign) {
+            QCOMPARE(data, expectedPartData);
+            QFile file(QString::fromUtf8(data));
+            QVERIFY(file.exists());
+            QCOMPARE(file.size(), expectedPartSize);
+            QVERIFY(file.open(QIODevice::ReadOnly));
+
+            const QByteArray fileData = file.readAll();
+            QCOMPARE(fileData, expectedFileData);
         } else {
             QCOMPARE(data, expectedPartData);
 

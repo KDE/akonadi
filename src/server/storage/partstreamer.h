@@ -60,6 +60,7 @@ private:
     bool streamPayload(Part &part, const QByteArray &partName);
     bool streamPayloadToFile(Part &part, const Protocol::PartMetaData &metaPart);
     bool streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart);
+    bool streamForeignPayload(Part &part, const Protocol::PartMetaData &metaPart);
 
     Protocol::PartMetaData requestPartMetaData(const QByteArray &partName);
     bool preparePart(bool checkExists, const QByteArray &partName, Part &part);

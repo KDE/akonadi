@@ -33,6 +33,8 @@
 
 #include <functional>
 
+#include <QFile>
+
 using namespace Akonadi;
 
 ItemModifyJobPrivate::ItemModifyJobPrivate(ItemModifyJob *parent)
@@ -60,9 +62,15 @@ Protocol::PartMetaData ItemModifyJobPrivate::preparePart(const QByteArray &partN
 
     mPendingData.clear();
     int version = 0;
-    ItemSerializer::serialize(mItems.first(), partLabel, mPendingData, version);
-
-    return Protocol::PartMetaData(partName, mPendingData.size(), version);
+    const auto item = mItems.first();
+    if (!item.d_ptr->mPayloadPath.isEmpty()) {
+        mPendingData = item.d_ptr->mPayloadPath.toUtf8();
+        const auto size = QFile(item.d_ptr->mPayloadPath).size();
+        return Protocol::PartMetaData(partName, size, version, Protocol::PartMetaData::Foreign);
+    } else {
+        ItemSerializer::serialize(mItems.first(), partLabel, mPendingData, version);
+        return Protocol::PartMetaData(partName, mPendingData.size(), version);
+    }
 }
 
 void ItemModifyJobPrivate::conflictResolved()

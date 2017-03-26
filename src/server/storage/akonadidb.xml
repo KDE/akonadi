@@ -169,6 +169,7 @@
     <enum name="Storage">
       <value name="Internal"/>
       <value name="External"/>
+      <value name="Foreign"/>
     </enum>
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>

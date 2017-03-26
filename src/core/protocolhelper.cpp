@@ -479,7 +479,11 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         const auto metaData = part.metaData();
         switch (ns) {
         case ProtocolHelper::PartPayload:
-            ItemSerializer::deserialize(item, plainKey, part.data(), metaData.version(), metaData.storageType());
+            ItemSerializer::deserialize(item, plainKey, part.data(), metaData.version(),
+                                        static_cast<ItemSerializer::PayloadStorage>(metaData.storageType()));
+            if (metaData.storageType() == Protocol::PartMetaData::Foreign) {
+                item.d_ptr->mPayloadPath = QString::fromUtf8(part.data());
+            }
             break;
         case ProtocolHelper::PartAttribute: {
             Attribute *attr = AttributeFactory::createAttribute(plainKey);

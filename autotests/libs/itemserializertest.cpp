@@ -34,7 +34,7 @@ void ItemSerializerTest::testEmptyPayload()
     // should not crash
     QByteArray data;
     Item item;
-    ItemSerializer::deserialize(item, Item::FullPayload, data, 0, false);
+    ItemSerializer::deserialize(item, Item::FullPayload, data, 0, ItemSerializer::Internal);
     QVERIFY(data.isEmpty());
 }
 
@@ -53,7 +53,7 @@ void ItemSerializerTest::testDefaultSerializer()
     QFETCH(QByteArray, serialized);
     Item item;
     item.setMimeType(QStringLiteral("application/octet-stream"));
-    ItemSerializer::deserialize(item, Item::FullPayload, serialized, 0, false);
+    ItemSerializer::deserialize(item, Item::FullPayload, serialized, 0, ItemSerializer::Internal);
 
     QVERIFY(item.hasPayload<QByteArray>());
     QCOMPARE(item.payload<QByteArray>(), serialized);

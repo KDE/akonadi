@@ -135,16 +135,20 @@ bool PartHelper::remove(const QString &column, const QVariant &value)
 
 QByteArray PartHelper::translateData(const QByteArray &data, Part::Storage storage)
 {
-    if (storage == Part::External) {
-        const QString fileName = ExternalPartStorage::resolveAbsolutePath(data);
+    if (storage == Part::External || storage == Part::Foreign) {
+        QFile file;
+        if (storage == Part::External) {
+            file.setFileName(ExternalPartStorage::resolveAbsolutePath(data));
+        } else {
+            file.setFileName(QString::fromUtf8(data));
+        }
 
-        QFile file(fileName);
         if (file.open(QIODevice::ReadOnly)) {
             const QByteArray payload = file.readAll();
             file.close();
             return payload;
         } else {
-            qCCritical(AKONADISERVER_LOG) << "Payload file " << fileName << " could not be open for reading!";
+            qCCritical(AKONADISERVER_LOG) << "Payload file " << file.fileName() << " could not be open for reading!";
             qCCritical(AKONADISERVER_LOG) << "Error: " << file.errorString();
             return QByteArray();
         }
@@ -173,11 +177,19 @@ bool PartHelper::truncate(Part &part)
 
 bool PartHelper::verify(Part &part)
 {
-    if (part.storage() != Part::External) {
+    if (part.storage() == Part::Internal) {
         return true;
     }
 
-    const QString fileName = ExternalPartStorage::resolveAbsolutePath(part.data());
+    QString fileName;
+    if (part.storage() == Part::External) {
+        fileName = ExternalPartStorage::resolveAbsolutePath(part.data());
+    } else if (part.storage() == Part::Foreign) {
+        fileName = QString::fromUtf8(part.data());
+    } else {
+        Q_ASSERT(false);
+    }
+
     if (!QFile::exists(fileName)) {
         qCCritical(AKONADISERVER_LOG) << "Payload file" << fileName << "is missing, trying to recover.";
         part.setData(QByteArray());

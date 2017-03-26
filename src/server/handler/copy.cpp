@@ -50,6 +50,7 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
         Part newPart(part);
         newPart.setData(PartHelper::translateData(newPart.data(), part.storage()));
         newPart.setPimItemId(-1);
+        newPart.setStorage(Part::Internal);
         parts << newPart;
     }
 

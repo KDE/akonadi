@@ -24,6 +24,7 @@
 #include <qtest.h>
 #include <QDebug>
 #include <QSharedPointer>
+#include <QTemporaryFile>
 
 using namespace Akonadi;
 
@@ -336,3 +337,26 @@ void ItemHydra::testSharedPointerConversions()
 
 }
 
+void ItemHydra::testForeignPayload()
+{
+    QTemporaryFile file;
+    QVERIFY(file.open());
+    file.write("123456789");
+    file.close();
+
+    Item a(QStringLiteral("application/octet-stream"));
+    a.setPayloadPath(file.fileName());
+    QVERIFY(a.hasPayload<QByteArray>());
+    QCOMPARE(a.payload<QByteArray>(), QByteArray("123456789"));
+
+    Item b(QStringLiteral("application/octet-stream"));
+    b.apply(a);
+    QVERIFY(b.hasPayload<QByteArray>());
+    QCOMPARE(b.payload<QByteArray>(), QByteArray("123456789"));
+    QCOMPARE(b.payloadPath(), file.fileName());
+
+    Item c = b;
+    QVERIFY(c.hasPayload<QByteArray>());
+    QCOMPARE(c.payload<QByteArray>(), QByteArray("123456789"));
+    QCOMPARE(c.payloadPath(), file.fileName());
+}
