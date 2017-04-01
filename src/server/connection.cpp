@@ -257,16 +257,36 @@ void Connection::slotNewData()
         m_currentHandler->setCommand(cmd);
         try {
             if (!m_currentHandler->parseStream()) {
-                // TODO: What to do? How do we know we reached the end of command?
+                try {
+                    m_currentHandler->failureResponse("Failed to parse stream");
+                } catch (...) {
+                    qCWarning(AKONADISERVER_LOG) << "Failed to parse stream";
+                    m_connectionClosing = true;
+                }
             }
         } catch (const Akonadi::Server::HandlerException &e) {
             if (m_currentHandler) {
-                m_currentHandler->failureResponse(e.what());
+                try {
+                    m_currentHandler->failureResponse(e.what());
+                } catch (...) {
+                    qCWarning(AKONADISERVER_LOG) << "Handler exception:" << e.what();
+                    m_connectionClosing = true;
+                }
             }
         } catch (const Akonadi::Server::Exception &e) {
             if (m_currentHandler) {
-                m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
+                try {
+                    m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
+                } catch (...) {
+                    qCWarning(AKONADISERVER_LOG) << e.type() << "exception:" << e.what();
+                    m_connectionClosing = true;
+                }
             }
+        } catch (const Akonadi::ProtocolException &e) {
+            // No point trying to send anything back to client, the connection is
+            // already messed up
+            qCWarning(AKONADISERVER_LOG) << "Protocol exception:" << e.what();
+            m_connectionClosing = true;
 #if defined(Q_OS_LINUX)
         } catch (abi::__forced_unwind&) {
             // HACK: NPTL throws __forced_unwind during thread cancellation and
@@ -281,7 +301,12 @@ void Connection::slotNewData()
         } catch (...) {
             qCCritical(AKONADISERVER_LOG) << "Unknown exception caught in Connection for session" << m_sessionId;
             if (m_currentHandler) {
-                m_currentHandler->failureResponse("Unknown exception caught");
+                try {
+                    m_currentHandler->failureResponse("Unknown exception caught");
+                } catch (...) {
+                    qCWarning(AKONADISERVER_LOG) << "Unknown exception caught";
+                    m_connectionClosing = true;
+                }
             }
         }
         if (m_reportTime) {
@@ -297,6 +322,7 @@ void Connection::slotNewData()
 
         if (m_connectionClosing) {
             m_socket->disconnect(this);
+            m_socket->close();
             QTimer::singleShot(0, this, &Connection::quit);
             return;
         }

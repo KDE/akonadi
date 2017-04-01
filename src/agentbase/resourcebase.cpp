@@ -1078,9 +1078,15 @@ void ResourceBasePrivate::slotPrepareItemsRetrievalResult(KJob *job)
         return;
     }
     ItemFetchJob *fetch = qobject_cast<ItemFetchJob *>(job);
+    const auto items = fetch->items();
+    if (items.isEmpty()) {
+        q->cancelTask();
+        return;
+    }
+
     const QSet<QByteArray> parts = scheduler->currentTask().itemParts;
-    Q_ASSERT(fetch->items().first().parentCollection().isValid());
-    if (!q->retrieveItems(fetch->items(), parts)) {
+    Q_ASSERT(items.first().parentCollection().isValid());
+    if (!q->retrieveItems(items, parts)) {
         q->cancelTask();
     }
 }
