@@ -32,12 +32,11 @@ ItemSerializerPlugin::~ItemSerializerPlugin()
 
 QSet<QByteArray> ItemSerializerPlugin::parts(const Item &item) const
 {
-    QSet<QByteArray> set;
-    if (item.hasPayload()) {
-        set.insert(Item::FullPayload);
+    if (!item.hasPayload()) {
+        return {};
     }
 
-    return set;
+    return { Item::FullPayload };
 }
 
 void ItemSerializerPlugin::overridePluginLookup(QObject *p)
@@ -47,11 +46,11 @@ void ItemSerializerPlugin::overridePluginLookup(QObject *p)
 
 QSet<QByteArray> ItemSerializerPlugin::availableParts(const Item &item) const
 {
-    if (item.hasPayload()) {
-        return QSet<QByteArray>();
+    if (!item.hasPayload()) {
+        return {};
     }
 
-    return QSet<QByteArray>() << Item::FullPayload;
+    return { Item::FullPayload };
 }
 
 void ItemSerializerPlugin::apply(Item &item, const Item &other)
