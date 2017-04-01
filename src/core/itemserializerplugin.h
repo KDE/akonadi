@@ -184,20 +184,6 @@ public:
     */
     static void overridePluginLookup(QObject *plugin);
 
-};
-
-/**
- * @short The extended base class for item type serializer plugins.
- *
- * @since 4.4
- */
-class AKONADICORE_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
-{
-public:
-    /**
-     * Destroys the item serializer plugin.
-     */
-    virtual ~ItemSerializerPluginV2();
 
     /**
      * Merges the payload parts in @p other into @p item.
@@ -221,11 +207,11 @@ public:
      * @since 4.4
      */
     virtual QSet<QByteArray> availableParts(const Item &item) const;
+
 };
 
 }
 
-Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPlugin, "org.freedesktop.Akonadi.ItemSerializerPlugin/1.0")
-Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPluginV2, "org.freedesktop.Akonadi.ItemSerializerPlugin/1.1")
+Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPlugin, "org.freedesktop.Akonadi.ItemSerializerPlugin/2.0")
 
 #endif

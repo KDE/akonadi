@@ -155,25 +155,7 @@ void ItemSerializer::apply(Item &item, const Item &other)
     }
 
     ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
-
-    ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2 *>(plugin);
-    if (pluginV2) {
-        pluginV2->apply(item, other);
-        return;
-    }
-
-    // Old-school merge:
-    Q_FOREACH (const QByteArray &part, other.loadedPayloadParts()) {
-        QByteArray partData;
-        QBuffer buffer;
-        buffer.setBuffer(&partData);
-        buffer.open(QIODevice::ReadWrite);
-        buffer.seek(0);
-        int version;
-        serialize(other, part, buffer, version);
-        buffer.seek(0);
-        deserialize(item, part, buffer, version);
-    }
+    plugin->apply(item, other);
 }
 
 QSet<QByteArray> ItemSerializer::parts(const Item &item)
@@ -190,11 +172,8 @@ QSet<QByteArray> ItemSerializer::availableParts(const Item &item)
         return QSet<QByteArray>();
     }
     ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
-    ItemSerializerPluginV2 *pluginV2 = dynamic_cast<ItemSerializerPluginV2 *>(plugin);
-
-    if (pluginV2) {
-        return pluginV2->availableParts(item);
-    }
+    return plugin->availableParts(item);
+}
 
     if (item.hasPayload()) {
         return QSet<QByteArray>();

@@ -45,11 +45,7 @@ void ItemSerializerPlugin::overridePluginLookup(QObject *p)
     ItemSerializer::overridePluginLookup(p);
 }
 
-ItemSerializerPluginV2::~ItemSerializerPluginV2()
-{
-}
-
-QSet<QByteArray> ItemSerializerPluginV2::availableParts(const Item &item) const
+QSet<QByteArray> ItemSerializerPlugin::availableParts(const Item &item) const
 {
     if (item.hasPayload()) {
         return QSet<QByteArray>();
@@ -58,7 +54,7 @@ QSet<QByteArray> ItemSerializerPluginV2::availableParts(const Item &item) const
     return QSet<QByteArray>() << Item::FullPayload;
 }
 
-void ItemSerializerPluginV2::apply(Item &item, const Item &other)
+void ItemSerializerPlugin::apply(Item &item, const Item &other)
 {
     QBuffer buffer;
     QByteArray data(other.payloadData());
