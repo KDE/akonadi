@@ -1061,7 +1061,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
 
     if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch &&
             !m_collections.contains(collection.id())) {
-        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item whose collection was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale 'added' notification for an item whose collection was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1118,7 +1118,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item)
     }
 
     if (!m_items.contains(item.id())) {
-        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale 'removed' notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1146,7 +1146,7 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
     }
 
     if (!m_items.contains(item.id())) {
-        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale 'changed' notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1204,7 +1204,7 @@ void EntityTreeModelPrivate::monitoredItemMoved(const Akonadi::Item &item,
     // a reset of the source model inside of the message list (ouch!)
 #if 0
     if (!m_items.contains(item.id())) {
-        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale 'moved' notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
@@ -1291,7 +1291,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
     }
 
     if (!m_items.contains(item.id())) {
-        qCWarning(AKONADICORE_LOG) << "Got a stale notification for an item which was already removed." << item.id() << item.remoteId();
+        qCWarning(AKONADICORE_LOG) << "Got a stale 'unlinked' notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
