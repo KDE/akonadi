@@ -322,7 +322,9 @@
   </update>
 
   <update version="35" abortOnFailure="true">
-    <raw-sql backends="mysql,psql,sqlite">UPDATE PartTable SET storage = external;</raw-sql>
-    <raw-sql backends="mysql,psql,sqlite">ALTER TABLE PartTable DROP COLUMN external;</raw-sql>
+    <raw-sql backends="mysql,sqlite">UPDATE PartTable SET storage = external;</raw-sql>
+    <raw-sql backends="mysql,sqlite">ALTER TABLE PartTable DROP COLUMN external;</raw-sql>
+    <raw-sql backends="psql">UPDATE PartTable SET storage = cast(external as integer);</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE PartTable DROP COLUMN external;</raw-sql>
   </update>
 </updates>
