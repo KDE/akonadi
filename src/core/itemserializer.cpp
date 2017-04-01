@@ -175,11 +175,14 @@ QSet<QByteArray> ItemSerializer::availableParts(const Item &item)
     return plugin->availableParts(item);
 }
 
-    if (item.hasPayload()) {
+QSet<QByteArray> ItemSerializer::allowedForeignParts(const Item &item)
+{
+    if (!item.hasPayload()) {
         return QSet<QByteArray>();
     }
 
-    return QSet<QByteArray>() << Item::FullPayload;
+    ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
+    return plugin->allowedForeignParts(item);
 }
 
 Item ItemSerializer::convert(const Item &item, int mtid)

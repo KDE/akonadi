@@ -63,7 +63,7 @@ Protocol::PartMetaData ItemModifyJobPrivate::preparePart(const QByteArray &partN
     mPendingData.clear();
     int version = 0;
     const auto item = mItems.first();
-    if (!item.d_ptr->mPayloadPath.isEmpty()) {
+    if (mForeignParts.contains(partLabel)) {
         mPendingData = item.d_ptr->mPayloadPath.toUtf8();
         const auto size = QFile(item.d_ptr->mPayloadPath).size();
         return Protocol::PartMetaData(partName, size, version, Protocol::PartMetaData::Foreign);
@@ -125,6 +125,10 @@ ItemModifyJob::ItemModifyJob(const Item &item, QObject *parent)
 
     d->mOperations.insert(ItemModifyJobPrivate::RemoteId);
     d->mOperations.insert(ItemModifyJobPrivate::RemoteRevision);
+
+    if (!item.payloadPath().isEmpty()) {
+        d->mForeignParts = ItemSerializer::allowedForeignParts(item);
+    }
 }
 
 ItemModifyJob::ItemModifyJob(const Akonadi::Item::List &items, QObject *parent)

@@ -67,3 +67,12 @@ void ItemSerializerPlugin::apply(Item &item, const Item &other)
 
     buffer.close();
 }
+
+QSet<QByteArray> ItemSerializerPlugin::allowedForeignParts(const Item &item) const
+{
+    if (!item.hasPayload()) {
+        return {};
+    }
+
+    return { Item::FullPayload };
+}

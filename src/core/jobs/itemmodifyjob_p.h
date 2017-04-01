@@ -67,6 +67,7 @@ public:
     Item::List mItems;
     bool mRevCheck;
     QSet<QByteArray> mParts;
+    QSet<QByteArray> mForeignParts;
     QByteArray mPendingData;
     bool mIgnorePayload;
     bool mAutomaticConflictHandlingEnabled;

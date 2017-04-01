@@ -208,6 +208,18 @@ public:
      */
     virtual QSet<QByteArray> availableParts(const Item &item) const;
 
+    /**
+     * Returns the parts available in the item @p item that can be stored using
+     * foreign payload mechanism. Is only called for items whose payload has been
+     * set via Item::setPayloadPath().
+     *
+     * By default returns "RFC822", which can always be stored as foreign payload.
+     * Some implementations can also allow "HEAD" to be stored as foreign payload,
+     * if HEAD is only a subset of RFC822 part.
+     *
+     * @since 5.7
+     */
+    virtual QSet<QByteArray> allowedForeignParts(const Item &item) const;
 };
 
 }

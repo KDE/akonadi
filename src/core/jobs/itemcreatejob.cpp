@@ -54,6 +54,7 @@ public:
     Collection mCollection;
     Item mItem;
     QSet<QByteArray> mParts;
+    QSet<QByteArray> mForeignParts;
     QDateTime mDatetime;
     QByteArray mPendingData;
     ItemCreateJob::MergeOptions mMergeOptions;
@@ -81,7 +82,7 @@ Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partN
     }
 
     int version = 0;
-    if (!mItem.d_ptr->mPayloadPath.isEmpty()) {
+    if (mForeignParts.contains(partLabel)) {
         mPendingData = mItem.d_ptr->mPayloadPath.toUtf8();
         const auto size = QFile(mItem.d_ptr->mPayloadPath).size();
         return Protocol::PartMetaData(partName, size, version, Protocol::PartMetaData::Foreign);
@@ -101,6 +102,10 @@ ItemCreateJob::ItemCreateJob(const Item &item, const Collection &collection, QOb
     d->mItem = item;
     d->mParts = d->mItem.loadedPayloadParts();
     d->mCollection = collection;
+
+    if (!d->mItem.payloadPath().isEmpty()) {
+        d->mForeignParts = ItemSerializer::allowedForeignParts(d->mItem);
+    }
 }
 
 ItemCreateJob::~ItemCreateJob()

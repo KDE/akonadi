@@ -81,6 +81,14 @@ public:
     static QSet<QByteArray> availableParts(const Item &item);
 
     /**
+     * Returns list of parts of the item payload that can be stored using
+     * foreign payload.
+     *
+     * @since 5.7
+     */
+    static QSet<QByteArray> allowedForeignParts(const Item &item);
+
+    /**
      * Tries to convert the payload in \a item into type with
      * metatype-id \a metaTypeId.
      * Throws ItemSerializerException or returns an Item w/o payload on failure.
