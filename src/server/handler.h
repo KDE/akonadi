@@ -72,21 +72,21 @@ public:
 
     /**
      * Find a handler for a command that is always allowed, like LOGOUT.
-     * @param line the command string
+     * @param cmd the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
     static Handler *findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd);
 
     /**
      * Find a handler for a command that is allowed when the client is not yet authenticated, like LOGIN.
-     * @param line the command string
+     * @param cmd the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
     static Handler *findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd);
 
     /**
      * Find a handler for a command that is allowed when the client is authenticated, like LIST, FETCH, etc.
-     * @param line the command string
+     * @param cmd the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
     static Handler *findHandlerForCommandAuthenticated(Protocol::Command::Type cmd);

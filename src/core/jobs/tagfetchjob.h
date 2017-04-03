@@ -118,7 +118,7 @@ Q_SIGNALS:
     /**
      * This signal is emitted whenever new tags have been fetched completely.
      *
-     * @param items The fetched tags.
+     * @param tags The fetched tags
      */
     void tagsReceived(const Akonadi::Tag::List &tags);
 

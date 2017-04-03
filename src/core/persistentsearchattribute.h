@@ -111,7 +111,7 @@ public:
 
     /**
      * Sets IDs of collections to be queries
-     * @param collectionsIDs IDs of collections to query
+     * @param collectionsIds IDs of collections to query
      * @since 4.13
      */
     void setQueryCollections(const QList<qint64> &collectionsIds);

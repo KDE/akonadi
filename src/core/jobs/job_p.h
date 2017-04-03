@@ -94,7 +94,7 @@ public:
     /**
      * Notify following jobs about item revision changes.
      * This is used to avoid phantom conflicts between pipelined modify jobs on the same item.
-     * @param itemID the id of the item which has changed
+     * @param itemId the id of the item which has changed
      * @param oldRevision the old item revision
      * @param newRevision the new item revision
      */

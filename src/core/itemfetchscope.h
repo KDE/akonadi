@@ -412,7 +412,7 @@ public:
      *
      * The default is @c false.
      *
-     * @param fetchTags whether or not to load relations.
+     * @param fetchRelations whether or not to load relations.
      * @since 4.15
      */
     void setFetchRelations(bool fetchRelations);

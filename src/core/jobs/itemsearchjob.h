@@ -73,7 +73,6 @@ public:
     /**
      * Creates an invalid search job.
      *
-     * @param query The search query.
      * @param parent The parent object.
      * @since 5.1
      */

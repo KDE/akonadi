@@ -33,11 +33,11 @@ public:
     ~AgentPluginLoader();
 
     /**
-      Returns the loader for plugins with @param pluginName. Callers must not
+      Returns the loader for plugins with @p pluginName. Callers must not
       take ownership over the returned loader. Loaders will be unloaded and deleted
       when the AgentPluginLoader goes out of scope/gets deleted.
 
-      @return the plugin for @param pluginName or 0 if the plugin is not found.
+      @return the plugin for @p pluginName or 0 if the plugin is not found.
      */
     QPluginLoader *load(const QString &pluginName);
 

@@ -273,7 +273,6 @@ public:
      *
      * @param enable @c true to enable the feature, @c false means everything
      * that was requested will be fetched.
-     * @return void
      */
     void fetchChangedOnly(bool enable);
 
