@@ -43,15 +43,11 @@ public:
 
     /**
      * Adds the given @p collection to the search.
-     *
-     * @returns true if the collection was added successfully, false otherwise.
      */
     virtual void addSearch(const Collection &collection) = 0;
 
     /**
      * Removes the collection with the given @p id from the search.
-     *
-     * @returns true if the collection was removed successfully, false otherwise.
      */
     virtual void removeSearch(qint64 id) = 0;
 };

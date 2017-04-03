@@ -185,7 +185,7 @@ public:
      *
      * @deprecated Use ObserverV2 instead
      */
-    class AKONADIAGENTBASE_EXPORT Observer  // krazy:exclude=dpointer
+    class AKONADIAGENTBASE_DEPRECATED AKONADIAGENTBASE_EXPORT Observer  // krazy:exclude=dpointer
     {
     public:
         /**
@@ -319,7 +319,7 @@ public:
          * flag changes via Observer::itemChanged(), even when you don't reimplement
          * itemsFlagsChanged()!
          *
-         * @param item The changed item.
+         * @param items The changed items
          * @param addedFlags Flags that have been added to the item
          * @param removedFlags Flags that have been removed from the item
          */

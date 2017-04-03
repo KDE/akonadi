@@ -78,7 +78,7 @@ public:
      * metatype-id \a metaTypeId.
      * Throws ItemSerializerException or returns an Item w/o payload on failure.
      * @param item the item to convert
-     * @param metaTypeID the meta type id used to convert items payload
+     * @param metaTypeId the meta type id used to convert items payload
      * @since 4.6
      */
     static Item convert(const Item &item, int metaTypeId);
