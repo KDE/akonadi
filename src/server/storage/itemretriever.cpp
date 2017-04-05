@@ -30,6 +30,7 @@
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
+#include "helper_p.h"
 
 #include <private/protocol_p.h>
 
@@ -216,7 +217,7 @@ bool ItemRetriever::exec()
 
     QSqlQuery query = buildQuery();
     QByteArrayList parts;
-    Q_FOREACH (const QByteArray &part, mParts) {
+    for (const QByteArray &part : qAsConst(mParts)) {
         if (part.startsWith(AKONADI_PARAM_PLD)) {
             parts << part.mid(4);
         }

@@ -18,7 +18,7 @@
 */
 
 #include "modify.h"
-
+#include "helper_p.h"
 #include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
@@ -188,7 +188,7 @@ bool Modify::parseStream()
         cols.reserve(cmd.persistentSearchCollections().size());
         QVector<qint64> inCols = cmd.persistentSearchCollections();
         qSort(inCols);
-        Q_FOREACH (qint64 col, inCols) {
+        for (qint64 col : qAsConst(inCols)) {
             cols.append(QString::number(col));
         }
         const QString colStr = cols.join(QLatin1Char(' '));

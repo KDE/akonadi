@@ -18,7 +18,7 @@
 */
 
 #include "move.h"
-
+#include "helper_p.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"

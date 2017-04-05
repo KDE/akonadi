@@ -18,7 +18,7 @@
 */
 
 #include "storagejanitor.h"
-
+#include "helper_p.h"
 #include "storage/queryhelper.h"
 #include "storage/transaction.h"
 #include "storage/datastore.h"
@@ -235,7 +235,7 @@ void StorageJanitor::findOrphanedResources()
             resourceNames.append(resource.name());
         }
         inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QLatin1Char(','))));
-        Q_FOREACH (const QString &resourceName, resourceNames) {
+        for (const QString &resourceName : qAsConst(resourceNames)) {
             inform(QStringLiteral("Removing resource %1").arg(resourceName));
             ResourceManager::self()->removeResourceInstance(resourceName);
         }
@@ -303,7 +303,7 @@ void StorageJanitor::findOrphanedItems()
         qb.setColumnValue(PimItem::collectionIdFullColumnName(), col);
         QVector<ImapSet::Id> imapIds;
         imapIds.reserve(orphans.count());
-        Q_FOREACH (const PimItem &item, orphans) {
+        for (const PimItem &item : qAsConst(orphans)) {
             imapIds.append(item.id());
         }
         ImapSet set;
