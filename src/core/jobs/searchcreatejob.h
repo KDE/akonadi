@@ -69,9 +69,9 @@ public:
     /**
      * Creates a search create job
      *
-     * @param name The name of the search collection.
-     * @param query The search query.
-     * @param parent The parent object.
+     * @param name The name of the search collection
+     * @param searchQuery The search query
+     * @param parent The parent object
      * @since 4.13
      */
     SearchCreateJob(const QString &name, const SearchQuery &searchQuery, QObject *parent = nullptr);

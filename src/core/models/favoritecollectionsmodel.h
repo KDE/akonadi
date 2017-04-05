@@ -87,7 +87,7 @@ public:
      * Returns the list of favorite collections.
      * @deprecated Use collectionIds instead.
      */
-    Collection::List collections() const;
+    AKONADICORE_DEPRECATED Collection::List collections() const;
 
     /**
      * Returns the list of ids of favorite collections set on the FavoriteCollectionsModel.

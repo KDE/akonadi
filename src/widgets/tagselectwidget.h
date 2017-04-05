@@ -49,7 +49,6 @@ public:
     QStringList tagToStringList() const;
     /**
      * @brief setSelectionFromStringList, convert a QStringList to Tag (converted from url)
-     * @param lst
      */
     void setSelectionFromStringList(const QStringList &lst);
 private:
