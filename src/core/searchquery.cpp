@@ -19,7 +19,7 @@
 
 #include "searchquery.h"
 #include "akonadicore_debug.h"
-
+#include "helper_p.h"
 #include <QVariant>
 #include <QJsonDocument>
 #include <QJsonObject>
@@ -100,7 +100,7 @@ public:
             termJSON.insert(QStringLiteral("rel"), static_cast<int>(term.relation()));
             QVariantList subTermsJSON;
             subTermsJSON.reserve(subTerms.count());
-            Q_FOREACH (const SearchTerm &term, subTerms) {
+            for (const SearchTerm &term : qAsConst(subTerms)) {
                 subTermsJSON.append(termToJSON(term));
             }
             termJSON.insert(QStringLiteral("subTerms"), subTermsJSON);

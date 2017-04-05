@@ -314,7 +314,7 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
     QVariantList flagIds;
     QVariantList appendIds;
     PimItem::List appendItems;
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         if (existing.contains(item.id())) {
             continue;
         }
@@ -465,9 +465,9 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
 
     setBoolPtr(tagsChanged, false);
 
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         const Tag::List itemTags = item.tags();
-        Q_FOREACH (const Tag &tag, itemTags) {
+        for (const Tag &tag : itemTags) {
             if (!tags.contains(tag)) {
                 // Remove tags from items that had it set
                 removedTags << tag.id();
@@ -478,7 +478,7 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
             }
         }
 
-        Q_FOREACH (const Tag &tag, tags) {
+        for (const Tag &tag : tags) {
             if (!itemTags.contains(tag)) {
                 // Add tags to items that did not have the tag
                 addedTags << tag.id();
