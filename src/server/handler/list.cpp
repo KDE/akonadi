@@ -20,7 +20,7 @@
 #include "list.h"
 #include "akonadiserver_debug.h"
 
-#include "utils.h"
+#include "helper_p.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "collectionreferencemanager.h"

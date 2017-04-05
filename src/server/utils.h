@@ -29,22 +29,6 @@
 #include "storage/datastore.h"
 #include "storage/dbtype.h"
 
-#if QT_VERSION < QT_VERSION_CHECK(5,7,0)
-namespace QtPrivate
-{
-template <typename T> struct QAddConst {
-    typedef const T Type;
-};
-}
-
-// this adds const to non-const objects (like std::as_const)
-template <typename T>
-Q_DECL_CONSTEXPR typename QtPrivate::QAddConst<T>::Type &qAsConst(T &t) Q_DECL_NOTHROW { return t; }
-// prevent rvalue arguments:
-template <typename T>
-void qAsConst(const T &&) Q_DECL_EQ_DELETE;
-#endif
-
 namespace Akonadi
 {
 namespace Server

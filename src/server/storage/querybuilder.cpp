@@ -19,7 +19,7 @@
 
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
-#include "utils.h"
+#include "helper_p.h"
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -29,6 +29,7 @@
 
 #include <QSqlRecord>
 #include <QSqlError>
+#include <QTime>
 
 using namespace Akonadi::Server;
 

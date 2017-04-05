@@ -23,7 +23,7 @@
 #include "storage/notificationcollector.h"
 #include "tracer.h"
 #include "akonadiserver_debug.h"
-#include "utils.h"
+#include "helper_p.h"
 
 #include <private/standarddirs_p.h>
 #include <private/xdgbasedirs_p.h>
