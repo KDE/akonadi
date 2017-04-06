@@ -55,17 +55,19 @@ QSet<QByteArray> ItemSerializerPlugin::availableParts(const Item &item) const
 
 void ItemSerializerPlugin::apply(Item &item, const Item &other)
 {
-    QBuffer buffer;
-    QByteArray data(other.payloadData());
-    buffer.setBuffer(&data);
-    buffer.open(QIODevice::ReadOnly);
-
-    foreach (const QByteArray &part, other.loadedPayloadParts()) {
+    Q_FOREACH (const QByteArray &part, other.loadedPayloadParts()) {
+        QByteArray partData;
+        QBuffer buffer;
+        buffer.setBuffer(&partData);
+        buffer.open(QIODevice::ReadWrite);
         buffer.seek(0);
-        deserialize(item, part, buffer, 0);
+        int version;
+        // NOTE: we can't just pass other.payloadData() into deserialize(),
+        // because that does not preserve payload version.
+        serialize(other, part, buffer, version);
+        buffer.seek(0);
+        deserialize(item, part, buffer, version);
     }
-
-    buffer.close();
 }
 
 QSet<QByteArray> ItemSerializerPlugin::allowedForeignParts(const Item &item) const
