@@ -23,7 +23,7 @@
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
-#include "utils.h"
+#include "helper_p.h"
 
 #include <private/scope_p.h>
 

@@ -30,13 +30,13 @@
 #include "storage/parthelper.h"
 #include "storage/parttypehelper.h"
 #include "storage/transaction.h"
+#include "helper_p.h"
 #include "utils.h"
 #include "intervalcheck.h"
 #include "agentmanagerinterface.h"
 #include "dbusconnectionpool.h"
 #include "tagfetchhelper.h"
 #include "relationfetch.h"
-#include "utils.h"
 #include "akonadiserver_debug.h"
 
 #include <private/scope_p.h>
