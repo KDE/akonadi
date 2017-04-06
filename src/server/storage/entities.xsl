@@ -148,9 +148,16 @@ QVector&lt;QString&gt; Akonadi::Server::allDatabaseTables()
 <xsl:value-of select="concat(translate(substring($argument,1,1),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring($argument,2))"/>
 </xsl:template>
 
+<xsl:template name="data-type">
+  <xsl:choose>
+    <xsl:when test="@type = 'enum'"><xsl:value-of select="../@name"/>::<xsl:value-of select="@enumType"/></xsl:when>
+    <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
+  </xsl:choose>
+</xsl:template>
+
 <!-- generates function argument code for the current column -->
 <xsl:template name="argument">
-  <xsl:if test="starts-with(@type,'Q')">const </xsl:if><xsl:value-of select="@type"/><xsl:text> </xsl:text>
+  <xsl:if test="starts-with(@type,'Q')">const </xsl:if><xsl:call-template name="data-type"/><xsl:text> </xsl:text>
   <xsl:if test="starts-with(@type,'Q')">&amp;</xsl:if><xsl:value-of select="@name"/>
 </xsl:template>
 
@@ -210,20 +217,20 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
   <!-- this indirection is required to prevent off-by-one access now that we skip the key column -->
   int valueIndex = 0;
   <xsl:for-each select="column">
-    const <xsl:value-of select="@type"/> value<xsl:value-of select="position()"/> =
+    const <xsl:call-template name="data-type"/> value<xsl:value-of select="position()"/> =
     <xsl:choose>
       <xsl:when test="@name=$key">
         <xsl:value-of select="$key"/>;
       </xsl:when>
       <xsl:otherwise>
         (qb.query().isNull(valueIndex)) ?
-        <xsl:value-of select="@type"/>() :
+        <xsl:call-template name="data-type"/>() :
         <xsl:choose>
           <xsl:when test="starts-with(@type,'QString')">
           Utils::variantToString( qb.query().value( valueIndex ) )
           </xsl:when>
-          <xsl:when test="starts-with(@type, 'Tristate')">
-          static_cast&lt;Tristate&gt;(qb.query().value( valueIndex ).value&lt;int&gt;())
+          <xsl:when test="starts-with(@type, 'enum')">
+          static_cast&lt;<xsl:value-of select="@enumType"/>&gt;(qb.query().value( valueIndex ).value&lt;int&gt;())
           </xsl:when>
           <xsl:when test="starts-with(@type, 'QDateTime')">
           Utils::variantToDateTime(qb.query().value(valueIndex))

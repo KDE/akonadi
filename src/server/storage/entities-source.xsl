@@ -55,8 +55,8 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     <xsl:for-each select="column[@type = 'bool']">
       , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose> )
     </xsl:for-each>
-    <xsl:for-each select="column[@type = 'Tristate']">
-      , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>Tristate::Undefined</xsl:otherwise></xsl:choose> )
+    <xsl:for-each select="column[@type = 'enum']">
+      , <xsl:value-of select="@name"/>( <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose> )
     </xsl:for-each>
     <xsl:for-each select="column[@name != 'id']">
       , <xsl:value-of select="@name"/>_changed( false )
@@ -90,6 +90,9 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
     </xsl:for-each>
     <xsl:for-each select="column[@type = 'Tristate']">
     Tristate <xsl:value-of select="@name"/>;
+    </xsl:for-each>
+    <xsl:for-each select="column[@type = 'enum']">
+    <xsl:value-of select="@enumType"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>;
     </xsl:for-each>
     <xsl:for-each select="column[@name != 'id']">
     bool <xsl:value-of select="@name"/>_changed : 1;
@@ -205,10 +208,7 @@ bool <xsl:value-of select="$className"/>::operator==( const <xsl:value-of select
 
 // accessor methods
 <xsl:for-each select="column[@name != 'id']">
-<xsl:choose>
-  <xsl:when test="starts-with(@type, 'Tristate')">Akonadi::Tristate</xsl:when>
-  <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
-</xsl:choose><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const
+<xsl:call-template name="data-type"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::<xsl:value-of select="@name"/>() const
 {
   <xsl:text>return d-&gt;</xsl:text><xsl:value-of select="@name"/>;
 }
@@ -307,13 +307,13 @@ QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$clas
     rv.append( <xsl:value-of select="$className"/>(
       <xsl:for-each select="column">
         (query.isNull(<xsl:value-of select="position() - 1"/>)) ?
-          <xsl:value-of select="@type"/>() :
+          <xsl:call-template name="data-type"/>() :
           <xsl:choose>
             <xsl:when test="starts-with(@type,'QString')">
           Utils::variantToString( query.value( <xsl:value-of select="position() - 1"/> ) )
             </xsl:when>
-            <xsl:when test="starts-with(@type, 'Tristate')">
-          static_cast&lt;Tristate&gt;(query.value( <xsl:value-of select="position() - 1"/> ).value&lt;int&gt;())
+            <xsl:when test="starts-with(@type, 'enum')">
+            static_cast&lt;<xsl:value-of select="@enumType"/>&gt;(query.value( <xsl:value-of select="position() - 1"/> ).value&lt;int&gt;())
             </xsl:when>
             <xsl:otherwise>
           query.value( <xsl:value-of select="position() - 1"/> ).value&lt;<xsl:value-of select="@type"/>&gt;()
@@ -561,7 +561,7 @@ QDebug &amp; operator&lt;&lt;( QDebug&amp; d, const <xsl:value-of select="$class
   <xsl:for-each select="column">
     &lt;&lt; "<xsl:value-of select="@name"/> = " &lt;&lt;
     <xsl:choose>
-      <xsl:when test="starts-with(@type, 'Tristate')">
+      <xsl:when test="starts-with(@type, 'enum')">
         static_cast&lt;int&gt;(entity.<xsl:value-of select="@name"/>())
       </xsl:when>
       <xsl:otherwise>
@@ -595,7 +595,7 @@ bool <xsl:value-of select="$className"/>::insert( qint64* insertId )
     <xsl:if test="$refColumn != 'id'">
     if ( d-&gt;<xsl:value-of select="@name"/>_changed )
       <xsl:choose>
-        <xsl:when test="starts-with(@type, 'Tristate')">
+        <xsl:when test="starts-with(@type, 'enum')">
       qb.setColumnValue( <xsl:value-of select="@name"/>Column(), static_cast&lt;int&gt;(this-&gt;<xsl:value-of select="@name"/>()) );
         </xsl:when>
         <xsl:otherwise>
@@ -644,7 +644,7 @@ bool <xsl:value-of select="$className"/>::update()
       else
       </xsl:if>
       <xsl:choose>
-        <xsl:when test="starts-with(@type, 'Tristate')">
+        <xsl:when test="starts-with(@type, 'enum')">
       qb.setColumnValue( <xsl:value-of select="@name"/>Column(), static_cast&lt;int&gt;(this-&gt;<xsl:value-of select="@name"/>()) );
         </xsl:when>
         <xsl:otherwise>

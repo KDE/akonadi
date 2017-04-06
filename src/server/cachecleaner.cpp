@@ -112,7 +112,7 @@ bool CacheCleaner::shouldScheduleCollection(const Collection &collection)
 {
     return collection.cachePolicyLocalParts() != QLatin1String("ALL")
            && collection.cachePolicyCacheTimeout() >= 0
-           && (collection.enabled() || (collection.displayPref() == Tristate::True) || (collection.syncPref() == Tristate::True) || (collection.indexPref() == Tristate::True))
+           && (collection.enabled() || (collection.displayPref() == Collection::True) || (collection.syncPref() == Collection::True) || (collection.indexPref() == Collection::True))
            && collection.resourceId() > 0;
 }
 

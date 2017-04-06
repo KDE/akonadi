@@ -431,13 +431,13 @@ void ProtocolTest::testPartMetaData()
     in.setName("PLD:HEAD");
     in.setSize(42);
     in.setVersion(1);
-    in.setIsExternal(true);
+    in.setStorageType(PartMetaData::External);
 
     const PartMetaData out = serializeAndDeserialize(in);
     QCOMPARE(out.name(), QByteArray("PLD:HEAD"));
     QCOMPARE(out.size(), 42);
     QCOMPARE(out.version(), 1);
-    QCOMPARE(out.isExternal(), true);
+    QCOMPARE(out.storageType(), PartMetaData::External);
     QCOMPARE(out, in);
     const bool notEquals = (in != out);
     QVERIFY(!notEquals);

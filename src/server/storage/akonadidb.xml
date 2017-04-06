@@ -67,7 +67,7 @@
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
     <column name="generation" type="int" default="0" allowNull="false" />
-    <data columns="version" values="34"/>
+    <data columns="version" values="35"/>
   </table>
 
   <table name="Resource">
@@ -79,6 +79,12 @@
   </table>
 
   <table name="Collection">
+    <enum name="Tristate">
+      <value name="False"/>
+      <value name="True"/>
+      <value name="Undefined"/>
+    </enum>
+
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
@@ -86,9 +92,9 @@
     <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" allowNull="false"/>
     <column name="enabled" type="bool" default="true" allowNull="false"/>
-    <column name="syncPref" type="Tristate" default="Tristate::Undefined"/>
-    <column name="displayPref" type="Tristate" default="Tristate::Undefined"/>
-    <column name="indexPref" type="Tristate" default="Tristate::Undefined"/>
+    <column name="syncPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
+    <column name="displayPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
+    <column name="indexPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
     <column name="referenced" type="bool" default="false" allowNull="false"/>
     <column name="cachePolicyInherit" type="bool" default="true" allowNull="false"/>
     <column name="cachePolicyCheckInterval" type="int" default="-1" allowNull="false"/>
@@ -160,13 +166,18 @@
  </table>
 
   <table name="Part">
+    <enum name="Storage">
+      <value name="Internal"/>
+      <value name="External"/>
+      <value name="Foreign"/>
+    </enum>
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
     <column name="partTypeId" type="qint64" refTable="PartType" refColumn="id" allowNull="false" noUpdate="true" />
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="qint64" allowNull="false"/>
     <column name="version" type="int" default="0"/>
-    <column name="external" type="bool" default="false" />
+    <column name="storage" type="enum" enumType="Part::Storage" default="Part::Internal"/>
     <index name="pimItemIdTypeIndex" columns="pimItemId,partTypeId" unique="true"/>
     <index name="pimItemIdSortIndex" columns="pimItemId" unique="false" sort="DESC"/>
   </table>

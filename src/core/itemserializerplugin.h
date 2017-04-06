@@ -184,20 +184,6 @@ public:
     */
     static void overridePluginLookup(QObject *plugin);
 
-};
-
-/**
- * @short The extended base class for item type serializer plugins.
- *
- * @since 4.4
- */
-class AKONADICORE_EXPORT ItemSerializerPluginV2 : public ItemSerializerPlugin
-{
-public:
-    /**
-     * Destroys the item serializer plugin.
-     */
-    virtual ~ItemSerializerPluginV2();
 
     /**
      * Merges the payload parts in @p other into @p item.
@@ -221,11 +207,23 @@ public:
      * @since 4.4
      */
     virtual QSet<QByteArray> availableParts(const Item &item) const;
+
+    /**
+     * Returns the parts available in the item @p item that can be stored using
+     * foreign payload mechanism. Is only called for items whose payload has been
+     * set via Item::setPayloadPath().
+     *
+     * By default returns "RFC822", which can always be stored as foreign payload.
+     * Some implementations can also allow "HEAD" to be stored as foreign payload,
+     * if HEAD is only a subset of RFC822 part.
+     *
+     * @since 5.7
+     */
+    virtual QSet<QByteArray> allowedForeignParts(const Item &item) const;
 };
 
 }
 
-Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPlugin, "org.freedesktop.Akonadi.ItemSerializerPlugin/1.0")
-Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPluginV2, "org.freedesktop.Akonadi.ItemSerializerPlugin/1.1")
+Q_DECLARE_INTERFACE(Akonadi::ItemSerializerPlugin, "org.freedesktop.Akonadi.ItemSerializerPlugin/2.0")
 
 #endif

@@ -32,6 +32,7 @@
 #include "helper_p.h"
 
 #include <QDateTime>
+#include <QFile>
 
 #include <KLocalizedString>
 
@@ -53,6 +54,7 @@ public:
     Collection mCollection;
     Item mItem;
     QSet<QByteArray> mParts;
+    QSet<QByteArray> mForeignParts;
     QDateTime mDatetime;
     QByteArray mPendingData;
     ItemCreateJob::MergeOptions mMergeOptions;
@@ -79,11 +81,16 @@ Protocol::PartMetaData ItemCreateJobPrivate::preparePart(const QByteArray &partN
         return Protocol::PartMetaData();
     }
 
-    mPendingData.clear();
     int version = 0;
-    ItemSerializer::serialize(mItem, partLabel, mPendingData, version);
-
-    return Protocol::PartMetaData(partName, mPendingData.size(), version);
+    if (mForeignParts.contains(partLabel)) {
+        mPendingData = mItem.d_ptr->mPayloadPath.toUtf8();
+        const auto size = QFile(mItem.d_ptr->mPayloadPath).size();
+        return Protocol::PartMetaData(partName, size, version, Protocol::PartMetaData::Foreign);
+    } else {
+        mPendingData.clear();
+        ItemSerializer::serialize(mItem, partLabel, mPendingData, version);
+        return Protocol::PartMetaData(partName, mPendingData.size(), version);
+    }
 }
 
 ItemCreateJob::ItemCreateJob(const Item &item, const Collection &collection, QObject *parent)
@@ -95,6 +102,10 @@ ItemCreateJob::ItemCreateJob(const Item &item, const Collection &collection, QOb
     d->mItem = item;
     d->mParts = d->mItem.loadedPayloadParts();
     d->mCollection = collection;
+
+    if (!d->mItem.payloadPath().isEmpty()) {
+        d->mForeignParts = ItemSerializer::allowedForeignParts(d->mItem);
+    }
 }
 
 ItemCreateJob::~ItemCreateJob()

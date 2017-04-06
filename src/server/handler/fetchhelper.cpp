@@ -81,7 +81,7 @@ enum PartQueryColumns {
     PartQueryPimIdColumn,
     PartQueryTypeIdColumn,
     PartQueryDataColumn,
-    PartQueryExternalColumn,
+    PartQueryStorageColumn,
     PartQueryVersionColumn,
     PartQueryDataSizeColumn
 };
@@ -96,7 +96,7 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
         partQuery.addColumn(PimItem::idFullColumnName());
         partQuery.addColumn(Part::partTypeIdFullColumnName());
         partQuery.addColumn(Part::dataFullColumnName());
-        partQuery.addColumn(Part::externalFullColumnName());
+        partQuery.addColumn(Part::storageFullColumnName());
         partQuery.addColumn(Part::versionFullColumnName());
         partQuery.addColumn(Part::datasizeFullColumnName());
 
@@ -575,7 +575,8 @@ bool FetchHelper::fetchItems()
                     skipItem = true;
                     break;
                 }
-                metaPart.setIsExternal(partQuery.value(PartQueryExternalColumn).toBool());
+                metaPart.setStorageType(static_cast<Protocol::PartMetaData::StorageType>(
+                    partQuery.value(PartQueryStorageColumn).toInt()));
                 if (data.isEmpty()) {
                     partData.setData(QByteArray(""));
                 } else {

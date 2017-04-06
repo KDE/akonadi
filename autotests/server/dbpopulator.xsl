@@ -49,6 +49,13 @@
   <xsl:text>set</xsl:text><xsl:call-template name="first-upper-case"><xsl:with-param name="name" select="@name"/></xsl:call-template>
 </xsl:template>
 
+<xsl:template name="translate-enum-value">
+  <xsl:param name="value" />
+  <xsl:param name="enumType" />
+  <xsl:param name="table" />
+
+  <xsl:value-of select="$table"/>::<xsl:value-of select="substring($value, string-length($enumType) + 3)" />
+</xsl:template>
 
 <xsl:template name="parse-entities-recursively">
   <xsl:param name="attributes" />
@@ -162,13 +169,21 @@
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>
-        <xsl:when test="@type = 'Tristate'">
+        <xsl:when test="@type = 'enum'">
           <xsl:choose>
             <xsl:when test="$columnValue = 'NULL'">
-              <xsl:text>Tristate::Undefined</xsl:text>
+              <xsl:call-template name="translate-enum-value">
+                <xsl:with-param name="value"><xsl:value-of select="$schema/table[@name = $tableName]/column[@name = $columnName]/@default"/></xsl:with-param>
+                <xsl:with-param name="enumType"><xsl:value-of select="$schema/table[@name = $tableName]/column[@name = $columnName]/@enumType"/></xsl:with-param>
+                <xsl:with-param name="table"><xsl:value-of select="$tableName"/></xsl:with-param>
+              </xsl:call-template>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:value-of select="$columnValue" />
+              <xsl:call-template name="translate-enum-value">
+                <xsl:with-param name="value"><xsl:value-of select="$columnValue"/></xsl:with-param>
+                <xsl:with-param name="enumType"><xsl:value-of select="$schema/table[@name = $tableName]/column[@name = $columnName]/@enumType"/></xsl:with-param>
+                <xsl:with-param name="table"><xsl:value-of select="$tableName"/></xsl:with-param>
+              </xsl:call-template>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>

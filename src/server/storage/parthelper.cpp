@@ -42,24 +42,24 @@ void PartHelper::update(Part *part, const QByteArray &data, qint64 dataSize)
     const bool storeExternal = dataSize > DbConfig::configuredDatabase()->sizeThreshold();
 
     QByteArray newFile;
-    if (part->external() && storeExternal) {
+    if (part->storage() == Part::External && storeExternal) {
         if (!ExternalPartStorage::self()->updatePartFile(data, part->data(), newFile)) {
             throw PartHelperException(QStringLiteral("Failed to update external payload part"));
         }
         part->setData(newFile);
-    } else if (!part->external() && storeExternal) {
+    } else if (part->storage() != Part::External && storeExternal) {
         if (!ExternalPartStorage::self()->createPartFile(data, part->id(), newFile)) {
             throw PartHelperException(QStringLiteral("Failed to create external payload part"));
         }
         part->setData(newFile);
-        part->setExternal(true);
+        part->setStorage(Part::External);
     } else {
-        if (part->external() && !storeExternal) {
+        if (part->storage() == Part::External && !storeExternal) {
             const QString file = ExternalPartStorage::resolveAbsolutePath(part->data());
             ExternalPartStorage::self()->removePartFile(file);
         }
         part->setData(data);
-        part->setExternal(false);
+        part->setStorage(Part::Internal);
     }
 
     part->setDatasize(dataSize);
@@ -82,9 +82,9 @@ bool PartHelper::insert(Part *part, qint64 *insertId)
     if (storeInFile) {
         data = part->data();
         part->setData(QByteArray());
-        part->setExternal(true);
+        part->setStorage(Part::External);
     } else {
-        part->setExternal(false);
+        part->setStorage(Part::Internal);
     }
 
     bool result = part->insert(insertId);
@@ -107,7 +107,7 @@ bool PartHelper::remove(Part *part)
         return false;
     }
 
-    if (part->external()) {
+    if (part->storage() == Part::External) {
         ExternalPartStorage::self()->removePartFile(ExternalPartStorage::resolveAbsolutePath(part->data()));
     }
     return part->remove();
@@ -117,7 +117,7 @@ bool PartHelper::remove(const QString &column, const QVariant &value)
 {
     SelectQueryBuilder<Part> builder;
     builder.addValueCondition(column, Query::Equals, value);
-    builder.addValueCondition(Part::externalColumn(), Query::Equals, true);
+    builder.addValueCondition(Part::storageColumn(), Query::Equals, Part::External);
     builder.addValueCondition(Part::dataColumn(), Query::IsNot, QVariant());
     if (!builder.exec()) {
 //      qCDebug(AKONADISERVER_LOG) << "Error selecting records to be deleted from table"
@@ -133,18 +133,22 @@ bool PartHelper::remove(const QString &column, const QVariant &value)
     return Part::remove(column, value);
 }
 
-QByteArray PartHelper::translateData(const QByteArray &data, bool isExternal)
+QByteArray PartHelper::translateData(const QByteArray &data, Part::Storage storage)
 {
-    if (isExternal) {
-        const QString fileName = ExternalPartStorage::resolveAbsolutePath(data);
+    if (storage == Part::External || storage == Part::Foreign) {
+        QFile file;
+        if (storage == Part::External) {
+            file.setFileName(ExternalPartStorage::resolveAbsolutePath(data));
+        } else {
+            file.setFileName(QString::fromUtf8(data));
+        }
 
-        QFile file(fileName);
         if (file.open(QIODevice::ReadOnly)) {
             const QByteArray payload = file.readAll();
             file.close();
             return payload;
         } else {
-            qCCritical(AKONADISERVER_LOG) << "Payload file " << fileName << " could not be open for reading!";
+            qCCritical(AKONADISERVER_LOG) << "Payload file " << file.fileName() << " could not be open for reading!";
             qCCritical(AKONADISERVER_LOG) << "Error: " << file.errorString();
             return QByteArray();
         }
@@ -156,33 +160,41 @@ QByteArray PartHelper::translateData(const QByteArray &data, bool isExternal)
 
 QByteArray PartHelper::translateData(const Part &part)
 {
-    return translateData(part.data(), part.external());
+    return translateData(part.data(), part.storage());
 }
 
 bool PartHelper::truncate(Part &part)
 {
-    if (part.external()) {
+    if (part.storage() == Part::External) {
         ExternalPartStorage::self()->removePartFile(ExternalPartStorage::resolveAbsolutePath(part.data()));
     }
 
     part.setData(QByteArray());
     part.setDatasize(0);
-    part.setExternal(false);
+    part.setStorage(Part::Internal);
     return part.update();
 }
 
 bool PartHelper::verify(Part &part)
 {
-    if (!part.external()) {
+    if (part.storage() == Part::Internal) {
         return true;
     }
 
-    const QString fileName = ExternalPartStorage::resolveAbsolutePath(part.data());
+    QString fileName;
+    if (part.storage() == Part::External) {
+        fileName = ExternalPartStorage::resolveAbsolutePath(part.data());
+    } else if (part.storage() == Part::Foreign) {
+        fileName = QString::fromUtf8(part.data());
+    } else {
+        Q_ASSERT(false);
+    }
+
     if (!QFile::exists(fileName)) {
         qCCritical(AKONADISERVER_LOG) << "Payload file" << fileName << "is missing, trying to recover.";
         part.setData(QByteArray());
         part.setDatasize(0);
-        part.setExternal(false);
+        part.setStorage(Part::Internal);
         return part.update();
     }
 

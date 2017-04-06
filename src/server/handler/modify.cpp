@@ -210,16 +210,16 @@ bool Modify::parseStream()
             collection.setEnabled(cmd.enabled());
             changes.append(AKONADI_PARAM_ENABLED);
         }
-        if (cmd.syncPref() != collection.syncPref()) {
-            collection.setSyncPref(cmd.syncPref());
+        if (cmd.syncPref() != static_cast<Tristate>(collection.syncPref())) {
+            collection.setSyncPref(static_cast<Collection::Tristate>(cmd.syncPref()));
             changes.append(AKONADI_PARAM_SYNC);
         }
-        if (cmd.displayPref() != collection.displayPref()) {
-            collection.setDisplayPref(cmd.displayPref());
+        if (cmd.displayPref() != static_cast<Tristate>(collection.displayPref())) {
+            collection.setDisplayPref(static_cast<Collection::Tristate>(cmd.displayPref()));
             changes.append(AKONADI_PARAM_DISPLAY);
         }
-        if (cmd.indexPref() != collection.indexPref()) {
-            collection.setIndexPref(cmd.indexPref());
+        if (cmd.indexPref() != static_cast<Tristate>(collection.indexPref())) {
+            collection.setIndexPref(static_cast<Collection::Tristate>(cmd.indexPref()));
             changes.append(AKONADI_PARAM_INDEX);
         }
     }

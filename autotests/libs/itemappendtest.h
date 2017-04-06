@@ -39,6 +39,7 @@ private Q_SLOTS:
     void testItemSize();
     void testItemMerge_data();
     void testItemMerge();
+    void testForeignPayload();
 };
 
 #endif

@@ -44,8 +44,15 @@ class Item;
 class AKONADI_TESTS_EXPORT ItemSerializer
 {
 public:
+    enum PayloadStorage {
+        Internal,
+        External,
+        Foreign
+    };
+
     /** throws ItemSerializerException on failure */
-    static void deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version, bool external);
+    static void deserialize(Item &item, const QByteArray &label, const QByteArray &data, int version,
+                            PayloadStorage storage);
     /** throws ItemSerializerException on failure */
     static void deserialize(Item &item, const QByteArray &label, QIODevice &data, int version);
     /** throws ItemSerializerException on failure */
@@ -72,6 +79,14 @@ public:
      * @since 4.4
      */
     static QSet<QByteArray> availableParts(const Item &item);
+
+    /**
+     * Returns list of parts of the item payload that can be stored using
+     * foreign payload.
+     *
+     * @since 5.7
+     */
+    static QSet<QByteArray> allowedForeignParts(const Item &item);
 
     /**
      * Tries to convert the payload in \a item into type with

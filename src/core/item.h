@@ -532,6 +532,33 @@ public:
     QVector<int> availablePayloadMetaTypeIds() const;
 
     /**
+     * Sets a path to a file with full payload.
+     *
+     * This method can only be used by Resources and should not be used by Akonadi
+     * clients. Clients should use setPayload() instead.
+     *
+     * Akonadi will not duplicate content of the file in its database but will
+     * instead directly refer to this file. This means that the file must be
+     * persistent (don't use this method with a temporary files), and the Akonadi
+     * resource that owns the storage is responsible for updating the file path
+     * if the file is changed, moved or removed.
+     *
+     * The payload can still be accessed via payload() methods.
+     *
+     * @see setPayload(), setPayloadFromData()
+     * @since 5.6
+     */
+    void setPayloadPath(const QString &filePath);
+
+    /**
+     * Returns path to the payload file set by setPayloadPath()
+     *
+     * If payload was set via setPayload() or setPayloadFromData() then this
+     * method will return a null string.
+     */
+    QString payloadPath() const;
+
+    /**
      * Sets the payload object of this PIM item.
      *
      * @param p The payload object. Must be copyable and must not be a pointer,
@@ -665,6 +692,7 @@ public:
 private:
     //@cond PRIVATE
     friend class ItemCreateJob;
+    friend class ItemCreateJobPrivate;
     friend class ItemModifyJob;
     friend class ItemModifyJobPrivate;
     friend class ItemSync;

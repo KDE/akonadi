@@ -262,15 +262,15 @@ private Q_SLOTS:
         Collection col1 = initializer->createCollection("col1");
         Collection col2 = initializer->createCollection("col2", col1);
         col2.setEnabled(false);
-        col2.setSyncPref(Tristate::True);
-        col2.setDisplayPref(Tristate::True);
-        col2.setIndexPref(Tristate::True);
+        col2.setSyncPref(Collection::True);
+        col2.setDisplayPref(Collection::True);
+        col2.setIndexPref(Collection::True);
         col2.update();
         Collection col3 = initializer->createCollection("col3", col2);
         col3.setEnabled(true);
-        col3.setSyncPref(Tristate::False);
-        col3.setDisplayPref(Tristate::False);
-        col3.setIndexPref(Tristate::False);
+        col3.setSyncPref(Collection::False);
+        col3.setDisplayPref(Collection::False);
+        col3.setIndexPref(Collection::False);
         col3.update();
 
         QTest::addColumn<TestScenario::List>("scenarios");

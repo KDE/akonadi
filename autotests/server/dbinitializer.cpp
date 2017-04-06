@@ -101,15 +101,15 @@ QByteArray DbInitializer::toByteArray(bool enabled)
     return "FALSE";
 }
 
-QByteArray DbInitializer::toByteArray(Akonadi::Tristate tristate)
+QByteArray DbInitializer::toByteArray(Collection::Tristate tristate)
 {
 
     switch (tristate) {
-    case Akonadi::Tristate::True:
+    case Collection::True:
         return "TRUE";
-    case Akonadi::Tristate::False:
+    case Collection::False:
         return "FALSE";
-    case Akonadi::Tristate::Undefined:
+    case Collection::Undefined:
     default:
         break;
     }
@@ -167,9 +167,9 @@ Akonadi::Protocol::FetchCollectionsResponse DbInitializer::listResponse(const Co
     }
     resp.setReferenced(col.referenced());
     resp.setEnabled(col.enabled());
-    resp.setDisplayPref(col.displayPref());
-    resp.setSyncPref(col.syncPref());
-    resp.setIndexPref(col.indexPref());
+    resp.setDisplayPref(static_cast<Tristate>(col.displayPref()));
+    resp.setSyncPref(static_cast<Tristate>(col.syncPref()));
+    resp.setIndexPref(static_cast<Tristate>(col.indexPref()));
 
     Akonadi::Protocol::Attributes attrs;
     Q_FOREACH(const CollectionAttribute &attr, col.attributes()) {

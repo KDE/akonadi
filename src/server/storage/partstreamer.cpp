@@ -89,9 +89,11 @@ bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
         mDataChanged = mDataChanged || (metaPart.size() != part.datasize());
     }
 
-    //actual case when streaming storage is used: external payload is enabled, data is big enough in a literal
-    const bool storeInFile = part.datasize() > DbConfig::configuredDatabase()->sizeThreshold();
-    if (storeInFile) {
+    if (metaPart.storageType() == Protocol::PartMetaData::Foreign) {
+        return streamForeignPayload(part, metaPart);
+    } else if (part.datasize() > DbConfig::configuredDatabase()->sizeThreshold()) {
+        //actual case when streaming storage is used: external payload is enabled,
+        // data is big enough in a literal
         return streamPayloadToFile(part, metaPart);
     } else {
         return streamPayloadData(part, metaPart);
@@ -101,7 +103,7 @@ bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
 bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart)
 {
     // If the part WAS external previously, remove data file
-    if (part.external()) {
+    if (part.storage() == Part::External) {
         ExternalPartStorage::self()->removePartFile(
             ExternalPartStorage::resolveAbsolutePath(part.data()));
     }
@@ -116,7 +118,12 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
         return false;
     }
     const QByteArray newData = response.data();
-    if (newData.size() != metaPart.size()) {
+    // only use the data size with intenral payload parts, for foreign parts
+    // we use the size reported by client
+    const auto newSize = (metaPart.storageType() == Protocol::PartMetaData::Internal)
+                                ? newData.size()
+                                : metaPart.size();
+    if (newSize != metaPart.size()) {
         mError = QStringLiteral("Payload size mismatch");
         return false;
     }
@@ -125,10 +132,10 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
         if (!mDataChanged) {
             mDataChanged = mDataChanged || (newData != part.data());
         }
-        PartHelper::update(&part, newData, newData.size());
+        PartHelper::update(&part, newData, newSize);
     } else {
         part.setData(newData);
-        part.setDatasize(newData.size());
+        part.setDatasize(newSize);
         if (!part.insert()) {
             mError = QStringLiteral("Failed to insert part to database");
             return false;
@@ -147,7 +154,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
 
     QByteArray filename;
     if (part.isValid()) {
-        if (part.external()) {
+        if (part.storage() == Part::External) {
             // Part was external and is still external
             filename = part.data();
             ExternalPartStorage::self()->removePartFile(
@@ -164,7 +171,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         }
     }
 
-    part.setExternal(true);
+    part.setStorage(Part::External);
     part.setDatasize(metaPart.size());
     part.setData(filename);
 
@@ -208,6 +215,68 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
     if (file.size() != metaPart.size()) {
         mError = QStringLiteral("Payload size mismatch");
         qCDebug(AKONADISERVER_LOG) << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
+        return false;
+    }
+
+    if (mCheckChanged && !mDataChanged) {
+        // This is invoked only when part already exists, data sizes match and
+        // caller wants to know whether parts really differ
+        mDataChanged = (origData != PartHelper::translateData(part));
+    }
+
+    return true;
+}
+
+bool PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData &metaPart)
+{
+    QByteArray origData;
+    if (!mDataChanged && mCheckChanged) {
+        origData = PartHelper::translateData(part);
+    }
+
+    Protocol::StreamPayloadCommand cmd(metaPart.name(), Protocol::StreamPayloadCommand::Data);
+    Q_EMIT responseAvailable(cmd);
+
+    Protocol::StreamPayloadResponse response = mConnection->readCommand();
+    if (response.isError() || !response.isValid()) {
+        mError = QStringLiteral("Client failed to store payload into file");
+        qCCritical(AKONADISERVER_LOG) << mError;
+        return false;
+    }
+
+    // If the part was previously external, clean up the data
+    if (part.storage() == Part::External) {
+        const QString filename = QString::fromUtf8(part.data());
+        ExternalPartStorage::self()->removePartFile(
+                ExternalPartStorage::resolveAbsolutePath(filename));
+    }
+
+    part.setStorage(Part::Foreign);
+    part.setData(response.data());
+
+    if (part.isValid()) {
+        if (!part.update()) {
+            mError = QStringLiteral("Failed to update part in database");
+            return false;
+        }
+    } else {
+        if (!part.insert()) {
+            mError = QStringLiteral("Failed to insert part into database");
+            return false;
+        }
+    }
+
+    const QString filename = QString::fromUtf8(response.data());
+    QFile file(filename);
+    if (!file.exists()) {
+        mError = QStringLiteral("Foreign payload file does not exist");
+        qCCritical(AKONADISERVER_LOG) << mError;
+        return false;
+    }
+
+    if (file.size() != metaPart.size()) {
+        mError = QStringLiteral("Payload size mismatch");
+        qCCritical(AKONADISERVER_LOG) << mError << ", client advertised" << metaPart.size() << "bytes, but the file size is" << file.size() << "bytes!";
         return false;
     }
 

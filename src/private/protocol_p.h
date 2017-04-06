@@ -362,9 +362,15 @@ class PartMetaDataPrivate;
 class AKONADIPRIVATE_EXPORT PartMetaData
 {
 public:
+    enum StorageType {
+        Internal,
+        External,
+        Foreign
+    };
+
     explicit PartMetaData();
     PartMetaData(const QByteArray &name, qint64 size, int version = 0,
-                 bool external = false);
+                 StorageType storageType = Internal);
     PartMetaData(PartMetaData &&other);
     PartMetaData(const PartMetaData &other);
     ~PartMetaData();
@@ -386,8 +392,8 @@ public:
     void setVersion(int version);
     int version() const;
 
-    void setIsExternal(bool isExternal);
-    bool isExternal() const;
+    void setStorageType(StorageType storage);
+    StorageType storageType() const;
 
 private:
     QSharedDataPointer<PartMetaDataPrivate> d;

@@ -360,3 +360,41 @@ void ItemAppendTest::testItemMerge()
     AKVERIFYEXEC(del);
 }
 
+void ItemAppendTest::testForeignPayload()
+{
+    const Collection col(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    QVERIFY(col.isValid());
+
+    const QString filePath = QString::fromUtf8(qgetenv("TMPDIR")) + QStringLiteral("/foreignPayloadFile.mbox");
+    QFile file(filePath);
+    QVERIFY(file.open(QIODevice::WriteOnly));
+    file.write("123456789");
+    file.close();
+
+    Item item(QStringLiteral("application/octet-stream"));
+    item.setPayloadPath(filePath);
+    item.setRemoteId(QStringLiteral("RID3"));
+    item.setSize(9);
+
+    ItemCreateJob *create = new ItemCreateJob(item, col, this);
+    AKVERIFYEXEC(create);
+
+    auto ref = create->item();
+
+    ItemFetchJob *fetch = new ItemFetchJob(ref, this);
+    fetch->fetchScope().fetchFullPayload(true);
+    AKVERIFYEXEC(fetch);
+    const auto items = fetch->items();
+    QCOMPARE(items.size(), 1);
+    item = items[0];
+
+    QVERIFY(item.hasPayload<QByteArray>());
+    QCOMPARE(item.payload<QByteArray>(), QByteArray("123456789"));
+
+    ItemDeleteJob *del = new ItemDeleteJob(item, this);
+    AKVERIFYEXEC(del);
+
+    // Make sure Akonadi does not delete a foreign payload
+    QVERIFY(file.exists());
+    QVERIFY(file.remove());
+}

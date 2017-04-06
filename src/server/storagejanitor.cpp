@@ -369,7 +369,7 @@ void StorageJanitor::findOverlappingParts()
     QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
     qb.addColumn(Part::dataColumn());
     qb.addColumn(QLatin1Literal("count(") + Part::idColumn() + QLatin1Literal(") as cnt"));
-    qb.addValueCondition(Part::externalColumn(), Query::Equals, true);
+    qb.addValueCondition(Part::storageColumn(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataColumn(), Query::IsNot, QVariant());
     qb.addGroupColumn(Part::dataColumn());
     qb.addValueCondition(QLatin1Literal("count(") + Part::idColumn() + QLatin1Literal(")"), Query::Greater, 1, QueryBuilder::HavingCondition);
@@ -410,7 +410,7 @@ void StorageJanitor::verifyExternalParts()
     qb.addColumn(Part::dataColumn());
     qb.addColumn(Part::pimItemIdColumn());
     qb.addColumn(Part::idColumn());
-    qb.addValueCondition(Part::externalColumn(), Query::Equals, true);
+    qb.addValueCondition(Part::storageColumn(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataColumn(), Query::IsNot, QVariant());
     if (!qb.exec()) {
         inform("Failed to query existing parts, skipping test");
@@ -430,7 +430,7 @@ void StorageJanitor::verifyExternalParts()
             part.setPimItemId(pimItemId);
             part.setData(QByteArray());
             part.setDatasize(0);
-            part.setExternal(false);
+            part.setStorage(Part::Internal);
             part.update();
         }
     }
@@ -572,7 +572,7 @@ void StorageJanitor::checkSizeTreshold()
     {
         QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
         qb.addColumn(Part::idFullColumnName());
-        qb.addValueCondition(Part::externalFullColumnName(), Query::Equals, false);
+        qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::Internal);
         qb.addValueCondition(Part::datasizeFullColumnName(), Query::Greater, DbConfig::configuredDatabase()->sizeThreshold());
         if (!qb.exec()) {
             inform("Failed to query parts larger than treshold, skipping test");
@@ -604,7 +604,7 @@ void StorageJanitor::checkSizeTreshold()
             }
 
             part.setData(name);
-            part.setExternal(true);
+            part.setStorage(Part::External);
             if (!part.update() || !transaction.commit()) {
                 qCCritical(AKONADISERVER_LOG) << "Failed to update database entry of part" << part.id();
                 f.remove();
@@ -618,7 +618,7 @@ void StorageJanitor::checkSizeTreshold()
     {
         QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
         qb.addColumn(Part::idFullColumnName());
-        qb.addValueCondition(Part::externalFullColumnName(), Query::Equals, true);
+        qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
         qb.addValueCondition(Part::datasizeFullColumnName(), Query::Less, DbConfig::configuredDatabase()->sizeThreshold());
         if (!qb.exec()) {
             inform("Failed to query parts smaller than treshold, skipping test");
@@ -642,7 +642,7 @@ void StorageJanitor::checkSizeTreshold()
                 continue;
             }
 
-            part.setExternal(false);
+            part.setStorage(Part::Internal);
             part.setData(f.readAll());
             if (part.data().size() != part.datasize()) {
                 qCCritical(AKONADISERVER_LOG) << "Sizes of" << part.id() << "data don't match";
@@ -665,7 +665,7 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
     QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
     qb.addColumn(Part::idColumn());
     qb.addColumn(Part::dataColumn());
-    qb.addValueCondition(Part::externalColumn(), Query::Equals, true);
+    qb.addValueCondition(Part::storageColumn(), Query::Equals, Part::External);
     if (!qb.exec()) {
         inform("Failed to query external payload parts, skipping test");
         return;

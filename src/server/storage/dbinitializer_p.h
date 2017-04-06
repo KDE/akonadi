@@ -33,7 +33,7 @@ class DbInitializerMySql : public DbInitializer
 public:
     explicit DbInitializerMySql(const QSqlDatabase &database);
 protected:
-    QString sqlType(const QString &type, int size) const Q_DECL_OVERRIDE;
+    QString sqlType(const ColumnDescription &col, int size) const Q_DECL_OVERRIDE;
 
     QString buildCreateTableStatement(const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
     QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
@@ -50,7 +50,7 @@ protected:
     QString buildCreateTableStatement(const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
     QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
     QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const Q_DECL_OVERRIDE;
-    QString sqlValue(const QString &type, const QString &value) const Q_DECL_OVERRIDE;
+    QString sqlValue(const ColumnDescription &col, const QString &value) const Q_DECL_OVERRIDE;
 };
 
 class DbInitializerPostgreSql : public DbInitializer
@@ -58,7 +58,7 @@ class DbInitializerPostgreSql : public DbInitializer
 public:
     explicit DbInitializerPostgreSql(const QSqlDatabase &database);
 protected:
-    QString sqlType(const QString &type, int size) const Q_DECL_OVERRIDE;
+    QString sqlType(const ColumnDescription &col, int size) const Q_DECL_OVERRIDE;
 
     QString buildCreateTableStatement(const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
     QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const Q_DECL_OVERRIDE;

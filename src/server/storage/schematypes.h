@@ -52,12 +52,15 @@ public:
     bool isAutoIncrement;
     bool isPrimaryKey;
     bool isUnique;
+    bool isEnum;
     QString refTable;
     QString refColumn;
     QString defaultValue;
     ReferentialAction onUpdate;
     ReferentialAction onDelete;
     bool noUpdate;
+
+    QMap<QString, int> enumValueMap;
 };
 
 /**
