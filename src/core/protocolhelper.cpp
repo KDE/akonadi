@@ -321,9 +321,9 @@ Scope ProtocolHelper::hierarchicalRidToScope(const Item &item)
     return Scope(QVector<Scope::HRID>({ Scope::HRID(item.id(), item.remoteId()) }) + hierarchicalRidToScope(item.parentCollection()).hridChain());
 }
 
-Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchScope &fetchScope)
+Protocol::ItemFetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchScope &fetchScope)
 {
-    Protocol::FetchScope fs;
+    Protocol::ItemFetchScope fs;
     QVector<QByteArray> parts;
     parts.reserve(fetchScope.payloadParts().size() + fetchScope.attributes().size());
     Q_FOREACH (const QByteArray &part, fetchScope.payloadParts()) {
@@ -335,41 +335,41 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchSco
     fs.setRequestedParts(parts);
 
     // The default scope
-    fs.setFetch(Protocol::FetchScope::Flags |
-                Protocol::FetchScope::Size |
-                Protocol::FetchScope::RemoteID |
-                Protocol::FetchScope::RemoteRevision |
-                Protocol::FetchScope::MTime);
+    fs.setFetch(Protocol::ItemFetchScope::Flags |
+                Protocol::ItemFetchScope::Size |
+                Protocol::ItemFetchScope::RemoteID |
+                Protocol::ItemFetchScope::RemoteRevision |
+                Protocol::ItemFetchScope::MTime);
 
-    fs.setFetch(Protocol::FetchScope::FullPayload, fetchScope.fullPayload());
-    fs.setFetch(Protocol::FetchScope::AllAttributes, fetchScope.allAttributes());
-    fs.setFetch(Protocol::FetchScope::CacheOnly, fetchScope.cacheOnly());
-    fs.setFetch(Protocol::FetchScope::CheckCachedPayloadPartsOnly, fetchScope.checkForCachedPayloadPartsOnly());
-    fs.setFetch(Protocol::FetchScope::IgnoreErrors, fetchScope.ignoreRetrievalErrors());
-    if (fetchScope.ancestorRetrieval() != ItemFetchScope::None) {
-        switch (fetchScope.ancestorRetrieval()) {
-        case ItemFetchScope::Parent:
-            fs.setAncestorDepth(Protocol::FetchScope::ParentAncestor);
-            break;
-        case ItemFetchScope::All:
-            fs.setAncestorDepth(Protocol::FetchScope::AllAncestors);
-            break;
-        default:
-            Q_ASSERT(false);
-        }
-    } else {
-        fs.setAncestorDepth(Protocol::FetchScope::NoAncestor);
+    fs.setFetch(Protocol::ItemFetchScope::FullPayload, fetchScope.fullPayload());
+    fs.setFetch(Protocol::ItemFetchScope::AllAttributes, fetchScope.allAttributes());
+    fs.setFetch(Protocol::ItemFetchScope::CacheOnly, fetchScope.cacheOnly());
+    fs.setFetch(Protocol::ItemFetchScope::CheckCachedPayloadPartsOnly, fetchScope.checkForCachedPayloadPartsOnly());
+    fs.setFetch(Protocol::ItemFetchScope::IgnoreErrors, fetchScope.ignoreRetrievalErrors());
+    switch (fetchScope.ancestorRetrieval()) {
+    case ItemFetchScope::Parent:
+        fs.setAncestorDepth(Protocol::ItemFetchScope::ParentAncestor);
+        break;
+    case ItemFetchScope::All:
+        fs.setAncestorDepth(Protocol::ItemFetchScope::AllAncestors);
+        break;
+    case ItemFetchScope::None:
+        fs.setAncestorDepth(Protocol::ItemFetchScope::NoAncestor);
+        break;
+    default:
+        Q_ASSERT(false);
+        break;
     }
 
     if (fetchScope.fetchChangedSince().isValid()) {
         fs.setChangedSince(fetchScope.fetchChangedSince());
     }
 
-    fs.setFetch(Protocol::FetchScope::RemoteID, fetchScope.fetchRemoteIdentification());
-    fs.setFetch(Protocol::FetchScope::RemoteRevision, fetchScope.fetchRemoteIdentification());
-    fs.setFetch(Protocol::FetchScope::GID, fetchScope.fetchGid());
+    fs.setFetch(Protocol::ItemFetchScope::RemoteID, fetchScope.fetchRemoteIdentification());
+    fs.setFetch(Protocol::ItemFetchScope::RemoteRevision, fetchScope.fetchRemoteIdentification());
+    fs.setFetch(Protocol::ItemFetchScope::GID, fetchScope.fetchGid());
     if (fetchScope.fetchTags()) {
-        fs.setFetch(Protocol::FetchScope::Tags);
+        fs.setFetch(Protocol::ItemFetchScope::Tags);
         if (!fetchScope.tagFetchScope().fetchIdOnly()) {
             if (fetchScope.tagFetchScope().attributes().isEmpty()) {
                 fs.setTagFetchScope({ "ALL" });
@@ -379,12 +379,83 @@ Protocol::FetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetchSco
         }
     }
 
-    fs.setFetch(Protocol::FetchScope::VirtReferences, fetchScope.fetchVirtualReferences());
-    fs.setFetch(Protocol::FetchScope::MTime, fetchScope.fetchModificationTime());
-    fs.setFetch(Protocol::FetchScope::Relations, fetchScope.fetchRelations());
+    fs.setFetch(Protocol::ItemFetchScope::VirtReferences, fetchScope.fetchVirtualReferences());
+    fs.setFetch(Protocol::ItemFetchScope::MTime, fetchScope.fetchModificationTime());
+    fs.setFetch(Protocol::ItemFetchScope::Relations, fetchScope.fetchRelations());
 
     return fs;
 }
+
+ItemFetchScope ProtocolHelper::parseItemFetchScope(const Protocol::ItemFetchScope &fetchScope)
+{
+    ItemFetchScope ifs;
+    Q_FOREACH (const auto &part, fetchScope.requestedParts()) {
+        if (part.startsWith("PLD:")) {
+            ifs.fetchPayloadPart(part.mid(4), true);
+        } else if (part.startsWith("ATR:")) {
+            ifs.fetchAttribute(part.mid(4), true);
+        }
+    }
+
+    if (fetchScope.fetch(Protocol::ItemFetchScope::FullPayload)) {
+        ifs.fetchFullPayload(true);
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::AllAttributes)) {
+        ifs.fetchAllAttributes(true);
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::CacheOnly)) {
+        ifs.setCacheOnly(true);
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::CheckCachedPayloadPartsOnly)) {
+        ifs.setCheckForCachedPayloadPartsOnly(true);
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::IgnoreErrors)) {
+        ifs.setIgnoreRetrievalErrors(true);
+    }
+    switch (fetchScope.ancestorDepth()) {
+    case Protocol::Ancestor::ParentAncestor:
+        ifs.setAncestorRetrieval(ItemFetchScope::Parent);
+        break;
+    case Protocol::Ancestor::AllAncestors:
+        ifs.setAncestorRetrieval(ItemFetchScope::All);
+        break;
+    default:
+        ifs.setAncestorRetrieval(ItemFetchScope::None);
+        break;
+    }
+    if (fetchScope.changedSince().isValid()) {
+        ifs.setFetchChangedSince(fetchScope.changedSince());
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::RemoteID) || fetchScope.fetch(Protocol::ItemFetchScope::RemoteRevision)) {
+        ifs.setFetchRemoteIdentification(true);
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::GID)) {
+        ifs.setFetchGid(true);
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::Tags)) {
+        ifs.setFetchTags(true);
+        const auto tfs = fetchScope.tagFetchScope();
+        if (tfs.isEmpty()) {
+            ifs.tagFetchScope().setFetchIdOnly(true);
+        } else if (QSet<QByteArray>({ "ALL" }) != tfs) {
+            for (const auto &attr : tfs) {
+                ifs.tagFetchScope().fetchAttribute(attr, true);
+            }
+        }
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::VirtReferences)) {
+        ifs.setFetchVirtualReferences(true);
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::MTime)) {
+        ifs.setFetchModificationTime(true);
+    }
+    if (fetchScope.fetch(Protocol::ItemFetchScope::Relations)) {
+        ifs.setFetchRelations(true);
+    }
+
+    return ifs;
+}
+
 
 static Item::Flags convertFlags(const QVector<QByteArray> &flags, ProtocolHelperValuePool *valuePool)
 {

@@ -72,6 +72,9 @@ public:
     bool isExclusive() const;
     void setIsExclusive(bool isExclusive);
 
+    ItemFetchScope itemFetchScope() const;
+    void setItemFetchScope(const ItemFetchScope &itemFetchScope);
+
 private:
     class Private;
     QSharedDataPointer<Private> d;

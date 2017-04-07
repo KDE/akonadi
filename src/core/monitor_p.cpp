@@ -31,6 +31,7 @@
 #include "akonadicore_debug.h"
 #include "notificationsubscriber.h"
 #include "changenotification.h"
+#include "protocolhelper_p.h"
 
 
 using namespace Akonadi;
@@ -50,6 +51,7 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     , itemCache(nullptr)
     , tagCache(nullptr)
     , mCommandBuffer(parent, "handleCommands")
+    , pendingModificationChanges(Protocol::ModifySubscriptionCommand::None)
     , pendingModificationTimer(nullptr)
     , monitorReady(false)
     , fetchCollection(false)
@@ -189,6 +191,11 @@ void MonitorPrivate::slotUpdateSubscription()
     pendingModificationTimer = nullptr;
 
     if (ntfConnection) {
+        if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
+            pendingModification.setItemFetchScope(ProtocolHelper::itemFetchScopeToProtocol(mItemFetchScope));
+        }
+        pendingModificationChanges = Protocol::ModifySubscriptionCommand::None;
+
         ntfConnection->sendCommand(3, Protocol::ModifySubscriptionCommandPtr::create(pendingModification));
         pendingModification = Protocol::ModifySubscriptionCommand();
     }
@@ -534,6 +541,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         subscriber.setIgnoredSessions(subNtf.ignoredSessions());
         subscriber.setIsAllMonitored(subNtf.allMonitored());
         subscriber.setIsExclusive(subNtf.exclusive());
+        subscriber.setItemFetchScope(ProtocolHelper::parseItemFetchScope(subNtf.itemFetchScope()));
         someoneWasListening = emitSubscriptionChangeNotification(subNtf, subscriber);
     } else if (msg->type() == Protocol::Command::DebugChangeNotification) {
         const auto &changeNtf = Protocol::cmdCast<Protocol::DebugChangeNotification>(msg);

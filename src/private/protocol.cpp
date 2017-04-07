@@ -386,13 +386,13 @@ ResponsePtr Factory::response(Command::Type type)
 
 /******************************************************************************/
 
-FetchScope::FetchScope()
+ItemFetchScope::ItemFetchScope()
     : mAncestorDepth(NoAncestor)
     , mFlags(None)
 {
 }
 
-FetchScope::FetchScope(const FetchScope &other)
+ItemFetchScope::ItemFetchScope(const ItemFetchScope &other)
     : mAncestorDepth(other.mAncestorDepth)
     , mFlags(other.mFlags)
     , mRequestedParts(other.mRequestedParts)
@@ -401,11 +401,11 @@ FetchScope::FetchScope(const FetchScope &other)
 {
 }
 
-FetchScope::~FetchScope()
+ItemFetchScope::~ItemFetchScope()
 {
 }
 
-FetchScope &FetchScope::operator=(const FetchScope &other)
+ItemFetchScope &ItemFetchScope::operator=(const ItemFetchScope &other)
 {
     mAncestorDepth = other.mAncestorDepth;
     mFlags = other.mFlags;
@@ -415,7 +415,7 @@ FetchScope &FetchScope::operator=(const FetchScope &other)
     return *this;
 }
 
-bool FetchScope::operator==(const FetchScope &other) const
+bool ItemFetchScope::operator==(const ItemFetchScope &other) const
 {
     return mRequestedParts == other.mRequestedParts
             && mChangedSince == other.mChangedSince
@@ -424,7 +424,7 @@ bool FetchScope::operator==(const FetchScope &other) const
             && mFlags == other.mFlags;
 }
 
-QVector<QByteArray> FetchScope::requestedPayloads() const
+QVector<QByteArray> ItemFetchScope::requestedPayloads() const
 {
     QVector<QByteArray> rv;
     std::copy_if(mRequestedParts.begin(), mRequestedParts.end(),
@@ -433,7 +433,7 @@ QVector<QByteArray> FetchScope::requestedPayloads() const
     return rv;
 }
 
-void FetchScope::setFetch(FetchFlags attributes, bool fetch)
+void ItemFetchScope::setFetch(FetchFlags attributes, bool fetch)
 {
     if (fetch) {
         mFlags |= attributes;
@@ -447,7 +447,7 @@ void FetchScope::setFetch(FetchFlags attributes, bool fetch)
     }
 }
 
-bool FetchScope::fetch(FetchFlags flags) const
+bool ItemFetchScope::fetch(FetchFlags flags) const
 {
     if (flags == None) {
         return mFlags == None;
@@ -456,20 +456,20 @@ bool FetchScope::fetch(FetchFlags flags) const
     }
 }
 
-QDebug operator<<(QDebug dbg, FetchScope::AncestorDepth depth)
+QDebug operator<<(QDebug dbg, ItemFetchScope::AncestorDepth depth)
 {
     switch (depth) {
-    case FetchScope::NoAncestor:
+    case ItemFetchScope::NoAncestor:
         return dbg << "No ancestor";
-    case FetchScope::ParentAncestor:
+    case ItemFetchScope::ParentAncestor:
         return dbg << "Parent ancestor";
-    case FetchScope::AllAncestors:
+    case ItemFetchScope::AllAncestors:
         return dbg << "All ancestors";
     }
     Q_UNREACHABLE();
 }
 
-DataStream &operator<<(DataStream &stream, const FetchScope &scope)
+DataStream &operator<<(DataStream &stream, const ItemFetchScope &scope)
 {
     return stream << scope.mRequestedParts
                   << scope.mChangedSince
@@ -478,7 +478,7 @@ DataStream &operator<<(DataStream &stream, const FetchScope &scope)
                   << scope.mFlags;
 }
 
-DataStream &operator>>(DataStream &stream, FetchScope &scope)
+DataStream &operator>>(DataStream &stream, ItemFetchScope &scope)
 {
     return stream >> scope.mRequestedParts
                   >> scope.mChangedSince
@@ -487,7 +487,7 @@ DataStream &operator>>(DataStream &stream, FetchScope &scope)
                   >> scope.mFlags;
 }
 
-QDebug operator<<(QDebug dbg, const FetchScope &scope)
+QDebug operator<<(QDebug dbg, const ItemFetchScope &scope)
 {
     return dbg.noquote() << "FetchScope(\n"
             << "Fetch Flags:" << scope.mFlags << "\n"

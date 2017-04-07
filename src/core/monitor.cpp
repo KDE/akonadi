@@ -220,11 +220,14 @@ void Monitor::setItemFetchScope(const ItemFetchScope &fetchScope)
 {
     Q_D(Monitor);
     d->mItemFetchScope = fetchScope;
+    d->scheduleSubscriptionUpdate();
 }
 
 ItemFetchScope &Monitor::itemFetchScope()
 {
     Q_D(Monitor);
+    d->pendingModificationChanges |= Protocol::ModifySubscriptionCommand::ItemFetchScope;
+    d->scheduleSubscriptionUpdate();
     return d->mItemFetchScope;
 }
 

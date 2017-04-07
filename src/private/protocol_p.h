@@ -50,7 +50,7 @@ class DataStream;
 
 class Command;
 class Response;
-class FetchScope;
+class ItemFetchScope;
 class ScopeContext;
 class ChangeNotification;
 
@@ -273,14 +273,14 @@ namespace Protocol {
 
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
                                 Akonadi::Protocol::DataStream &stream,
-                                const Akonadi::Protocol::FetchScope &scope);
+                                const Akonadi::Protocol::ItemFetchScope &scope);
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
                                 Akonadi::Protocol::DataStream &stream,
-                                Akonadi::Protocol::FetchScope &scope);
-AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::FetchScope &scope);
+                                Akonadi::Protocol::ItemFetchScope &scope);
+AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ItemFetchScope &scope);
 
 
-class AKONADIPRIVATE_EXPORT FetchScope
+class AKONADIPRIVATE_EXPORT ItemFetchScope
 {
 public:
     enum FetchFlag : int {
@@ -308,14 +308,14 @@ public:
         AllAncestors
     };
 
-    explicit FetchScope();
-    FetchScope(const FetchScope &other);
-    ~FetchScope();
+    explicit ItemFetchScope();
+    ItemFetchScope(const ItemFetchScope &other);
+    ~ItemFetchScope();
 
-    FetchScope &operator=(const FetchScope &other);
+    ItemFetchScope &operator=(const ItemFetchScope &other);
 
-    bool operator==(const FetchScope &other) const;
-    inline bool operator!=(const FetchScope &other) const { return !operator==(other); }
+    bool operator==(const ItemFetchScope &other) const;
+    inline bool operator!=(const ItemFetchScope &other) const { return !operator==(other); }
 
     inline void setRequestedParts(const QVector<QByteArray> &requestedParts)
     {
@@ -360,16 +360,16 @@ private:
     QSet<QByteArray> mTagFetchScope;
 
     friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
-                                                                           const Akonadi::Protocol::FetchScope &scope);
+                                                                           const Akonadi::Protocol::ItemFetchScope &scope);
     friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
-                                                                           Akonadi::Protocol::FetchScope &scope);
-    friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::FetchScope &scope);
+                                                                           Akonadi::Protocol::ItemFetchScope &scope);
+    friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ItemFetchScope &scope);
 };
 
 } // namespace Protocol
 } // namespace Akonadi
 
-Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::FetchScope::FetchFlags)
+Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::ItemFetchScope::FetchFlags)
 
 namespace Akonadi {
 namespace Protocol {

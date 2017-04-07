@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="58">
+<protocol version="59">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -230,12 +230,12 @@
     <ctor>
       <arg name="scope" />
       <arg name="scopeContext" default="ScopeContext()" />
-      <arg name="fetchScope" default="FetchScope()" />
+      <arg name="fetchScope" default="ItemFetchScope()" />
     </ctor>
 
     <param name="scope" type="Scope" />
     <param name="scopeContext" type="Akonadi::Protocol::ScopeContext" />
-    <param name="fetchScope" type="Akonadi::Protocol::FetchScope" />
+    <param name="fetchScope" type="Akonadi::Protocol::ItemFetchScope" />
   </command>
 
   <response name="FetchItems">
@@ -605,7 +605,7 @@
     <param name="mimeTypes" type="QStringList" />
     <param name="collections" type="QVector&lt;qint64&gt;" />
     <param name="query" type="QString" />
-    <param name="fetchScope" type="Akonadi::Protocol::FetchScope" />
+    <param name="fetchScope" type="Akonadi::Protocol::ItemFetchScope" />
     <param name="recursive" type="bool" />
     <param name="remote" type="bool" />
   </command>
@@ -889,17 +889,18 @@
   <command name="ModifySubscription">
     <flag name="ModifiedPart">
       <value name="None" value="0" />
-      <value name="Collections" value="1" />
-      <value name="Items" value="2" />
-      <value name="Tags" value="4" />
-      <value name="Types" value="8" />
-      <value name="Resources" value="16" />
-      <value name="MimeTypes" value="32" />
-      <value name="AllFlag" value="64" />
-      <value name="ExclusiveFlag" value="128" />
-      <value name="Sessions" value="256" />
-      <value name="Add" value="16384" />
-      <value name="Remove" value="32768" />
+      <value name="Collections" value="1 &lt;&lt; 0" />
+      <value name="Items" value="1 &lt;&lt; 1" />
+      <value name="Tags" value="1 &lt;&lt; 2" />
+      <value name="Types" value="1 &lt;&lt; 3" />
+      <value name="Resources" value="1 &lt;&lt; 4" />
+      <value name="MimeTypes" value="1 &lt;&lt; 5" />
+      <value name="AllFlag" value="1 &lt;&lt; 6" />
+      <value name="ExclusiveFlag" value="1 &lt;&lt; 7" />
+      <value name="Sessions" value="1 &lt;&lt; 8" />
+      <value name="Add" value="1 &lt;&lt; 9" />
+      <value name="Remove" value="1 &lt;&lt; 10" />
+      <value name="ItemFetchScope" value="1 &lt;&lt; 11" />
     </flag>
 
     <enum name="ChangeType">
@@ -1032,6 +1033,9 @@
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Sessions" />
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::Remove" />
     </param>
+    <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope">
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::ItemFetchScope" />
+    </param>
   </command>
 
   <response name="ModifySubscription" />
@@ -1056,6 +1060,7 @@
     <param name="ignoredSessions" type="QSet&lt;QByteArray&gt;" />
     <param name="allMonitored" type="bool" />
     <param name="exclusive" type="bool" />
+    <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope" />
   </notification>
 
   <!-- Debug Change Notification //-->

@@ -39,7 +39,7 @@ void ProtocolTest::testProtocolVersion()
     // If it wasn't you who broke it, please go find that person who was too
     // lazy to extend the test case and beat them with a stick. -- Dan
 
-    QCOMPARE(Akonadi::Protocol::version(), 58);
+    QCOMPARE(Akonadi::Protocol::version(), 59);
 }
 
 void ProtocolTest::testFactory_data()
@@ -241,38 +241,38 @@ void ProtocolTest::testFetchScope()
     QFETCH(QVector<QByteArray>, expectedParts);
     QFETCH(QVector<QByteArray>, expectedPayloads);
 
-    FetchScope in;
-    for (int i = FetchScope::CacheOnly; i <= FetchScope::VirtReferences; i = i << 1) {
-        QVERIFY(!in.fetch(static_cast<FetchScope::FetchFlag>(i)));
+    ItemFetchScope in;
+    for (int i = ItemFetchScope::CacheOnly; i <= ItemFetchScope::VirtReferences; i = i << 1) {
+        QVERIFY(!in.fetch(static_cast<ItemFetchScope::FetchFlag>(i)));
     }
-    QVERIFY(in.fetch(FetchScope::None));
+    QVERIFY(in.fetch(ItemFetchScope::None));
 
     in.setRequestedParts(requestedParts);
     in.setChangedSince(QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), Qt::UTC));
     in.setTagFetchScope({ "TAGID" });
-    in.setAncestorDepth(FetchScope::AllAncestors);
-    in.setFetch(FetchScope::CacheOnly);
-    in.setFetch(FetchScope::CheckCachedPayloadPartsOnly);
-    in.setFetch(FetchScope::FullPayload, fullPayload);
-    in.setFetch(FetchScope::AllAttributes);
-    in.setFetch(FetchScope::Size);
-    in.setFetch(FetchScope::MTime);
-    in.setFetch(FetchScope::RemoteRevision);
-    in.setFetch(FetchScope::IgnoreErrors);
-    in.setFetch(FetchScope::Flags);
-    in.setFetch(FetchScope::RemoteID);
-    in.setFetch(FetchScope::GID);
-    in.setFetch(FetchScope::Tags);
-    in.setFetch(FetchScope::Relations);
-    in.setFetch(FetchScope::VirtReferences);
+    in.setAncestorDepth(ItemFetchScope::AllAncestors);
+    in.setFetch(ItemFetchScope::CacheOnly);
+    in.setFetch(ItemFetchScope::CheckCachedPayloadPartsOnly);
+    in.setFetch(ItemFetchScope::FullPayload, fullPayload);
+    in.setFetch(ItemFetchScope::AllAttributes);
+    in.setFetch(ItemFetchScope::Size);
+    in.setFetch(ItemFetchScope::MTime);
+    in.setFetch(ItemFetchScope::RemoteRevision);
+    in.setFetch(ItemFetchScope::IgnoreErrors);
+    in.setFetch(ItemFetchScope::Flags);
+    in.setFetch(ItemFetchScope::RemoteID);
+    in.setFetch(ItemFetchScope::GID);
+    in.setFetch(ItemFetchScope::Tags);
+    in.setFetch(ItemFetchScope::Relations);
+    in.setFetch(ItemFetchScope::VirtReferences);
 
-    const FetchScope out = serializeAndDeserialize(in);
+    const ItemFetchScope out = serializeAndDeserialize(in);
     QCOMPARE(out.requestedParts(), expectedParts);
     QCOMPARE(out.requestedPayloads(), expectedPayloads);
     QCOMPARE(out.changedSince(), QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), Qt::UTC));
     QCOMPARE(out.tagFetchScope(), QSet<QByteArray>{ "TAGID" });
-    QCOMPARE(out.ancestorDepth(), FetchScope::AllAncestors);
-    QCOMPARE(out.fetch(FetchScope::None), false);
+    QCOMPARE(out.ancestorDepth(), ItemFetchScope::AllAncestors);
+    QCOMPARE(out.fetch(ItemFetchScope::None), false);
     QCOMPARE(out.cacheOnly(), true);
     QCOMPARE(out.checkCachedPayloadPartsOnly(), true);
     QCOMPARE(out.fullPayload(), fullPayload);

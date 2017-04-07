@@ -239,6 +239,9 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
     if (modifiedParts & Protocol::ModifySubscriptionCommand::ExclusiveFlag) {
         mExclusive = command.isExclusive();
     }
+    if (modifiedParts & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
+        mFetchScope = command.itemFetchScope();
+    }
 
     if (mManager) {
         if (modifiedParts & Protocol::ModifySubscriptionCommand::Types) {
@@ -296,6 +299,7 @@ Protocol::SubscriptionChangeNotificationPtr NotificationSubscriber::toChangeNoti
     ntf->setIgnoredSessions(mIgnoredSessions);
     ntf->setAllMonitored(mAllMonitored);
     ntf->setExclusive(mExclusive);
+    ntf->setItemFetchScope(mFetchScope);
     return ntf;
 }
 

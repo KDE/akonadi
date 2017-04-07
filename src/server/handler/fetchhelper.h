@@ -44,7 +44,7 @@ class FetchHelper : public QObject
     Q_OBJECT
 
 public:
-    FetchHelper(Connection *connection, const Scope &scope, const Protocol::FetchScope &fetchScope);
+    FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
 
     bool fetchItems();
 
@@ -81,7 +81,7 @@ private:
     Connection *mConnection = nullptr;
     QHash<Collection::Id, QVector<Protocol::Ancestor>> mAncestorCache;
     Scope mScope;
-    Protocol::FetchScope mFetchScope;
+    Protocol::ItemFetchScope mFetchScope;
     int mItemQueryColumnMap[ItemQueryColumnCount];
 
     friend class ::FetchHelperTest;

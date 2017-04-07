@@ -85,6 +85,7 @@ public:
 
     CommandBuffer mCommandBuffer;
 
+    Protocol::ModifySubscriptionCommand::ModifiedParts pendingModificationChanges;
     Protocol::ModifySubscriptionCommand pendingModification;
     QTimer *pendingModificationTimer;
     bool monitorReady;

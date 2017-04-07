@@ -45,7 +45,7 @@ private Q_SLOTS:
     void slotResultsAvailable(const QSet<qint64> &results);
 
 private:
-    Protocol::FetchScope mFetchScope;
+    Protocol::ItemFetchScope mFetchScope;
     QSet<qint64> mAllResults;
 };
 

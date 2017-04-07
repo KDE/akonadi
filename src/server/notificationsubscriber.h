@@ -107,6 +107,7 @@ protected:
     QSet<QByteArray> mMonitoredResources;
     QSet<QByteArray> mIgnoredSessions;
     QByteArray mSession;
+    Protocol::ItemFetchScope mFetchScope;
     bool mAllMonitored;
     bool mExclusive;
     bool mNotificationDebugging;

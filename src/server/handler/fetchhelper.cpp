@@ -69,7 +69,7 @@ using namespace Akonadi::Server;
 #endif
 
 FetchHelper::FetchHelper(Connection *connection, const Scope &scope,
-                         const Protocol::FetchScope &fetchScope)
+                         const Protocol::ItemFetchScope &fetchScope)
     : mConnection(connection)
     , mScope(scope)
     , mFetchScope(fetchScope)
@@ -534,7 +534,7 @@ bool FetchHelper::fetchItems()
             response->setRelations(relations);
         }
 
-        if (mFetchScope.ancestorDepth() != Protocol::FetchScope::NoAncestor) {
+        if (mFetchScope.ancestorDepth() != Protocol::ItemFetchScope::NoAncestor) {
             response->setAncestors(ancestorsForItem(response->parentId()));
         }
 
@@ -689,7 +689,7 @@ void FetchHelper::triggerOnDemandFetch()
 
 QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentColId)
 {
-    if (mFetchScope.ancestorDepth() == Protocol::FetchScope::NoAncestor || parentColId == 0) {
+    if (mFetchScope.ancestorDepth() == Protocol::ItemFetchScope::NoAncestor || parentColId == 0) {
         return QVector<Protocol::Ancestor>();
     }
     const auto it = mAncestorCache.constFind(parentColId);
@@ -699,7 +699,7 @@ QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentC
 
     QVector<Protocol::Ancestor> ancestors;
     Collection col = Collection::retrieveById(parentColId);
-    const int depthNum = mFetchScope.ancestorDepth() == Protocol::FetchScope::ParentAncestor ? 1 : INT_MAX;
+    const int depthNum = mFetchScope.ancestorDepth() == Protocol::ItemFetchScope::ParentAncestor ? 1 : INT_MAX;
     for (int i = 0; i < depthNum; ++i) {
         if (!col.isValid()) {
             Protocol::Ancestor ancestor;

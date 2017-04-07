@@ -24,7 +24,7 @@ using namespace Akonadi;
 
 Q_DECLARE_METATYPE(Scope)
 Q_DECLARE_METATYPE(QVector<Protocol::Ancestor>)
-Q_DECLARE_METATYPE(Protocol::FetchScope)
+Q_DECLARE_METATYPE(Protocol::ItemFetchScope)
 
 class ProtocolHelperTest : public QObject
 {
@@ -227,15 +227,15 @@ private Q_SLOTS:
     void testItemFetchScopeToProtocol_data()
     {
         QTest::addColumn<ItemFetchScope>("scope");
-        QTest::addColumn<Protocol::FetchScope>("result");
+        QTest::addColumn<Protocol::ItemFetchScope>("result");
 
         {
-            Protocol::FetchScope fs;
-            fs.setFetch(Protocol::FetchScope::Flags |
-                        Protocol::FetchScope::Size |
-                        Protocol::FetchScope::RemoteID |
-                        Protocol::FetchScope::RemoteRevision |
-                        Protocol::FetchScope::MTime);
+            Protocol::ItemFetchScope fs;
+            fs.setFetch(Protocol::ItemFetchScope::Flags |
+                        Protocol::ItemFetchScope::Size |
+                        Protocol::ItemFetchScope::RemoteID |
+                        Protocol::ItemFetchScope::RemoteRevision |
+                        Protocol::ItemFetchScope::MTime);
             QTest::newRow("empty") << ItemFetchScope() << fs;
         }
 
@@ -246,16 +246,16 @@ private Q_SLOTS:
             scope.setAncestorRetrieval(Akonadi::ItemFetchScope::All);
             scope.setIgnoreRetrievalErrors(true);
 
-            Protocol::FetchScope fs;
-            fs.setFetch(Protocol::FetchScope::FullPayload |
-                        Protocol::FetchScope::AllAttributes |
-                        Protocol::FetchScope::Flags |
-                        Protocol::FetchScope::Size |
-                        Protocol::FetchScope::RemoteID |
-                        Protocol::FetchScope::RemoteRevision |
-                        Protocol::FetchScope::MTime |
-                        Protocol::FetchScope::IgnoreErrors);
-            fs.setAncestorDepth(Protocol::FetchScope::AllAncestors);
+            Protocol::ItemFetchScope fs;
+            fs.setFetch(Protocol::ItemFetchScope::FullPayload |
+                        Protocol::ItemFetchScope::AllAttributes |
+                        Protocol::ItemFetchScope::Flags |
+                        Protocol::ItemFetchScope::Size |
+                        Protocol::ItemFetchScope::RemoteID |
+                        Protocol::ItemFetchScope::RemoteRevision |
+                        Protocol::ItemFetchScope::MTime |
+                        Protocol::ItemFetchScope::IgnoreErrors);
+            fs.setAncestorDepth(Protocol::ItemFetchScope::AllAncestors);
             QTest::newRow("full") << scope << fs;
         }
 
@@ -264,9 +264,9 @@ private Q_SLOTS:
             scope.setFetchModificationTime(false);
             scope.setFetchRemoteIdentification(false);
 
-            Protocol::FetchScope fs;
-            fs.setFetch(Protocol::FetchScope::Flags |
-                        Protocol::FetchScope::Size);
+            Protocol::ItemFetchScope fs;
+            fs.setFetch(Protocol::ItemFetchScope::Flags |
+                        Protocol::ItemFetchScope::Size);
             QTest::newRow("minimal") << scope << fs;
         }
     }
@@ -274,7 +274,7 @@ private Q_SLOTS:
     void testItemFetchScopeToProtocol()
     {
         QFETCH(ItemFetchScope, scope);
-        QFETCH(Protocol::FetchScope, result);
+        QFETCH(Protocol::ItemFetchScope, result);
         QCOMPARE(ProtocolHelper::itemFetchScopeToProtocol(scope), result);
     }
 

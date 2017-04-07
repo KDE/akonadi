@@ -18,6 +18,7 @@
 */
 
 #include "notificationsubscriber.h"
+#include "itemfetchscope.h"
 
 namespace Akonadi
 {
@@ -41,6 +42,7 @@ public:
         , mimeTypes(other.mimeTypes)
         , resources(other.resources)
         , ignoredSessions(other.ignoredSessions)
+        , itemFetchScope(other.itemFetchScope)
         , isAllMonitored(other.isAllMonitored)
         , isExclusive(other.isExclusive)
     {}
@@ -54,6 +56,7 @@ public:
     QSet<QString> mimeTypes;
     QSet<QByteArray> resources;
     QSet<QByteArray> ignoredSessions;
+    ItemFetchScope itemFetchScope;
     bool isAllMonitored;
     bool isExclusive;
 };
@@ -195,4 +198,14 @@ bool NotificationSubscriber::isExclusive() const
 void NotificationSubscriber::setIsExclusive(bool isExclusive)
 {
     d->isExclusive = isExclusive;
+}
+
+ItemFetchScope NotificationSubscriber::itemFetchScope() const
+{
+    return d->itemFetchScope;
+}
+
+void NotificationSubscriber::setItemFetchScope(const ItemFetchScope &itemFetchScope)
+{
+    d->itemFetchScope = itemFetchScope;
 }
