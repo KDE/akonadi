@@ -38,7 +38,7 @@ public:
     }
 
     QString queryString;
-    QList<qint64> queryCollections;
+    QVector<qint64> queryCollections;
     bool remote;
     bool recursive;
 };
@@ -63,7 +63,7 @@ void PersistentSearchAttribute::setQueryString(const QString &query)
     d->queryString = query;
 }
 
-QList<qint64> PersistentSearchAttribute::queryCollections() const
+QVector<qint64> PersistentSearchAttribute::queryCollections() const
 {
     return d->queryCollections;
 }
@@ -77,7 +77,7 @@ void PersistentSearchAttribute::setQueryCollections(const QVector<Collection> &c
     }
 }
 
-void PersistentSearchAttribute::setQueryCollections(const QList<qint64> &collectionsIds)
+void PersistentSearchAttribute::setQueryCollections(const QVector<qint64> &collectionsIds)
 {
     d->queryCollections = collectionsIds;
 }

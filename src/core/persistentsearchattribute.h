@@ -100,7 +100,7 @@ public:
      * Returns IDs of collections that will be queried
      * @since 4.13
      */
-    QList<qint64> queryCollections() const;
+    QVector<qint64> queryCollections() const;
 
     /**
      * Sets collections to be queried.
@@ -114,7 +114,7 @@ public:
      * @param collectionsIds IDs of collections to query
      * @since 4.13
      */
-    void setQueryCollections(const QList<qint64> &collectionsIds);
+    void setQueryCollections(const QVector<qint64> &collectionsIds);
 
     /**
      * Sets whether resources should be queried too.

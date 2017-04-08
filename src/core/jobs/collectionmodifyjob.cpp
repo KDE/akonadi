@@ -104,7 +104,7 @@ void CollectionModifyJob::doStart()
         cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
     }
     if (auto attr = d->mCollection.attribute<Akonadi::PersistentSearchAttribute>()) {
-        cmd.setPersistentSearchCollections(attr->queryCollections().toVector());
+        cmd.setPersistentSearchCollections(attr->queryCollections());
         cmd.setPersistentSearchQuery(attr->queryString());
         cmd.setPersistentSearchRecursive(attr->isRecursive());
         cmd.setPersistentSearchRemote(attr->isRemoteSearchEnabled());
