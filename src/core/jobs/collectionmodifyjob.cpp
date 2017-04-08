@@ -25,6 +25,7 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "private/protocol_p.h"
+#include "persistentsearchattribute.h"
 
 using namespace Akonadi;
 
@@ -101,6 +102,12 @@ void CollectionModifyJob::doStart()
     }
     if (!d->mCollection.attributes().isEmpty()) {
         cmd.setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
+    }
+    if (auto attr = d->mCollection.attribute<Akonadi::PersistentSearchAttribute>()) {
+        cmd.setPersistentSearchCollections(attr->queryCollections().toVector());
+        cmd.setPersistentSearchQuery(attr->queryString());
+        cmd.setPersistentSearchRecursive(attr->isRecursive());
+        cmd.setPersistentSearchRemote(attr->isRemoteSearchEnabled());
     }
     if (!d->mCollection.d_ptr->mDeletedAttributes.isEmpty()) {
         cmd.setRemovedAttributes(d->mCollection.d_ptr->mDeletedAttributes);
