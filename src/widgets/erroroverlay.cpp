@@ -234,6 +234,11 @@ void ErrorOverlay::serverStateChanged(ServerManager::State state)
             break;
         case ServerManager::Broken:
             ui->stackWidget->setCurrentWidget(ui->brokenPage);
+            if (!ServerManager::brokenReason().isEmpty()) {
+                ui->brokenDescription->setText(
+                    i18nc("%1 is a reason why", "Cannot connect to the Personal information management service.\n\n%1",
+                          ServerManager::brokenReason()));
+            }
             break;
         case ServerManager::Starting:
             ui->progressPage->setToolTip(i18n("Personal information management service is starting..."));

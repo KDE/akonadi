@@ -96,6 +96,17 @@ public:
     static State state();
 
     /**
+     * Returns the reason why the Server is broken, if known.
+     *
+     * If state() is @p Broken, then you can use this method to obtain a more
+     * detailed description of the problem and present it to users. Note that
+     * the message can be empty if the reason is not known.
+     *
+     * @since 5.6
+     */
+    static QString brokenReason();
+
+    /**
      * Returns the identifier of the Akonadi instance we are connected to. This is usually
      * an empty string (representing the default instance), unless you have explicitly set
      * the AKONADI_INSTANCE environment variable to connect to a different one.

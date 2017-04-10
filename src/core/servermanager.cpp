@@ -29,6 +29,7 @@
 #include "akonadicore_debug.h"
 
 #include <Kdelibs4ConfigMigrator>
+#include <KLocalizedString>
 
 #include "private/protocol_p.h"
 #include "private/standarddirs_p.h"
@@ -128,6 +129,7 @@ public:
     QScopedPointer<QTimer> mSafetyTimer;
     Firstrun *mFirstRunner;
     static Internal::ClientType clientType;
+    QString mBrokenReason;
 };
 
 int ServerManagerPrivate::serverProtocolVersion = -1;
@@ -235,6 +237,7 @@ ServerManager::State ServerManager::state()
     ServerManager::State previousState = NotRunning;
     if (sInstance.exists()) {   // be careful, this is called from the ServerManager::Private ctor, so using sInstance unprotected can cause infinite recursion
         previousState = sInstance->mState;
+        sInstance->mBrokenReason.clear();
     }
 
     const bool serverUpgrading = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::UpgradeIndicator));
@@ -248,7 +251,10 @@ ServerManager::State ServerManager::state()
         // check if the server protocol is recent enough
         if (sInstance.exists()) {
             if (Internal::serverProtocolVersion() >= 0 &&
-                    Internal::serverProtocolVersion() < Protocol::version()) {
+                    Internal::serverProtocolVersion() != Protocol::version()) {
+                sInstance->mBrokenReason = i18n("The Akonadi server protocol version differs from the protocol version used by this application.\n"
+                                                "If you recently updated your system please log out and back in to make sure all applications use the "
+                                                "correct protocol version.");
                 return Broken;
             }
         }
@@ -261,6 +267,9 @@ ServerManager::State ServerManager::state()
                 if (type.capabilities().contains(QStringLiteral("Resource"))) {
                     return Running;
                 }
+            }
+            if (sInstance.exists()) {
+                sInstance->mBrokenReason = i18n("There are no Akonadi Agents available. Please verify your KDE PIM installation.");
             }
             return Broken;
         } else {
@@ -286,6 +295,14 @@ ServerManager::State ServerManager::state()
         return previousState;
     }
     return NotRunning;
+}
+
+QString ServerManager::brokenReason()
+{
+    if (sInstance.exists()) {
+        return sInstance->mBrokenReason;
+    }
+    return QString();
 }
 
 QString ServerManager::instanceIdentifier()
