@@ -76,7 +76,7 @@
     <xsd:attribute name="onUpdate"    type="xsd:string"/>
     <xsd:attribute name="onDelete"    type="xsd:string"/>
     <xsd:attribute name="noUpdate"    type="xsd:boolean" default="false"/>
-    <xsl:attribute name="enumType"    type="xsd:string"/>
+    <xsd:attribute name="enumType"    type="xsd:string"/>
   </xsd:complexType>
 
   <xsd:complexType name="indexType">
