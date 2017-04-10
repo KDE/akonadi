@@ -251,6 +251,7 @@ include_directories(
 )
 
 add_subdirectory(src)
+add_subdirectory(icons)
 
 if(BUILD_TOOLS)
     # add testrunner (application for managing a self-contained
