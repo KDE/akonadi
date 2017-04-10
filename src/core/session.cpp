@@ -184,16 +184,16 @@ void SessionPrivate::startJob(Job *job)
     if (protocolVersion != Protocol::version()) {
         job->setError(Job::ProtocolVersionMismatch);
         if (protocolVersion < Protocol::version()) {
-            job->setErrorText(i18n("Protocol version mismatch. Server version is newer (%1) than ours (%2). "
+            job->setErrorText(i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
                                    "If you updated your system recently please restart the Akonadi server.",
                                    protocolVersion, Protocol::version()));
-            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
+            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
                                        "If you updated your system recently please restart the Akonadi server.";
         } else {
-            job->setErrorText(i18n("Protocol version mismatch. Server version is older (%1) than ours (%2). "
+            job->setErrorText(i18n("Protocol version mismatch. Server version is newer (%1) than ours (%2). "
                                    "If you updated your system recently please restart all KDE PIM applications.",
                                    protocolVersion, Protocol::version()));
-            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is older (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
+            qCWarning(AKONADICORE_LOG) << "Protocol version mismatch. Server version is newer (" << protocolVersion << ") than ours (" << Protocol::version() << "). "
                                        "If you updated your system recently please restart all KDE PIM applications.";
         }
         job->emitResult();
