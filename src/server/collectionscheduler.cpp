@@ -220,7 +220,7 @@ void CollectionScheduler::startScheduler()
     // Get next collection to expire and start the timer
     const uint next = mSchedule.constBegin().key();
     // cast next - now() to int, so that we get negative result when next is in the past
-    mScheduler->start(qMax(0, (int)(next - QDateTime::currentDateTime().toTime_t()) * 1000));
+    mScheduler->start(qMax(0, (int)(next - QDateTime::currentDateTimeUtc().toTime_t()) * 1000));
 }
 
 void CollectionScheduler::scheduleCollection(Collection collection, bool shouldStartScheduler)
@@ -238,7 +238,7 @@ void CollectionScheduler::scheduleCollection(Collection collection, bool shouldS
     }
 
     const int expireMinutes = qMax(mMinInterval, collectionScheduleInterval(collection));
-    uint nextCheck = QDateTime::currentDateTime().toTime_t() + (expireMinutes * 60);
+    uint nextCheck = QDateTime::currentDateTimeUtc().toTime_t() + (expireMinutes * 60);
 
     // Check whether there's another check scheduled within a minute after this one.
     // If yes, then delay this check so that it's scheduled together with the others

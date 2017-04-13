@@ -342,7 +342,7 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     }
 
     // Query all plugins for search results
-    SearchRequest request("searchUpdate-" + QByteArray::number(QDateTime::currentDateTime().toTime_t()));
+    SearchRequest request("searchUpdate-" + QByteArray::number(QDateTime::currentDateTimeUtc().toTime_t()));
     request.setCollections(queryCollections);
     request.setMimeTypes(queryMimeTypes);
     request.setQuery(collection.queryString());

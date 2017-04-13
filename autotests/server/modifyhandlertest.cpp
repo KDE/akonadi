@@ -165,7 +165,7 @@ private Q_SLOTS:
                 Collection col = Collection::retrieveById(notification.id());
                 QCOMPARE(col.name(), newValue.toString());
             }
-            if (!notification.changedParts().intersect({ "ENABLED", "SYNC", "DISPLAY", "INDEX" }).isEmpty()) {
+            if (notification.changedParts().intersects({ "ENABLED", "SYNC", "DISPLAY", "INDEX" })) {
                 Collection col = Collection::retrieveById(notification.id());
                 const bool sync = col.syncPref() == Collection::Undefined ? col.enabled() : col.syncPref() == Collection::True;
                 QCOMPARE(sync, newValue.toBool());

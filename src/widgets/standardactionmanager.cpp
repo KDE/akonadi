@@ -1373,7 +1373,7 @@ public:
         const bool isItemAction = (type == CopyItemToMenu || type == MoveItemToMenu);
         const bool isCollectionAction = (type == CopyCollectionToMenu || type == MoveCollectionToMenu);
 
-        const bool canContainRequiredMimeTypes = !collection.contentMimeTypes().toSet().intersect(mimeTypes).isEmpty();
+        const bool canContainRequiredMimeTypes = collection.contentMimeTypes().toSet().intersects(mimeTypes);
         const bool canCreateNewItems = (collection.rights() & Collection::CanCreateItem);
 
         const bool canCreateNewCollections = (collection.rights() & Collection::CanCreateCollection);
