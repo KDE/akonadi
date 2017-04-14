@@ -1365,7 +1365,7 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
         const QModelIndex index = indexForCollection(Collection(collectionId));
         Q_ASSERT(index.isValid());
         //To notify about the changed fetch and population state
-        emit dataChanged(index, index);
+        dataChanged(index, index);
     }
 }
 
