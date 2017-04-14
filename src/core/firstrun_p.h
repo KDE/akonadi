@@ -69,7 +69,7 @@ class Firstrun : public QObject
 {
     Q_OBJECT
 public:
-    explicit Firstrun(QObject *parent = 0);
+    explicit Firstrun(QObject *parent = nullptr);
     ~Firstrun();
 
 private:
@@ -84,7 +84,6 @@ private:
     QStringList mPendingDefaults;
     KConfig *mConfig;
     KConfig *mCurrentDefault;
-    KProcess *mProcess;
 };
 
 }

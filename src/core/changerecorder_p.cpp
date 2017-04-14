@@ -484,6 +484,9 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadItemNotification(QDataSt
             stream >> addedTags;
             stream >> removedTags;
         }
+    } else {
+        qCWarning(AKONADICORE_LOG) << "Error version is not correct here" << version;
+        return msg;
     }
     if (version >= 5) {
         msg.setOperation(static_cast<Protocol::ItemChangeNotification::Operation>(operation));
@@ -585,7 +588,11 @@ Protocol::ChangeNotification ChangeRecorderPrivate::loadCollectionNotification(Q
             stream >> dummyIv;
             stream >> dummyIv;
         }
-    }
+    } else {
+        qCWarning(AKONADICORE_LOG) << "Error version is not correct here" << version;
+        return msg;
+     }
+
     if (version >= 5) {
         msg.setOperation(static_cast<Protocol::CollectionChangeNotification::Operation>(operation));
     } else {

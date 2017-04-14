@@ -88,7 +88,7 @@ private Q_SLOTS:
                 AkonadiTest::akWaitForSignal(rec, SIGNAL(monitorReady()), 1000);
             } else if (action.at(0) == QLatin1Char('c')) {
                 // c1 = "trigger change on item 1"
-                const int id = action.mid(1).toInt();
+                const int id = action.midRef(1).toInt();
                 Q_ASSERT(id);
                 triggerChange(id);
                 if (action != lastAction) {
@@ -97,13 +97,13 @@ private Q_SLOTS:
                 }
             } else if (action.at(0) == QLatin1Char('d')) {
                 // d1 = "delete item 1"
-                const int id = action.mid(1).toInt();
+                const int id = action.midRef(1).toInt();
                 Q_ASSERT(id);
                 triggerDelete(id);
                 QTest::qWait(500);
             } else if (action.at(0) == QLatin1Char('r')) {
                 // r1 = "replayNext and expect to get itemChanged(1)"
-                const int id = action.mid(1).toInt();
+                const int id = action.midRef(1).toInt();
                 Q_ASSERT(id);
                 replayNextAndProcess(rec, id);
             } else {
