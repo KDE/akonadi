@@ -31,6 +31,7 @@
 #include "akonadicore_debug.h"
 #include "notificationsubscriber.h"
 #include "changenotification.h"
+#include "helper_p.h"
 
 using namespace Akonadi;
 class operation;
@@ -106,25 +107,25 @@ bool MonitorPrivate::connectToNotificationManager()
                    q_ptr, SLOT(commandReceived(qint64,Akonadi::Protocol::Command)));
 
     pendingModification = Protocol::ModifySubscriptionCommand();
-    for (const auto &col : collections) {
+    for (const auto &col : qAsConst(collections)) {
         pendingModification.startMonitoringCollection(col.id());
     }
-    for (const auto &res : resources) {
+    for (const auto &res : qAsConst(resources)) {
         pendingModification.startMonitoringResource(res);
     }
-    for (auto itemId : items) {
+    for (auto itemId : qAsConst(items)) {
         pendingModification.startMonitoringItem(itemId);
     }
-    for (auto tagId : tags) {
+    for (auto tagId : qAsConst(tags)) {
         pendingModification.startMonitoringTag(tagId);
     }
-    for (auto type : types) {
+    for (auto type : qAsConst(types)) {
         pendingModification.startMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
     }
-    for (const auto &mimetype : mimetypes) {
+    for (const auto &mimetype : qAsConst(mimetypes)) {
         pendingModification.startMonitoringMimeType(mimetype);
     }
-    for (const auto &session : sessions) {
+    for (const auto &session : qAsConst(sessions)) {
         pendingModification.startIgnoringSession(session);
     }
     pendingModification.setAllMonitored(monitorAll);
