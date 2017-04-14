@@ -1246,7 +1246,7 @@ public:
 
         const QMimeData *mimeData = selectionModel->model()->mimeData(selectionModel->selectedRows());
 
-        const QModelIndex index = action->data().value<QModelIndex>();
+        const QModelIndex index = action->data().toModelIndex();
         Q_ASSERT(index.isValid());
 
         QAbstractItemModel *model = const_cast<QAbstractItemModel *>(index.model());
