@@ -212,7 +212,7 @@ void SearchManager::loadSearchPlugins()
 
 void SearchManager::initSearchPlugins()
 {
-    for (QPluginLoader *loader : mPluginLoaders) {
+    for (QPluginLoader *loader : qAsConst(mPluginLoaders)) {
         if (!loader->load()) {
             qCCritical(AKONADISERVER_LOG) << "Failed to load search plugin" << loader->fileName() << ":" << loader->errorString();
             continue;
@@ -460,7 +460,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
         return;
     }
 
-    for (const auto item : items) {
+    for (const auto &item : items) {
         Collection::addPimItem(collection.id(), item.id());
     }
 
