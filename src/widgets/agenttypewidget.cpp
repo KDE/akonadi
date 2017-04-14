@@ -205,7 +205,6 @@ void AgentTypeWidgetDelegate::paint(QPainter *painter, const QStyleOptionViewIte
         painter->setPen(option.palette.color(cg, QPalette::Text));
     }
 
-    QFont font = painter->font();
     painter->setFont(option.font);
 
     painter->drawPixmap(option.rect.x() + 5, option.rect.y() + 5, pixmap);
