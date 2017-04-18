@@ -39,7 +39,7 @@
 #include "itemmodifyjob.h"
 #include "session.h"
 #include "collectionfetchscope.h"
-#include "helper_p.h"
+
 
 #include "collectionutils.h"
 

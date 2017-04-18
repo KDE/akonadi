@@ -19,7 +19,7 @@
 
 #include "session.h"
 #include "session_p.h"
-#include "helper_p.h"
+
 
 #include "job.h"
 #include "job_p.h"

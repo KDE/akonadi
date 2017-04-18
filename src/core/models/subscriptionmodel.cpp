@@ -25,7 +25,7 @@
 #include "entityhiddenattribute.h"
 
 #include "akonadicore_debug.h"
-#include "helper_p.h"
+
 
 #include <QFont>
 

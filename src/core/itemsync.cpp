@@ -31,7 +31,7 @@
 #include "itemmodifyjob.h"
 #include "transactionsequence.h"
 #include "itemfetchscope.h"
-#include "helper_p.h"
+
 
 #include "akonadicore_debug.h"
 

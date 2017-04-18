@@ -30,7 +30,7 @@
 #include "storage/parthelper.h"
 #include "storage/parttypehelper.h"
 #include "storage/transaction.h"
-#include "helper_p.h"
+
 #include "utils.h"
 #include "intervalcheck.h"
 #include "agentmanagerinterface.h"

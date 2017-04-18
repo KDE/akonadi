@@ -32,7 +32,7 @@
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
 #include "handler/searchhelper.h"
-#include "helper_p.h"
+
 
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>

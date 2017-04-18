@@ -30,7 +30,7 @@
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
-#include "helper_p.h"
+
 
 #include <private/protocol_p.h>
 

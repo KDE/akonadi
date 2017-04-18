@@ -23,7 +23,7 @@
 #include "selftestdialog.h"
 #include "erroroverlay_p.h"
 #include "akonadiwidgets_debug.h"
-#include "helper_p.h"
+
 
 #include <KLocalizedString>
 

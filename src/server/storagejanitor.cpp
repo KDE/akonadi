@@ -18,7 +18,7 @@
 */
 
 #include "storagejanitor.h"
-#include "helper_p.h"
+
 #include "storage/queryhelper.h"
 #include "storage/transaction.h"
 #include "storage/datastore.h"

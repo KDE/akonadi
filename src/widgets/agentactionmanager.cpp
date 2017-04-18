@@ -25,7 +25,7 @@
 #include "agentmanager.h"
 #include "agenttypedialog.h"
 #include "metatypes.h"
-#include "helper_p.h"
+
 
 #include <QAction>
 #include <QIcon>

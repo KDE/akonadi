@@ -19,7 +19,7 @@
 
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
-#include "helper_p.h"
+
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"

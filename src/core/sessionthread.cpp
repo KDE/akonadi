@@ -18,7 +18,7 @@
 */
 
 #include "sessionthread_p.h"
-#include "helper_p.h"
+
 
 #include <QThread>
 

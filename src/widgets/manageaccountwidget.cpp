@@ -24,7 +24,7 @@
 #include "agenttypedialog.h"
 #include "agentfilterproxymodel.h"
 #include "agentmanager.h"
-#include "helper_p.h"
+
 #include "ui_manageaccountwidget.h"
 
 #include <KMessageBox>

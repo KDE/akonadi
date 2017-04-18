@@ -21,7 +21,7 @@
 
 #include "agenttypemodel.h"
 #include "agentinstancemodel.h"
-#include "helper_p.h"
+
 
 #include <qdebug.h>
 

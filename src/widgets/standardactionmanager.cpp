@@ -18,7 +18,7 @@
 */
 
 #include "standardactionmanager.h"
-#include "helper_p.h"
+
 #include "actionstatemanager_p.h"
 #include "agentfilterproxymodel.h"
 #include "agentinstancecreatejob.h"

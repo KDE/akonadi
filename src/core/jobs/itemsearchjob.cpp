@@ -24,7 +24,7 @@
 #include "protocolhelper_p.h"
 #include "searchquery.h"
 #include "private/protocol_p.h"
-#include "helper_p.h"
+
 
 #include <QCoreApplication>
 #include <QTimer>

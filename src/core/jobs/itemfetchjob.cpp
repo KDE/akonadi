@@ -26,7 +26,7 @@
 #include "protocolhelper_p.h"
 #include "session_p.h"
 #include "private/protocol_p.h"
-#include "helper_p.h"
+
 
 #include <qdebug.h>
 

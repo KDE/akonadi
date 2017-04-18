@@ -28,7 +28,7 @@
 #include "private/protocol_p.h"
 
 #include "akonadicore_debug.h"
-#include "helper_p.h"
+
 
 #include <KLocalizedString>
 

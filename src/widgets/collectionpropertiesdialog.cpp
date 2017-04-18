@@ -26,7 +26,7 @@
 #include "collectionmodifyjob.h"
 
 #include "akonadiwidgets_debug.h"
-#include "helper_p.h"
+
 
 #include <ksharedconfig.h>
 #include <KConfigGroup>

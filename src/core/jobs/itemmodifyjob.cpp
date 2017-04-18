@@ -27,7 +27,7 @@
 #include "item_p.h"
 #include "itemserializer_p.h"
 #include "job_p.h"
-#include "helper_p.h"
+
 #include "protocolhelper_p.h"
 #include "gidextractor_p.h"
 

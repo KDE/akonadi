@@ -25,7 +25,7 @@
 #include "collectionrightsattribute_p.h"
 #include "collectionstatistics.h"
 #include "entitydisplayattribute.h"
-#include "helper_p.h"
+
 
 #include <QDebug>
 #include <QHash>

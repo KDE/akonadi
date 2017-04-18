@@ -19,7 +19,7 @@
 
 #include "tag.h"
 #include "tag_p.h"
-#include "helper_p.h"
+
 #include "tagattribute.h"
 #include <QUuid>
 #include <QUrlQuery>

@@ -20,7 +20,7 @@
 #include "subscriptionjob_p.h"
 
 #include "job_p.h"
-#include "helper_p.h"
+
 #include "collectionmodifyjob.h"
 
 using namespace Akonadi;

@@ -29,7 +29,7 @@
 #include "entities.h" // Akonadi::Server::PimItem
 #include "storage/datastore.h"
 #include "tracer.h"
-#include "helper_p.h"
+
 #include "collectionreferencemanager.h"
 
 #include "preprocessormanageradaptor.h"

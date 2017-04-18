@@ -23,7 +23,7 @@
 #include "specialcollectionattribute.h"
 #include "specialcollections.h"
 #include "servermanager.h"
-#include "helper_p.h"
+
 
 #include "agentinstance.h"
 #include "agentinstancecreatejob.h"

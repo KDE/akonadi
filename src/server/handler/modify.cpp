@@ -18,7 +18,7 @@
 */
 
 #include "modify.h"
-#include "helper_p.h"
+
 #include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"

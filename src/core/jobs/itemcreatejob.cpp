@@ -29,7 +29,7 @@
 #include "protocolhelper_p.h"
 #include "gidextractor_p.h"
 #include "private/protocol_p.h"
-#include "helper_p.h"
+
 
 #include <QDateTime>
 #include <QFile>

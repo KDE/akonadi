@@ -21,7 +21,7 @@
 
 #include "KDBusConnectionPool"
 #include "recursivemover_p.h"
-#include "helper_p.h"
+
 #include "akonadiagentbase_debug.h"
 #include "private/instance_p.h"
 #include <KLocalizedString>

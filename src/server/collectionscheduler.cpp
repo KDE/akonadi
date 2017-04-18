@@ -21,7 +21,7 @@
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include "akonadiserver_debug.h"
-#include "helper_p.h"
+
 #include <private/tristate_p.h>
 
 #include <QDateTime>

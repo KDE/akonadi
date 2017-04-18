@@ -20,7 +20,7 @@
 
 #include "resourcebase.h"
 #include "agentbase_p.h"
-#include "helper_p.h"
+
 
 #include "resourceadaptor.h"
 #include "collectiondeletejob.h"
@@ -1363,7 +1363,8 @@ void ResourceBasePrivate::slotItemSyncDone(KJob *job)
     Q_Q(ResourceBase);
     if (job->error() && job->error() != Job::UserCanceled) {
         emit q->error(job->errorString());
-    } else if (scheduler->currentTask().type == ResourceScheduler::FetchItems) {
+    }
+    if (scheduler->currentTask().type == ResourceScheduler::FetchItems) {
         scheduler->currentTask().sendDBusReplies(QString());
     }
     scheduler->taskDone();

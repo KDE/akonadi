@@ -19,7 +19,7 @@
 
 #include "persistentsearchattribute.h"
 #include "collection.h"
-#include "helper_p.h"
+
 
 #include "private/imapparser_p.h"
 

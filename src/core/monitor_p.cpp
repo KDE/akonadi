@@ -31,7 +31,7 @@
 #include "akonadicore_debug.h"
 #include "notificationsubscriber.h"
 #include "changenotification.h"
-#include "helper_p.h"
+
 
 using namespace Akonadi;
 class operation;

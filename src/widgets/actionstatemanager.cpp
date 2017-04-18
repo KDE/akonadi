@@ -18,7 +18,7 @@
 */
 
 #include "actionstatemanager_p.h"
-#include "helper_p.h"
+
 #include "agentmanager.h"
 #include "collectionutils.h"
 #include "pastehelper_p.h"

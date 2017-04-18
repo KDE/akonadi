@@ -26,7 +26,7 @@
 #include "collectionmodifyjob.h"
 #include "collectionfetchscope.h"
 #include "collectionmovejob.h"
-#include "helper_p.h"
+
 
 #include "cachepolicy.h"
 

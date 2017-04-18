@@ -28,7 +28,7 @@
 #include "itemmovejob.h"
 #include "collection.h"
 #include "item.h"
-#include "helper_p.h"
+
 
 //static const char mediatorSessionId[] = "MediatorSession"; TODO: remove?
 

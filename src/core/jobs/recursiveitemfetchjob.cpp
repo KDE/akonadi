@@ -22,7 +22,7 @@
 #include "collectionfetchscope.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "helper_p.h"
+
 
 #include <QStringList>
 

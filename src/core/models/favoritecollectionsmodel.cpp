@@ -19,7 +19,7 @@
 
 #include "favoritecollectionsmodel.h"
 #include "akonadicore_debug.h"
-#include "helper_p.h"
+
 #include <QItemSelectionModel>
 #include <QMimeData>
 

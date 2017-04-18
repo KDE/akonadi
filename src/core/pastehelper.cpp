@@ -18,7 +18,7 @@
 */
 
 #include "pastehelper_p.h"
-#include "helper_p.h"
+
 
 #include "collectioncopyjob.h"
 #include "collectionmovejob.h"

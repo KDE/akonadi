@@ -24,7 +24,7 @@ class Item;
 #include "relationsync.h"
 #include "akonadicore_debug.h"
 #include "itemfetchscope.h"
-#include "helper_p.h"
+
 
 #include "jobs/itemfetchjob.h"
 #include "jobs/relationfetchjob.h"

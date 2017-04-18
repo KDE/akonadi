@@ -23,7 +23,7 @@
 #include "entitydeletedattribute.h"
 #include "item.h"
 #include "job_p.h"
-#include "helper_p.h"
+
 #include "trashsettings.h"
 
 #include <KLocalizedString>
