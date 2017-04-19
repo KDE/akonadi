@@ -88,6 +88,12 @@ void CollectionStatistics::invalidateCollection(const Collection &col)
     mCache.remove(col.id());
 }
 
+void CollectionStatistics::expireCache()
+{
+    QMutexLocker lock(&mCacheLock);
+    mCache.clear();
+}
+
 const CollectionStatistics::Statistics CollectionStatistics::statistics(const Collection &col)
 {
     QMutexLocker lock(&mCacheLock);

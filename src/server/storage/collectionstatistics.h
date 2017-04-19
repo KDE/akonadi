@@ -64,6 +64,8 @@ public:
 
     void invalidateCollection(const Collection &col);
 
+    void expireCache();
+
 protected:
     virtual Statistics calculateCollectionStatistics(const Collection &col);
 

@@ -25,6 +25,7 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/parthelper.h"
 #include "storage/dbconfig.h"
+#include "storage/collectionstatistics.h"
 #include "search/searchrequest.h"
 #include "search/searchmanager.h"
 #include "resourcemanager.h"
@@ -132,6 +133,9 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
     inform("Checking search index consistency...");
     findOprhanSearchIndexEntries();
+
+    inform("Flushing collection statistics memory cache...");
+    CollectionStatistics::self()->expireCache();
 
     /* TODO some ideas for further checks:
      * the collection tree is non-cyclic
