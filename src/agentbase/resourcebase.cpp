@@ -1363,8 +1363,7 @@ void ResourceBasePrivate::slotItemSyncDone(KJob *job)
     Q_Q(ResourceBase);
     if (job->error() && job->error() != Job::UserCanceled) {
         emit q->error(job->errorString());
-    }
-    if (scheduler->currentTask().type == ResourceScheduler::FetchItems) {
+    } else if (scheduler->currentTask().type == ResourceScheduler::FetchItems) {
         scheduler->currentTask().sendDBusReplies(QString());
     }
     scheduler->taskDone();
