@@ -140,9 +140,6 @@ protected:
     void virtual_hook(int id, void *data) Q_DECL_OVERRIDE;
 
 private:
-#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    QSQLiteResultPrivate *d_ptr;
-#endif
     Q_DECLARE_PRIVATE(QSQLiteResult)
 };
 
@@ -157,19 +154,10 @@ public:
     QList<QSQLiteResult *> results;
 };
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
 class QSQLiteResultPrivate : public QSqlCachedResultPrivate
-#else
-class QSQLiteResultPrivate
-#endif
 {
 public:
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     QSQLiteResultPrivate(QSQLiteResult *res, const QSQLiteDriver *drv);
-#else
-    QSQLiteResultPrivate(QSQLiteResult *res);
-    QSQLiteResult *q_ptr;
-#endif
 
     void cleanup();
     bool fetchNext(QSqlCachedResult::ValueCache &values, int idx, bool initialFetch);
@@ -189,13 +177,8 @@ public:
     Q_DECLARE_PUBLIC(QSQLiteResult)
 };
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
 QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult *res, const QSQLiteDriver *drv)
     : QSqlCachedResultPrivate(res, drv)
-#else
-QSQLiteResultPrivate::QSQLiteResultPrivate(QSQLiteResult * res)
-    : q_ptr(res)
-#endif
     , access(nullptr)
     , stmt(nullptr)
     , skippedStatus(false)
@@ -389,12 +372,7 @@ bool QSQLiteResultPrivate::fetchNext(QSqlCachedResult::ValueCache &values, int i
 }
 
 QSQLiteResult::QSQLiteResult(const QSQLiteDriver *db)
-#if QT_VERSION >= QT_VERSION_CHECK(5, 7, 0)
     : QSqlCachedResult(*new QSQLiteResultPrivate(this, db))
-#else
-    : QSqlCachedResult(db)
-    , d_ptr(new QSQLiteResultPrivate(this))
-#endif
 {
     Q_D(QSQLiteResult);
     d->access = db->d_func()->access;
@@ -409,9 +387,6 @@ QSQLiteResult::~QSQLiteResult()
         const_cast<QSQLiteDriverPrivate *>(qobject_cast<const QSQLiteDriver *>(sqlDriver)->d_func())->results.removeOne(this);
     }
     d->cleanup();
-#if QT_VERSION < QT_VERSION_CHECK(5, 7, 0)
-    delete d;
-#endif
 }
 
 void QSQLiteResult::virtual_hook(int id, void *data)
