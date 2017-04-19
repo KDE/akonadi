@@ -131,6 +131,12 @@ private:
      */
     void migrateToLevelledCacheHierarchy();
 
+    /**
+     * Check if the search index contains any entries that refer to Akonadi
+     * Items that no longer exist in the DB.
+     */
+    void findOprhanSearchIndexEntries();
+
 private:
     qint64 m_lostFoundCollectionId;
 };

@@ -25,6 +25,8 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/parthelper.h"
 #include "storage/dbconfig.h"
+#include "search/searchrequest.h"
+#include "search/searchmanager.h"
 #include "resourcemanager.h"
 #include "entities.h"
 #include "dbusconnectionpool.h"
@@ -127,6 +129,9 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
 
     inform("Migrating parts to new cache hierarchy...");
     migrateToLevelledCacheHierarchy();
+
+    inform("Checking search index consistency...");
+    findOprhanSearchIndexEntries();
 
     /* TODO some ideas for further checks:
      * the collection tree is non-cyclic
@@ -701,6 +706,66 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
         }
     }
 }
+
+void StorageJanitor::findOprhanSearchIndexEntries()
+{
+    QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
+    qb.addSortColumn(Collection::idColumn(), Query::Ascending);
+    qb.addColumn(Collection::idColumn());
+    if (!qb.exec()) {
+        inform("Failed to query collections, skipping test");
+        return;
+    }
+
+    QDBusInterface iface(DBus::agentServiceName(QStringLiteral("akonadi_indexing_agent"), DBus::Agent),
+                         QStringLiteral("/"),
+                         QStringLiteral("org.freedesktop.Akonadi.Indexer"),
+                         DBusConnectionPool::threadConnection());
+    if (!iface.isValid()) {
+        inform("Akonadi Indexing Agent is not running, skipping test");
+        return;
+    }
+
+    QSqlQuery query = qb.query();
+    while (query.next()) {
+        const qint64 colId = query.value(0).toLongLong();
+        inform(QStringLiteral("Checking Collection %1 search index...").arg(colId));
+        SearchRequest req("StorageJanitor");
+        req.setStoreResults(true);
+        req.setCollections({ colId });
+        req.setRemoteSearch(false);
+        req.setQuery(QStringLiteral("{ }")); // empty query to match all
+        QStringList mts;
+        Collection col;
+        col.setId(colId);
+        const auto colMts = col.mimeTypes();
+        for (const auto &mt : colMts) {
+            mts << mt.name();
+        }
+        req.setMimeTypes(mts);
+        req.exec();
+        auto searchResults = req.results();
+
+        QueryBuilder iqb(PimItem::tableName(), QueryBuilder::Select);
+        iqb.addColumn(PimItem::idColumn());
+        iqb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, colId);
+        if (!iqb.exec()) {
+            inform(QStringLiteral("Failed to query items in collection %1").arg(colId));
+            continue;
+        }
+
+        QSqlQuery itemQuery = iqb.query();
+        while (itemQuery.next()) {
+            searchResults.remove(itemQuery.value(0).toLongLong());
+        }
+
+        if (!searchResults.isEmpty()) {
+            inform(QStringLiteral("Collection %1 search index contains %2 oprhan items. Scheduling reindexing").arg(colId).arg(searchResults.count()));
+            iface.call(QDBus::NoBlock, QStringLiteral("reindexCollection"), colId);
+        }
+    }
+}
+
 
 void StorageJanitor::inform(const char *msg)
 {
