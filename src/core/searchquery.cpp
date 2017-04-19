@@ -93,9 +93,11 @@ public:
         QVariantMap termJSON;
         termJSON.insert(QStringLiteral("negated"), term.isNegated());
         if (subTerms.isEmpty()) {
-            termJSON.insert(QStringLiteral("key"), term.key());
-            termJSON.insert(QStringLiteral("value"), term.value());
-            termJSON.insert(QStringLiteral("cond"), static_cast<int>(term.condition()));
+            if (!term.isNull()) {
+                termJSON.insert(QStringLiteral("key"), term.key());
+                termJSON.insert(QStringLiteral("value"), term.value());
+                termJSON.insert(QStringLiteral("cond"), static_cast<int>(term.condition()));
+            }
         } else {
             termJSON.insert(QStringLiteral("rel"), static_cast<int>(term.relation()));
             QVariantList subTermsJSON;
@@ -111,7 +113,9 @@ public:
 
     static SearchTerm JSONToTerm(const QVariantMap &map)
     {
-        if (map.contains(QStringLiteral("key"))) {
+        if (map.isEmpty()) {
+            return SearchTerm();
+        } else if (map.contains(QStringLiteral("key"))) {
             SearchTerm term(map[QStringLiteral("key")].toString(),
                             map[QStringLiteral("value")],
                             static_cast<SearchTerm::Condition>(map[QStringLiteral("cond")].toInt()));
@@ -278,8 +282,11 @@ int SearchQuery::limit() const
 
 QByteArray SearchQuery::toJSON() const
 {
-    QVariantMap root = Private::termToJSON(d->rootTerm);
-    root.insert(QStringLiteral("limit"), d->limit);
+    QVariantMap root;
+    if (!d->rootTerm.isNull()) {
+        root = Private::termToJSON(d->rootTerm);
+        root.insert(QStringLiteral("limit"), d->limit);
+    }
 
     QJsonObject jo = QJsonObject::fromVariantMap(root);
     QJsonDocument jdoc;
