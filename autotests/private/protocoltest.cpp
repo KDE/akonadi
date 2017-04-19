@@ -39,7 +39,7 @@ void ProtocolTest::testProtocolVersion()
     // If it wasn't you who broke it, please go find that person who was too
     // lazy to extend the test case and beat them with a stick. -- Dan
 
-    QCOMPARE(Akonadi::Protocol::version(), 56);
+    QCOMPARE(Akonadi::Protocol::version(), 57);
 }
 
 void ProtocolTest::testFactory_data()
@@ -612,6 +612,7 @@ void ProtocolTest::testCreateItemCommand()
     in.setRemoteRevision(QStringLiteral("RREV"));
     in.setDateTime(QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
     in.setFlags({ "\\SEEN", "FLAG" });
+    in.setFlagsOverwritten(true);
     in.setAddedFlags({ "FLAG2" });
     in.setRemovedFlags({ "FLAG3" });
     in.setTags(Scope(2));
@@ -632,6 +633,7 @@ void ProtocolTest::testCreateItemCommand()
     QCOMPARE(out.remoteRevision(), QStringLiteral("RREV"));
     QCOMPARE(out.dateTime(), QDateTime(QDate(2015, 8, 11), QTime(14, 32, 21), Qt::UTC));
     QCOMPARE(out.flags(), QSet<QByteArray>() << "\\SEEN" << "FLAG");
+    QCOMPARE(out.flagsOverwritten(), true);
     QCOMPARE(out.addedFlags(), QSet<QByteArray>{ "FLAG2" });
     QCOMPARE(out.removedFlags(), QSet<QByteArray>{ "FLAG3" });
     QCOMPARE(out.tags(), Scope(2));

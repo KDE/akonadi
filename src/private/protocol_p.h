@@ -576,6 +576,8 @@ public:
     void setDateTime(const QDateTime &dateTime);
     QDateTime dateTime() const;
 
+    void setFlagsOverwritten(bool overwritten);
+    bool flagsOverwritten() const;
     void setFlags(const QSet<QByteArray> &flags);
     QSet<QByteArray> flags() const;
     void setAddedFlags(const QSet<QByteArray> &flags);

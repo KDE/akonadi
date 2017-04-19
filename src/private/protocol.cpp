@@ -51,7 +51,7 @@ namespace Protocol
 
 int version()
 {
-    return 56;
+    return 57;
 }
 
 }
@@ -1837,6 +1837,7 @@ public:
         : CommandPrivate(Command::CreateItem)
         , mergeMode(CreateItemCommand::None)
         , itemSize(0)
+        , flagsOverwritten(false)
     {}
 
     CreateItemCommandPrivate(const CreateItemCommandPrivate &other)
@@ -1857,6 +1858,7 @@ public:
         , attributes(other.attributes)
         , mergeMode(other.mergeMode)
         , itemSize(other.itemSize)
+        , flagsOverwritten(other.flagsOverwritten)
     {}
 
     bool compare(const CommandPrivate *other) const Q_DECL_OVERRIDE
@@ -1877,7 +1879,8 @@ public:
                && COMPARE(addedFlags)
                && COMPARE(removedFlags)
                && COMPARE(attributes)
-               && COMPARE(parts);
+               && COMPARE(parts)
+               && COMPARE(flagsOverwritten);
     }
 
     DataStream &serialize(DataStream &stream) const Q_DECL_OVERRIDE
@@ -1898,7 +1901,8 @@ public:
                << addedTags
                << removedTags
                << attributes
-               << parts;
+               << parts
+               << flagsOverwritten;
     }
 
     DataStream &deserialize(DataStream &stream) Q_DECL_OVERRIDE {
@@ -1918,7 +1922,8 @@ public:
         >> addedTags
         >> removedTags
         >> attributes
-        >> parts;
+        >> parts
+        >> flagsOverwritten;
     }
 
     void debugString(DebugBlock &blck) const Q_DECL_OVERRIDE
@@ -1952,6 +1957,7 @@ public:
         blck.write("Added Tags", addedTags);
         blck.write("Removed Tags", removedTags);
         blck.write("Flags", flags);
+        blck.write("Flags overwritten", flagsOverwritten);
         blck.write("Added Flags", addedFlags);
         blck.write("Removed Flags", removedFlags);
         blck.beginBlock("Attributes");
@@ -1983,6 +1989,7 @@ public:
     Attributes attributes;
     CreateItemCommand::MergeModes mergeMode;
     qint64 itemSize;
+    bool flagsOverwritten;
 };
 
 AKONADI_DECLARE_PRIVATE(CreateItemCommand)
@@ -2069,6 +2076,16 @@ void CreateItemCommand::setDateTime(const QDateTime &dateTime)
 QDateTime CreateItemCommand::dateTime() const
 {
     return d_func()->dateTime;
+}
+
+void CreateItemCommand::setFlagsOverwritten(bool overwritten)
+{
+    d_func()->flagsOverwritten = overwritten;
+}
+
+bool CreateItemCommand::flagsOverwritten() const
+{
+    return d_func()->flagsOverwritten;
 }
 
 void CreateItemCommand::setFlags(const QSet<QByteArray> &flags)
