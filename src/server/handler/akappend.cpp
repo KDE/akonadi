@@ -186,7 +186,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     }
 
     const Collection col = Collection::retrieveById(parentCol.id());
-    if (cmd.flags().isEmpty()) {
+    if (cmd.flags().isEmpty() && !cmd.flagsOverwritten()) {
         bool flagsAdded = false, flagsRemoved = false;
         if (!cmd.addedFlags().isEmpty()) {
             const Flag::List addedFlags = HandlerHelper::resolveFlags(cmd.addedFlags());

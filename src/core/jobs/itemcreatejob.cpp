@@ -63,7 +63,9 @@ public:
 QString Akonadi::ItemCreateJobPrivate::jobDebuggingString() const
 {
     const QString collectionName = mCollection.name();
-    QString str = QStringLiteral("Create Item %1 from col %2").arg(mItem.id()).arg(mCollection.id());
+    QString str = QStringLiteral("%1 Item %2 from col %3")
+        .arg(mMergeOptions == ItemCreateJob::NoMerge ? QStringLiteral("Create") : QStringLiteral("Merge"))
+        .arg(mItem.id()).arg(mCollection.id());
     if (!collectionName.isEmpty()) {
         str += QStringLiteral(" (%1)").arg(collectionName);
     }
@@ -134,6 +136,7 @@ void ItemCreateJob::doStart()
 
     if (d->mItem.d_ptr->mFlagsOverwritten || !merge) {
         cmd.setFlags(d->mItem.flags());
+        cmd.setFlagsOverwritten(d->mItem.d_ptr->mFlagsOverwritten);
     } else {
         auto addedFlags = ItemChangeLog::instance()->addedFlags(d->mItem.d_ptr);
         auto deletedFlags = ItemChangeLog::instance()->deletedFlags(d->mItem.d_ptr);
