@@ -438,7 +438,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
     // This will remove IDs that no longer exist in the DB.
     QVariantList newMatchesVariant;
     newMatchesVariant.reserve(newMatches.count());
-    Q_FOREACH (qint64 id, newMatches) {
+    for (qint64 id : qAsConst(newMatches)) {
         newMatchesVariant << id;
     }
 

@@ -151,7 +151,7 @@ void SpecialCollectionsPrivate::endBatchRegister()
     Q_ASSERT(mBatchMode);
     mBatchMode = false;
 
-    foreach (const QString &resourceId, mToEmitChangedFor) {
+    for (const QString &resourceId : qAsConst(mToEmitChangedFor)) {
         emitChanged(resourceId);
     }
 

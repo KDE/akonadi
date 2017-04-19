@@ -3198,14 +3198,14 @@ public:
         blck.write("Time", time);
         blck.write("Flags", flags);
         blck.beginBlock("Tags");
-        Q_FOREACH (const FetchTagsResponse &tag, tags) {
+        for (const FetchTagsResponse &tag : qAsConst(tags)) {
             blck.beginBlock();
             tag.debugString(blck);
             blck.endBlock();
         }
         blck.endBlock();
         blck.beginBlock("Relations");
-        Q_FOREACH (const FetchRelationsResponse &rel, relations) {
+        for (const FetchRelationsResponse &rel : qAsConst(relations)) {
             blck.beginBlock();
             rel.debugString(blck);
             blck.endBlock();
@@ -3213,7 +3213,7 @@ public:
         blck.endBlock();
         blck.write("Virtual References", virtRefs);
         blck.beginBlock("Ancestors");
-        Q_FOREACH (const Ancestor &anc, ancestors) {
+        for (const Ancestor &anc : qAsConst(ancestors)) {
             blck.beginBlock();
             anc.debugString(blck);
             blck.endBlock();
@@ -3221,7 +3221,7 @@ public:
         blck.endBlock();
         blck.write("Cached Parts", cachedParts);
         blck.beginBlock("Parts");
-        Q_FOREACH (const StreamPayloadResponse &part, parts) {
+        for (const StreamPayloadResponse &part : qAsConst(parts)) {
             blck.beginBlock(part.payloadName());
             blck.write("Size", part.metaData().size());
             blck.write("External", [](PartMetaData::StorageType storage) {
@@ -5293,7 +5293,7 @@ public:
         cachePolicy.debugString(blck);
         blck.endBlock();
         blck.beginBlock("Ancestors");
-        Q_FOREACH (const Ancestor &anc, ancestors) {
+        for (const Ancestor &anc : qAsConst(ancestors)) {
             blck.beginBlock();
             anc.debugString(blck);
             blck.endBlock();
@@ -7939,7 +7939,7 @@ public:
             return QString();
         }());
         blck.beginBlock("Items");
-        Q_FOREACH (const ItemChangeNotification::Item &item, items) {
+        for (const ItemChangeNotification::Item &item : qAsConst(items)) {
             blck.beginBlock();
             blck.write("ID", item.id);
             blck.write("RemoteID", item.remoteId);
@@ -8006,7 +8006,7 @@ void ItemChangeNotification::setItem(const QVector<Item> &items)
 {
     Q_D(ItemChangeNotification);
     clearItems();
-    Q_FOREACH (const Item &item, items) {
+    for (const Item &item : qAsConst(items)) {
         d->items.insert(item.id, item);
     }
 }

@@ -600,7 +600,7 @@ void MonitorPrivate::slotStatisticsChangedFinished(KJob *job)
 
 void MonitorPrivate::slotFlushRecentlyChangedCollections()
 {
-    foreach (Collection::Id collection, recentlyChangedCollections) {
+    for (Collection::Id collection : qAsConst(recentlyChangedCollections)) {
         Q_ASSERT(collection >= 0);
         if (fetchCollectionStatistics) {
             fetchStatistics(collection);

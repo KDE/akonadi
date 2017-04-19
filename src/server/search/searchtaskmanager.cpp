@@ -111,7 +111,7 @@ void SearchTaskManager::addTask(SearchTask *task)
     Q_ASSERT(!task->collections.isEmpty());
     QVariantList list;
     list.reserve(task->collections.size());
-    Q_FOREACH (qint64 collection, task->collections) {
+    for (qint64 collection : qAsConst(task->collections)) {
         list << collection;
     }
     qb.addValueCondition(Collection::idFullColumnName(), Query::In, list);
