@@ -35,12 +35,12 @@
 
   <xsd:complexType name="tableType">
     <xsd:sequence>
+      <xsd:element name="enum"       type="enumType"      minOccurs="0" maxOccurs="100"/>
       <xsd:element name="comment"    type="xsd:string"    minOccurs="0" maxOccurs="1"/>
       <xsd:element name="column"     type="columnType"    minOccurs="1" maxOccurs="100"/>
       <xsd:element name="index"      type="indexType"     minOccurs="0" maxOccurs="100"/>
       <xsd:element name="reference"  type="referenceType" minOccurs="0" maxOccurs="100"/>
       <xsd:element name="data"       type="dataType"      minOccurs="0" maxOccurs="100"/>
-      <xsd:element name="enum"       type="enumType"      minOccurs="0" maxOccurs="100"/>
     </xsd:sequence>
     <xsd:attribute name="name"       type="xsd:string"   use="required"/>
     <xsd:attribute name="properties" type="xsd:string"/>
@@ -101,10 +101,10 @@
   </xsd:complexType>
 
   <xsd:complexType name="enumType">
-    <xsd:attribute name="name"     type="xsd:string"  use="required"/>
     <xsd:sequence>
       <xsd:element name="value"    type="enumValueType" minOccurs="1" maxOccurs="100"/>
     </xsd:sequence>
+    <xsd:attribute name="name"     type="xsd:string"  use="required"/>
   </xsd:complexType>
 
   <xsd:complexType name="enumValueType">
