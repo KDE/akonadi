@@ -6,3 +6,4 @@
 .*.swp
 /build/
 CMakeLists.txt.user*
+*.unc-backup*
