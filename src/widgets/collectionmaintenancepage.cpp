@@ -86,7 +86,7 @@ CollectionMaintenancePage::CollectionMaintenancePage(QWidget *parent)
     : CollectionPropertiesPage(parent)
     , d(new Private(this))
 {
-    setObjectName(QStringLiteral("KMail::CollectionMaintenancePage"));
+    setObjectName(QStringLiteral("Akonadi::CollectionMaintenancePage"));
     setPageTitle(i18n("Maintenance"));
 }
 
