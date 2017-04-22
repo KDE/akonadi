@@ -8,6 +8,7 @@ set(akonadiwidgets_SRCS
     collectioncombobox.cpp
     collectiondialog.cpp
     collectiongeneralpropertiespage.cpp
+    collectionmaintenancepage.cpp
     collectionpropertiesdialog.cpp
     collectionpropertiespage.cpp
     collectionrequester.cpp
@@ -39,12 +40,13 @@ ecm_qt_declare_logging_category(akonadiwidgets_SRCS HEADER akonadiwidgets_debug.
 
 set(akonadiwidgets_UI
     cachepolicypage.ui
+    collectiongeneralpropertiespage.ui
+    collectionmaintenancepage.ui
     controlprogressindicator.ui
     erroroverlay.ui
     manageaccountwidget.ui
-    selftestdialog.ui 
+    selftestdialog.ui
 )
-
 
 ecm_generate_headers(AkonadiWidgets_HEADERS
     HEADER_NAMES
@@ -56,6 +58,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     CollectionDialog
     CollectionPropertiesDialog
     CollectionPropertiesPage
+    CollectionMaintenancePage
     CollectionRequester
     CollectionStatisticsDelegate
     CollectionView
@@ -74,11 +77,6 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     TagWidget
     TagSelectWidget
     REQUIRED_HEADERS AkonadiWidgets_HEADERS
-)
-
-set(akonadiwidgets_UI
-    ${akonadiwidgets_UI}
-    collectiongeneralpropertiespage.ui
 )
 
 ki18n_wrap_ui(akonadiwidgets_SRCS ${akonadiwidgets_UI})
