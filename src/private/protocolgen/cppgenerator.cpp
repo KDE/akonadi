@@ -205,24 +205,24 @@ void CppGenerator::writeImplSerializer(DocumentNode  const *node)
              "    QString out;\n"
              "    switch (static_cast<int>(cmd.type() | (cmd.isResponse() ? Command::_ResponseBit : 0))) {\n"
              "    case Command::Invalid:\n"
-             "        QDebug(&out) << static_cast<const Command &>(cmd);\n"
+             "        QDebug(&out).noquote() << static_cast<const Command &>(cmd);\n"
              "        return out;\n"
              "    case Command::Invalid | Command::_ResponseBit:\n"
-             "        QDebug(&out) << static_cast<const Response &>(cmd);\n"
+             "        QDebug(&out).noquote() << static_cast<const Response &>(cmd);\n"
              "        return out;\n";
     for (auto child : qAsConst(node->children())) {
         auto classNode = static_cast<ClassNode const *>(child);
         if (classNode->classType() == ClassNode::Response) {
             mImpl << "    case Command::" << classNode->name() << " | Command::_ResponseBit:\n"
-                     "        QDebug(&out) << static_cast<const " << classNode->className() << " &>(cmd);\n"
+                     "        QDebug(&out).noquote() << static_cast<const " << classNode->className() << " &>(cmd);\n"
                      "        return out;\n";
         } else if (classNode->classType() == ClassNode::Command) {
             mImpl << "    case Command::" << classNode->name() << ":\n"
-                     "        QDebug(&out) << static_cast<const " << classNode->className() << " &>(cmd);\n"
+                     "        QDebug(&out).noquote() << static_cast<const " << classNode->className() << " &>(cmd);\n"
                      "        return out;\n";
         } else if (classNode->classType() == ClassNode::Notification) {
             mImpl << "    case Command::" << classNode->name() << "Notification:\n"
-                     "        QDebug(&out) << static_cast<const " << classNode->className() << " &>(cmd);\n"
+                     "        QDebug(&out).noquote() << static_cast<const " << classNode->className() << " &>(cmd);\n"
                      "        return out;\n";
         }
     }
@@ -573,7 +573,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     }
 
     for (auto prop : serializeProperties) {
-        mImpl << "        << obj." << prop->mVariableName() << "\n";
+        mImpl << "        << \"" << prop->name() << ":\" << obj." << prop->mVariableName() << " << \"\\n\"\n";
     }
     mImpl << "    ;\n"
              "}\n"
