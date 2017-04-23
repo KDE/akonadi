@@ -14,12 +14,14 @@ set(akonadiprivate_SRCS
 
 ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.h IDENTIFIER AKONADIPRIVATE_LOG CATEGORY_NAME org.kde.pim.akonadiprivate)
 
-add_library(KF5AkonadiPrivate ${akonadiprivate_SRCS})
+add_library(akonadiprivate_obj OBJECT ${akonadiprivate_SRCS})
+target_include_directories(akonadiprivate_obj PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
+target_include_directories(akonadiprivate_obj PUBLIC "$<BUILD_INTERFACE:${Qt5Core_INCLUDE_DIRS};${Qt5DBus_INCLUDE_DIRS}>")
+set_target_properties(akonadiprivate_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
+
+
+add_library(KF5AkonadiPrivate SHARED $<TARGET_OBJECTS:akonadiprivate_obj>)
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
-
-target_include_directories(KF5AkonadiPrivate PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private>")
-
-
 target_link_libraries(KF5AkonadiPrivate
 PUBLIC
     Qt5::Core
@@ -59,7 +61,7 @@ install(FILES
 
 ### Private static library used by unit-tests ####
 
-add_library(akonadiprivate_static STATIC ${akonadiprivate_SRCS})
+add_library(akonadiprivate_static STATIC $<TARGET_OBJECTS:akonadiprivate_obj>)
 set_target_properties(akonadiprivate_static PROPERTIES
     COMPILE_FLAGS -DAKONADIPRIVATE_STATIC_DEFINE
 )
