@@ -155,13 +155,15 @@ QDebug operator<<(QDebug _dbg, Command::Type type)
 template<typename T>
 DataStream &operator<<(DataStream &stream, const QSharedPointer<T> &ptr)
 {
-    return stream << *ptr;
+    Protocol::serialize(stream.device(), ptr);
+    return stream;
 }
 
 template<typename T>
 DataStream &operator>>(DataStream &stream, QSharedPointer<T> &ptr)
 {
-    return stream >> *ptr;
+    ptr = Protocol::deserialize(stream.device()).staticCast<T>();
+    return stream;
 }
 
 /******************************************************************************/
