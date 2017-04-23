@@ -33,7 +33,7 @@
       <item row="0" column="1">
        <widget class="QLabel" name="folderTypeLbl">
         <property name="text">
-         <string>uknown</string>
+         <string>unknown</string>
         </property>
        </widget>
       </item>

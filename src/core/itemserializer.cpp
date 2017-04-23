@@ -110,7 +110,7 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
             deserialize(item, label, file, version);
             file.close();
         } else {
-            qCWarning(AKONADICORE_LOG) << "Failed to to open"
+            qCWarning(AKONADICORE_LOG) << "Failed to open"
                     << ((storage == External) ? "external" : "foreign") << "payload:"
                     << file.fileName() << file.errorString();
         }

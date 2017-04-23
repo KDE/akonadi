@@ -206,7 +206,7 @@ struct PayloadTrait {
     /// (eg. a shared pointer containing a pointer to SuperElementType)
     /// same as Type if there is not super class
     typedef typename Akonadi::SuperClass<T>::Type SuperType;
-    /// indicates if this payload is polymorphic, that is is a shared pointer
+    /// indicates if this payload is polymorphic, that it is a shared pointer
     /// and has a known super class
     static const bool isPolymorphic = false;
     /// checks an object of this payload type for being @c null

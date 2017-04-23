@@ -59,7 +59,7 @@ bool RelationRemove::parseStream()
         DataStore::self()->notificationCollector()->relationRemoved(relation);
     }
 
-    // Get all PIM items that that are part of the relation
+    // Get all PIM items that are part of the relation
     SelectQueryBuilder<PimItem> itemsQuery;
     itemsQuery.setSubQueryMode(Query::Or);
     itemsQuery.addValueCondition(PimItem::idColumn(), Query::Equals, cmd.left());
