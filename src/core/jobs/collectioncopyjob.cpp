@@ -43,7 +43,7 @@ public:
 
 QString Akonadi::CollectionCopyJobPrivate::jobDebuggingString() const
 {
-    return QStringLiteral("copy collection from %1 to %2").arg(mSource.id(), mTarget.id());
+    return QStringLiteral("copy collection from %1 to %2").arg(mSource.id()).arg(mTarget.id());
 }
 
 CollectionCopyJob::CollectionCopyJob(const Collection &source, const Collection &target, QObject *parent)

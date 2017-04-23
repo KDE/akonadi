@@ -60,6 +60,7 @@ using namespace Akonadi::Server;
 Handler::Handler()
     : QObject()
     , m_connection(nullptr)
+    , m_sentFailureResponse(false)
 {
 }
 
@@ -253,11 +254,17 @@ bool Handler::failureResponse(const char *failureMessage)
 
 bool Handler::failureResponse(const QString &failureMessage)
 {
-    Protocol::Response r = Protocol::Factory::response(m_command.type());
-    // FIXME: Error enums?
-    r.setError(1, failureMessage);
+    // Prevent sending multiple error responses from a single handler (or from
+    // a handler and then from Connection, since clients only expect a single
+    // error response
+    if (!m_sentFailureResponse) {
+        m_sentFailureResponse = true;
+        Protocol::Response r = Protocol::Factory::response(m_command.type());
+        // FIXME: Error enums?
+        r.setError(1, failureMessage);
 
-    sendResponse(r);
+        sendResponse(r);
+    }
 
     return false;
 }

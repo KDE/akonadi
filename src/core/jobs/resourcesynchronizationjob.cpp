@@ -65,7 +65,7 @@ ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance &inst
     d->instance = instance;
     d->safetyTimer = new QTimer(this);
     connect(d->safetyTimer, SIGNAL(timeout()), SLOT(slotTimeout()));
-    d->safetyTimer->setInterval(10 * 1000);
+    d->safetyTimer->setInterval(30 * 1000);
     d->safetyTimer->setSingleShot(false);
 }
 

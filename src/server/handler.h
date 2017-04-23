@@ -129,6 +129,7 @@ Q_SIGNALS:
 private:
     quint64 m_tag;
     Connection *m_connection;
+    bool m_sentFailureResponse;
 
 protected:
     Protocol::Command m_command;
