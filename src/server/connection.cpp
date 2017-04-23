@@ -258,9 +258,9 @@ void Connection::slotNewData()
         try {
             if (!m_currentHandler->parseStream()) {
                 try {
-                    m_currentHandler->failureResponse("Failed to parse stream");
+                    m_currentHandler->failureResponse("Unknown error while handling a command");
                 } catch (...) {
-                    qCWarning(AKONADISERVER_LOG) << "Failed to parse stream";
+                    qCWarning(AKONADISERVER_LOG) << "Unknown error while handling a command";
                     m_connectionClosing = true;
                 }
             }
