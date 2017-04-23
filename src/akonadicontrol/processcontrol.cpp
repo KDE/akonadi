@@ -213,6 +213,22 @@ void ProcessControl::start()
         qCDebug(AKONADICONTROL_LOG) << "============================================================";
         qCDebug(AKONADICONTROL_LOG);
     }
+
+    const QString agentPerf = akGetEnv("AKONADI_PERF");
+    if (!agentPerf.isEmpty() && (mApplication.contains(agentPerf) || listContains(mArguments, agentPerf))) {
+
+        mArguments.prepend(mApplication);
+        const QString originalArguments = mArguments.join(QLatin1Char(' '));
+        mApplication = QStringLiteral("perf");
+
+        mArguments = QStringList{ QStringLiteral("record"), QStringLiteral("--call-graph"), QStringLiteral("dwarf"), QStringLiteral("--") } + mArguments;
+
+        qCDebug(AKONADICONTROL_LOG);
+        qCDebug(AKONADICONTROL_LOG) << "============================================================";
+        qCDebug(AKONADICONTROL_LOG) << "ProcessControl: Perf-recording process" << originalArguments;
+        qCDebug(AKONADICONTROL_LOG) << "============================================================";
+        qCDebug(AKONADICONTROL_LOG);
+    }
 #endif
 
     mProcess.start(mApplication, mArguments);
