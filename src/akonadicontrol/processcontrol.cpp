@@ -199,6 +199,20 @@ void ProcessControl::start()
         qCDebug(AKONADICONTROL_LOG) << "============================================================";
         qCDebug(AKONADICONTROL_LOG);
     }
+
+    const QString agentHeaptrack = akGetEnv("AKONADI_HEAPTRACK");
+    if (!agentHeaptrack.isEmpty() && (mApplication.contains(agentHeaptrack) || listContains(mArguments, agentHeaptrack))) {
+
+        mArguments.prepend(mApplication);
+        const QString originalArguments = mArguments.join(QLatin1Char(' '));
+        mApplication = QStringLiteral("heaptrack");
+
+        qCDebug(AKONADICONTROL_LOG);
+        qCDebug(AKONADICONTROL_LOG) << "============================================================";
+        qCDebug(AKONADICONTROL_LOG) << "ProcessControl: Heaptracking process" << originalArguments;
+        qCDebug(AKONADICONTROL_LOG) << "============================================================";
+        qCDebug(AKONADICONTROL_LOG);
+    }
 #endif
 
     mProcess.start(mApplication, mArguments);
