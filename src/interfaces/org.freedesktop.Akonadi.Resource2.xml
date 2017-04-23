@@ -1,0 +1,55 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.Akonadi.Resource2">
+
+    <signal name="onlineChanged">
+      <arg name="state" type="b" direction="out"/>
+    </signal>
+    <method name="isOnline">
+      <arg type="b" direction="out"/>
+    </method>
+    <method name="setOnline">
+      <arg name="state" type="b" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+
+    <signal name="nameChanged">
+      <arg name="name" type="s" direction="out"/>
+    </signal>
+    <method name="setName">
+      <arg name="name" type="s" direction="in"/>
+    </method>
+    <method name="name">
+      <arg type="s" direction="out"/>
+    </method>
+
+    <method name="requestItemDelivery">
+      <arg type="o" direction="out"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;qlonglong&gt;"/>
+      <arg name="uids" type="ax" direction="in"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QByteArrayList"/>
+      <arg name="parts" type="aay" direction="in"/>
+    </method>
+    <method name="synchronize">
+      <arg type="o" direction="out"/>
+    </method>
+    <method name="synchronizeCollectionTree">
+      <arg type="o" direction="out"/>
+    </method>
+    <method name="synchronizeCollection">
+      <arg name="collectionId" type="x" direction="in"/>
+      <arg type="o" direction="out"/>
+    </method>
+    <method name="synchronizeCollection">
+      <arg name="collectionId" type="x" direction="in"/>
+      <arg name="recursive"  type="b" direction="in"/>
+      <arg type="o" direction="out"/>
+    </method>
+    <method name="synchronizeCollectionAttributes">
+      <arg name="collectionId" type="x" direction="in"/>
+      <arg type="o" direction="out"/>
+    </method>
+
+  </interface>
+</node>
+

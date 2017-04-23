@@ -19,7 +19,7 @@
       <arg name="message" type="s" direction="out"/>
     </signal>
     <signal name="agentInstanceAdvancedStatusChanged">
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
       <arg name="agentIdentifier" type="s" direction="out"/>
       <arg name="status" type="a{sv}" direction="out"/>
     </signal>

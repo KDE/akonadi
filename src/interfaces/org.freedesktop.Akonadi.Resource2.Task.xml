@@ -1,0 +1,43 @@
+<!DOCTYPE node PUBLIC "-//freedesktop//DTD D-BUS Object Introspection 1.0//EN" "http://www.freedesktop.org/standards/dbus/1.0/introspect.dtd">
+<node>
+  <interface name="org.freedesktop.Akonadi.Resource2.Task">
+    <method name="name">
+      <arg type="s" direction="out"/>
+    </method>
+
+    <method name="type">
+      <arg type="i" direction="out"/>
+    </method>
+
+    <method name="status">
+      <arg type="i" direction="out"/>
+    </method>
+    <method name="statusMessage">
+      <arg type="s" direction="out"/>
+    </method>
+    <signal name="statusChanged">
+      <arg name="status" type="i" direction="out"/>
+      <arg name="statusMessage" type="s" direction="out"/>
+    </signal>
+
+    <signal name="error">
+      <arg name="message" type="s" direction="out"/>
+    </signal>
+
+    <signal name="warning">
+      <arg name="message" type="s" direction="out"/>
+    </signal>
+
+    <method name="progress">
+      <arg type="i" direction="out"/>
+    </method>
+    <signal name="progressChanged">
+      <arg name="progress" type="i" direction="out"/>
+    </signal>
+
+    <method name="abort">
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+
+  </interface>
+</node>
