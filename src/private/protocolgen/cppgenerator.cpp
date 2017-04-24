@@ -95,15 +95,13 @@ void CppGenerator::writeImplHeader(DocumentNode const *node)
              "{\n"
              "    return " << node->version() << ";\n"
              "}\n"
-             "\n"
-             "} // namespace Protocol\n"
-             "} // namespace Akonadi\n"
              "\n";
 }
 
 void CppGenerator::writeImplFooter(DocumentNode const *)
 {
-    // nothing
+    mImpl << "} // namespace Protocol\n"
+             "} // namespace Akonadi\n";
 }
 
 
@@ -128,7 +126,7 @@ bool CppGenerator::generateDocument(DocumentNode  const *node)
 
 void CppGenerator::writeImplSerializer(DocumentNode  const *node)
 {
-    mImpl << "void Protocol::serialize(QIODevice *device, const CommandPtr &cmd)\n"
+    mImpl << "void serialize(QIODevice *device, const CommandPtr &cmd)\n"
              "{\n"
              "    DataStream stream(device);\n"
              "    switch (static_cast<int>(cmd->type() | (cmd->isResponse() ? Command::_ResponseBit : 0))) {\n"
@@ -157,7 +155,7 @@ void CppGenerator::writeImplSerializer(DocumentNode  const *node)
     mImpl << "    }\n"
              "}\n\n";
 
-    mImpl << "CommandPtr Protocol::deserialize(QIODevice *device)\n"
+    mImpl << "CommandPtr deserialize(QIODevice *device)\n"
              "{\n"
              "    DataStream stream(device);\n"
              "    stream.waitForData(sizeof(Command::Type));\n"
@@ -200,7 +198,7 @@ void CppGenerator::writeImplSerializer(DocumentNode  const *node)
              "\n";
 
 
-    mImpl << "QString Protocol::debugString(const Command &cmd)\n"
+    mImpl << "QString debugString(const Command &cmd)\n"
              "{\n"
              "    QString out;\n"
              "    switch (static_cast<int>(cmd.type() | (cmd.isResponse() ? Command::_ResponseBit : 0))) {\n"
@@ -257,17 +255,11 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
     const QString parentClass = node->parentClassName();
     const bool isTypeClass = node->classType() == ClassNode::Class;
 
-    mHeader << "AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(\n"
-               "                                Akonadi::Protocol::DataStream &stream,\n"
-               "                                const Akonadi::Protocol::" << node->className() << " &obj);\n"
-               "AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(\n"
-               "                                Akonadi::Protocol::DataStream &stream,\n"
-               "                                Akonadi::Protocol::" << node->className() << " &obj);\n"
-               "AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg,\n"
-               "                                const Akonadi::Protocol::" << node->className() << " &obj);\n"
-               "\n"
-               "namespace Akonadi {\n"
-               "namespace Protocol {\n"
+    mHeader << "namespace Akonadi {\n"
+               "namespace Protocol {\n\n"
+               "AKONADIPRIVATE_EXPORT DataStream &operator<<(DataStream &stream, const " << node->className() << " &obj);\n"
+               "AKONADIPRIVATE_EXPORT DataStream &operator>>(DataStream &stream, " << node->className() << " &obj);\n"
+               "AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const " << node->className() << " &obj);\n"
                "\n"
                "using " << node->className() << "Ptr = QSharedPointer<" << node->className() << ">;\n"
                "\n";
@@ -349,9 +341,9 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
 
     mHeader << "\n"
                "private:\n"
-               "    friend Akonadi::Protocol::DataStream &::operator<<(Akonadi::Protocol::DataStream &stream, const Akonadi::Protocol::" << node->className() << " &obj);\n"
-               "    friend Akonadi::Protocol::DataStream &::operator>>(Akonadi::Protocol::DataStream &stream, Akonadi::Protocol::" << node->className() << " &obj);\n"
-               "    friend QDebug (::operator<<(QDebug dbg, const Akonadi::Protocol::" << node->className() << " &obj));\n"
+               "    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const Akonadi::Protocol::" << node->className() << " &obj);\n"
+               "    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, Akonadi::Protocol::" << node->className() << " &obj);\n"
+               "    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::" << node->className() << " &obj);\n"
                "};\n\n"
                "} // namespace Protocol\n"
                "} // namespace Akonadi\n"

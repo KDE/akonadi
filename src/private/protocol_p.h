@@ -62,11 +62,14 @@ class FetchScope;
 class ScopeContext;
 class ChangeNotification;
 
-using CommandPtr = QSharedPointer<Command>;
 using Attributes = QMap<QByteArray, QByteArray>;
 
 } // namespace Protocol
 } // namespace Akonadi
+
+
+namespace Akonadi {
+namespace Protocol {
 
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
                                     Akonadi::Protocol::DataStream &stream,
@@ -76,8 +79,7 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
                                     Akonadi::Protocol::Command &cmd);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::Command &cmd);
 
-namespace Akonadi {
-namespace Protocol {
+using CommandPtr = QSharedPointer<Command>;
 
 class AKONADIPRIVATE_EXPORT Command
 {
@@ -168,11 +170,11 @@ protected:
 
 private:
     friend class Factory;
-    friend Akonadi::Protocol::DataStream &::operator<<(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
                                                        const Akonadi::Protocol::Command &cmd);
-    friend Akonadi::Protocol::DataStream &::operator>>(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
                                                        Akonadi::Protocol::Command &cmd);
-    friend QDebug (::operator<<(::QDebug dbg, const Akonadi::Protocol::Command &cmd));
+    friend QDebug operator<<(::QDebug dbg, const Akonadi::Protocol::Command &cmd);
 };
 
 } // namespace Protocol
@@ -182,6 +184,9 @@ Q_DECLARE_METATYPE(Akonadi::Protocol::Command::Type)
 Q_DECLARE_METATYPE(Akonadi::Protocol::CommandPtr)
 
 
+namespace Akonadi {
+namespace Protocol {
+
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
                                 Akonadi::Protocol::DataStream &stream,
                                 const Akonadi::Protocol::Response &cmd);
@@ -190,8 +195,6 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
                                 Akonadi::Protocol::Response &cmd);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::Response &response);
 
-namespace Akonadi {
-namespace Protocol {
 
 using ResponsePtr = QSharedPointer<Response>;
 
@@ -224,11 +227,11 @@ protected:
 
 private:
     friend class Factory;
-    friend Akonadi::Protocol::DataStream &::operator<<(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
                                                        const Akonadi::Protocol::Response &cmd);
-    friend Akonadi::Protocol::DataStream &::operator>>(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
                                                        Akonadi::Protocol::Response &cmd);
-    friend QDebug (::operator<<(QDebug dbg, const Akonadi::Protocol::Response &cmd));
+    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::Response &cmd);
 };
 
 } // namespace Protocol
@@ -274,6 +277,8 @@ AKONADIPRIVATE_EXPORT inline QString debugString(const CommandPtr &command)
 } // namespace Akonadi
 
 
+namespace Akonadi {
+namespace Protocol {
 
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
                                 Akonadi::Protocol::DataStream &stream,
@@ -283,8 +288,6 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
                                 Akonadi::Protocol::FetchScope &scope);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::FetchScope &scope);
 
-namespace Akonadi {
-namespace Protocol {
 
 class AKONADIPRIVATE_EXPORT FetchScope
 {
@@ -365,11 +368,11 @@ private:
     QDateTime mChangedSince;
     QSet<QByteArray> mTagFetchScope;
 
-    friend Akonadi::Protocol::DataStream &::operator<<(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
                                                        const Akonadi::Protocol::FetchScope &scope);
-    friend Akonadi::Protocol::DataStream &::operator>>(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
                                                        Akonadi::Protocol::FetchScope &scope);
-    friend QDebug (::operator<<(QDebug dbg, const Akonadi::Protocol::FetchScope &scope));
+    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::FetchScope &scope);
 };
 
 } // namespace Protocol
@@ -377,6 +380,8 @@ private:
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(Akonadi::Protocol::FetchScope::FetchFlags)
 
+namespace Akonadi {
+namespace Protocol {
 
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
                                 Akonadi::Protocol::DataStream &stream,
@@ -385,9 +390,6 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
                                 Akonadi::Protocol::DataStream &stream,
                                 Akonadi::Protocol::ScopeContext &ctx);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ScopeContext &ctx);
-
-namespace Akonadi {
-namespace Protocol {
 
 class AKONADIPRIVATE_EXPORT ScopeContext
 {
@@ -454,16 +456,19 @@ private:
         }
     }
 
-    friend Akonadi::Protocol::DataStream &::operator<<(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
                                                       const Akonadi::Protocol::ScopeContext &context);
-    friend Akonadi::Protocol::DataStream &::operator>>(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
                                                        Akonadi::Protocol::ScopeContext &context);
-    friend QDebug (::operator<<(QDebug dbg, const Akonadi::Protocol::ScopeContext &ctx));
+    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ScopeContext &ctx);
 };
 
 } // namespace Protocol
 } // namespace akonadi
 
+
+namespace Akonadi {
+namespace Protocol {
 
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
                                 Akonadi::Protocol::DataStream &stream,
@@ -472,9 +477,6 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
                                 Akonadi::Protocol::DataStream &stream,
                                 Akonadi::Protocol::ChangeNotification &ntf);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ChangeNotification &ntf);
-
-namespace Akonadi {
-namespace Protocol {
 
 using ChangeNotificationPtr = QSharedPointer<ChangeNotification>;
 using ChangeNotificationList = QVector<ChangeNotificationPtr>;
@@ -574,11 +576,11 @@ protected:
     // it is never transferred to clients
     QVector<QByteArray> mMetaData;
 
-    friend Akonadi::Protocol::DataStream &::operator<<(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
                                                        const Akonadi::Protocol::ChangeNotification &ntf);
-    friend Akonadi::Protocol::DataStream &::operator>>(Akonadi::Protocol::DataStream &stream,
+    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
                                                        Akonadi::Protocol::ChangeNotification &ntf);
-    friend QDebug (::operator<<(QDebug dbg, const Akonadi::Protocol::ChangeNotification &ntf));
+    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ChangeNotification &ntf);
 };
 
 inline uint qHash(const ChangeNotification::Relation &rel)
@@ -586,8 +588,6 @@ inline uint qHash(const ChangeNotification::Relation &rel)
     return ::qHash(rel.leftId + rel.rightId);
 }
 
-} // namespace Protocol
-} // namespace Akonadi
 
 
 // TODO: Internalize?
@@ -603,11 +603,14 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
                                 Akonadi::Protocol::DataStream &stream,
                                 Akonadi::Protocol::ChangeNotification::Relation &relation);
 
+} // namespace Protocol
+} // namespace Akonadi
 
 Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotificationPtr)
 Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotificationList)
 
 /******************************************************************************/
+
 
 // Here comes the actual generated Protocol. See protocol.xml for definitions,
 // and genprotocol folder for the generator.

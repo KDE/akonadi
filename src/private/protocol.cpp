@@ -46,8 +46,8 @@ inline const Class##Private* Class::d_func() const {\
 #define COMPARE(prop) \
     (prop == ((decltype(this)) other)->prop)
 
-using namespace Akonadi;
-using namespace Akonadi::Protocol;
+namespace Akonadi {
+namespace Protocol {
 
 QDebug operator<<(QDebug _dbg, Command::Type type)
 {
@@ -818,6 +818,10 @@ QDebug operator<<(QDebug _dbg, const ChangeNotification::Relation &rel)
     QDebug dbg(_dbg.noquote());
     return dbg << "Left: " << rel.leftId << ", Right:" << rel.rightId << ", Type: " << rel.type;
 }
+
+
+} // namespace Protocol
+} // namespace Akonadi
 
 /******************************************************************************/
 
