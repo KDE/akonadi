@@ -198,7 +198,6 @@ bool Modify::parseStream()
         }
 
         if (changed || cmd.modifiedParts() & Protocol::ModifyCollectionCommand::MimeTypes) {
-            SearchManager::instance()->updateSearch(collection);
             if (changed) {
                 changes.append(AKONADI_PARAM_PERSISTENTSEARCH);
             }
@@ -300,6 +299,12 @@ bool Modify::parseStream()
         }
         if (!transaction.commit()) {
             return failureResponse("Unable to commit transaction");
+        }
+
+        // Only request Search update AFTER committing the transaction to avoid
+        // transaction deadlock with SQLite
+        if (changes.contains(AKONADI_PARAM_PERSISTENTSEARCH)) {
+            SearchManager::instance()->updateSearch(collection);
         }
     }
 
