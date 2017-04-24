@@ -716,6 +716,7 @@ void StorageJanitor::findOprhanSearchIndexEntries()
     QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
     qb.addSortColumn(Collection::idColumn(), Query::Ascending);
     qb.addColumn(Collection::idColumn());
+    qb.addColumn(Collection::isVirtualColumn());
     if (!qb.exec()) {
         inform("Failed to query collections, skipping test");
         return;
@@ -733,6 +734,12 @@ void StorageJanitor::findOprhanSearchIndexEntries()
     QSqlQuery query = qb.query();
     while (query.next()) {
         const qint64 colId = query.value(0).toLongLong();
+        // Skip virtual collections, they are not indexed
+        if (query.value(1).toBool()) {
+            inform(QStringLiteral("Skipping virtual Collection %1").arg(colId));
+            continue;
+        }
+
         inform(QStringLiteral("Checking Collection %1 search index...").arg(colId));
         SearchRequest req("StorageJanitor");
         req.setStoreResults(true);
@@ -743,6 +750,11 @@ void StorageJanitor::findOprhanSearchIndexEntries()
         Collection col;
         col.setId(colId);
         const auto colMts = col.mimeTypes();
+        if (colMts.isEmpty()) {
+            // No mimetypes means we don't know which search store to look into,
+            // skip it.
+            continue;
+        }
         for (const auto &mt : colMts) {
             mts << mt.name();
         }
