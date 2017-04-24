@@ -39,7 +39,7 @@ void ProtocolTest::testProtocolVersion()
     // If it wasn't you who broke it, please go find that person who was too
     // lazy to extend the test case and beat them with a stick. -- Dan
 
-    QCOMPARE(Akonadi::Protocol::version(), 57);
+    QCOMPARE(Akonadi::Protocol::version(), 58);
 }
 
 void ProtocolTest::testFactory_data()
