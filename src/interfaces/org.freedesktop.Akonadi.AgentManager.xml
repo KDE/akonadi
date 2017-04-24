@@ -20,6 +20,7 @@
     </signal>
     <signal name="agentInstanceAdvancedStatusChanged">
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out1" value="QVariantMap"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QVariantMap"/>
       <arg name="agentIdentifier" type="s" direction="out"/>
       <arg name="status" type="a{sv}" direction="out"/>
     </signal>
@@ -70,6 +71,7 @@
     </method>
     <method name="agentCustomProperties">
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
       <arg type="a{sv}" direction="out"/>
       <arg name="identifier" type="s" direction="in"/>
     </method>

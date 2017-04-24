@@ -19,6 +19,7 @@
     </signal>
     <signal name="advancedStatus">
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out0" value="QVariantMap"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVariantMap"/>
       <arg name="status" type="a{sv}" direction="out"/>
     </signal>
     <method name="status">
