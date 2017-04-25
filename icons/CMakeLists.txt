@@ -8,7 +8,7 @@ set(icons
     64-apps-akonadi.png
     128-apps-akonadi.png
     256-apps-akonadi.png
-    hisc-apps-akonadi.svgz
+    sc-apps-akonadi.svgz
 )
 
 ecm_install_icons(ICONS ${icons} DESTINATION ${ICON_INSTALL_DIR})
