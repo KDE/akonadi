@@ -1112,6 +1112,10 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item)
         return;
     }
 
+    if ((m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains(item.parentCollection().id())) {
+        return;
+    }
+
     const Collection::List parents = getParentCollections(item);
     if (parents.isEmpty()) {
         return;
@@ -1142,6 +1146,10 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item)
 void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &)
 {
     if (isHidden(item)) {
+        return;
+    }
+
+    if ((m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains(item.parentCollection().id())) {
         return;
     }
 
@@ -1287,6 +1295,10 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
     Q_Q(EntityTreeModel);
 
     if (isHidden(item)) {
+        return;
+    }
+
+    if ((m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains(item.parentCollection().id())) {
         return;
     }
 
