@@ -29,7 +29,8 @@ namespace TestModelHelpers
 inline QList<QStandardItem *> makeStandardItems(const QStringList &texts)
 {
     QList<QStandardItem *> items;
-    foreach (const QString &txt, texts) {
+    items.reserve(texts.count());
+    for (const QString &txt : qAsConst(texts)) {
         items << new QStandardItem(txt);
     }
     return items;

@@ -717,8 +717,8 @@ bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &par
     qb.addCondition(PartTypeHelper::conditionFromFqNames(parts));
 
     qb.exec();
-    Part::List existingParts = qb.result();
-    Q_FOREACH (Part part, existingParts) {  //krazy:exclude=foreach
+    const Part::List existingParts = qb.result();
+    for (Part part : qAsConst(existingParts)) {  //krazy:exclude=foreach
         if (!PartHelper::remove(&part)) {
             return false;
         }

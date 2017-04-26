@@ -212,14 +212,14 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     }
 
     if (!merge) {
-        Q_FOREACH (Item item, toRemove) {   //krazy:exclude=foreach
+        for (Item item : qAsConst(toRemove)) {   //krazy:exclude=foreach
             item.clearTag(tag);
             ItemModifyJob *modJob = new ItemModifyJob(item, this);
             connect(modJob, &KJob::result, this, &TagSync::onJobDone);
             qCDebug(AKONADICORE_LOG) << "removing tag " << item.remoteId();
         }
     }
-    Q_FOREACH (Item item, toAdd) {  //krazy:exclude=foreach
+    for (Item item : qAsConst(toAdd)) {  //krazy:exclude=foreach
         item.setTag(tag);
         ItemModifyJob *modJob = new ItemModifyJob(item, this);
         connect(modJob, &KJob::result, this, &TagSync::onJobDone);

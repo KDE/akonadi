@@ -56,7 +56,7 @@ public:
             return false;
         }
 
-        foreach (const QString &wantedMimeType, mWantedMimeTypes) {
+        for (const QString &wantedMimeType : qAsConst(mWantedMimeTypes)) {
             if (mt.inherits(wantedMimeType)) {
                 return true;
             }

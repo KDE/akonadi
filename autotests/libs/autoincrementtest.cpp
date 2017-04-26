@@ -85,7 +85,7 @@ void AutoIncrementTest::testItemAutoIncrement()
     }
 
     // Delete the 20 items
-    foreach (const Item &item, itemsToDelete) {
+    for (const Item &item : qAsConst(itemsToDelete)) {
         ItemDeleteJob *job = new ItemDeleteJob(item);
         AKVERIFYEXEC(job);
     }
