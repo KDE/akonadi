@@ -1224,6 +1224,7 @@ public:
         if (dlg->exec() == QDialog::Accepted && dlg != nullptr) {
             const QModelIndex index = EntityTreeModel::modelIndexForCollection(collectionSelectionModel->model(), dlg->selectedCollection());
             if (!index.isValid()) {
+                delete dlg;
                 return;
             }
 
