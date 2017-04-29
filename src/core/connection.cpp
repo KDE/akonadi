@@ -29,6 +29,7 @@
 #include <QSettings>
 #include <QElapsedTimer>
 #include <QApplication>
+#include <QDateTime>
 
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_exception_p.h>
@@ -220,7 +221,11 @@ void Connection::dataReceived()
         }
 
         if (mLogFile) {
-            mLogFile->write("S: " + Protocol::debugString(cmd).toUtf8());
+            mLogFile->write("S: ");
+            mLogFile->write(QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd hh:mm:ss.zzz ")).toUtf8());
+            mLogFile->write(QByteArray::number(tag));
+            mLogFile->write(" ");
+            mLogFile->write(Protocol::debugString(cmd).toUtf8());
             mLogFile->write("\n\n");
             mLogFile->flush();
         }
@@ -269,7 +274,11 @@ void Connection::doSendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
     Q_ASSERT(QThread::currentThread() == thread());
 
     if (mLogFile) {
-        mLogFile->write("C: " + Protocol::debugString(cmd).toUtf8());
+        mLogFile->write("C: ");
+        mLogFile->write(QDateTime::currentDateTime().toString(QStringLiteral("yyyy-MM-dd hh:mm:ss.zzz ")).toUtf8());
+        mLogFile->write(QByteArray::number(tag));
+        mLogFile->write(" ");
+        mLogFile->write(Protocol::debugString(cmd).toUtf8());
         mLogFile->write("\n\n");
         mLogFile->flush();
     }
