@@ -1330,7 +1330,9 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
                 this, SLOT(slotItemSyncDone(KJob*)));
         for (const Item &item : items) {
             Q_ASSERT(item.parentCollection().isValid());
-            if (!item.remoteId().isEmpty()) {
+            if (item.isValid()) {
+                new ItemModifyJob(item, trx);
+            } else if (!item.remoteId().isEmpty()) {
                 auto job = new ItemCreateJob(item, item.parentCollection(), trx);
                 job->setMerge(ItemCreateJob::RID);
             } else {
