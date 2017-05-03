@@ -66,7 +66,7 @@ public:
     void add(const T &values)
     {
         T vals = values;
-        qSort(vals);
+        std::sort(vals.begin(), vals.end());
         for (int i = 0; i < vals.count(); ++i) {
             const int begin = vals[i];
             Q_ASSERT(begin >= 0);

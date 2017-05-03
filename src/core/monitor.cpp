@@ -269,7 +269,7 @@ QVector<Item::Id> Monitor::itemsMonitoredEx() const
     Q_D(const Monitor);
     QVector<Item::Id> result;
     result.reserve(d->items.size());
-    qCopy(d->items.begin(), d->items.end(), std::back_inserter(result));
+    std::copy(d->items.begin(), d->items.end(), std::back_inserter(result));
     return result;
 }
 
@@ -284,7 +284,7 @@ QVector<Tag::Id> Monitor::tagsMonitored() const
     Q_D(const Monitor);
     QVector<Tag::Id> result;
     result.reserve(d->tags.size());
-    qCopy(d->tags.begin(), d->tags.end(), std::back_inserter(result));
+    std::copy(d->tags.begin(), d->tags.end(), std::back_inserter(result));
     return result;
 }
 
@@ -293,7 +293,7 @@ QVector<Monitor::Type> Monitor::typesMonitored() const
     Q_D(const Monitor);
     QVector<Monitor::Type> result;
     result.reserve(d->types.size());
-    qCopy(d->types.begin(), d->types.end(), std::back_inserter(result));
+    std::copy(d->types.begin(), d->types.end(), std::back_inserter(result));
     return result;
 }
 
