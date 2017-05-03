@@ -49,8 +49,9 @@ Connection::Connection(ConnectionType connType, const QByteArray &sessionId, QOb
 
     const QByteArray sessionLogFile = qgetenv("AKONADI_SESSION_LOGFILE");
     if (!sessionLogFile.isEmpty()) {
-        mLogFile = new QFile(QStringLiteral("%1.%2.%3-%4").arg(QString::fromLatin1(sessionLogFile))
+        mLogFile = new QFile(QStringLiteral("%1.%2.%3.%4-%5").arg(QString::fromLatin1(sessionLogFile))
                              .arg(QString::number(QApplication::applicationPid()))
+                             .arg(QString::number(reinterpret_cast<qulonglong>(this), 16))
                              .arg(QString::fromLatin1(mSessionId.replace('/', '_')))
                              .arg(connType == CommandConnection ? QStringLiteral("Cmd") : QStringLiteral("Ntf")));
         if (!mLogFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
