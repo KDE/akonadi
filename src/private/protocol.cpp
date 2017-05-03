@@ -775,7 +775,7 @@ DataStream &operator<<(DataStream &stream, const ChangeNotification::Item &item)
 QDebug operator<<(QDebug _dbg, const ChangeNotification::Item &item)
 {
     QDebug dbg(_dbg.noquote());
-    return dbg << "Item" << item.id << "(RID:" << item.remoteId
+    return dbg << "Item:" << item.id << "(RID:" << item.remoteId
                << ", RREV:" << item.remoteRevision << ", mimetype: " << item.mimeType;
 }
 
