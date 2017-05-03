@@ -142,8 +142,8 @@ private Q_SLOTS:
 
         QVector<qint64> results = SearchHelper::matchSubcollectionsByMimeType(ancestors, mimetypes);
 
-        qSort(expectedResults);
-        qSort(results);
+        std::sort(expectedResults.begin(), expectedResults.end());
+        std::sort(results.begin(), results.end());
 
         QCOMPARE(results.size(), expectedResults.size());
         QCOMPARE(results, expectedResults);

@@ -104,7 +104,7 @@ bool Modify::parseStream()
         }
 
         QStringList parts = newCp.localParts();
-        qSort(parts);
+        std::sort(parts.begin(), parts.end());
         const QString localParts = parts.join(QLatin1Char(' '));
         if (collection.cachePolicyLocalParts() != localParts) {
             collection.setCachePolicyLocalParts(localParts);
@@ -187,7 +187,7 @@ bool Modify::parseStream()
         QStringList cols;
         cols.reserve(cmd.persistentSearchCollections().size());
         QVector<qint64> inCols = cmd.persistentSearchCollections();
-        qSort(inCols);
+        std::sort(inCols.begin(), inCols.end());
         for (qint64 col : qAsConst(inCols)) {
             cols.append(QString::number(col));
         }
