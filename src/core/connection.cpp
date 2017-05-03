@@ -212,7 +212,7 @@ void Connection::dataReceived()
         } catch (const Akonadi::ProtocolException &) {
             // cmd's type will be Invalid by default.
         }
-        if (cmd->type() == Protocol::Command::Invalid) {
+        if (!cmd || (cmd->type() == Protocol::Command::Invalid)) {
             qCWarning(AKONADICORE_LOG) << "Invalid command, the world is going to end!";
             mSocket->close();
             mSocket->readAll();
