@@ -382,25 +382,6 @@ ResponsePtr Factory::response(Command::Type type)
     return iter->second();
 }
 
-CommandPtr Factory::deserializeImpl(QIODevice *device)
-{
-    device->waitForReadyRead(sizeof(Command::Type));
-    Command::Type cmdType;
-    if (device->peek((char *) &cmdType, sizeof(Command::Type)) != sizeof(Command::Type)) {
-        throw ProtocolException("Failed to peek command type");
-    }
-
-    if (cmdType & Command::_ResponseBit) {
-        return Factory::response(Command::Type(cmdType & ~Command::_ResponseBit));
-    } else {
-        return Factory::command(cmdType);
-    }
-}
-
-
-
-
-
 /******************************************************************************/
 
 

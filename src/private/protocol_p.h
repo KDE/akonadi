@@ -260,7 +260,6 @@ public:
     static ResponsePtr response(Command::Type type);
 
 private:
-    static CommandPtr deserializeImpl(QIODevice *device);
     template<typename T>
     friend CommandPtr deserialize(QIODevice *device);
 };
