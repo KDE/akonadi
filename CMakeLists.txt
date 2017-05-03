@@ -77,9 +77,6 @@ set_package_properties(Boost PROPERTIES
     TYPE REQUIRED
 )
 
-# Some more strictness not enforced by ECM
-add_definitions(-DQT_STRICT_ITERATORS)
-
 
 if(BUILD_TESTING)
     set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
