@@ -39,8 +39,8 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
     PimItem newItem = item;
     newItem.setId(-1);
     newItem.setRev(0);
-    newItem.setDatetime(QDateTime::currentDateTime());
-    newItem.setAtime(QDateTime::currentDateTime());
+    newItem.setDatetime(QDateTime::currentDateTimeUtc());
+    newItem.setAtime(QDateTime::currentDateTimeUtc());
     newItem.setRemoteId(QString());
     newItem.setRemoteRevision(QString());
     newItem.setCollectionId(target.id());
@@ -55,7 +55,7 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
     }
 
     DataStore *store = connection()->storageBackend();
-    if (!store->appendPimItem(parts, item.flags(), item.mimeType(), target, QDateTime::currentDateTime(), QString(), QString(), item.gid(), newItem)) {
+    if (!store->appendPimItem(parts, item.flags(), item.mimeType(), target, QDateTime::currentDateTimeUtc(), QString(), QString(), item.gid(), newItem)) {
         return false;
     }
 

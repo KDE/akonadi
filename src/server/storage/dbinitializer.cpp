@@ -314,7 +314,7 @@ QString DbInitializer::sqlType(const ColumnDescription &col, int size) const
 
 QString DbInitializer::sqlValue(const ColumnDescription &col, const QString &value) const
 {
-    if (col.type == QLatin1String("QDateTime") && value == QLatin1String("QDateTime::currentDateTime()")) {
+    if (col.type == QLatin1String("QDateTime") && value == QLatin1String("QDateTime::currentDateTimeUtc()")) {
         return QStringLiteral("CURRENT_TIMESTAMP");
     } else if (col.isEnum) {
         return QString::number(col.enumValueMap[value]);

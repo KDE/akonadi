@@ -122,7 +122,7 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     qb.addJoin(QueryBuilder::InnerJoin, PimItem::tableName(), Part::pimItemIdColumn(), PimItem::idFullColumnName());
     qb.addJoin(QueryBuilder::InnerJoin, PartType::tableName(), Part::partTypeIdFullColumnName(), PartType::idFullColumnName());
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, collection.id());
-    qb.addValueCondition(PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTime().addSecs(-60 * collection.cachePolicyCacheTimeout()));
+    qb.addValueCondition(PimItem::atimeFullColumnName(), Query::Less, QDateTime::currentDateTimeUtc().addSecs(-60 * collection.cachePolicyCacheTimeout()));
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
     qb.addValueCondition(PartType::nsFullColumnName(), Query::Equals, QLatin1String("PLD"));
     qb.addValueCondition(PimItem::dirtyFullColumnName(), Query::Equals, false);

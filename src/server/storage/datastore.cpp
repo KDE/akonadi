@@ -872,7 +872,7 @@ static bool recursiveSetResourceId(const Collection &collection, qint64 resource
     qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, collection.id());
     qb.setColumnValue(PimItem::remoteIdColumn(), QVariant());
     qb.setColumnValue(PimItem::remoteRevisionColumn(), QVariant());
-    const QDateTime now = QDateTime::currentDateTime();
+    const QDateTime now = QDateTime::currentDateTimeUtc();
     qb.setColumnValue(PimItem::datetimeColumn(), now);
     qb.setColumnValue(PimItem::atimeColumn(), now);
     qb.setColumnValue(PimItem::dirtyColumn(), true);
@@ -1065,7 +1065,7 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
     }
     pimItem.setRemoteRevision(remoteRevision);
     pimItem.setGid(gid);
-    pimItem.setAtime(QDateTime::currentDateTime());
+    pimItem.setAtime(QDateTime::currentDateTimeUtc());
 
     if (!pimItem.insert()) {
         return false;

@@ -74,7 +74,7 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
     }
     item.setRemoteRevision(cmd.remoteRevision());
     item.setGid(cmd.gid());
-    item.setAtime(QDateTime::currentDateTime());
+    item.setAtime(QDateTime::currentDateTimeUtc());
 
     return true;
 }
@@ -284,7 +284,7 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     if (needsUpdate) {
         currentItem.setRev(qMax(newItem.rev(), currentItem.rev()) + 1);
-        currentItem.setAtime(QDateTime::currentDateTime());
+        currentItem.setAtime(QDateTime::currentDateTimeUtc());
         // Only mark dirty when merged from application
         currentItem.setDirty(!connection()->context()->resource().isValid());
 

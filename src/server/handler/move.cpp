@@ -41,7 +41,7 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
     ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::NotEquals, mDestination.id());
 
-    const QDateTime mtime = QDateTime::currentDateTime();
+    const QDateTime mtime = QDateTime::currentDateTimeUtc();
 
     if (!qb.exec()) {
         failureResponse("Unable to execute query");
