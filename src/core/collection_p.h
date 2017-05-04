@@ -61,7 +61,7 @@ public:
         mId = other.mId;
         mRemoteId = other.mRemoteId;
         mRemoteRevision = other.mRemoteRevision;
-        Q_FOREACH (Attribute *attr, other.mAttributes) {
+        for (Attribute *attr : qAsConst(other.mAttributes)) {
             mAttributes.insert(attr->type(), attr->clone());
         }
         mDeletedAttributes = other.mDeletedAttributes;
