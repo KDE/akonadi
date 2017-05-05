@@ -409,7 +409,8 @@ bool QueryBuilder::exec()
                 return retryLastTransaction();
             }
         } else if (mDatabaseType == DbType::MySQL) {
-            const int error = mQuery.lastError().number();
+            const QString lastErrorStr = mQuery.lastError().nativeErrorCode();
+            const int error = lastErrorStr.isEmpty() ? -1 : lastErrorStr.toInt();
             if (error == 1213 /* ER_LOCK_DEADLOCK */) {
                 qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
                 qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
@@ -420,7 +421,8 @@ bool QueryBuilder::exec()
                 return retryLastTransaction();
             }
         } else if (mDatabaseType == DbType::Sqlite && !DbType::isSystemSQLite(DataStore::self()->database())) {
-            const int error = mQuery.lastError().number();
+            const QString lastErrorStr = mQuery.lastError().nativeErrorCode();
+            const int error = lastErrorStr.isEmpty() ? -1 : lastErrorStr.toInt();
             if (error == 6 /* SQLITE_LOCKED */) {
                 qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
                 qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
@@ -437,7 +439,7 @@ bool QueryBuilder::exec()
         }
 
         qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR:";
-        qCCritical(AKONADISERVER_LOG) << "  Error code:" << mQuery.lastError().number();
+        qCCritical(AKONADISERVER_LOG) << "  Error code:" << mQuery.lastError().nativeErrorCode();
         qCCritical(AKONADISERVER_LOG) << "  DB error: " << mQuery.lastError().databaseText();
         qCCritical(AKONADISERVER_LOG) << "  Error text:" << mQuery.lastError().text();
         qCCritical(AKONADISERVER_LOG) << "  Query:" << statement;
