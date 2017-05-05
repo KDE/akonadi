@@ -1334,7 +1334,7 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
         if (!res) {
             // Don't do another deadlock detection here, just give up.
             qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR:";
-            qCCritical(AKONADISERVER_LOG) << "  Error code:" << query.lastError().number();
+            qCCritical(AKONADISERVER_LOG) << "  Error code:" << query.lastError().nativeErrorCode();
             qCCritical(AKONADISERVER_LOG) << "  DB error: " << query.lastError().databaseText();
             qCCritical(AKONADISERVER_LOG) << "  Error text:" << query.lastError().text();
             qCCritical(AKONADISERVER_LOG) << "  Query:" << query.executedQuery();

@@ -173,7 +173,7 @@ QString DbIntrospectorPostgreSql::hasIndexQuery(const QString &tableName, const 
     QString query = QStringLiteral("SELECT indexname FROM pg_catalog.pg_indexes");
     query += QStringLiteral(" WHERE tablename ilike '%1'").arg(tableName);
     query += QStringLiteral(" AND  indexname ilike '%1'").arg(indexName);
-    query += QLatin1String(" UNION SELECT conname FROM pg_catalog.pg_constraint ");
+    query += QStringLiteral(" UNION SELECT conname FROM pg_catalog.pg_constraint ");
     query += QStringLiteral(" WHERE conname ilike '%1'").arg(indexName);
     return query;
 }
