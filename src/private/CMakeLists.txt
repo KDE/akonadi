@@ -1,5 +1,11 @@
 add_subdirectory(protocolgen)
 
+if(NOT XMLLINT_EXECUTABLE)
+  message(STATUS "xmllint not found, skipping protocol.xml validation")
+else()
+  add_test(AkonadiPrivate-protocol-xmllint ${XMLLINT_EXECUTABLE} --noout ${CMAKE_CURRENT_SOURCE_DIR}/protocol.xml)
+endif()
+
 add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/protocol_gen.cpp
                           ${CMAKE_CURRENT_BINARY_DIR}/protocol_gen.h
     COMMAND protocolgen ${CMAKE_CURRENT_SOURCE_DIR}/protocol.xml
