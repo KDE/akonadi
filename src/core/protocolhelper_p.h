@@ -25,6 +25,7 @@
 #include "collectionutils.h"
 #include "item.h"
 #include "itemfetchscope.h"
+#include "collectionfetchscope.h"
 #include "sharedvaluepool_p.h"
 #include "tag.h"
 
@@ -224,6 +225,9 @@ public:
     */
     static Protocol::ItemFetchScope itemFetchScopeToProtocol(const ItemFetchScope &fetchScope);
     static ItemFetchScope parseItemFetchScope(const Protocol::ItemFetchScope &fetchScope);
+
+    static Protocol::CollectionFetchScope collectionFetchScopeToProtocol(const CollectionFetchScope &fetchScope);
+    static CollectionFetchScope parseCollectionFetchScope(const Protocol::CollectionFetchScope &fetchScope);
 
     /**
       Converts a given TagFetchScope object into a protocol representation.

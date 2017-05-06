@@ -241,11 +241,14 @@ void Monitor::setCollectionFetchScope(const CollectionFetchScope &fetchScope)
 {
     Q_D(Monitor);
     d->mCollectionFetchScope = fetchScope;
+    d->scheduleSubscriptionUpdate();
 }
 
 CollectionFetchScope &Monitor::collectionFetchScope()
 {
     Q_D(Monitor);
+    d->pendingModificationChanges |= Protocol::ModifySubscriptionCommand::CollectionFetchScope;
+    d->scheduleSubscriptionUpdate();
     return d->mCollectionFetchScope;
 }
 

@@ -456,6 +456,103 @@ ItemFetchScope ProtocolHelper::parseItemFetchScope(const Protocol::ItemFetchScop
     return ifs;
 }
 
+Protocol::CollectionFetchScope ProtocolHelper::collectionFetchScopeToProtocol(const CollectionFetchScope &fetchScope)
+{
+    Protocol::CollectionFetchScope cfs;
+    switch (fetchScope.listFilter()) {
+    case CollectionFetchScope::NoFilter:
+        cfs.setListFilter(Protocol::CollectionFetchScope::NoFilter);
+        break;
+    case CollectionFetchScope::Display:
+        cfs.setListFilter(Protocol::CollectionFetchScope::Display);
+        break;
+    case CollectionFetchScope::Sync:
+        cfs.setListFilter(Protocol::CollectionFetchScope::Sync);
+        break;
+    case CollectionFetchScope::Index:
+        cfs.setListFilter(Protocol::CollectionFetchScope::Index);
+        break;
+    case CollectionFetchScope::Enabled:
+        cfs.setListFilter(Protocol::CollectionFetchScope::Enabled);
+        break;
+    }
+    cfs.setIncludeStatistics(fetchScope.includeStatistics());
+    cfs.setResource(fetchScope.resource());
+    cfs.setContentMimeTypes(fetchScope.contentMimeTypes());
+    cfs.setAttributes(fetchScope.attributes());
+    cfs.setFetchIdOnly(fetchScope.fetchIdOnly());
+    switch (fetchScope.ancestorRetrieval()) {
+    case CollectionFetchScope::None:
+        cfs.setAncestorRetrieval(Protocol::CollectionFetchScope::None);
+        break;
+    case CollectionFetchScope::Parent:
+        cfs.setAncestorRetrieval(Protocol::CollectionFetchScope::Parent);
+        break;
+    case CollectionFetchScope::All:
+        cfs.setAncestorRetrieval(Protocol::CollectionFetchScope::All);
+        break;
+    }
+    if (cfs.ancestorRetrieval() != Protocol::CollectionFetchScope::None) {
+        cfs.setAncestorAttributes(fetchScope.ancestorFetchScope().attributes());
+        cfs.setAncestorFetchIdOnly(fetchScope.ancestorFetchScope().fetchIdOnly());
+    }
+    cfs.setIgnoreRetrievalErrors(fetchScope.ignoreRetrievalErrors());
+
+    return cfs;
+}
+
+CollectionFetchScope ProtocolHelper::parseCollectionFetchScope(const Protocol::CollectionFetchScope &fetchScope)
+{
+    CollectionFetchScope cfs;
+    switch (fetchScope.listFilter()) {
+    case Protocol::CollectionFetchScope::NoFilter:
+        cfs.setListFilter(CollectionFetchScope::NoFilter);
+        break;
+    case Protocol::CollectionFetchScope::Display:
+        cfs.setListFilter(CollectionFetchScope::Display);
+        break;
+    case Protocol::CollectionFetchScope::Sync:
+        cfs.setListFilter(CollectionFetchScope::Sync);
+        break;
+    case Protocol::CollectionFetchScope::Index:
+        cfs.setListFilter(CollectionFetchScope::Index);
+        break;
+    case Protocol::CollectionFetchScope::Enabled:
+        cfs.setListFilter(CollectionFetchScope::Enabled);
+        break;
+    }
+    cfs.setIncludeStatistics(fetchScope.includeStatistics());
+    cfs.setResource(fetchScope.resource());
+    cfs.setContentMimeTypes(fetchScope.contentMimeTypes());
+    switch (fetchScope.ancestorRetrieval()) {
+    case Protocol::CollectionFetchScope::None:
+        cfs.setAncestorRetrieval(CollectionFetchScope::None);
+        break;
+    case Protocol::CollectionFetchScope::Parent:
+        cfs.setAncestorRetrieval(CollectionFetchScope::Parent);
+        break;
+    case Protocol::CollectionFetchScope::All:
+        cfs.setAncestorRetrieval(CollectionFetchScope::All);
+        break;
+    }
+    if (cfs.ancestorRetrieval() != CollectionFetchScope::None) {
+        cfs.ancestorFetchScope().setFetchIdOnly(fetchScope.ancestorFetchIdOnly());
+        const auto attrs = fetchScope.ancestorAttributes();
+        for (const auto attr : attrs) {
+            cfs.ancestorFetchScope().fetchAttribute(attr, true);
+        }
+    }
+    const auto attrs = fetchScope.attributes();
+    for (const auto attr : attrs) {
+        cfs.fetchAttribute(attr, true);
+    }
+    cfs.setFetchIdOnly(fetchScope.fetchIdOnly());
+    cfs.setIgnoreRetrievalErrors(fetchScope.ignoreRetrievalErrors());
+
+    return cfs;
+}
+
+
 
 static Item::Flags convertFlags(const QVector<QByteArray> &flags, ProtocolHelperValuePool *valuePool)
 {

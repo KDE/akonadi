@@ -194,6 +194,9 @@ void MonitorPrivate::slotUpdateSubscription()
         if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
             pendingModification.setItemFetchScope(ProtocolHelper::itemFetchScopeToProtocol(mItemFetchScope));
         }
+        if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::CollectionFetchScope) {
+            pendingModification.setCollectionFetchScope(ProtocolHelper::collectionFetchScopeToProtocol(mCollectionFetchScope));
+        }
         pendingModificationChanges = Protocol::ModifySubscriptionCommand::None;
 
         ntfConnection->sendCommand(3, Protocol::ModifySubscriptionCommandPtr::create(pendingModification));
@@ -542,6 +545,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         subscriber.setIsAllMonitored(subNtf.allMonitored());
         subscriber.setIsExclusive(subNtf.exclusive());
         subscriber.setItemFetchScope(ProtocolHelper::parseItemFetchScope(subNtf.itemFetchScope()));
+        subscriber.setCollectionFetchScope(ProtocolHelper::parseCollectionFetchScope(subNtf.collectionFetchScope()));
         someoneWasListening = emitSubscriptionChangeNotification(subNtf, subscriber);
     } else if (msg->type() == Protocol::Command::DebugChangeNotification) {
         const auto &changeNtf = Protocol::cmdCast<Protocol::DebugChangeNotification>(msg);

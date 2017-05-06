@@ -47,9 +47,34 @@
     <param name="localParts" type="QStringList" />
   </class>
 
+  <class name="CollectionFetchScope">
+    <enum name="ListFilter">
+      <value name="NoFilter" value="0" />
+      <value name="Display" />
+      <value name="Sync" />
+      <value name="Index" />
+      <value name="Enabled" />
+    </enum>
 
+    <enum name="AncestorRetrieval">
+      <value name="None" />
+      <value name="Parent" />
+      <value name="All" />
+    </enum>
 
-    <!-- Hello //-->
+    <param name="listFilter" type="CollectionFetchScope::ListFilter" default="Enabled" />
+    <param name="includeStatistics" type="bool" default="false" />
+    <param name="resource" type="QString" />
+    <param name="contentMimeTypes" type="QStringList" />
+    <param name="attributes" type="QSet&lt;QByteArray&gt;" />
+    <param name="fetchIdOnly" type="bool" default="false" />
+    <param name="ancestorRetrieval" type="CollectionFetchScope::AncestorRetrieval" default="None" />
+    <param name="ancestorFetchIdOnly" type="bool" default="false" />
+    <param name="ancestorAttributes" type="QSet&lt;QByteArray&gt;" />
+    <param name="ignoreRetrievalErrors" type="bool" default="false" />
+  </class>
+
+  <!-- Hello //-->
   <response name="Hello">
     <param name="serverName" type="QString" />
     <param name="message" type="QString" />
@@ -901,6 +926,7 @@
       <value name="Add" value="1 &lt;&lt; 9" />
       <value name="Remove" value="1 &lt;&lt; 10" />
       <value name="ItemFetchScope" value="1 &lt;&lt; 11" />
+      <value name="CollectionFetchScope" value="1 &lt;&lt; 12" />
     </flag>
 
     <enum name="ChangeType">
@@ -1036,6 +1062,9 @@
     <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope">
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::ItemFetchScope" />
     </param>
+    <param name="collectionFetchScope" type="Akonadi::Protocol::CollectionFetchScope">
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::CollectionFetchScope" />
+    </param>
   </command>
 
   <response name="ModifySubscription" />
@@ -1061,6 +1090,7 @@
     <param name="allMonitored" type="bool" />
     <param name="exclusive" type="bool" />
     <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope" />
+    <param name="collectionFetchScope" type="Akonadi::Protocol::CollectionFetchScope" />
   </notification>
 
   <!-- Debug Change Notification //-->

@@ -240,7 +240,10 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         mExclusive = command.isExclusive();
     }
     if (modifiedParts & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
-        mFetchScope = command.itemFetchScope();
+        mItemFetchScope = command.itemFetchScope();
+    }
+    if (modifiedParts & Protocol::ModifySubscriptionCommand::CollectionFetchScope) {
+        mCollectionFetchScope = command.collectionFetchScope();
     }
 
     if (mManager) {
@@ -299,7 +302,8 @@ Protocol::SubscriptionChangeNotificationPtr NotificationSubscriber::toChangeNoti
     ntf->setIgnoredSessions(mIgnoredSessions);
     ntf->setAllMonitored(mAllMonitored);
     ntf->setExclusive(mExclusive);
-    ntf->setItemFetchScope(mFetchScope);
+    ntf->setItemFetchScope(mItemFetchScope);
+    ntf->setCollectionFetchScope(mCollectionFetchScope);
     return ntf;
 }
 
