@@ -93,7 +93,7 @@ public:
                                   const Akonadi::Collection &destCollection);
 
     void monitoredItemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection);
-    void monitoredItemRemoved(const Akonadi::Item &item);
+    void monitoredItemRemoved(const Akonadi::Item &item, const Akonadi::Collection &collection = Akonadi::Collection());
     void monitoredItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &);
     void monitoredItemMoved(const Akonadi::Item &item, const Akonadi::Collection &, const Akonadi::Collection &);
 
