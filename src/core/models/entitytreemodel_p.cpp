@@ -1104,7 +1104,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
     q->endInsertRows();
 }
 
-void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item)
+void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item, const Akonadi::Collection &parentCollection)
 {
     Q_Q(EntityTreeModel);
 
@@ -1112,7 +1112,8 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item)
         return;
     }
 
-    if ((m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains(item.parentCollection().id())) {
+    if ((m_itemPopulation == EntityTreeModel::LazyPopulation) &&
+        !m_populatedCols.contains(parentCollection.isValid() ? parentCollection.id() : item.parentCollection().id())) {
         return;
     }
 
@@ -1197,10 +1198,10 @@ void EntityTreeModelPrivate::monitoredItemMoved(const Akonadi::Item &item,
         monitoredItemAdded(item, destCollection);
         return;
     } else if (isHidden(destCollection)) {
-        monitoredItemRemoved(item);
+        monitoredItemRemoved(item, sourceCollection);
         return;
     } else {
-        monitoredItemRemoved(item);
+        monitoredItemRemoved(item, sourceCollection);
         monitoredItemAdded(item, destCollection);
         return;
     }
