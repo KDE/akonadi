@@ -211,7 +211,7 @@ bool XmlParser::parseEnumValue(EnumNode *enumNode)
     auto valueNode = new EnumValueNode(attrs.value(QLatin1String("name")).toString(),
                                        enumNode);
     if (attrs.hasAttribute(QLatin1String("value"))) {
-        valueNode->setValue(attrs.value(QLatin1String("value")).toInt());
+        valueNode->setValue(attrs.value(QLatin1String("value")).toString());
     }
 
     return true;

@@ -144,12 +144,12 @@ public:
     EnumValueNode(const QString &name, EnumNode *parent);
 
     QString name() const;
-    void setValue(int value);
-    int value() const;
+    void setValue(const QString &value);
+    QString value() const;
 
 private:
     QString mName;
-    int mValue;
+    QString mValue;
 };
 
 

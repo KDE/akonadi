@@ -238,7 +238,7 @@ void CppGenerator::writeHeaderEnum(EnumNode const *node)
         Q_ASSERT(enumChild->type() == Node::EnumValue);
         const auto valueNode = static_cast<EnumValueNode const *>(enumChild);
         mHeader << "        " << valueNode->name();
-        if (valueNode->value() >= 0) {
+        if (!valueNode->value().isEmpty()) {
             mHeader << " = " << valueNode->value();
         }
         mHeader << ",\n";

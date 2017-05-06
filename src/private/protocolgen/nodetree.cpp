@@ -201,7 +201,7 @@ EnumNode::EnumType EnumNode::elementNameToType(const QStringRef &name)
 EnumValueNode::EnumValueNode(const QString &name, EnumNode *parent)
     : Node(EnumValue, parent)
     , mName(name)
-    , mValue(-1)
+    , mValue()
 {}
 
 QString EnumValueNode::name() const
@@ -209,12 +209,12 @@ QString EnumValueNode::name() const
     return mName;
 }
 
-void EnumValueNode::setValue(int value)
+void EnumValueNode::setValue(const QString &value)
 {
     mValue = value;
 }
 
-int EnumValueNode::value() const
+QString EnumValueNode::value() const
 {
     return mValue;
 }
