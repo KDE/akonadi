@@ -117,7 +117,7 @@
     <column name="remoteRevision" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
     <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id" onDelete="Restrict"/>
-    <column name="datetime" type="QDateTime" default="QDateTime::currentDateTime()">
+    <column name="datetime" type="QDateTime" default="QDateTime::currentDateTimeUtc()">
       <comment>create/modified time</comment>
     </column>
     <column name="atime" type="QDateTime">
