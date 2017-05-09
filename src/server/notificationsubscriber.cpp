@@ -442,7 +442,8 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
 {
     // Assumes mLock being locked by caller
 
-    if (msg.id() < 0) {
+    const auto collection = msg.collection();
+    if (!collection || collection->id() < 0) {
         return false;
     }
 
@@ -459,12 +460,12 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
         }
 
         //Deliver the notification if referenced from this session
-        if (CollectionReferenceManager::instance()->isReferenced(msg.id(), mSession)) {
+        if (CollectionReferenceManager::instance()->isReferenced(collection->id(), mSession)) {
             return true;
         }
 
         //Exclusive subscribers still want the notification
-        if (mExclusive && CollectionReferenceManager::instance()->isReferenced(msg.id())) {
+        if (mExclusive && CollectionReferenceManager::instance()->isReferenced(collection->id())) {
             return true;
         }
 
@@ -502,7 +503,7 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
     }
 
     // we explicitly monitor that colleciton, or all of them
-    if (isCollectionMonitored(msg.id())) {
+    if (isCollectionMonitored(collection->id())) {
         return true;
     }
 

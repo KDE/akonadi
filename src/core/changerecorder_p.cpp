@@ -129,7 +129,7 @@ void ChangeRecorderPrivate::loadNotifications()
     notificationsLoaded();
 }
 
-static const quint64 s_currentVersion = Q_UINT64_C(0x000600000000);
+static const quint64 s_currentVersion = Q_UINT64_C(0x000700000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
@@ -401,8 +401,11 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
     msg->setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
     msg->setOperation(mapCollectionOperation(static_cast<LegacyOp>(settings->value(QStringLiteral("op")).toInt())));
-    msg->setId(settings->value(QStringLiteral("uid")).toLongLong());
-    msg->setRemoteId(settings->value(QStringLiteral("rid")).toString());
+    auto collection = Protocol::FetchCollectionsResponsePtr::create();
+    collection->setId(settings->value(QStringLiteral("uid")).toLongLong());
+    collection->setRemoteId(settings->value(QStringLiteral("rid")).toString());
+    msg->setCollection(collection);
+    msg->addMetadata("FETCH_COLLECTION");
     msg->setResource(settings->value(QStringLiteral("resource")).toByteArray());
     msg->setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
     msg->setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
@@ -561,23 +564,119 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
         stream >> dummyString;
         stream >> changedParts;
 
-        msg->setId(uid);
-        msg->setRemoteId(remoteId);
+        auto collection = Protocol::FetchCollectionsResponsePtr::create();
+        collection->setId(uid);
+        collection->setRemoteId(remoteId);
+        msg->setCollection(collection);
+        msg->addMetadata("FETCH_COLLECTION");
     } else if (version >= 2) {
         stream >> operation;
         stream >> entityCnt;
-        for (int j = 0; j < entityCnt; ++j) {
+        if (version >= 7) {
+            QString str;
+            QStringList stringList;
+            qint64 i64;
+            QVector<qint64> vb;
+            QMap<QByteArray, QByteArray> attrs;
+            bool b;
+            int i;
+            Tristate tristate;
+            auto collection = Protocol::FetchCollectionsResponsePtr::create();
             stream >> uid;
-            stream >> remoteId;
-            stream >> remoteRevision;
-            stream >> dummyString;
-            if (stream.status() != QDataStream::Ok) {
-                qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
-                return msg;
+            collection->setId(uid);
+            stream >> uid;
+            collection->setParentId(uid);
+            stream >> str;
+            collection->setName(str);
+            stream >> stringList;
+            collection->setMimeTypes(stringList);
+            stream >> str;
+            collection->setRemoteId(str);
+            stream >> str;
+            collection->setRemoteRevision(str);
+            stream >> str;
+            collection->setResource(str);
+
+            Protocol::FetchCollectionStatsResponse stats;
+            stream >> i64;
+            stats.setCount(i64);
+            stream >> i64;
+            stats.setUnseen(i64);
+            stream >> i64;
+            stats.setSize(i64);
+            collection->setStatistics(stats);
+
+            stream >> str;
+            collection->setSearchQuery(str);
+            stream >> vb;
+            collection->setSearchCollections(vb);
+            stream >> entityCnt;
+            QVector<Protocol::Ancestor> ancestors;
+            for (int i = 0; i < entityCnt; ++i) {
+                Protocol::Ancestor ancestor;
+                stream >> i64;
+                ancestor.setId(i64);
+                stream >> str;
+                ancestor.setRemoteId(str);
+                stream >> str;
+                ancestor.setName(str);
+                stream >> attrs;
+                ancestor.setAttributes(attrs);
+                ancestors.push_back(ancestor);
+
+                if (stream.status() != QDataStream::Ok) {
+                    qCWarning(AKONADICORE_LOG) << "Erorr reading saved notifications! Aborting";
+                    return msg;
+                }
             }
-            msg->setId(uid);
-            msg->setRemoteId(remoteId);
-            msg->setRemoteRevision(remoteRevision);
+            collection->setAncestors(ancestors);
+
+            Protocol::CachePolicy cachePolicy;
+            stream >> b;
+            cachePolicy.setInherit(b);
+            stream >> i;
+            cachePolicy.setCheckInterval(i);
+            stream >> i;
+            cachePolicy.setCacheTimeout(i);
+            stream >> b;
+            cachePolicy.setSyncOnDemand(b);
+            stream >> stringList;
+            cachePolicy.setLocalParts(stringList);
+            collection->setCachePolicy(cachePolicy);
+
+            stream >> attrs;
+            collection->setAttributes(attrs);
+            stream >> b;
+            collection->setEnabled(b);
+            stream >> reinterpret_cast<qint8&>(tristate);
+            collection->setDisplayPref(tristate);
+            stream >> reinterpret_cast<qint8&>(tristate);
+            collection->setSyncPref(tristate);
+            stream >> reinterpret_cast<qint8&>(tristate);
+            collection->setIndexPref(tristate);
+            stream >> b;
+            collection->setReferenced(b);
+            stream >> b;
+            collection->setIsVirtual(b);
+
+            msg->setCollection(collection);
+        } else {
+            for (int j = 0; j < entityCnt; ++j) {
+                stream >> uid;
+                stream >> remoteId;
+                stream >> remoteRevision;
+                stream >> dummyString;
+                if (stream.status() != QDataStream::Ok) {
+                    qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
+                    return msg;
+                }
+                auto collection = Protocol::FetchCollectionsResponsePtr::create();
+                collection->setId(uid);
+                collection->setRemoteId(remoteId);
+                collection->setRemoteRevision(remoteRevision);
+                msg->setCollection(collection);
+                msg->addMetadata("FETCH_COLLECTION");
+            }
         }
         stream >> resource;
         stream >> destinationResource;
@@ -610,12 +709,48 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
 
 void Akonadi::ChangeRecorderPrivate::saveCollectionNotification(QDataStream &stream, const Protocol::CollectionChangeNotification &msg)
 {
+    // Version 7
+
+    const auto col = msg.collection();
+
     stream << int(msg.operation());
     stream << int(1);
-    stream << msg.id();
-    stream << msg.remoteId();
-    stream << msg.remoteRevision();
-    stream << QString();
+    stream << col->id();
+    stream << col->parentId();
+    stream << col->name();
+    stream << col->mimeTypes();
+    stream << col->remoteId();
+    stream << col->remoteRevision();
+    stream << col->resource();
+    const auto stats = col->statistics();
+    stream << stats.count();
+    stream << stats.unseen();
+    stream << stats.size();
+    stream << col->searchQuery();
+    stream << col->searchCollections();
+    const auto ancestors = col->ancestors();
+    stream << ancestors.count();
+    for (const auto &ancestor : ancestors) {
+        stream << ancestor.id()
+               << ancestor.remoteId()
+               << ancestor.name()
+               << ancestor.attributes();
+    }
+    const auto cachePolicy = col->cachePolicy();
+    stream << cachePolicy.inherit();
+    stream << cachePolicy.checkInterval();
+    stream << cachePolicy.cacheTimeout();
+    stream << cachePolicy.syncOnDemand();
+    stream << cachePolicy.localParts();
+    stream << col->attributes();
+    stream << col->enabled();
+    stream << static_cast<qint8>(col->displayPref());
+    stream << static_cast<qint8>(col->syncPref());
+    stream << static_cast<qint8>(col->indexPref());
+    stream << col->referenced();
+    stream << col->isVirtual();
+
+
     stream << msg.resource();
     stream << msg.destinationResource();
     stream << quint64(msg.parentCollection());

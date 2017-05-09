@@ -62,12 +62,17 @@ private Q_SLOTS:
 
         auto notificationTemplate = Protocol::CollectionChangeNotificationPtr::create();
         notificationTemplate->setOperation(Protocol::CollectionChangeNotification::Modify);
-        notificationTemplate->setId(5);
-        notificationTemplate->setRemoteId(QStringLiteral("ColD"));
-        notificationTemplate->setRemoteRevision(QStringLiteral(""));
         notificationTemplate->setParentCollection(4);
         notificationTemplate->setResource("akonadi_fake_resource_0");
         notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+
+        auto collectionTemplate = Protocol::FetchCollectionsResponsePtr::create();
+        collectionTemplate->setId(5);
+        collectionTemplate->setRemoteId(QStringLiteral("ColD"));
+        collectionTemplate->setRemoteRevision(QStringLiteral(""));
+        collectionTemplate->setName(QStringLiteral("New Name"));
+        collectionTemplate->setParentId(4);
+        collectionTemplate->setResource(QStringLiteral("akonadi_fake_resource_0"));
 
         {
             auto cmd = Protocol::ModifyCollectionCommandPtr::create(5);
@@ -80,7 +85,7 @@ private Q_SLOTS:
 
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "NAME");
-
+            notification->setCollection(Protocol::FetchCollectionsResponsePtr::create(*collectionTemplate));
             QTest::newRow("modify collection") << scenarios << Protocol::ChangeNotificationList{ notification } << QVariant::fromValue(QStringLiteral("New Name"));
         }
         {
@@ -92,10 +97,14 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create());
 
+            auto collection = Protocol::FetchCollectionsResponsePtr::create(*collectionTemplate);
+            collection->setEnabled(false);
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "ENABLED");
+            notification->setCollection(collection);
             auto unsubscribeNotification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             unsubscribeNotification->setOperation(Protocol::CollectionChangeNotification::Unsubscribe);
+            unsubscribeNotification->setCollection(collection);
 
             QTest::newRow("disable collection") << scenarios << Protocol::ChangeNotificationList{ notification, unsubscribeNotification} << QVariant::fromValue(false);
         }
@@ -108,10 +117,13 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create());
 
+            auto collection = Protocol::FetchCollectionsResponsePtr::create(*collectionTemplate);
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "ENABLED");
+            notification->setCollection(collection);
             auto subscribeNotification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             subscribeNotification->setOperation(Protocol::CollectionChangeNotification::Subscribe);
+            subscribeNotification->setCollection(collection);
 
             QTest::newRow("enable collection") << scenarios << Protocol::ChangeNotificationList{ notification, subscribeNotification } << QVariant::fromValue(true);
         }
@@ -127,10 +139,17 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create());
 
+            auto collection = Protocol::FetchCollectionsResponsePtr::create(*collectionTemplate);
+            collection->setEnabled(false);
+            collection->setSyncPref(Tristate::True);
+            collection->setDisplayPref(Tristate::True);
+            collection->setIndexPref(Tristate::True);
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
+            notification->setCollection(collection);
             auto unsubscribeNotification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             unsubscribeNotification->setOperation(Protocol::CollectionChangeNotification::Unsubscribe);
+            unsubscribeNotification->setCollection(collection);
 
             QTest::newRow("local override enable") << scenarios << Protocol::ChangeNotificationList{ notification, unsubscribeNotification } << QVariant::fromValue(true);
         }
@@ -166,11 +185,11 @@ private Q_SLOTS:
             QCOMPARE(*recvNtf, *expNtf);
             const auto notification = receivedNotifications.at(i).staticCast<Protocol::CollectionChangeNotification>();
             if (notification->changedParts().contains("NAME")) {
-                Collection col = Collection::retrieveById(notification->id());
+                Collection col = Collection::retrieveById(notification->collection()->id());
                 QCOMPARE(col.name(), newValue.toString());
             }
             if (!notification->changedParts().intersects({ "ENABLED", "SYNC", "DISPLAY", "INDEX" })) {
-                Collection col = Collection::retrieveById(notification->id());
+                Collection col = Collection::retrieveById(notification->collection()->id());
                 const bool sync = col.syncPref() == Collection::Undefined ? col.enabled() : col.syncPref() == Collection::True;
                 QCOMPARE(sync, newValue.toBool());
                 const bool display = col.displayPref() == Collection::Undefined ? col.enabled() : col.displayPref() == Collection::True;

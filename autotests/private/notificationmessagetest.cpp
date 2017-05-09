@@ -31,7 +31,9 @@ using namespace Akonadi::Protocol;
 void NotificationMessageTest::testCompress()
 {
     ChangeNotificationList list;
+    auto collection = FetchCollectionsResponsePtr::create(1);
     CollectionChangeNotification msg;
+    msg.setCollection(collection);
     msg.setOperation(CollectionChangeNotification::Add);
 
     QVERIFY(CollectionChangeNotification::appendAndCompress(
@@ -53,7 +55,9 @@ void NotificationMessageTest::testCompress()
 void NotificationMessageTest::testCompress2()
 {
     ChangeNotificationList list;
+    auto collection = FetchCollectionsResponsePtr::create(1);
     CollectionChangeNotification msg;
+    msg.setCollection(collection);
     msg.setOperation(CollectionChangeNotification::Modify);
 
     QVERIFY(CollectionChangeNotification::appendAndCompress(
@@ -71,7 +75,9 @@ void NotificationMessageTest::testCompress2()
 void NotificationMessageTest::testCompress3()
 {
     ChangeNotificationList list;
+    auto collection = FetchCollectionsResponsePtr::create(1);
     CollectionChangeNotification msg;
+    msg.setCollection(collection);
     msg.setOperation(CollectionChangeNotification::Modify);
 
     QVERIFY(CollectionChangeNotification::appendAndCompress(
@@ -86,7 +92,9 @@ void NotificationMessageTest::testCompress3()
 void NotificationMessageTest::testPartModificationMerge()
 {
     ChangeNotificationList list;
+    auto collection = FetchCollectionsResponsePtr::create(1);
     CollectionChangeNotification msg;
+    msg.setCollection(collection);
     msg.setOperation(CollectionChangeNotification::Modify);
     msg.setChangedParts(QSet<QByteArray>() << "PART1");
 

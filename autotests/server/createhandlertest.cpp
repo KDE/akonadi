@@ -88,10 +88,11 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
+            auto collection = Protocol::FetchCollectionsResponsePtr::create(*resp);
+            collection->setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
+            collection->setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
-            notification->setId(8);
-            notification->setRemoteId(QStringLiteral(""));
-            notification->setRemoteRevision(QStringLiteral(""));
+            notification->setCollection(collection);
 
             QTest::newRow("create collection") << scenarios <<  notification;
         }
@@ -123,10 +124,12 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
+            auto collection = Protocol::FetchCollectionsResponsePtr::create(*resp);
+            collection->setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
+            collection->setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
-            notification->setId(9);
-            notification->setRemoteId(QStringLiteral(""));
-            notification->setRemoteRevision(QStringLiteral(""));
+            notification->setCollection(collection);
+
 
             QTest::newRow("create collection with local override") << scenarios <<  notification;
         }
@@ -152,12 +155,14 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
+            auto collection = Protocol::FetchCollectionsResponsePtr::create(*resp);
+            collection->setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
+            collection->setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setSessionId("akonadi_fake_resource_0");
             notification->setParentCollection(0);
-            notification->setId(10);
-            notification->setRemoteId(QStringLiteral(""));
-            notification->setRemoteRevision(QStringLiteral(""));
+            notification->setCollection(collection);
+
 
             QTest::newRow("create top-level collection") << scenarios <<  notification;
         }
@@ -177,6 +182,11 @@ private Q_SLOTS:
             QCOMPARE(notificationSpy->count(), 1);
             const auto notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>();
             QCOMPARE(notifications.count(), 1);
+            const auto actualNtf = notifications.first().staticCast<Protocol::CollectionChangeNotification>();
+            if (*actualNtf != *notification) {
+                qDebug() << "Actual:  " << Protocol::debugString(actualNtf);
+                qDebug() << "Expected:" << Protocol::debugString(notification);
+            }
             QCOMPARE(*notifications.first().staticCast<Protocol::CollectionChangeNotification>(), *notification);
         } else {
             QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());

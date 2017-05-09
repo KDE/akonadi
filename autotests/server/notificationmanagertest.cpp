@@ -181,8 +181,10 @@ private Q_SLOTS:
         // Simulate adding a new resource
         auto colMsg = Protocol::CollectionChangeNotificationPtr::create();
         colMsg->setOperation(Protocol::CollectionChangeNotification::Add);
-        colMsg->setId(1);
-        colMsg->setRemoteId(QStringLiteral("imap://user@some.domain/"));
+        auto col = Protocol::FetchCollectionsResponsePtr::create();
+        col->setId(1);
+        col->setRemoteId(QStringLiteral("imap://user@some.domain/"));
+        colMsg->setCollection(col);
         colMsg->setParentCollection(0);
         colMsg->setSessionId("akonadi_imap_resource_0");
         colMsg->setResource("akonadi_imap_resource_0");

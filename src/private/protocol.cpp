@@ -692,16 +692,24 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
 
     if (msg->type() == Command::CollectionChangeNotification) {
         const auto &cmsg = Protocol::cmdCast<class CollectionChangeNotification>(msg);
+        if (!cmsg.collection()) { // drop the message if collection is null
+            return false;
+        }
         if (cmsg.operation() == CollectionChangeNotification::Modify) {
             // We are iterating from end, since there's higher probability of finding
             // matching notification
             for (auto iter = list.end(), begin = list.begin(); iter != begin;) {
                 --iter;
                 auto &it = Protocol::cmdCast<class CollectionChangeNotification>(*iter);
-                if (cmsg.id() == it.id()
-                    && cmsg.remoteId() == it.remoteId()
-                    && cmsg.remoteRevision() == it.remoteRevision()
-                    && cmsg.resource() == it.resource()
+                const auto msgCol = cmsg.collection();
+                const auto itCol = it.collection();
+                if (!itCol) {
+                    continue; // WTH?!
+                }
+                if (msgCol->id() == itCol->id()
+                    && msgCol->remoteId() == itCol->remoteId()
+                    && msgCol->remoteRevision() == itCol->remoteRevision()
+                    && msgCol->resource() == itCol->resource()
                     && cmsg.destinationResource() == it.destinationResource()
                     && cmsg.parentCollection() == it.parentCollection()
                     && cmsg.parentDestCollection() == it.parentDestCollection())

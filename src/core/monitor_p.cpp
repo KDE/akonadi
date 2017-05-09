@@ -472,9 +472,13 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
         }
 
     } else if (msg->type() == Protocol::Command::CollectionChangeNotification && fetchCollections()) {
-        const qint64 colId = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg).id();
-        if (!collectionCache->ensureCached(colId, mCollectionFetchScope)) {
-            allCached = false;
+        const auto &colMsg = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);
+        if (colMsg.metadata().contains("FETCH_COLLECTION")) {
+            if (!collectionCache->ensureCached(colMsg.collection()->id(), mCollectionFetchScope)) {
+                allCached = false;
+            }
+        } else {
+            allCached = true;
         }
     }
 
@@ -506,7 +510,9 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         }
 
         //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
-        const Collection col = collectionCache->retrieve(colNtf.id());
+        const bool fetched = colNtf.metadata().contains("FETCH_COLLECTION");
+        qCDebug(AKONADICORE_LOG) << "Monitor::emitNotification: Collection notification bypassed CollectionCache?" << (!fetched);
+        const Collection col = fetched ? collectionCache->retrieve(colNtf.collection()->id()) : ProtocolHelper::parseCollection(*colNtf.collection(), true);
         //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
         //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
         if (col.isValid() || colNtf.operation() == Protocol::CollectionChangeNotification::Remove || !fetchCollections()) {
@@ -591,7 +597,7 @@ void MonitorPrivate::updatePendingStatistics(const Protocol::ChangeNotificationP
         const auto &colNtf = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);
         if (colNtf.operation() == Protocol::CollectionChangeNotification::Remove) {
             // no need for statistics updates anymore
-            recentlyChangedCollections.remove(colNtf.id());
+            recentlyChangedCollections.remove(colNtf.collection()->id());
         }
     }
 }
@@ -1149,10 +1155,10 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChange
     }
 
     Collection collection = col;
-    if (!collection.isValid() || msg.operation() == Protocol::CollectionChangeNotification::Remove) {
-        collection = Collection(msg.id());
-        collection.setResource(QString::fromUtf8(msg.resource()));
-        collection.setRemoteId(msg.remoteId());
+    Q_ASSERT(collection.isValid());
+    if (!collection.isValid()) {
+        qCWarning(AKONADICORE_LOG) << "Failed to get valid Collection for a Collection change!";
+        return true; // prevent Monitor disconnecting from a signal
     }
 
     if (!collection.parentCollection().isValid()) {
@@ -1341,10 +1347,10 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotificationPtr &msg
         case Protocol::CollectionChangeNotification::Modify:
         case Protocol::CollectionChangeNotification::Move:
         case Protocol::CollectionChangeNotification::Subscribe:
-            collectionCache->update(colNtf.id(), mCollectionFetchScope);
+            collectionCache->update(colNtf.collection()->id(), mCollectionFetchScope);
             break;
         case Protocol::CollectionChangeNotification::Remove:
-            collectionCache->invalidate(colNtf.id());
+            collectionCache->invalidate(colNtf.collection()->id());
             break;
         default:
             break;

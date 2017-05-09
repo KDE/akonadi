@@ -857,14 +857,13 @@
     </enum>
 
     <param name="operation" type="CollectionChangeNotification::Operation" default="InvalidOp" />
-    <param name="id" type="qint64" default="-1" />
-    <param name="remoteId" type="QString" />
-    <param name="remoteRevision" type="QString" />
     <param name="resource" type="QByteArray" />
     <param name="parentCollection" type="qint64" default="-1"/>
     <param name="parentDestCollection" type="qint64" default="-1" />
     <param name="destinationResource" type="QByteArray" />
     <param name="changedParts" type="QSet&lt;QByteArray&gt;" />
+
+    <param name="collection" type="Akonadi::Protocol::FetchCollectionsResponsePtr" />
   </notification>
 
   <!-- Tag Change Notification //-->

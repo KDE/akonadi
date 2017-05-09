@@ -107,7 +107,7 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
     msg->setParentCollection(parent.id());
     msg->setOperation(Protocol::CollectionChangeNotification::Add);
-    msg->setId(added.id());
+    msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
 
     QHash<Collection::Id, Collection> data;
     data.insert(parent.id(), parent);
@@ -174,7 +174,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
         auto msg = Protocol::CollectionChangeNotificationPtr::create();
         msg->setParentCollection(parent.id());
         msg->setOperation(Protocol::CollectionChangeNotification::Add);
-        msg->setId(added.id());
+        msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
 
         data.insert(parent.id(), parent);
         data.insert(added.id(), added);
@@ -247,7 +247,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
         auto msg = Protocol::CollectionChangeNotificationPtr::create();
         msg->setParentCollection(i % 2 ? 2 : added.id() - 1);
         msg->setOperation(Protocol::CollectionChangeNotification::Add);
-        msg->setId(added.id());
+        msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
 
         list << msg;
     }

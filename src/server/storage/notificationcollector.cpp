@@ -379,9 +379,7 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
     msg->setOperation(op);
     msg->setSessionId(mSessionId);
-    msg->setId(collection.id());
-    msg->setRemoteId(collection.remoteId());
-    msg->setRemoteRevision(collection.remoteRevision());
+    msg->setCollection(HandlerHelper::fetchCollectionsResponse(collection));
     msg->setParentCollection(source);
     msg->setParentDestCollection(destination);
     msg->setDestinationResource(destResource);
