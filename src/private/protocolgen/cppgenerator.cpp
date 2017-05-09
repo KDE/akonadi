@@ -503,7 +503,11 @@ void CppGenerator::writeImplClass(ClassNode const *node)
         mImpl << "        && " << parentClass << "::operator==(other)\n";
     }
     for (auto prop : properties) {
-        mImpl << "        && " << prop->mVariableName() << " == other." << prop->mVariableName() << "\n";
+        if (prop->isPointer()) {
+            mImpl << "        && *" << prop->mVariableName() << " == *other." << prop->mVariableName() << "\n";
+        } else {
+            mImpl << "        && " << prop->mVariableName() << " == other." << prop->mVariableName() << "\n";
+        }
     }
     mImpl << "    ;\n"
              "}\n"
@@ -589,7 +593,11 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     }
 
     for (auto prop : serializeProperties) {
-        mImpl << "        << \"" << prop->name() << ":\" << obj." << prop->mVariableName() << " << \"\\n\"\n";
+        if (prop->isPointer()) {
+            mImpl << "        << \"" << prop->name() << ":\" << *obj." << prop->mVariableName() << " << \"\\n\"\n";
+        } else {
+            mImpl << "        << \"" << prop->name() << ":\" << obj." << prop->mVariableName() << " << \"\\n\"\n";
+        }
     }
     mImpl << "    ;\n"
              "}\n"

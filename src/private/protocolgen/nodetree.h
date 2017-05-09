@@ -177,6 +177,8 @@ public:
     bool asReference() const;
     void setAsReference(bool asReference);
 
+    bool isPointer() const;
+
     QMultiMap<QString, QString> dependencies() const;
     void addDependency(const QString &enumVar, const QString &enumValue);
 

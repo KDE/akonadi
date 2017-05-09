@@ -270,6 +270,11 @@ void PropertyNode::setAsReference(bool asReference)
     mAsReference = asReference;
 }
 
+bool PropertyNode::isPointer() const
+{
+    return mType.endsWith(QLatin1String("Ptr"));
+}
+
 QMultiMap<QString, QString> PropertyNode::dependencies() const
 {
     return mDepends;
