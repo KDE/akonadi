@@ -176,7 +176,7 @@ void NotificationManager::emitPendingNotifications()
         // so that we can work with return value of notify()
         for (const auto &notification : qAsConst(mNotifications)) {
             QVector<QByteArray> listeners;
-            Q_FOREACH (NotificationSubscriber *subscriber, mSubscribers) {
+            for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
                 if (subscriber->notify(notification)) {
                     listeners.push_back(subscriber->subscriber());
                 }

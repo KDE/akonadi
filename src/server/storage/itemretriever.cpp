@@ -198,7 +198,7 @@ namespace
 {
 static bool hasAllParts(ItemRetrievalRequest *req, const QSet<QByteArray> &availableParts)
 {
-    Q_FOREACH (const auto &part, req->parts) {
+    for (const auto &part : qAsConst(req->parts)) {
         if (!availableParts.contains(part)) {
             return false;
         }
