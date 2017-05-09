@@ -263,7 +263,7 @@ void SetupTest::shutdown()
         qDebug() << "Shutting down Akonadi control...";
         Akonadi::ServerManager::self()->stop();
         // safety timeout
-        QTimer::singleShot(30 * 1000, this, SLOT(shutdownHarder()));
+        QTimer::singleShot(30 * 1000, this, &SetupTest::shutdownHarder);
         break;
     case Akonadi::ServerManager::NotRunning:
     case Akonadi::ServerManager::Broken:
@@ -273,7 +273,7 @@ void SetupTest::shutdown()
 #endif
     case Akonadi::ServerManager::Stopping:
         // safety timeout
-        QTimer::singleShot(30 * 1000, this, SLOT(shutdownHarder()));
+        QTimer::singleShot(30 * 1000, this, &SetupTest::shutdownHarder);
         break;
     }
 }

@@ -71,7 +71,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     view->expandAll();
     setCentralWidget(view);
 
-    QTimer::singleShot(5000, this, SLOT(moveCollection()));
+    QTimer::singleShot(5000, this, &MainWindow::moveCollection);
 }
 
 void MainWindow::moveCollection()
