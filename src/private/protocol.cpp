@@ -700,31 +700,33 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
             // matching notification
             for (auto iter = list.end(), begin = list.begin(); iter != begin;) {
                 --iter;
-                auto &it = Protocol::cmdCast<class CollectionChangeNotification>(*iter);
-                const auto msgCol = cmsg.collection();
-                const auto itCol = it.collection();
-                if (!itCol) {
-                    continue; // WTH?!
-                }
-                if (msgCol->id() == itCol->id()
-                    && msgCol->remoteId() == itCol->remoteId()
-                    && msgCol->remoteRevision() == itCol->remoteRevision()
-                    && msgCol->resource() == itCol->resource()
-                    && cmsg.destinationResource() == it.destinationResource()
-                    && cmsg.parentCollection() == it.parentCollection()
-                    && cmsg.parentDestCollection() == it.parentDestCollection())
-                {
-                    // both are modifications, merge them together and drop the new one
-                    if (cmsg.operation() == CollectionChangeNotification::Modify
-                            && it.operation() == CollectionChangeNotification::Modify) {
-                        const auto parts = it.changedParts();
-                        it.setChangedParts(parts + cmsg.changedParts());
-                        return false;
+                if ((*iter)->type() == Protocol::Command::CollectionChangeNotification) {
+                    auto &it = Protocol::cmdCast<class CollectionChangeNotification>(*iter);
+                    const auto msgCol = cmsg.collection();
+                    const auto itCol = it.collection();
+                    if (!itCol) {
+                        continue; // WTH?!
                     }
+                    if (msgCol->id() == itCol->id()
+                        && msgCol->remoteId() == itCol->remoteId()
+                        && msgCol->remoteRevision() == itCol->remoteRevision()
+                        && msgCol->resource() == itCol->resource()
+                        && cmsg.destinationResource() == it.destinationResource()
+                        && cmsg.parentCollection() == it.parentCollection()
+                        && cmsg.parentDestCollection() == it.parentDestCollection())
+                    {
+                        // both are modifications, merge them together and drop the new one
+                        if (cmsg.operation() == CollectionChangeNotification::Modify
+                                && it.operation() == CollectionChangeNotification::Modify) {
+                            const auto parts = it.changedParts();
+                            it.setChangedParts(parts + cmsg.changedParts());
+                            return false;
+                        }
 
-                    // we found Add notification, which means we can drop this modification
-                    if (it.operation() == CollectionChangeNotification::Add) {
-                        return false;
+                        // we found Add notification, which means we can drop this modification
+                        if (it.operation() == CollectionChangeNotification::Add) {
+                            return false;
+                        }
                     }
                 }
                 searchCounter++;
