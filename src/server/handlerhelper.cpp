@@ -87,7 +87,9 @@ Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
     cachePolicy.setInherit(col.cachePolicyInherit());
     cachePolicy.setCacheTimeout(col.cachePolicyCacheTimeout());
     cachePolicy.setCheckInterval(col.cachePolicyCheckInterval());
-    cachePolicy.setLocalParts(col.cachePolicyLocalParts().split(QLatin1Char(' ')));
+    if (!col.cachePolicyLocalParts().isEmpty()) {
+        cachePolicy.setLocalParts(col.cachePolicyLocalParts().split(QLatin1Char(' ')));
+    }
     cachePolicy.setSyncOnDemand(col.cachePolicySyncOnDemand());
     return cachePolicy;
 }
