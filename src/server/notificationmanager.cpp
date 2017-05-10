@@ -23,7 +23,10 @@
 #include "storage/notificationcollector.h"
 #include "tracer.h"
 #include "akonadiserver_debug.h"
-
+#include "aggregatedfetchscope.h"
+#include "storage/collectionstatistics.h"
+#include "storage/selectquerybuilder.h"
+#include "handlerhelper.h"
 
 #include <private/standarddirs_p.h>
 
@@ -42,6 +45,7 @@ NotificationManager::NotificationManager()
     , mTimer(nullptr)
     , mNotifyThreadPool(nullptr)
     , mDebugNotifications(0)
+    , mCollectionFetchScope(nullptr)
 {
 }
 
@@ -65,6 +69,8 @@ void NotificationManager::init()
 
     mNotifyThreadPool = new QThreadPool(this);
     mNotifyThreadPool->setMaxThreadCount(5);
+
+    mCollectionFetchScope = new AggregatedCollectionFetchScope();
 }
 
 void NotificationManager::quit()
@@ -83,6 +89,8 @@ void NotificationManager::quit()
     delete mNotifyThreadPool;
 
     qDeleteAll(mSubscribers);
+
+    delete mCollectionFetchScope;
 
     AkThread::quit();
 }
@@ -143,6 +151,11 @@ void NotificationManager::waitForSocketData()
     mWaiting = false;
 }
 
+AggregatedCollectionFetchScope *NotificationManager::collectionFetchScope() const
+{
+    return mCollectionFetchScope;
+}
+
 void NotificationManager::forgetSubscriber(NotificationSubscriber *subscriber)
 {
     Q_ASSERT(QThread::currentThread() == thread());
@@ -164,6 +177,50 @@ void NotificationManager::slotNotify(const Protocol::ChangeNotificationList &msg
 
     for (const auto &msg : msgs) {
         if (msg->type() == Protocol::Command::CollectionChangeNotification) {
+            auto &cmsg = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);
+            auto msgCollection = cmsg.collection();
+
+            // Make sure we have all the data
+            if (!mCollectionFetchScope->fetchIdOnly() && msgCollection->name().isEmpty()) {
+                const auto col = Collection::retrieveById(msgCollection->id());
+                const auto mts = col.mimeTypes();
+                QStringList mimeTypes;
+                mimeTypes.reserve(mts.size());
+                for (const auto &mt : mts) {
+                    mimeTypes.push_back(mt.name());
+                }
+                msgCollection = HandlerHelper::fetchCollectionsResponse(col, {}, false, 0, {}, {}, false, mimeTypes);
+            }
+            // Get up-to-date statistics
+            if (mCollectionFetchScope->fetchStatistics()) {
+                Collection col;
+                col.setId(msgCollection->id());
+                const auto stats = CollectionStatistics::self()->statistics(col);
+                msgCollection->setStatistics(Protocol::FetchCollectionStatsResponse(stats.count, stats.count - stats.read, stats.size));
+            }
+            // Get attributes
+            const auto requestedAttrs = mCollectionFetchScope->attributes();
+            auto msgColAttrs = msgCollection->attributes();
+            // TODO: This assumes that we have either none or all attributes in msgCollection
+            if (msgColAttrs.isEmpty() && !requestedAttrs.isEmpty()) {
+                SelectQueryBuilder<CollectionAttribute> qb;
+                qb.addColumn(CollectionAttribute::typeFullColumnName());
+                qb.addColumn(CollectionAttribute::valueFullColumnName());
+                Query::Condition cond(Query::Or);
+                for (const auto &attr : requestedAttrs) {
+                    cond.addValueCondition(CollectionAttribute::typeFullColumnName(), Query::Equals, attr);
+                }
+                qb.addCondition(cond);
+                if (!qb.exec()) {
+                    qCWarning(AKONADISERVER_LOG) << "Failed to obtain collection attributes!";
+                }
+                const auto attrs = qb.result();
+                for (const auto &attr : attrs)  {
+                    msgColAttrs.insert(attr.type(), attr.value());
+                }
+                msgCollection->setAttributes(msgColAttrs);
+            }
+
             Protocol::CollectionChangeNotification::appendAndCompress(mNotifications, msg);
         } else {
             mNotifications.push_back(msg);

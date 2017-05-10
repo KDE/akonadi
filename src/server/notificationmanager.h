@@ -38,6 +38,7 @@ namespace Server
 
 class NotificationCollector;
 class NotificationSubscriber;
+class AggregatedCollectionFetchScope;
 
 class NotificationManager : public AkThread
 {
@@ -49,6 +50,8 @@ public:
 
     void connectNotificationCollector(NotificationCollector *collector);
     void forgetSubscriber(NotificationSubscriber *subscriber);
+
+    AggregatedCollectionFetchScope *collectionFetchScope() const;
 
 public Q_SLOTS:
     void registerConnection(quintptr socketDescriptor);
@@ -73,6 +76,7 @@ private:
     QThreadPool *mNotifyThreadPool = nullptr;
     QVector<QPointer<NotificationSubscriber>> mSubscribers;
     int mDebugNotifications;
+    AggregatedCollectionFetchScope *mCollectionFetchScope;
 
     QEventLoop *mEventLoop = nullptr;
     bool mWaiting = false;

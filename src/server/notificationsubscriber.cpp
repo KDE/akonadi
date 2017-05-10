@@ -21,6 +21,7 @@
 #include "akonadiserver_debug.h"
 #include "notificationmanager.h"
 #include "collectionreferencemanager.h"
+#include "aggregatedfetchscope.h"
 
 #include <QLocalSocket>
 #include <QDataStream>
@@ -147,6 +148,20 @@ void NotificationSubscriber::disconnectSubscriber()
     disconnect(mSocket, &QLocalSocket::disconnected,
                this, &NotificationSubscriber::socketDisconnected);
     mSocket->close();
+
+    // Unregister ourselves from the aggergated collection fetch scope
+    auto cfs = mManager->collectionFetchScope();
+    if (mCollectionFetchScope.fetchIdOnly()) {
+        cfs->setFetchIdOnly(false);
+    }
+    if (mCollectionFetchScope.includeStatistics()) {
+        cfs->setFetchStatistics(false);
+    }
+    const auto attrs = mCollectionFetchScope.attributes();
+    for (const auto &attr : attrs) {
+        cfs->removeAttribute(attr);
+    }
+
     mManager->forgetSubscriber(this);
     deleteLater();
 }
@@ -243,6 +258,24 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         mItemFetchScope = command.itemFetchScope();
     }
     if (modifiedParts & Protocol::ModifySubscriptionCommand::CollectionFetchScope) {
+        const auto newScope = command.collectionFetchScope();
+        auto cfs = mManager->collectionFetchScope();
+        if (newScope.includeStatistics() != mCollectionFetchScope.includeStatistics()) {
+            cfs->setFetchStatistics(newScope.includeStatistics());
+        }
+        if (newScope.fetchIdOnly() != mCollectionFetchScope.fetchIdOnly()) {
+            cfs->setFetchIdOnly(newScope.fetchIdOnly());
+        }
+        if (newScope.attributes() != mCollectionFetchScope.attributes()) {
+            const auto added = newScope.attributes() - mCollectionFetchScope.attributes();
+            for (const auto &attr : added) {
+                cfs->addAttribute(attr);
+            }
+            const auto removed = mCollectionFetchScope.attributes() - newScope.attributes();
+            for (const auto &attr : removed) {
+                cfs->removeAttribute(attr);
+            }
+        }
         mCollectionFetchScope = command.collectionFetchScope();
     }
 

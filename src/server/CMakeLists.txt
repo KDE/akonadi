@@ -38,6 +38,7 @@ akonadi_add_xmllint_test(
 
 set(libakonadiserver_SRCS
     akonadi.cpp
+    aggregatedfetchscope.cpp
     aklocalserver.cpp
     akthread.cpp
     commandcontext.cpp
