@@ -50,7 +50,7 @@ public:
     /**
       Creates a new ResourceScanJob.
     */
-    explicit ResourceScanJob(const QString &resourceId, KCoreConfigSkeleton *settings, QObject *parent = 0);
+    explicit ResourceScanJob(const QString &resourceId, KCoreConfigSkeleton *settings, QObject *parent = nullptr);
 
     /**
       Destroys this ResourceScanJob.
@@ -121,7 +121,7 @@ public:
     /**
      * Creates a new DefaultResourceJob.
      */
-    explicit DefaultResourceJob(KCoreConfigSkeleton *settings, QObject *parent = 0);
+    explicit DefaultResourceJob(KCoreConfigSkeleton *settings, QObject *parent = nullptr);
 
     /**
      * Destroys the DefaultResourceJob.
@@ -199,7 +199,7 @@ public:
     /**
       Creates a new GetLockJob.
     */
-    explicit GetLockJob(QObject *parent = 0);
+    explicit GetLockJob(QObject *parent = nullptr);
 
     /**
       Destroys the GetLockJob.

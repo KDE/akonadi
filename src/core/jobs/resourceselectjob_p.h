@@ -91,7 +91,7 @@ public:
      *                   the selection.
      * @param parent The parent object.
      */
-    explicit ResourceSelectJob(const QString &identifier, QObject *parent = 0);
+    explicit ResourceSelectJob(const QString &identifier, QObject *parent = nullptr);
 
 protected:
     void doStart() Q_DECL_OVERRIDE;

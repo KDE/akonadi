@@ -46,7 +46,7 @@ public:
       Create a new subscription model.
       @param parent The parent object.
     */
-    explicit SubscriptionModel(QObject *parent = 0);
+    explicit SubscriptionModel(QObject *parent = nullptr);
 
     /**
       Destructor.

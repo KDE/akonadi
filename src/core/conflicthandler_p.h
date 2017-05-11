@@ -67,7 +67,7 @@ public:
      * @param type The type of the conflict that should be resolved.
      * @param parent The parent object.
      */
-    explicit ConflictHandler(ConflictType type, QObject *parent = 0);
+    explicit ConflictHandler(ConflictType type, QObject *parent = nullptr);
 
     /**
      * Sets the items that causes the conflict.

@@ -102,7 +102,7 @@ public:
         }
     };
 
-    explicit ResourceScheduler(QObject *parent = 0);
+    explicit ResourceScheduler(QObject *parent = nullptr);
 
     /**
       Schedules a full synchronization.

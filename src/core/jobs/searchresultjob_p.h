@@ -34,7 +34,7 @@ class AKONADICORE_EXPORT SearchResultJob : public Akonadi::Job
 {
     Q_OBJECT
 public:
-    explicit SearchResultJob(const QByteArray &searchId, const Collection &collection, QObject *parent = 0);
+    explicit SearchResultJob(const QByteArray &searchId, const Collection &collection, QObject *parent = nullptr);
     virtual ~SearchResultJob();
 
     void setSearchId(const QByteArray &searchId);

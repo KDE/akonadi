@@ -35,7 +35,7 @@ class AKONADI_EXPORT VirtualResource : public QObject
 {
     Q_OBJECT
 public:
-    explicit VirtualResource(const QString &name, QObject *parent = 0);
+    explicit VirtualResource(const QString &name, QObject *parent = nullptr);
     ~VirtualResource();
 
     Akonadi::Collection createCollection(const Akonadi::Collection &collection);

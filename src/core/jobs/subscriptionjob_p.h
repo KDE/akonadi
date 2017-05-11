@@ -43,7 +43,7 @@ public:
      *
      * @param parent The parent object.
      */
-    explicit SubscriptionJob(QObject *parent = 0);
+    explicit SubscriptionJob(QObject *parent = nullptr);
 
     /**
      * Destroys the subscription job.

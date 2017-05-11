@@ -54,7 +54,7 @@ class AKONADI_TESTS_EXPORT EntityCacheBase : public QObject
 {
     Q_OBJECT
 public:
-    explicit EntityCacheBase(Session *session, QObject *parent = 0);
+    explicit EntityCacheBase(Session *session, QObject *parent = nullptr);
 
     void setSession(Session *session);
 
@@ -95,7 +95,7 @@ class EntityCache : public EntityCacheBase
 {
 public:
     typedef FetchScope_ FetchScope;
-    explicit EntityCache(int maxCapacity, Session *session = 0, QObject *parent = 0)
+    explicit EntityCache(int maxCapacity, Session *session = 0, QObject *parent = nullptr)
         : EntityCacheBase(session, parent)
         , mCapacity(maxCapacity)
     {
@@ -306,7 +306,7 @@ class EntityListCache : public EntityCacheBase
 public:
     typedef FetchScope_ FetchScope;
 
-    explicit EntityListCache(int maxCapacity, Session *session = 0, QObject *parent = 0)
+    explicit EntityListCache(int maxCapacity, Session *session = 0, QObject *parent = nullptr)
         : EntityCacheBase(session, parent)
         , mCapacity(maxCapacity)
     {

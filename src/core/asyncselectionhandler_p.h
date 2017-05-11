@@ -47,7 +47,7 @@ class AKONADICORE_EXPORT AsyncSelectionHandler : public QObject
 public:
     /**
      */
-    explicit AsyncSelectionHandler(QAbstractItemModel *model, QObject *parent = 0);
+    explicit AsyncSelectionHandler(QAbstractItemModel *model, QObject *parent = nullptr);
 
     ~AsyncSelectionHandler();
 
