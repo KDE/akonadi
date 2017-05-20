@@ -125,7 +125,9 @@ void Connection::quit()
     delete m_socket;
     m_socket = nullptr;
 
-    m_idleTimer->stop();
+    if (m_idleTimer) {
+        m_idleTimer->stop();
+    }
     delete m_idleTimer;
 
     AkThread::quit();
