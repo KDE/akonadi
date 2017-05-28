@@ -101,7 +101,7 @@ public:
     static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
                                      Item *item,
                                      Collection::Id parentCollection,
-                                     ProtocolHelperValuePool *valuePool = 0);
+                                     ProtocolHelperValuePool *valuePool = nullptr);
 
     /**
       Convert a ancestor chain from its protocol representation into an Collection object.
@@ -112,7 +112,7 @@ public:
     static void parseAncestorsCached(const QVector<Protocol::Ancestor> &ancestors,
                                      Collection *collection,
                                      Collection::Id parentCollection,
-                                     ProtocolHelperValuePool *valuePool = 0);
+                                     ProtocolHelperValuePool *valuePool = nullptr);
     /**
       Parse a collection description.
       @param data The input data.
@@ -232,7 +232,7 @@ public:
     /**
       Parses a single line from an item fetch job result into an Item object.
      */
-    static Item parseItemFetchResult(const Protocol::FetchItemsResponse &data, ProtocolHelperValuePool *valuePool = 0);
+    static Item parseItemFetchResult(const Protocol::FetchItemsResponse &data, ProtocolHelperValuePool *valuePool = nullptr);
     static Tag parseTagFetchResult(const Protocol::FetchTagsResponse &data);
     static Relation parseRelationFetchResult(const Protocol::FetchRelationsResponse &data);
 
@@ -252,7 +252,7 @@ private:
     template<typename T, template<typename> class Container>
     inline static
     typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, bool>::type
-    entitySetHasGID(const Container<T> &/*objects*/, int * /*dummy*/ = 0)
+    entitySetHasGID(const Container<T> &/*objects*/, int * /*dummy*/ = nullptr)
     {
         return false;
     }
@@ -268,7 +268,7 @@ private:
     template<typename T, template<typename> class Container>
     inline static
     typename std::enable_if<std::is_same<T, Akonadi::Collection>::value, Scope>::type
-    entitySetToGID(const Container<T> &/*objects*/, int * /*dummy*/ = 0)
+    entitySetToGID(const Container<T> &/*objects*/, int * /*dummy*/ = nullptr)
     {
         return Scope();
     }
@@ -301,7 +301,7 @@ private:
     template<typename T, template<typename> class Container, typename RIDFunc>
     inline static
     typename std::enable_if<std::is_same<QByteArray, typename RIDFunc:: result_type>::value, Scope>::type
-    entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc, int * /*dummy*/ = 0)
+    entitySetToRemoteIdentifier(Scope::SelectionScope scope, const Container<T> &objects, const RIDFunc &ridFunc, int * /*dummy*/ = nullptr)
     {
         QStringList rids;
         rids.reserve(objects.size());
@@ -328,7 +328,7 @@ private:
     template<typename T, template<typename> class Container>
     inline static
     typename std::enable_if<std::is_same<T, Tag>::value, bool>::type
-    entitySetHasHRID(const Container<T> &/*objects*/, int * /*dummy*/ = 0)
+    entitySetHasHRID(const Container<T> &/*objects*/, int * /*dummy*/ = nullptr)
     {
         return false;
     }

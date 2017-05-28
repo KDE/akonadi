@@ -126,9 +126,9 @@ public:
     /* --- ItemFlags ----------------------------------------------------- */
     virtual bool setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
                                bool *flagsChanged = nullptr, const Collection &col = Collection(), bool silent = false);
-    virtual bool appendItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = 0,
+    virtual bool appendItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = nullptr,
                                   bool checkIfExists = true, const Collection &col = Collection(), bool silent = false);
-    virtual bool removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = 0,
+    virtual bool removeItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *tagsChanged = nullptr,
                                   const Collection &collection = Collection(), bool silent = false);
 
     /* --- ItemTags ----------------------------------------------------- */

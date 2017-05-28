@@ -95,7 +95,7 @@ class EntityCache : public EntityCacheBase
 {
 public:
     typedef FetchScope_ FetchScope;
-    explicit EntityCache(int maxCapacity, Session *session = 0, QObject *parent = nullptr)
+    explicit EntityCache(int maxCapacity, Session *session = nullptr, QObject *parent = nullptr)
         : EntityCacheBase(session, parent)
         , mCapacity(maxCapacity)
     {
@@ -306,7 +306,7 @@ class EntityListCache : public EntityCacheBase
 public:
     typedef FetchScope_ FetchScope;
 
-    explicit EntityListCache(int maxCapacity, Session *session = 0, QObject *parent = nullptr)
+    explicit EntityListCache(int maxCapacity, Session *session = nullptr, QObject *parent = nullptr)
         : EntityCacheBase(session, parent)
         , mCapacity(maxCapacity)
     {

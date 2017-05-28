@@ -94,7 +94,7 @@ public:
         // check if T also inherits AgentBase::Observer and
         // if it does, automatically register it on itself
         Akonadi::AgentBase::Observer *observer = dynamic_cast<Akonadi::AgentBase::Observer *>(instance);
-        if (observer != 0) {
+        if (observer != nullptr) {
             instance->registerObserver(observer);
         }
 
