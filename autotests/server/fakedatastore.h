@@ -42,34 +42,34 @@ public:
 
     virtual bool setItemsFlags(const PimItem::List &items,
                                const QVector<Flag> &flags,
-                               bool *flagsChanged = 0,
+                               bool *flagsChanged = nullptr,
                                const Collection &col = Collection(),
                                bool silent = false) Q_DECL_OVERRIDE;
     virtual bool appendItemsFlags(const PimItem::List &items,
                                   const QVector<Flag> &flags,
-                                  bool *flagsChanged = 0,
+                                  bool *flagsChanged = nullptr,
                                   bool checkIfExists = true,
                                   const Collection &col = Collection(),
                                   bool silent = false) Q_DECL_OVERRIDE;
     virtual bool removeItemsFlags(const PimItem::List &items,
                                   const QVector<Flag> &flags,
-                                  bool *flagsChanged = 0,
+                                  bool *flagsChanged = nullptr,
                                   const Collection &col = Collection(),
                                   bool silent = false) Q_DECL_OVERRIDE;
 
     virtual bool setItemsTags(const PimItem::List &items,
                               const Tag::List &tags,
-                              bool *tagsChanged = 0,
+                              bool *tagsChanged = nullptr,
                               bool silent = false) Q_DECL_OVERRIDE;
     virtual bool appendItemsTags(const PimItem::List &items,
                                  const Tag::List &tags,
-                                 bool *tagsChanged = 0,
+                                 bool *tagsChanged = nullptr,
                                  bool checkIfExists = true,
                                  const Collection &col = Collection(),
                                  bool silent = false) Q_DECL_OVERRIDE;
     virtual bool removeItemsTags(const PimItem::List &items,
                                  const Tag::List &tags,
-                                 bool *tagsChanged = 0,
+                                 bool *tagsChanged = nullptr,
                                  bool silent = false) Q_DECL_OVERRIDE;
 
     virtual bool removeItemParts(const PimItem &item,

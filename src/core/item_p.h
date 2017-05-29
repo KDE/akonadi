@@ -91,7 +91,7 @@ public:
         t = 0;
         return r;
     }
-    void reset(T *other = 0)
+    void reset(T *other = nullptr)
     {
         delete t;
         t = other;

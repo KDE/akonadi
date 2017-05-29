@@ -25,8 +25,8 @@
 
 using namespace Akonadi;
 
-static AkonadiConnection *s_connection = 0;
-static DataStore *s_backend = 0;
+static AkonadiConnection *s_connection = nullptr;
+static DataStore *s_backend = nullptr;
 
 class MockConnection : public AkonadiConnection
 {

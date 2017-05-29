@@ -114,7 +114,7 @@ public:
       @param ok Set to false if the parsing failed.
       @param start Start parsing at this index.
     */
-    static int parseNumber(const QByteArray &data, qint64 &result, bool *ok = 0, int start = 0);
+    static int parseNumber(const QByteArray &data, qint64 &result, bool *ok = nullptr, int start = 0);
 
     /**
       Quotes the given QByteArray.
