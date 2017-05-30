@@ -44,8 +44,7 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
 
   # based on kde4_add_unit_test
   if (WIN32)
-    get_target_property( _loc ${_name} LOCATION )
-    set(_executable ${_loc}.bat)
+    set(_executable $<TARGET_FILE:${_name}>)
   else()
     set(_executable ${EXECUTABLE_OUTPUT_PATH}/${_name})
   endif()

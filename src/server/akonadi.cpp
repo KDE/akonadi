@@ -56,6 +56,11 @@
 #include <QTimer>
 #include <QDBusServiceWatcher>
 
+#ifdef Q_OS_WIN
+#include <windows.h>
+#include <sddl.h>
+#endif
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 

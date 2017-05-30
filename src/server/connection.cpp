@@ -32,7 +32,10 @@
 #include "collectionreferencemanager.h"
 
 #include <cassert>
+
+#ifndef Q_OS_WIN
 #include <cxxabi.h>
+#endif
 
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>

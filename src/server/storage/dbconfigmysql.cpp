@@ -337,6 +337,7 @@ bool DbConfigMysql::startInternalServer()
     arguments << QString::fromLatin1("--shared-memory");
 #endif
 
+#ifndef Q_OS_WIN
     // If mysql.socket file does not exists, then we must start the server,
     // otherwise we reconnect to it
     if (!QFile::exists(socketFile)) {
@@ -387,16 +388,15 @@ bool DbConfigMysql::startInternalServer()
         connect(mDatabaseProcess, static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished),
                 this, &DbConfigMysql::processFinished);
 
-#ifndef Q_OS_WIN
         // wait until mysqld has created the socket file (workaround for QTBUG-47475 in Qt5.5.0)
         int counter = 50;  // avoid an endless loop in case mysqld terminated
         while ((counter-- > 0) && !QFileInfo::exists(socketFile)) {
             QThread::msleep(100);
         }
-#endif
     } else {
         qCDebug(AKONADISERVER_LOG) << "Found mysql.socket file, reconnecting to the database";
     }
+#endif
 
     const QLatin1String initCon("initConnection");
     {
