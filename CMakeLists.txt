@@ -247,7 +247,7 @@ include_directories(
     src
 )
 
-#add_definitions( -DQT_DISABLE_DEPRECATED_BEFORE=0x060000 )
+#add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
 
 add_subdirectory(src)
 add_subdirectory(icons)
