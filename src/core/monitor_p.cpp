@@ -477,8 +477,6 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
             if (!collectionCache->ensureCached(colMsg.collection()->id(), mCollectionFetchScope)) {
                 allCached = false;
             }
-        } else {
-            allCached = true;
         }
     }
 
