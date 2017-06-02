@@ -109,6 +109,7 @@ protected:
     QByteArray mSession;
     Protocol::ItemFetchScope mItemFetchScope;
     Protocol::CollectionFetchScope mCollectionFetchScope;
+    Protocol::TagFetchScope mTagFetchScope;
     bool mAllMonitored;
     bool mExclusive;
     bool mNotificationDebugging;

@@ -74,6 +74,11 @@
     <param name="ignoreRetrievalErrors" type="bool" default="false" />
   </class>
 
+  <class name="TagFetchScope">
+    <param name="fetchIdOnly" type="bool" default="false" />
+    <param name="attributes" type="QSet&lt;QByteArray&gt;" />
+  </class>
+
   <!-- Hello //-->
   <response name="Hello">
     <param name="serverName" type="QString" />
@@ -876,9 +881,9 @@
     </enum>
 
     <param name="operation" type="TagChangeNotification::Operation" default="InvalidOp" />
-    <param name="id" type="qint64" default="-1" />
-    <param name="remoteId" type="QString" />
     <param name="resource" type="QByteArray" />
+
+    <param name="tag" type="Akonadi::Protocol::FetchTagsResponsePtr" />
   </notification>
 
   <!-- Relation Change Notification //-->
@@ -926,6 +931,7 @@
       <value name="Remove" value="1 &lt;&lt; 10" />
       <value name="ItemFetchScope" value="1 &lt;&lt; 11" />
       <value name="CollectionFetchScope" value="1 &lt;&lt; 12" />
+      <value name="TagFetchScope" value="1 &lt;&lt; 13" />
     </flag>
 
     <enum name="ChangeType">
@@ -1063,6 +1069,9 @@
     </param>
     <param name="collectionFetchScope" type="Akonadi::Protocol::CollectionFetchScope">
       <depends enum="modifiedParts" value="ModifySubscriptionCommand::CollectionFetchScope" />
+    </param>
+    <param name="tagFetchScope" type="Akonadi::Protocol::TagFetchScope">
+      <depends enum="modifiedParts" value="ModifySubscriptionCommand::TagFetchScope" />
     </param>
   </command>
 

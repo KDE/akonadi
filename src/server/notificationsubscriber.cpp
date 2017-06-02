@@ -22,6 +22,8 @@
 #include "notificationmanager.h"
 #include "collectionreferencemanager.h"
 #include "aggregatedfetchscope.h"
+#include "storage/querybuilder.h"
+#include "utils.h"
 
 #include <QLocalSocket>
 #include <QDataStream>
@@ -276,7 +278,25 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
                 cfs->removeAttribute(attr);
             }
         }
-        mCollectionFetchScope = command.collectionFetchScope();
+        mCollectionFetchScope = newScope;
+    }
+    if (modifiedParts & Protocol::ModifySubscriptionCommand::TagFetchScope) {
+        const auto newScope = command.tagFetchScope();
+        auto tfs = mManager->tagFetchScope();
+        if (newScope.fetchIdOnly() != mTagFetchScope.fetchIdOnly()) {
+            tfs->setFetchIdOnly(newScope.fetchIdOnly());
+        }
+        if (newScope.attributes() != mTagFetchScope.attributes()) {
+            const auto added = newScope.attributes() - mTagFetchScope.attributes();
+            for (const auto &attr : added) {
+                tfs->addAttribute(attr);
+            }
+            const auto removed = mTagFetchScope.attributes() - newScope.attributes();
+            for (const auto &attr : removed) {
+                tfs->removeAttribute(attr);
+            }
+        }
+        mTagFetchScope = newScope;
     }
 
     if (mManager) {
@@ -549,7 +569,7 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
 {
     // Assumes mLock being locked by caller
 
-    if (msg.id() < 0) {
+    if (msg.tag()->id() < 0) {
         return false;
     }
 
@@ -575,7 +595,6 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
         if (!msg.resource().isEmpty() && !mIgnoredSessions.contains(msg.resource())) {
             return false;
         }
-
         // Now we got here, which means that this notification either has empty
         // resource, i.e. it is destined for a client applications, or it's
         // destined for resource that we *think* (see the hack above) this
@@ -596,11 +615,11 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
         return true;
     }
 
-    if (mMonitoredTags.contains(msg.id())) {
+    if (mMonitoredTags.contains(msg.tag()->id())) {
         return true;
     }
 
-    return false;
+    return true;
 }
 
 bool NotificationSubscriber::acceptsRelationNotification(const Protocol::RelationChangeNotification &msg) const

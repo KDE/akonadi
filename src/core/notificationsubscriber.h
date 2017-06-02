@@ -78,6 +78,9 @@ public:
     CollectionFetchScope collectionFetchScope() const;
     void setCollectionFetchScope(const CollectionFetchScope &collectionFetchScope);
 
+    TagFetchScope tagFetchScope() const;
+    void setTagFetchScope(const TagFetchScope &tagFetchScope);
+
 private:
     class Private;
     QSharedDataPointer<Private> d;

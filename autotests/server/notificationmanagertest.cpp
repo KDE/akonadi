@@ -291,8 +291,10 @@ private Q_SLOTS:
         tagMsg->setOperation(Protocol::TagChangeNotification::Remove);
         tagMsg->setSessionId("randomSession");
         tagMsg->setResource("akonadi_random_resource_0");
-        tagMsg->setId(1);
-        tagMsg->setRemoteId(QStringLiteral("TAG"));
+        auto tagMsgTag = Protocol::FetchTagsResponsePtr::create();
+        tagMsgTag->setId(1);
+        tagMsgTag->setRemoteId("TAG");
+        tagMsg->setTag(tagMsgTag);
         QTest::newRow("Tag removal - resource notification - matching resource source")
                 << false
                 << EmptyList(Entity::Id)
@@ -316,8 +318,10 @@ private Q_SLOTS:
         tagMsg = Protocol::TagChangeNotificationPtr::create();
         tagMsg->setOperation(Protocol::TagChangeNotification::Remove);
         tagMsg->setSessionId("randomSession");
-        tagMsg->setId(1);
-        tagMsg->setRemoteId(QStringLiteral("TAG"));
+        tagMsgTag = Protocol::FetchTagsResponsePtr::create();
+        tagMsgTag->setId(1);
+        tagMsgTag->setRemoteId("TAG");
+        tagMsg->setTag(tagMsgTag);
         QTest::newRow("Tag removal - client notification - client source")
                 << false
                 << EmptyList(Entity::Id)

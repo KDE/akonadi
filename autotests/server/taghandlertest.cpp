@@ -145,7 +145,9 @@ private Q_SLOTS:
             auto notification = Protocol::TagChangeNotificationPtr::create();
             notification->setOperation(Protocol::TagChangeNotification::Add);
             notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            notification->setId(1);
+            auto ntfTag = Protocol::FetchTagsResponsePtr::create();
+            ntfTag->setId(1);
+            notification->setTag(ntfTag);
 
             QTest::newRow("uid create relation") << scenarios
                                                  << QVector<TagTagAttributeListPair>{ { tag, { attribute } } }
@@ -184,7 +186,9 @@ private Q_SLOTS:
             auto notification = Protocol::TagChangeNotificationPtr::create();
             notification->setOperation(Protocol::TagChangeNotification::Add);
             notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            notification->setId(2);
+            auto ntfTag = Protocol::FetchTagsResponsePtr::create();
+            ntfTag->setId(2);
+            notification->setTag(ntfTag);
 
             QTest::newRow("create child tag") << scenarios
                                               << QVector<TagTagAttributeListPair>{ { tag, { attribute } } }
@@ -207,7 +211,7 @@ private Q_SLOTS:
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
             QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
-            ids << Protocol::cmdCast<Protocol::TagChangeNotification>(receivedNotifications.at(i)).id();
+            ids << Protocol::cmdCast<Protocol::TagChangeNotification>(receivedNotifications.at(i)).tag()->id();
         }
 
         SelectQueryBuilder<Tag> qb;
@@ -278,7 +282,9 @@ private Q_SLOTS:
             auto notification = Protocol::TagChangeNotificationPtr::create();
             notification->setOperation(Protocol::TagChangeNotification::Modify);
             notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            notification->setId(tag.id());
+            auto ntfTag = Protocol::FetchTagsResponsePtr::create();
+            ntfTag->setId(tag.id());
+            notification->setTag(ntfTag);
 
             QTest::newRow("uid store name") << scenarios << (Tag::List() << tag) << (Protocol::ChangeNotificationList() << notification);
         }
@@ -353,7 +359,11 @@ private Q_SLOTS:
             auto tagRemoveNtf = Protocol::TagChangeNotificationPtr::create();
             tagRemoveNtf->setOperation(Protocol::TagChangeNotification::Remove);
             tagRemoveNtf->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            tagRemoveNtf->setId(tag.id());
+            auto ntfTag = Protocol::FetchTagsResponsePtr::create();
+            ntfTag->setId(tag.id());
+            ntfTag->setGid("gid");
+            ntfTag->setType("PLAIN");
+            tagRemoveNtf->setTag(ntfTag);
 
             QTest::newRow("uid store unset last rid") << scenarios << Tag::List() << (Protocol::ChangeNotificationList() << itemUntaggedNtf << tagRemoveNtf);
         }
@@ -372,6 +382,8 @@ private Q_SLOTS:
 
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < receivedNotifications.size(); i++) {
+            qDebug() << Protocol::debugString(receivedNotifications.at(i));
+            qDebug() << Protocol::debugString(expectedNotifications.at(i));
             QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
         }
 
@@ -423,17 +435,23 @@ private Q_SLOTS:
             ntf->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
             auto res1Ntf = Protocol::TagChangeNotificationPtr::create(*ntf);
-            res1Ntf->setId(tag.id());
-            res1Ntf->setRemoteId(rel1.remoteId());
+            auto res1NtfTag = Protocol::FetchTagsResponsePtr::create();
+            res1NtfTag->setId(tag.id());
+            res1NtfTag->setRemoteId(rel1.remoteId().toLatin1());
+            res1Ntf->setTag(res1NtfTag);
             res1Ntf->setResource(res1.name().toLatin1());
 
             auto res2Ntf = Protocol::TagChangeNotificationPtr::create(*ntf);
-            res2Ntf->setId(tag.id());
-            res2Ntf->setRemoteId(rel2.remoteId());
+            auto res2NtfTag = Protocol::FetchTagsResponsePtr::create();
+            res2NtfTag->setId(tag.id());
+            res2NtfTag->setRemoteId(rel2.remoteId().toLatin1());
+            res2Ntf->setTag(res2NtfTag);
             res2Ntf->setResource(res2.name().toLatin1());
 
             auto clientNtf = Protocol::TagChangeNotificationPtr::create(*ntf);
-            clientNtf->setId(tag.id());
+            auto clientNtfTag = Protocol::FetchTagsResponsePtr::create();
+            clientNtfTag->setId(tag.id());
+            clientNtf->setTag(clientNtfTag);
 
             QTest::newRow("uid remove") << scenarios << Tag::List() << (Protocol::ChangeNotificationList() << res1Ntf << res2Ntf << clientNtf);
         }

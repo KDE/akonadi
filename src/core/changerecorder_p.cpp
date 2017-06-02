@@ -783,33 +783,62 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadTagNotification(QData
         stream >> dummyString;
         stream >> dummyBaV;
 
-        msg->setId(uid);
-        msg->setRemoteId(remoteId);
+        auto tag = Protocol::FetchTagsResponsePtr::create();
+        tag->setId(uid);
+        tag->setRemoteId(remoteId.toLatin1());
+        msg->setTag(tag);
+        msg->addMetadata("FETCH_TAG");
     } else if (version >= 2) {
         stream >> operation;
         stream >> entityCnt;
-        for (int j = 0; j < entityCnt; ++j) {
+        if (version >= 7) {
+            QByteArray ba;
+            QMap<QByteArray, QByteArray> attrs;
+
+            auto tag = Protocol::FetchTagsResponsePtr::create();
+
             stream >> uid;
-            stream >> remoteId;
-            stream >> dummyString;
-            stream >> dummyString;
-            if (stream.status() != QDataStream::Ok) {
-                qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
-                return msg;
+            tag->setId(uid);
+            stream >> ba;
+            tag->setParentId(uid);
+            stream >> attrs;
+            tag->setGid(ba);
+            stream >> ba;
+            tag->setType(ba);
+            stream >> uid;
+            tag->setRemoteId(ba);
+            stream >> ba;
+            tag->setAttributes(attrs);
+            msg->setTag(tag);
+
+            stream >> resource;
+        } else {
+            for (int j = 0; j < entityCnt; ++j) {
+                stream >> uid;
+                stream >> remoteId;
+                stream >> dummyString;
+                stream >> dummyString;
+                if (stream.status() != QDataStream::Ok) {
+                    qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
+                    return msg;
+                }
+                auto tag = Protocol::FetchTagsResponsePtr::create();
+                tag->setId(uid);
+                tag->setRemoteId(remoteId.toLatin1());
+                msg->setTag(tag);
+                msg->addMetadata("FETCH_TAG");
             }
-            msg->setId(uid);
-            msg->setRemoteId(remoteId);
-        }
-        stream >> resource;
-        stream >> dummyBa;
-        stream >> dummyI;
-        stream >> dummyI;
-        stream >> dummyBaV;
-        stream >> dummyBaV;
-        stream >> dummyBaV;
-        if (version >= 3) {
-            stream >> dummyIv;
-            stream >> dummyIv;
+            stream >> resource;
+            stream >> dummyBa;
+            stream >> dummyI;
+            stream >> dummyI;
+            stream >> dummyBaV;
+            stream >> dummyBaV;
+            stream >> dummyBaV;
+            if (version >= 3) {
+                stream >> dummyIv;
+                stream >> dummyIv;
+            }
         }
     }
     if (version >= 5) {
@@ -823,21 +852,16 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadTagNotification(QData
 
 void Akonadi::ChangeRecorderPrivate::saveTagNotification(QDataStream &stream, const Protocol::TagChangeNotification &msg)
 {
+    const auto tag = msg.tag();
     stream << int(msg.operation());
     stream << int(1);
-    stream << msg.id();
-    stream << msg.remoteId();
-    stream << QString();
-    stream << QString();
+    stream << tag->id();
+    stream << tag->parentId();
+    stream << tag->gid();
+    stream << tag->type();
+    stream << tag->remoteId();
+    stream << tag->attributes();
     stream << msg.resource();
-    stream << qint64(0);
-    stream << qint64(0);
-    stream << qint64(0);
-    stream << QSet<QByteArray>();
-    stream << QSet<QByteArray>();
-    stream << QSet<QByteArray>();
-    stream << QSet<qint64>();
-    stream << QSet<qint64>();
 }
 
 Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(QDataStream &stream, quint64 version) const

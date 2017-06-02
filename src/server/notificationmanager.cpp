@@ -71,6 +71,7 @@ void NotificationManager::init()
     mNotifyThreadPool->setMaxThreadCount(5);
 
     mCollectionFetchScope = new AggregatedCollectionFetchScope();
+    mTagFetchScope = new AggregatedTagFetchScope();
 }
 
 void NotificationManager::quit()
@@ -91,6 +92,7 @@ void NotificationManager::quit()
     qDeleteAll(mSubscribers);
 
     delete mCollectionFetchScope;
+    delete mTagFetchScope;
 
     AkThread::quit();
 }
@@ -149,11 +151,6 @@ void NotificationManager::waitForSocketData()
         }
     }
     mWaiting = false;
-}
-
-AggregatedCollectionFetchScope *NotificationManager::collectionFetchScope() const
-{
-    return mCollectionFetchScope;
 }
 
 void NotificationManager::forgetSubscriber(NotificationSubscriber *subscriber)
@@ -224,6 +221,37 @@ void NotificationManager::slotNotify(const Protocol::ChangeNotificationList &msg
             }
 
             Protocol::CollectionChangeNotification::appendAndCompress(mNotifications, msg);
+        } else if (msg->type() == Protocol::Command::TagChangeNotification) {
+            auto &tmsg = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
+            auto msgTag = tmsg.tag();
+
+            if (!mTagFetchScope->fetchIdOnly() && msgTag->gid().isEmpty()) {
+                msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag->id()), false);
+            }
+
+            const auto requestedAttrs = mTagFetchScope->attributes();
+            auto msgTagAttrs = msgTag->attributes();
+            if (msgTagAttrs.isEmpty() && !requestedAttrs.isEmpty()) {
+                SelectQueryBuilder<TagAttribute> qb;
+                qb.addColumn(TagAttribute::typeFullColumnName());
+                qb.addColumn(TagAttribute::valueFullColumnName());
+                qb.addValueCondition(TagAttribute::tagIdFullColumnName(), Query::Equals, msgTag->id());
+                Query::Condition cond(Query::Or);
+                for (const auto &attr : requestedAttrs) {
+                    cond.addValueCondition(TagAttribute::typeFullColumnName(), Query::Equals, attr);
+                }
+                qb.addCondition(cond);
+                if (!qb.exec()) {
+                    qCWarning(AKONADISERVER_LOG) << "Failed to obtain tag attributes!";
+                }
+                const auto attrs = qb.result();
+                for (const auto &attr : attrs) {
+                    msgTagAttrs.insert(attr.type(), attr.value());
+                }
+                msgTag->setAttributes(msgTagAttrs);
+            }
+            mNotifications.push_back(msg);
+
         } else {
             mNotifications.push_back(msg);
         }

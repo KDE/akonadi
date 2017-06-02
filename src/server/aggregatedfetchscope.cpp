@@ -34,7 +34,19 @@ public:
     {
     }
 
-    ~AggregatedCollectionFetchScopePrivate()
+    mutable QMutex lock;
+    QSet<QByteArray> attrs;
+    QHash<QByteArray, int> attrsCount;
+    int fetchIdOnly;
+    int fetchStats;
+};
+
+
+class AggregatedTagFetchScopePrivate
+{
+public:
+    explicit AggregatedTagFetchScopePrivate()
+        : fetchIdOnly(0)
     {
     }
 
@@ -42,9 +54,6 @@ public:
     QSet<QByteArray> attrs;
     QHash<QByteArray, int> attrsCount;
     int fetchIdOnly;
-    int fetchStats;
-
-
 };
 
 } // namespace Server
@@ -130,3 +139,67 @@ void AggregatedCollectionFetchScope::setFetchStatistics(bool fetchStats)
 }
 
 
+
+
+
+AggregatedTagFetchScope::AggregatedTagFetchScope()
+    : d_ptr(new AggregatedCollectionFetchScopePrivate)
+{
+}
+
+AggregatedTagFetchScope::~AggregatedTagFetchScope()
+{
+    delete d_ptr;
+}
+
+bool AggregatedTagFetchScope::fetchIdOnly() const
+{
+    Q_D(const AggregatedTagFetchScope);
+    QMutexLocker locker(&d->lock);
+
+    // Aggregation: we can return true only if everyone wants fetchIdOnly,
+    // otherwise there's at least one subscriber who wants everything
+    return d->fetchIdOnly == 0;
+}
+
+void AggregatedTagFetchScope::setFetchIdOnly(bool fetchIdOnly)
+{
+    Q_D(AggregatedTagFetchScope);
+    QMutexLocker locker(&d->lock);
+
+    d->fetchIdOnly += fetchIdOnly ? 1 : -1;
+}
+
+QSet<QByteArray> AggregatedTagFetchScope::attributes() const
+{
+    Q_D(const AggregatedTagFetchScope);
+    QMutexLocker locker(&d->lock);
+    return d->attrs;
+}
+
+void AggregatedTagFetchScope::addAttribute(const QByteArray &attribute)
+{
+    Q_D(AggregatedTagFetchScope);
+    QMutexLocker locker(&d->lock);
+    auto it = d->attrsCount.find(attribute);
+    if (it == d->attrsCount.end()) {
+        it = d->attrsCount.insert(attribute, 0);
+        d->attrs.insert(attribute);
+    }
+    ++(*it);
+}
+
+void AggregatedTagFetchScope::removeAttribute(const QByteArray &attribute)
+{
+    Q_D(AggregatedTagFetchScope);
+    QMutexLocker locker(&d->lock);
+    auto it = d->attrsCount.find(attribute);
+    if (it == d->attrsCount.end()) {
+        return;
+    }
+
+    if (--(*it) == 0) {
+        d->attrsCount.erase(it);
+        d->attrs.remove(attribute);
+    }
+}

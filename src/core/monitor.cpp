@@ -220,6 +220,7 @@ void Monitor::setItemFetchScope(const ItemFetchScope &fetchScope)
 {
     Q_D(Monitor);
     d->mItemFetchScope = fetchScope;
+    d->pendingModificationChanges |= Protocol::ModifySubscriptionCommand::ItemFetchScope;
     d->scheduleSubscriptionUpdate();
 }
 
@@ -241,6 +242,7 @@ void Monitor::setCollectionFetchScope(const CollectionFetchScope &fetchScope)
 {
     Q_D(Monitor);
     d->mCollectionFetchScope = fetchScope;
+    d->pendingModificationChanges |= Protocol::ModifySubscriptionCommand::CollectionFetchScope;
     d->scheduleSubscriptionUpdate();
 }
 
@@ -256,11 +258,15 @@ void Monitor::setTagFetchScope(const TagFetchScope &fetchScope)
 {
     Q_D(Monitor);
     d->mTagFetchScope = fetchScope;
+    d->pendingModificationChanges |= Protocol::ModifySubscriptionCommand::TagFetchScope;
+    d->scheduleSubscriptionUpdate();
 }
 
 TagFetchScope &Monitor::tagFetchScope()
 {
     Q_D(Monitor);
+    d->pendingModificationChanges |= Protocol::ModifySubscriptionCommand::TagFetchScope;
+    d->scheduleSubscriptionUpdate();
     return d->mTagFetchScope;
 }
 

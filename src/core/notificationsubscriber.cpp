@@ -20,6 +20,7 @@
 #include "notificationsubscriber.h"
 #include "itemfetchscope.h"
 #include "collectionfetchscope.h"
+#include "tagfetchscope.h"
 
 namespace Akonadi
 {
@@ -45,6 +46,7 @@ public:
         , ignoredSessions(other.ignoredSessions)
         , itemFetchScope(other.itemFetchScope)
         , collectionFetchScope(other.collectionFetchScope)
+        , tagFetchScope(other.tagFetchScope)
         , isAllMonitored(other.isAllMonitored)
         , isExclusive(other.isExclusive)
     {}
@@ -60,6 +62,7 @@ public:
     QSet<QByteArray> ignoredSessions;
     ItemFetchScope itemFetchScope;
     CollectionFetchScope collectionFetchScope;
+    TagFetchScope tagFetchScope;
     bool isAllMonitored;
     bool isExclusive;
 };
@@ -221,4 +224,14 @@ CollectionFetchScope NotificationSubscriber::collectionFetchScope() const
 void NotificationSubscriber::setCollectionFetchScope(const CollectionFetchScope &fetchScope)
 {
     d->collectionFetchScope = fetchScope;
+}
+
+TagFetchScope NotificationSubscriber::tagFetchScope() const
+{
+    return d->tagFetchScope;
+}
+
+void NotificationSubscriber::setTagFetchScope(const TagFetchScope &tagFetchScope)
+{
+    d->tagFetchScope = tagFetchScope;
 }

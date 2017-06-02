@@ -106,30 +106,7 @@ bool MonitorPrivate::connectToNotificationManager()
         return false;
     }
 
-    pendingModification = Protocol::ModifySubscriptionCommand();
-    for (const auto &col : qAsConst(collections)) {
-        pendingModification.startMonitoringCollection(col.id());
-    }
-    for (const auto &res : qAsConst(resources)) {
-        pendingModification.startMonitoringResource(res);
-    }
-    for (auto itemId : qAsConst(items)) {
-        pendingModification.startMonitoringItem(itemId);
-    }
-    for (auto tagId : qAsConst(tags)) {
-        pendingModification.startMonitoringTag(tagId);
-    }
-    for (auto type : qAsConst(types)) {
-        pendingModification.startMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
-    }
-    for (const auto &mimetype : qAsConst(mimetypes)) {
-        pendingModification.startMonitoringMimeType(mimetype);
-    }
-    for (const auto &session : qAsConst(sessions)) {
-        pendingModification.startIgnoringSession(session);
-    }
-    pendingModification.setAllMonitored(monitorAll);
-    pendingModification.setIsExclusive(exclusive);
+    slotUpdateSubscription();
 
     ntfConnection->reconnect();
 
@@ -190,15 +167,18 @@ void MonitorPrivate::slotUpdateSubscription()
     delete pendingModificationTimer;
     pendingModificationTimer = nullptr;
 
-    if (ntfConnection) {
-        if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
-            pendingModification.setItemFetchScope(ProtocolHelper::itemFetchScopeToProtocol(mItemFetchScope));
-        }
-        if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::CollectionFetchScope) {
-            pendingModification.setCollectionFetchScope(ProtocolHelper::collectionFetchScopeToProtocol(mCollectionFetchScope));
-        }
-        pendingModificationChanges = Protocol::ModifySubscriptionCommand::None;
+    if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
+        pendingModification.setItemFetchScope(ProtocolHelper::itemFetchScopeToProtocol(mItemFetchScope));
+    }
+    if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::CollectionFetchScope) {
+        pendingModification.setCollectionFetchScope(ProtocolHelper::collectionFetchScopeToProtocol(mCollectionFetchScope));
+    }
+    if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::TagFetchScope) {
+        pendingModification.setTagFetchScope(ProtocolHelper::tagFetchScopeToProtocol(mTagFetchScope));
+    }
+    pendingModificationChanges = Protocol::ModifySubscriptionCommand::None;
 
+    if (ntfConnection) {
         ntfConnection->sendCommand(3, Protocol::ModifySubscriptionCommandPtr::create(pendingModification));
         pendingModification = Protocol::ModifySubscriptionCommand();
     }
@@ -377,8 +357,15 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
     bool allCached = true;
 
     if (msg->type() == Protocol::Command::TagChangeNotification) {
-        return tagCache->ensureCached({ Protocol::cmdCast<Protocol::TagChangeNotification>(msg).id() }, mTagFetchScope);
+        const auto tagMsg = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
+        if (tagMsg.metadata().contains("FETCH_TAG")) {
+            if (!tagCache->ensureCached({ tagMsg.tag()->id() }, mTagFetchScope)) {
+                allCached = false;
+            }
+        }
+        return true;
     }
+
     if (msg->type() == Protocol::Command::RelationChangeNotification) {
         return true;
     }
@@ -488,9 +475,15 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
     bool someoneWasListening = false;
     if (msg->type() == Protocol::Command::TagChangeNotification) {
         const auto &tagNtf = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
-        //In case of a Remove notification this will return a list of invalid entities (we'll deal later with them)
-        const Tag::List tags = tagCache->retrieve({ tagNtf.id() });
-        someoneWasListening = emitTagNotification(tagNtf, tags.isEmpty() ? Tag() : tags[0]);
+        const bool fetched = tagNtf.metadata().contains("FETCH_TAG");
+        Tag tag;
+        if (fetched) {
+            const auto tags = tagCache->retrieve({ tagNtf.tag()->id() });
+            tag = tags.isEmpty() ? Tag() : tags.at(0);
+        } else {
+            tag = ProtocolHelper::parseTag(*tagNtf.tag());
+        }
+        someoneWasListening = emitTagNotification(tagNtf, tag);
     } else if (msg->type() == Protocol::Command::RelationChangeNotification) {
         const auto &relNtf = Protocol::cmdCast<Protocol::RelationChangeNotification>(msg);
         Relation rel;
@@ -509,7 +502,6 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
 
         //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
         const bool fetched = colNtf.metadata().contains("FETCH_COLLECTION");
-        qCDebug(AKONADICORE_LOG) << "Monitor::emitNotification: Collection notification bypassed CollectionCache?" << (!fetched);
         const Collection col = fetched ? collectionCache->retrieve(colNtf.collection()->id()) : ProtocolHelper::parseCollection(*colNtf.collection(), true);
         //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
         //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
@@ -772,7 +764,33 @@ void MonitorPrivate::handleCommands()
             }
 
             case Protocol::Command::CreateSubscription: {
-                auto msubCmd = Protocol::ModifySubscriptionCommandPtr::create(pendingModification);
+                auto msubCmd = Protocol::ModifySubscriptionCommandPtr::create();
+                for (const auto &col : qAsConst(collections)) {
+                    msubCmd->startMonitoringCollection(col.id());
+                }
+                for (const auto &res : qAsConst(resources)) {
+                    msubCmd->startMonitoringResource(res);
+                }
+                for (auto itemId : qAsConst(items)) {
+                    msubCmd->startMonitoringItem(itemId);
+                }
+                for (auto tagId : qAsConst(tags)) {
+                    msubCmd->startMonitoringTag(tagId);
+                }
+                for (auto type : qAsConst(types)) {
+                    msubCmd->startMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
+                }
+                for (const auto &mimetype : qAsConst(mimetypes)) {
+                    msubCmd->startMonitoringMimeType(mimetype);
+                }
+                for (const auto &session : qAsConst(sessions)) {
+                    msubCmd->startIgnoringSession(session);
+                }
+                msubCmd->setAllMonitored(monitorAll);
+                msubCmd->setIsExclusive(exclusive);
+                msubCmd->setItemFetchScope(ProtocolHelper::itemFetchScopeToProtocol(mItemFetchScope));
+                msubCmd->setCollectionFetchScope(ProtocolHelper::collectionFetchScopeToProtocol(mCollectionFetchScope));
+                msubCmd->setTagFetchScope(ProtocolHelper::tagFetchScopeToProtocol(mTagFetchScope));
                 pendingModification = Protocol::ModifySubscriptionCommand();
                 ntfConnection->sendCommand(3, msubCmd);
                 break;
@@ -1219,37 +1237,25 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChange
 
 bool MonitorPrivate::emitTagNotification(const Protocol::TagChangeNotification &msg, const Tag &tag)
 {
-    Tag validTag;
-    if (msg.operation() == Protocol::TagChangeNotification::Remove) {
-        //In case of a removed signal the cache entry was already invalidated, and we therefore received an empty list of tags
-        validTag = Tag(msg.id());
-        validTag.setRemoteId(msg.remoteId().toLatin1());
-    } else {
-        validTag = tag;
-    }
-
-    if (!validTag.isValid()) {
-        return false;
-    }
-
+    Q_UNUSED(msg);
     switch (msg.operation()) {
     case Protocol::TagChangeNotification::Add:
         if (q_ptr->receivers(SIGNAL(tagAdded(Akonadi::Tag))) == 0) {
             return false;
         }
-        Q_EMIT q_ptr->tagAdded(validTag);
+        Q_EMIT q_ptr->tagAdded(tag);
         return true;
     case Protocol::TagChangeNotification::Modify:
         if (q_ptr->receivers(SIGNAL(tagChanged(Akonadi::Tag))) == 0) {
             return false;
         }
-        Q_EMIT q_ptr->tagChanged(validTag);
+        Q_EMIT q_ptr->tagChanged(tag);
         return true;
     case Protocol::TagChangeNotification::Remove:
         if (q_ptr->receivers(SIGNAL(tagRemoved(Akonadi::Tag))) == 0) {
             return false;
         }
-        Q_EMIT q_ptr->tagRemoved(validTag);
+        Q_EMIT q_ptr->tagRemoved(tag);
         return true;
     default:
         qCDebug(AKONADICORE_LOG) << "Unknown operation type" << msg.operation() << "in tag change notification";
@@ -1375,10 +1381,10 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotificationPtr &msg
         const auto &tagNtf = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
         switch (tagNtf.operation()) {
         case Protocol::TagChangeNotification::Modify:
-            tagCache->update({ tagNtf.id() }, mTagFetchScope);
+            tagCache->update({ tagNtf.tag()->id() }, mTagFetchScope);
             break;
         case Protocol::TagChangeNotification::Remove:
-            tagCache->invalidate({ tagNtf.id() });
+            tagCache->invalidate({ tagNtf.tag()->id() });
             break;
         default:
             break;

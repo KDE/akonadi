@@ -245,6 +245,18 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
     return collection;
 }
 
+Tag ProtocolHelper::parseTag(const Protocol::FetchTagsResponse &data)
+{
+    Tag tag(data.id());
+    tag.setRemoteId(data.remoteId());
+    tag.setGid(data.gid());
+    tag.setType(data.type());
+    tag.setParent(Tag(data.parentId()));
+    parseAttributes(data.attributes(), &tag);
+
+    return tag;
+}
+
 QByteArray ProtocolHelper::encodePartIdentifier(PartNamespace ns, const QByteArray &label)
 {
     switch (ns) {
@@ -543,7 +555,7 @@ CollectionFetchScope ProtocolHelper::parseCollectionFetchScope(const Protocol::C
         }
     }
     const auto attrs = fetchScope.attributes();
-    for (const auto attr : attrs) {
+    for (const auto &attr : attrs) {
         cfs.fetchAttribute(attr, true);
     }
     cfs.setFetchIdOnly(fetchScope.fetchIdOnly());
@@ -552,7 +564,24 @@ CollectionFetchScope ProtocolHelper::parseCollectionFetchScope(const Protocol::C
     return cfs;
 }
 
+Protocol::TagFetchScope ProtocolHelper::tagFetchScopeToProtocol(const TagFetchScope &fetchScope)
+{
+    Protocol::TagFetchScope tfs;
+    tfs.setFetchIdOnly(fetchScope.fetchIdOnly());
+    tfs.setAttributes(fetchScope.attributes());
+    return tfs;
+}
 
+TagFetchScope ProtocolHelper::parseTagFetchScope(const Protocol::TagFetchScope &fetchScope)
+{
+    TagFetchScope tfs;
+    tfs.setFetchIdOnly(fetchScope.fetchIdOnly());
+    const auto attrs = fetchScope.attributes();
+    for (const auto &attr : attrs) {
+        tfs.fetchAttribute(attr, true);
+    }
+    return tfs;
+}
 
 static Item::Flags convertFlags(const QVector<QByteArray> &flags, ProtocolHelperValuePool *valuePool)
 {

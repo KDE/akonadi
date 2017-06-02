@@ -50,6 +50,25 @@ private:
 };
 
 
+class AggregatedTagFetchScopePrivate;
+class AggregatedTagFetchScope
+{
+public:
+    explicit AggregatedTagFetchScope();
+    ~AggregatedTagFetchScope();
+
+    QSet<QByteArray> attributes() const;
+    void addAttribute(const QByteArray &attribute);
+    void removeAttribute(const QByteArray &attribute);
+
+    bool fetchIdOnly() const;
+    void setFetchIdOnly(bool fetchIdOnly);
+
+private:
+    AggregatedCollectionFetchScopePrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(AggregatedTagFetchScope)
+};
+
 } // namespace Server
 } // namespace Akonadi
 

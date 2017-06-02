@@ -122,6 +122,8 @@ public:
     */
     static Collection parseCollection(const Protocol::FetchCollectionsResponse &data, bool requireParent = true);
 
+    static Tag parseTag(const Protocol::FetchTagsResponse &data);
+
     static void parseAttributes(const Protocol::Attributes &attributes, Item *item);
     static void parseAttributes(const Protocol::Attributes &attributes, Collection *collection);
     static void parseAttributes(const Protocol::Attributes &attributes, Tag *entity);
@@ -229,10 +231,8 @@ public:
     static Protocol::CollectionFetchScope collectionFetchScopeToProtocol(const CollectionFetchScope &fetchScope);
     static CollectionFetchScope parseCollectionFetchScope(const Protocol::CollectionFetchScope &fetchScope);
 
-    /**
-      Converts a given TagFetchScope object into a protocol representation.
-    */
-    static QVector<QByteArray> tagFetchScopeToProtocol(const TagFetchScope &fetchScope);
+    static Protocol::TagFetchScope tagFetchScopeToProtocol(const TagFetchScope &fetchScope);
+    static TagFetchScope parseTagFetchScope(const Protocol::TagFetchScope &fetchScope);
 
     /**
       Parses a single line from an item fetch job result into an Item object.

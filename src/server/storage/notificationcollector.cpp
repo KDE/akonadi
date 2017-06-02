@@ -401,15 +401,14 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
 void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Operation op,
         const Tag &tag,
         const QByteArray &resource,
-        const QString &remoteId
-                                           )
+        const QString &remoteId)
 {
     auto msg = Protocol::TagChangeNotificationPtr::create();
     msg->setOperation(op);
     msg->setSessionId(mSessionId);
     msg->setResource(resource);
-    msg->setId(tag.id());
-    msg->setRemoteId(remoteId);
+    msg->setTag(HandlerHelper::fetchTagsResponse(tag, false));
+    msg->tag()->setRemoteId(remoteId.toLatin1());
 
     dispatchNotification(msg);
 }

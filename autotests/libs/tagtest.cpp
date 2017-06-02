@@ -743,6 +743,7 @@ void TagTest::testMonitor()
     Akonadi::Monitor monitor;
     monitor.setTypeMonitored(Akonadi::Monitor::Tags);
     monitor.tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
+    QTest::qWait(10); // give Monitor time to upload settings
 
     Akonadi::Tag createdTag;
     {
