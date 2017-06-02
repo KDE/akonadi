@@ -206,6 +206,8 @@ void NotificationManager::slotNotify(const Protocol::ChangeNotificationList &msg
                 SelectQueryBuilder<CollectionAttribute> qb;
                 qb.addColumn(CollectionAttribute::typeFullColumnName());
                 qb.addColumn(CollectionAttribute::valueFullColumnName());
+                qb.addValueCondition(CollectionAttribute::collectionIdFullColumnName(),
+                                     Query::Equals, msgCollection->id());
                 Query::Condition cond(Query::Or);
                 for (const auto &attr : requestedAttrs) {
                     cond.addValueCondition(CollectionAttribute::typeFullColumnName(), Query::Equals, attr);
