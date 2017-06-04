@@ -32,23 +32,23 @@ class DbIntrospectorMySql : public DbIntrospector
 {
 public:
     explicit DbIntrospectorMySql(const QSqlDatabase &database);
-    QVector<ForeignKey> foreignKeyConstraints(const QString &tableName) Q_DECL_OVERRIDE;
-    QString hasIndexQuery(const QString &tableName, const QString &indexName) Q_DECL_OVERRIDE;
+    QVector<ForeignKey> foreignKeyConstraints(const QString &tableName) override;
+    QString hasIndexQuery(const QString &tableName, const QString &indexName) override;
 };
 
 class DbIntrospectorSqlite : public DbIntrospector
 {
 public:
     explicit DbIntrospectorSqlite(const QSqlDatabase &database);
-    QString hasIndexQuery(const QString &tableName, const QString &indexName) Q_DECL_OVERRIDE;
+    QString hasIndexQuery(const QString &tableName, const QString &indexName) override;
 };
 
 class DbIntrospectorPostgreSql : public DbIntrospector
 {
 public:
     explicit DbIntrospectorPostgreSql(const QSqlDatabase &database);
-    QVector<ForeignKey> foreignKeyConstraints(const QString &tableName) Q_DECL_OVERRIDE;
-    QString hasIndexQuery(const QString &tableName, const QString &indexName) Q_DECL_OVERRIDE;
+    QVector<ForeignKey> foreignKeyConstraints(const QString &tableName) override;
+    QString hasIndexQuery(const QString &tableName, const QString &indexName) override;
 };
 
 } // namespace Server

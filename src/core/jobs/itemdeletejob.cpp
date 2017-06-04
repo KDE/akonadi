@@ -37,7 +37,7 @@ public:
     }
 
     Q_DECLARE_PUBLIC(ItemDeleteJob)
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
 
     Item::List mItems;
     Collection mCollection;

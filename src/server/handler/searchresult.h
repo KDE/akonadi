@@ -36,7 +36,7 @@ class SearchResult : public Handler
 {
     Q_OBJECT
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 
 private:
     bool fail(const QByteArray &searchId, const QString &error);

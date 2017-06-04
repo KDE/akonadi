@@ -50,7 +50,7 @@ public:
     void configure(qlonglong windowId);
 
 protected:
-    void run() Q_DECL_OVERRIDE;
+    void run() override;
 
 private:
     QString m_identifier;

@@ -47,19 +47,19 @@ public:
         : mData(data)
     {
     }
-    TestAttribute *clone() const Q_DECL_OVERRIDE
+    TestAttribute *clone() const override
     {
         return new TestAttribute(mData);
     }
-    QByteArray type() const Q_DECL_OVERRIDE
+    QByteArray type() const override
     {
         return "TESTATTRIBUTE";
     }
-    QByteArray serialized() const Q_DECL_OVERRIDE
+    QByteArray serialized() const override
     {
         return mData;
     }
-    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE {
+    void deserialize(const QByteArray &data) override {
         mData = data;
     }
 private:

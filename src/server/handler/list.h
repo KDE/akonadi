@@ -90,7 +90,7 @@ class List : public Handler
 public:
     List();
 
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 
 private:
     void listCollection(const Collection &root,

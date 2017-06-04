@@ -94,8 +94,8 @@ protected Q_SLOTS:
 protected:
     Connection(QObject *parent = nullptr); // used for testing
 
-    virtual void init() Q_DECL_OVERRIDE;
-    virtual void quit() Q_DECL_OVERRIDE;
+    virtual void init() override;
+    virtual void quit() override;
 
     virtual Handler *findHandlerForCommand(Protocol::Command::Type cmd);
 

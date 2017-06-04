@@ -114,7 +114,7 @@ public:
      * @reimp
      * @param model the model to set
      */
-    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void setModel(QAbstractItemModel *model) override;
 
     /**
      * Sets whether the drop action menu is @p enabled and will
@@ -219,13 +219,13 @@ Q_SIGNALS:
 protected:
     using QTreeView::currentChanged;
 #ifndef QT_NO_DRAGANDDROP
-    void startDrag(Qt::DropActions supportedActions) Q_DECL_OVERRIDE;
-    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
+    void startDrag(Qt::DropActions supportedActions) override;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
 #endif
-    void timerEvent(QTimerEvent *event) Q_DECL_OVERRIDE;
+    void timerEvent(QTimerEvent *event) override;
 #ifndef QT_NO_CONTEXTMENU
-    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 #endif
 
 private:

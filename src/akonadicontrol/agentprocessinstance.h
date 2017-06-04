@@ -35,11 +35,11 @@ class AgentProcessInstance : public AgentInstance
 public:
     explicit AgentProcessInstance(AgentManager *manager);
 
-    bool start(const AgentType &agentInfo) Q_DECL_OVERRIDE;
-    void quit() Q_DECL_OVERRIDE;
-    void cleanup() Q_DECL_OVERRIDE;
-    void restartWhenIdle() Q_DECL_OVERRIDE;
-    void configure(qlonglong windowId) Q_DECL_OVERRIDE;
+    bool start(const AgentType &agentInfo) override;
+    void quit() override;
+    void cleanup() override;
+    void restartWhenIdle() override;
+    void configure(qlonglong windowId) override;
 
 private Q_SLOTS:
     void failedToStart();

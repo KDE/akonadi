@@ -39,7 +39,7 @@ class Search : public Handler
     Q_OBJECT
 
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 
 private Q_SLOTS:
     void slotResultsAvailable(const QSet<qint64> &results);

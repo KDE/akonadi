@@ -48,8 +48,8 @@ public:
     Tag::List tags() const;
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
-    bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) Q_DECL_OVERRIDE;
+    void doStart() override;
+    bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:
     Q_DECLARE_PRIVATE(TagDeleteJob)

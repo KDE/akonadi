@@ -38,7 +38,7 @@ public:
 
     // JobPrivate interface
 public:
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
 };
 
 QString SearchResultJobPrivate::jobDebuggingString() const

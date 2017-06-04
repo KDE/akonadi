@@ -41,12 +41,12 @@ public:
     QSettings *settings;
     bool enableChangeRecording;
 
-    int pipelineSize() const Q_DECL_OVERRIDE;
-    void notificationsEnqueued(int count) Q_DECL_OVERRIDE;
-    void notificationsErased() Q_DECL_OVERRIDE;
+    int pipelineSize() const override;
+    void notificationsEnqueued(int count) override;
+    void notificationsErased() override;
 
-    void slotNotify(const Protocol::ChangeNotificationPtr &msg) Q_DECL_OVERRIDE;
-    bool emitNotification(const Protocol::ChangeNotificationPtr &msg) Q_DECL_OVERRIDE;
+    void slotNotify(const Protocol::ChangeNotificationPtr &msg) override;
+    bool emitNotification(const Protocol::ChangeNotificationPtr &msg) override;
 
     QString notificationsFileName() const;
 

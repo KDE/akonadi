@@ -41,7 +41,7 @@ public:
     ~XmlWriteJob();
 
 protected:
-    /* reimpl. */ void doStart() Q_DECL_OVERRIDE;
+    /* reimpl. */ void doStart() override;
 
 private:
     friend class XmlWriteJobPrivate;

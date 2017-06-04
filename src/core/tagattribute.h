@@ -88,10 +88,10 @@ public:
     int priority() const;
 
     /* reimpl */
-    QByteArray type() const Q_DECL_OVERRIDE;
-    TagAttribute *clone() const Q_DECL_OVERRIDE;
-    QByteArray serialized() const Q_DECL_OVERRIDE;
-    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE;
+    QByteArray type() const override;
+    TagAttribute *clone() const override;
+    QByteArray serialized() const override;
+    void deserialize(const QByteArray &data) override;
 
 private:
     TagAttribute(const TagAttribute &other);

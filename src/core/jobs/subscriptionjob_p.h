@@ -65,8 +65,8 @@ public:
     void unsubscribe(const Collection::List &collections);
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
-    void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void doStart() override;
+    void slotResult(KJob *job) override;
 
 private:
     Q_DECLARE_PRIVATE(SubscriptionJob)

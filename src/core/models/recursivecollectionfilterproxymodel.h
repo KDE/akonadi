@@ -99,8 +99,8 @@ public:
     void setIncludeCheckedOnly(bool checked);
 
 protected:
-    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
-    int columnCount(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    int columnCount(const QModelIndex &index) const override;
 
 protected:
     RecursiveCollectionFilterProxyModelPrivate *const d_ptr;

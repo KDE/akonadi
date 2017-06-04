@@ -74,18 +74,18 @@ public:
     /**
      * @reimp
      */
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const Q_DECL_OVERRIDE;
+    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 
     /**
      * @reimp
      */
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
     /**
      * @reimp
      */
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
-                          Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
+                          Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
     EntityOrderProxyModelPrivate *const d_ptr;

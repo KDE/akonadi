@@ -178,12 +178,12 @@ Q_SIGNALS:
     void collectionsReceived(const Akonadi::Collection::List &collections);
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
-    bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) Q_DECL_OVERRIDE;
+    void doStart() override;
+    bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 protected Q_SLOTS:
     //@cond PRIVATE
-    void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) override;
     //@endcond
 
 private:

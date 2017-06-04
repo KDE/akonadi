@@ -126,7 +126,7 @@ public:
         q->emitResult();
     }
 
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
     AgentInstanceCreateJob *q;
     AgentType agentType;

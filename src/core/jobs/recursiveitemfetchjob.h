@@ -138,7 +138,7 @@ public:
     /**
      * Starts the recursive item fetch job.
      */
-    void start() Q_DECL_OVERRIDE;
+    void start() override;
 
 private:
     //@cond PRIVATE

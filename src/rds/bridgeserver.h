@@ -47,7 +47,7 @@ public:
     }
 
 protected:
-    void slotNewConnection() Q_DECL_OVERRIDE {
+    void slotNewConnection() override {
         while (m_server->hasPendingConnections())
         {
             new ConnectionType(m_server->nextPendingConnection(), this);

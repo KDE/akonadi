@@ -36,7 +36,7 @@ public:
     {
     }
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
     Collection destination;
     Collection collection;
 

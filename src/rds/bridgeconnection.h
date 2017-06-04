@@ -55,7 +55,7 @@ public:
     explicit AkonadiBridgeConnection(QTcpSocket *remoteSocket, QObject *parent = nullptr);
 
 protected:
-    void connectLocal() Q_DECL_OVERRIDE;
+    void connectLocal() override;
 };
 
 class DBusBridgeConnection : public BridgeConnection
@@ -66,7 +66,7 @@ public:
     explicit DBusBridgeConnection(QTcpSocket *remoteSocket, QObject *parent = nullptr);
 
 protected:
-    void connectLocal() Q_DECL_OVERRIDE;
+    void connectLocal() override;
 };
 
 #endif // BRIDGECONNECTION_H

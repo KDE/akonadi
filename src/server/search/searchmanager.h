@@ -107,8 +107,8 @@ private Q_SLOTS:
     void updateSearchImpl(const Collection &collection, QSemaphore *cond);
 
 private:
-    void init() Q_DECL_OVERRIDE;
-    void quit() Q_DECL_OVERRIDE;
+    void init() override;
+    void quit() override;
 
     // Called from main thread
     void loadSearchPlugins();

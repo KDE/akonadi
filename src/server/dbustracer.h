@@ -40,13 +40,13 @@ public:
     DBusTracer();
     virtual ~DBusTracer();
 
-    void beginConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE;
-    void endConnection(const QString &identifier, const QString &msg) Q_DECL_OVERRIDE;
-    void connectionInput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE;
-    void connectionOutput(const QString &identifier, const QByteArray &msg) Q_DECL_OVERRIDE;
-    void signal(const QString &signalName, const QString &msg) Q_DECL_OVERRIDE;
-    void warning(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE;
-    void error(const QString &componentName, const QString &msg) Q_DECL_OVERRIDE;
+    void beginConnection(const QString &identifier, const QString &msg) override;
+    void endConnection(const QString &identifier, const QString &msg) override;
+    void connectionInput(const QString &identifier, const QByteArray &msg) override;
+    void connectionOutput(const QString &identifier, const QByteArray &msg) override;
+    void signal(const QString &signalName, const QString &msg) override;
+    void warning(const QString &componentName, const QString &msg) override;
+    void error(const QString &componentName, const QString &msg) override;
 
 Q_SIGNALS:
     void connectionStarted(const QString &identifier, const QString &msg);

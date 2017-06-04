@@ -58,8 +58,8 @@ public:
     int minimumInterval() const;
 
 protected:
-    virtual void init() Q_DECL_OVERRIDE;
-    virtual void quit() Q_DECL_OVERRIDE;
+    virtual void init() override;
+    virtual void quit() override;
 
     virtual bool shouldScheduleCollection(const Collection &collection) = 0;
     virtual bool hasChanged(const Collection &collection, const Collection &changed) = 0;

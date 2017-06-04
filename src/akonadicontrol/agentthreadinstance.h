@@ -31,10 +31,10 @@ class AgentThreadInstance : public AgentInstance
 public:
     explicit AgentThreadInstance(AgentManager *manager);
 
-    bool start(const AgentType &agentInfo) Q_DECL_OVERRIDE;
-    void quit() Q_DECL_OVERRIDE;
-    void restartWhenIdle() Q_DECL_OVERRIDE;
-    void configure(qlonglong windowId) Q_DECL_OVERRIDE;
+    bool start(const AgentType &agentInfo) override;
+    void quit() override;
+    void restartWhenIdle() override;
+    void configure(qlonglong windowId) override;
 
 private Q_SLOTS:
     void agentServerRegistered();

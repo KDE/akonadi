@@ -38,7 +38,7 @@ public:
     Collection mSource;
     Collection mTarget;
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
 };
 
 QString Akonadi::CollectionCopyJobPrivate::jobDebuggingString() const

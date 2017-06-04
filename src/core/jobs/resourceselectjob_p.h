@@ -94,8 +94,8 @@ public:
     explicit ResourceSelectJob(const QString &identifier, QObject *parent = nullptr);
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
-    bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) Q_DECL_OVERRIDE;
+    void doStart() override;
+    bool doHandleResponse(qint64 tag, const Protocol::CommandPtr &response) override;
 
 private:
     //@cond PRIVATE

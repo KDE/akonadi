@@ -70,7 +70,7 @@ public:
     ~CollectionAttributesSynchronizationJob();
 
     /* reimpl */
-    void start() Q_DECL_OVERRIDE;
+    void start() override;
 
 private:
     //@cond PRIVATE

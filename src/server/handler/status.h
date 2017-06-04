@@ -35,7 +35,7 @@ class Status : public Handler
 {
     Q_OBJECT
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 };
 
 } // namespace Server

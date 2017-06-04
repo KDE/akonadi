@@ -40,7 +40,7 @@ ItemRetrievalManager *ItemRetrievalManager::sInstance = nullptr;
 
 class ItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
 {
-    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) Q_DECL_OVERRIDE {
+    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) override {
         return new ItemRetrievalJob(request, parent);
     }
 };

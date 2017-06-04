@@ -88,14 +88,14 @@ public:
      */
     bool isExtraColumnsEnabled() const;
 
-    QVariant extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const Q_DECL_OVERRIDE;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QVariant extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const override;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
-                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
+                                  Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
-    void setSourceModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void setSourceModel(QAbstractItemModel *model) override;
 
 private:
     //@cond PRIVATE

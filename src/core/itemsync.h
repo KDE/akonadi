@@ -253,8 +253,8 @@ Q_SIGNALS:
     void transactionCommitted();
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
-    void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void doStart() override;
+    void slotResult(KJob *job) override;
 
 private:
     //@cond PRIVATE

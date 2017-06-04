@@ -50,7 +50,7 @@ class ColCopy : public Copy
 {
     Q_OBJECT
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 
 private:
     bool copyCollection(const Collection &source, const Collection &target);

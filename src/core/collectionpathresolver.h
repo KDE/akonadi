@@ -100,7 +100,7 @@ public:
     static QString pathDelimiter();
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
 private:
     Q_DECLARE_PRIVATE(CollectionPathResolver)

@@ -66,9 +66,9 @@ public:
         m_interface = interface;
     }
 
-    ~ItemRetrievalJob() Q_DECL_OVERRIDE;
-    void start() Q_DECL_OVERRIDE;
-    void kill() Q_DECL_OVERRIDE;
+    ~ItemRetrievalJob() override;
+    void start() override;
+    void kill() override;
 
 private Q_SLOTS:
     void callFinished(QDBusPendingCallWatcher *watcher);

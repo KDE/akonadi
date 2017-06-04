@@ -131,7 +131,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_collectionName;
@@ -153,7 +153,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_collectionName;
@@ -174,7 +174,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_collectionName;
@@ -201,7 +201,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     Akonadi::Collection m_collection;
@@ -224,7 +224,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_itemName;
@@ -246,7 +246,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_itemName;
@@ -267,7 +267,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_itemName;
@@ -289,7 +289,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_itemName;
@@ -310,7 +310,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_tagName;
@@ -331,7 +331,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_tagName;
@@ -353,7 +353,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_tagName;
@@ -375,7 +375,7 @@ public:
     {
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
 private:
     QString m_tagName;
@@ -424,7 +424,7 @@ public:
         m_tags.insert(tag.id(), tag);
     }
 
-    void doCommand() Q_DECL_OVERRIDE;
+    void doCommand() override;
 
     static QList<FakeAkonadiServerCommand *> interpret(FakeServerData *fakeServerData, const QString &input);
 

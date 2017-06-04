@@ -52,7 +52,7 @@ public:
      */
     ~SpecialCollectionsDiscoveryJob();
 
-    void start() Q_DECL_OVERRIDE;
+    void start() override;
 
 protected:
     /**
@@ -64,7 +64,7 @@ protected:
     explicit SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent = nullptr);
 
     /* reimpl */
-    void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) override;
 
 private:
     //@cond PRIVATE

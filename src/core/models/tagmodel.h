@@ -54,21 +54,21 @@ public:
     explicit TagModel(Monitor *recorder, QObject *parent);
     virtual ~TagModel();
 
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
     /*
     virtual Qt::DropActions supportedDropActions() const;
     virtual QMimeData* mimeData( const QModelIndexList &indexes ) const;
     virtual bool dropMimeData( const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent );
     */
 
-    QModelIndex parent(const QModelIndex &child) const Q_DECL_OVERRIDE;
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    QModelIndex parent(const QModelIndex &child) const override;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
 
 protected:
     Q_DECLARE_PRIVATE(TagModel)
@@ -80,10 +80,10 @@ Q_SIGNALS:
     void populated();
 
 private:
-    bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
-    bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
-    bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
-    bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
+    bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
+    bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
+    bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
+    bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
 
     Q_PRIVATE_SLOT(d_func(), void fillModel())
     Q_PRIVATE_SLOT(d_func(), void tagsFetched(const Akonadi::Tag::List &tags))

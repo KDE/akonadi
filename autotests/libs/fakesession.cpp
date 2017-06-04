@@ -34,7 +34,7 @@ public:
     }
 
     /* reimp */
-    void init(const QByteArray &id) Q_DECL_OVERRIDE
+    void init(const QByteArray &id) override
     {
         // trimmed down version of the real SessionPrivate::init(), without any server access
         if (!id.isEmpty()) {
@@ -52,7 +52,7 @@ public:
     }
 
     /* reimp */
-    void reconnect() Q_DECL_OVERRIDE
+    void reconnect() override
     {
         if (m_mode == FakeSession::EndJobsImmediately) {
             return;
@@ -64,7 +64,7 @@ public:
     }
 
     /* reimp */
-    void addJob(Job *job) Q_DECL_OVERRIDE
+    void addJob(Job *job) override
     {
         emit q_ptr->jobAdded(job);
         // Return immediately so that no actual communication happens with the server and

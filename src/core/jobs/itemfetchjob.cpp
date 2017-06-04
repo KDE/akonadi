@@ -61,7 +61,7 @@ public:
         q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
     }
 
-    void aboutToFinish() Q_DECL_OVERRIDE {
+    void aboutToFinish() override {
         timeout();
     }
 
@@ -78,7 +78,7 @@ public:
         }
     }
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE
+    QString jobDebuggingString() const override
     {
         if (mRequestedItems.isEmpty()) {
             QString str = QStringLiteral("All items from collection %1").arg(mCollection.id());

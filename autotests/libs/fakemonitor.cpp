@@ -35,7 +35,7 @@ public:
     {
     }
 
-    bool connectToNotificationManager() Q_DECL_OVERRIDE {
+    bool connectToNotificationManager() override {
         // Do nothing. This monitor should not connect to the notification manager.
         return true;
     }

@@ -39,14 +39,14 @@ public:
     void setTagMembers(const QHash<QString, Akonadi::Item::List> &ridMemberMap);
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
 private Q_SLOTS:
     void onLocalTagFetchDone(KJob *job);
     void onCreateTagDone(KJob *job);
     void onTagItemsFetchDone(KJob *job);
     void onJobDone(KJob *job);
-    void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) override;
 
 private:
     void diffTags();

@@ -50,20 +50,20 @@ public:
     {
     }
 
-    QByteArray type() const Q_DECL_OVERRIDE
+    QByteArray type() const override
     {
         return mType;
     }
-    Attribute *clone() const Q_DECL_OVERRIDE
+    Attribute *clone() const override
     {
         return new DefaultAttribute(mType, mValue);
     }
 
-    QByteArray serialized() const Q_DECL_OVERRIDE
+    QByteArray serialized() const override
     {
         return mValue;
     }
-    void deserialize(const QByteArray &data) Q_DECL_OVERRIDE {
+    void deserialize(const QByteArray &data) override {
         mValue = data;
     }
 

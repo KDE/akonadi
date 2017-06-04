@@ -44,7 +44,7 @@ public:
     {
     }
 
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
     CollectionAttributesSynchronizationJob *q;
     AgentInstance instance;

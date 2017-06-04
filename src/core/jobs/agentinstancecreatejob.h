@@ -110,7 +110,7 @@ public:
     /**
      * Starts the instance creation.
      */
-    void start() Q_DECL_OVERRIDE;
+    void start() override;
 
 private:
     //@cond PRIVATE

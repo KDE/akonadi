@@ -190,7 +190,7 @@ private:
         return nullptr;
     }
 
-    void processResult(KJob *job) Q_DECL_OVERRIDE {
+    void processResult(KJob *job) override {
         if (job->error())
         {
             //This can happen if we have stale notifications for items that have already been removed
@@ -457,7 +457,7 @@ private:
         return job;
     }
 
-    void processResult(KJob *job) Q_DECL_OVERRIDE {
+    void processResult(KJob *job) override {
         if (job->error())
         {
             qWarning() << job->errorString();

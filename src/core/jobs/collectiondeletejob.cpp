@@ -34,7 +34,7 @@ public:
         : JobPrivate(parent)
     {
     }
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
 
     Collection mCollection;
 

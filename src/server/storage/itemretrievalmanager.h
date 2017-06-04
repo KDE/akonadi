@@ -74,7 +74,7 @@ private:
     OrgFreedesktopAkonadiResourceInterface *resourceInterface(const QString &id);
 
 private Q_SLOTS:
-    void init() Q_DECL_OVERRIDE;
+    void init() override;
 
     void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
     void processRequest();

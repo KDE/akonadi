@@ -96,7 +96,7 @@ public:
     AgentInstance resource() const;
 
     /* reimpl */
-    void start() Q_DECL_OVERRIDE;
+    void start() override;
 
     /*
      * @since 5.1

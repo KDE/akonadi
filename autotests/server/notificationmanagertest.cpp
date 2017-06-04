@@ -92,7 +92,7 @@ public:
         }
     }
 
-    void writeNotification(const Protocol::ChangeNotificationPtr &notification) Q_DECL_OVERRIDE
+    void writeNotification(const Protocol::ChangeNotificationPtr &notification) override
     {
         emittedNotifications << notification;
     }

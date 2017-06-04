@@ -43,7 +43,7 @@ public:
     }
 
 protected:
-    Statistics calculateCollectionStatistics(const Collection &col) Q_DECL_OVERRIDE
+    Statistics calculateCollectionStatistics(const Collection &col) override
     {
         ++mCalculationsCount;
         return CollectionStatistics::calculateCollectionStatistics(col);

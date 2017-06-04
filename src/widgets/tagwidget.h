@@ -40,7 +40,7 @@ Q_SIGNALS:
     void clearTags();
 
 protected:
-    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 };
 
 /**

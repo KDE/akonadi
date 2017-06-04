@@ -55,8 +55,8 @@ Q_SIGNALS:
     Q_SCRIPTABLE void done();
 
 protected:
-    void init() Q_DECL_OVERRIDE;
-    void quit() Q_DECL_OVERRIDE;
+    void init() override;
+    void quit() override;
 
 private:
     void inform(const char *msg);

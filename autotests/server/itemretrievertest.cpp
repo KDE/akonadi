@@ -54,7 +54,7 @@ public:
     {
     }
 
-    void start() Q_DECL_OVERRIDE
+    void start() override
     {
         Q_FOREACH (const JobResult &res, mResults) {
             if (res.error.isEmpty()) {
@@ -87,7 +87,7 @@ public:
         });
     }
 
-    void kill() Q_DECL_OVERRIDE
+    void kill() override
     {
         // TODO?
     }
@@ -117,7 +117,7 @@ public:
         mJobResults.insert(itemId, JobResult{ itemId, QByteArray(), QByteArray(), error });
     }
 
-    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) Q_DECL_OVERRIDE
+    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) override
     {
         QVector<JobResult> results;
         Q_FOREACH (auto id, request->ids) {
@@ -154,7 +154,7 @@ public:
         : m_itemId(itemId), m_requestedParts(requestedParts)
     {}
 
-    void run() Q_DECL_OVERRIDE
+    void run() override
     {
         // ItemRetriever should...
         ItemRetriever retriever;

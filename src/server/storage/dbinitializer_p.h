@@ -33,13 +33,13 @@ class DbInitializerMySql : public DbInitializer
 public:
     explicit DbInitializerMySql(const QSqlDatabase &database);
 protected:
-    QString sqlType(const ColumnDescription &col, int size) const Q_DECL_OVERRIDE;
+    QString sqlType(const ColumnDescription &col, int size) const override;
 
-    QString buildCreateTableStatement(const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
-    QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
-    QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const Q_DECL_OVERRIDE;
-    QString buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const Q_DECL_OVERRIDE;
-    QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const Q_DECL_OVERRIDE;
+    QString buildCreateTableStatement(const TableDescription &tableDescription) const override;
+    QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const override;
+    QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const override;
+    QString buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const override;
+    QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const override;
 };
 
 class DbInitializerSqlite : public DbInitializer
@@ -47,10 +47,10 @@ class DbInitializerSqlite : public DbInitializer
 public:
     explicit DbInitializerSqlite(const QSqlDatabase &database);
 protected:
-    QString buildCreateTableStatement(const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
-    QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
-    QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const Q_DECL_OVERRIDE;
-    QString sqlValue(const ColumnDescription &col, const QString &value) const Q_DECL_OVERRIDE;
+    QString buildCreateTableStatement(const TableDescription &tableDescription) const override;
+    QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const override;
+    QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const override;
+    QString sqlValue(const ColumnDescription &col, const QString &value) const override;
 };
 
 class DbInitializerPostgreSql : public DbInitializer
@@ -58,13 +58,13 @@ class DbInitializerPostgreSql : public DbInitializer
 public:
     explicit DbInitializerPostgreSql(const QSqlDatabase &database);
 protected:
-    QString sqlType(const ColumnDescription &col, int size) const Q_DECL_OVERRIDE;
+    QString sqlType(const ColumnDescription &col, int size) const override;
 
-    QString buildCreateTableStatement(const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
-    QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const Q_DECL_OVERRIDE;
-    QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const Q_DECL_OVERRIDE;
-    QString buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const Q_DECL_OVERRIDE;
-    QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const Q_DECL_OVERRIDE;
+    QString buildCreateTableStatement(const TableDescription &tableDescription) const override;
+    QString buildColumnStatement(const ColumnDescription &columnDescription, const TableDescription &tableDescription) const override;
+    QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const override;
+    QString buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const override;
+    QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const override;
 };
 
 } // namespace Server

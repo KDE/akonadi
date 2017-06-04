@@ -58,8 +58,8 @@ private Q_SLOTS:
     void slotNotify(const Akonadi::Protocol::ChangeNotificationList &msgs);
 
 protected:
-    void init() Q_DECL_OVERRIDE;
-    void quit() Q_DECL_OVERRIDE;
+    void init() override;
+    void quit() override;
 
     void emitDebugNotification(const Protocol::ChangeNotificationPtr &ntf,
                                const QVector<QByteArray> &listeners);

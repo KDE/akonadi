@@ -53,7 +53,7 @@ public:
 
     // JobPrivate interface
 public:
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
 };
 
 QString Akonadi::SearchCreateJobPrivate::jobDebuggingString() const

@@ -94,7 +94,7 @@ public:
      */
     void setXmlGuiClient(KXMLGUIClient *xmlGuiClient);
 
-    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void setModel(QAbstractItemModel *model) override;
 
 Q_SIGNALS:
     /**
@@ -133,7 +133,7 @@ Q_SIGNALS:
 
 protected:
     using QTreeView::currentChanged;
-    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
     //@cond PRIVATE

@@ -37,7 +37,7 @@ public:
     {
     }
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE
+    QString jobDebuggingString() const override
     {
         return QStringLiteral("Collection Id %1").arg(mCollection.id());
     }

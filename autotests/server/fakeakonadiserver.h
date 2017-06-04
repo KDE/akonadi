@@ -91,10 +91,10 @@ public:
     ~FakeAkonadiServer();
 
     /* Reimpl */
-    bool init() Q_DECL_OVERRIDE;
+    bool init() override;
 
     /* Reimpl */
-    bool quit() Q_DECL_OVERRIDE;
+    bool quit() override;
 
     static QString basePath();
     static QString socketFile();
@@ -114,7 +114,7 @@ public:
     void disableItemRetrievalManager();
 
 protected:
-    void newCmdConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
+    void newCmdConnection(quintptr socketDescriptor) override;
 
 private:
     explicit FakeAkonadiServer();

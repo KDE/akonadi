@@ -37,11 +37,11 @@ public:
     void setRemoteRelations(const Akonadi::Relation::List &relations);
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
 private Q_SLOTS:
     void onLocalFetchDone(KJob *job);
-    void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) override;
 
 private:
     void diffRelations();

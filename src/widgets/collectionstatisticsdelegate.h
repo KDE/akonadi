@@ -125,14 +125,14 @@ protected:
      * @param index model index (QModelIndex)
      */
     void paint(QPainter *painter, const QStyleOptionViewItem &option,
-               const QModelIndex &index) const Q_DECL_OVERRIDE;
+               const QModelIndex &index) const override;
 
     /**
      * @param option style option view item
      * @param index model index (QModelIndex)
      */
     void initStyleOption(QStyleOptionViewItem *option,
-                         const QModelIndex &index) const Q_DECL_OVERRIDE;
+                         const QModelIndex &index) const override;
 
 private:
     //@cond PRIVATE

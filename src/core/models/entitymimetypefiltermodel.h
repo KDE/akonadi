@@ -126,19 +126,19 @@ public:
      */
     void setHeaderGroup(EntityTreeModel::HeaderGroup headerGroup);
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
-    bool canFetchMore(const QModelIndex &parent) const Q_DECL_OVERRIDE;
+    bool canFetchMore(const QModelIndex &parent) const override;
 
-    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
+    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
 protected:
-    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
-    bool filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    bool filterAcceptsColumn(int sourceColumn, const QModelIndex &sourceParent) const override;
 
 private:
     //@cond PRIVATE

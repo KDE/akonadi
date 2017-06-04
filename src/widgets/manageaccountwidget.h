@@ -63,7 +63,7 @@ public:
 
     QAbstractItemView *view() const;
 protected:
-    bool eventFilter(QObject *obj, QEvent *event) Q_DECL_OVERRIDE;
+    bool eventFilter(QObject *obj, QEvent *event) override;
 private Q_SLOTS:
     void slotAccountSelected(const Akonadi::AgentInstance &current);
     void slotRemoveSelectedAccount();

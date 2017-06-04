@@ -76,7 +76,7 @@ public:
 
     Item::List items() const;
 protected:
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
 private:
     //@cond PRIVATE

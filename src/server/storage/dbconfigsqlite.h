@@ -41,12 +41,12 @@ public:
     /**
      * Returns the name of the used driver.
      */
-    QString driverName() const Q_DECL_OVERRIDE;
+    QString driverName() const override;
 
     /**
      * Returns the database name.
      */
-    QString databaseName() const Q_DECL_OVERRIDE;
+    QString databaseName() const override;
 
     /**
      * This method is called whenever the Akonadi server is started
@@ -55,23 +55,23 @@ public:
      * At this point the default settings should be determined, merged
      * with the given @p settings and written back.
      */
-    bool init(QSettings &settings) Q_DECL_OVERRIDE;
+    bool init(QSettings &settings) override;
 
     /**
      * This method applies the configured settings to the QtSql @p database
      * instance.
      */
-    void apply(QSqlDatabase &database) Q_DECL_OVERRIDE;
+    void apply(QSqlDatabase &database) override;
 
     /**
      * Returns whether an internal server needs to be used.
      */
-    bool useInternalServer() const Q_DECL_OVERRIDE;
+    bool useInternalServer() const override;
 
     /**
      * Sets sqlite journal mode to WAL and synchronous mode to NORMAL
      */
-    void setup() Q_DECL_OVERRIDE;
+    void setup() override;
 private:
     Version mDriverVersion;
     QString mDatabaseName;

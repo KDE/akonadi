@@ -68,7 +68,7 @@ public:
     /**
       Returns the error message associated with this exception.
     */
-    const char *what() const throw() Q_DECL_OVERRIDE;
+    const char *what() const throw() override;
 
     /**
       Returns the type of this exception.
@@ -97,7 +97,7 @@ private:
         { \
         } \
         ~classname() throw(); \
-        QByteArray type() const throw() Q_DECL_OVERRIDE; \
+        QByteArray type() const throw() override; \
     }
 
 AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(PayloadException);

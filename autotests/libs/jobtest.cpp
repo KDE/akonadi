@@ -37,7 +37,7 @@ public:
         emitResult();
     }
 protected:
-    void doStart() Q_DECL_OVERRIDE { emitWriteFinished(); }
+    void doStart() override { emitWriteFinished(); }
 };
 
 class JobTest : public QObject

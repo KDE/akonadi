@@ -38,7 +38,7 @@ public:
     {
     }
 
-    bool emitNotification(const Akonadi::Protocol::ChangeNotificationPtr &msg) Q_DECL_OVERRIDE {
+    bool emitNotification(const Akonadi::Protocol::ChangeNotificationPtr &msg) override {
         // TODO: Check/Log
         return Akonadi::ChangeRecorderPrivate::emitNotification(msg);
     }

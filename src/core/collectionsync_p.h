@@ -125,7 +125,7 @@ public:
     void setKeepLocalChanges(const QSet<QByteArray> &parts);
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
 private:
     class Private;

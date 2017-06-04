@@ -82,7 +82,7 @@ public:
     AgentFilterProxyModel *agentFilterProxyModel() const;
 
 public Q_SLOTS:
-    void done(int result) Q_DECL_OVERRIDE;
+    void done(int result) override;
 
 private:
     //@cond PRIVATE

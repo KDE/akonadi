@@ -82,7 +82,7 @@ public:
 
 protected:
     /* reimpl */
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
 private:
     class Private;
@@ -157,9 +157,9 @@ public:
 
 protected:
     /* reimpl */
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
     /* reimpl */
-    void slotResult(KJob *job) Q_DECL_OVERRIDE;
+    void slotResult(KJob *job) override;
 
 private:
     friend class DefaultResourceJobPrivate;
@@ -207,7 +207,7 @@ public:
     ~GetLockJob();
 
     /* reimpl */
-    void start() Q_DECL_OVERRIDE;
+    void start() override;
 
 private:
     class Private;

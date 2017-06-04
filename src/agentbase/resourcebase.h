@@ -752,7 +752,7 @@ protected:
      * When going offline, the scheduler aborts the current task, so you should
      * do the same in your resource, if the task implementation is asynchronous.
      */
-    void doSetOnline(bool online) Q_DECL_OVERRIDE;
+    void doSetOnline(bool online) override;
 
     /**
      * Indicate the use of hierarchical remote identifiers.

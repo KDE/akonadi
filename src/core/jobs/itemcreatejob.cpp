@@ -50,7 +50,7 @@ public:
 
     Protocol::PartMetaData preparePart(const QByteArray &part);
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
     Collection mCollection;
     Item mItem;
     QSet<QByteArray> mParts;

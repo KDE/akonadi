@@ -45,7 +45,7 @@ public:
         q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
     }
 
-    void aboutToFinish() Q_DECL_OVERRIDE {
+    void aboutToFinish() override {
         timeout();
     }
 

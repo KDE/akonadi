@@ -69,7 +69,7 @@ public:
         q->emitResult();
     }
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
 };
 
 QString Akonadi::TransactionSequencePrivate::jobDebuggingString() const

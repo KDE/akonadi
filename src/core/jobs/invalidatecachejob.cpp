@@ -39,7 +39,7 @@ public:
     }
     Collection collection;
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
     void collectionFetchResult(KJob *job);
     void itemFetchResult(KJob *job);
     void itemStoreResult(KJob *job);

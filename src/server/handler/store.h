@@ -98,7 +98,7 @@ class Store : public Handler
     Q_OBJECT
 
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 
 private:
     bool replaceFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged);

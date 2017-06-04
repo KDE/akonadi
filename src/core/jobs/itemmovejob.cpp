@@ -37,7 +37,7 @@ public:
     {
     }
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE
+    QString jobDebuggingString() const override
     {
         QString str = QStringLiteral("Move item");
         if (source.isValid()) {

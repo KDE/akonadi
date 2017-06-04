@@ -38,7 +38,7 @@ class TransactionHandler : public Handler
     Q_ENUMS(Mode)
 
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 };
 
 } // namespace Server

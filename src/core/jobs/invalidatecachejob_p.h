@@ -43,7 +43,7 @@ public:
     explicit InvalidateCacheJob(const Collection &collection, QObject *parent);
 
 protected:
-    void doStart() Q_DECL_OVERRIDE;
+    void doStart() override;
 
 private:
     Q_DECLARE_PRIVATE(InvalidateCacheJob)

@@ -52,18 +52,18 @@ public:
         emit Cache::dataAvailable();
     }
 
-    T retrieve(typename T::Id id) const Q_DECL_OVERRIDE
+    T retrieve(typename T::Id id) const override
     {
         return m_data.value(id);
     }
 
-    void request(typename T::Id id, const typename Cache::FetchScope &scope) Q_DECL_OVERRIDE
+    void request(typename T::Id id, const typename Cache::FetchScope &scope) override
     {
         Q_UNUSED(id)
         Q_UNUSED(scope)
     }
 
-    bool ensureCached(typename T::Id id, const typename Cache::FetchScope &scope) Q_DECL_OVERRIDE
+    bool ensureCached(typename T::Id id, const typename Cache::FetchScope &scope) override
     {
         Q_UNUSED(scope)
         return m_data.contains(id);
@@ -155,17 +155,17 @@ public:
     {
     }
 
-    Akonadi::Connection *createNotificationConnection(Akonadi::Session *parent) Q_DECL_OVERRIDE {
+    Akonadi::Connection *createNotificationConnection(Akonadi::Session *parent) override {
         return new FakeNotificationConnection(parent);
     }
 
-    Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE {
+    Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) override {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)
         return collectionCache;
     }
 
-    Akonadi::ItemCache *createItemCache(int maxCapacity, Akonadi::Session *session) Q_DECL_OVERRIDE {
+    Akonadi::ItemCache *createItemCache(int maxCapacity, Akonadi::Session *session) override {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)
         return itemCache;

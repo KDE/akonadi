@@ -39,7 +39,7 @@ public:
         , mWhat(what)
     {}
 
-    const char *what() const throw() Q_DECL_OVERRIDE {
+    const char *what() const throw() override {
         return mWhat.constData();
     }
 

@@ -209,7 +209,7 @@ public:
     class factoryName : public Akonadi::CollectionPropertiesPageFactory \
     { \
     public: \
-        inline Akonadi::CollectionPropertiesPage *createWidget( QWidget *parent = nullptr ) const Q_DECL_OVERRIDE \
+        inline Akonadi::CollectionPropertiesPage *createWidget( QWidget *parent = nullptr ) const override \
         { \
             return new className( parent ); \
         } \

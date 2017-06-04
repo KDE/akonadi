@@ -34,7 +34,7 @@ class DbException : public Exception
 {
 public:
     explicit DbException(const QSqlQuery &query, const char *what = nullptr);
-    const char *type() const throw() Q_DECL_OVERRIDE;
+    const char *type() const throw() override;
 };
 
 } // namespace Server

@@ -41,7 +41,7 @@ class Delete : public Handler
 {
     Q_OBJECT
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 
 private:
     bool deleteRecursive(Collection &col);

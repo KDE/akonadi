@@ -50,12 +50,12 @@ public:
     void requestCollectionSync(const Collection &collection);
 
 protected:
-    int collectionScheduleInterval(const Collection &collection) Q_DECL_OVERRIDE;
-    bool hasChanged(const Collection &collection, const Collection &changed) Q_DECL_OVERRIDE;
-    bool shouldScheduleCollection(const Collection &collection) Q_DECL_OVERRIDE;
+    int collectionScheduleInterval(const Collection &collection) override;
+    bool hasChanged(const Collection &collection, const Collection &changed) override;
+    bool shouldScheduleCollection(const Collection &collection) override;
 
 protected Q_SLOTS:
-    void collectionExpired(const Collection &collection) Q_DECL_OVERRIDE;
+    void collectionExpired(const Collection &collection) override;
 
 private:
     QHash<int, QDateTime> mLastChecks;

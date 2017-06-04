@@ -55,9 +55,9 @@ public:
     void conflictResolved();
     void conflictResolveError(const QString &message);
 
-    void doUpdateItemRevision(Item::Id id, int oldRevision, int newRevision) Q_DECL_OVERRIDE;
+    void doUpdateItemRevision(Item::Id id, int oldRevision, int newRevision) override;
 
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
     Protocol::ModifyItemsCommandPtr fullCommand() const;
 
     void setSilent(bool silent);

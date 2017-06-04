@@ -37,7 +37,7 @@ Q_SIGNALS:
     void newConnection(quintptr socketDescriptor);
 
 protected:
-    void incomingConnection(quintptr socketDescriptor) Q_DECL_OVERRIDE;
+    void incomingConnection(quintptr socketDescriptor) override;
 };
 
 } // namespace Server

@@ -46,7 +46,7 @@ struct Rudi: public Volker {
         who = QStringLiteral("Rudi");
     }
     virtual ~Rudi() { }
-    Rudi *clone() const Q_DECL_OVERRIDE
+    Rudi *clone() const override
     {
         return new Rudi(*this);
     }
@@ -60,7 +60,7 @@ struct Gerd: public Volker {
     {
         who = QStringLiteral("Gerd");
     }
-    Gerd *clone() const Q_DECL_OVERRIDE
+    Gerd *clone() const override
     {
         return new Gerd(*this);
     }

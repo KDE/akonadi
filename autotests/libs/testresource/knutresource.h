@@ -45,28 +45,28 @@ public:
     ~KnutResource();
 
 public Q_SLOTS:
-    void configure(WId windowId) Q_DECL_OVERRIDE;
+    void configure(WId windowId) override;
 
 protected:
-    void retrieveCollections() Q_DECL_OVERRIDE;
-    void retrieveItems(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
+    void retrieveCollections() override;
+    void retrieveItems(const Akonadi::Collection &collection) override;
 #ifdef DO_IT_THE_OLD_WAY
-    bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
+    bool retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts) override;
 #endif
-    bool retrieveItems(const Akonadi::Item::List &items, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
+    bool retrieveItems(const Akonadi::Item::List &items, const QSet<QByteArray> &parts) override;
 
-    void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent) Q_DECL_OVERRIDE;
-    void collectionChanged(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
-    void collectionRemoved(const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
+    void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent) override;
+    void collectionChanged(const Akonadi::Collection &collection) override;
+    void collectionRemoved(const Akonadi::Collection &collection) override;
 
-    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
-    void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts) Q_DECL_OVERRIDE;
-    void itemRemoved(const Akonadi::Item &ref) Q_DECL_OVERRIDE;
-    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination) Q_DECL_OVERRIDE;
+    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection) override;
+    void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &parts) override;
+    void itemRemoved(const Akonadi::Item &ref) override;
+    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &collectionSource, const Akonadi::Collection &collectionDestination) override;
 
-    void search(const QString &query, const Akonadi::Collection &collection) Q_DECL_OVERRIDE;
-    void addSearch(const QString &query, const QString &queryLanguage, const Akonadi::Collection &resultCollection) Q_DECL_OVERRIDE;
-    void removeSearch(const Akonadi::Collection &resultCollection) Q_DECL_OVERRIDE;
+    void search(const QString &query, const Akonadi::Collection &collection) override;
+    void addSearch(const QString &query, const QString &queryLanguage, const Akonadi::Collection &resultCollection) override;
+    void removeSearch(const Akonadi::Collection &resultCollection) override;
 
 private:
     QDomElement findElementByRid(const QString &rid) const;

@@ -516,29 +516,29 @@ public:
      */
     CollectionFetchStrategy collectionFetchStrategy() const;
 
-    QHash<int, QByteArray> roleNames() const Q_DECL_OVERRIDE;
+    QHash<int, QByteArray> roleNames() const override;
 
-    int columnCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    int rowCount(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const Q_DECL_OVERRIDE;
+    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
-    QStringList mimeTypes() const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    QStringList mimeTypes() const override;
 
-    Qt::DropActions supportedDropActions() const Q_DECL_OVERRIDE;
-    QMimeData *mimeData(const QModelIndexList &indexes) const Q_DECL_OVERRIDE;
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) Q_DECL_OVERRIDE;
-    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) Q_DECL_OVERRIDE;
+    Qt::DropActions supportedDropActions() const override;
+    QMimeData *mimeData(const QModelIndexList &indexes) const override;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
-    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
-    QModelIndex parent(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
+    QModelIndex parent(const QModelIndex &index) const override;
 
     // TODO: Review the implementations of these. I think they could be better.
-    bool canFetchMore(const QModelIndex &parent) const Q_DECL_OVERRIDE;
-    void fetchMore(const QModelIndex &parent) Q_DECL_OVERRIDE;
-    bool hasChildren(const QModelIndex &parent = QModelIndex()) const Q_DECL_OVERRIDE;
+    bool canFetchMore(const QModelIndex &parent) const override;
+    void fetchMore(const QModelIndex &parent) override;
+    bool hasChildren(const QModelIndex &parent = QModelIndex()) const override;
 
     /**
      * Returns whether the collection tree has been fetched at initialisation.
@@ -570,7 +570,7 @@ public:
     /**
      * Reimplemented to handle the AmazingCompletionRole.
      */
-    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
+    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1, Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
     /**
      * Returns a QModelIndex in @p model which points to @p collection.
@@ -677,10 +677,10 @@ protected:
 private:
     //@cond PRIVATE
     // Make these private, they shouldn't be called by applications
-    bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
-    bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
-    bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
-    bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) Q_DECL_OVERRIDE;
+    bool insertRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
+    bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
+    bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
+    bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
 
     Q_PRIVATE_SLOT(d_func(), void monitoredCollectionStatisticsChanged(Akonadi::Collection::Id,
                    const Akonadi::CollectionStatistics &))

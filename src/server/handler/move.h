@@ -45,7 +45,7 @@ class  Move : public Handler
     Q_OBJECT
 
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 
 private Q_SLOTS:
     void itemsRetrieved(const QList<qint64> &ids);

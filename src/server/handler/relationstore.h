@@ -34,7 +34,7 @@ class RelationStore : public Handler
     Q_OBJECT
 
 public:
-    bool parseStream() Q_DECL_OVERRIDE;
+    bool parseStream() override;
 
 private:
     Relation fetchRelation(qint64 leftId, qint64 rightId, qint64 typeId);

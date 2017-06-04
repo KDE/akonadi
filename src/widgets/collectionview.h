@@ -97,7 +97,7 @@ public:
      */
     void setXmlGuiClient(KXMLGUIClient *xmlGuiClient);
 
-    void setModel(QAbstractItemModel *model) Q_DECL_OVERRIDE;
+    void setModel(QAbstractItemModel *model) override;
 
 Q_SIGNALS:
     /**
@@ -118,10 +118,10 @@ Q_SIGNALS:
 
 protected:
     using QTreeView::currentChanged;
-    void dragMoveEvent(QDragMoveEvent *event) Q_DECL_OVERRIDE;
-    void dragLeaveEvent(QDragLeaveEvent *event) Q_DECL_OVERRIDE;
-    void dropEvent(QDropEvent *event) Q_DECL_OVERRIDE;
-    void contextMenuEvent(QContextMenuEvent *event) Q_DECL_OVERRIDE;
+    void dragMoveEvent(QDragMoveEvent *event) override;
+    void dragLeaveEvent(QDragLeaveEvent *event) override;
+    void dropEvent(QDropEvent *event) override;
+    void contextMenuEvent(QContextMenuEvent *event) override;
 
 private:
     //@cond PRIVATE

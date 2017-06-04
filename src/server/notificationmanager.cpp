@@ -143,7 +143,7 @@ public:
     {
     }
 
-    void run() Q_DECL_OVERRIDE {
+    void run() override {
         for (const auto &ntf : qAsConst(mNotifications))
         {
             if (mSubscriber) {

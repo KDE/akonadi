@@ -40,7 +40,7 @@ public:
     UnitActionStateManager(ActionStateManagerTest *receiver);
 
 protected:
-    bool hasResourceCapability(const Collection &collection, const QString &capability) const Q_DECL_OVERRIDE;
+    bool hasResourceCapability(const Collection &collection, const QString &capability) const override;
 
 private:
     ActionStateManagerTest *mReceiver;

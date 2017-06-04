@@ -80,8 +80,8 @@ public Q_SLOTS:
     void collectionRemoved(const Collection &col);
 
 protected:
-    void init() Q_DECL_OVERRIDE;
-    void quit() Q_DECL_OVERRIDE;
+    void init() override;
+    void quit() override;
 
     Node *findNode(const QString &rid, const QString &resource) const;
 

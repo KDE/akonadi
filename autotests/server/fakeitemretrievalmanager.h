@@ -30,9 +30,9 @@ class FakeItemRetrievalManager : public ItemRetrievalManager
     Q_OBJECT
 public:
     explicit FakeItemRetrievalManager();
-    ~FakeItemRetrievalManager() Q_DECL_OVERRIDE;
+    ~FakeItemRetrievalManager() override;
 
-    void requestItemDelivery(ItemRetrievalRequest *request) Q_DECL_OVERRIDE;
+    void requestItemDelivery(ItemRetrievalRequest *request) override;
 };
 
 } // namespace Server

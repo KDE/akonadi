@@ -34,7 +34,7 @@ public:
     }
 
     QString resourceId;
-    QString jobDebuggingString() const Q_DECL_OVERRIDE;
+    QString jobDebuggingString() const override;
 };
 
 QString Akonadi::ResourceSelectJobPrivate::jobDebuggingString() const

@@ -91,16 +91,16 @@ public:
     /**
      * @reimp
      */
-    Qt::ItemFlags flags(const QModelIndex &index) const Q_DECL_OVERRIDE;
+    Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     /**
      * @reimp
      */
     QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
-                          Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const Q_DECL_OVERRIDE;
+                          Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
-    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const Q_DECL_OVERRIDE;
+    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
     //@cond PRIVATE

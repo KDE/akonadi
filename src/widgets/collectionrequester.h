@@ -122,7 +122,7 @@ public:
     void setContentMimeTypes(const QStringList &mimetypes);
 
 protected:
-    void changeEvent(QEvent *event) Q_DECL_OVERRIDE;
+    void changeEvent(QEvent *event) override;
 
 public Q_SLOTS:
     /**

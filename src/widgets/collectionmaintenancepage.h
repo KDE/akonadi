@@ -31,10 +31,10 @@ class AKONADIWIDGETS_EXPORT CollectionMaintenancePage : public Akonadi::Collecti
     Q_OBJECT
 public:
     explicit CollectionMaintenancePage(QWidget *parent = nullptr);
-    ~CollectionMaintenancePage() Q_DECL_OVERRIDE;
+    ~CollectionMaintenancePage() override;
 
-    void load(const Akonadi::Collection &col) Q_DECL_OVERRIDE;
-    void save(Akonadi::Collection &col) Q_DECL_OVERRIDE;
+    void load(const Akonadi::Collection &col) override;
+    void save(Akonadi::Collection &col) override;
 
 protected:
     void init(const Akonadi::Collection &);

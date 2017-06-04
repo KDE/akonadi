@@ -31,8 +31,8 @@ namespace Server
 class AgentSearchEngine : public AbstractSearchEngine
 {
 public:
-    void addSearch(const Collection &collection) Q_DECL_OVERRIDE;
-    void removeSearch(qint64 id) Q_DECL_OVERRIDE;
+    void addSearch(const Collection &collection) override;
+    void removeSearch(qint64 id) override;
 };
 
 } // namespace Server
