@@ -324,6 +324,9 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
                 }
             }
             // fall through.
+#if QT_VERSION >= QT_VERSION_CHECK(5,8,0)
+        Q_FALLTHROUGH();
+#endif
         }
         default:
             return entityData(collection, index.column(), role);
@@ -372,6 +375,9 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
                 }
             }
             // fall through.
+#if QT_VERSION >= QT_VERSION_CHECK(5,8,0)
+        Q_FALLTHROUGH();
+#endif
         }
         default:
             return entityData(item, index.column(), role);
