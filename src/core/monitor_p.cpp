@@ -486,11 +486,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         someoneWasListening = emitTagNotification(tagNtf, tag);
     } else if (msg->type() == Protocol::Command::RelationChangeNotification) {
         const auto &relNtf = Protocol::cmdCast<Protocol::RelationChangeNotification>(msg);
-        Relation rel;
-        rel.setLeft(Akonadi::Item(relNtf.leftItem()));
-        rel.setRight(Akonadi::Item(relNtf.rightItem()));
-        rel.setType(relNtf.type().toLatin1());
-        rel.setRemoteId(relNtf.remoteId().toLatin1());
+        const Relation rel = ProtocolHelper::parseRelationFetchResult(*relNtf.relation());
         someoneWasListening = emitRelationNotification(relNtf, rel);
     } else if (msg->type() == Protocol::Command::CollectionChangeNotification) {
         const auto &colNtf = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);

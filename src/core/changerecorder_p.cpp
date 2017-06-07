@@ -881,33 +881,72 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(
     } else if (version >= 2) {
         stream >> operation;
         stream >> entityCnt;
-        for (int j = 0; j < entityCnt; ++j) {
-            stream >> dummyI;
-            stream >> dummyString;
-            stream >> dummyString;
-            stream >> dummyString;
-            if (stream.status() != QDataStream::Ok) {
-                qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
-                return msg;
-            }
-        }
-        stream >> dummyBa;
-        if (version == 5) {
-            // there was a bug in version 5 serializer that serialized this
-            // field as qint64 (8 bytes) instead of empty QByteArray (which is
-            // 4 bytes)
-            stream >> dummyI;
+        if (version >= 7) {
+            auto relation = Protocol::FetchRelationsResponsePtr::create();
+            qint64 i64;
+            QByteArray ba;
+            stream >> i64;
+            relation->setLeft(i64);
+            stream >> ba;
+            relation->setLeftMimeType(ba);
+            stream >> i64;
+            relation->setRight(i64);
+            stream >>ba;
+            relation->setRightMimeType(ba);
+            stream >> ba;
+            relation->setRemoteId(ba);
+            stream >> ba;
+            relation->setType(ba);
+
+            msg->setRelation(relation);
+
         } else {
+            for (int j = 0; j < entityCnt; ++j) {
+                stream >> dummyI;
+                stream >> dummyString;
+                stream >> dummyString;
+                stream >> dummyString;
+                if (stream.status() != QDataStream::Ok) {
+                    qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
+                    return msg;
+                }
+            }
             stream >> dummyBa;
-        }
-        stream >> dummyI;
-        stream >> dummyI;
-        stream >> itemParts;
-        stream >> dummyBaV;
-        stream >> dummyBaV;
-        if (version >= 3) {
-            stream >> dummyIv;
-            stream >> dummyIv;
+            if (version == 5) {
+                // there was a bug in version 5 serializer that serialized this
+                // field as qint64 (8 bytes) instead of empty QByteArray (which is
+                // 4 bytes)
+                stream >> dummyI;
+            } else {
+                stream >> dummyBa;
+            }
+            stream >> dummyI;
+            stream >> dummyI;
+            stream >> itemParts;
+            stream >> dummyBaV;
+            stream >> dummyBaV;
+            if (version >= 3) {
+                stream >> dummyIv;
+                stream >> dummyIv;
+            }
+
+            auto relation = Protocol::FetchRelationsResponsePtr::create();
+            for (const QByteArray &part : qAsConst(itemParts)) {
+                const QByteArrayList p = part.split(' ');
+                if (p.size() < 2) {
+                    continue;
+                }
+                if (p[0] == "LEFT") {
+                    relation->setLeft(p[1].toLongLong());
+                } else if (p[0] == "RIGHT") {
+                    relation->setRight(p[1].toLongLong());
+                } else if (p[0] == "RID") {
+                    relation->setRemoteId(p[1]);
+                } else if (p[0] == "TYPE") {
+                    relation->setType(p[1]);
+                }
+            }
+            msg->setRelation(relation);
         }
     }
 
@@ -916,47 +955,21 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(
     } else {
         msg->setOperation(mapRelationOperation(static_cast<LegacyOp>(operation)));
     }
-    for (const QByteArray &part : qAsConst(itemParts)) {
-        const QByteArrayList p = part.split(' ');
-        if (p.size() < 2) {
-            continue;
-        }
-        if (p[0] == "LEFT") {
-            msg->setLeftItem(p[1].toLongLong());
-        } else if (p[0] == "RIGHT") {
-            msg->setRightItem(p[1].toLongLong());
-        } else if (p[0] == "RID") {
-            msg->setRemoteId(QString::fromLatin1(p[1]));
-        } else if (p[0] == "TYPE") {
-            msg->setType(QString::fromLatin1(p[1]));
-        }
-    }
+
     return msg;
 }
 
 void Akonadi::ChangeRecorderPrivate::saveRelationNotification(QDataStream &stream, const Protocol::RelationChangeNotification &msg)
 {
-    QSet<QByteArray> rv;
-    rv.insert("LEFT " + QByteArray::number(msg.leftItem()));
-    rv.insert("RIGHT " + QByteArray::number(msg.rightItem()));
-    rv.insert("RID " + msg.remoteId().toLatin1());
-    rv.insert("TYPE " + msg.type().toLatin1());
-
+    const auto rel = msg.relation();
     stream << int(msg.operation());
     stream << int(0);
-    stream << qint64(0);
-    stream << QString();
-    stream << QString();
-    stream << QString();
-    stream << QByteArray();
-    stream << QByteArray();
-    stream << qint64(0);
-    stream << qint64(0);
-    stream << rv;
-    stream << QSet<QByteArray>();
-    stream << QSet<QByteArray>();
-    stream << QSet<qint64>();
-    stream << QSet<qint64>();
+    stream << rel->left();
+    stream << rel->leftMimeType();
+    stream << rel->right();
+    stream << rel->rightMimeType();
+    stream << rel->remoteId();
+    stream << rel->type();
 }
 
 Protocol::ItemChangeNotification::Operation ChangeRecorderPrivate::mapItemOperation(LegacyOp op) const

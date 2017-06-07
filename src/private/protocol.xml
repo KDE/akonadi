@@ -895,10 +895,8 @@
     </enum>
 
     <param name="operation" type="RelationChangeNotification::Operation" default="InvalidOp" />
-    <param name="leftItem" type="qint64" default="-1" />
-    <param name="rightItem" type="qint64" default="-1" />
-    <param name="remoteId" type="QString" />
-    <param name="type" type="QString" />
+
+    <param name="relation" type="Akonadi::Protocol::FetchRelationsResponsePtr" />
   </notification>
 
   <!--Create Subscription //-->

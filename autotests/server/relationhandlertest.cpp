@@ -87,17 +87,23 @@ public:
 
     QScopedPointer<DbInitializer> initializer;
 
-    Protocol::RelationChangeNotificationPtr relationNotification(const Protocol::RelationChangeNotificationPtr &notificationTemplate,
+    Protocol::RelationChangeNotificationPtr relationNotification(Protocol::RelationChangeNotification::Operation op,
                                                                  const PimItem &item1,
                                                                  const PimItem &item2,
                                                                  const QString &rid,
                                                                  const QString &type = QStringLiteral("type"))
     {
-        auto notification = Protocol::RelationChangeNotificationPtr::create(*notificationTemplate);
-        notification->setLeftItem(item1.id());
-        notification->setRightItem(item2.id());
-        notification->setRemoteId(rid);
-        notification->setType(type);
+        auto notification = Protocol::RelationChangeNotificationPtr::create();
+        notification->setOperation(op);
+        notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
+        auto relation = Protocol::FetchRelationsResponsePtr::create();
+        relation->setLeft(item1.id());
+        relation->setLeftMimeType(item1.mimeType().name().toLatin1());
+        relation->setRight(item2.id());
+        relation->setRightMimeType(item2.mimeType().name().toLatin1());
+        relation->setRemoteId(rid.toLatin1());
+        relation->setType(type.toLatin1());
+        notification->setRelation(relation);
         return notification;
     }
 
@@ -113,10 +119,6 @@ private Q_SLOTS:
         QTest::addColumn<TestScenario::List >("scenarios");
         QTest::addColumn<Relation::List>("expectedRelations");
         QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
-
-        auto notificationTemplate = Protocol::RelationChangeNotificationPtr::create();
-        notificationTemplate->setOperation(Protocol::RelationChangeNotification::Add);
-        notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
 
         {
             TestScenario::List scenarios;
@@ -141,7 +143,7 @@ private Q_SLOTS:
                 { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
             itemNotification->setAddedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
 
-            const auto notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId());
+            const auto notification = relationNotification(Protocol::RelationChangeNotification::Add, item1, item2, rel.remoteId());
 
             QTest::newRow("uid create relation") << scenarios << (Relation::List() << rel) << (Protocol::ChangeNotificationList() << notification << itemNotification);
         }
@@ -198,10 +200,6 @@ private Q_SLOTS:
         rel2.setRelationType(RelationType::retrieveByName(QStringLiteral("type2")));
         QVERIFY(rel2.insert());
 
-        auto notificationTemplate = Protocol::RelationChangeNotificationPtr::create();
-        notificationTemplate->setOperation(Protocol::RelationChangeNotification::Remove);
-        notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-
         QTest::addColumn<TestScenario::List>("scenarios");
         QTest::addColumn<Relation::List>("expectedRelations");
         QTest::addColumn<Protocol::ChangeNotificationList>("expectedNotifications");
@@ -221,7 +219,7 @@ private Q_SLOTS:
                 { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
             itemNotification->setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
 
-            const auto notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId());
+            const auto notification = relationNotification(Protocol::RelationChangeNotification::Remove, item1, item2, rel.remoteId());
 
             QTest::newRow("uid remove relation") << scenarios << (Relation::List() << rel2) << (Protocol::ChangeNotificationList() << notification << itemNotification);
         }
@@ -242,7 +240,7 @@ private Q_SLOTS:
                 { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
             itemNotification->setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type2")) });
 
-            const auto notification = relationNotification(notificationTemplate, item1, item2, rel.remoteId(), QStringLiteral("type2"));
+            const auto notification = relationNotification(Protocol::RelationChangeNotification::Remove, item1, item2, rel.remoteId(), QStringLiteral("type2"));
 
             QTest::newRow("uid remove relation without type") << scenarios << Relation::List() << (Protocol::ChangeNotificationList() << notification << itemNotification);
         }

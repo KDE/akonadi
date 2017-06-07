@@ -419,10 +419,7 @@ void NotificationCollector::relationNotification(Protocol::RelationChangeNotific
     auto msg = Protocol::RelationChangeNotificationPtr::create();
     msg->setOperation(op);
     msg->setSessionId(mSessionId);
-    msg->setLeftItem(relation.leftId());
-    msg->setRightItem(relation.rightId());
-    msg->setRemoteId(relation.remoteId());
-    msg->setType(relation.relationType().name());
+    msg->setRelation(HandlerHelper::fetchRelationsResponse(relation));
 
     dispatchNotification(msg);
 }
