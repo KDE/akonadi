@@ -77,7 +77,7 @@ private Q_SLOTS:
         ChangeRecorder *rec = createChangeRecorder();
         AkonadiTest::akWaitForSignal(rec, SIGNAL(monitorReady()), 1000);
         QVERIFY(rec->isEmpty());
-        Q_FOREACH (const QString &action, actions) {
+        for (const QString &action : qAsConst(actions)) {
             qDebug() << action;
             if (action == QStringLiteral("rn")) {
                 replayNextAndExpectNothing(rec);

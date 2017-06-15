@@ -44,7 +44,7 @@ public:
             parent.reset(new Tag(*other.parent));
         }
         type = other.type;
-        Q_FOREACH (Attribute *attr, other.mAttributes) {
+        for (Attribute *attr : qAsConst(other.mAttributes)) {
             mAttributes.insert(attr->type(), attr->clone());
         }
         mDeletedAttributes = other.mDeletedAttributes;
