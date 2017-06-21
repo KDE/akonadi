@@ -46,6 +46,64 @@ void CollectionStatistics::destroy()
     sInstance = nullptr;
 }
 
+CollectionStatistics::CollectionStatistics(bool prefetch)
+{
+    if (prefetch) {
+        QMutexLocker lock(&mCacheLock);
+
+        QList<QueryBuilder> builders;
+        // This single query will give us statistics for all non-empty non-virtual
+        // Collections at much better speed than individual queries.
+        auto qb = prepareGenericQuery();
+        qb.addColumn(PimItem::collectionIdFullColumnName());
+        qb.addGroupColumn(PimItem::collectionIdFullColumnName());
+        builders << qb;
+
+        // This single query will give us statistics for all non-empty virtual
+        // Collections
+        qb = prepareGenericQuery();
+        qb.addColumn(CollectionPimItemRelation::leftFullColumnName());
+        qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),
+                   CollectionPimItemRelation::rightFullColumnName(), PimItem::idFullColumnName());
+        qb.addGroupColumn(CollectionPimItemRelation::leftFullColumnName());
+        builders << qb;
+
+        for (auto &qb : builders) {
+            if (!qb.exec()) {
+                return;
+            }
+
+            auto query = qb.query();
+            while (query.next()) {
+                mCache.insert(query.value(3).toLongLong(),
+                            { query.value(0).toLongLong(),
+                                query.value(1).toLongLong(),
+                                query.value(2).toLongLong()
+                            });
+            }
+        }
+
+        // Now quickly get all non-virtual enabled Collections and if they are
+        // not in mCache yet, insert them with empty statistics.
+        qb = QueryBuilder(Collection::tableName());
+        qb.addColumn(Collection::idColumn());
+        qb.addValueCondition(Collection::enabledColumn(), Query::Equals, true);
+        qb.addValueCondition(Collection::isVirtualColumn(), Query::Equals, false);
+        if (!qb.exec()) {
+            return;
+        }
+
+        auto query = qb.query();
+        while (query.next()) {
+            const auto colId = query.value(0).toLongLong();
+            const auto isVirtual = query.value(1).toBool();
+            if (!isVirtual && !mCache.contains(colId)) {
+                mCache.insert(colId, { 0, 0, 0 });
+            }
+        }
+    }
+}
+
 void CollectionStatistics::itemAdded(const Collection &col, qint64 size, bool seen)
 {
     if (!col.isValid()) {
@@ -104,12 +162,12 @@ const CollectionStatistics::Statistics CollectionStatistics::statistics(const Co
     return it.value();
 }
 
-CollectionStatistics::Statistics CollectionStatistics::calculateCollectionStatistics(const Collection &col)
+QueryBuilder CollectionStatistics::prepareGenericQuery()
 {
     static const QString SeenFlagsTableName = QStringLiteral("SeenFlags");
     static const QString IgnoredFlagsTableName = QStringLiteral("IgnoredFlags");
 
-#define FLAGS_COLUMN(table, column) \
+    #define FLAGS_COLUMN(table, column) \
     QStringLiteral("%1.%2").arg(table##TableName, PimItemFlagRelation::column())
 
     // COUNT(DISTINCT PimItemTable.id)
@@ -153,7 +211,14 @@ CollectionStatistics::Statistics CollectionStatistics::calculateCollectionStatis
                    ignoredCondition);
     }
 
-#undef FLAGS_COLUMN
+    #undef FLAGS_COLUMN
+
+    return qb;
+}
+
+CollectionStatistics::Statistics CollectionStatistics::calculateCollectionStatistics(const Collection &col)
+{
+    auto qb = prepareGenericQuery();
 
     if (col.isVirtual()) {
         qb.addJoin(QueryBuilder::InnerJoin, CollectionPimItemRelation::tableName(),

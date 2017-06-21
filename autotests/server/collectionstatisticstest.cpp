@@ -26,12 +26,13 @@
 
 using namespace Akonadi::Server;
 
+Q_DECLARE_METATYPE(Akonadi::Server::Collection)
 
 class IntrospectableCollectionStatistics : public CollectionStatistics
 {
 public:
-    IntrospectableCollectionStatistics()
-        : CollectionStatistics()
+    IntrospectableCollectionStatistics(bool prefetch)
+        : CollectionStatistics(prefetch)
         , mCalculationsCount(0)
     {}
     ~IntrospectableCollectionStatistics()
@@ -61,6 +62,8 @@ class CollectionStatisticsTest : public QObject
 public:
     CollectionStatisticsTest()
     {
+        qRegisterMetaType<Collection>();
+
         try {
             FakeAkonadiServer::instance()->setPopulateDb(false);
             FakeAkonadiServer::instance()->init();
@@ -76,6 +79,45 @@ public:
     }
 
 private Q_SLOTS:
+    void testPrefetch_data()
+    {
+        DbInitializer initializer;
+        initializer.createResource("testresource");
+        auto col1 = initializer.createCollection("col1");
+        initializer.createItem("item1", col1);
+        initializer.createItem("item2", col1);
+        auto col2 = initializer.createCollection("col2");
+        // empty
+        auto col3 = initializer.createCollection("col3");
+        initializer.createItem("item3", col3);
+
+        QTest::addColumn<Collection>("collection");
+        QTest::addColumn<int>("calculationsCount");
+        QTest::addColumn<qint64>("count");
+        QTest::addColumn<qint64>("read");
+        QTest::addColumn<qint64>("size");
+
+        QTest::newRow("col1") << col1 << 0 << 2ll << 0ll << 0ll;
+        QTest::newRow("col2") << col2 << 0 << 0ll << 0ll << 0ll;
+        QTest::newRow("col3") << col3 << 0 << 1ll << 0ll << 0ll;
+    }
+
+    void testPrefetch()
+    {
+        QFETCH(Collection, collection);
+        QFETCH(int, calculationsCount);
+        QFETCH(qint64, count);
+        QFETCH(qint64, read);
+        QFETCH(qint64, size);
+
+        IntrospectableCollectionStatistics cs(true);
+        auto stats = cs.statistics(collection);
+        QCOMPARE(cs.calculationsCount(), calculationsCount);
+        QCOMPARE(stats.count, count);
+        QCOMPARE(stats.read, read);
+        QCOMPARE(stats.size, size);
+    }
+
     void testCalculateStats()
     {
         DbInitializer initializer;
@@ -85,7 +127,7 @@ private Q_SLOTS:
         initializer.createItem("item2", col);
         initializer.createItem("item3", col);
 
-        IntrospectableCollectionStatistics cs;
+        IntrospectableCollectionStatistics cs(false);
         auto stats = cs.statistics(col);
         QCOMPARE(cs.calculationsCount(), 1);
         QCOMPARE(stats.count, 3);
@@ -102,7 +144,7 @@ private Q_SLOTS:
         initializer.createItem("item2", col);
         initializer.createItem("item3", col);
 
-        IntrospectableCollectionStatistics cs;
+        IntrospectableCollectionStatistics cs(false);
         auto stats = cs.statistics(col);
         QCOMPARE(cs.calculationsCount(), 1);
         QCOMPARE(stats.count, 3);
@@ -131,7 +173,7 @@ void testItemAdded()
         auto col = initializer.createCollection("col1");
         initializer.createItem("item1", col);
 
-        IntrospectableCollectionStatistics cs;
+        IntrospectableCollectionStatistics cs(false);
         auto stats = cs.statistics(col);
         QCOMPARE(cs.calculationsCount(), 1);
         QCOMPARE(stats.count, 1);

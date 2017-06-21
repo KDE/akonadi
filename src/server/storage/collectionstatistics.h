@@ -30,6 +30,7 @@ namespace Akonadi
 namespace Server
 {
 
+class QueryBuilder;
 class Collection;
 
 /**
@@ -67,6 +68,9 @@ public:
     void expireCache();
 
 protected:
+    explicit CollectionStatistics(bool prefetch = true);
+    QueryBuilder prepareGenericQuery();
+
     virtual Statistics calculateCollectionStatistics(const Collection &col);
 
     QMutex mCacheLock;
