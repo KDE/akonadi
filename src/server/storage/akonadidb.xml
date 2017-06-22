@@ -177,7 +177,7 @@
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="qint64" allowNull="false"/>
     <column name="version" type="int" default="0"/>
-    <column name="storage" type="enum" enumType="Part::Storage" default="Part::Internal"/>
+    <column name="storage" type="enum" enumType="Storage" default="Internal"/>
     <index name="pimItemIdTypeIndex" columns="pimItemId,partTypeId" unique="true"/>
     <index name="pimItemIdSortIndex" columns="pimItemId" unique="false" sort="DESC"/>
   </table>
