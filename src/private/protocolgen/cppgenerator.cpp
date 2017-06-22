@@ -341,9 +341,9 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
 
     mHeader << "\n"
                "private:\n"
-               "    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const Akonadi::Protocol::" << node->className() << " &obj);\n"
-               "    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, Akonadi::Protocol::" << node->className() << " &obj);\n"
-               "    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::" << node->className() << " &obj);\n"
+               "    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const Akonadi::Protocol::" << node->className() << " &obj);\n"
+               "    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, Akonadi::Protocol::" << node->className() << " &obj);\n"
+               "    friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::" << node->className() << " &obj);\n"
                "};\n\n"
                "} // namespace Protocol\n"
                "} // namespace Akonadi\n"

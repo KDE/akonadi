@@ -170,11 +170,11 @@ protected:
 
 private:
     friend class Factory;
-    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
-                                                       const Akonadi::Protocol::Command &cmd);
-    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
-                                                       Akonadi::Protocol::Command &cmd);
-    friend QDebug operator<<(::QDebug dbg, const Akonadi::Protocol::Command &cmd);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
+                                                                           const Akonadi::Protocol::Command &cmd);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
+                                                                           Akonadi::Protocol::Command &cmd);
+    friend AKONADIPRIVATE_EXPORT QDebug operator<<(::QDebug dbg, const Akonadi::Protocol::Command &cmd);
 };
 
 } // namespace Protocol
@@ -227,11 +227,11 @@ protected:
 
 private:
     friend class Factory;
-    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
-                                                       const Akonadi::Protocol::Response &cmd);
-    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
-                                                       Akonadi::Protocol::Response &cmd);
-    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::Response &cmd);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
+                                                                           const Akonadi::Protocol::Response &cmd);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
+                                                                           Akonadi::Protocol::Response &cmd);
+    friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::Response &cmd);
 };
 
 } // namespace Protocol
@@ -261,7 +261,7 @@ public:
 
 private:
     template<typename T>
-    friend CommandPtr deserialize(QIODevice *device);
+    friend AKONADIPRIVATE_EXPORT CommandPtr deserialize(QIODevice *device);
 };
 
 AKONADIPRIVATE_EXPORT void serialize(QIODevice *device, const CommandPtr &command);
@@ -367,11 +367,11 @@ private:
     QDateTime mChangedSince;
     QSet<QByteArray> mTagFetchScope;
 
-    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
-                                                       const Akonadi::Protocol::FetchScope &scope);
-    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
-                                                       Akonadi::Protocol::FetchScope &scope);
-    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::FetchScope &scope);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
+                                                                           const Akonadi::Protocol::FetchScope &scope);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
+                                                                           Akonadi::Protocol::FetchScope &scope);
+    friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::FetchScope &scope);
 };
 
 } // namespace Protocol
@@ -455,11 +455,11 @@ private:
         }
     }
 
-    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
-                                                      const Akonadi::Protocol::ScopeContext &context);
-    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
-                                                       Akonadi::Protocol::ScopeContext &context);
-    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ScopeContext &ctx);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
+                                                                           const Akonadi::Protocol::ScopeContext &context);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
+                                                                           Akonadi::Protocol::ScopeContext &context);
+    friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ScopeContext &ctx);
 };
 
 } // namespace Protocol
@@ -575,11 +575,11 @@ protected:
     // it is never transferred to clients
     QVector<QByteArray> mMetaData;
 
-    friend Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
-                                                       const Akonadi::Protocol::ChangeNotification &ntf);
-    friend Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
-                                                       Akonadi::Protocol::ChangeNotification &ntf);
-    friend QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ChangeNotification &ntf);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
+                                                                           const Akonadi::Protocol::ChangeNotification &ntf);
+    friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
+                                                                           Akonadi::Protocol::ChangeNotification &ntf);
+    friend AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::ChangeNotification &ntf);
 };
 
 inline uint qHash(const ChangeNotification::Relation &rel)
