@@ -25,15 +25,24 @@ set(akonadiprivate_SRCS
 
 ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.h IDENTIFIER AKONADIPRIVATE_LOG CATEGORY_NAME org.kde.pim.akonadiprivate)
 
-add_library(akonadiprivate_obj OBJECT ${akonadiprivate_SRCS})
-target_include_directories(akonadiprivate_obj PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
-target_include_directories(akonadiprivate_obj PUBLIC "$<BUILD_INTERFACE:${Qt5Core_INCLUDE_DIRS};${Qt5DBus_INCLUDE_DIRS}>")
-set_target_properties(akonadiprivate_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
-add_dependencies(akonadiprivate_obj generate_protocol)
+if (MSVC)
+    # MSVC does not like when the same object files are reused for shared and
+    # static linking, so in this case we build all sources twice to make it happy
+    set(akonadiprivate_buildsources ${akonadiprivate_SRCS})
+else()
+    add_library(akonadiprivate_obj OBJECT ${akonadiprivate_SRCS})
+    target_include_directories(akonadiprivate_obj PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
+    target_include_directories(akonadiprivate_obj PUBLIC "$<BUILD_INTERFACE:${Qt5Core_INCLUDE_DIRS};${Qt5DBus_INCLUDE_DIRS}>")
+    set_target_properties(akonadiprivate_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
+    add_dependencies(akonadiprivate_obj generate_protocol)
+    set(akonadiprivate_buildsources $<TARGET_OBJECTS:akonadiprivate_obj>)
+endif()
 
-
-add_library(KF5AkonadiPrivate SHARED $<TARGET_OBJECTS:akonadiprivate_obj>)
+add_library(KF5AkonadiPrivate SHARED ${akonadiprivate_buildsources})
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
+if (MSVC)
+    add_dependencies(KF5AkonadiPrivate generate_protocol)
+endif()
 target_link_libraries(KF5AkonadiPrivate
 PUBLIC
     Qt5::Core
@@ -74,7 +83,10 @@ install(FILES
 
 ### Private static library used by unit-tests ####
 
-add_library(akonadiprivate_static STATIC $<TARGET_OBJECTS:akonadiprivate_obj>)
+add_library(akonadiprivate_static STATIC ${akonadiprivate_buildsources})
+if (MSVC)
+    add_dependencies(akonadiprivate_static generate_protocol)
+endif()
 set_target_properties(akonadiprivate_static PROPERTIES
     COMPILE_FLAGS -DAKONADIPRIVATE_STATIC_DEFINE
 )
