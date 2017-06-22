@@ -96,8 +96,7 @@ CollectionStatistics::CollectionStatistics(bool prefetch)
         auto query = qb.query();
         while (query.next()) {
             const auto colId = query.value(0).toLongLong();
-            const auto isVirtual = query.value(1).toBool();
-            if (!isVirtual && !mCache.contains(colId)) {
+            if (!mCache.contains(colId)) {
                 mCache.insert(colId, { 0, 0, 0 });
             }
         }
