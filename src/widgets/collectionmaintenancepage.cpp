@@ -28,6 +28,7 @@
 
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
+#include <AkonadiCore/ServerManager>
 
 #include <QDialog>
 #include <QPushButton>
@@ -54,7 +55,12 @@ public:
             //Don't allow to reindex twice.
             ui.reindexButton->setEnabled(false);
 
-            QDBusInterface indexingAgentIface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_indexing_agent"),
+            QString service = QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_indexing_agent");
+            if (Akonadi::ServerManager::hasInstanceIdentifier()) {
+                service += QLatin1Char('.') + Akonadi::ServerManager::instanceIdentifier();
+            }
+
+            QDBusInterface indexingAgentIface(service,
                                               QStringLiteral("/"),
                                               QStringLiteral("org.freedesktop.Akonadi.Indexer"));
             if (indexingAgentIface.isValid()) {
@@ -140,7 +146,12 @@ void CollectionMaintenancePage::load(const Collection &col)
         if (!indexingWasEnabled) {
             d->ui.indexedCountLbl->hide();
         } else {
-            QDBusInterface indexingAgentIface(QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_indexing_agent"),
+            QString service = QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_indexing_agent");
+            if (Akonadi::ServerManager::hasInstanceIdentifier()) {
+                service += QLatin1Char('.') + Akonadi::ServerManager::instanceIdentifier();
+            }
+
+            QDBusInterface indexingAgentIface(service,
                                               QStringLiteral("/"),
                                               QStringLiteral("org.freedesktop.Akonadi.Indexer"));
             if (indexingAgentIface.isValid()) {
