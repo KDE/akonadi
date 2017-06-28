@@ -25,10 +25,10 @@
 #include "akonadiwidgets_debug.h"
 #include "indexpolicyattribute.h"
 #include "cachepolicy.h"
+#include "servermanager.h"
 
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
-#include <AkonadiCore/ServerManager>
 
 #include <QDialog>
 #include <QPushButton>
