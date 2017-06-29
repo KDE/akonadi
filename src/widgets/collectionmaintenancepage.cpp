@@ -55,11 +55,7 @@ public:
             //Don't allow to reindex twice.
             ui.reindexButton->setEnabled(false);
 
-            QString service = QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_indexing_agent");
-            if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-                service += QLatin1Char('.') + Akonadi::ServerManager::instanceIdentifier();
-            }
-
+            const auto service = ServerManager::agentServiceName(ServerManager::Agent, QStringLiteral("akonadi_indexing_agent"));
             QDBusInterface indexingAgentIface(service,
                                               QStringLiteral("/"),
                                               QStringLiteral("org.freedesktop.Akonadi.Indexer"));
@@ -146,11 +142,7 @@ void CollectionMaintenancePage::load(const Collection &col)
         if (!indexingWasEnabled) {
             d->ui.indexedCountLbl->hide();
         } else {
-            QString service = QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_indexing_agent");
-            if (Akonadi::ServerManager::hasInstanceIdentifier()) {
-                service += QLatin1Char('.') + Akonadi::ServerManager::instanceIdentifier();
-            }
-
+            const auto service = ServerManager::agentServiceName(ServerManager::Agent, QStringLiteral("akonadi_indexing_agent"));
             QDBusInterface indexingAgentIface(service,
                                               QStringLiteral("/"),
                                               QStringLiteral("org.freedesktop.Akonadi.Indexer"));

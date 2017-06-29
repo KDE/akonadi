@@ -332,8 +332,8 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
     {
         agent.setName(mDefaultResourceOptions.value(QStringLiteral("Name")).toString());
 
-        QDBusInterface conf(QLatin1String("org.freedesktop.Akonadi.Resource.") + defaultId,
-                            QStringLiteral("/Settings"), QString());
+        const auto service = ServerManager::agentServiceName(ServerManager::Resource, defaultId);
+        QDBusInterface conf(service, QStringLiteral("/Settings"), QString());
 
         if (!conf.isValid()) {
             q->setError(-1);

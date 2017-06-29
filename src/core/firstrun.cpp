@@ -152,8 +152,8 @@ void Firstrun::instanceCreated(KJob *job)
         instance.setName(agentName);
     }
 
-    QDBusInterface *iface = new QDBusInterface(QStringLiteral("org.freedesktop.Akonadi.Agent.%1").arg(instance.identifier()),
-            QStringLiteral("/Settings"), QString(),
+    const auto service = ServerManager::agentServiceName(ServerManager::Agent, instance.identifier());
+    QDBusInterface *iface = new QDBusInterface(service, QStringLiteral("/Settings"), QString(),
             KDBusConnectionPool::threadConnection(), this);
     if (!iface->isValid()) {
         qCCritical(AKONADICORE_LOG) << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
