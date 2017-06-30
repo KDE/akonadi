@@ -470,7 +470,10 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
 
         if (m_itemPopulation == EntityTreeModel::ImmediatePopulation) {
             foreach (const Collection::Id &collectionId, collectionIt.value()) {
-                fetchItems(m_collections.value(collectionId));
+                const auto col = m_collections.value(collectionId);
+                if (m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedCollection(col)) {
+                    fetchItems(m_collections.value(collectionId));
+                }
             }
         }
     }
