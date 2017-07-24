@@ -393,7 +393,7 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
     Q_D(const EntityTreeModel);
     // Pass modeltest.
     if (!index.isValid()) {
-        return nullptr;
+        return {};
     }
 
     Qt::ItemFlags flags = QAbstractItemModel::flags(index);
@@ -453,7 +453,7 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
 
             // Can't drop onto items.
             if (rights & Collection::CanChangeItem && index.column() == 0) {
-                flags = flags | Qt::ItemIsEditable;
+                flags |= Qt::ItemIsEditable;
             }
             // dragging is always possible, even for read-only objects, but they can only be copied, not moved.
             flags |= Qt::ItemIsDragEnabled;
