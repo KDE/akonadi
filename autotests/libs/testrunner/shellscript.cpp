@@ -31,7 +31,7 @@ ShellScript::ShellScript()
 void ShellScript::writeEnvironmentVariables()
 {
     foreach (const EnvVar &envvar, mEnvVars) {
-        mScript += QLatin1String("_old_") + QLatin1String(envvar.first) + QLatin1String("=") + QLatin1String(envvar.first) + QLatin1String("\n");
+        mScript += QLatin1String("_old_") + QLatin1String(envvar.first) + QLatin1String("=$") + QLatin1String(envvar.first) + QLatin1String("\n");
         mScript.append(QLatin1String(envvar.first));
         mScript.append(QLatin1String("=\""));
         QString value = QString::fromLocal8Bit(envvar.second);
