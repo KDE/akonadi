@@ -574,10 +574,10 @@ void EntityTreeModelTest::testItemRemoved()
     FakeServerData *serverData = testDrivers.first;
     Akonadi::EntityTreeModel *model = testDrivers.second;
 
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, removedItem, 1, Qt::MatchRecursive);
+    const QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, removedItem, 1, Qt::MatchRecursive);
     Q_ASSERT(!list.isEmpty());
     QModelIndex removedIndex = list.first();
-    QString sourceCollection = removedIndex.parent().data().toString();
+    const QString sourceCollection = removedIndex.parent().data().toString();
     int sourceRow = removedIndex.row();
 
     FakeItemRemovedCommand *removeCommand = new FakeItemRemovedCommand(removedItem, sourceCollection, serverData);
