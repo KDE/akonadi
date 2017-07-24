@@ -21,7 +21,7 @@
 macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibraries)
   set(_test ${_source})
   get_filename_component(_name ${_source} NAME_WE)
-  add_executable( ${_name} ${_test} ${_additionalsources})
+  add_executable(${_name} ${_test} ${_additionalsources})
   ecm_mark_as_test(${_name})
   target_link_libraries(${_name}
                         Qt5::Test Qt5::Gui Qt5::Widgets Qt5::Network KF5::KIOCore KF5::AkonadiCore
@@ -57,30 +57,33 @@ macro(add_akonadi_isolated_test_advanced _source _additionalsources _linklibrari
   endif()
 
   if ( KDEPIMLIBS_TESTS_XML OR AKONADI_TESTS_XML )
-    set( MYSQL_EXTRA_OPTIONS_FS -xml -o ${TEST_RESULT_OUTPUT_PATH}/mysql-fs-${_name}.xml )
-    set( POSTGRESL_EXTRA_OPTIONS_FS -xml -o ${TEST_RESULT_OUTPUT_PATH}/postgresql-fs-${_name}.xml )
-    set( SQLITE_EXTRA_OPTIONS -xml -o ${TEST_RESULT_OUTPUT_PATH}/sqlite-${_name}.xml )
+    set(MYSQL_EXTRA_OPTIONS_FS -xml -o "${TEST_RESULT_OUTPUT_PATH}/mysql-fs-${_name}.xml")
+    set(POSTGRESL_EXTRA_OPTIONS_FS -xml -o "${TEST_RESULT_OUTPUT_PATH}/postgresql-fs-${_name}.xml")
+    set(SQLITE_EXTRA_OPTIONS -xml -o "${TEST_RESULT_OUTPUT_PATH}/sqlite-${_name}.xml")
   endif()
 
   if (NOT DEFINED AKONADI_RUN_MYSQL_ISOLATED_TESTS OR AKONADI_RUN_MYSQL_ISOLATED_TESTS)
-    find_program( MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin )
-    if ( MYSQLD_EXECUTABLE )
-      add_test( NAME akonadi-mysql-fs-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml ${_executable}
-        ${MYSQL_EXTRA_OPTIONS_FS} )
+    find_program(MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin)
+    if (MYSQLD_EXECUTABLE)
+      add_test(NAME akonadi-mysql-fs-${_name}
+               COMMAND ${_testrunner} -c "${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-mysql-fs.xml"
+                       ${_executable} ${MYSQL_EXTRA_OPTIONS_FS})
     endif()
   endif()
 
   if (NOT DEFINED AKONADI_RUN_PGSQL_ISOLATED_TESTS OR AKONADI_RUN_PGSQL_ISOLATED_TESTS)
-    find_program( POSTGRES_EXECUTABLE postgres )
-    if ( POSTGRES_EXECUTABLE )
-      add_test( NAME akonadi-postgresql-fs-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml ${_executable}
-        ${POSTGRESL_EXTRA_OPTIONS_FS} )
+    find_program(POSTGRES_EXECUTABLE postgres)
+    if (POSTGRES_EXECUTABLE)
+      add_test(NAME akonadi-postgresql-fs-${_name}
+               COMMAND ${_testrunner} -c "${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-postgresql-fs.xml"
+                       ${_executable} ${POSTGRESL_EXTRA_OPTIONS_FS} )
     endif()
   endif()
 
   if (NOT DEFINED AKONADI_RUN_SQLITE_ISOLATED_TESTS OR AKONADI_RUN_SQLITE_ISOLATED_TESTS)
-    add_test( NAME akonadi-sqlite-${_name} COMMAND ${_testrunner} -c ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml ${_executable}
-    ${SQLITE_EXTRA_OPTIONS} )
+    add_test(NAME akonadi-sqlite-${_name}
+             COMMAND ${_testrunner} -c "${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config-sqlite-db.xml"
+                     ${_executable} ${SQLITE_EXTRA_OPTIONS} )
   endif()
 endmacro()
 
