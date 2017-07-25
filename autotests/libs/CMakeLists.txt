@@ -123,36 +123,43 @@ add_akonadi_test(cachepolicytest.cpp)
 
 
 # testrunner tests
-add_akonadi_isolated_test(testenvironmenttest.cpp)
-add_akonadi_isolated_test(autoincrementtest.cpp)
-add_akonadi_isolated_test(attributefactorytest.cpp)
-add_akonadi_isolated_test(collectionpathresolvertest.cpp)
-add_akonadi_isolated_test(collectionattributetest.cpp)
-add_akonadi_isolated_test(itemfetchtest.cpp)
-add_akonadi_isolated_test(itemappendtest.cpp)
-add_akonadi_isolated_test(itemstoretest.cpp)
-add_akonadi_isolated_test(itemdeletetest.cpp)
-add_akonadi_isolated_test(entitycachetest.cpp)
-add_akonadi_isolated_test(monitortest.cpp)
+add_akonadi_isolated_test(SOURCE testenvironmenttest.cpp)
+add_akonadi_isolated_test(SOURCE autoincrementtest.cpp)
+add_akonadi_isolated_test(SOURCE attributefactorytest.cpp)
+add_akonadi_isolated_test(SOURCE collectionpathresolvertest.cpp)
+add_akonadi_isolated_test(SOURCE collectionattributetest.cpp)
+add_akonadi_isolated_test(SOURCE itemfetchtest.cpp)
+add_akonadi_isolated_test(SOURCE itemappendtest.cpp)
+add_akonadi_isolated_test(SOURCE itemstoretest.cpp)
+add_akonadi_isolated_test(SOURCE itemdeletetest.cpp)
+add_akonadi_isolated_test(SOURCE entitycachetest.cpp)
+add_akonadi_isolated_test(SOURCE monitortest.cpp)
 #add_akonadi_isolated_test_advanced(monitorfiltertest.cpp "" "KF5::AkonadiPrivate")
-add_akonadi_isolated_test(searchjobtest.cpp)
-add_akonadi_isolated_test(changerecordertest.cpp)
-add_akonadi_isolated_test(resourcetest.cpp)
-add_akonadi_isolated_test(subscriptiontest.cpp)
-add_akonadi_isolated_test(transactiontest.cpp)
-add_akonadi_isolated_test(itemcopytest.cpp)
-add_akonadi_isolated_test(itemmovetest.cpp)
-add_akonadi_isolated_test(collectioncopytest.cpp)
-add_akonadi_isolated_test(collectionmovetest.cpp)
-add_akonadi_isolated_test_advanced(collectionsynctest.cpp "${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp" "KF5::I18n")
-add_akonadi_isolated_test(itemsynctest.cpp)
-add_akonadi_isolated_test(linktest.cpp)
-add_akonadi_isolated_test(cachetest.cpp)
+add_akonadi_isolated_test(SOURCE searchjobtest.cpp)
+add_akonadi_isolated_test(SOURCE changerecordertest.cpp)
+add_akonadi_isolated_test(SOURCE resourcetest.cpp)
+add_akonadi_isolated_test(SOURCE subscriptiontest.cpp)
+add_akonadi_isolated_test(SOURCE transactiontest.cpp)
+add_akonadi_isolated_test(SOURCE itemcopytest.cpp)
+add_akonadi_isolated_test(SOURCE itemmovetest.cpp)
+add_akonadi_isolated_test(SOURCE collectioncopytest.cpp)
+add_akonadi_isolated_test(SOURCE collectionmovetest.cpp)
+add_akonadi_isolated_test(
+    SOURCE  collectionsynctest.cpp
+    ADDITIONAL_SOURCES ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
+    LINK_LIBRARIES KF5::I18n
+)
+add_akonadi_isolated_test(SOURCE itemsynctest.cpp)
+add_akonadi_isolated_test(SOURCE linktest.cpp)
+add_akonadi_isolated_test(SOURCE cachetest.cpp)
 
 # FIXME: This is very unstable on Jenkins
 #add_akonadi_isolated_test(servermanagertest.cpp)
 
-add_akonadi_isolated_test_advanced(tagselectwidgettest.cpp "" "KF5::AkonadiWidgets")
+add_akonadi_isolated_test(
+    SOURCE tagselectwidgettest.cpp
+    LINK_LIBRARIES KF5::AkonadiWidgets
+)
 
 
 # Having a benchmark is cool if you have any reference to compare against, but this
@@ -161,11 +168,13 @@ add_akonadi_isolated_test_advanced(tagselectwidgettest.cpp "" "KF5::AkonadiWidge
 #add_akonadi_isolated_test(itembenchmark.cpp)
 #add_akonadi_isolated_test(collectioncreator.cpp)
 
-add_akonadi_isolated_test(gidtest.cpp)
-add_akonadi_isolated_test(lazypopulationtest.cpp)
-add_akonadi_isolated_test(favoriteproxytest.cpp)
-add_akonadi_isolated_test_advanced(itemsearchjobtest.cpp testsearchplugin/testsearchplugin.cpp "")
-add_akonadi_isolated_test(tagtest.cpp)
-add_akonadi_isolated_test(tagsynctest.cpp)
-add_akonadi_isolated_test(relationtest.cpp)
-add_akonadi_isolated_test(etmpopulationtest.cpp)
+add_akonadi_isolated_test(SOURCE gidtest.cpp)
+add_akonadi_isolated_test(SOURCE lazypopulationtest.cpp)
+add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp)
+add_akonadi_isolated_test(
+    SOURCE itemsearchjobtest.cpp
+    ADDITIONAL_SOURCES testsearchplugin/testsearchplugin.cpp)
+add_akonadi_isolated_test(SOURCE tagtest.cpp)
+add_akonadi_isolated_test(SOURCE tagsynctest.cpp)
+add_akonadi_isolated_test(SOURCE relationtest.cpp)
+add_akonadi_isolated_test(SOURCE etmpopulationtest.cpp)

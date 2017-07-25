@@ -1,6 +1,0 @@
-[%General]
-SizeThreshold=0
-ExternalPayload=true
-
-[Search]
-Manager=Dummy

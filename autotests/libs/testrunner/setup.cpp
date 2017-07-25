@@ -34,6 +34,7 @@
 #include <QFileInfo>
 #include <QTimer>
 #include <QDBusConnection>
+#include <QSettings>
 
 bool SetupTest::startAkonadiDaemon()
 {
@@ -45,7 +46,8 @@ bool SetupTest::startAkonadiDaemon()
                 this, SLOT(slotAkonadiDaemonProcessFinished(int)));
     }
 
-    mAkonadiDaemonProcess->setProgram(QStringLiteral("akonadi_control"), QStringList() << QStringLiteral("--instance") << instanceId());
+    mAkonadiDaemonProcess->setProgram(QStringLiteral("akonadi_control"),
+                                      { QStringLiteral("--instance"), instanceId() });
     mAkonadiDaemonProcess->start();
     const bool started = mAkonadiDaemonProcess->waitForStarted(5000);
     qDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
@@ -75,9 +77,8 @@ void SetupTest::setupAgents()
     }
     mAgentsCreated = true;
     Config *config = Config::instance();
-    const QList<QPair<QString, bool> > agents = config->agents();
-    typedef QPair<QString, bool> StringBoolPair;
-    foreach (const StringBoolPair &agent, agents) {
+    const auto agents = config->agents();
+    for (const auto agent : agents) {
         qDebug() << "Creating agent" << agent.first << "...";
         ++mSetupJobCount;
         Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(agent.first, this);
@@ -140,8 +141,10 @@ void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
 
 void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
 {
+    qDebug() << "Copying" << src << "to" << dst;
     const QDir srcDir(src);
-    foreach (const QFileInfo &fi, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot)) {
+    const auto entries = srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+    for (const auto &fi : entries) {
         if (fi.isDir()) {
             if (fi.fileName() == QStringLiteral("akonadi")) {
                 // namespace according to instance identifier
@@ -166,8 +169,8 @@ void SetupTest::copyDirectory(const QString &src, const QString &dst)
 {
     const QDir srcDir(src);
     QDir::root().mkpath(dst);
-
-    foreach (const QFileInfo &fi, srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot)) {
+    const auto entries = srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
+    for (const auto &fi : entries) {
         if (fi.isDir()) {
             copyDirectory(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
         } else {
@@ -192,12 +195,51 @@ void SetupTest::createTempEnvironment()
     const Config *config = Config::instance();
     // Always copy the generic xdgconfig dir
     copyXdgDirectory(config->basePath() + QStringLiteral("/xdgconfig"), basePath() + testRunnerConfigDir);
-    copyXdgDirectory(config->xdgConfigHome(), basePath() + testRunnerConfigDir);
+    if (!config->xdgConfigHome().isEmpty()) {
+        copyXdgDirectory(config->xdgConfigHome(), basePath() + testRunnerConfigDir);
+    }
     copyXdgDirectory(config->xdgDataHome(), basePath() + testRunnerDataDir);
 
+    QString backend;
+    if (Config::instance()->dbBackend() == QLatin1String("pgsql")) {
+        backend = QStringLiteral("postgresql");
+    } else {
+        backend = Config::instance()->dbBackend();
+    }
     setEnvironmentVariable("XDG_DATA_HOME", basePath() + testRunnerDataDir);
     setEnvironmentVariable("XDG_CONFIG_HOME", basePath() + testRunnerConfigDir);
     setEnvironmentVariable("TMPDIR", basePath() + testRunnerTmpDir);
+    setEnvironmentVariable("TESTRUNNER_DB_ENVIRONMENT", backend);
+
+    writeAkonadiserverrc(basePath() + testRunnerConfigDir);
+}
+
+void SetupTest::writeAkonadiserverrc(const QString &path)
+{
+    QString backend;
+    if (Config::instance()->dbBackend() == QLatin1String("sqlite")) {
+        backend = QStringLiteral("QSQLITE3");
+    } else if (Config::instance()->dbBackend() == QLatin1String("mysql")) {
+        backend = QStringLiteral("QMYSQL");
+    } else if (Config::instance()->dbBackend() == QLatin1String("pgsql")) {
+        backend = QStringLiteral("QPSQL");
+    } else {
+        qCritical("Invalid backend name %s", qPrintable(backend));
+        return;
+    }
+
+    QSettings settings(path + QStringLiteral("/akonadi/instance/%1/akonadiserverrc").arg(instanceId()),
+                       QSettings::IniFormat);
+    settings.beginGroup(QStringLiteral("General"));
+    settings.setValue(QStringLiteral("Driver"), backend);
+    settings.endGroup();
+    settings.beginGroup(QStringLiteral("Search"));
+    settings.setValue(QStringLiteral("Manager"), QStringLiteral("Dummy"));
+    settings.endGroup();
+    settings.beginGroup(QStringLiteral("Debug"));
+    settings.setValue(QStringLiteral("Tracer"), QStringLiteral("null"));
+    settings.endGroup();
+    qDebug() << "Written akonadiserverrc to" << settings.fileName();
 }
 
 void SetupTest::cleanTempEnvironment()

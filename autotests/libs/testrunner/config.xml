@@ -1,6 +1,7 @@
-<config>
-  <kdehome>kde</kdehome>
-  <confighome>config</confighome>
-  <datahome>local/share</datahome>
-<!--  <item location="test.vcf" collection="akonadi_vcard_resource_0" />-->
-</config>
+<configs>
+  <config name="sqlite">
+    <datahome>xdglocal</datahome>
+    <!-- Acceptable values: QSQLITE, QSQLITE3, QMYSQL, QPSQL //-->
+    <dbbackend>QSQLITE3</dbbackend>
+  </config>
+</configs>

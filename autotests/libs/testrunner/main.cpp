@@ -70,9 +70,15 @@ int main(int argc, char **argv)
     KAboutData::setApplicationData(aboutdata);
     parser.addVersionOption();
     parser.addHelpOption();
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("c") << QStringLiteral("config"), i18n("Configuration file to open"), QStringLiteral("configfile"), QStringLiteral("config.xml")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("!+[test]"), i18n("Test to run automatically, interactive if none specified")));
-    parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("testenv"), i18n("Path where testenvironment would be saved"), QStringLiteral("path")));
+    parser.addOption({ { QStringLiteral("c"), QStringLiteral("config") },
+                       i18n("Configuration file to open"), QStringLiteral("configfile"),
+                       QStringLiteral("config.xml") });
+    parser.addOption({ { QStringLiteral("b"), QStringLiteral("backend") },
+                       i18n("Database backend"), QStringLiteral("backend") });
+    parser.addOption({ { QStringLiteral("!+[test]") },
+                       i18n("Test to run automatically, interactive if none specified") });
+    parser.addOption({ { QStringLiteral("testenv") },
+                       i18n("Path where testenvironment would be saved"), QStringLiteral("path") });
 
     aboutdata.setupCommandLine(&parser);
     parser.process(app);
@@ -81,7 +87,20 @@ int main(int argc, char **argv)
     //QT5 app.disableSessionManagement();
 
     if (parser.isSet(QStringLiteral("config"))) {
+        const auto backend = parser.value(QStringLiteral("backend"));
+        if (backend != QLatin1String("sqlite")
+            && backend != QLatin1String("mysql")
+            && backend != QLatin1String("pgsql")) {
+            qCritical("Invalid backend specified. Supported values are: sqlite,mysql,pgsql");
+            return 1;
+        }
+
         Config::instance(parser.value(QStringLiteral("config")));
+
+        if (!Config::instance()->setDbBackend(backend)) {
+            qCritical("Current configuration does not support the selected backend");
+            return 1;
+        }
     }
 
 #ifdef Q_OS_UNIX

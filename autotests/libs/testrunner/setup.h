@@ -80,6 +80,7 @@ private:
     void cleanTempEnvironment();
     bool isSetupDone() const;
     void setupFailed();
+    void writeAkonadiserverrc(const QString &path);
 
 private:
     KProcess *mAkonadiDaemonProcess;
