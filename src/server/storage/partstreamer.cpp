@@ -168,9 +168,14 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         if (part.storage() == Part::External) {
             // Part was external and is still external
             filename = part.data();
-            ExternalPartStorage::self()->removePartFile(
-                ExternalPartStorage::resolveAbsolutePath(filename));
-            filename = ExternalPartStorage::updateFileNameRevision(filename);
+            if (!filename.isEmpty()) {
+                ExternalPartStorage::self()->removePartFile(
+                    ExternalPartStorage::resolveAbsolutePath(filename));
+                filename = ExternalPartStorage::updateFileNameRevision(filename);
+            } else {
+                // recover from data corruption
+                filename = ExternalPartStorage::nameForPartId(part.id());
+            }
         } else {
             // Part wasn't external, but is now
             filename = ExternalPartStorage::nameForPartId(part.id());
