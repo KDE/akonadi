@@ -75,9 +75,9 @@ int main(int argc, char **argv)
                        QStringLiteral("config.xml") });
     parser.addOption({ { QStringLiteral("b"), QStringLiteral("backend") },
                        i18n("Database backend"), QStringLiteral("backend") });
-    parser.addOption({ { QStringLiteral("!+[test]") },
-                       i18n("Test to run automatically, interactive if none specified") });
-    parser.addOption({ { QStringLiteral("testenv") },
+    parser.addOption({ QStringList{ QStringLiteral("!+[test]") },
+                       i18n("Test to run automatically, interactive if none specified"), QString() });
+    parser.addOption({ QStringList{ QStringLiteral("testenv") },
                        i18n("Path where testenvironment would be saved"), QStringLiteral("path") });
 
     aboutdata.setupCommandLine(&parser);
