@@ -190,7 +190,7 @@ QQueue<Protocol::ChangeNotificationPtr> ChangeRecorderPrivate::loadFrom(QFile *d
             continue;
         }
 
-        if (msg->isValid()) {
+        if (msg && msg->isValid()) {
             msg->setSessionId(sessionId);
             list << msg;
         }
