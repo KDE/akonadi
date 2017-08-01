@@ -198,9 +198,7 @@ bool Modify::parseStream()
         }
 
         if (changed || cmd.modifiedParts() & Protocol::ModifyCollectionCommand::MimeTypes) {
-            if (changed) {
-                changes.append(AKONADI_PARAM_PERSISTENTSEARCH);
-            }
+            changes.append(AKONADI_PARAM_PERSISTENTSEARCH);
         }
     }
 
