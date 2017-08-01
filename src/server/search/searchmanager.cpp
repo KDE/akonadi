@@ -41,7 +41,6 @@
 #include <QPluginLoader>
 #include <QDBusConnection>
 #include <QTimer>
-#include <QSemaphore>
 
 #include <memory>
 
@@ -53,17 +52,13 @@ using namespace Akonadi::Server;
 SearchManager *SearchManager::sInstance = nullptr;
 
 Q_DECLARE_METATYPE(Collection)
-Q_DECLARE_METATYPE(QSet<qint64>)
-Q_DECLARE_METATYPE(QSemaphore *)
 
 SearchManager::SearchManager(const QStringList &searchEngines, QObject *parent)
     : AkThread(QStringLiteral("SearchManager"), AkThread::ManualStart, QThread::InheritPriority, parent)
     , mEngineNames(searchEngines),
       mSearchUpdateTimer(nullptr)
 {
-    qRegisterMetaType<QSet<qint64>>();
     qRegisterMetaType<Collection>();
-    qRegisterMetaType<QSemaphore *>();
 
     Q_ASSERT(sInstance == nullptr);
     sInstance = this;
@@ -250,55 +245,37 @@ void SearchManager::updateSearchAsync(const Collection &collection)
 {
     QMetaObject::invokeMethod(this, "updateSearchImpl",
                               Qt::QueuedConnection,
-                              Q_ARG(Collection, collection),
-                              Q_ARG(QSemaphore *, nullptr));
+                              Q_ARG(Collection, collection));
 }
 
 void SearchManager::updateSearch(const Collection &collection)
 {
-    QMutex mutex;
-
     mLock.lock();
     if (mUpdatingCollections.contains(collection.id())) {
         mLock.unlock();
         return;
+        // FIXME: If another thread already requested an update, we return to the caller before the
+        // search update is performed; this contradicts the docs
     }
     mUpdatingCollections.insert(collection.id());
     mLock.unlock();
 
-    QSemaphore sem(1);
-    sem.acquire();
-
     QMetaObject::invokeMethod(this, "updateSearchImpl",
-                              Qt::QueuedConnection,
-                              Q_ARG(Collection, collection),
-                              Q_ARG(QSemaphore *, &sem));
-
-    // Now wait for updateSearchImpl to wake us.
-    if (!sem.tryAcquire()) {
-        sem.acquire();
-    }
-    sem.release();
+                              Qt::BlockingQueuedConnection,
+                              Q_ARG(Collection, collection));
 
     mLock.lock();
     mUpdatingCollections.remove(collection.id());
     mLock.unlock();
 }
 
-#define wakeUpCaller(cond) \
-    if (cond) { \
-        cond->release(); \
-    }
-
-void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *cond)
+void SearchManager::updateSearchImpl(const Collection &collection)
 {
     if (collection.queryString().size() >= 32768) {
         qCWarning(AKONADISERVER_LOG) << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
-        wakeUpCaller(cond);
         return;
     }
     if (collection.queryString().isEmpty()) {
-        wakeUpCaller(cond);
         return;
     }
 
@@ -337,7 +314,6 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     //This happens if we try to search a virtual collection in recursive mode (because virtual collections are excluded from listCollectionsRecursive)
     if (queryCollections.isEmpty()) {
         qCDebug(AKONADISERVER_LOG) << "No collections to search, you're probably trying to search a virtual collection.";
-        wakeUpCaller(cond);
         return;
     }
 
@@ -360,7 +336,6 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     qb.addColumn(CollectionPimItemRelation::rightColumn());
     qb.addValueCondition(CollectionPimItemRelation::leftColumn(), Query::Equals, collection.id());
     if (!qb.exec()) {
-        wakeUpCaller(cond);
         return;
     }
 
@@ -377,7 +352,6 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     }
 
     if (!transaction.commit()) {
-        wakeUpCaller(cond);
         return;
     }
 
@@ -385,7 +359,6 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
         SelectQueryBuilder<PimItem> qb;
         qb.addValueCondition(PimItem::idFullColumnName(), Query::In, toRemove);
         if (!qb.exec()) {
-            wakeUpCaller(cond);
             return;
         }
 
@@ -396,8 +369,6 @@ void SearchManager::updateSearchImpl(const Collection &collection, QSemaphore *c
     qCDebug(AKONADISERVER_LOG) << "Search update finished";
     qCDebug(AKONADISERVER_LOG) << "All results:" << results.count();
     qCDebug(AKONADISERVER_LOG) << "Removed results:" << toRemove.count();
-
-    wakeUpCaller(cond);
 }
 
 void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)

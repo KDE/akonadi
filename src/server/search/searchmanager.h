@@ -27,7 +27,6 @@
 #include <QSet>
 #include <QMutex>
 
-class QSemaphore;
 class QTimer;
 class QPluginLoader;
 
@@ -99,12 +98,9 @@ private Q_SLOTS:
     /**
      * Actual implementation of search updates.
      *
-     * Since caller invokes this method from a different thread, they use
-     * QMetaObject::invokeMethod(). To still make it possible for callers to behave
-     * synchronously, we can pass in a QWaitCondition that the code will wake up
-     * once the search update is completed.
+     * This method has to be called using QMetaObject::invokeMethod.
      */
-    void updateSearchImpl(const Collection &collection, QSemaphore *cond);
+    void updateSearchImpl(const Collection &collection);
 
 private:
     void init() override;
