@@ -83,7 +83,6 @@ QObject *PluginLoader::createForName(const QString &name)
         if (QLatin1String(plugin->metaObject()->className()) == info.className) {
             info.loaded = true;
             return plugin;
-            break;
         }
     }
 
