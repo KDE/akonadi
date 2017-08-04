@@ -139,9 +139,7 @@ void CollectionMaintenancePage::load(const Collection &col)
         Akonadi::IndexPolicyAttribute *attr = col.attribute<Akonadi::IndexPolicyAttribute>();
         const bool indexingWasEnabled(!attr || attr->indexingEnabled());
         d->ui.enableIndexingChkBox->setChecked(indexingWasEnabled);
-        if (!indexingWasEnabled) {
-            d->ui.indexedCountLbl->hide();
-        } else {
+        if (indexingWasEnabled) {
             const auto service = ServerManager::agentServiceName(ServerManager::Agent, QStringLiteral("akonadi_indexing_agent"));
             QDBusInterface indexingAgentIface(service,
                                               QStringLiteral("/"),
@@ -167,6 +165,8 @@ void CollectionMaintenancePage::load(const Collection &col)
                 qCDebug(AKONADIWIDGETS_LOG) << "Failed to obtain Indexer interface";
                 d->ui.indexedCountLbl->hide();
             }
+        } else {
+            d->ui.indexedCountLbl->hide();
         }
     }
 }
