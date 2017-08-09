@@ -119,15 +119,13 @@ bool AkonadiServer::init()
     QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
 
     mCmdServer = new AkLocalServer(this);
-    connect(mCmdServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
-            this, &AkonadiServer::newCmdConnection);
+    connect(mCmdServer, QOverload<quintptr>::of(&AkLocalServer::newConnection), this, &AkonadiServer::newCmdConnection);
 
     mNotificationManager = new NotificationManager();
     mNtfServer = new AkLocalServer(this);
     // Note: this is a queued connection, as NotificationManager lives in its
     // own thread
-    connect(mNtfServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
-            mNotificationManager, &NotificationManager::registerConnection);
+    connect(mNtfServer, QOverload<quintptr>::of(&AkLocalServer::newConnection), mNotificationManager, &NotificationManager::registerConnection);
 
 #ifdef Q_OS_WIN
     HANDLE hToken = NULL;
