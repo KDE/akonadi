@@ -26,7 +26,7 @@ include(ECMCoverageOption)
 
 include(AkonadiMacros)
 
-set(QT_REQUIRED_VERSION "5.7.0")
+set(QT_REQUIRED_VERSION "5.8.0")
 set(AKONADI_VERSION ${PIM_VERSION})
 
 ecm_setup_version(PROJECT
