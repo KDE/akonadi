@@ -473,6 +473,13 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
                 const auto col = m_collections.value(collectionId);
                 if (m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedCollection(col)) {
                     fetchItems(m_collections.value(collectionId));
+                } else {
+                    // Consider collections that don't contain relevant mimetypes to be populated
+                    m_populatedCols.insert(collectionId);
+                    Q_EMIT q_ptr->collectionPopulated(collectionId);
+                    const auto idx = indexForCollection(Collection(collectionId));
+                    Q_ASSERT(idx.isValid());
+                    dataChanged(idx, idx);
                 }
             }
         }
