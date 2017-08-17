@@ -7,7 +7,7 @@ macro(add_unit_test _source)
     set(_test ${_source})
     get_filename_component(_name ${_source} NAME_WE)
     add_executable(${_name} ${_source})
-    add_test(AkonadiPrivate-${_name} ${_name})
+    add_test(NAME AkonadiPrivate-${_name} COMMAND ${_name})
     if (ENABLE_ASAN)
         set_tests_properties(AkonadiPrivate-${_name} PROPERTIES
                              ENVIRONMENT ASAN_OPTIONS=symbolize=1
