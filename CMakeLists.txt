@@ -74,9 +74,8 @@ set_package_properties(Qt5Designer PROPERTIES
    TYPE OPTIONAL
 )
 
-if (Qt5Designer_FOUND)
-  find_package(KF5DesignerPlugin ${KF5_VERSION} CONFIG REQUIRED)
-endif()
+find_package(KF5DesignerPlugin ${KF5_VERSION} CONFIG)
+set_package_properties(KF5DesignerPlugin PROPERTIES DESCRIPTION "KF5 designer plugin" TYPE OPTIONAL)
 
 set(Boost_MINIMUM_VERSION "1.34.0")
 find_package(Boost ${Boost_MINIMUM_VERSION})

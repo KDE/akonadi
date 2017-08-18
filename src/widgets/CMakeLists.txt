@@ -135,7 +135,7 @@ install(FILES
 
 ######### Build and install QtDesigner plugin #############
 
-if (Qt5Designer_FOUND)
+if (KF5DesignerPlugin_FOUND)
     kf5designerplugin_add_plugin(akonadiwidgets akonadi.widgets)
     target_link_libraries(akonadiwidgets
         KF5::AkonadiCore
