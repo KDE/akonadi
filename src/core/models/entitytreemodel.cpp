@@ -1208,4 +1208,28 @@ QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *m
     return proxyList;
 }
 
+Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model,
+                                              qint64 collectionId)
+{
+    const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>(model);
+    const QAbstractItemModel *_model = model;
+    while (proxy) {
+        auto _model = proxy->sourceModel();
+        proxy = qobject_cast<const QAbstractProxyModel*>(_model);
+    }
+
+    auto etm = qobject_cast<const EntityTreeModel*>(_model);
+    if (etm) {
+        return etm->d_ptr->m_collections.value(collectionId);
+    } else {
+        return Collection{ collectionId };
+    }
+}
+
+Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model,
+                                              const Collection &collection)
+{
+    return updatedCollection(model, collection.id());
+}
+
 #include "moc_entitytreemodel.cpp"

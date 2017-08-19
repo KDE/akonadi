@@ -614,6 +614,15 @@ public:
      */
     static QModelIndexList modelIndexesForItem(const QAbstractItemModel *model, const Item &item);
 
+    /**
+     * Returns an Akonadi::Collection from the @p model based on given @p collectionId.
+     *
+     * This is faster and simpler than retrieving a full Collection from the ETM
+     * by using modelIndexForCollection() and then querying for the index data.
+     */
+    static Collection updatedCollection(const QAbstractItemModel *model, qint64 collectionId);
+    static Collection updatedCollection(const QAbstractItemModel *model, const Collection &col);
+
 Q_SIGNALS:
     /**
      * Signal emitted when the collection tree has been fetched for the first time.
