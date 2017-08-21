@@ -1214,7 +1214,7 @@ Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model,
     const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>(model);
     const QAbstractItemModel *_model = model;
     while (proxy) {
-        auto _model = proxy->sourceModel();
+        _model = proxy->sourceModel();
         proxy = qobject_cast<const QAbstractProxyModel*>(_model);
     }
 
