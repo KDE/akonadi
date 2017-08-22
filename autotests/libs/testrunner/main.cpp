@@ -74,7 +74,7 @@ int main(int argc, char **argv)
                        i18n("Configuration file to open"), QStringLiteral("configfile"),
                        QStringLiteral("config.xml") });
     parser.addOption({ { QStringLiteral("b"), QStringLiteral("backend") },
-                       i18n("Database backend"), QStringLiteral("backend") });
+                       i18n("Database backend"), QStringLiteral("backend"), QStringLiteral("sqlite") });
     parser.addOption({ QStringList{ QStringLiteral("!+[test]") },
                        i18n("Test to run automatically, interactive if none specified"), QString() });
     parser.addOption({ QStringList{ QStringLiteral("testenv") },
