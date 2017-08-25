@@ -21,3 +21,7 @@ more about the internals of the Akonadi Server and the protocol in the
 ## History ##
 
 You can also read a bit more about [history of Akonadi](@ref history)
+
+## Implementation details ##
+
+* [Tags](@ref tags)
