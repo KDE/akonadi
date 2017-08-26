@@ -74,7 +74,9 @@ QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id)
 QSqlQuery TagFetchHelper::buildTagQuery()
 {
     QueryBuilder qb(Tag::tableName());
-    qb.addColumns(Tag::fullColumnNames());
+    qb.addColumn(Tag::idFullColumnName());
+    qb.addColumn(Tag::gidFullColumnName());
+    qb.addColumn(Tag::parentIdFullColumnName());
 
     qb.addJoin(QueryBuilder::InnerJoin, TagType::tableName(),
                Tag::typeIdFullColumnName(), TagType::idFullColumnName());
@@ -126,9 +128,9 @@ bool TagFetchHelper::fetchTags()
         response->setId(tagId);
         response->setGid(Utils::variantToByteArray(tagQuery.value(1)));
         response->setParentId(tagQuery.value(2).toLongLong());
-        response->setType(Utils::variantToByteArray(tagQuery.value(4)));
+        response->setType(Utils::variantToByteArray(tagQuery.value(3)));
         if (mConnection->context()->resource().isValid()) {
-            response->setRemoteId(Utils::variantToByteArray(tagQuery.value(5)));
+            response->setRemoteId(Utils::variantToByteArray(tagQuery.value(4)));
         }
 
         QMap<QByteArray, QByteArray> tagAttributes;
