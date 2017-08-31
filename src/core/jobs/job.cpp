@@ -34,6 +34,7 @@
 #include <QTimer>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
+#include <QCoreApplication>
 
 using namespace Akonadi;
 
@@ -114,7 +115,7 @@ void JobPrivate::init(QObject *parent)
             if (s_lastTime.isNull()) {
                 s_lastTime.start();
             }
-            const QString suffix; // = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
+            const QString suffix  = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
             if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
                 s_jobtracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole") + suffix,
                                                   QStringLiteral("/jobtracker"),
