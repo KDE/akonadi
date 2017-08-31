@@ -1285,7 +1285,11 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
     if (rollbackFirst) {
         // In some cases the SQL database won't rollback the failed transaction, so
         // we need to do it manually
+        QElapsedTimer timer; timer.start();
         m_database.driver()->rollbackTransaction();
+        StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
+                                                       false, timer.elapsed(),
+                                                       m_database.lastError().text());
     }
 
     // The database has rolled back the actual transaction, so reset the counter
@@ -1326,9 +1330,19 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
                 ++i;
             }
             query = copiedQuery;
+        }
+
+        QElapsedTimer t; t.start();
+        if (isBatch) {
             res = query.execBatch();
         } else {
             res = query.exec();
+        }
+        if (StorageDebugger::instance()->isSQLDebuggingEnabled()) {
+            StorageDebugger::instance()->queryExecuted(reinterpret_cast<qint64>(this),
+                                                       query, t.elapsed());
+        } else {
+            StorageDebugger::instance()->incSequence();
         }
 
         if (!res) {
