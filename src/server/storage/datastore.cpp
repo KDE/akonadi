@@ -1265,7 +1265,7 @@ QDateTime DataStore::dateTimeToQDateTime(const QByteArray &dateTime)
     return QDateTime::fromString(QString::fromLatin1(dateTime), QStringLiteral("yyyy-MM-dd hh:mm:ss"));
 }
 
-void DataStore::addQueryToTransaction(const QSqlQuery &query, bool isBatch)
+void DataStore::addQueryToTransaction(const QString &statement, const QVector<QVariant> &bindValues, bool isBatch)
 {
     // This is used for replaying deadlocked transactions, so only record queries
     // for backends that support concurrent transactions.
@@ -1273,7 +1273,7 @@ void DataStore::addQueryToTransaction(const QSqlQuery &query, bool isBatch)
         return;
     }
 
-    m_transactionQueries.append(qMakePair(query, isBatch));
+    m_transactionQueries.append({ statement, bindValues, isBatch });
 }
 
 QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
@@ -1303,37 +1303,17 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
     }
     m_transactionLevel = oldTransactionLevel;
 
-    typedef QPair<QSqlQuery, bool> QueryBoolPair;
-    QMutableVectorIterator<QueryBoolPair> iter(m_transactionQueries);
-    while (iter.hasNext()) {
-        iter.next();
-        QSqlQuery query = iter.value().first;
-        const bool isBatch = iter.value().second;
-
-        // Make sure the query is ready to be executed again
-        if (query.isActive()) {
-            query.finish();
+    QSqlQuery lastQuery;
+    for (auto q = m_transactionQueries.begin(), qEnd = m_transactionQueries.end(); q != qEnd; ++q) {
+        QSqlQuery query(database());
+        query.prepare(q->query);
+        for (int i = 0; i < q->boundValues.count(); ++i) {
+            query.bindValue(QLatin1Char(':') + QString::number(i), q->boundValues.at(i));
         }
 
         bool res = false;
-        if (isBatch) {
-            // QSqlQuery::execBatch() does not reset lastError(), so for the sake
-            // of transparency (make it look to the caller like if the query was
-            // successful the first time), we create a copy of the original query,
-            // which has lastError empty.
-            QSqlQuery copiedQuery(m_database);
-            copiedQuery.prepare(query.executedQuery());
-            const QMap<QString, QVariant> boundValues = query.boundValues();
-            int i = 0;
-            for (const QVariant &value : boundValues) {
-                copiedQuery.bindValue(i, value);
-                ++i;
-            }
-            query = copiedQuery;
-        }
-
         QElapsedTimer t; t.start();
-        if (isBatch) {
+        if (q->isBatch) {
             res = query.execBatch();
         } else {
             res = query.exec();
@@ -1355,14 +1335,13 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
 
             // Return the last query, because that's what caller expects to retrieve
             // from QueryBuilder. It is in error state anyway.
-            return m_transactionQueries.last().first;
+            return query;
         }
 
-        // Update the query in the list
-        iter.setValue(qMakePair(query, isBatch));
+        lastQuery = query;
     }
 
-    return m_transactionQueries.last().first;
+    return lastQuery;
 }
 
 bool DataStore::beginTransaction(const QString &name)

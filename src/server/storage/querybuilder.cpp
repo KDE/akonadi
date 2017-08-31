@@ -366,7 +366,7 @@ bool QueryBuilder::exec()
     bool isBatch = false;
     for (int i = 0; i < mBindValues.count(); ++i) {
         mQuery.bindValue(QLatin1Char(':') + QString::number(i), mBindValues[i]);
-        if (!isBatch && mBindValues[i].canConvert<QVariantList>()) {
+        if (!isBatch && static_cast<QMetaType::Type>(mBindValues[i].type()) == QMetaType::QVariantList) {
             isBatch = true;
         }
         //qCDebug(AKONADISERVER_LOG) << QString::fromLatin1( ":%1" ).arg( i ) <<  mBindValues[i];
@@ -397,7 +397,7 @@ bool QueryBuilder::exec()
     // The method does nothing when this query is not executed within a transaction.
     // We don't care whether the query was successful or not. In case of error, the caller
     // will rollback the transaction anyway, and all cached queries will be removed.
-    DataStore::self()->addQueryToTransaction(mQuery, isBatch);
+    DataStore::self()->addQueryToTransaction(statement, mBindValues, isBatch);
 
     if (!ret) {
         // Handle transaction deadlocks and timeouts by attempting to replay the transaction.
