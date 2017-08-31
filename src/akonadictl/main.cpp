@@ -39,6 +39,7 @@
 #include <private/protocol_p.h>
 #include <private/xdgbasedirs_p.h>
 #include <private/dbus_p.h>
+#include <private/instance_p.h>
 
 #if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
 #include <unistd.h>
@@ -150,6 +151,40 @@ static bool checkAvailableAgentTypes()
     return true;
 }
 
+static bool instanceRunning(const QString &instanceName = {})
+{
+    const auto oldInstance = Akonadi::Instance::identifier();
+    Akonadi::Instance::setIdentifier(instanceName);
+    const auto service = Akonadi::DBus::serviceName(Akonadi::DBus::Control);
+    Akonadi::Instance::setIdentifier(oldInstance);
+
+    return QDBusConnection::sessionBus().interface()->isServiceRegistered(service);
+}
+
+static void listInstances()
+{
+    struct Instance {
+        QString name;
+        bool running;
+    };
+    QVector<Instance> instances { { QStringLiteral("(default)"), instanceRunning() } };
+    const QDir instanceDir(Akonadi::XdgBaseDirs::saveDir("config", QStringLiteral("akonadi/instance")));
+    if (instanceDir.exists()) {
+        const auto list = instanceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
+        for (const auto &e : list) {
+            instances.push_back({ e, instanceRunning(e) });
+        }
+    }
+
+    for (const auto &i : qAsConst(instances)) {
+        std::cout << i.name.toStdString();
+        if (i.running) {
+            std::cout << " (running)";
+        }
+        std::cout << std::endl;
+    }
+}
+
 static bool statusServer()
 {
     checkAkonadiControlStatus();
@@ -186,6 +221,7 @@ int main(int argc, char **argv)
                                       "  stop           Stops the Akonadi server and all its processes cleanly\n"
                                       "  restart        Restart Akonadi server with all its processes\n"
                                       "  status         Shows a status overview of the Akonadi server\n"
+                                      "  instances      List all existing Akonadi instances\n"
                                       "  vacuum         Vacuum internal storage (WARNING: needs a lot of time and disk\n"
                                       "                 space!)\n"
                                       "  fsck           Check (and attempt to fix) consistency of the internal storage\n"
@@ -199,15 +235,17 @@ int main(int argc, char **argv)
     KAboutData::setApplicationData(aboutData);
 
     app.addPositionalCommandLineOption(QStringLiteral("command"), QStringLiteral("Command to execute"),
-                                       QStringLiteral("start|stop|restart|status|vacuum|fsck"));
+                                       QStringLiteral("start|stop|restart|status|vacuum|fsck|instances"));
 
     app.parseCommandLine();
-    const QStringList commands = app.commandLineArguments().positionalArguments();
+
+    const auto &cmdArgs = app.commandLineArguments();
+    const QStringList commands = cmdArgs.positionalArguments();
     if (commands.size() != 1) {
         app.printUsage();
         return -1;
     }
-    const bool verbose = app.commandLineArguments().isSet(QStringLiteral("verbose"));
+    const bool verbose = cmdArgs.isSet(QStringLiteral("verbose"));
 
     const QString command = commands[0];
     if (command == QLatin1String("start")) {
@@ -241,6 +279,8 @@ int main(int argc, char **argv)
         runJanitor(QStringLiteral("vacuum"));
     } else if (command == QLatin1String("fsck")) {
         runJanitor(QStringLiteral("check"));
+    } else if (command == QLatin1String("instances")) {
+        listInstances();
     } else {
         app.printUsage();
         return -1;
