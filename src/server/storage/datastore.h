@@ -331,7 +331,7 @@ private:
      *
      * This method should only be used by QueryBuilder.
      */
-    void addQueryToTransaction(const QSqlQuery &query, bool isBatch);
+    void addQueryToTransaction(const QString &statement, const QVector<QVariant> &bindValues, bool isBatch);
 
     /**
      * Tries to execute all queries from last transaction again. If any of the
@@ -355,7 +355,12 @@ protected:
     QSqlDatabase m_database;
     bool m_dbOpened;
     uint m_transactionLevel;
-    QVector<QPair<QSqlQuery, bool /* isBatch */> > m_transactionQueries;
+    struct TransactionQuery {
+        QString query;
+        QVector<QVariant> boundValues;
+        bool isBatch;
+    };
+    QVector<TransactionQuery> m_transactionQueries;
     QByteArray mSessionId;
     NotificationCollector *mNotificationCollector;
     QTimer *m_keepAliveTimer;
