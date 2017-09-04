@@ -132,7 +132,7 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
     migrateToLevelledCacheHierarchy();
 
     inform("Checking search index consistency...");
-    findOprhanSearchIndexEntries();
+    findOrphanSearchIndexEntries();
 
     inform("Flushing collection statistics memory cache...");
     CollectionStatistics::self()->expireCache();
@@ -711,7 +711,7 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
     }
 }
 
-void StorageJanitor::findOprhanSearchIndexEntries()
+void StorageJanitor::findOrphanSearchIndexEntries()
 {
     QueryBuilder qb(Collection::tableName(), QueryBuilder::Select);
     qb.addSortColumn(Collection::idColumn(), Query::Ascending);
@@ -776,7 +776,7 @@ void StorageJanitor::findOprhanSearchIndexEntries()
         }
 
         if (!searchResults.isEmpty()) {
-            inform(QStringLiteral("Collection %1 search index contains %2 oprhan items. Scheduling reindexing").arg(colId).arg(searchResults.count()));
+            inform(QStringLiteral("Collection %1 search index contains %2 orphan items. Scheduling reindexing").arg(colId).arg(searchResults.count()));
             iface.call(QDBus::NoBlock, QStringLiteral("reindexCollection"), colId);
         }
     }

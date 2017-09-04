@@ -337,7 +337,13 @@ Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, CommandCo
         cond.addColumnCondition(Tag::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::tagIdFullColumnName());
         cond.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
         qb.addJoin(QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), cond);
-        qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, tagRID);
+        if (DbType::type(DataStore::self()->database()) == DbType::Sqlite) {
+            // FIXME: Workaround for an SQLite issue where "WHERE remoteId = 'rid-with-hyphen'" does
+            // not match any rows, even if such row exists. This only seems to affect this table
+            qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Like, tagRID);
+        } else {
+            qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, tagRID);
+        }
         if (!qb.exec()) {
             throw HandlerException("Unable to resolve tags");
         }

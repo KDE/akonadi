@@ -24,6 +24,7 @@
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
 #include "storage/countquerybuilder.h"
+#include "storage/transaction.h"
 
 #include <private/scope_p.h>
 #include <private/imapset_p.h>
@@ -38,6 +39,8 @@ bool TagAppend::parseStream()
     if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
         return failureResponse("Only resources can create tags with remote ID");
     }
+
+    Transaction trx(DataStore::self(), QStringLiteral("TAGAPPEND"));
 
     TagType tagType;
     if (!cmd.type().isEmpty()) {
@@ -119,6 +122,8 @@ bool TagAppend::parseStream()
             return failureResponse("Failed to store tag remote ID");
         }
     }
+
+    trx.commit();
 
     // FIXME BIN
     Scope scope;

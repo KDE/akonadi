@@ -135,7 +135,7 @@ private:
      * Check if the search index contains any entries that refer to Akonadi
      * Items that no longer exist in the DB.
      */
-    void findOprhanSearchIndexEntries();
+    void findOrphanSearchIndexEntries();
 
 private:
     qint64 m_lostFoundCollectionId;
