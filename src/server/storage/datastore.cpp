@@ -581,14 +581,20 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
             }
 
             QSqlQuery query = qb.query();
-            if (query.size() == items.count()) {
-                continue;
+            if (query.driver()->hasFeature(QSqlDriver::QuerySize)) {
+                if (query.size() == items.count()) {
+                    continue;
+                }
+                setBoolPtr(tagsChanged, true);
             }
-
-            setBoolPtr(tagsChanged, true);
 
             while (query.next()) {
                 existing << query.value(0).value<PimItem::Id>();
+            }
+            if (!query.driver()->hasFeature(QSqlDriver::QuerySize)) {
+                if (existing.size() != items.count()) {
+                    setBoolPtr(tagsChanged, true);
+                }
             }
         }
 
