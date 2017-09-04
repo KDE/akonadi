@@ -24,6 +24,8 @@
 #include "agentbase.h"
 #include "tracerinterface.h"
 
+#include <NetworkManagerQt/Manager>
+
 #include <klocalizedstring.h>
 
 class QSettings;
@@ -54,6 +56,7 @@ public:
     void slotNetworkStatusChange(bool isOnline);
     void slotResumedFromSuspend();
     void slotTemporaryOfflineTimeout();
+    void slotConnectivityChanged(NetworkManager::Connectivity connectivity);
 
     virtual void changeProcessed();
 

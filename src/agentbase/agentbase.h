@@ -790,6 +790,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotNetworkStatusChange(bool))
     Q_PRIVATE_SLOT(d_func(), void slotResumedFromSuspend())
     Q_PRIVATE_SLOT(d_func(), void slotTemporaryOfflineTimeout())
+    Q_PRIVATE_SLOT(d_func(), void slotConnectivityChanged(NetworkManager::Connectivity))
 
     //@endcond
 };

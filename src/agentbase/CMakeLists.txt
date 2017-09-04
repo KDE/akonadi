@@ -60,6 +60,7 @@ PRIVATE
     KF5::AkonadiPrivate
     KF5::DBusAddons
     KF5::I18n
+    KF5::NetworkManagerQt
     Qt5::Network
 )
 
