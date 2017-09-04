@@ -103,6 +103,7 @@ void CollectionMaintenancePage::init(const Collection &col)
 
     d->currentCollection = col;
     d->monitor = new Monitor(this);
+    d->monitor->setObjectName(QStringLiteral("CollectionMaintenancePageMonitor"));
     d->monitor->setCollectionMonitored(col, true);
     d->monitor->fetchCollectionStatistics(true);
     connect(d->monitor, &Monitor::collectionStatisticsChanged,

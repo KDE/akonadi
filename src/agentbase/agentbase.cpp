@@ -380,6 +380,7 @@ void AgentBasePrivate::init()
     mSettings = new QSettings(QStringLiteral("%1/agent_config_%2").arg(StandardDirs::saveDir("config"), mId), QSettings::IniFormat);
 
     mChangeRecorder = new ChangeRecorder(q);
+    mChangeRecorder->setObjectName(QStringLiteral("AgentBaseChangeRecorder"));
     mChangeRecorder->ignoreSession(Session::defaultSession());
     mChangeRecorder->itemFetchScope().setCacheOnly(true);
     mChangeRecorder->setConfig(mSettings);

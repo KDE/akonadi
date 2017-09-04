@@ -41,6 +41,7 @@ public:
         , mParent(parent)
         , mMonitor(new Monitor())
     {
+        mMonitor->setObjectName(QStringLiteral("ItemMonitorMonitor"));
         connect(mMonitor, &Monitor::itemChanged,
                 this, &Private::slotItemChanged);
         connect(mMonitor, &Monitor::itemRemoved,

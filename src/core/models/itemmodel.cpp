@@ -65,6 +65,7 @@ public:
         session = new Session(QCoreApplication::instance()->applicationName().toUtf8()
                               + QByteArray("-ItemModel-") + QByteArray::number(qrand()), mParent);
 
+        monitor->setObjectName(QStringLiteral("ItemModelMonitor"));
         monitor->ignoreSession(session);
 
         mParent->connect(monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),

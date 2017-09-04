@@ -45,6 +45,7 @@ void TagSelectWidget::Private::init()
     mParent->setLayout(mainLayout);
 
     Monitor *monitor = new Monitor(mParent);
+    monitor->setObjectName(QStringLiteral("TagSelectWidgetMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 
     Akonadi::TagModel *model = new Akonadi::TagModel(monitor, mParent);

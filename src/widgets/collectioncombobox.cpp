@@ -24,7 +24,7 @@
 #include "asyncselectionhandler_p.h"
 #include "collectiondialog.h"
 
-#include "changerecorder.h"
+#include "monitor.h"
 #include "collectionfetchscope.h"
 #include "collectionfilterproxymodel.h"
 #include "entityrightsfiltermodel.h"
@@ -49,7 +49,8 @@ public:
         if (customModel) {
             mBaseModel = customModel;
         } else {
-            mMonitor = new Akonadi::ChangeRecorder(mParent);
+            mMonitor = new Akonadi::Monitor(mParent);
+            mMonitor->setObjectName(QStringLiteral("CollectionComboBoxMonitor"));
             mMonitor->fetchCollection(true);
             mMonitor->setCollectionMonitored(Akonadi::Collection::root());
 
@@ -98,7 +99,7 @@ public:
 
     CollectionComboBox *mParent;
 
-    ChangeRecorder *mMonitor;
+    Monitor *mMonitor;
     EntityTreeModel *mModel;
     QAbstractItemModel *mBaseModel;
     CollectionFilterProxyModel *mMimeTypeFilterModel;

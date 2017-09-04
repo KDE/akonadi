@@ -71,6 +71,7 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
     QVBoxLayout *vbox = new QVBoxLayout(this);
 
     Monitor *monitor = new Monitor(this);
+    monitor->setObjectName(QStringLiteral("TagSelectionDialogMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 
     Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);

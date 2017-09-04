@@ -301,6 +301,7 @@ void CollectionModelPrivate::init()
 
     // monitor collection changes
     monitor = new Monitor();
+    monitor->setObjectName(QStringLiteral("CollectionModelMonitor"));
     monitor->setCollectionMonitored(Collection::root());
     monitor->fetchCollection(true);
 

@@ -729,12 +729,13 @@ void MonitorPrivate::commandReceived(qint64 tag, const Protocol::CommandPtr &com
         switch (command->type()) {
         case Protocol::Command::Hello: {
             qCDebug(AKONADICORE_LOG) << q_ptr << "Connected to notification bus";
-            QByteArray subname = session->sessionId() + " - ";
+            QByteArray subname;
             if (!q->objectName().isEmpty()) {
-                subname += q->objectName().toLatin1();
+                subname = q->objectName().toLatin1();
             } else {
-                subname += QByteArray::number(quintptr(q));
+                subname = session->sessionId();
             }
+            subname += " - " + QByteArray::number(quintptr(q));
             qCDebug(AKONADICORE_LOG) << q_ptr << "Subscribing as \"" << subname << "\"";
             auto subCmd = Protocol::CreateSubscriptionCommandPtr::create(subname, session->sessionId());
             ntfConnection->sendCommand(2, subCmd);
