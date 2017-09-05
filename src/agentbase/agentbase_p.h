@@ -23,8 +23,11 @@
 
 #include "agentbase.h"
 #include "tracerinterface.h"
+#include "config-akonadi.h"
 
+#ifdef HAVE_NMQT
 #include <NetworkManagerQt/Manager>
+#endif
 
 #include <klocalizedstring.h>
 
@@ -56,7 +59,9 @@ public:
     void slotNetworkStatusChange(bool isOnline);
     void slotResumedFromSuspend();
     void slotTemporaryOfflineTimeout();
+#ifdef HAVE_NMQT
     void slotConnectivityChanged(NetworkManager::Connectivity connectivity);
+#endif
 
     virtual void changeProcessed();
 
