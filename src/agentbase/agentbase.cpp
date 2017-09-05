@@ -1091,7 +1091,7 @@ void AgentBase::setOnlineInternal(bool state)
     if (state && d->mNeedsNetwork) {
         if ((d->mNetworkManager && !d->mNetworkManager->isOnline())
 #ifdef HAVE_NMQT
-            || (NetworkManager::connectivity() != NetworkManager::Full)
+            || (!d->mNetworkManager && NetworkManager::connectivity() != NetworkManager::Full)
 #endif
         ) {
             //Don't go online if the resource needs network but there is none
