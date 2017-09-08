@@ -428,6 +428,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             mCollections.insert(missingCol.id(), missingCol);
             ancestorIds << missingCol.id();
             attributeIds << missingCol.id();
+            mimeTypeIds << missingCol.id();
             //We have to do another round if the parents parent is missing
             if (missingCol.parentId() != parentId && !mCollections.contains(missingCol.parentId())) {
                 missingCollections.insert(missingCol.parentId());
