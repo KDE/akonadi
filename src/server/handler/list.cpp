@@ -362,19 +362,17 @@ void List::retrieveCollections(const Collection &topParent, int depth)
 
     QVariantList mimeTypeIds;
     QVariantList attributeIds;
+    QVariantList ancestorIds;
     mimeTypeIds.reserve(mCollections.size());
     attributeIds.reserve(mCollections.size());
-    for (auto it = mCollections.cbegin(), end = mCollections.cend(); it != end; ++it) {
-        mimeTypeIds << it.key();
-        attributeIds << it.key();
-    }
-
-    QVariantList ancestorIds;
     //We'd only require the non-leaf collections, but we don't know which those are, so we take all.
     ancestorIds.reserve(mCollections.size());
     for (auto it = mCollections.cbegin(), end = mCollections.cend(); it != end; ++it) {
+        mimeTypeIds << it.key();
+        attributeIds << it.key();
         ancestorIds << it.key();
     }
+
     if (mAncestorDepth > 0 && topParent.isValid()) {
         //unless depth is 0 the base collection is not part of the listing
         mAncestors.insert(topParent.id(), topParent);
