@@ -47,7 +47,7 @@ private Q_SLOTS:
 private:
     QStringList mArguments;
     int mExitCode;
-    KProcess *mProcess;
+    KProcess *mProcess = nullptr;
 };
 
 #endif // TESTRUNNER_H

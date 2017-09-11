@@ -90,18 +90,18 @@ private:
 protected:
     AkonadiServer(QObject *parent = nullptr);
 
-    AkLocalServer *mCmdServer;
-    AkLocalServer *mNtfServer;
+    AkLocalServer *mCmdServer = nullptr;
+    AkLocalServer *mNtfServer = nullptr;
 
-    NotificationManager *mNotificationManager;
-    CacheCleaner *mCacheCleaner;
-    IntervalCheck *mIntervalCheck;
-    StorageJanitor *mStorageJanitor;
-    ItemRetrievalManager *mItemRetrieval;
-    SearchTaskManager *mAgentSearchManager;
-    QProcess *mDatabaseProcess;
+    NotificationManager *mNotificationManager = nullptr;
+    CacheCleaner *mCacheCleaner = nullptr;
+    IntervalCheck *mIntervalCheck = nullptr;
+    StorageJanitor *mStorageJanitor = nullptr;
+    ItemRetrievalManager *mItemRetrieval = nullptr;
+    SearchTaskManager *mAgentSearchManager = nullptr;
+    QProcess *mDatabaseProcess = nullptr;
     QVector<Connection *> mConnections;
-    SearchManager *mSearchManager;
+    SearchManager *mSearchManager = nullptr;
     bool mAlreadyShutdown;
 
     static AkonadiServer *s_instance;

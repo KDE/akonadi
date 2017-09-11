@@ -119,15 +119,15 @@ protected:
 private:
     explicit FakeAkonadiServer();
 
-    FakeDataStore *mDataStore;
-    FakeSearchManager *mSearchManager;
-    FakeConnection *mConnection;
-    FakeClient *mClient;
-    FakeItemRetrievalManager *mRetrievalManager;
+    FakeDataStore *mDataStore = nullptr;
+    FakeSearchManager *mSearchManager = nullptr;
+    FakeConnection *mConnection = nullptr;
+    FakeClient *mClient = nullptr;
+    FakeItemRetrievalManager *mRetrievalManager = nullptr;
 
-    QEventLoop *mServerLoop;
+    QEventLoop *mServerLoop = nullptr;
 
-    NotificationCollector *mNtfCollector;
+    NotificationCollector *mNtfCollector = nullptr;
     QSharedPointer<QSignalSpy> mNotificationSpy;
 
     bool mPopulateDb;

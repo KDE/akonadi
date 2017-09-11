@@ -64,7 +64,7 @@ private Q_SLOTS:
     void itemFetchResult(KJob *job);
 
 private:
-    AgentBasePrivate *m_agentBase;
+    AgentBasePrivate *m_agentBase = nullptr;
     Collection m_movedCollection;
     /// sorted queue of collections still to be processed
     Collection::List m_pendingCollections;

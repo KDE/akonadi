@@ -64,9 +64,9 @@ private:
 
 private:
     QStringList mListRecentCollection;
-    QMenu *mMenu;
-    const QAbstractItemModel *mModel;
-    QAction *mRecentAction;
+    QMenu *mMenu = nullptr;
+    const QAbstractItemModel *mModel = nullptr;
+    QAction *mRecentAction = nullptr;
     KSharedConfig::Ptr mAkonadiConfig;
 };
 }

@@ -59,7 +59,7 @@ private:
     void testMonitor_impl(MonitorImpl *monitor, FakeCollectionCache *collectionCache, FakeItemCache *itemCache);
 
 private:
-    FakeSession *m_fakeSession;
+    FakeSession *m_fakeSession = nullptr;
     QByteArray m_sessionName;
 };
 

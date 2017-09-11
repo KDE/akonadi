@@ -72,7 +72,7 @@ public:
     void serverStateChanged(ServerManager::State state);
 
     QPointer<Control> mParent;
-    QEventLoop *mEventLoop;
+    QEventLoop *mEventLoop = nullptr;
     bool mSuccess;
 
     bool mStarting;

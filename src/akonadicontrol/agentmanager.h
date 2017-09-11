@@ -373,10 +373,10 @@ private:
      */
     QHash<QString, AgentInstance::Ptr> mAgentInstances;
 
-    Akonadi::ProcessControl *mAgentServer;
-    Akonadi::ProcessControl *mStorageController;
+    Akonadi::ProcessControl *mAgentServer = nullptr;
+    Akonadi::ProcessControl *mStorageController = nullptr;
 #ifndef QT_NO_DEBUG
-    QFileSystemWatcher *mAgentWatcher;
+    QFileSystemWatcher *mAgentWatcher = nullptr;
 #endif
     bool mAgentServerEnabled;
     bool mVerbose;

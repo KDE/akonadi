@@ -45,7 +45,7 @@ private Q_SLOTS:
     void failedToStart();
 
 private:
-    Akonadi::ProcessControl *mController;
+    Akonadi::ProcessControl *mController = nullptr;
 };
 
 }

@@ -60,8 +60,8 @@ public:
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC(Monitor)
-    ChangeNotificationDependenciesFactory *dependenciesFactory;
-    Connection *ntfConnection;
+    ChangeNotificationDependenciesFactory *dependenciesFactory = nullptr;
+    Connection *ntfConnection = nullptr;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;

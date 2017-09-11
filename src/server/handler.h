@@ -128,7 +128,7 @@ Q_SIGNALS:
 
 private:
     quint64 m_tag;
-    Connection *m_connection;
+    Connection *m_connection = nullptr;
     bool m_sentFailureResponse;
 
 protected:

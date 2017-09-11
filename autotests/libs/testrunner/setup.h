@@ -83,7 +83,7 @@ private:
     void writeAkonadiserverrc(const QString &path);
 
 private:
-    KProcess *mAkonadiDaemonProcess;
+    KProcess *mAkonadiDaemonProcess = nullptr;
     bool mShuttingDown;
     bool mAgentsCreated;
     bool mTrackAkonadiProcess;

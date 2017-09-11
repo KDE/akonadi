@@ -60,9 +60,9 @@ public:
 
     CollectionRequester *q;
     Collection collection;
-    QLineEdit *edit;
-    QPushButton *button;
-    CollectionDialog *collectionDialog;
+    QLineEdit *edit = nullptr;
+    QPushButton *button = nullptr;
+    CollectionDialog *collectionDialog = nullptr;
 };
 
 void CollectionRequester::Private::fetchCollection(const Collection &collection)

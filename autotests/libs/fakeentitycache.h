@@ -172,8 +172,8 @@ public:
     }
 
 private:
-    FakeItemCache *itemCache;
-    FakeCollectionCache *collectionCache;
+    FakeItemCache *itemCache = nullptr;
+    FakeCollectionCache *collectionCache = nullptr;
 
 };
 

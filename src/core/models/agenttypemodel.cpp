@@ -37,7 +37,7 @@ public:
         mTypes = AgentManager::self()->types();
     }
 
-    AgentTypeModel *mParent;
+    AgentTypeModel *mParent = nullptr;
     AgentType::List mTypes;
 
     void typeAdded(const AgentType &agentType);

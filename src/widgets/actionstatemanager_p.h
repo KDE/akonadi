@@ -76,7 +76,7 @@ protected:
     virtual void updateAlternatingAction(int action);
 
 private:
-    QObject *mReceiver;
+    QObject *mReceiver = nullptr;
 };
 
 }

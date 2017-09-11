@@ -91,8 +91,8 @@ protected:
     bool isTagSignal(const QByteArray &signature) const;
 
 protected:
-    FakeServerData *m_serverData;
-    QAbstractItemModel *m_model;
+    FakeServerData *m_serverData = nullptr;
+    QAbstractItemModel *m_model = nullptr;
     Akonadi::Collection m_parentCollection;
     Akonadi::Tag m_parentTag;
     QHash<Akonadi::Collection::Id, Akonadi::Collection> m_collections;
@@ -272,7 +272,7 @@ public:
 private:
     QString m_itemName;
     QString m_parentName;
-    FakeServerData *m_serverData;
+    FakeServerData *m_serverData = nullptr;
 };
 
 class AKONADITESTFAKE_EXPORT FakeItemChangedCommand : public FakeMonitorCommand

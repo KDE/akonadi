@@ -53,9 +53,9 @@ public:
         delete mMonitor;
     }
 
-    ItemMonitor *mParent;
+    ItemMonitor *mParent = nullptr;
     Item mItem;
-    Monitor *mMonitor;
+    Monitor *mMonitor = nullptr;
 
 private Q_SLOTS:
     void slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &aSet)

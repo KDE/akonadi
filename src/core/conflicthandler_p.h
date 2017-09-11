@@ -114,7 +114,7 @@ private:
     Akonadi::Item mChangedItem;
     Akonadi::Item mConflictingItem;
 
-    Session *mSession;
+    Session *mSession = nullptr;
 };
 
 }

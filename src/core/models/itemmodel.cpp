@@ -97,14 +97,14 @@ public:
     int rowForItem(const Akonadi::Item &item);
     bool collectionIsCompatible() const;
 
-    ItemModel *mParent;
+    ItemModel *mParent = nullptr;
 
     QList<ItemContainer *> items;
     QHash<Item, ItemContainer *> itemHash;
 
     Collection collection;
-    Monitor *monitor;
-    Session *session;
+    Monitor *monitor = nullptr;
+    Session *session = nullptr;
 };
 
 bool ItemModel::Private::collectionIsCompatible() const

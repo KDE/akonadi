@@ -182,7 +182,7 @@ private:
         return rec;
     }
 
-    QSettings *settings;
+    QSettings *settings = nullptr;
 
 };
 

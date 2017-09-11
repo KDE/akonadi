@@ -121,12 +121,12 @@ protected:
      * The mutex used to protect the internals of this class  (mainly
      * the mPreprocessorChain member).
      */
-    QMutex *mMutex;
+    QMutex *mMutex = nullptr;
 
     /**
      * The heartbeat timer. Used mainly to expire preprocessor jobs.
      */
-    QTimer *mHeartbeatTimer;
+    QTimer *mHeartbeatTimer = nullptr;
 
 public:
 

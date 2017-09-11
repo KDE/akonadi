@@ -43,9 +43,9 @@ public:
     }
     void writeConfig();
     void readConfig();
-    QDialog *d;
-    Akonadi::TagEditWidget *mTagWidget;
-    QDialogButtonBox *mButtonBox;
+    QDialog *d = nullptr;
+    Akonadi::TagEditWidget *mTagWidget = nullptr;
+    QDialogButtonBox *mButtonBox = nullptr;
 };
 
 void TagSelectionDialog::Private::writeConfig()

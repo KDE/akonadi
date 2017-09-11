@@ -83,7 +83,7 @@ protected Q_SLOTS:
     void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
-    QAbstractItemModel *m_model;
+    QAbstractItemModel *m_model = nullptr;
     bool m_isSpying;
     QList<ExpectedSignal> m_expectedSignals;
 };

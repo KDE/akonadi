@@ -48,8 +48,8 @@ private Q_SLOTS:
 
 private:
     QStandardItemModel m_model;
-    KRecursiveFilterProxyModel *m_krfp;
-    KRFPTestModel *m_krfptest;
+    KRecursiveFilterProxyModel *m_krfp = nullptr;
+    KRFPTestModel *m_krfptest = nullptr;
 };
 
 void ProxyModelsTest::initTestCase()

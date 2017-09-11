@@ -107,19 +107,19 @@ public:
     bool mOnline;
     bool mDesiredOnlineState;
 
-    QSettings *mSettings;
+    QSettings *mSettings = nullptr;
 
-    ChangeRecorder *mChangeRecorder;
+    ChangeRecorder *mChangeRecorder = nullptr;
 
-    org::freedesktop::Akonadi::Tracer *mTracer;
+    org::freedesktop::Akonadi::Tracer *mTracer = nullptr;
 
-    AgentBase::Observer *mObserver;
-    QDBusInterface *mPowerInterface;
+    AgentBase::Observer *mObserver = nullptr;
+    QDBusInterface *mPowerInterface = nullptr;
 
-    QTimer *mTemporaryOfflineTimer;
+    QTimer *mTemporaryOfflineTimer = nullptr;
 
-    QEventLoopLocker *mEventLoopLocker;
-    QNetworkConfigurationManager *mNetworkManager;
+    QEventLoopLocker *mEventLoopLocker = nullptr;
+    QNetworkConfigurationManager *mNetworkManager = nullptr;
 
 public Q_SLOTS:
     // Dump the contents of the current ChangeReplay

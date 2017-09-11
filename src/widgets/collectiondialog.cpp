@@ -85,7 +85,7 @@ public:
         mButtonBox->button(QDialogButtonBox::Ok)->setEnabled(false);
 
         // setup models
-        QAbstractItemModel *baseModel;
+        QAbstractItemModel *baseModel = nullptr;
 
         if (customModel) {
             baseModel = customModel;
@@ -167,21 +167,21 @@ public:
         group.sync();
     }
 
-    CollectionDialog *mParent;
+    CollectionDialog *mParent = nullptr;
 
-    Monitor *mMonitor;
-    CollectionFilterProxyModel *mMimeTypeFilterModel;
-    EntityRightsFilterModel *mRightsFilterModel;
-    EntityTreeView *mView;
-    AsyncSelectionHandler *mSelectionHandler;
-    QLabel *mTextLabel;
+    Monitor *mMonitor = nullptr;
+    CollectionFilterProxyModel *mMimeTypeFilterModel = nullptr;
+    EntityRightsFilterModel *mRightsFilterModel = nullptr;
+    EntityTreeView *mView = nullptr;
+    AsyncSelectionHandler *mSelectionHandler = nullptr;
+    QLabel *mTextLabel = nullptr;
     bool mAllowToCreateNewChildCollection;
     bool mKeepTreeExpanded;
-    KRecursiveFilterProxyModel *mFilterCollection;
-    QCheckBox *mUseByDefault;
+    KRecursiveFilterProxyModel *mFilterCollection = nullptr;
+    QCheckBox *mUseByDefault = nullptr;
     QStringList mContentMimeTypes;
-    QDialogButtonBox *mButtonBox;
-    QPushButton *mNewSubfolderButton;
+    QDialogButtonBox *mButtonBox = nullptr;
+    QPushButton *mNewSubfolderButton = nullptr;
 
     void slotDoubleClicked();
     void slotSelectionChanged();

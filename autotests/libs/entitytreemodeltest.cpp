@@ -150,8 +150,8 @@ private:
     }
 
 private:
-    ModelSpy *m_modelSpy;
-    FakeSession *m_fakeSession;
+    ModelSpy *m_modelSpy = nullptr;
+    FakeSession *m_fakeSession = nullptr;
     QByteArray m_sessionName;
 
 };

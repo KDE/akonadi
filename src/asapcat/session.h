@@ -50,9 +50,9 @@ private Q_SLOTS:
     void serverRead();
 
 private:
-    QIODevice *m_input;
-    QIODevice *m_session;
-    QSocketNotifier *m_notifier;
+    QIODevice *m_input = nullptr;
+    QIODevice *m_session = nullptr;
+    QSocketNotifier *m_notifier = nullptr;
 
     QTime m_connectionTime;
     qint64 m_receivedBytes;

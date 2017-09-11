@@ -42,7 +42,7 @@ struct Q_DECL_HIDDEN TagManagementDialog::Private {
     void writeConfig();
     void readConfig();
     QDialog *d;
-    QDialogButtonBox *buttonBox;
+    QDialogButtonBox *buttonBox = nullptr;
 };
 
 void TagManagementDialog::Private::writeConfig()

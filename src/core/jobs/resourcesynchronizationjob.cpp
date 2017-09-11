@@ -48,8 +48,8 @@ public:
 
     ResourceSynchronizationJob *q;
     AgentInstance instance;
-    QDBusInterface *interface;
-    QTimer *safetyTimer;
+    QDBusInterface *interface = nullptr;
+    QTimer *safetyTimer = nullptr;
     int timeoutCount;
     bool collectionTreeOnly;
     int timeoutCountLimit;

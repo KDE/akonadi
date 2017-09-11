@@ -85,7 +85,7 @@ public:
         }
     }
 
-    RecursiveItemFetchJob *mParent;
+    RecursiveItemFetchJob *mParent = nullptr;
     Collection mCollection;
     Item::List mItems;
     ItemFetchScope mFetchScope;

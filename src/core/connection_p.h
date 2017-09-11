@@ -75,8 +75,8 @@ private:
     bool handleCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
     ConnectionType mConnectionType;
-    QLocalSocket *mSocket;
-    QFile *mLogFile;
+    QLocalSocket *mSocket = nullptr;
+    QFile *mLogFile = nullptr;
     QByteArray mSessionId;
     QMutex mLock;
     struct Command {

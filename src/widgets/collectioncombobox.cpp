@@ -97,14 +97,14 @@ public:
     void activated(int index);
     void activated(const QModelIndex &index);
 
-    CollectionComboBox *mParent;
+    CollectionComboBox *mParent = nullptr;
 
-    Monitor *mMonitor;
-    EntityTreeModel *mModel;
-    QAbstractItemModel *mBaseModel;
-    CollectionFilterProxyModel *mMimeTypeFilterModel;
-    EntityRightsFilterModel *mRightsFilterModel;
-    AsyncSelectionHandler *mSelectionHandler;
+    Monitor *mMonitor = nullptr;
+    EntityTreeModel *mModel = nullptr;
+    QAbstractItemModel *mBaseModel = nullptr;
+    CollectionFilterProxyModel *mMimeTypeFilterModel = nullptr;
+    EntityRightsFilterModel *mRightsFilterModel = nullptr;
+    AsyncSelectionHandler *mSelectionHandler = nullptr;
 };
 
 void CollectionComboBox::Private::activated(int index)

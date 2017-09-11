@@ -78,7 +78,7 @@ private:
     static QByteArray relationsToByteArray(const Relation::List &relations);
 
 private:
-    Connection *mConnection;
+    Connection *mConnection = nullptr;
     QHash<Collection::Id, QVector<Protocol::Ancestor>> mAncestorCache;
     Scope mScope;
     Protocol::FetchScope mFetchScope;

@@ -56,7 +56,7 @@ private:
     mutable QMutex mMutex;
 
     TestScenario::List mScenarios;
-    QLocalSocket *mSocket;
+    QLocalSocket *mSocket = nullptr;
     QDataStream mStream;
 };
 }

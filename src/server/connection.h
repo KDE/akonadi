@@ -101,16 +101,16 @@ protected:
 
 protected:
     quintptr m_socketDescriptor;
-    QLocalSocket *m_socket;
+    QLocalSocket *m_socket = nullptr;
     QPointer<Handler> m_currentHandler;
     ConnectionState m_connectionState;
-    mutable DataStore *m_backend;
+    mutable DataStore *m_backend = nullptr;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
-    QTimer *m_idleTimer;
+    QTimer *m_idleTimer = nullptr;
 
     QTime m_time;
     qint64 m_totalTime;

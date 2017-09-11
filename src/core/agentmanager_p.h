@@ -93,8 +93,8 @@ public:
 
     static AgentManager *mSelf;
 
-    AgentManager *mParent;
-    org::freedesktop::Akonadi::AgentManager *mManager;
+    AgentManager *mParent = nullptr;
+    org::freedesktop::Akonadi::AgentManager *mManager = nullptr;
 
     QHash<QString, AgentType> mTypes;
     QHash<QString, AgentInstance> mInstances;

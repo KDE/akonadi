@@ -43,7 +43,7 @@ protected:
     bool hasResourceCapability(const Collection &collection, const QString &capability) const override;
 
 private:
-    ActionStateManagerTest *mReceiver;
+    ActionStateManagerTest *mReceiver = nullptr;
 };
 
 class ActionStateManagerTest : public QObject

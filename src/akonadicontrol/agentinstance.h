@@ -173,12 +173,12 @@ protected:
 private:
     QString mIdentifier;
     QString mType;
-    AgentManager *mManager;
-    org::freedesktop::Akonadi::Agent::Control *mAgentControlInterface;
-    org::freedesktop::Akonadi::Agent::Status *mAgentStatusInterface;
-    org::freedesktop::Akonadi::Agent::Search *mSearchInterface;
-    org::freedesktop::Akonadi::Resource *mResourceInterface;
-    org::freedesktop::Akonadi::Preprocessor *mPreprocessorInterface;
+    AgentManager *mManager = nullptr;
+    org::freedesktop::Akonadi::Agent::Control *mAgentControlInterface = nullptr;
+    org::freedesktop::Akonadi::Agent::Status *mAgentStatusInterface = nullptr;
+    org::freedesktop::Akonadi::Agent::Search *mSearchInterface = nullptr;
+    org::freedesktop::Akonadi::Resource *mResourceInterface = nullptr;
+    org::freedesktop::Akonadi::Preprocessor *mPreprocessorInterface = nullptr;
 
     int mStatus;
     QString mStatusMessage;

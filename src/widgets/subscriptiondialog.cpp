@@ -107,13 +107,13 @@ public:
     void slotUnSubscribe();
     void slotSubscribe();
 
-    SubscriptionDialog *q;
-    QTreeView *collectionView;
-    QPushButton *subscribe;
-    QPushButton *unSubscribe;
-    SubscriptionModel *model;
-    RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter;
-    QPushButton *mOkButton;
+    SubscriptionDialog *q = nullptr;
+    QTreeView *collectionView = nullptr;
+    QPushButton *subscribe = nullptr;
+    QPushButton *unSubscribe = nullptr;
+    SubscriptionModel *model = nullptr;
+    RecursiveCollectionFilterProxyModel *filterRecursiveCollectionFilter = nullptr;
+    QPushButton *mOkButton = nullptr;
 
 };
 

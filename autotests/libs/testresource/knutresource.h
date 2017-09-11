@@ -79,8 +79,8 @@ private Q_SLOTS:
 
 private:
     Akonadi::XmlDocument mDocument;
-    QFileSystemWatcher *mWatcher;
-    KnutSettings *mSettings;
+    QFileSystemWatcher *mWatcher = nullptr;
+    KnutSettings *mSettings = nullptr;
 };
 
 #endif

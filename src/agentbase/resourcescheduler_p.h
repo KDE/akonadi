@@ -84,7 +84,7 @@ public:
         QVector<Item> items;
         QSet<QByteArray> itemParts;
         QList<QDBusMessage> dbusMsgs;
-        QObject *receiver;
+        QObject *receiver = nullptr;
         QByteArray methodName;
         QVariant argument;
 

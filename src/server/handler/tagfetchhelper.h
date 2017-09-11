@@ -50,7 +50,7 @@ private:
     static QSqlQuery buildAttributeQuery(qint64 id);
 
 private:
-    Connection *mConnection;
+    Connection *mConnection = nullptr;
     Scope mScope;
 };
 

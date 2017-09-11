@@ -111,7 +111,7 @@ private:
     static StorageDebugger *mSelf;
     static QMutex mMutex;
 
-    QFile *mFile;
+    QFile *mFile = nullptr;
 
     bool mEnabled;
 #ifdef Q_ATOMC_INT64_IS_SUPPORTED

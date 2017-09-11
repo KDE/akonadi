@@ -362,8 +362,8 @@ protected:
     };
     QVector<TransactionQuery> m_transactionQueries;
     QByteArray mSessionId;
-    NotificationCollector *mNotificationCollector;
-    QTimer *m_keepAliveTimer;
+    NotificationCollector *mNotificationCollector = nullptr;
+    QTimer *m_keepAliveTimer = nullptr;
     static bool s_hasForeignKeyConstraints;
 
     // Gives QueryBuilder access to addQueryToTransaction() and retryLastTransaction()

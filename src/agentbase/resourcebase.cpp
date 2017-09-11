@@ -453,14 +453,14 @@ public:
     // synchronize states
     Collection currentCollection;
 
-    ResourceScheduler *scheduler;
-    ItemSync *mItemSyncer;
-    ItemFetchScope *mItemSyncFetchScope;
+    ResourceScheduler *scheduler = nullptr;
+    ItemSync *mItemSyncer = nullptr;
+    ItemFetchScope *mItemSyncFetchScope = nullptr;
     ItemSync::TransactionMode mItemTransactionMode;
     ItemSync::MergeMode mItemMergeMode;
-    CollectionSync *mCollectionSyncer;
-    TagSync *mTagSyncer;
-    RelationSync *mRelationSyncer;
+    CollectionSync *mCollectionSyncer = nullptr;
+    TagSync *mTagSyncer = nullptr;
+    RelationSync *mRelationSyncer = nullptr;
     bool mHierarchicalRid;
     QTimer mProgressEmissionCompressor;
     int mUnemittedProgress;
@@ -470,7 +470,7 @@ public:
     QPointer<RecursiveMover> m_recursiveMover;
     int mItemSyncBatchSize;
     QSet<QByteArray> mKeepLocalCollectionChanges;
-    KJob *mCurrentCollectionFetchJob;
+    KJob *mCurrentCollectionFetchJob = nullptr;
     bool mScheduleAttributeSyncBeforeCollectionSync;
 };
 

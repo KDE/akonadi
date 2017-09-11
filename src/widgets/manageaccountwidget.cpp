@@ -39,7 +39,6 @@ class Akonadi::ManageAccountWidgetPrivate
 {
 public:
     ManageAccountWidgetPrivate()
-        : ui(nullptr)
     {
 
     }
@@ -54,7 +53,7 @@ public:
     QStringList mCapabilityFilter;
     QStringList mExcludeCapabilities;
 
-    Ui::ManageAccountWidget *ui;
+    Ui::ManageAccountWidget *ui = nullptr;
 };
 
 ManageAccountWidget::ManageAccountWidget(QWidget *parent)

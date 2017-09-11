@@ -79,7 +79,7 @@ protected Q_SLOTS:
 protected:
     QMutex mScheduleLock;
     QMultiMap<uint /*timestamp*/, Collection> mSchedule;
-    PauseableTimer *mScheduler;
+    PauseableTimer *mScheduler = nullptr;
     int mMinInterval;
 };
 

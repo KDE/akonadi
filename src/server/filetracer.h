@@ -50,7 +50,7 @@ public:
 private:
     void output(const QString &id, const QString &msg);
 
-    QFile *m_file;
+    QFile *m_file = nullptr;
 };
 
 } // namespace Server

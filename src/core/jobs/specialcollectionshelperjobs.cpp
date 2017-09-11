@@ -112,7 +112,7 @@ public:
 
     // Input:
     QString mResourceId;
-    KCoreConfigSkeleton *mSettings;
+    KCoreConfigSkeleton *mSettings = nullptr;
 
     // Output:
     Collection mRootCollection;
@@ -236,7 +236,7 @@ public:
     void collectionModifyResult(KJob *job);   // slot
 
     DefaultResourceJob *const q;
-    KCoreConfigSkeleton *mSettings;
+    KCoreConfigSkeleton *mSettings = nullptr;
     bool mResourceWasPreexisting;
     int mPendingModifyJobs;
     QString mDefaultResourceType;
@@ -567,7 +567,7 @@ public:
     void timeout(); // slot
 
     GetLockJob *const q;
-    QTimer *mSafetyTimer;
+    QTimer *mSafetyTimer = nullptr;
 };
 
 GetLockJob::Private::Private(GetLockJob *qq)

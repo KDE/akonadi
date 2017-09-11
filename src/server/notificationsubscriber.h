@@ -90,8 +90,8 @@ protected:
     void writeCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
     mutable QMutex mLock;
-    NotificationManager *mManager;
-    QLocalSocket *mSocket;
+    NotificationManager *mManager = nullptr;
+    QLocalSocket *mSocket = nullptr;
     QByteArray mSubscriber;
     QSet<Entity::Id> mMonitoredCollections;
     QSet<Entity::Id> mMonitoredItems;

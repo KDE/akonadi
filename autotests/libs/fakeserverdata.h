@@ -72,9 +72,9 @@ private:
     void returnTags();
 
 private:
-    QAbstractItemModel *m_model;
-    FakeSession *m_session;
-    FakeMonitor *m_monitor;
+    QAbstractItemModel *m_model = nullptr;
+    FakeSession *m_session = nullptr;
+    FakeMonitor *m_monitor = nullptr;
 
     QList<FakeAkonadiServerCommand *> m_commandList;
     QQueue<FakeAkonadiServerCommand *> m_communicationQueue;

@@ -125,10 +125,10 @@ public:
     Job *q_ptr;
     Q_DECLARE_PUBLIC(Job)
 
-    Job *mParentJob;
-    Job *mCurrentSubJob;
+    Job *mParentJob = nullptr;
+    Job *mCurrentSubJob = nullptr;
     qint64 mTag;
-    Session *mSession;
+    Session *mSession = nullptr;
     bool mWriteFinished;
     bool mReadingFinished;
     bool mStarted;

@@ -66,9 +66,9 @@ protected:
 
 private:
     Protocol::ChangeNotificationList mNotifications;
-    QTimer *mTimer;
+    QTimer *mTimer = nullptr;
 
-    QThreadPool *mNotifyThreadPool;
+    QThreadPool *mNotifyThreadPool = nullptr;
     QVector<QPointer<NotificationSubscriber>> mSubscribers;
     int mDebugNotifications;
 
