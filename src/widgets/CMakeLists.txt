@@ -94,6 +94,7 @@ PUBLIC
     KF5::AkonadiCore
     KF5::ItemModels
     Qt5::Widgets
+    KF5::ConfigWidgets
 PRIVATE
     KF5::I18n
     KF5::IconThemes

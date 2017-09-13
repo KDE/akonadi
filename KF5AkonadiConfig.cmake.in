@@ -8,6 +8,7 @@ include(CMakeFindDependencyMacro)
 find_dependency(KF5Completion "@KF5_VERSION@")
 find_dependency(KF5XmlGui "@KF5_VERSION@")
 find_dependency(KF5ItemModels "@KF5_VERSION@")
+find_dependency(KF5ConfigWidgets "@KF5_VERSION@")
 
 find_dependency(Qt5DBus "@QT_REQUIRED_VERSION@")
 find_dependency(Qt5Network "@QT_REQUIRED_VERSION@")
