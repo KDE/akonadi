@@ -30,7 +30,6 @@
 #include <QHash>
 #include <QVector>
 
-class QSqlQuery;
 
 namespace Akonadi {
 

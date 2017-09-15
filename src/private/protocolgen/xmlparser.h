@@ -27,7 +27,6 @@ class Node;
 class DocumentNode;
 class EnumNode;
 class ClassNode;
-class CppGenerator;
 class PropertyNode;
 
 class XmlParser

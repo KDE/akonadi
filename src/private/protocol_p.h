@@ -44,12 +44,6 @@
 namespace Akonadi
 {
 
-namespace Server
-{
-class NotificationSource;
-class NotificationCollector;
-}
-
 namespace Protocol
 {
 

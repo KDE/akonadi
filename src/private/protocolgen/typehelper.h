@@ -21,7 +21,6 @@
 #define TYPEHELPER_H
 
 class QString;
-class PropertyNode;
 
 namespace TypeHelper
 {

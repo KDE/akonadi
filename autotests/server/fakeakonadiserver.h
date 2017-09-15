@@ -32,7 +32,6 @@
 
 #include <private/protocol_p.h>
 
-class QLocalServer;
 class QEventLoop;
 
 namespace Akonadi {

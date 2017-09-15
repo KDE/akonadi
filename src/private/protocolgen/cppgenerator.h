@@ -28,7 +28,6 @@ class Node;
 class DocumentNode;
 class ClassNode;
 class EnumNode;
-class EnumValueNode;
 class PropertyNode;
 
 class CppGenerator
