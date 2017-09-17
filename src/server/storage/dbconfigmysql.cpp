@@ -492,7 +492,6 @@ bool DbConfigMysql::startInternalServer()
         }
     }
 
-    QSqlDatabase::removeDatabase(initCon);
     return success;
 }
 
@@ -519,6 +518,9 @@ void DbConfigMysql::stopInternalServer()
     if (!mDatabaseProcess) {
         return;
     }
+
+    // closing initConnection this late to work around QTBUG-63108
+    QSqlDatabase::removeDatabase(QStringLiteral("initConnection"));
 
     disconnect(mDatabaseProcess, static_cast<void(QProcess::*)(int,QProcess::ExitStatus)>(&QProcess::finished),
                this, &DbConfigMysql::processFinished);

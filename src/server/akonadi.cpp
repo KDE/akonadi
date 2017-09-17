@@ -423,13 +423,14 @@ bool AkonadiServer::createDatabase()
             success = false;
         }
     }
-    QSqlDatabase::removeDatabase(initCon);
     return success;
 }
 
 void AkonadiServer::stopDatabaseProcess()
 {
     if (!DbConfig::configuredDatabase()->useInternalServer()) {
+        // closing initConnection this late to work around QTBUG-63108
+        QSqlDatabase::removeDatabase(QStringLiteral("initConnection"));
         return;
     }
 
