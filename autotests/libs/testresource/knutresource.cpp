@@ -26,7 +26,6 @@
 #include "xmlreader.h"
 #include <searchquery.h>
 
-#include <QUrl>
 #include <agentfactory.h>
 #include <changerecorder.h>
 #include <collection.h>
@@ -43,7 +42,6 @@
 #include <QDir>
 #include <QUuid>
 #include <QStandardPaths>
-#include <QDebug>
 #include <QFileDialog>
 
 using namespace Akonadi;

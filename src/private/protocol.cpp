@@ -26,11 +26,7 @@
 #include <type_traits>
 #include <typeinfo>
 
-#include <QGlobalStatic>
 #include <QHash>
-#include <QMap>
-#include <QDateTime>
-#include <QStack>
 
 #include <cassert>
 

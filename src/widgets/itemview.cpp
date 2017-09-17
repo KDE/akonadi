@@ -23,8 +23,7 @@
 #include "itemmodel.h"
 
 #include <KXMLGUIFactory>
-#include <KXmlGuiWindow>
-
+#include <KXMLGUIClient>
 #include <QContextMenuEvent>
 #include <QHeaderView>
 #include <QMenu>

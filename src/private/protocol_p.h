@@ -24,13 +24,11 @@
 
 #include "akonadiprivate_export.h"
 
-#include <QFlags>
 #include <QSharedPointer>
 #include <QDebug>
 #include <QDateTime>
 #include <QByteArray>
 #include <QVector>
-#include <QDataStream>
 
 #include "tristate_p.h"
 #include "scope_p.h"

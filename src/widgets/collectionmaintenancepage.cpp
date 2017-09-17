@@ -30,15 +30,10 @@
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 
-#include <QDialog>
 #include <QPushButton>
 #include <KLocalizedString>
-#include <QGroupBox>
-#include <QLabel>
-#include <QFormLayout>
 #include <QCheckBox>
 #include <KFormat>
-#include <KConfigGroup>
 
 using namespace Akonadi;
 

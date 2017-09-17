@@ -34,7 +34,6 @@
 #include <QTimer>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
-#include <QCoreApplication>
 
 using namespace Akonadi;
 

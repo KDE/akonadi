@@ -29,7 +29,6 @@
 #include <signal.h>
 #include <QApplication>
 #include <QCommandLineParser>
-#include <QCommandLineOption>
 
 static SetupTest *setup = nullptr;
 static TestRunner *runner = nullptr;

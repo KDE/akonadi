@@ -25,7 +25,6 @@
 
 #include <private/scope_p.h>
 
-#include <QAtomicInt>
 #include <QStack>
 
 #include <map>

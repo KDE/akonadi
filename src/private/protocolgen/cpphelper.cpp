@@ -25,8 +25,8 @@
 #include <QSharedDataPointer>
 #include <QMap>
 #include <QMetaType>
-#include <QDebug>
-
+#include <QSharedPointer>
+#include <QSet>
 namespace {
 
 class Dummy;

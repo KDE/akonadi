@@ -25,7 +25,6 @@
 #include <QSqlError>
 
 #include <QDBusConnection>
-#include <QDBusMetaType>
 
 Akonadi::Server::StorageDebugger *Akonadi::Server::StorageDebugger::mSelf = nullptr;
 QMutex Akonadi::Server::StorageDebugger::mMutex;

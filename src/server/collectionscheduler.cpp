@@ -25,7 +25,6 @@
 #include <private/tristate_p.h>
 
 #include <QDateTime>
-#include <QCoreApplication>
 #include <QTimer>
 
 namespace Akonadi

@@ -23,9 +23,6 @@
 #include "exception.h"
 
 #include <QSignalSpy>
-#include <QBuffer>
-#include <QDataStream>
-#include <QTest>
 #include <QSharedPointer>
 
 #include <type_traits>

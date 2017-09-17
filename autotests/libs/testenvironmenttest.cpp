@@ -22,7 +22,6 @@
 #include <qtest_akonadi.h>
 #include <servermanager.h>
 
-#include <QDir>
 #include <QObject>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>

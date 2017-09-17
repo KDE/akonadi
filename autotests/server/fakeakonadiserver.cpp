@@ -26,11 +26,9 @@
 
 #include <QSettings>
 #include <QCoreApplication>
-#include <QSqlQuery>
 #include <QDir>
-#include <QFileInfo>
-#include <QLocalServer>
 #include <QTest>
+#include <QBuffer>
 
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>

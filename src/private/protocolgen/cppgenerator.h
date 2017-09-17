@@ -22,7 +22,6 @@
 
 #include <QTextStream>
 #include <QFile>
-#include <QVector>
 
 class Node;
 class DocumentNode;

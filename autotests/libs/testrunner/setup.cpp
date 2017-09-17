@@ -31,7 +31,6 @@
 #include <QCoreApplication>
 #include <QDir>
 #include <QFile>
-#include <QFileInfo>
 #include <QTimer>
 #include <QDBusConnection>
 #include <QSettings>

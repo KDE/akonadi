@@ -29,7 +29,6 @@
 #include <private/imapset_p.h>
 
 #include <QTest>
-#include <QSignalSpy>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

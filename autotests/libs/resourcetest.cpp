@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-#include <QMetaType>
 #include <QObject>
 
 #include <qtest_akonadi.h>

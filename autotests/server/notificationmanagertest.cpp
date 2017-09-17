@@ -25,8 +25,6 @@
 
 #include <QObject>
 #include <QTest>
-#include <QSignalSpy>
-#include <QDebug>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

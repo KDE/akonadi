@@ -22,7 +22,6 @@
 #include "fakedatastore.h"
 #include "fakeakonadiserver.h"
 
-#include <QBuffer>
 
 using namespace Akonadi::Server;
 

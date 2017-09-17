@@ -20,9 +20,7 @@
 
 #include "dbinitializertest.h"
 #include "unittestschema.h"
-
-#include <QDebug>
-#include <QVariant>
+#include <QIODevice>
 
 #define DBINITIALIZER_UNITTEST
 #include "storage/dbinitializer.cpp"

@@ -21,7 +21,6 @@
 #define AKONADI_FILETRACER_H
 
 #include "tracerinterface.h"
-#include <QObject>
 class QFile;
 
 namespace Akonadi

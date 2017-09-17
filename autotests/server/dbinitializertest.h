@@ -21,8 +21,7 @@
 #define DBINITIALIZERTEST_H
 
 #include <QObject>
-#include <QTest>
-
+class QIODevice;
 class DbInitializerTest : public QObject
 {
     Q_OBJECT

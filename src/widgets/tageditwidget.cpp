@@ -24,7 +24,7 @@
 #include <QLineEdit>
 #include <QMessageBox>
 #include <kcheckableproxymodel.h>
-
+#include <QListView>
 #include "changerecorder.h"
 #include "tagcreatejob.h"
 #include "tagdeletejob.h"
@@ -35,7 +35,6 @@
 #include <QEvent>
 #include <QHBoxLayout>
 #include <QLabel>
-#include <QListWidget>
 #include <QPushButton>
 #include <QTimer>
 #include <QVBoxLayout>

@@ -24,9 +24,7 @@
 #include "akonadischema.h"
 #include "storage/dbinitializer.h"
 
-#include <QUuid>
 #include <QThread>
-#include <QFile>
 
 using namespace Akonadi::Server;
 

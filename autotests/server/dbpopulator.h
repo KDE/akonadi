@@ -20,7 +20,6 @@
 #ifndef AKONADI_SERVER_DBPOPULATOR_H
 #define AKONADI_SERVER_DBPOPULATOR_H
 
-#include <QSqlDatabase>
 
 namespace Akonadi {
 namespace Server {

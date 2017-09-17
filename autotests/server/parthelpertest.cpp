@@ -23,7 +23,6 @@
 
 #include <QObject>
 #include <QTest>
-#include <QDebug>
 #include <QDir>
 
 #define QL1S(x) QString::fromLatin1(x)

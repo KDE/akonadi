@@ -35,7 +35,6 @@
 
 #include <QObject>
 #include <QSignalSpy>
-#include <QEventLoop>
 
 #include <qtest_akonadi.h>
 #include <resourceselectjob_p.h>

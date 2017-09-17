@@ -20,8 +20,6 @@
 #include <QDebug>
 #include <KProcess>
 
-#include <QCoreApplication>
-#include <QTimer>
 
 TestRunner::TestRunner(const QStringList &args, QObject *parent)
     : QObject(parent)

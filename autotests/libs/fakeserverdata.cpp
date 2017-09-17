@@ -21,7 +21,6 @@
 #include "itemfetchjob.h"
 #include "collectionfetchjob.h"
 
-#include <QPointer>
 #include <QTimer>
 
 FakeServerData::FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent)

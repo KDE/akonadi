@@ -21,7 +21,6 @@
 #define DBUPDATERTEST_H
 
 #include <QObject>
-#include <QTest>
 
 class DbUpdaterTest : public QObject
 {

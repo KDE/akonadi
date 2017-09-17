@@ -19,12 +19,9 @@
 
 #include "dbupdatertest.h"
 
-#include <QDebug>
-#include <QVariant>
-#include <QBuffer>
-#include <QDir>
 
 #include "storage/dbupdater.h"
+#include <QTest>
 
 using namespace Akonadi::Server;
 

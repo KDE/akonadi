@@ -21,8 +21,6 @@
 #include "nodetree.h"
 
 #include <QFile>
-#include <QDebug>
-#include <QXmlStreamAttribute>
 
 #include <iostream>
 

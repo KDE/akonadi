@@ -22,7 +22,6 @@
 
 #include <QObject>
 #include <QTest>
-#include <QDebug>
 
 #define QL1S(x) QStringLiteral(x)
 

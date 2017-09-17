@@ -26,7 +26,6 @@
 #include "krandom.h"
 
 #include <QMimeDatabase>
-#include <QMimeType>
 
 
 #include <qtest.h>

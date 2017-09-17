@@ -21,7 +21,6 @@
 #define XMLPARSER_H
 
 #include <QXmlStreamReader>
-#include <QStack>
 
 class Node;
 class DocumentNode;

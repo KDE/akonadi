@@ -21,7 +21,6 @@
 #include "itemserializerplugin.h"
 
 #include <QDebug>
-#include <QFile>
 #include <QStringList>
 #include <QApplication>
 
