@@ -59,7 +59,7 @@ public:
     void setSession(Session *session);
 
 protected:
-    Session *session;
+    Session *session = nullptr;
 
 Q_SIGNALS:
     void dataAvailable();

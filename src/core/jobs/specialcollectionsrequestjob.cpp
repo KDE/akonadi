@@ -52,7 +52,7 @@ public:
     void collectionCreateResult(KJob *job);   // slot
 
     SpecialCollectionsRequestJob *q;
-    SpecialCollections *mSpecialCollections;
+    SpecialCollections *mSpecialCollections = nullptr;
     int mPendingCreateJobs;
 
     QByteArray mRequestedType;

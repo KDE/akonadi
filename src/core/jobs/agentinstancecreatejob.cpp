@@ -132,8 +132,8 @@ public:
     AgentType agentType;
     QString agentTypeId;
     AgentInstance agentInstance;
-    QWidget *parentWidget;
-    QTimer *safetyTimer;
+    QWidget *parentWidget = nullptr;
+    QTimer *safetyTimer = nullptr;
     bool doConfig;
     bool tooLate;
 };

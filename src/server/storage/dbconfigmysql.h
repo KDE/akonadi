@@ -99,7 +99,7 @@ private:
     QString mMysqlInstallDbPath;
     QString mMysqlCheckPath;
     bool mInternalServer;
-    QProcess *mDatabaseProcess;
+    QProcess *mDatabaseProcess = nullptr;
 };
 
 } // namespace Server

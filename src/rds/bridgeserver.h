@@ -34,7 +34,7 @@ protected Q_SLOTS:
     virtual void slotNewConnection() = 0;
 
 protected:
-    QTcpServer *m_server;
+    QTcpServer *m_server = nullptr;
 };
 
 template <typename ConnectionType>

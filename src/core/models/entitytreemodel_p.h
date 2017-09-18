@@ -148,9 +148,9 @@ public:
     mutable QHash<QString, QIcon> m_iconCache;
     mutable QString m_iconThemeName;
 
-    Monitor *m_monitor;
+    Monitor *m_monitor = nullptr;
     Collection m_rootCollection;
-    Node *m_rootNode;
+    Node *m_rootNode = nullptr;
     QString m_rootCollectionDisplayName;
     QStringList m_mimeTypeFilter;
     MimeTypeChecker m_mimeChecker;
@@ -208,7 +208,7 @@ public:
         return "FetchCollectionId";
     }
 
-    Session *m_session;
+    Session *m_session = nullptr;
 
     Q_DECLARE_PUBLIC(EntityTreeModel)
 

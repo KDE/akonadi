@@ -75,10 +75,10 @@ public:
         }
     }
 
-    AgentTypeWidget *mParent;
-    QListView *mView;
-    AgentTypeModel *mModel;
-    AgentFilterProxyModel *proxyModel;
+    AgentTypeWidget *mParent = nullptr;
+    QListView *mView = nullptr;
+    AgentTypeModel *mModel = nullptr;
+    AgentFilterProxyModel *proxyModel = nullptr;
 };
 
 void AgentTypeWidget::Private::currentAgentTypeChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex)

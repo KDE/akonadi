@@ -58,11 +58,11 @@ public:
     void itemCurrentChanged(const QModelIndex &index);
     bool hasParent(const QModelIndex &idx, Collection::Id parentId);
 
-    CollectionView *mParent;
+    CollectionView *mParent = nullptr;
     QModelIndex dragOverIndex;
     QTimer dragExpandTimer;
 
-    KXMLGUIClient *xmlGuiClient;
+    KXMLGUIClient *xmlGuiClient = nullptr;
 };
 
 void CollectionView::Private::init()

@@ -84,7 +84,7 @@ public:
     CollectionPropertiesDialog *q;
     Collection mCollection;
     QStringList mPageNames;
-    QTabWidget *mTabWidget;
+    QTabWidget *mTabWidget = nullptr;
 };
 
 typedef QList<CollectionPropertiesPageFactory *> CollectionPropertiesPageFactoryList;

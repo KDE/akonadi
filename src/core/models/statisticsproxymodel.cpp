@@ -182,7 +182,7 @@ public:
 
     void _k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 
-    StatisticsProxyModel *q;
+    StatisticsProxyModel *q = nullptr;
 
     bool mToolTipEnabled;
     bool mExtraColumnsEnabled;

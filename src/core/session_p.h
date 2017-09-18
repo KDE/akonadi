@@ -126,9 +126,9 @@ public:
      */
     static QString connectionFile();
 
-    Session *mParent;
-    SessionThread *mSessionThread;
-    Connection *connection;
+    Session *mParent = nullptr;
+    SessionThread *mSessionThread = nullptr;
+    Connection *connection = nullptr;
     QMetaObject::Connection connThreadCleanUp;
     QByteArray sessionId;
     bool connected;
@@ -138,10 +138,10 @@ public:
     // job management
     QQueue<Job *> queue;
     QQueue<Job *> pipeline;
-    Job *currentJob;
+    Job *currentJob = nullptr;
     bool jobRunning;
 
-    QFile *logFile;
+    QFile *logFile = nullptr;
 };
 
 }

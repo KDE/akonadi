@@ -71,7 +71,7 @@ public:
     }
 
     Akonadi::Collection currentCollection;
-    Akonadi::Monitor *monitor;
+    Akonadi::Monitor *monitor = nullptr;
 
     Ui::CollectionMaintenancePage ui;
 

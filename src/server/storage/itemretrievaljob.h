@@ -46,7 +46,7 @@ Q_SIGNALS:
     void requestCompleted(ItemRetrievalRequest *request, const QString &errorMsg);
 
 protected:
-    ItemRetrievalRequest *m_request;
+    ItemRetrievalRequest *m_request = nullptr;
 };
 
 /// Async D-Bus retrieval, no modification of the request (thus no need for locking)
@@ -75,7 +75,7 @@ private Q_SLOTS:
 
 private:
     bool m_active;
-    OrgFreedesktopAkonadiResourceInterface *m_interface;
+    OrgFreedesktopAkonadiResourceInterface *m_interface = nullptr;
 
 };
 

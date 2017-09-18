@@ -73,7 +73,7 @@ private:
     Akonadi::Item mLocalItem;
     Akonadi::Item mOtherItem;
 
-    QTextBrowser *mView;
+    QTextBrowser *mView = nullptr;
 };
 
 }

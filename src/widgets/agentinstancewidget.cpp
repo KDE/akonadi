@@ -96,10 +96,10 @@ public:
     void currentAgentInstanceDoubleClicked(const QModelIndex &currentIndex);
     void currentAgentInstanceClicked(const QModelIndex &currentIndex);
 
-    AgentInstanceWidget *mParent;
-    QListView *mView;
-    AgentInstanceModel *mModel;
-    AgentFilterProxyModel *proxy;
+    AgentInstanceWidget *mParent = nullptr;
+    QListView *mView = nullptr;
+    AgentInstanceModel *mModel = nullptr;
+    AgentFilterProxyModel *proxy = nullptr;
 };
 
 void AgentInstanceWidget::Private::currentAgentInstanceChanged(const QModelIndex &currentIndex, const QModelIndex &previousIndex)

@@ -43,9 +43,9 @@ public:
     }
     void readConfig();
     void writeConfig();
-    AgentTypeWidget *Widget;
+    AgentTypeWidget *Widget = nullptr;
     AgentType agentType;
-    AgentTypeDialog *q;
+    AgentTypeDialog *q = nullptr;
 };
 
 void AgentTypeDialog::Private::writeConfig()

@@ -88,7 +88,7 @@ private:
     Akonadi::ImapSet mItemSet;
     Collection mCollection;
     Scope mScope;
-    Connection *mConnection;
+    Connection *mConnection = nullptr;
     QVector<QByteArray> mParts;
     bool mFullPayload;
     bool mRecursive;

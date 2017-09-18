@@ -43,9 +43,9 @@ protected Q_SLOTS:
     void slotDefaultName();
 private:
     QString m_defaultName;
-    QLabel *m_label;
-    QLineEdit *m_lineEdit;
-    QPushButton *mOkButton;
+    QLabel *m_label = nullptr;
+    QLineEdit *m_lineEdit = nullptr;
+    QPushButton *mOkButton = nullptr;
 };
 
 #endif /* RENAMEFAVORITEDIALOG_H */

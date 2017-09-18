@@ -118,7 +118,7 @@ private:
     QVector<AbstractSearchEngine *> mEngines;
     QVector<AbstractSearchPlugin *> mPlugins;
 
-    QTimer *mSearchUpdateTimer;
+    QTimer *mSearchUpdateTimer = nullptr;
 
     QMutex mLock;
     QSet<qint64> mUpdatingCollections;

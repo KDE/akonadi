@@ -79,11 +79,11 @@ public:
     AgentInstance defaultResource() const;
 
     SpecialCollections *q;
-    KCoreConfigSkeleton *mSettings;
+    KCoreConfigSkeleton *mSettings = nullptr;
     QHash<QString, QHash<QByteArray, Collection> > mFoldersForResource;
     bool mBatchMode;
     QSet<QString> mToEmitChangedFor;
-    Monitor *mMonitor;
+    Monitor *mMonitor = nullptr;
 
     mutable QString mDefaultResourceId;
 };

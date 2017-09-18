@@ -67,11 +67,11 @@ public:
     QHash<Collection::Id, Collection> m_newCollections;
     QHash< Collection::Id, QVector<Collection::Id> > m_newChildCollections;
 
-    Monitor *monitor;
-    Session *session;
+    Monitor *monitor = nullptr;
+    Session *session = nullptr;
     QStringList mimeTypes;
-    bool fetchStatistics;
-    bool unsubscribed;
+    bool fetchStatistics = false;
+    bool unsubscribed = false;
     QString headerContent;
 
     void init();

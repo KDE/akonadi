@@ -54,8 +54,8 @@ protected:
 
 private:
     QString m_identifier;
-    QObject *m_factory;
-    QObject *m_instance;
+    QObject *m_factory = nullptr;
+    QObject *m_instance = nullptr;
 };
 
 }

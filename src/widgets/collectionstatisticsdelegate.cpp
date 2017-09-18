@@ -49,16 +49,14 @@ enum CountType {
 class CollectionStatisticsDelegatePrivate
 {
 public:
-    QAbstractItemView *parent;
-    bool drawUnreadAfterFolder;
-    DelegateAnimator *animator;
+    QAbstractItemView *parent = nullptr;
+    bool drawUnreadAfterFolder = false;
+    DelegateAnimator *animator = nullptr;
     QColor mSelectedUnreadColor;
     QColor mDeselectedUnreadColor;
 
     CollectionStatisticsDelegatePrivate(QAbstractItemView *treeView)
         : parent(treeView)
-        , drawUnreadAfterFolder(false)
-        , animator(nullptr)
     {
         updateColor();
     }

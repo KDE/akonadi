@@ -38,13 +38,13 @@ protected Q_SLOTS:
     void doConnects();
 
 protected:
-    QIODevice *m_localSocket;
+    QIODevice *m_localSocket = nullptr;
 
 private Q_SLOTS:
     void slotDataAvailable();
 
 private:
-    QTcpSocket *m_remoteSocket;
+    QTcpSocket *m_remoteSocket = nullptr;
 };
 
 class AkonadiBridgeConnection : public BridgeConnection

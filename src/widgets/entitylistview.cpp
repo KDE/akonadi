@@ -59,9 +59,9 @@ public:
     void itemDoubleClicked(const QModelIndex &index);
     void itemCurrentChanged(const QModelIndex &index);
 
-    EntityListView *mParent;
-    DragDropManager *mDragDropManager;
-    KXMLGUIClient *mXmlGuiClient;
+    EntityListView *mParent = nullptr;
+    DragDropManager *mDragDropManager = nullptr;
+    KXMLGUIClient *mXmlGuiClient = nullptr;
 };
 
 void EntityListView::Private::init()

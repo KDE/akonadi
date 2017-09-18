@@ -119,8 +119,8 @@ public:
     Item::List mResultItems;
     ItemFetchScope mFetchScope;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
-    QTimer *mEmitTimer;
-    ProtocolHelperValuePool *mValuePool;
+    QTimer *mEmitTimer = nullptr;
+    ProtocolHelperValuePool *mValuePool = nullptr;
     ItemFetchJob::DeliveryOptions mDeliveryOptions;
     int mCount;
 };

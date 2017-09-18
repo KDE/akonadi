@@ -38,9 +38,6 @@ class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
 public:
     CollectionAttributesSynchronizationJobPrivate(CollectionAttributesSynchronizationJob *parent)
         : q(parent)
-        , interface(nullptr)
-        , safetyTimer(nullptr)
-        , timeoutCount(0)
     {
     }
 
@@ -49,9 +46,9 @@ public:
     CollectionAttributesSynchronizationJob *q;
     AgentInstance instance;
     Collection collection;
-    QDBusInterface *interface;
-    QTimer *safetyTimer;
-    int timeoutCount;
+    QDBusInterface *interface = nullptr;
+    QTimer *safetyTimer = nullptr;
+    int timeoutCount = 0;
     static const int timeoutCountLimit;
 
     void slotSynchronized(qlonglong);

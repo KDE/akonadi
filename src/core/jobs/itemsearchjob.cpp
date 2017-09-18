@@ -95,7 +95,7 @@ public:
     Item::List mItems;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
 
-    QTimer *mEmitTimer;
+    QTimer *mEmitTimer = nullptr;
 };
 
 QThreadStorage<Session *> instances;

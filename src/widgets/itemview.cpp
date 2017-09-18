@@ -50,10 +50,10 @@ public:
 
     Item itemForIndex(const QModelIndex &index);
 
-    KXMLGUIClient *xmlGuiClient;
+    KXMLGUIClient *xmlGuiClient = nullptr;
 
 private:
-    ItemView *mParent;
+    ItemView *mParent = nullptr;
 };
 
 void ItemView::Private::init()

@@ -64,7 +64,7 @@ public:
 
     Relation::List mResultRelations;
     Relation::List mPendingRelations; // relation pending for emitting itemsReceived()
-    QTimer *mEmitTimer;
+    QTimer *mEmitTimer = nullptr;
     QVector<QByteArray> mTypes;
     QString mResource;
     Relation mRequestedRelation;

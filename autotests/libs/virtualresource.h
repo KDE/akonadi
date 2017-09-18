@@ -46,7 +46,7 @@ public:
 private:
     Akonadi::Collection mRootCollection;
     QString mResourceName;
-    Akonadi::Session *mSession;
+    Akonadi::Session *mSession = nullptr;
 };
 
 }

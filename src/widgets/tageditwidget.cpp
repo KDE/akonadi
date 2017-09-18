@@ -65,15 +65,15 @@ public:
 
     QWidget *d;
     Akonadi::Tag::List m_tags;
-    Akonadi::TagModel *m_model;
-    QListView *m_tagsView;
-    KCheckableProxyModel *m_checkableProxy;
+    Akonadi::TagModel *m_model = nullptr;
+    QListView *m_tagsView = nullptr;
+    KCheckableProxyModel *m_checkableProxy = nullptr;
     QModelIndex m_deleteCandidate;
-    QPushButton *m_newTagButton;
-    QLineEdit *m_newTagEdit;
+    QPushButton *m_newTagButton = nullptr;
+    QLineEdit *m_newTagEdit = nullptr;
 
-    QPushButton *m_deleteButton;
-    QTimer *m_deleteButtonTimer;
+    QPushButton *m_deleteButton = nullptr;
+    QTimer *m_deleteButtonTimer = nullptr;
 };
 
 TagEditWidget::Private::Private(Akonadi::TagModel *model, QWidget *parent)

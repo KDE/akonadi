@@ -39,7 +39,7 @@ public:
     {
     }
 
-    SpecialCollections *mSpecialCollections;
+    SpecialCollections *mSpecialCollections = nullptr;
     QStringList mMimeTypes;
 };
 

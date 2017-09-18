@@ -55,7 +55,7 @@ protected:
         void appendChild(Node *child);
         void removeChild(Node *child);
 
-        Node *parent;
+        Node *parent = nullptr;
         QVector<Node *> children;
         QAtomicInt lruCounter;
         qint64 id;
@@ -92,7 +92,7 @@ protected:
 protected:
     mutable QReadWriteLock mLock;
 
-    Node *mRoot;
+    Node *mRoot = nullptr;
 
     QHash<qint64 /* col ID */, Node *> mNodeLookup;
 };

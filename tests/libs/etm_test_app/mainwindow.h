@@ -39,8 +39,8 @@ private Q_SLOTS:
     void moveCollection();
 
 private:
-    FakeServerData *m_serverData;
-    Akonadi::EntityTreeModel *m_model;
+    FakeServerData *m_serverData = nullptr;
+    Akonadi::EntityTreeModel *m_model = nullptr;
 };
 
 #endif

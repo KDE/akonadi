@@ -89,7 +89,7 @@ private:
     QString createReport();
 
     Ui::SelfTestDialog ui;
-    QStandardItemModel *mTestModel;
+    QStandardItemModel *mTestModel = nullptr;
 };
 }
 #endif

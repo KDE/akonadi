@@ -125,7 +125,7 @@ public:
     void serverStateChanged(ServerManager::State state);
 
     QPointer<ControlGui> mParent;
-    QEventLoop *mEventLoop;
+    QEventLoop *mEventLoop = nullptr;
     QPointer<Internal::ControlProgressIndicator> mProgressIndicator;
     QList<QPointer<QWidget> > mPendingOverlays;
     bool mSuccess;

@@ -66,7 +66,7 @@ public:
     Tag::List mRequestedTags;
     Tag::List mResultTags;
     Tag::List mPendingTags; // items pending for emitting itemsReceived()
-    QTimer *mEmitTimer;
+    QTimer *mEmitTimer = nullptr;
     TagFetchScope mFetchScope;
 };
 

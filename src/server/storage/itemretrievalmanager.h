@@ -85,12 +85,12 @@ private Q_SLOTS:
 protected:
     static ItemRetrievalManager *sInstance;
 
-    AbstractItemRetrievalJobFactory *mJobFactory;
+    AbstractItemRetrievalJobFactory *mJobFactory = nullptr;
 
     /// Protects mPendingRequests and every Request object posted to it
-    QReadWriteLock *mLock;
+    QReadWriteLock *mLock = nullptr;
     /// Used to let requesting threads wait until the request has been processed
-    QWaitCondition *mWaitCondition;
+    QWaitCondition *mWaitCondition = nullptr;
     /// Pending requests queues, one per resource
     QHash<QString, QList<ItemRetrievalRequest *> > mPendingRequests;
     /// Currently running jobs, one per resource

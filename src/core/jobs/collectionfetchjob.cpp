@@ -66,7 +66,7 @@ public:
     Collection::List mCollections;
     CollectionFetchScope mScope;
     Collection::List mPendingCollections;
-    QTimer *mEmitTimer;
+    QTimer *mEmitTimer = nullptr;
     bool mBasePrefetch;
     Collection::List mPrefetchList;
 

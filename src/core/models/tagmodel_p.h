@@ -52,8 +52,8 @@ public:
 
     void removeTagsRecursively(qint64 parentTag);
 
-    Monitor *mMonitor;
-    Session *mSession;
+    Monitor *mMonitor = nullptr;
+    Session *mSession = nullptr;
 
     QHash<Tag::Id /* parent */, Tag::List > mChildTags;
     QHash<Tag::Id /* tag ID */, Tag> mTags;

@@ -176,9 +176,9 @@ private:
     void execPendingQueries(const QStringList &queries);
 
     QSqlDatabase mDatabase;
-    Schema *mSchema;
+    Schema *mSchema = nullptr;
     QString mErrorMsg;
-    TestInterface *mTestInterface;
+    TestInterface *mTestInterface = nullptr;
     DbIntrospector::Ptr m_introspector;
     bool m_noForeignKeyContraints;
     QStringList m_pendingIndexes;

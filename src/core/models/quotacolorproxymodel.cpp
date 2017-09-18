@@ -35,14 +35,14 @@ class Q_DECL_HIDDEN QuotaColorProxyModel::Private
 {
 public:
     Private(QuotaColorProxyModel *parent)
-        : mParent(parent), mThreshold(100.0), mColor(Qt::red)
+        : mParent(parent)
     {
     }
 
-    QuotaColorProxyModel *mParent;
+    QuotaColorProxyModel *mParent = nullptr;
 
-    qreal mThreshold;
-    QColor mColor;
+    qreal mThreshold = 100.0;
+    QColor mColor = Qt::red;
 };
 
 QuotaColorProxyModel::QuotaColorProxyModel(QObject *parent)

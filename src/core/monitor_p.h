@@ -75,10 +75,10 @@ public:
     TagFetchScope mTagFetchScope;
     CollectionFetchScope mCollectionFetchScope;
     bool mFetchChangedOnly;
-    Session *session;
-    CollectionCache *collectionCache;
-    ItemListCache *itemCache;
-    TagListCache *tagCache;
+    Session *session = nullptr;
+    CollectionCache *collectionCache = nullptr;
+    ItemListCache *itemCache = nullptr;
+    TagListCache *tagCache = nullptr;
     QMimeDatabase mimeDatabase;
 
     Protocol::ModifySubscriptionCommand pendingModification;
