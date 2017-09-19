@@ -202,11 +202,11 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     QVBoxLayout *subscribeButtonLayout = new QVBoxLayout;
     d->subscribe = new QPushButton(i18n("Subscribe"));
     subscribeButtonLayout->addWidget(d->subscribe);
-    connect(d->subscribe, SIGNAL(clicked()), this, SLOT(slotSubscribe()));
+    connect(d->subscribe, &QPushButton::clicked, this, [this]() { d->slotSubscribe(); });
 
     d->unSubscribe = new QPushButton(i18n("Unsubscribe"));
     subscribeButtonLayout->addWidget(d->unSubscribe);
-    connect(d->unSubscribe, SIGNAL(clicked()), this, SLOT(slotUnSubscribe()));
+    connect(d->unSubscribe, &QPushButton::clicked, this, [this]() { d->slotUnSubscribe(); });
     subscribeButtonLayout->addItem(new QSpacerItem(5, 5, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
     hboxLayout->addLayout(subscribeButtonLayout);
@@ -223,7 +223,7 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     mainLayout->addWidget(buttonBox);
 
     connect(d->model, SIGNAL(loaded()), SLOT(modelLoaded()));
-    connect(d->mOkButton, SIGNAL(clicked(bool)), this, SLOT(done()));
+    connect(d->mOkButton, &QPushButton::clicked, this, [this] () { d->done(); });
     connect(buttonBox->button(QDialogButtonBox::Cancel), &QPushButton::clicked, this, &SubscriptionDialog::deleteLater);
     ControlGui::widgetNeedsAkonadi(mainWidget);
     d->readConfig();
