@@ -86,9 +86,6 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void typeAdded(const Akonadi::AgentType &))
-    Q_PRIVATE_SLOT(d, void typeRemoved(const Akonadi::AgentType &))
     //@endcond
 };
 

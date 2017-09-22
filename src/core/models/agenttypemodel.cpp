@@ -62,10 +62,8 @@ AgentTypeModel::AgentTypeModel(QObject *parent)
     : QAbstractItemModel(parent)
     , d(new Private(this))
 {
-    connect(AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)),
-            this, SLOT(typeAdded(Akonadi::AgentType)));
-    connect(AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)),
-            this, SLOT(typeRemoved(Akonadi::AgentType)));
+    connect(AgentManager::self(), &AgentManager::typeAdded, this, [this](const Akonadi::AgentType &type ) { d->typeAdded(type); });
+    connect(AgentManager::self(), &AgentManager::typeRemoved, this, [this](const Akonadi::AgentType &type ) { d->typeRemoved(type); });
 }
 
 AgentTypeModel::~AgentTypeModel()

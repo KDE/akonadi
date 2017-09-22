@@ -58,7 +58,7 @@ public:
 
         // We use WA_DeleteOnClose => Don't use dialog as parent otherwise we can't save modified collection.
         CollectionModifyJob *job = new CollectionModifyJob(mCollection);
-        connect(job, SIGNAL(result(KJob*)), q, SLOT(saveResult(KJob*)));
+        connect(job, &CollectionModifyJob::result, q, [this](KJob *job) { saveResult(job); });
     }
 
     void saveResult(KJob *job)
@@ -167,7 +167,7 @@ void CollectionPropertiesDialog::Private::init()
         }
     }
 
-    q->connect(buttonBox->button(QDialogButtonBox::Ok), SIGNAL(clicked()), SLOT(save()));
+    q->connect(buttonBox->button(QDialogButtonBox::Ok), &QPushButton::clicked, q, [this]() { save(); });
     q->connect(buttonBox->button(QDialogButtonBox::Cancel), &QAbstractButton::clicked, q, &QObject::deleteLater);
 
     KConfigGroup group(KSharedConfig::openConfig(), "CollectionPropertiesDialog");

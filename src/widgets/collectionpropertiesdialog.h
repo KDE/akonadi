@@ -140,9 +140,6 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void save())
-    Q_PRIVATE_SLOT(d, void saveResult(KJob *))
     //@endcond
 };
 
