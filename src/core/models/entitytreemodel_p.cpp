@@ -471,7 +471,7 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
         if (m_itemPopulation == EntityTreeModel::ImmediatePopulation) {
             foreach (const Collection::Id &collectionId, collectionIt.value()) {
                 const auto col = m_collections.value(collectionId);
-                if (m_mimeChecker.wantedMimeTypes().isEmpty() || m_mimeChecker.isWantedCollection(col)) {
+                if (!m_mimeChecker.hasWantedMimeTypes() || m_mimeChecker.isWantedCollection(col)) {
                     fetchItems(m_collections.value(collectionId));
                 } else {
                     // Consider collections that don't contain relevant mimetypes to be populated
@@ -521,8 +521,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
             continue;
         }
 
-        if ((m_mimeChecker.wantedMimeTypes().isEmpty() ||
-                m_mimeChecker.isWantedItem(item))) {
+        if ((!m_mimeChecker.hasWantedMimeTypes() || m_mimeChecker.isWantedItem(item))) {
             // When listing virtual collections we might get results for items which are already in
             // the model if their concrete collection has already been listed.
             // In that case the collectionId should be different though.
@@ -773,7 +772,7 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
     }
 
     //We're explicitly monitoring collections, but didn't match the filter
-    if (m_mimeChecker.wantedMimeTypes().isEmpty() && !m_monitor->collectionsMonitored().isEmpty()) {
+    if (!m_mimeChecker.hasWantedMimeTypes() && !m_monitor->collectionsMonitored().isEmpty()) {
         //The collection should be included if one of the parents is monitored
         if (isAncestorMonitored(collection)) {
             return true;
@@ -783,8 +782,7 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
 
     // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
     // only get the ones we're interested in from the job, we have to filter on collections received through signals too.
-    if (!m_mimeChecker.wantedMimeTypes().isEmpty() &&
-            !m_mimeChecker.isWantedCollection(collection)) {
+    if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedCollection(collection)) {
         return false;
     }
 
@@ -1081,8 +1079,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
 
     Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains(collection.id()) : true);
 
-    if (!m_mimeChecker.wantedMimeTypes().isEmpty() &&
-            !m_mimeChecker.isWantedItem(item)) {
+    if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
     }
 
@@ -1271,8 +1268,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
 
     Q_ASSERT(m_collections.contains(collectionId));
 
-    if (!m_mimeChecker.wantedMimeTypes().isEmpty() &&
-            !m_mimeChecker.isWantedItem(item)) {
+    if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
         return;
     }
 
@@ -1485,7 +1481,7 @@ void EntityTreeModelPrivate::startFirstListJob()
         m_collections.insert(m_rootCollection.id(), m_rootCollection);
     }
 
-    const bool noMimetypes = m_mimeChecker.wantedMimeTypes().isEmpty();
+    const bool noMimetypes = !m_mimeChecker.hasWantedMimeTypes();
     const bool noResources = m_monitor->resourcesMonitored().isEmpty();
     const bool multipleCollections = m_monitor->collectionsMonitored().size() > 1;
     const bool generalPopulation = !noMimetypes || (noMimetypes && noResources);
