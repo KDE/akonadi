@@ -135,9 +135,21 @@ public:
     /**
      * Returns the list of wanted MIME types this instance checks against.
      *
-     * @see setWantedMimeTypes()
+     * @note Don't use this just to check whether there are any wanted mimetypes.
+     * It is much faster to call @c hasWantedMimeTypes() instead for that purpose.
+     *
+     * @see setWantedMimeTypes(), hasWantedMimeTypes()
      */
     QStringList wantedMimeTypes() const;
+
+    /**
+     * Checks whether any wanted MIME types are set.
+     *
+     * @return @c true if any wanted MIME types are set, false otherwise.
+     *
+     * @since 5.6.43
+     */
+    bool hasWantedMimeTypes() const;
 
     /**
      * Sets the list of wanted MIME types this instance checks against.

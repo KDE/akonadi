@@ -54,6 +54,11 @@ QStringList MimeTypeChecker::wantedMimeTypes() const
     return d->mWantedMimeTypes.values();
 }
 
+bool MimeTypeChecker::hasWantedMimeTypes() const
+{
+    return !d->mWantedMimeTypes.isEmpty();
+}
+
 void MimeTypeChecker::setWantedMimeTypes(const QStringList &mimeTypes)
 {
     d->mWantedMimeTypes = QSet<QString>::fromList(mimeTypes);

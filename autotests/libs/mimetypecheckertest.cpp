@@ -54,6 +54,7 @@ void MimeTypeCheckerTest::initTestCase()
     const QLatin1String textPlain = QLatin1String("text/plain");
     mEmptyChecker.addWantedMimeType(textPlain);
     QVERIFY(!mEmptyChecker.wantedMimeTypes().isEmpty());
+    QVERIFY(mEmptyChecker.hasWantedMimeTypes());
 
     const QLatin1String textCalendar = QLatin1String("text/calendar");
     calendarChecker.addWantedMimeType(textCalendar);
@@ -73,6 +74,7 @@ void MimeTypeCheckerTest::initTestCase()
     mAliasChecker    = aliasChecker;
 
     QVERIFY(mEmptyChecker.wantedMimeTypes().isEmpty());
+    QVERIFY(!mEmptyChecker.hasWantedMimeTypes());
 
     QCOMPARE(mCalendarChecker.wantedMimeTypes().count(), 1);
     QCOMPARE(mCalendarChecker.wantedMimeTypes(), QStringList() << textCalendar);
