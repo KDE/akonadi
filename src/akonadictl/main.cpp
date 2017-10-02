@@ -76,6 +76,11 @@ static bool stopServer()
     return true;
 }
 
+static bool isAkonadiServerRunning()
+{
+    return QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server));
+}
+
 static bool checkAkonadiControlStatus()
 {
     const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control));
@@ -85,7 +90,7 @@ static bool checkAkonadiControlStatus()
 
 static bool checkAkonadiServerStatus()
 {
-    const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server));
+    const bool registered = isAkonadiServerRunning();
     std::cerr << "Akonadi Server: " << (registered ? "running" : "stopped") << std::endl;
     return registered;
 }
@@ -196,6 +201,11 @@ static bool statusServer()
 
 static void runJanitor(const QString &operation)
 {
+    if (!isAkonadiServerRunning()) {
+        std::cerr << "Akonadi Server is not running, " << operation.toStdString() << " will not run" << std::endl;
+        return;
+    }
+
     org::freedesktop::Akonadi::Janitor janitor(Akonadi::DBus::serviceName(Akonadi::DBus::StorageJanitor),
             QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH),
             QDBusConnection::sessionBus());
