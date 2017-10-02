@@ -181,7 +181,6 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT(d, void listingDone(KJob *))
     Q_PRIVATE_SLOT(d, void collectionFetchResult(KJob *))
     Q_PRIVATE_SLOT(d, void itemChanged(const Akonadi::Item &, const QSet<QByteArray> &))
     Q_PRIVATE_SLOT(d, void itemMoved(const Akonadi::Item &, const Akonadi::Collection &, const Akonadi::Collection &))

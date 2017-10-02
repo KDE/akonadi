@@ -371,7 +371,7 @@ void ItemModel::setCollection(const Collection &collection)
         job->setFetchScope(d->monitor->itemFetchScope());
         connect(job, SIGNAL(itemsReceived(Akonadi::Item::List)),
                 SLOT(itemsAdded(Akonadi::Item::List)));
-        connect(job, SIGNAL(result(KJob*)), SLOT(listingDone(KJob*)));
+        connect(job, &ItemFetchJob::result, this, [this](KJob *job) { d->listingDone(job); });
     }
 
     emit collectionChanged(collection);

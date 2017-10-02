@@ -139,11 +139,11 @@ void CollectionRequester::Private::init()
     q->setFocusProxy(button);
     q->setFocusPolicy(Qt::StrongFocus);
 
-    q->connect(button, SIGNAL(clicked()), q, SLOT(_k_slotOpenDialog()));
+    q->connect(button, &QPushButton::clicked, q, [this]() { _k_slotOpenDialog(); });
 
     QAction *openAction = new QAction(q);
     openAction->setShortcut(KStandardShortcut::Open);
-    q->connect(openAction, SIGNAL(triggered(bool)), q, SLOT(_k_slotOpenDialog()));
+    q->connect(openAction, &QAction::triggered, q, [this]() { _k_slotOpenDialog(); });
 
     collectionDialog = new CollectionDialog(q);
     collectionDialog->setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));

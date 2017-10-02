@@ -128,7 +128,6 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT(d, void dragExpand())
     Q_PRIVATE_SLOT(d, void itemClicked(const QModelIndex &))
     Q_PRIVATE_SLOT(d, void itemCurrentChanged(const QModelIndex &))
     //@endcond
