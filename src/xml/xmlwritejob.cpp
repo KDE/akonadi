@@ -93,7 +93,7 @@ void XmlWriteJobPrivate::processCollection()
     qDebug() << "Writing " << current.name() << "into" << elementStack.top().attribute(QStringLiteral("name"));
     elementStack.push(XmlWriter::writeCollection(current, elementStack.top()));
     CollectionFetchJob *subfetch = new CollectionFetchJob(current, CollectionFetchJob::FirstLevel, q);
-    q->connect(subfetch, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)));
+    q->connect(subfetch, &CollectionFetchJob::result, q, [this](KJob *job) {collectionFetchResult(job); });
 }
 
 void XmlWriteJobPrivate::processItems()
@@ -102,7 +102,7 @@ void XmlWriteJobPrivate::processItems()
     ItemFetchJob *fetch = new ItemFetchJob(collection, q);
     fetch->fetchScope().fetchAllAttributes();
     fetch->fetchScope().fetchFullPayload();
-    q->connect(fetch, SIGNAL(result(KJob*)), q, SLOT(itemFetchResult(KJob*)));
+    q->connect(fetch, &ItemFetchJob::result, q, [this](KJob *job) { itemFetchResult(job); } );
 }
 
 void XmlWriteJobPrivate::itemFetchResult(KJob *job)
@@ -146,7 +146,7 @@ void XmlWriteJob::doStart()
 {
     d->elementStack.push(d->document.document().documentElement());
     CollectionFetchJob *job = new CollectionFetchJob(d->roots, this);
-    connect(job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)));
+    connect(job, &CollectionFetchJob::result, this, [this](KJob *job) {d->collectionFetchResult(job);});
 }
 
 void XmlWriteJob::done() // cannot be in the private class due to emitResult()

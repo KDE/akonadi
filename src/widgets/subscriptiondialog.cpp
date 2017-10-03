@@ -59,7 +59,7 @@ public:
         SubscriptionJob *job = new SubscriptionJob(q);
         job->subscribe(model->subscribed());
         job->unsubscribe(model->unsubscribed());
-        connect(job, SIGNAL(result(KJob*)), q, SLOT(subscriptionResult(KJob*)));
+        connect(job, &SubscriptionJob::result, q, [this](KJob *job) { subscriptionResult(job); });
     }
 
     void subscriptionResult(KJob *job)

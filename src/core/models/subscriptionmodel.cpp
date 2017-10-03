@@ -94,7 +94,7 @@ SubscriptionModel::SubscriptionModel(QObject *parent) :
 {
     includeUnsubscribed();
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
-    connect(job, SIGNAL(result(KJob*)), this, SLOT(listResult(KJob*)));
+    connect(job,&CollectionFetchJob::result, this, [this](KJob *job) { d->listResult(job); });
 }
 
 SubscriptionModel::~SubscriptionModel()

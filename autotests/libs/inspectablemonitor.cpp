@@ -49,6 +49,6 @@ InspectableMonitor::InspectableMonitor(FakeMonitorDependeciesFactory *dependenci
     connect(this, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), SIGNAL(dummySignal()));
     connect(this, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), SIGNAL(dummySignal()));
 
-    QTimer::singleShot(0, this, SLOT(doConnectToNotificationManager()));
+    QTimer::singleShot(0, this, [this]() { doConnectToNotificationManager(); });
 }
 
