@@ -1194,6 +1194,9 @@ void ResourceBase::cancelTask()
     case ResourceScheduler::FetchItem:
         itemRetrieved(Item());   // sends the error reply and
         break;
+    case ResourceScheduler::FetchItems:
+        itemsRetrieved(Item::List());
+        break;
     case ResourceScheduler::ChangeReplay:
         d->changeProcessed();
         break;
