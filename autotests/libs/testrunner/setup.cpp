@@ -309,9 +309,7 @@ void SetupTest::shutdown()
     case Akonadi::ServerManager::NotRunning:
     case Akonadi::ServerManager::Broken:
         shutdownHarder();
-#if QT_VERSION >= QT_VERSION_CHECK(5,8,0)
         Q_FALLTHROUGH();
-#endif
     case Akonadi::ServerManager::Stopping:
         // safety timeout
         QTimer::singleShot(30 * 1000, this, &SetupTest::shutdownHarder);
