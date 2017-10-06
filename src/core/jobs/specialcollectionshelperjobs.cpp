@@ -637,7 +637,7 @@ GetLockJob::~GetLockJob()
 
 void GetLockJob::start()
 {
-    QTimer::singleShot(0, this, SLOT(doStart()));
+    QTimer::singleShot(0, this, [this]() { d->doStart(); });
 }
 
 void Akonadi::setCollectionAttributes(Akonadi::Collection &collection, const QByteArray &type,
