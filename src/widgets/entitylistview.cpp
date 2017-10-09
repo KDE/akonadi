@@ -187,9 +187,6 @@ void EntityListView::dropEvent(QDropEvent *event)
     bool menuCanceled = false;
     if (d->mDragDropManager->processDropEvent(event, menuCanceled) &&
             !menuCanceled) {
-        if (menuCanceled) {
-            return;
-        }
         QListView::dropEvent(event);
     } else if (qobject_cast<Akonadi::FavoriteCollectionsModel *>(model()) &&
                !menuCanceled) {
