@@ -237,8 +237,8 @@ public:
 
     DefaultResourceJob *const q;
     KCoreConfigSkeleton *mSettings = nullptr;
-    bool mResourceWasPreexisting;
-    int mPendingModifyJobs;
+    bool mResourceWasPreexisting = true;
+    int mPendingModifyJobs = 0;
     QString mDefaultResourceType;
     QVariantMap mDefaultResourceOptions;
     QList<QByteArray> mKnownTypes;

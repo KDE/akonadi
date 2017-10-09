@@ -1484,7 +1484,7 @@ void EntityTreeModelPrivate::startFirstListJob()
     const bool noMimetypes = !m_mimeChecker.hasWantedMimeTypes();
     const bool noResources = m_monitor->resourcesMonitored().isEmpty();
     const bool multipleCollections = m_monitor->collectionsMonitored().size() > 1;
-    const bool generalPopulation = !noMimetypes || (noMimetypes && noResources);
+    const bool generalPopulation = !noMimetypes || noResources;
 
     const CollectionFetchJob::Type fetchType = getFetchType(m_collectionFetchStrategy);
 

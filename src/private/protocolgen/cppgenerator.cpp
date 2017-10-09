@@ -359,13 +359,11 @@ void CppGenerator::writeImplSerializer(PropertyNode const *node,
                                        const char *streamingOperator)
 {
     const auto deps = node->dependencies();
-    const auto classNode = static_cast<const ClassNode*>(node->parent());
     if (deps.isEmpty()) {
         mImpl << "    stream " << streamingOperator << " obj." << node->mVariableName() << ";\n";
     } else {
         mImpl << "    if (";
         auto it = deps.cend();
-        const QString className = classNode->className();
         while (1 + 1 == 2) {
             --it;
             const QString mVar = it.key();

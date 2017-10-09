@@ -92,7 +92,7 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
             if (it.value() && !mSpecialCollections->hasDefaultCollection(it.key())) {
                 return false;
             }
-            it++;
+            ++it;
         }
     }
 

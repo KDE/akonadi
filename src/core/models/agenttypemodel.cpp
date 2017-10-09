@@ -96,28 +96,21 @@ QVariant AgentTypeModel::data(const QModelIndex &index, int role) const
     switch (role) {
     case Qt::DisplayRole:
         return type.name();
-        break;
     case Qt::DecorationRole:
         return type.icon();
-        break;
     case TypeRole: {
         QVariant var;
         var.setValue(type);
         return var;
-        break;
     }
     case IdentifierRole:
         return type.identifier();
-        break;
     case DescriptionRole:
         return type.description();
-        break;
     case MimeTypesRole:
         return type.mimeTypes();
-        break;
     case CapabilitiesRole:
         return type.capabilities();
-        break;
     default:
         break;
     }

@@ -165,10 +165,9 @@ void CollectionModelPrivate::collectionsChanged(const Collection::List &cols)
     // parent is already in the model, the collection can be added to the model.
     // Otherwise it is persisted until it has a valid parent in the model.
     int currentSize = m_newChildCollections.size();
-    int lastSize = -1;
 
     while (currentSize > 0) {
-        lastSize = currentSize;
+        int lastSize = currentSize;
 
         QMutableHashIterator< Collection::Id, QVector< Collection::Id > > i(m_newChildCollections);
         while (i.hasNext()) {
