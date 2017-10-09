@@ -35,8 +35,8 @@ public:
         init();
     }
     void init();
-    TagSelectWidget *mParent;
-    Akonadi::TagEditWidget *mTagEditWidget;
+    TagSelectWidget *mParent = nullptr;
+    Akonadi::TagEditWidget *mTagEditWidget = nullptr;
 };
 
 void TagSelectWidget::Private::init()

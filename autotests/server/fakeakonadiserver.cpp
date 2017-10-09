@@ -259,7 +259,7 @@ bool FakeAkonadiServer::quit()
     }
 
     PreprocessorManager::done();
-    SearchManager::instance();
+    (void)SearchManager::instance();
 
     if (mDataStore) {
         mDataStore->close();

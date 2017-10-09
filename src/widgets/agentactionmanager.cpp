@@ -244,10 +244,10 @@ public:
         return mContextTexts[type].value(context);
     }
 
-    AgentActionManager *q;
-    KActionCollection *mActionCollection;
-    QWidget *mParentWidget;
-    QItemSelectionModel *mSelectionModel;
+    AgentActionManager *q = nullptr;
+    KActionCollection *mActionCollection = nullptr;
+    QWidget *mParentWidget = nullptr;
+    QItemSelectionModel *mSelectionModel = nullptr;
     QVector<QAction *> mActions;
     QStringList mMimeTypeFilter;
     QStringList mCapabilityFilter;

@@ -39,15 +39,13 @@ class Q_DECL_HIDDEN TagWidget::Private
 {
 public:
     Private()
-        : mTagView(nullptr),
-          mModel(nullptr)
     {
 
     }
 
-    TagView *mTagView;
     Akonadi::Tag::List mTags;
-    Akonadi::TagModel *mModel;
+    TagView *mTagView = nullptr;
+    Akonadi::TagModel *mModel = nullptr;
 };
 
 TagView::TagView(QWidget *parent)

@@ -81,7 +81,7 @@ public:
         }
     }
 
-    CollectionPropertiesDialog *q;
+    CollectionPropertiesDialog *q = nullptr;
     Collection mCollection;
     QStringList mPageNames;
     QTabWidget *mTabWidget = nullptr;

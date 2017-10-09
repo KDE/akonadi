@@ -49,6 +49,7 @@ void AgentSearchInterfacePrivate::delayedInit()
                          QStringLiteral("org.freedesktop.Akonadi.SearchManager"),
                          QDBusConnection::sessionBus(), this);
     QDBusMessage msg = iface.call(QStringLiteral("registerInstance"), dynamic_cast<AgentBase *>(q)->identifier());
+    //TODO ?
 }
 
 void AgentSearchInterfacePrivate::addSearch(const QString &query, const QString &queryLanguage, quint64 resultCollectionId)

@@ -191,7 +191,7 @@ public:
 
 private:
     Q_DISABLE_COPY(PainterStateSaver)
-    QPainter *mPainter;
+    QPainter *mPainter = nullptr;
 };
 
 void CollectionStatisticsDelegate::paint(QPainter *painter,
