@@ -39,8 +39,6 @@ int main(int argc, char *argv[])
 
     app.setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
     QCommandLineParser parser;
-    parser.addVersionOption();
-    parser.addHelpOption();
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);

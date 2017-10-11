@@ -93,14 +93,11 @@ int main(int argc, char **argv)
 
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutData);
-    parser.addVersionOption();
-    parser.addHelpOption();
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("path"), i18n("IMAP destination path"), QStringLiteral("argument")));
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("mimetype"), i18n("Source mimetype"), QStringLiteral("argument"), QStringLiteral("application/octet-stream")));
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("file"), i18n("Source file"), QStringLiteral("argument")));
     parser.addOption(QCommandLineOption(QStringList() << QStringLiteral("count"), i18n("Number of times this file is added"), QStringLiteral("argument"), QStringLiteral("1")));
 
-    //PORTING SCRIPT: adapt aboutdata variable if necessary
     aboutData.setupCommandLine(&parser);
     parser.process(app);
     aboutData.processCommandLine(&parser);

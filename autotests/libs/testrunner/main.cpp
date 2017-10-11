@@ -67,8 +67,6 @@ int main(int argc, char **argv)
     app.setQuitLockEnabled(false);
     QCommandLineParser parser;
     KAboutData::setApplicationData(aboutdata);
-    parser.addVersionOption();
-    parser.addHelpOption();
     parser.addOption({ { QStringLiteral("c"), QStringLiteral("config") },
                        i18n("Configuration file to open"), QStringLiteral("configfile"),
                        QStringLiteral("config.xml") });
