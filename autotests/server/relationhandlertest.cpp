@@ -72,11 +72,11 @@ public:
         }
 
         RelationType type;
-        type.setName(QLatin1String("type"));
+        type.setName(QStringLiteral("type"));
         type.insert();
 
         RelationType type2;
-        type2.setName(QLatin1String("type2"));
+        type2.setName(QStringLiteral("type2"));
         type2.insert();
     }
 
@@ -128,7 +128,7 @@ private Q_SLOTS:
             rel.setLeftId(item1.id());
             rel.setRightId(item2.id());
             RelationType type;
-            type.setName(QLatin1String("type"));
+            type.setName(QStringLiteral("type"));
             rel.setRelationType(type);
 
             auto itemNotification = Protocol::ItemChangeNotificationPtr::create();
@@ -189,13 +189,13 @@ private Q_SLOTS:
         Relation rel;
         rel.setLeftId(item1.id());
         rel.setRightId(item2.id());
-        rel.setRelationType(RelationType::retrieveByName(QLatin1String("type")));
+        rel.setRelationType(RelationType::retrieveByName(QStringLiteral("type")));
         QVERIFY(rel.insert());
 
         Relation rel2;
         rel2.setLeftId(item1.id());
         rel2.setRightId(item2.id());
-        rel2.setRelationType(RelationType::retrieveByName(QLatin1String("type2")));
+        rel2.setRelationType(RelationType::retrieveByName(QStringLiteral("type2")));
         QVERIFY(rel2.insert());
 
         auto notificationTemplate = Protocol::RelationChangeNotificationPtr::create();
@@ -294,29 +294,29 @@ private Q_SLOTS:
         Relation rel;
         rel.setLeftId(item1.id());
         rel.setRightId(item2.id());
-        rel.setRelationType(RelationType::retrieveByName(QLatin1String("type")));
-        rel.setRemoteId(QLatin1String("foobar1"));
+        rel.setRelationType(RelationType::retrieveByName(QStringLiteral("type")));
+        rel.setRemoteId(QStringLiteral("foobar1"));
         QVERIFY(rel.insert());
 
         Relation rel2;
         rel2.setLeftId(item1.id());
         rel2.setRightId(item2.id());
-        rel2.setRelationType(RelationType::retrieveByName(QLatin1String("type2")));
-        rel2.setRemoteId(QLatin1String("foobar2"));
+        rel2.setRelationType(RelationType::retrieveByName(QStringLiteral("type2")));
+        rel2.setRemoteId(QStringLiteral("foobar2"));
         QVERIFY(rel2.insert());
 
         Relation rel3;
         rel3.setLeftId(item3.id());
         rel3.setRightId(item4.id());
-        rel3.setRelationType(RelationType::retrieveByName(QLatin1String("type")));
-        rel3.setRemoteId(QLatin1String("foobar3"));
+        rel3.setRelationType(RelationType::retrieveByName(QStringLiteral("type")));
+        rel3.setRemoteId(QStringLiteral("foobar3"));
         QVERIFY(rel3.insert());
 
         Relation rel4;
         rel4.setLeftId(item4.id());
         rel4.setRightId(item3.id());
-        rel4.setRelationType(RelationType::retrieveByName(QLatin1String("type")));
-        rel4.setRemoteId(QLatin1String("foobar4"));
+        rel4.setRelationType(RelationType::retrieveByName(QStringLiteral("type")));
+        rel4.setRemoteId(QStringLiteral("foobar4"));
         QVERIFY(rel4.insert());
 
         QTest::addColumn<TestScenario::List>("scenarios");
@@ -358,7 +358,7 @@ private Q_SLOTS:
         {
 
             Resource res;
-            res.setName(QLatin1String("testresource2"));
+            res.setName(QStringLiteral("testresource2"));
             res.insert();
 
             TestScenario::List scenarios;

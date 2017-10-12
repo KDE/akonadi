@@ -208,8 +208,8 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         }
 
         collection.setId(fakeServerData->nextCollectionId());
-        collection.setName(QString::fromLatin1("Collection %1").arg(collection.id()));
-        collection.setRemoteId(QString::fromLatin1("remoteId %1").arg(collection.id()));
+        collection.setName(QStringLiteral("Collection %1").arg(collection.id()));
+        collection.setRemoteId(QStringLiteral("remoteId %1").arg(collection.id()));
 
         if (depth == 0) {
             collection.setParentCollection(Collection::root());
@@ -285,7 +285,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
 
         item.setMimeType(type);
         item.setId(fakeServerData->nextItemId());
-        item.setRemoteId(QString::fromLatin1("RId_%1 %2").arg(item.id()).arg(type));
+        item.setRemoteId(QStringLiteral("RId_%1 %2").arg(item.id()).arg(type));
         item.setParentCollection(recentCollections.at(depth));
 
         Collection::Id colId = recentCollections[ depth ].id();
@@ -374,8 +374,8 @@ void FakeCollectionAddedCommand::doCommand()
 
     Collection collection;
     collection.setId(m_serverData->nextCollectionId());
-    collection.setName(QString::fromLatin1("Collection %1").arg(collection.id()));
-    collection.setRemoteId(QString::fromLatin1("remoteId %1").arg(collection.id()));
+    collection.setName(QStringLiteral("Collection %1").arg(collection.id()));
+    collection.setRemoteId(QStringLiteral("remoteId %1").arg(collection.id()));
     collection.setParentCollection(parent);
 
     EntityDisplayAttribute *eda = new EntityDisplayAttribute();
@@ -431,7 +431,7 @@ void FakeItemAddedCommand::doCommand()
 
     Item item;
     item.setId(m_serverData->nextItemId());
-    item.setRemoteId(QString::fromLatin1("remoteId %1").arg(item.id()));
+    item.setRemoteId(QStringLiteral("remoteId %1").arg(item.id()));
     item.setParentCollection(parent);
 
     EntityDisplayAttribute *eda = new EntityDisplayAttribute();

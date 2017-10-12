@@ -51,19 +51,19 @@ public:
             qFatal("Fake Akonadi Server failed to start up, aborting test");
         }
         {
-            MimeType mt(QLatin1String("mimetype1"));
+            MimeType mt(QStringLiteral("mimetype1"));
             mt.insert();
         }
         {
-            MimeType mt(QLatin1String("mimetype2"));
+            MimeType mt(QStringLiteral("mimetype2"));
             mt.insert();
         }
         {
-            MimeType mt(QLatin1String("mimetype3"));
+            MimeType mt(QStringLiteral("mimetype3"));
             mt.insert();
         }
         {
-            MimeType mt(QLatin1String("mimetype4"));
+            MimeType mt(QStringLiteral("mimetype4"));
             mt.insert();
         }
     }
@@ -190,7 +190,7 @@ private Q_SLOTS:
     {
         initializer.reset(new DbInitializer);
 
-        MimeType mtCalendar(QLatin1String("text/calendar"));
+        MimeType mtCalendar(QStringLiteral("text/calendar"));
         mtCalendar.insert();
 
         Resource res = initializer->createResource("testresource");
@@ -228,15 +228,15 @@ private Q_SLOTS:
         initializer.reset(new DbInitializer);
 
         Resource res2;
-        res2.setName(QLatin1String("testresource2"));
+        res2.setName(QStringLiteral("testresource2"));
         QVERIFY(res2.insert());
 
         Resource res = initializer->createResource("testresource");
         Collection col1 = initializer->createCollection("col1");
 
         Collection col2;
-        col2.setName(QLatin1String("col2"));
-        col2.setRemoteId(QLatin1String("col2"));
+        col2.setName(QStringLiteral("col2"));
+        col2.setRemoteId(QStringLiteral("col2"));
         col2.setResource(res2);
         QVERIFY(col2.insert());
 
@@ -244,7 +244,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, createCommand(Scope(),
                             Protocol::FetchCollectionsCommand::AllCollections,
-                            Protocol::Ancestor::NoAncestor, {}, QLatin1String("testresource")))
+                            Protocol::Ancestor::NoAncestor, {}, QStringLiteral("testresource")))
                   << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
 
@@ -365,7 +365,7 @@ private Q_SLOTS:
 
         CollectionAttribute attr2;
         attr2.setType("type");
-        attr2.setValue(QString::fromUtf8("Umlautäöü").toUtf8());
+        attr2.setValue(QStringLiteral("Umlautäöü").toUtf8());
         attr2.setCollection(col2);
         attr2.insert();
 
@@ -442,7 +442,7 @@ private Q_SLOTS:
         initializer.reset(new DbInitializer);
         Resource res = initializer->createResource("testresource");
 
-        MimeType mtDirectory = MimeType::retrieveByName(QLatin1String("mimetype1"));
+        MimeType mtDirectory = MimeType::retrieveByName(QStringLiteral("mimetype1"));
 
         Collection col1 = initializer->createCollection("col1");
         col1.addMimeType(mtDirectory);

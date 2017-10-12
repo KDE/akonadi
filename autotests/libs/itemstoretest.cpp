@@ -166,11 +166,11 @@ void ItemStoreTest::testRemoteId_data()
     QTest::addColumn<QString>("rid");
     QTest::addColumn<QString>("exprid");
 
-    QTest::newRow("set") << QString::fromLatin1("A") << QString::fromLatin1("A");
-    QTest::newRow("no-change") << QString() << QString::fromLatin1("A");
-    QTest::newRow("clear") << QString::fromLatin1("") << QString::fromLatin1("");
-    QTest::newRow("reset") << QString::fromLatin1("A") << QString::fromLatin1("A");
-    QTest::newRow("utf8") << QString::fromUtf8("ä ö ü @") << QString::fromUtf8("ä ö ü @");
+    QTest::newRow("set") << QStringLiteral("A") << QStringLiteral("A");
+    QTest::newRow("no-change") << QString() << QStringLiteral("A");
+    QTest::newRow("clear") << QStringLiteral("") << QStringLiteral("");
+    QTest::newRow("reset") << QStringLiteral("A") << QStringLiteral("A");
+    QTest::newRow("utf8") << QStringLiteral("ä ö ü @") << QStringLiteral("ä ö ü @");
 }
 
 void ItemStoreTest::testRemoteId()

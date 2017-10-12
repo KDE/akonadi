@@ -70,7 +70,7 @@ bool XmlParser::parseProtocol()
 
     const auto attrs = mReader.attributes();
     if (!attrs.hasAttribute(QLatin1String("version"))) {
-        printError(QLatin1Literal("Missing \"version\" attribute in <protocol> tag!"));
+        printError(QStringLiteral("Missing \"version\" attribute in <protocol> tag!"));
         return false;
     }
 
@@ -106,7 +106,7 @@ bool XmlParser::parseCommand(DocumentNode *documentNode)
 {
     const auto attrs = mReader.attributes();
     if (!attrs.hasAttribute(QLatin1String("name"))) {
-        printError(QLatin1Literal("Missing \"name\" attribute  in command tag!"));
+        printError(QStringLiteral("Missing \"name\" attribute  in command tag!"));
         return false;
     }
 
@@ -172,7 +172,7 @@ bool XmlParser::parseEnum(ClassNode *classNode)
 {
     const auto attrs = mReader.attributes();
     if (!attrs.hasAttribute(QLatin1String("name"))) {
-        printError(QLatin1Literal("Missing \"name\" attribute in enum/flag tag!"));
+        printError(QStringLiteral("Missing \"name\" attribute in enum/flag tag!"));
         return false;
     }
 
@@ -204,7 +204,7 @@ bool XmlParser::parseEnumValue(EnumNode *enumNode)
 
     const auto attrs = mReader.attributes();
     if (!attrs.hasAttribute(QLatin1String("name"))) {
-        printError(QLatin1Literal("Missing \"name\" attribute in <value> tag!"));
+        printError(QStringLiteral("Missing \"name\" attribute in <value> tag!"));
         return false;
     }
 
@@ -224,11 +224,11 @@ bool XmlParser::parseParam(ClassNode *classNode)
 
     const auto attrs = mReader.attributes();
     if (!attrs.hasAttribute(QLatin1String("name"))) {
-        printError(QLatin1Literal("Missing \"name\" attribute in <param> tag!"));
+        printError(QStringLiteral("Missing \"name\" attribute in <param> tag!"));
         return false;
     }
     if (!attrs.hasAttribute(QLatin1String("type"))) {
-        printError(QLatin1Literal("Missing \"type\" attribute in <param> tag!"));
+        printError(QStringLiteral("Missing \"type\" attribute in <param> tag!"));
         return false;
     }
 
@@ -265,11 +265,11 @@ bool XmlParser::parseParam(ClassNode *classNode)
             } else if (mReader.name() == QLatin1String("depends")) {
                 auto dependsAttrs = mReader.attributes();
                 if (!dependsAttrs.hasAttribute(QLatin1String("enum"))) {
-                    printError(QLatin1Literal("Missing \"enum\" attribute in <depends> tag!"));
+                    printError(QStringLiteral("Missing \"enum\" attribute in <depends> tag!"));
                     return false;
                 }
                 if (!dependsAttrs.hasAttribute(QLatin1String("value"))) {
-                    printError(QLatin1Literal("Missing \"value\" attribute in <depends> tag!"));
+                    printError(QStringLiteral("Missing \"value\" attribute in <depends> tag!"));
                     return false;
                 }
                 paramNode->addDependency(dependsAttrs.value(QLatin1String("enum")).toString(),

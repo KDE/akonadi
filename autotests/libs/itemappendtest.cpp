@@ -103,7 +103,7 @@ void ItemAppendTest::testContent_data()
     QTest::newRow("empty") << QByteArray("");
     QTest::newRow("nullbyte") << QByteArray("\0", 1);
     QTest::newRow("nullbyte2") << QByteArray("\0X", 2);
-    QString utf8string = QString::fromUtf8("äöüß@€µøđ¢©®");
+    QString utf8string = QStringLiteral("äöüß@€µøđ¢©®");
     QTest::newRow("utf8") << utf8string.toUtf8();
     QTest::newRow("newlines") << QByteArray("\nsome\n\nbreaked\ncontent\n\n");
     QByteArray b;

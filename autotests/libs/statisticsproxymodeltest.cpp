@@ -200,8 +200,8 @@ void StatisticsProxyModelTest::shouldShowToolTip()
     QString toolTip = pm.index(0, 0).data(Qt::ToolTipRole).toString();
 
     // Then the tooltip should contain the expected information
-    toolTip.remove(QLatin1String("<strong>"));
-    toolTip.remove(QLatin1String("</strong>"));
+    toolTip.remove(QStringLiteral("<strong>"));
+    toolTip.remove(QStringLiteral("</strong>"));
     QVERIFY2(toolTip.contains(QLatin1String("Total Messages: 6")), qPrintable(toolTip));
     QVERIFY2(toolTip.contains(QLatin1String("Unread Messages: 2")), qPrintable(toolTip));
     QVERIFY2(toolTip.contains(QLatin1String("Storage Size: 9 B")), qPrintable(toolTip));

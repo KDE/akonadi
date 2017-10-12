@@ -397,7 +397,7 @@ void EntityTreeModelTest::testCollectionChanged_data()
     QTest::newRow("change-collection06") << serverContent1 << "Col 6" << QString();
     QTest::newRow("change-collection07") << serverContent1 << "Col 7" << QString();
     //Don't remove the parent due to a missing mimetype
-    QTest::newRow("change-collection08") << serverContent1 << "Col 1" << QString::fromLatin1("message/rfc822");
+    QTest::newRow("change-collection08") << serverContent1 << "Col 1" << QStringLiteral("message/rfc822");
 }
 
 void EntityTreeModelTest::testCollectionChanged()
@@ -661,7 +661,7 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
                                       "- - C (text/directory)                 'Col 2'     1"
                                       "- - - I text/directory                 'Item 1'");
     const QString collectionName = QStringLiteral("Col 2");
-    const QString monitoredMimeType = QString::fromLatin1("text/directory");
+    const QString monitoredMimeType = QStringLiteral("text/directory");
 
     QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent, monitoredMimeType);
     FakeServerData *serverData = testDrivers.first;

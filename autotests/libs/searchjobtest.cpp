@@ -86,7 +86,7 @@ void SearchJobTest::testModifySearch()
 {
     Akonadi::SearchQuery query;
     query.addTerm(Akonadi::SearchTerm(QStringLiteral("plugin"), 1));
-    query.addTerm(Akonadi::SearchTerm(QLatin1String("resource"), 2));
+    query.addTerm(Akonadi::SearchTerm(QStringLiteral("resource"), 2));
 
     // make sure there is a virtual collection
     SearchCreateJob *create = new SearchCreateJob(QStringLiteral("search123456"), query, this);

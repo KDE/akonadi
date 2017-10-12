@@ -130,7 +130,7 @@ FakeAkonadiServer::~FakeAkonadiServer()
 
 QString FakeAkonadiServer::basePath()
 {
-    return QString::fromLatin1("/tmp/akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
+    return QStringLiteral("/tmp/akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
 QString FakeAkonadiServer::socketFile()
@@ -140,7 +140,7 @@ QString FakeAkonadiServer::socketFile()
 
 QString FakeAkonadiServer::instanceName()
 {
-    return QString::fromLatin1("akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
+    return QStringLiteral("akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
 TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
@@ -186,12 +186,12 @@ bool FakeAkonadiServer::init()
     qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1String("/config"))));
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
     QSettings settings(StandardDirs::serverConfigFile(XdgBaseDirs::WriteOnly), QSettings::IniFormat);
-    settings.beginGroup(QLatin1String("General"));
-    settings.setValue(QLatin1String("Driver"), QLatin1String("QSQLITE3"));
+    settings.beginGroup(QStringLiteral("General"));
+    settings.setValue(QStringLiteral("Driver"), QLatin1String("QSQLITE3"));
     settings.endGroup();
 
-    settings.beginGroup(QLatin1String("QSQLITE3"));
-    settings.setValue(QLatin1String("Name"), QString(basePath() + QLatin1String("/local/share/akonadi/akonadi.db")));
+    settings.beginGroup(QStringLiteral("QSQLITE3"));
+    settings.setValue(QStringLiteral("Name"), QString(basePath() + QLatin1String("/local/share/akonadi/akonadi.db")));
     settings.endGroup();
     settings.sync();
 
@@ -206,7 +206,7 @@ bool FakeAkonadiServer::init()
         DbConfig::configuredDatabase()->apply(db);
         db.setDatabaseName(DbConfig::configuredDatabase()->databaseName());
         if (!db.isDriverAvailable(DbConfig::configuredDatabase()->driverName())) {
-            throw FakeAkonadiServerException(QString::fromLatin1("SQL driver %s not available").arg(db.driverName()));
+            throw FakeAkonadiServerException(QStringLiteral("SQL driver %s not available").arg(db.driverName()));
         }
         if (!db.isValid()) {
             throw FakeAkonadiServerException("Got invalid database");
@@ -251,7 +251,7 @@ bool FakeAkonadiServer::quit()
     }
 
     const QCommandLineParser &args = AkApplicationBase::instance()->commandLineArguments();
-    if (!args.isSet(QLatin1String("no-cleanup"))) {
+    if (!args.isSet(QStringLiteral("no-cleanup"))) {
         bool ok = QDir(basePath()).removeRecursively();
         qDebug() << "Cleaned up" << basePath() << "success=" << ok;
     } else {

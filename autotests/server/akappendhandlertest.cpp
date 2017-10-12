@@ -52,7 +52,7 @@ public:
         // for that
         const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
         QSettings settings(serverConfigFile, QSettings::IniFormat);
-        settings.setValue(QLatin1String("General/SizeThreshold"), std::numeric_limits<qint64>::max());
+        settings.setValue(QStringLiteral("General/SizeThreshold"), std::numeric_limits<qint64>::max());
 
         try {
             FakeAkonadiServer::instance()->init();
@@ -224,10 +224,10 @@ private Q_SLOTS:
 
         pimItem.setCollectionId(4);
         pimItem.setSize(10);
-        pimItem.setRemoteId(QLatin1String("TEST-1"));
-        pimItem.setRemoteRevision(QLatin1String("1"));
-        pimItem.setGid(QLatin1String("TEST-1"));
-        pimItem.setMimeType(MimeType::retrieveByName(QLatin1String("application/octet-stream")));
+        pimItem.setRemoteId(QStringLiteral("TEST-1"));
+        pimItem.setRemoteRevision(QStringLiteral("1"));
+        pimItem.setGid(QStringLiteral("TEST-1"));
+        pimItem.setMimeType(MimeType::retrieveByName(QStringLiteral("application/octet-stream")));
         pimItem.setDatetime(datetime);
         updateParts(parts, { { QLatin1String("PLD:DATA"), "0123456789", 10 } });
         notification->setOperation(Protocol::ItemChangeNotification::Add);
@@ -249,7 +249,7 @@ private Q_SLOTS:
                                      << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-2"), 20);
+        updatePimItem(pimItem, QStringLiteral("TEST-2"), 20);
         updateParts(parts, { { QLatin1String("PLD:DATA"), "Random Data", 11 },
                              { QLatin1String("PLD:PLDTEST"), "Test Data", 9 } });
         updateNotifcationEntity(notification, pimItem);
@@ -281,7 +281,7 @@ private Q_SLOTS:
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
                   << inScenario
-                  << errorResponse(QLatin1String("Invalid parent collection"));
+                  << errorResponse(QStringLiteral("Invalid parent collection"));
         QTest::newRow("invalid collection") << scenarios << Protocol::ItemChangeNotificationPtr::create()
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
@@ -295,13 +295,13 @@ private Q_SLOTS:
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
                   << inScenario
-                  << errorResponse(QLatin1String("Cannot append item into virtual collection"));
+                  << errorResponse(QStringLiteral("Cannot append item into virtual collection"));
         QTest::newRow("virtual collection") << scenarios << Protocol::ItemChangeNotificationPtr::create()
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
 
-        updatePimItem(pimItem, QLatin1String("TEST-3"), 5);
+        updatePimItem(pimItem, QStringLiteral("TEST-3"), 5);
         updateParts(parts, { { QLatin1String("PLD:DATA"), "12345", 5 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
@@ -320,7 +320,7 @@ private Q_SLOTS:
                                                        << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-4"), 10);
+        updatePimItem(pimItem, QStringLiteral("TEST-4"), 10);
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         scenarios.clear();
@@ -344,7 +344,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 5)))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "123"))
-                  << errorResponse(QLatin1String("Payload size mismatch"));
+                  << errorResponse(QStringLiteral("Payload size mismatch"));
         QTest::newRow("incomplete part data") << scenarios << Protocol::ItemChangeNotificationPtr::create()
                                               << PimItem() << QVector<FakePart>()
                                               << QVector<Flag>() << QVector<FakeTag>()
@@ -357,14 +357,14 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 4)))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "1234567890"))
-                  << errorResponse(QLatin1String("Payload size mismatch"));
+                  << errorResponse(QStringLiteral("Payload size mismatch"));
         QTest::newRow("part data larger than advertised") << scenarios << Protocol::ItemChangeNotificationPtr::create()
                                                           << PimItem() << QVector<FakePart>()
                                                           << QVector<Flag>() << QVector<FakeTag>()
                                                           << -1ll << QDateTime() << true;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-5"), 0);
+        updatePimItem(pimItem, QStringLiteral("TEST-5"), 0);
         updateParts(parts, { { QLatin1String("PLD:DATA"), QByteArray(), 0 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
@@ -382,7 +382,7 @@ private Q_SLOTS:
                                             << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-8"), 1);
+        updatePimItem(pimItem, QStringLiteral("TEST-8"), 1);
         updateParts(parts, { { QLatin1String("PLD:DATA"), QByteArray("\0", 1), 1 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
@@ -400,9 +400,9 @@ private Q_SLOTS:
                                                        << parts << flags << tags << uidnext
                                                        << datetime << false;
 
-        const QString utf8String = QString::fromUtf8("äöüß@€µøđ¢©®");
+        const QString utf8String = QStringLiteral("äöüß@€µøđ¢©®");
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-9"), utf8String.toUtf8().size());
+        updatePimItem(pimItem, QStringLiteral("TEST-9"), utf8String.toUtf8().size());
         updateParts(parts, { { QLatin1String("PLD:DATA"), utf8String.toUtf8(), utf8String.toUtf8().size() } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
@@ -421,7 +421,7 @@ private Q_SLOTS:
 
         const QByteArray hugeData = QByteArray("a").repeated(1 << 20);
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-10"), 1 << 20);
+        updatePimItem(pimItem, QStringLiteral("TEST-10"), 1 << 20);
         updateParts(parts, { { QLatin1String("PLD:DATA"), hugeData, 1 << 20 } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
@@ -440,7 +440,7 @@ private Q_SLOTS:
 
         const QByteArray dataWithNewLines = "Bernard, Bernard, Bernard, Bernard, look, look Bernard!\nWHAT!!!!!!!\nI'm a prostitute robot from the future!";
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-11"), dataWithNewLines.size());
+        updatePimItem(pimItem, QStringLiteral("TEST-11"), dataWithNewLines.size());
         updateParts(parts, { { QLatin1String("PLD:DATA"), dataWithNewLines, dataWithNewLines.size() } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
@@ -459,7 +459,7 @@ private Q_SLOTS:
 
         const QByteArray lotsOfNewlines = QByteArray("\n").repeated(1 << 20);
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-12"), lotsOfNewlines.size());
+        updatePimItem(pimItem, QStringLiteral("TEST-12"), lotsOfNewlines.size());
         updateParts(parts, { { QLatin1String("PLD:DATA"), lotsOfNewlines, lotsOfNewlines.size() } });
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
@@ -478,7 +478,7 @@ private Q_SLOTS:
                                                     << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-13"), 20);
+        updatePimItem(pimItem, QStringLiteral("TEST-13"), 20);
         updateParts(parts, { { QLatin1String("PLD:NEWPARTTYPE1"), "0123456789", 10 },
                              { QLatin1String("PLD:NEWPARTTYPE2"), "9876543210", 10 } });
         updateNotifcationEntity(notification, pimItem);
@@ -503,9 +503,9 @@ private Q_SLOTS:
                                                  << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-14"), 0);
+        updatePimItem(pimItem, QStringLiteral("TEST-14"), 0);
         updateParts(parts, {});
-        updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("\\RANDOM"));
+        updateFlags(flags, QStringList() << QStringLiteral("\\SEEN") << QStringLiteral("\\RANDOM"));
         updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         {
@@ -526,7 +526,7 @@ private Q_SLOTS:
                                          << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-15"), 0);
+        updatePimItem(pimItem, QStringLiteral("TEST-15"), 0);
         updateFlags(flags, {});
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-1") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-2") } });
@@ -553,7 +553,7 @@ private Q_SLOTS:
                                                            << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-16"), 0);
+        updatePimItem(pimItem, QStringLiteral("TEST-16"), 0);
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-3") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-4") } });
         updateNotifcationEntity(notification, pimItem);
@@ -571,7 +571,7 @@ private Q_SLOTS:
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_0"))
+                  << FakeAkonadiServer::selectResourceScenario(QStringLiteral("akonadi_fake_resource_0"))
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
@@ -579,7 +579,7 @@ private Q_SLOTS:
                                                            << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-17"), 0);
+        updatePimItem(pimItem, QStringLiteral("TEST-17"), 0);
         updateNotifcationEntity(notification, pimItem);
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-1") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-2") } });
@@ -597,7 +597,7 @@ private Q_SLOTS:
         }
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
-                  << FakeAkonadiServer::selectResourceScenario(QLatin1String("akonadi_fake_resource_0"))
+                  << FakeAkonadiServer::selectResourceScenario(QStringLiteral("akonadi_fake_resource_0"))
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
@@ -605,7 +605,7 @@ private Q_SLOTS:
                                                        << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-18"), 0);
+        updatePimItem(pimItem, QStringLiteral("TEST-18"), 0);
         updateNotifcationEntity(notification, pimItem);
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-3") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-4") } });
@@ -630,8 +630,8 @@ private Q_SLOTS:
                                                        << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-19"), 0);
-        updateFlags(flags, QStringList() << QLatin1String("\\SEEN") << QLatin1String("$FLAG"));
+        updatePimItem(pimItem, QStringLiteral("TEST-19"), 0);
+        updateFlags(flags, QStringList() << QStringLiteral("\\SEEN") << QStringLiteral("$FLAG"));
         updateTags(tags, { { QLatin1String("PLAIN"), QLatin1String("TAG-1") },
                            { QLatin1String("PLAIN"), QLatin1String("TAG-2") } });
         updateNotifcationEntity(notification, pimItem);
@@ -658,7 +658,7 @@ private Q_SLOTS:
                                                   << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        updatePimItem(pimItem, QLatin1String("TEST-20"), 0);
+        updatePimItem(pimItem, QStringLiteral("TEST-20"), 0);
         updateFlags(flags, {});
         updateTags(tags, { { QLatin1String("PLAIN"), utf8String } });
         updateNotifcationEntity(notification, pimItem);;

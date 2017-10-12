@@ -69,15 +69,15 @@ private Q_SLOTS:
 
         {
             auto cmd = Protocol::CreateCollectionCommandPtr::create();
-            cmd->setName(QLatin1String("New Name"));
+            cmd->setName(QStringLiteral("New Name"));
             cmd->setParent(Scope(3));
             cmd->setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
 
             auto resp = Protocol::FetchCollectionsResponsePtr::create(8);
-            resp->setName(QLatin1String("New Name"));
+            resp->setName(QStringLiteral("New Name"));
             resp->setParentId(3);
             resp->setAttributes({ { "MYRANDOMATTRIBUTE", "" } });
-            resp->setResource(QLatin1String("akonadi_fake_resource_0"));
+            resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
             resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
             resp->setMimeTypes({ QLatin1String("application/octet-stream"),
                                 QLatin1String("inode/directory") });
@@ -97,7 +97,7 @@ private Q_SLOTS:
         }
         {
             auto cmd = Protocol::CreateCollectionCommandPtr::create();
-            cmd->setName(QLatin1String("Name 2"));
+            cmd->setName(QStringLiteral("Name 2"));
             cmd->setParent(Scope(3));
             cmd->setEnabled(false);
             cmd->setDisplayPref(Tristate::True);
@@ -105,13 +105,13 @@ private Q_SLOTS:
             cmd->setIndexPref(Tristate::True);
 
             auto resp = Protocol::FetchCollectionsResponsePtr::create(9);
-            resp->setName(QLatin1String("Name 2"));
+            resp->setName(QStringLiteral("Name 2"));
             resp->setParentId(3);
             resp->setEnabled(false);
             resp->setDisplayPref(Tristate::True);
             resp->setSyncPref(Tristate::True);
             resp->setIndexPref(Tristate::True);
-            resp->setResource(QLatin1String("akonadi_fake_resource_0"));
+            resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
             resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
             resp->setMimeTypes({ QLatin1String("application/octet-stream"),
                                  QLatin1String("inode/directory") });
@@ -134,17 +134,17 @@ private Q_SLOTS:
 
         {
             auto cmd = Protocol::CreateCollectionCommandPtr::create();
-            cmd->setName(QLatin1String("TopLevel"));
+            cmd->setName(QStringLiteral("TopLevel"));
             cmd->setParent(Scope(0));
             cmd->setMimeTypes({ QLatin1String("inode/directory") });
 
             auto resp = Protocol::FetchCollectionsResponsePtr::create(10);
-            resp->setName(QLatin1String("TopLevel"));
+            resp->setName(QStringLiteral("TopLevel"));
             resp->setParentId(0);
             resp->setEnabled(true);
             resp->setMimeTypes({ QLatin1String("inode/directory") });
             resp->cachePolicy().setLocalParts({ QLatin1String("ALL") });
-            resp->setResource(QLatin1String("akonadi_fake_resource_0"));
+            resp->setResource(QStringLiteral("akonadi_fake_resource_0"));
 
             TestScenario::List scenarios;
             scenarios << FakeAkonadiServer::loginScenario("akonadi_fake_resource_0")

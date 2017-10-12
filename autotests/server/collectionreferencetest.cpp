@@ -83,7 +83,7 @@ private Q_SLOTS:
         {
             auto cmd = Protocol::FetchCollectionsCommandPtr::create();
             cmd->setDepth(Protocol::FetchCollectionsCommand::AllCollections);
-            cmd->setResource(QLatin1String("testresource"));
+            cmd->setResource(QStringLiteral("testresource"));
             cmd->setEnabled(true);
 
             TestScenario::List scenarios;
@@ -137,7 +137,7 @@ private Q_SLOTS:
             cmd->setReferenced(true);
 
             auto listCmd = Protocol::FetchCollectionsCommandPtr::create();
-            listCmd->setResource(QLatin1String("testresource"));
+            listCmd->setResource(QStringLiteral("testresource"));
             listCmd->setEnabled(true);
             listCmd->setDepth(Protocol::FetchCollectionsCommand::ParentCollection);
 

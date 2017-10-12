@@ -102,7 +102,7 @@ private:
         // allowed to create top-level collection
         Collection::List baseCollections;
         for (int i = 0; i < 20; ++i) {
-            baseCollections << createCollection(QString::fromLatin1("Base Col %1").arg(i), QString::fromLatin1("/baseCol%1").arg(i), root);
+            baseCollections << createCollection(QStringLiteral("Base Col %1").arg(i), QStringLiteral("/baseCol%1").arg(i), root);
         }
         collections += baseCollections;
 
@@ -110,10 +110,10 @@ private:
         baseCollections << shared;
         collections << shared;
         for (int i = 0; i < 10000; ++i) {
-            const Collection col = createCollection(QString::fromLatin1("Shared Col %1").arg(i), QString::fromLatin1("/shared%1").arg(i), shared);
+            const Collection col = createCollection(QStringLiteral("Shared Col %1").arg(i), QStringLiteral("/shared%1").arg(i), shared);
             collections << col;
             for (int j = 0; j < 6; ++j) {
-                collections << createCollection(QString::fromLatin1("Shared Subcol %1-%2").arg(i).arg(j), QString::fromLatin1("/shared%1-%2").arg(i).arg(j), col);
+                collections << createCollection(QStringLiteral("Shared Subcol %1-%2").arg(i).arg(j), QStringLiteral("/shared%1-%2").arg(i).arg(j), col);
             }
         }
         return collections;

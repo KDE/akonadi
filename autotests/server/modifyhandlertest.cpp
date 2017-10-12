@@ -81,7 +81,7 @@ private Q_SLOTS:
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "NAME");
 
-            QTest::newRow("modify collection") << scenarios << Protocol::ChangeNotificationList{ notification } << QVariant::fromValue(QString::fromLatin1("New Name"));
+            QTest::newRow("modify collection") << scenarios << Protocol::ChangeNotificationList{ notification } << QVariant::fromValue(QStringLiteral("New Name"));
         }
         {
             auto cmd = Protocol::ModifyCollectionCommandPtr::create(5);

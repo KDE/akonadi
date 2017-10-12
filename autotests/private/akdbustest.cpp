@@ -36,7 +36,7 @@ private Q_SLOTS:
     {
         akTestSetInstanceIdentifier(QString());
         QCOMPARE(DBus::serviceName(DBus::Server), QLatin1String("org.freedesktop.Akonadi"));
-        akTestSetInstanceIdentifier(QLatin1String("foo"));
+        akTestSetInstanceIdentifier(QStringLiteral("foo"));
         QCOMPARE(DBus::serviceName(DBus::Server), QLatin1String("org.freedesktop.Akonadi.foo"));
     }
 
@@ -87,7 +87,7 @@ private Q_SLOTS:
         akTestSetInstanceIdentifier(QString());
         QCOMPARE(DBus::agentServiceName(QLatin1String("akonadi_maildir_resource_0"), DBus::Agent), QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0"));
 
-        akTestSetInstanceIdentifier(QLatin1String("foo"));
+        akTestSetInstanceIdentifier(QStringLiteral("foo"));
         QCOMPARE(DBus::agentServiceName(QLatin1String("akonadi_maildir_resource_0"), DBus::Agent), QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo"));
     }
 };

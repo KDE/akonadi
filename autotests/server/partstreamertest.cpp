@@ -52,7 +52,7 @@ public:
         // Set a very small treshold for easier testing
         const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
         QSettings settings(serverConfigFile, QSettings::IniFormat);
-        settings.setValue(QLatin1String("General/SizeThreshold"), 5);
+        settings.setValue(QStringLiteral("General/SizeThreshold"), 5);
 
         try {
             FakeAkonadiServer::instance()->init();
@@ -87,8 +87,8 @@ private Q_SLOTS:
         QTest::addColumn<PimItem>("pimItem");
 
         PimItem item;
-        item.setCollectionId(Collection::retrieveByName(QLatin1String("Col A")).id());
-        item.setMimeType(MimeType::retrieveByName(QLatin1String("application/octet-stream")));
+        item.setCollectionId(Collection::retrieveByName(QStringLiteral("Col A")).id());
+        item.setMimeType(MimeType::retrieveByName(QStringLiteral("application/octet-stream")));
         item.setSize(1); // this will not match reality during the test, but that does not matter, as
         // that's not the subject of this test
         QVERIFY(item.insert());
@@ -121,7 +121,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QString::fromLatin1("%1_r0").arg(partId)))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r0").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 2));
 
@@ -134,7 +134,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QString::fromLatin1("%1_r1").arg(partId)))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r1").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 3));
 
@@ -147,7 +147,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::MetaData))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 9)))
-                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QString::fromLatin1("%1_r2").arg(partId)))
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data, QStringLiteral("%1_r2").arg(partId)))
                       << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA"))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyItemsResponsePtr::create(item.id(), 4));
 

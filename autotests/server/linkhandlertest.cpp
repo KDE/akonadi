@@ -73,7 +73,7 @@ private Q_SLOTS:
 
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, ImapInterval(1, 3), 3))
-                  << TestScenario::create(5, TestScenario::ServerCmd, createError(QLatin1String("Can't link items to non-virtual collections")));
+                  << TestScenario::create(5, TestScenario::ServerCmd, createError(QStringLiteral("Can't link items to non-virtual collections")));
         QTest::newRow("non-virtual collection") << scenarios << Protocol::ItemChangeNotificationPtr::create() << true;
 
         auto notification = Protocol::ItemChangeNotificationPtr::create();
@@ -179,7 +179,7 @@ private Q_SLOTS:
 
         scenarios << FakeAkonadiServer::loginScenario()
                  << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, ImapInterval(1, 3), 3))
-                 << TestScenario::create(5, TestScenario::ServerCmd, createError(QLatin1String("Can't link items to non-virtual collections")));
+                 << TestScenario::create(5, TestScenario::ServerCmd, createError(QStringLiteral("Can't link items to non-virtual collections")));
         QTest::newRow("non-virtual collection") << scenarios << Protocol::ItemChangeNotificationPtr::create() << true;
 
         auto notification = Protocol::ItemChangeNotificationPtr::create();

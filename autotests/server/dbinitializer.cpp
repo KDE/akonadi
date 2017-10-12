@@ -61,10 +61,10 @@ Collection DbInitializer::createCollection(const char *name, const Collection &p
 PimItem DbInitializer::createItem(const char *name, const Collection &parent)
 {
     PimItem item;
-    MimeType mimeType = MimeType::retrieveByName(QLatin1String("test"));
+    MimeType mimeType = MimeType::retrieveByName(QStringLiteral("test"));
     if (!mimeType.isValid()) {
         MimeType mt;
-        mt.setName(QLatin1String("test"));
+        mt.setName(QStringLiteral("test"));
         mt.insert();
         mimeType = mt;
     }
