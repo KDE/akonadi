@@ -383,9 +383,6 @@ void CppGenerator::writeImplSerializer(PropertyNode const *node,
 void CppGenerator::writeImplClass(ClassNode const *node)
 {
     const QString parentClass = node->parentClassName();
-    const QString enumName = node->classType() == ClassNode::Notification
-                                ? node->name() % QStringLiteral("Notification")
-                                : node->name();
     const auto children = node->children();
     const auto properties = node->properties();
 

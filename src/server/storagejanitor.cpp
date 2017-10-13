@@ -530,6 +530,7 @@ void StorageJanitor::findRIDDuplicates()
         Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(id);
         const QVector<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes();
         QVariantList contentMimeTypesVariantList;
+        contentMimeTypesVariantList.reserve(contentMimeTypes.count());
         for (const Akonadi::Server::MimeType &mimeType : contentMimeTypes) {
             contentMimeTypesVariantList << mimeType.id();
         }
@@ -755,6 +756,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
             // skip it.
             continue;
         }
+        mts.reserve(colMts.count());
         for (const auto &mt : colMts) {
             mts << mt.name();
         }

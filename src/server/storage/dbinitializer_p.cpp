@@ -136,6 +136,7 @@ QString DbInitializerSqlite::buildCreateTableStatement(const TableDescription &t
 {
     QStringList columns;
 
+    columns.reserve(tableDescription.columns.count() + 1);
     Q_FOREACH (const ColumnDescription &columnDescription, tableDescription.columns) {
         columns.append(buildColumnStatement(columnDescription, tableDescription));
     }
