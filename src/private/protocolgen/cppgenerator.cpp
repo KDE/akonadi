@@ -287,8 +287,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
             mHeader << "    explicit " << node->className() << "(";
             for (int i = 0; i < args.count(); ++i) {
                 const auto &arg = args[i];
-                if (arg.type == QLatin1String("qint64")
-                        || arg.type == QLatin1String("int") ) {
+                if (TypeHelper::isNumericType(arg.type) || TypeHelper::isBoolType(arg.type)) {
                     mHeader << arg.type << " " << arg.name;
                 } else {
                     mHeader << "const " << arg.type << " &" << arg.name;
@@ -327,9 +326,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                             << " &" << prop->name() << ");\n";
                 } else if (!prop->dependencies().isEmpty()) {
                     QString varType;
-                    if (prop->type() == QLatin1String("qint64")
-                            || prop->type() == QLatin1String("int")
-                            || prop->type() == QLatin1String("bool") ) {
+                    if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
                         varType = QLatin1String("(") + prop->type() + QLatin1String(" ");
                     } else {
                         varType = QLatin1String("(const ") + prop->type() + QLatin1String(" &");
@@ -337,9 +334,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                     mHeader << "    void " << prop->setterName() << varType << prop->name() << ");\n";
                 } else {
                     QString varType;
-                    if (prop->type() == QLatin1String("qint64")
-                            || prop->type() == QLatin1String("int")
-                            || prop->type() == QLatin1String("bool") ) {
+                    if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
                         varType = QLatin1String("(") + prop->type() + QLatin1String(" ");
                     } else {
                         varType = QLatin1String("(const ") + prop->type() + QLatin1String(" &");
@@ -415,8 +410,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             mImpl << node->className() << "::" << node->className() << "(";
             for (int i = 0; i < args.count(); ++i) {
                 const auto &arg = args[i];
-                if (arg.type == QLatin1String("qint64")
-                        || arg.type == QLatin1String("int") ) {
+                if (TypeHelper::isNumericType(arg.type) || TypeHelper::isBoolType(arg.type)) {
                     mImpl << arg.type << " " << arg.name;
                 } else {
                     mImpl << "const " << arg.type << " &" << arg.name;
@@ -539,9 +533,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             mImpl << "}\n\n";
         } else if (!prop->dependencies().isEmpty()) {
             QString varType;
-            if (prop->type() == QLatin1String("qint64")
-                    || prop->type() == QLatin1String("int")
-                    || prop->type() == QLatin1String("bool") ) {
+            if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
                 mImpl << "void " << node->className() << "::" << prop->setterName()
                       << "(" << prop->type() << " val)\n"
                                                       "{\n"
