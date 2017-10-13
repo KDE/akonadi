@@ -287,7 +287,12 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
             mHeader << "    explicit " << node->className() << "(";
             for (int i = 0; i < args.count(); ++i) {
                 const auto &arg = args[i];
-                mHeader << "const " << arg.type << " &" << arg.name;
+                if (arg.type == QLatin1String("qint64")
+                        || arg.type == QLatin1String("int") ) {
+                    mHeader << arg.type << " " << arg.name;
+                } else {
+                    mHeader << "const " << arg.type << " &" << arg.name;
+                }
                 if (!arg.defaultValue.isEmpty()) {
                     mHeader << " = " << arg.defaultValue;
                 }
@@ -394,7 +399,12 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             mImpl << node->className() << "::" << node->className() << "(";
             for (int i = 0; i < args.count(); ++i) {
                 const auto &arg = args[i];
-                mImpl << "const " << arg.type << " &" << arg.name;
+                if (arg.type == QLatin1String("qint64")
+                        || arg.type == QLatin1String("int") ) {
+                    mImpl << arg.type << " " << arg.name;
+                } else {
+                    mImpl << "const " << arg.type << " &" << arg.name;
+                }
                 if (i < args.count() - 1) {
                     mImpl << ", ";
                 }
