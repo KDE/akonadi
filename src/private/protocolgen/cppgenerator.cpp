@@ -328,7 +328,15 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                 } else if (!prop->dependencies().isEmpty()) {
                     mHeader << "    void " << prop->setterName() << "(const " << prop->type() << " &" << prop->name() << ");\n";
                 } else {
-                    mHeader << "    inline void " << prop->setterName() << "(const " << prop->type() << " &"
+                    QString varType;
+                    if (prop->type() == QLatin1String("qint64")
+                            || prop->type() == QLatin1String("int")
+                            || prop->type() == QLatin1String("bool") ) {
+                        varType = QLatin1String("(") + prop->type() + QLatin1String(" ");
+                    } else {
+                        varType = QLatin1String("(const ") + prop->type() + QLatin1String(" &");
+                    }
+                    mHeader << "    inline void " << prop->setterName() << varType
                             << prop->name() << ") { " << prop->mVariableName() << " = "
                             << prop->name() << "; }\n";
                 }
