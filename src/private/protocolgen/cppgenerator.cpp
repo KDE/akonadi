@@ -538,10 +538,21 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             writeImplPropertyDependencies(prop);
             mImpl << "}\n\n";
         } else if (!prop->dependencies().isEmpty()) {
-            mImpl << "void " << node->className() << "::" << prop->setterName()
-                    << "(const " << prop->type() << " &val)\n"
-                        "{\n"
-                        "    " << prop->mVariableName() << " = val;\n";
+            QString varType;
+            if (prop->type() == QLatin1String("qint64")
+                    || prop->type() == QLatin1String("int")
+                    || prop->type() == QLatin1String("bool") ) {
+                mImpl << "void " << node->className() << "::" << prop->setterName()
+                      << "(" << prop->type() << " val)\n"
+                                                      "{\n"
+                                                      "    " << prop->mVariableName() << " = val;\n";
+
+            } else {
+                mImpl << "void " << node->className() << "::" << prop->setterName()
+                      << "(const " << prop->type() << " &val)\n"
+                                                      "{\n"
+                                                      "    " << prop->mVariableName() << " = val;\n";
+            }
             writeImplPropertyDependencies(prop);
             mImpl << "}\n\n";
         }
