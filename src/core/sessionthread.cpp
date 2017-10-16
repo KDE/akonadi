@@ -55,7 +55,7 @@ Connection *SessionThread::createConnection(Connection::ConnectionType connectio
     Connection *conn = nullptr;
     const bool invoke = QMetaObject::invokeMethod(this, "doCreateConnection",
                         Qt::BlockingQueuedConnection,
-                        Q_RETURN_ARG(Akonadi::Connection *, conn),
+                        Q_RETURN_ARG(Akonadi::Connection*, conn),
                         Q_ARG(Akonadi::Connection::ConnectionType, connectionType),
                         Q_ARG(QByteArray, sessionId));
     Q_ASSERT(invoke); Q_UNUSED(invoke);
