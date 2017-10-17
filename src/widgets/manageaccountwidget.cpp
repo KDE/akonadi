@@ -84,6 +84,16 @@ ManageAccountWidget::~ManageAccountWidget()
     delete d;
 }
 
+void ManageAccountWidget::disconnectAddAccountButton()
+{
+    disconnect(d->ui->mAddAccountButton, &QPushButton::clicked, this, &ManageAccountWidget::slotAddAccount);
+}
+
+QPushButton *ManageAccountWidget::addAccountButton() const
+{
+    return d->ui->mAddAccountButton;
+}
+
 void ManageAccountWidget::setDescriptionLabelText(const QString &text)
 {
     d->ui->label->setText(text);

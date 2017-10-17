@@ -32,6 +32,7 @@ class AgentInstance;
 }
 class QAbstractItemDelegate;
 class QAbstractItemView;
+class QPushButton;
 namespace Akonadi
 {
 class ManageAccountWidgetPrivate;
@@ -62,14 +63,20 @@ public:
     void setItemDelegate(QAbstractItemDelegate *delegate);
 
     QAbstractItemView *view() const;
+
+    QPushButton *addAccountButton() const;
+    void disconnectAddAccountButton();
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;
+
+public Q_SLOTS:
+    void slotAddAccount();
+
 private Q_SLOTS:
     void slotAccountSelected(const Akonadi::AgentInstance &current);
     void slotRemoveSelectedAccount();
     void slotRestartSelectedAccount();
     void slotModifySelectedAccount();
-    void slotAddAccount();
 private:
     ManageAccountWidgetPrivate *const d;
 };
