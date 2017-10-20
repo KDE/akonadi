@@ -71,10 +71,7 @@ private:
 
     void init(const QStringList &mimetypes);
 
-    Q_PRIVATE_SLOT(d, void subscriptionResult(KJob *job))
     Q_PRIVATE_SLOT(d, void modelLoaded())
-    Q_PRIVATE_SLOT(d, void slotSetPattern(const QString &))
-    Q_PRIVATE_SLOT(d, void slotSetIncludeCheckedOnly(bool))
 };
 
 }

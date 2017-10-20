@@ -187,13 +187,11 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     mainLayout->addWidget(lineEdit);
     lineEdit->setClearButtonEnabled(true);
     lineEdit->setFocus();
-    connect(lineEdit, SIGNAL(textChanged(QString)),
-            this, SLOT(slotSetPattern(QString)));
+    connect(lineEdit, &QLineEdit::textChanged, this, [this](const QString &str) { d->slotSetPattern(str); });
     filterBarLayout->addWidget(lineEdit);
     QCheckBox *checkBox = new QCheckBox(i18n("Subscribed only"), mainWidget);
     mainLayout->addWidget(checkBox);
-    connect(checkBox, SIGNAL(clicked(bool)),
-            this, SLOT(slotSetIncludeCheckedOnly(bool)));
+    connect(checkBox, &QCheckBox::clicked, this, [this](bool state) { d->slotSetIncludeCheckedOnly(state); });
     filterBarLayout->addWidget(checkBox);
 
     QHBoxLayout *hboxLayout = new QHBoxLayout;
