@@ -694,7 +694,7 @@ public:
 
         for (const Collection &collection : collections) {
             CollectionDeleteJob *job = new CollectionDeleteJob(collection, q);
-            q->connect(job, SIGNAL(result(KJob*)), q, SLOT(collectionDeletionResult(KJob*)));
+            q->connect(job, &CollectionDeleteJob::result, q, [this](KJob* job) { collectionDeletionResult(job); });
         }
     }
 
@@ -707,7 +707,7 @@ public:
 
         for (const Collection &collection : collections) {
             TrashJob *job = new TrashJob(collection, q);
-            q->connect(job, SIGNAL(result(KJob*)), q, SLOT(moveCollectionToTrashResult(KJob*)));
+            q->connect(job, &TrashJob::result, q, [this](KJob *job) { moveCollectionToTrashResult(job);});
         }
     }
 
@@ -720,7 +720,7 @@ public:
 
         for (const Collection &collection : collections) {
             TrashRestoreJob *job = new TrashRestoreJob(collection, q);
-            q->connect(job, SIGNAL(result(KJob*)), q, SLOT(moveCollectionToTrashResult(KJob*)));
+            q->connect(job, &TrashRestoreJob::result, q, [this](KJob*job) {moveCollectionToTrashResult(job);});
         }
     }
 
@@ -751,7 +751,7 @@ public:
         }
 
         TrashJob *job = new TrashJob(items, q);
-        q->connect(job, SIGNAL(result(KJob*)), q, SLOT(moveItemToTrashResult(KJob*)));
+        q->connect(job, &TrashJob::result, q, [this](KJob *job) {moveItemToTrashResult(job); });
     }
 
     void slotRestoreItemFromTrash()
@@ -762,7 +762,7 @@ public:
         }
 
         TrashRestoreJob *job = new TrashRestoreJob(items, q);
-        q->connect(job, SIGNAL(result(KJob*)), q, SLOT(moveItemToTrashResult(KJob*)));
+        q->connect(job, &TrashRestoreJob::result, q, [this](KJob *job) {moveItemToTrashResult(job);});
     }
 
     void slotTrashRestoreCollection()
@@ -962,7 +962,7 @@ public:
         }
 
         ItemDeleteJob *job = new ItemDeleteJob(items, q);
-        q->connect(job, SIGNAL(result(KJob*)), q, SLOT(itemDeletionResult(KJob*)));
+        q->connect(job, &ItemDeleteJob::result, q, [this](KJob*job) {itemDeletionResult(job);});
     }
 
     void slotLocalSubscription()

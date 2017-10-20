@@ -412,10 +412,7 @@ private:
     Q_PRIVATE_SLOT(d, void slotToggleWorkOffline(bool))
     Q_PRIVATE_SLOT(d, void slotSynchronizeCollectionTree())
     Q_PRIVATE_SLOT(d, void collectionCreationResult(KJob *))
-    Q_PRIVATE_SLOT(d, void collectionDeletionResult(KJob *))
-    Q_PRIVATE_SLOT(d, void moveCollectionToTrashResult(KJob *))
     Q_PRIVATE_SLOT(d, void moveItemToTrashResult(KJob *))
-    Q_PRIVATE_SLOT(d, void itemDeletionResult(KJob *))
     Q_PRIVATE_SLOT(d, void resourceCreationResult(KJob *))
     Q_PRIVATE_SLOT(d, void pasteResult(KJob *))
 

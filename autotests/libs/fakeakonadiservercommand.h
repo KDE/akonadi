@@ -106,6 +106,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeMonitorCommand : public FakeAkonadiServerCommand
 {
+    Q_OBJECT
 public:
     explicit FakeMonitorCommand(FakeServerData *serverData)
         : FakeAkonadiServerCommand(Notification, serverData)
@@ -118,6 +119,7 @@ public:
 
 class AKONADITESTFAKE_EXPORT FakeCollectionMovedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeCollectionMovedCommand(const QString &collection, const QString &source, const QString &target, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -141,6 +143,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeCollectionAddedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeCollectionAddedCommand(const QString &collection, const QString &parent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -162,6 +165,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeCollectionRemovedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeCollectionRemovedCommand(const QString &collection, const QString &source, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -183,6 +187,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeCollectionChangedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeCollectionChangedCommand(const QString &collection, const QString &parent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -211,6 +216,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeItemMovedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeItemMovedCommand(const QString &item, const QString &source, const QString &target, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -234,6 +240,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeItemAddedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeItemAddedCommand(const QString &item, const QString &parent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -255,6 +262,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeItemRemovedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeItemRemovedCommand(const QString &item, const QString &parent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -277,6 +285,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeItemChangedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeItemChangedCommand(const QString &item, const QString &parent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -298,6 +307,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeTagAddedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeTagAddedCommand(const QString &tag, const QString &parent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -319,6 +329,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeTagChangedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeTagChangedCommand(const QString &tag, const QString &parent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -340,6 +351,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeTagMovedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeTagMovedCommand(const QString &tag, const QString &oldParent, const QString &newParent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -363,6 +375,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeTagRemovedCommand : public FakeMonitorCommand
 {
+    Q_OBJECT
 public:
     FakeTagRemovedCommand(const QString &tag, const QString &parent, FakeServerData *serverData)
         : FakeMonitorCommand(serverData)
@@ -384,6 +397,7 @@ private:
 
 class AKONADITESTFAKE_EXPORT FakeJobResponse : public FakeAkonadiServerCommand
 {
+    Q_OBJECT
     struct Token {
         enum Type {
             Branch,
