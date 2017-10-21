@@ -94,7 +94,7 @@ AgentManager::AgentManager(bool verbose, QObject *parent)
     }
 
 #ifndef QT_NO_DEBUG
-    connect(mAgentWatcher, SIGNAL(fileChanged(QString)), SLOT(agentExeChanged(QString)));
+    connect(mAgentWatcher, &QFileSystemWatcher::fileChanged, this, &AgentManager::agentExeChanged);
 #endif
 }
 
