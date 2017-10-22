@@ -418,7 +418,7 @@ Qt::ItemFlags ItemModel::flags(const QModelIndex &index) const
 
 QStringList ItemModel::mimeTypes() const
 {
-    return QStringList() << QStringLiteral("text/uri-list");
+    return {QStringLiteral("text/uri-list")};
 }
 
 Session *ItemModel::session() const

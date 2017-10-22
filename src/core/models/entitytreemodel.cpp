@@ -467,7 +467,7 @@ Qt::DropActions EntityTreeModel::supportedDropActions() const
 QStringList EntityTreeModel::mimeTypes() const
 {
     // TODO: Should this return the mimetypes that the items provide? Allow dragging a contact from here for example.
-    return QStringList() << QStringLiteral("text/uri-list");
+    return {QStringLiteral("text/uri-list")};
 }
 
 bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)

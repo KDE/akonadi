@@ -44,7 +44,7 @@ int main(int argc, char **argv)
     aboutData.processCommandLine(&parser);
 
     CollectionDialog dlg;
-    dlg.setMimeTypeFilter(QStringList() << QStringLiteral("text/directory"));
+    dlg.setMimeTypeFilter( {QStringLiteral("text/directory")} );
     dlg.setAccessRightsFilter(Collection::CanCreateItem);
     dlg.setDescription(i18n("Select an address book for saving:"));
     dlg.setSelectionMode(QAbstractItemView::ExtendedSelection);

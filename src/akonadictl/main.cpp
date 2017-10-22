@@ -97,8 +97,7 @@ static bool checkAkonadiServerStatus()
 
 static bool checkSearchSupportStatus()
 {
-    QStringList searchMethods;
-    searchMethods << QStringLiteral("Remote Search");
+    QStringList searchMethods {QStringLiteral("Remote Search")};
 
     const QString pluginOverride = QString::fromLatin1(qgetenv("AKONADI_OVERRIDE_SEARCHPLUGIN"));
     if (!pluginOverride.isEmpty()) {

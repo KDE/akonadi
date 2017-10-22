@@ -63,9 +63,7 @@ void CollectionTest::testBuildCollection()
     mDocument.setContent(collection1, true, nullptr);
     Collection::List colist = XmlReader::readCollections(mDocument.documentElement());
 
-    QStringList mimeType;
-
-    mimeType << QStringLiteral("inode/directory") << QStringLiteral("message/rfc822");
+    const QStringList mimeType {QStringLiteral("inode/directory"),QStringLiteral("message/rfc822")};
     QCOMPARE(colist.size(), 1);
     verifyCollection(colist, 0, QStringLiteral("c11"), QStringLiteral("Inbox"), mimeType);
 

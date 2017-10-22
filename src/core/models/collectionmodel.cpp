@@ -250,7 +250,7 @@ Qt::DropActions CollectionModel::supportedDropActions() const
 
 QStringList CollectionModel::mimeTypes() const
 {
-    return QStringList() << QStringLiteral("text/uri-list");
+    return {QStringLiteral("text/uri-list")};
 }
 
 QMimeData *CollectionModel::mimeData(const QModelIndexList &indexes) const
