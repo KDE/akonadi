@@ -13,6 +13,7 @@
 #include "aklocalserver.h"
 #include "cachecleaner.h"
 #include "debuginterface.h"
+#include "indexer/indexer.h"
 #include "intervalcheck.h"
 #include "notificationmanager.h"
 #include "preprocessormanager.h"
@@ -129,6 +130,7 @@ bool AkonadiServer::init()
     mIntervalCheck = AkThread::create<IntervalCheck>(*mItemRetrieval);
     mSearchManager = AkThread::create<SearchManager>(searchManagers, *mAgentSearchManager);
     mStorageJanitor = AkThread::create<StorageJanitor>(this);
+    mIndexer = std::make_unique<Indexer>();
 
     if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
         mPreprocessorManager->setEnabled(false);
@@ -176,6 +178,7 @@ bool AkonadiServer::quit()
 
     qCDebug(AKONADISERVER_LOG) << "terminating service threads";
     // Keep this order in sync (reversed) with the order of initialization
+    mIndexer.reset();
     mStorageJanitor.reset();
     mSearchManager.reset();
     mIntervalCheck.reset();

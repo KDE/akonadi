@@ -32,6 +32,7 @@ class CollectionStatistics;
 class PreprocessorManager;
 class Tracer;
 class DebugInterface;
+class Indexer;
 
 class AkonadiServer : public QObject
 {
@@ -114,6 +115,7 @@ protected:
     std::unique_ptr<ItemRetrievalManager> mItemRetrieval;
     std::unique_ptr<SearchTaskManager> mAgentSearchManager;
     std::unique_ptr<SearchManager> mSearchManager;
+    std::unique_ptr<Indexer> mIndexer;
     std::unique_ptr<Tracer> mTracer;
 
     std::vector<std::unique_ptr<Connection>> mConnections;

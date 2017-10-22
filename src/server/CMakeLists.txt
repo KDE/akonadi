@@ -66,6 +66,9 @@ set(libakonadiserver_SRCS
     handler/tagfetchhelper.cpp
     handler/tagmodifyhandler.cpp
     handler/transactionhandler.cpp
+    indexer/persistentqueue.cpp
+    indexer/indexer.cpp
+    indexer/indexfuture.cpp
     localsocket.cpp
     search/agentsearchengine.cpp
     search/agentsearchinstance.cpp
