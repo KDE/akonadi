@@ -80,6 +80,9 @@ set(libakonadiserver_SRCS
     handler/tagremove.cpp
     handler/tagstore.cpp
     handler/transaction.cpp
+    indexer/persistentqueue.cpp
+    indexer/indexer.cpp
+    indexer/indexfuture.cpp
     search/agentsearchengine.cpp
     search/agentsearchinstance.cpp
     search/searchtaskmanager.cpp

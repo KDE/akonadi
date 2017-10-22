@@ -39,6 +39,7 @@ class CacheCleaner;
 class IntervalCheck;
 class AkLocalServer;
 class NotificationManager;
+class Indexer;
 
 class AkonadiServer : public QObject
 {
@@ -102,6 +103,7 @@ protected:
     StorageJanitor *mStorageJanitor = nullptr;
     ItemRetrievalManager *mItemRetrieval = nullptr;
     SearchTaskManager *mAgentSearchManager = nullptr;
+    Indexer *mIndexer = nullptr;
     QProcess *mDatabaseProcess = nullptr;
     QVector<Connection *> mConnections;
     SearchManager *mSearchManager = nullptr;

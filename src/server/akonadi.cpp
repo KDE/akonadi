@@ -38,6 +38,7 @@
 #include "preprocessormanager.h"
 #include "search/searchmanager.h"
 #include "search/searchtaskmanager.h"
+#include "indexer/indexer.h"
 #include "aklocalserver.h"
 
 #include "collectionreferencemanager.h"
@@ -198,6 +199,7 @@ bool AkonadiServer::init()
     mStorageJanitor = new StorageJanitor();
     mItemRetrieval = new ItemRetrievalManager();
     mAgentSearchManager = new SearchTaskManager();
+    mIndexer = new Indexer();
 
     const QStringList searchManagers = settings.value(QStringLiteral("Search/Manager"),
                                        QStringList() << QStringLiteral("Agent")).toStringList();
