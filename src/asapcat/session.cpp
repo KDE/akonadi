@@ -78,7 +78,7 @@ void Session::connectToHost()
     }
 
     QLocalSocket *socket = new QLocalSocket(this);
-    connect(socket, SIGNAL(error(QLocalSocket::LocalSocketError)), SLOT(serverError(QLocalSocket::LocalSocketError)));
+    connect(socket, QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error), this, &Session::serverError);
     connect(socket, &QLocalSocket::disconnected, this, &Session::serverDisconnected);
     connect(socket, &QIODevice::readyRead, this, &Session::serverRead);
     connect(socket, &QLocalSocket::connected, this, &Session::inputAvailable);

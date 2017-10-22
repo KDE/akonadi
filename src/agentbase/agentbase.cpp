@@ -448,7 +448,7 @@ void AgentBasePrivate::init()
     mResourceTypeName = AgentManager::self()->instance(mId).type().name();
     setProgramName();
 
-    QTimer::singleShot(0, q, SLOT(delayedInit()));
+    QTimer::singleShot(0, q, [this]{ delayedInit();});
 }
 
 void AgentBasePrivate::delayedInit()
