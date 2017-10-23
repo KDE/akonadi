@@ -71,7 +71,7 @@ private Q_SLOTS:
         mItem = Item();
         mParent->itemRemoved();
     }
-
+public Q_SLOTS:
     void initialFetchDone(KJob *job)
     {
         if (job->error()) {

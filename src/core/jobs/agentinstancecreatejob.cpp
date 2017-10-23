@@ -58,7 +58,7 @@ public:
     {
         QObject::connect(AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
                          q, SLOT(agentInstanceAdded(Akonadi::AgentInstance)));
-        QObject::connect(safetyTimer, SIGNAL(timeout()), q, SLOT(timeout()));
+        QObject::connect(safetyTimer, &QTimer::timeout, q, [this]() {timeout(); });
     }
 
     void agentInstanceAdded(const AgentInstance &instance)
