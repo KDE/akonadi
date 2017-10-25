@@ -184,7 +184,7 @@ void AgentInstanceCreateJobPrivate::doStart()
     if (!agentType.isValid()) {
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Unable to obtain agent type '%1'.", agentTypeId));
-        QTimer::singleShot(0, q, SLOT(emitResult()));
+        QTimer::singleShot(0, q, [this]() { emitResult(); });
         return;
     }
 
@@ -192,7 +192,7 @@ void AgentInstanceCreateJobPrivate::doStart()
     if (!agentInstance.isValid()) {
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Unable to create agent instance."));
-        QTimer::singleShot(0, q, SLOT(emitResult()));
+        QTimer::singleShot(0, q, [this]() { emitResult(); });
     } else {
         int timeout = safetyTimeout;
 #ifdef Q_OS_UNIX

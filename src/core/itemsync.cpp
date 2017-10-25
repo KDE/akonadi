@@ -136,7 +136,7 @@ void ItemSyncPrivate::createOrMerge(const Item &item)
         merge |= ItemCreateJob::RID;
     }
     create->setMerge(merge);
-    q->connect(create, SIGNAL(result(KJob*)), q, SLOT(slotLocalChangeDone(KJob*)));
+    q->connect(create, &ItemCreateJob::result, q, [this](KJob *job) {slotLocalChangeDone(job);});
 }
 
 bool ItemSyncPrivate::allProcessed() const
@@ -296,7 +296,7 @@ void ItemSyncPrivate::fetchLocalItemsToDelete()
     job->fetchScope().setCacheOnly(true);
 
     QObject::connect(job, SIGNAL(itemsReceived(Akonadi::Item::List)), q, SLOT(slotItemsReceived(Akonadi::Item::List)));
-    QObject::connect(job, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)));
+    QObject::connect(job, &ItemFetchJob::result, q, [this](KJob *job) { slotLocalListDone(job); });
     mPendingJobs++;
 }
 
@@ -416,7 +416,7 @@ void ItemSyncPrivate::deleteItems(const Item::List &itemsToDelete)
 
     mPendingJobs++;
     ItemDeleteJob *job = new ItemDeleteJob(itemsToDelete, subjobParent());
-    q->connect(job, SIGNAL(result(KJob*)), q, SLOT(slotLocalDeleteDone(KJob*)));
+    q->connect(job, &ItemDeleteJob::result, q, [this](KJob *job) { slotLocalDeleteDone(job); });
 
     // It can happen that the groupware servers report us deleted items
     // twice, in this case this item delete job will fail on the second try.
