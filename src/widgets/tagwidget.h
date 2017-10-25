@@ -60,6 +60,7 @@ public:
     Akonadi::Tag::List selection() const;
 
     void clearTags();
+    void setReadOnly(bool readOnly);
 Q_SIGNALS:
     void selectionChanged(const Akonadi::Tag::List &tags);
 

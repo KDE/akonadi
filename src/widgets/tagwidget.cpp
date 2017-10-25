@@ -46,6 +46,7 @@ public:
     Akonadi::Tag::List mTags;
     TagView *mTagView = nullptr;
     Akonadi::TagModel *mModel = nullptr;
+    QToolButton *mEditButton = nullptr;
 };
 
 TagView::TagView(QWidget *parent)
@@ -83,13 +84,13 @@ TagWidget::TagWidget(QWidget *parent)
     connect(d->mTagView, &TagView::clearTags, this, &TagWidget::clearTags);
     layout->addWidget(d->mTagView);
 
-    QToolButton *editButton = new QToolButton(this);
-    editButton->setText(i18n("..."));
-    layout->addWidget(editButton, Qt::AlignRight);
+    d->mEditButton = new QToolButton(this);
+    d->mEditButton->setText(i18n("..."));
+    layout->addWidget(d->mEditButton, Qt::AlignRight);
 
     layout->setStretch(0, 10);
 
-    connect(editButton, &QToolButton::clicked, this, &TagWidget::editTags);
+    connect(d->mEditButton, &QToolButton::clicked, this, &TagWidget::editTags);
     connect(d->mModel, &Akonadi::TagModel::populated, this, &TagWidget::updateView);
 }
 
@@ -117,6 +118,12 @@ void TagWidget::setSelection(const Akonadi::Tag::List &tags)
 Akonadi::Tag::List TagWidget::selection() const
 {
     return d->mTags;
+}
+
+void TagWidget::setReadOnly(bool readOnly)
+{
+    d->mEditButton->setEnabled(!readOnly);
+    //d->mTagView is always readOnly => not change it.
 }
 
 void TagWidget::editTags()
