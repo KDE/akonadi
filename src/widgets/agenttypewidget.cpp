@@ -119,8 +119,8 @@ AgentTypeWidget::AgentTypeWidget(QWidget *parent)
     d->mView->scrollTo(d->mView->model()->index(0, 0));
     connect(d->mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(currentAgentTypeChanged(QModelIndex,QModelIndex)));
-    connect(d->mView, SIGNAL(activated(QModelIndex)),
-            SLOT(typeActivated(QModelIndex)));
+    connect(d->mView, QOverload<const QModelIndex &>::of(&QListView::activated),
+            this, [this](const QModelIndex &index) { d->typeActivated(index); });
 }
 
 AgentTypeWidget::~AgentTypeWidget()

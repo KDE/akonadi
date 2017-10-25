@@ -100,7 +100,6 @@ private:
     Private *const d;
 
     Q_PRIVATE_SLOT(d, void currentAgentTypeChanged(const QModelIndex &, const QModelIndex &))
-    Q_PRIVATE_SLOT(d, void typeActivated(const QModelIndex &index))
     //@endcond
 };
 
