@@ -79,7 +79,7 @@ void JobPrivate::handleResponse(qint64 tag, const Protocol::CommandPtr &response
 
         if (q->doHandleResponse(tag, response)) {
             mReadingFinished = true;
-            QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
+            QTimer::singleShot(0, q, [this]() {delayedEmitResult(); });
         }
     }
 }
@@ -213,7 +213,7 @@ void JobPrivate::startNext()
         job->d_ptr->startQueued();
     } else if (mFinishPending && !q->hasSubjobs()) {
         // The last subjob we've been waiting for has finished, emitResult() finally
-        QTimer::singleShot(0, q, SLOT(delayedEmitResult()));
+        QTimer::singleShot(0, q, [this]() {delayedEmitResult(); });
     }
 }
 

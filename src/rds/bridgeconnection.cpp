@@ -113,9 +113,9 @@ void DBusBridgeConnection::connectLocal()
 
 void BridgeConnection::doConnects()
 {
-    connect(m_localSocket, SIGNAL(disconnected()), SLOT(deleteLater()));
+    connect(m_localSocket, &QLocalSocket::disconnected, this, &BridgeConnection::deleteLater);
     connect(m_remoteSocket, &QAbstractSocket::disconnected, this, &QObject::deleteLater);
     connect(m_localSocket, &QIODevice::readyRead, this, &BridgeConnection::slotDataAvailable);
     connect(m_remoteSocket, &QIODevice::readyRead, this, &BridgeConnection::slotDataAvailable);
-    connect(m_localSocket, SIGNAL(connected()), SLOT(slotDataAvailable()));
+    connect(m_localSocket, &QLocalSocket::connected, this, &BridgeConnection::slotDataAvailable);
 }

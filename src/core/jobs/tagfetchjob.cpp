@@ -42,7 +42,7 @@ public:
         mEmitTimer = new QTimer(q);
         mEmitTimer->setSingleShot(true);
         mEmitTimer->setInterval(100);
-        q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
+        q->connect(mEmitTimer, &QTimer::timeout, q, [this]() { timeout(); });
     }
 
     void aboutToFinish() override {

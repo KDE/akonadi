@@ -24,6 +24,7 @@
 
 class QTcpSocket;
 class QIODevice;
+class QLocalSocket;
 
 class BridgeConnection : public QObject
 {
@@ -38,7 +39,7 @@ protected Q_SLOTS:
     void doConnects();
 
 protected:
-    QIODevice *m_localSocket = nullptr;
+    QLocalSocket *m_localSocket = nullptr;
 
 private Q_SLOTS:
     void slotDataAvailable();
