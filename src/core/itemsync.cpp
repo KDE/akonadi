@@ -295,7 +295,7 @@ void ItemSyncPrivate::fetchLocalItemsToDelete()
     // we only can fetch parts already in the cache, otherwise this will deadlock
     job->fetchScope().setCacheOnly(true);
 
-    QObject::connect(job, SIGNAL(itemsReceived(Akonadi::Item::List)), q, SLOT(slotItemsReceived(Akonadi::Item::List)));
+    QObject::connect(job, &ItemFetchJob::itemsReceived, q, [this](const Akonadi::Item::List &lst)  { slotItemsReceived(lst); });
     QObject::connect(job, &ItemFetchJob::result, q, [this](KJob *job) { slotLocalListDone(job); });
     mPendingJobs++;
 }
@@ -468,7 +468,7 @@ void ItemSyncPrivate::requestTransaction()
         ++mTransactionJobs;
         mCurrentTransaction = new TransactionSequence(q);
         mCurrentTransaction->setAutomaticCommittingEnabled(false);
-        QObject::connect(mCurrentTransaction, SIGNAL(result(KJob*)), q, SLOT(slotTransactionResult(KJob*)));
+        QObject::connect(mCurrentTransaction, &TransactionSequence::result, q, [this](KJob *job) { slotTransactionResult(job); });
     }
 }
 

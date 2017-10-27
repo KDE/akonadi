@@ -120,8 +120,8 @@ void AgentManager::continueStartup()
         QFileSystemWatcher *watcher = new QFileSystemWatcher(this);
         watcher->addPath(path);
 
-        connect(watcher, SIGNAL(directoryChanged(QString)),
-                this, SLOT(updatePluginInfos()));
+        connect(watcher, &QFileSystemWatcher::directoryChanged,
+                this, &AgentManager::updatePluginInfos);
     }
 #endif
 

@@ -70,8 +70,6 @@ private:
     Private *const d;
 
     void init(const QStringList &mimetypes);
-
-    Q_PRIVATE_SLOT(d, void modelLoaded())
 };
 
 }

@@ -67,7 +67,7 @@ public:
             safetyTimer->stop();
             if (doConfig) {
                 // return from dbus call first before doing the next one
-                QTimer::singleShot(0, q, SLOT(doConfigure()));
+                QTimer::singleShot(0, q, [this]() { doConfigure(); });
             } else {
                 q->emitResult();
             }

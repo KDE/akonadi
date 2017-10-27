@@ -43,10 +43,10 @@ ProcessControl::ProcessControl(QObject *parent)
     , mRestartOnceOnExit(false)
     , mShutdownTimeout(1000)
 {
-    connect(&mProcess, SIGNAL(error(QProcess::ProcessError)),
-            this, SLOT(slotError(QProcess::ProcessError)));
-    connect(&mProcess, SIGNAL(finished(int,QProcess::ExitStatus)),
-            this, SLOT(slotFinished(int,QProcess::ExitStatus)));
+    connect(&mProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
+            this, &ProcessControl::slotError);
+    connect(&mProcess, QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),
+            this, &ProcessControl::slotFinished);
     mProcess.setProcessChannelMode(QProcess::ForwardedChannels);
 
     if (Akonadi::Instance::hasIdentifier()) {

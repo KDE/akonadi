@@ -64,7 +64,7 @@ CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob(c
     d->instance = AgentManager::self()->instance(collection.resource());
     d->collection = collection;
     d->safetyTimer = new QTimer(this);
-    connect(d->safetyTimer, SIGNAL(timeout()), SLOT(slotTimeout()));
+    connect(d->safetyTimer, &QTimer::timeout, this, [this] { d->slotTimeout(); });
     d->safetyTimer->setInterval(5 * 1000);
     d->safetyTimer->setSingleShot(false);
 }
