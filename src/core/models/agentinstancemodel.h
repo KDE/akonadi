@@ -98,8 +98,6 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT(d, void instanceAdded(const Akonadi::AgentInstance &))
-    Q_PRIVATE_SLOT(d, void instanceRemoved(const Akonadi::AgentInstance &))
     Q_PRIVATE_SLOT(d, void instanceChanged(const Akonadi::AgentInstance &))
     //@endcond
 };

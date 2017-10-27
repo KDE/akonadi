@@ -88,10 +88,10 @@ AgentInstanceModel::AgentInstanceModel(QObject *parent)
 {
     d->mInstances = AgentManager::self()->instances();
 
-    connect(AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
-            this, SLOT(instanceAdded(Akonadi::AgentInstance)));
-    connect(AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)),
-            this, SLOT(instanceRemoved(Akonadi::AgentInstance)));
+    connect(AgentManager::self(), &AgentManager::instanceAdded,
+            this, [this](const Akonadi::AgentInstance &inst) { d->instanceAdded(inst);});
+    connect(AgentManager::self(), &AgentManager::instanceRemoved,
+            this, [this](const Akonadi::AgentInstance &inst) { d->instanceRemoved(inst);});
     connect(AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
             this, SLOT(instanceChanged(Akonadi::AgentInstance)));
     connect(AgentManager::self(), SIGNAL(instanceProgressChanged(Akonadi::AgentInstance)),

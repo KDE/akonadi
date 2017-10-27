@@ -213,7 +213,6 @@ private:
     Q_PRIVATE_SLOT(d, void agentInstanceWarning(const QString &, const QString &))
     Q_PRIVATE_SLOT(d, void agentInstanceError(const QString &, const QString &))
     Q_PRIVATE_SLOT(d, void agentInstanceOnlineChanged(const QString &, bool))
-    Q_PRIVATE_SLOT(d, void serviceOwnerChanged(const QString &, const QString &, const QString &))
     //@endcond
 };
 

@@ -362,8 +362,8 @@ AgentManager::AgentManager()
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Control),
             KDBusConnectionPool::threadConnection(),
             QDBusServiceWatcher::WatchForOwnerChange, this);
-    connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            this, SLOT(serviceOwnerChanged(QString,QString,QString)));
+    connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged,
+            this, [this](const QString &arg1, const QString &arg2 , const QString &arg3) { d->serviceOwnerChanged(arg1, arg2, arg3); });
 }
 
 // @endcond
