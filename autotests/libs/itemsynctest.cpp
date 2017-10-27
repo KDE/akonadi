@@ -24,6 +24,7 @@
 #include <control.h>
 #include <collection.h>
 #include <item.h>
+#include <itemdeletejob.h>
 #include <itemfetchjob.h>
 #include <itemfetchscope.h>
 #include <itemsync.h>
@@ -49,7 +50,7 @@ class ItemsyncTest : public QObject
 private:
     Item::List fetchItems(const Collection &col)
     {
-        qDebug() << col.remoteId();
+        qDebug() << "fetching items from collection" << col.remoteId() << col.name();
         ItemFetchJob *fetch = new ItemFetchJob(col, this);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().fetchAllAttributes();
@@ -574,6 +575,62 @@ private Q_SLOTS:
 
         syncer->deliveryDone();
         QTRY_COMPARE(spy.count(), 1);
+    }
+
+    void testFullSyncManyItems()
+    {
+        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
+        QVERIFY(col.isValid());
+
+        Akonadi::Monitor monitor;
+        monitor.setCollectionMonitored(col);
+        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QVERIFY(addedSpy.isValid());
+
+        const int itemCount = 1000;
+        for (int i = 0; i < itemCount; ++i) {
+            Item item(QStringLiteral("application/octet-stream"));
+            item.setRemoteId(QStringLiteral("rid") + QString::number(i));
+            item.setGid(QStringLiteral("gid") + QString::number(i));
+            item.setPayload<QByteArray>("payload1");
+            ItemCreateJob *job = new ItemCreateJob(item, col);
+            AKVERIFYEXEC(job);
+        }
+
+        QTRY_COMPARE(addedSpy.count(), itemCount);
+        addedSpy.clear();
+
+        const Item::List origItems = fetchItems(col);
+
+        //Since the item sync affects the knut resource we ensure we actually managed to load all items
+        //This needs to be adjusted should the testdataset change
+        QCOMPARE(origItems.size(), itemCount);
+
+        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QVERIFY(deletedSpy.isValid());
+        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QVERIFY(changedSpy.isValid());
+
+        QBENCHMARK {
+            ItemSync *syncer = new ItemSync(col);
+            syncer->setTransactionMode(ItemSync::SingleTransaction);
+            QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+            QVERIFY(transactionSpy.isValid());
+            syncer->setFullSyncItems(origItems);
+            AKVERIFYEXEC(syncer);
+            QCOMPARE(transactionSpy.count(), 1);
+        }
+
+        const Item::List resultItems = fetchItems(col);
+        QCOMPARE(resultItems.count(), origItems.count());
+        QTest::qWait(100);
+        QCOMPARE(deletedSpy.count(), 0);
+        QCOMPARE(addedSpy.count(), 0);
+        QCOMPARE(changedSpy.count(), 0);
+
+        // delete all items; QBENCHMARK leads to the whole method being called more than once
+        ItemDeleteJob *job = new ItemDeleteJob(resultItems);
+        AKVERIFYEXEC(job);
     }
 };
 

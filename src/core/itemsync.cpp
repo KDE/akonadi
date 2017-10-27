@@ -344,9 +344,10 @@ void ItemSyncPrivate::execute()
         if (mRemoteItemQueue.size() >= mBatchSize || mDeliveryDone) {
             //we have a new batch to process
             const int num = qMin(mBatchSize, mRemoteItemQueue.size());
-            for (int i = 0; i < num; i++) {
-                mCurrentBatchRemoteItems << mRemoteItemQueue.takeFirst();
-            }
+            mCurrentBatchRemoteItems.reserve(mBatchSize);
+            std::move(mRemoteItemQueue.begin(), mRemoteItemQueue.begin() + num, std::back_inserter(mCurrentBatchRemoteItems));
+            mRemoteItemQueue.erase(mRemoteItemQueue.begin(), mRemoteItemQueue.begin() + num);
+
             mCurrentBatchRemovedRemoteItems += mRemovedRemoteItemQueue;
             mRemovedRemoteItemQueue.clear();
         } else {
