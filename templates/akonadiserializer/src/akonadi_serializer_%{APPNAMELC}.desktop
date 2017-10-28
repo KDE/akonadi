@@ -1,0 +1,7 @@
+[Misc]
+Name=%{APPNAME} Serializer
+Comment=An Akonadi serializer plugin for %{APPNAMELC}
+
+[Plugin]
+Type=application/x-vnd.kde.%{APPNAMELC}
+X-KDE-Library=akonadi_serializer_%{APPNAMELC}

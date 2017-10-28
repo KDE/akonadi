@@ -1,0 +1,6 @@
+[General]
+Name=C++
+Comment=Akonadi Serializer Template. A template for an Akonadi data serializer plugin
+Category=Akonadi/Serializer
+Icon=akonadiserializer.png
+ShowFilesAfterGeneration=src/%{APPNAMELC}resource.cpp

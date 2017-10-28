@@ -1,0 +1,6 @@
+[General]
+Name=C++
+Comment=Akonadi Resource Template. A template for an Akonadi PIM data resource
+Category=Akonadi/Resource
+Icon=akonadiresource.png
+ShowFilesAfterGeneration=src/akonadi_serializer_%{APPNAMELC}.cpp

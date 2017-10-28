@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=%{APPNAME} Resource
+Comment=An Akonadi resource plugin for %{APPNAME}
+Type=AkonadiResource
+Exec=akonadi_%{APPNAMELC}_resource
+Icon=text-directory
+
+X-Akonadi-MimeTypes=text/directory
+X-Akonadi-Capabilities=Resource
+X-Akonadi-Identifier=akonadi_%{APPNAMELC}_resource

@@ -24,6 +24,7 @@ include(CheckIncludeFiles)
 include(ECMQtDeclareLoggingCategory)
 include(CheckSymbolExists)
 include(ECMCoverageOption)
+include(KDEPackageAppTemplates)
 
 
 include(AkonadiMacros)
@@ -256,6 +257,8 @@ include_directories(
 
 add_subdirectory(src)
 add_subdirectory(icons)
+
+add_subdirectory(templates)
 
 if(BUILD_TOOLS)
     # add testrunner (application for managing a self-contained
