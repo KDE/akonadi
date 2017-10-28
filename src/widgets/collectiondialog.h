@@ -211,11 +211,9 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT(d, void slotCollectionAvailable(const QModelIndex &))
     Q_PRIVATE_SLOT(d, void slotSelectionChanged())
     Q_PRIVATE_SLOT(d, void slotAddChildCollection())
     Q_PRIVATE_SLOT(d, void slotCollectionCreationResult(KJob *job))
-    Q_PRIVATE_SLOT(d, void slotFilterFixedString(const QString &))
     Q_PRIVATE_SLOT(d, void slotDoubleClicked())
     //@endcond
 };

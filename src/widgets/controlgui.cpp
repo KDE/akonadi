@@ -184,8 +184,8 @@ void ControlGui::Private::serverStateChanged(ServerManager::State state)
 ControlGui::ControlGui()
     : d(new Private(this))
 {
-    connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-            SLOT(serverStateChanged(Akonadi::ServerManager::State)));
+    connect(ServerManager::self(), &ServerManager::stateChanged,
+            this, [this](Akonadi::ServerManager::State state) { d->serverStateChanged(state); });
     // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
     // Otherwise we get a crash in QCursor code with Qt-4.5
     if (QCoreApplication::instance()) {

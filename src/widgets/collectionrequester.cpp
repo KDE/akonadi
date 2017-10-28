@@ -70,7 +70,7 @@ void CollectionRequester::Private::fetchCollection(const Collection &collection)
     CollectionFetchJob *job = new CollectionFetchJob(collection, Akonadi::CollectionFetchJob::Base, q);
     job->setProperty("OriginalCollectionId", collection.id());
     job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-    connect(job, SIGNAL(finished(KJob*)), q, SLOT(_k_collectionReceived(KJob*)));
+    connect(job, &CollectionFetchJob::finished, q, [this](KJob *job) {_k_collectionReceived(job);});
 }
 
 void CollectionRequester::Private::_k_collectionReceived(KJob *job)
@@ -87,7 +87,7 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
         CollectionFetchJob *namesFetch = new CollectionFetchJob(chain, CollectionFetchJob::Base, q);
         namesFetch->setProperty("OriginalCollectionId", job->property("OriginalCollectionId"));
         namesFetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::Parent);
-        connect(namesFetch, SIGNAL(finished(KJob*)), q, SLOT(_k_collectionsNamesReceived(KJob*)));
+        connect(namesFetch, &CollectionFetchJob::finished, q, [this](KJob *job) {_k_collectionsNamesReceived(job);});
     } else {
         _k_collectionsNamesReceived(job);
     }

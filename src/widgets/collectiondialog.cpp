@@ -115,8 +115,8 @@ public:
         mView->setModel(mFilterCollection);
 
         changeCollectionDialogOptions(options);
-        mParent->connect(filterCollectionLineEdit, SIGNAL(textChanged(QString)),
-                         mParent, SLOT(slotFilterFixedString(QString)));
+        mParent->connect(filterCollectionLineEdit, &QLineEdit::textChanged,
+                         mParent, [this](const QString &str) { slotFilterFixedString(str); });
 
         mParent->connect(mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
                          mParent, SLOT(slotSelectionChanged()));
@@ -125,8 +125,8 @@ public:
                          mParent, SLOT(slotDoubleClicked()));
 
         mSelectionHandler = new AsyncSelectionHandler(mFilterCollection, mParent);
-        mParent->connect(mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
-                         mParent, SLOT(slotCollectionAvailable(QModelIndex)));
+        mParent->connect(mSelectionHandler, &AsyncSelectionHandler::collectionAvailable,
+                         mParent, [this](const QModelIndex &index) {slotCollectionAvailable(index);});
         readConfig();
     }
 
