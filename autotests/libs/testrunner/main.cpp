@@ -30,6 +30,7 @@
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QCommandLineOption>
+#include <QSessionManager>
 
 static SetupTest *setup = nullptr;
 static TestRunner *runner = nullptr;
@@ -78,7 +79,11 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutdata.processCommandLine(&parser);
 
-    //QT5 app.disableSessionManagement();
+    auto disableSessionManagement = [](QSessionManager &sm) {
+        sm.setRestartHint(QSessionManager::RestartNever);
+    };
+    QObject::connect(qApp, &QGuiApplication::commitDataRequest, disableSessionManagement);
+    QObject::connect(qApp, &QGuiApplication::saveStateRequest, disableSessionManagement);
 
     if (parser.isSet(QStringLiteral("config"))) {
         Config::instance(parser.value(QStringLiteral("config")));
