@@ -90,6 +90,21 @@ public:
     int limit = -1;
 };
 
+
+namespace {
+
+static QMap<SearchTerm::SearchField, QString> searchFieldMapping()
+{
+    static QMap<SearchTerm::SearchField, QString> mapping;
+    if (mapping.isEmpty()) {
+        mapping.insert(SearchTerm::Collection, QStringLiteral("collection"));
+    }
+
+    return mapping;
+}
+
+}
+
 SearchTerm::SearchTerm(SearchTerm::Relation relation)
     : d(new SearchTermPrivate)
 {
@@ -103,6 +118,11 @@ SearchTerm::SearchTerm(const QString &key, const QVariant &value, SearchTerm::Co
     d->key = key;
     d->value = value;
     d->condition = condition;
+}
+
+SearchTerm::SearchTerm(SearchField field, const QVariant &value, SearchTerm::Condition condition)
+    : SearchTerm(toKey(field), value, condition)
+{
 }
 
 SearchTerm::SearchTerm(const SearchTerm &other)
@@ -167,6 +187,17 @@ SearchTerm::Relation SearchTerm::relation() const
 {
     return d->relation;
 }
+
+QString SearchTerm::toKey(SearchField field)
+{
+    return searchFieldMapping().value(field);
+}
+
+SearchTerm::SearchField SearchTerm::fromKey(const QString &key)
+{
+    return searchFieldMapping().key(key);
+}
+
 
 SearchQuery::SearchQuery(SearchTerm::Relation rel)
     : d(new SearchQueryPrivate)
@@ -314,6 +345,8 @@ static QMap<ContactSearchTerm::ContactSearchField, QString> contactSearchFieldMa
         mapping.insert(ContactSearchTerm::Email, QStringLiteral("email"));
         mapping.insert(ContactSearchTerm::Uid, QStringLiteral("uid"));
         mapping.insert(ContactSearchTerm::All, QStringLiteral("all"));
+        mapping.insert(ContactSearchTerm::Birthday, QStringLiteral("birthday"));
+        mapping.insert(ContactSearchTerm::Anniversary, QStringLiteral("anniversary"));
     }
     return mapping;
 }
