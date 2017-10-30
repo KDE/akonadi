@@ -63,13 +63,6 @@ PRIVATE
     Qt5::Network
 )
 
-if (HAVE_NMQT)
-    target_link_libraries(KF5AkonadiAgentBase
-        PRIVATE
-            KF5::NetworkManagerQt
-    )
-endif()
-
 set_target_properties(KF5AkonadiAgentBase PROPERTIES
     VERSION ${AKONADI_VERSION_STRING}
     SOVERSION ${AKONADI_SOVERSION}

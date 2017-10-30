@@ -23,7 +23,6 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
-#include "config-akonadi.h"
 #include "akonadi_version.h"
 #include "agentmanager.h"
 #include "changerecorder.h"
@@ -47,14 +46,10 @@
 #include <QSettings>
 #include <QTimer>
 #include <QDBusConnection>
-#include <QDBusConnectionInterface>
 #include <QApplication>
 #include <QCommandLineParser>
 #include <QNetworkConfiguration>
 #include <QNetworkConfigurationManager>
-#ifdef HAVE_NMQT
-#include <NetworkManagerQt/NetworkManagerQt/Manager>
-#endif
 
 #include <signal.h>
 #include <stdlib.h>
@@ -839,29 +834,10 @@ void AgentBasePrivate::slotNetworkStatusChange(bool isOnline)
     q->setOnlineInternal(mDesiredOnlineState);
 }
 
-#ifdef HAVE_NMQT
-void AgentBasePrivate::slotConnectivityChanged(NetworkManager::Connectivity connectivity)
-{
-    Q_Q(AgentBase);
-    qCDebug(AKONADIAGENTBASE_LOG) << "NM Connectivity changed:" << connectivity;
-    if (connectivity == NetworkManager::Full) {
-        q->setOnlineInternal(mDesiredOnlineState);
-    } else {
-        q->setOnlineInternal(false);
-    }
-}
-#endif
-
 void AgentBasePrivate::slotResumedFromSuspend()
 {
     if (mNeedsNetwork) {
-        if (mNetworkManager) {
-            slotNetworkStatusChange(mNetworkManager->isOnline());
-        } else {
-#ifdef HAVE_NMQT
-            slotConnectivityChanged(NetworkManager::connectivity());
-#endif
-        }
+        slotNetworkStatusChange(mNetworkManager->isOnline());
     }
 }
 
@@ -1023,36 +999,15 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
 
     d->mNeedsNetwork = needsNetwork;
 
-
     if (d->mNeedsNetwork) {
-#ifdef HAVE_NMQT
-        if (QDBusConnection::systemBus().interface()->isServiceRegistered(QStringLiteral("org.freedesktop.NetworkManager"))) {
-            connect(NetworkManager::notifier(), &NetworkManager::Notifier::connectivityChanged,
-                    d, &AgentBasePrivate::slotConnectivityChanged, Qt::UniqueConnection);
-            if (d->mDesiredOnlineState && NetworkManager::connectivity() == NetworkManager::Full) {
-                setOnlineInternal(d->mDesiredOnlineState);
-            }
-        } else
-#endif
-        {
-            d->mNetworkManager = new QNetworkConfigurationManager(this);
-            connect(d->mNetworkManager, SIGNAL(onlineStateChanged(bool)),
-                    this, SLOT(slotNetworkStatusChange(bool)));
-            if (d->mDesiredOnlineState && d->mNetworkManager->isOnline()) {
-                setOnlineInternal(d->mDesiredOnlineState);
-            }
-        }
+        d->mNetworkManager = new QNetworkConfigurationManager(this);
+        connect(d->mNetworkManager, SIGNAL(onlineStateChanged(bool)),
+                this, SLOT(slotNetworkStatusChange(bool)),
+                Qt::UniqueConnection);
+
     } else {
-        if (d->mNetworkManager) {
-            delete d->mNetworkManager;
-            d->mNetworkManager = nullptr;
-        }
-#ifdef HAVE_NMQT
-        else {
-            disconnect(NetworkManager::notifier(), &NetworkManager::Notifier::connectivityChanged,
-                       d, &AgentBasePrivate::slotConnectivityChanged);
-        }
-#endif
+        delete d->mNetworkManager;
+        d->mNetworkManager = nullptr;
         setOnlineInternal(d->mDesiredOnlineState);
     }
 }
@@ -1089,11 +1044,7 @@ void AgentBase::setOnlineInternal(bool state)
 {
     Q_D(AgentBase);
     if (state && d->mNeedsNetwork) {
-        if ((d->mNetworkManager && !d->mNetworkManager->isOnline())
-#ifdef HAVE_NMQT
-            || (!d->mNetworkManager && NetworkManager::connectivity() != NetworkManager::Full)
-#endif
-        ) {
+        if (!d->mNetworkManager->isOnline()) {
             //Don't go online if the resource needs network but there is none
             state = false;
         }

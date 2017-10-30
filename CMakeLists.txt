@@ -62,10 +62,6 @@ find_package(KF5WindowSystem ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5XmlGui ${KF5_VERSION} CONFIG REQUIRED)
 find_package(KF5Crash ${KF5_VERSION} CONFIG REQUIRED)
 
-find_package(KF5NetworkManagerQt ${KF5_VERSION} CONFIG)
-set_package_properties(KF5NetworkManagerQt PROPERTIES TYPE OPTIONAL)
-set(HAVE_NMQT ${KF5NetworkManagerQt_FOUND})
-
 find_package(Qt5Designer NO_MODULE)
 set_package_properties(Qt5Designer PROPERTIES
    PURPOSE "Required to build the Qt Designer plugins"
