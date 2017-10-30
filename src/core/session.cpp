@@ -54,7 +54,7 @@ using namespace Akonadi;
 
 void SessionPrivate::startNext()
 {
-    QTimer::singleShot(0, mParent, SLOT(doStartNext()));
+    QTimer::singleShot(0, mParent, [this]() { doStartNext(); });
 }
 
 void SessionPrivate::reconnect()

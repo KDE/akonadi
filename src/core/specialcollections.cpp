@@ -122,7 +122,7 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged(Akonadi::Collection:
     fetchJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::None);
     fetchJob->setProperty("statistics", QVariant::fromValue(statistics));
 
-    q->connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchJobFinished(KJob*)));
+    q->connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) { collectionFetchJobFinished(job); });
 }
 
 void SpecialCollectionsPrivate::collectionFetchJobFinished(KJob *job)

@@ -167,8 +167,6 @@ private:
 #endif
 
     SpecialCollectionsPrivate *const d;
-
-    Q_PRIVATE_SLOT(d, void collectionFetchJobFinished(KJob *))
     //@endcond
 };
 

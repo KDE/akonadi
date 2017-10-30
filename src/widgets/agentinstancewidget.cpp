@@ -163,8 +163,8 @@ AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
 
     connect(d->mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
             this, SLOT(currentAgentInstanceChanged(QModelIndex,QModelIndex)));
-    connect(d->mView, SIGNAL(doubleClicked(QModelIndex)),
-            this, SLOT(currentAgentInstanceDoubleClicked(QModelIndex)));
+    connect(d->mView, &QListView::doubleClicked,
+            this, [this](const QModelIndex &currentIndex) { d->currentAgentInstanceDoubleClicked(currentIndex); });
     connect(d->mView, SIGNAL(clicked(QModelIndex)),
             this, SLOT(currentAgentInstanceClicked(QModelIndex)));
 }
