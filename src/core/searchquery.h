@@ -53,6 +53,11 @@ public:
         CondContains
     };
 
+    enum SearchField {
+        Unknown = 0,            ///< Invalid search field
+        Collection = 1          ///< Match entities from given Collection (expects Collection ID (qint64))
+    };
+
     /**
      * Constructs a term where all subterms will be in given relation
      */
@@ -62,7 +67,7 @@ public:
      * Constructs an end term
      */
     SearchTerm(const QString &key, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
-
+    SearchTerm(SearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
     SearchTerm(const SearchTerm &other);
     ~SearchTerm();
 
@@ -114,6 +119,9 @@ public:
      * Returns whether the entire term is negated.
      */
     Q_REQUIRED_RESULT bool isNegated() const;
+
+    static QString toKey(SearchField field);
+    static SearchField fromKey(const QString &key);
 
 private:
     class Private;
@@ -199,28 +207,22 @@ public:
      * All fields expect a search string unless noted otherwise.
      */
     enum EmailSearchField {
-        Unknown,
-        Subject,
-        Body,
-        Message, //Complete message including headers, body and attachment
-        Headers, //All headers
-        HeaderFrom,
-        HeaderTo,
-        HeaderCC,
-        HeaderBCC,
-        HeaderReplyTo,
-        HeaderOrganization,
-        HeaderListId,
-        HeaderResentFrom,
-        HeaderXLoop,
-        HeaderXMailingList,
-        HeaderXSpamFlag,
-        HeaderDate, //Expects QDateTime
-        HeaderOnlyDate, //Expectes QDate
-        MessageStatus, //Expects message flag from Akonadi::MessageFlags. Boolean filter.
-        ByteSize, //Expects int
-        Attachment, //Textsearch on attachment
-        MessageTag
+        Subject = 100,      ///< Search in the subject field (expects QString)
+        Body,               ///< Search in the email body (expects QString)
+        HeaderFrom,         ///< Search in the From header (expects QString)
+        HeaderTo,           ///< Search in the To header (expects QString)
+        HeaderCC,           ///< Search in the CC header (expects QString)
+        HeaderBCC,          ///< Search in the BCC header (expects QString)
+        HeaderReplyTo,      ///< Search in the ReplyTo header (expects QString)
+        HeaderOrganization, ///< Search in the Organization header (expects QString)
+        HeaderListId,       ///< Search in the ListId header (expects QString)
+        HeaderDate,         ///< Match by the Date header (expects QDateTime)
+        HeaderOnlyDate,     ///< Match by the Date header, but only by date (expects QDate)
+        MessageStatus,      ///< Match by message flags (expects Akonadi::MessageFlag), boolean filter.
+        ByteSize,           ///< Match by message size (expects integer)
+        AttachmentName,     ///< Search in attachment names (expects QString)
+        Attachment,         ///< Search in bodies of plaintext attachments (expects QString)
+        Message             ///< Search in all the QString-based fields listed above
     };
 
     /**
@@ -250,12 +252,13 @@ class AKONADICORE_EXPORT ContactSearchTerm : public SearchTerm
 {
 public:
     enum ContactSearchField {
-        Unknown,
-        Name,
-        Email,
-        Nickname,
-        Uid,
-        All //Special field: matches all contacts.
+        Name = 200,         ///< Search by full name (expects QString)
+        Email,              ///< Search by email address (expects QString)
+        Nickname,           ///< Search by nickname (expects QString)
+        Uid,                ///< Search by vCard UID (expects QString)
+        Birthday,           ///< Match by birthday (expects QDate)
+        Anniversary,        ///< Match by anniversary (expects QDate)
+        All                 ///< Matches all contacts regardless of value
     };
 
     ContactSearchTerm(ContactSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
@@ -282,12 +285,11 @@ class AKONADICORE_EXPORT IncidenceSearchTerm : public SearchTerm
 {
 public:
     enum IncidenceSearchField {
-        Unknown,
-        All,
-        PartStatus,                                         // Own PartStatus
-        Organizer,
-        Summary,
-        Location
+        All = 300,          ///< Matches all events regardless of value
+        PartStatus,         ///< Match events based on participant status
+        Organizer,          ///< Search by incidence organizer name or email
+        Summary,            ///< Search by incidence summary
+        Location            ///< Search by incidence location
     };
 
     IncidenceSearchTerm(IncidenceSearchField field, const QVariant &value, SearchTerm::Condition condition = SearchTerm::CondEqual);
