@@ -49,10 +49,11 @@ SpecialCollectionsPrivate::SpecialCollectionsPrivate(KCoreConfigSkeleton *settin
     /// from one of our specialcollection folders,
     /// we have to watch all mail item add/move/delete notifications
     /// and check for the parent to see if it is one we care about
-    QObject::connect(mMonitor, SIGNAL(collectionRemoved(Akonadi::Collection)),
-                     q, SLOT(collectionRemoved(Akonadi::Collection)));
-    QObject::connect(mMonitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)),
-                     q, SLOT(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)));
+    QObject::connect(mMonitor, &Monitor::collectionRemoved,
+                     q, [this](const Akonadi::Collection &col) { collectionRemoved(col); });
+    QObject::connect(mMonitor, &Monitor::collectionStatisticsChanged,
+                     q, [this](Akonadi::Collection::Id id, const Akonadi::CollectionStatistics &statistics)
+    { collectionStatisticsChanged(id, statistics); });
 }
 
 SpecialCollectionsPrivate::~SpecialCollectionsPrivate()
