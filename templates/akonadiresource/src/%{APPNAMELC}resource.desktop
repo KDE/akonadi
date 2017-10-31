@@ -1,6 +1,16 @@
 [Desktop Entry]
 Name=%{APPNAME} Resource
+Name[ca]=Recurs %{APPNAME}
+Name[nl]=%{APPNAME} hulpbron
+Name[pt]=Recurso de %{APPNAME}
+Name[uk]=Ресурс %{APPNAME}
+Name[x-test]=xx%{APPNAME} Resourcexx
 Comment=An Akonadi resource plugin for %{APPNAME}
+Comment[ca]=Un connector de recurs per a l'Akonadi per %{APPNAME}
+Comment[nl]=Een hulpbronplug-in van Akonadi voor %{APPNAME}
+Comment[pt]=Um 'plugin' de recursos de Akonadi para o %{APPNAME}
+Comment[uk]=Додаток ресурсу Akonadi для %{APPNAME}
+Comment[x-test]=xxAn Akonadi resource plugin for %{APPNAME}xx
 Type=AkonadiResource
 Exec=akonadi_%{APPNAMELC}_resource
 Icon=text-directory
