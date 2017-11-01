@@ -77,7 +77,7 @@ private:
 
     template<typename T>
     typename std::enable_if<std::is_base_of<Akonadi::Protocol::Command, T>::value == false, T>::type
-    serializeAndDeserialize(const T &in, int * = 0)
+    serializeAndDeserialize(const T &in, int * = nullptr)
     {
         QBuffer buf;
         buf.open(QIODevice::ReadWrite);

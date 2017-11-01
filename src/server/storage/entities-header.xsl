@@ -198,7 +198,7 @@ class <xsl:value-of select="$className"/> : private Entity
       Inserts this record into the DataStore.
       @param insertId pointer to an int, filled with the identifier of this record on success.
     */
-    bool insert( qint64* insertId = 0 );
+    bool insert( qint64 *insertId = nullptr );
 
     /**
       Returns @c true if this record has any pending changes.
