@@ -37,7 +37,7 @@ class Q_DECL_HIDDEN ItemMonitor::Private : public QObject
 
 public:
     Private(ItemMonitor *parent)
-        : QObject(0)
+        : QObject(nullptr)
         , mParent(parent)
         , mMonitor(new Monitor())
     {

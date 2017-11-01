@@ -44,7 +44,7 @@ class clone_ptr
     T *t;
 public:
     clone_ptr()
-        : t(0)
+        : t(nullptr)
     {
     }
     explicit clone_ptr(T *t)
@@ -52,7 +52,7 @@ public:
     {
     }
     clone_ptr(const clone_ptr &other)
-        : t(other.t ? other.t->clone() : 0)
+        : t(other.t ? other.t->clone() : nullptr)
     {
     }
     ~clone_ptr()
@@ -78,7 +78,7 @@ public:
     }
     T &operator*() const
     {
-        assert(get() != 0);
+        assert(get() != nullptr);
         return *get();
     }
     T *get() const
@@ -88,7 +88,7 @@ public:
     T *release()
     {
         T *const r = t;
-        t = 0;
+        t = nullptr;
         return r;
     }
     void reset(T *other = nullptr)
@@ -372,7 +372,7 @@ public:
     {
         auto it = std::find_if(mPayloads.cbegin(), mPayloads.cend(),
                                _detail::BySharedPointerAndMetaTypeID(spid, mtid));
-        return it == mPayloads.cend() ? 0 : it->payload.get();
+        return it == mPayloads.cend() ? nullptr : it->payload.get();
     }
 
     bool movePayloadFrom(ItemPrivate *other, int mtid) const    /*sic!*/
