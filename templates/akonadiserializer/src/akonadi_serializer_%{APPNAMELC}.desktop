@@ -1,6 +1,7 @@
 [Misc]
 Name=%{APPNAME} Serializer
 Name[ca]=Serialitzador %{APPNAME}
+Name[ca@valencia]=Serialitzador %{APPNAME}
 Name[nl]=%{APPNAME}-serialisator
 Name[pt]=Serialização de %{APPNAME}
 Name[sk]=%{APPNAME} Serializer
@@ -9,6 +10,7 @@ Name[uk]=Перетворювач у послідовну форму %{APPNAME}
 Name[x-test]=xx%{APPNAME} Serializerxx
 Comment=An Akonadi serializer plugin for %{APPNAMELC}
 Comment[ca]=Un connector de serialització de l'Akonadi per %{APPNAMELC}
+Comment[ca@valencia]=Un connector de serialització de l'Akonadi per %{APPNAMELC}
 Comment[nl]=Een Akonadi serialisatorplug-in voor %{APPNAMELC}
 Comment[pt]=Um 'plugin' de serialização do Akonadi para o %{APPNAMELC}
 Comment[sk]=Plugin Akonadi serializátora pre %{APPNAMELC}
