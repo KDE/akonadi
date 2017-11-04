@@ -58,7 +58,7 @@ void TagModelPrivate::init(Monitor *monitor)
                q, SLOT(monitoredTagRemoved(Akonadi::Tag)));
 
     // Delay starting the job to allow unit-tests to set up fake stuff
-    QTimer::singleShot(0, q, SLOT(fillModel()));
+    QTimer::singleShot(0, q, [this] { fillModel(); });
 }
 
 void TagModelPrivate::fillModel()

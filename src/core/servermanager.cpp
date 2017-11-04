@@ -59,7 +59,7 @@ public:
         mState = instance->state();
         mSafetyTimer->setSingleShot(true);
         mSafetyTimer->setInterval(30000);
-        QObject::connect(mSafetyTimer.data(), SIGNAL(timeout()), instance, SLOT(timeout()));
+        QObject::connect(mSafetyTimer.data(), &QTimer::timeout, instance, [this]() { timeout();});
         if (mState == ServerManager::Running && Internal::clientType() == Internal::User && !ServerManager::hasInstanceIdentifier()) {
             mFirstRunner = new Firstrun(instance);
         }

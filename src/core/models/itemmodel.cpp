@@ -68,14 +68,14 @@ public:
         monitor->setObjectName(QStringLiteral("ItemModelMonitor"));
         monitor->ignoreSession(session);
 
-        mParent->connect(monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)),
-                         mParent, SLOT(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        mParent->connect(monitor, &Monitor::itemChanged,
+                         mParent, [this](const Akonadi::Item &item, const QSet<QByteArray> &set) { itemChanged(item, set); });
         mParent->connect(monitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)),
                          mParent, SLOT(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
         mParent->connect(monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)),
                          mParent, SLOT(itemAdded(Akonadi::Item)));
-        mParent->connect(monitor, SIGNAL(itemRemoved(Akonadi::Item)),
-                         mParent, SLOT(itemRemoved(Akonadi::Item)));
+        mParent->connect(monitor, &Monitor::itemRemoved,
+                         mParent, [this](const Akonadi::Item &item) { itemRemoved(item); });
         mParent->connect(monitor, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)),
                          mParent, SLOT(itemAdded(Akonadi::Item)));
         mParent->connect(monitor, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)),
