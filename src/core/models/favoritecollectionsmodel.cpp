@@ -101,7 +101,7 @@ public:
     void rowsInserted(const QModelIndex &parent, int begin, int end)
     {
         for (int row = begin; row <= end; row++) {
-            const QModelIndex child = parent.child(row, 0);
+            const QModelIndex child = q->sourceModel()->index(row, 0, parent);
             if (!child.isValid()) {
                 continue;
             }
@@ -116,7 +116,7 @@ public:
     void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight)
     {
         for (int row = topLeft.row(); row <= bottomRight.row(); row++) {
-            const QModelIndex idx = topLeft.parent().child(row, 0);
+            const QModelIndex idx = topLeft.sibling(row, 0);
             insertIfAvailable(idx);
         }
     }
