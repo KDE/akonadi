@@ -209,6 +209,7 @@ public:
     enum EmailSearchField {
         Subject = 100,      ///< Search in the subject field (expects QString)
         Body,               ///< Search in the email body (expects QString)
+        Headers,            ///< @deprecated Will be removed
         HeaderFrom,         ///< Search in the From header (expects QString)
         HeaderTo,           ///< Search in the To header (expects QString)
         HeaderCC,           ///< Search in the CC header (expects QString)
@@ -216,13 +217,18 @@ public:
         HeaderReplyTo,      ///< Search in the ReplyTo header (expects QString)
         HeaderOrganization, ///< Search in the Organization header (expects QString)
         HeaderListId,       ///< Search in the ListId header (expects QString)
+        HeaderResentFrom,   ///< @deprecated Will be removed
+        HeaderXLoop,        ///< @deprecated Will be removed
+        HeaderXMailingList, ///< @deprecated Will be removed
+        HeaderXSpamFlag,    ///< @deprecated Will be removed
         HeaderDate,         ///< Match by the Date header (expects QDateTime)
         HeaderOnlyDate,     ///< Match by the Date header, but only by date (expects QDate)
         MessageStatus,      ///< Match by message flags (expects Akonadi::MessageFlag), boolean filter.
         ByteSize,           ///< Match by message size (expects integer)
         AttachmentName,     ///< Search in attachment names (expects QString)
         Attachment,         ///< Search in bodies of plaintext attachments (expects QString)
-        Message             ///< Search in all the QString-based fields listed above
+        Message,            ///< Search in all the QString-based fields listed above
+        MessageTag          ///< @deprecated Will be removed
     };
 
     /**
