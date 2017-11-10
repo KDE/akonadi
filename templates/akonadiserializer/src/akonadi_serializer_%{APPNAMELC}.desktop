@@ -12,6 +12,7 @@ Name[sr@latin]=Serijalizator za %{APPNAME}
 Name[sv]=%{APPNAME} serialisering
 Name[uk]=Перетворювач у послідовну форму %{APPNAME}
 Name[x-test]=xx%{APPNAME} Serializerxx
+Name[zh_CN]=%{APPNAME} 转换器
 Comment=An Akonadi serializer plugin for %{APPNAMELC}
 Comment[ca]=Un connector de serialització de l'Akonadi per %{APPNAMELC}
 Comment[ca@valencia]=Un connector de serialització de l'Akonadi per %{APPNAMELC}
@@ -25,6 +26,7 @@ Comment[sr@latin]=Priključak Akonadijevog serijalizatora za %{APPNAMELC}
 Comment[sv]=Ett Akonadi insticksprogram för serialisering av %{APPNAMELC}
 Comment[uk]=Додаток перетворення у послідовну форму Akonadi для %{APPNAMELC}
 Comment[x-test]=xxAn Akonadi serializer plugin for %{APPNAMELC}xx
+Comment[zh_CN]=%{APPNAMELC} 的 Akonadi 转换器插件
 
 [Plugin]
 Type=application/x-vnd.kde.%{APPNAMELC}
