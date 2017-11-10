@@ -308,7 +308,7 @@ install(
     DESTINATION ${KDE_INSTALL_CONFDIR}/akonadi
 )
 
-install(FILES search/abstractsearchplugin.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore/akonadi)
+install(FILES search/abstractsearchplugin.h indexer/abstractindexingplugin.h DESTINATION ${KDE_INSTALL_INCLUDEDIR}/KPim6/AkonadiCore/akonadi)
 
 ## DBus XML files
 install(
