@@ -189,6 +189,7 @@ install(FILES
 
 install(FILES
   search/abstractsearchplugin.h
+  indexer/abstractindexingplugin.h
   DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi
 )
 

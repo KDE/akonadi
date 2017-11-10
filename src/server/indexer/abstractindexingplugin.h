@@ -31,6 +31,9 @@ public:
     virtual ~AbstractIndexingPlugin() = default;
 
     virtual bool index(const QString &mimeType, qint64 id, const QByteArray &rawData) = 0;
+    virtual bool removeItem(const QString &mimeType, qint64 id) = 0;
+    virtual bool removeCollection(const QString &mimeType, qint64 id) = 0;
+    virtual bool moveItem(const QString &mimeType, qint64 id, qint64 sourceCollection, qint64 destCollection) = 0;
 };
 
 
