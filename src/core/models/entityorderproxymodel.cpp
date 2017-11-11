@@ -68,7 +68,7 @@ EntityOrderProxyModel::~EntityOrderProxyModel()
     delete d_ptr;
 }
 
-void EntityOrderProxyModel::setOrderConfig(KConfigGroup &configGroup)
+void EntityOrderProxyModel::setOrderConfig(const KConfigGroup &configGroup)
 {
     Q_D(EntityOrderProxyModel);
     Q_EMIT layoutAboutToBeChanged();
