@@ -61,7 +61,7 @@ public:
     /**
      * Sets the config @p group that will be used for storing the order.
      */
-    void setOrderConfig(KConfigGroup &group);
+    void setOrderConfig(const KConfigGroup &group);
 
     /**
      * Saves the order.
