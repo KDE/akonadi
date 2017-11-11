@@ -56,7 +56,7 @@ public:
 using namespace Akonadi;
 
 EntityOrderProxyModel::EntityOrderProxyModel(QObject *parent)
-    : QSortFilterProxyModel(parent)
+    : KRecursiveFilterProxyModel(parent)
     , d_ptr(new EntityOrderProxyModelPrivate(this))
 {
     setDynamicSortFilter(true);
@@ -81,14 +81,14 @@ bool EntityOrderProxyModel::lessThan(const QModelIndex &left, const QModelIndex 
     Q_D(const EntityOrderProxyModel);
 
     if (!d->m_orderConfig.isValid()) {
-        return QSortFilterProxyModel::lessThan(left, right);
+        return KRecursiveFilterProxyModel::lessThan(left, right);
     }
     Collection col = left.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
 
     const QStringList list = d->m_orderConfig.readEntry(QString::number(col.id()), QStringList());
 
     if (list.isEmpty()) {
-        return QSortFilterProxyModel::lessThan(left, right);
+        return KRecursiveFilterProxyModel::lessThan(left, right);
     }
 
     const QString leftValue = configString(left);
@@ -98,7 +98,7 @@ bool EntityOrderProxyModel::lessThan(const QModelIndex &left, const QModelIndex 
     const int rightPosition = list.indexOf(rightValue);
 
     if (leftPosition < 0 || rightPosition < 0) {
-        return QSortFilterProxyModel::lessThan(left, right);
+        return KRecursiveFilterProxyModel::lessThan(left, right);
     }
 
     return leftPosition < rightPosition;
@@ -109,15 +109,15 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
     Q_D(EntityOrderProxyModel);
 
     if (!d->m_orderConfig.isValid()) {
-        return QSortFilterProxyModel::dropMimeData(data, action, row, column, parent);
+        return KRecursiveFilterProxyModel::dropMimeData(data, action, row, column, parent);
     }
 
     if (!data->hasFormat(QStringLiteral("text/uri-list"))) {
-        return QSortFilterProxyModel::dropMimeData(data, action, row, column, parent);
+        return KRecursiveFilterProxyModel::dropMimeData(data, action, row, column, parent);
     }
 
     if (row == -1) {
-        return QSortFilterProxyModel::dropMimeData(data, action, row, column, parent);
+        return KRecursiveFilterProxyModel::dropMimeData(data, action, row, column, parent);
     }
 
     bool containsMove = false;
@@ -130,7 +130,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
         parentCol = parent.data(EntityTreeModel::CollectionRole).value<Collection>();
     } else {
         if (!hasChildren(parent)) {
-            return QSortFilterProxyModel::dropMimeData(data, action, row, column, parent);
+            return KRecursiveFilterProxyModel::dropMimeData(data, action, row, column, parent);
         }
 
         const QModelIndex targetIndex = index(0, column, parent);
@@ -195,7 +195,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
     d->m_orderConfig.writeEntry(QString::number(parentCol.id()), existingList);
 
     if (containsMove) {
-        bool result = QSortFilterProxyModel::dropMimeData(data, action, row, column, parent);
+        bool result = KRecursiveFilterProxyModel::dropMimeData(data, action, row, column, parent);
         invalidate();
         return result;
     }
@@ -206,7 +206,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
 QModelIndexList EntityOrderProxyModel::match(const QModelIndex &start, int role, const QVariant &value, int hits, Qt::MatchFlags flags) const
 {
     if (role < Qt::UserRole) {
-        return QSortFilterProxyModel::match(start, role, value, hits, flags);
+        return KRecursiveFilterProxyModel::match(start, role, value, hits, flags);
     }
 
     QModelIndexList list;
