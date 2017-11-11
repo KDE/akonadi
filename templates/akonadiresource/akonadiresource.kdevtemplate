@@ -2,6 +2,7 @@
 Name=C++
 Name[ca]=C++
 Name[ca@valencia]=C++
+Name[es]=C++
 Name[nl]=C++
 Name[pt]=C++
 Name[sk]=C++
@@ -16,6 +17,7 @@ Name[zh_CN]=C++
 Comment=Akonadi Resource Template. A template for an Akonadi PIM data resource
 Comment[ca]=Una plantilla de recurs de l'Akonadi. Una plantilla per un recurs de dades PIM de l'Akonadi
 Comment[ca@valencia]=Una plantilla de recurs de l'Akonadi. Una plantilla per un recurs de dades PIM de l'Akonadi
+Comment[es]=Plantilla de recursos de Akonadi. Una plantilla para un recurso de datos PIM de Akonadi
 Comment[nl]=Akonadi sjabloon voor hulpbron. Een sjabloon voor een Akonadi PIM gegevenshulpbron
 Comment[pt]=Modelo de Recursos do Akonadi. Um modelo para um recurso de dados PIM do Akonadi
 Comment[sk]=Šablóna Akonadi zdroja. Šablóna pre zdroj dát Akonadi PIM

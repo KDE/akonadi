@@ -2,6 +2,7 @@
 Name=%{APPNAME} Resource
 Name[ca]=Recurs %{APPNAME}
 Name[ca@valencia]=Recurs %{APPNAME}
+Name[es]=Recurso %{APPNAME}
 Name[nl]=%{APPNAME} hulpbron
 Name[pt]=Recurso de %{APPNAME}
 Name[sk]=%{APPNAME} zdroj
@@ -15,6 +16,7 @@ Name[x-test]=xx%{APPNAME} Resourcexx
 Comment=An Akonadi resource plugin for %{APPNAME}
 Comment[ca]=Un connector de recurs per a l'Akonadi per %{APPNAME}
 Comment[ca@valencia]=Un connector de recurs per a l'Akonadi per %{APPNAME}
+Comment[es]=Un complemento de recurso de Akonadi para %{APPNAME}
 Comment[nl]=Een hulpbronplug-in van Akonadi voor %{APPNAME}
 Comment[pt]=Um 'plugin' de recursos de Akonadi para o %{APPNAME}
 Comment[sk]=Plugin zdroja Akonadi pre %{APPNAME}
