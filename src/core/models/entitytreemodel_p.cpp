@@ -53,7 +53,7 @@
 
 QHash<KJob *, QTime> jobTimeTracker;
 
-Q_LOGGING_CATEGORY(DebugETM, "org.kde.akonadi.ETM")
+Q_LOGGING_CATEGORY(DebugETM, "org.kde.pim.akonadi.ETM", QtInfoMsg)
 
 using namespace Akonadi;
 
