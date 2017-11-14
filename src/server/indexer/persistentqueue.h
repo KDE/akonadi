@@ -39,17 +39,17 @@ public:
 
     int size() const;
     bool isEmpty() const;
-    IndexTask dequeue();
-    const IndexTask &peekHead() const;
-    const IndexTask &peekTail() const;
-    void enqueue(const IndexTask &obj);
+    IndexerTask dequeue();
+    const IndexerTask &peekHead() const;
+    const IndexerTask &peekTail() const;
+    void enqueue(const IndexerTask &obj);
 
 protected:
     virtual bool rewrite();
     bool openStore();
-    void writeTask(QIODevice *device, const IndexTask &task);
+    void writeTask(QIODevice *device, const IndexerTask &task);
 
-    QQueue<IndexTask> mQueue;
+    QQueue<IndexerTask> mQueue;
     QFile mStoreFile;
     quint32 mOffset = 0;
 };

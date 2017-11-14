@@ -41,13 +41,17 @@ public:
     explicit Indexer();
     ~Indexer();
 
-    IndexFuture index(qint64 id, const QString &mimetype, const QByteArray &indexData);
+    IndexFuture index(qint64 id, const QString &mimeType, const QByteArray &indexData);
+    IndexFuture removeItem(qint64 id, const QString &mimeType);
+    IndexFuture moveItem(qint64 id, const QString &mimeType, qint64 sourceCollection,
+                         qint64 destinationCollection);
+    IndexFuture removeCollection(qint64 colId, const QStringList &mimeTypes);
 
     void init() override;
     void quit() override;
 
     void enableDebugging(bool enable);
-    QList<IndexTask> queue();
+    QList<IndexerTask> queue();
 
 Q_SIGNALS:
     void enqueued(qint64 taskId, qint64 itemId, const QString &mimeType);
