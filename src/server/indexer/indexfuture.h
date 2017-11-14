@@ -26,7 +26,7 @@ namespace Akonadi {
 namespace Server {
 
 class IndexFuturePrivate;
-class IndexTask;
+class IndexerTask;
 class PersistentQueue;
 class IndexFuture
 {
@@ -52,7 +52,7 @@ private:
     QExplicitlySharedDataPointer<IndexFuturePrivate> d;
 
     friend class Indexer;
-    friend class IndexTask;
+    friend class IndexerTask;
     friend class PersistentQueue;
 };
 

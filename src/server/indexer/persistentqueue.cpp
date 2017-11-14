@@ -60,7 +60,7 @@ bool PersistentQueue::setPersistenceFile(const QString &persistenceFile)
 
     // Load all tasks in the file
     while (!mStoreFile.atEnd()) {
-        IndexTask task;
+        IndexerTask task;
         quint32 size;
         qint64 taskId;
         stream >> size;
@@ -87,7 +87,7 @@ QString PersistentQueue::persistenceFile() const
     return mStoreFile.fileName();
 }
 
-IndexTask PersistentQueue::dequeue()
+IndexerTask PersistentQueue::dequeue()
 {
     QDataStream stream(&mStoreFile);
     mStoreFile.seek(mOffset);
@@ -108,7 +108,7 @@ IndexTask PersistentQueue::dequeue()
 
 }
 
-void PersistentQueue::enqueue(const IndexTask &task)
+void PersistentQueue::enqueue(const IndexerTask &task)
 {
     // seek past the end
     mStoreFile.seek(mStoreFile.size());
@@ -117,12 +117,12 @@ void PersistentQueue::enqueue(const IndexTask &task)
     mQueue.enqueue(task);
 }
 
-const IndexTask &PersistentQueue::peekHead() const
+const IndexerTask &PersistentQueue::peekHead() const
 {
     return mQueue.first();
 }
 
-const IndexTask &PersistentQueue::peekTail() const
+const IndexerTask &PersistentQueue::peekTail() const
 {
     return mQueue.last();
 }
@@ -182,7 +182,7 @@ bool PersistentQueue::rewrite()
     return openStore();
 }
 
-void PersistentQueue::writeTask(QIODevice *device, const IndexTask &task)
+void PersistentQueue::writeTask(QIODevice *device, const IndexerTask &task)
 {
     QDataStream stream(device);
 

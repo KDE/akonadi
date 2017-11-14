@@ -66,9 +66,9 @@ private Q_SLOTS:
         tempFile.setAutoRemove(false);
         QVERIFY(tempFile.open());
 
-        IndexTask task1{ 11, 1, QStringLiteral("message/rfc822"), "ABCD Payload" };
-        IndexTask task2{ 12, 2, QStringLiteral("application/x-vnd-akonadi.event"), "EVENT" };
-        IndexTask task3{ 13, 3, QStringLiteral("message/rfc822"), "MIME MESSAGE" };
+        auto task1 = IndexerTask::createIndexTask(11, 1, QStringLiteral("message/rfc822"), "ABCD Payload");
+        auto task2 = IndexerTask::createIndexTask(12, 2, QStringLiteral("application/x-vnd-akonadi.event"), "EVENT");
+        auto task3 = IndexerTask::createIndexTask(13, 3, QStringLiteral("message/rfc822"), "MIME MESSAGE");
 
         // Empty queue, enqueue two tasks
         {
@@ -147,8 +147,9 @@ private Q_SLOTS:
         QVERIFY(!queue.wasRewritten());
 
         for (int i = 0; i < 4; ++i) {
-            queue.enqueue({ i, i, QStringLiteral("message/rfc822"),
-                            QByteArray("MIME MESSAGE PAYLOAD ") + QByteArray::number(i) });
+            queue.enqueue(
+                IndexerTask::createIndexTask(i, i, QStringLiteral("message/rfc822"),
+                                             QByteArray("MIME MESSAGE PAYLOAD ") + QByteArray::number(i)));
         }
         QCOMPARE(queue.size(), 4);
 

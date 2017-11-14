@@ -19,7 +19,7 @@
 
 #include "indexer.h"
 #include "indexfuture.h"
-#include "indextask.h"
+#include "indexertask.h"
 #include "abstractindexingplugin.h"
 #include "akonadiserver_debug.h"
 
@@ -49,7 +49,7 @@ public:
     qint64 lastTaskId = 0;
     QMutex lock;
     QWaitCondition cond;
-    QQueue<IndexTask> queue;
+    QQueue<IndexerTask> queue;
     bool shouldStop = false;
     bool enableDebugging = false;
 };
@@ -64,7 +64,7 @@ IndexFuture Indexer::index(qint64 id, const QString &mimeType, const QByteArray 
 {
     QMutexLocker locker(&d->lock);
     const int taskId = ++d->lastTaskId;
-    const IndexTask task{ taskId, id, mimeType, indexData };
+    const IndexerTask task{ taskId, id, mimeType, indexData };
     if (d->enableDebugging) {
         QTimer::singleShot(0, this, [=]() {
             Q_EMIT enqueued(taskId, id, mimeType);
@@ -190,7 +190,7 @@ void Indexer::enableDebugging(bool enable)
     d->enableDebugging = enable;
 }
 
-QList<IndexTask> Indexer::queue()
+QList<IndexerTask> Indexer::queue()
 {
     QMutexLocker locker(&d->lock);
     return d->queue;
@@ -236,12 +236,36 @@ void Indexer::indexerLoop()
         locker.unlock();
 
         for (auto indexer : qAsConst(d->indexers)) {
-            if (!indexer->index(task.mimeType, task.entityId, task.data)) {
-                qCWarning(AKONADISERVER_LOG) << "Failed to index Item" << task.entityId << "!";
-                task.future.setFinished(false);
+            bool result = false;
+            switch (task.taskType) {
+            case IndexerTask::Invalid:
+                Q_ASSERT(false);
+                qCCritical(AKONADISERVER_LOG) << "Invalid IndexerTask in queue, what is going on?!";
+                break;
+            case IndexerTask::Index:
+                result = indexer->index(task.mimeTypes.first(), task.entityId, task.data);
+                break;
+            case IndexerTask::MoveItem:
+                result = indexer->moveItem(task.mimeTypes.first(), task.entityId,
+                                            task.collectionId, task.destinationCollectionId);
+                break;
+            case IndexerTask::RemoveItem:
+                result = indexer->removeItem(task.mimeTypes.first(), task.entityId);
+                break;
+            case IndexerTask::RemoveCollection:
+                for (const auto &mt : qAsConst(task.mimeTypes)) {
+                    result = indexer->removeCollection(mt, task.entityId);
+                    if (!result) {
+                        break;
+                    }
+                }
                 break;
             }
+            if (!result) {
+                qCWarning(AKONADISERVER_LOG) << "Failed to process IndexingTask:" << task;
+            }
         }
+
         if (!task.future.isFinished()) {
             task.future.setFinished(true);
         }
