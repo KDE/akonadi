@@ -95,7 +95,7 @@ public:
         for (const Collection::Id &collectionId : qAsConst(collectionIds)) {
             insertIfAvailable(collectionId);
         }
-        //TODO remove what's no longer here
+        // If a favorite folder was removed then surely it's gone from the selection model, so no need to do anything about that.
     }
 
     void rowsInserted(const QModelIndex &parent, int begin, int end)
@@ -259,15 +259,19 @@ public:
     KConfigGroup configGroup;
 };
 
+/* Implementation note:
+ *
+ * We use KSelectionProxyModel in order to make a flat list of selected folders from the folder tree.
+ *
+ * Attempts to use QSortFilterProxyModel / KRecursiveFilterProxyModel make code somewhat simpler,
+ * but don't work since we then get a filtered tree, not a flat list. Stacking a KDescendantsProxyModel
+ * on top would likely remove explicitly selected parents when one of their child is selected too.
+ */
+
 FavoriteCollectionsModel::FavoriteCollectionsModel(QAbstractItemModel *source, const KConfigGroup &group, QObject *parent)
-    : Akonadi::SelectionProxyModel(new QItemSelectionModel(source, parent), parent)
+    : KSelectionProxyModel(new QItemSelectionModel(source, parent), parent)
     , d(new Private(group, this))
 {
-    //This should only be a KRecursiveFilterProxyModel, but remains a SelectionProxyModel for backwards compatibility.
-    // We therefore disable what we anyways don't want (the referencing is handled separately).
-    disconnect(this, SIGNAL(rootIndexAdded(QModelIndex)), this, SLOT(rootIndexAdded(QModelIndex)));
-    disconnect(this, SIGNAL(rootIndexAboutToBeRemoved(QModelIndex)), this, SLOT(rootIndexAboutToBeRemoved(QModelIndex)));
-
     setSourceModel(source);
     setFilterBehavior(ExactSelection);
 
@@ -362,7 +366,7 @@ bool FavoriteCollectionsModel::setData(const QModelIndex &index, const QVariant 
         setFavoriteLabel(collection, newLabel);
         return true;
     }
-    return Akonadi::SelectionProxyModel::setData(index, value, role);
+    return KSelectionProxyModel::setData(index, value, role);
 }
 
 QString Akonadi::FavoriteCollectionsModel::favoriteLabel(const Akonadi::Collection &collection)
@@ -435,7 +439,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
 
 QStringList FavoriteCollectionsModel::mimeTypes() const
 {
-    QStringList mts = Akonadi::SelectionProxyModel::mimeTypes();
+    QStringList mts = KSelectionProxyModel::mimeTypes();
     if (!mts.contains(QStringLiteral("text/uri-list"))) {
         mts.append(QStringLiteral("text/uri-list"));
     }
@@ -444,7 +448,7 @@ QStringList FavoriteCollectionsModel::mimeTypes() const
 
 Qt::ItemFlags FavoriteCollectionsModel::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags fs = Akonadi::SelectionProxyModel::flags(index);
+    Qt::ItemFlags fs = KSelectionProxyModel::flags(index);
     if (!index.isValid()) {
         fs |= Qt::ItemIsDropEnabled;
     }

@@ -21,7 +21,7 @@
 #define AKONADI_FAVORITECOLLECTIONSMODEL_H
 
 #include "akonadicore_export.h"
-#include "selectionproxymodel.h"
+#include "kselectionproxymodel.h"
 #include "collection.h"
 
 class KConfigGroup;
@@ -37,7 +37,7 @@ class EntityTreeModel;
  *
  * In some applications you want to provide fast access to a list
  * of often used collections (e.g. Inboxes from different email accounts
- * in a mail application). Therefor you can use the FavoriteCollectionsModel
+ * in a mail application). Therefore you can use the FavoriteCollectionsModel
  * which stores the list of favorite collections in a given configuration
  * file.
  *
@@ -61,8 +61,7 @@ class EntityTreeModel;
  * @author Kevin Ottens <ervin@kde.org>
  * @since 4.4
  */
-//TODO_KDE5: Make this a KRecursiveFilterProxyModel instead of a SelectionProxyModel
-class AKONADICORE_EXPORT FavoriteCollectionsModel : public Akonadi::SelectionProxyModel
+class AKONADICORE_EXPORT FavoriteCollectionsModel : public KSelectionProxyModel
 {
     Q_OBJECT
 

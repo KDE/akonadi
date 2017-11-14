@@ -22,7 +22,7 @@
 #ifndef AKONADI_ENTITYORDERPROXYMODEL_H
 #define AKONADI_ENTITYORDERPROXYMODEL_H
 
-#include <QSortFilterProxyModel>
+#include <KRecursiveFilterProxyModel>
 
 #include "akonadicore_export.h"
 
@@ -41,7 +41,7 @@ class EntityOrderProxyModelPrivate;
  * @author Stephen Kelly <stephen@kdab.com>
  * @since 4.6
  */
-class AKONADICORE_EXPORT EntityOrderProxyModel : public QSortFilterProxyModel
+class AKONADICORE_EXPORT EntityOrderProxyModel : public KRecursiveFilterProxyModel
 {
     Q_OBJECT
 

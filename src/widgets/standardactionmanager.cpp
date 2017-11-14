@@ -556,11 +556,11 @@ public:
             return;
         }
         InsideSelectionSlotBlocker block(this);
-        QItemSelection selection = collectionSelectionModel->selection();
-        selection = mapToEntityTreeModel(collectionSelectionModel->model(), selection);
-        selection = mapFromEntityTreeModel(favoritesModel, selection);
-
         if (favoriteSelectionModel) {
+            QItemSelection selection = collectionSelectionModel->selection();
+            selection = mapToEntityTreeModel(collectionSelectionModel->model(), selection);
+            selection = mapFromEntityTreeModel(favoriteSelectionModel->model(), selection);
+
             favoriteSelectionModel->select(selection, QItemSelectionModel::ClearAndSelect);
         }
 
@@ -577,7 +577,7 @@ public:
             return;
         }
 
-        selection = mapToEntityTreeModel(favoritesModel, selection);
+        selection = mapToEntityTreeModel(favoriteSelectionModel->model(), selection);
         selection = mapFromEntityTreeModel(collectionSelectionModel->model(), selection);
 
         InsideSelectionSlotBlocker block(this);
