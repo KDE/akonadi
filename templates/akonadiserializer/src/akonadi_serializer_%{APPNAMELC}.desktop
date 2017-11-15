@@ -2,6 +2,7 @@
 Name=%{APPNAME} Serializer
 Name[ca]=Serialitzador %{APPNAME}
 Name[ca@valencia]=Serialitzador %{APPNAME}
+Name[cs]=%{APPNAME} Serializer
 Name[es]=Serializador de %{APPNAME}
 Name[nl]=%{APPNAME}-serialisator
 Name[pt]=Serialização de %{APPNAME}
