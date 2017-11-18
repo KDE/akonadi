@@ -76,6 +76,17 @@ void EntityOrderProxyModel::setOrderConfig(const KConfigGroup &configGroup)
     Q_EMIT layoutChanged();
 }
 
+// reimplemented in FavoriteCollectionOrderProxyModel
+Collection EntityOrderProxyModel::parentCollection(const QModelIndex &index) const
+{
+    return index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+}
+
+static QString configKey(const Collection &col)
+{
+    return !col.isValid() ? QStringLiteral("0") : QString::number(col.id());
+}
+
 bool EntityOrderProxyModel::lessThan(const QModelIndex &left, const QModelIndex &right) const
 {
     Q_D(const EntityOrderProxyModel);
@@ -83,9 +94,9 @@ bool EntityOrderProxyModel::lessThan(const QModelIndex &left, const QModelIndex 
     if (!d->m_orderConfig.isValid()) {
         return KRecursiveFilterProxyModel::lessThan(left, right);
     }
-    Collection col = left.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+    const Collection col = parentCollection(left);
 
-    const QStringList list = d->m_orderConfig.readEntry(QString::number(col.id()), QStringList());
+    const QStringList list = d->m_orderConfig.readEntry(configKey(col), QStringList());
 
     if (list.isEmpty()) {
         return KRecursiveFilterProxyModel::lessThan(left, right);
@@ -134,8 +145,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
         }
 
         const QModelIndex targetIndex = index(0, column, parent);
-
-        parentCol = targetIndex.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+        parentCol = parentCollection(targetIndex);
     }
 
     QStringList droppedList;
@@ -153,7 +163,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
                 continue;
             }
 
-            if (!containsMove && list.first().data(EntityTreeModel::ParentCollectionRole).value<Collection>().id() != parentCol.id()) {
+            if (!containsMove && parentCollection(list.first()).id() != parentCol.id()) {
                 containsMove = true;
             }
 
@@ -164,7 +174,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
                 continue;
             }
 
-            if (!containsMove && idx.data(EntityTreeModel::ParentCollectionRole).value<Collection>().id() != parentCol.id()) {
+            if (!containsMove && parentCollection(idx).id() != parentCol.id()) {
                 containsMove = true;
             }
 
@@ -174,7 +184,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
 
     QStringList existingList;
     if (d->m_orderConfig.hasKey(QString::number(parentCol.id()))) {
-        existingList = d->m_orderConfig.readEntry(QString::number(parentCol.id()), QStringList());
+        existingList = d->m_orderConfig.readEntry(configKey(parentCol), QStringList());
     } else {
         const int rowCount = this->rowCount(parent);
         existingList.reserve(rowCount);
@@ -192,7 +202,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
         existingList.insert(row + i - (existingIndex > row ? 0 : 1), droppedList.at(i));
     }
 
-    d->m_orderConfig.writeEntry(QString::number(parentCol.id()), existingList);
+    d->m_orderConfig.writeEntry(configKey(parentCol), existingList);
 
     if (containsMove) {
         bool result = KRecursiveFilterProxyModel::dropMimeData(data, action, row, column, parent);
@@ -255,7 +265,7 @@ void EntityOrderProxyModelPrivate::saveOrder(const QModelIndex &parent)
 
 QString EntityOrderProxyModel::parentConfigString(const QModelIndex &index) const
 {
-    const Collection col = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+    const Collection col = parentCollection(index);
 
     Q_ASSERT(col.isValid());
     if (!col.isValid()) {

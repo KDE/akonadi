@@ -23,6 +23,7 @@
 #define AKONADI_ENTITYORDERPROXYMODEL_H
 
 #include <KRecursiveFilterProxyModel>
+#include <AkonadiCore/Collection>
 
 #include "akonadicore_export.h"
 
@@ -92,6 +93,7 @@ protected:
 
     virtual QString parentConfigString(const QModelIndex &index) const;
     virtual QString configString(const QModelIndex &index) const;
+    virtual Akonadi::Collection parentCollection(const QModelIndex &index) const;
 
 private:
     //@cond PRIVATE
