@@ -22,7 +22,6 @@
 #include "entitylistview.h"
 
 #include "dragdropmanager_p.h"
-#include "favoritecollectionsmodel.h"
 
 #include <QDragMoveEvent>
 #include <QMenu>
@@ -172,8 +171,7 @@ void EntityListView::setModel(QAbstractItemModel *model)
 #ifndef QT_NO_DRAGANDDROP
 void EntityListView::dragMoveEvent(QDragMoveEvent *event)
 {
-    if (d->mDragDropManager->dropAllowed(event) ||
-            qobject_cast<Akonadi::FavoriteCollectionsModel *>(model())) {
+    if (d->mDragDropManager->dropAllowed(event)) {
         // All urls are supported. process the event.
         QListView::dragMoveEvent(event);
         return;
@@ -187,9 +185,6 @@ void EntityListView::dropEvent(QDropEvent *event)
     bool menuCanceled = false;
     if (d->mDragDropManager->processDropEvent(event, menuCanceled) &&
             !menuCanceled) {
-        QListView::dropEvent(event);
-    } else if (qobject_cast<Akonadi::FavoriteCollectionsModel *>(model()) &&
-               !menuCanceled) {
         QListView::dropEvent(event);
     }
 }
