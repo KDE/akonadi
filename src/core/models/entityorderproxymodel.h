@@ -23,7 +23,7 @@
 #define AKONADI_ENTITYORDERPROXYMODEL_H
 
 #include <KRecursiveFilterProxyModel>
-#include <AkonadiCore/Collection>
+#include "collection.h"
 
 #include "akonadicore_export.h"
 
