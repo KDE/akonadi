@@ -203,8 +203,10 @@ public:
 private Q_SLOTS:
     void testAkAppend_data()
     {
+        using Notifications = QVector<Protocol::ItemChangeNotificationPtr>;
+
         QTest::addColumn<TestScenario::List>("scenarios");
-        QTest::addColumn<Protocol::ItemChangeNotificationPtr>("notification");
+        QTest::addColumn<Notifications>("notifications");
         QTest::addColumn<PimItem>("pimItem");
         QTest::addColumn<QVector<FakePart> >("parts");
         QTest::addColumn<QVector<Flag> >("flags");
@@ -212,6 +214,7 @@ private Q_SLOTS:
         QTest::addColumn<qint64>("uidnext");
         QTest::addColumn<QDateTime>("datetime");
         QTest::addColumn<bool>("expectFail");
+
 
         TestScenario::List scenarios;
         auto notification = Protocol::ItemChangeNotificationPtr::create();
@@ -245,7 +248,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 10), "0123456789") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("single-part") << scenarios << notification << pimItem << parts
+        QTest::newRow("single-part") << scenarios << Notifications{ notification } << pimItem << parts
                                      << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
@@ -269,7 +272,7 @@ private Q_SLOTS:
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 11), "Random Data"),
                           Protocol::StreamPayloadResponse("PLD:PLDTEST", Protocol::PartMetaData("PLD:PLDTEST", 9), "Test Data") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("multi-part") << scenarios << notification << pimItem << parts
+        QTest::newRow("multi-part") << scenarios << Notifications{ notification } << pimItem << parts
                                     << flags << tags << uidnext << datetime << false;
 
         TestScenario inScenario, outScenario;
@@ -282,7 +285,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << inScenario
                   << errorResponse(QStringLiteral("Invalid parent collection"));
-        QTest::newRow("invalid collection") << scenarios << Protocol::ItemChangeNotificationPtr::create()
+        QTest::newRow("invalid collection") << scenarios << Notifications{}
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
@@ -296,7 +299,7 @@ private Q_SLOTS:
         scenarios << FakeAkonadiServer::loginScenario()
                   << inScenario
                   << errorResponse(QStringLiteral("Cannot append item into virtual collection"));
-        QTest::newRow("virtual collection") << scenarios << Protocol::ItemChangeNotificationPtr::create()
+        QTest::newRow("virtual collection") << scenarios << Notifications{}
                                             << PimItem() << QVector<FakePart>()
                                             << QVector<Flag>() << QVector<FakeTag>()
                                             << -1ll << QDateTime() << true;
@@ -315,7 +318,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 5), "12345") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("mismatch item sizes (smaller)") << scenarios << notification << pimItem
+        QTest::newRow("mismatch item sizes (smaller)") << scenarios << Notifications{ notification } << pimItem
                                                        << parts << flags << tags << uidnext
                                                        << datetime << false;
 
@@ -333,7 +336,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 5), "12345") }, 10))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("mismatch item sizes (bigger)") << scenarios << notification << pimItem
+        QTest::newRow("mismatch item sizes (bigger)") << scenarios << Notifications{ notification } << pimItem
                                                       << parts << flags << tags << uidnext
                                                       << datetime << false;
 
@@ -345,7 +348,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "123"))
                   << errorResponse(QStringLiteral("Payload size mismatch"));
-        QTest::newRow("incomplete part data") << scenarios << Protocol::ItemChangeNotificationPtr::create()
+        QTest::newRow("incomplete part data") << scenarios << Notifications{}
                                               << PimItem() << QVector<FakePart>()
                                               << QVector<Flag>() << QVector<FakeTag>()
                                               << -1ll << QDateTime() << true;
@@ -358,7 +361,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::StreamPayloadCommandPtr::create("PLD:DATA", Protocol::StreamPayloadCommand::Data))
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::StreamPayloadResponsePtr::create("PLD:DATA", "1234567890"))
                   << errorResponse(QStringLiteral("Payload size mismatch"));
-        QTest::newRow("part data larger than advertised") << scenarios << Protocol::ItemChangeNotificationPtr::create()
+        QTest::newRow("part data larger than advertised") << scenarios << Notifications{}
                                                           << PimItem() << QVector<FakePart>()
                                                           << QVector<Flag>() << QVector<FakeTag>()
                                                           << -1ll << QDateTime() << true;
@@ -378,7 +381,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem ,datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 0), QByteArray()) } ))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("empty payload part") << scenarios << notification << pimItem << parts
+        QTest::newRow("empty payload part") << scenarios << Notifications{ notification } << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
@@ -396,7 +399,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", 1), QByteArray("\0", 1)) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("part data will null character") << scenarios << notification << pimItem
+        QTest::newRow("part data will null character") << scenarios << Notifications{ notification } << pimItem
                                                        << parts << flags << tags << uidnext
                                                        << datetime << false;
 
@@ -416,7 +419,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", utf8String.toUtf8().size()), utf8String.toUtf8()) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("utf8 part data") << scenarios << notification << pimItem << parts
+        QTest::newRow("utf8 part data") << scenarios << Notifications{ notification } << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
 
         const QByteArray hugeData = QByteArray("a").repeated(1 << 20);
@@ -435,7 +438,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem ,datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", parts.first().datasize()), hugeData) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("huge part data") << scenarios << notification << pimItem << parts
+        QTest::newRow("huge part data") << scenarios << Notifications{ notification } << pimItem << parts
                                         << flags << tags << uidnext << datetime << false;
 
         const QByteArray dataWithNewLines = "Bernard, Bernard, Bernard, Bernard, look, look Bernard!\nWHAT!!!!!!!\nI'm a prostitute robot from the future!";
@@ -454,7 +457,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", dataWithNewLines.size()), dataWithNewLines) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("data with newlines") << scenarios << notification << pimItem << parts
+        QTest::newRow("data with newlines") << scenarios << Notifications{ notification } << pimItem << parts
                                             << flags << tags << uidnext << datetime << false;
 
         const QByteArray lotsOfNewlines = QByteArray("\n").repeated(1 << 20);
@@ -473,7 +476,7 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, createResponse(uidnext, pimItem, datetime,
                         { Protocol::StreamPayloadResponse("PLD:DATA", Protocol::PartMetaData("PLD:DATA", parts.first().datasize()), lotsOfNewlines) }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("data with lots of newlines") << scenarios << notification << pimItem
+        QTest::newRow("data with lots of newlines") << scenarios << Notifications{ notification } << pimItem
                                                     << parts << flags << tags << uidnext
                                                     << datetime << false;
 
@@ -498,7 +501,7 @@ private Q_SLOTS:
                         { Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE2", Protocol::PartMetaData("PLD:NEWPARTTYPE2", 10), "9876543210"),
                           Protocol::StreamPayloadResponse("PLD:NEWPARTTYPE1", Protocol::PartMetaData("PLD:NEWPARTTYPE1", 10), "0123456789") }))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("non-existent part types") << scenarios << notification << pimItem
+        QTest::newRow("non-existent part types") << scenarios << Notifications{ notification } << pimItem
                                                  << parts << flags << tags << uidnext
                                                  << datetime << false;
 
@@ -522,7 +525,7 @@ private Q_SLOTS:
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("item with flags") << scenarios << notification << pimItem << parts
+        QTest::newRow("item with flags") << scenarios << Notifications{ notification } << pimItem << parts
                                          << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
@@ -549,7 +552,7 @@ private Q_SLOTS:
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("item with non-existent tags (GID)") << scenarios << notification << pimItem << parts
+        QTest::newRow("item with non-existent tags (GID)") << scenarios << Notifications{ notification } << pimItem << parts
                                                            << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
@@ -575,7 +578,7 @@ private Q_SLOTS:
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("item with non-existent tags (RID)") << scenarios << notification << pimItem << parts
+        QTest::newRow("item with non-existent tags (RID)") << scenarios << Notifications{ notification } << pimItem << parts
                                                            << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
@@ -601,7 +604,7 @@ private Q_SLOTS:
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("item with existing tags (RID)") << scenarios << notification << pimItem << parts
+        QTest::newRow("item with existing tags (RID)") << scenarios << Notifications{ notification } << pimItem << parts
                                                        << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
@@ -626,7 +629,7 @@ private Q_SLOTS:
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("item with existing tags (GID)") << scenarios << notification << pimItem << parts
+        QTest::newRow("item with existing tags (GID)") << scenarios << Notifications{ notification } << pimItem << parts
                                                        << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
@@ -654,7 +657,7 @@ private Q_SLOTS:
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("item with flags and tags") << scenarios << notification << pimItem << parts
+        QTest::newRow("item with flags and tags") << scenarios << Notifications{ notification } << pimItem << parts
                                                   << flags << tags << uidnext << datetime << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
@@ -678,14 +681,125 @@ private Q_SLOTS:
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
-        QTest::newRow("item with UTF-8 tag") << scenarios << notification << pimItem << parts
+        QTest::newRow("item with UTF-8 tag") << scenarios << Notifications{ notification }<< pimItem << parts
                                              << flags << tags << uidnext << datetime << false;
+
+
+        notification = Protocol::ItemChangeNotificationPtr::create(*notification);
+        updatePimItem(pimItem, QStringLiteral("TEST-21"), 0);
+        updateFlags(flags, {});
+        updateTags(tags, {});
+        pimItem.setGid(QStringLiteral("GID-21"));
+        updateNotifcationEntity(notification, pimItem);
+        scenarios = FakeAkonadiServer::loginScenario();
+        // Create a normal item with RID
+        {
+            ++uidnext;
+            auto cmd = createCommand(pimItem, datetime, {});
+            scenarios << TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            scenarios << TestScenario::create(5, TestScenario::ServerCmd, rsp)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
+        }
+        // Create the same item again (no merging, so it will just be created)
+        {
+            ++uidnext;
+            auto cmd = createCommand(pimItem, datetime, {});
+            scenarios << TestScenario::create(6, TestScenario::ClientCmd, cmd);
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            scenarios << TestScenario::create(6, TestScenario::ServerCmd, rsp)
+                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
+        }
+        // Now try to create the item once again, but in merge mode, we should fail now
+        {
+            ++uidnext;
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd->setMergeModes(Protocol::CreateItemCommand::RemoteID);
+            scenarios << TestScenario::create(7, TestScenario::ClientCmd, cmd);
+            auto rsp = Protocol::CreateItemResponsePtr::create();
+            rsp->setError(1, QStringLiteral("Multiple merge canddiates"));
+            scenarios << TestScenario::create(7, TestScenario::ServerCmd, rsp);
+        }
+        Notifications notifications = { notification, Protocol::ItemChangeNotificationPtr::create(*notification) };
+        QTest::newRow("multiple merge candidates (RID)") << scenarios << notifications << pimItem << parts
+                                                         << flags << tags << uidnext << datetime << true;
+
+
+        notification = Protocol::ItemChangeNotificationPtr::create(*notification);
+        updatePimItem(pimItem, QStringLiteral("TEST-22"), 0);
+        pimItem.setGid(QStringLiteral("GID-22"));
+        updateNotifcationEntity(notification, pimItem);
+        scenarios = FakeAkonadiServer::loginScenario();
+        // Create a normal item with GID
+        {
+            // Don't increase uidnext, we will reuse the one from previous test,
+            // since that did not actually create a new Item
+            auto cmd = createCommand(pimItem, datetime, {});
+            scenarios << TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            scenarios << TestScenario::create(5, TestScenario::ServerCmd, rsp)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
+        }
+        // Create the same item again (no merging, so it will just be created)
+        {
+            ++uidnext;
+            auto cmd = createCommand(pimItem, datetime, {});
+            scenarios << TestScenario::create(6, TestScenario::ClientCmd, cmd);
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            scenarios << TestScenario::create(6, TestScenario::ServerCmd, rsp)
+                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
+        }
+        // Now try to create the item once again, but in merge mode, we should fail now
+        {
+            ++uidnext;
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd->setMergeModes(Protocol::CreateItemCommand::GID);
+            scenarios << TestScenario::create(7, TestScenario::ClientCmd, cmd);
+            auto rsp = Protocol::CreateItemResponsePtr::create();
+            rsp->setError(1, QStringLiteral("Multiple merge candidates"));
+            scenarios << TestScenario::create(7, TestScenario::ServerCmd, rsp);
+        }
+        notifications = { notification, Protocol::ItemChangeNotificationPtr::create(*notification) };
+        QTest::newRow("multiple merge candidates (GID)") << scenarios << notifications << pimItem << parts
+                                                         << flags << tags << uidnext << datetime << true;
+
+
+        notification = Protocol::ItemChangeNotificationPtr::create(*notification);
+        updatePimItem(pimItem, QStringLiteral("TEST-23"), 0);
+        pimItem.setGid(QString());
+        updateNotifcationEntity(notification, pimItem);
+        scenarios = FakeAkonadiServer::loginScenario();
+        // Create a normal item with RID, but with empty GID
+        {
+            // Don't increase uidnext, we will reuse the one from previous test,
+            // since that did not actually create a new Item
+            auto cmd = createCommand(pimItem, datetime, {});
+            scenarios << TestScenario::create(5, TestScenario::ClientCmd, cmd);
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            scenarios << TestScenario::create(5, TestScenario::ServerCmd, rsp)
+                      << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
+        }
+        // Merge by GID - should not create a new Item but actually merge by RID,
+        // since an item with matching RID but empty GID exists
+        {
+            ++uidnext;
+            pimItem.setGid(QStringLiteral("GID-23"));
+            auto cmd = createCommand(pimItem, datetime, {});
+            cmd->setMergeModes(Protocol::CreateItemCommand::GID);
+            scenarios << TestScenario::create(6, TestScenario::ClientCmd, cmd);
+            auto rsp = createResponse(uidnext, pimItem, datetime, {});
+            scenarios << TestScenario::create(6, TestScenario::ServerCmd, rsp)
+                      << TestScenario::create(6, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
+        }
+        notifications = { notification, Protocol::ItemChangeNotificationPtr::create(*notification) };
+        QTest::newRow("merge into empty GID if RID matches") << scenarios << notifications << pimItem << parts
+                                                             << flags << tags << uidnext << datetime << false;
     }
 
     void testAkAppend()
     {
         QFETCH(TestScenario::List, scenarios);
-        QFETCH(Protocol::ItemChangeNotificationPtr, notification);
+        QFETCH(QVector<Protocol::ItemChangeNotificationPtr>, notifications);
         QFETCH(PimItem, pimItem);
         QFETCH(QVector<FakePart>, parts);
         QFETCH(QVector<Flag>, flags);
@@ -698,16 +812,14 @@ private Q_SLOTS:
 
         auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
 
-        if (notification->operation() != Protocol::ItemChangeNotification::InvalidOp) {
-            QCOMPARE(notificationSpy->count(), 1);
-            const auto notifications = notificationSpy->at(0).first().value<Protocol::ChangeNotificationList>();
-            QCOMPARE(notifications.count(), 1);
-            const auto itemNotification = notifications.at(0).staticCast<Protocol::ItemChangeNotification>();
+        QCOMPARE(notificationSpy->count(), notifications.count());
+        for (int i = 0; i < notifications.count(); ++i) {
+            const auto incomingNtfs = notificationSpy->at(i).first().value<Protocol::ChangeNotificationList>();
+            QCOMPARE(incomingNtfs.count(), 1);
+            const auto itemNotification = incomingNtfs.at(0).staticCast<Protocol::ItemChangeNotification>();
 
-            QVERIFY(AkTest::compareNotifications(itemNotification, notification, QFlag(AkTest::NtfAll & ~ AkTest::NtfEntities)));
-            QCOMPARE(itemNotification->items().count(), notification->items().count());
-        } else {
-            QVERIFY(notificationSpy->isEmpty());
+            QVERIFY(AkTest::compareNotifications(itemNotification, notifications.at(i), QFlag(AkTest::NtfAll & ~ AkTest::NtfEntities)));
+            QCOMPARE(itemNotification->items().count(), notifications.at(i)->items().count());
         }
 
         const PimItem actualItem = PimItem::retrieveById(uidnext);

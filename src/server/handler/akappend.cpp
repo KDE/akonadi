@@ -376,6 +376,7 @@ bool AkAppend::parseStream()
         return false;
     }
 
+
     if (cmd.mergeModes() == Protocol::CreateItemCommand::None) {
         if (!insertItem(cmd, item, parentCol)) {
             return false;
@@ -388,12 +389,26 @@ bool AkAppend::parseStream()
         // Merging is always restricted to the same collection
         SelectQueryBuilder<PimItem> qb;
         qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, parentCol.id());
+        Query::Condition rootCondition(Query::Or);
+
+        Query::Condition mergeCondition(Query::And);
         if (cmd.mergeModes() & Protocol::CreateItemCommand::GID) {
-            qb.addValueCondition(PimItem::gidColumn(), Query::Equals, item.gid());
+            mergeCondition.addValueCondition(PimItem::gidColumn(), Query::Equals, item.gid());
         }
         if (cmd.mergeModes() & Protocol::CreateItemCommand::RemoteID) {
-            qb.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, item.remoteId());
+            mergeCondition.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, item.remoteId());
         }
+        rootCondition.addCondition(mergeCondition);
+
+        // If an Item with matching RID but empty GID exists during GID merge,
+        // merge into this item instead of creating a new one
+        if (cmd.mergeModes() & Protocol::CreateItemCommand::GID && !item.remoteId().isEmpty()) {
+            mergeCondition = Query::Condition(Query::And);
+            mergeCondition.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, item.remoteId());
+            mergeCondition.addValueCondition(PimItem::gidColumn(), Query::Equals, QStringLiteral(""));
+            rootCondition.addCondition(mergeCondition);
+        }
+        qb.addCondition(rootCondition);
 
         if (!qb.exec()) {
             return failureResponse("Failed to query database for item");
