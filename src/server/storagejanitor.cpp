@@ -514,7 +514,7 @@ void StorageJanitor::findRIDDuplicates()
     qb.exec();
 
     while (qb.query().next()) {
-        const Collection::Id id = qb.query().value(0).value<Collection::Id>();
+        const Collection::Id colId = qb.query().value(0).value<Collection::Id>();
         const QString name = qb.query().value(1).toString();
         inform(QStringLiteral("Checking ") + name);
 
@@ -522,12 +522,12 @@ void StorageJanitor::findRIDDuplicates()
         duplicates.addColumn(PimItem::remoteIdColumn());
         duplicates.addColumn(QStringLiteral("count(") + PimItem::idColumn() + QStringLiteral(") as cnt"));
         duplicates.addValueCondition(PimItem::remoteIdColumn(), Query::IsNot, QVariant());
-        duplicates.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, id);
+        duplicates.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, colId);
         duplicates.addGroupColumn(PimItem::remoteIdColumn());
         duplicates.addValueCondition(QStringLiteral("count(") + PimItem::idColumn() + QLatin1Char(')'), Query::Greater, 1, QueryBuilder::HavingCondition);
         duplicates.exec();
 
-        Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(id);
+        Akonadi::Server::Collection col = Akonadi::Server::Collection::retrieveById(colId);
         const QVector<Akonadi::Server::MimeType> contentMimeTypes = col.mimeTypes();
         QVariantList contentMimeTypesVariantList;
         contentMimeTypesVariantList.reserve(contentMimeTypes.count());
@@ -538,9 +538,39 @@ void StorageJanitor::findRIDDuplicates()
             const QString rid = duplicates.query().value(0).toString();
             inform(QStringLiteral("Found duplicates ") + rid);
 
-            QueryBuilder items(PimItem::tableName(), QueryBuilder::Delete);
-            items.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, rid);
-            items.addValueCondition(PimItem::mimeTypeIdColumn(), Query::NotIn, contentMimeTypesVariantList);
+            Query::Condition condition(Query::And);
+            condition.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, rid);
+            condition.addValueCondition(PimItem::mimeTypeIdColumn(), Query::NotIn, contentMimeTypesVariantList);
+            condition.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, colId);
+
+            QueryBuilder items(PimItem::tableName(), QueryBuilder::Select);
+            items.addColumn(PimItem::idColumn());
+            items.addCondition(condition);
+            if (!items.exec()) {
+                inform(QStringLiteral("Error while deleting duplicates: ") + items.query().lastError().text());
+                continue;
+            }
+            QVariantList itemsIds;
+            while (items.query().next()) {
+                itemsIds.push_back(items.query().value(0));
+            }
+
+            SelectQueryBuilder<Part> parts;
+            parts.addValueCondition(Part::pimItemIdFullColumnName(), Query::In, QVariant::fromValue(itemsIds));
+            parts.addValueCondition(Part::storageFullColumnName(), Query::Equals, (int) Part::External);
+            if (parts.exec()) {
+                const auto partsList = parts.result();
+                for (const auto &part : partsList) {
+                    bool exists = false;
+                    const auto filename = ExternalPartStorage::resolveAbsolutePath(part.data(), &exists);
+                    if (exists) {
+                        QFile::remove(filename);
+                    }
+                }
+            }
+
+            items = QueryBuilder(PimItem::tableName(), QueryBuilder::Delete);
+            items.addCondition(condition);
             if (!items.exec()) {
                 inform(QStringLiteral("Error while deleting duplicates ") + items.query().lastError().text());
             }
