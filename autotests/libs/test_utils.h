@@ -101,7 +101,7 @@ Akonadi::Monitor *getTestMonitor()
 {
     auto m = new Akonadi::Monitor();
     m->fetchCollection(true);
-    Q_EMIT m->collectionMonitored(Akonadi::Collection::root(), true);
+    m->setCollectionMonitored(Akonadi::Collection::root(), true);
     m->setAllMonitored(true);
     auto &itemFS = m->itemFetchScope();
     itemFS.setAncestorRetrieval(Akonadi::ItemFetchScope::All);

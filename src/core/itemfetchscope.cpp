@@ -97,7 +97,13 @@ void ItemFetchScope::fetchAllAttributes(bool fetch)
 
 bool ItemFetchScope::isEmpty() const
 {
-    return d->mPayloadParts.isEmpty() && d->mAttributes.isEmpty() && !d->mFullPayload && !d->mAllAttributes && !d->mFetchTags && !d->mFetchVRefs;
+    return d->mPayloadParts.isEmpty()
+        && d->mAttributes.isEmpty()
+        && !d->mFullPayload
+        && !d->mAllAttributes
+        && !d->mFetchTags
+        && !d->mFetchVRefs
+        && d->mAncestorDepth == AncestorRetrieval::None;
 }
 
 bool ItemFetchScope::cacheOnly() const
