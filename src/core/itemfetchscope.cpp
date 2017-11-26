@@ -101,8 +101,15 @@ bool ItemFetchScope::isEmpty() const
         && d->mAttributes.isEmpty()
         && !d->mFullPayload
         && !d->mAllAttributes
+        && !d->mCacheOnly
+        && !d->mCheckCachedPayloadPartsOnly
+        && d->mFetchMtime // true by deafult -> false = non-empty
+        && !d->mIgnoreRetrievalErrors
+        && d->mFetchRid // true by default
+        && !d->mFetchGid
         && !d->mFetchTags
         && !d->mFetchVRefs
+        && !d->mFetchRelations
         && d->mAncestorDepth == AncestorRetrieval::None;
 }
 
