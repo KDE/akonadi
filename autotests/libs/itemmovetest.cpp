@@ -22,6 +22,7 @@
 #include "collection.h"
 #include "control.h"
 #include "itemfetchjob.h"
+#include "itemcreatejob.h"
 #include "itemmovejob.h"
 #include "itemfetchscope.h"
 #include "collectionfetchscope.h"
@@ -141,6 +142,44 @@ private Q_SLOTS:
         store = new ItemMoveJob(item, col, this);
         QEXPECT_FAIL("", "Check not yet implemented by the server.", Continue);
         QVERIFY(!store->exec());
+
+        Monitor *monitor = getTestMonitor();
+        QSignalSpy itemMovedSpy(monitor, &Monitor::itemsMoved);
+        // Wait for the notifciation so that it does not disturb the next test
+        QTRY_COMPARE(itemMovedSpy.count(), 1);
+    }
+
+    void testMoveNotifications()
+    {
+        Monitor *monitor = getTestMonitor();
+        QSignalSpy itemMovedSpy(monitor, &Monitor::itemsMoved);
+        QSignalSpy itemAddedSpy(monitor, &Monitor::itemAdded);
+
+        Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
+        Item item(QStringLiteral("application/octet-stream"));
+        item.setFlags({ "\\SEEN", "$ENCRYPTED" });
+        item.setPayload(QByteArray("This is a test payload"));
+        item.setSize(34);
+        item.setParentCollection(col);
+        auto create = new ItemCreateJob(item, col, this);
+        AKVERIFYEXEC(create);
+        item = create->item();
+
+        QTRY_COMPARE(itemAddedSpy.size(), 1);
+        auto ntfItem = itemAddedSpy.at(0).at(0).value<Akonadi::Item>();
+        QCOMPARE(ntfItem.id(), item.id());
+        QCOMPARE(ntfItem.flags(), item.flags());
+
+        Collection dest(collectionIdFromPath(QStringLiteral("res1/foo/bar")));
+        auto move = new ItemMoveJob(item, dest, this);
+        AKVERIFYEXEC(move);
+
+        QTRY_COMPARE(itemMovedSpy.size(), 1);
+        const auto ntfItems = itemMovedSpy.at(0).at(0).value<Akonadi::Item::List>();
+        QCOMPARE(ntfItems.size(), 1);
+        ntfItem = ntfItems.at(0);
+        QCOMPARE(ntfItem.id(), item.id());
+        QCOMPARE(ntfItem.flags(), item.flags());
     }
 };
 
