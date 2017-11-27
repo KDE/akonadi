@@ -95,7 +95,7 @@ QString ExternalPartStorage::resolveAbsolutePath(const QString &filename, bool *
     const QString path = basePath
                          + QDir::separator()
                          + (revPos > 1 ? filename[revPos - 2] : QLatin1Char('0'))
-                         + filename[revPos - 1]
+                         + (revPos > 0 ? filename[revPos - 1] : QLatin1Char('0'))
                          + QDir::separator()
                          + filename;
     // If legacy fallback is disabled, return it in any case
