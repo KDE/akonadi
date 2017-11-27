@@ -19,6 +19,10 @@
 
 #include "indexertask.h"
 
+#include "private/datastream_p_p.h"
+#include <QBuffer>
+
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 IndexerTask::IndexerTask()
@@ -72,7 +76,7 @@ bool IndexerTask::operator==(const IndexerTask &other) const
             && data == other.data;
 }
 
-inline QDebug operator<<(QDebug dbg, const IndexerTask &task)
+QDebug operator<<(QDebug dbg, const IndexerTask &task)
 {
     auto d = dbg.nospace();
     switch (task.taskType) {
@@ -96,7 +100,7 @@ inline QDebug operator<<(QDebug dbg, const IndexerTask &task)
     return dbg;
 }
 
-inline QDBusArgument &operator<<(QDBusArgument &arg, const IndexerTask &task)
+QDBusArgument &operator<<(QDBusArgument &arg, const IndexerTask &task)
 {
     arg.beginStructure();
     arg << task.future.taskId()
@@ -104,4 +108,39 @@ inline QDBusArgument &operator<<(QDBusArgument &arg, const IndexerTask &task)
         << task.mimeTypes;
     arg.endStructure();
     return arg;
+}
+
+QDataStream &operator<<(QDataStream &stream, const IndexerTask &task)
+{
+    QBuffer buffer;
+    buffer.open(QIODevice::WriteOnly);
+    Protocol::DataStream ds(&buffer);
+    ds << task.entityId
+         << task.future.taskId()
+         << task.taskType
+         << task.mimeTypes
+         << task.data
+         << task.collectionId
+         << task.destinationCollectionId;
+    stream << buffer.buffer();
+    return stream;
+}
+
+QDataStream &operator>>(QDataStream &stream, IndexerTask &task)
+{
+    QBuffer buffer;
+    buffer.open(QIODevice::ReadOnly);
+    stream >> buffer.buffer();
+
+    Protocol::DataStream ds(&buffer);
+    qint64 taskId;
+    ds >> task.entityId
+       >> taskId
+       >> task.taskType
+       >> task.mimeTypes
+       >> task.data
+       >> task.collectionId
+       >> task.destinationCollectionId;
+    task.future = IndexFuture(taskId);
+    return stream;
 }

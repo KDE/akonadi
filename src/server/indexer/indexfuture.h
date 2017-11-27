@@ -32,6 +32,7 @@ class IndexFuture
 {
 public:
     ~IndexFuture();
+    IndexFuture(qint64 taskId);
     IndexFuture(const IndexFuture &other);
     IndexFuture &operator=(const IndexFuture &other);
     bool operator==(const IndexFuture &other) const;
@@ -44,7 +45,6 @@ public:
     qint64 taskId() const;
 
 protected:
-    IndexFuture(qint64 taskId);
 
     void setFinished(bool success);
 
