@@ -50,4 +50,4 @@ else()
 endif()
 
 install(TARGETS akonadi_agent_server
-        ${KF5_INSTALL_TARGETS_DEFAULT_ARGS}})
+        ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
