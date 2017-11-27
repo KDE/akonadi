@@ -61,21 +61,7 @@ bool PersistentQueue::setPersistenceFile(const QString &persistenceFile)
     // Load all tasks in the file
     while (!mStoreFile.atEnd()) {
         IndexerTask task;
-        quint32 size;
-        qint64 taskId;
-        stream >> size;
-        stream >> task.entityId;
-        stream >> taskId;
-        stream >> size;
-        task.future = taskId;
-        QByteArray ba;
-        ba.resize(size);
-        mStoreFile.read(ba.data(), size);
-        task.mimeType = QString::fromLatin1(ba);
-        stream >> size;
-        task.data.resize(size);
-        mStoreFile.read(task.data.data(), size);
-
+        stream >> task;
         mQueue.enqueue(task);
     }
 
@@ -92,8 +78,9 @@ IndexerTask PersistentQueue::dequeue()
     QDataStream stream(&mStoreFile);
     mStoreFile.seek(mOffset);
 
-    quint32 headSize;
+    quint32 headSize = 0;
     stream >> headSize;
+    mStoreFile.seek(mOffset);
     qDebug() << "dequeue:" << mOffset << (mOffset + sizeof(decltype(headSize)) + headSize) << mStoreFile.size();
     mOffset += sizeof(decltype(headSize)) + headSize;
     if ((mOffset - DataOffset) > (mStoreFile.size() - DataOffset) / 2) {
@@ -185,16 +172,5 @@ bool PersistentQueue::rewrite()
 void PersistentQueue::writeTask(QIODevice *device, const IndexerTask &task)
 {
     QDataStream stream(device);
-
-    const quint32 size = sizeof(qint64) +   // entityId
-                         sizeof(qint64) +   // taskId
-                         sizeof(quint32) + task.mimeType.size() + // mimeType
-                         sizeof(quint32) + task.data.size();      // data
-    stream << size
-           << task.entityId
-           << task.future.taskId()
-           << task.mimeType.size();
-    device->write(task.mimeType.toLatin1().constData(), task.mimeType.size());
-    stream << task.data.size();
-    device->write(task.data.constData(), task.data.size());
+    stream << task;
 }

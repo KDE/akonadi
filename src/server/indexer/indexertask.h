@@ -62,7 +62,10 @@ public:
 
 Q_DECLARE_METATYPE(Akonadi::Server::IndexerTask)
 
-inline QDebug operator<<(QDebug dbg, const Akonadi::Server::IndexerTask &task);
-inline QDBusArgument &operator<<(QDBusArgument &arg, const Akonadi::Server::IndexerTask &task);
+QDebug operator<<(QDebug dbg, const Akonadi::Server::IndexerTask &task);
+QDBusArgument &operator<<(QDBusArgument &arg, const Akonadi::Server::IndexerTask &task);
+
+QDataStream &operator<<(QDataStream &stream, const Akonadi::Server::IndexerTask &task);
+QDataStream &operator>>(QDataStream &stream, Akonadi::Server::IndexerTask &task);
 
 #endif

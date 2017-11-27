@@ -22,7 +22,7 @@
 #include <QTest>
 
 #include "server/indexer/persistentqueue.h"
-#include "server/indexer/indextask.h"
+#include "server/indexer/indexertask.h"
 
 using namespace Akonadi::Server;
 
@@ -63,7 +63,6 @@ private Q_SLOTS:
     void testSavingAndLoading()
     {
         QTemporaryFile tempFile;
-        tempFile.setAutoRemove(false);
         QVERIFY(tempFile.open());
 
         auto task1 = IndexerTask::createIndexTask(11, 1, QStringLiteral("message/rfc822"), "ABCD Payload");

@@ -13,6 +13,7 @@
 
 #include "akonadiprivate_export.h"
 #include "protocol_exception_p.h"
+#include "akonadiprivate_export.h"
 
 #include <QByteArray>
 #include <QIODevice>

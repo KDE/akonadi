@@ -23,7 +23,7 @@
 #include <QQueue>
 #include <QFile>
 
-#include "indexer/indextask.h"
+#include "indexer/indexertask.h"
 
 namespace Akonadi {
 namespace Server {

@@ -21,7 +21,7 @@
 #define AKONADI_INDEXER_H_
 
 #include "akthread.h"
-#include "indextask.h"
+#include "indexertask.h"
 
 #include <QList>
 #include <QExplicitlySharedDataPointer>
