@@ -282,10 +282,9 @@ add_library(KF5AkonadiCore ${akonadicore_SRCS})
 generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
 
 add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
-target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Boost_INCLUDE_DIR}>")
 
 kde_target_enable_exceptions(KF5AkonadiCore PUBLIC)
 
@@ -294,6 +293,7 @@ PUBLIC
     KF5::CoreAddons # for KJob
     KF5::ItemModels
     Qt5::Gui # for QColor
+    Boost::boost
 PRIVATE
     Qt5::Network
     Qt5::Widgets
