@@ -283,6 +283,9 @@ configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+    PATH_VARS AKONADI_DBUS_INTERFACES_INSTALL_DIR
+              AKONADI_INCLUDE_DIR
+              KF5Akonadi_DATA_DIR
 )
 
 install(FILES
