@@ -72,7 +72,7 @@ find_package(KF5DesignerPlugin ${KF5_VERSION} CONFIG)
 set_package_properties(KF5DesignerPlugin PROPERTIES DESCRIPTION "KF5 designer plugin" TYPE OPTIONAL)
 
 set(Boost_MINIMUM_VERSION "1.34.0")
-find_package(Boost ${Boost_MINIMUM_VERSION})
+find_package(Boost ${Boost_MINIMUM_VERSION} REQUIRED COMPONENTS graph)
 set_package_properties(Boost PROPERTIES
     DESCRIPTION "Boost C++ Libraries"
     URL "http://www.boost.org"
@@ -283,6 +283,9 @@ configure_package_config_file(
     "${CMAKE_CURRENT_SOURCE_DIR}/KF5AkonadiConfig.cmake.in"
     "${CMAKE_CURRENT_BINARY_DIR}/KF5AkonadiConfig.cmake"
     INSTALL_DESTINATION ${CMAKECONFIG_INSTALL_DIR}
+    PATH_VARS AKONADI_DBUS_INTERFACES_INSTALL_DIR
+              AKONADI_INCLUDE_DIR
+              KF5Akonadi_DATA_DIR
 )
 
 install(FILES
