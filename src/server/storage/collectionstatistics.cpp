@@ -195,7 +195,7 @@ QueryBuilder CollectionStatistics::prepareGenericQuery()
         Query::Condition seenCondition(Query::And);
         seenCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, FLAGS_COLUMN(SeenFlags, leftColumn));
         seenCondition.addValueCondition(FLAGS_COLUMN(SeenFlags, rightColumn), Query::Equals,
-                                        Flag::retrieveByName(QStringLiteral(AKONADI_FLAG_SEEN)).id());
+                                        Flag::retrieveByNameOrCreate(QStringLiteral(AKONADI_FLAG_SEEN)).id());
         qb.addJoin(QueryBuilder::LeftJoin,
                    QStringLiteral("%1 AS %2").arg(PimItemFlagRelation::tableName(), SeenFlagsTableName),
                    seenCondition);
@@ -204,7 +204,7 @@ QueryBuilder CollectionStatistics::prepareGenericQuery()
         Query::Condition ignoredCondition(Query::And);
         ignoredCondition.addColumnCondition(PimItem::idFullColumnName(), Query::Equals, FLAGS_COLUMN(IgnoredFlags, leftColumn));
         ignoredCondition.addValueCondition(FLAGS_COLUMN(IgnoredFlags, rightColumn), Query::Equals,
-                                           Flag::retrieveByName(QStringLiteral(AKONADI_FLAG_IGNORED)).id());
+                                           Flag::retrieveByNameOrCreate(QStringLiteral(AKONADI_FLAG_IGNORED)).id());
         qb.addJoin(QueryBuilder::LeftJoin,
                    QStringLiteral("%1 AS %2").arg(PimItemFlagRelation::tableName(), IgnoredFlagsTableName),
                    ignoredCondition);
