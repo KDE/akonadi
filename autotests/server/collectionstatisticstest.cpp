@@ -59,6 +59,7 @@ class CollectionStatisticsTest : public QObject
 {
     Q_OBJECT
 
+    DbInitializer *dbInitializer = nullptr;
 public:
     CollectionStatisticsTest()
     {
@@ -71,25 +72,27 @@ public:
             qWarning() << "Server exception: " << e.what();
             qFatal("Fake Akonadi Server failed to start up, aborting test");
         }
+
+        dbInitializer =  new DbInitializer;
     }
 
     ~CollectionStatisticsTest()
     {
+        delete dbInitializer;
         FakeAkonadiServer::instance()->quit();
     }
 
 private Q_SLOTS:
     void testPrefetch_data()
     {
-        DbInitializer initializer;
-        initializer.createResource("testresource");
-        auto col1 = initializer.createCollection("col1");
-        initializer.createItem("item1", col1);
-        initializer.createItem("item2", col1);
-        auto col2 = initializer.createCollection("col2");
+        dbInitializer->createResource("testresource");
+        auto col1 = dbInitializer->createCollection("col1");
+        dbInitializer->createItem("item1", col1);
+        dbInitializer->createItem("item2", col1);
+        auto col2 = dbInitializer->createCollection("col2");
         // empty
-        auto col3 = initializer.createCollection("col3");
-        initializer.createItem("item3", col3);
+        auto col3 = dbInitializer->createCollection("col3");
+        dbInitializer->createItem("item3", col3);
 
         QTest::addColumn<Collection>("collection");
         QTest::addColumn<int>("calculationsCount");
@@ -120,12 +123,12 @@ private Q_SLOTS:
 
     void testCalculateStats()
     {
-        DbInitializer initializer;
-        initializer.createResource("testresource");
-        auto col = initializer.createCollection("col1");
-        initializer.createItem("item1", col);
-        initializer.createItem("item2", col);
-        initializer.createItem("item3", col);
+        dbInitializer->cleanup();
+        dbInitializer->createResource("testresource");
+        auto col = dbInitializer->createCollection("col1");
+        dbInitializer->createItem("item1", col);
+        dbInitializer->createItem("item2", col);
+        dbInitializer->createItem("item3", col);
 
         IntrospectableCollectionStatistics cs(false);
         auto stats = cs.statistics(col);
@@ -137,12 +140,12 @@ private Q_SLOTS:
 
     void testSeenChanged()
     {
-        DbInitializer initializer;
-        initializer.createResource("testresource");
-        auto col = initializer.createCollection("col1");
-        initializer.createItem("item1", col);
-        initializer.createItem("item2", col);
-        initializer.createItem("item3", col);
+        dbInitializer->cleanup();
+        dbInitializer->createResource("testresource");
+        auto col = dbInitializer->createCollection("col1");
+        dbInitializer->createItem("item1", col);
+        dbInitializer->createItem("item2", col);
+        dbInitializer->createItem("item3", col);
 
         IntrospectableCollectionStatistics cs(false);
         auto stats = cs.statistics(col);
@@ -166,12 +169,12 @@ private Q_SLOTS:
         QCOMPARE(stats.size, 0);
     }
 
-void testItemAdded()
-{
-        DbInitializer initializer;
-        initializer.createResource("testresource");
-        auto col = initializer.createCollection("col1");
-        initializer.createItem("item1", col);
+    void testItemAdded()
+    {
+        dbInitializer->cleanup();
+        dbInitializer->createResource("testresource");
+        auto col = dbInitializer->createCollection("col1");
+        dbInitializer->createItem("item1", col);
 
         IntrospectableCollectionStatistics cs(false);
         auto stats = cs.statistics(col);
