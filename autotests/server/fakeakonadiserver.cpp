@@ -250,8 +250,7 @@ bool FakeAkonadiServer::quit()
         mCmdServer->close();
     }
 
-    const QCommandLineParser &args = AkApplicationBase::instance()->commandLineArguments();
-    if (!args.isSet(QStringLiteral("no-cleanup"))) {
+    if (!qEnvironmentVariableIsSet("AKONADI_TEST_NOCLEANUP")) {
         bool ok = QDir(basePath()).removeRecursively();
         qDebug() << "Cleaned up" << basePath() << "success=" << ok;
     } else {
