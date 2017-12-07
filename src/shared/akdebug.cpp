@@ -96,12 +96,17 @@ public:
         file.close();
     }
 
-    QString errorLogFileName() const
+    static QString errorLogFileName(const QString &name)
     {
         return Akonadi::StandardDirs::saveDir("data")
-               + QDir::separator()
-               + name
-               + QLatin1String(".error");
+                + QDir::separator()
+                + name
+                + QLatin1String(".error");
+    }
+
+    QString errorLogFileName() const
+    {
+        return errorLogFileName(name);
     }
 
     void log(QtMsgType type, const QMessageLogContext &context, const QString &msg)
@@ -185,9 +190,9 @@ void akCategoryFilter(QLoggingCategory *category)
 void akInit(const QString &appName)
 {
     KCrash::initialize();
-    sInstance()->setName(appName);
 
-    QFileInfo infoOld(sInstance()->errorLogFileName() + QLatin1String(".old"));
+    const auto errorLogFile = DebugPrivate::errorLogFileName(appName);
+    QFileInfo infoOld(errorLogFile + QLatin1String(".old"));
     if (infoOld.exists()) {
         QFile fileOld(infoOld.absoluteFilePath());
         const bool success = fileOld.remove();
@@ -195,16 +200,18 @@ void akInit(const QString &appName)
             qFatal("Cannot remove old log file - running on a readonly filesystem maybe?");
         }
     }
-    QFileInfo info(sInstance()->errorLogFileName());
+
+    QFileInfo info(errorLogFile);
     if (info.exists()) {
         QFile file(info.absoluteFilePath());
-        const bool success = file.rename(sInstance()->errorLogFileName() + QLatin1String(".old"));
+        const bool success = file.rename(errorLogFile + QLatin1String(".old"));
         if (!success) {
             qFatal("Cannot rename log file - running on a readonly filesystem maybe?");
         }
     }
 
     QtMessageHandler origHandler = qInstallMessageHandler(akMessageHandler);
+    sInstance()->setName(appName);
     sInstance()->setOrigHandler(origHandler);
 }
 
