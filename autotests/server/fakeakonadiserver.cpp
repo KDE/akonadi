@@ -29,6 +29,7 @@
 #include <QDir>
 #include <QTest>
 #include <QBuffer>
+#include <QStandardPaths>
 
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>
@@ -130,7 +131,8 @@ FakeAkonadiServer::~FakeAkonadiServer()
 
 QString FakeAkonadiServer::basePath()
 {
-    return QStringLiteral("/tmp/akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
+    return QStandardPaths::writableLocation(QStandardPaths::TempLocation)
+                + QStringLiteral("/akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
 QString FakeAkonadiServer::socketFile()

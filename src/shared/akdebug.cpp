@@ -129,7 +129,7 @@ public:
     void setName(const QString &appName)
     {
         // Keep only the executable name, e.g. akonadi_control
-        name = appName.mid(appName.lastIndexOf(QLatin1Char('/')) + 1);
+        name = appName.mid(appName.lastIndexOf(QDir::separator()) + 1);
 
         if (file.isOpen()) {
             file.close();
