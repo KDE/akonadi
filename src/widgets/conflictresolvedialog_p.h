@@ -66,6 +66,7 @@ private Q_SLOTS:
     void slotUseLocalItemChoosen();
     void slotUseOtherItemChoosen();
     void slotUseBothItemsChoosen();
+    void slotOpenEditor();
 
 private:
     ConflictHandler::ResolveStrategy mResolveStrategy;
@@ -74,6 +75,7 @@ private:
     Akonadi::Item mOtherItem;
 
     QTextBrowser *mView = nullptr;
+    QString mTextContent;
 };
 
 }

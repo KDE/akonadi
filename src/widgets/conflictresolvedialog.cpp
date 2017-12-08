@@ -28,6 +28,9 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QDateTime>
+#include <QTemporaryFile>
+#include <QDir>
+#include <QDesktopServices>
 
 #include <kcolorscheme.h>
 #include <KLocalizedString>
@@ -53,6 +56,11 @@ public:
         return header() + mContent + footer();
     }
 
+    QString plainText() const
+    {
+        return mTextContent;
+    }
+
     void setPropertyNameTitle(const QString &title) override {
         mNameTitle = title;
     }
@@ -73,22 +81,26 @@ public:
             .arg(name,
             textToHTML(leftValue),
             textToHTML(rightValue)));
+            mTextContent.append(QStringLiteral("%1:\n%2\n%3\n\n").arg(name, leftValue, rightValue));
             break;
         case ConflictMode:
             mContent.append(QStringLiteral("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#ff8686\">%2</td><td></td><td bgcolor=\"#ff8686\">%3</td></tr>")
             .arg(name,
             textToHTML(leftValue),
             textToHTML(rightValue)));
+            mTextContent.append(QStringLiteral("%1:\n%2\n%3\n\n").arg(name, leftValue, rightValue));
             break;
         case AdditionalLeftMode:
             mContent.append(QStringLiteral("<tr><td align=\"right\"><b>%1:</b></td><td bgcolor=\"#9cff83\">%2</td><td></td><td></td></tr>")
             .arg(name,
             textToHTML(leftValue)));
+            mTextContent.append(QStringLiteral("%1:\n%2\n\n").arg(name, leftValue));
             break;
         case AdditionalRightMode:
             mContent.append(QStringLiteral("<tr><td align=\"right\"><b>%1:</b></td><td></td><td></td><td bgcolor=\"#9cff83\">%2</td></tr>")
             .arg(name,
             textToHTML(rightValue)));
+            mTextContent.append(QStringLiteral("%1:\n%2\n\n").arg(name, rightValue));
             break;
         }
     }
@@ -118,6 +130,7 @@ private:
     QString mNameTitle;
     QString mLeftTitle;
     QString mRightTitle;
+    QString mTextContent;
 };
 
 static void compareItems(AbstractDifferencesReporter *reporter, const Akonadi::Item &localItem, const Akonadi::Item &otherItem)
@@ -187,36 +200,52 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     : QDialog(parent), mResolveStrategy(ConflictHandler::UseBothItems)
 {
     setWindowTitle(i18nc("@title:window", "Conflict Resolution"));
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(this);
-    QWidget *mainWidget = new QWidget(this);
+
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
-    mainLayout->addWidget(mainWidget);
-    QPushButton *user1Button = new QPushButton(this);
-    buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    QPushButton *user2Button = new QPushButton(this);
-    buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
-    QPushButton *user3Button = new QPushButton(this);
-    buttonBox->addButton(user3Button, QDialogButtonBox::ActionRole);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &ConflictResolveDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &ConflictResolveDialog::reject);
-    user3Button->setDefault(true);
+    // Don't use QDialogButtonBox, order is very important (left on the left, right on the right)
+    QHBoxLayout *buttonLayout = new QHBoxLayout();
+    QPushButton *takeLeftButton = new QPushButton(this);
+    takeLeftButton->setText(i18nc("@action:button", "Take my version"));
+    connect(takeLeftButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseLocalItemChoosen);
+    buttonLayout->addWidget(takeLeftButton);
+    takeLeftButton->setObjectName(QStringLiteral("takeLeftButton"));
 
-    user3Button->setText(i18n("Take left one"));
-    user2Button->setText(i18n("Take right one"));
-    user1Button->setText(i18n("Keep both"));
+    QPushButton *takeRightButton = new QPushButton(this);
+    takeRightButton->setText(i18nc("@action:button", "Take their version"));
+    takeRightButton->setObjectName(QStringLiteral("takeRightButton"));
+    connect(takeRightButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseOtherItemChoosen);
+    buttonLayout->addWidget(takeRightButton);
 
-    connect(user1Button, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseBothItemsChoosen);
-    connect(user2Button, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseOtherItemChoosen);
-    connect(user3Button, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseLocalItemChoosen);
+    QPushButton *keepBothButton = new QPushButton(this);
+    keepBothButton->setText(i18nc("@action:button", "Keep both versions"));
+    keepBothButton->setObjectName(QStringLiteral("keepBothButton"));
+    buttonLayout->addWidget(keepBothButton);
+    connect(keepBothButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotUseBothItemsChoosen);
 
-    QLabel *label = new QLabel(xi18nc("@label", "Two updates conflict with each other.<nl/>Please choose which update(s) to apply."), mainWidget);
-    mainLayout->addWidget(label);
+    keepBothButton->setDefault(true);
+
 
     mView = new QTextBrowser(this);
+    mView->setObjectName(QStringLiteral("view"));
+    mView->setOpenLinks(false);
+
+    QLabel *docuLabel = new QLabel(i18n("Your changes conflict with those made by someone else meanwhile.\n"
+                                        "Unless one version can just be thrown away, you will have to integrate those changes manually.\n"
+                                        "Click on \"Open text editor\" to keep a copy of the texts, then select which version is most correct, then re-open it and modify it again to add what's missing."));
+    docuLabel->setObjectName(QStringLiteral("doculabel"));
+    // TODO it would be even better if this was a clickable link in the label...
+    QPushButton *openEditorButton = new QPushButton(this);
+    openEditorButton->setText(i18nc("@action:button", "Open text editor"));
+    connect(openEditorButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotOpenEditor);
+    openEditorButton->setObjectName(QStringLiteral("openEditorButton"));
+    QHBoxLayout *separateLayout = new QHBoxLayout;
+    separateLayout->addWidget(openEditorButton);
+    separateLayout->addStretch();
 
     mainLayout->addWidget(mView);
-    mainLayout->addWidget(buttonBox);
-
+    mainLayout->addWidget(docuLabel);
+    mainLayout->addLayout(separateLayout);
+    mainLayout->addLayout(buttonLayout);
 }
 
 void ConflictResolveDialog::setConflictingItems(const Akonadi::Item &localItem, const Akonadi::Item &otherItem)
@@ -235,6 +264,7 @@ void ConflictResolveDialog::setConflictingItems(const Akonadi::Item &localItem, 
             if (algorithm) {
                 algorithm->compare(&reporter, localItem, otherItem);
                 mView->setHtml(reporter.toHtml());
+                mTextContent = reporter.plainText();
                 return;
             }
         }
@@ -245,6 +275,19 @@ void ConflictResolveDialog::setConflictingItems(const Akonadi::Item &localItem, 
     }
 
     mView->setHtml(reporter.toHtml());
+    mTextContent = reporter.plainText();
+}
+
+void ConflictResolveDialog::slotOpenEditor()
+{
+    QTemporaryFile file(QDir::tempPath() + QStringLiteral("/akonadi-XXXXXX.txt"));
+    if (file.open()) {
+        file.setAutoRemove(false);
+        file.write(mTextContent.toLocal8Bit());
+        const QString fileName = file.fileName();
+        file.close();
+        QDesktopServices::openUrl(QUrl::fromLocalFile(fileName));
+    }
 }
 
 ConflictHandler::ResolveStrategy ConflictResolveDialog::resolveStrategy() const
