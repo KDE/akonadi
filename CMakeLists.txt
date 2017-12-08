@@ -82,8 +82,10 @@ set_package_properties(Boost PROPERTIES
 
 if(BUILD_TESTING)
     set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)
+    set(AKONADIWIDGET_TESTS_EXPORT AKONADIWIDGETS_EXPORT)
 endif()
 configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
+configure_file(akonadiwidgetstests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgetstests_export.h")
 
 # Make sure the KF5Akonadi_DATA_DIR is absolute before passing it to KF5AkonadiConfig.cmake.in
 # otherwise build fails either on OSX CI, or for normal users

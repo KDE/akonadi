@@ -24,6 +24,7 @@
 #include <QDialog>
 
 #include "conflicthandler_p.h"
+#include "akonadiwidgetstests_export.h"
 
 class QTextBrowser;
 
@@ -35,7 +36,7 @@ namespace Akonadi
  *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class ConflictResolveDialog : public QDialog
+class AKONADIWIDGET_TESTS_EXPORT ConflictResolveDialog : public QDialog
 {
     Q_OBJECT
 

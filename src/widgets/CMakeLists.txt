@@ -134,6 +134,7 @@ install(FILES
     DESTINATION ${ECM_MKSPECS_INSTALL_DIR}
 )
 
+
 ######### Build and install QtDesigner plugin #############
 
 if (KF5DesignerPlugin_FOUND)

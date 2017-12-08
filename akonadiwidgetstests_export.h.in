@@ -1,0 +1,2 @@
+#include "akonadiwidgets_export.h"
+#define AKONADIWIDGET_TESTS_EXPORT @AKONADIWIDGET_TESTS_EXPORT@

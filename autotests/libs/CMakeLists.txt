@@ -105,6 +105,7 @@ add_akonadi_test(proxymodelstest.cpp)
 add_akonadi_test(newmailnotifierattributetest.cpp)
 add_akonadi_test(pop3resourceattributetest.cpp)
 add_akonadi_test_widgets(actionstatemanagertest.cpp)
+add_akonadi_test_widgets(conflictresolvedialogtest.cpp)
 add_akonadi_test(tagmodeltest.cpp)
 add_akonadi_test(statisticsproxymodeltest.cpp)
 
