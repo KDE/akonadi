@@ -207,11 +207,13 @@ void ErrorOverlay::serverStateChanged(ServerManager::State state)
         return;
     }
 
-    if (state == ServerManager::Running && mOverlayActive) {
-        mOverlayActive = false;
-        hide();
-        if (!mBaseWidgetIsParent) {
-            mBaseWidget->setEnabled(mPreviousState);
+    if (state == ServerManager::Running) {
+        if (mOverlayActive) {
+            mOverlayActive = false;
+            hide();
+            if (!mBaseWidgetIsParent) {
+                mBaseWidget->setEnabled(mPreviousState);
+            }
         }
     } else if (!mOverlayActive) {
         mOverlayActive = true;
