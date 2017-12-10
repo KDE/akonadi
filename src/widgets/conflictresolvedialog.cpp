@@ -31,11 +31,14 @@
 #include <QTemporaryFile>
 #include <QDir>
 #include <QDesktopServices>
+#include <QWindow>
+#include <QScreen>
 
 #include <kcolorscheme.h>
 #include <KLocalizedString>
 #include <qtextbrowser.h>
 #include <QDialogButtonBox>
+#include <KWindowConfig>
 
 using namespace Akonadi;
 
@@ -246,6 +249,19 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     mainLayout->addWidget(docuLabel);
     mainLayout->addLayout(separateLayout);
     mainLayout->addLayout(buttonLayout);
+
+    // default size is tiny, and there's usually lots of text, so make it much bigger
+    create(); // ensure a window is created
+    const QSize availableSize = windowHandle()->screen()->availableSize();
+    windowHandle()->resize(availableSize.width() * 0.7, availableSize.height() * 0.5);
+    KWindowConfig::restoreWindowSize(windowHandle(), KSharedConfig::openConfig()->group("ConflictResolveDialog"));
+    resize(windowHandle()->size()); // workaround for QTBUG-40584
+}
+
+ConflictResolveDialog::~ConflictResolveDialog()
+{
+    KConfigGroup group(KSharedConfig::openConfig()->group("ConflictResolveDialog"));
+    KWindowConfig::saveWindowSize(windowHandle(), group);
 }
 
 void ConflictResolveDialog::setConflictingItems(const Akonadi::Item &localItem, const Akonadi::Item &otherItem)
