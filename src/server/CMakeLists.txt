@@ -32,6 +32,8 @@ add_custom_command(
           ${AKONADI_DB_SCHEME}
 )
 
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp PROPERTY SKIP_AUTOMOC TRUE)
+
 add_test(akonadidb-xmllint ${XMLLINT_EXECUTABLE} --noout --schema ${CMAKE_CURRENT_SOURCE_DIR}/storage/akonadidb.xsd ${CMAKE_CURRENT_SOURCE_DIR}/storage/akonadidb.xml)
 add_test(akonadidbupdate-xmllint ${XMLLINT_EXECUTABLE} --noout --schema ${CMAKE_CURRENT_SOURCE_DIR}/storage/dbupdate.xsd ${CMAKE_CURRENT_SOURCE_DIR}/storage/dbupdate.xml)
 

@@ -44,4 +44,7 @@ add_custom_command(
           ${Akonadi_SOURCE_DIR}/src/server/storage/schema-source.xsl
           ${_schemaXml}
 )
+
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/${_fileBaseName}.cpp ${CMAKE_CURRENT_BINARY_DIR}/${_fileBaseName}.h PROPERTY SKIP_AUTOMOC TRUE)
+
 endmacro()

@@ -23,6 +23,8 @@ add_custom_command(
           ${AKONADI_DB_DATA}
 )
 
+set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp PROPERTY SKIP_AUTOMOC TRUE)
+
 set(common_SRCS
     unittestschema.cpp
     fakeconnection.cpp
