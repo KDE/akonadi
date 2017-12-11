@@ -209,7 +209,6 @@ private:
 
     Q_PRIVATE_SLOT(d, void doStart())
     Q_PRIVATE_SLOT(d, void serviceOwnerChanged(QString, QString, QString))
-    Q_PRIVATE_SLOT(d, void timeout())
 };
 
 // ===================== helper functions ============================

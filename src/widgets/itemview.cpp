@@ -65,7 +65,7 @@ void ItemView::Private::init()
 
     mParent->connect(mParent, SIGNAL(activated(QModelIndex)), mParent, SLOT(itemActivated(QModelIndex)));
     mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
-    mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)), mParent, SLOT(itemDoubleClicked(QModelIndex)));
+    mParent->connect(mParent, QOverload<const QModelIndex &>::of(&QAbstractItemView::doubleClicked), mParent, [this](const QModelIndex &index) { itemDoubleClicked(index); });
 
     ControlGui::widgetNeedsAkonadi(mParent);
 }

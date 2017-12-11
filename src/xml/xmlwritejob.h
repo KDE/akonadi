@@ -47,9 +47,6 @@ private:
     friend class XmlWriteJobPrivate;
     XmlWriteJobPrivate *const d;
     void done();
-
-    Q_PRIVATE_SLOT(d, void collectionFetchResult(KJob *))
-    Q_PRIVATE_SLOT(d, void itemFetchResult(KJob *))
 };
 
 }

@@ -277,8 +277,8 @@ FavoriteCollectionsModel::FavoriteCollectionsModel(QAbstractItemModel *source, c
 
     d->loadConfig();
     //React to various changes in the source model
-    connect(source, SIGNAL(modelReset()), this, SLOT(reload()));
-    connect(source, SIGNAL(layoutChanged()), this, SLOT(reload()));
+    connect(source, &QAbstractItemModel::modelReset, this, [this]() { d->reload(); });
+    connect(source, &QAbstractItemModel::layoutChanged, this, [this]() { d->reload(); });
     connect(source, &QAbstractItemModel::rowsInserted, this, [this](const QModelIndex &parent, int begin, int end) { d->rowsInserted(parent, begin, end); });
     connect(source, &QAbstractItemModel::dataChanged, this, [this](const QModelIndex &tl, const QModelIndex &br) { d->dataChanged(tl, br); });
 }
