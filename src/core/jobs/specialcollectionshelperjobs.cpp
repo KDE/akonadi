@@ -216,7 +216,7 @@ void ResourceScanJob::doStart()
     fetchJob->fetchScope().setResource(d->mResourceId);
     fetchJob->fetchScope().setIncludeStatistics(true);
     fetchJob->fetchScope().setListFilter(CollectionFetchScope::Display);
-    connect(fetchJob, SIGNAL(result(KJob*)), this, SLOT(fetchResult(KJob*)));
+    connect(fetchJob, &CollectionFetchJob::result, this, [this](KJob *job) { d->fetchResult(job); });
 }
 
 // ===================== DefaultResourceJob ============================
@@ -273,7 +273,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
         CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
         fetchJob->fetchScope().setResource(resourceId);
         fetchJob->fetchScope().setIncludeStatistics(true);
-        q->connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)));
+        q->connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) { collectionFetchResult(job); });
     } else {
         // Try harder: maybe the default resource has been removed and another one added
         //             without updating the config file, in this case search for a resource
@@ -299,7 +299,7 @@ void DefaultResourceJobPrivate::tryFetchResource()
         qCDebug(AKONADICORE_LOG) << "Creating maildir resource.";
         const AgentType type = AgentManager::self()->type(mDefaultResourceType);
         AgentInstanceCreateJob *job = new AgentInstanceCreateJob(type, q);
-        QObject::connect(job, SIGNAL(result(KJob*)), q, SLOT(resourceCreateResult(KJob*)));
+        QObject::connect(job, &AgentInstanceCreateJob::result, q, [this](KJob *job) { resourceCreateResult(job); });
         job->start(); // non-Akonadi::Job
     }
 }
@@ -376,7 +376,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
     // Sync the resource.
     {
         ResourceSynchronizationJob *syncJob = new ResourceSynchronizationJob(agent, q);
-        QObject::connect(syncJob, SIGNAL(result(KJob*)), q, SLOT(resourceSyncResult(KJob*)));
+        QObject::connect(syncJob, &ResourceSynchronizationJob::result, q, [this](KJob *job) { resourceSyncResult(job); });
         syncJob->start(); // non-Akonadi
     }
 }
@@ -393,7 +393,7 @@ void DefaultResourceJobPrivate::resourceSyncResult(KJob *job)
     qCDebug(AKONADICORE_LOG) << "Fetching maildir collections.";
     CollectionFetchJob *fetchJob = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, q);
     fetchJob->fetchScope().setResource(defaultResourceId(mSettings));
-    QObject::connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(collectionFetchResult(KJob*)));
+    QObject::connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) { collectionFetchResult(job); });
 }
 
 void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
@@ -459,7 +459,7 @@ void DefaultResourceJobPrivate::collectionFetchResult(KJob *job)
             setCollectionAttributes(collection, type, mNameForTypeMap, mIconForTypeMap);
 
             CollectionModifyJob *modifyJob = new CollectionModifyJob(collection, q);
-            QObject::connect(modifyJob, SIGNAL(result(KJob*)), q, SLOT(collectionModifyResult(KJob*)));
+            QObject::connect(modifyJob, &CollectionModifyJob::result, q, [this](KJob *job) {collectionModifyResult(job); });
             mPendingModifyJobs++;
         } else {
             qCDebug(AKONADICORE_LOG) << "Searching for names: " << typeForName.keys();
@@ -598,7 +598,7 @@ void GetLockJob::Private::doStart()
         mSafetyTimer->setSingleShot(true);
         mSafetyTimer->setInterval(LOCK_WAIT_TIMEOUT_SECONDS * 1000);
         mSafetyTimer->start();
-        connect(mSafetyTimer, SIGNAL(timeout()), q, SLOT(timeout()));
+        connect(mSafetyTimer, &QTimer::timeout, q, [this]() { timeout(); });
     }
 }
 

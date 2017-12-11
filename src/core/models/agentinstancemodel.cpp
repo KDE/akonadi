@@ -92,12 +92,12 @@ AgentInstanceModel::AgentInstanceModel(QObject *parent)
             this, [this](const Akonadi::AgentInstance &inst) { d->instanceAdded(inst);});
     connect(AgentManager::self(), &AgentManager::instanceRemoved,
             this, [this](const Akonadi::AgentInstance &inst) { d->instanceRemoved(inst);});
-    connect(AgentManager::self(), SIGNAL(instanceStatusChanged(Akonadi::AgentInstance)),
-            this, SLOT(instanceChanged(Akonadi::AgentInstance)));
-    connect(AgentManager::self(), SIGNAL(instanceProgressChanged(Akonadi::AgentInstance)),
-            this, SLOT(instanceChanged(Akonadi::AgentInstance)));
-    connect(AgentManager::self(), SIGNAL(instanceNameChanged(Akonadi::AgentInstance)),
-            this, SLOT(instanceChanged(Akonadi::AgentInstance)));
+    connect(AgentManager::self(), &AgentManager::instanceStatusChanged,
+            this, [this](const Akonadi::AgentInstance &inst) { d->instanceChanged(inst);});
+    connect(AgentManager::self(), &AgentManager::instanceProgressChanged,
+            this, [this](const Akonadi::AgentInstance &inst) { d->instanceChanged(inst);});
+    connect(AgentManager::self(), &AgentManager::instanceNameChanged,
+            this, [this](const Akonadi::AgentInstance &inst) { d->instanceChanged(inst);});
     connect(AgentManager::self(), SIGNAL(instanceOnline(Akonadi::AgentInstance,bool)),
             this, SLOT(instanceChanged(Akonadi::AgentInstance)));
 }

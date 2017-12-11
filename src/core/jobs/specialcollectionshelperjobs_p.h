@@ -88,8 +88,6 @@ private:
     class Private;
     friend class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void fetchResult(KJob *))
 };
 
 // ===================== DefaultResourceJob ============================
@@ -164,11 +162,6 @@ protected:
 private:
     friend class DefaultResourceJobPrivate;
     DefaultResourceJobPrivate *const d;
-
-    Q_PRIVATE_SLOT(d, void resourceCreateResult(KJob *))
-    Q_PRIVATE_SLOT(d, void resourceSyncResult(KJob *))
-    Q_PRIVATE_SLOT(d, void collectionFetchResult(KJob *))
-    Q_PRIVATE_SLOT(d, void collectionModifyResult(KJob *))
 };
 
 // ===================== GetLockJob ============================
