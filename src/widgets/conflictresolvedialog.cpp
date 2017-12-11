@@ -235,6 +235,7 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     QLabel *docuLabel = new QLabel(i18n("Your changes conflict with those made by someone else meanwhile.\n"
                                         "Unless one version can just be thrown away, you will have to integrate those changes manually.\n"
                                         "Click on \"Open text editor\" to keep a copy of the texts, then select which version is most correct, then re-open it and modify it again to add what's missing."));
+    docuLabel->setWordWrap(true);
     docuLabel->setObjectName(QStringLiteral("doculabel"));
     // TODO it would be even better if this was a clickable link in the label...
     QPushButton *openEditorButton = new QPushButton(this);

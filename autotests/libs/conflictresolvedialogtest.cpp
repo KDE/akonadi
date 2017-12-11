@@ -59,6 +59,7 @@ void ConflictResolveDialogTest::shouldHaveDefaultValues()
     QLabel *docuLabel = dlg.findChild<QLabel *>(QStringLiteral("doculabel"));
     QVERIFY(docuLabel);
     QVERIFY(!docuLabel->text().isEmpty());
+    QVERIFY(docuLabel->wordWrap());
 
     QPushButton *openEditorButton = dlg.findChild<QPushButton *>(QStringLiteral("openEditorButton"));
     QVERIFY(openEditorButton);

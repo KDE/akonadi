@@ -20,6 +20,7 @@
 #include "../src/widgets/conflictresolvedialog_p.h"
 
 #include <QApplication>
+#include <QStandardPaths>
 #include <QCommandLineParser>
 #include <kaboutdata.h>
 
@@ -36,6 +37,7 @@ int main(int argc, char **argv)
     parser.process(app);
     aboutData.processCommandLine(&parser);
 
+    QStandardPaths::setTestModeEnabled(true);
     Akonadi::ConflictResolveDialog dlg;
     dlg.exec();
 
