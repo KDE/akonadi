@@ -42,5 +42,6 @@ add_akonadi_demo(pluginloadertest.cpp)
 ##REACTIVATE
 #add_akonadi_demo(selftester.cpp)
 add_akonadi_demo(collectiondialog.cpp)
+add_akonadi_demo(conflictresolvedialogtest_gui.cpp)
 
 add_subdirectory(etm_test_app)
