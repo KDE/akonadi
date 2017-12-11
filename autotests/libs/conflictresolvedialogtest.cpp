@@ -60,8 +60,5 @@ void ConflictResolveDialogTest::shouldHaveDefaultValues()
     QVERIFY(docuLabel);
     QVERIFY(!docuLabel->text().isEmpty());
     QVERIFY(docuLabel->wordWrap());
-
-    QPushButton *openEditorButton = dlg.findChild<QPushButton *>(QStringLiteral("openEditorButton"));
-    QVERIFY(openEditorButton);
-    QVERIFY(!openEditorButton->text().isEmpty());
+    QCOMPARE(docuLabel->contextMenuPolicy(), Qt::NoContextMenu);
 }

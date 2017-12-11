@@ -232,23 +232,17 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     mView->setObjectName(QStringLiteral("view"));
     mView->setOpenLinks(false);
 
-    QLabel *docuLabel = new QLabel(i18n("Your changes conflict with those made by someone else meanwhile.\n"
-                                        "Unless one version can just be thrown away, you will have to integrate those changes manually.\n"
-                                        "Click on \"Open text editor\" to keep a copy of the texts, then select which version is most correct, then re-open it and modify it again to add what's missing."));
+    QLabel *docuLabel = new QLabel(i18n("<qt>Your changes conflict with those made by someone else meanwhile.<br>"
+                                        "Unless one version can just be thrown away, you will have to integrate those changes manually.<br>"
+                                        "Click on <a href=\"opentexteditor\">\"Open text editor\"</a> to keep a copy of the texts, then select which version is most correct, then re-open it and modify it again to add what's missing."));
+    connect(docuLabel, &QLabel::linkActivated, this, &ConflictResolveDialog::slotOpenEditor);
+    docuLabel->setContextMenuPolicy(Qt::NoContextMenu);
+
     docuLabel->setWordWrap(true);
     docuLabel->setObjectName(QStringLiteral("doculabel"));
-    // TODO it would be even better if this was a clickable link in the label...
-    QPushButton *openEditorButton = new QPushButton(this);
-    openEditorButton->setText(i18nc("@action:button", "Open text editor"));
-    connect(openEditorButton, &QPushButton::clicked, this, &ConflictResolveDialog::slotOpenEditor);
-    openEditorButton->setObjectName(QStringLiteral("openEditorButton"));
-    QHBoxLayout *separateLayout = new QHBoxLayout;
-    separateLayout->addWidget(openEditorButton);
-    separateLayout->addStretch();
 
     mainLayout->addWidget(mView);
     mainLayout->addWidget(docuLabel);
-    mainLayout->addLayout(separateLayout);
     mainLayout->addLayout(buttonLayout);
 
     // default size is tiny, and there's usually lots of text, so make it much bigger
