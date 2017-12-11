@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 
-#include "conflictresolvedialogtest_gui.h"
 #include "../src/widgets/conflictresolvedialog_p.h"
 
 #include <QApplication>
