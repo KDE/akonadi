@@ -131,12 +131,12 @@ private:
     void cleanupBenchmark(const Collection::List &collections)
     {
         Collection::List baseCols;
-        Q_FOREACH (const Collection &col, collections) {
+        for (const Collection &col : collections) {
             if (col.remoteId().startsWith(QLatin1String("/baseCol")) || col.remoteId() == QLatin1String("/shared")) {
                 baseCols << col;
             }
         }
-        Q_FOREACH (const Collection &col, baseCols) {
+        for (const Collection &col : baseCols) {
             CollectionDeleteJob *del = new CollectionDeleteJob(col);
             AKVERIFYEXEC(del);
         }
