@@ -174,7 +174,11 @@ bool Store::parseStream()
 
             // check and update revisions
             if (pimItems.at(i).rev() != (int) cmd.oldRevision()) {
-                return failureResponse("[LLCONFLICT] Item was modified elsewhere, aborting STORE.");
+                const QString error = QStringLiteral("[LLCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with revision %5; the item was modified elsewhere and has revision %6, aborting STORE.");
+                return failureResponse(error.arg(pimItem.collection().resource().name())
+                                            .arg(pimItem.id())
+                                            .arg(pimItem.remoteId()).arg(pimItem.collectionId())
+                                            .arg(cmd.oldRevision()).arg(pimItems.at(i).rev()));
             }
         }
     }
