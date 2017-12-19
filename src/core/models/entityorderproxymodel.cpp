@@ -115,6 +115,45 @@ bool EntityOrderProxyModel::lessThan(const QModelIndex &left, const QModelIndex 
     return leftPosition < rightPosition;
 }
 
+QStringList EntityOrderProxyModel::configStringsForDroppedUrls(const QList<QUrl> &urls, const Akonadi::Collection &parentCol, bool *containsMove) const
+{
+    QStringList droppedList;
+    droppedList.reserve(urls.count());
+    for (const QUrl &url : urls) {
+        Collection col = Collection::fromUrl(url);
+
+        if (!col.isValid()) {
+            Item item = Item::fromUrl(url);
+            if (!item.isValid()) {
+                continue;
+            }
+
+            const QModelIndexList list = EntityTreeModel::modelIndexesForItem(this, item);
+            if (list.isEmpty()) {
+                continue;
+            }
+
+            if (!*containsMove && parentCollection(list.first()).id() != parentCol.id()) {
+                *containsMove = true;
+            }
+
+            droppedList << configString(list.first());
+        } else {
+            const QModelIndex idx = EntityTreeModel::modelIndexForCollection(this, col);
+            if (!idx.isValid()) {
+                continue;
+            }
+
+            if (!*containsMove && parentCollection(idx).id() != parentCol.id()) {
+                *containsMove = true;
+            }
+
+            droppedList << configString(idx);
+        }
+    }
+    return droppedList;
+}
+
 bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
     Q_D(EntityOrderProxyModel);
@@ -134,6 +173,9 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
     bool containsMove = false;
 
     const QList<QUrl> urls = data->urls();
+    if (urls.isEmpty()) {
+        return false;
+    }
 
     Collection parentCol;
 
@@ -148,37 +190,14 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
         parentCol = parentCollection(targetIndex);
     }
 
-    QStringList droppedList;
-    for (const QUrl &url : urls) {
-        Collection col = Collection::fromUrl(url);
 
-        if (!col.isValid()) {
-            Item item = Item::fromUrl(url);
-            if (!item.isValid()) {
-                continue;
-            }
+    QStringList droppedList = configStringsForDroppedUrls(urls, parentCol, &containsMove);
 
-            const QModelIndexList list = EntityTreeModel::modelIndexesForItem(this, item);
-            if (list.isEmpty()) {
-                continue;
-            }
-
-            if (!containsMove && parentCollection(list.first()).id() != parentCol.id()) {
-                containsMove = true;
-            }
-
-            droppedList << configString(list.first());
-        } else {
-            const QModelIndex idx = EntityTreeModel::modelIndexForCollection(this, col);
-            if (!idx.isValid()) {
-                continue;
-            }
-
-            if (!containsMove && parentCollection(idx).id() != parentCol.id()) {
-                containsMove = true;
-            }
-
-            droppedList << configString(idx);
+    // Dropping new favorite folders
+    if (droppedList.isEmpty()) {
+        const bool ok = KRecursiveFilterProxyModel::dropMimeData(data, action, row, column, parent);
+        if (ok) {
+            droppedList = configStringsForDroppedUrls(urls, parentCol, &containsMove);
         }
     }
 
