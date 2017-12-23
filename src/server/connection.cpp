@@ -179,7 +179,7 @@ void Connection::slotConnectionIdle()
             // But it is safer to abort and leave the connection open, until
             // a later operation causes the idle timer to fire (than crash
             // the akonadi server).
-            qCDebug(AKONADISERVER_LOG) << "NOT Closing idle db connection; we are in transaction";
+            qCDebug(AKONADISERVER_LOG) << m_sessionId << "NOT Closing idle db connection; we are in transaction";
             return;
         }
         m_backend->close();
