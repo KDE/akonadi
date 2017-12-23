@@ -28,6 +28,7 @@
 #include "entitydeletedattribute.h"
 #include "tagattribute.h"
 #include "entityannotationsattribute.h"
+#include "favoritecollectionattribute.h"
 
 #include <QHash>
 
@@ -99,6 +100,7 @@ public:
         AttributeFactory::registerAttribute<EntityDeletedAttribute>();
         AttributeFactory::registerAttribute<EntityAnnotationsAttribute>();
         AttributeFactory::registerAttribute<TagAttribute>();
+        AttributeFactory::registerAttribute<FavoriteCollectionAttribute>();
     }
     bool initialized;
 };

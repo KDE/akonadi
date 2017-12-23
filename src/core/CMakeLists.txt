@@ -33,6 +33,7 @@ set(akonadicore_base_SRCS
     entitydisplayattribute.cpp
     entityhiddenattribute.cpp
     exception.cpp
+    favoritecollectionattribute.cpp
     firstrun.cpp
     gidextractor.cpp
     indexpolicyattribute.cpp
@@ -96,6 +97,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     EntityDisplayAttribute
     EntityHiddenAttribute
     ExceptionBase
+    FavoriteCollectionAttribute
     GidExtractorInterface
     IndexPolicyAttribute
     Item

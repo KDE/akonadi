@@ -50,6 +50,8 @@
 #include "servermanager_p.h"
 #include "recursivemover_p.h"
 #include "tagmodifyjob.h"
+#include "specialcollectionattribute.h"
+#include "favoritecollectionattribute.h"
 
 #include "akonadiagentbase_debug.h"
 #include <KLocalizedString>
@@ -882,6 +884,8 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
         if (scheduler->currentTask().type == ResourceScheduler::SyncAll) {
             CollectionFetchJob *list = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
             list->setFetchScope(q->changeRecorder()->collectionFetchScope());
+            list->fetchScope().fetchAttribute<SpecialCollectionAttribute>();
+            list->fetchScope().fetchAttribute<FavoriteCollectionAttribute>();
             list->fetchScope().setResource(mId);
             list->fetchScope().setListFilter(CollectionFetchScope::Sync);
             q->connect(list, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)));
@@ -893,14 +897,59 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
     scheduler->taskDone();
 }
 
+
+namespace {
+
+bool sortCollectionsForSync(const Collection &l, const Collection &r)
+{
+    const auto lType = l.hasAttribute<SpecialCollectionAttribute>()
+        ? l.attribute<SpecialCollectionAttribute>()->collectionType()
+        : QByteArray();
+    const bool lInbox = (lType == "inbox") || (l.remoteId().midRef(1).compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0);
+    const bool lFav = l.hasAttribute<FavoriteCollectionAttribute>();
+
+    const auto rType = r.hasAttribute<SpecialCollectionAttribute>()
+        ? r.attribute<SpecialCollectionAttribute>()->collectionType()
+        : QByteArray();
+    const bool rInbox = (rType == "inbox") || (r.remoteId().midRef(1).compare(QLatin1String("inbox"), Qt::CaseInsensitive) == 0);
+    const bool rFav = r.hasAttribute<FavoriteCollectionAttribute>();
+
+    // inbox is always first
+    if (lInbox) {
+        return true;
+    } else if (rInbox) {
+        return false;
+    }
+
+    // favorites right after inbox
+    if (lFav) {
+        return !rInbox;
+    } else if (rFav) {
+        return lInbox;
+    }
+
+    // trash is always last (unless it's favorite)
+    if (lType == "trash") {
+        return false;
+    } else if (rType == "trash") {
+        return true;
+    }
+
+    // Fallback to sorting by id
+    return l.id() < r.id();
+}
+
+}
+
 void ResourceBasePrivate::slotLocalListDone(KJob *job)
 {
     Q_Q(ResourceBase);
     if (job->error()) {
         emit q->error(job->errorString());
     } else {
-        const Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
-        for (const Collection &col : cols) {
+        Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
+        std::sort(cols.begin(), cols.end(), sortCollectionsForSync);
+        for (const Collection &col : qAsConst(cols)) {
             scheduler->scheduleSync(col);
         }
         scheduler->scheduleFullSyncCompletion();

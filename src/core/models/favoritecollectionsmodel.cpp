@@ -32,6 +32,8 @@
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
 #include "pastehelper_p.h"
+#include "favoritecollectionattribute.h"
+#include "collectionmodifyjob.h"
 
 using namespace Akonadi;
 
@@ -77,6 +79,14 @@ public:
             select(col);
             if (!referencedCollections.contains(col)) {
                 reference(col);
+            }
+            auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{ col });
+            if (idx.isValid()) {
+                auto c = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
+                if (c.isValid() && !c.hasAttribute<FavoriteCollectionAttribute>()) {
+                    c.addAttribute(new FavoriteCollectionAttribute());
+                    new CollectionModifyJob(c, q);
+                }
             }
         }
     }
@@ -189,6 +199,14 @@ public:
         collectionIds << collectionId;
         reference(collectionId);
         select(collectionId);
+        const auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{ collectionId });
+        if (idx.isValid()) {
+            auto col = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
+            if (col.isValid() && !col.hasAttribute<FavoriteCollectionAttribute>()) {
+                col.addAttribute(new FavoriteCollectionAttribute());
+                new CollectionModifyJob(col, q);
+            }
+        }
     }
 
     void remove(const Collection::Id &collectionId)
@@ -197,6 +215,14 @@ public:
         labelMap.remove(collectionId);
         dereference(collectionId);
         deselect(collectionId);
+        const auto idx = EntityTreeModel::modelIndexForCollection(q, Collection{ collectionId });
+        if (idx.isValid()) {
+            auto col = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
+            if (col.isValid() && col.hasAttribute<FavoriteCollectionAttribute>()) {
+                col.removeAttribute<FavoriteCollectionAttribute>();
+                new CollectionModifyJob(col, q);
+            }
+        }
     }
 
     void set(const QList<Collection::Id> &collections)
