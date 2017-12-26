@@ -21,6 +21,7 @@
 #define AKONADI_INDEXERFUTURE_H_
 
 #include <QExplicitlySharedDataPointer>
+#include <QSet>
 
 namespace Akonadi {
 namespace Server {
@@ -28,6 +29,7 @@ namespace Server {
 class IndexFuturePrivate;
 class IndexerTask;
 class PersistentQueue;
+class IndexFutureSet;
 class IndexFuture
 {
 public:
@@ -49,12 +51,32 @@ protected:
     void setFinished(bool success);
 
 private:
+    void setFutureSet(IndexFutureSet *set);
+
     QExplicitlySharedDataPointer<IndexFuturePrivate> d;
 
     friend class Indexer;
     friend class IndexerTask;
     friend class PersistentQueue;
+    friend class IndexFutureSet;
 };
+
+
+class IndexFutureSet
+{
+public:
+    explicit IndexFutureSet();
+    explicit IndexFutureSet(int reserveSize);
+    void add(const IndexFuture &future);
+
+    void waitForAll();
+
+private:
+    QSet<IndexFuture> mFutures;
+
+    friend class IndexFuture;
+};
+
 
 }
 }

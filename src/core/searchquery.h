@@ -245,6 +245,18 @@ public:
      * Translates key to field
      */
     static EmailSearchField fromKey(const QString &key);
+
+    static SearchTerm from(const QStringList &from, SearchTerm::Relation rel = SearchTerm::RelOr);
+    static SearchTerm to(const QStringList &to, SearchTerm::Relation rel = SearchTerm::RelOr);
+    static SearchTerm cc(const QStringList &cc, SearchTerm::Relation rel = SearchTerm::RelOr);
+    static SearchTerm bcc(const QStringList &bcc, SearchTerm::Relation rel = SearchTerm::RelOr);
+    static SearchTerm involves(const QStringList &involves, SearchTerm::Relation rel = SearchTerm::RelOr);
+    static SearchTerm isRead(bool isRead = true);
+    static SearchTerm isImportant(bool isImportant = true);
+    static SearchTerm hasAttachment(bool hasAttachment = true);
+    static SearchTerm matches(const QString &match);
+    static SearchTerm subjectMatches(const QString &subject);
+    static SearchTerm bodyMatches(const QString &bodyMatches);
 };
 
 /**
@@ -309,6 +321,26 @@ public:
      * Translates key to field
      */
     static IncidenceSearchField fromKey(const QString &key);
+};
+
+/**
+ * A search term for Collections.
+ */
+class AKONADICORE_EXPORT CollectionSearchTerm : public SearchTerm
+{
+public:
+    enum CollectionSearchField {
+        Name = 400,         ///< Search by collection name
+        Namespace,          ///< Search by collection namespace
+        Identification,     ///< Search by additional collection identification
+        MimeType            ///< Search by collection mimetype
+    };
+
+    CollectionSearchTerm(CollectionSearchField field, const QVariant &value,
+                         SearchTerm::Condition condition = SearchTerm::CondEqual);
+
+    static QString toKey(CollectionSearchField field);
+    static CollectionSearchField fromKey(const QString &key);
 };
 
 }

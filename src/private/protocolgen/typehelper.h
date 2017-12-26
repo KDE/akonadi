@@ -34,6 +34,7 @@ bool isBoolType(const QString &name);
 bool isBuiltInType(const QString &type);
 
 bool isContainer(const QString &type);
+bool isAssociativeContainer(const QString &type);
 
 QString containerType(const QString &type);
 QString containerName(const QString &type);

@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include "store.h"
-
+#include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "storage/datastore.h"
@@ -30,6 +30,8 @@
 #include "storage/itemretriever.h"
 #include "storage/parttypehelper.h"
 #include "storage/partstreamer.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include <private/externalpartstorage_p.h>
 
 
@@ -330,6 +332,7 @@ bool Store::parseStream()
         const bool revisionNeedsUpdate = (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged && !onlyGIDChanged);
 
         // run update query and prepare change notifications
+        const auto indexData = cmd.indexData();
         for (int i = 0; i < pimItems.count(); ++i) {
 
             if (revisionNeedsUpdate) {
@@ -345,6 +348,9 @@ bool Store::parseStream()
             if (!item.update()) {
                 return failureResponse("Unable to write item changes into the database");
             }
+
+            auto indexer = AkonadiServer::instance()->indexer();
+            indexer->index(item.id(), item.mimeType().name(), indexData.value(item.id())).waitForFinished();
 
             if (cmd.invalidateCache()) {
                 if (!store->invalidateItemCache(item)) {

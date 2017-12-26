@@ -18,12 +18,14 @@
 */
 
 #include "remove.h"
-
+#include "akonadi.h"
 #include "connection.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 
 #include <private/scope_p.h>
 
@@ -46,9 +48,16 @@ bool Remove::parseStream()
         return failureResponse("Unable to execute query");
     }
 
+
     const QVector<PimItem> items = qb.result();
     if (items.isEmpty()) {
         return failureResponse("No items found");
+    }
+
+    auto indexer = AkonadiServer::instance()->indexer();
+    IndexFutureSet futures;
+    for (const auto &item : items) {
+        futures.add(indexer->removeItem(item.id(), item.mimeType().name()));
     }
     if (!store->cleanupPimItems(items)) {
         return failureResponse("Deletion failed");
@@ -57,6 +66,8 @@ bool Remove::parseStream()
     if (!transaction.commit()) {
         return failureResponse("Unable to commit transaction");
     }
+
+    futures.waitForAll();
 
     return successResponse<Protocol::DeleteItemsResponse>();
 }

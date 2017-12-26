@@ -19,6 +19,7 @@
 
 #include "colmove.h"
 
+#include "akonadi.h"
 #include "handlerhelper.h"
 #include "connection.h"
 #include "cachecleaner.h"
@@ -27,6 +28,8 @@
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
 #include "storage/selectquerybuilder.h"
+#include "indexer/indexfuture.h"
+#include "indexer/indexer.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -67,13 +70,20 @@ bool ColMove::parseStream()
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store, QStringLiteral("COLMOVE"));
 
+    const auto sourceParent = source.parentId();
     if (!store->moveCollection(source, target)) {
         return failureResponse(QStringLiteral("Unable to reparent collection"));
     }
 
+    auto indexer = AkonadiServer::instance()->indexer();
+    auto future = indexer->move(source.id(), QStringLiteral("inode/directory"),
+                                sourceParent, target.id());
+
     if (!transaction.commit()) {
         return failureResponse(QStringLiteral("Cannot commit transaction."));
     }
+
+    future.waitForFinished();
 
     return successResponse<Protocol::MoveCollectionResponse>();
 }

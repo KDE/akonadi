@@ -22,6 +22,7 @@
 #include <QMutex>
 #include <QWaitCondition>
 
+
 namespace Akonadi {
 namespace Server {
 
@@ -35,9 +36,16 @@ public:
     const qint64 taskId;
     QMutex lock;
     QWaitCondition cond;
+    IndexFutureSet *set = nullptr;
     bool finished = false;
     bool hasError = false;
 };
+
+
+inline uint qHash(const IndexFuture &future, uint seed = 0)
+{
+    return qHash(future.taskId(), seed);
+}
 
 }
 }
@@ -102,7 +110,52 @@ bool IndexFuture::waitForFinished()
 {
     QMutexLocker lock(&d->lock);
     if (d->finished) {
+        if (d->set) {
+            d->set->mFutures.remove(*this);
+        }
         return true;
     }
-    return d->cond.wait(&d->lock);
+    if (d->cond.wait(&d->lock)) {
+        if (d->set) {
+            d->set->mFutures.remove(*this);
+        }
+        return true;
+    }
+    return false;
+}
+
+
+void IndexFuture::setFutureSet(IndexFutureSet *set)
+{
+    d->set = set;
+    QMutexLocker locker(&d->lock);
+    if (d->finished) {
+        set->mFutures.remove(*this);
+    }
+}
+
+
+
+
+IndexFutureSet::IndexFutureSet()
+{
+}
+
+IndexFutureSet::IndexFutureSet(int reserveSize)
+{
+    mFutures.reserve(reserveSize);
+}
+
+void IndexFutureSet::add(const IndexFuture &future)
+{
+    mFutures.insert(future);
+    const_cast<IndexFuture&>(future).setFutureSet(this);
+}
+
+void IndexFutureSet::waitForAll()
+{
+    while (!mFutures.isEmpty()) {
+        auto future = mFutures.begin();
+        const_cast<IndexFuture&>(*future).waitForFinished();
+    }
 }

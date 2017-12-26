@@ -17,13 +17,14 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 #include "create.h"
-
+#include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
-
+#include "indexer/indexfuture.h"
+#include "indexer/indexer.h"
 
 #include <private/scope_p.h>
 
@@ -121,11 +122,16 @@ bool Create::parseStream()
                                % QStringLiteral(", resourceId: ") % QString::number(resourceId));
     }
 
+    auto indexer = AkonadiServer::instance()->indexer();
+    auto future = indexer->index(collection.id(), QStringLiteral("inode/directory"), cmd.indexData());
+
     if (!transaction.commit()) {
         return failureResponse(QStringLiteral("Unable to commit transaction."));
     }
 
     db->activeCachePolicy(collection);
+
+    future.waitForFinished();
 
     sendResponse<Protocol::FetchCollectionsResponse>(
         HandlerHelper::fetchCollectionsResponse(collection));

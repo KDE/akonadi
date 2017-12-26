@@ -387,6 +387,99 @@ EmailSearchTerm::EmailSearchField EmailSearchTerm::fromKey(const QString &key)
     return emailSearchFieldMapping().key(key);
 }
 
+namespace {
+
+SearchTerm matchStringList(EmailSearchTerm::EmailSearchField field, const QStringList &list,
+                           SearchTerm::Relation relation)
+{
+    if (list.size() == 1) {
+        return EmailSearchTerm(field, list.first());
+    }
+
+    SearchTerm relTerm(relation);
+    for (const auto &e : list) {
+        relTerm.addSubTerm(EmailSearchTerm(field, e));
+    }
+    return relTerm;
+}
+
+}
+
+SearchTerm EmailSearchTerm::from(const QStringList &from, SearchTerm::Relation relation)
+{
+    return matchStringList(HeaderFrom, from, relation);
+}
+
+SearchTerm EmailSearchTerm::to(const QStringList &to, SearchTerm::Relation relation)
+{
+    return matchStringList(HeaderTo, to, relation);
+}
+
+SearchTerm EmailSearchTerm::cc(const QStringList &cc, SearchTerm::Relation relation)
+{
+    return matchStringList(HeaderCC, cc, relation);
+}
+
+
+SearchTerm EmailSearchTerm::bcc(const QStringList &bcc, SearchTerm::Relation relation)
+{
+    return matchStringList(HeaderBCC, bcc, relation);
+}
+
+SearchTerm EmailSearchTerm::involves(const QStringList &involves, SearchTerm::Relation relation)
+{
+    SearchTerm rootTerm(relation);
+    for (const auto person : involves) {
+        SearchTerm orTerm(SearchTerm::RelOr);
+        for (const auto field : { HeaderFrom, HeaderTo, HeaderCC, HeaderBCC }) {
+            orTerm.addSubTerm(EmailSearchTerm(field, person));
+        }
+        rootTerm.addSubTerm(orTerm);
+    }
+    return rootTerm;
+}
+
+SearchTerm EmailSearchTerm::isRead(bool isRead)
+{
+    // FIXME: The strings are in akonadi-mime - should this whole thing go there?
+    EmailSearchTerm term(MessageStatus, QLatin1String("\\SEEN"));
+    term.setIsNegated(!isRead);
+    return term;
+}
+
+SearchTerm EmailSearchTerm::isImportant(bool isImportant)
+{
+    EmailSearchTerm term(MessageStatus, QLatin1String("\\FLAGGED"));
+    term.setIsNegated(!isImportant);
+    return term;
+}
+
+SearchTerm EmailSearchTerm::hasAttachment(bool hasAttachment)
+{
+    EmailSearchTerm term(MessageStatus, QLatin1String("$ATTACHMENT"));
+    term.setIsNegated(!hasAttachment);
+    return term;
+}
+
+SearchTerm EmailSearchTerm::subjectMatches(const QString &subject)
+{
+    return EmailSearchTerm(Subject, subject, SearchTerm::CondContains);
+}
+
+SearchTerm EmailSearchTerm::bodyMatches(const QString &bodyMatches)
+{
+    return EmailSearchTerm(Body, bodyMatches, SearchTerm::CondContains);
+}
+
+SearchTerm EmailSearchTerm::matches(const QString &match)
+{
+    return EmailSearchTerm(Message, match, SearchTerm::CondContains);
+}
+
+
+
+
+
 static QMap<ContactSearchTerm::ContactSearchField, QString> contactSearchFieldMapping()
 {
     static QMap<ContactSearchTerm::ContactSearchField, QString> mapping;
@@ -420,7 +513,7 @@ ContactSearchTerm::ContactSearchField ContactSearchTerm::fromKey(const QString &
 
 QMap<IncidenceSearchTerm::IncidenceSearchField, QString> incidenceSearchFieldMapping()
 {
-    QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
+    static QMap<IncidenceSearchTerm::IncidenceSearchField, QString> mapping;
     if (mapping.isEmpty()) {
         mapping.insert(IncidenceSearchTerm::All, QStringLiteral("all"));
         mapping.insert(IncidenceSearchTerm::PartStatus, QStringLiteral("partstatus"));
@@ -445,4 +538,31 @@ QString IncidenceSearchTerm::toKey(IncidenceSearchTerm::IncidenceSearchField fie
 IncidenceSearchTerm::IncidenceSearchField IncidenceSearchTerm::fromKey(const QString &key)
 {
     return incidenceSearchFieldMapping().key(key);
+}
+
+QMap<CollectionSearchTerm::CollectionSearchField, QString> collectionSearchFieldMapping()
+{
+    static QMap<CollectionSearchTerm::CollectionSearchField, QString> mapping;
+    if (mapping.isEmpty()) {
+        mapping.insert(CollectionSearchTerm::Name, QStringLiteral("name"));
+        mapping.insert(CollectionSearchTerm::Namespace, QStringLiteral("namespace"));
+        mapping.insert(CollectionSearchTerm::Identification, QStringLiteral("identification"));
+        mapping.insert(CollectionSearchTerm::MimeType, QStringLiteral("mimetype"));
+    }
+    return mapping;
+}
+
+CollectionSearchTerm::CollectionSearchTerm(CollectionSearchTerm::CollectionSearchField field, const QVariant &value, SearchTerm::Condition condition)
+    : SearchTerm(toKey(field), value, condition)
+{
+}
+
+QString CollectionSearchTerm::toKey(CollectionSearchTerm::CollectionSearchField field)
+{
+    return collectionSearchFieldMapping().value(field);
+}
+
+Akonadi::CollectionSearchTerm::CollectionSearchField Akonadi::CollectionSearchTerm::fromKey(const QString &key)
+{
+    return collectionSearchFieldMapping().key(key);
 }

@@ -406,19 +406,24 @@ void AkonadiServer::serviceOwnerChanged(const QString &name, const QString &oldO
     }
 }
 
-CacheCleaner *AkonadiServer::cacheCleaner()
+CacheCleaner *AkonadiServer::cacheCleaner() const
 {
     return mCacheCleaner;
 }
 
-IntervalCheck *AkonadiServer::intervalChecker()
+IntervalCheck *AkonadiServer::intervalChecker() const
 {
     return mIntervalCheck;
 }
 
-NotificationManager *AkonadiServer::notificationManager()
+NotificationManager *AkonadiServer::notificationManager() const
 {
     return mNotificationManager;
+}
+
+Indexer *AkonadiServer::indexer() const
+{
+    return mIndexer;
 }
 
 QString AkonadiServer::serverPath() const

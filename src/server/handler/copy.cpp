@@ -28,6 +28,9 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 #include "storage/parthelper.h"
+#include "indexer/indexfuture.h"
+#include "indexer/indexer.h"
+#include "akonadi.h"
 
 #include <private/imapset_p.h>
 
@@ -58,6 +61,10 @@ bool Copy::copyItem(const PimItem &item, const Collection &target)
     if (!store->appendPimItem(parts, item.flags(), item.mimeType(), target, QDateTime::currentDateTimeUtc(), QString(), QString(), item.gid(), newItem)) {
         return false;
     }
+
+    auto indexer = AkonadiServer::instance()->indexer();
+    mFutureSet.add(indexer->copy(item.id(), newItem.mimeType().name(), item.collectionId(),
+                                 newItem.id(), target.id()));
 
     return true;
 }
@@ -121,6 +128,8 @@ bool Copy::parseStream()
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
     }
+
+    mFutureSet.waitForAll();
 
     return successResponse<Protocol::CopyItemsResponse>();
 }

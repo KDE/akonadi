@@ -602,6 +602,29 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                      "        " << prop->mVariableName() << "->toJson(jsonObject);\n"
                      "        json[QStringLiteral(\"" << prop->name() << "\")] = jsonObject;\n"
                      "    }\n";
+        } else if (TypeHelper::isAssociativeContainer(prop->type())) {
+            const auto containerType = TypeHelper::containerType(prop->type());
+            QString key = containerType.left(containerType.indexOf(QLatin1Char(','))).trimmed();
+            QString value = containerType.mid(containerType.indexOf(QLatin1Char(',')) + 1).trimmed();
+            mImpl << "    {\n"
+                     "        QJsonObject obj;\n"
+                     "        for (auto it = " << prop->mVariableName() << ".cbegin(), end = " << prop->mVariableName() << ".cend(); it != end; ++it) {\n";
+            if (TypeHelper::isNumericType(key)) {
+                mImpl << "            const QString key = QString::number(it.key());\n";
+            } else {
+                mImpl << "            const QString key = it.key();\n";
+            }
+            if (TypeHelper::isNumericType(value)) {
+                mImpl << "            const QString value = QString::number(it.value());\n";
+            } else if (value == QLatin1String("QByteArray")) {
+                mImpl << "            const QString value = QString::fromUtf8(it.value());\n";
+            } else {
+                mImpl << "            const QString value = it.value();\n";
+            }
+            mImpl << "            obj[key] = value;\n"
+                     "        }\n"
+                     "        json[QStringLiteral(\"" << prop->name() << "\")] = obj;\n"
+                     "    }\n";
         } else if (TypeHelper::isContainer(prop->type())) {
             const auto &containerType = TypeHelper::containerType(prop->type());
             mImpl << "    {\n"

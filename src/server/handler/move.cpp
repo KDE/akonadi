@@ -18,7 +18,8 @@
 */
 
 #include "move.h"
-
+#include "akonadi.h"
+#include "akonadiserver_debug.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
@@ -28,7 +29,8 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
-#include "akonadiserver_debug.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -58,6 +60,8 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
     QMap<Entity::Id /* collection */, PimItem> toMove;
     QMap<Entity::Id /* collection */, Collection> sources;
     ImapSet toMoveIds;
+    auto indexer = AkonadiServer::instance()->indexer();
+    IndexFutureSet futures(items.size());
     Q_FOREACH (/*sic!*/ PimItem item, items) {  //krazy:exclude=foreach
         if (!item.isValid()) {
             failureResponse("Invalid item in result set!?");
@@ -88,6 +92,8 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
             return;
         }
 
+        futures.add(indexer->move(item.id(), item.mimeType().name(), source.id(), mDestination.id()));
+
         toMove.insertMulti(source.id(), item);
         toMoveIds.add(QVector<qint64>{ item.id() });
     }
@@ -96,6 +102,8 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
         failureResponse("Unable to commit transaction.");
         return;
     }
+
+    futures.waitForAll();
 
     // Emit notification for each source collection separately
     Collection source;

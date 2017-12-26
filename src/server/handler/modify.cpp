@@ -31,6 +31,8 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
 #include "search/searchmanager.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -282,6 +284,10 @@ bool Modify::parseStream()
         if (collection.hasPendingChanges() && !collection.update()) {
             return failureResponse("Unable to update collection");
         }
+
+        auto indexer = AkonadiServer::instance()->indexer();
+        indexer->index(collection.id(), QStringLiteral("inode/directory"), cmd.indexData()).waitForFinished();
+
         //This must be after the collection was updated in the db. The resource will immediately request a copy of the collection.
         if (AkonadiServer::instance()->intervalChecker() && collection.referenced() && referencedChanged) {
             AkonadiServer::instance()->intervalChecker()->requestCollectionSync(collection);

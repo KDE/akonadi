@@ -896,6 +896,12 @@ inline bool containerComparator(const Container<Value> &c1, const Container<Valu
     return c1 == c2;
 }
 
+template<typename Key, typename Value, template<typename, typename> class Container>
+inline bool containerComparator(const Container<Key, Value> &c1, const Container<Key, Value> &c2)
+{
+    return c1 == c2;
+}
+
 template<typename T, template<typename> class Container>
 inline bool containerComparator(const Container<QSharedPointer<T>> &c1,
                                 const Container<QSharedPointer<T>> &c2)

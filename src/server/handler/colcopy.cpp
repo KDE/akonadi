@@ -26,6 +26,9 @@
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
 #include "storage/collectionqueryhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
+#include "akonadi.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -47,8 +50,12 @@ bool ColCopy::copyCollection(const Collection &source, const Collection &target)
         col.setRemoteRevision(QString());
     }
 
-    DataStore *db = connection()->storageBackend();
+    auto indexer = AkonadiServer::instance()->indexer();
+    mFutureSet.add(indexer->copy(source.id(), QStringLiteral("inode/directory"),
+                                 source.parentId(), col.id(), target.id()));
 
+
+    DataStore *db = connection()->storageBackend();
     const auto sourceMimeTypes = source.mimeTypes();
     QStringList mimeTypes;
     mimeTypes.reserve(sourceMimeTypes.size());
@@ -118,6 +125,8 @@ bool ColCopy::parseStream()
     if (!transaction.commit()) {
         return failureResponse(QStringLiteral("Cannot commit transaction."));
     }
+
+    mFutureSet.waitForAll();
 
     return successResponse<Protocol::CopyCollectionResponse>();
 }

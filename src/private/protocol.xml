@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="60">
+<protocol version="61">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -150,6 +150,7 @@
     <param name="attributes" type="Akonadi::Protocol::Attributes" />
     <param name="parts" type="QSet&lt;QByteArray&gt;" />
     <param name="flagsOverwritten" type="bool" />
+    <param name="indexData" type="QByteArray" />
   </command>
 
   <response name="CreateItem"/>
@@ -339,6 +340,7 @@
     <param name="modifiedParts" type="ModifyItemsCommand::ModifiedParts" default="None" readonly="true" />
     <param name="items" type="Scope" />
     <param name="oldRevision" type="int" default="-1" />
+    <param name="indexData" type="QMap&lt;qint64, QByteArray&gt;" />
     <param name="flags" type="QSet&lt;QByteArray&gt;">
       <depends enum="modifiedParts" value="ModifyItemsCommand::Flags" />
     </param>
@@ -429,6 +431,7 @@
     <param name="syncPref" type="Tristate" default="Tristate::Undefined" />
     <param name="displayPref" type="Tristate" default="Tristate::Undefined" />
     <param name="indexPref" type="Tristate" default="Tristate::Undefined" />
+    <param name="indexData" type="QByteArray" />
   </command>
 
   <response name="CreateCollection" />
@@ -556,6 +559,7 @@
 
     <param name="modifiedParts" type="ModifyCollectionCommand::ModifiedParts" default="None" readonly="true" />
     <param name="collection" type="Scope" />
+    <param name="indexData" type="QByteArray" />
     <param name="parentId" type="qint64" default="-1">
       <depends enum="modifiedParts" value="ModifyCollectionCommand::ParentID" />
     </param>

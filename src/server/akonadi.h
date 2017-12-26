@@ -52,12 +52,12 @@ public:
     /**
      * Can return a nullptr
      */
-    CacheCleaner *cacheCleaner();
+    CacheCleaner *cacheCleaner() const;
 
     /**
      * Can return a nullptr
      */
-    IntervalCheck *intervalChecker();
+    IntervalCheck *intervalChecker() const;
 
     /**
      * Instance-aware server .config directory
@@ -67,7 +67,9 @@ public:
     /**
      * Can return a nullptr
      */
-    NotificationManager *notificationManager();
+    NotificationManager *notificationManager() const;
+
+    Indexer *indexer() const;
 
 public Q_SLOTS:
     /**
