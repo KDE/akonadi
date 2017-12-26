@@ -6,8 +6,11 @@
 
 #include "itemmodifyhandler.h"
 
+#include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "private/externalpartstorage_p.h"
 #include "shared/akranges.h"
 #include "storage/datastore.h"
@@ -332,6 +335,7 @@ bool ItemModifyHandler::parseStream()
             (!changes.isEmpty() && !onlyRemoteIdChanged && !onlyRemoteRevisionChanged && !onlyRemoteIdAndRevisionChanged && !onlyGIDChanged);
 
         // run update query and prepare change notifications
+        const auto indexData = cmd.indexData();
         for (int i = 0; i < pimItems.count(); ++i) {
             PimItem &item = pimItems[i];
             if (revisionNeedsUpdate) {
@@ -346,6 +350,8 @@ bool ItemModifyHandler::parseStream()
             if (!item.update()) {
                 return failureResponse("Unable to write item changes into the database");
             }
+
+            akonadi().indexer().index(item.id(), item.mimeType().name(), indexData.value(item.id())).waitForFinished();
 
             if (cmd.invalidateCache()) {
                 if (!store->invalidateItemCache(item)) {

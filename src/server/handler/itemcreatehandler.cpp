@@ -9,6 +9,8 @@
 #include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "itemfetchhelper.h"
 #include "preprocessormanager.h"
 #include "private/externalpartstorage_p.h"
@@ -82,6 +84,8 @@ bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimIt
         return failureResponse(QStringLiteral("Failed to append item"));
     }
 
+    auto future = akonadi().indexer().index(item.id(), item.mimeType().name(), cmd.indexData());
+
     // set message flags
     const QSet<QByteArray> flags = cmd.mergeModes() == Protocol::CreateItemCommand::None ? cmd.flags() : cmd.addedFlags();
     if (!flags.isEmpty()) {
@@ -140,6 +144,9 @@ bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimIt
         // TODO: Handle errors? Technically, this is not a critical issue as no data are lost
         PartHelper::insert(&hiddenAttribute);
     }
+
+    // Make sure we have the data indexed before we notify listeners
+    future.waitForFinished();
 
     const bool seen = flags.contains(AKONADI_FLAG_SEEN) || flags.contains(AKONADI_FLAG_IGNORED);
     notify(item, seen, item.collection());
@@ -292,10 +299,14 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd, PimIte
         // Only mark dirty when merged from application
         currentItem.setDirty(!connection()->context().resource().isValid());
 
+        auto future = akonadi().indexer().index(currentItem.id(), currentItem.mimeType().name(), cmd.indexData());
+
         // Store all changes
         if (!currentItem.update()) {
             return failureResponse("Failed to store merged item");
         }
+
+        future.waitForFinished();
 
         notify(currentItem, currentItem.collection(), changedParts);
     }

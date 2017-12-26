@@ -11,6 +11,8 @@
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
 #include "storage/transaction.h"
@@ -74,13 +76,18 @@ bool CollectionMoveHandler::parseStream()
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store, QStringLiteral("CollectionMoveHandler"));
 
+    const auto sourceParent = source.parentId();
     if (!store->moveCollection(source, target)) {
         return failureResponse(QStringLiteral("Unable to reparent collection"));
     }
 
+    auto future = akonadi().indexer().move(source.id(), QStringLiteral("inode/directory"), sourceParent, target.id());
+
     if (!transaction.commit()) {
         return failureResponse(QStringLiteral("Cannot commit transaction."));
     }
+
+    future.waitForFinished();
 
     return successResponse<Protocol::MoveCollectionResponse>();
 }

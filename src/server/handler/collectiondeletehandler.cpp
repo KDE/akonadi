@@ -6,8 +6,13 @@
 
 #include "collectiondeletehandler.h"
 
+#include "akonadi.h"
+
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
+#include "shared/akranges.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 
@@ -21,14 +26,17 @@ CollectionDeleteHandler::CollectionDeleteHandler(AkonadiServer &akonadi)
 {
 }
 
-bool CollectionDeleteHandler::deleteRecursive(Collection &col)
+bool CollectionDeleteHandler::deleteRecursive(Collection &col, IndexFutureSet &futures)
 {
     Collection::List children = col.children();
     for (Collection &child : children) {
-        if (!deleteRecursive(child)) {
+        if (!deleteRecursive(child, futures)) {
             return false;
         }
     }
+
+    const auto mimeTypes = col.mimeTypes() | Views::transform(&MimeType::name) | Actions::toQList;
+    futures.add(akonadi().indexer().removeCollection(col.id(), mimeTypes));
 
     DataStore *db = connection()->storageBackend();
     return db->cleanupCollection(col);
@@ -53,13 +61,17 @@ bool CollectionDeleteHandler::parseStream()
 
     Transaction transaction(storageBackend(), QStringLiteral("DELETE"));
 
-    if (!deleteRecursive(collection)) {
+    IndexFutureSet futures;
+
+    if (!deleteRecursive(collection, futures)) {
         return failureResponse(QStringLiteral("Unable to delete collection"));
     }
 
     if (!transaction.commit()) {
         return failureResponse(QStringLiteral("Unable to commit transaction"));
     }
+
+    futures.waitForAll();
 
     return successResponse<Protocol::DeleteCollectionResponse>();
 }

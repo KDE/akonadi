@@ -12,6 +12,7 @@ namespace Akonadi
 {
 namespace Server
 {
+class IndexFutureSet;
 class Collection;
 
 /**
@@ -31,7 +32,7 @@ public:
     bool parseStream() override;
 
 private:
-    bool deleteRecursive(Collection &col);
+    bool deleteRecursive(Collection &col, IndexFutureSet &futures);
 };
 
 } // namespace Server

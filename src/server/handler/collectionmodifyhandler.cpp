@@ -11,6 +11,8 @@
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "intervalcheck.h"
 #include "search/searchmanager.h"
 #include "shared/akranges.h"
@@ -262,6 +264,9 @@ bool CollectionModifyHandler::parseStream()
         if (collection.hasPendingChanges() && !collection.update()) {
             return failureResponse("Unable to update collection");
         }
+
+        akonadi().indexer().index(collection.id(), QStringLiteral("inode/directory"), cmd.indexData()).waitForFinished();
+
         db->notificationCollector()->collectionChanged(collection, changes);
         // For backwards compatibility. Must be after the changed notification (otherwise the compression removes it).
         if (changes.contains(AKONADI_PARAM_ENABLED)) {

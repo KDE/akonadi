@@ -35,23 +35,27 @@ public:
     enum TaskType {
         Invalid,
         Index,
-        MoveItem,
+        Copy,
+        Move,
         RemoveItem,
         RemoveCollection
     };
 
     explicit IndexerTask();
-    IndexerTask(qint64 taskId, qint64 itemId, const QString &mimeType, const QByteArray &data);
-    IndexerTask(qint64 taskId, qint64 itemId, const QString &mimeType);
-    IndexerTask(qint64 taskId, qint64 collectionId, const QStringList &mimeTypes);
-    IndexerTask(qint64 taskId, qint64 itemId, const QString &mimeType, qint64 srcCollectionId, qint64 dstCollectionId);
+
+    static IndexerTask createIndexTask(qint64 taskId, qint64 id, const QString &mimeType, const QByteArray &data);
+    static IndexerTask createCopyTask(qint64 taskId, qint64 id, const QString &mimeType, qint64 srcCollection, qint64 dstId, qint64 dstCollectionId);
+    static IndexerTask createMoveTask(qint64 taskId, qint64 id, const QString &mimeType, qint64 srcCollection, qint64 dstCollectionId);
+    static IndexerTask createRemoveItemTask(qint64 taskId, qint64 id, const QString &mimeType);
+    static IndexerTask createRemoveCollectionTask(qint64 taskId, qint64 id, const QStringList &mimeTypes);
 
     bool operator==(const IndexerTask &other) const;
 
     TaskType taskType = Invalid;
     IndexFuture future;
     qint64 entityId = -1;
-    qint64 collectionId = -1;
+    qint64 dstId = -1;
+    qint64 sourceCollectionId = -1;
     qint64 destinationCollectionId = -1;
     QStringList mimeTypes;
     QByteArray data;

@@ -452,6 +452,11 @@ Tracer &AkonadiServer::tracer()
     return *mTracer;
 }
 
+Indexer &AkonadiServer::indexer()
+{
+    return *mIndexer;
+}
+
 QString AkonadiServer::serverPath() const
 {
     return StandardDirs::saveDir("config");

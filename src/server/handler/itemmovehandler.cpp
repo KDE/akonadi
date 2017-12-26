@@ -10,6 +10,8 @@
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretrievalmanager.h"
@@ -46,6 +48,8 @@ void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
     }
 
     const QDateTime mtime = QDateTime::currentDateTimeUtc();
+    auto &indexer = akonadi().indexer();
+    IndexFutureSet futures(items.size());
     // Split the list by source collection
     QMultiMap<Entity::Id /* collection */, PimItem> toMove;
     QMap<Entity::Id /* collection */, Collection> sources;
@@ -81,6 +85,8 @@ void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
             return;
         }
 
+        futures.add(indexer.move(item.id(), item.mimeType().name(), source.id(), mDestination.id()));
+
         toMove.insert(source.id(), item);
         toMoveIds.push_back(item.id());
     }
@@ -89,6 +95,8 @@ void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
         failureResponse("Unable to commit transaction.");
         return;
     }
+
+    futures.waitForAll();
 
     // Emit notification for each source collection separately
     Collection source;

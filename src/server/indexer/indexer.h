@@ -42,9 +42,11 @@ public:
     ~Indexer();
 
     IndexFuture index(qint64 id, const QString &mimeType, const QByteArray &indexData);
+    IndexFuture copy(qint64 id, const QString &mimeType, qint64 sourceCollection,
+                     qint64 newId, qint64 destinationCollection);
+    IndexFuture move(qint64 id, const QString &mimeType, qint64 sourceCollection,
+                     qint64 destinationCollection);
     IndexFuture removeItem(qint64 id, const QString &mimeType);
-    IndexFuture moveItem(qint64 id, const QString &mimeType, qint64 sourceCollection,
-                         qint64 destinationCollection);
     IndexFuture removeCollection(qint64 colId, const QStringList &mimeTypes);
 
     void init() override;

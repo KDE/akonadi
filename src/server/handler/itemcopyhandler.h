@@ -8,6 +8,7 @@
 
 #include "entities.h"
 #include "handler.h"
+#include "indexer/indexfuture.h"
 
 namespace Akonadi
 {
@@ -44,6 +45,9 @@ protected:
     */
     bool copyItem(const PimItem &item, const Collection &target);
     void processItems(const QList<qint64> &ids);
+
+protected:
+    IndexFutureSet mFutureSet;
 
 private:
     Collection mTargetCollection;

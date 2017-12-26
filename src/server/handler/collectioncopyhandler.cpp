@@ -10,6 +10,8 @@
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "protocol_p.h"
 #include "shared/akranges.h"
 #include "storage/collectionqueryhelper.h"
@@ -52,6 +54,8 @@ bool CollectionCopyHandler::copyCollection(const Collection &source, const Colle
     if (!storageBackend()->appendCollection(col, mimeTypes, attributes)) {
         return false;
     }
+
+    mFutureSet.add(akonadi().indexer().copy(source.id(), QStringLiteral("inode/directory"), source.parentId(), col.id(), target.id()));
 
     // copy sub-collections
     const Collection::List lstCols = source.children();
@@ -105,6 +109,8 @@ bool CollectionCopyHandler::parseStream()
     if (!transaction.commit()) {
         return failureResponse(QStringLiteral("Cannot commit transaction."));
     }
+
+    mFutureSet.waitForAll();
 
     return successResponse<Protocol::CopyCollectionResponse>();
 }

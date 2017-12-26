@@ -64,7 +64,7 @@ IndexFuture Indexer::index(qint64 id, const QString &mimeType, const QByteArray 
 {
     QMutexLocker locker(&d->lock);
     const int taskId = ++d->lastTaskId;
-    const IndexerTask task{ taskId, id, mimeType, indexData };
+    const auto task = IndexerTask::createIndexTask(taskId, id, mimeType, indexData);
     if (d->enableDebugging) {
         QTimer::singleShot(0, this, [=]() {
             Q_EMIT enqueued(taskId, id, mimeType);
@@ -76,6 +76,79 @@ IndexFuture Indexer::index(qint64 id, const QString &mimeType, const QByteArray 
 
     return task.future;
 }
+
+IndexFuture Indexer::copy(qint64 id, const QString &mimeType, qint64 sourceCollection,
+                          qint64 newId, qint64 destinationCollection)
+{
+    QMutexLocker locker(&d->lock);
+    const int taskId = ++d->lastTaskId;
+    const auto task = IndexerTask::createCopyTask(taskId, id, mimeType, sourceCollection,
+                                                  newId, destinationCollection);
+    if (d->enableDebugging) {
+        QTimer::singleShot(0, this, [=]() {
+            Q_EMIT enqueued(taskId, id, mimeType);
+        });
+    }
+    d->queue.enqueue(task);
+    locker.unlock();
+    d->cond.wakeAll();
+
+    return task.future;
+}
+
+IndexFuture Indexer::move(qint64 id, const QString &mimeType, qint64 sourceCollection,
+                          qint64 destinationCollection)
+{
+    QMutexLocker locker(&d->lock);
+    const int taskId = ++d->lastTaskId;
+    const auto task = IndexerTask::createMoveTask(taskId, id, mimeType, sourceCollection,
+                                                  destinationCollection);
+    if (d->enableDebugging) {
+        QTimer::singleShot(0, this, [=]() {
+            Q_EMIT enqueued(taskId, id, mimeType);
+        });
+    }
+    d->queue.enqueue(task);
+    locker.unlock();
+    d->cond.wakeAll();
+
+    return task.future;
+}
+
+IndexFuture Indexer::removeCollection(qint64 colId, const QStringList &mimeTypes)
+{
+    QMutexLocker locker(&d->lock);
+    const int taskId = ++d->lastTaskId;
+    const auto task = IndexerTask::createRemoveCollectionTask(taskId, colId, mimeTypes);
+    if (d->enableDebugging) {
+        QTimer::singleShot(0, this, [=]() {
+            //
+        });
+    }
+    d->queue.enqueue(task);
+    locker.unlock();
+    d->cond.wakeAll();
+
+    return task.future;
+}
+
+IndexFuture Indexer::removeItem(qint64 id, const QString &mimeType)
+{
+    QMutexLocker locker(&d->lock);
+    const int taskId = ++d->lastTaskId;
+    const auto task = IndexerTask::createRemoveItemTask(taskId, id, mimeType);
+    if (d->enableDebugging) {
+        QTimer::singleShot(0, this, [=]() {
+            Q_EMIT enqueued(taskId, id, mimeType);
+        });
+    }
+    d->queue.enqueue(task);
+    locker.unlock();
+    d->cond.wakeAll();
+
+    return task.future;
+}
+
 
 
 void IndexerPrivate::loadIndexingPlugins()
@@ -245,9 +318,13 @@ void Indexer::indexerLoop()
             case IndexerTask::Index:
                 result = indexer->index(task.mimeTypes.first(), task.entityId, task.data);
                 break;
-            case IndexerTask::MoveItem:
-                result = indexer->moveItem(task.mimeTypes.first(), task.entityId,
-                                            task.collectionId, task.destinationCollectionId);
+            case IndexerTask::Copy:
+                result = indexer->copy(task.mimeTypes.first(), task.entityId, task.sourceCollectionId,
+                                       task.dstId, task.destinationCollectionId);
+                break;
+            case IndexerTask::Move:
+                result = indexer->move(task.mimeTypes.first(), task.entityId,
+                                       task.sourceCollectionId, task.destinationCollectionId);
                 break;
             case IndexerTask::RemoveItem:
                 result = indexer->removeItem(task.mimeTypes.first(), task.entityId);
@@ -259,6 +336,7 @@ void Indexer::indexerLoop()
                         break;
                     }
                 }
+                indexer->removeCollection(QStringLiteral("inode/directory"), task.entityId);
                 break;
             }
             if (!result) {

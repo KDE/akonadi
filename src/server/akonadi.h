@@ -66,6 +66,8 @@ public:
 
     Tracer &tracer();
 
+    Indexer &indexer();
+
     /**
      * Instance-aware server .config directory
      */

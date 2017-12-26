@@ -10,6 +10,8 @@
 #include "cachecleaner.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/itemretriever.h"
@@ -47,7 +49,13 @@ bool ItemCopyHandler::copyItem(const PimItem &item, const Collection &target)
     }
 
     DataStore *store = connection()->storageBackend();
-    return store->appendPimItem(newParts, item.flags(), item.mimeType(), target, QDateTime::currentDateTimeUtc(), QString(), QString(), item.gid(), newItem);
+    if (!store->appendPimItem(newParts, item.flags(), item.mimeType(), target, QDateTime::currentDateTimeUtc(), QString(), QString(), item.gid(), newItem)) {
+        return false;
+    }
+
+    mFutureSet.add(akonadi().indexer().copy(item.id(), newItem.mimeType().name(), item.collectionId(), newItem.id(), target.id()));
+
+    return true;
 }
 
 void ItemCopyHandler::processItems(const QList<qint64> &ids)
@@ -108,6 +116,8 @@ bool ItemCopyHandler::parseStream()
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
     }
+
+    mFutureSet.waitForAll();
 
     return successResponse<Protocol::CopyItemsResponse>();
 }

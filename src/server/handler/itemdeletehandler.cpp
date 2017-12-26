@@ -6,7 +6,10 @@
 
 #include "itemdeletehandler.h"
 
+#include "akonadi.h"
 #include "connection.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"
@@ -42,6 +45,13 @@ bool ItemDeleteHandler::parseStream()
     }
 
     const QList<PimItem> items = qb.result();
+
+    auto &indexer = akonadi().indexer();
+    IndexFutureSet futures;
+    for (const auto &item : items) {
+        futures.add(indexer.removeItem(item.id(), item.mimeType().name()));
+    }
+
     if (!store->cleanupPimItems(items)) {
         return failureResponse("Deletion failed");
     }
@@ -49,6 +59,8 @@ bool ItemDeleteHandler::parseStream()
     if (!transaction.commit()) {
         return failureResponse("Unable to commit transaction");
     }
+
+    futures.waitForAll();
 
     return successResponse<Protocol::DeleteItemsResponse>();
 }

@@ -5,8 +5,11 @@
  ***************************************************************************/
 #include "collectioncreatehandler.h"
 
+#include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
+#include "indexer/indexer.h"
+#include "indexer/indexfuture.h"
 #include "shared/akranges.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
@@ -116,11 +119,15 @@ bool CollectionCreateHandler::parseStream()
         return failureResponse(QStringLiteral("Could not create collection %1, resourceId %2").arg(cmd.name()).arg(resourceId));
     }
 
+    auto future = akonadi().indexer().index(collection.id(), QStringLiteral("inode/directory"), cmd.indexData());
+
     if (!transaction.commit()) {
         return failureResponse(QStringLiteral("Unable to commit transaction."));
     }
 
     db->activeCachePolicy(collection);
+
+    future.waitForFinished();
 
     sendResponse<Protocol::FetchCollectionsResponse>(HandlerHelper::fetchCollectionsResponse(akonadi(), collection));
 
