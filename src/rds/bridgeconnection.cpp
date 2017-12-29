@@ -39,8 +39,14 @@ BridgeConnection::BridgeConnection(QTcpSocket *remoteSocket, QObject *parent)
     , m_remoteSocket(remoteSocket)
 {
     // wait for the vtable to be complete
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    QMetaObject::invokeMethod(this, &BridgeConnection::doConnects, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(this, &BridgeConnection::connectLocal, Qt::QueuedConnection);
+#else
     QMetaObject::invokeMethod(this, "doConnects", Qt::QueuedConnection);
     QMetaObject::invokeMethod(this, "connectLocal", Qt::QueuedConnection);
+#endif
+
 }
 
 BridgeConnection::~BridgeConnection()
