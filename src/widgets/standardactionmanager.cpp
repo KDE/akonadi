@@ -584,7 +584,9 @@ public:
         collectionSelectionModel->select(selection, QItemSelectionModel::ClearAndSelect | QItemSelectionModel::Rows);
 
         // Also set the current index. This will trigger KMMainWidget::slotFolderChanged in kmail, which we want.
-        collectionSelectionModel->setCurrentIndex(selection.indexes().first(), QItemSelectionModel::NoUpdate);
+        if (!selection.indexes().isEmpty()) {
+            collectionSelectionModel->setCurrentIndex(selection.indexes().first(), QItemSelectionModel::NoUpdate);
+        }
 
         updateActions();
     }
