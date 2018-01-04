@@ -40,9 +40,13 @@ IntervalCheck::~IntervalCheck()
 
 void IntervalCheck::requestCollectionSync(const Collection &collection)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    QMetaObject::invokeMethod(this, [this, collection]() { collectionExpired(collection); }, Qt::QueuedConnection);
+#else
     QMetaObject::invokeMethod(this, "collectionExpired",
                               Qt::QueuedConnection,
                               Q_ARG(Collection, collection));
+#endif
 }
 
 int IntervalCheck::collectionScheduleInterval(const Collection &collection)

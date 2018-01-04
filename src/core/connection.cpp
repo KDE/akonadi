@@ -74,7 +74,11 @@ Connection::~Connection()
 
 void Connection::reconnect()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    const bool ok = QMetaObject::invokeMethod(this, &Connection::doReconnect, Qt::QueuedConnection);
+#else
     const bool ok = QMetaObject::invokeMethod(this, "doReconnect", Qt::QueuedConnection);
+#endif
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }

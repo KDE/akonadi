@@ -40,7 +40,11 @@ SessionThread::SessionThread(QObject *parent)
 
 SessionThread::~SessionThread()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    QMetaObject::invokeMethod(this, &SessionThread::doThreadQuit);
+#else
     QMetaObject::invokeMethod(this, "doThreadQuit");
+#endif
     if (!thread()->wait(10 * 1000)) {
         thread()->terminate();
         // Make sure to wait until it's done, otherwise it can crash when the pthread callback is called
