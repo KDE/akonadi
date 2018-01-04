@@ -1045,13 +1045,21 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
 void ResourceBasePrivate::slotSynchronizeTags()
 {
     Q_Q(ResourceBase);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    QMetaObject::invokeMethod(this, [this, q] { q->retrieveTags(); });
+#else
     QMetaObject::invokeMethod(q, "retrieveTags");
+#endif
 }
 
 void ResourceBasePrivate::slotSynchronizeRelations()
 {
     Q_Q(ResourceBase);
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    QMetaObject::invokeMethod(this, [this, q] { q->retrieveRelations(); });
+#else
     QMetaObject::invokeMethod(q, "retrieveRelations");
+#endif
 }
 
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)

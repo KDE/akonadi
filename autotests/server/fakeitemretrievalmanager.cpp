@@ -37,7 +37,11 @@ FakeItemRetrievalManager::~FakeItemRetrievalManager()
 
 void FakeItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *request)
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    QMetaObject::invokeMethod(this, [this, request] { Q_EMIT requestFinished(request); }, Qt::QueuedConnection);
+#else
     QMetaObject::invokeMethod(this, "requestFinished", Qt::QueuedConnection,
                               Q_ARG(ItemRetrievalRequest*, request));
+#endif
 }
 

@@ -52,14 +52,16 @@ AkThread::~AkThread()
 void AkThread::startThread()
 {
     const bool init = QMetaObject::invokeMethod(this, "init", Qt::QueuedConnection);
-    Q_ASSERT(init); Q_UNUSED(init);
+    Q_ASSERT(init);
+    Q_UNUSED(init);
 }
 
 void AkThread::quitThread()
 {
     qCDebug(AKONADISERVER_LOG) << "Shutting down" << objectName() << "...";
     const bool invoke = QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
-    Q_ASSERT(invoke); Q_UNUSED(invoke);
+    Q_ASSERT(invoke);
+    Q_UNUSED(invoke);
     if (!thread()->wait(10 * 1000)) {
         thread()->terminate();
         thread()->wait();
