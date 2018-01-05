@@ -125,7 +125,6 @@ private:
 
     SpecialCollectionsRequestJobPrivate *const d;
 
-    Q_PRIVATE_SLOT(d, void lockResult(KJob *))
     Q_PRIVATE_SLOT(d, void releaseLock())
     Q_PRIVATE_SLOT(d, void resourceScanResult(KJob *))
     Q_PRIVATE_SLOT(d, void collectionCreateResult(KJob *))

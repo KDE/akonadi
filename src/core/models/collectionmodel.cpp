@@ -201,7 +201,7 @@ bool CollectionModel::setData(const QModelIndex &index, const QVariant &value, i
         }
         col.setName(value.toString());
         CollectionModifyJob *job = new CollectionModifyJob(col, d->session);
-        connect(job, SIGNAL(result(KJob*)), SLOT(editDone(KJob*)));
+        connect(job, &CollectionModifyJob::result, this, [this, d](KJob* job) { d->editDone(job); });
         return true;
     }
     return QAbstractItemModel::setData(index, value, role);

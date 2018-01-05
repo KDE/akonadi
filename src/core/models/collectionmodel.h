@@ -129,7 +129,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void collectionStatisticsChanged(Akonadi::Collection::Id,
                    const Akonadi::CollectionStatistics &))
     Q_PRIVATE_SLOT(d_func(), void listDone(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void editDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void dropResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void collectionsChanged(const Akonadi::Collection::List &))
     //@endcond

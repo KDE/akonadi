@@ -347,7 +347,7 @@ void SpecialCollectionsRequestJob::doStart()
         emitResult();
     } else {
         GetLockJob *lockJob = new GetLockJob(this);
-        connect(lockJob, SIGNAL(result(KJob*)), this, SLOT(lockResult(KJob*)));
+        connect(lockJob, &GetLockJob::result, this, [this](KJob*job) { d->lockResult(job);});
         lockJob->start();
     }
 }
