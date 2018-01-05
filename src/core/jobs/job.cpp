@@ -181,7 +181,7 @@ void JobPrivate::startQueued()
 
     emit q->aboutToStart(q);
     q->doStart();
-    QTimer::singleShot(0, q, SLOT(startNext()));
+    QTimer::singleShot(0, q, [this]() { startNext(); });
     QMetaObject::invokeMethod(q, "signalStartedToJobTracker", Qt::QueuedConnection);
 }
 
@@ -348,7 +348,7 @@ bool Job::addSubjob(KJob *job)
     bool rv = KCompositeJob::addSubjob(job);
     if (rv) {
         connect(job, SIGNAL(aboutToStart(Akonadi::Job*)), SLOT(slotSubJobAboutToStart(Akonadi::Job*)));
-        QTimer::singleShot(0, this, SLOT(startNext()));
+        QTimer::singleShot(0, this, [this]() { d_ptr->startNext(); });
     }
     return rv;
 }
@@ -358,7 +358,7 @@ bool Job::removeSubjob(KJob *job)
     bool rv = KCompositeJob::removeSubjob(job);
     if (job == d_ptr->mCurrentSubJob) {
         d_ptr->mCurrentSubJob = nullptr;
-        QTimer::singleShot(0, this, SLOT(startNext()));
+        QTimer::singleShot(0, this, [this]() { d_ptr->startNext(); });
     }
     return rv;
 }
@@ -379,7 +379,7 @@ void Job::slotResult(KJob *job)
         d_ptr->mCurrentSubJob = nullptr;
         KCompositeJob::slotResult(job);
         if (!job->error()) {
-            QTimer::singleShot(0, this, SLOT(startNext()));
+            QTimer::singleShot(0, this, [this]() { d_ptr->startNext(); });
         }
     } else {
         // job that was still waiting for execution finished, probably canceled,

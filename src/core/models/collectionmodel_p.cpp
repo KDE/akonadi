@@ -296,7 +296,7 @@ void CollectionModelPrivate::init()
 
     session = new Session(QCoreApplication::instance()->applicationName().toUtf8()
                           + QByteArray("-CollectionModel-") + QByteArray::number(qrand()), q);
-    QTimer::singleShot(0, q, SLOT(startFirstListJob()));
+    QTimer::singleShot(0, q, [this] { startFirstListJob(); });
 
     // monitor collection changes
     monitor = new Monitor();
