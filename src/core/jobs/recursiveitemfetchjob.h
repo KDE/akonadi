@@ -145,7 +145,6 @@ private:
     class Private;
     Private *const d;
 
-    Q_PRIVATE_SLOT(d, void collectionFetchResult(KJob *))
     Q_PRIVATE_SLOT(d, void itemFetchResult(KJob *))
     //@endcond
 };

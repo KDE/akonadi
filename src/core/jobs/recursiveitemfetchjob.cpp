@@ -123,7 +123,7 @@ void RecursiveItemFetchJob::start()
         job->fetchScope().setContentMimeTypes(d->mMimeTypes);
     }
 
-    connect(job, SIGNAL(result(KJob*)), this, SLOT(collectionFetchResult(KJob*)));
+    connect(job, &CollectionFetchJob::result, this, [this](KJob *job) { d->collectionFetchResult(job); });
 }
 
 Akonadi::Item::List RecursiveItemFetchJob::items() const

@@ -204,9 +204,6 @@ protected:
 private:
     //@cond PRIVATE
     Q_DECLARE_PRIVATE(ItemModifyJob)
-
-    Q_PRIVATE_SLOT(d_func(), void conflictResolved())
-    Q_PRIVATE_SLOT(d_func(), void conflictResolveError(const QString &))
     //@endcond
 };
 

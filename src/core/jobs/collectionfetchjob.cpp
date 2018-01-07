@@ -383,7 +383,7 @@ void CollectionFetchJob::slotResult(KJob *job)
         }
         d_ptr->mCurrentSubJob = nullptr;
         removeSubjob(job);
-        QTimer::singleShot(0, this, SLOT(startNext()));
+        QTimer::singleShot(0, this, [this, d]() { d->startNext(); });
     } else {
         Job::slotResult(job);
     }

@@ -222,7 +222,7 @@ void CollectionPathResolver::doStart()
         }
         job = new CollectionFetchJob(d->mCurrentNode, CollectionFetchJob::Base, this);
     }
-    connect(job, SIGNAL(result(KJob*)), SLOT(jobResult(KJob*)));
+    connect(job, &CollectionFetchJob::result, this, [this, d](KJob *job) { d->jobResult(job);});
 }
 
 //@endcond
