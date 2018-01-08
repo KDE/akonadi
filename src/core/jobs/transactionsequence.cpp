@@ -132,7 +132,7 @@ void TransactionSequence::slotResult(KJob *job)
             }
             d->mState = TransactionSequencePrivate::Committing;
             TransactionCommitJob *job = new TransactionCommitJob(this);
-            connect(job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)));
+            connect(job, &TransactionCommitJob::result, [this, d](KJob *job) { d->commitResult(job);});
         }
     } else {
         setError(job->error());
@@ -141,7 +141,7 @@ void TransactionSequence::slotResult(KJob *job)
 
         // cancel all subjobs in case someone else is listening (such as ItemSync), but without notifying ourselves again
         foreach (KJob *job, subjobs()) {
-            disconnect(job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)));
+            disconnect(job, &KJob::result, this, &TransactionSequence::slotResult);
             job->kill(EmitResult);
         }
         clearSubjobs();
@@ -153,7 +153,7 @@ void TransactionSequence::slotResult(KJob *job)
             }
             d->mState = TransactionSequencePrivate::RollingBack;
             TransactionRollbackJob *job = new TransactionRollbackJob(this);
-            connect(job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)));
+            connect(job, &TransactionRollbackJob::result, [this, d](KJob *job) { d->rollbackResult(job);});
         }
     }
 }
@@ -181,11 +181,11 @@ void TransactionSequence::commit()
         if (!error()) {
             d->mState = TransactionSequencePrivate::Committing;
             TransactionCommitJob *job = new TransactionCommitJob(this);
-            connect(job, SIGNAL(result(KJob*)), SLOT(commitResult(KJob*)));
+            connect(job, &TransactionCommitJob::result, [this, d](KJob *job) { d->commitResult(job);});
         } else {
             d->mState = TransactionSequencePrivate::RollingBack;
             TransactionRollbackJob *job = new TransactionRollbackJob(this);
-            connect(job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)));
+            connect(job, &TransactionRollbackJob::result, [this, d](KJob *job) { d->rollbackResult(job);});
         }
     }
 }
@@ -234,7 +234,7 @@ void TransactionSequence::rollback()
 
     d->mState = TransactionSequencePrivate::RollingBack;
     TransactionRollbackJob *job = new TransactionRollbackJob(this);
-    connect(job, SIGNAL(result(KJob*)), SLOT(rollbackResult(KJob*)));
+    connect(job, &TransactionRollbackJob::result, [this, d](KJob *job) { d->rollbackResult(job);});
 }
 
 #include "moc_transactionsequence.cpp"
