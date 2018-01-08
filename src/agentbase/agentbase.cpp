@@ -420,9 +420,9 @@ void AgentBasePrivate::init()
             this, &AgentBasePrivate::collectionUnsubscribed);
 
     connect(q, SIGNAL(status(int,QString)), q, SLOT(slotStatus(int,QString)));
-    connect(q, SIGNAL(percent(int)), q, SLOT(slotPercent(int)));
-    connect(q, SIGNAL(warning(QString)), q, SLOT(slotWarning(QString)));
-    connect(q, SIGNAL(error(QString)), q, SLOT(slotError(QString)));
+    connect(q, &AgentBase::percent, q, [this](int value) { slotPercent(value); });
+    connect(q, &AgentBase::warning, q, [this](const QString &str) { slotWarning(str); });
+    connect(q, &AgentBase::error, q, [this](const QString &str) { slotError(str); });
 
     mPowerInterface = new QDBusInterface(QStringLiteral("org.kde.Solid.PowerManagement"),
                                          QStringLiteral("/org/kde/Solid/PowerManagement/Actions/SuspendSession"),
