@@ -129,7 +129,20 @@ void Connection::doReconnect()
                                      << XdgBaseDirs::homePath("config") << "nor in any of"
                                      << XdgBaseDirs::systemPathList("config");
         }
+
+        // TODO: share socket setup with server
         const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
+#ifdef Q_OS_WIN
+        // use the installation prefix as uid
+        const QString prefix = QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
+        if (mConnectionType == CommandConnection) {
+            const QString defaultPipe = QStringLiteral("Akonadi-Cmd-") % prefix;
+            serverAddress = connectionSettings.value(QStringLiteral("Connection/NamedPipe"), defaultPipe).toString();
+        } else if (mConnectionType == NotificationConnection) {
+            const QString defaultPipe = QStringLiteral("Akonadi-Ntf-") % prefix;
+            serverAddress = connectionSettings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultPipe).toString();
+        }
+#else
         const QString defaultSocketDir = StandardDirs::saveDir("data");
 
         if (mConnectionType == CommandConnection) {
@@ -139,6 +152,7 @@ void Connection::doReconnect()
             const QString defaultSocketPath = defaultSocketDir % QStringLiteral("/akonadiserver-ntf.socket");
             serverAddress = connectionSettings.value(QStringLiteral("Notifications/UnixPath"), defaultSocketPath).toString();
         }
+#endif
     }
 
     // create sockets if not yet done, note that this does not yet allow changing socket types on the fly

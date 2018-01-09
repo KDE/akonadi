@@ -56,11 +56,6 @@
 #include <QTimer>
 #include <QDBusServiceWatcher>
 
-#ifdef Q_OS_WIN
-#include <windows.h>
-#include <sddl.h>
-#endif
-
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -127,40 +122,11 @@ bool AkonadiServer::init()
     // own thread
     connect(mNtfServer, QOverload<quintptr>::of(&AkLocalServer::newConnection), mNotificationManager, &NotificationManager::registerConnection);
 
+    // TODO: share socket setup with client
 #ifdef Q_OS_WIN
-    HANDLE hToken = NULL;
-    PSID sid;
-    QString userID;
-
-    OpenProcessToken(GetCurrentProcess(), TOKEN_READ, &hToken);
-    if (hToken) {
-        DWORD size;
-        PTOKEN_USER userStruct;
-
-        GetTokenInformation(hToken, TokenUser, NULL, 0, &size);
-        if (ERROR_INSUFFICIENT_BUFFER == GetLastError()) {
-            userStruct = reinterpret_cast<PTOKEN_USER>(new BYTE[size]);
-            GetTokenInformation(hToken, TokenUser, userStruct, size, &size);
-
-            int sidLength = GetLengthSid(userStruct->User.Sid);
-            sid = (PSID) malloc(sidLength);
-            CopySid(sidLength, sid, userStruct->User.Sid);
-            CloseHandle(hToken);
-            delete [] userStruct;
-        }
-
-        LPWSTR s;
-        if (!ConvertSidToStringSidW(sid, &s)) {
-            qCCritical(AKONADISERVER_LOG) << "Could not determine user id for current process.";
-            userID = QString();
-        } else {
-            userID = QString::fromUtf16(reinterpret_cast<ushort *>(s));
-            LocalFree(s);
-        }
-        free(sid);
-    }
-
-    const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % userID;
+    // use the installation prefix as uid
+    const QString prefix = QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
+    const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % prefix;
     const QString cmdPipe = settings.value(QStringLiteral("Connection/NamedPipe"), defaultCmdPipe).toString();
     if (!mCmdServer->listen(cmdPipe)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << cmdPipe;
@@ -168,7 +134,7 @@ bool AkonadiServer::init()
         return false;
     }
 
-    const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % userID;
+    const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % prefix;
     const QString ntfPipe = settings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultNtfPipe).toString();
     if (!mNtfServer->listen(ntfPipe)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << ntfPipe;
