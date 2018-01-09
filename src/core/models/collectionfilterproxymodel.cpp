@@ -35,7 +35,6 @@ class Q_DECL_HIDDEN CollectionFilterProxyModel::Private
 public:
     Private(CollectionFilterProxyModel *parent)
         : mParent(parent)
-        , mExcludeVirtualCollections(false)
     {
         mimeChecker.addWantedMimeType(QStringLiteral("text/uri-list"));
     }
@@ -45,7 +44,7 @@ public:
     QVector< QModelIndex > acceptedResources;
     CollectionFilterProxyModel *mParent = nullptr;
     MimeTypeChecker mimeChecker;
-    bool mExcludeVirtualCollections;
+    bool mExcludeVirtualCollections = false;
 };
 
 bool CollectionFilterProxyModel::Private::collectionAccepted(const QModelIndex &index, bool checkResourceVisibility)

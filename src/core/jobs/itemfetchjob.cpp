@@ -39,12 +39,8 @@ class Akonadi::ItemFetchJobPrivate : public JobPrivate
 public:
     ItemFetchJobPrivate(ItemFetchJob *parent)
         : JobPrivate(parent)
-        , mEmitTimer(nullptr)
-        , mValuePool(nullptr)
-        , mCount(0)
     {
         mCollection = Collection::root();
-        mDeliveryOptions = ItemFetchJob::Default;
     }
 
     ~ItemFetchJobPrivate()
@@ -121,8 +117,8 @@ public:
     Item::List mPendingItems; // items pending for emitting itemsReceived()
     QTimer *mEmitTimer = nullptr;
     ProtocolHelperValuePool *mValuePool = nullptr;
-    ItemFetchJob::DeliveryOptions mDeliveryOptions;
-    int mCount;
+    ItemFetchJob::DeliveryOptions mDeliveryOptions = ItemFetchJob::Default;
+    int mCount = 0;
 };
 
 ItemFetchJob::ItemFetchJob(const Collection &collection, QObject *parent)

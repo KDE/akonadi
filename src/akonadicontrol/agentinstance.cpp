@@ -28,15 +28,6 @@
 AgentInstance::AgentInstance(AgentManager *manager)
     : QObject(manager)
     , mManager(manager)
-    , mAgentControlInterface(nullptr)
-    , mAgentStatusInterface(nullptr)
-    , mSearchInterface(nullptr)
-    , mResourceInterface(nullptr)
-    , mPreprocessorInterface(nullptr)
-    , mStatus(0)
-    , mPercent(0)
-    , mOnline(false)
-    , mPendingQuit(false)
 {
 }
 

@@ -317,7 +317,7 @@ bool Job::doKill()
 }
 
 QString Job::errorString() const
-{
+{    
     QString str;
     switch (error()) {
     case NoError:
@@ -333,7 +333,7 @@ QString Job::errorString() const
         break;
     case Unknown:
         return errorText();
-    default:
+    case UserError:
         str = i18n("Unknown error.");
         break;
     }

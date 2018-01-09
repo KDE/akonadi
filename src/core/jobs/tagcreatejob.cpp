@@ -31,13 +31,12 @@ class Akonadi::TagCreateJobPrivate : public JobPrivate
 public:
     TagCreateJobPrivate(TagCreateJob *parent)
         : JobPrivate(parent)
-        , mMerge(false)
     {
     }
 
     Tag mTag;
     Tag mResultTag;
-    bool mMerge;
+    bool mMerge = false;
 };
 
 TagCreateJob::TagCreateJob(const Akonadi::Tag &tag, QObject *parent)

@@ -44,8 +44,6 @@ public:
     CollectionFetchJobPrivate(CollectionFetchJob *parent)
         : JobPrivate(parent)
         , mType(CollectionFetchJob::Base)
-        , mEmitTimer(nullptr)
-        , mBasePrefetch(false)
     {
 
     }
@@ -67,7 +65,7 @@ public:
     CollectionFetchScope mScope;
     Collection::List mPendingCollections;
     QTimer *mEmitTimer = nullptr;
-    bool mBasePrefetch;
+    bool mBasePrefetch = false;
     Collection::List mPrefetchList;
 
     void aboutToFinish() override {

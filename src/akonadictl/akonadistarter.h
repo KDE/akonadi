@@ -33,7 +33,7 @@ private Q_SLOTS:
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
 
 private:
-    bool mRegistered;
+    bool mRegistered = false;
 };
 
 #endif

@@ -55,8 +55,8 @@ private:
     QSocketNotifier *m_notifier = nullptr;
 
     QTime m_connectionTime;
-    qint64 m_receivedBytes;
-    qint64 m_sentBytes;
+    qint64 m_receivedBytes = 0;
+    qint64 m_sentBytes = 0;
 };
 
 #endif // SESSION_H

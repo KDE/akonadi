@@ -38,9 +38,6 @@ public:
     ItemSearchJobPrivate(ItemSearchJob *parent, const SearchQuery &query)
         : JobPrivate(parent)
         , mQuery(query)
-        , mRecursive(false)
-        , mRemote(false)
-        , mEmitTimer(nullptr)
     {
     }
 
@@ -88,8 +85,8 @@ public:
     SearchQuery mQuery;
     Collection::List mCollections;
     QStringList mMimeTypes;
-    bool mRecursive;
-    bool mRemote;
+    bool mRecursive = false;
+    bool mRemote = false;
     ItemFetchScope mFetchScope;
 
     Item::List mItems;

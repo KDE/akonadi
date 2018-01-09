@@ -32,7 +32,6 @@ public:
     TransactionSequencePrivate(TransactionSequence *parent)
         : JobPrivate(parent)
         , mState(Idle)
-        , mAutoCommit(true)
     {
     }
 
@@ -48,7 +47,7 @@ public:
 
     TransactionState mState;
     QSet<KJob *> mIgnoredErrorJobs;
-    bool mAutoCommit;
+    bool mAutoCommit = true;
 
     void commitResult(KJob *job)
     {

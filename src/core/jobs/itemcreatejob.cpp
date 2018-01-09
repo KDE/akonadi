@@ -43,8 +43,6 @@ class Akonadi::ItemCreateJobPrivate : public JobPrivate
 public:
     ItemCreateJobPrivate(ItemCreateJob *parent)
         : JobPrivate(parent)
-        , mMergeOptions(ItemCreateJob::NoMerge)
-        , mItemReceived(false)
     {
     }
 
@@ -57,8 +55,8 @@ public:
     QSet<QByteArray> mForeignParts;
     QDateTime mDatetime;
     QByteArray mPendingData;
-    ItemCreateJob::MergeOptions mMergeOptions;
-    bool mItemReceived;
+    ItemCreateJob::MergeOptions mMergeOptions = ItemCreateJob::NoMerge;
+    bool mItemReceived = false;
 
 };
 

@@ -36,11 +36,6 @@ class ResourceSynchronizationJobPrivate : public KJobPrivateBase
 public:
     ResourceSynchronizationJobPrivate(ResourceSynchronizationJob *parent)
         : q(parent)
-        , interface(nullptr)
-        , safetyTimer(nullptr)
-        , timeoutCount(60)
-        , collectionTreeOnly(false)
-        , timeoutCountLimit(0)
     {
     }
 
@@ -50,9 +45,9 @@ public:
     AgentInstance instance;
     QDBusInterface *interface = nullptr;
     QTimer *safetyTimer = nullptr;
-    int timeoutCount;
-    bool collectionTreeOnly;
-    int timeoutCountLimit;
+    int timeoutCount = 60;
+    bool collectionTreeOnly = false;
+    int timeoutCountLimit = 0;
 
     void slotSynchronized();
     void slotTimeout();

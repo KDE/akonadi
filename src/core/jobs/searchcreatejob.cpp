@@ -37,8 +37,6 @@ public:
         : JobPrivate(parent)
         , mName(name)
         , mQuery(query)
-        , mRecursive(false)
-        , mRemote(false)
     {
     }
 
@@ -46,8 +44,8 @@ public:
     SearchQuery mQuery;
     QStringList mMimeTypes;
     QVector<Collection> mCollections;
-    bool mRecursive;
-    bool mRemote;
+    bool mRecursive = false;
+    bool mRemote = false;
     Collection mCreatedCollection;
 
 
@@ -63,7 +61,7 @@ QString Akonadi::SearchCreateJobPrivate::jobDebuggingString() const
         str += QStringLiteral("Recursive ");
     }
     if (mRemote) {
-        str += QStringLiteral("Remote ");
+        str += QStringLiteral("Remote");
     }
     return str;
 }

@@ -180,12 +180,12 @@ private:
     org::freedesktop::Akonadi::Resource *mResourceInterface = nullptr;
     org::freedesktop::Akonadi::Preprocessor *mPreprocessorInterface = nullptr;
 
-    int mStatus;
+    int mStatus = 0;
     QString mStatusMessage;
-    int mPercent;
+    int mPercent = 0;
     QString mResourceName;
-    bool mOnline;
-    bool mPendingQuit;
+    bool mOnline = false;
+    bool mPendingQuit = false;
 
 };
 

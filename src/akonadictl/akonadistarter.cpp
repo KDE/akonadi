@@ -35,7 +35,6 @@
 
 AkonadiStarter::AkonadiStarter(QObject *parent)
     : QObject(parent)
-    , mRegistered(false)
 {
     QDBusServiceWatcher *watcher = new QDBusServiceWatcher(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock),
             QDBusConnection::sessionBus(),
