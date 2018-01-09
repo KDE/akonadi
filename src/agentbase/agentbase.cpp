@@ -1110,6 +1110,8 @@ void AgentBase::quit()
     if (d->mSettings) {
         d->mChangeRecorder->setConfig(nullptr);
         d->mSettings->sync();
+        delete d->mSettings;
+        d->mSettings = nullptr;
     }
 
     delete d->mEventLoopLocker;
