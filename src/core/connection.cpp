@@ -164,8 +164,14 @@ void Connection::doReconnect()
 
 void Connection::forceReconnect()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    const bool ok = QMetaObject::invokeMethod(this, &Connection::doForceReconnect,
+                    Qt::QueuedConnection);
+#else
     const bool ok = QMetaObject::invokeMethod(this, "doForceReconnect",
                     Qt::QueuedConnection);
+#endif
+
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }
@@ -184,7 +190,13 @@ void Connection::doForceReconnect()
 
 void Connection::closeConnection()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    const bool ok = QMetaObject::invokeMethod(this, &Connection::doCloseConnection,
+                    Qt::QueuedConnection);
+#else
     const bool ok = QMetaObject::invokeMethod(this, "doCloseConnection", Qt::QueuedConnection);
+#endif
+
     Q_ASSERT(ok);
     Q_UNUSED(ok)
 }

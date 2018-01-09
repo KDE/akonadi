@@ -51,7 +51,11 @@ AkThread::~AkThread()
 
 void AkThread::startThread()
 {
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    const bool init = QMetaObject::invokeMethod(this, &AkThread::init, Qt::QueuedConnection);
+#else
     const bool init = QMetaObject::invokeMethod(this, "init", Qt::QueuedConnection);
+#endif
     Q_ASSERT(init);
     Q_UNUSED(init);
 }
@@ -59,7 +63,12 @@ void AkThread::startThread()
 void AkThread::quitThread()
 {
     qCDebug(AKONADISERVER_LOG) << "Shutting down" << objectName() << "...";
+#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
+    const bool invoke = QMetaObject::invokeMethod(this, &AkThread::quit, Qt::QueuedConnection);
+#else
     const bool invoke = QMetaObject::invokeMethod(this, "quit", Qt::QueuedConnection);
+#endif
+
     Q_ASSERT(invoke);
     Q_UNUSED(invoke);
     if (!thread()->wait(10 * 1000)) {
