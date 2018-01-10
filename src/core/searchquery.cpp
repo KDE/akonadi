@@ -33,7 +33,6 @@ public:
         : QSharedData()
         , condition(SearchTerm::CondEqual)
         , relation(SearchTerm::RelAnd)
-        , isNegated(false)
     {
     }
 
@@ -63,7 +62,7 @@ public:
     Condition condition;
     Relation relation;
     QList<SearchTerm> terms;
-    bool isNegated;
+    bool isNegated = false;
 };
 
 class SearchQuery::Private : public QSharedData

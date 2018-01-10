@@ -35,9 +35,7 @@ class Item;
 using namespace Akonadi;
 
 RelationSync::RelationSync(QObject *parent)
-    : Job(parent),
-      mRemoteRelationsSet(false),
-      mLocalRelationsFetched(false)
+    : Job(parent)
 {
 
 }

@@ -50,8 +50,8 @@ private:
 private:
     Akonadi::Relation::List mRemoteRelations;
     Akonadi::Relation::List mLocalRelations;
-    bool mRemoteRelationsSet;
-    bool mLocalRelationsFetched;
+    bool mRemoteRelationsSet = false;
+    bool mLocalRelationsFetched = false;
 };
 
 }

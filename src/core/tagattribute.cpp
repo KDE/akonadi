@@ -27,8 +27,6 @@ class Q_DECL_HIDDEN TagAttribute::Private
 {
 public:
     Private()
-        : inToolbar(false)
-        , priority(-1)
     {
     }
 
@@ -37,9 +35,9 @@ public:
     QColor backgroundColor;
     QColor textColor;
     QString font;
-    bool inToolbar;
+    bool inToolbar = false;
     QString shortcut;
-    int priority;
+    int priority = -1;
 };
 
 TagAttribute::TagAttribute()
@@ -95,6 +93,7 @@ TagAttribute *TagAttribute::clone() const
 QByteArray TagAttribute::serialized() const
 {
     QList<QByteArray> l;
+    l.reserve(8);
     l << ImapParser::quote(d->name.toUtf8());
     l << ImapParser::quote(d->icon.toUtf8());
     l << ImapParser::quote(d->font.toUtf8());

@@ -54,7 +54,6 @@ public:
         : instance(new ServerManager(this))
         , mState(ServerManager::NotRunning)
         , mSafetyTimer(new QTimer)
-        , mFirstRunner(nullptr)
     {
         mState = instance->state();
         mSafetyTimer->setSingleShot(true);
@@ -122,12 +121,12 @@ public:
         }
     }
 
-    ServerManager *instance;
+    ServerManager *instance = nullptr;
     static int serverProtocolVersion;
     static uint generation;
     ServerManager::State mState;
     QScopedPointer<QTimer> mSafetyTimer;
-    Firstrun *mFirstRunner;
+    Firstrun *mFirstRunner = nullptr;
     static Internal::ClientType clientType;
     QString mBrokenReason;
 };

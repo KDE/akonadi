@@ -24,12 +24,11 @@ using namespace Akonadi;
 
 struct Q_DECL_HIDDEN Akonadi::TagFetchScope::Private {
     Private()
-        : mFetchIdOnly(false)
     {
     }
 
     QSet<QByteArray> mAttributes;
-    bool mFetchIdOnly;
+    bool mFetchIdOnly = false;
 };
 
 TagFetchScope::TagFetchScope()

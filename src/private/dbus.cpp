@@ -70,11 +70,12 @@ QString DBus::parseAgentServiceName(const QString &serviceName, DBus::AgentType 
     if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
             || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
         // switch on parts.at( 0 )
-        if (parts.first() == QLatin1String("Agent")) {
+        const QString &partFirst = parts.constFirst();
+        if (partFirst == QLatin1String("Agent")) {
             agentType = Agent;
-        } else if (parts.first() == QLatin1String("Resource")) {
+        } else if (partFirst == QLatin1String("Resource")) {
             agentType = Resource;
-        } else if (parts.first() == QLatin1String("Preprocessor")) {
+        } else if (partFirst == QLatin1String("Preprocessor")) {
             agentType = Preprocessor;
         } else {
             return QString();
