@@ -366,7 +366,7 @@ public:
             if (localCollection.contentMimeTypes().size() != remoteCollection.contentMimeTypes().size()) {
                 return true;
             } else {
-                for (int i = 0; i < remoteCollection.contentMimeTypes().size(); i++) {
+                for (int i = 0, total = remoteCollection.contentMimeTypes().size(); i < total; ++i) {
                     const QString &m = remoteCollection.contentMimeTypes().at(i);
                     if (!localCollection.contentMimeTypes().contains(m)) {
                         return true;

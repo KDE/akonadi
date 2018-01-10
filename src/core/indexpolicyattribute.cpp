@@ -28,10 +28,9 @@ class Q_DECL_HIDDEN IndexPolicyAttribute::Private
 {
 public:
     Private()
-        : enable(true)
     {
     }
-    bool enable;
+    bool enable = true;
 };
 
 IndexPolicyAttribute::IndexPolicyAttribute()
@@ -70,6 +69,7 @@ Attribute *IndexPolicyAttribute::clone() const
 QByteArray IndexPolicyAttribute::serialized() const
 {
     QList<QByteArray> l;
+    l.reserve(2);
     l.append("ENABLE");
     l.append(d->enable ? "true" : "false");
     return "(" + ImapParser::join(l, " ") + ')';   //krazy:exclude=doublequote_chars

@@ -91,6 +91,7 @@ EntityDisplayAttribute *EntityDisplayAttribute::clone() const
 QByteArray EntityDisplayAttribute::serialized() const
 {
     QList<QByteArray> l;
+    l.reserve(4);
     l << ImapParser::quote(d->name.toUtf8());
     l << ImapParser::quote(d->icon.toUtf8());
     l << ImapParser::quote(d->activeIcon.toUtf8());

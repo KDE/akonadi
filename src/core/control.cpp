@@ -54,9 +54,6 @@ public:
     Private(Control *parent)
         : mParent(parent)
         , mEventLoop(nullptr)
-        , mSuccess(false)
-        , mStarting(false)
-        , mStopping(false)
     {
     }
 
@@ -73,10 +70,10 @@ public:
 
     QPointer<Control> mParent;
     QEventLoop *mEventLoop = nullptr;
-    bool mSuccess;
+    bool mSuccess = false;
 
-    bool mStarting;
-    bool mStopping;
+    bool mStarting = false;
+    bool mStopping = false;
 };
 
 bool Control::Private::exec()

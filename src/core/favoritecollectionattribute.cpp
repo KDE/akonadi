@@ -33,7 +33,7 @@ Attribute *FavoriteCollectionAttribute::clone() const
 
 QByteArray FavoriteCollectionAttribute::type() const
 {
-    return "favorite";
+    return QByteArrayLiteral("favorite");
 }
 
 void FavoriteCollectionAttribute::deserialize(const QByteArray &)

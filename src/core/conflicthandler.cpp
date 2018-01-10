@@ -20,9 +20,6 @@
 
 #include "conflicthandler_p.h"
 
-//KF5 PORT ME
-//#include "conflictresolvedialog_p.h"
-
 #include "itemcreatejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"

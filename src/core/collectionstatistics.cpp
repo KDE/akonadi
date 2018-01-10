@@ -32,9 +32,6 @@ class Q_DECL_HIDDEN CollectionStatistics::Private : public QSharedData
 public:
     Private()
         : QSharedData()
-        , count(-1)
-        , unreadCount(-1)
-        , size(-1)
     {
     }
 
@@ -46,9 +43,9 @@ public:
         size = other.size;
     }
 
-    qint64 count;
-    qint64 unreadCount;
-    qint64 size;
+    qint64 count = -1;
+    qint64 unreadCount = -1;
+    qint64 size = -1;
 };
 
 CollectionStatistics::CollectionStatistics()
