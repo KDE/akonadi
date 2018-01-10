@@ -93,6 +93,7 @@ public:
 
     ~DebugPrivate()
     {
+        qInstallMessageHandler(origHandler);
         file.close();
     }
 
