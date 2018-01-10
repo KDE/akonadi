@@ -107,7 +107,7 @@ QByteArray CollectionIdentificationAttribute::collectionNamespace() const
 
 QByteArray CollectionIdentificationAttribute::type() const
 {
-    return "collectionidentification";
+    return QByteArrayLiteral("collectionidentification");
 }
 
 Akonadi::Attribute *CollectionIdentificationAttribute::clone() const

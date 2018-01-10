@@ -27,10 +27,9 @@ class TrashFilterProxyModel::TrashFilterProxyModelPrivate
 {
 public:
     TrashFilterProxyModelPrivate()
-        : mTrashIsShown(false)
     {
     }
-    bool mTrashIsShown;
+    bool mTrashIsShown = false;
 };
 
 TrashFilterProxyModel::TrashFilterProxyModel(QObject *parent)

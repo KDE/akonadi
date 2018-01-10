@@ -52,7 +52,7 @@ QColor CollectionColorAttribute::color() const
 
 QByteArray CollectionColorAttribute::type() const
 {
-    return "collectioncolor";
+    return QByteArrayLiteral("collectioncolor");
 }
 
 CollectionColorAttribute *CollectionColorAttribute::clone() const

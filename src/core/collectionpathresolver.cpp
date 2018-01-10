@@ -91,7 +91,7 @@ public:
 
     Collection::Id mColId;
     QString mPath;
-    bool mPathToId;
+    bool mPathToId = false;
     QStringList mPathParts;
     Collection mCurrentNode;
 };

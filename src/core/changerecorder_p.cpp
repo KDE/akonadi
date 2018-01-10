@@ -182,7 +182,7 @@ QQueue<Protocol::ChangeNotificationPtr> ChangeRecorderPrivate::loadFrom(QFile *d
             msg = loadRelationNotification(stream, version);
             break;
         default:
-            qWarning() << "Unknown notification type";
+            qCWarning(AKONADICORE_LOG) << "Unknown notification type";
             break;
         }
 
@@ -241,7 +241,7 @@ void ChangeRecorderPrivate::addToStream(QDataStream &stream, const Protocol::Cha
         saveRelationNotification(stream, Protocol::cmdCast<Protocol::RelationChangeNotification>(msg));
         break;
     default:
-        qWarning() << "Unexpected type?";
+        qCWarning(AKONADICORE_LOG) << "Unexpected type?";
         return;
     }
 }
@@ -717,7 +717,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(
     auto msg = Protocol::RelationChangeNotificationPtr::create();
 
     if (version == 1) {
-        qWarning() << "Invalid version of relation notification";
+        qCWarning(AKONADICORE_LOG) << "Invalid version of relation notification";
         return msg;
     } else if (version >= 2) {
         stream >> operation;
@@ -843,7 +843,7 @@ Protocol::CollectionChangeNotification::Operation ChangeRecorderPrivate::mapColl
     case Unsubscribe:
         return Protocol::CollectionChangeNotification::Unsubscribe;
     default:
-        qWarning() << "Unexpected operation type in collection notification";
+        qCWarning(AKONADICORE_LOG) << "Unexpected operation type in collection notification";
         return Protocol::CollectionChangeNotification::InvalidOp;
     }
 }
@@ -858,7 +858,7 @@ Protocol::TagChangeNotification::Operation ChangeRecorderPrivate::mapTagOperatio
     case Remove:
         return Protocol::TagChangeNotification::Remove;
     default:
-        qWarning() << "Unexpected operation type in tag notification";
+        qCWarning(AKONADICORE_LOG) << "Unexpected operation type in tag notification";
         return Protocol::TagChangeNotification::InvalidOp;
     }
 }
@@ -871,7 +871,7 @@ Protocol::RelationChangeNotification::Operation ChangeRecorderPrivate::mapRelati
     case Remove:
         return Protocol::RelationChangeNotification::Remove;
     default:
-        qWarning() << "Unexpected operation type in relation notification";
+        qCWarning(AKONADICORE_LOG) << "Unexpected operation type in relation notification";
         return Protocol::RelationChangeNotification::InvalidOp;
     }
 }
@@ -888,7 +888,7 @@ ChangeRecorderPrivate::LegacyType ChangeRecorderPrivate::mapToLegacyType(Protoco
     case Protocol::Command::RelationChangeNotification:
         return Relation;
     default:
-        qWarning() << "Unexpected notification type";
+        qCWarning(AKONADICORE_LOG) << "Unexpected notification type";
         return InvalidType;
     }
 }

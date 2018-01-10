@@ -37,7 +37,6 @@ class RecursiveCollectionFilterProxyModelPrivate
 public:
     RecursiveCollectionFilterProxyModelPrivate(RecursiveCollectionFilterProxyModel *model)
         : q_ptr(model)
-        , checkOnlyChecked(false)
     {
 
     }
@@ -45,7 +44,7 @@ public:
     QSet<QString> includedMimeTypes;
     Akonadi::MimeTypeChecker checker;
     QString pattern;
-    bool checkOnlyChecked;
+    bool checkOnlyChecked = false;
 };
 
 }
@@ -134,13 +133,17 @@ int Akonadi::RecursiveCollectionFilterProxyModel::columnCount(const QModelIndex 
 void Akonadi::RecursiveCollectionFilterProxyModel::setSearchPattern(const QString &pattern)
 {
     Q_D(RecursiveCollectionFilterProxyModel);
-    d->pattern = pattern;
-    invalidate();
+    if (d->pattern != pattern) {
+        d->pattern = pattern;
+        invalidate();
+    }
 }
 
 void Akonadi::RecursiveCollectionFilterProxyModel::setIncludeCheckedOnly(bool checked)
 {
     Q_D(RecursiveCollectionFilterProxyModel);
-    d->checkOnlyChecked = checked;
-    invalidate();
+    if (d->checkOnlyChecked != checked) {
+        d->checkOnlyChecked = checked;
+        invalidate();
+    }
 }

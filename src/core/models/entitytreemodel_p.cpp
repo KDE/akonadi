@@ -1274,7 +1274,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
 
     QList<Node *> &collectionEntities =  m_childEntities[collectionId];
 
-    int existingPosition = indexOf<Node::Item>(collectionEntities, itemId);
+    const int existingPosition = indexOf<Node::Item>(collectionEntities, itemId);
 
     if (existingPosition > 0) {
         qCWarning(AKONADICORE_LOG) << "Item with id " << itemId << " already in virtual collection with id " << collectionId;
@@ -1528,7 +1528,8 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
                q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)));
     q->connect(job, SIGNAL(result(KJob*)),
                q, SLOT(collectionFetchJobDone(KJob*)));
-    qCDebug(DebugETM) << ""; jobTimeTracker[job].start();
+    qCDebug(DebugETM) << "EntityTreeModelPrivate::fetchTopLevelCollections";
+    jobTimeTracker[job].start();
 }
 
 void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collection::List &list)

@@ -30,10 +30,6 @@ class Q_DECL_HIDDEN CachePolicy::Private : public QSharedData
 public:
     Private()
         : QSharedData()
-        , inherit(true)
-        , timeout(-1)
-        , interval(-1)
-        , syncOnDemand(false)
     {
     }
 
@@ -47,11 +43,11 @@ public:
         syncOnDemand = other.syncOnDemand;
     }
 
-    bool inherit;
+    bool inherit = true;
     QStringList localParts;
-    int timeout;
-    int interval;
-    bool syncOnDemand;
+    int timeout = -1;
+    int interval = -1;
+    bool syncOnDemand = false;
 };
 
 CachePolicy::CachePolicy()

@@ -74,8 +74,8 @@ public:
 
     QString toolTipForCollection(const QModelIndex &index, const Collection &collection)
     {
-        QString bckColor = QApplication::palette().color(QPalette::ToolTipBase).name();
-        QString txtColor = QApplication::palette().color(QPalette::ToolTipText).name();
+        const QString bckColor = QApplication::palette().color(QPalette::ToolTipBase).name();
+        const QString txtColor = QApplication::palette().color(QPalette::ToolTipText).name();
 
         QString tip = QStringLiteral(
                           "<table width=\"100%\" border=\"0\" cellpadding=\"2\" cellspacing=\"0\">\n"
@@ -96,8 +96,7 @@ public:
                    "    <td align=\"%1\" valign=\"top\">\n"
                ).arg(textDirection);
 
-        QString tipInfo;
-        tipInfo += QStringLiteral(
+        QString tipInfo = QStringLiteral(
                        "      <strong>%1</strong>: %2<br>\n"
                        "      <strong>%3</strong>: %4<br><br>\n"
                    ).arg(i18n("Total Messages")).arg(collection.statistics().count())
