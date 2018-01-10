@@ -136,7 +136,7 @@ public:
             file.close();
         }
         file.setFileName(errorLogFileName());
-        file.open(QIODevice::WriteOnly | QIODevice::Append | QIODevice::Unbuffered);
+        file.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
     }
 
     void setOrigHandler(QtMessageHandler origHandler_)
@@ -205,7 +205,7 @@ void akInit(const QString &appName)
     QFileInfo info(errorLogFile);
     if (info.exists()) {
         QFile file(info.absoluteFilePath());
-        const bool success = file.rename(errorLogFile + QLatin1String(".old"));
+        const bool success = file.copy(errorLogFile + QLatin1String(".old"));
         if (!success) {
             qFatal("Cannot rename log file - running on a readonly filesystem maybe?");
         }
