@@ -179,7 +179,7 @@ QVariant EntityTreeModel::entityData(const Item &item, int column, int role) con
                 if (!item.remoteId().isEmpty()) {
                     return item.remoteId();
                 }
-                return QString(QStringLiteral("<") + QString::number(item.id()) + QStringLiteral(">"));
+                return QString(QLatin1Char('<') + QString::number(item.id()) + QLatin1Char('>'));
             }
             break;
         case Qt::DecorationRole:

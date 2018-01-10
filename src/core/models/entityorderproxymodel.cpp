@@ -170,7 +170,6 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
         return KRecursiveFilterProxyModel::dropMimeData(data, action, row, column, parent);
     }
 
-    bool containsMove = false;
 
     const QList<QUrl> urls = data->urls();
     if (urls.isEmpty()) {
@@ -191,6 +190,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
     }
 
 
+    bool containsMove = false;
     QStringList droppedList = configStringsForDroppedUrls(urls, parentCol, &containsMove);
 
     // Dropping new favorite folders
@@ -262,7 +262,7 @@ void EntityOrderProxyModelPrivate::saveOrder(const QModelIndex &parent)
     static const int column = 0;
     QModelIndex childIndex = q->index(0, column, parent);
 
-    QString parentKey = q->parentConfigString(childIndex);
+    const QString parentKey = q->parentConfigString(childIndex);
 
     if (parentKey.isEmpty()) {
         return;
@@ -272,7 +272,7 @@ void EntityOrderProxyModelPrivate::saveOrder(const QModelIndex &parent)
 
     list << q->configString(childIndex);
     saveOrder(childIndex);
-    list.reserve(rowCount);
+    list.reserve(list.count() + rowCount);
     for (int row = 1; row < rowCount; ++row) {
         childIndex = q->index(row, column, parent);
         list << q->configString(childIndex);
