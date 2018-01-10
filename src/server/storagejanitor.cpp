@@ -410,7 +410,7 @@ void StorageJanitor::verifyExternalParts()
     while (it.hasNext()) {
         existingFiles.insert(it.next());
     }
-    existingFiles.remove(dataDir + QDir::separator() + QLatin1String("."));
+    existingFiles.remove(dataDir + QDir::separator() + QLatin1Char('.'));
     existingFiles.remove(dataDir + QDir::separator() + QLatin1String(".."));
     inform(QLatin1Literal("Found ") + QString::number(existingFiles.size()) + QLatin1Literal(" external files."));
 
