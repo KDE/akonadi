@@ -264,7 +264,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
             }
         }
 
-        Q_FOREACH (const Flag &flag, flags) {
+        for (const Flag &flag : flags) {
             if (!itemFlags.contains(flag)) {
                 addedFlags << flag.name().toLatin1();
                 insIds << item.id();
@@ -656,7 +656,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
     QSet<qint64> removedTags;
     removedTagsIds.reserve(tags.count());
     removedTags.reserve(tags.count());
-    Q_FOREACH (const Tag &tag, tags) {
+    for (const Tag &tag : tags) {
         removedTagsIds << tag.id();
         removedTags << tag.id();
     }
@@ -1014,7 +1014,7 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
     } else {
         QVariantList ids;
         ids.reserve(items.count());
-        Q_FOREACH (const PimItem &item, items) {
+        for (const PimItem &item : items) {
             ids << item.id();
         }
         qb.addValueCondition(CollectionPimItemRelation::rightFullColumnName(), Query::In, ids);
@@ -1313,7 +1313,7 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
     for (auto q = m_transactionQueries.begin(), qEnd = m_transactionQueries.end(); q != qEnd; ++q) {
         QSqlQuery query(database());
         query.prepare(q->query);
-        for (int i = 0; i < q->boundValues.count(); ++i) {
+        for (int i = 0, total = q->boundValues.count(); i < total; ++i) {
             query.bindValue(QLatin1Char(':') + QString::number(i), q->boundValues.at(i));
         }
 
@@ -1443,7 +1443,8 @@ bool DataStore::commitTransaction()
 
     if (m_transactionLevel == 1) {
         QSqlDriver *driver = m_database.driver();
-        QElapsedTimer timer; timer.start();
+        QElapsedTimer timer;
+        timer.start();
         driver->commitTransaction();
         StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
                                                        true, timer.elapsed(),

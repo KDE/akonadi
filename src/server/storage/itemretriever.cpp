@@ -356,7 +356,7 @@ bool ItemRetriever::exec()
         try {
             // Request is deleted inside ItemRetrievalManager, so we need to take
             // a copy here
-            const auto ids = request->ids;
+            //const auto ids = request->ids;
             ItemRetrievalManager::instance()->requestItemDelivery(request);
         } catch (const ItemRetrieverException &e) {
             qCCritical(AKONADISERVER_LOG) << e.type() << ": " << e.what();
@@ -408,7 +408,7 @@ void ItemRetriever::verifyCache()
     }
 
     if (!qb.exec()) {
-        mLastError = "Unable to query parts.";
+        mLastError = QByteArrayLiteral("Unable to query parts.");
         throw ItemRetrieverException(mLastError);
     }
 
