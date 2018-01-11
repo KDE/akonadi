@@ -129,8 +129,7 @@ public:
 
     void setName(const QString &appName)
     {
-        // Keep only the executable name, e.g. akonadi_control
-        name = appName.mid(appName.lastIndexOf(QDir::separator()) + 1);
+        name = appName;
 
         if (file.isOpen()) {
             file.close();
@@ -192,7 +191,8 @@ void akInit(const QString &appName)
 {
     KCrash::initialize();
 
-    const auto errorLogFile = DebugPrivate::errorLogFileName(appName);
+    QString name = QFileInfo(appName).fileName();
+    const auto errorLogFile = DebugPrivate::errorLogFileName(name);
     QFileInfo infoOld(errorLogFile + QLatin1String(".old"));
     if (infoOld.exists()) {
         QFile fileOld(infoOld.absoluteFilePath());
@@ -212,7 +212,7 @@ void akInit(const QString &appName)
     }
 
     QtMessageHandler origHandler = qInstallMessageHandler(akMessageHandler);
-    sInstance()->setName(appName);
+    sInstance()->setName(name);
     sInstance()->setOrigHandler(origHandler);
 }
 
