@@ -38,9 +38,7 @@
 
 static QStringList alternateExecPaths(const QString &path)
 {
-    QStringList pathList;
-
-    pathList << path;
+    QStringList pathList{path};
 
 #if defined(Q_OS_WIN) //krazy:exclude=cpp
     pathList << path + QLatin1String(".exe");
