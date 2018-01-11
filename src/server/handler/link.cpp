@@ -38,7 +38,7 @@ bool Link::parseStream()
 
     const Collection collection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (!collection.isVirtual()) {
-        return failureResponse("Can't link items to non-virtual collections");
+        return failureResponse(QStringLiteral("Can't link items to non-virtual collections"));
     }
 
     /* FIXME BIN
@@ -68,7 +68,7 @@ bool Link::parseStream()
     */
 
     if (!qb.exec()) {
-        return failureResponse("Unable to execute item query");
+        return failureResponse(QStringLiteral("Unable to execute item query"));
     }
 
     const PimItem::List items = qb.result();
@@ -89,7 +89,7 @@ bool Link::parseStream()
             toUnlink << item;
         }
         if (!result) {
-            return failureResponse("Failed to modify item reference");
+            return failureResponse(QStringLiteral("Failed to modify item reference"));
         }
     }
 
@@ -100,7 +100,7 @@ bool Link::parseStream()
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Cannot commit transaction.");
+        return failureResponse(QStringLiteral("Cannot commit transaction."));
     }
 
     return successResponse<Protocol::LinkItemsResponse>();

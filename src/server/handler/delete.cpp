@@ -51,25 +51,25 @@ bool Delete::parseStream()
 
     Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!collection.isValid()) {
-        return failureResponse("No such collection.");
+        return failureResponse(QStringLiteral("No such collection."));
     }
 
     // handle virtual folders
     if (collection.resource().name() == QLatin1String(AKONADI_SEARCH_RESOURCE)) {
         // don't delete virtual root
         if (collection.parentId() == 0) {
-            return failureResponse("Cannot delete virtual root collection");
+            return failureResponse(QStringLiteral("Cannot delete virtual root collection"));
         }
     }
 
     Transaction transaction(DataStore::self(), QStringLiteral("DELETE"));
 
     if (!deleteRecursive(collection)) {
-        return failureResponse("Unable to delete collection");
+        return failureResponse(QStringLiteral("Unable to delete collection"));
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Unable to commit transaction");
+        return failureResponse(QStringLiteral("Unable to commit transaction"));
     }
 
     return successResponse<Protocol::DeleteCollectionResponse>();

@@ -36,12 +36,12 @@ bool Status::parseStream()
 
     const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!col.isValid()) {
-        return failureResponse("No status for this folder");
+        return failureResponse(QStringLiteral("No status for this folder"));
     }
 
     const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
     if (stats.count == -1) {
-        return failureResponse("Failed to query statistics.");
+        return failureResponse(QStringLiteral("Failed to query statistics."));
     }
 
     auto resp = Protocol::FetchCollectionStatsResponsePtr::create();

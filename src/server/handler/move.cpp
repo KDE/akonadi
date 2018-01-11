@@ -41,7 +41,6 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
     ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::NotEquals, mDestination.id());
 
-    const QDateTime mtime = QDateTime::currentDateTimeUtc();
 
     if (!qb.exec()) {
         failureResponse("Unable to execute query");
@@ -53,6 +52,7 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
         return;
     }
 
+    const QDateTime mtime = QDateTime::currentDateTimeUtc();
     // Split the list by source collection
     QMap<Entity::Id /* collection */, PimItem> toMove;
     QMap<Entity::Id /* collection */, Collection> sources;

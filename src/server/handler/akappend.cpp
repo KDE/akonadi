@@ -48,10 +48,10 @@ bool AkAppend::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &ite
 {
     parentCol = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!parentCol.isValid()) {
-        return failureResponse("Invalid parent collection");
+        return failureResponse(QStringLiteral("Invalid parent collection"));
     }
     if (parentCol.isVirtual()) {
-        return failureResponse("Cannot append item into virtual collection");
+        return failureResponse(QStringLiteral("Cannot append item into virtual collection"));
     }
 
     MimeType mimeType = MimeType::retrieveByNameOrCreate(cmd.mimeType());
@@ -87,7 +87,7 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     }
 
     if (!item.insert()) {
-        return failureResponse("Failed to append item");
+        return failureResponse(QStringLiteral("Failed to append item"));
     }
 
     // set message flags
@@ -106,7 +106,7 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
         const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
         bool tagsChanged = false;
         if (!DataStore::self()->appendItemsTags(PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true)) {
-            return failureResponse("Unable to append item tags.");
+            return failureResponse(QStringLiteral("Unable to append item tags."));
         }
     }
 
@@ -382,7 +382,7 @@ bool AkAppend::parseStream()
             return false;
         }
         if (!transaction.commit()) {
-            return failureResponse("Failed to commit transaction");
+            return failureResponse(QStringLiteral("Failed to commit transaction"));
         }
         storageTrx.commit();
     } else {
@@ -440,7 +440,7 @@ bool AkAppend::parseStream()
             storageTrx.commit();
         } else {
             qCDebug(AKONADISERVER_LOG) << "Multiple merge candidates:";
-            Q_FOREACH (const PimItem &item, result) {
+            for (const PimItem &item : result) {
                 qCDebug(AKONADISERVER_LOG) << "\tID:" << item.id() << ", RID:" << item.remoteId()
                                            << ", GID:" << item.gid()
                                            << ", Collection:" << item.collection().name() << "(" << item.collectionId() << ")"
@@ -448,7 +448,7 @@ bool AkAppend::parseStream()
             }
             // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
             // something we don't want
-            return failureResponse("Multiple merge candidates, aborting");
+            return failureResponse(QStringLiteral("Multiple merge candidates, aborting"));
         }
     }
 

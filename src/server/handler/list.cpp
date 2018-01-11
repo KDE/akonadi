@@ -363,10 +363,11 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     QVariantList mimeTypeIds;
     QVariantList attributeIds;
     QVariantList ancestorIds;
-    mimeTypeIds.reserve(mCollections.size());
-    attributeIds.reserve(mCollections.size());
+    const int collectionSize{mCollections.size()};
+    mimeTypeIds.reserve(collectionSize);
+    attributeIds.reserve(collectionSize);
     //We'd only require the non-leaf collections, but we don't know which those are, so we take all.
-    ancestorIds.reserve(mCollections.size());
+    ancestorIds.reserve(collectionSize);
     for (auto it = mCollections.cbegin(), end = mCollections.cend(); it != end; ++it) {
         mimeTypeIds << it.key();
         attributeIds << it.key();

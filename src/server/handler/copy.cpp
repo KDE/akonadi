@@ -67,7 +67,7 @@ void Copy::itemsRetrieved(const QList<qint64> &ids)
     SelectQueryBuilder<PimItem> qb;
     ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
     if (!qb.exec()) {
-        failureResponse("Unable to retrieve items");
+        failureResponse(QStringLiteral("Unable to retrieve items"));
         return;
     }
     const PimItem::List items = qb.result();
@@ -78,13 +78,13 @@ void Copy::itemsRetrieved(const QList<qint64> &ids)
 
     for (const PimItem &item : items) {
         if (!copyItem(item, mTargetCollection)) {
-            failureResponse("Unable to copy item");
+            failureResponse(QStringLiteral("Unable to copy item"));
             return;
         }
     }
 
     if (!transaction.commit()) {
-        failureResponse("Cannot commit transaction.");
+        failureResponse(QStringLiteral("Cannot commit transaction."));
         return;
     }
 }
@@ -94,19 +94,19 @@ bool Copy::parseStream()
     const auto &cmd = Protocol::cmdCast<Protocol::CopyItemsCommand>(m_command);
 
     if (!checkScopeConstraints(cmd.items(), Scope::Uid)) {
-        return failureResponse("Only UID copy is allowed");
+        return failureResponse(QStringLiteral("Only UID copy is allowed"));
     }
 
     if (cmd.items().isEmpty()) {
-        return failureResponse("No items specified");
+        return failureResponse(QStringLiteral("No items specified"));
     }
 
     mTargetCollection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
     if (!mTargetCollection.isValid()) {
-        return failureResponse("No valid target specified");
+        return failureResponse(QStringLiteral("No valid target specified"));
     }
     if (mTargetCollection.isVirtual()) {
-        return failureResponse("Copying items into virtual collections is not allowed");
+        return failureResponse(QStringLiteral("Copying items into virtual collections is not allowed"));
     }
 
     CacheCleanerInhibitor inhibitor;

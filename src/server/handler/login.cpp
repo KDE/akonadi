@@ -29,7 +29,7 @@ bool Login::parseStream()
     const auto &cmd = Protocol::cmdCast<Protocol::LoginCommand>(m_command);
 
     if (cmd.sessionId().isEmpty()) {
-        return failureResponse("Missing session identifier");
+        return failureResponse(QStringLiteral("Missing session identifier"));
     }
 
     connection()->setSessionId(cmd.sessionId());

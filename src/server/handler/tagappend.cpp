@@ -37,7 +37,7 @@ bool TagAppend::parseStream()
     const auto &cmd = Protocol::cmdCast<Protocol::CreateTagCommand>(m_command);
 
     if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
-        return failureResponse("Only resources can create tags with remote ID");
+        return failureResponse(QStringLiteral("Only resources can create tags with remote ID"));
     }
 
     Transaction trx(DataStore::self(), QStringLiteral("TAGAPPEND"));

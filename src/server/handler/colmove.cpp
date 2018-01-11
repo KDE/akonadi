@@ -37,7 +37,7 @@ bool ColMove::parseStream()
 
     Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
     if (!source.isValid()) {
-        return failureResponse("Invalid collection to move");
+        return failureResponse(QStringLiteral("Invalid collection to move"));
     }
 
     Collection target;
@@ -46,7 +46,7 @@ bool ColMove::parseStream()
     } else {
         target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
         if (!target.isValid()) {
-            return failureResponse("Invalid destination collection");
+            return failureResponse(QStringLiteral("Invalid destination collection"));
         }
     }
 
@@ -68,11 +68,11 @@ bool ColMove::parseStream()
     Transaction transaction(store, QStringLiteral("COLMOVE"));
 
     if (!store->moveCollection(source, target)) {
-        return failureResponse("Unable to reparent collection");
+        return failureResponse(QStringLiteral("Unable to reparent collection"));
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Cannot commit transaction.");
+        return failureResponse(QStringLiteral("Cannot commit transaction."));
     }
 
     return successResponse<Protocol::MoveCollectionResponse>();

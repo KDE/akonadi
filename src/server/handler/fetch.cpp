@@ -32,19 +32,19 @@ bool Fetch::parseStream()
     const auto &cmd = Protocol::cmdCast<Protocol::FetchItemsCommand>(m_command);
 
     if (!connection()->context()->setScopeContext(cmd.scopeContext())) {
-        return failureResponse("Invalid scope context");
+        return failureResponse(QStringLiteral("Invalid scope context"));
     }
 
     // We require context in case we do RID fetch
     if (connection()->context()->isEmpty() && cmd.scope().scope() == Scope::Rid) {
-        return failureResponse("No FETCH context specified");
+        return failureResponse(QStringLiteral("No FETCH context specified"));
     }
 
     CacheCleanerInhibitor inhibitor;
 
     FetchHelper fetchHelper(connection(), cmd.scope(), cmd.fetchScope());
     if (!fetchHelper.fetchItems()) {
-        return failureResponse("Failed to fetch items");
+        return failureResponse(QStringLiteral("Failed to fetch items"));
     }
 
     return successResponse<Protocol::FetchItemsResponse>();

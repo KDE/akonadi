@@ -35,7 +35,7 @@ bool Create::parseStream()
     const auto &cmd = Protocol::cmdCast<Protocol::CreateCollectionCommand>(m_command);
 
     if (cmd.name().isEmpty()) {
-        return failureResponse("Invalid collection name");
+        return failureResponse(QStringLiteral("Invalid collection name"));
     }
 
     Collection parent;
@@ -47,16 +47,17 @@ bool Create::parseStream()
     if (cmd.parent().scope() != Scope::Invalid && !cmd.parent().isEmpty()) {
         parent = HandlerHelper::collectionFromScope(cmd.parent(), connection());
         if (!parent.isValid()) {
-            return failureResponse("Invalid parent collection");
+            return failureResponse(QStringLiteral("Invalid parent collection"));
         }
 
         // check if parent can contain a sub-folder
         parentContentTypes = parent.mimeTypes();
         bool found = false, foundVirtual = false;
         for (const MimeType &mt : qAsConst(parentContentTypes)) {
-            if (mt.name() == QLatin1String("inode/directory")) {
+            const QString mtName{mt.name()};
+            if (mtName == QLatin1String("inode/directory")) {
                 found = true;
-            } else if (mt.name() == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
+            } else if (mtName == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
                 foundVirtual = true;
             }
             if (found && foundVirtual) {
@@ -64,7 +65,7 @@ bool Create::parseStream()
             }
         }
         if (!found && !foundVirtual) {
-            return failureResponse("Parent collection can not contain sub-collections");
+            return failureResponse(QStringLiteral("Parent collection can not contain sub-collections"));
         }
 
         // If only virtual collections are supported, force every new collection to
@@ -79,7 +80,7 @@ bool Create::parseStream()
         const QString sessionId = QString::fromUtf8(connection()->sessionId());
         Resource res = Resource::retrieveByName(sessionId);
         if (!res.isValid()) {
-            return failureResponse("Cannot create top-level collection");
+            return failureResponse(QStringLiteral("Cannot create top-level collection"));
         }
         resourceId = res.id();
     }
@@ -128,12 +129,12 @@ bool Create::parseStream()
     const QMap<QByteArray, QByteArray> attrs = cmd.attributes();
     for (auto iter = attrs.constBegin(), end = attrs.constEnd(); iter != end; ++iter) {
         if (!db->addCollectionAttribute(collection, iter.key(), iter.value())) {
-            return failureResponse("Unable to add collection attribute.");
+            return failureResponse(QStringLiteral("Unable to add collection attribute."));
         }
     }
 
     if (!transaction.commit()) {
-        return failureResponse("Unable to commit transaction.");
+        return failureResponse(QStringLiteral("Unable to commit transaction."));
     }
 
     db->activeCachePolicy(collection);

@@ -34,19 +34,19 @@ bool TagRemove::parseStream()
     const auto &cmd = Protocol::cmdCast<Protocol::DeleteTagCommand>(m_command);
 
     if (!checkScopeConstraints(cmd.tag(), Scope::Uid)) {
-        return failureResponse("Only UID-based TAGREMOVE is supported");
+        return failureResponse(QStringLiteral("Only UID-based TAGREMOVE is supported"));
     }
 
     SelectQueryBuilder<Tag> tagQuery;
     QueryHelper::setToQuery(cmd.tag().uidSet(), Tag::idFullColumnName(), tagQuery);
     if (!tagQuery.exec()) {
-        return failureResponse("Failed to obtain tags");
+        return failureResponse(QStringLiteral("Failed to obtain tags"));
     }
 
     const Tag::List tags = tagQuery.result();
 
     if (!DataStore::self()->removeTags(tags)) {
-        return failureResponse("Failed to remove tags");
+        return failureResponse(QStringLiteral("Failed to remove tags"));
     }
 
     return successResponse<Protocol::DeleteTagResponse>();
