@@ -48,7 +48,6 @@ class Q_DECL_HIDDEN CollectionView::Private
 public:
     Private(CollectionView *parent)
         : mParent(parent)
-        , xmlGuiClient(nullptr)
     {
     }
 

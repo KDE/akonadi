@@ -43,8 +43,6 @@ class Q_DECL_HIDDEN CollectionComboBox::Private
 public:
     Private(QAbstractItemModel *customModel, CollectionComboBox *parent)
         : mParent(parent)
-        , mMonitor(nullptr)
-        , mModel(nullptr)
     {
         if (customModel) {
             mBaseModel = customModel;

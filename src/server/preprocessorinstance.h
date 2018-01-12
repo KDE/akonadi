@@ -83,7 +83,7 @@ private:
      * This, in fact, *should* be equivalent to "mItemQueue.count() > 0"
      * as the head item in the queue is the one being processed now.
      */
-    bool mBusy;
+    bool mBusy = false;
 
     /**
      * The date-time at that we have started processing the current
@@ -102,7 +102,7 @@ private:
     /**
      * The preprocessor D-Bus interface. Owned.
      */
-    OrgFreedesktopAkonadiPreprocessorInterface *mInterface;
+    OrgFreedesktopAkonadiPreprocessorInterface *mInterface = nullptr;
 
 protected:
 

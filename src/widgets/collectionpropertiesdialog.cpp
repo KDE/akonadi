@@ -120,8 +120,7 @@ void CollectionPropertiesDialog::Private::registerBuiltinPages()
 
 void CollectionPropertiesDialog::Private::init()
 {
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    q->setLayout(mainLayout);
+    QVBoxLayout *mainLayout = new QVBoxLayout(q);
     q->setAttribute(Qt::WA_DeleteOnClose);
     mTabWidget = new QTabWidget(q);
     mainLayout->addWidget(mTabWidget);

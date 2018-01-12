@@ -84,7 +84,7 @@ void StorageJanitor::quit()
     // Make sure all childrens are deleted within context of this thread
     qDeleteAll(children());
 
-    qDebug() << "chainup()";
+    qCDebug(AKONADISERVER_LOG) << "chainup()";
     AkThread::quit();
 }
 
@@ -243,7 +243,7 @@ void StorageJanitor::findOrphanedResources()
         for (const Resource &resource : orphanResources) {
             resourceNames.append(resource.name());
         }
-        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResources.size()). arg(resourceNames.join(QLatin1Char(','))));
+        inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResourcesSize). arg(resourceNames.join(QLatin1Char(','))));
         for (const QString &resourceName : qAsConst(resourceNames)) {
             inform(QStringLiteral("Removing resource %1").arg(resourceName));
             ResourceManager::self()->removeResourceInstance(resourceName);

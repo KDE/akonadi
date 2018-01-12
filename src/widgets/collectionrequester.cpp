@@ -39,9 +39,6 @@ class Q_DECL_HIDDEN CollectionRequester::Private
 public:
     Private(CollectionRequester *parent)
         : q(parent)
-        , edit(nullptr)
-        , button(nullptr)
-        , collectionDialog(nullptr)
     {
     }
 
@@ -115,9 +112,8 @@ void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
 
 void CollectionRequester::Private::init()
 {
-    QHBoxLayout *hbox = new QHBoxLayout;
+    QHBoxLayout *hbox = new QHBoxLayout(q);
     hbox->setMargin(0);
-    q->setLayout(hbox);
 
     edit = new QLineEdit(q);
     edit->setReadOnly(true);

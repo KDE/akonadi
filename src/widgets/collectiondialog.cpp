@@ -53,28 +53,26 @@ class Q_DECL_HIDDEN CollectionDialog::Private
 public:
     Private(QAbstractItemModel *customModel, CollectionDialog *parent, CollectionDialogOptions options)
         : mParent(parent)
-        , mMonitor(nullptr)
-        , mNewSubfolderButton(nullptr)
     {
         // setup GUI
         QVBoxLayout *layout = new QVBoxLayout(mParent);
 
-        mTextLabel = new QLabel;
+        mTextLabel = new QLabel(mParent);
         layout->addWidget(mTextLabel);
         mTextLabel->hide();
 
-        QLineEdit *filterCollectionLineEdit = new QLineEdit();
+        QLineEdit *filterCollectionLineEdit = new QLineEdit(mParent);
         filterCollectionLineEdit->setClearButtonEnabled(true);
         filterCollectionLineEdit->setPlaceholderText(i18nc("@info Displayed grayed-out inside the "
                 "textbox, verb to search", "Search"));
         layout->addWidget(filterCollectionLineEdit);
 
-        mView = new EntityTreeView;
+        mView = new EntityTreeView(mParent);
         mView->setDragDropMode(QAbstractItemView::NoDragDrop);
         mView->header()->hide();
         layout->addWidget(mView);
 
-        mUseByDefault = new QCheckBox(i18n("Use folder by default"));
+        mUseByDefault = new QCheckBox(i18n("Use folder by default"), mParent);
         mUseByDefault->hide();
         layout->addWidget(mUseByDefault);
 
@@ -175,8 +173,8 @@ public:
     EntityTreeView *mView = nullptr;
     AsyncSelectionHandler *mSelectionHandler = nullptr;
     QLabel *mTextLabel = nullptr;
-    bool mAllowToCreateNewChildCollection;
-    bool mKeepTreeExpanded;
+    bool mAllowToCreateNewChildCollection = false;
+    bool mKeepTreeExpanded = false;
     KRecursiveFilterProxyModel *mFilterCollection = nullptr;
     QCheckBox *mUseByDefault = nullptr;
     QStringList mContentMimeTypes;

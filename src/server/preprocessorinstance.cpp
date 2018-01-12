@@ -42,9 +42,7 @@ using namespace Akonadi::Server;
 
 PreprocessorInstance::PreprocessorInstance(const QString &id)
     : QObject()
-    , mBusy(false)
     , mId(id)
-    , mInterface(nullptr)
 {
     Q_ASSERT(!id.isEmpty());
 }

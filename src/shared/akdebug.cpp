@@ -191,7 +191,7 @@ void akInit(const QString &appName)
 {
     KCrash::initialize();
 
-    QString name = QFileInfo(appName).fileName();
+    const QString name = QFileInfo(appName).fileName();
     const auto errorLogFile = DebugPrivate::errorLogFileName(name);
     QFileInfo infoOld(errorLogFile + QLatin1String(".old"));
     if (infoOld.exists()) {
