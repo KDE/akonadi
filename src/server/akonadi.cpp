@@ -63,17 +63,6 @@ AkonadiServer *AkonadiServer::s_instance = nullptr;
 
 AkonadiServer::AkonadiServer(QObject *parent)
     : QObject(parent)
-    , mCmdServer(nullptr)
-    , mNtfServer(nullptr)
-    , mNotificationManager(nullptr)
-    , mCacheCleaner(nullptr)
-    , mIntervalCheck(nullptr)
-    , mStorageJanitor(nullptr)
-    , mItemRetrieval(nullptr)
-    , mAgentSearchManager(nullptr)
-    , mDatabaseProcess(nullptr)
-    , mSearchManager(nullptr)
-    , mAlreadyShutdown(false)
 {
     // Register bunch of useful types
     qRegisterMetaType<Protocol::CommandPtr>();

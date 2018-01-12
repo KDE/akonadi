@@ -102,7 +102,7 @@ protected:
     QProcess *mDatabaseProcess = nullptr;
     QVector<Connection *> mConnections;
     SearchManager *mSearchManager = nullptr;
-    bool mAlreadyShutdown;
+    bool mAlreadyShutdown = false;
 
     static AkonadiServer *s_instance;
 };
