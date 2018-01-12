@@ -256,17 +256,15 @@ inline DataStream &DataStream::operator>>(QDateTime &dt)
 // Inline functions
 
 template<typename T>
-inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, const QFlags<T> &flags)
+inline Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream, QFlags<T> flags)
 {
-    return stream << (int) flags;
+    return stream << static_cast<typename QFlags<T>::Int>(flags);
 }
 
 template<typename T>
 inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream, QFlags<T> &flags)
 {
-    int i;
-    stream >> i;
-    flags = QFlags<T>(i);
+    stream >> reinterpret_cast<typename QFlags<T>::Int&>(flags);
     return stream;
 }
 
