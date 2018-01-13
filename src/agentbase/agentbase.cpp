@@ -642,7 +642,7 @@ void AgentBasePrivate::tagRemoved(const Akonadi::Tag &tag)
 
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
-        observer4->tagRemoved(tag);;
+        observer4->tagRemoved(tag);
     } else {
         changeProcessed();
     }

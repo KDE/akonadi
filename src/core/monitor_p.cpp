@@ -434,7 +434,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
             for (const QByteArray &part : changedParts)  {
                 if (part.startsWith("PLD:") &&    //krazy:exclude=strings since QByteArray
                         (fullPayloadWasRequested || requestedPayloadParts.contains(part))) {
-                    scope.fetchPayloadPart(part.mid(4), true);;
+                    scope.fetchPayloadPart(part.mid(4), true);
                 }
                 if (part.startsWith("ATR:") &&    //krazy:exclude=strings since QByteArray
                         (allAttributesWereRequested || requestedAttrParts.contains(part))) {
