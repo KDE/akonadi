@@ -100,7 +100,7 @@ QString RecentCollectionAction::actionName(QModelIndex index)
         index = index.parent();
     }
     if (topLevelName.isEmpty()) {
-        return QStringLiteral("%1").arg(name);
+        return name;
     } else {
         topLevelName.replace(QLatin1Char('&'), QStringLiteral("&&"));
         return QStringLiteral("%1 - %2").arg(name, topLevelName);

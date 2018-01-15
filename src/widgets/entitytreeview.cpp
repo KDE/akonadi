@@ -52,7 +52,6 @@ public:
 #ifndef QT_NO_DRAGANDDROP
         , mDragDropManager(new DragDropManager(mParent))
 #endif
-        , mXmlGuiClient(nullptr)
         , mDefaultPopupMenu(QStringLiteral("akonadi_collectionview_contextmenu"))
     {
     }

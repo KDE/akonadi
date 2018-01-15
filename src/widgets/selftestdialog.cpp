@@ -76,9 +76,9 @@ SelfTestDialog::SelfTestDialog(QWidget *parent)
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
     mainLayout->addWidget(mainWidget);
-    QPushButton *user1Button = new QPushButton;
+    QPushButton *user1Button = new QPushButton(this);
     buttonBox->addButton(user1Button, QDialogButtonBox::ActionRole);
-    QPushButton *user2Button = new QPushButton;
+    QPushButton *user2Button = new QPushButton(this);
     buttonBox->addButton(user2Button, QDialogButtonBox::ActionRole);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &SelfTestDialog::reject);
     mainLayout->addWidget(buttonBox);

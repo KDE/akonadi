@@ -37,8 +37,7 @@ class Q_DECL_HIDDEN ItemView::Private
 {
 public:
     Private(ItemView *parent)
-        : xmlGuiClient(nullptr)
-        , mParent(parent)
+        : mParent(parent)
     {
     }
 
