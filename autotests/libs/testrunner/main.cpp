@@ -124,7 +124,11 @@ int main(int argc, char **argv)
     if (parser.isSet(QStringLiteral("testenv"))) {
         sh.makeShellScript(parser.value(QStringLiteral("testenv")));
     } else {
+#ifdef Q_OS_WIN
+        sh.makeShellScript(setup->basePath() + QLatin1String("testenvironment.ps1"));
+#else
         sh.makeShellScript(setup->basePath() + QLatin1String("testenvironment.sh"));
+#endif
     }
 
     if (!parser.positionalArguments().isEmpty()) {

@@ -30,36 +30,53 @@ ShellScript::ShellScript()
 
 void ShellScript::writeEnvironmentVariables()
 {
-    foreach (const EnvVar &envvar, mEnvVars) {
-        mScript += QLatin1String("_old_") + QLatin1String(envvar.first) + QLatin1String("=$") + QLatin1String(envvar.first) + QLatin1String("\n");
-        mScript.append(QLatin1String(envvar.first));
-        mScript.append(QLatin1String("=\""));
-        QString value = QString::fromLocal8Bit(envvar.second);
-        value = value.replace(QLatin1Char('"'), QLatin1String("\\\""));
-        mScript.append(value);
-        mScript.append(QLatin1String("\"\n"));
-
-        mScript.append(QLatin1String("export "));
-        mScript.append(QLatin1String(envvar.first));
-        mScript.append(QLatin1Char('\n'));
+    for (const auto &envvar : qAsConst(mEnvVars)) {
+#ifdef Q_OS_WIN
+        const auto tmpl = QStringLiteral("$_old_%1=$%1\r\n"
+                                         "$%1=\"%2\"\r\n");
+#else
+        const auto tmpl = QStringLiteral("_old_%1=$%1\n"
+                                         "%1=\"%2\"\n"
+                                         "export %1\n");
+#endif
+        mScript += tmpl.arg(QString::fromLocal8Bit(envvar.first),
+                            QString::fromLocal8Bit(envvar.second).replace(QLatin1Char('"'), QStringLiteral("\\\"")));
     }
 
-    mScript.append(QLatin1String("\n\n"));
+#ifdef Q_OS_WIN
+    mScript += QStringLiteral("\r\n\r\n");
+#else
+    mScript += QStringLiteral("\n\n");
+#endif
 }
 
 void ShellScript::writeShutdownFunction()
 {
-    QString s =
-        QLatin1String("function shutdown-testenvironment()\n"
-                      "{\n"
-                      "  qdbus org.kde.Akonadi.Testrunner-") + QString::number(QCoreApplication::instance()->applicationPid()) + QLatin1String(" / org.kde.Akonadi.Testrunner.shutdown\n");
-
-    foreach (const EnvVar &envvar, mEnvVars) {
-        s += QLatin1String("  ") + QLatin1String(envvar.first) + QLatin1String("=$_old_") + QLatin1String(envvar.first) + QLatin1String("\n");
-        s += QLatin1String("  export ") + QLatin1String(envvar.first) + QLatin1String("\n");
+#ifdef Q_OS_WIN
+    const auto tmpl = QStringLiteral("Function shutdownTestEnvironment()\r\n"
+                                     "{\r\n"
+                                     "  qdbus %1 %2 %3\r\n"
+                                     "%4"
+                                     "}\r\n\r\n");
+    const auto restoreTmpl = QStringLiteral("  $%1=$_old_%1\r\n");
+#else
+    const auto tmpl = QStringLiteral("function shutdown-testenvironment()\n"
+                                     "{\n"
+                                     "  qdbus %1 %2 %3\n"
+                                     "%4"
+                                     "}\n\n");
+    const auto restoreTmpl = QStringLiteral("  %1=$_old_%1\n"
+                                            "  export %1\n");
+#endif
+    QString restore;
+    for (const auto &envvar : qAsConst(mEnvVars)) {
+        restore += restoreTmpl.arg(QString::fromLocal8Bit(envvar.first));
     }
-    s.append(QLatin1String("}\n\n"));
-    mScript.append(s);
+
+    mScript += tmpl.arg(QStringLiteral("org.kde.Akonadi.Testrunner-%1").arg(qApp->applicationPid()),
+                        QStringLiteral("/"),
+                        QStringLiteral("org.kde.Akonadi.Testrunner.shutdown"),
+                        restore);
 }
 
 void ShellScript::makeShellScript(const QString &fileName)
@@ -71,7 +88,7 @@ void ShellScript::makeShellScript(const QString &fileName)
         writeEnvironmentVariables();
         writeShutdownFunction();
 
-        file.write(mScript.toLatin1().constData(), qstrlen(mScript.toLatin1().constData()));
+        file.write(mScript.toLatin1());
         file.close();
     } else {
         qCritical() << "Failed to write" << fileName;
