@@ -24,6 +24,7 @@
 #include "session.h"
 #include "item.h"
 #include "servermanager.h"
+#include "commandbuffer_p.h"
 
 
 #include <QQueue>
@@ -67,7 +68,7 @@ public:
     void socketDisconnected();
     void socketError(const QString &error);
     void dataReceived();
-    virtual bool handleCommand(qint64 tag, const Protocol::CommandPtr &cmd);
+    virtual bool handleCommands();
     void doStartNext();
     void startJob(Job *job);
 
@@ -134,6 +135,8 @@ public:
     bool connected;
     qint64 theNextTag;
     int protocolVersion;
+
+    CommandBuffer mCommandBuffer;
 
     // job management
     QQueue<Job *> queue;

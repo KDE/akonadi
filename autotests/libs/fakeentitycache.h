@@ -126,8 +126,8 @@ class AKONADITESTFAKE_EXPORT FakeNotificationConnection : public Akonadi::Connec
     Q_OBJECT
 
 public:
-    explicit FakeNotificationConnection(QObject *parent = nullptr)
-        : Connection(Connection::NotificationConnection, "testConn", parent)
+    explicit FakeNotificationConnection(Akonadi::Session *session, Akonadi::CommandBuffer *buffer)
+        : Connection(Connection::NotificationConnection, "", buffer, session)
     {}
 
     virtual ~FakeNotificationConnection()
@@ -155,8 +155,9 @@ public:
     {
     }
 
-    Akonadi::Connection *createNotificationConnection(Akonadi::Session *parent) override {
-        return new FakeNotificationConnection(parent);
+    Akonadi::Connection *createNotificationConnection(Akonadi::Session *parent,
+                                                      Akonadi::CommandBuffer *buffer) override {
+        return new FakeNotificationConnection(parent, buffer);
     }
 
     Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) override {

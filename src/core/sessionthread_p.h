@@ -27,7 +27,7 @@
 
 namespace Akonadi
 {
-
+class CommandBuffer;
 class SessionThread : public QObject
 {
     Q_OBJECT
@@ -36,13 +36,14 @@ public:
     explicit SessionThread(QObject *parent = nullptr);
     ~SessionThread();
 
-    Connection *createConnection(Connection::ConnectionType connType, const QByteArray &sessionId);
+    Connection *createConnection(Connection::ConnectionType connType, const QByteArray &sessionId,
+                                 CommandBuffer *commandBuffer);
 
-private:
-    Q_INVOKABLE Akonadi::Connection *doCreateConnection(Akonadi::Connection::ConnectionType connType,
-            const QByteArray &sessionId);
-
-    Q_INVOKABLE void doThreadQuit();
+private Q_SLOTS:
+    Akonadi::Connection *doCreateConnection(Akonadi::Connection::ConnectionType connType,
+                                            const QByteArray &sessionId,
+                                            Akonadi::CommandBuffer *commandBuffer);
+    void doThreadQuit();
 
 private:
     QVector<Connection *> mConnections;

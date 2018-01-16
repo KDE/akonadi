@@ -60,11 +60,8 @@ void SessionPrivate::startNext()
 void SessionPrivate::reconnect()
 {
     if (!connection) {
-        connection = sessionThread()->createConnection(Connection::CommandConnection, sessionId);
+        connection = sessionThread()->createConnection(Connection::CommandConnection, sessionId, &mCommandBuffer);
         mParent->connect(connection, &Connection::reconnected, mParent, &Session::reconnected,
-                         Qt::QueuedConnection);
-        mParent->connect(connection, SIGNAL(commandReceived(qint64,Akonadi::Protocol::CommandPtr)),
-                         mParent, SLOT(handleCommand(qint64,Akonadi::Protocol::CommandPtr)),
                          Qt::QueuedConnection);
         mParent->connect(connection, SIGNAL(socketDisconnected()), mParent, SLOT(socketDisconnected()),
                          Qt::QueuedConnection);
@@ -94,49 +91,52 @@ void SessionPrivate::socketDisconnected()
     connected = false;
 }
 
-bool SessionPrivate::handleCommand(qint64 tag, const Protocol::CommandPtr &cmd)
+bool SessionPrivate::handleCommands()
 {
-    // Handle Hello response -> send Login
-    if (cmd->type() == Protocol::Command::Hello) {
-        const auto &hello = Protocol::cmdCast<Protocol::HelloResponse>(cmd);
-        if (hello.isError()) {
-            qCWarning(AKONADICORE_LOG) << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
-            connection->closeConnection();
-            QTimer::singleShot(1000, connection, &Connection::reconnect);
-            return false;
+    CommandBufferLocker lock(&mCommandBuffer);
+    CommandBufferNotifyBlocker notify(&mCommandBuffer);
+    while (!mCommandBuffer.isEmpty()) {
+        const auto command = mCommandBuffer.dequeue();
+        lock.unlock();
+        const auto cmd = command.command;
+        const auto tag = command.tag;
+
+        // Handle Hello response -> send Login
+        if (cmd->type() == Protocol::Command::Hello) {
+            const auto &hello = Protocol::cmdCast<Protocol::HelloResponse>(cmd);
+            if (hello.isError()) {
+                qCWarning(AKONADICORE_LOG) << "Error when establishing connection with Akonadi server:" << hello.errorMessage();
+                connection->closeConnection();
+                QTimer::singleShot(1000, connection, &Connection::reconnect);
+                return false;
+            }
+
+            qCDebug(AKONADICORE_LOG) << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
+            qCDebug(AKONADICORE_LOG) << "Server generation:" << hello.generation();
+            qCDebug(AKONADICORE_LOG) << "Server says:" << hello.message();
+            // Version mismatch is handled in SessionPrivate::startJob() so that
+            // we can report the error out via KJob API
+            protocolVersion = hello.protocolVersion();
+            Internal::setServerProtocolVersion(protocolVersion);
+            Internal::setGeneration(hello.generation());
+
+            sendCommand(nextTag(), Protocol::LoginCommandPtr::create(sessionId));
+        } else if (cmd->type() == Protocol::Command::Login) {
+            const auto &login = Protocol::cmdCast<Protocol::LoginResponse>(cmd);
+            if (login.isError()) {
+                qCWarning(AKONADICORE_LOG) << "Unable to login to Akonadi server:" << login.errorMessage();
+                connection->closeConnection();
+                QTimer::singleShot(1000, mParent, SLOT(reconnect()));
+                return false;
+            }
+
+            connected = true;
+            startNext();
+        } else if (currentJob) {
+            currentJob->d_ptr->handleResponse(tag, cmd);
         }
 
-        qCDebug(AKONADICORE_LOG) << "Connected to" << hello.serverName() << ", using protocol version" << hello.protocolVersion();
-        qCDebug(AKONADICORE_LOG) << "Server generation:" << hello.generation();
-        qCDebug(AKONADICORE_LOG) << "Server says:" << hello.message();
-        // Version mismatch is handled in SessionPrivate::startJob() so that
-        // we can report the error out via KJob API
-        protocolVersion = hello.protocolVersion();
-        Internal::setServerProtocolVersion(protocolVersion);
-        Internal::setGeneration(hello.generation());
-
-        sendCommand(nextTag(), Protocol::LoginCommandPtr::create(sessionId));
-        return true;
-    }
-
-    // Login response
-    if (cmd->type() == Protocol::Command::Login) {
-        const auto &login = Protocol::cmdCast<Protocol::LoginResponse>(cmd);
-        if (login.isError()) {
-            qCWarning(AKONADICORE_LOG) << "Unable to login to Akonadi server:" << login.errorMessage();
-            connection->closeConnection();
-            QTimer::singleShot(1000, mParent, SLOT(reconnect()));
-            return false;
-        }
-
-        connected = true;
-        startNext();
-        return true;
-    }
-
-    // work for the current job
-    if (currentJob) {
-        currentJob->d_ptr->handleResponse(tag, cmd);
+        lock.relock();
     }
 
     return true;
@@ -292,6 +292,7 @@ SessionPrivate::SessionPrivate(Session *parent)
     , mSessionThread(new SessionThread)
     , connection(nullptr)
     , protocolVersion(0)
+    , mCommandBuffer(parent, "handleCommands")
     , currentJob(nullptr)
 {
     // Shutdown the thread before QApplication event loop quits - the

@@ -29,13 +29,15 @@
 
 using namespace Akonadi;
 
-Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(Session *session)
+Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(Session *session,
+                                                                                CommandBuffer *commandBuffer)
 {
     if (!Akonadi::ServerManager::self()->isRunning()) {
         return nullptr;
     }
 
-    return session->d->sessionThread()->createConnection(Connection::NotificationConnection, session->sessionId());
+    return session->d->sessionThread()->createConnection(Connection::NotificationConnection,
+                                                         session->sessionId(), commandBuffer);
 }
 
 QObject *ChangeNotificationDependenciesFactory::createChangeMediator(QObject *parent)

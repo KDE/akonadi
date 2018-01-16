@@ -27,6 +27,7 @@ namespace Akonadi
 {
 
 class Connection;
+class CommandBuffer;
 
 /**
  * This class exists so that we can create a fake notification source in
@@ -38,7 +39,9 @@ public:
     virtual ~ChangeNotificationDependenciesFactory()
     {
     }
-    virtual Connection *createNotificationConnection(Session *parent);
+
+    virtual Connection *createNotificationConnection(Session *parent, CommandBuffer *commandBuffer);
+
     virtual QObject *createChangeMediator(QObject *parent);
 
     virtual Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Session *session);

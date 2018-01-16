@@ -21,6 +21,7 @@
 #include "session_p.h"
 #include "servermanager_p.h"
 #include "akonadicore_debug.h"
+#include "commandbuffer_p.h"
 
 #include <QDataStream>
 #include <QFile>
@@ -37,12 +38,12 @@
 
 using namespace Akonadi;
 
-Connection::Connection(ConnectionType connType, const QByteArray &sessionId, QObject *parent)
+Connection::Connection(ConnectionType connType, const QByteArray &sessionId,
+                       CommandBuffer *commandBuffer, QObject *parent)
     : QObject(parent)
     , mConnectionType(connType)
-    , mSocket(nullptr)
-    , mLogFile(nullptr)
     , mSessionId(sessionId)
+    , mCommandBuffer(commandBuffer)
 {
     qRegisterMetaType<Protocol::CommandPtr>();
     qRegisterMetaType<QAbstractSocket::SocketState>();
@@ -265,27 +266,9 @@ void Connection::dataReceived()
             Q_ASSERT(cmd->isResponse());
         }
 
-        Q_EMIT commandReceived(tag, cmd);
-        /*
-        if (!handleCommand(tag, cmd)) {
-            break;
-        }
-        */
-
-        // FIXME: It happens often that data are arriving from the server faster
-        // than we Jobs can process them which means, that we often process all
-        // responses in single dataReceived() call and thus not returning to back
-        // to QEventLoop, which breaks batch-delivery of ItemFetchJob (among other
-        // things). To workaround that we force processing of events every
-        // now and then.
-        //
-        // Longterm we want something better, like processing and parsing in
-        // separate thread which would only post the parsed Protocol::Commands
-        // to the jobs through event loop. That will be overall slower but should
-        // result in much more responsive applications.
-        if (timer.elapsed() > 50) {
-            thread()->eventDispatcher()->processEvents(QEventLoop::ExcludeSocketNotifiers);
-            timer.restart();
+        {
+            CommandBufferLocker locker(mCommandBuffer);
+            mCommandBuffer->enqueue(tag, cmd);
         }
     }
 }

@@ -49,6 +49,7 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
     , collectionCache(nullptr)
     , itemCache(nullptr)
     , tagCache(nullptr)
+    , mCommandBuffer(parent, "handleCommands")
     , pendingModificationTimer(nullptr)
     , monitorReady(false)
     , fetchCollection(false)
@@ -99,12 +100,10 @@ bool MonitorPrivate::connectToNotificationManager()
         return false;
     }
 
-    ntfConnection = dependenciesFactory->createNotificationConnection(session);
+    ntfConnection = dependenciesFactory->createNotificationConnection(session, &mCommandBuffer);
     if (!ntfConnection) {
         return false;
     }
-    q_ptr->connect(ntfConnection, SIGNAL(commandReceived(qint64,Akonadi::Protocol::CommandPtr)),
-                   q_ptr, SLOT(commandReceived(qint64,Akonadi::Protocol::CommandPtr)));
 
     pendingModification = Protocol::ModifySubscriptionCommand();
     for (const auto &col : qAsConst(collections)) {
@@ -721,60 +720,70 @@ int MonitorPrivate::translateAndCompress(QQueue<Protocol::ChangeNotificationPtr>
     return 0;
 }
 
-void MonitorPrivate::commandReceived(qint64 tag, const Protocol::CommandPtr &command)
+void MonitorPrivate::handleCommands()
 {
     Q_Q(Monitor);
-    Q_UNUSED(tag);
-    if (command->isResponse()) {
-        switch (command->type()) {
-        case Protocol::Command::Hello: {
-            qCDebug(AKONADICORE_LOG) << q_ptr << "Connected to notification bus";
-            QByteArray subname;
-            if (!q->objectName().isEmpty()) {
-                subname = q->objectName().toLatin1();
-            } else {
-                subname = session->sessionId();
+
+    CommandBufferLocker lock(&mCommandBuffer);
+    CommandBufferNotifyBlocker notify(&mCommandBuffer);
+    while (!mCommandBuffer.isEmpty()) {
+        const auto cmd = mCommandBuffer.dequeue();
+        lock.unlock();
+        const auto command = cmd.command;
+
+        if (command->isResponse()) {
+            switch (command->type()) {
+            case Protocol::Command::Hello: {
+                qCDebug(AKONADICORE_LOG) << q_ptr << "Connected to notification bus";
+                QByteArray subname;
+                if (!q->objectName().isEmpty()) {
+                    subname = q->objectName().toLatin1();
+                } else {
+                    subname = session->sessionId();
+                }
+                subname += " - " + QByteArray::number(quintptr(q));
+                qCDebug(AKONADICORE_LOG) << q_ptr << "Subscribing as \"" << subname << "\"";
+                auto subCmd = Protocol::CreateSubscriptionCommandPtr::create(subname, session->sessionId());
+                ntfConnection->sendCommand(2, subCmd);
+                break;
             }
-            subname += " - " + QByteArray::number(quintptr(q));
-            qCDebug(AKONADICORE_LOG) << q_ptr << "Subscribing as \"" << subname << "\"";
-            auto subCmd = Protocol::CreateSubscriptionCommandPtr::create(subname, session->sessionId());
-            ntfConnection->sendCommand(2, subCmd);
-            break;
-        }
 
-        case Protocol::Command::CreateSubscription: {
-            auto msubCmd = Protocol::ModifySubscriptionCommandPtr::create(pendingModification);
-            pendingModification = Protocol::ModifySubscriptionCommand();
-            ntfConnection->sendCommand(3, msubCmd);
-            break;
-        }
-
-        case Protocol::Command::ModifySubscription:
-            // TODO: Handle errors
-            if (!monitorReady) {
-                monitorReady = true;
-                Q_EMIT q_ptr->monitorReady();
+            case Protocol::Command::CreateSubscription: {
+                auto msubCmd = Protocol::ModifySubscriptionCommandPtr::create(pendingModification);
+                pendingModification = Protocol::ModifySubscriptionCommand();
+                ntfConnection->sendCommand(3, msubCmd);
+                break;
             }
-            break;
 
-        default:
-            qCWarning(AKONADICORE_LOG) << "Received an unexpected response on Notification stream: " << Protocol::debugString(command);
-            break;
+            case Protocol::Command::ModifySubscription:
+                // TODO: Handle errors
+                if (!monitorReady) {
+                    monitorReady = true;
+                    Q_EMIT q_ptr->monitorReady();
+                }
+                break;
+
+            default:
+                qCWarning(AKONADICORE_LOG) << "Received an unexpected response on Notification stream: " << Protocol::debugString(command);
+                break;
+            }
+        } else {
+            switch (command->type()) {
+            case Protocol::Command::ItemChangeNotification:
+            case Protocol::Command::CollectionChangeNotification:
+            case Protocol::Command::TagChangeNotification:
+            case Protocol::Command::RelationChangeNotification:
+            case Protocol::Command::SubscriptionChangeNotification:
+            case Protocol::Command::DebugChangeNotification:
+                slotNotify(command.staticCast<Protocol::ChangeNotification>());
+                break;
+            default:
+                qCWarning(AKONADICORE_LOG) << "Received an unexpected message on Notification stream:" << Protocol::debugString(command);
+                break;
+            }
         }
-    } else {
-        switch (command->type()) {
-        case Protocol::Command::ItemChangeNotification:
-        case Protocol::Command::CollectionChangeNotification:
-        case Protocol::Command::TagChangeNotification:
-        case Protocol::Command::RelationChangeNotification:
-        case Protocol::Command::SubscriptionChangeNotification:
-        case Protocol::Command::DebugChangeNotification:
-            slotNotify(command.staticCast<Protocol::ChangeNotification>());
-            break;
-        default:
-            qCWarning(AKONADICORE_LOG) << "Received an unexpected message on Notification stream:" << Protocol::debugString(command);
-            break;
-        }
+
+        lock.relock();
     }
 }
 

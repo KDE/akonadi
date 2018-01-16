@@ -35,6 +35,8 @@ namespace Akonadi
 {
 
 class SessionThread;
+class SessionPrivate;
+class CommandBuffer;
 
 class AKONADICORE_EXPORT Connection : public QObject
 {
@@ -47,7 +49,8 @@ public:
     };
     Q_ENUM(ConnectionType)
 
-    explicit Connection(ConnectionType connType, const QByteArray &sessionId, QObject *parent = nullptr);
+    explicit Connection(ConnectionType connType, const QByteArray &sessionId,
+                        CommandBuffer *commandBuffer, QObject *parent = nullptr);
     ~Connection();
 
     Q_INVOKABLE void reconnect();
@@ -78,12 +81,7 @@ private:
     QLocalSocket *mSocket = nullptr;
     QFile *mLogFile = nullptr;
     QByteArray mSessionId;
-    QMutex mLock;
-    struct Command {
-        qint64 tag;
-        Protocol::CommandPtr cmd;
-    };
-    QQueue<Command> mOutQueue;
+    CommandBuffer *mCommandBuffer;
 
     friend class Akonadi::SessionThread;
 };

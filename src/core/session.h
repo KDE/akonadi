@@ -134,7 +134,7 @@ private:
     Q_PRIVATE_SLOT(d, void reconnect())
     Q_PRIVATE_SLOT(d, void socketError(const QString &error))
     Q_PRIVATE_SLOT(d, void socketDisconnected())
-    Q_PRIVATE_SLOT(d, bool handleCommand(qint64 tag, const Akonadi::Protocol::CommandPtr &cmd))
+    Q_PRIVATE_SLOT(d, bool handleCommands())
     Q_PRIVATE_SLOT(d, void doStartNext())
     Q_PRIVATE_SLOT(d, void jobDone(KJob *))
     Q_PRIVATE_SLOT(d, void jobWriteFinished(Akonadi::Job *))

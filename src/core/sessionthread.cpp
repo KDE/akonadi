@@ -18,12 +18,14 @@
 */
 
 #include "sessionthread_p.h"
-
+#include "session_p.h"
+#include "akonadicore_debug.h"
 
 #include <QThread>
 
 Q_DECLARE_METATYPE(Akonadi::Connection::ConnectionType)
 Q_DECLARE_METATYPE(Akonadi::Connection *)
+Q_DECLARE_METATYPE(Akonadi::CommandBuffer *)
 
 using namespace Akonadi;
 
@@ -32,6 +34,7 @@ SessionThread::SessionThread(QObject *parent)
 {
     qRegisterMetaType<Connection::ConnectionType>();
     qRegisterMetaType<Connection *>();
+    qRegisterMetaType<CommandBuffer *>();
 
     QThread *thread = new QThread();
     moveToThread(thread);
@@ -54,24 +57,27 @@ SessionThread::~SessionThread()
 }
 
 Connection *SessionThread::createConnection(Connection::ConnectionType connectionType,
-        const QByteArray &sessionId)
+                                            const QByteArray &sessionId,
+                                            CommandBuffer *commandBuffer)
 {
     Connection *conn = nullptr;
     const bool invoke = QMetaObject::invokeMethod(this, "doCreateConnection",
                         Qt::BlockingQueuedConnection,
                         Q_RETURN_ARG(Akonadi::Connection*, conn),
                         Q_ARG(Akonadi::Connection::ConnectionType, connectionType),
-                        Q_ARG(QByteArray, sessionId));
+                        Q_ARG(QByteArray, sessionId),
+                        Q_ARG(Akonadi::CommandBuffer*, commandBuffer));
     Q_ASSERT(invoke); Q_UNUSED(invoke);
     return conn;
 }
 
 Connection *SessionThread::doCreateConnection(Connection::ConnectionType connType,
-        const QByteArray &sessionId)
+                                              const QByteArray &sessionId,
+                                              CommandBuffer *commandBuffer)
 {
     Q_ASSERT(thread() == QThread::currentThread());
 
-    Connection *conn = new Connection(connType, sessionId);
+    Connection *conn = new Connection(connType, sessionId, commandBuffer);
     conn->moveToThread(thread());
     connect(conn, &QObject::destroyed,
     this, [this](QObject * obj) {

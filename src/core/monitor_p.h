@@ -33,6 +33,7 @@
 #include "servermanager.h"
 #include "changenotificationdependenciesfactory_p.h"
 #include "connection_p.h"
+#include "commandbuffer_p.h"
 
 #include "private/protocol_p.h"
 
@@ -80,6 +81,8 @@ public:
     ItemListCache *itemCache = nullptr;
     TagListCache *tagCache = nullptr;
     QMimeDatabase mimeDatabase;
+
+    CommandBuffer mCommandBuffer;
 
     Protocol::ModifySubscriptionCommand pendingModification;
     QTimer *pendingModificationTimer;
@@ -141,7 +144,7 @@ public:
     */
     int translateAndCompress(QQueue<Protocol::ChangeNotificationPtr> &notificationQueue, const Protocol::ChangeNotificationPtr &msg);
 
-    void commandReceived(qint64 tag, const Protocol::CommandPtr &command);
+    void handleCommands();
 
     virtual void slotNotify(const Protocol::ChangeNotificationPtr &msg);
 
