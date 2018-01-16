@@ -25,6 +25,7 @@
 #include <private/standarddirs_p.h>
 
 #include <storage/dbconfig.h>
+#include "config-akonadi.h"
 
 #define QL1S(x) QStringLiteral(x)
 
@@ -39,7 +40,7 @@ private Q_SLOTS:
     {
         // doesn't work, DbConfig has an internal singleton-like cache...
         //QFETCH( QString, driverName );
-        const QString driverName(QL1S("QMYSQL"));
+        const QString driverName(QL1S(AKONADI_DATABASE_BACKEND));
 
         // isolated config file to not conflict with a running instance
         akTestSetInstanceIdentifier(QL1S("unit-test"));
