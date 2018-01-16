@@ -41,8 +41,7 @@ public:
 
 void TagSelectWidget::Private::init()
 {
-    QHBoxLayout *mainLayout = new QHBoxLayout;
-    mParent->setLayout(mainLayout);
+    QHBoxLayout *mainLayout = new QHBoxLayout(mParent);
 
     Monitor *monitor = new Monitor(mParent);
     monitor->setObjectName(QStringLiteral("TagSelectWidgetMonitor"));

@@ -22,7 +22,7 @@
 
 #include <KLocalizedString>
 #include <QLineEdit>
-#include <QMessageBox>
+#include <KMessageBox>
 #include <kcheckableproxymodel.h>
 #include <QListView>
 #include "changerecorder.h"
@@ -80,12 +80,6 @@ TagEditWidget::Private::Private(Akonadi::TagModel *model, QWidget *parent)
     : QObject()
     , d(parent)
     , m_model(model)
-    , m_tagsView(nullptr)
-    , m_checkableProxy(nullptr)
-    , m_newTagButton(nullptr)
-    , m_newTagEdit(nullptr)
-    , m_deleteButton(nullptr)
-    , m_deleteButtonTimer(nullptr)
 {
 
 }
@@ -182,7 +176,7 @@ void TagEditWidget::Private::deleteTag()
                                 "Do you really want to remove the tag <resource>%1</resource>?",
                                 tag.name());
     const QString caption = i18nc("@title", "Delete tag");
-    if (QMessageBox::question(d, caption, text, i18nc("@action:button", "Delete"), i18nc("@action:button", "Cancel")) == 0) {
+    if (KMessageBox::questionYesNo(d, caption, text, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::Yes) {
         new Akonadi::TagDeleteJob(tag, this);
     }
 }
