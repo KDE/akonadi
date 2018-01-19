@@ -50,11 +50,17 @@ public:
         return mSubscriber;
     }
 
+    QLocalSocket *socket() const
+    {
+        return mSocket;
+    }
+
+    void handleIncomingData();
+
 public Q_SLOTS:
     bool notify(const Akonadi::Protocol::ChangeNotificationPtr &notification);
 
 private Q_SLOTS:
-    void socketReadyRead();
     void socketDisconnected();
 
 Q_SIGNALS:

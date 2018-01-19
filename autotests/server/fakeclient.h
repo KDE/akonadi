@@ -47,7 +47,7 @@ protected:
     void run() override;
 
 private Q_SLOTS:
-    void dataAvailable();
+    bool dataAvailable();
     void readServerPart();
     void writeClientPart();
     void connectionLost();

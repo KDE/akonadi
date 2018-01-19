@@ -22,6 +22,8 @@
 #include "akonadicore_debug.h"
 
 #include <QThread>
+#include <QEventLoop>
+#include <QTimer>
 
 Q_DECLARE_METATYPE(Akonadi::Connection::ConnectionType)
 Q_DECLARE_METATYPE(Akonadi::Connection *)
@@ -39,6 +41,8 @@ SessionThread::SessionThread(QObject *parent)
     QThread *thread = new QThread();
     moveToThread(thread);
     thread->start();
+
+    QTimer::singleShot(0, this, &SessionThread::waitForSocketData);
 }
 
 SessionThread::~SessionThread()
@@ -80,18 +84,92 @@ Connection *SessionThread::doCreateConnection(Connection::ConnectionType connTyp
     Connection *conn = new Connection(connType, sessionId, commandBuffer);
     conn->moveToThread(thread());
     connect(conn, &QObject::destroyed,
-    this, [this](QObject * obj) {
-        mConnections.removeOne(static_cast<Connection *>(obj));
-    });
+            this, [this](QObject * obj) {
+                mConnections.removeOne(static_cast<Connection *>(obj));
+                if (mWaitLoop) {
+                    mWaitLoop->quit();
+                }
+            });
+    mConnections.push_back(conn);
+
+    if (mWaitLoop) {
+        mWaitLoop->quit();
+    }
+    if (!mWaiting) {
+        mWaiting = true;
+        QTimer::singleShot(0, this, &SessionThread::waitForSocketData);
+    }
+
     return conn;
+}
+
+void SessionThread::destroyConnection(Connection *connection)
+{
+    const bool invoke = QMetaObject::invokeMethod(this, "doDestroyConnection",
+                                                  Qt::BlockingQueuedConnection,
+                                                  Q_ARG(Akonadi::Connection*, connection));
+    Q_ASSERT(invoke); Q_UNUSED(invoke);
+}
+
+void SessionThread::doDestroyConnection(Connection *connection)
+{
+    Q_ASSERT(thread() == QThread::currentThread());
+    Q_ASSERT(mConnections.contains(connection));
+
+    mConnections.removeAll(connection);
+    delete connection;
+
+    if (mWaitLoop) {
+        mWaitLoop->quit();
+    }
+
+    if (!mWaiting) {
+        mWaiting = true;
+        QTimer::singleShot(0, this, &SessionThread::waitForSocketData);
+    }
 }
 
 void SessionThread::doThreadQuit()
 {
+    Q_ASSERT(thread() == QThread::currentThread());
+
     for (Connection *conn : qAsConst(mConnections)) {
-        conn->closeConnection();
-        delete conn;
+        if (mWaitLoop) {
+            conn->socket()->disconnect(mWaitLoop);
+        }
+        conn->doCloseConnection(); // we can call directly because we are in the correct thread
+    }
+    while (!mConnections.isEmpty()) {
+        delete mConnections.takeFirst();
+    }
+    if (mWaitLoop) {
+        mWaitLoop->quit();
     }
 
     thread()->quit();
+}
+
+void SessionThread::waitForSocketData()
+{
+    mWaiting = true;
+    while (!mConnections.isEmpty()) {
+        QEventLoop loop;
+        mWaitLoop = &loop;
+        for (auto con : qAsConst(mConnections)) {
+            auto socket = con->socket();
+            if (socket) {
+                connect(socket, &QLocalSocket::readyRead, &loop, &QEventLoop::quit);
+                connect(socket, &QLocalSocket::disconnected, &loop, &QEventLoop::quit);
+            } else {
+                connect(con, &Connection::reconnected, &loop, &QEventLoop::quit);
+            }
+        }
+        loop.exec();
+        mWaitLoop = nullptr;
+
+        for (auto con : qAsConst(mConnections)) {
+            con->handleIncomingData();
+        }
+    }
+    mWaiting = false;
 }

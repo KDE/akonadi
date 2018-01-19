@@ -29,6 +29,7 @@
 
 class NotificationManagerTest;
 class QThreadPool;
+class QEventLoop;
 
 namespace Akonadi
 {
@@ -56,6 +57,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void slotNotify(const Akonadi::Protocol::ChangeNotificationList &msgs);
+    void waitForSocketData();
 
 protected:
     void init() override;
@@ -71,6 +73,10 @@ private:
     QThreadPool *mNotifyThreadPool = nullptr;
     QVector<QPointer<NotificationSubscriber>> mSubscribers;
     int mDebugNotifications;
+
+    QEventLoop *mEventLoop = nullptr;
+    bool mWaiting = false;
+    bool mQuitting = false;
 
     friend class NotificationSubscriber;
     friend class ::NotificationManagerTest;

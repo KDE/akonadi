@@ -41,6 +41,7 @@ public:
     }
 
     virtual Connection *createNotificationConnection(Session *parent, CommandBuffer *commandBuffer);
+    virtual void destroyNotificationConnection(Session *parent, Connection *connection);
 
     virtual QObject *createChangeMediator(QObject *parent);
 

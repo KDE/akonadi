@@ -23,6 +23,19 @@ set(akonadiprivate_SRCS
     dbus.cpp
 )
 
+set(akonadiprivate_LIBS
+PUBLIC
+    Qt5::Core
+    Qt5::DBus
+)
+if (WIN32)
+    set(akonadiprivate_LIBS
+    ${akonadiprivate_LIBS}
+    PRIVATE
+        Qt5::Network
+    )
+endif()
+
 ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.h IDENTIFIER AKONADIPRIVATE_LOG CATEGORY_NAME org.kde.pim.akonadiprivate)
 
 if (WIN32)
@@ -43,11 +56,7 @@ add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
 if (WIN32)
     add_dependencies(KF5AkonadiPrivate generate_protocol)
 endif()
-target_link_libraries(KF5AkonadiPrivate
-PUBLIC
-    Qt5::Core
-    Qt5::DBus
-)
+target_link_libraries(KF5AkonadiPrivate ${akonadiprivate_LIBS})
 generate_export_header(KF5AkonadiPrivate BASE_NAME akonadiprivate)
 
 set_target_properties(KF5AkonadiPrivate PROPERTIES
@@ -90,7 +99,4 @@ endif()
 set_target_properties(akonadiprivate_static PROPERTIES
     COMPILE_FLAGS -DAKONADIPRIVATE_STATIC_DEFINE
 )
-target_link_libraries(akonadiprivate_static
-    Qt5::Core
-    Qt5::DBus
-)
+target_link_libraries(akonadiprivate_static ${akonadiprivate_LIBS})

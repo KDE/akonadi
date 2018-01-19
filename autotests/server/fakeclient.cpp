@@ -20,25 +20,27 @@
 #include "fakeclient.h"
 #include "fakeakonadiserver.h"
 
+#include <private/protocol_exception_p.h>
 #include <private/protocol_p.h>
+#include <private/datastream_p_p.h>
 
 #include <QTest>
 #include <QMutexLocker>
 #include <QLocalSocket>
 
-#define CLIENT_COMPARE(actual, expected)\
+#define CLIENT_COMPARE(actual, expected, ...)\
 do {\
     if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__)) {\
-        quit();\
-        return;\
+        mSocket->disconnectFromServer();\
+        return __VA_ARGS__;\
     }\
 } while (0)
 
-#define CLIENT_VERIFY(statement)\
+#define CLIENT_VERIFY(statement, ...)\
 do {\
     if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__)) {\
-        quit();\
-        return;\
+        mSocket->disconnectFromServer();\
+        return __VA_ARGS__;\
     }\
 } while (0)
 
@@ -47,6 +49,7 @@ using namespace Akonadi::Server;
 
 FakeClient::FakeClient(QObject *parent)
     : QThread(parent)
+    , mMutex(QMutex::Recursive)
 {
     moveToThread(this);
 }
@@ -66,14 +69,16 @@ bool FakeClient::isScenarioDone() const
     return mScenarios.isEmpty();
 }
 
-void FakeClient::dataAvailable()
+bool FakeClient::dataAvailable()
 {
     QMutexLocker locker(&mMutex);
 
-    CLIENT_VERIFY(!mScenarios.isEmpty());
+    CLIENT_VERIFY(!mScenarios.isEmpty(), false);
 
     readServerPart();
     writeClientPart();
+
+    return true;
 }
 
 void FakeClient::readServerPart()
@@ -97,18 +102,27 @@ void FakeClient::readServerPart()
 
             expectedStream >> expectedTag;
             const auto expectedCommand = Protocol::deserialize(expectedStream.device());
-
-            while ((size_t)mSocket->bytesAvailable() < sizeof(qint64)) {
-                if (!mSocket->waitForReadyRead(5000)) {
-                    qDebug() << "Timeout while waiting for server response";
-                    qDebug() << "Expected response:" << Protocol::debugString(expectedCommand);
-                    QVERIFY(false);
+            try {
+                while ((size_t)mSocket->bytesAvailable() < sizeof(qint64)) {
+                    Protocol::DataStream::waitForData(mSocket, 5000);
                 }
+            } catch (const ProtocolException &e) {
+                qDebug() << "ProtocolException:" << e.what();
+                qDebug() << "Expected response:" << Protocol::debugString(expectedCommand);
+                CLIENT_VERIFY(false);
             }
+
             mStream >> actualTag;
             CLIENT_COMPARE(actualTag, expectedTag);
 
-            const auto actualCommand = Protocol::deserialize(mStream.device());
+            Protocol::CommandPtr actualCommand;
+            try {
+                actualCommand = Protocol::deserialize(mStream.device());
+            } catch (const ProtocolException &e) {
+                qDebug() << "Protocol exception:" << e.what();
+                qDebug() << "Expected response:" << Protocol::debugString(expectedCommand);
+                CLIENT_VERIFY(false);
+            }
 
             if (actualCommand->type() != expectedCommand->type()) {
                 qDebug() << "Actual command:  " << Protocol::debugString(actualCommand);
@@ -131,7 +145,7 @@ void FakeClient::readServerPart()
                         || mScenarios.at(0).action ==TestScenario::Quit);
     } else {
         // Server replied and there's nothing else to send, then quit
-        quit();
+        mSocket->disconnectFromServer();
     }
 }
 
@@ -143,6 +157,7 @@ void FakeClient::writeClientPart()
 
        if (rule.action == TestScenario::ClientCmd) {
             mSocket->write(rule.data);
+            CLIENT_VERIFY(mSocket->waitForBytesWritten());
         } else {
             const int timeout = rule.data.toInt();
             QTest::qWait(timeout);
@@ -163,14 +178,44 @@ void FakeClient::run()
 {
     mSocket = new QLocalSocket();
     mSocket->connectToServer(FakeAkonadiServer::socketFile());
-    connect(mSocket, &QIODevice::readyRead, this, &FakeClient::dataAvailable);
     connect(mSocket, &QLocalSocket::disconnected, this, &FakeClient::connectionLost);
+    connect(mSocket, QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
+            this, [this](QLocalSocket::LocalSocketError error) {
+                qWarning() << "Client socket error: " << mSocket->errorString();
+                connectionLost();
+                QVERIFY(false);
+            });
     if (!mSocket->waitForConnected()) {
         qFatal("Failed to connect to FakeAkonadiServer");
+        QVERIFY(false);
+        return;
     }
     mStream.setDevice(mSocket);
 
-    exec();
+    Q_FOREVER {
+        if (mSocket->state() != QLocalSocket::ConnectedState) {
+            connectionLost();
+            break;
+        }
+
+        {
+            QEventLoop loop;
+            connect(mSocket, &QLocalSocket::readyRead, &loop, &QEventLoop::quit);
+            connect(mSocket, &QLocalSocket::disconnected, &loop, &QEventLoop::quit);
+            loop.exec();
+        }
+
+        while (mSocket->bytesAvailable() > 0) {
+            if (mSocket->state() != QLocalSocket::ConnectedState) {
+                connectionLost();
+                break;
+            }
+
+            if(!dataAvailable()) {
+                break;
+            }
+        }
+    }
 
     mStream.setDevice(nullptr);
     mSocket->close();
@@ -182,6 +227,4 @@ void FakeClient::connectionLost()
 {
     // Otherwise this is an error on server-side, we expected more talking
     CLIENT_VERIFY(isScenarioDone());
-
-    quit();
 }

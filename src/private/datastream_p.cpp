@@ -19,6 +19,12 @@
 
 #include "datastream_p_p.h"
 
+#ifdef Q_OS_WIN
+#include <QEventLoop>
+#include <QTimer>
+#include <QLocalSocket>
+#endif
+
 using namespace Akonadi;
 using namespace Akonadi::Protocol;
 
@@ -36,6 +42,44 @@ DataStream::DataStream(QIODevice *device)
 
 DataStream::~DataStream()
 {
+}
+
+void DataStream::waitForData(QIODevice *device, int timeoutMs)
+{
+#ifdef Q_OS_WIN
+    // Apparently readyRead() gets emitted sometimes even if there are no data
+    // so we will re-enter the wait again immediatelly
+    while (device->bytesAvailable() == 0) {
+        auto ls = qobject_cast<QLocalSocket*>(device);
+        if (ls && ls->state() != QLocalSocket::ConnectedState) {
+            throw ProtocolException("Socket not connected to server");
+        }
+
+        QEventLoop loop;
+        QObject::connect(device, &QIODevice::readyRead, &loop, &QEventLoop::quit);
+        if (ls) {
+            QObject::connect(ls, &QLocalSocket::stateChanged, &loop, &QEventLoop::quit);
+        }
+        bool timeout = false;
+        if (timeoutMs > 0) {
+            QTimer::singleShot(timeoutMs, &loop, [&]() {
+                timeout = true;
+                loop.quit();
+            });
+        }
+        loop.exec();
+        if (timeout) {
+            throw ProtocolException("Timeout while waiting for data");
+        }
+        if (ls && ls->state() != QLocalSocket::ConnectedState) {
+            throw ProtocolException("Socket not connected to server");
+        }
+    }
+#else
+    if (!device->waitForReadyRead(timeoutMs)) {
+        throw ProtocolException("Timeout while waiting for data");
+    }
+#endif
 }
 
 QIODevice *DataStream::device() const
@@ -62,9 +106,7 @@ void DataStream::waitForData(quint32 size)
     checkDevice();
 
     while (mDev->bytesAvailable() < size) {
-        if (!mDev->waitForReadyRead(mWaitTimeout)) {
-            throw ProtocolException("Timeout while waiting for data");
-        }
+        waitForData(mDev, mWaitTimeout);
     }
 }
 

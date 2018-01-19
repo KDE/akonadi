@@ -25,6 +25,7 @@
 
 class KJob;
 class FakeSession;
+class FakeNotificationConnection;
 
 namespace Akonadi
 {
@@ -129,6 +130,7 @@ private:
     //@cond PRIVATE
     SessionPrivate *const d;
     friend class ::FakeSession;
+    friend class ::FakeNotificationConnection;
     friend class ChangeNotificationDependenciesFactory;
 
     Q_PRIVATE_SLOT(d, void reconnect())

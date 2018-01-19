@@ -31,6 +31,7 @@
 #include <QThreadStorage>
 #include <QMetaObject>
 #include <QFile>
+#include <QMutex>
 
 namespace Akonadi
 {
@@ -58,6 +59,8 @@ public:
     {
         return mSessionThread;
     }
+
+    void enqueueCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
     void startNext();
     /// Disconnects a previously existing connection and tries to reconnect
@@ -121,6 +124,8 @@ public:
      * Propagate item revision changes to following jobs.
      */
     void itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, int newRevision);
+
+    void clear(bool forceReconnect);
 
     /**
      * Default location for akonadiconnectionrc

@@ -61,12 +61,11 @@ MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenci
 
 MonitorPrivate::~MonitorPrivate()
 {
+    disconnectFromNotificationManager();
     delete dependenciesFactory;
     delete collectionCache;
     delete itemCache;
     delete tagCache;
-    ntfConnection->disconnect(q_ptr);
-    ntfConnection->deleteLater();
 }
 
 void MonitorPrivate::init()
@@ -133,6 +132,14 @@ bool MonitorPrivate::connectToNotificationManager()
     ntfConnection->reconnect();
 
     return true;
+}
+
+void MonitorPrivate::disconnectFromNotificationManager()
+{
+    if (ntfConnection) {
+        ntfConnection->disconnect(q_ptr);
+        dependenciesFactory->destroyNotificationConnection(session, ntfConnection.data());
+    }
 }
 
 void MonitorPrivate::serverStateChanged(ServerManager::State state)

@@ -33,6 +33,8 @@
 
 #include <private/protocol_p.h>
 
+class QEventLoop;
+
 namespace Akonadi
 {
 namespace Server
@@ -82,10 +84,8 @@ Q_SIGNALS:
     void connectionClosing();
 
 protected Q_SLOTS:
-    /**
-     * New data arrived from the client. Creates a handler for it and passes the data to the handler.
-     */
-    void slotNewData();
+    void handleIncomingData();
+
     void slotConnectionStateChange(ConnectionState state);
     void slotConnectionIdle();
     void slotSocketDisconnected();
@@ -111,6 +111,7 @@ protected:
     bool m_verifyCacheOnRetrieval;
     CommandContext m_context;
     QTimer *m_idleTimer = nullptr;
+    QEventLoop *m_waitLoop = nullptr;
 
     QTime m_time;
     qint64 m_totalTime;

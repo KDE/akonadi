@@ -40,6 +40,11 @@ Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(
                                                          session->sessionId(), commandBuffer);
 }
 
+void ChangeNotificationDependenciesFactory::destroyNotificationConnection(Session *session, Connection *connection)
+{
+    session->d->sessionThread()->destroyConnection(connection);
+}
+
 QObject *ChangeNotificationDependenciesFactory::createChangeMediator(QObject *parent)
 {
     Q_UNUSED(parent);

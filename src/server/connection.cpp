@@ -23,6 +23,7 @@
 
 #include <QSettings>
 #include <QDataStream>
+#include <QEventLoop>
 
 #include "storage/datastore.h"
 #include "handler.h"
@@ -36,6 +37,8 @@
 #ifndef Q_OS_WIN
 #include <cxxabi.h>
 #endif
+
+#include <QElapsedTimer>
 
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
@@ -92,18 +95,6 @@ void Connection::init()
     }
 
     m_socket = socket;
-
-    /* Whenever a full command has been read, it is delegated to the responsible
-     * handler and processed by that. If that command needs to do something
-     * asynchronous such as ask the db for data, it returns and the input
-     * queue can continue to be processed. Whenever there is something to
-     * be sent back to the user it is queued in the form of a Response object.
-     * All this is meant to make it possible to process large incoming or
-     * outgoing data transfers in a streaming manner, without having to
-     * hold them in memory 'en gros'. */
-
-    connect(socket, &QIODevice::readyRead,
-            this, &Connection::slotNewData);
     connect(socket, &QLocalSocket::disconnected,
             this, &Connection::slotSocketDisconnected);
 
@@ -111,7 +102,20 @@ void Connection::init()
     connect(m_idleTimer, &QTimer::timeout,
             this, &Connection::slotConnectionIdle);
 
-    slotSendHello();
+
+    if (socket->state() == QLocalSocket::ConnectedState) {
+        QTimer::singleShot(0, this, &Connection::handleIncomingData);
+    } else {
+        connect(socket, &QLocalSocket::connected, this, &Connection::handleIncomingData,
+                Qt::QueuedConnection);
+    }
+
+    try {
+        slotSendHello();
+    } catch (const ProtocolException &e) {
+        qCWarning(AKONADISERVER_LOG) << "Protocol Exception sending \"hello\":" << e.what();
+        m_socket->disconnectFromServer();
+    }
 }
 
 void Connection::quit()
@@ -197,144 +201,168 @@ void Connection::slotSocketDisconnected()
     Q_EMIT disconnected();
 }
 
-void Connection::slotNewData()
+void Connection::handleIncomingData()
 {
-    if (m_socket->state() != QLocalSocket::ConnectedState) {
-        return;
-    }
+    Q_FOREVER {
 
-    m_idleTimer->stop();
-
-    // will only open() a previously idle backend.
-    // Otherwise, a new backend could lazily be constructed by later calls.
-    if (!storageBackend()->isOpened()) {
-        m_backend->open();
-    }
-
-    QString currentCommand;
-    while (m_socket->bytesAvailable() > (int) sizeof(qint64)) {
-        QDataStream stream(m_socket);
-
-        qint64 tag = -1;
-        stream >> tag;
-        // TODO: Check tag is incremental sequence
-
-        Protocol::CommandPtr cmd;
-        try {
-            cmd = Protocol::deserialize(m_socket);
-        } catch (const Akonadi::ProtocolException &e) {
-            qCWarning(AKONADISERVER_LOG) << "ProtocolException:" << e.what();
-            slotConnectionStateChange(Server::LoggingOut);
-            return;
-        } catch (const std::exception &e) {
-            qCWarning(AKONADISERVER_LOG) << "Unknown exception:" << e.what();
-            slotConnectionStateChange(Server::LoggingOut);
-            return;
-        }
-        if (cmd->type() == Protocol::Command::Invalid) {
-            qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
-            slotConnectionStateChange(Server::LoggingOut);
-            return;
+        if (m_connectionClosing || m_socket->state() != QLocalSocket::ConnectedState) {
+            break;
         }
 
-        // Tag context and collection context is not persistent.
-        context()->setTag(-1);
-        context()->setCollection(Collection());
-        if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-            Tracer::self()->connectionInput(m_identifier, QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8());
+        // Blocks with event loop until some data arrive, allows us to still use QTimers
+        // and similar while waiting for some data to arrive
+        if (m_socket->bytesAvailable() < int(sizeof(qint64))) {
+            QEventLoop loop;
+            connect(m_socket, &QLocalSocket::readyRead, &loop, &QEventLoop::quit);
+            connect(m_socket, &QLocalSocket::stateChanged, &loop, &QEventLoop::quit);
+            connect(this, &Connection::connectionClosing, &loop, &QEventLoop::quit);
+            loop.exec();
         }
 
-        m_currentHandler = findHandlerForCommand(cmd->type());
-        if (!m_currentHandler) {
-            qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type();
-            slotConnectionStateChange(Server::LoggingOut);
-            return;
+        if (m_connectionClosing || m_socket->state() != QLocalSocket::ConnectedState) {
+            break;
         }
-        if (m_reportTime) {
-            startTime();
-        }
-        connect(m_currentHandler.data(), &Handler::connectionStateChange,
-                this, &Connection::slotConnectionStateChange,
-                Qt::DirectConnection);
 
-        m_currentHandler->setConnection(this);
-        m_currentHandler->setTag(tag);
-        m_currentHandler->setCommand(cmd);
-        try {
-            if (!m_currentHandler->parseStream()) {
-                try {
-                    m_currentHandler->failureResponse("Unknown error while handling a command");
-                } catch (...) {
-                    qCWarning(AKONADISERVER_LOG) << "Unknown error while handling a command";
-                    m_connectionClosing = true;
-                }
+        m_idleTimer->stop();
+
+        // will only open() a previously idle backend.
+        // Otherwise, a new backend could lazily be constructed by later calls.
+        if (!storageBackend()->isOpened()) {
+            m_backend->open();
+        }
+
+        QString currentCommand;
+        while (m_socket->bytesAvailable() >= int(sizeof(qint64))) {
+            QDataStream stream(m_socket);
+
+            qint64 tag = -1;
+            stream >> tag;
+            // TODO: Check tag is incremental sequence
+
+            Protocol::CommandPtr cmd;
+            try {
+                cmd = Protocol::deserialize(m_socket);
+            } catch (const Akonadi::ProtocolException &e) {
+                qCWarning(AKONADISERVER_LOG) << "ProtocolException:" << e.what();
+                slotConnectionStateChange(Server::LoggingOut);
+                return;
+            } catch (const std::exception &e) {
+                qCWarning(AKONADISERVER_LOG) << "Unknown exception:" << e.what();
+                slotConnectionStateChange(Server::LoggingOut);
+                return;
             }
-        } catch (const Akonadi::Server::HandlerException &e) {
-            if (m_currentHandler) {
-                try {
-                    m_currentHandler->failureResponse(e.what());
-                } catch (...) {
-                    qCWarning(AKONADISERVER_LOG) << "Handler exception:" << e.what();
-                    m_connectionClosing = true;
-                }
+            if (cmd->type() == Protocol::Command::Invalid) {
+                qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
+                slotConnectionStateChange(Server::LoggingOut);
+                return;
             }
-        } catch (const Akonadi::Server::Exception &e) {
-            if (m_currentHandler) {
-                try {
-                    m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
-                } catch (...) {
-                    qCWarning(AKONADISERVER_LOG) << e.type() << "exception:" << e.what();
-                    m_connectionClosing = true;
-                }
+
+            // Tag context and collection context is not persistent.
+            context()->setTag(-1);
+            context()->setCollection(Collection());
+            if (Tracer::self()->currentTracer() != QLatin1String("null")) {
+                Tracer::self()->connectionInput(m_identifier, QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8());
             }
-        } catch (const Akonadi::ProtocolException &e) {
-            // No point trying to send anything back to client, the connection is
-            // already messed up
-            qCWarning(AKONADISERVER_LOG) << "Protocol exception:" << e.what();
-            m_connectionClosing = true;
+
+            m_currentHandler = findHandlerForCommand(cmd->type());
+            if (!m_currentHandler) {
+                qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type();
+                slotConnectionStateChange(Server::LoggingOut);
+                return;
+            }
+            if (m_reportTime) {
+                startTime();
+            }
+            connect(m_currentHandler.data(), &Handler::connectionStateChange,
+                    this, &Connection::slotConnectionStateChange,
+                    Qt::DirectConnection);
+
+            m_currentHandler->setConnection(this);
+            m_currentHandler->setTag(tag);
+            m_currentHandler->setCommand(cmd);
+            try {
+                if (!m_currentHandler->parseStream()) {
+                    try {
+                        m_currentHandler->failureResponse("Unknown error while handling a command");
+                    } catch (...) {
+                        qCWarning(AKONADISERVER_LOG) << "Unknown error while handling a command";
+                        m_connectionClosing = true;
+                    }
+                }
+            } catch (const Akonadi::Server::HandlerException &e) {
+                if (m_currentHandler) {
+                    try {
+                        m_currentHandler->failureResponse(e.what());
+                    } catch (...) {
+                        qCWarning(AKONADISERVER_LOG) << "Handler exception:" << e.what();
+                        m_connectionClosing = true;
+                    }
+                }
+            } catch (const Akonadi::Server::Exception &e) {
+                if (m_currentHandler) {
+                    try {
+                        m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
+                    } catch (...) {
+                        qCWarning(AKONADISERVER_LOG) << e.type() << "exception:" << e.what();
+                        m_connectionClosing = true;
+                    }
+                }
+            } catch (const Akonadi::ProtocolException &e) {
+                // No point trying to send anything back to client, the connection is
+                // already messed up
+                qCWarning(AKONADISERVER_LOG) << "Protocol exception:" << e.what();
+                m_connectionClosing = true;
 #if defined(Q_OS_LINUX)
-        } catch (abi::__forced_unwind&) {
-            // HACK: NPTL throws __forced_unwind during thread cancellation and
-            // we *must* rethrow it otherwise the program aborts. Due to the issue
-            // described in #376385 we might end up destroying (cancelling) the
-            // thread from a nested loop executed inside parseStream() above,
-            // so the exception raised in there gets caught by this try..catch
-            // statement and it must be rethrown at all cost. Remove this hack
-            // once the root problem is fixed.
-            throw;
+            } catch (abi::__forced_unwind&) {
+                // HACK: NPTL throws __forced_unwind during thread cancellation and
+                // we *must* rethrow it otherwise the program aborts. Due to the issue
+                // described in #376385 we might end up destroying (cancelling) the
+                // thread from a nested loop executed inside parseStream() above,
+                // so the exception raised in there gets caught by this try..catch
+                // statement and it must be rethrown at all cost. Remove this hack
+                // once the root problem is fixed.
+                throw;
 #endif
-        } catch (...) {
-            qCCritical(AKONADISERVER_LOG) << "Unknown exception caught in Connection for session" << m_sessionId;
-            if (m_currentHandler) {
-                try {
-                    m_currentHandler->failureResponse("Unknown exception caught");
-                } catch (...) {
-                    qCWarning(AKONADISERVER_LOG) << "Unknown exception caught";
-                    m_connectionClosing = true;
+            } catch (...) {
+                qCCritical(AKONADISERVER_LOG) << "Unknown exception caught in Connection for session" << m_sessionId;
+                if (m_currentHandler) {
+                    try {
+                        m_currentHandler->failureResponse("Unknown exception caught");
+                    } catch (...) {
+                        qCWarning(AKONADISERVER_LOG) << "Unknown exception caught";
+                        m_connectionClosing = true;
+                    }
                 }
             }
-        }
-        if (m_reportTime) {
-            stopTime(currentCommand);
-        }
-        delete m_currentHandler;
-        m_currentHandler = nullptr;
+            if (m_reportTime) {
+                stopTime(currentCommand);
+            }
+            delete m_currentHandler;
+            m_currentHandler = nullptr;
 
-        if (m_socket->state() != QLocalSocket::ConnectedState) {
-            Q_EMIT disconnected();
-            return;
+            if (m_socket->state() != QLocalSocket::ConnectedState) {
+                Q_EMIT disconnected();
+                return;
+            }
+
+            if (m_connectionClosing) {
+                break;
+            }
         }
+
+        // reset, arm the timer
+        m_idleTimer->start(IDLE_TIMER_TIMEOUT);
 
         if (m_connectionClosing) {
-            m_socket->disconnect(this);
-            m_socket->close();
-            QTimer::singleShot(0, this, &Connection::quit);
-            return;
+            break;
         }
     }
 
-    // reset, arm the timer
-    m_idleTimer->start(IDLE_TIMER_TIMEOUT);
+    if (m_connectionClosing) {
+        m_socket->disconnect(this);
+        m_socket->close();
+        QTimer::singleShot(0, this, &Connection::quit);
+    }
 }
 
 CommandContext *Connection::context() const
@@ -464,6 +492,14 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
     QDataStream stream(m_socket);
     stream << tag;
     Protocol::serialize(m_socket, response);
+    if (!m_socket->waitForBytesWritten()) {
+        if (m_socket->state() == QLocalSocket::ConnectedState) {
+            throw ProtocolException("Server write timeout");
+        } else {
+            // The client has disconnected before we managed to send our response,
+            // which is not an error
+        }
+    }
 }
 
 void Connection::sendResponse(const Protocol::CommandPtr &response)
@@ -475,10 +511,7 @@ void Connection::sendResponse(const Protocol::CommandPtr &response)
 Protocol::CommandPtr Connection::readCommand()
 {
     while (m_socket->bytesAvailable() < (int) sizeof(qint64)) {
-        if (m_socket->state() == QLocalSocket::UnconnectedState) {
-            throw ProtocolException("Socket disconnected");
-        }
-        m_socket->waitForReadyRead(500);
+        Protocol::DataStream::waitForData(m_socket, 10000); // 10 seconds, just in case client is busy
     }
 
     QDataStream stream(m_socket);

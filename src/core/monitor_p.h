@@ -42,6 +42,7 @@
 
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QPointer>
 
 namespace Akonadi
 {
@@ -62,7 +63,7 @@ public:
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC(Monitor)
     ChangeNotificationDependenciesFactory *dependenciesFactory = nullptr;
-    Connection *ntfConnection = nullptr;
+    QPointer<Connection> ntfConnection;
     Collection::List collections;
     QSet<QByteArray> resources;
     QSet<Item::Id> items;
@@ -112,6 +113,8 @@ public:
 
     // Virtual so it can be overridden in FakeMonitor.
     virtual bool connectToNotificationManager();
+    void disconnectFromNotificationManager();
+
     void dispatchNotifications();
     void flushPipeline();
 

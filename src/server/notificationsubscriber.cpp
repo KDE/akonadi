@@ -51,8 +51,6 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, qui
     : NotificationSubscriber(manager)
 {
     mSocket = new QLocalSocket(this);
-    connect(mSocket, &QLocalSocket::readyRead,
-            this, &NotificationSubscriber::socketReadyRead);
     connect(mSocket, &QLocalSocket::disconnected,
             this, &NotificationSubscriber::socketDisconnected);
     mSocket->setSocketDescriptor(socketDescriptor);
@@ -76,7 +74,7 @@ NotificationSubscriber::~NotificationSubscriber()
     }
 }
 
-void NotificationSubscriber::socketReadyRead()
+void NotificationSubscriber::handleIncomingData()
 {
     while (mSocket->bytesAvailable() > (int) sizeof(qint64)) {
         QDataStream stream(mSocket);
@@ -146,8 +144,6 @@ void NotificationSubscriber::disconnectSubscriber()
         mManager->slotNotify({ changeNtf });
     }
 
-    disconnect(mSocket, &QLocalSocket::readyRead,
-               this, &NotificationSubscriber::socketReadyRead);
     disconnect(mSocket, &QLocalSocket::disconnected,
                this, &NotificationSubscriber::socketDisconnected);
     mSocket->close();
@@ -673,5 +669,16 @@ void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::CommandPtr
 
     QDataStream stream(mSocket);
     stream << tag;
-    Protocol::serialize(mSocket, cmd);
+    try {
+        Protocol::serialize(mSocket, cmd);
+        if (!mSocket->waitForBytesWritten()) {
+            if (mSocket->state() == QLocalSocket::ConnectedState) {
+                qCWarning(AKONADISERVER_LOG) << "Notification socket write timeout!";
+            } else {
+                // client has disconnected, just discard the message
+            }
+        }
+    } catch (const ProtocolException &e) {
+        qCWarning(AKONADISERVER_LOG) << "Notification protocol exception:" << e.what();
+    }
 }

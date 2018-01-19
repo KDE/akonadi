@@ -22,8 +22,11 @@
 
 #include <QObject>
 #include <QVector>
+#include <QMutex>
 
 #include "connection_p.h"
+
+class QEventLoop;
 
 namespace Akonadi
 {
@@ -38,15 +41,20 @@ public:
 
     Connection *createConnection(Connection::ConnectionType connType, const QByteArray &sessionId,
                                  CommandBuffer *commandBuffer);
+    void destroyConnection(Connection *connection);
 
 private Q_SLOTS:
+    void doDestroyConnection(Akonadi::Connection *connection);
     Akonadi::Connection *doCreateConnection(Akonadi::Connection::ConnectionType connType,
                                             const QByteArray &sessionId,
                                             Akonadi::CommandBuffer *commandBuffer);
     void doThreadQuit();
+    void waitForSocketData();
 
 private:
     QVector<Connection *> mConnections;
+    QEventLoop *mWaitLoop = nullptr;
+    bool mWaiting = false;
 };
 
 }

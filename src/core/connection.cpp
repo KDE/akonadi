@@ -31,6 +31,8 @@
 #include <QElapsedTimer>
 #include <QApplication>
 #include <QDateTime>
+#include <QEventLoop>
+#include <QTimer>
 
 #include <private/xdgbasedirs_p.h>
 #include <private/protocol_exception_p.h>
@@ -67,9 +69,10 @@ Connection::~Connection()
 {
     delete mLogFile;
     if (mSocket) {
-        mSocket->disconnect(this);
+        mSocket->disconnect();
+        mSocket->disconnectFromServer();
         mSocket->close();
-        delete mSocket;
+        mSocket.reset();
     }
 }
 
@@ -91,6 +94,10 @@ void Connection::doReconnect()
     if (mSocket && (mSocket->state() == QLocalSocket::ConnectedState
                     || mSocket->state() == QLocalSocket::ConnectingState)) {
         // nothing to do, we are still/already connected
+        return;
+    }
+
+    if (ServerManager::self()->state() != ServerManager::Running) {
         return;
     }
 
@@ -159,20 +166,27 @@ void Connection::doReconnect()
     // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
     // but that's probably not something we need to support anyway
     if (!mSocket) {
-        mSocket = new QLocalSocket(this);
-        connect(mSocket, static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
+        mSocket.reset(new QLocalSocket(this));
+        connect(mSocket.data(), static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
         [this](QLocalSocket::LocalSocketError) {
             qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
             Q_EMIT socketError(mSocket->errorString());
             Q_EMIT socketDisconnected();
         });
-        connect(mSocket, &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
-        connect(mSocket, &QLocalSocket::readyRead, this, &Connection::dataReceived);
+        connect(mSocket.data(), &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
     }
 
     // actually do connect
     qCDebug(AKONADICORE_LOG) << "connectToServer" << serverAddress;
     mSocket->connectToServer(serverAddress);
+    if (!mSocket->waitForConnected()) {
+        qCWarning(AKONADICORE_LOG) << "Failed to connect to server!";
+        Q_EMIT socketError(tr("Failed to connect to server!"));
+        mSocket.reset();
+        return;
+    }
+
+    QTimer::singleShot(0, this, &Connection::handleIncomingData);
 
     Q_EMIT reconnected();
 }
@@ -197,10 +211,9 @@ void Connection::doForceReconnect()
 
     if (mSocket) {
         mSocket->disconnect(this, SIGNAL(socketDisconnected()));
-        delete mSocket;
-        mSocket = nullptr;
+        mSocket->disconnectFromServer();
+        mSocket.reset();
     }
-    mSocket = nullptr;
 }
 
 void Connection::closeConnection()
@@ -223,26 +236,35 @@ void Connection::doCloseConnection()
     if (mSocket) {
         mSocket->close();
         mSocket->readAll();
+        mSocket.reset();
     }
 }
 
-void Connection::dataReceived()
+QLocalSocket *Connection::socket() const
+{
+    return mSocket.data();
+}
+
+void Connection::handleIncomingData()
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
-    QElapsedTimer timer;
-    timer.start();
-    while (mSocket->bytesAvailable() > 0) {
-        QDataStream stream(mSocket);
+    if (!mSocket) { // not connected yet
+        return;
+    }
+
+    while (mSocket->bytesAvailable() >= int(sizeof(qint64))) {
+        QDataStream stream(mSocket.data());
         qint64 tag;
         // TODO: Verify the tag matches the last tag we sent
         stream >> tag;
 
         Protocol::CommandPtr cmd;
         try {
-            cmd = Protocol::deserialize(mSocket);
-        } catch (const Akonadi::ProtocolException &) {
-            // cmd's type will be Invalid by default.
+            cmd = Protocol::deserialize(mSocket.data());
+        } catch (const Akonadi::ProtocolException &e) {
+            qCWarning(AKONADICORE_LOG) << "Protocol exception:" << e.what();
+            // cmd's type will be Invalid by default, so fall-through
         }
         if (!cmd || (cmd->type() == Protocol::Command::Invalid)) {
             qCWarning(AKONADICORE_LOG) << "Invalid command, the world is going to end!";
@@ -298,15 +320,23 @@ void Connection::doSendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
     }
 
     if (mSocket && mSocket->isOpen()) {
-        QDataStream stream(mSocket);
+        QDataStream stream(mSocket.data());
         stream << tag;
         try {
-            Protocol::serialize(mSocket, cmd);
+            Protocol::serialize(mSocket.data(), cmd);
         } catch (const Akonadi::ProtocolException &e) {
             qCWarning(AKONADICORE_LOG) << "Protocol Exception:" << QString::fromUtf8(e.what());
             mSocket->close();
             mSocket->readAll();
             reconnect();
+            return;
+        }
+        if (!mSocket->waitForBytesWritten()) {
+            qCWarning(AKONADICORE_LOG) << "Socket write timeout";
+            mSocket->close();
+            mSocket->readAll();
+            reconnect();
+            return;
         }
     } else {
         // TODO: Queue the commands and resend on reconnect?

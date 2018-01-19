@@ -160,6 +160,11 @@ public:
         return new FakeNotificationConnection(parent, buffer);
     }
 
+    void destroyNotificationConnection(Akonadi::Session *parent, Akonadi::Connection *connection) override {
+        Q_UNUSED(parent);
+        delete connection;
+    }
+
     Akonadi::CollectionCache *createCollectionCache(int maxCapacity, Akonadi::Session *session) override {
         Q_UNUSED(maxCapacity)
         Q_UNUSED(session)

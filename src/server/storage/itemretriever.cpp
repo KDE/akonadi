@@ -366,7 +366,7 @@ bool ItemRetriever::exec()
         ++it;
     }
     if (!requests.isEmpty()) {
-        if (eventLoop.exec(QEventLoop::ExcludeSocketNotifiers)) {
+        if (eventLoop.exec()) {
             return false;
         }
     }

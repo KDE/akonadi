@@ -32,6 +32,8 @@
 #include <QThreadPool>
 #include <QPointer>
 #include <QDateTime>
+#include <QEventLoop>
+#include <QLocalSocket>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -68,6 +70,12 @@ void NotificationManager::init()
 
 void NotificationManager::quit()
 {
+    mQuitting = true;
+    if (mEventLoop) {
+        mEventLoop->quit();
+        return;
+    }
+
     mTimer->stop();
     delete mTimer;
 
@@ -87,23 +95,62 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
     NotificationSubscriber *subscriber = new NotificationSubscriber(this, socketDescriptor);
     qCDebug(AKONADISERVER_LOG) << "New notification connection (registered as" << subscriber << ")";
     connect(subscriber, &NotificationSubscriber::notificationDebuggingChanged,
-    this, [this](bool enabled) {
-        if (enabled) {
-            ++mDebugNotifications;
-        } else {
-            --mDebugNotifications;
-        }
-        Q_ASSERT(mDebugNotifications >= 0);
-        Q_ASSERT(mDebugNotifications <= mSubscribers.count());
-    });
+            this, [this](bool enabled) {
+                if (enabled) {
+                    ++mDebugNotifications;
+                } else {
+                    --mDebugNotifications;
+                }
+                Q_ASSERT(mDebugNotifications >= 0);
+                Q_ASSERT(mDebugNotifications <= mSubscribers.count());
+            });
 
     mSubscribers.push_back(subscriber);
+    if (mEventLoop) {
+        mEventLoop->quit();
+    }
+    if (!mWaiting) {
+        mWaiting = true;
+        QTimer::singleShot(0, this, &NotificationManager::waitForSocketData);
+    }
+}
+
+void NotificationManager::waitForSocketData()
+{
+    mWaiting = true;
+    while (!mSubscribers.isEmpty()) {
+        QEventLoop loop;
+        mEventLoop = &loop;
+        for (const auto sub : qAsConst(mSubscribers)) {
+            if (sub) {
+                connect(sub->socket(), &QLocalSocket::readyRead, &loop, &QEventLoop::quit);
+                connect(sub->socket(), &QLocalSocket::disconnected, &loop, &QEventLoop::quit);
+            }
+        }
+        loop.exec();
+        mEventLoop = nullptr;
+
+        if (mQuitting) {
+            QTimer::singleShot(0, this, &NotificationManager::quit);
+            break;
+        }
+
+        for (const auto sub : qAsConst(mSubscribers)) {
+            if (sub) {
+                sub->handleIncomingData();
+            }
+        }
+    }
+    mWaiting = false;
 }
 
 void NotificationManager::forgetSubscriber(NotificationSubscriber *subscriber)
 {
     Q_ASSERT(QThread::currentThread() == thread());
-    mSubscribers.removeOne(subscriber);
+    mSubscribers.removeAll(subscriber);
+    if (mEventLoop) {
+        mEventLoop->quit();
+    }
 }
 
 void NotificationManager::connectNotificationCollector(NotificationCollector *collector)

@@ -365,7 +365,7 @@ Session::Session(SessionPrivate *dd, const QByteArray &sessionId, QObject *paren
 
 Session::~Session()
 {
-    clear();
+    d->clear(false);
     delete d;
 }
 
@@ -410,20 +410,28 @@ Session *Session::defaultSession()
 
 void Session::clear()
 {
-    for (Job *job : qAsConst(d->queue)) {
+    d->clear(true);
+}
+
+void SessionPrivate::clear(bool forceReconnect)
+{
+    for (Job *job : qAsConst(queue)) {
         job->kill(KJob::EmitResult);   // safe, not started yet
     }
-    d->queue.clear();
-    for (Job *job : qAsConst(d->pipeline)) {
+    queue.clear();
+    for (Job *job : qAsConst(pipeline)) {
         job->d_ptr->mStarted = false; // avoid killing/reconnect loops
         job->kill(KJob::EmitResult);
     }
-    d->pipeline.clear();
-    if (d->currentJob) {
-        d->currentJob->d_ptr->mStarted = false; // avoid killing/reconnect loops
-        d->currentJob->kill(KJob::EmitResult);
+    pipeline.clear();
+    if (currentJob) {
+        currentJob->d_ptr->mStarted = false; // avoid killing/reconnect loops
+        currentJob->kill(KJob::EmitResult);
     }
-    d->forceReconnect();
+
+    if (forceReconnect) {
+        this->forceReconnect();
+    }
 }
 
 #include "moc_session.cpp"

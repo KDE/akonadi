@@ -22,6 +22,7 @@
 
 #include <type_traits>
 
+#include "akonadiprivate_export.h"
 #include "protocol_exception_p.h"
 
 #include <QByteArray>
@@ -33,13 +34,15 @@ namespace Akonadi
 namespace Protocol
 {
 
-class DataStream
+class AKONADIPRIVATE_EXPORT DataStream
 {
 
 public:
     explicit DataStream();
     explicit DataStream(QIODevice *device);
     ~DataStream();
+
+    static void waitForData(QIODevice *device, int timeoutMs);
 
     QIODevice *device() const;
     void setDevice(QIODevice *device);

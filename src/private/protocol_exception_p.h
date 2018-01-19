@@ -25,6 +25,7 @@
 #include "akonadiprivate_export.h"
 
 #include <exception>
+#include <iostream>
 
 #include <QByteArray>
 
@@ -37,7 +38,9 @@ public:
     explicit ProtocolException(const char *what)
         : std::exception()
         , mWhat(what)
-    {}
+    {
+        std::cerr << "ProtocolException thrown:" << what << std::endl;
+    }
 
     const char *what() const throw() override {
         return mWhat.constData();

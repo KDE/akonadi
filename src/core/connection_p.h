@@ -24,6 +24,7 @@
 #include <QMutex>
 #include <QQueue>
 #include <QLocalSocket>
+#include <QScopedPointer>
 
 #include "private/protocol_p.h"
 
@@ -53,10 +54,16 @@ public:
                         CommandBuffer *commandBuffer, QObject *parent = nullptr);
     ~Connection();
 
+    void setSession(SessionPrivate *session);
+
+    QLocalSocket *socket() const;
+
     Q_INVOKABLE void reconnect();
     void forceReconnect();
     void closeConnection();
     void sendCommand(qint64 tag, const Protocol::CommandPtr &command);
+
+    void handleIncomingData();
 
 Q_SIGNALS:
     void connected();
@@ -71,14 +78,13 @@ private Q_SLOTS:
     void doCloseConnection();
     void doSendCommand(qint64 tag, const Akonadi::Protocol::CommandPtr &command);
 
-    void dataReceived();
 
 private:
 
     bool handleCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
     ConnectionType mConnectionType;
-    QLocalSocket *mSocket = nullptr;
+    QScopedPointer<QLocalSocket> mSocket;
     QFile *mLogFile = nullptr;
     QByteArray mSessionId;
     CommandBuffer *mCommandBuffer;
