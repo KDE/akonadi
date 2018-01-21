@@ -238,24 +238,27 @@ void ProcessControl::start()
                   qPrintable(mApplication), qPrintable(mProcess.errorString()));
         Q_EMIT unableToStart();
         return;
-    }
-
-#ifdef Q_OS_UNIX
-    else {
+    } else {
         QString agentDebug = QString::fromLocal8Bit(qgetenv("AKONADI_DEBUG_WAIT"));
-        pid_t pid = mProcess.pid();
+        auto pid = mProcess.processId();
         if (!agentDebug.isEmpty() && mApplication.contains(agentDebug)) {
             qCDebug(AKONADICONTROL_LOG);
             qCDebug(AKONADICONTROL_LOG) << "============================================================";
             qCDebug(AKONADICONTROL_LOG) << "ProcessControl: Suspending process" << mApplication;
+#ifdef Q_OS_UNIX
             qCDebug(AKONADICONTROL_LOG) << "'gdb --pid" << pid << "' to debug";
             qCDebug(AKONADICONTROL_LOG) << "'kill -SIGCONT" << pid << "' to continue";
+            kill(pid, SIGSTOP);
+#else defined(Q_OS_WIN)
+            qCDebug(AKONADICONTROL_LOG) << "PID:" << pid;
+            qCDebug(AKONADICONTROL_LOG) << "Process is waiting for a debugger...";
+            // the agent process will wait for a debugger to be attached in AgentBase::debugAgent()
+#endif
             qCDebug(AKONADICONTROL_LOG) << "============================================================";
             qCDebug(AKONADICONTROL_LOG);
-            kill(pid, SIGSTOP);
+
         }
     }
-#endif
 }
 
 void ProcessControl::resetCrashCount()

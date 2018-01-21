@@ -58,6 +58,12 @@
 # include <malloc.h> // for dumping memory information
 #endif
 
+#ifdef Q_OS_WIN
+#include <Windows.h>
+#include <chrono>
+#include <thread>
+#endif
+
 using namespace Akonadi;
 
 static AgentBase *sAgentBase = nullptr;
@@ -905,6 +911,20 @@ AgentBase::AgentBase(AgentBasePrivate *d, const QString &id)
 AgentBase::~AgentBase()
 {
     delete d_ptr;
+}
+
+void AgentBase::debugAgent(int argc, char **argv)
+{
+#ifdef Q_OS_WIN
+    if (qEnvironmentVariableIsSet("AKONADI_DEBUG_WAIT")) {
+        if (QByteArray(argv[0]).endsWith(qgetenv("AKONADI_DEBUG_WAIT") + ".exe")) {
+            while (!IsDebuggerPresent()) {
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            }
+            DebugBreak();
+        }
+    }
+#endif
 }
 
 QString AgentBase::parseArguments(int argc, char **argv)

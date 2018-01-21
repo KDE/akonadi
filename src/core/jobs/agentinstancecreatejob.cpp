@@ -201,7 +201,7 @@ void AgentInstanceCreateJobPrivate::doStart()
         if (!agentValgrind.isEmpty() && agentType.identifier().contains(agentValgrind)) {
             timeout *= 15;
         }
-
+#endif
         // change the timeout when debugging the agent, because we need time to start the debugger
         const QString agentDebugging = QString::fromLocal8Bit(qgetenv("AKONADI_DEBUG_WAIT"));
         if (!agentDebugging.isEmpty()) {
@@ -215,7 +215,6 @@ void AgentInstanceCreateJobPrivate::doStart()
                 timeout = agentDebuggingTimeout.toInt();
             }
         }
-#endif
         safetyTimer->start(timeout);
     }
 }

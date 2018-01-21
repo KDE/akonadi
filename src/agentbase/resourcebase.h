@@ -179,10 +179,12 @@ public:
     template <typename T>
     static int init(int argc, char **argv)
     {
+
         // Disable session management
         qunsetenv("SESSION_MANAGER");
 
         QApplication app(argc, argv);
+        debugAgent(argc, argv);
         const QString id = parseArguments(argc, argv);
         T *r = new T(id);
 
