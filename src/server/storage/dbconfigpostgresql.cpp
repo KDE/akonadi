@@ -29,6 +29,7 @@
 #include <QSqlDriver>
 #include <QSqlError>
 #include <QSqlQuery>
+#include <QStandardPaths>
 
 #include <config-akonadi.h>
 #ifdef HAVE_UNISTD_H
@@ -96,9 +97,8 @@ bool DbConfigPostgresql::init(QSettings &settings)
             }
         }
         postgresSearchPath.append(postgresVersionedSearchPaths);
-
-        defaultServerPath = XdgBaseDirs::findExecutableFile(QStringLiteral("pg_ctl"), postgresSearchPath);
-        defaultInitDbPath = XdgBaseDirs::findExecutableFile(QStringLiteral("initdb"), postgresSearchPath);
+        defaultServerPath = QStandardPaths::findExecutable(QStringLiteral("pg_ctl"), postgresSearchPath);
+        defaultInitDbPath = QStandardPaths::findExecutable(QStringLiteral("initdb"), postgresSearchPath);
         defaultHostName = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
         defaultPgData = StandardDirs::saveDir("data", QStringLiteral("db_data"));
     }

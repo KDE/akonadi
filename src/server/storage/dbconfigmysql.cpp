@@ -33,6 +33,7 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QCoreApplication>
+#include <QStandardPaths>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -86,10 +87,10 @@ bool DbConfigMysql::init(QSettings &settings)
                                          << QStringLiteral("/opt/local/lib/mysql5/bin")
                                          << QStringLiteral("/opt/mysql/sbin");
     if (defaultServerPath.isEmpty()) {
-        defaultServerPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysqld"), mysqldSearchPath);
+        defaultServerPath = QStandardPaths::findExecutable(QStringLiteral("mysqld"), mysqldSearchPath);
     }
 
-    const QString mysqladminPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysqladmin"), mysqldSearchPath);
+    const QString mysqladminPath = QStandardPaths::findExecutable(QStringLiteral("mysqladmin"), mysqldSearchPath);
     if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
         defaultCleanShutdownCommand = QStringLiteral("%1 --defaults-file=%2/mysql.conf --socket=%3/mysql.socket shutdown")
@@ -99,10 +100,10 @@ bool DbConfigMysql::init(QSettings &settings)
 #endif
     }
 
-    mMysqlInstallDbPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysql_install_db"), mysqldSearchPath);
+    mMysqlInstallDbPath = QStandardPaths::findExecutable(QStringLiteral("mysql_install_db"), mysqldSearchPath);
     qCDebug(AKONADISERVER_LOG) << "Found mysql_install_db: " << mMysqlInstallDbPath;
 
-    mMysqlCheckPath = XdgBaseDirs::findExecutableFile(QStringLiteral("mysqlcheck"), mysqldSearchPath);
+    mMysqlCheckPath = QStandardPaths::findExecutable(QStringLiteral("mysqlcheck"), mysqldSearchPath);
     qCDebug(AKONADISERVER_LOG) << "Found mysqlcheck: " << mMysqlCheckPath;
 
     mInternalServer = settings.value(QStringLiteral("QMYSQL/StartServer"), defaultInternalServer).toBool();

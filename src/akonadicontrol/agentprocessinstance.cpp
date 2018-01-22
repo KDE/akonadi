@@ -23,7 +23,7 @@
 #include "processcontrol.h"
 #include "akonadicontrol_debug.h"
 
-#include <private/xdgbasedirs_p.h>
+#include <QStandardPaths>
 
 using namespace Akonadi;
 
@@ -45,7 +45,7 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
              agentInfo.launchMethod == AgentType::Launcher);
 
     const QString executable = (agentInfo.launchMethod == AgentType::Process)
-                               ? XdgBaseDirs::findExecutableFile(agentInfo.exec) : agentInfo.exec;
+                               ? QStandardPaths::findExecutable(agentInfo.exec) : agentInfo.exec;
 
     if (executable.isEmpty()) {
         qCWarning(AKONADICONTROL_LOG) << "Unable to find agent executable" << agentInfo.exec;
@@ -61,7 +61,7 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
     } else {
         Q_ASSERT(agentInfo.launchMethod == AgentType::Launcher);
         const QStringList arguments = QStringList() << executable << identifier();
-        const QString agentLauncherExec = XdgBaseDirs::findExecutableFile(QStringLiteral("akonadi_agent_launcher"));
+        const QString agentLauncherExec = QStandardPaths::findExecutable(QStringLiteral("akonadi_agent_launcher"));
         mController->start(agentLauncherExec, arguments);
     }
     return true;
