@@ -21,7 +21,6 @@
 #include "standarddirs_p.h"
 #include "instance_p.h"
 #include "akonadi-prefix.h"
-#include "akonadiprivate_debug.h"
 
 #include <QStandardPaths>
 #include <QFile>
@@ -181,7 +180,6 @@ QStringList StandardDirs::locateAllResourceDirs(const QString &relPath)
 
     const auto fallback = QDir::toNativeSeparators(QStringLiteral(AKONADIPREFIX AKONADIDATA "/") + relPath);
     if (!dirs.contains(fallback)) {
-        qCDebug(AKONADIPRIVATE_LOG) << QDir::root().exists(fallback);
         if (QDir::root().exists(fallback)) {
             dirs.push_back(fallback);
         }

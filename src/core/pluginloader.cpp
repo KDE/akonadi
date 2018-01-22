@@ -120,7 +120,6 @@ PluginMetaData PluginLoader::infoForName(const QString &name) const
 void PluginLoader::scan()
 {
     const auto dirs = StandardDirs::locateAllResourceDirs(QStringLiteral("akonadi/plugins/serializer/"));
-    qCDebug(AKONADICORE_LOG) << "PLUGINLOADER::SCAN" << dirs;
     for (const QString &dir : dirs) {
         const QStringList fileNames = QDir(dir).entryList(QStringList() << QStringLiteral("*.desktop"));
         for (const QString &file : fileNames) {
