@@ -124,12 +124,12 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
         userLocations = { QStandardPaths::AppConfigLocation,
                           QStandardPaths::ConfigLocation };
         genericLocation = QStandardPaths::GenericConfigLocation;
-        fallback = QStringLiteral(AKONADIPREFIX AKONADICONFIG);
+        fallback = QDir::toNativeSeparators(QStringLiteral(AKONADIPREFIX "/" AKONADICONFIG));
     } else if (qstrncmp(resource, "data", 4) == 0) {
         userLocations = { QStandardPaths::AppLocalDataLocation,
                           QStandardPaths::AppDataLocation };
         genericLocation = QStandardPaths::GenericDataLocation;
-        fallback = QStringLiteral(AKONADIPREFIX AKONADIDATA);
+        fallback = QDir::toNativeSeparators(QStringLiteral(AKONADIPREFIX "/" AKONADIDATA));
     } else {
         qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
     }
@@ -178,7 +178,7 @@ QStringList StandardDirs::locateAllResourceDirs(const QString &relPath)
     auto dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, relPath,
                                           QStandardPaths::LocateDirectory);
 
-    const auto fallback = QDir::toNativeSeparators(QStringLiteral(AKONADIPREFIX AKONADIDATA "/") + relPath);
+    const auto fallback = QDir::toNativeSeparators(QStringLiteral(AKONADIPREFIX "/" AKONADIDATA "/") + relPath);
     if (!dirs.contains(fallback)) {
         if (QDir::root().exists(fallback)) {
             dirs.push_back(fallback);
