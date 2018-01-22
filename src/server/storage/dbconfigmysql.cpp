@@ -22,7 +22,6 @@
 #include "akonadiserver_debug.h"
 
 #include <private/standarddirs_p.h>
-#include <private/xdgbasedirs_p.h>
 
 #include <QDateTime>
 #include <QDir>
@@ -197,8 +196,8 @@ bool DbConfigMysql::startInternalServer()
 #endif
 
     // generate config file
-    const QString globalConfig = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
-    const QString localConfig  = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-local.conf"));
+    const QString globalConfig = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-global.conf"));
+    const QString localConfig  = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-local.conf"));
     const QString actualConfig = StandardDirs::saveDir("data") + QLatin1String("/mysql.conf");
     if (globalConfig.isEmpty()) {
         qCCritical(AKONADISERVER_LOG) << "Did not find MySQL server default configuration (mysql-global.conf)";
@@ -358,7 +357,7 @@ bool DbConfigMysql::startInternalServer()
         }
 
         // first run, some MySQL versions need a mysql_install_db run for that
-        const QString confFile = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
+        const QString confFile = StandardDirs::locateResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
         if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty() && !mMysqlInstallDbPath.isEmpty()) {
             if (isMariaDB) {
                 initializeMariaDBDatabase(confFile, dataDir);

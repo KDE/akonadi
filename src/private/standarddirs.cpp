@@ -28,6 +28,22 @@
 
 using namespace Akonadi;
 
+namespace {
+
+QString buildFullRelPath(const QString &relPath)
+{
+    QString fullRelPath = QStringLiteral("/akonadi");
+    if (Akonadi::Instance::hasIdentifier()) {
+        fullRelPath += QStringLiteral("/instance/") + Akonadi::Instance::identifier();
+    }
+    if (!relPath.isEmpty()) {
+        fullRelPath += QLatin1Char('/') + relPath;
+    }
+    return fullRelPath;
+}
+
+}
+
 QString StandardDirs::configFile(const QString &configFile, FileAccessMode openMode)
 {
     const QString savePath = StandardDirs::saveDir("config") + QLatin1Char('/') + configFile;
@@ -76,19 +92,64 @@ QString StandardDirs::agentConfigFile(const QString &identifier, FileAccessMode 
 
 QString StandardDirs::saveDir(const char *resource, const QString &relPath)
 {
-    QString fullRelPath = QStringLiteral("/akonadi");
-    if (Akonadi::Instance::hasIdentifier()) {
-        fullRelPath += QStringLiteral("/instance/") + Akonadi::Instance::identifier();
-    }
-    if (!relPath.isEmpty()) {
-        fullRelPath += QLatin1Char('/') + relPath;
-    }
+    const QString fullRelPath = buildFullRelPath(relPath);
     if (qstrncmp(resource, "config", 6) == 0) {
         return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + fullRelPath;
     } else if (qstrncmp(resource, "data", 4) == 0) {
         return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + fullRelPath;
     } else {
         qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
+    }
+
+    return {};
+}
+
+QString StandardDirs::locateResourceFile(const char *resource, const QString &relPath)
+{
+    const QString fullRelPath = buildFullRelPath(relPath);
+    QVector<QStandardPaths::StandardLocation> userLocations;
+    QStandardPaths::StandardLocation genericLocation;
+    if (qstrncmp(resource, "config", 6) == 0) {
+        userLocations = { QStandardPaths::AppConfigLocation,
+                          QStandardPaths::ConfigLocation };
+        genericLocation = QStandardPaths::GenericConfigLocation;
+    } else if (qstrncmp(resource, "data", 4) == 0) {
+        userLocations = { QStandardPaths::AppLocalDataLocation,
+                          QStandardPaths::AppDataLocation };
+        genericLocation = QStandardPaths::GenericDataLocation;
+    } else {
+        qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
+    }
+
+    const auto locateFile = [](QStandardPaths::StandardLocation location, const QString &relPath) -> QString {
+        const auto path = QStandardPaths::locate(location, relPath);
+        if (!path.isEmpty()) {
+            QFileInfo file(path);
+            if (file.exists() && file.isFile() && file.isReadable()) {
+                return file.absoluteFilePath();
+            }
+        }
+        return {};
+    };
+
+    // Always honor instance in user-specific locations
+    for (const auto location : qAsConst(userLocations)) {
+        const auto path = locateFile(location, fullRelPath);
+        if (!path.isEmpty()) {
+            return path;
+        }
+    }
+
+    // First try instance-specific path in generic locations
+    auto path = locateFile(genericLocation, fullRelPath);
+    if (!path.isEmpty()) {
+        return path;
+    }
+
+    // Fallback to global instance path in generic locations
+    path = locateFile(genericLocation, QStringLiteral("/akonadi/") + relPath);
+    if (!path.isEmpty()) {
+        return path;
     }
 
     return {};

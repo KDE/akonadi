@@ -21,7 +21,6 @@
 #include "utils.h"
 #include "akonadiserver_debug.h"
 
-#include <private/xdgbasedirs_p.h>
 #include <private/standarddirs_p.h>
 
 #include <QDir>
@@ -35,10 +34,12 @@ using namespace Akonadi::Server;
 static QString dataDir()
 {
     QString akonadiHomeDir = StandardDirs::saveDir("data");
-    if (akonadiHomeDir.isEmpty()) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to create directory 'akonadi' in " << XdgBaseDirs::homePath("data")
-                                      << "during database initialization";
-        return QString();
+    if (!QDir(akonadiHomeDir).exists()) {
+        if (!QDir().mkpath(akonadiHomeDir)) {
+            qCCritical(AKONADISERVER_LOG) << "Unable to create" << akonadiHomeDir
+                                          << "during database initialization";
+            return QString();
+        }
     }
 
     akonadiHomeDir += QDir::separator();

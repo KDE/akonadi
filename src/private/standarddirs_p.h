@@ -75,11 +75,27 @@ AKONADIPRIVATE_EXPORT QString agentsConfigFile(FileAccessMode openMode = ReadOnl
 AKONADIPRIVATE_EXPORT QString agentConfigFile(const QString &identifier, FileAccessMode openMode = ReadOnly);
 
 /**
- * Instance-aware wrapper for XdgBaseDirs::saveDir().
+ * Instance-aware wrapper for QStandardPaths
  * @note @p relPath does not need to include the "akonadi/" folder.
- * @see XdgBaseDirs::saveDir()
  */
 AKONADIPRIVATE_EXPORT QString saveDir(const char *resource, const QString &relPath = QString());
+
+/**
+ * @brief Searches the resource specific directories for a given file
+ *
+ * Convenience method for finding a given file (with optional relative path)
+ * in any of the configured base directories for a given resource type.
+ *
+ * Will check the user local directory first and then process the system
+ * wide path list according to the inherent priority.
+ *
+ * @param resource a named resource type, e.g. "config"
+ * @param relPath relative path of a file to look for, e.g."akonadi/akonadiserverrc"
+ *
+ * @returns the file path of the first match, or @c QString() if no such relative path
+ *          exists in any of the base directories or if a match is not a file
+ */
+AKONADIPRIVATE_EXPORT QString locateResourceFile(const char *resource, const QString &relPath);
 
 }
 }
