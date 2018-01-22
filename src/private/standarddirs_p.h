@@ -98,6 +98,12 @@ AKONADIPRIVATE_EXPORT QString saveDir(const char *resource, const QString &relPa
  */
 AKONADIPRIVATE_EXPORT QString locateResourceFile(const char *resource, const QString &relPath);
 
+/**
+ * Equivalent to QStandardPaths::locateAll() but always includes at least the
+ * default Akonadi compile prefix.
+ */
+AKONADIPRIVATE_EXPORT QStringList locateAllResourceDirs(const QString &relPath);
+
 }
 }
 

@@ -25,6 +25,7 @@
 #include "agentinstancecreatejob.h"
 #include "agentmanager.h"
 #include "agenttype.h"
+#include <private/standarddirs_p.h>
 
 #include "akonadicore_debug.h"
 
@@ -77,7 +78,7 @@ Firstrun::~Firstrun()
 void Firstrun::findPendingDefaults()
 {
     const KConfigGroup cfg(mConfig, "ProcessedDefaults");
-    const QStringList paths = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/firstrun"), QStandardPaths::LocateDirectory);
+    const auto paths = StandardDirs::locateAllResourceDirs(QStringLiteral("akonadi/firstrun"));
     for (const QString &dirName : paths) {
         const QStringList files = QDir(dirName).entryList(QDir::Files | QDir::Readable);
         for (const QString &fileName : files) {

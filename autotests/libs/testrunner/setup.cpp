@@ -155,15 +155,21 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
                 copyDirectory(fi.absoluteFilePath(), dst + QStringLiteral("/akonadi/instance/") + instanceId());
 #endif
             } else {
-                copyDirectory(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
+                copyDirectory(fi.absoluteFilePath(), dst + QLatin1Char('/') + fi.fileName());
             }
         } else {
             if (fi.fileName().startsWith(QStringLiteral("akonadi_")) && fi.fileName().endsWith(QStringLiteral("rc"))) {
                 // namespace according to instance identifier
                 const QString baseName = fi.fileName().left(fi.fileName().size() - 2);
-                QFile::copy(fi.absoluteFilePath(), dst + QDir::separator() + Akonadi::ServerManager::addNamespace(baseName) + QStringLiteral("rc"));
+                const QString dstPath = dst + QLatin1Char('/') + Akonadi::ServerManager::addNamespace(baseName) + QStringLiteral("rc");
+                if (!QFile::copy(fi.absoluteFilePath(), dstPath)) {
+                    qWarning() << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
+                }
             } else {
-                QFile::copy(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
+                const QString dstPath = dst + QLatin1Char('/') + fi.fileName();
+                if (!QFile::copy(fi.absoluteFilePath(), dstPath)) {
+                    qWarning() << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
+                }
             }
         }
     }
@@ -175,10 +181,13 @@ void SetupTest::copyDirectory(const QString &src, const QString &dst)
     QDir::root().mkpath(dst);
     const auto entries = srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     for (const auto &fi : entries) {
+        const QString dstPath = dst + QLatin1Char('/') + fi.fileName();
         if (fi.isDir()) {
-            copyDirectory(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
+            copyDirectory(fi.absoluteFilePath(), dstPath);
         } else {
-            QFile::copy(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
+            if (!QFile::copy(fi.absoluteFilePath(), dstPath)) {
+                qWarning() << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
+            }
         }
     }
 }
@@ -195,6 +204,8 @@ void SetupTest::createTempEnvironment()
         copyXdgDirectory(config->xdgConfigHome(), basePath());
     }
     copyXdgDirectory(config->xdgDataHome(), basePath());
+    setEnvironmentVariable("XDG_DATA_HOME", basePath());
+    setEnvironmentVariable("XDG_CONFIG_HOME", basePath());
     writeAkonadiserverrc(basePath() + QStringLiteral("/akonadi/config/instance/%1/akonadiserverrc").arg(instanceId()));
 #else
     const QDir tmpDir(basePath());

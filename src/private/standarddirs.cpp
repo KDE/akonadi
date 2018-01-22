@@ -20,11 +20,14 @@
 
 #include "standarddirs_p.h"
 #include "instance_p.h"
+#include "akonadi-prefix.h"
+#include "akonadiprivate_debug.h"
 
 #include <QStandardPaths>
 #include <QFile>
 #include <QFileInfo>
 #include <QVector>
+#include <QDir>
 
 using namespace Akonadi;
 
@@ -117,14 +120,17 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
     const QString fullRelPath = buildFullRelPath(resource, relPath);
     QVector<QStandardPaths::StandardLocation> userLocations;
     QStandardPaths::StandardLocation genericLocation;
+    QString fallback;
     if (qstrncmp(resource, "config", 6) == 0) {
         userLocations = { QStandardPaths::AppConfigLocation,
                           QStandardPaths::ConfigLocation };
         genericLocation = QStandardPaths::GenericConfigLocation;
+        fallback = QStringLiteral(AKONADIPREFIX AKONADICONFIG);
     } else if (qstrncmp(resource, "data", 4) == 0) {
         userLocations = { QStandardPaths::AppLocalDataLocation,
                           QStandardPaths::AppDataLocation };
         genericLocation = QStandardPaths::GenericDataLocation;
+        fallback = QStringLiteral(AKONADIPREFIX AKONADIDATA);
     } else {
         qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
     }
@@ -134,7 +140,7 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
         if (!path.isEmpty()) {
             QFileInfo file(path);
             if (file.exists() && file.isFile() && file.isReadable()) {
-                return file.absoluteFilePath();
+                return path;
             }
         }
         return {};
@@ -160,5 +166,25 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
         return path;
     }
 
+    QFile f(fallback + QStringLiteral("/akonadi/") + relPath);
+    if (f.exists()) {
+        return f.fileName();
+    }
+
     return {};
+}
+
+QStringList StandardDirs::locateAllResourceDirs(const QString &relPath)
+{
+    auto dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, relPath,
+                                          QStandardPaths::LocateDirectory);
+
+    const auto fallback = QDir::toNativeSeparators(QStringLiteral(AKONADIPREFIX AKONADIDATA "/") + relPath);
+    if (!dirs.contains(fallback)) {
+        qCDebug(AKONADIPRIVATE_LOG) << QDir::root().exists(fallback);
+        if (QDir::root().exists(fallback)) {
+            dirs.push_back(fallback);
+        }
+    }
+    return dirs;
 }

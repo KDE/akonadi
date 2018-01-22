@@ -559,9 +559,7 @@ void AgentManager::readPluginInfos(const QDir &directory)
 
 QStringList AgentManager::pluginInfoPathList()
 {
-    return QStandardPaths::locateAll(QStandardPaths::GenericDataLocation,
-                                     QStringLiteral("akonadi/agents"),
-                                     QStandardPaths::LocateDirectory);
+    return Akonadi::StandardDirs::locateAllResourceDirs(QStringLiteral("akonadi/agents"));
 }
 
 void AgentManager::load()

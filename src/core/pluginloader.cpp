@@ -19,6 +19,7 @@
 
 #include "pluginloader_p.h"
 #include "akonadicore_debug.h"
+#include <private/standarddirs_p.h>
 #include <kconfiggroup.h>
 #include <KLocalizedString>
 #include <KConfig>
@@ -87,7 +88,7 @@ QObject *PluginLoader::createForName(const QString &name)
     }
 
     if (!info.loaded) {
-        QPluginLoader *loader = new QPluginLoader(info.library);
+        QPluginLoader *loader = new QPluginLoader(QStringLiteral("R:/plugins/") + info.library);
         if (loader->fileName().isEmpty()) {
             qCWarning(AKONADICORE_LOG) << "Error loading" << info.library << ":" << loader->errorString();
             delete loader;
@@ -118,7 +119,8 @@ PluginMetaData PluginLoader::infoForName(const QString &name) const
 
 void PluginLoader::scan()
 {
-    const QStringList dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/plugins/serializer/"), QStandardPaths::LocateDirectory);
+    const auto dirs = StandardDirs::locateAllResourceDirs(QStringLiteral("akonadi/plugins/serializer/"));
+    qCDebug(AKONADICORE_LOG) << "PLUGINLOADER::SCAN" << dirs;
     for (const QString &dir : dirs) {
         const QStringList fileNames = QDir(dir).entryList(QStringList() << QStringLiteral("*.desktop"));
         for (const QString &file : fileNames) {

@@ -40,6 +40,7 @@
 #include <private/protocol_p.h>
 #include <private/dbus_p.h>
 #include <private/instance_p.h>
+#include <private/standarddirs_p.h>
 
 #include <iostream>
 #include <thread>
@@ -123,8 +124,7 @@ static bool checkSearchSupportStatus()
 
 static bool checkAvailableAgentTypes()
 {
-    const auto dirs = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/agents"),
-                                                QStandardPaths::LocateDirectory);
+    const auto dirs = Akonadi::StandardDirs::locateAllResourceDirs(QStringLiteral("akonadi/agents"));
     QStringList types;
     for (const QString &pluginDir : dirs) {
         QDir dir(pluginDir);

@@ -86,7 +86,7 @@ add_executable(akonadi-firstrun
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore KF5::DBusAddons KF5::ConfigCore Qt5::Widgets)
+target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::DBusAddons KF5::ConfigCore Qt5::Widgets)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)
