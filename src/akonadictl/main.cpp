@@ -42,14 +42,9 @@
 #include <private/dbus_p.h>
 #include <private/instance_p.h>
 
-#if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
-#include <unistd.h>
-#else
-#define WIN32_LEAN_AND_MEAN
-#include <Windows.h>
-#endif
-
 #include <iostream>
+#include <thread>
+#include <chrono>
 
 static bool startServer(bool verbose)
 {
@@ -274,11 +269,7 @@ int main(int argc, char **argv)
             return 4;
         } else {
             do {
-#if defined(HAVE_UNISTD_H) && !defined(Q_WS_WIN)
-                usleep(100000);
-#else
-                Sleep(100000);
-#endif
+                std::this_thread::sleep_for(std::chrono::milliseconds(100));
             } while (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control)));
             if (!startServer(verbose)) {
                 return 3;
