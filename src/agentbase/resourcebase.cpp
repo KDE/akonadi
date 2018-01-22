@@ -32,7 +32,6 @@
 #include "relationsync.h"
 #include "resourcescheduler_p.h"
 #include "tracerinterface.h"
-#include "private/xdgbasedirs_p.h"
 
 #include "changerecorder.h"
 #include "collectionfetchjob.h"

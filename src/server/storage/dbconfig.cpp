@@ -25,7 +25,6 @@
 #include "akonadiserver_debug.h"
 
 #include <private/standarddirs_p.h>
-#include <private/xdgbasedirs_p.h>
 #include <private/instance_p.h>
 
 #include <QProcess>

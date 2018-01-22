@@ -41,7 +41,6 @@
 
 #include "collectionreferencemanager.h"
 
-#include <private/xdgbasedirs_p.h>
 #include <private/standarddirs_p.h>
 #include <private/protocol_p.h>
 #include <private/dbus_p.h>

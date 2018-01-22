@@ -20,8 +20,9 @@
 #ifndef AKSTANDARDDIRS_H
 #define AKSTANDARDDIRS_H
 
-#include "xdgbasedirs_p.h"
 #include "akonadiprivate_export.h"
+
+#include <QString>
 
 namespace Akonadi
 {

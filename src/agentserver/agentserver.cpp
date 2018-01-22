@@ -21,7 +21,6 @@
 #include "akonadiagentserver_debug.h"
 #include "agentthread.h"
 
-#include <private/xdgbasedirs_p.h>
 #include <private/dbus_p.h>
 
 #include <QCoreApplication>

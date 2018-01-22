@@ -31,7 +31,6 @@
 #include <QBuffer>
 #include <QStandardPaths>
 
-#include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>
 #include <private/scope_p.h>
 #include <private/standarddirs_p.h>

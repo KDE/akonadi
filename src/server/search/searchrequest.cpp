@@ -26,8 +26,6 @@
 #include "connection.h"
 #include "akonadiserver_debug.h"
 
-#include <private/xdgbasedirs_p.h>
-
 using namespace Akonadi::Server;
 
 SearchRequest::SearchRequest(const QByteArray &connectionId)

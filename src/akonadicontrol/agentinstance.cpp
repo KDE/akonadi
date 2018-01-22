@@ -23,8 +23,6 @@
 #include "agenttype.h"
 #include "agentmanager.h"
 
-#include <private/xdgbasedirs_p.h>
-
 AgentInstance::AgentInstance(AgentManager *manager)
     : QObject(manager)
     , mManager(manager)

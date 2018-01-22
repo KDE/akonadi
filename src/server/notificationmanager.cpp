@@ -26,7 +26,6 @@
 
 
 #include <private/standarddirs_p.h>
-#include <private/xdgbasedirs_p.h>
 
 #include <QSettings>
 #include <QThreadPool>

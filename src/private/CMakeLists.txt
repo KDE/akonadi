@@ -18,7 +18,6 @@ set(akonadiprivate_SRCS
     protocol.cpp
     scope.cpp
     tristate.cpp
-    xdgbasedirs.cpp
     standarddirs.cpp
     dbus.cpp
 )
@@ -82,7 +81,6 @@ install(FILES
     protocol_p.h
     ${CMAKE_CURRENT_BINARY_DIR}/protocol_gen.h
     protocol_exception_p.h
-    xdgbasedirs_p.h
     capabilities_p.h
     scope_p.h
     tristate_p.h

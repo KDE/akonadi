@@ -31,7 +31,6 @@
 #include "persistentsearchattribute.h"
 
 #include "private/protocol_p.h"
-#include "private/xdgbasedirs_p.h"
 #include "private/externalpartstorage_p.h"
 
 #include <QFile>
