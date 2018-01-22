@@ -33,8 +33,6 @@
 #include "storage/selectquerybuilder.h"
 #include "handler/searchhelper.h"
 
-
-#include <private/xdgbasedirs_p.h>
 #include <private/protocol_p.h>
 
 #include <QDir>
@@ -162,7 +160,7 @@ void SearchManager::loadSearchPlugins()
         qCDebug(AKONADISERVER_LOG) << "Overriding the search plugins with: " << pluginOverride;
     }
 
-    const QStringList dirs = XdgBaseDirs::findPluginDirs();
+    const QStringList dirs = QCoreApplication::libraryPaths();
     for (const QString &pluginDir : dirs) {
         QDir dir(pluginDir + QLatin1String("/akonadi"));
         const QStringList fileNames = dir.entryList(QDir::Files);

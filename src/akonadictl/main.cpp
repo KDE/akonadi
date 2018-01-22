@@ -99,7 +99,7 @@ static bool checkSearchSupportStatus()
     if (!pluginOverride.isEmpty()) {
         searchMethods << pluginOverride;
     } else {
-        const QStringList dirs = Akonadi::XdgBaseDirs::findPluginDirs();
+        const QStringList dirs = QCoreApplication::libraryPaths();
         for (const QString &pluginDir : dirs) {
             QDir dir(pluginDir + QLatin1String("/akonadi/"));
             const QStringList pluginFiles = dir.entryList(QDir::Files);
