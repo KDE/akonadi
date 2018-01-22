@@ -120,6 +120,7 @@ public:
 #endif
         const QByteArray buf = msg.toUtf8();
         file.write(buf.constData(), buf.size());
+        file.write("\n");
         file.flush();
 
         if (origHandler) {
@@ -133,6 +134,10 @@ public:
 
         if (file.isOpen()) {
             file.close();
+        }
+        QFileInfo finfo(errorLogFileName());
+        if (!finfo.absoluteDir().exists()) {
+            QDir().mkpath(finfo.absolutePath());
         }
         file.setFileName(errorLogFileName());
         file.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
