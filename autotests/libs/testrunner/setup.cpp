@@ -147,8 +147,13 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
         if (fi.isDir()) {
             if (fi.fileName() == QStringLiteral("akonadi")) {
                 // namespace according to instance identifier
-                copyDirectory(fi.absoluteFilePath(), dst + QDir::separator() + QStringLiteral("akonadi") + QDir::separator()
-                              + QStringLiteral("instance") + QDir::separator() + instanceId());
+#ifdef Q_OS_WIN
+                const bool isXdgConfig = src.contains(QLatin1String("/xdgconfig/"));
+                copyDirectory(fi.absoluteFilePath(), dst + QStringLiteral("/akonadi/") + (isXdgConfig ? QStringLiteral("config/") : QStringLiteral("data/"))
+                              + QStringLiteral("instance/") + instanceId());
+#else
+                copyDirectory(fi.absoluteFilePath(), dst + QStringLiteral("/akonadi/instance/") + instanceId());
+#endif
             } else {
                 copyDirectory(fi.absoluteFilePath(), dst + QDir::separator() + fi.fileName());
             }
@@ -182,16 +187,25 @@ void SetupTest::createTempEnvironment()
 {
     qDebug() << "Creating test environment in" << basePath();
 
+    const Config *config = Config::instance();
+#ifdef Q_OS_WIN
+    // Always copy the generic xdgconfig dir
+    copyXdgDirectory(config->basePath() + QStringLiteral("/xdgconfig"), basePath());
+    if (!config->xdgConfigHome().isEmpty()) {
+        copyXdgDirectory(config->xdgConfigHome(), basePath());
+    }
+    copyXdgDirectory(config->xdgDataHome(), basePath());
+    writeAkonadiserverrc(basePath() + QStringLiteral("/akonadi/config/instance/%1/akonadiserverrc").arg(instanceId()));
+#else
     const QDir tmpDir(basePath());
     const QString testRunnerDataDir = QStringLiteral("data");
     const QString testRunnerConfigDir = QStringLiteral("config");
     const QString testRunnerTmpDir = QStringLiteral("tmp");
 
-    tmpDir.mkdir(testRunnerConfigDir);
-    tmpDir.mkdir(testRunnerDataDir);
-    tmpDir.mkdir(testRunnerTmpDir);
+    tmpDir.mkpath(testRunnerConfigDir);
+    tmpDir.mkpath(testRunnerDataDir);
+    tmpDir.mkpath(testRunnerTmpDir);
 
-    const Config *config = Config::instance();
     // Always copy the generic xdgconfig dir
     copyXdgDirectory(config->basePath() + QStringLiteral("/xdgconfig"), basePath() + testRunnerConfigDir);
     if (!config->xdgConfigHome().isEmpty()) {
@@ -199,18 +213,19 @@ void SetupTest::createTempEnvironment()
     }
     copyXdgDirectory(config->xdgDataHome(), basePath() + testRunnerDataDir);
 
+    setEnvironmentVariable("XDG_DATA_HOME", basePath() + testRunnerDataDir);
+    setEnvironmentVariable("XDG_CONFIG_HOME", basePath() + testRunnerConfigDir);
+    setEnvironmentVariable("TMPDIR", basePath() + testRunnerTmpDir);
+    writeAkonadiserverrc(basePath() + testRunnerConfigDir + QStringLiteral("/akonadi/instance/%1/akonadiserverrc").arg(instanceId()));
+#endif
+
     QString backend;
     if (Config::instance()->dbBackend() == QLatin1String("pgsql")) {
         backend = QStringLiteral("postgresql");
     } else {
         backend = Config::instance()->dbBackend();
     }
-    setEnvironmentVariable("XDG_DATA_HOME", basePath() + testRunnerDataDir);
-    setEnvironmentVariable("XDG_CONFIG_HOME", basePath() + testRunnerConfigDir);
-    setEnvironmentVariable("TMPDIR", basePath() + testRunnerTmpDir);
     setEnvironmentVariable("TESTRUNNER_DB_ENVIRONMENT", backend);
-
-    writeAkonadiserverrc(basePath() + testRunnerConfigDir);
 }
 
 void SetupTest::writeAkonadiserverrc(const QString &path)
@@ -227,8 +242,7 @@ void SetupTest::writeAkonadiserverrc(const QString &path)
         return;
     }
 
-    QSettings settings(path + QStringLiteral("/akonadi/instance/%1/akonadiserverrc").arg(instanceId()),
-                       QSettings::IniFormat);
+    QSettings settings(path, QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("General"));
     settings.setValue(QStringLiteral("Driver"), backend);
     settings.endGroup();
@@ -243,7 +257,12 @@ void SetupTest::writeAkonadiserverrc(const QString &path)
 
 void SetupTest::cleanTempEnvironment()
 {
+#ifdef Q_OS_WIN
+    QDir(basePath() + QStringLiteral("akonadi/config/instance/") + instanceId()).removeRecursively();
+    QDir(basePath() + QStringLiteral("akonadi/data/instance/") + instanceId()).removeRecursively();
+#else
     QDir(basePath()).removeRecursively();
+#endif
 }
 
 SetupTest::SetupTest()
@@ -345,22 +364,29 @@ void SetupTest::restartAkonadiServer()
 
 QString SetupTest::basePath() const
 {
+#ifdef Q_OS_WIN
+    // On Windows we are forced to share the same data directory as production instances
+    // because there's no way to override QStandardPaths like we can on Unix.
+    // This means that on Windows we rely on Instances providing us the neccessary isolation
+    return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
+#else
     QString sysTempDirPath = QDir::tempPath();
-#ifdef Q_OS_UNIX
+    #ifdef Q_OS_UNIX
     // QDir::tempPath() makes sure to use the fully sym-link exploded
     // absolute path to the temp dir. That is nice, but on OSX it makes
     // that path really long. MySQL chokes on this, for it's socket path,
     // so work around that
     sysTempDirPath = QStringLiteral("/tmp");
-#endif
+    #endif
 
     const QDir sysTempDir(sysTempDirPath);
-    const QString tempDir = QStringLiteral("akonadi_testrunner-%1")
+    const QString tempDir = QStringLiteral("/akonadi_testrunner-%1/")
                             .arg(QCoreApplication::instance()->applicationPid());
     if (!sysTempDir.exists(tempDir)) {
         sysTempDir.mkdir(tempDir);
     }
-    return sysTempDirPath + QDir::separator() + tempDir + QDir::separator();
+    return sysTempDirPath + tempDir;
+#endif
 }
 
 void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)

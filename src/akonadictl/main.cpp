@@ -167,7 +167,11 @@ static void listInstances()
         bool running;
     };
     QVector<Instance> instances { { QStringLiteral("(default)"), instanceRunning() } };
+#ifdef Q_OS_WIN
+    const QDir instanceDir(QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + QStringLiteral("/akonadi/config/instance"));
+#else
     const QDir instanceDir(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + QStringLiteral("/akonadi/instance"));
+#endif
     if (instanceDir.exists()) {
         const auto list = instanceDir.entryList(QDir::Dirs | QDir::NoDotAndDotDot);
         for (const auto &e : list) {

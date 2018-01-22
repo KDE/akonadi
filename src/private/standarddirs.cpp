@@ -30,9 +30,17 @@ using namespace Akonadi;
 
 namespace {
 
-QString buildFullRelPath(const QString &relPath)
+QString buildFullRelPath(const char *resource, const QString &relPath)
 {
     QString fullRelPath = QStringLiteral("/akonadi");
+#ifdef Q_OS_WIN
+    // On Windows all Generic*Location fall into ~/AppData/Local so we need to disambiguate
+    // inside the "akonadi" folder whether it's data or config.
+    fullRelPath += QLatin1Char('/') + QString::fromLocal8Bit(resource);
+#else
+    Q_UNUSED(resource);
+#endif
+
     if (Akonadi::Instance::hasIdentifier()) {
         fullRelPath += QStringLiteral("/instance/") + Akonadi::Instance::identifier();
     }
@@ -92,9 +100,9 @@ QString StandardDirs::agentConfigFile(const QString &identifier, FileAccessMode 
 
 QString StandardDirs::saveDir(const char *resource, const QString &relPath)
 {
-    const QString fullRelPath = buildFullRelPath(relPath);
+    const QString fullRelPath = buildFullRelPath(resource, relPath);
     if (qstrncmp(resource, "config", 6) == 0) {
-        return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + fullRelPath;
+        return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + fullRelPath;
     } else if (qstrncmp(resource, "data", 4) == 0) {
         return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + fullRelPath;
     } else {
@@ -106,7 +114,7 @@ QString StandardDirs::saveDir(const char *resource, const QString &relPath)
 
 QString StandardDirs::locateResourceFile(const char *resource, const QString &relPath)
 {
-    const QString fullRelPath = buildFullRelPath(relPath);
+    const QString fullRelPath = buildFullRelPath(resource, relPath);
     QVector<QStandardPaths::StandardLocation> userLocations;
     QStandardPaths::StandardLocation genericLocation;
     if (qstrncmp(resource, "config", 6) == 0) {
