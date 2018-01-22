@@ -19,10 +19,7 @@
 #include "agentpluginloader.h"
 #include "akonadiagentserver_debug.h"
 
-#include <private/xdgbasedirs_p.h>
 #include <shared/akdebug.h>
-
-using namespace Akonadi;
 
 AgentPluginLoader::AgentPluginLoader()
 {
@@ -36,23 +33,17 @@ AgentPluginLoader::~AgentPluginLoader()
 
 QPluginLoader *AgentPluginLoader::load(const QString &pluginName)
 {
-    const QString pluginFile = XdgBaseDirs::findPluginFile(pluginName);
-    if (pluginFile.isEmpty()) {
-        qCWarning(AKONADIAGENTSERVER_LOG) << "plugin file:" << pluginName << "not found!";
-        return nullptr;
-    }
-
-    QPluginLoader *loader = m_pluginLoaders.value(pluginFile);
+    QPluginLoader *loader = m_pluginLoaders.value(pluginName);
     if (loader) {
         return loader;
     } else {
-        loader = new QPluginLoader(pluginFile);
+        loader = new QPluginLoader(pluginName);
         if (!loader->load()) {
             qCWarning(AKONADIAGENTSERVER_LOG) << "Failed to load agent: " << loader->errorString();
             delete loader;
             return nullptr;
         }
-        m_pluginLoaders.insert(pluginFile, loader);
+        m_pluginLoaders.insert(pluginName, loader);
         return loader;
     }
 }
