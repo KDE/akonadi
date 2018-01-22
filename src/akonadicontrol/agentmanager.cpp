@@ -32,7 +32,6 @@
 #include "akonadicontrol_debug.h"
 
 #include <private/protocol_p.h>
-#include <private/xdgbasedirs_p.h>
 #include <private/instance_p.h>
 #include <private/standarddirs_p.h>
 #include <private/dbus_p.h>
@@ -560,7 +559,9 @@ void AgentManager::readPluginInfos(const QDir &directory)
 
 QStringList AgentManager::pluginInfoPathList()
 {
-    return Akonadi::XdgBaseDirs::findAllResourceDirs("data", QStringLiteral("akonadi/agents"));
+    return QStandardPaths::locateAll(QStandardPaths::GenericDataLocation,
+                                     QStringLiteral("akonadi/agents"),
+                                     QStandardPaths::LocateDirectory);
 }
 
 void AgentManager::load()

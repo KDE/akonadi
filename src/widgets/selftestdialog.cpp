@@ -471,7 +471,8 @@ void SelfTestDialog::testResources()
         }
     }
 
-    const QStringList pathList = XdgBaseDirs::findAllResourceDirs("data", QStringLiteral("akonadi/agents"));
+    const auto pathList = QStandardPaths::locateAll(QStandardPaths::GenericDataLocation, QStringLiteral("akonadi/agents"),
+                                                    QStandardPaths::LocateDirectory);
     QStandardItem *item = nullptr;
     if (resourceFound) {
         item = report(Success, ki18n("Resource agents found."), ki18n("At least one resource agent has been found."));

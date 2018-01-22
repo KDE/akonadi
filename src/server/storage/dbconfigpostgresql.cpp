@@ -21,7 +21,6 @@
 #include "utils.h"
 #include "akonadiserver_debug.h"
 
-#include <private/xdgbasedirs_p.h>
 #include <private/standarddirs_p.h>
 
 #include <QDir>
