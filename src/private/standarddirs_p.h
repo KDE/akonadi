@@ -61,9 +61,18 @@ AKONADIPRIVATE_EXPORT QString serverConfigFile(FileAccessMode openMode = ReadOnl
 AKONADIPRIVATE_EXPORT QString connectionConfigFile(FileAccessMode openMode = ReadOnly);
 
 /**
- * Returns the full path to the agent config file (agentsrc).
+ * Returns the full path to the agentsrc config file
  */
 AKONADIPRIVATE_EXPORT QString agentsConfigFile(FileAccessMode openMode = ReadOnly);
+
+/**
+ * Returns the full path to config file of agent @p identifier.
+ *
+ * Never returns empty string.
+ *
+ * @param identifier identifier of the agent (akonadi_foo_resource_0)
+ */
+AKONADIPRIVATE_EXPORT QString agentConfigFile(const QString &identifier, FileAccessMode openMode = ReadOnly);
 
 /**
  * Instance-aware wrapper for XdgBaseDirs::saveDir().

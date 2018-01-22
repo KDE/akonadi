@@ -383,7 +383,7 @@ void AgentBasePrivate::init()
         q->error(i18n("Unable to register object at dbus: %1", KDBusConnectionPool::threadConnection().lastError().message()));
     }
 
-    mSettings = new QSettings(QStringLiteral("%1/agent_config_%2").arg(StandardDirs::saveDir("config"), mId), QSettings::IniFormat);
+    mSettings = new QSettings(ServerManager::agentConfigFilePath(mId), QSettings::IniFormat);
 
     mChangeRecorder = new ChangeRecorder(q);
     mChangeRecorder->setObjectName(QStringLiteral("AgentBaseChangeRecorder"));

@@ -354,12 +354,7 @@ QString ServerManager::serverConfigFilePath(OpenMode openMode)
 
 QString ServerManager::agentConfigFilePath(const QString &identifier)
 {
-    QString fullRelPath = QStringLiteral("akonadi");
-    if (hasInstanceIdentifier()) {
-        fullRelPath += QStringLiteral("/instance/%1").arg(ServerManager::instanceIdentifier());
-    }
-    fullRelPath += QStringLiteral("agent_config_%1").arg(identifier);
-    return Akonadi::XdgBaseDirs::findResourceFile("config", fullRelPath);
+    return StandardDirs::agentConfigFile(identifier);
 }
 
 QString ServerManager::addNamespace(const QString &string)

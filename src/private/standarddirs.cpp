@@ -69,6 +69,11 @@ QString StandardDirs::agentsConfigFile(FileAccessMode openMode)
     return configFile(QStringLiteral("agentsrc"), openMode);
 }
 
+QString StandardDirs::agentConfigFile(const QString &identifier, FileAccessMode openMode)
+{
+    return configFile(QStringLiteral("agent_config_") + identifier, openMode);
+}
+
 QString StandardDirs::saveDir(const char *resource, const QString &relPath)
 {
     QString fullRelPath = QStringLiteral("/akonadi");
