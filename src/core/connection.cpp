@@ -142,10 +142,10 @@ void Connection::doReconnect()
         const QString prefix = QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
         if (mConnectionType == CommandConnection) {
             const QString defaultPipe = QStringLiteral("Akonadi-Cmd-") % prefix;
-            serverAddress = connectionSettings.value(QStringLiteral("Connection/NamedPipe"), defaultPipe).toString();
+            serverAddress = connectionSettings.value(QStringLiteral("Data/NamedPipe"), defaultPipe).toString();
         } else if (mConnectionType == NotificationConnection) {
             const QString defaultPipe = QStringLiteral("Akonadi-Ntf-") % prefix;
-            serverAddress = connectionSettings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultPipe).toString();
+            serverAddress = connectionSettings.value(QStringLiteral("Data/NamedPipe"), defaultPipe).toString();
         }
 #else
         const QString defaultSocketDir = StandardDirs::saveDir("data");
