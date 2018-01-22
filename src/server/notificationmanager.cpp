@@ -55,7 +55,7 @@ void NotificationManager::init()
 {
     AkThread::init();
 
-    const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+    const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
 
     mTimer = new QTimer(this);

@@ -27,30 +27,43 @@ namespace Akonadi
 {
 
 /**
- * Convenience wrappers on top of XdgBaseDirs that are instance namespace aware.
+ * Convenience wrappers on top of QStandardPaths that are instance namespace aware.
  * @since 1.7
  */
 namespace StandardDirs
 {
+
+/**
+ * @brief Open mode flags for resource files
+ *
+ * FileAccessMode is a typedef for QFlags<FileAccessFlag>. It stores
+ * a OR combination of FileAccessFlag values
+ */
+enum FileAccessMode {
+    ReadOnly  = 0x1,
+    WriteOnly = 0x2,
+    ReadWrite = ReadOnly | WriteOnly
+};
+
 /**
  * Returns path to the config file @p configFile.
  */
-AKONADIPRIVATE_EXPORT QString configFile(const QString &configFile, Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly);
+AKONADIPRIVATE_EXPORT QString configFile(const QString &configFile, FileAccessMode openMode = ReadOnly);
 
 /**
  * Returns the full path to the server config file (akonadiserverrc).
  */
-AKONADIPRIVATE_EXPORT QString serverConfigFile(Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly);
+AKONADIPRIVATE_EXPORT QString serverConfigFile(FileAccessMode openMode = ReadOnly);
 
 /**
  * Returns the full path to the connection config file (akonadiconnectionrc).
  */
-AKONADIPRIVATE_EXPORT QString connectionConfigFile(Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly);
+AKONADIPRIVATE_EXPORT QString connectionConfigFile(FileAccessMode openMode = ReadOnly);
 
 /**
  * Returns the full path to the agent config file (agentsrc).
  */
-AKONADIPRIVATE_EXPORT QString agentConfigFile(Akonadi::XdgBaseDirs::FileAccessMode openMode = Akonadi::XdgBaseDirs::ReadOnly);
+AKONADIPRIVATE_EXPORT QString agentConfigFile(FileAccessMode openMode = ReadOnly);
 
 /**
  * Instance-aware wrapper for XdgBaseDirs::saveDir().

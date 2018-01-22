@@ -346,14 +346,10 @@ QString ServerManager::agentServiceName(ServiceAgentType agentType, const QStrin
 
 QString ServerManager::serverConfigFilePath(OpenMode openMode)
 {
-    QString relPath;
-    if (hasInstanceIdentifier()) {
-        relPath = QStringLiteral("instance/%1").arg(ServerManager::instanceIdentifier());
-    }
-    return XdgBaseDirs::akonadiServerConfigFile(openMode == Akonadi::ServerManager::ReadOnly
-            ? XdgBaseDirs::ReadOnly
-            : XdgBaseDirs::ReadWrite,
-            relPath);
+    return StandardDirs::serverConfigFile(
+            openMode == Akonadi::ServerManager::ReadOnly
+                ? StandardDirs::ReadOnly
+                : StandardDirs::ReadWrite);
 }
 
 QString ServerManager::agentConfigFilePath(const QString &identifier)

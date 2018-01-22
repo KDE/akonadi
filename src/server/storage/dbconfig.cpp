@@ -38,7 +38,7 @@ static DbConfig *s_DbConfigInstance = nullptr;
 
 DbConfig::DbConfig()
 {
-    const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+    const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
 
     mSizeThreshold = 4096;
@@ -66,7 +66,7 @@ bool DbConfig::isConfigured()
 DbConfig *DbConfig::configuredDatabase()
 {
     if (!s_DbConfigInstance) {
-        const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+        const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
         QSettings settings(serverConfigFile, QSettings::IniFormat);
 
         // determine driver to use

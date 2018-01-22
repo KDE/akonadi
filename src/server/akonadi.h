@@ -58,6 +58,9 @@ public:
      */
     IntervalCheck *intervalChecker();
 
+    /**
+     * Instance-aware server .config directory
+     */
     QString serverPath() const;
 
     /**

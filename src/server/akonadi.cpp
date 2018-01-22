@@ -73,7 +73,7 @@ AkonadiServer::AkonadiServer(QObject *parent)
 
 bool AkonadiServer::init()
 {
-    const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+    const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
     // Restrict permission to 600, as the file might contain database password in plaintext
     QFile::setPermissions(serverConfigFile, QFile::ReadOwner | QFile::WriteOwner);
@@ -99,7 +99,7 @@ bool AkonadiServer::init()
 
     s_instance = this;
 
-    const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
+    const QString connectionSettingsFile = StandardDirs::connectionConfigFile(StandardDirs::WriteOnly);
     QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
 
     mCmdServer = new AkLocalServer(this);
@@ -282,7 +282,7 @@ bool AkonadiServer::quit()
     }
 
     //QSettings settings(StandardDirs::serverConfigFile(), QSettings::IniFormat);
-    const QString connectionSettingsFile = StandardDirs::connectionConfigFile(XdgBaseDirs::WriteOnly);
+    const QString connectionSettingsFile = StandardDirs::connectionConfigFile(StandardDirs::WriteOnly);
 
     if (!QDir::home().remove(connectionSettingsFile)) {
         qCCritical(AKONADISERVER_LOG) << "Failed to remove runtime connection config file";
@@ -417,5 +417,5 @@ NotificationManager *AkonadiServer::notificationManager()
 
 QString AkonadiServer::serverPath() const
 {
-    return XdgBaseDirs::homePath("config");
+    return StandardDirs::saveDir("config");
 }

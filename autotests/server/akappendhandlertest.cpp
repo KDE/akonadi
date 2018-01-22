@@ -50,7 +50,7 @@ public:
     {
         // Effectively disable external payload parts, we have a dedicated unit-test
         // for that
-        const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadWrite);
+        const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
         QSettings settings(serverConfigFile, QSettings::IniFormat);
         settings.setValue(QStringLiteral("General/SizeThreshold"), std::numeric_limits<qint64>::max());
 

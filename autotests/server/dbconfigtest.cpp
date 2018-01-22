@@ -46,7 +46,7 @@ private Q_SLOTS:
         akTestSetInstanceIdentifier(QL1S("unit-test"));
 
         {
-            QSettings s(StandardDirs::serverConfigFile(XdgBaseDirs::WriteOnly));
+            QSettings s(StandardDirs::serverConfigFile(StandardDirs::WriteOnly));
             s.setValue(QL1S("General/Driver"), driverName);
         }
 

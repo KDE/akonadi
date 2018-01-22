@@ -71,7 +71,7 @@ AgentManager::AgentManager(bool verbose, QObject *parent)
         qFatal("akonadiserver already running!");
     }
 
-    const QSettings settings(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
+    const QSettings settings(Akonadi::StandardDirs::agentConfigFile(Akonadi::StandardDirs::ReadOnly), QSettings::IniFormat);
     mAgentServerEnabled = settings.value(QStringLiteral("AgentServer/Enabled"), enableAgentServerDefault).toBool();
 
     QStringList serviceArgs;
@@ -568,7 +568,7 @@ void AgentManager::load()
     org::freedesktop::Akonadi::ResourceManager resmanager(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/ResourceManager"), QDBusConnection::sessionBus(), this);
     const QStringList knownResources = resmanager.resourceInstances();
 
-    QSettings file(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::ReadOnly), QSettings::IniFormat);
+    QSettings file(Akonadi::StandardDirs::agentConfigFile(Akonadi::StandardDirs::ReadOnly), QSettings::IniFormat);
     file.beginGroup(QStringLiteral("Instances"));
     const QStringList entries = file.childGroups();
     for (int i = 0; i < entries.count(); ++i) {
@@ -609,7 +609,7 @@ void AgentManager::load()
 
 void AgentManager::save()
 {
-    QSettings file(Akonadi::StandardDirs::agentConfigFile(Akonadi::XdgBaseDirs::WriteOnly), QSettings::IniFormat);
+    QSettings file(Akonadi::StandardDirs::agentConfigFile(Akonadi::StandardDirs::WriteOnly), QSettings::IniFormat);
 
     for (const AgentType &info : qAsConst(mAgents)) {
         info.save(&file);

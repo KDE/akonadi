@@ -169,7 +169,7 @@ void SelfTestDialog::runTests()
 
 QVariant SelfTestDialog::serverSetting(const QString &group, const char *key, const QVariant &def) const
 {
-    const QString serverConfigFile = StandardDirs::serverConfigFile(XdgBaseDirs::ReadOnly);
+    const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadOnly);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
     settings.beginGroup(group);
     return settings.value(QString::fromLatin1(key), def);
@@ -216,7 +216,7 @@ void SelfTestDialog::testSQLDriver()
     } else {
         item = report(Error, ki18n("Database driver not found."), detailsFail);
     }
-    item->setData(StandardDirs::serverConfigFile(XdgBaseDirs::ReadOnly), FileIncludeRole);
+    item->setData(StandardDirs::serverConfigFile(StandardDirs::ReadOnly), FileIncludeRole);
 }
 
 void SelfTestDialog::testMySQLServer()

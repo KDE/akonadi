@@ -187,7 +187,7 @@ bool FakeAkonadiServer::init()
     qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
     qputenv("XDG_CONFIG_HOME", qPrintable(QString(basePath() + QLatin1String("/config"))));
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
-    QSettings settings(StandardDirs::serverConfigFile(XdgBaseDirs::WriteOnly), QSettings::IniFormat);
+    QSettings settings(StandardDirs::serverConfigFile(StandardDirs::WriteOnly), QSettings::IniFormat);
     settings.beginGroup(QStringLiteral("General"));
     settings.setValue(QStringLiteral("Driver"), QLatin1String("QSQLITE3"));
     settings.endGroup();

@@ -1,5 +1,6 @@
 /*
     Copyright (c) 2011 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2018 Daniel Vrátil <dvratil@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -18,65 +19,72 @@
 */
 
 #include "standarddirs_p.h"
-#include "xdgbasedirs_p.h"
 #include "instance_p.h"
 
+#include <QStandardPaths>
 #include <QFile>
+#include <QFileInfo>
+#include <QVector>
 
 using namespace Akonadi;
 
-QString StandardDirs::configFile(const QString &configFile, Akonadi::XdgBaseDirs::FileAccessMode openMode)
+QString StandardDirs::configFile(const QString &configFile, FileAccessMode openMode)
 {
     const QString savePath = StandardDirs::saveDir("config") + QLatin1Char('/') + configFile;
-
-    if (openMode == XdgBaseDirs::WriteOnly) {
+    if (openMode == WriteOnly) {
         return savePath;
     }
 
-    QString path = XdgBaseDirs::findResourceFile("config", QStringLiteral("akonadi/") + configFile);
+
+    auto path = QStandardPaths::locate(QStandardPaths::GenericConfigLocation, QStringLiteral("akonadi/") + configFile);
     // HACK: when using instance namespaces, ignore the non-namespaced file
-    if (Akonadi::Instance::hasIdentifier() && path.startsWith(XdgBaseDirs::homePath("config"))) {
+    if (Akonadi::Instance::hasIdentifier() && path.startsWith(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))) {
         path.clear();
     }
 
     if (path.isEmpty()) {
         return savePath;
-    } else if (openMode == XdgBaseDirs::ReadOnly || path == savePath) {
+    } else if (openMode == ReadOnly || path == savePath) {
         return path;
     }
 
     // file found in system paths and mode is ReadWrite, thus
     // we copy to the home path location and return this path
-    QFile systemFile(path);
-
-    systemFile.copy(savePath);
-
+    QFile::copy(path, savePath);
     return savePath;
 }
 
-QString StandardDirs::serverConfigFile(XdgBaseDirs::FileAccessMode openMode)
+QString StandardDirs::serverConfigFile(FileAccessMode openMode)
 {
     return configFile(QStringLiteral("akonadiserverrc"), openMode);
 }
 
-QString StandardDirs::connectionConfigFile(XdgBaseDirs::FileAccessMode openMode)
+QString StandardDirs::connectionConfigFile(FileAccessMode openMode)
 {
     return configFile(QStringLiteral("akonadiconnectionrc"), openMode);
 }
 
-QString StandardDirs::agentConfigFile(XdgBaseDirs::FileAccessMode openMode)
+QString StandardDirs::agentConfigFile(FileAccessMode openMode)
 {
     return configFile(QStringLiteral("agentsrc"), openMode);
 }
 
 QString StandardDirs::saveDir(const char *resource, const QString &relPath)
 {
-    QString fullRelPath = QStringLiteral("akonadi");
+    QString fullRelPath = QStringLiteral("/akonadi");
     if (Akonadi::Instance::hasIdentifier()) {
         fullRelPath += QStringLiteral("/instance/") + Akonadi::Instance::identifier();
     }
     if (!relPath.isEmpty()) {
         fullRelPath += QLatin1Char('/') + relPath;
     }
-    return XdgBaseDirs::saveDir(resource, fullRelPath);
+    if (qstrncmp(resource, "config", 6) == 0) {
+        return QStandardPaths::writableLocation(QStandardPaths::ConfigLocation) + fullRelPath;
+    } else if (qstrncmp(resource, "data", 4) == 0) {
+        return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + fullRelPath;
+    } else {
+        qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
+    }
+
+    return {};
 }
