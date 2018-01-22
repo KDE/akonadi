@@ -24,6 +24,7 @@
 #include <QSettings>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
+#include <QPluginLoader>
 
 #include <KAboutData>
 
@@ -105,19 +106,18 @@ static bool checkSearchSupportStatus()
     } else {
         const QStringList dirs = Akonadi::XdgBaseDirs::findPluginDirs();
         for (const QString &pluginDir : dirs) {
-            QDir dir(pluginDir + QLatin1String("/akonadi"));
-            const QStringList desktopFiles = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files);
-            for (const QString &desktopFileName : desktopFiles) {
-                QSettings desktop(pluginDir + QLatin1String("/akonadi/") + desktopFileName, QSettings::IniFormat);
-                desktop.beginGroup(QStringLiteral("Desktop Entry"));
-                if (desktop.value(QStringLiteral("Type")).toString() != QLatin1String("AkonadiSearchPlugin")) {
+            QDir dir(pluginDir + QLatin1String("/akonadi/"));
+            const QStringList pluginFiles = dir.entryList(QDir::Files);
+            for (const QString &pluginFileName : pluginFiles) {
+                QPluginLoader loader(dir.absolutePath() + QLatin1Char('/') + pluginFileName);
+                const QVariantMap metadata = loader.metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
+                if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
                     continue;
                 }
-                if (!desktop.value(QStringLiteral("X-Akonadi-LoadByDefault"), true).toBool()) {
+                if (!metadata.value(QStringLiteral("X-Akonadi-LoadByDefault"), true).toBool()) {
                     continue;
                 }
-
-                searchMethods << desktop.value(QStringLiteral("Name")).toString();
+                searchMethods << metadata.value(QStringLiteral("X-Akonadi-PluginName")).toString();
             }
         }
     }
