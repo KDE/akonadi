@@ -34,7 +34,6 @@
 #include <QEventLoop>
 #include <QTimer>
 
-#include <private/xdgbasedirs_p.h>
 #include <private/protocol_exception_p.h>
 #include <private/standarddirs_p.h>
 
@@ -129,13 +128,11 @@ void Connection::doReconnect()
 
     // try config file next, fall back to defaults if that fails as well
     if (serverAddress.isEmpty()) {
-        const QString connectionConfigFile = SessionPrivate::connectionFile();
+        const QString connectionConfigFile = StandardDirs::connectionConfigFile();
         const QFileInfo fileInfo(connectionConfigFile);
         if (!fileInfo.exists()) {
             qCDebug(AKONADICORE_LOG) << "Akonadi Client Session: connection config file '"
-                                     "akonadi/akonadiconnectionrc' can not be found in"
-                                     << XdgBaseDirs::homePath("config") << "nor in any of"
-                                     << XdgBaseDirs::systemPathList("config");
+                                        "akonadi/akonadiconnectionrc' can not be found!";
         }
 
         // TODO: share socket setup with server

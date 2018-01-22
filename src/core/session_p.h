@@ -127,11 +127,6 @@ public:
 
     void clear(bool forceReconnect);
 
-    /**
-     * Default location for akonadiconnectionrc
-     */
-    static QString connectionFile();
-
     Session *mParent = nullptr;
     SessionThread *mSessionThread = nullptr;
     Connection *connection = nullptr;

@@ -72,11 +72,6 @@ void SessionPrivate::reconnect()
     connection->reconnect();
 }
 
-QString SessionPrivate::connectionFile()
-{
-    return StandardDirs::saveDir("config") + QStringLiteral("/akonadiconnectionrc");
-}
-
 void SessionPrivate::socketError(const QString &error)
 {
     qCWarning(AKONADICORE_LOG) << "Socket error occurred:" << error;
