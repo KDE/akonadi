@@ -63,7 +63,7 @@ AKONADIPRIVATE_EXPORT QString connectionConfigFile(FileAccessMode openMode = Rea
 /**
  * Returns the full path to the agent config file (agentsrc).
  */
-AKONADIPRIVATE_EXPORT QString agentConfigFile(FileAccessMode openMode = ReadOnly);
+AKONADIPRIVATE_EXPORT QString agentsConfigFile(FileAccessMode openMode = ReadOnly);
 
 /**
  * Instance-aware wrapper for XdgBaseDirs::saveDir().

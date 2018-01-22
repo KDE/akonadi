@@ -101,7 +101,7 @@ bool AgentType::load(const QString &fileName, AgentManager *manager)
 
     // load instance count if needed
     if (!capabilities.contains(CapabilityUnique)) {
-        QSettings agentrc(StandardDirs::agentConfigFile(StandardDirs::ReadOnly), QSettings::IniFormat);
+        QSettings agentrc(StandardDirs::agentsConfigFile(StandardDirs::ReadOnly), QSettings::IniFormat);
         instanceCounter = agentrc.value(QStringLiteral("InstanceCounters/%1/InstanceCounter")
                                         .arg(identifier), 0).toInt();
     }

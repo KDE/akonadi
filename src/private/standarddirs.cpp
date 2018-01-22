@@ -64,7 +64,7 @@ QString StandardDirs::connectionConfigFile(FileAccessMode openMode)
     return configFile(QStringLiteral("akonadiconnectionrc"), openMode);
 }
 
-QString StandardDirs::agentConfigFile(FileAccessMode openMode)
+QString StandardDirs::agentsConfigFile(FileAccessMode openMode)
 {
     return configFile(QStringLiteral("agentsrc"), openMode);
 }

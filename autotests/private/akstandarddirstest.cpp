@@ -34,13 +34,13 @@ private Q_SLOTS:
     void testCondigFile()
     {
         akTestSetInstanceIdentifier(QString());
-        QVERIFY(StandardDirs::agentConfigFile(StandardDirs::ReadOnly).endsWith(QL1S("agentsrc")));
-        QVERIFY(StandardDirs::agentConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("agentsrc")));
-        QVERIFY(!StandardDirs::agentConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("foo/agentsrc")));
+        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadOnly).endsWith(QL1S("agentsrc")));
+        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("agentsrc")));
+        QVERIFY(!StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("foo/agentsrc")));
 
         akTestSetInstanceIdentifier(QL1S("foo"));
-        QVERIFY(StandardDirs::agentConfigFile(StandardDirs::ReadOnly).endsWith(QL1S("agentsrc")));
-        QVERIFY(StandardDirs::agentConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("instance/foo/agentsrc")));
+        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadOnly).endsWith(QL1S("agentsrc")));
+        QVERIFY(StandardDirs::agentsConfigFile(StandardDirs::ReadWrite).endsWith(QL1S("instance/foo/agentsrc")));
     }
 
     void testSaveDir()
