@@ -88,7 +88,7 @@ QObject *PluginLoader::createForName(const QString &name)
     }
 
     if (!info.loaded) {
-        QPluginLoader *loader = new QPluginLoader(QStringLiteral("R:/plugins/") + info.library);
+        QPluginLoader *loader = new QPluginLoader(info.library);
         if (loader->fileName().isEmpty()) {
             qCWarning(AKONADICORE_LOG) << "Error loading" << info.library << ":" << loader->errorString();
             delete loader;
