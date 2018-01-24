@@ -236,7 +236,10 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
     }
 
     // nothing to do
-    if (cmd->modifiedParts() == Protocol::ModifyItemsCommand::None && mParts.isEmpty() && item.attributes().isEmpty()) {
+    if (cmd->modifiedParts() == Protocol::ModifyItemsCommand::None
+        && mParts.isEmpty()
+        && item.attributes().isEmpty()
+        && !cmd->invalidateCache()) {
         return cmd;
     }
 
