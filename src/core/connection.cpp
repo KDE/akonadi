@@ -22,6 +22,7 @@
 #include "servermanager_p.h"
 #include "akonadicore_debug.h"
 #include "commandbuffer_p.h"
+#include <private/instance_p.h>
 
 #include <QDataStream>
 #include <QFile>
@@ -86,6 +87,31 @@ void Connection::reconnect()
     Q_UNUSED(ok)
 }
 
+QString Connection::defaultAddressForTypeAndMethod(ConnectionType type, const QString &method)
+{
+    if (method == QLatin1String("UnixPath")) {
+        const QString defaultSocketDir = StandardDirs::saveDir("data");
+        if (type == CommandConnection) {
+            return defaultSocketDir % QStringLiteral("akonadiserver-cmd.socket");
+        } else if (type == NotificationConnection) {
+            return defaultSocketDir % QStringLiteral("akonadiserver-ntf.socket");
+        }
+   } else if (method == QLatin1String("NamedPipe")) {
+        QString suffix;
+        if (Instance::hasIdentifier()) {
+            suffix += QStringLiteral("%1-").arg(Instance::identifier());
+        }
+        suffix += QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
+        if (type == CommandConnection) {
+            return QStringLiteral("Akonadi-Cmd-") % suffix;
+        } else if (type == NotificationConnection) {
+            return QStringLiteral("Akonadi-Ntf-") % suffix;
+       }
+   }
+
+   Q_UNREACHABLE();
+}
+
 void Connection::doReconnect()
 {
     Q_ASSERT(QThread::currentThread() == thread());
@@ -135,29 +161,18 @@ void Connection::doReconnect()
                                         "akonadi/akonadiconnectionrc' can not be found!";
         }
 
-        // TODO: share socket setup with server
-        const QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
-#ifdef Q_OS_WIN
-        // use the installation prefix as uid
-        const QString prefix = QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
-        if (mConnectionType == CommandConnection) {
-            const QString defaultPipe = QStringLiteral("Akonadi-Cmd-") % prefix;
-            serverAddress = connectionSettings.value(QStringLiteral("Data/NamedPipe"), defaultPipe).toString();
-        } else if (mConnectionType == NotificationConnection) {
-            const QString defaultPipe = QStringLiteral("Akonadi-Ntf-") % prefix;
-            serverAddress = connectionSettings.value(QStringLiteral("Data/NamedPipe"), defaultPipe).toString();
-        }
-#else
-        const QString defaultSocketDir = StandardDirs::saveDir("data");
+        QSettings connectionSettings(connectionConfigFile, QSettings::IniFormat);
 
+        QString connectionType;
         if (mConnectionType == CommandConnection) {
-            const QString defaultSocketPath = defaultSocketDir % QStringLiteral("/akonadiserver-cmd.socket");
-            serverAddress = connectionSettings.value(QStringLiteral("Data/UnixPath"), defaultSocketPath).toString();
+            connectionType = QStringLiteral("Data");
         } else if (mConnectionType == NotificationConnection) {
-            const QString defaultSocketPath = defaultSocketDir % QStringLiteral("/akonadiserver-ntf.socket");
-            serverAddress = connectionSettings.value(QStringLiteral("Notifications/UnixPath"), defaultSocketPath).toString();
+            connectionType = QStringLiteral("Notifications");
         }
-#endif
+
+        connectionSettings.beginGroup(connectionType);
+        const auto method = connectionSettings.value(QStringLiteral("Method"), QStringLiteral("UnixPath")).toString();
+        serverAddress = connectionSettings.value(method, defaultAddressForTypeAndMethod(mConnectionType, method)).toString();
     }
 
     // create sockets if not yet done, note that this does not yet allow changing socket types on the fly

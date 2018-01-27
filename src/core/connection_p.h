@@ -80,7 +80,7 @@ private Q_SLOTS:
 
 
 private:
-
+    QString defaultAddressForTypeAndMethod(ConnectionType type, const QString &method);
     bool handleCommand(qint64 tag, const Protocol::CommandPtr &cmd);
 
     ConnectionType mConnectionType;
