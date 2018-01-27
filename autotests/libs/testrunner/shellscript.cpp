@@ -32,10 +32,10 @@ void ShellScript::writeEnvironmentVariables()
 {
     for (const auto &envvar : qAsConst(mEnvVars)) {
 #ifdef Q_OS_WIN
-        const auto tmpl = QStringLiteral("$_old_%1=$%1\r\n"
-                                         "$%1=\"%2\"\r\n");
+        const auto tmpl = QStringLiteral("$env:_old_%1=$env:%1\r\n"
+                                         "$env:%1=\"%2\"\r\n");
 #else
-        const auto tmpl = QStringLiteral("_old_%1=$%1\n"
+        const auto tmpl = QStringLiteral("$_old_%1=$%1\n"
                                          "%1=\"%2\"\n"
                                          "export %1\n");
 #endif
@@ -58,7 +58,7 @@ void ShellScript::writeShutdownFunction()
                                      "  qdbus %1 %2 %3\r\n"
                                      "%4"
                                      "}\r\n\r\n");
-    const auto restoreTmpl = QStringLiteral("  $%1=$_old_%1\r\n");
+    const auto restoreTmpl = QStringLiteral("  $env:%1=$env:_old_%1\r\n");
 #else
     const auto tmpl = QStringLiteral("function shutdown-testenvironment()\n"
                                      "{\n"
