@@ -113,8 +113,12 @@ bool AkonadiServer::init()
     // TODO: share socket setup with client
 #ifdef Q_OS_WIN
     // use the installation prefix as uid
-    const QString prefix = QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
-    const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % prefix;
+    QString suffix;
+    if (Instance::hasIdentifier()) {
+        suffix = QStringLiteral("%1-").arg(Instance::identifier());
+    }
+    suffix += QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
+    const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % suffix;
     const QString cmdPipe = settings.value(QStringLiteral("Connection/NamedPipe"), defaultCmdPipe).toString();
     if (!mCmdServer->listen(cmdPipe)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << cmdPipe;
@@ -122,7 +126,7 @@ bool AkonadiServer::init()
         return false;
     }
 
-    const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % prefix;
+    const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % suffix;
     const QString ntfPipe = settings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultNtfPipe).toString();
     if (!mNtfServer->listen(ntfPipe)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << ntfPipe;
