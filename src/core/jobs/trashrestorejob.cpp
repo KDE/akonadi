@@ -226,7 +226,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::collectionsReceived(const Akonadi:
         return;
     }
 
-    //Explicit target Q_DECL_OVERRIDEs the resource/configured restore collection
+    //Explicit target overrides the resource/configured restore collection
     if (mTargetCollection.isValid()) {
         targetCollection = mTargetCollection;
     }
