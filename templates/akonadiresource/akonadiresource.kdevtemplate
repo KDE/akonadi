@@ -1,5 +1,6 @@
 [General]
 Name=C++
+Name[ar]=سي++
 Name[ast]=C++
 Name[ca]=C++
 Name[ca@valencia]=C++
@@ -26,6 +27,7 @@ Name[uk]=C++
 Name[x-test]=xxC++xx
 Name[zh_CN]=C++
 Comment=Akonadi Resource Template. A template for an Akonadi PIM data resource
+Comment[ar]=قالب موارد «أكونادي». قالب لمورد بيانات «أكونادي PIM»
 Comment[ca]=Una plantilla de recurs de l'Akonadi. Una plantilla per un recurs de dades PIM de l'Akonadi
 Comment[ca@valencia]=Una plantilla de recurs de l'Akonadi. Una plantilla per un recurs de dades PIM de l'Akonadi
 Comment[de]=Vorlage für Akonadi-Ressource. Vorlage für eine Datenressource für das Akonadi-PIM-Framework
