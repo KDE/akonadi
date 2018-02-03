@@ -44,7 +44,7 @@ public:
 
 inline uint qHash(const IndexFuture &future, uint seed = 0)
 {
-    return qHash(future.taskId(), seed);
+    return ::qHash(future.taskId(), seed);
 }
 
 }
