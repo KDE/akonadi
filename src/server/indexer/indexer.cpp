@@ -64,6 +64,13 @@ IndexFuture Indexer::index(qint64 id, const QString &mimeType, const QByteArray 
 {
     QMutexLocker locker(&d->lock);
     const int taskId = ++d->lastTaskId;
+
+    if (indexData.isEmpty()) {
+        IndexFuture future(taskId);
+        future.setFinished(true);
+        return future;
+    }
+
     const auto task = IndexerTask::createIndexTask(taskId, id, mimeType, indexData);
     if (d->enableDebugging) {
         QTimer::singleShot(0, this, [=]() {
