@@ -7,6 +7,7 @@
 #include "collectioncreatejob.h"
 #include "job_p.h"
 #include "private/protocol_p.h"
+#include "indexer_p.h"
 #include "protocolhelper_p.h"
 
 #include <KLocalizedString>
@@ -70,6 +71,7 @@ void CollectionCreateJob::doStart()
         attrs.insert(attr->type(), attr->serialized());
     }
     cmd->setAttributes(attrs);
+    cmd->setIndexData(Indexer::index(d->mCollection));
 
     d->sendCommand(cmd);
     emitWriteFinished();

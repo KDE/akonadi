@@ -36,6 +36,8 @@ set(akonadicore_base_SRCS
     exception.cpp
     firstrun.cpp
     gidextractor.cpp
+    indexer.cpp
+    indexer_p.h
     item.cpp
     itemchangelog.cpp
     itemfetchscope.cpp
@@ -147,6 +149,7 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     DifferencesAlgorithmInterface
     ExceptionBase
     GidExtractorInterface
+    IndexerInterface
     Item
     ItemFetchScope
     ItemMonitor

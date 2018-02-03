@@ -15,6 +15,7 @@
 #include "itemserializer_p.h"
 #include "job_p.h"
 #include "private/protocol_p.h"
+#include "indexer_p.h"
 #include "protocolhelper_p.h"
 
 #include <QFile>
@@ -173,6 +174,7 @@ void ItemCreateJob::doStart()
         parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
     }
     cmd->setParts(parts);
+    cmd->setIndexData(Indexer::index(d->mItem));
 
     d->sendCommand(cmd);
 }

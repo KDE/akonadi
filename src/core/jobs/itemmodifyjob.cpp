@@ -16,6 +16,7 @@
 #include "job_p.h"
 
 #include "gidextractor_p.h"
+#include "indexer_p.h"
 #include "protocolhelper_p.h"
 
 #include <functional>
@@ -262,6 +263,12 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
     mRemainingItems = mRemainingItems.subspan(batch.size());
 
     cmd->setItems(ProtocolHelper::entitySetToScope(QList(batch.begin(), batch.end())));
+
+    QMap<Akonadi::Item::Id, QByteArray> index;
+    for (const auto &item : batch) {
+        index.insert(item.id(), Indexer::index(item));
+    }
+    cmd->setIndexData(index);
     if (mRevCheck && item.revision() >= 0) {
         cmd->setOldRevision(item.revision());
     }
