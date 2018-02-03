@@ -37,7 +37,7 @@ public:
     virtual ~ItemIndexerInterface()
     {}
 
-    virtual QByteArray index(const Item &item) const = 0;
+    virtual QByteArray index(const Item &item, const Collection &parent) const = 0;
 };
 
 class CollectionIndexerInterface
@@ -46,7 +46,7 @@ public:
     virtual ~CollectionIndexerInterface()
     {}
 
-    virtual QByteArray index(const Collection &collection) const = 0;
+    virtual QByteArray index(const Collection &collection, const Collection &parent) const = 0;
 };
 
 }

@@ -27,21 +27,21 @@
 
 using namespace Akonadi;
 
-QByteArray Indexer::index(const Item &item)
+QByteArray Indexer::index(const Item &item, const Collection &parent)
 {
     if (auto plugin = qobject_cast<ItemIndexerInterface*>(
             TypePluginLoader::defaultObjectForMimeType(item.mimeType()))) {
-        return plugin->index(item);
+        return plugin->index(item, parent);
     }
 
     return {};
 }
 
-QByteArray Indexer::index(const Collection &collection)
+QByteArray Indexer::index(const Collection &collection, const Collection &parent)
 {
     if (auto plugin = qobject_cast<CollectionIndexerInterface*>(
             TypePluginLoader::defaultObjectForMimeType(QStringLiteral("directory/node")))) {
-        return plugin->index(collection);
+        return plugin->index(collection, parent);
     }
 
     return {};
