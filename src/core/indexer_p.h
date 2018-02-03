@@ -22,18 +22,16 @@
 #ifndef AKONADI_CORE_INDEXER_P_H_
 #define AKONADI_CORE_INDEXER_P_H_
 
-class QByteArray;
+#include "item.h"
+#include "collection.h"
 
 namespace Akonadi {
-
-class Item;
-class Collection;
 
 class Indexer
 {
 public:
-    static QByteArray index(const Item &item);
-    static QByteArray index(const Collection &collection);
+    static QByteArray index(const Item &item, const Collection &parent = {});
+    static QByteArray index(const Collection &collection, const Collection &parent = {});
 };
 
 }

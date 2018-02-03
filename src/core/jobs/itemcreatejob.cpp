@@ -176,7 +176,7 @@ void ItemCreateJob::doStart()
         parts.insert(ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part));
     }
     cmd->setParts(parts);
-    cmd->setIndexData(Indexer::index(d->mItem));
+    cmd->setIndexData(Indexer::index(d->mItem, d->mCollection));
 
     d->sendCommand(cmd);
 }
