@@ -26,6 +26,7 @@
 #include "protocolhelper_p.h"
 #include "private/protocol_p.h"
 #include "persistentsearchattribute.h"
+#include "indexer_p.h"
 
 using namespace Akonadi;
 
@@ -117,6 +118,8 @@ void CollectionModifyJob::doStart()
         emitResult();
         return;
     }
+
+    cmd->setIndexData(Indexer::index(d->mCollection));
 
     d->sendCommand(cmd);
 

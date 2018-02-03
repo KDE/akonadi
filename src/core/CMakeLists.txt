@@ -37,6 +37,7 @@ set(akonadicore_base_SRCS
     firstrun.cpp
     gidextractor.cpp
     indexpolicyattribute.cpp
+    indexer.cpp
     item.cpp
     itemchangelog.cpp
     itemfetchscope.cpp
@@ -101,6 +102,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     FavoriteCollectionAttribute
     GidExtractorInterface
     IndexPolicyAttribute
+    IndexerInterface
     Item
     ItemFetchScope
     ItemMonitor

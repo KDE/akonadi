@@ -30,6 +30,7 @@
 
 #include "protocolhelper_p.h"
 #include "gidextractor_p.h"
+#include "indexer_p.h"
 
 #include <functional>
 
@@ -275,6 +276,13 @@ void ItemModifyJob::doStart()
         emitResult();
         return;
     }
+
+    QMap<Akonadi::Item::Id, QByteArray> index;
+    for (const auto &item : qAsConst(d->mItems)) {
+        index.insert(item.id(), Indexer::index(item));
+    }
+    command->setIndexData(index);
+
 
     d->sendCommand(command);
 }
