@@ -95,7 +95,6 @@ DataStore::DataStore()
         m_keepAliveTimer->setInterval(3600 * 1000);
         QObject::connect(m_keepAliveTimer, &QTimer::timeout,
                          this, &DataStore::sendKeepAliveQuery);
-        m_keepAliveTimer->start();
     }
 }
 
@@ -137,6 +136,10 @@ void DataStore::open()
             });
 
     DbConfig::configuredDatabase()->initSession(m_database);
+
+    if (m_keepAliveTimer) {
+        m_keepAliveTimer->start();
+    }
 }
 
 QSqlDatabase DataStore::database()
