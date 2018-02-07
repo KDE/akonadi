@@ -242,7 +242,7 @@ void SelfTestDialog::testMySQLServer()
         report(Error, ki18n("MySQL server not readable."), details);
     } else if (!info.isExecutable()) {
         report(Error, ki18n("MySQL server not executable."), details);
-    } else if (!serverPath.contains(QStringLiteral("mysqld"))) {
+    } else if (!serverPath.contains(QLatin1String("mysqld"))) {
         report(Warning, ki18n("MySQL found with unexpected name."), details);
     } else {
         report(Success, ki18n("MySQL server found."), details);
@@ -286,13 +286,13 @@ void SelfTestDialog::testMySQLServerLog()
     QStandardItem *item = nullptr;
     while (!logFile.atEnd()) {
         const QString line = QString::fromUtf8(logFile.readLine());
-        if (line.contains(QStringLiteral("error"), Qt::CaseInsensitive)) {
+        if (line.contains(QLatin1String("error"), Qt::CaseInsensitive)) {
             item = report(Error, ki18n("MySQL server log contains errors."),
                           ki18n("The MySQL server error log file '%1' contains errors.").subs(makeLink(logFileName)));
             item->setData(logFileName, FileIncludeRole);
             return;
         }
-        if (!warningsFound && line.contains(QStringLiteral("warn"), Qt::CaseInsensitive)) {
+        if (!warningsFound && line.contains(QLatin1String("warn"), Qt::CaseInsensitive)) {
             warningsFound = true;
         }
     }
@@ -465,7 +465,7 @@ void SelfTestDialog::testResources()
     const AgentType::List agentTypes = AgentManager::self()->types();
     bool resourceFound = false;
     for (const AgentType &type : agentTypes) {
-        if (type.capabilities().contains(QStringLiteral("Resource"))) {
+        if (type.capabilities().contains(QLatin1String("Resource"))) {
             resourceFound = true;
             break;
         }

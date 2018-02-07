@@ -117,7 +117,7 @@ void CachePolicyPage::load(const Collection &collection)
     d->mUi->syncOnDemand->setChecked(policy.syncOnDemand());
     d->mUi->localParts->setItems(policy.localParts());
 
-    const bool fetchBodies = policy.localParts().contains(QStringLiteral("RFC822"));
+    const bool fetchBodies = policy.localParts().contains(QLatin1String("RFC822"));
     d->mUi->retrieveFullMessages->setChecked(fetchBodies);
 
     //done explicitly to disable/enabled widgets
@@ -152,10 +152,10 @@ void CachePolicyPage::save(Collection &collection)
     // view.
     if (d->mUi->stackedWidget->currentWidget() != d->mUi->rawPage) {
         if (d->mUi->retrieveFullMessages->isChecked() &&
-                !localParts.contains(QStringLiteral("RFC822"))) {
+                !localParts.contains(QLatin1String("RFC822"))) {
             localParts.append(QStringLiteral("RFC822"));
         } else if (!d->mUi->retrieveFullMessages->isChecked() &&
-                   localParts.contains(QStringLiteral("RFC822"))) {
+                   localParts.contains(QLatin1String("RFC822"))) {
             localParts.removeAll(QStringLiteral("RFC822"));
         }
     }

@@ -117,7 +117,7 @@ void Firstrun::setupNext()
         setupNext();
         return;
     }
-    if (type.capabilities().contains(QStringLiteral("Unique"))) {
+    if (type.capabilities().contains(QLatin1String("Unique"))) {
         const Akonadi::AgentInstance::List lstAgents = AgentManager::self()->instances();
         for (const AgentInstance &agent : lstAgents) {
             if (agent.type() == type) {

@@ -88,16 +88,16 @@ inline QString defaultIconName(const Collection &col)
     const QStringList content = col.contentMimeTypes();
     if ((content.size() == 1) ||
             (content.size() == 2 && content.contains(Collection::mimeType()))) {
-        if (content.contains(QStringLiteral("text/x-vcard")) ||
-                content.contains(QStringLiteral("text/directory")) ||
-                content.contains(QStringLiteral("text/vcard"))) {
+        if (content.contains(QLatin1String("text/x-vcard")) ||
+                content.contains(QLatin1String("text/directory")) ||
+                content.contains(QLatin1String("text/vcard"))) {
             return QStringLiteral("x-office-address-book");
         }
         // TODO: add all other content types and/or fix their mimetypes
-        if (content.contains(QStringLiteral("akonadi/event")) || content.contains(QStringLiteral("text/ical"))) {
+        if (content.contains(QLatin1String("akonadi/event")) || content.contains(QLatin1String("text/ical"))) {
             return QStringLiteral("view-pim-calendar");
         }
-        if (content.contains(QStringLiteral("akonadi/task"))) {
+        if (content.contains(QLatin1String("akonadi/task"))) {
             return QStringLiteral("view-pim-tasks");
         }
     } else if (content.isEmpty()) {

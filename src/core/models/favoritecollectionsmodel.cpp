@@ -466,7 +466,7 @@ bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropActio
 QStringList FavoriteCollectionsModel::mimeTypes() const
 {
     QStringList mts = KSelectionProxyModel::mimeTypes();
-    if (!mts.contains(QStringLiteral("text/uri-list"))) {
+    if (!mts.contains(QLatin1String("text/uri-list"))) {
         mts.append(QStringLiteral("text/uri-list"));
     }
     return mts;

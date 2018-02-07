@@ -183,7 +183,7 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
 
         const Collection collection = Collection::fromUrl(url);
         if (collection.isValid()) {
-            if (!supportedContentTypes.contains(QStringLiteral("inode/directory"))) {
+            if (!supportedContentTypes.contains(QLatin1String("inode/directory"))) {
                 break;
             }
 
