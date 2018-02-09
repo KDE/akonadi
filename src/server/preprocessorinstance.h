@@ -129,7 +129,7 @@ protected:
      * to the slave preprocessor instance. If no item is currently being
      * processed then this function returns -1;
      */
-    int currentProcessingTime();
+    qint64 currentProcessingTime();
 
     /**
      * Returns the id of this preprocessor. This is actually

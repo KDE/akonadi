@@ -32,8 +32,8 @@ class CollectionFetchScopePrivate : public QSharedData
 public:
     CollectionFetchScopePrivate()
         : ancestorDepth(CollectionFetchScope::None)
-        , statistics(false)
         , listFilter(CollectionFetchScope::Enabled)
+        , statistics(false)
         , fetchAllAttributes(false)
         , fetchIdOnly(true)
         , mIgnoreRetrievalErrors(false)
@@ -64,10 +64,10 @@ public:
     QString resource;
     QStringList contentMimeTypes;
     CollectionFetchScope::AncestorRetrieval ancestorDepth;
-    bool statistics;
     CollectionFetchScope::ListFilter listFilter;
     QSet<QByteArray> attributes;
     QScopedPointer<CollectionFetchScope> ancestorFetchScope;
+    bool statistics;
     bool fetchAllAttributes;
     bool fetchIdOnly;
     bool mIgnoreRetrievalErrors;

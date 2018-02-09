@@ -65,10 +65,10 @@ private:
     void runCollectionsActions();
 
 private:
-    Qt::DropAction mAction;
     Akonadi::Item::List mItems;
     Akonadi::Collection::List mCollections;
     Akonadi::Collection mDestCollection;
+    Qt::DropAction mAction;
 };
 
 PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
@@ -76,10 +76,10 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
                                const Collection &destination,
                                QObject *parent)
     : TransactionSequence(parent)
-    , mAction(action)
     , mItems(items)
     , mCollections(collections)
     , mDestCollection(destination)
+    , mAction(action)
 {
     //FIXME: The below code disables transactions in otder to avoid data loss due to nested
     //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).

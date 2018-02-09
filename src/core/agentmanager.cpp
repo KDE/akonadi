@@ -249,7 +249,7 @@ void AgentManagerPrivate::configure(const AgentInstance &instance, QWidget *pare
 {
     qlonglong winId = 0;
     if (parent) {
-        winId = (qlonglong)(parent->window()->winId());
+        winId = static_cast<qlonglong>(parent->window()->winId());
     }
 
     mManager->agentInstanceConfigure(instance.identifier(), winId);

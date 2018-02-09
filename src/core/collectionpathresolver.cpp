@@ -89,11 +89,11 @@ public:
 
     Q_DECLARE_PUBLIC(CollectionPathResolver)
 
-    Collection::Id mColId;
-    QString mPath;
-    bool mPathToId = false;
-    QStringList mPathParts;
     Collection mCurrentNode;
+    QStringList mPathParts;
+    QString mPath;
+    Collection::Id mColId;
+    bool mPathToId = false;
 };
 
 void CollectionPathResolverPrivate::jobResult(KJob *job)

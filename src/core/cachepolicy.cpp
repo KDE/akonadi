@@ -43,10 +43,10 @@ public:
         syncOnDemand = other.syncOnDemand;
     }
 
-    bool inherit = true;
     QStringList localParts;
     int timeout = -1;
     int interval = -1;
+    bool inherit = true;
     bool syncOnDemand = false;
 };
 

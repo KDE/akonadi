@@ -140,7 +140,7 @@ void PreprocessorInstance::processHeadItem()
     qCDebug(AKONADISERVER_LOG) << "PreprocessorInstance::processHeadItem(): processing started for item " << itemId;
 }
 
-int PreprocessorInstance::currentProcessingTime()
+qint64 PreprocessorInstance::currentProcessingTime()
 {
     if (!mBusy) {
         return -1; // nothing being processed
