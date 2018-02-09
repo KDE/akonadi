@@ -249,7 +249,8 @@ void ProcessControl::start()
             qCDebug(AKONADICONTROL_LOG) << "'gdb --pid" << pid << "' to debug";
             qCDebug(AKONADICONTROL_LOG) << "'kill -SIGCONT" << pid << "' to continue";
             kill(pid, SIGSTOP);
-#else defined(Q_OS_WIN)
+#endif
+#ifdef Q_OS_WIN
             qCDebug(AKONADICONTROL_LOG) << "PID:" << pid;
             qCDebug(AKONADICONTROL_LOG) << "Process is waiting for a debugger...";
             // the agent process will wait for a debugger to be attached in AgentBase::debugAgent()

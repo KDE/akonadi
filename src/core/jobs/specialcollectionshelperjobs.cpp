@@ -237,20 +237,20 @@ public:
 
     DefaultResourceJob *const q;
     KCoreConfigSkeleton *mSettings = nullptr;
-    bool mResourceWasPreexisting = true;
-    int mPendingModifyJobs = 0;
-    QString mDefaultResourceType;
     QVariantMap mDefaultResourceOptions;
     QList<QByteArray> mKnownTypes;
     QMap<QByteArray, QString> mNameForTypeMap;
     QMap<QByteArray, QString> mIconForTypeMap;
+    QString mDefaultResourceType;
+    int mPendingModifyJobs = 0;
+    bool mResourceWasPreexisting = true;
 };
 
 DefaultResourceJobPrivate::DefaultResourceJobPrivate(KCoreConfigSkeleton *settings, DefaultResourceJob *qq)
     : q(qq)
     , mSettings(settings)
-    , mResourceWasPreexisting(true /* for safety, so as not to accidentally delete data */)
     , mPendingModifyJobs(0)
+    , mResourceWasPreexisting(true /* for safety, so as not to accidentally delete data */)
 {
 }
 

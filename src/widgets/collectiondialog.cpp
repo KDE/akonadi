@@ -173,13 +173,13 @@ public:
     EntityTreeView *mView = nullptr;
     AsyncSelectionHandler *mSelectionHandler = nullptr;
     QLabel *mTextLabel = nullptr;
-    bool mAllowToCreateNewChildCollection = false;
-    bool mKeepTreeExpanded = false;
     KRecursiveFilterProxyModel *mFilterCollection = nullptr;
     QCheckBox *mUseByDefault = nullptr;
     QStringList mContentMimeTypes;
     QDialogButtonBox *mButtonBox = nullptr;
     QPushButton *mNewSubfolderButton = nullptr;
+    bool mAllowToCreateNewChildCollection = false;
+    bool mKeepTreeExpanded = false;
 
     void slotDoubleClicked();
     void slotSelectionChanged();

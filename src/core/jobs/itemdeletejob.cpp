@@ -41,7 +41,7 @@ public:
 
     Item::List mItems;
     Collection mCollection;
-    Tag mTag;
+    Tag mCurrentTag;
 
 };
 
@@ -90,7 +90,7 @@ ItemDeleteJob::ItemDeleteJob(const Tag &tag, QObject *parent)
 {
     Q_D(ItemDeleteJob);
 
-    d->mTag = tag;
+    d->mCurrentTag = tag;
 }
 
 ItemDeleteJob::~ItemDeleteJob()
@@ -111,7 +111,7 @@ void ItemDeleteJob::doStart()
     try {
         d->sendCommand(Protocol::DeleteItemsCommandPtr::create(
                            d->mItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mItems),
-                           ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mItems)));
+                           ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mItems)));
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));

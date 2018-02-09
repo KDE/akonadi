@@ -92,7 +92,7 @@ public:
     int mStatusCode;
     QString mStatusMessage;
 
-    uint mProgress;
+    int mProgress;
     QString mProgressMessage;
 
     bool mNeedsNetwork;

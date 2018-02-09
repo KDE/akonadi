@@ -319,7 +319,7 @@ QAction *AgentActionManager::createAction(Type type)
 void AgentActionManager::createAllActions()
 {
     for (int type = 0; type < LastType; ++type) {
-        createAction((Type)type);
+        createAction(static_cast<Type>(type));
     }
 }
 

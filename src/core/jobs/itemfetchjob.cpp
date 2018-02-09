@@ -110,7 +110,7 @@ public:
     Q_DECLARE_PUBLIC(ItemFetchJob)
 
     Collection mCollection;
-    Tag mTag;
+    Tag mCurrentTag;
     Item::List mRequestedItems;
     Item::List mResultItems;
     ItemFetchScope mFetchScope;
@@ -179,7 +179,7 @@ ItemFetchJob::ItemFetchJob(const Tag &tag, QObject *parent)
     Q_D(ItemFetchJob);
 
     d->init();
-    d->mTag = tag;
+    d->mCurrentTag = tag;
     d->mValuePool = new ProtocolHelperValuePool;
 }
 
@@ -194,7 +194,7 @@ void ItemFetchJob::doStart()
     try {
         d->sendCommand(Protocol::FetchItemsCommandPtr::create(
                            d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
-                           ProtocolHelper::commandContextToProtocol(d->mCollection, d->mTag, d->mRequestedItems),
+                           ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mRequestedItems),
                            ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope)));
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);

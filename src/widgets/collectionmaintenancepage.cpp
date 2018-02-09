@@ -55,7 +55,7 @@ public:
                                               QStringLiteral("/"),
                                               QStringLiteral("org.freedesktop.Akonadi.Indexer"));
             if (indexingAgentIface.isValid()) {
-                indexingAgentIface.call(QStringLiteral("reindexCollection"), (qlonglong)currentCollection.id());
+                indexingAgentIface.call(QStringLiteral("reindexCollection"), static_cast<qlonglong>(currentCollection.id()));
                 ui.indexedCountLbl->setText(i18n("Remember that indexing can take some minutes."));
             } else {
                 qCWarning(AKONADIWIDGETS_LOG) << "indexer interface not valid";

@@ -51,7 +51,7 @@ void TransportResourceBasePrivate::fetchResult(KJob *job)
 {
     if (job->error()) {
         const Item::Id id = job->property("id").toLongLong();
-        emit transportResult(id, (int)TransportResourceBase::TransportFailed, job->errorText());
+        emit transportResult(id, static_cast<int>(TransportResourceBase::TransportFailed), job->errorText());
         return;
     }
 

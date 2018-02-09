@@ -31,10 +31,10 @@ class SearchResultJobPrivate : public Akonadi::JobPrivate
 public:
     SearchResultJobPrivate(SearchResultJob *parent);
 
+    QVector<QByteArray> rid;
     QByteArray searchId;
     Collection collection;
     ImapSet uid;
-    QVector<QByteArray> rid;
 
     // JobPrivate interface
 public:

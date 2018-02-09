@@ -120,8 +120,8 @@ QStandardItem *SelfTestDialog::report(ResultType type, const KLocalizedString &s
         item->setIcon(QIcon::fromTheme(QStringLiteral("dialog-warning")));
         break;
     case Error:
-    default:
         item->setIcon(QIcon::fromTheme(QStringLiteral("dialog-error")));
+        break;
     }
     item->setEditable(false);
     item->setWhatsThis(details.toString());
