@@ -44,7 +44,7 @@ public:
     CollectionColorAttribute();
     explicit CollectionColorAttribute(const QColor &color);
 
-    virtual ~CollectionColorAttribute();
+    ~CollectionColorAttribute() override;
 
     void setColor(const QColor &color);
     QColor color() const;

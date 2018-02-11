@@ -32,7 +32,7 @@ class AKONADICORE_EXPORT RelationSync : public Akonadi::Job
     Q_OBJECT
 public:
     explicit RelationSync(QObject *parent = nullptr);
-    virtual ~RelationSync();
+    ~RelationSync() override;
 
     void setRemoteRelations(const Akonadi::Relation::List &relations);
 

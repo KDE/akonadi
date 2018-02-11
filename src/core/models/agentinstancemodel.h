@@ -81,7 +81,7 @@ public:
     /**
      * Destroys the agent instance model.
      */
-    virtual ~AgentInstanceModel();
+    ~AgentInstanceModel() override;
 
     QHash<int, QByteArray> roleNames() const override;
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;

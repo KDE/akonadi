@@ -35,7 +35,7 @@ class AKONADICORE_EXPORT SearchResultJob : public Akonadi::Job
     Q_OBJECT
 public:
     explicit SearchResultJob(const QByteArray &searchId, const Collection &collection, QObject *parent = nullptr);
-    virtual ~SearchResultJob();
+    ~SearchResultJob() override;
 
     void setSearchId(const QByteArray &searchId);
     QByteArray searchId() const;

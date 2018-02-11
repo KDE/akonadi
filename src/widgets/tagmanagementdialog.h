@@ -40,7 +40,7 @@ class AKONADIWIDGETS_EXPORT TagManagementDialog : public QDialog
     Q_OBJECT
 public:
     explicit TagManagementDialog(QWidget *parent = nullptr);
-    virtual ~TagManagementDialog();
+    ~TagManagementDialog() override;
 
     QDialogButtonBox *buttons() const;
 

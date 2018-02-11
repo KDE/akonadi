@@ -80,7 +80,7 @@ public:
     /**
      * Destroys the favorite collections model.
      */
-    virtual ~FavoriteCollectionsModel();
+    ~FavoriteCollectionsModel() override;
 
     /**
      * Returns the list of favorite collections.

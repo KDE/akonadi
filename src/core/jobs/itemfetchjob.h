@@ -156,7 +156,7 @@ public:
     /**
      * Destroys the item fetch job.
      */
-    virtual ~ItemFetchJob();
+    ~ItemFetchJob() override;
 
     /**
      * Returns the fetched items.

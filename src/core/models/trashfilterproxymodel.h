@@ -59,7 +59,7 @@ class AKONADICORE_EXPORT TrashFilterProxyModel : public KRecursiveFilterProxyMod
 
 public:
     explicit TrashFilterProxyModel(QObject *parent = nullptr);
-    virtual ~TrashFilterProxyModel();
+    ~TrashFilterProxyModel() override;
 
     void showTrash(bool enable);
     bool trashIsShown() const;

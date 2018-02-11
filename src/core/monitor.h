@@ -124,7 +124,7 @@ public:
     /**
      * Destroys the monitor.
      */
-    virtual ~Monitor();
+    ~Monitor() override;
 
     /**
      * Sets whether the specified collection shall be monitored for changes. If

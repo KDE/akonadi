@@ -87,7 +87,7 @@ public:
     /**
      * Destroys the part fetcher.
      */
-    virtual ~PartFetcher();
+    ~PartFetcher() override;
 
     /**
      * Starts the fetch operation.

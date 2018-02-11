@@ -86,7 +86,7 @@ public:
     /**
      * Destroys the collection view.
      */
-    virtual ~CollectionView();
+    ~CollectionView() override;
 
     /**
      * Sets the KXMLGUIClient which the view is used in.

@@ -47,7 +47,7 @@ public:
     /**
      * Destroys the special collection attribute.
      */
-    virtual ~SpecialCollectionAttribute();
+    ~SpecialCollectionAttribute() override;
 
     /**
      * Sets the special collections @p type of the collection.

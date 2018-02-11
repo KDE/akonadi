@@ -52,7 +52,7 @@ class Handler : public QObject
 public:
     Handler();
 
-    virtual ~Handler();
+    ~Handler() override;
 
     /**
      * Set the tag of the command to be processed, and thus of the response

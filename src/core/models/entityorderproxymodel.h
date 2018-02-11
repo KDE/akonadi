@@ -57,7 +57,7 @@ public:
     /**
      * Destroys the entity order proxy model.
      */
-    virtual ~EntityOrderProxyModel();
+    ~EntityOrderProxyModel() override;
 
     /**
      * Sets the config @p group that will be used for storing the order.

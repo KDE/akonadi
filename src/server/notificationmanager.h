@@ -45,7 +45,7 @@ class NotificationManager : public AkThread
 
 public:
     explicit NotificationManager();
-    virtual ~NotificationManager();
+    ~NotificationManager() override;
 
     void connectNotificationCollector(NotificationCollector *collector);
     void forgetSubscriber(NotificationSubscriber *subscriber);

@@ -74,7 +74,7 @@ public:
     /**
      * Destroys the entity mime type filter model.
      */
-    virtual ~EntityMimeTypeFilterModel();
+    ~EntityMimeTypeFilterModel() override;
 
     /**
      * Add mime types to be shown by the filter.

@@ -69,7 +69,7 @@ public:
     /**
      * Destroys the collection create job.
      */
-    virtual ~CollectionCreateJob();
+    ~CollectionCreateJob() override;
 
     /**
      * Returns the created collection if the job was executed successfully.

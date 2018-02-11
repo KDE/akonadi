@@ -40,7 +40,7 @@ class AKONADIWIDGETS_EXPORT TagEditWidget : public QWidget
     Q_OBJECT
 public:
     explicit TagEditWidget(Akonadi::TagModel *model, QWidget *parent = nullptr, bool enableSelection = false);
-    virtual ~TagEditWidget();
+    ~TagEditWidget() override;
 
     void setSelection(const Akonadi::Tag::List &tags);
     Akonadi::Tag::List selection() const;

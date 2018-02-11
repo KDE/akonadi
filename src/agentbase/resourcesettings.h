@@ -34,7 +34,7 @@ public:
 
 private:
     ResourceSettings();
-    virtual ~ResourceSettings();
+    ~ResourceSettings() override;
     static ResourceSettings *mSelf;
 };
 

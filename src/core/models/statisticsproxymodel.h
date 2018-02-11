@@ -64,7 +64,7 @@ public:
     /**
      * Destroys the statistics proxy model.
      */
-    virtual ~StatisticsProxyModel();
+    ~StatisticsProxyModel() override;
 
     /**
      * @param enable Display tooltips

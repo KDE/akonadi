@@ -54,7 +54,7 @@ class Connection : public AkThread
     Q_OBJECT
 public:
     explicit Connection(quintptr socketDescriptor, QObject *parent = nullptr);
-    virtual ~Connection();
+    ~Connection() override;
 
     virtual DataStore *storageBackend();
 

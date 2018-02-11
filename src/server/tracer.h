@@ -51,7 +51,7 @@ public:
     /**
      * Destroys the global tracer instance.
      */
-    virtual ~Tracer();
+    ~Tracer() override;
 
 public Q_SLOTS:
     /**

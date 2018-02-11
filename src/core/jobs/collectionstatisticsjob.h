@@ -79,7 +79,7 @@ public:
     /**
      * Destroys the collection statistics job.
      */
-    virtual ~CollectionStatisticsJob();
+    ~CollectionStatisticsJob() override;
 
     /**
      * Returns the fetched collection statistics.

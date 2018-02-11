@@ -84,7 +84,7 @@ public:
     /**
      * Destroys the item view.
      */
-    virtual ~ItemView();
+    ~ItemView() override;
 
     /**
      * Sets the KXMLGUIFactory which this view is used in.

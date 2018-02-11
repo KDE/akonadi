@@ -97,7 +97,7 @@ public:
     /**
      * Destroys the favorite collections view.
      */
-    virtual ~EntityListView();
+    ~EntityListView() override;
 
     /**
      * Sets the XML GUI client which the view is used in.

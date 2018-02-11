@@ -75,7 +75,7 @@ public:
     /**
      * Destroys the collection model.
      */
-    virtual ~CollectionModel();
+    ~CollectionModel() override;
 
     /**
      * Sets whether collection statistics information shall be provided

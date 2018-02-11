@@ -61,7 +61,7 @@ public:
     /**
      * Destroys the statistics tooltip proxy model.
      */
-    virtual ~QuotaColorProxyModel();
+    ~QuotaColorProxyModel() override;
 
     void setWarningThreshold(qreal threshold);
     qreal warningThreshold() const;

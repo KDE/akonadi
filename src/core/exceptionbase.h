@@ -63,7 +63,7 @@ public:
     /**
       Destructor.
     */
-    virtual ~Exception() throw();
+    ~Exception() throw() override;
 
     /**
       Returns the error message associated with this exception.

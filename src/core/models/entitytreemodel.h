@@ -396,7 +396,7 @@ public:
     /**
      * Destroys the entity tree model.
      */
-    virtual ~EntityTreeModel();
+    ~EntityTreeModel() override;
 
     /**
      * Describes how the model should populated its items.

@@ -88,7 +88,7 @@ public:
     /**
      * Destroys the item model.
      */
-    virtual ~ItemModel();
+    ~ItemModel() override;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 

@@ -34,7 +34,7 @@ class FakeSearchManager : public SearchManager
 
 public:
     explicit FakeSearchManager(QObject *parent = nullptr);
-    virtual ~FakeSearchManager();
+    ~FakeSearchManager() override;
 
     void registerInstance(const QString &id) override;
     void unregisterInstance(const QString &id) override;

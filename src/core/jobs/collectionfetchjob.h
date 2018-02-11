@@ -133,7 +133,7 @@ public:
     /**
      * Destroys the collection fetch job.
      */
-    virtual ~CollectionFetchJob();
+    ~CollectionFetchJob() override;
 
     /**
      * Returns the list of fetched collection.

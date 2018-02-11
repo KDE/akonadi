@@ -38,7 +38,7 @@ class DBusTracer : public QObject, public TracerInterface
 
 public:
     DBusTracer();
-    virtual ~DBusTracer();
+    ~DBusTracer() override;
 
     void beginConnection(const QString &identifier, const QString &msg) override;
     void endConnection(const QString &identifier, const QString &msg) override;

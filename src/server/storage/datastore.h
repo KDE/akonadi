@@ -96,7 +96,7 @@ public:
     /**
       Closes the database connection and destroys the DataStore object.
     */
-    virtual ~DataStore();
+    ~DataStore() override;
 
     /**
       Opens the database connection.

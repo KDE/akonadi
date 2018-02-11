@@ -73,7 +73,7 @@ public:
     /**
      * Destroys the agent type model.
      */
-    virtual ~AgentTypeModel();
+    ~AgentTypeModel() override;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

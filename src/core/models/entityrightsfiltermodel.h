@@ -73,7 +73,7 @@ public:
     /**
      * Destroys the entity rights filter model.
      */
-    virtual ~EntityRightsFilterModel();
+    ~EntityRightsFilterModel() override;
 
     /**
      * Sets the access @p rights the entities shall be filtered

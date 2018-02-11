@@ -36,7 +36,7 @@ class AgentSearchInstance : public QObject
     Q_OBJECT
 public:
     explicit AgentSearchInstance(const QString &id);
-    virtual ~AgentSearchInstance();
+    ~AgentSearchInstance() override;
 
     bool init();
 

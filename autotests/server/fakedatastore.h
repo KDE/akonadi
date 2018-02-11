@@ -30,7 +30,7 @@ class FakeDataStore : public DataStore
     Q_OBJECT
 
 public:
-    virtual ~FakeDataStore();
+    ~FakeDataStore() override;
     static DataStore *self();
 
     bool init() override;

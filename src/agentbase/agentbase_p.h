@@ -43,7 +43,7 @@ class AgentBasePrivate : public QObject
 
 public:
     explicit AgentBasePrivate(AgentBase *parent);
-    virtual ~AgentBasePrivate();
+    ~AgentBasePrivate() override;
     void init();
     virtual void delayedInit();
 

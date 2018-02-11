@@ -42,7 +42,7 @@ public:
     explicit AkThread(const QString &objectName, StartMode startMode,
                       QThread::Priority priority = QThread::InheritPriority,
                       QObject *parent = nullptr);
-    virtual ~AkThread();
+    ~AkThread() override;
 
 protected:
     void quitThread();

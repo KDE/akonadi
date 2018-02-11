@@ -34,7 +34,7 @@ class FakeConnection : public Connection
 public:
     explicit FakeConnection(quintptr socketDescriptor, QObject *parent = nullptr);
     explicit FakeConnection(QObject *parent = nullptr);
-    virtual ~FakeConnection();
+    ~FakeConnection() override;
 
     DataStore *storageBackend() override;
 

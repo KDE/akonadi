@@ -130,7 +130,7 @@ public:
     /**
      * Destroys the job.
      */
-    virtual ~Job();
+    ~Job() override;
 
     /**
      * Jobs are started automatically once entering the event loop again, no need

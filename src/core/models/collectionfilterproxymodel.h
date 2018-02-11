@@ -67,7 +67,7 @@ public:
     /**
      * Destroys the collection proxy filter model.
      */
-    virtual ~CollectionFilterProxyModel();
+    ~CollectionFilterProxyModel() override;
 
     /**
      * Adds a list of mime types to be shown by the filter.

@@ -37,7 +37,7 @@ class AbstractItemRetrievalJob : public QObject
     Q_OBJECT
 public:
     AbstractItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent);
-    virtual ~AbstractItemRetrievalJob();
+    ~AbstractItemRetrievalJob() override;
 
     virtual void start() = 0;
     virtual void kill() = 0;

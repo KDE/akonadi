@@ -41,7 +41,7 @@ class CollectionScheduler : public AkThread
 
 public:
     explicit CollectionScheduler(const QString &threadName, QThread::Priority priority, QObject *parent = nullptr);
-    virtual ~CollectionScheduler();
+    ~CollectionScheduler() override;
 
     void collectionChanged(qint64 collectionId);
     void collectionRemoved(qint64 collectionId);

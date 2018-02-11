@@ -129,7 +129,7 @@ public:
     /**
      * Destroys the item modify job.
      */
-    virtual ~ItemModifyJob();
+    ~ItemModifyJob() override;
 
     /**
      * Sets whether the payload of the modified item shall be

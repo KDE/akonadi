@@ -164,7 +164,7 @@ protected:
     /**
      * Destroys the preprocessor base agent.
      */
-    virtual ~PreprocessorBase();
+    ~PreprocessorBase() override;
 
 private:
     //@cond PRIVATE

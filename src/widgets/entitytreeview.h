@@ -93,7 +93,7 @@ public:
     /**
      * Destroys the entity tree view.
      */
-    virtual ~EntityTreeView();
+    ~EntityTreeView() override;
 
     /**
      * Sets the XML GUI client which the view is used in.

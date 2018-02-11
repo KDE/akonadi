@@ -51,7 +51,7 @@ public:
     /**
      * Destroys the recursive collection filter proxy model.
      */
-    virtual ~RecursiveCollectionFilterProxyModel();
+    ~RecursiveCollectionFilterProxyModel() override;
 
     /**
      * Add content mime type to be shown by the filter.

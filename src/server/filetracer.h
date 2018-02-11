@@ -36,7 +36,7 @@ class FileTracer : public TracerInterface
 {
 public:
     explicit FileTracer(const QString &fileName);
-    virtual ~FileTracer();
+    ~FileTracer() override;
 
     void beginConnection(const QString &identifier, const QString &msg) override;
     void endConnection(const QString &identifier, const QString &msg) override;

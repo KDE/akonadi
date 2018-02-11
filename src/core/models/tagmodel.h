@@ -52,7 +52,7 @@ public:
     };
 
     explicit TagModel(Monitor *recorder, QObject *parent);
-    virtual ~TagModel();
+    ~TagModel() override;
 
     int columnCount(const QModelIndex &parent = QModelIndex()) const override;
     int rowCount(const QModelIndex &parent = QModelIndex()) const override;

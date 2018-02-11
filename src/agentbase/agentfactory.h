@@ -54,7 +54,7 @@ public:
      */
     explicit AgentFactoryBase(const char *catalogName, QObject *parent = nullptr);
 
-    virtual ~AgentFactoryBase();
+    ~AgentFactoryBase() override;
 
 public Q_SLOTS:
     /**
