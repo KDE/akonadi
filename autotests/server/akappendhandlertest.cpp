@@ -664,7 +664,7 @@ private Q_SLOTS:
         updatePimItem(pimItem, QStringLiteral("TEST-20"), 0);
         updateFlags(flags, {});
         updateTags(tags, { { QLatin1String("PLAIN"), utf8String } });
-        updateNotifcationEntity(notification, pimItem);;
+        updateNotifcationEntity(notification, pimItem);
         ++uidnext;
         {
             auto cmd = createCommand(pimItem, datetime, {});

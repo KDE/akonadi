@@ -224,7 +224,7 @@ void CollectionAttributeTest::testCollectionIdentifcationAttribute()
     QByteArray result = attribute.serialized();
     CollectionIdentificationAttribute parsed;
     parsed.deserialize(result);
-    qDebug() << parsed.identifier() << parsed.collectionNamespace() << result;;
+    qDebug() << parsed.identifier() << parsed.collectionNamespace() << result;
     QCOMPARE(parsed.identifier(), id);
     QCOMPARE(parsed.collectionNamespace(), ns);
 }

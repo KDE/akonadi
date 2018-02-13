@@ -64,7 +64,7 @@ public:
     {
         auto cmd = Protocol::FetchItemsCommandPtr::create(scope, ctx);
         cmd->fetchScope().setFetch(Protocol::FetchScope::IgnoreErrors);
-        return cmd;;
+        return cmd;
     }
 
     Protocol::FetchItemsResponsePtr createResponse(const PimItem &item)
