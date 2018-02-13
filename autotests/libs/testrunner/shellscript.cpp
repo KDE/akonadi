@@ -35,7 +35,7 @@ void ShellScript::writeEnvironmentVariables()
         const auto tmpl = QStringLiteral("$env:_old_%1=$env:%1\r\n"
                                          "$env:%1=\"%2\"\r\n");
 #else
-        const auto tmpl = QStringLiteral("$_old_%1=$%1\n"
+        const auto tmpl = QStringLiteral("_old_%1=$%1\n"
                                          "%1=\"%2\"\n"
                                          "export %1\n");
 #endif
