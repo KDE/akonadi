@@ -93,7 +93,7 @@ public:
         mKeepLocalCollectionChanges << "ENTITYDISPLAY";
     }
 
-    ~ResourceBasePrivate()
+    ~ResourceBasePrivate() override
     {
         delete mItemSyncFetchScope;
     }
