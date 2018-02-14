@@ -141,11 +141,11 @@ QDebug operator<<(QDebug _dbg, Command::Type type)
 
     case Command::_ResponseBit:
         Q_ASSERT(false);
-        return dbg << (int)type;
+        return dbg << static_cast<int>(type);
     }
 
     Q_ASSERT(false);
-    return dbg << (int)type;
+    return dbg << static_cast<int>(type);
 }
 
 template<typename T>

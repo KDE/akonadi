@@ -110,8 +110,6 @@ QString StandardDirs::saveDir(const char *resource, const QString &relPath)
     } else {
         qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
     }
-
-    return {};
 }
 
 QString StandardDirs::locateResourceFile(const char *resource, const QString &relPath)

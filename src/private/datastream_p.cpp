@@ -123,7 +123,7 @@ void DataStream::writeRawData(const char *data, int len)
 
 void DataStream::writeBytes(const char *bytes, int len)
 {
-    *this << (quint32) len;
+    *this << static_cast<quint32> (len);
     if (len) {
         writeRawData(bytes, len);
     }
