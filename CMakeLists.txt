@@ -106,7 +106,7 @@ if(BUILD_TESTING)
    set(BUILD_TOOLS TRUE)
 endif()
 
-set(SMI_MIN_VERSION "1.0")
+set(SMI_MIN_VERSION "1.3")
 find_package(SharedMimeInfo ${SMI_MIN_VERSION} REQUIRED)
 
 find_program(XSLTPROC_EXECUTABLE xsltproc)
