@@ -160,8 +160,7 @@ private:
     friend class SpecialCollectionsRequestJob;
     friend class SpecialCollectionsRequestJobPrivate;
     friend class SpecialCollectionsPrivate;
-
-#if 1 // TODO do this only if building tests:
+#ifdef BUILD_TESTING
     friend class SpecialMailCollectionsTesting;
     friend class LocalFoldersTest;
 #endif
