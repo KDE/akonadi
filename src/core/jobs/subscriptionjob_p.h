@@ -48,7 +48,7 @@ public:
     /**
      * Destroys the subscription job.
      */
-    ~SubscriptionJob();
+    ~SubscriptionJob() override;
 
     /**
      * Subscribes to the given list of collections.

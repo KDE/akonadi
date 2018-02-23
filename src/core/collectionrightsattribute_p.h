@@ -53,7 +53,7 @@ public:
     /**
      * Destroys the collection rights attribute.
      */
-    ~CollectionRightsAttribute();
+    ~CollectionRightsAttribute() override;
 
     /**
      * Sets the @p rights of the collection.

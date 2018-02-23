@@ -64,7 +64,7 @@ public:
     /**
      * Destroys the agent filter proxy model.
      */
-    ~AgentFilterProxyModel();
+    ~AgentFilterProxyModel() override;
 
     /**
      * Accept agents supporting @p mimeType.

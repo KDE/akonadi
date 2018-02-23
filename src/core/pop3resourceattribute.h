@@ -31,7 +31,7 @@ class AKONADICORE_EXPORT Pop3ResourceAttribute : public Akonadi::Attribute
 {
 public:
     Pop3ResourceAttribute();
-    ~Pop3ResourceAttribute();
+    ~Pop3ResourceAttribute() override;
 
     /* reimpl */
     Pop3ResourceAttribute *clone() const override;

@@ -30,6 +30,7 @@ class AgentThreadInstance : public AgentInstance
     Q_OBJECT
 public:
     explicit AgentThreadInstance(AgentManager *manager);
+    virtual ~AgentThreadInstance() {}
 
     bool start(const AgentType &agentInfo) override;
     void quit() override;

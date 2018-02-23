@@ -60,7 +60,7 @@ public:
     /**
      * Destroys the special collections request job.
      */
-    ~SpecialCollectionsRequestJob();
+    ~SpecialCollectionsRequestJob() override;
 
     /**
      * Requests a special collection of the given @p type in the default resource.

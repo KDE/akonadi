@@ -81,7 +81,7 @@ public:
     /**
      * Destroys the unlink job.
      */
-    ~UnlinkJob();
+    ~UnlinkJob() override;
 
 protected:
     void doStart() override;

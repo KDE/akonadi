@@ -67,7 +67,7 @@ public:
     /**
      * Destroys the synchronization job.
      */
-    ~CollectionAttributesSynchronizationJob();
+    ~CollectionAttributesSynchronizationJob() override;
 
     /* reimpl */
     void start() override;

@@ -48,10 +48,6 @@ public:
     Q_DECLARE_PUBLIC(CollectionModel)
     explicit CollectionModelPrivate(CollectionModel *parent)
         : q_ptr(parent)
-        , monitor(0)
-        , session(0)
-        , fetchStatistics(false)
-        , unsubscribed(false)
         , headerContent(i18nc("@title:column, name of a thing", "Name"))
     {
     }

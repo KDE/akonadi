@@ -31,7 +31,7 @@ class AKONADICORE_EXPORT NewMailNotifierAttribute : public Akonadi::Attribute
 {
 public:
     NewMailNotifierAttribute();
-    ~NewMailNotifierAttribute();
+    ~NewMailNotifierAttribute() override;
 
     /* reimpl */
     NewMailNotifierAttribute *clone() const override;

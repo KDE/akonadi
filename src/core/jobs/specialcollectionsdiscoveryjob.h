@@ -50,7 +50,7 @@ public:
     /**
      * Destroys the special collections request job.
      */
-    ~SpecialCollectionsDiscoveryJob();
+    ~SpecialCollectionsDiscoveryJob() override;
 
     void start() override;
 

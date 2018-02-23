@@ -67,7 +67,7 @@ public:
     /**
       Destroys this job.
     */
-    ~CollectionSync();
+    ~CollectionSync() override;
 
     /**
       Sets the result of a full remote collection listing.

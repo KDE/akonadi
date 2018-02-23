@@ -34,7 +34,7 @@ class AgentProcessInstance : public AgentInstance
 
 public:
     explicit AgentProcessInstance(AgentManager *manager);
-
+    virtual ~AgentProcessInstance() {}
     bool start(const AgentType &agentInfo) override;
     void quit() override;
     void cleanup() override;

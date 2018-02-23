@@ -55,7 +55,7 @@ public:
     /**
      * Destroys the entity deleted attribute.
      */
-    ~EntityDeletedAttribute();
+    ~EntityDeletedAttribute() override;
     /**
      * Sets the collection used to restore items which have been moved to trash using a TrashJob
      * If the Resource is set on the collection, the resource root will be used as fallback during the restore operation.

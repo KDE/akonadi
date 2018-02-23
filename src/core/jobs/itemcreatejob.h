@@ -90,7 +90,7 @@ public:
     /**
      * Destroys the item create job.
      */
-    ~ItemCreateJob();
+    ~ItemCreateJob() override;
 
     /**
      * Returns the created item with the new unique id, or an invalid item if the job failed.

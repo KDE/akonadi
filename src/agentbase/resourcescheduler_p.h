@@ -75,7 +75,6 @@ public:
         Task()
             : serial(++latestSerial)
             , type(Invalid)
-            , receiver(0)
         {
         }
         qint64 serial;

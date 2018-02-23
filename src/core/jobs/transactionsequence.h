@@ -80,7 +80,7 @@ public:
     /**
      * Destroys the transaction sequence.
      */
-    ~TransactionSequence();
+    ~TransactionSequence() override;
 
     /**
      * Commits the transaction as soon as all pending sub-jobs finished successfully.

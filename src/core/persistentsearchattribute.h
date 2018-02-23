@@ -83,7 +83,7 @@ public:
     /**
      * Destroys the persistent search attribute.
      */
-    ~PersistentSearchAttribute();
+    ~PersistentSearchAttribute() override;
 
     /**
      * Returns the query string used for this search.

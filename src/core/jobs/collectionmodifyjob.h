@@ -99,7 +99,7 @@ public:
     /**
      * Destroys the collection modify job.
      */
-    ~CollectionModifyJob();
+    ~CollectionModifyJob() override;
 
     /**
      * Returns the modified collection.

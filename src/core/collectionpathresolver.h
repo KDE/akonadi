@@ -82,7 +82,7 @@ public:
     /**
      * Destroys the collection path resolver.
      */
-    ~CollectionPathResolver();
+    ~CollectionPathResolver() override;
 
     /**
      * Returns the collection id. Only valid after the job succeeded.

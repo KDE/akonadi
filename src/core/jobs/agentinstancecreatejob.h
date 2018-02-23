@@ -93,7 +93,7 @@ public:
     /**
      * Destroys the agent instance create job.
      */
-    ~AgentInstanceCreateJob();
+    ~AgentInstanceCreateJob() override;
 
     /**
      * Setup the job to show agent configuration dialog once the agent instance

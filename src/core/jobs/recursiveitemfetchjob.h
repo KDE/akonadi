@@ -101,7 +101,7 @@ public:
     /**
      * Destroys the recursive item fetch job.
      */
-    ~RecursiveItemFetchJob();
+    ~RecursiveItemFetchJob() override;
 
     /**
      * Sets the item fetch scope.

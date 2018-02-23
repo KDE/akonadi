@@ -159,7 +159,7 @@ public:
     /**
      * Destroys the search create job.
      */
-    ~SearchCreateJob();
+    ~SearchCreateJob() override;
 
     /**
      * Returns the newly created search collection once the job finished successfully. Returns an invalid

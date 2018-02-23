@@ -89,7 +89,7 @@ template <typename T>
 struct clone_traits_helper<T, true> {
     static T *clone(T *t)
     {
-        return t ? t->clone() : 0;
+        return t ? t->clone() : nullptr;
     }
 };
 

@@ -55,7 +55,7 @@ public:
     /**
       Destroys this ResourceScanJob.
     */
-    ~ResourceScanJob();
+    ~ResourceScanJob() override;
 
     /**
       Returns the resource ID of the resource being scanned.

@@ -81,7 +81,7 @@ public:
     /**
      * Destroys the link job.
      */
-    ~LinkJob();
+    ~LinkJob() override;
 
 protected:
     void doStart() override;

@@ -83,7 +83,7 @@ public:
     /**
      * Destroys the item move job.
      */
-    ~ItemMoveJob();
+    ~ItemMoveJob() override;
 
     /**
      * Returns the destination collection.

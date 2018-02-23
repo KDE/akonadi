@@ -70,7 +70,7 @@ public:
     /**
      * Destroys the entity hidden attribute.
      */
-    ~EntityHiddenAttribute();
+    ~EntityHiddenAttribute() override;
 
     /**
      * Reimplemented from Attribute

@@ -45,7 +45,7 @@ public:
     /**
      * Destroys the index policy attribute.
      */
-    ~IndexPolicyAttribute();
+    ~IndexPolicyAttribute() override;
 
     /**
      * Returns whether this collection is supposed to be indexed at all.

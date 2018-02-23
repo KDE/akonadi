@@ -90,7 +90,7 @@ public:
     /**
      * Destroys the item search job.
      */
-    ~ItemSearchJob();
+    ~ItemSearchJob() override;
 
     /**
      * Sets the search @p query.

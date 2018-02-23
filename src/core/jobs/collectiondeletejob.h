@@ -81,7 +81,7 @@ public:
     /**
      * Destroys the collection delete job.
      */
-    ~CollectionDeleteJob();
+    ~CollectionDeleteJob() override;
 
 protected:
     void doStart() override;

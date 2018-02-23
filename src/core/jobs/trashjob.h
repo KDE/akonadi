@@ -101,7 +101,7 @@ public:
      */
     explicit TrashJob(const Collection &collection, QObject *parent = nullptr);
 
-    ~TrashJob();
+    ~TrashJob() override;
 
     /**
      * Ignore configured Trash collections and keep all items local

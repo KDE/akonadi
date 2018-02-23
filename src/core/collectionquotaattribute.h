@@ -68,7 +68,7 @@ public:
     /**
      * Destroys the collection quota attribute.
      */
-    ~CollectionQuotaAttribute();
+    ~CollectionQuotaAttribute() override;
 
     /**
      * Sets the current quota @p value for the collection.

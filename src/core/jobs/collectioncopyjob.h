@@ -73,7 +73,7 @@ public:
     /**
      * Destroys the collection copy job.
      */
-    ~CollectionCopyJob();
+    ~CollectionCopyJob() override;
 
 protected:
     void doStart() override;

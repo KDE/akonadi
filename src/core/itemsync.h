@@ -72,7 +72,7 @@ public:
     /**
      * Destroys the item synchronizer.
      */
-    ~ItemSync();
+    ~ItemSync() override;
 
     /**
      * Sets the full item list for the collection.

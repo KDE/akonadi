@@ -65,7 +65,7 @@ public:
 
     explicit TrashRestoreJob(const Collection &collection, QObject *parent = nullptr);
 
-    ~TrashRestoreJob();
+    ~TrashRestoreJob() override;
 
     /**
      * Sets the target collection, where the item is moved to.

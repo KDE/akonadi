@@ -72,7 +72,7 @@ public:
     /**
      * Destroys the synchronization job.
      */
-    ~ResourceSynchronizationJob();
+    ~ResourceSynchronizationJob() override;
 
     /**
      * Returns whether a full synchronization will be done, or just the collection tree (without items).

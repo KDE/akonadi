@@ -85,7 +85,7 @@ public:
     /**
      * Destroys the item copy job.
      */
-    ~ItemCopyJob();
+    ~ItemCopyJob() override;
 
 protected:
     void doStart() override;

@@ -32,7 +32,7 @@ class AKONADICORE_EXPORT TransactionJob : public Job
     Q_OBJECT
 
 public:
-    ~TransactionJob();
+    ~TransactionJob() override;
 
 protected:
     explicit TransactionJob(QObject *parent);
