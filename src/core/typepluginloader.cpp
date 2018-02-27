@@ -310,6 +310,7 @@ private:
         const QMimeDatabase mimeDb;
         const QMimeType mimeType = mimeDb.mimeTypeForName(type);
         if (!mimeType.isValid()) {
+            qCWarning(AKONADICORE_LOG) << "Invalid mimetype requested:" << type;
             return mDefaultPlugin.plugin();
         }
 
