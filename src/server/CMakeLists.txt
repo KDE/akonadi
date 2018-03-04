@@ -11,17 +11,17 @@ endif()
 
 ########### next target ###############
 
-set(AKONADI_DB_SCHEME ${CMAKE_CURRENT_SOURCE_DIR}/storage/akonadidb.xml)
+set(AKONADI_DB_SCHEME "${CMAKE_CURRENT_SOURCE_DIR}/storage/akonadidb.xml")
 
 add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/entities.h
          ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
-  COMMAND ${XSLTPROC_EXECUTABLE}
+  COMMAND "${XSLTPROC_EXECUTABLE}"
           --output "${CMAKE_CURRENT_BINARY_DIR}/entities.h"
           --stringparam code header
-          ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities.xsl
+          "${CMAKE_CURRENT_SOURCE_DIR}/storage/entities.xsl"
           "${AKONADI_DB_SCHEME}"
-  COMMAND ${XSLTPROC_EXECUTABLE}
+  COMMAND "${XSLTPROC_EXECUTABLE}"
           --output "${CMAKE_CURRENT_BINARY_DIR}/entities.cpp"
           --stringparam code source
           "${CMAKE_CURRENT_SOURCE_DIR}/storage/entities.xsl"
