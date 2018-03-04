@@ -26,6 +26,8 @@
 #include <QSharedPointer>
 #include <QTemporaryFile>
 
+#include <boost/shared_ptr.hpp>
+
 using namespace Akonadi;
 
 struct Volker {

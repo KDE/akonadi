@@ -28,8 +28,6 @@
 #include <typeinfo>
 #include <memory>
 
-#include <boost/shared_ptr.hpp>
-
 #include "exceptionbase.h"
 
 //@cond PRIVATE Doxygen 1.7.1 hangs processing this file. so skip it.
