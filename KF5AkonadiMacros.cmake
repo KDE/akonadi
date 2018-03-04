@@ -95,3 +95,27 @@ function(add_akonadi_isolated_test_advanced source additional_sources link_libra
                               LINK_LIBRARIES "${link_libraries}"
     )
 endfunction()
+
+function(kcfg_generate_dbus_interface _kcfg _name)
+    if (NOT XSLTPROC_EXECUTABLE)
+        message(FATAL_ERROR "xsltproc executable not found but needed by KCFG_GENERATE_DBUS_INTERFACE()")
+    endif()
+
+    file(RELATIVE_PATH xsl_relpath ${CMAKE_CURRENT_BINARY_DIR} ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl)
+    if (IS_ABSOLUTE ${_kcfg})
+        file(RELATIVE_PATH kcfg_relpath ${CMAKE_CURRENT_BINARY_DIR} ${_kcfg})
+    else()
+        file(RELATIVE_PATH kcfg_relpath ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg})
+    endif()
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+        COMMAND ${XSLTPROC_EXECUTABLE}
+            --output ${_name}.xml
+            --stringparam interfaceName ${_name}
+            ${xsl_relpath}
+            ${kcfg_relpath}
+        DEPENDS
+            ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl
+            ${_kcfg}
+    )
+endfunction()
