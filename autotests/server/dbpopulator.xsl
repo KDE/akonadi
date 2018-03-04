@@ -315,8 +315,36 @@
 
 
 <xsl:template match="/">
+<!-- Header generation //-->
+<xsl:if test="$code='header'">
+/*
+ * This is an auto-generated file.
+ * Do not edit! All changes made to it will be lost.
+ */
 
+#ifndef AKONADI_SERVER_DBPOPULATOR_H
+#define AKONADI_SERVER_DBPOPULATOR_H
 
+namespace Akonadi {
+namespace Server {
+
+class DbPopulator
+{
+public:
+    DbPopulator();
+    ~DbPopulator();
+
+    bool run();
+
+};
+
+}
+}
+#endif
+</xsl:if>
+
+<!-- Source generation //-->
+<xsl:if test="$code='source'">
 /*
  * This is an auto-generated file.
  * Do not edit! All changes made to it will be lost.
@@ -394,6 +422,7 @@ bool DbPopulator::run()
   qDebug() &lt;&lt; "Database successfully populated";
   return true;
 }
+</xsl:if>
 
 
 </xsl:template>

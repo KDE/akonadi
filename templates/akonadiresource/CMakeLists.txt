@@ -22,12 +22,10 @@ find_package(KF5Config ${KF5_MIN_VERSION} CONFIG REQUIRED)
 set(AKONADI_MIN_VERSION "5.2")
 find_package(KF5Akonadi ${AKONADI_MIN_VERSION} CONFIG REQUIRED)
 
-find_package(Xsltproc REQUIRED)
-set_package_properties(Xsltproc PROPERTIES
-    DESCRIPTION "XSLT processor from libxslt"
-    TYPE REQUIRED
-    PURPOSE "Required to generate a D-Bus interface for the resource."
-)
+find_program(XSLTPROC_EXECUTABLE xsltproc DOC "Path to the xsltproc executable")
+if (NOT XSLTPROC_EXECUTABLE)
+    message(FATAL_ERROR "\nThe command line XSLT processor program 'xsltproc'  could not be found.\nPlease install xsltproc.\n")
+endif()
 
 add_subdirectory(src)
 

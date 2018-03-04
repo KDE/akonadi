@@ -95,3 +95,34 @@ function(add_akonadi_isolated_test_advanced source additional_sources link_libra
                               LINK_LIBRARIES "${link_libraries}"
     )
 endfunction()
+
+function(kcfg_generate_dbus_interface _kcfg _name)
+    if (NOT XSLTPROC_EXECUTABLE)
+        message(FATAL_ERROR "xsltproc executable not found but needed by KCFG_GENERATE_DBUS_INTERFACE()")
+    endif()
+
+    # When using this macro inside Akonadi, we need to refer to the file in the
+    # repo
+    if (Akonadi_SOURCE_DIR)
+        set(xsl_path ${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl)
+    else()
+        set(xsl_path ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl)
+    endif()
+    file(RELATIVE_PATH xsl_relpath ${CMAKE_CURRENT_BINARY_DIR} ${xsl_path})
+    if (IS_ABSOLUTE ${_kcfg})
+        file(RELATIVE_PATH kcfg_relpath ${CMAKE_CURRENT_BINARY_DIR} ${_kcfg})
+    else()
+        file(RELATIVE_PATH kcfg_relpath ${CMAKE_CURRENT_BINARY_DIR} ${CMAKE_CURRENT_SOURCE_DIR}/${_kcfg})
+    endif()
+    add_custom_command(
+        OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+        COMMAND ${XSLTPROC_EXECUTABLE}
+            --output ${_name}.xml
+            --stringparam interfaceName ${_name}
+            ${xsl_relpath}
+            ${kcfg_relpath}
+        DEPENDS
+            ${xsl_path}
+            ${_kcfg}
+    )
+endfunction()
