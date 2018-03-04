@@ -101,7 +101,13 @@ function(kcfg_generate_dbus_interface _kcfg _name)
         message(FATAL_ERROR "xsltproc executable not found but needed by KCFG_GENERATE_DBUS_INTERFACE()")
     endif()
 
-    file(RELATIVE_PATH xsl_relpath ${CMAKE_CURRENT_BINARY_DIR} ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl)
+    # When using this macro inside Akonadi, we need to refer to the file in the
+    # repo
+    if (Akonadi_SOURCE_DIR)
+        file(RELATIVE_PATH xsl_relpath ${CMAKE_CURRENT_BINARY_DIR} ${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl)
+    else()
+        file(RELATIVE_PATH xsl_relpath ${CMAKE_CURRENT_BINARY_DIR} ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl)
+    endif()
     if (IS_ABSOLUTE ${_kcfg})
         file(RELATIVE_PATH kcfg_relpath ${CMAKE_CURRENT_BINARY_DIR} ${_kcfg})
     else()
