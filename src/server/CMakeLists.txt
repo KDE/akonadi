@@ -17,15 +17,15 @@ add_custom_command(
   OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/entities.h
          ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
   COMMAND ${XSLTPROC_EXECUTABLE}
-          --output ${CMAKE_CURRENT_BINARY_DIR}/entities.h
+          --output "${CMAKE_CURRENT_BINARY_DIR}/entities.h"
           --stringparam code header
           ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities.xsl
-          ${AKONADI_DB_SCHEME}
+          "${AKONADI_DB_SCHEME}"
   COMMAND ${XSLTPROC_EXECUTABLE}
-          --output ${CMAKE_CURRENT_BINARY_DIR}/entities.cpp
+          --output "${CMAKE_CURRENT_BINARY_DIR}/entities.cpp"
           --stringparam code source
-          ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities.xsl
-          ${AKONADI_DB_SCHEME}
+          "${CMAKE_CURRENT_SOURCE_DIR}/storage/entities.xsl"
+          "${AKONADI_DB_SCHEME}"
   DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities.xsl
           ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities-header.xsl
           ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities-source.xsl

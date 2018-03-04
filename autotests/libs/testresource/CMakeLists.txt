@@ -17,9 +17,9 @@ macro(kcfg_generate_dbus_interface _kcfg _name)
   add_custom_command(
     OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
     COMMAND ${XSLTPROC_EXECUTABLE} --stringparam interfaceName ${_name}
-    ${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl
-    ${_kcfg}
-    > ${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml
+    "${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl"
+    "${_kcfg}"
+    > "${CMAKE_CURRENT_BINARY_DIR}/${_name}.xml"
     DEPENDS ${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl
     ${_kcfg}
     )
