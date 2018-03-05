@@ -104,10 +104,11 @@ function(kcfg_generate_dbus_interface _kcfg _name)
     # When using this macro inside Akonadi, we need to refer to the file in the
     # repo
     if (Akonadi_SOURCE_DIR)
-        file(RELATIVE_PATH xsl_relpath ${CMAKE_CURRENT_BINARY_DIR} ${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl)
+        set(xsl_path ${Akonadi_SOURCE_DIR}/src/core/kcfg2dbus.xsl)
     else()
-        file(RELATIVE_PATH xsl_relpath ${CMAKE_CURRENT_BINARY_DIR} ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl)
+        set(xsl_path ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl)
     endif()
+    file(RELATIVE_PATH xsl_relpath ${CMAKE_CURRENT_BINARY_DIR} ${xsl_path})
     if (IS_ABSOLUTE ${_kcfg})
         file(RELATIVE_PATH kcfg_relpath ${CMAKE_CURRENT_BINARY_DIR} ${_kcfg})
     else()
@@ -121,7 +122,7 @@ function(kcfg_generate_dbus_interface _kcfg _name)
             ${xsl_relpath}
             ${kcfg_relpath}
         DEPENDS
-            ${KF5Akonadi_DATA_DIR}/kcfg2dbus.xsl
+            ${xsl_path}
             ${_kcfg}
     )
 endfunction()
