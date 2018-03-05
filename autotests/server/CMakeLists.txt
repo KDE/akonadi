@@ -9,18 +9,16 @@ include_directories(${CMAKE_CURRENT_BINARY_DIR}
                     ${CMAKE_BINARY_DIR}/src/server
                     ${Akonadi_SOURCE_DIR}/src/server)
 
-akonadi_generate_schema(${CMAKE_CURRENT_SOURCE_DIR}/dbtest_data/unittest_schema.xml UnitTestSchema unittestschema)
-
-set(AKONADI_DB_DATA ${CMAKE_CURRENT_SOURCE_DIR}/dbtest_data/dbdata.xml)
-
-add_custom_command(
-  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
-  COMMAND ${XSLTPROC_EXECUTABLE}
-          --output ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
-          ${CMAKE_CURRENT_SOURCE_DIR}/dbpopulator.xsl
-          ${AKONADI_DB_DATA}
-  DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/dbpopulator.xsl
-          ${AKONADI_DB_DATA}
+akonadi_run_xsltproc(
+    XSL ${Akonadi_SOURCE_DIR}/src/server/storage/schema.xsl
+    XML ${CMAKE_CURRENT_SOURCE_DIR}/dbtest_data/unittest_schema.xml
+    BASENAME unittestschema
+    CLASSNAME UnitTestSchema
+)
+akonadi_run_xsltproc(
+    XSL ${CMAKE_CURRENT_SOURCE_DIR}/dbpopulator.xsl
+    XML ${CMAKE_CURRENT_SOURCE_DIR}/dbtest_data/dbdata.xml
+    BASENAME dbpopulator
 )
 
 set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp PROPERTY SKIP_AUTOMOC TRUE)
