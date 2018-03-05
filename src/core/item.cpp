@@ -648,9 +648,12 @@ QString Item::payloadExceptionText(int spid, int mtid) const
 void Item::throwPayloadException(int spid, int mtid) const
 {
     if (d_ptr->mPayloads.empty()) {
+        qCDebug(AKONADICORE_LOG) << "Throwing PayloadException: No payload set";
         throw PayloadException("No payload set");
     } else {
-        throw PayloadException(QStringLiteral("Wrong payload type (requested: %1; present: %2")
+        qCDebug(AKONADICORE_LOG) << "Throwing PayloadException: Wrong payload type (requested:" << format_type(spid, mtid)
+                                 << "; present: " << format_types(d_ptr->mPayloads) << "), item mime type is" << mimeType();
+        throw PayloadException(QStringLiteral("Wrong payload type (requested: %1; present: %2)")
                                .arg(format_type(spid, mtid), format_types(d_ptr->mPayloads)));
     }
 }
