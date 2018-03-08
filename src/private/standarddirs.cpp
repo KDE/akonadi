@@ -22,6 +22,7 @@
 #include "instance_p.h"
 #include "akonadi-prefix.h"
 
+#include <QCoreApplication>
 #include <QStandardPaths>
 #include <QFile>
 #include <QFileInfo>
@@ -185,4 +186,13 @@ QStringList StandardDirs::locateAllResourceDirs(const QString &relPath)
         }
     }
     return dirs;
+}
+
+QString StandardDirs::findExecutable(const QString &executableName)
+{
+    QString executable = QStandardPaths::findExecutable(executableName, {qApp->applicationDirPath()});
+    if (executable.isEmpty()) {
+        executable = QStandardPaths::findExecutable(executableName);
+    }
+    return executable;
 }

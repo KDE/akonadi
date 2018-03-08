@@ -393,7 +393,7 @@ void SelfTestDialog::testPSQLServer()
 
 void SelfTestDialog::testAkonadiCtl()
 {
-    const QString path = QStandardPaths::findExecutable(QStringLiteral("akonadictl"));
+    const QString path = Akonadi::StandardDirs::findExecutable(QStringLiteral("akonadictl"));
     if (path.isEmpty()) {
         report(Error, ki18n("akonadictl not found"),
                ki18n("The program 'akonadictl' needs to be accessible in $PATH. "

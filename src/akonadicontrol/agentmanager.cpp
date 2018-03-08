@@ -539,7 +539,7 @@ void AgentManager::readPluginInfos(const QDir &directory)
             }
 
             if (agentInfo.launchMethod == AgentType::Process) {
-                const QString executable = QStandardPaths::findExecutable(agentInfo.exec);
+                const QString executable = Akonadi::StandardDirs::findExecutable(agentInfo.exec);
                 if (executable.isEmpty()) {
                     qCWarning(AKONADICONTROL_LOG) << "Executable" << agentInfo.exec << "for agent" << agentInfo.identifier << "could not be found!";
                     continue;

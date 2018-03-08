@@ -104,6 +104,13 @@ AKONADIPRIVATE_EXPORT QString locateResourceFile(const char *resource, const QSt
  */
 AKONADIPRIVATE_EXPORT QStringList locateAllResourceDirs(const QString &relPath);
 
+/**
+ * Equivalent to QStandardPaths::findExecutable() but it looks in
+ * qApp->applicationDirPath() first.
+ */
+
+AKONADIPRIVATE_EXPORT QString findExecutable(const QString &relPath);
+
 }
 }
 
