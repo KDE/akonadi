@@ -692,8 +692,9 @@ QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentC
     if (mFetchScope.ancestorDepth() == Protocol::FetchScope::NoAncestor || parentColId == 0) {
         return QVector<Protocol::Ancestor>();
     }
-    if (mAncestorCache.contains(parentColId)) {
-        return mAncestorCache.value(parentColId);
+    const auto it = mAncestorCache.constFind(parentColId);
+    if (it != mAncestorCache.cend()) {
+        return *it;
     }
 
     QVector<Protocol::Ancestor> ancestors;
