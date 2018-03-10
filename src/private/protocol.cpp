@@ -806,9 +806,39 @@ QDebug operator<<(QDebug _dbg, const ChangeNotification::Relation &rel)
     return dbg << "Left: " << rel.leftId << ", Right:" << rel.rightId << ", Type: " << rel.type;
 }
 
-
 } // namespace Protocol
 } // namespace Akonadi
+
+
+
+// Helpers for the generated code
+namespace Akonadi {
+namespace Protocol {
+
+template<typename Value, template<typename> class Container>
+inline bool containerComparator(const Container<Value> &c1, const Container<Value> &c2)
+{
+    return c1 == c2;
+}
+
+template<typename T, template<typename> class Container>
+inline bool containerComparator(const Container<QSharedPointer<T>> &c1,
+                                const Container<QSharedPointer<T>> &c2)
+{
+    if (c1.size() != c2.size()) {
+        return false;
+    }
+
+    for (auto it1 = c1.cbegin(), it2 = c2.cbegin(), end1 = c1.cend(); it1 != end1; ++it1, ++it2) {
+        if (**it1 != **it2) {
+            return false;
+        }
+    }
+    return true;
+}
+
+}
+}
 
 /******************************************************************************/
 

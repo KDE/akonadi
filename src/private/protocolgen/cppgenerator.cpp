@@ -505,6 +505,8 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     for (auto prop : properties) {
         if (prop->isPointer()) {
             mImpl << "        && *" << prop->mVariableName() << " == *other." << prop->mVariableName() << "\n";
+        } else if (TypeHelper::isContainer(prop->type())) {
+            mImpl << "        && containerComparator(" << prop->mVariableName() << ", other." << prop->mVariableName() << ")\n";
         } else {
             mImpl << "        && " << prop->mVariableName() << " == other." << prop->mVariableName() << "\n";
         }
