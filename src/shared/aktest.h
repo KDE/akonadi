@@ -24,6 +24,8 @@
 #include "akapplication.h"
 #include <private/instance_p.h>
 
+#include <KCrash/KCrash>
+
 #include <QTest>
 
 #define AKTEST_MAIN(TestObject) \
@@ -32,6 +34,7 @@
         qputenv("XDG_DATA_HOME", ".local-unit-test/share"); \
         qputenv("XDG_CONFIG_HOME", ".config-unit-test"); \
         AkCoreApplication app(argc, argv); \
+        KCrash::setDrKonqiEnabled(false); \
         app.parseCommandLine(); \
         TestObject tc; \
         return QTest::qExec(&tc, argc, argv); \
@@ -42,6 +45,7 @@
     { \
         FakeAkonadiServer::instance(); \
         AkCoreApplication app(argc, argv); \
+        KCrash::setDrKonqiEnabled(false); \
         app.addCommandLineOptions(QCommandLineOption( \
                                   QLatin1String("no-cleanup"), QLatin1String("Don't clean up the temporary runtime environment"))); \
         app.parseCommandLine(); \
