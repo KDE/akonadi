@@ -20,6 +20,7 @@
 
 #include "nodetree.h"
 #include "cpphelper.h"
+#include "typehelper.h"
 
 Node::Node(NodeType type, Node *parent)
     : mParent(parent)
@@ -272,7 +273,7 @@ void PropertyNode::setAsReference(bool asReference)
 
 bool PropertyNode::isPointer() const
 {
-    return mType.endsWith(QLatin1String("Ptr"));
+    return TypeHelper::isPointerType(mType);
 }
 
 QMultiMap<QString, QString> PropertyNode::dependencies() const

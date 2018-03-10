@@ -90,3 +90,8 @@ QString TypeHelper::containerName(const QString &type)
     const int tplB = type.indexOf(QLatin1Char('<'));
     return type.left(tplB);
 }
+
+bool TypeHelper::isPointerType(const QString &type)
+{
+    return type.endsWith(QLatin1String("Ptr"));
+}

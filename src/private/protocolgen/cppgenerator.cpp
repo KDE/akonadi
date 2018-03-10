@@ -587,19 +587,32 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     mImpl << "QDebug operator<<(QDebug dbg, const " << node->className() << " &obj)\n"
              "{\n";
     if (!parentClass.isEmpty()) {
-        mImpl << "    return dbg.noquote() << static_cast<const " << parentClass << " &>(obj)\n";
+        mImpl << "    dbg.noquote() << static_cast<const " << parentClass << " &>(obj)\n";
     } else {
-        mImpl << "    return dbg.noquote()\n";
+        mImpl << "    dbg.noquote()\n";
     }
 
     for (auto prop : serializeProperties) {
         if (prop->isPointer()) {
             mImpl << "        << \"" << prop->name() << ":\" << *obj." << prop->mVariableName() << " << \"\\n\"\n";
+        } else if (TypeHelper::isContainer(prop->type())) {
+            mImpl << "        << \"" << prop->name() << ": [\\n\";\n"
+                     "    for (const auto &type : qAsConst(obj." << prop->mVariableName() << ")) {\n"
+                     "        dbg.noquote() << \"    \" << ";
+            if (TypeHelper::isPointerType(TypeHelper::containerType(prop->type()))) {
+                mImpl << "*type";
+            } else {
+                mImpl << "type";
+            }
+            mImpl << "<< \"\\n\";\n"
+                     "    }\n"
+                     "    dbg.noquote() << \"]\\n\"\n";
         } else {
             mImpl << "        << \"" << prop->name() << ":\" << obj." << prop->mVariableName() << " << \"\\n\"\n";
         }
     }
     mImpl << "    ;\n"
+             "    return dbg;\n"
              "}\n"
              "\n";
 }

@@ -37,6 +37,7 @@ bool isContainer(const QString &type);
 
 QString containerType(const QString &type);
 QString containerName(const QString &type);
+bool isPointerType(const QString &type);
 
 }
 #endif
