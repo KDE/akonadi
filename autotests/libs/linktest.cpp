@@ -83,6 +83,7 @@ private Q_SLOTS:
         QList<QVariant> arg = lspy.takeFirst();
         Item item = arg.at(0).value<Item>();
         QCOMPARE(item.mimeType(), QString::fromLatin1("application/octet-stream"));
+        qDebug() << "TEST" << item.id() << item.loadedPayloadParts() << item.payloadData();
         QVERIFY(item.hasPayload<QByteArray>());
 
         lspy.clear();

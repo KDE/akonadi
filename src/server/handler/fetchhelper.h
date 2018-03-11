@@ -24,6 +24,7 @@
 #include "storage/countquerybuilder.h"
 #include "storage/datastore.h"
 #include "storage/itemretriever.h"
+#include "commandcontext.h"
 
 #include <private/imapset_p.h>
 #include <private/scope_p.h>
@@ -37,14 +38,23 @@ namespace Akonadi
 namespace Server
 {
 
+class AggregatedItemFetchScope;
 class Connection;
 
 class FetchHelper : public QObject
 {
     Q_OBJECT
-
 public:
+    class ResponseCollectorInterface
+    {
+    public:
+        virtual ~ResponseCollectorInterface() {};
+        virtual void addResponse(const Protocol::CommandPtr &response) = 0;
+    };
+
     FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
+    FetchHelper(ResponseCollectorInterface *collector, Connection *connection,
+                CommandContext *context, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
 
     bool fetchItems();
 
@@ -74,11 +84,14 @@ private:
     static bool needsAccessTimeUpdate(const QVector<QByteArray> &parts);
     QVariant extractQueryResult(const QSqlQuery &query, ItemQueryColumns column) const;
     bool isScopeLocal(const Scope &scope);
+    DataStore *storageBackend() const;
     static QByteArray tagsToByteArray(const Tag::List &tags);
     static QByteArray relationsToByteArray(const Relation::List &relations);
 
 private:
+    ResponseCollectorInterface *mCollector = nullptr;
     Connection *mConnection = nullptr;
+    CommandContext *mContext = nullptr;
     QHash<Collection::Id, QVector<Protocol::Ancestor>> mAncestorCache;
     Scope mScope;
     Protocol::ItemFetchScope mFetchScope;

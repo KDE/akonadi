@@ -24,6 +24,8 @@
 #include <QSettings>
 #include <QDataStream>
 #include <QEventLoop>
+#include <QGlobalStatic>
+#include <QThreadStorage>
 
 #include "storage/datastore.h"
 #include "handler.h"
@@ -55,6 +57,11 @@ static QString connectionIdentifier(Connection *c) {
     return id;
 }
 
+namespace
+{
+Q_GLOBAL_STATIC(QThreadStorage<QPointer<Connection>>, sConnectionStore)
+}
+
 Connection::Connection(QObject *parent)
     : AkThread(connectionIdentifier(this), QThread::InheritPriority, parent)
     , m_socketDescriptor(0)
@@ -80,9 +87,17 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     m_verifyCacheOnRetrieval = settings.value(QStringLiteral("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
 }
 
+Connection *Connection::self()
+{
+    Q_ASSERT(sConnectionStore->hasLocalData());
+    return sConnectionStore->localData();
+}
+
 void Connection::init()
 {
     AkThread::init();
+
+    sConnectionStore->setLocalData(this);
 
     QLocalSocket *socket = new QLocalSocket();
 

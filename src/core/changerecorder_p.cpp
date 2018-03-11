@@ -380,10 +380,12 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QSet
     auto msg = Protocol::ItemChangeNotificationPtr::create();
     msg->setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
     msg->setOperation(mapItemOperation(static_cast<LegacyOp>(settings->value(QStringLiteral("op")).toInt())));
-    msg->setItems({ { settings->value(QStringLiteral("uid")).toLongLong(),
-                     settings->value(QStringLiteral("rid")).toString(),
-                     QString(),
-                     settings->value(QStringLiteral("mimeType")).toString() } });
+    auto item = Protocol::FetchItemsResponsePtr::create();
+    item->setId(settings->value(QStringLiteral("uid")).toLongLong());
+    item->setRemoteId(settings->value(QStringLiteral("rid")).toString());
+    item->setMimeType(settings->value(QStringLiteral("mimeType")).toString());
+    msg->setItems({ item });
+    msg->addMetadata("FETCH_ITEM");
     msg->setResource(settings->value(QStringLiteral("resource")).toByteArray());
     msg->setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
     msg->setParentDestCollection(settings->value(QStringLiteral("parentDestCol")).toLongLong());
@@ -448,7 +450,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
     QString remoteId, mimeType, remoteRevision;
     QSet<QByteArray> itemParts, addedFlags, removedFlags;
     QSet<qint64> addedTags, removedTags;
-    QVector<Protocol::ChangeNotification::Item> items;
+    QVector<Protocol::FetchItemsResponsePtr> items;
 
     auto msg = Protocol::ItemChangeNotificationPtr::create();
 
@@ -462,20 +464,145 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
         stream >> mimeType;
         stream >> itemParts;
 
-        items << Protocol::ChangeNotification::Item{ uid, remoteId, QString(), mimeType };
+        auto item = Protocol::FetchItemsResponsePtr::create();
+        item->setId(uid);
+        item->setRemoteId(remoteId);
+        item->setMimeType(mimeType);
+        items << item;
+        msg->addMetadata("FETCH_ITEM");
     } else if (version >= 2) {
         stream >> operation;
         stream >> entityCnt;
-        for (int j = 0; j < entityCnt; ++j) {
-            stream >> uid;
-            stream >> remoteId;
-            stream >> remoteRevision;
-            stream >> mimeType;
-            if (stream.status() != QDataStream::Ok) {
-                qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
-                return msg;
+        if (version >= 7) {
+            QByteArray ba;
+            qint64 i64;
+            int i;
+            QDateTime dt;
+            QString str;
+            QVector<QByteArray> bav;
+            QVector<qint64> i64v;
+            QMap<QByteArray, QByteArray> babaMap;
+            int cnt;
+            for (int j = 0; j < entityCnt; ++j) {
+                auto item = Protocol::FetchItemsResponsePtr::create();
+                stream >> i64;
+                item->setId(i64);
+                stream >> i;
+                item->setRevision(i);
+                stream >> i64;
+                item->setParentId(i64);
+                stream >> str;
+                item->setRemoteId(str);
+                stream >> str;
+                item->setRemoteRevision(str);
+                stream >> str;
+                item->setGid(str);
+                stream >> i64;
+                item->setSize(i64);
+                stream >> str;
+                item->setMimeType(str);
+                stream >> dt;
+                item->setMTime(dt);
+                stream >> bav;
+                item->setFlags(bav);
+                stream >> cnt;
+                QVector<Protocol::FetchTagsResponse> tags;
+                for (int k = 0; k < cnt; ++k) {
+                    Protocol::FetchTagsResponse tag;
+                    stream >> i64;
+                    tag.setId(i64);
+                    stream >> i64;
+                    tag.setParentId(i64);
+                    stream >> ba;
+                    tag.setGid(ba);
+                    stream >> ba;
+                    tag.setType(ba);
+                    stream >> ba;
+                    tag.setRemoteId(ba);
+                    stream >> babaMap;
+                    tag.setAttributes(babaMap);
+                    tags << tag;
+                }
+                item->setTags(tags);
+                stream >> i64v;
+                item->setVirtualReferences(i64v);
+                stream >> cnt;
+                QVector<Protocol::FetchRelationsResponse> relations;
+                for (int k = 0; k < cnt; ++k) {
+                    Protocol::FetchRelationsResponse relation;
+                    stream >> i64;
+                    relation.setLeft(i64);
+                    stream >> ba;
+                    relation.setLeftMimeType(ba);
+                    stream >> i64;
+                    relation.setRight(i64);
+                    stream >> ba;
+                    relation.setRightMimeType(ba);
+                    stream >> ba;
+                    relation.setType(ba);
+                    stream >> ba;
+                    relation.setRemoteId(ba);
+                    relations << relation;
+                }
+                item->setRelations(relations);
+                stream >> cnt;
+                QVector<Protocol::Ancestor> ancestors;
+                for (int k = 0; k < cnt; ++k) {
+                    Protocol::Ancestor ancestor;
+                    stream >> i64;
+                    ancestor.setId(i64);
+                    stream >> str;
+                    ancestor.setRemoteId(str);
+                    stream >> str;
+                    ancestor.setName(str);
+                    stream >> babaMap;
+                    ancestor.setAttributes(babaMap);
+                    ancestors << ancestor;
+                }
+                item->setAncestors(ancestors);
+                stream >> cnt;
+                QVector<Protocol::StreamPayloadResponse> parts;
+                for (int k = 0; k < cnt; ++k) {
+                    Protocol::StreamPayloadResponse part;
+                    stream >> ba;
+                    part.setPayloadName(ba);
+                    Protocol::PartMetaData metaData;
+                    stream >> ba;
+                    metaData.setName(ba);
+                    stream >> i64;
+                    metaData.setSize(i64);
+                    stream >> i;
+                    metaData.setVersion(i);
+                    stream >> i;
+                    metaData.setStorageType(static_cast<Protocol::PartMetaData::StorageType>(i));
+                    part.setMetaData(metaData);
+                    stream >> ba;
+                    part.setData(ba);
+                    parts << part;
+                }
+                item->setParts(parts);
+                stream >> bav;
+                item->setCachedParts(bav);
+                items << item;
             }
-            items << Protocol::ChangeNotification::Item{ uid, remoteId, remoteRevision, mimeType };
+        } else {
+            for (int j = 0; j < entityCnt; ++j) {
+                stream >> uid;
+                stream >> remoteId;
+                stream >> remoteRevision;
+                stream >> mimeType;
+                if (stream.status() != QDataStream::Ok) {
+                    qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
+                    return msg;
+                }
+                auto item = Protocol::FetchItemsResponsePtr::create();
+                item->setId(uid);
+                item->setRemoteId(remoteId);
+                item->setRemoteRevision(remoteRevision);
+                item->setMimeType(mimeType);
+                items << item;
+            }
+            msg->addMetadata("FETCH_ITEM");
         }
         stream >> resource;
         stream >> destinationResource;
@@ -523,14 +650,63 @@ QSet<QByteArray> ChangeRecorderPrivate::encodeRelations(const QSet<Protocol::Ite
 
 void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Protocol::ItemChangeNotification &msg)
 {
+    // Version 7
+
     stream << int(msg.operation());
     const auto items = msg.items();
     stream << items.count();
-    for (const Protocol::ItemChangeNotification::Item &item : items) {
-        stream << quint64(item.id);
-        stream << item.remoteId;
-        stream << item.remoteRevision;
-        stream << item.mimeType;
+    for (const auto &item : items) {
+        stream << item->id()
+               << item->revision()
+               << item->parentId()
+               << item->remoteId()
+               << item->remoteRevision()
+               << item->gid()
+               << item->size()
+               << item->mimeType()
+               << item->mTime()
+               << item->flags();
+        const auto tags = item->tags();
+        stream << tags.count();
+        for (const auto &tag : tags) {
+            stream << tag.id()
+                   << tag.parentId()
+                   << tag.gid()
+                   << tag.type()
+                   << tag.remoteId()
+                   << tag.attributes();
+        }
+        stream << item->virtualReferences();
+        const auto relations = item->relations();
+        stream << relations.count();
+        for (const auto &relation : relations) {
+            stream << relation.left()
+                   << relation.leftMimeType()
+                   << relation.right()
+                   << relation.rightMimeType()
+                   << relation.type()
+                   << relation.remoteId();
+        }
+        const auto ancestors = item->ancestors();
+        stream << ancestors.count();
+        for (const auto &ancestor : ancestors) {
+            stream << ancestor.id()
+                   << ancestor.remoteId()
+                   << ancestor.name()
+                   << ancestor.attributes();
+        }
+        const auto parts = item->parts();
+        stream << parts.count();
+        for (const auto &part : parts) {
+            const auto metaData = part.metaData();
+            stream << part.payloadName()
+                   << metaData.name()
+                   << metaData.size()
+                   << metaData.version()
+                   << static_cast<int>(metaData.storageType())
+                   << part.data();
+        }
+        stream << item->cachedParts();
     }
     stream << msg.resource();
     stream << msg.destinationResource();

@@ -256,10 +256,10 @@ private:
     void dispatchNotification(const Protocol::ChangeNotificationPtr &msg);
     void clear();
 
+    void completeNotification(const Protocol::ChangeNotificationPtr &msg);
 private Q_SLOTS:
     void transactionCommitted();
     void transactionRolledBack();
-
 private:
     DataStore *mDb;
     QByteArray mSessionId;

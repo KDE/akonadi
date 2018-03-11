@@ -26,9 +26,11 @@
 #include "aggregatedfetchscope.h"
 #include "storage/collectionstatistics.h"
 #include "storage/selectquerybuilder.h"
+#include "handler/fetchhelper.h"
 #include "handlerhelper.h"
 
 #include <private/standarddirs_p.h>
+#include <private/scope_p.h>
 
 #include <QSettings>
 #include <QThreadPool>
@@ -45,7 +47,6 @@ NotificationManager::NotificationManager()
     , mTimer(nullptr)
     , mNotifyThreadPool(nullptr)
     , mDebugNotifications(0)
-    , mCollectionFetchScope(nullptr)
 {
 }
 
@@ -71,6 +72,7 @@ void NotificationManager::init()
     mNotifyThreadPool->setMaxThreadCount(5);
 
     mCollectionFetchScope = new AggregatedCollectionFetchScope();
+    mItemFetchScope = new AggregatedItemFetchScope();
     mTagFetchScope = new AggregatedTagFetchScope();
 }
 
@@ -92,6 +94,7 @@ void NotificationManager::quit()
     qDeleteAll(mSubscribers);
 
     delete mCollectionFetchScope;
+    delete mItemFetchScope;
     delete mTagFetchScope;
 
     AkThread::quit();
@@ -115,145 +118,39 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
             });
 
     mSubscribers.push_back(subscriber);
-    if (mEventLoop) {
-        mEventLoop->quit();
-    }
-    if (!mWaiting) {
-        mWaiting = true;
-        QTimer::singleShot(0, this, &NotificationManager::waitForSocketData);
-    }
 }
-
-void NotificationManager::waitForSocketData()
-{
-    mWaiting = true;
-    while (!mSubscribers.isEmpty()) {
-        QEventLoop loop;
-        mEventLoop = &loop;
-        for (const auto sub : qAsConst(mSubscribers)) {
-            if (sub) {
-                connect(sub->socket(), &QLocalSocket::readyRead, &loop, &QEventLoop::quit);
-                connect(sub->socket(), &QLocalSocket::disconnected, &loop, &QEventLoop::quit);
-            }
-        }
-        loop.exec();
-        mEventLoop = nullptr;
-
-        if (mQuitting) {
-            QTimer::singleShot(0, this, &NotificationManager::quit);
-            break;
-        }
-
-        for (const auto sub : qAsConst(mSubscribers)) {
-            if (sub) {
-                sub->handleIncomingData();
-            }
-        }
-    }
-    mWaiting = false;
-}
-
 void NotificationManager::forgetSubscriber(NotificationSubscriber *subscriber)
 {
     Q_ASSERT(QThread::currentThread() == thread());
     mSubscribers.removeAll(subscriber);
-    if (mEventLoop) {
-        mEventLoop->quit();
-    }
 }
 
 void NotificationManager::connectNotificationCollector(NotificationCollector *collector)
 {
     connect(collector, &NotificationCollector::notify,
-            this, &NotificationManager::slotNotify);
+            this, &NotificationManager::slotNotify,
+            Qt::QueuedConnection);
 }
 
 void NotificationManager::slotNotify(const Protocol::ChangeNotificationList &msgs)
 {
     Q_ASSERT(QThread::currentThread() == thread());
-
     for (const auto &msg : msgs) {
-        if (msg->type() == Protocol::Command::CollectionChangeNotification) {
-            auto &cmsg = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);
-            auto msgCollection = cmsg.collection();
-
-            // Make sure we have all the data
-            if (!mCollectionFetchScope->fetchIdOnly() && msgCollection->name().isEmpty()) {
-                const auto col = Collection::retrieveById(msgCollection->id());
-                const auto mts = col.mimeTypes();
-                QStringList mimeTypes;
-                mimeTypes.reserve(mts.size());
-                for (const auto &mt : mts) {
-                    mimeTypes.push_back(mt.name());
-                }
-                msgCollection = HandlerHelper::fetchCollectionsResponse(col, {}, false, 0, {}, {}, false, mimeTypes);
-            }
-            // Get up-to-date statistics
-            if (mCollectionFetchScope->fetchStatistics()) {
-                Collection col;
-                col.setId(msgCollection->id());
-                const auto stats = CollectionStatistics::self()->statistics(col);
-                msgCollection->setStatistics(Protocol::FetchCollectionStatsResponse(stats.count, stats.count - stats.read, stats.size));
-            }
-            // Get attributes
-            const auto requestedAttrs = mCollectionFetchScope->attributes();
-            auto msgColAttrs = msgCollection->attributes();
-            // TODO: This assumes that we have either none or all attributes in msgCollection
-            if (msgColAttrs.isEmpty() && !requestedAttrs.isEmpty()) {
-                SelectQueryBuilder<CollectionAttribute> qb;
-                qb.addColumn(CollectionAttribute::typeFullColumnName());
-                qb.addColumn(CollectionAttribute::valueFullColumnName());
-                qb.addValueCondition(CollectionAttribute::collectionIdFullColumnName(),
-                                     Query::Equals, msgCollection->id());
-                Query::Condition cond(Query::Or);
-                for (const auto &attr : requestedAttrs) {
-                    cond.addValueCondition(CollectionAttribute::typeFullColumnName(), Query::Equals, attr);
-                }
-                qb.addCondition(cond);
-                if (!qb.exec()) {
-                    qCWarning(AKONADISERVER_LOG) << "Failed to obtain collection attributes!";
-                }
-                const auto attrs = qb.result();
-                for (const auto &attr : attrs)  {
-                    msgColAttrs.insert(attr.type(), attr.value());
-                }
-                msgCollection->setAttributes(msgColAttrs);
-            }
-
+        switch (msg->type()) {
+        case Protocol::Command::CollectionChangeNotification:
             Protocol::CollectionChangeNotification::appendAndCompress(mNotifications, msg);
-        } else if (msg->type() == Protocol::Command::TagChangeNotification) {
-            auto &tmsg = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
-            auto msgTag = tmsg.tag();
-
-            if (!mTagFetchScope->fetchIdOnly() && msgTag->gid().isEmpty()) {
-                msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag->id()), false);
-            }
-
-            const auto requestedAttrs = mTagFetchScope->attributes();
-            auto msgTagAttrs = msgTag->attributes();
-            if (msgTagAttrs.isEmpty() && !requestedAttrs.isEmpty()) {
-                SelectQueryBuilder<TagAttribute> qb;
-                qb.addColumn(TagAttribute::typeFullColumnName());
-                qb.addColumn(TagAttribute::valueFullColumnName());
-                qb.addValueCondition(TagAttribute::tagIdFullColumnName(), Query::Equals, msgTag->id());
-                Query::Condition cond(Query::Or);
-                for (const auto &attr : requestedAttrs) {
-                    cond.addValueCondition(TagAttribute::typeFullColumnName(), Query::Equals, attr);
-                }
-                qb.addCondition(cond);
-                if (!qb.exec()) {
-                    qCWarning(AKONADISERVER_LOG) << "Failed to obtain tag attributes!";
-                }
-                const auto attrs = qb.result();
-                for (const auto &attr : attrs) {
-                    msgTagAttrs.insert(attr.type(), attr.value());
-                }
-                msgTag->setAttributes(msgTagAttrs);
-            }
+            continue;
+        case Protocol::Command::ItemChangeNotification:
+        case Protocol::Command::TagChangeNotification:
+        case Protocol::Command::RelationChangeNotification:
+        case Protocol::Command::SubscriptionChangeNotification:
+        case Protocol::Command::DebugChangeNotification:
             mNotifications.push_back(msg);
+            continue;
 
-        } else {
-            mNotifications.push_back(msg);
+        default:
+            Q_ASSERT_X(false, "slotNotify", "Invalid notification type!");
+            continue;
         }
     }
 

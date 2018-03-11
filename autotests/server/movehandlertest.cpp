@@ -53,6 +53,16 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
+    Protocol::FetchItemsResponsePtr fetchResponse(quint64 id, const QString &rid, const QString &rrev, const QString &mt)
+    {
+        auto item = Protocol::FetchItemsResponsePtr::create();
+        item->setId(id);
+        item->setRemoteId(rid);
+        item->setRemoteRevision(rrev);
+        item->setMimeType(mt);
+        return item;
+    }
+
 private Q_SLOTS:
     void testMove_data()
     {
@@ -80,7 +90,7 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::MoveItemsResponsePtr::create());
 
             auto notification = Protocol::ItemChangeNotificationPtr::create(*notificationTemplate);
-            notification->setItems({ { 1, QStringLiteral("A"), QString(), QStringLiteral("application/octet-stream") } });
+            notification->setItems({ fetchResponse(1, QStringLiteral("A"), QString(), QStringLiteral("application/octet-stream")) });
 
             QTest::newRow("move item") << scenarios << Protocol::ChangeNotificationList{ notification }
                                        << QVariant::fromValue(destCol.id());
@@ -96,8 +106,8 @@ private Q_SLOTS:
 
             auto notification = Protocol::ItemChangeNotificationPtr::create(*notificationTemplate);
             notification->setItems({
-                { 3, QStringLiteral("C"), QString(), QStringLiteral("application/octet-stream") },
-                { 2, QStringLiteral("B"), QString(), QStringLiteral("application/octet-stream") } });
+                fetchResponse(3, QStringLiteral("C"), QString(), QStringLiteral("application/octet-stream")),
+                fetchResponse(2, QStringLiteral("B"), QString(), QStringLiteral("application/octet-stream")) });
 
             QTest::newRow("move items") << scenarios << Protocol::ChangeNotificationList{ notification }
                                         << QVariant::fromValue(destCol.id());
@@ -132,7 +142,7 @@ private Q_SLOTS:
             QCOMPARE(notification->parentDestCollection(), newValue.toInt());
 
             Q_FOREACH (const auto &ntfItem, notification->items()) {
-                const PimItem item = PimItem::retrieveById(ntfItem.id);
+                const PimItem item = PimItem::retrieveById(ntfItem->id());
                 QCOMPARE(item.collectionId(), newValue.toInt());
             }
         }

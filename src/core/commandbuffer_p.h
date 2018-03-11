@@ -69,6 +69,11 @@ public:
         return mCommands.isEmpty();
     }
 
+    inline int size() const
+    {
+        return mCommands.size();
+    }
+
 private:
     QObject *mParent = nullptr;
     QByteArray mNotifySlot;
@@ -95,16 +100,23 @@ public:
 
     inline void unlock()
     {
-        mBuffer->mLock.unlock();
+        if (mLocked) {
+            mBuffer->mLock.unlock();
+            mLocked = false;
+        }
     }
 
     inline void relock()
     {
-        mBuffer->mLock.lock();
+        if (!mLocked) {
+            mBuffer->mLock.lock();
+            mLocked = true;
+        }
     }
 
 private:
-    CommandBuffer *mBuffer;
+    CommandBuffer *mBuffer = nullptr;
+    bool mLocked = false;
 };
 
 class CommandBufferNotifyBlocker
@@ -118,9 +130,13 @@ public:
 
     ~CommandBufferNotifyBlocker()
     {
-        mBuffer->mNotify = true;
+        unblock();
     }
 
+    void unblock()
+    {
+        mBuffer->mNotify = true;
+    }
 private:
     CommandBuffer *mBuffer;
 };

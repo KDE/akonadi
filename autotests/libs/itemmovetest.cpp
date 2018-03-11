@@ -81,7 +81,8 @@ private Q_SLOTS:
         Monitor monitor(&monitorSession);
         monitor.setObjectName(QStringLiteral("itemmovetest"));
         monitor.setCollectionMonitored(Collection::root());
-        monitor.fetchCollection(true);        monitor.itemFetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
+        monitor.fetchCollection(true);
+        monitor.itemFetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
         monitor.itemFetchScope().setFetchRemoteIdentification(true);
         QSignalSpy moveSpy(&monitor, &Monitor::itemsMoved);
         QSignalSpy readySpy(&monitor, &Monitor::monitorReady);

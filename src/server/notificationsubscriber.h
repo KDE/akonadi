@@ -85,6 +85,7 @@ private:
     bool isMoveDestinationResourceMonitored(const Protocol::ItemChangeNotification &msg) const;
     bool isMoveDestinationResourceMonitored(const Protocol::CollectionChangeNotification &msg) const;
 
+    Protocol::CollectionChangeNotificationPtr customizeCollection(const Protocol::CollectionChangeNotificationPtr &msg);
     Protocol::SubscriptionChangeNotificationPtr toChangeNotification() const;
 
 protected Q_SLOTS:

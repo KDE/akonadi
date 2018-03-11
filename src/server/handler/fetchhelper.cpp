@@ -1,3 +1,4 @@
+
 /***************************************************************************
  *   Copyright (C) 2006-2009 by Tobias Koenig <tokoe@kde.org>              *
  *                                                                         *
@@ -68,9 +69,39 @@ using namespace Akonadi::Server;
 #define PROF_INC(name)
 #endif
 
-FetchHelper::FetchHelper(Connection *connection, const Scope &scope,
-                         const Protocol::ItemFetchScope &fetchScope)
-    : mConnection(connection)
+namespace {
+
+class ConnectionResponseCollector : public FetchHelper::ResponseCollectorInterface
+{
+public:
+    ConnectionResponseCollector(Connection *connection)
+        : mConnection(connection)
+    {}
+
+    ~ConnectionResponseCollector() override {}
+
+    void addResponse(const Protocol::CommandPtr &response) override
+    {
+        mConnection->sendResponse(response);
+    }
+
+private:
+    Connection *mConnection = nullptr;
+};
+
+}
+
+FetchHelper::FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope)
+    : FetchHelper(new ConnectionResponseCollector(connection), connection, connection->context(), scope, fetchScope)
+{
+}
+
+
+FetchHelper::FetchHelper(ResponseCollectorInterface *collector, Connection *connection,
+                         CommandContext *context, const Scope &scope, const Protocol::ItemFetchScope &fetchScope)
+    : mCollector(collector)
+    , mConnection(connection)
+    , mContext(context)
     , mScope(scope)
     , mFetchScope(fetchScope)
 {
@@ -122,7 +153,7 @@ QSqlQuery FetchHelper::buildPartQuery(const QVector<QByteArray> &partList, bool 
             partQuery.addCondition(cond);
         }
 
-        ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), partQuery);
+        ItemQueryHelper::scopeToQuery(mScope, mContext, partQuery);
 
         if (!partQuery.exec()) {
             throw HandlerException("Unable to list item parts");
@@ -162,7 +193,7 @@ QSqlQuery FetchHelper::buildItemQuery()
 
     itemQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
 
-    ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), itemQuery);
+    ItemQueryHelper::scopeToQuery(mScope, mContext, itemQuery);
 
     if (mFetchScope.changedSince().isValid()) {
         itemQuery.addValueCondition(PimItem::datetimeFullColumnName(), Query::GreaterOrEqual, mFetchScope.changedSince().toUTC());
@@ -190,7 +221,7 @@ QSqlQuery FetchHelper::buildFlagQuery()
     flagQuery.addColumn(PimItem::idFullColumnName());
     flagQuery.addColumn(PimItemFlagRelation::rightFullColumnName());
 
-    ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), flagQuery);
+    ItemQueryHelper::scopeToQuery(mScope, mContext, flagQuery);
     flagQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
 
     if (!flagQuery.exec()) {
@@ -217,7 +248,7 @@ QSqlQuery FetchHelper::buildTagQuery()
     tagQuery.addColumn(PimItem::idFullColumnName());
     tagQuery.addColumn(Tag::idFullColumnName());
 
-    ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), tagQuery);
+    ItemQueryHelper::scopeToQuery(mScope, mContext, tagQuery);
     tagQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
 
     if (!tagQuery.exec()) {
@@ -242,7 +273,7 @@ QSqlQuery FetchHelper::buildVRefQuery()
                       PimItem::idFullColumnName());
     vRefQuery.addColumn(CollectionPimItemRelation::leftFullColumnName());
     vRefQuery.addColumn(CollectionPimItemRelation::rightFullColumnName());
-    ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), vRefQuery);
+    ItemQueryHelper::scopeToQuery(mScope, mContext, vRefQuery);
     vRefQuery.addSortColumn(PimItem::idFullColumnName(), Query::Descending);
 
     if (!vRefQuery.exec()) {
@@ -269,10 +300,10 @@ bool FetchHelper::isScopeLocal(const Scope &scope)
                PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
     qb.addJoin(QueryBuilder::LeftJoin, Resource::tableName(),
                Collection::resourceIdFullColumnName(), Resource::idFullColumnName());
-    ItemQueryHelper::scopeToQuery(scope, mConnection->context(), qb);
-    if (mConnection->context()->resource().isValid()) {
+    ItemQueryHelper::scopeToQuery(scope, mContext, qb);
+    if (mContext->resource().isValid()) {
         qb.addValueCondition(Resource::nameFullColumnName(), Query::NotEquals,
-                             mConnection->context()->resource().name());
+                             mContext->resource().name());
     }
 
     if (!qb.exec()) {
@@ -299,6 +330,18 @@ bool FetchHelper::isScopeLocal(const Scope &scope)
     const QVariantMap properties = manager.agentCustomProperties(typeIdentifier);
     return properties.value(QStringLiteral("HasLocalStorage"), false).toBool();
 }
+
+DataStore *FetchHelper::storageBackend() const
+{
+    if (mConnection) {
+        if (auto store = mConnection->storageBackend()) {
+            return store;
+        }
+    }
+
+    return DataStore::self();
+}
+
 
 bool FetchHelper::fetchItems()
 {
@@ -332,14 +375,14 @@ bool FetchHelper::fetchItems()
         retriever.setRetrieveFullPayload(mFetchScope.fullPayload());
         retriever.setChangedSince(mFetchScope.changedSince());
         if (!retriever.exec() && !mFetchScope.ignoreErrors()) {   // There we go, retrieve the missing parts from the resource.
-            if (mConnection->context()->resource().isValid()) {
+            if (mContext->resource().isValid()) {
                 throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1, resource %2) : %3")
-                                       .arg(mConnection->context()->collectionId())
-                                       .arg(mConnection->context()->resource().id())
+                                       .arg(mContext->collectionId())
+                                       .arg(mContext->resource().id())
                                        .arg(QString::fromLatin1(retriever.lastError())));
             } else {
                 throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1) : %2")
-                                       .arg(mConnection->context()->collectionId())
+                                       .arg(mContext->collectionId())
                                        .arg(QString::fromLatin1(retriever.lastError())));
             }
         }
@@ -574,7 +617,7 @@ bool FetchHelper::fetchItems()
                 if (mFetchScope.ignoreErrors() && data.isEmpty()) {
                     //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
                     //This is not an error though, it's fine to have empty payload parts (to denote existing but not cached parts)
-                    //qCDebug(AKONADISERVER_LOG) << "item" << id << "has an empty payload part in parttable for part" << partName;
+                    qCDebug(AKONADISERVER_LOG) << "item" << id << "has an empty payload part in parttable for part" << metaPart.name();
                     skipItem = true;
                     break;
                 }
@@ -605,7 +648,7 @@ bool FetchHelper::fetchItems()
             response->setCachedParts(cachedParts);
         }
 
-        mConnection->sendResponse(response);
+        mCollector->addResponse(response);
 
         itemQuery.next();
     }
@@ -651,10 +694,10 @@ bool FetchHelper::needsAccessTimeUpdate(const QVector<QByteArray> &parts)
 
 void FetchHelper::updateItemAccessTime()
 {
-    Transaction transaction(mConnection->storageBackend(), QStringLiteral("update atime"));
+    Transaction transaction(storageBackend(), QStringLiteral("update atime"));
     QueryBuilder qb(PimItem::tableName(), QueryBuilder::Update);
     qb.setColumnValue(PimItem::atimeColumn(), QDateTime::currentDateTimeUtc());
-    ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
+    ItemQueryHelper::scopeToQuery(mScope, mContext, qb);
 
     if (!qb.exec()) {
         qCWarning(AKONADISERVER_LOG) << "Unable to update item access time";
@@ -665,19 +708,18 @@ void FetchHelper::updateItemAccessTime()
 
 void FetchHelper::triggerOnDemandFetch()
 {
-    if (mConnection->context()->collectionId() <= 0 || mFetchScope.cacheOnly()) {
+    if (mContext->collectionId() <= 0 || mFetchScope.cacheOnly()) {
         return;
     }
 
-    Collection collection = mConnection->context()->collection();
+    Collection collection = mContext->collection();
 
     // HACK: don't trigger on-demand syncing if the resource is the one triggering it
     if (mConnection->sessionId() == collection.resource().name().toLatin1()) {
         return;
     }
 
-    DataStore *store = mConnection->storageBackend();
-    store->activeCachePolicy(collection);
+    storageBackend()->activeCachePolicy(collection);
     if (!collection.cachePolicySyncOnDemand()) {
         return;
     }

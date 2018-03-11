@@ -835,7 +835,6 @@
     </enum>
 
     <param name="operation" type="ItemChangeNotification::Operation" default="InvalidOp" />
-    <param name="items" type="QVector&lt;Akonadi::Protocol::ChangeNotification::Item&gt;" />
     <param name="resource" type="QByteArray" />
     <param name="parentCollection" type="qint64" default="-1"/>
     <param name="parentDestCollection" type="qint64" default="-1" />
@@ -847,6 +846,8 @@
     <param name="removedTags" type="QSet&lt;qint64&gt;" />
     <param name="addedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
     <param name="removedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
+
+    <param name="items" type="QVector&lt;Akonadi::Protocol::FetchItemsResponsePtr&gt;" />
   </notification>
 
   <!-- Collection Change Notification //-->

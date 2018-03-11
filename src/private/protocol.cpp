@@ -637,6 +637,15 @@ bool ChangeNotification::operator==(const ChangeNotification &other) const
         // metadata are not compared
 }
 
+QList<qint64> ChangeNotification::itemsToUids(const QVector<FetchItemsResponsePtr> &items)
+{
+    QList<qint64> rv;
+    rv.reserve(items.size());
+    std::transform(items.cbegin(), items.cend(), std::back_inserter(rv),
+                    [](const FetchItemsResponsePtr &item) { return item->id(); });
+    return rv;
+}
+
 bool ChangeNotification::isRemove() const
 {
     switch (type()) {
@@ -759,30 +768,6 @@ QDebug operator<<(QDebug dbg, const ChangeNotification &ntf)
     return dbg.noquote() << static_cast<const Command &>(ntf)
                   << "Session:" << ntf.mSessionId << "\n"
                   << "MetaData:" << ntf.mMetaData << "\n";
-}
-
-
-DataStream &operator>>(DataStream &stream, ChangeNotification::Item &item)
-{
-    return stream >> item.id
-                  >> item.mimeType
-                  >> item.remoteId
-                  >> item.remoteRevision;
-}
-
-DataStream &operator<<(DataStream &stream, const ChangeNotification::Item &item)
-{
-    return stream << item.id
-                  << item.mimeType
-                  << item.remoteId
-                  << item.remoteRevision;
-}
-
-QDebug operator<<(QDebug _dbg, const ChangeNotification::Item &item)
-{
-    QDebug dbg(_dbg.noquote());
-    return dbg << "Item:" << item.id << "(RID:" << item.remoteId
-               << ", RREV:" << item.remoteRevision << ", mimetype: " << item.mimeType;
 }
 
 

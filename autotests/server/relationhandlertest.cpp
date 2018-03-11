@@ -138,9 +138,7 @@ private Q_SLOTS:
             itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification->setResource("testresource");
             itemNotification->setParentCollection(col1.id());
-            itemNotification->setItems({
-                { item1.id(), item1.remoteId(), QString(), item1.mimeType().name() },
-                { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
+            itemNotification->setItems({ initializer->fetchResponse(item1), initializer->fetchResponse(item2) });
             itemNotification->setAddedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
 
             const auto notification = relationNotification(Protocol::RelationChangeNotification::Add, item1, item2, rel.remoteId());
@@ -214,9 +212,7 @@ private Q_SLOTS:
             itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification->setResource("testresource");
             itemNotification->setParentCollection(col1.id());
-            itemNotification->setItems({
-                { item1.id(), item1.remoteId(), QString(), item1.mimeType().name() },
-                { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
+            itemNotification->setItems({ initializer->fetchResponse(item1), initializer->fetchResponse(item2) });
             itemNotification->setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
 
             const auto notification = relationNotification(Protocol::RelationChangeNotification::Remove, item1, item2, rel.remoteId());
@@ -235,9 +231,7 @@ private Q_SLOTS:
             itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification->setResource("testresource");
             itemNotification->setParentCollection(col1.id());
-            itemNotification->setItems({
-                { item1.id(), item1.remoteId(), QString(), item1.mimeType().name() },
-                { item2.id(), item2.remoteId(), QString(), item2.mimeType().name() } });
+            itemNotification->setItems({ initializer->fetchResponse(item1), initializer->fetchResponse(item2) });
             itemNotification->setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type2")) });
 
             const auto notification = relationNotification(Protocol::RelationChangeNotification::Remove, item1, item2, rel.remoteId(), QStringLiteral("type2"));

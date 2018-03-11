@@ -62,6 +62,16 @@ public:
         return resp;
     }
 
+    Protocol::FetchItemsResponsePtr itemResponse(qint64 id, const QString &rid, const QString &rrev, const QString &mimeType)
+    {
+        auto item = Protocol::FetchItemsResponsePtr::create();
+        item->setId(id);
+        item->setRemoteId(rid);
+        item->setRemoteRevision(rrev);
+        item->setMimeType(mimeType);
+        return item;
+    }
+
 private Q_SLOTS:
     void testLink_data()
     {
@@ -79,9 +89,9 @@ private Q_SLOTS:
         auto notification = Protocol::ItemChangeNotificationPtr::create();
         notification->setOperation(Protocol::ItemChangeNotification::Link);
         notification->setItems({
-            { 1, QLatin1String("A"), QString(), QLatin1String("application/octet-stream") },
-            { 2, QLatin1String("B"), QString(), QLatin1String("application/octet-stream") },
-            { 3, QLatin1String("C"), QString(), QLatin1String("application/octet-stream") } });
+            itemResponse(1, QLatin1String("A"), QString(), QLatin1String("application/octet-stream")),
+            itemResponse(2, QLatin1String("B"), QString(), QLatin1String("application/octet-stream")),
+            itemResponse(3, QLatin1String("C"), QString(), QLatin1String("application/octet-stream")) });
         notification->setParentCollection(6);
         notification->setResource("akonadi_fake_resource_with_virtual_collections_0");
         notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
@@ -93,7 +103,7 @@ private Q_SLOTS:
         QTest::newRow("normal") << scenarios << notification << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        notification->setItems({ { 4, QLatin1String("D"), QString(), QLatin1String("application/octet-stream") } });
+        notification->setItems({ itemResponse(4, QLatin1String("D"), QString(), QLatin1String("application/octet-stream")) });
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Link, QVector<qint64>{ 4, 123456 }, 6))
@@ -162,9 +172,9 @@ private Q_SLOTS:
 
         Q_FOREACH (const auto &entity, notification->items()) {
             if (expectFail) {
-                QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity.id));
+                QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity->id()));
             } else {
-                QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity.id));
+                QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity->id()));
             }
         }
     }
@@ -185,9 +195,9 @@ private Q_SLOTS:
         auto notification = Protocol::ItemChangeNotificationPtr::create();
         notification->setOperation(Protocol::ItemChangeNotification::Unlink);
         notification->setItems({
-            { 1, QLatin1String("A"), QString(), QLatin1String("application/octet-stream") },
-            { 2, QLatin1String("B"), QString(), QLatin1String("application/octet-stream") },
-            { 3, QLatin1String("C"), QString(), QLatin1String("application/octet-stream") } });
+            itemResponse(1, QLatin1String("A"), QString(), QLatin1String("application/octet-stream")),
+            itemResponse(2, QLatin1String("B"), QString(), QLatin1String("application/octet-stream")),
+            itemResponse(3, QLatin1String("C"), QString(), QLatin1String("application/octet-stream")) });
         notification->setParentCollection(6);
         notification->setResource("akonadi_fake_resource_with_virtual_collections_0");
         notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
@@ -198,7 +208,7 @@ private Q_SLOTS:
         QTest::newRow("normal") << scenarios << notification << false;
 
         notification = Protocol::ItemChangeNotificationPtr::create(*notification);
-        notification->setItems({ { 4, QLatin1String("D"), QString(), QLatin1String("application/octet-stream") } });
+        notification->setItems({ itemResponse(4, QLatin1String("D"), QString(), QLatin1String("application/octet-stream")) });
         scenarios.clear();
         scenarios << FakeAkonadiServer::loginScenario()
                   << TestScenario::create(5, TestScenario::ClientCmd, Protocol::LinkItemsCommandPtr::create(Protocol::LinkItemsCommand::Unlink, QVector<qint64>{ 4, 2048 }, 6))
@@ -267,9 +277,9 @@ private Q_SLOTS:
 
         Q_FOREACH (const auto &entity, notification->items()) {
             if (expectFail) {
-                QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity.id));
+                QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity->id()));
             } else {
-                QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity.id));
+                QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity->id()));
             }
         }
     }

@@ -22,6 +22,8 @@
 
 #include <QSet>
 
+#include <private/protocol_p.h>
+
 class QByteArray;
 
 namespace Akonadi {
@@ -33,6 +35,9 @@ class AggregatedCollectionFetchScope
 public:
     explicit AggregatedCollectionFetchScope();
     ~AggregatedCollectionFetchScope();
+
+    void apply(const Protocol::CollectionFetchScope &oldScope,
+               const Protocol::CollectionFetchScope &newScope);
 
     QSet<QByteArray> attributes() const;
     void addAttribute(const QByteArray &attribute);
@@ -49,6 +54,61 @@ private:
     Q_DECLARE_PRIVATE(AggregatedCollectionFetchScope)
 };
 
+class AggregatedItemFetchScopePrivate;
+class AggregatedItemFetchScope
+{
+public:
+    explicit AggregatedItemFetchScope();
+    ~AggregatedItemFetchScope();
+
+    void apply(const Protocol::ItemFetchScope &oldScope,
+               const Protocol::ItemFetchScope &newScope);
+    Protocol::ItemFetchScope toFetchScope() const;
+
+    QSet<QByteArray> requestedParts() const;
+    void addRequestedPart(const QByteArray &part);
+    void removeRequestedPart(const QByteArray &part);
+
+    QSet<QByteArray> tagFetchScope() const;
+    void addTag(const QByteArray &tag);
+    void removeTag(const QByteArray &tag);
+
+    Protocol::ItemFetchScope::AncestorDepth ancestorDepth() const;
+    void updateAncestorDepth(Protocol::ItemFetchScope::AncestorDepth oldDepth,
+                             Protocol::ItemFetchScope::AncestorDepth newDepth);
+
+    bool cacheOnly() const;
+    void setCacheOnly(bool cacheOnly);
+    bool fullPayload() const;
+    void setFullPayload(bool fullPayload);
+    bool allAttributes() const;
+    void setAllAttributes(bool allAttributes);
+    bool fetchSize() const;
+    void setFetchSize(bool fetchSize);
+    bool fetchMTime() const;
+    void setFetchMTime(bool fetchMTime);
+    bool fetchRemoteRevision() const;
+    void setFetchRemoteRevision(bool remoteRevision);
+    bool ignoreErrors() const;
+    void setIgnoreErrors(bool ignoreErrors);
+    bool fetchFlags() const;
+    void setFetchFlags(bool fetchFlags);
+    bool fetchRemoteId() const;
+    void setFetchRemoteId(bool fetchRemoteId);
+    bool fetchGID() const;
+    void setFetchGID(bool fetchGid);
+    bool fetchTags() const;
+    void setFetchTags(bool fetchTags);
+    bool fetchRelations() const;
+    void setFetchRelations(bool fetchRelations);
+    bool fetchVirtualReferences() const;
+    void setFetchVirtualReferences(bool fetchVRefs);
+
+private:
+    AggregatedItemFetchScopePrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(AggregatedItemFetchScope)
+};
+
 
 class AggregatedTagFetchScopePrivate;
 class AggregatedTagFetchScope
@@ -56,6 +116,9 @@ class AggregatedTagFetchScope
 public:
     explicit AggregatedTagFetchScope();
     ~AggregatedTagFetchScope();
+
+    void apply(const Protocol::TagFetchScope &oldScope,
+               const Protocol::TagFetchScope &newScope);
 
     QSet<QByteArray> attributes() const;
     void addAttribute(const QByteArray &attribute);
@@ -65,7 +128,7 @@ public:
     void setFetchIdOnly(bool fetchIdOnly);
 
 private:
-    AggregatedCollectionFetchScopePrivate * const d_ptr;
+    AggregatedTagFetchScopePrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedTagFetchScope)
 };
 

@@ -26,6 +26,7 @@
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
+#include "akonadiserver_debug.h"
 
 #include <private/scope_p.h>
 
@@ -93,15 +94,16 @@ bool Link::parseStream()
         }
     }
 
+    if (!transaction.commit()) {
+        return failureResponse(QStringLiteral("Cannot commit transaction."));
+    }
+
     if (!toLink.isEmpty()) {
         store->notificationCollector()->itemsLinked(toLink, collection);
     } else if (!toUnlink.isEmpty()) {
         store->notificationCollector()->itemsUnlinked(toUnlink, collection);
     }
 
-    if (!transaction.commit()) {
-        return failureResponse(QStringLiteral("Cannot commit transaction."));
-    }
 
     return successResponse<Protocol::LinkItemsResponse>();
 }

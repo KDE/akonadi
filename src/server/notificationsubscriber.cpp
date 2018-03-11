@@ -54,6 +54,8 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, qui
     : NotificationSubscriber(manager)
 {
     mSocket = new QLocalSocket(this);
+    connect(mSocket, &QLocalSocket::readyRead,
+            this, &NotificationSubscriber::handleIncomingData);
     connect(mSocket, &QLocalSocket::disconnected,
             this, &NotificationSubscriber::socketDisconnected);
     mSocket->setSocketDescriptor(socketDescriptor);
@@ -257,45 +259,18 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         mExclusive = command.isExclusive();
     }
     if (modifiedParts & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
-        mItemFetchScope = command.itemFetchScope();
+        const auto newScope = command.itemFetchScope();
+        mManager->itemFetchScope()->apply(mItemFetchScope, newScope);
+        mItemFetchScope = newScope;
     }
     if (modifiedParts & Protocol::ModifySubscriptionCommand::CollectionFetchScope) {
         const auto newScope = command.collectionFetchScope();
-        auto cfs = mManager->collectionFetchScope();
-        if (newScope.includeStatistics() != mCollectionFetchScope.includeStatistics()) {
-            cfs->setFetchStatistics(newScope.includeStatistics());
-        }
-        if (newScope.fetchIdOnly() != mCollectionFetchScope.fetchIdOnly()) {
-            cfs->setFetchIdOnly(newScope.fetchIdOnly());
-        }
-        if (newScope.attributes() != mCollectionFetchScope.attributes()) {
-            const auto added = newScope.attributes() - mCollectionFetchScope.attributes();
-            for (const auto &attr : added) {
-                cfs->addAttribute(attr);
-            }
-            const auto removed = mCollectionFetchScope.attributes() - newScope.attributes();
-            for (const auto &attr : removed) {
-                cfs->removeAttribute(attr);
-            }
-        }
+        mManager->collectionFetchScope()->apply(mCollectionFetchScope, newScope);
         mCollectionFetchScope = newScope;
     }
     if (modifiedParts & Protocol::ModifySubscriptionCommand::TagFetchScope) {
         const auto newScope = command.tagFetchScope();
-        auto tfs = mManager->tagFetchScope();
-        if (newScope.fetchIdOnly() != mTagFetchScope.fetchIdOnly()) {
-            tfs->setFetchIdOnly(newScope.fetchIdOnly());
-        }
-        if (newScope.attributes() != mTagFetchScope.attributes()) {
-            const auto added = newScope.attributes() - mTagFetchScope.attributes();
-            for (const auto &attr : added) {
-                tfs->addAttribute(attr);
-            }
-            const auto removed = mTagFetchScope.attributes() - newScope.attributes();
-            for (const auto &attr : removed) {
-                tfs->removeAttribute(attr);
-            }
-        }
+        mManager->tagFetchScope()->apply(mTagFetchScope, newScope);
         mTagFetchScope = newScope;
     }
 
@@ -430,8 +405,8 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
                              || notificationForParentResource;
         TRACE_NTF("ACCEPTS ITEM: parent col referenced"
                   << "exclusive:" << mExclusive << ","
-                  << "parent monitored:" << isCollectionMonitored(notification.parentCollection()) << ","
-                  << "destination monitored:" << isMoveDestinationResourceMonitored(notification) << ","
+                  << "parent monitored:" << isCollectionMonitored(msg.parentCollection()) << ","
+                  << "destination monitored:" << isMoveDestinationResourceMonitored(msg) << ","
                   << "ntf for parent resource:" << notificationForParentResource << ":"
                   << "ACCEPTED:" << accepts);
         return accepts;
@@ -460,7 +435,7 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
         }
 
         Q_FOREACH (const auto &item, msg.items()) {
-            if (isMimeTypeMonitored(item.mimeType)) {
+            if (isMimeTypeMonitored(item->mimeType())) {
                 TRACE_NTF("ACCEPTS ITEM: ACCEPTED - mimetype monitored");
                 return true;
             }
@@ -472,7 +447,7 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
 
     // we explicitly monitor that item or the collections it's in
     Q_FOREACH (const auto &item, msg.items()) {
-        if (mMonitoredItems.contains(item.id)) {
+        if (mMonitoredItems.contains(item->id())) {
             TRACE_NTF("ACCEPTS ITEM: ACCEPTED: item explicitly monitored");
             return true;
         }
@@ -701,6 +676,19 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
     }
 }
 
+Protocol::CollectionChangeNotificationPtr NotificationSubscriber::customizeCollection(const Protocol::CollectionChangeNotificationPtr &ntf)
+{
+    const bool isReferencedFromSession = CollectionReferenceManager::instance()->isReferenced(ntf->collection()->id(), mSession);
+    if (isReferencedFromSession != ntf->collection()->referenced()) {
+        auto copy = Protocol::CollectionChangeNotificationPtr::create(*ntf);
+        copy->setCollection(Protocol::FetchCollectionsResponsePtr::create(*ntf->collection()));
+        copy->collection()->setReferenced(isReferencedFromSession);
+        return copy;
+    }
+
+    return ntf;
+}
+
 bool NotificationSubscriber::notify(const Protocol::ChangeNotificationPtr &notification)
 {
     // Guard against this object being deleted while we are waiting for the lock
@@ -711,8 +699,12 @@ bool NotificationSubscriber::notify(const Protocol::ChangeNotificationPtr &notif
     }
 
     if (acceptsNotification(*notification)) {
+        auto ntf = notification;
+        if (ntf->type() == Protocol::Command::CollectionChangeNotification) {
+            ntf = customizeCollection(notification.staticCast<Protocol::CollectionChangeNotification>());
+        }
         QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
-                                  Q_ARG(Akonadi::Protocol::ChangeNotificationPtr, notification));
+                                  Q_ARG(Akonadi::Protocol::ChangeNotificationPtr, ntf));
         return true;
     }
     return false;

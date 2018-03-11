@@ -668,7 +668,6 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
     item.setSize(data.size());
     item.setModificationTime(data.mTime());
     parseAncestorsCached(data.ancestors(), &item, data.parentId(), valuePool);
-
     Q_FOREACH (const Protocol::StreamPayloadResponse &part, data.parts()) {
         ProtocolHelper::PartNamespace ns;
         const QByteArray plainKey = decodePartIdentifier(part.payloadName(), ns);
@@ -677,6 +676,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         case ProtocolHelper::PartPayload:
             ItemSerializer::deserialize(item, plainKey, part.data(), metaData.version(),
                                         static_cast<ItemSerializer::PayloadStorage>(metaData.storageType()));
+            qCDebug(AKONADICORE_LOG) << item.id() << plainKey << item.payloadData() << item.payload<QByteArray>();
             if (metaData.storageType() == Protocol::PartMetaData::Foreign) {
                 item.d_ptr->mPayloadPath = QString::fromUtf8(part.data());
             }

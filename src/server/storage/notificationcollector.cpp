@@ -27,10 +27,38 @@
 #include "search/searchmanager.h"
 #include "akonadi.h"
 #include "handler/search.h"
+#include "notificationmanager.h"
+#include "aggregatedfetchscope.h"
+#include "selectquerybuilder.h"
+#include "handler/fetchhelper.h"
 
+#include "akonadiserver_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+
+
+namespace {
+
+class ItemCollector : public FetchHelper::ResponseCollectorInterface
+{
+public:
+    void addResponse(const Protocol::CommandPtr &response) override
+    {
+        mItems.push_back(response.staticCast<Protocol::FetchItemsResponse>());
+    }
+
+    QVector<Protocol::FetchItemsResponsePtr> items() const
+    {
+        return mItems;
+    }
+
+private:
+    QVector<Protocol::FetchItemsResponsePtr> mItems;
+};
+
+}
+
 
 NotificationCollector::NotificationCollector(QObject *parent)
     : QObject(parent)
@@ -317,14 +345,28 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
 
     msg->setParentDestCollection(collectionDest.id());
 
+    QVector<Protocol::FetchItemsResponsePtr> ntfItems;
+    Q_FOREACH (const PimItem &item, items) {
+        auto i = Protocol::FetchItemsResponsePtr::create();
+        i->setId(item.id());
+        i->setRemoteId(item.remoteId());
+        i->setRemoteRevision(item.remoteRevision());
+        i->setMimeType(item.mimeType().name());
+        ntfItems.push_back(i);
+    }
+
     /* Notify all virtual collections the items are linked to. */
+    QHash<qint64, Protocol::FetchItemsResponsePtr> virtItems;
+    for (const auto &ntfItem : ntfItems) {
+        virtItems.insert(ntfItem->id(), ntfItem);
+    }
     auto iter = vCollections.constBegin(), endIter = vCollections.constEnd();
     for (; iter != endIter; ++iter) {
         auto copy = Protocol::ItemChangeNotificationPtr::create(*msg);
-        QVector<Protocol::ChangeNotification::Item> items;
-        items.reserve(iter.value().size());
-        Q_FOREACH (const PimItem &item, iter.value()) {
-            items.push_back({ item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() });
+        QVector<Protocol::FetchItemsResponsePtr> items;
+        items.reserve(iter->size());
+        for (const auto &item : qAsConst(*iter)) {
+            items.append(virtItems.value(item.id()));
         }
         copy->setItems(items);
         copy->setParentCollection(iter.key());
@@ -334,11 +376,6 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
         dispatchNotification(copy);
     }
 
-    QVector<Protocol::ChangeNotification::Item> ntfItems;
-    ntfItems.reserve(items.size());
-    Q_FOREACH (const PimItem &item, items) {
-        ntfItems.push_back({ item.id(), item.remoteId(), item.remoteRevision(), item.mimeType().name() });
-    }
     msg->setItems(ntfItems);
 
     Collection col;
@@ -379,11 +416,58 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
     msg->setOperation(op);
     msg->setSessionId(mSessionId);
-    msg->setCollection(HandlerHelper::fetchCollectionsResponse(collection));
     msg->setParentCollection(source);
     msg->setParentDestCollection(destination);
     msg->setDestinationResource(destResource);
     msg->setChangedParts(changes);
+
+    auto msgCollection = HandlerHelper::fetchCollectionsResponse(collection);
+    if (auto mgr = AkonadiServer::instance()->notificationManager()) {
+        auto fetchScope = mgr->collectionFetchScope();
+        // Make sure we have all the data
+        if (!fetchScope->fetchIdOnly() && msgCollection->name().isEmpty()) {
+            const auto col = Collection::retrieveById(msgCollection->id());
+            const auto mts = col.mimeTypes();
+            QStringList mimeTypes;
+            mimeTypes.reserve(mts.size());
+            for (const auto &mt : mts) {
+                mimeTypes.push_back(mt.name());
+            }
+            msgCollection = HandlerHelper::fetchCollectionsResponse(col, {}, false, 0, {}, {}, false, mimeTypes);
+        }
+        // Get up-to-date statistics
+        if (fetchScope->fetchStatistics()) {
+            Collection col;
+            col.setId(msgCollection->id());
+            const auto stats = CollectionStatistics::self()->statistics(col);
+            msgCollection->setStatistics(Protocol::FetchCollectionStatsResponse(stats.count, stats.count - stats.read, stats.size));
+        }
+        // Get attributes
+        const auto requestedAttrs = fetchScope->attributes();
+        auto msgColAttrs = msgCollection->attributes();
+        // TODO: This assumes that we have either none or all attributes in msgCollection
+        if (msgColAttrs.isEmpty() && !requestedAttrs.isEmpty()) {
+            SelectQueryBuilder<CollectionAttribute> qb;
+            qb.addColumn(CollectionAttribute::typeFullColumnName());
+            qb.addColumn(CollectionAttribute::valueFullColumnName());
+            qb.addValueCondition(CollectionAttribute::collectionIdFullColumnName(),
+                                    Query::Equals, msgCollection->id());
+            Query::Condition cond(Query::Or);
+            for (const auto &attr : requestedAttrs) {
+                cond.addValueCondition(CollectionAttribute::typeFullColumnName(), Query::Equals, attr);
+            }
+            qb.addCondition(cond);
+            if (!qb.exec()) {
+                qCWarning(AKONADISERVER_LOG) << "Failed to obtain collection attributes!";
+            }
+            const auto attrs = qb.result();
+            for (const auto &attr : attrs)  {
+                msgColAttrs.insert(attr.type(), attr.value());
+            }
+            msgCollection->setAttributes(msgColAttrs);
+        }
+    }
+    msg->setCollection(msgCollection);
 
     if (!collection.enabled()) {
         msg->addMetadata("DISABLED");
@@ -407,8 +491,37 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
     msg->setOperation(op);
     msg->setSessionId(mSessionId);
     msg->setResource(resource);
-    msg->setTag(HandlerHelper::fetchTagsResponse(tag, false));
-    msg->tag()->setRemoteId(remoteId.toLatin1());
+    auto msgTag = HandlerHelper::fetchTagsResponse(tag, false);
+    msgTag->setRemoteId(remoteId.toUtf8());
+    if (auto mgr = AkonadiServer::instance()->notificationManager()) {
+        auto fetchScope = mgr->tagFetchScope();
+        if (!fetchScope->fetchIdOnly() && msgTag->gid().isEmpty()) {
+            msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag->id()), false);
+        }
+
+        const auto requestedAttrs = fetchScope->attributes();
+        auto msgTagAttrs = msgTag->attributes();
+        if (msgTagAttrs.isEmpty() && !requestedAttrs.isEmpty()) {
+            SelectQueryBuilder<TagAttribute> qb;
+            qb.addColumn(TagAttribute::typeFullColumnName());
+            qb.addColumn(TagAttribute::valueFullColumnName());
+            qb.addValueCondition(TagAttribute::tagIdFullColumnName(), Query::Equals, msgTag->id());
+            Query::Condition cond(Query::Or);
+            for (const auto &attr : requestedAttrs) {
+                cond.addValueCondition(TagAttribute::typeFullColumnName(), Query::Equals, attr);
+            }
+            qb.addCondition(cond);
+            if (!qb.exec()) {
+                qCWarning(AKONADISERVER_LOG) << "Failed to obtain tag attributes!";
+            }
+            const auto attrs = qb.result();
+            for (const auto &attr : attrs) {
+                msgTagAttrs.insert(attr.type(), attr.value());
+            }
+            msgTag->setAttributes(msgTagAttrs);
+        }
+    }
+    msg->setTag(msgTag);
 
     dispatchNotification(msg);
 }
@@ -424,6 +537,46 @@ void NotificationCollector::relationNotification(Protocol::RelationChangeNotific
     dispatchNotification(msg);
 }
 
+void NotificationCollector::completeNotification(const Protocol::ChangeNotificationPtr &changeMsg)
+{
+    if (changeMsg->type() == Protocol::Command::ItemChangeNotification) {
+        const auto msg = changeMsg.staticCast<Protocol::ItemChangeNotification>();
+        const auto mgr = AkonadiServer::instance()->notificationManager();
+        if (mgr && msg->operation() != Protocol::ItemChangeNotification::Remove) {
+            if (mDb->inTransaction()) {
+                qCWarning(AKONADISERVER_LOG) << "FetchHelper requested from within a transaction, aborting, since this would deadlock!";
+                return;
+            }
+            auto fetchScope = mgr->itemFetchScope();
+            // NOTE: Checking and retrieving missing elements for each Item manually
+            // here would require a complex code (and I'm too lazy), so instead we simply
+            // feed the Items to FetchHelper and retrieve them all with the setup from
+            // the aggregated fetch scope. The worst case is that we re-fetch everything
+            // we already have, but that's stil better than the pre-ntf-payload situation
+            QVector<qint64> ids;
+            const auto items = msg->items();
+            ids.reserve(items.size());
+            for (const auto &item : items) {
+                ids.push_back(item->id());
+            }
+            // Prevent transactions inside FetchHelper to recursively call our slot
+            disconnect(mDb, &DataStore::transactionCommitted, this, &NotificationCollector::transactionCommitted);
+            disconnect(mDb, &DataStore::transactionRolledBack, this, &NotificationCollector::transactionRolledBack);
+            ItemCollector collector;
+            CommandContext context;
+            auto scope = fetchScope->toFetchScope();
+            FetchHelper helper(&collector, Connection::self(), &context, Scope(ids), scope);
+            if (helper.fetchItems()) {
+                msg->setItems(collector.items());
+            } else {
+                qCWarning(AKONADISERVER_LOG) << "Failed to retrieve Items for notification!";
+            }
+            connect(mDb, &DataStore::transactionCommitted, this, &NotificationCollector::transactionCommitted);
+            connect(mDb, &DataStore::transactionRolledBack, this, &NotificationCollector::transactionRolledBack);
+        }
+    }
+}
+
 void NotificationCollector::dispatchNotification(const Protocol::ChangeNotificationPtr &msg)
 {
     if (!mDb || mDb->inTransaction()) {
@@ -433,6 +586,7 @@ void NotificationCollector::dispatchNotification(const Protocol::ChangeNotificat
             mNotifications.append(msg);
         }
     } else {
+        completeNotification(msg);
         Q_EMIT notify({ msg });
     }
 }
@@ -440,6 +594,9 @@ void NotificationCollector::dispatchNotification(const Protocol::ChangeNotificat
 void NotificationCollector::dispatchNotifications()
 {
     if (!mNotifications.isEmpty()) {
+        for (auto &ntf : mNotifications) {
+            completeNotification(ntf);
+        }
         Q_EMIT notify(mNotifications);
         clear();
     }

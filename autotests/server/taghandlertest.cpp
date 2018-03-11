@@ -351,7 +351,7 @@ private Q_SLOTS:
             auto itemUntaggedNtf = Protocol::ItemChangeNotificationPtr::create();
             itemUntaggedNtf->setOperation(Protocol::ItemChangeNotification::ModifyTags);
             itemUntaggedNtf->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-            itemUntaggedNtf->setItems({ { pimItem.id(), pimItem.remoteId(), QString(), pimItem.mimeType().name() } });
+            itemUntaggedNtf->setItems({ initializer->fetchResponse(pimItem) });
             itemUntaggedNtf->setResource(res2.name().toLatin1());
             itemUntaggedNtf->setParentCollection(col.id());
             itemUntaggedNtf->setRemovedTags(QSet<qint64>() << tag.id());

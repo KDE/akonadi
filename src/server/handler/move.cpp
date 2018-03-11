@@ -28,6 +28,7 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
+#include "akonadiserver_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

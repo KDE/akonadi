@@ -457,9 +457,11 @@ private:
 } // namespace Protocol
 } // namespace akonadi
 
-
 namespace Akonadi {
 namespace Protocol {
+
+class FetchItemsResponse;
+typedef QSharedPointer<FetchItemsResponse> FetchItemsResponsePtr;
 
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
                                 Akonadi::Protocol::DataStream &stream,
@@ -475,41 +477,7 @@ using ChangeNotificationList = QVector<ChangeNotificationPtr>;
 class AKONADIPRIVATE_EXPORT ChangeNotification : public Command
 {
 public:
-    class Item
-    {
-    public:
-        inline Item()
-            : id(-1)
-        {}
-
-        inline Item(qint64 id, const QString &remoteId, const QString &remoteRevision, const QString &mimeType)
-            : id(id)
-            , remoteId(remoteId)
-            , remoteRevision(remoteRevision)
-            , mimeType(mimeType)
-        {}
-
-        inline bool operator==(const Item &other) const
-        {
-            return id == other.id
-                   && remoteId == other.remoteId
-                   && remoteRevision == other.remoteRevision
-                   && mimeType == other.mimeType;
-        }
-
-        qint64 id;
-        QString remoteId;
-        QString remoteRevision;
-        QString mimeType;
-    };
-
-    inline static QList<qint64> itemsToUids(const QVector<Item> &items) {
-        QList<qint64> rv;
-        rv.reserve(items.size());
-        std::transform(items.cbegin(), items.cend(), std::back_inserter(rv),
-                       [](const Item &item) { return item.id; });
-        return rv;
-    }
+    static QList<qint64> itemsToUids(const QVector<Akonadi::Protocol::FetchItemsResponsePtr> &items);
 
     class Relation
     {
@@ -582,11 +550,6 @@ inline uint qHash(const ChangeNotification::Relation &rel)
 
 
 // TODO: Internalize?
-AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
-                                Akonadi::Protocol::DataStream &stream,
-                                 const Akonadi::Protocol::ChangeNotification::Item &item);
-AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
-                                Akonadi::Protocol::DataStream &stream, Akonadi::Protocol::ChangeNotification::Item &item);
 AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(
                                 Akonadi::Protocol::DataStream &stream,
                                 const Akonadi::Protocol::ChangeNotification::Relation &relation);

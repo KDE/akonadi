@@ -37,6 +37,7 @@ public:
                                                                 bool ancestors = false,
                                                                 bool mimetypes = true,
                                                                 const QStringList &ancestorFetchScope = QStringList());
+    Akonadi::Protocol::FetchItemsResponsePtr fetchResponse(const Akonadi::Server::PimItem &item);
     Akonadi::Server::Collection collection(const char *name);
 
     void cleanup();

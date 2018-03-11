@@ -76,7 +76,12 @@ public:
 
     void updateNotifcationEntity(Protocol::ItemChangeNotificationPtr &ntf, const PimItem &pimItem)
     {
-        ntf->setItems({ { pimItem.id(), pimItem.remoteId(), pimItem.remoteRevision(), pimItem.mimeType().name() } });
+        auto item = Protocol::FetchItemsResponsePtr::create();
+        item->setId(pimItem.id());
+        item->setRemoteId(pimItem.remoteId());
+        item->setRemoteRevision(pimItem.remoteRevision());
+        item->setMimeType(pimItem.mimeType().name());
+        ntf->setItems({ item });
     }
 
     struct PartHelper
@@ -236,7 +241,12 @@ private Q_SLOTS:
         notification->setOperation(Protocol::ItemChangeNotification::Add);
         notification->setParentCollection(4);
         notification->setResource("akonadi_fake_resource_0");
-        notification->setItems({ { -1, QLatin1String("TEST-1"), QLatin1String("1"), QLatin1String("application/octet-stream") } });
+        auto item = Protocol::FetchItemsResponsePtr::create();
+        item->setId(-1);
+        item->setRemoteId(QStringLiteral("TEST-1"));
+        item->setRemoteRevision(QStringLiteral("1"));
+        item->setMimeType(QStringLiteral("application/octet-stream"));
+        notification->setItems({ item });
         notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
         uidnext = 13;
         scenarios << FakeAkonadiServer::loginScenario()

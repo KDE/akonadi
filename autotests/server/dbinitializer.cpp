@@ -179,6 +179,28 @@ Akonadi::Protocol::FetchCollectionsResponsePtr DbInitializer::listResponse(const
     return resp;
 }
 
+Akonadi::Protocol::FetchItemsResponsePtr DbInitializer::fetchResponse(const PimItem &item)
+{
+    auto resp = Akonadi::Protocol::FetchItemsResponsePtr::create();
+    resp->setId(item.id());
+    resp->setRevision(item.rev());
+    resp->setMimeType(item.mimeType().name());
+    resp->setRemoteId(item.remoteId());
+    resp->setParentId(item.collectionId());
+    resp->setSize(item.size());
+    resp->setMTime(item.datetime());
+    resp->setRemoteRevision(item.remoteRevision());
+    resp->setGid(item.gid());
+    const auto flags = item.flags();
+    QVector<QByteArray> flagNames;
+    for (const auto &flag : flags) {
+        flagNames.push_back(flag.name().toUtf8());
+    }
+    resp->setFlags(flagNames);
+
+    return resp;
+}
+
 Collection DbInitializer::collection(const char *name)
 {
     return Collection::retrieveByName(QLatin1String(name));

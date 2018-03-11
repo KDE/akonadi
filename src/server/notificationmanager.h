@@ -39,6 +39,7 @@ namespace Server
 class NotificationCollector;
 class NotificationSubscriber;
 class AggregatedCollectionFetchScope;
+class AggregatedItemFetchScope;
 class AggregatedTagFetchScope;
 
 class NotificationManager : public AkThread
@@ -53,6 +54,7 @@ public:
     void forgetSubscriber(NotificationSubscriber *subscriber);
 
     AggregatedCollectionFetchScope *collectionFetchScope() const { return mCollectionFetchScope; }
+    AggregatedItemFetchScope *itemFetchScope() const { return mItemFetchScope; }
     AggregatedTagFetchScope *tagFetchScope() const { return mTagFetchScope; }
 
 public Q_SLOTS:
@@ -62,7 +64,6 @@ public Q_SLOTS:
 
 private Q_SLOTS:
     void slotNotify(const Akonadi::Protocol::ChangeNotificationList &msgs);
-    void waitForSocketData();
 
 protected:
     void init() override;
@@ -78,8 +79,9 @@ private:
     QThreadPool *mNotifyThreadPool = nullptr;
     QVector<QPointer<NotificationSubscriber>> mSubscribers;
     int mDebugNotifications;
-    AggregatedCollectionFetchScope *mCollectionFetchScope;
-    AggregatedTagFetchScope *mTagFetchScope;
+    AggregatedCollectionFetchScope *mCollectionFetchScope = nullptr;
+    AggregatedItemFetchScope *mItemFetchScope = nullptr;
+    AggregatedTagFetchScope *mTagFetchScope = nullptr;
 
     QEventLoop *mEventLoop = nullptr;
     bool mWaiting = false;

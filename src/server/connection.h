@@ -56,6 +56,8 @@ public:
     explicit Connection(quintptr socketDescriptor, QObject *parent = nullptr);
     ~Connection() override;
 
+    static Connection *self();
+
     virtual DataStore *storageBackend();
 
     CollectionReferenceManager *collectionReferenceManager();

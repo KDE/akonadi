@@ -219,9 +219,9 @@ NotificationCollector *DataStore::notificationCollector()
 {
     if (mNotificationCollector == nullptr) {
         mNotificationCollector = new NotificationCollector(this);
-        NotificationManager *notificationManager = AkonadiServer::instance()->notificationManager();
+        auto notificationManager = AkonadiServer::instance()->notificationManager();
         if (notificationManager) {
-            notificationManager->connectNotificationCollector(notificationCollector());
+            notificationManager->connectNotificationCollector(mNotificationCollector);
         }
     }
 
@@ -1458,13 +1458,14 @@ bool DataStore::commitTransaction()
             return false;
         } else {
             TRANSACTION_MUTEX_UNLOCK;
+            m_transactionLevel--;
             Q_EMIT transactionCommitted();
         }
 
         m_transactionQueries.clear();
+    } else {
+        m_transactionLevel--;
     }
-
-    m_transactionLevel--;
     return true;
 }
 

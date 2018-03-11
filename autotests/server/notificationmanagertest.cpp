@@ -104,6 +104,17 @@ class NotificationManagerTest : public QObject
 
     typedef QList<NotificationSubscriber *> NSList;
 
+
+    Protocol::FetchItemsResponsePtr itemResponse(qint64 id, const QString &rid, const QString &rrev, const QString &mt)
+    {
+        auto item = Protocol::FetchItemsResponsePtr::create();
+        item->setId(id);
+        item->setRemoteId(rid);
+        item->setRemoteRevision(rrev);
+        item->setMimeType(mt);
+        return item;
+    }
+
 private Q_SLOTS:
     void testSourceFilter_data()
     {
@@ -135,7 +146,7 @@ private Q_SLOTS:
                 << false;
 
         itemMsg = Protocol::ItemChangeNotificationPtr::create(*itemMsg);
-        itemMsg->setItems({ { 1, QString(), QString(), QStringLiteral("message/rfc822") } });
+        itemMsg->setItems({ itemResponse(1, QString(), QString(), QStringLiteral("message/rfc822")) });
         QTest::newRow("monitorAll vs notification with one item")
                 << true
                 << EmptyList(Entity::Id)
@@ -205,7 +216,7 @@ private Q_SLOTS:
         itemMsg->setParentCollection(1);
         itemMsg->setParentDestCollection(2);
         itemMsg->setSessionId("kmail");
-        itemMsg->setItems({ { 10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822") } });
+        itemMsg->setItems({ itemResponse(10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822")) });
         QTest::newRow("inter-resource move, source source")
                 << false
                 << EmptyList(Entity::Id)
@@ -244,8 +255,8 @@ private Q_SLOTS:
         itemMsg->setParentDestCollection(2);
         itemMsg->setSessionId("kmail");
         itemMsg->setItems({
-            { 10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822") },
-            { 11, QStringLiteral("456"), QStringLiteral("1"), QStringLiteral("message/rfc822") } });
+            itemResponse(10, QStringLiteral("123"), QStringLiteral("1"), QStringLiteral("message/rfc822")),
+            itemResponse(11, QStringLiteral("456"), QStringLiteral("1"), QStringLiteral("message/rfc822")) });
         QTest::newRow("intra-resource move, owning resource")
                 << false
                 << EmptyList(Entity::Id)
@@ -276,7 +287,7 @@ private Q_SLOTS:
         itemMsg->setSessionId("randomSession");
         itemMsg->setResource("randomResource");
         itemMsg->setParentCollection(1);
-        itemMsg->setItems({ { 10, QString(), QString(), QStringLiteral("message/rfc822") } });
+        itemMsg->setItems({ itemResponse(10, QString(), QString(), QStringLiteral("message/rfc822")) });
         QTest::newRow("new mail for mailfilter or maildispatcher")
                 << false
                 << List(Entity::Id, 0)

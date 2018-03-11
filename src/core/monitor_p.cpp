@@ -333,9 +333,9 @@ Protocol::ChangeNotificationList MonitorPrivate::splitMessage(const Protocol::It
 
     const auto items = msg.items();
     list.reserve(items.count());
-    for (const Protocol::ItemChangeNotification::Item &item : items) {
+    for (const auto &item : items) {
         auto copy = Protocol::ItemChangeNotificationPtr::create(baseMsg);
-        copy->setItems({ { item.id, item.remoteId, item.remoteRevision, item.mimeType } });
+        copy->setItems({ Protocol::FetchItemsResponsePtr::create(*item) });
         list << copy;
     }
 
@@ -354,13 +354,11 @@ bool MonitorPrivate::fetchItems() const
 
 bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &msg)
 {
-    bool allCached = true;
-
     if (msg->type() == Protocol::Command::TagChangeNotification) {
         const auto tagMsg = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
         if (tagMsg.metadata().contains("FETCH_TAG")) {
             if (!tagCache->ensureCached({ tagMsg.tag()->id() }, mTagFetchScope)) {
-                allCached = false;
+                return false;
             }
         }
         return true;
@@ -386,6 +384,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
         return parentCollection <= -1 || collectionCache->ensureCached(parentCollection, mCollectionFetchScope);
     }
 
+    bool allCached = true;
     if (fetchCollections()) {
         const qint64 parentCollection = (msg->type() == Protocol::Command::ItemChangeNotification) ?
                                         Protocol::cmdCast<Protocol::ItemChangeNotification>(msg).parentCollection() :
@@ -416,55 +415,73 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
     }
 
     if (msg->type() == Protocol::Command::ItemChangeNotification && fetchItems()) {
-        ItemFetchScope scope(mItemFetchScope);
         const auto &itemNtf = Protocol::cmdCast<Protocol::ItemChangeNotification>(msg);
         if (mFetchChangedOnly && (itemNtf.operation() == Protocol::ItemChangeNotification::Modify
-            || itemNtf.operation() == Protocol::ItemChangeNotification::ModifyFlags)) {
-            bool fullPayloadWasRequested = scope.fullPayload();
-            scope.fetchFullPayload(false);
-            const QSet<QByteArray> requestedPayloadParts = scope.payloadParts();
-            for (const QByteArray &part : requestedPayloadParts) {
-                scope.fetchPayloadPart(part, false);
-            }
+                || itemNtf.operation() == Protocol::ItemChangeNotification::ModifyFlags)) {
 
-            bool allAttributesWereRequested = scope.allAttributes();
-            const QSet<QByteArray> requestedAttrParts = scope.attributes();
-            for (const QByteArray &part : requestedAttrParts) {
-                scope.fetchAttribute(part, false);
-            }
-
-            const QSet<QByteArray> changedParts = itemNtf.itemParts();
+            const auto changedParts = itemNtf.itemParts();
+            const auto requestedParts = mItemFetchScope.payloadParts();
+            const auto requestedAttrs = mItemFetchScope.attributes();
+            QSet<QByteArray> missingParts, missingAttributes;
             for (const QByteArray &part : changedParts)  {
+                const auto partName = part.mid(4);
                 if (part.startsWith("PLD:") &&    //krazy:exclude=strings since QByteArray
-                        (fullPayloadWasRequested || requestedPayloadParts.contains(part))) {
-                    scope.fetchPayloadPart(part.mid(4), true);
-                }
-                if (part.startsWith("ATR:") &&    //krazy:exclude=strings since QByteArray
-                        (allAttributesWereRequested || requestedAttrParts.contains(part))) {
-                    scope.fetchAttribute(part.mid(4), true);
+                        (!mItemFetchScope.fullPayload() || !requestedParts.contains(partName))) {
+                    missingParts.insert(partName);
+                } else if (part.startsWith("ATR:") &&    //krazy:exclude=strings since QByteArray
+                        (!mItemFetchScope.allAttributes() || !requestedAttrs.contains(partName))) {
+                    missingAttributes.insert(partName);
                 }
             }
-        }
 
-        if (!itemCache->ensureCached(Protocol::ChangeNotification::itemsToUids(itemNtf.items()), scope)) {
-            allCached = false;
+            if (!missingParts.isEmpty() || !missingAttributes.isEmpty()) {
+                ItemFetchScope scope(mItemFetchScope);
+                scope.fetchFullPayload(false);
+                for (const auto &part : requestedParts) {
+                    scope.fetchPayloadPart(part, false);
+                }
+                for (const auto &attr : requestedAttrs) {
+                    scope.fetchAttribute(attr, false);
+                }
+                for (const auto &part : missingParts) {
+                    scope.fetchPayloadPart(part, true);
+                }
+                for (const auto &attr : missingAttributes) {
+                    scope.fetchAttribute(attr, true);
+                }
 
+                if (!itemCache->ensureCached(Protocol::ChangeNotification::itemsToUids(itemNtf.items()), scope)) {
+                    return false;
+                }
+            }
+
+            return allCached;
         }
 
         // Make sure all tags for ModifyTags operation are in cache too
         if (itemNtf.operation() == Protocol::ItemChangeNotification::ModifyTags) {
             if (!tagCache->ensureCached((itemNtf.addedTags() + itemNtf.removedTags()).toList(), mTagFetchScope)) {
-                allCached = false;
+                return false;
             }
         }
+
+        if (itemNtf.metadata().contains("FETCH_ITEM")) {
+            if (!itemCache->ensureCached(Protocol::ChangeNotification::itemsToUids(itemNtf.items()), mItemFetchScope)) {
+                return false;
+            }
+        }
+
+        return allCached;
 
     } else if (msg->type() == Protocol::Command::CollectionChangeNotification && fetchCollections()) {
         const auto &colMsg = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);
         if (colMsg.metadata().contains("FETCH_COLLECTION")) {
             if (!collectionCache->ensureCached(colMsg.collection()->id(), mCollectionFetchScope)) {
-                allCached = false;
+                return false;
             }
         }
+
+        return allCached;
     }
 
     return allCached;
@@ -496,8 +513,8 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
             destParent = collectionCache->retrieve(colNtf.parentDestCollection());
         }
 
-        //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
         const bool fetched = colNtf.metadata().contains("FETCH_COLLECTION");
+        //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
         const Collection col = fetched ? collectionCache->retrieve(colNtf.collection()->id()) : ProtocolHelper::parseCollection(*colNtf.collection(), true);
         //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
         //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
@@ -511,8 +528,18 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         if (itemNtf.operation() == Protocol::ItemChangeNotification::Move) {
             destParent = collectionCache->retrieve(itemNtf.parentDestCollection());
         }
+        const bool fetched = itemNtf.metadata().contains("FETCH_ITEM");
         //For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
-        const Item::List items = itemCache->retrieve(Protocol::ChangeNotification::itemsToUids(itemNtf.items()));
+        Item::List items;
+        if (fetched) {
+            items = itemCache->retrieve(Protocol::ChangeNotification::itemsToUids(itemNtf.items()));
+        } else {
+            const auto ntfItems = itemNtf.items();
+            items.reserve(ntfItems.size());
+            for (const auto &ntfItem : ntfItems) {
+                items.push_back(ProtocolHelper::parseItemFetchResult(*ntfItem));
+            }
+        }
         //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
         //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
         if (!items.isEmpty() || itemNtf.operation() == Protocol::ItemChangeNotification::Remove || !fetchItems()) {
@@ -822,6 +849,8 @@ void MonitorPrivate::handleCommands()
 
         lock.relock();
     }
+    notify.unblock();
+    lock.unlock();
 }
 
 /*
@@ -944,7 +973,8 @@ void MonitorPrivate::dispatchNotifications()
     // Note that this code is not used in a ChangeRecorder (pipelineSize==0)
     while (pipeline.size() < pipelineSize() && !pendingNotifications.isEmpty()) {
         const auto msg = pendingNotifications.dequeue();
-        if (ensureDataAvailable(msg) && pipeline.isEmpty()) {
+        const bool avail = ensureDataAvailable(msg);
+        if (avail && pipeline.isEmpty()) {
             emitNotification(msg);
         } else {
             pipeline.enqueue(msg);
@@ -998,78 +1028,35 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
         removedTags = tagCache->retrieve(msg.removedTags().toList());
     }
 
-    auto msgItems = msg.items();
     Item::List its = items;
-    QMutableVectorIterator<Item> iter(its);
-    while (iter.hasNext()) {
-        Item it = iter.next();
-        if (it.isValid()) {
-            const auto msgItem = std::find_if(msgItems.begin(), msgItems.end(),
-                                              [&it](const Protocol::ChangeNotification::Item &i) {
-                                                 return i.id == it.id();
-                                              });
-            if (msg.operation() == Protocol::ItemChangeNotification::Remove) {
-                it.setRemoteId(msgItem->remoteId);
-                it.setRemoteRevision(msgItem->remoteRevision);
-                it.setMimeType(msgItem->mimeType);
-            } else if (msg.operation() == Protocol::ItemChangeNotification::Move) {
-                // For moves we remove the RID from the PimItemTable to prevent
-                // RID conflict during merge (see T3904 in Phab), so restore the
-                // RID from notification.
-                // TODO: Should we do this for all items with empty RID? Right now
-                // I only know about this usecase.
-                it.setRemoteId(msgItem->remoteId);
-            }
-
-            if (!it.parentCollection().isValid()) {
-                if (msg.operation() == Protocol::ItemChangeNotification::Move) {
-                    it.setParentCollection(colDest);
-                } else {
-                    it.setParentCollection(col);
-                }
+    for (auto it = its.begin(), end = its.end(); it != end; ++it) {
+        if (!it->parentCollection().isValid()) {
+            if (msg.operation() == Protocol::ItemChangeNotification::Move) {
+                it->setParentCollection(colDest);
             } else {
-                // item has a valid parent collection, most likely due to retrieved ancestors
-                // still, collection might contain extra info, so inject that
-                if (it.parentCollection() == col) {
-                    const Collection oldParent = it.parentCollection();
-                    if (oldParent.parentCollection().isValid() && !col.parentCollection().isValid()) {
-                        col.setParentCollection(oldParent.parentCollection());   // preserve ancestor chain
-                    }
-                    it.setParentCollection(col);
+                it->setParentCollection(col);
+            }
+        } else {
+            // item has a valid parent collection, most likely due to retrieved ancestors
+            // still, collection might contain extra info, so inject that
+            if (it->parentCollection() == col) {
+                const Collection oldParent = it->parentCollection();
+                if (oldParent.parentCollection().isValid() && !col.parentCollection().isValid()) {
+                    col.setParentCollection(oldParent.parentCollection());   // preserve ancestor chain
+                }
+                it->setParentCollection(col);
+            } else {
+                // If one client does a modify followed by a move we have to make sure that the
+                // AgentBase::itemChanged() in another client always sees the parent collection
+                // of the item before it has been moved.
+                if (msg.operation() != Protocol::ItemChangeNotification::Move) {
+                    it->setParentCollection(col);
                 } else {
-                    // If one client does a modify followed by a move we have to make sure that the
-                    // AgentBase::itemChanged() in another client always sees the parent collection
-                    // of the item before it has been moved.
-                    if (msg.operation() != Protocol::ItemChangeNotification::Move) {
-                        it.setParentCollection(col);
-                    } else {
-                        it.setParentCollection(colDest);
-                    }
+                    it->setParentCollection(colDest);
                 }
             }
-            iter.setValue(it);
-            msgItems.erase(msgItem);
-        } else {
-            // remove the invalid item
-            iter.remove();
         }
     }
-
-    its.reserve(its.size() + msgItems.size());
-    // Now reconstruct any items there were left in msgItems
-    Q_FOREACH (const Protocol::ItemChangeNotification::Item &msgItem, msgItems) {
-        Item it(msgItem.id);
-        it.setRemoteId(msgItem.remoteId);
-        it.setRemoteRevision(msgItem.remoteRevision);
-        it.setMimeType(msgItem.mimeType);
-        if (msg.operation() == Protocol::ItemChangeNotification::Move) {
-            it.setParentCollection(colDest);
-        } else {
-            it.setParentCollection(col);
-        }
-        its << it;
-    }
-
     bool handled = false;
     switch (msg.operation()) {
     case Protocol::ItemChangeNotification::Add:
