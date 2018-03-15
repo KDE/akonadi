@@ -445,8 +445,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     const int querySizeLimit = 999;
     int mimetypeQueryStart = 0;
     int attributeQueryStart = 0;
-    QSqlQuery mimeTypeQuery;
-    QSqlQuery attributeQuery;
+    QSqlQuery mimeTypeQuery(DataStore::self()->database());
+    QSqlQuery attributeQuery(DataStore::self()->database());
     auto it = mCollections.begin();
     while (it != mCollections.end()) {
         const Collection col = it.value();

@@ -369,7 +369,7 @@ bool FetchHelper::fetchItems()
     }
     // build part query if needed
     BEGIN_TIMER(parts)
-    QSqlQuery partQuery;
+    QSqlQuery partQuery(DataStore::self()->database());
     if (!mFetchScope.requestedParts().isEmpty() || mFetchScope.fullPayload() || mFetchScope.allAttributes()) {
         partQuery = buildPartQuery(mFetchScope.requestedParts(), mFetchScope.fullPayload(), mFetchScope.allAttributes());
     }
@@ -377,7 +377,7 @@ bool FetchHelper::fetchItems()
 
     // build flag query if needed
     BEGIN_TIMER(flags)
-    QSqlQuery flagQuery;
+    QSqlQuery flagQuery(DataStore::self()->database());
     if (mFetchScope.fetchFlags()) {
         flagQuery = buildFlagQuery();
     }
@@ -385,14 +385,14 @@ bool FetchHelper::fetchItems()
 
     // build tag query if needed
     BEGIN_TIMER(tags)
-    QSqlQuery tagQuery;
+    QSqlQuery tagQuery(DataStore::self()->database());
     if (mFetchScope.fetchTags()) {
         tagQuery = buildTagQuery();
     }
     END_TIMER(tags)
 
     BEGIN_TIMER(vRefs)
-    QSqlQuery vRefQuery;
+    QSqlQuery vRefQuery(DataStore::self()->database());
     if (mFetchScope.fetchVirtualReferences()) {
         vRefQuery = buildVRefQuery();
     }
