@@ -32,6 +32,7 @@
 #include <KWindowSystem>
 #include <QKeyEvent>
 #include <QAbstractItemDelegate>
+#include <QAbstractItemView>
 
 using namespace Akonadi;
 
