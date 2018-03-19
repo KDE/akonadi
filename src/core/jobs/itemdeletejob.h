@@ -128,7 +128,7 @@ public:
     /**
      * Destroys the item delete job.
      */
-    ~ItemDeleteJob();
+    ~ItemDeleteJob() override;
 
     /**
      * Returns the items passed on in the constructor.

@@ -84,7 +84,7 @@ class FakeAkonadiServer : public AkonadiServer
 public:
     static FakeAkonadiServer *instance();
 
-    ~FakeAkonadiServer();
+    ~FakeAkonadiServer() override;
 
     /* Reimpl */
     bool init() override;

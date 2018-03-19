@@ -41,7 +41,7 @@ class StorageJanitor : public AkThread
 
 public:
     explicit StorageJanitor(QObject *parent = nullptr);
-    ~StorageJanitor();
+    ~StorageJanitor() override;
 
 public Q_SLOTS:
     /** Triggers a consistency check of the internal storage. */

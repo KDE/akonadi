@@ -54,7 +54,7 @@ public:
     /** Create a new search manager with the given @p searchEngines. */
     explicit SearchManager(const QStringList &searchEngines, QObject *parent = nullptr);
 
-    ~SearchManager();
+    ~SearchManager() override;
 
     /**
      * Returns a global instance of the search manager.

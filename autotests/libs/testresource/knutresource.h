@@ -42,7 +42,7 @@ class KnutResource : public Akonadi::ResourceBase,
 public:
     using Akonadi::AgentBase::ObserverV2::collectionChanged; // So we don't trigger -Woverloaded-virtual
     explicit KnutResource(const QString &id);
-    ~KnutResource();
+    ~KnutResource() override;
 
 public Q_SLOTS:
     void configure(WId windowId) override;

@@ -56,7 +56,7 @@ class ItemRetrievalManager : public AkThread
 public:
     explicit ItemRetrievalManager(QObject *parent = nullptr);
     explicit ItemRetrievalManager(AbstractItemRetrievalJobFactory *factory, QObject *parent = nullptr);
-    ~ItemRetrievalManager();
+    ~ItemRetrievalManager() override;
 
     /**
      * Added for convenience. ItemRetrievalManager takes ownership over the

@@ -397,7 +397,7 @@ protected:
     /**
      * Destroys the base resource.
      */
-    ~ResourceBase();
+    ~ResourceBase() override;
 
     /**
      * Call this method from retrieveItem() once the result is available.
@@ -592,7 +592,7 @@ protected:
      *
      * @param mode Item merging mode (see ItemCreateJob for details on item merging)
      * @see Akonadi::ItemSync::MergeMode
-     * @ince 4.14.11
+     * @since 4.14.11
      */
     void setItemMergingMode(ItemSync::MergeMode mode);
 

@@ -39,7 +39,7 @@ class IntervalCheck : public CollectionScheduler
 
 public:
     explicit IntervalCheck(QObject *parent = nullptr);
-    ~IntervalCheck();
+    ~IntervalCheck() override;
 
     /**
      * Requests the given collection to be synced.

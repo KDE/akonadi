@@ -65,7 +65,7 @@ protected:
 
 public:
     explicit CollectionTreeCache();
-    ~CollectionTreeCache();
+    ~CollectionTreeCache() override;
 
     QVector<Collection> retrieveCollections(const Scope &scope,
                                             int depth, int ancestorDepth,

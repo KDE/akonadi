@@ -50,7 +50,7 @@ public:
      * @p parent must not be equal to @p baseWidget
      */
     explicit ErrorOverlay(QWidget *baseWidget, QWidget *parent = nullptr);
-    ~ErrorOverlay();
+    ~ErrorOverlay() override;
 
 protected:
     bool eventFilter(QObject *object, QEvent *event) override;

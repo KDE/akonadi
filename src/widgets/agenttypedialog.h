@@ -66,7 +66,7 @@ public:
     /**
      * Destroys the agent type dialog.
      */
-    ~AgentTypeDialog();
+    ~AgentTypeDialog() override;
 
     /**
      * Returns the agent type that was selected by the user,

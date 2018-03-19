@@ -41,7 +41,7 @@ class AKONADIWIDGETS_EXPORT ManageAccountWidget : public QWidget
     Q_OBJECT
 public:
     explicit ManageAccountWidget(QWidget *parent);
-    ~ManageAccountWidget();
+    ~ManageAccountWidget() override;
 
     /**
      * Sets the text of the label above the list of accounts.

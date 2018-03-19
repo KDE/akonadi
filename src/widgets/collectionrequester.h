@@ -79,7 +79,7 @@ public:
     /**
      * Destroys the collection requester.
      */
-    ~CollectionRequester();
+    ~CollectionRequester() override;
 
     /**
      * Returns the currently chosen collection, or an empty collection if none

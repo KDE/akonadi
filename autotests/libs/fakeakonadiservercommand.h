@@ -129,7 +129,7 @@ public:
     {
     }
 
-    virtual ~FakeCollectionMovedCommand()
+    ~FakeCollectionMovedCommand() override
     {
     }
 
@@ -152,7 +152,7 @@ public:
     {
     }
 
-    virtual ~FakeCollectionAddedCommand()
+    ~FakeCollectionAddedCommand() override
     {
     }
 
@@ -174,7 +174,7 @@ public:
     {
     }
 
-    virtual ~FakeCollectionRemovedCommand()
+    ~FakeCollectionRemovedCommand() override
     {
     }
 
@@ -202,7 +202,7 @@ public:
     {
     }
 
-    virtual ~FakeCollectionChangedCommand()
+    ~FakeCollectionChangedCommand() override
     {
     }
 
@@ -226,7 +226,7 @@ public:
     {
     }
 
-    virtual ~FakeItemMovedCommand()
+    ~FakeItemMovedCommand() override
     {
     }
 
@@ -249,7 +249,7 @@ public:
     {
     }
 
-    virtual ~FakeItemAddedCommand()
+    ~FakeItemAddedCommand() override
     {
     }
 
@@ -271,7 +271,7 @@ public:
     {
     }
 
-    virtual ~FakeItemRemovedCommand()
+    ~FakeItemRemovedCommand() override
     {
     }
 
@@ -294,7 +294,7 @@ public:
     {
     }
 
-    virtual ~FakeItemChangedCommand()
+    ~FakeItemChangedCommand() override
     {
     }
 
@@ -316,7 +316,7 @@ public:
     {
     }
 
-    virtual ~FakeTagAddedCommand()
+    ~FakeTagAddedCommand() override
     {
     }
 
@@ -338,7 +338,7 @@ public:
     {
     }
 
-    virtual ~FakeTagChangedCommand()
+    ~FakeTagChangedCommand() override
     {
     }
 
@@ -361,7 +361,7 @@ public:
     {
     }
 
-    virtual ~FakeTagMovedCommand()
+    ~FakeTagMovedCommand() override
     {
     }
 
@@ -384,7 +384,7 @@ public:
     {
     }
 
-    virtual ~FakeTagRemovedCommand()
+    ~FakeTagRemovedCommand() override
     {
     }
 
@@ -419,7 +419,7 @@ public:
         m_parentTag = parentTag;
     }
 
-    virtual ~FakeJobResponse()
+    ~FakeJobResponse() override
     {
     }
 

@@ -70,7 +70,7 @@ public:
       @param parent The parent object.
     */
     explicit CacheCleaner(QObject *parent = nullptr);
-    ~CacheCleaner();
+    ~CacheCleaner() override;
 
 protected:
     void collectionExpired(const Collection &collection) override;
