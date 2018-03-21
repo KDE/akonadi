@@ -342,6 +342,7 @@ void Monitor::setSession(Akonadi::Session *session)
 
     d->itemCache->setSession(d->session);
     d->collectionCache->setSession(d->session);
+    d->tagCache->setSession(d->session);
 
     // Reconnect with a new session
     d->connectToNotificationManager();
