@@ -84,11 +84,6 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void slotIntervalValueChanged(int))
-    Q_PRIVATE_SLOT(d, void slotCacheValueChanged(int))
-    Q_PRIVATE_SLOT(d, void slotRetrievalOptionsGroupBoxDisabled(bool))
-
     //@endcond
 };
 

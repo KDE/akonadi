@@ -76,12 +76,9 @@ CachePolicyPage::CachePolicyPage(QWidget *parent, GuiMode mode)
     setPageTitle(i18n("Retrieval"));
 
     d->mUi->setupUi(this);
-    connect(d->mUi->checkInterval, SIGNAL(valueChanged(int)),
-            SLOT(slotIntervalValueChanged(int)));
-    connect(d->mUi->localCacheTimeout, SIGNAL(valueChanged(int)),
-            SLOT(slotCacheValueChanged(int)));
-    connect(d->mUi->inherit, SIGNAL(toggled(bool)),
-            SLOT(slotRetrievalOptionsGroupBoxDisabled(bool)));
+    connect(d->mUi->checkInterval, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) { d->slotIntervalValueChanged(value); });
+    connect(d->mUi->localCacheTimeout, QOverload<int>::of(&QSpinBox::valueChanged), this, [this](int value) { d->slotCacheValueChanged(value); });
+    connect(d->mUi->inherit, &QCheckBox::toggled, this, [this](bool checked) { d->slotRetrievalOptionsGroupBoxDisabled(checked); });
     if (mode == AdvancedMode) {
         d->mUi->stackedWidget->setCurrentWidget(d->mUi->rawPage);
     }
