@@ -136,7 +136,6 @@ private:
     Private *const d;
 
     Q_PRIVATE_SLOT(d, void createErrorOverlays())
-    Q_PRIVATE_SLOT(d, void cleanup())
     //@endcond
 };
 

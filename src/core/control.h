@@ -104,9 +104,6 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void serverStateChanged(Akonadi::ServerManager::State))
-    Q_PRIVATE_SLOT(d, void cleanup())
     //@endcond
 };
 

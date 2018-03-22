@@ -118,7 +118,7 @@ Control::Control()
     // mProgressIndicator is a widget, so it better be deleted before the QApplication is deleted
     // Otherwise we get a crash in QCursor code with Qt-4.5
     if (QCoreApplication::instance()) {
-        connect(QCoreApplication::instance(), SIGNAL(aboutToQuit()), this, SLOT(cleanup()));
+        connect(QCoreApplication::instance(), &QCoreApplication::aboutToQuit, this, [this]() {d->cleanup();});
     }
 }
 
