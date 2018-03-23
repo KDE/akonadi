@@ -81,7 +81,7 @@ struct clone_traits_helper {
     template <typename U>
     static T *clone(U)
     {
-        return 0;
+        return nullptr;
     }
 };
 
