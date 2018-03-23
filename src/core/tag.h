@@ -22,6 +22,7 @@
 
 #include "akonadicore_export.h"
 #include "attribute.h"
+#include "akonadicore_debug.h"
 
 #include <QString>
 #include <QSharedPointer>
@@ -236,8 +237,7 @@ inline T *Tag::attribute() const
         if (attr) {
             return attr;
         }
-        //Reuse 5250
-        qWarning() << "Found attribute of unknown type" << dummy.type()
+        qCWarning(AKONADICORE_LOG) << "Found attribute of unknown type" << dummy.type()
                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 

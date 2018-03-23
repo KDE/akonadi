@@ -175,7 +175,7 @@ add_akonadi_isolated_test(SOURCE favoriteproxytest.cpp)
 add_akonadi_isolated_test(
     SOURCE itemsearchjobtest.cpp
     ADDITIONAL_SOURCES testsearchplugin/testsearchplugin.cpp)
-add_akonadi_isolated_test(SOURCE tagtest.cpp)
+add_akonadi_isolated_test(SOURCE tagtest.cpp ADDITIONAL_SOURCES ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp)
 add_akonadi_isolated_test(SOURCE tagsynctest.cpp)
 add_akonadi_isolated_test(SOURCE relationtest.cpp)
 add_akonadi_isolated_test(SOURCE etmpopulationtest.cpp)
