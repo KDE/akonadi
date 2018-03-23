@@ -312,7 +312,7 @@ public:
     {
     }
 
-    ~EntityListCache()
+    ~EntityListCache() override
     {
         qDeleteAll(mCache);
     }
