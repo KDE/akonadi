@@ -324,6 +324,7 @@ install(TARGETS
 )
 
 install(FILES
+    ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_debug.h
     ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
     ${AkonadiCore_base_HEADERS}
     ${AkonadiCore_models_HEADERS}
