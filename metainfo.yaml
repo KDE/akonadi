@@ -1,5 +1,6 @@
 name: akonadi
 description: PIM Storage Framework
+maintainer: dvratil
 group: kdepim
 platforms:
     - name: Linux
