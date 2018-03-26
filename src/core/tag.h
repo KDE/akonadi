@@ -22,7 +22,6 @@
 
 #include "akonadicore_export.h"
 #include "attribute.h"
-#include "akonadicore_debug.h"
 
 #include <QString>
 #include <QSharedPointer>
@@ -198,6 +197,8 @@ public:
     static Tag genericTag(const QString &name);
 
 private:
+    bool checkAttribute(Attribute *attr, const QByteArray &type) const;
+
     //@cond PRIVATE
     friend class TagModifyJob;
 
@@ -215,12 +216,9 @@ inline T *Tag::attribute(CreateOption option)
     const T dummy;
     if (hasAttribute(dummy.type())) {
         T *attr = dynamic_cast<T *>(attribute(dummy.type()));
-        if (attr) {
+        if (checkAttribute(attr, dummy.type())) {
             return attr;
         }
-        //reuse 5250
-        qWarning() << "Found attribute of unknown type" << dummy.type()
-                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
     T *attr = new T();
@@ -234,11 +232,9 @@ inline T *Tag::attribute() const
     const T dummy;
     if (hasAttribute(dummy.type())) {
         T *attr = dynamic_cast<T *>(attribute(dummy.type()));
-        if (attr) {
+        if (checkAttribute(attr, dummy.type())) {
             return attr;
         }
-        qCWarning(AKONADICORE_LOG) << "Found attribute of unknown type" << dummy.type()
-                   << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
     return nullptr;

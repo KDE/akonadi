@@ -19,6 +19,7 @@
 
 #include "tag.h"
 #include "tag_p.h"
+#include "akonadicore_debug.h"
 
 #include "tagattribute.h"
 #include <QUuid>
@@ -255,4 +256,14 @@ Tag Tag::genericTag(const QString &name)
     tag.d_ptr->gid = QUuid::createUuid().toByteArray().mid(1, 36);
     tag.setName(name);
     return tag;
+}
+
+bool Tag::checkAttribute(Attribute *attr, const QByteArray &type) const
+{
+    if (attr) {
+        return true;
+    }
+    qCWarning(AKONADICORE_LOG) << "Found attribute of unknown type" << type
+                               << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    return false;
 }
