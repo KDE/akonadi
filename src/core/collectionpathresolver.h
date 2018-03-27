@@ -104,10 +104,6 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(CollectionPathResolver)
-
-    //@cond PRIVATE
-    Q_PRIVATE_SLOT(d_func(), void jobResult(KJob *))
-    //@endcond
 };
 
 }

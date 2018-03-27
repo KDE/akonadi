@@ -149,7 +149,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
         }
         nextJob = new CollectionFetchJob(mCurrentNode, CollectionFetchJob::Base, q);
     }
-    q->connect(nextJob, SIGNAL(result(KJob*)), q, SLOT(jobResult(KJob*)));
+    q->connect(nextJob, &CollectionFetchJob::result, q, [this](KJob *job) { jobResult(job);});
 }
 
 CollectionPathResolver::CollectionPathResolver(const QString &path, QObject *parent)
