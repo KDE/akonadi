@@ -40,7 +40,8 @@ void TestRunner::run()
     mProcess = new KProcess(this);
     mProcess->setProgram(mArguments);
     connect(mProcess, SIGNAL(finished(int)), SLOT(processFinished(int)));
-    connect(mProcess, SIGNAL(error(QProcess::ProcessError)), SLOT(processError(QProcess::ProcessError)));
+    connect(mProcess, QOverload<QProcess::ProcessError>::of(&KProcess::error),
+            this, &TestRunner::processError);
     // environment setup seems to have been done by setuptest globally already
     mProcess->start();
     if (!mProcess->waitForStarted()) {
