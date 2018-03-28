@@ -278,7 +278,7 @@ void CollectionDialog::Private::slotAddChildCollection()
             collection.setContentMimeTypes(mContentMimeTypes);
         }
         Akonadi::CollectionCreateJob *job = new Akonadi::CollectionCreateJob(collection);
-        connect(job, SIGNAL(result(KJob*)), mParent, SLOT(slotCollectionCreationResult(KJob*)));
+        connect(job, &Akonadi::CollectionCreateJob::result, mParent, [this](KJob *job) {slotCollectionCreationResult(job);});
     }
 }
 
