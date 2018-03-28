@@ -169,7 +169,7 @@ public:
             dlg->agentFilterProxyModel()->addCapabilityFilter(capability);
         }
 
-        if (dlg->exec() == QDialog::Accepted && dlg != nullptr) {
+        if (dlg->exec() == QDialog::Accepted) {
             const AgentType agentType = dlg->agentType();
 
             if (agentType.isValid()) {
