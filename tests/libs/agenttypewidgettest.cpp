@@ -47,8 +47,8 @@ Dialog::Dialog(QWidget *parent)
             this, SLOT(filterChanged(int)));
 
     mWidget = new Akonadi::AgentTypeWidget(this);
-    connect(mWidget, SIGNAL(currentChanged(Akonadi::AgentType,Akonadi::AgentType)),
-            this, SLOT(currentChanged(Akonadi::AgentType,Akonadi::AgentType)));
+    connect(mWidget, &Akonadi::AgentTypeWidget::currentChanged,
+            this, &Dialog::currentChanged);
 
     QDialogButtonBox *box = new QDialogButtonBox(this);
 
