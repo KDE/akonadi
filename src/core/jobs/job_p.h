@@ -39,14 +39,6 @@ class JobPrivate
 public:
     explicit JobPrivate(Job *parent)
         : q_ptr(parent)
-        , mParentJob(nullptr)
-        , mCurrentSubJob(nullptr)
-        , mTag(-1)
-        , mSession(nullptr)
-        , mWriteFinished(false)
-        , mReadingFinished(false)
-        , mStarted(false)
-        , mFinishPending(false)
     {
     }
 
@@ -127,12 +119,12 @@ public:
 
     Job *mParentJob = nullptr;
     Job *mCurrentSubJob = nullptr;
-    qint64 mTag;
+    qint64 mTag = -1;
     Session *mSession = nullptr;
-    bool mWriteFinished;
-    bool mReadingFinished;
-    bool mStarted;
-    bool mFinishPending;
+    bool mWriteFinished = false;
+    bool mReadingFinished = false;
+    bool mStarted = false;
+    bool mFinishPending = false;
 };
 
 }
