@@ -1054,7 +1054,7 @@ void AgentBase::setTemporaryOffline(int makeOnlineInSeconds)
     if (!d->mTemporaryOfflineTimer) {
         d->mTemporaryOfflineTimer = new QTimer(d);
         d->mTemporaryOfflineTimer->setSingleShot(true);
-        connect(d->mTemporaryOfflineTimer, SIGNAL(timeout()), this, SLOT(slotTemporaryOfflineTimeout()));
+        connect(d->mTemporaryOfflineTimer, &QTimer::timeout, this, [this]() { d_ptr->slotTemporaryOfflineTimeout(); });
     }
     d->mTemporaryOfflineTimer->setInterval(makeOnlineInSeconds * 1000);
     d->mTemporaryOfflineTimer->start();
