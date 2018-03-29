@@ -43,7 +43,7 @@ public:
         mCollection = Collection::root();
     }
 
-    ~ItemFetchJobPrivate()
+    ~ItemFetchJobPrivate() override
     {
         delete mValuePool;
     }
