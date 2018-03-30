@@ -41,8 +41,8 @@ bool SetupTest::startAkonadiDaemon()
 
     if (!mAkonadiDaemonProcess) {
         mAkonadiDaemonProcess = new KProcess(this);
-        connect(mAkonadiDaemonProcess, SIGNAL(finished(int)),
-                this, SLOT(slotAkonadiDaemonProcessFinished(int)));
+        connect(mAkonadiDaemonProcess, QOverload<int>::of(&KProcess::finished),
+                this, &SetupTest::slotAkonadiDaemonProcessFinished);
     }
 
     mAkonadiDaemonProcess->setProgram(QStringLiteral("akonadi_control"),
@@ -308,8 +308,8 @@ SetupTest::SetupTest()
     KConfigGroup migrationCfg(&migratorConfig, "Migration");
     migrationCfg.writeEntry("Enabled", false);
 
-    connect(Akonadi::ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-            SLOT(serverStateChanged(Akonadi::ServerManager::State)));
+    connect(Akonadi::ServerManager::self(), &Akonadi::ServerManager::stateChanged,
+            this, &SetupTest::serverStateChanged);
 
     QDBusConnection::sessionBus().registerService(QStringLiteral("org.kde.Akonadi.Testrunner-") + QString::number(QCoreApplication::instance()->applicationPid()));
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/"), this, QDBusConnection::ExportScriptableSlots);
