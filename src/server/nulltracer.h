@@ -33,7 +33,7 @@ namespace Server
 class NullTracer : public TracerInterface
 {
 public:
-    virtual ~NullTracer()
+    ~NullTracer() override
     {
     }
 
