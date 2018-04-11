@@ -52,7 +52,7 @@ private:
         // Fight for freedom every 15 minutes
         freedom->start(15 * 60 * 1000);
         qApp->setProperty("__Akonadi__Braveheart", true);
-    };
+    }
 
 public:
     explicit Braveheart()

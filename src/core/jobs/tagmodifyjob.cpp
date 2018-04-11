@@ -76,7 +76,7 @@ void TagModifyJob::doStart()
 
 bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    Q_D(TagModifyJob);
+    //Q_D(TagModifyJob);
 
     if (response->isResponse()) {
         if (response->type() == Protocol::Command::FetchTags) {

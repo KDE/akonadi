@@ -76,7 +76,7 @@ void TransportResourceBase::itemSent(const Item &item,
                                      TransportResult result,
                                      const QString &message)
 {
-    emit d->transportResult(item.id(), (int)result, message);
+    emit d->transportResult(item.id(), static_cast<int>(result), message);
 }
 
 #include "moc_transportresourcebase_p.cpp"

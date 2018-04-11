@@ -131,7 +131,7 @@ void TransactionSequence::slotResult(KJob *job)
             }
             d->mState = TransactionSequencePrivate::Committing;
             TransactionCommitJob *job = new TransactionCommitJob(this);
-            connect(job, &TransactionCommitJob::result, [this, d](KJob *job) { d->commitResult(job);});
+            connect(job, &TransactionCommitJob::result, this, [d](KJob *job) { d->commitResult(job);});
         }
     } else {
         setError(job->error());
@@ -152,7 +152,7 @@ void TransactionSequence::slotResult(KJob *job)
             }
             d->mState = TransactionSequencePrivate::RollingBack;
             TransactionRollbackJob *job = new TransactionRollbackJob(this);
-            connect(job, &TransactionRollbackJob::result, [this, d](KJob *job) { d->rollbackResult(job);});
+            connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) { d->rollbackResult(job);});
         }
     }
 }
@@ -180,11 +180,11 @@ void TransactionSequence::commit()
         if (!error()) {
             d->mState = TransactionSequencePrivate::Committing;
             TransactionCommitJob *job = new TransactionCommitJob(this);
-            connect(job, &TransactionCommitJob::result, [this, d](KJob *job) { d->commitResult(job);});
+            connect(job, &TransactionCommitJob::result, this, [d](KJob *job) { d->commitResult(job);});
         } else {
             d->mState = TransactionSequencePrivate::RollingBack;
             TransactionRollbackJob *job = new TransactionRollbackJob(this);
-            connect(job, &TransactionRollbackJob::result, [this, d](KJob *job) { d->rollbackResult(job);});
+            connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) { d->rollbackResult(job);});
         }
     }
 }
@@ -233,7 +233,7 @@ void TransactionSequence::rollback()
 
     d->mState = TransactionSequencePrivate::RollingBack;
     TransactionRollbackJob *job = new TransactionRollbackJob(this);
-    connect(job, &TransactionRollbackJob::result, [this, d](KJob *job) { d->rollbackResult(job);});
+    connect(job, &TransactionRollbackJob::result, this, [d](KJob *job) { d->rollbackResult(job);});
 }
 
 #include "moc_transactionsequence.cpp"
