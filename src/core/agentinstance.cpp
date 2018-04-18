@@ -74,11 +74,11 @@ AgentInstance::Status AgentInstance::status() const
         return Idle;
     case 1:
         return Running;
+    case 3:
+        return NotConfigured;
     case 2:
     default:
         return Broken;
-    case 3:
-        return NotConfigured;
     }
 }
 
