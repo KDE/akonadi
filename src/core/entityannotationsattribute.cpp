@@ -101,7 +101,7 @@ void EntityAnnotationsAttribute::deserialize(const QByteArray &data)
         if (line.trimmed().isEmpty()) {
             continue;
         }
-        int wsIndex = line.indexOf(' ');
+        const int wsIndex = line.indexOf(' ');
         if (wsIndex > 0) {
             const QByteArray key = line.mid(0, wsIndex);
             const QByteArray value = line.mid(wsIndex + 1);

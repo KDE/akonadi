@@ -148,13 +148,13 @@ void PersistentSearchAttribute::deserialize(const QByteArray &data)
     const int listSize(l.size());
     for (int i = 0; i < listSize; ++i) {
         const QByteArray key = l.at(i);
-        if (key == "QUERYLANGUAGE") {
+        if (key == QByteArrayLiteral("QUERYLANGUAGE")) {
             // Skip the value
             ++i;
-        } else if (key == "QUERYSTRING") {
+        } else if (key == QByteArrayLiteral("QUERYSTRING")) {
             d->queryString = QString::fromUtf8(l.at(i + 1));
             ++i;
-        } else if (key == "QUERYCOLLECTIONS") {
+        } else if (key == QByteArrayLiteral("QUERYCOLLECTIONS")) {
             QList<QByteArray> ids;
             ImapParser::parseParenthesizedList(l.at(i + 1), ids);
             d->queryCollections.clear();
@@ -163,9 +163,9 @@ void PersistentSearchAttribute::deserialize(const QByteArray &data)
                 d->queryCollections << id.toLongLong();
             }
             ++i;
-        } else if (key == "REMOTE") {
+        } else if (key == QByteArrayLiteral("REMOTE")) {
             d->remote = true;
-        } else if (key == "RECURSIVE") {
+        } else if (key == QByteArrayLiteral("RECURSIVE")) {
             d->recursive = true;
         }
     }
