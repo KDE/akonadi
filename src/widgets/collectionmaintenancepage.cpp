@@ -40,8 +40,7 @@ using namespace Akonadi;
 class CollectionMaintenancePage::Private
 {
 public:
-    Private(CollectionMaintenancePage *q)
-        : q(q)
+    Private()
     {}
 
     void slotReindexCollection()
@@ -74,14 +73,11 @@ public:
     Akonadi::Monitor *monitor = nullptr;
 
     Ui::CollectionMaintenancePage ui;
-
-private:
-    CollectionMaintenancePage * const q;
 };
 
 CollectionMaintenancePage::CollectionMaintenancePage(QWidget *parent)
     : CollectionPropertiesPage(parent)
-    , d(new Private(this))
+    , d(new Private)
 {
     setObjectName(QStringLiteral("Akonadi::CollectionMaintenancePage"));
     setPageTitle(i18n("Maintenance"));

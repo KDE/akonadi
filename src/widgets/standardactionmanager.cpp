@@ -1032,7 +1032,7 @@ public:
         Q_ASSERT(collection.isValid());
 
         QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle), contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText), favoritesModel->favoriteLabel(collection), collection.displayName(), parentWidget));
-        if (dlg->exec() == QDialog::Accepted && dlg != nullptr) {
+        if (dlg->exec() == QDialog::Accepted) {
             favoritesModel->setFavoriteLabel(collection, dlg->newName());
         }
         delete dlg;
@@ -1137,7 +1137,7 @@ public:
             dlg->agentFilterProxyModel()->addCapabilityFilter(capability);
         }
 
-        if (dlg->exec() == QDialog::Accepted && dlg != nullptr) {
+        if (dlg->exec() == QDialog::Accepted) {
             const AgentType agentType = dlg->agentType();
 
             if (agentType.isValid()) {
