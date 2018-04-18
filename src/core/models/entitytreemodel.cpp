@@ -315,6 +315,8 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
         case OriginalCollectionNameRole: {
             return entityData(collection, index.column(), Qt::DisplayRole);
         }
+        case PendingCutRole:
+            return d->m_pendingCutCollections.contains(node->id);
         case Qt::BackgroundRole: {
             if (collection.hasAttribute<EntityDisplayAttribute>()) {
                 EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>();
@@ -364,6 +366,8 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
         case EntityUrlRole:
             return item.url(Akonadi::Item::UrlWithMimeType).url();
             break;
+        case PendingCutRole:
+            return d->m_pendingCutItems.contains(node->id);
         case Qt::BackgroundRole: {
             if (item.hasAttribute<EntityDisplayAttribute>()) {
                 EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>();
@@ -397,11 +401,6 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
     const Node *node = reinterpret_cast<Node *>(index.internalPointer());
 
     if (Node::Collection == node->type) {
-        // cut out entities will be shown as inactive
-        if (d->m_pendingCutCollections.contains(node->id)) {
-            return Qt::ItemIsSelectable;
-        }
-
         const Collection collection = d->m_collections.value(node->id);
         if (collection.isValid()) {
 
@@ -430,6 +429,9 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
 
         }
     } else if (Node::Item == node->type) {
+        // cut out entities are shown as disabled
+        // TODO: Not sure this is wanted, it prevents any interaction with them, better
+        // solution would be to move this to the delegate, as was done for collections.
         if (d->m_pendingCutItems.contains(node->id)) {
             return Qt::ItemIsSelectable;
         }

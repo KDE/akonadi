@@ -342,7 +342,7 @@ public:
         SessionRole,                            ///< @internal The Session used by this model
         CollectionRefRole,                      ///< @internal Used to increase the reference count on a Collection
         CollectionDerefRole,                    ///< @internal Used to decrease the reference count on a Collection
-        PendingCutRole,                         ///< @internal Used to indicate items which are to be cut
+        PendingCutRole,                         ///< Used to indicate items which are to be cut
         EntityUrlRole,                          ///< The akonadi:/ Url of the entity as a string. Item urls will contain the mimetype.
         UnreadCountRole,                        ///< Returns the number of unread items in a collection. @since 4.5
         FetchStateRole,                         ///< Returns the FetchState of a particular item. @since 4.5
