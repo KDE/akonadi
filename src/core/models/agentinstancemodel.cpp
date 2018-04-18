@@ -191,10 +191,8 @@ QVariant AgentInstanceModel::headerData(int section, Qt::Orientation orientation
     switch (section) {
     case 0:
         return i18nc("@title:column, name of a thing", "Name");
-        break;
     default:
         return QVariant();
-        break;
     }
 }
 
