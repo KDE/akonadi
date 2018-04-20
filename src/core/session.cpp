@@ -38,6 +38,7 @@
 #include <QThreadStorage>
 #include <QTimer>
 #include <QThread>
+#include <QPointer>
 
 #include <QHostAddress>
 #include <QApplication>
@@ -369,12 +370,7 @@ QByteArray Session::sessionId() const
     return d->sessionId;
 }
 
-Q_GLOBAL_STATIC(QThreadStorage<Session *>, instances)
-
-static void cleanupDefaultSession()
-{
-    instances()->setLocalData(nullptr);
-}
+Q_GLOBAL_STATIC(QThreadStorage<QPointer<Session>>, instances)
 
 void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
 {
@@ -384,23 +380,25 @@ void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
                "You tried to create a default session twice!");
 
     Session *session = new Session(sessionId);
-    instances()->setLocalData(session);
-    qAddPostRoutine(cleanupDefaultSession);
+    setDefaultSession(session);
 }
 
 void SessionPrivate::setDefaultSession(Session *session)
 {
-    instances()->setLocalData(session);
+    instances()->setLocalData({ session });
+    QObject::connect(qApp, &QCoreApplication::aboutToQuit,
+                     []() {
+                        instances()->setLocalData({});
+                     });
 }
 
 Session *Session::defaultSession()
 {
     if (!instances()->hasLocalData()) {
         Session *session = new Session();
-        instances()->setLocalData(session);
-        qAddPostRoutine(cleanupDefaultSession);
+        SessionPrivate::setDefaultSession(session);
     }
-    return instances()->localData();
+    return instances()->localData().data();
 }
 
 void Session::clear()
