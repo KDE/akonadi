@@ -337,7 +337,7 @@ void SessionPrivate::forceReconnect()
         connection->forceReconnect();
     }
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
-    QMetaObject::invokeMethod(mParent, &Session::reconnected, Qt::QueuedConnection);
+    QMetaObject::invokeMethod(mParent, [this]() { reconnect(); }, Qt::QueuedConnection);
 #else
     QMetaObject::invokeMethod(mParent, "reconnect", Qt::QueuedConnection);
 #endif
