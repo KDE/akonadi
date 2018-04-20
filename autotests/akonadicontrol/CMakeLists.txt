@@ -10,7 +10,7 @@ macro(add_unit_test _source)
     )
     get_filename_component(_name ${_source} NAME_WE)
     add_executable(${_name} ${_test})
-    add_test(AkonadiControl-${_name} ${_name})
+    add_test(NAME AkonadiControl-${_name} COMMAND ${_name})
     add_dependencies(${_name} akonadi_control)
     if (ENABLE_ASAN)
         set_tests_properties(AkonadiControl-${_name} PROPERTIES
