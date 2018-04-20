@@ -36,8 +36,14 @@ Connection *ChangeNotificationDependenciesFactory::createNotificationConnection(
         return nullptr;
     }
 
-    return session->d->sessionThread()->createConnection(Connection::NotificationConnection,
-                                                         session->sessionId(), commandBuffer);
+    auto connection = new Connection(Connection::NotificationConnection, session->sessionId(), commandBuffer);
+    addConnection(session, connection);
+    return connection;
+}
+
+void ChangeNotificationDependenciesFactory::addConnection(Session *session, Connection *connection)
+{
+    session->d->sessionThread()->addConnection(connection);
 }
 
 void ChangeNotificationDependenciesFactory::destroyNotificationConnection(Session *session, Connection *connection)

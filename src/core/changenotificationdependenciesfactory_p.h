@@ -49,6 +49,9 @@ public:
     virtual Akonadi::ItemCache *createItemCache(int maxCapacity, Session *session);
     virtual Akonadi::ItemListCache *createItemListCache(int maxCapacity, Session *session);
     virtual Akonadi::TagListCache *createTagListCache(int maxCapacity, Session *session);
+
+protected:
+    void addConnection(Session *session, Connection *connection);
 };
 
 }

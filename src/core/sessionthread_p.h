@@ -39,22 +39,20 @@ public:
     explicit SessionThread(QObject *parent = nullptr);
     ~SessionThread();
 
-    Connection *createConnection(Connection::ConnectionType connType, const QByteArray &sessionId,
-                                 CommandBuffer *commandBuffer);
+    void addConnection(Connection *connection);
     void destroyConnection(Connection *connection);
 
 private Q_SLOTS:
     void doDestroyConnection(Akonadi::Connection *connection);
-    Akonadi::Connection *doCreateConnection(Akonadi::Connection::ConnectionType connType,
-                                            const QByteArray &sessionId,
-                                            Akonadi::CommandBuffer *commandBuffer);
+    void doAddConnection(Akonadi::Connection *connection);
+
     void doThreadQuit();
     void waitForSocketData();
 
 private:
     QVector<Connection *> mConnections;
-    QEventLoop *mWaitLoop = nullptr;
-    bool mWaiting = false;
+    QEventLoop *mWaitLoop;
+    bool mWaiting;
 };
 
 }

@@ -60,37 +60,29 @@ SessionThread::~SessionThread()
     delete thread();
 }
 
-Connection *SessionThread::createConnection(Connection::ConnectionType connectionType,
-                                            const QByteArray &sessionId,
-                                            CommandBuffer *commandBuffer)
+void SessionThread::addConnection(Connection *connection)
 {
-    Connection *conn = nullptr;
-    const bool invoke = QMetaObject::invokeMethod(this, "doCreateConnection",
-                        Qt::BlockingQueuedConnection,
-                        Q_RETURN_ARG(Akonadi::Connection*, conn),
-                        Q_ARG(Akonadi::Connection::ConnectionType, connectionType),
-                        Q_ARG(QByteArray, sessionId),
-                        Q_ARG(Akonadi::CommandBuffer*, commandBuffer));
+    connection->moveToThread(thread());
+    const bool invoke = QMetaObject::invokeMethod(this, "doAddConnection",
+                                                  Qt::BlockingQueuedConnection,
+                                                  Q_ARG(Akonadi::Connection*, connection));
     Q_ASSERT(invoke); Q_UNUSED(invoke);
-    return conn;
 }
 
-Connection *SessionThread::doCreateConnection(Connection::ConnectionType connType,
-                                              const QByteArray &sessionId,
-                                              CommandBuffer *commandBuffer)
+void SessionThread::doAddConnection(Connection *connection)
 {
     Q_ASSERT(thread() == QThread::currentThread());
+    Q_ASSERT(!mConnections.contains(connection));
 
-    Connection *conn = new Connection(connType, sessionId, commandBuffer);
-    conn->moveToThread(thread());
-    connect(conn, &QObject::destroyed,
+    connect(connection, &QObject::destroyed,
             this, [this](QObject * obj) {
                 mConnections.removeOne(static_cast<Connection *>(obj));
                 if (mWaitLoop) {
                     mWaitLoop->quit();
                 }
             });
-    mConnections.push_back(conn);
+
+    mConnections.push_back(connection);
 
     if (mWaitLoop) {
         mWaitLoop->quit();
@@ -116,6 +108,8 @@ void SessionThread::doDestroyConnection(Connection *connection)
     Q_ASSERT(thread() == QThread::currentThread());
     Q_ASSERT(mConnections.contains(connection));
 
+    connection->disconnect(this);
+    connection->doCloseConnection();
     mConnections.removeAll(connection);
     delete connection;
 
@@ -137,10 +131,9 @@ void SessionThread::doThreadQuit()
         if (mWaitLoop) {
             conn->socket()->disconnect(mWaitLoop);
         }
+        conn->disconnect(this);
         conn->doCloseConnection(); // we can call directly because we are in the correct thread
-    }
-    while (!mConnections.isEmpty()) {
-        delete mConnections.takeFirst();
+        delete conn;
     }
     if (mWaitLoop) {
         mWaitLoop->quit();

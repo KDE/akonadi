@@ -126,8 +126,9 @@ class AKONADITESTFAKE_EXPORT FakeNotificationConnection : public Akonadi::Connec
     Q_OBJECT
 
 public:
-    explicit FakeNotificationConnection(Akonadi::Session *session, Akonadi::CommandBuffer *buffer)
-        : Connection(Connection::NotificationConnection, "", buffer, session)
+    explicit FakeNotificationConnection(Akonadi::CommandBuffer *buffer)
+        : Connection(Connection::NotificationConnection, "", buffer)
+        , mBuffer(buffer)
     {}
 
     virtual ~FakeNotificationConnection()
@@ -135,13 +136,12 @@ public:
 
     void emitNotify(const Akonadi::Protocol::ChangeNotificationPtr &ntf)
     {
-        Q_EMIT commandReceived(3, ntf);
+        Akonadi::CommandBufferLocker locker(mBuffer);
+        mBuffer->enqueue(3, ntf);
     }
 
-    /*
-Q_SIGNALS:
-    void notify(const Akonadi::Protocol::ChangeNotification &ntf);
-    */
+private:
+    Akonadi::CommandBuffer *mBuffer;
 };
 
 class FakeMonitorDependeciesFactory : public Akonadi::ChangeNotificationDependenciesFactory
@@ -157,7 +157,9 @@ public:
 
     Akonadi::Connection *createNotificationConnection(Akonadi::Session *parent,
                                                       Akonadi::CommandBuffer *buffer) override {
-        return new FakeNotificationConnection(parent, buffer);
+        auto conn = new FakeNotificationConnection(buffer);
+        addConnection(parent, conn);
+        return conn;
     }
 
     void destroyNotificationConnection(Akonadi::Session *parent, Akonadi::Connection *connection) override {

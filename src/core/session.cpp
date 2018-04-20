@@ -61,7 +61,8 @@ void SessionPrivate::startNext()
 void SessionPrivate::reconnect()
 {
     if (!connection) {
-        connection = sessionThread()->createConnection(Connection::CommandConnection, sessionId, &mCommandBuffer);
+        connection = new Connection(Connection::CommandConnection, sessionId, &mCommandBuffer);
+        sessionThread()->addConnection(connection);
         mParent->connect(connection, &Connection::reconnected, mParent, &Session::reconnected,
                          Qt::QueuedConnection);
         mParent->connect(connection, SIGNAL(socketDisconnected()), mParent, SLOT(socketDisconnected()),
