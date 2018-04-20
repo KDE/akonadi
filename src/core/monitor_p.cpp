@@ -1173,12 +1173,10 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChange
         return true; // prevent Monitor disconnecting from a signal
     }
 
-    if (!collection.parentCollection().isValid()) {
-        if (msg.operation() == Protocol::CollectionChangeNotification::Move) {
-            collection.setParentCollection(destination);
-        } else {
-            collection.setParentCollection(parent);
-        }
+    if (msg.operation() == Protocol::CollectionChangeNotification::Move) {
+        collection.setParentCollection(destination);
+    } else {
+        collection.setParentCollection(parent);
     }
 
     switch (msg.operation()) {
