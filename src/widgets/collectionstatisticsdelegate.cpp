@@ -223,7 +223,9 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     QTreeView *treeView = qobject_cast<QTreeView *>(d->parent);
     bool expanded = treeView && treeView->isExpanded(firstColumn);
 
-    if (option.state & QStyle::State_Selected) {
+    if (index.data(EntityTreeModel::PendingCutRole).toBool()) {
+        painter->setPen(option.palette.color(QPalette::Disabled, QPalette::Text));
+    } else if (option.state & QStyle::State_Selected) {
         painter->setPen(textColor.isValid() ? textColor : option.palette.highlightedText().color());
     } else {
         painter->setPen(textColor.isValid() ? textColor : option.palette.text().color());
