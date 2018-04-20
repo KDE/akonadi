@@ -676,7 +676,6 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         case ProtocolHelper::PartPayload:
             ItemSerializer::deserialize(item, plainKey, part.data(), metaData.version(),
                                         static_cast<ItemSerializer::PayloadStorage>(metaData.storageType()));
-            qCDebug(AKONADICORE_LOG) << item.id() << plainKey << item.payloadData() << item.payload<QByteArray>();
             if (metaData.storageType() == Protocol::PartMetaData::Foreign) {
                 item.d_ptr->mPayloadPath = QString::fromUtf8(part.data());
             }
