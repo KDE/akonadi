@@ -41,6 +41,11 @@ public:
         m_fakeSession->setAsDefaultSession();
     }
 
+    ~MonitorNotificationTest()
+    {
+        delete m_fakeSession;
+    }
+
 private Q_SLOTS:
     void testSingleMessage();
     void testFillPipeline();
@@ -108,6 +113,10 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     msg->setParentCollection(parent.id());
     msg->setOperation(Protocol::CollectionChangeNotification::Add);
     msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
+    // With notification payloads most requests by-pass the pipeline as the
+    // notification already contains everything. To force pipelineing we set
+    // the internal metadata (normally set by ChangeRecorder)
+    msg->addMetadata("FETCH_COLLECTION");
 
     QHash<Collection::Id, Collection> data;
     data.insert(parent.id(), parent);
@@ -120,7 +129,7 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
 
     monitor->notificationConnection()->emitNotify(msg);
 
-    QCOMPARE(monitor->pipeline().size(), 1);
+    QTRY_COMPARE(monitor->pipeline().size(), 1);
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
     collectionCache->setData(data);
@@ -175,6 +184,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
         msg->setParentCollection(parent.id());
         msg->setOperation(Protocol::CollectionChangeNotification::Add);
         msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
+        msg->addMetadata("FETCH_COLLECTION");
 
         data.insert(parent.id(), parent);
         data.insert(added.id(), added);
@@ -189,7 +199,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
         monitor->notificationConnection()->emitNotify(ntf);
     }
 
-    QCOMPARE(monitor->pipeline().size(), 5);
+    QTRY_COMPARE(monitor->pipeline().size(), 5);
     QCOMPARE(monitor->pendingNotifications().size(), 15);
 
     collectionCache->setData(data);
@@ -248,6 +258,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
         msg->setParentCollection(i % 2 ? 2 : added.id() - 1);
         msg->setOperation(Protocol::CollectionChangeNotification::Add);
         msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
+        msg->addMetadata("FETCH_COLLECTION");
 
         list << msg;
     }
@@ -268,7 +279,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
 
     collectionCache->emitDataAvailable();
 
-    QVERIFY(monitor->pipeline().isEmpty());
+    QTRY_VERIFY(monitor->pipeline().isEmpty());
     QVERIFY(monitor->pendingNotifications().isEmpty());
 
     Q_FOREACH (const Protocol::ChangeNotificationPtr &ntf, list) {
@@ -276,7 +287,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
     }
 
     // Collection 6 is not notified, because Collection 5 has held up the pipeline
-    QCOMPARE(collectionAddedSpy.size(), 1);
+    QTRY_COMPARE(collectionAddedSpy.size(), 1);
     QCOMPARE((int)collectionAddedSpy.takeFirst().first().value<Akonadi::Collection>().id(), 4);
     QCOMPARE(monitor->pipeline().size(), 3);
     QCOMPARE(monitor->pendingNotifications().size(), 0);
