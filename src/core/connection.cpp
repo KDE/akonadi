@@ -186,6 +186,7 @@ void Connection::doReconnect()
             Q_EMIT socketDisconnected();
         });
         connect(mSocket.data(), &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
+        connect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);
     }
 
     // actually do connect

@@ -47,12 +47,9 @@ private Q_SLOTS:
     void doAddConnection(Akonadi::Connection *connection);
 
     void doThreadQuit();
-    void waitForSocketData();
 
 private:
     QVector<Connection *> mConnections;
-    QEventLoop *mWaitLoop;
-    bool mWaiting;
 };
 
 }
