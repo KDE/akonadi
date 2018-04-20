@@ -71,12 +71,10 @@ namespace AkonadiTest
  */
 void checkTestIsIsolated()
 {
-    Q_ASSERT_X(!qEnvironmentVariableIsEmpty("TESTRUNNER_DB_ENVIRONMENT"),
-               "AkonadiTest::checkTestIsIsolated",
-               "This test must be run using ctest, in order to use the testrunner environment. Aborting, to avoid messing up your real akonadi");
-    Q_ASSERT_X(qgetenv("XDG_DATA_HOME").contains("testrunner"),
-               "AkonadiTest::checkTestIsIsolated",
-               "Did you forget to run the test using QTEST_AKONADIMAIN?");
+    if (qEnvironmentVariableIsEmpty("TESTRUNNER_DB_ENVIRONMENT"))
+        qFatal("This test must be run using ctest, in order to use the testrunner environment. Aborting, to avoid messing up your real akonadi");
+    if (!qgetenv("XDG_DATA_HOME").contains("testrunner"))
+        qFatal("Did you forget to run the test using QTEST_AKONADIMAIN?");
 }
 
 /**
