@@ -199,7 +199,9 @@ void NotificationManager::emitPendingNotifications()
 
     if (mDebugNotifications == 0) {
         for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
-            mNotifyThreadPool->start(new NotifyRunnable(subscriber, mNotifications));
+            if (subscriber) {
+                mNotifyThreadPool->start(new NotifyRunnable(subscriber, mNotifications));
+            }
         }
     } else {
         // When debugging notification we have to use a non-threaded approach
@@ -207,7 +209,7 @@ void NotificationManager::emitPendingNotifications()
         for (const auto &notification : qAsConst(mNotifications)) {
             QVector<QByteArray> listeners;
             for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
-                if (subscriber->notify(notification)) {
+                if (subscriber && subscriber->notify(notification)) {
                     listeners.push_back(subscriber->subscriber());
                 }
             }
@@ -227,6 +229,8 @@ void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificati
     debugNtf->setListeners(listeners);
     debugNtf->setTimestamp(QDateTime::currentMSecsSinceEpoch());
     for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
-        mNotifyThreadPool->start(new NotifyRunnable(subscriber, { debugNtf }));
+        if (subscriber) {
+            mNotifyThreadPool->start(new NotifyRunnable(subscriber, { debugNtf }));
+        }
     }
 }
