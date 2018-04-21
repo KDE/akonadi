@@ -1030,31 +1030,10 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
 
     Item::List its = items;
     for (auto it = its.begin(), end = its.end(); it != end; ++it) {
-        if (!it->parentCollection().isValid()) {
-            if (msg.operation() == Protocol::ItemChangeNotification::Move) {
-                it->setParentCollection(colDest);
-            } else {
-                it->setParentCollection(col);
-            }
+        if (msg.operation() == Protocol::ItemChangeNotification::Move) {
+            it->setParentCollection(colDest);
         } else {
-            // item has a valid parent collection, most likely due to retrieved ancestors
-            // still, collection might contain extra info, so inject that
-            if (it->parentCollection() == col) {
-                const Collection oldParent = it->parentCollection();
-                if (oldParent.parentCollection().isValid() && !col.parentCollection().isValid()) {
-                    col.setParentCollection(oldParent.parentCollection());   // preserve ancestor chain
-                }
-                it->setParentCollection(col);
-            } else {
-                // If one client does a modify followed by a move we have to make sure that the
-                // AgentBase::itemChanged() in another client always sees the parent collection
-                // of the item before it has been moved.
-                if (msg.operation() != Protocol::ItemChangeNotification::Move) {
-                    it->setParentCollection(col);
-                } else {
-                    it->setParentCollection(colDest);
-                }
-            }
+            it->setParentCollection(col);
         }
     }
     bool handled = false;
