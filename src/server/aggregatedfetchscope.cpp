@@ -131,6 +131,7 @@ public:
 } // namespace Server
 } // namespace Akonadi
 
+using namespace Akonadi;
 using namespace Akonadi::Protocol;
 using namespace Akonadi::Server;
 
