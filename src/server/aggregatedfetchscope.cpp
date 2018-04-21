@@ -18,7 +18,7 @@
 */
 
 #include "aggregatedfetchscope.h"
-
+#include <private/protocol_p.h>
 #include <shared/vectorhelper.h>
 
 #include <QMutex>
