@@ -735,8 +735,7 @@ protected:
     void cancelTask(const QString &error);
 
     /**
-     * Stops the execution of the current task and continues with the next one.
-     * The current task will be tried again later.
+     * Suspends the execution of the current task and tries again to execute it.
      *
      * This can be used to delay the task processing until the resource has reached a safe
      * state, e.g. login to a server succeeded.
