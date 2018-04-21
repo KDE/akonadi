@@ -272,6 +272,8 @@ void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope,
     if (newScope.fetchVirtualReferences() != oldScope.fetchVirtualReferences()) {
         setFetchVirtualReferences(newScope.fetchVirtualReferences());
     }
+
+    d->mCachedScopeValid = false;
 }
 
 ItemFetchScope AggregatedItemFetchScope::toFetchScope() const
