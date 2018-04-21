@@ -97,17 +97,6 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
         return;
     }
 
-    // Batch-reset RID
-    // The item should have an empty RID in the destination collection to avoid
-    // RID conflicts with existing items (see T3904 in Phab).
-    QueryBuilder qb2(PimItem::tableName(), QueryBuilder::Update);
-    qb2.setColumnValue(PimItem::remoteIdColumn(), QString());
-    ItemQueryHelper::itemSetToQuery(toMoveIds, connection()->context(), qb2);
-    if (!qb2.exec()) {
-        failureResponse("Unable to update RID");
-        return;
-    }
-
     // Emit notification for each source collection separately
     Collection source;
     PimItem::List itemsToMove;
@@ -126,6 +115,20 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
     if (!itemsToMove.isEmpty()) {
         store->notificationCollector()->itemsMoved(itemsToMove, source, mDestination);
     }
+
+    // Batch-reset RID
+    // The item should have an empty RID in the destination collection to avoid
+    // RID conflicts with existing items (see T3904 in Phab).
+    // We do it after emitting notification so that the FetchHelper can still
+    // retrieve the RID
+    QueryBuilder qb2(PimItem::tableName(), QueryBuilder::Update);
+    qb2.setColumnValue(PimItem::remoteIdColumn(), QString());
+    ItemQueryHelper::itemSetToQuery(toMoveIds, connection()->context(), qb2);
+    if (!qb2.exec()) {
+        failureResponse("Unable to update RID");
+        return;
+    }
+
 }
 
 bool Move::parseStream()
