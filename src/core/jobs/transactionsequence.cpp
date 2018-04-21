@@ -124,14 +124,18 @@ void TransactionSequence::slotResult(KJob *job)
             Job::removeSubjob(job);
         }
 
-        if (!hasSubjobs() && d->mState == TransactionSequencePrivate::WaitingForSubjobs) {
-            if (property("transactionsDisabled").toBool()) {
+        if (!hasSubjobs()) {
+            if (d->mState == TransactionSequencePrivate::WaitingForSubjobs) {
+                if (property("transactionsDisabled").toBool()) {
+                    emitResult();
+                    return;
+                }
+                d->mState = TransactionSequencePrivate::Committing;
+                TransactionCommitJob *job = new TransactionCommitJob(this);
+                connect(job, &TransactionCommitJob::result, [this, d](KJob *job) { d->commitResult(job);});
+            } else if (d->mState == TransactionSequencePrivate::RollingBack) {
                 emitResult();
-                return;
             }
-            d->mState = TransactionSequencePrivate::Committing;
-            TransactionCommitJob *job = new TransactionCommitJob(this);
-            connect(job, &TransactionCommitJob::result, [this, d](KJob *job) { d->commitResult(job);});
         }
     } else {
         setError(job->error());
