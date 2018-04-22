@@ -19,6 +19,7 @@
 
 #include "akapplication.h"
 #include "akdebug.h"
+#include "akremotelog.h"
 
 #include <private/instance_p.h>
 #include <akonadi_version.h>
@@ -59,6 +60,7 @@ AkApplicationBase *AkApplicationBase::instance()
 void AkApplicationBase::init()
 {
     akInit(QString::fromLatin1(mArgv[0]));
+    akInitRemoteLog();
 
     if (!QDBusConnection::sessionBus().isConnected()) {
         qFatal("D-Bus session bus is not available!");

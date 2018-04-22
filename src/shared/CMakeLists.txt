@@ -1,6 +1,7 @@
 set(akonadi_shared_srcs
     akapplication.cpp
     akdebug.cpp
+    akremotelog.cpp
 )
 
 add_library(akonadi_shared STATIC ${akonadi_shared_srcs})

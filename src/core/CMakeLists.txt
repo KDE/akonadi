@@ -56,6 +56,7 @@ set(akonadicore_base_SRCS
     pluginloader.cpp
     pop3resourceattribute.cpp
     protocolhelper.cpp
+    remotelog.cpp
     relation.cpp
     relationsync.cpp
     searchquery.cpp
@@ -305,6 +306,7 @@ PRIVATE
     KF5::IconThemes
     KF5::ConfigCore
     KF5AkonadiPrivate
+    akonadi_shared
 )
 
 set_target_properties(KF5AkonadiCore PROPERTIES
