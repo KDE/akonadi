@@ -1,4 +1,4 @@
-set(QT_REQUIRED_VERSION "5.8.0")
+set(QT_REQUIRED_VERSION "5.9.0")
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Test DBus)
 include(ECMAddTests)
 
