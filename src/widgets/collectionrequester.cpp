@@ -73,8 +73,11 @@ void CollectionRequester::Private::fetchCollection(const Collection &collection)
 void CollectionRequester::Private::_k_collectionReceived(KJob *job)
 {
     CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
-    Collection::List chain;
+    if (!fetch) {
+        return;
+    }
     if (fetch->collections().size() == 1) {
+        Collection::List chain;
         Collection currentCollection = fetch->collections().at(0);
         while (currentCollection.isValid()) {
             chain << currentCollection;
