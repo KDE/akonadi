@@ -154,6 +154,7 @@ public:
     inline bool isValid() const { return type() != Invalid; }
     inline bool isResponse() const { return mType & _ResponseBit; }
 
+    QTextStream &toJson(QTextStream &stream) const;
 protected:
     explicit Command(quint8 type);
 
@@ -211,6 +212,7 @@ public:
     inline int errorCode() const { return mErrorCode; }
     inline QString errorMessage() const { return mErrorMsg; }
 
+    QTextStream &toJson(QTextStream &stream) const;
 protected:
     explicit Response(Command::Type type);
 
@@ -351,6 +353,7 @@ public:
     void setFetch(FetchFlags attributes, bool fetch = true);
     bool fetch(FetchFlags flags) const;
 
+    QTextStream &toJson(QTextStream &stream) const;
 private:
     AncestorDepth mAncestorDepth;
     // 2 bytes free
@@ -429,6 +432,7 @@ public:
         return hasContextRID(type) ? ctx(type).toString() : QString();
     }
 
+    QTextStream &toJson(QTextStream &stream) const;
 private:
     QVariant mColCtx;
     QVariant mTagCtx;
@@ -502,6 +506,16 @@ public:
                    && type == other.type;
         }
 
+        QTextStream &toJson(QTextStream &stream) const
+        {
+            stream << "{\n"
+                   << "    \"leftId\": " << leftId << ",\n"
+                   << "    \"rightId\": " << rightId << ",\n"
+                   << "    \"type\": \"" << type << "\"\n"
+                   << "}";
+            return stream;
+        }
+
         qint64 leftId;
         qint64 rightId;
         QString type;
@@ -524,6 +538,7 @@ public:
 
     static bool appendAndCompress(ChangeNotificationList &list, const ChangeNotificationPtr &msg);
 
+    QTextStream &toJson(QTextStream &stream) const;
 protected:
     explicit ChangeNotification(Command::Type type);
     ChangeNotification(const ChangeNotification &other);

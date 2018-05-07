@@ -194,6 +194,68 @@ bool Command::operator==(const Command &other) const
     return mType == other.mType;
 }
 
+QTextStream &Command::toJson(QTextStream &stream) const
+{
+    stream << "{\"type\": \"";
+
+#define case_label(x)    case Command::x: stream << #x; break
+    switch (mType)
+    {
+        case_label(Invalid);
+
+        case_label(Hello);
+        case_label(Login);
+        case_label(Logout);
+
+        case_label(Transaction);
+
+        case_label(CreateItem);
+        case_label(CopyItems);
+        case_label(DeleteItems);
+        case_label(FetchItems);
+        case_label(LinkItems);
+        case_label(ModifyItems);
+        case_label(MoveItems);
+
+        case_label(CreateCollection);
+        case_label(CopyCollection);
+        case_label(DeleteCollection);
+        case_label(FetchCollections);
+        case_label(FetchCollectionStats);
+        case_label(ModifyCollection);
+        case_label(MoveCollection);
+
+        case_label(Search);
+        case_label(SearchResult);
+        case_label(StoreSearch);
+
+        case_label(CreateTag);
+        case_label(DeleteTag);
+        case_label(FetchTags);
+        case_label(ModifyTag);
+
+        case_label(FetchRelations);
+        case_label(ModifyRelation);
+        case_label(RemoveRelations);
+
+        case_label(SelectResource);
+
+        case_label(StreamPayload);
+        case_label(ItemChangeNotification);
+        case_label(CollectionChangeNotification);
+        case_label(TagChangeNotification);
+        case_label(RelationChangeNotification);
+        case_label(SubscriptionChangeNotification);
+        case_label(DebugChangeNotification);
+        case_label(CreateSubscription);
+        case_label(ModifySubscription);
+    }
+#undef case_label
+    stream << "\"reponse\": " << ((mType & Command::_ResponseBit) ? "true" : "false");
+    stream << "\"}";
+    return stream;
+}
+
 DataStream &operator<<(DataStream &stream, const Command &cmd)
 {
     return stream << cmd.mType;
@@ -243,6 +305,18 @@ bool Response::operator==(const Response &other) const
     return *static_cast<const Command*>(this) == static_cast<const Command&>(other)
         && mErrorCode == other.mErrorCode
         && mErrorMsg == other.mErrorMsg;
+}
+
+QTextStream &Response::toJson(QTextStream &stream) const
+{
+    stream << "{"
+           << "\"parent\": ";
+    static_cast<const Command *>(this)->toJson(stream);
+    stream << ","
+           << "\"errcode\": " << mErrorCode << ","
+           << "\"errstr\": \"" << mErrorMsg << "\""
+           << "}";
+    return stream;
 }
 
 DataStream &operator<<(DataStream &stream, const Response &cmd)
@@ -456,6 +530,33 @@ bool ItemFetchScope::fetch(FetchFlags flags) const
     }
 }
 
+QTextStream &ItemFetchScope::toJson(QTextStream &stream) const
+{
+    stream << "{ \"type\": \"fetchscope\","
+           << "\"flags\": " << mFlags << ","
+           << "\"TagFetchScope\": [";
+    for (const auto &tag : qAsConst(mTagFetchScope)) {
+        stream << "\"" << tag << "\",";
+    }
+    if (!mTagFetchScope.isEmpty()) {
+        stream.seek(-1);
+    }
+    stream << "],"
+           << "\"ChangedSince\": \"" << mChangedSince.toString() << "\","
+           << "\"AncestorDepth\":" << mAncestorDepth << ","
+           << "\"RequestedParts\": [";
+
+    for (const auto &part : qAsConst(mRequestedParts)) {
+        stream << "\"" << part << "\",";
+    }
+    if (!mRequestedParts.isEmpty()) {
+        stream.seek(-1);
+    }
+    stream << "]"
+           << "}";
+    return stream;
+}
+
 QDebug operator<<(QDebug dbg, ItemFetchScope::AncestorDepth depth)
 {
     switch (depth) {
@@ -543,6 +644,29 @@ ScopeContext &ScopeContext::operator=(const ScopeContext &other)
 bool ScopeContext::operator==(const ScopeContext &other) const
 {
     return mColCtx == other.mColCtx && mTagCtx == other.mTagCtx;
+}
+
+QTextStream &ScopeContext::toJson(QTextStream &stream) const
+{
+    stream << "{\"scopeContext\":";
+    if (isEmpty()) {
+        stream << "\"empty\"";
+    } else if (hasContextId(ScopeContext::Tag)) {
+        stream << "\"tag\",";
+        stream << "\"TagID\": " << contextId(ScopeContext::Tag);
+    } else if (hasContextId(ScopeContext::Collection)) {
+        stream << "\"collection\"";
+        stream << "\"ColID\":" << contextId(ScopeContext::Collection);
+    } else if (hasContextRID(ScopeContext::Tag)) {
+        stream << "\"tagrid\"";
+        stream << "\"TagRID\": \"" << contextRID(ScopeContext::Tag) << "\"";
+    } else if (hasContextRID(ScopeContext::Collection)) {
+        stream << "\"colrid\",";
+        stream << "\"ColRID\": \"" << contextRID(ScopeContext::Collection) << "\"";
+    }
+    stream << "}";
+
+    return stream;
 }
 
 DataStream &operator<<(DataStream &stream, const ScopeContext &context)
@@ -749,6 +873,25 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
     // All other cases are just append, as the compression becomes too expensive in large batches
     list.append(msg);
     return true;
+}
+
+QTextStream &ChangeNotification::toJson(QTextStream &stream) const
+{
+    stream << "{"
+           << "\"parent\": ";
+    static_cast<const Command *>(this)->toJson(stream);
+    stream << ","
+           << "\"session\": \"" << mSessionId << "\","
+           << "\"metadata\": [";
+    for (const auto &m : qAsConst(mMetaData)) {
+        stream << "\"" << m << "\",";
+    }
+    if (!mMetaData.isEmpty()) {
+        stream.seek(-1);
+    }
+    stream << "]"
+           << "}";
+    return stream;
 }
 
 DataStream &operator<<(DataStream &stream, const ChangeNotification &ntf)

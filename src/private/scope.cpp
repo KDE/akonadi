@@ -305,6 +305,46 @@ QString Scope::gid() const
     return d->gidSet.at(0);
 }
 
+QTextStream &Akonadi::Scope::HRID::toJson(QTextStream &stream) const
+{
+    stream << "{\"ID\": " << id << ", \"RemoteID\": \"" << remoteId << "\"}";
+    return stream;
+}
+
+QTextStream &Scope::toJson(QTextStream& stream) const
+{
+    stream << "{";
+    switch (scope()) {
+    case Scope::Uid:
+        stream << "\"UID\": \"" << uidSet().toImapSequenceSet() << "\"";
+        break;
+    case Scope::Rid:
+        stream << "\"RID\": [\"" << ridSet().join(QStringLiteral("\" , \"")) << "\"]";
+        break;
+    case Scope::Gid:
+        stream << "\"GID\": [\"" << gidSet().join(QStringLiteral("\" , \"")) << "\"]";
+        break;
+    case Scope::HierarchicalRid:
+        {
+            const auto &chain = hridChain();
+            stream << "\"HRID\": [";
+            for (const auto &hrid : chain) {
+                hrid.toJson(stream);
+                stream << ",";
+            }
+            if (!chain.isEmpty()) {
+                stream.seek(-1);
+            }
+            stream << "]";
+        }
+        break;
+    default:
+        stream << "None";
+    }
+    stream << "}";
+    return stream;
+}
+
 Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::Scope &scope)
 {
     stream << (quint8) scope.d->scope;

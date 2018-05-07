@@ -347,6 +347,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
             mHeader << "\n";
         }
     }
+    mHeader << "    QTextStream &toJson(QTextStream &stream) const;\n";
 
     // End of class
     mHeader << "protected:\n";
@@ -606,7 +607,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             } else {
                 mImpl << "type";
             }
-            mImpl << "<< \"\\n\";\n"
+            mImpl << " << \"\\n\";\n"
                      "    }\n"
                      "    dbg.noquote() << \"]\\n\"\n";
         } else {
@@ -615,6 +616,95 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     }
     mImpl << "    ;\n"
              "    return dbg;\n"
+             "}\n"
+             "\n";
+
+    // toJson
+    mImpl << "QTextStream &" << node->className() << "::toJson(QTextStream &stream) const\n"
+             "{\n"
+             "    stream << \"{\";\n";
+    if (!parentClass.isEmpty()) {
+        mImpl << "    stream << \"\\\"parent\\\": \";\n"
+              << "    static_cast<const " << parentClass << " *>(this)->toJson(stream);\n";
+    }
+
+    for (auto prop : qAsConst(serializeProperties)) {
+        mImpl << "    stream << \"\\\"" << prop->name() << "\\\": \";\n";
+        if (prop->isPointer()) {
+            mImpl << "           " << prop->mVariableName() << "->toJson(stream);\n"
+                  << "    stream << \",\\n\";\n";
+        } else if (TypeHelper::isContainer(prop->type())) {
+            mImpl << "    stream << \" [\\n\";\n"
+                     "    for (const auto &type : qAsConst(" << prop->mVariableName() << ")) {\n";
+            if (TypeHelper::isPointerType(TypeHelper::containerType(prop->type()))) {
+                mImpl << "        stream << \"    \";\n"
+                         "        type->toJson(stream);\n"
+                         "        stream << \",\\n\";\n";
+            } else if (TypeHelper::isNumericType(TypeHelper::containerType(prop->type()))) {
+                mImpl << "        stream<< \"    \" << type << \",\\n\";\n";
+            } else if (TypeHelper::isBoolType(TypeHelper::containerType(prop->type()))) {
+                mImpl << "        stream << \"    \" << (type?\"true\":\"false\") << \",\\n\";\n";
+            } else if (TypeHelper::isBuiltInType(TypeHelper::containerType(prop->type()))) {
+                if (TypeHelper::containerType(prop->type()) == QStringLiteral("Akonadi::Protocol::ChangeNotification::Relation")) {
+                    mImpl << "        stream << \"    \";\n"
+                            "        type.toJson(stream);\n"
+                            "        stream << \",\\n\";\n";
+                } else {
+                    mImpl << "        stream << \"    \\\"\" << type << \"\\\",\\n\";\n";
+                }
+            } else {
+                mImpl << "        stream << \"    \";\n"
+                         "        type.toJson(stream);\n"
+                         "        stream << \",\\n\";\n";
+            }
+            mImpl << "    }\n"
+                     "    if (!"<< prop->mVariableName() <<".isEmpty()) {\n"
+                     "        stream.seek(-2);\n"
+                     "    }\n"
+                     "    stream << \"],\\n\";\n";
+        } else if (TypeHelper::isNumericType(prop->type())) {
+            mImpl << "    stream << " << prop->mVariableName() << " << \",\\n\";\n";
+        } else if (TypeHelper::isBoolType(prop->type())) {
+            mImpl << "    stream << (" << prop->mVariableName() << "?\"true\":\"false\") << \",\\n\";\n";
+        } else if (TypeHelper::isBuiltInType(prop->type())) {
+            if (prop->type() == QStringLiteral("QStringList")) {
+                mImpl << "    stream << \"[\" << " <<  prop->mVariableName() << ".join(QStringLiteral(\"\\\", \\\"\")) << \"],\\n\";\n";
+            } else if (prop->type() == QStringLiteral("QDateTime")) {
+                mImpl << "    stream << " << prop->mVariableName() << ".toString() << \",\\n\";\n";
+            } else if (prop->type() == QStringLiteral("Scope")) {
+                mImpl << "    " << prop->mVariableName() << ".toJson(stream);\n"
+                      << "    stream << \",\\n\";\n";
+            } else if (prop->type() == QStringLiteral("Tristate")) {
+                mImpl << "    switch (" << prop->mVariableName() << ") {\n;"
+                         "    case Tristate::True:\n"
+                         "        return stream << \"True\";\n"
+                         "    case Tristate::False:\n"
+                         "       return stream << \"False\";\n"
+                         "    case Tristate::Undefined:\n"
+                         "        return stream << \"Undefined\";\n"
+                         "    }\n"
+                         "    stream << \",\\n\";\n";
+            } else if (prop->type() == QStringLiteral("Akonadi::Protocol::Attributes")) {
+               mImpl << "    stream << \"{\";\n"
+                        "    for ( auto key : " << prop->mVariableName() << ".keys() ) {\n"
+                        "        stream << \"\\\"\" << key <<  \"\\\": \\\"\" << " << prop->mVariableName() << ".value(key) << \"\\\",\\n\";\n"
+                        "    }\n"
+                        "    if (!" << prop->mVariableName() << ".isEmpty()) {\n"
+                        "        stream.seek(-2);\n"
+                        "    }\n"
+                        "    stream << \"},\\n\";\n";
+            } else {
+                mImpl << "    stream << \"\\\"\"  << " << prop->mVariableName() << " << \"\\\",\\n\";\n";
+            }
+        } else {
+            mImpl << "    " << prop->mVariableName() << ".toJson(stream);\n"
+                     "    stream << \",\\n\";\n";
+        }
+    }
+    mImpl << "    stream.seek(-2);"
+             "    stream << \"}\";\n"
+             "\n"
+             "    return stream;\n"
              "}\n"
              "\n";
 }
