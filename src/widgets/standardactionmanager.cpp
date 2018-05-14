@@ -835,7 +835,7 @@ public:
     bool testAndSetOnlineResources(const Akonadi::Collection &collection)
     {
         // Shortcut for the Search resource, which is a virtual resource and thus
-        // is awlays online (but AgentManager does not know about it, so it returns
+        // is always online (but AgentManager does not know about it, so it returns
         // an invalid AgentInstance, which is "offline").
         //
         // FIXME: AgentManager should return a valid AgentInstance even
