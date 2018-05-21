@@ -566,7 +566,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     if (!parentClass.isEmpty()) {
              mImpl << "    stream << static_cast<const " << parentClass << " &>(obj);\n";
     }
-    for (auto prop : serializeProperties) {
+    for (auto prop : qAsConst(serializeProperties)) {
         writeImplSerializer(prop, "<<");
     }
     mImpl << "    return stream;\n"
@@ -579,7 +579,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     if (!parentClass.isEmpty()) {
         mImpl << "    stream >> static_cast<" << parentClass << " &>(obj);\n";
     }
-    for (auto prop : serializeProperties) {
+    for (auto prop : qAsConst(serializeProperties)) {
         writeImplSerializer(prop, ">>");
     }
     mImpl << "    return stream;\n"
@@ -595,7 +595,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
         mImpl << "    dbg.noquote()\n";
     }
 
-    for (auto prop : serializeProperties) {
+    for (auto prop : qAsConst(serializeProperties)) {
         if (prop->isPointer()) {
             mImpl << "        << \"" << prop->name() << ":\" << *obj." << prop->mVariableName() << " << \"\\n\"\n";
         } else if (TypeHelper::isContainer(prop->type())) {
