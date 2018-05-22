@@ -543,7 +543,7 @@ QTextStream &ItemFetchScope::toJson(QTextStream &stream) const
     }
     stream << "],"
            << "\"ChangedSince\": \"" << mChangedSince.toString() << "\","
-           << "\"AncestorDepth\":" << mAncestorDepth << ","
+           << "\"AncestorDepth\":" << static_cast<std::underlying_type<AncestorDepth>::type>(mAncestorDepth) << ","
            << "\"RequestedParts\": [";
 
     for (const auto &part : qAsConst(mRequestedParts)) {
