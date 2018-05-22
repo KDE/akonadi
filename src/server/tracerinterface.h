@@ -40,6 +40,11 @@ namespace Server
 class TracerInterface
 {
 public:
+    enum ConnectionFormat {
+        DebugString,
+        Json
+    };
+
     virtual ~TracerInterface()
     {
     }
@@ -100,6 +105,8 @@ public:
      * This method is called whenever a component wants to output an error.
      */
     virtual void error(const QString &componentName, const QString &msg) = 0;
+
+    virtual ConnectionFormat connectionFormat() const {return DebugString;}
 };
 
 } // namespace Server

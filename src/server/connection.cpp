@@ -276,7 +276,7 @@ void Connection::handleIncomingData()
             context()->setTag(-1);
             context()->setCollection(Collection());
             if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-                Tracer::self()->connectionInput(m_identifier, QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8());
+                Tracer::self()->connectionInput(m_identifier, tag, cmd);
             }
 
             m_currentHandler = findHandlerForCommand(cmd->type());
@@ -502,7 +502,7 @@ void Connection::reportTime() const
 void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
     if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-        Tracer::self()->connectionOutput(m_identifier, QByteArray::number(tag) + ' ' + Protocol::debugString(response).toUtf8());
+        Tracer::self()->connectionOutput(m_identifier, tag, response);
     }
     QDataStream stream(m_socket);
     stream << tag;

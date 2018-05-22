@@ -27,6 +27,7 @@
 #include "filetracer.h"
 #include "nulltracer.h"
 
+#include <private/protocol_p.h>
 #include <private/standarddirs_p.h>
 
 // #define DEFAULT_TRACER QLatin1String( "dbus" )
@@ -83,11 +84,45 @@ void Tracer::connectionInput(const QString &identifier, const QByteArray &msg)
     mMutex.unlock();
 }
 
+void Akonadi::Server::Tracer::connectionInput(const QString& identifier, qint64 tag, const Protocol::CommandPtr &cmd)
+{
+    QByteArray msg;
+    if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
+        QJsonObject json;
+        json[QStringLiteral("tag")] = tag;
+        Akonadi::Protocol::toJson(cmd.data(), json);
+
+        QJsonDocument doc(json);
+
+        msg = doc.toJson(QJsonDocument::Indented);
+    } else {
+        msg = QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8();
+    }
+    connectionInput(identifier, msg);
+}
+
 void Tracer::connectionOutput(const QString &identifier, const QByteArray &msg)
 {
     mMutex.lock();
     mTracerBackend->connectionOutput(identifier, msg);
     mMutex.unlock();
+}
+
+void Akonadi::Server::Tracer::connectionOutput(const QString& identifier, qint64 tag, const Protocol::CommandPtr &cmd)
+{
+    QByteArray msg;
+    if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
+        QJsonObject json;
+        json[QStringLiteral("tag")] = tag;
+        Akonadi::Protocol::toJson(cmd.data(), json);
+
+        QJsonDocument doc(json);
+
+        msg = doc.toJson(QJsonDocument::Indented);
+    } else {
+        msg = QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8();
+    }
+    connectionOutput(identifier, msg);
 }
 
 void Tracer::signal(const QString &signalName, const QString &msg)

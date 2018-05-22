@@ -29,6 +29,13 @@ class QSettings;
 
 namespace Akonadi
 {
+
+namespace Protocol
+{
+class Command;
+using CommandPtr = QSharedPointer<Command>;
+}
+
 namespace Server
 {
 
@@ -84,6 +91,8 @@ public Q_SLOTS:
      */
     void connectionInput(const QString &identifier, const QByteArray &msg) override;
 
+    void connectionInput(const QString &identifier, qint64 tag, const Protocol::CommandPtr &cmd);
+
     /**
      * This method is called whenever the akonadi server sends some data out to a client.
      *
@@ -92,6 +101,8 @@ public Q_SLOTS:
      * @param msg A message specific string.
      */
     void connectionOutput(const QString &identifier, const QByteArray &msg) override;
+
+    void connectionOutput(const QString &identifier, qint64 tag, const Protocol::CommandPtr &cmd);
 
     /**
      * This method is called whenever a dbus signal is emitted on the bus.

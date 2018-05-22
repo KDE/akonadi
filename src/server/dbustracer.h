@@ -48,6 +48,8 @@ public:
     void warning(const QString &componentName, const QString &msg) override;
     void error(const QString &componentName, const QString &msg) override;
 
+    TracerInterface::ConnectionFormat connectionFormat() const override {return TracerInterface::Json;}
+
 Q_SIGNALS:
     void connectionStarted(const QString &identifier, const QString &msg);
     void connectionEnded(const QString &identifier, const QString &msg);
