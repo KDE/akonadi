@@ -196,63 +196,90 @@ bool Command::operator==(const Command &other) const
 
 QTextStream &Command::toJson(QTextStream &stream) const
 {
-    stream << "{\"type\": \"";
+    bool response = mType & Command::_ResponseBit;
+    stream << "{\"reponse\": " << (response ? "true" : "false") << ",\n"
+           << "\"type\": \"";
 
-#define case_label(x)    case Command::x: stream << #x; break
+#define case_label(x, class)    case Command::x: { \
+    stream << #x << "\",\n" \
+           << "\"foo\": "; \
+    static_cast<const Akonadi::Protocol::class *>(this)->toJson(stream); \
+    stream << ",\n"; \
+    } break;
+#define case_commandlabel(x, cmd, resp) \
+case Command::x: { \
+    stream << #x << "\",\n" \
+           << "\"foo\": "; \
+    static_cast<const Akonadi::Protocol::cmd *>(this)->toJson(stream); \
+    } break; \
+case Command::x | Command::_ResponseBit: { \
+    stream << #x << "\",\n" \
+           << "\"foo\": "; \
+    static_cast<const Akonadi::Protocol::resp *>(this)->toJson(stream); \
+    } break;
+
     switch (mType)
     {
-        case_label(Invalid);
+        case Command::Invalid:
+            stream << "Invalid" << "\"";
+            break;
 
-        case_label(Hello);
-        case_label(Login);
-        case_label(Logout);
+        case Command::Hello | Command::_ResponseBit:
+        {
+            stream << "Hello" << "\",\n";
+            stream << "\"foo\": ";
+            static_cast<const Akonadi::Protocol::HelloResponse *>(this)->toJson(stream);
+        }
+            break;
+        case_commandlabel(Login, LoginCommand, LoginResponse);
+        case_commandlabel(Logout, LogoutCommand, LogoutResponse);
 
-        case_label(Transaction);
+        case_commandlabel(Transaction, TransactionCommand, TransactionResponse);
 
-        case_label(CreateItem);
-        case_label(CopyItems);
-        case_label(DeleteItems);
-        case_label(FetchItems);
-        case_label(LinkItems);
-        case_label(ModifyItems);
-        case_label(MoveItems);
+        case_commandlabel(CreateItem, CreateItemCommand, CreateItemResponse);
+        case_commandlabel(CopyItems, CopyItemsCommand, CopyItemsResponse);
+        case_commandlabel(DeleteItems, DeleteItemsCommand, DeleteItemsResponse);
+        case_commandlabel(FetchItems, FetchItemsCommand, FetchItemsResponse);
+        case_commandlabel(LinkItems, LinkItemsCommand, LinkItemsResponse);
+        case_commandlabel(ModifyItems, ModifyItemsCommand, ModifyItemsResponse);
+        case_commandlabel(MoveItems, MoveItemsCommand, MoveItemsResponse);
 
-        case_label(CreateCollection);
-        case_label(CopyCollection);
-        case_label(DeleteCollection);
-        case_label(FetchCollections);
-        case_label(FetchCollectionStats);
-        case_label(ModifyCollection);
-        case_label(MoveCollection);
+        case_commandlabel(CreateCollection, CreateCollectionCommand, CreateCollectionResponse);
+        case_commandlabel(CopyCollection, CopyCollectionCommand, CopyCollectionResponse);
+        case_commandlabel(DeleteCollection, DeleteCollectionCommand, DeleteCollectionResponse);
+        case_commandlabel(FetchCollections, FetchCollectionsCommand, FetchCollectionsResponse);
+        case_commandlabel(FetchCollectionStats, FetchCollectionStatsCommand, FetchCollectionStatsResponse);
+        case_commandlabel(ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse);
+        case_commandlabel(MoveCollection, MoveCollectionCommand, MoveCollectionResponse);
 
-        case_label(Search);
-        case_label(SearchResult);
-        case_label(StoreSearch);
+        case_commandlabel(Search, SearchCommand, SearchResponse);
+        case_commandlabel(SearchResult, SearchResultCommand, SearchResultResponse);
+        case_commandlabel(StoreSearch, StoreSearchCommand, StoreSearchResponse);
 
-        case_label(CreateTag);
-        case_label(DeleteTag);
-        case_label(FetchTags);
-        case_label(ModifyTag);
+        case_commandlabel(CreateTag, CreateTagCommand, CreateTagResponse);
+        case_commandlabel(DeleteTag, DeleteTagCommand, DeleteTagResponse);
+        case_commandlabel(FetchTags, FetchTagsCommand, FetchTagsResponse);
+        case_commandlabel(ModifyTag, ModifyTagCommand, ModifyTagResponse);
 
-        case_label(FetchRelations);
-        case_label(ModifyRelation);
-        case_label(RemoveRelations);
+        case_commandlabel(FetchRelations, FetchRelationsCommand, FetchRelationsResponse);
+        case_commandlabel(ModifyRelation, ModifyRelationCommand, ModifyRelationResponse);
+        case_commandlabel(RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse);
 
-        case_label(SelectResource);
+        case_commandlabel(SelectResource, SelectResourceCommand, SelectResourceResponse);
 
-        case_label(StreamPayload);
-        case_label(ItemChangeNotification);
-        case_label(CollectionChangeNotification);
-        case_label(TagChangeNotification);
-        case_label(RelationChangeNotification);
-        case_label(SubscriptionChangeNotification);
-        case_label(DebugChangeNotification);
-        case_label(CreateSubscription);
-        case_label(ModifySubscription);
+        case_commandlabel(StreamPayload, StreamPayloadCommand, StreamPayloadResponse);
+        case_commandlabel(CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse);
+        case_commandlabel(ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse);
+
+        case_label(DebugChangeNotification, DebugChangeNotification);
+        case_label(ItemChangeNotification, ItemChangeNotification);
+        case_label(CollectionChangeNotification, CollectionChangeNotification);
+        case_label(TagChangeNotification, TagChangeNotification);
+        case_label(RelationChangeNotification, RelationChangeNotification);
+        case_label(SubscriptionChangeNotification, SubscriptionChangeNotification);
     }
 #undef case_label
-    stream << "\"reponse\": " << ((mType & Command::_ResponseBit) ? "true" : "false");
-    stream << "\"}";
+    stream << "}";
     return stream;
 }
 

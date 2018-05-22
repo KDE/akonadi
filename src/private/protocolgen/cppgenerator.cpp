@@ -623,11 +623,6 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     mImpl << "QTextStream &" << node->className() << "::toJson(QTextStream &stream) const\n"
              "{\n"
              "    stream << \"{\";\n";
-    if (!parentClass.isEmpty()) {
-        mImpl << "    stream << \"\\\"parent\\\": \";\n"
-              << "    static_cast<const " << parentClass << " *>(this)->toJson(stream);\n";
-    }
-
     for (auto prop : qAsConst(serializeProperties)) {
         mImpl << "    stream << \"\\\"" << prop->name() << "\\\": \";\n";
         if (prop->isPointer()) {
