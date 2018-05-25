@@ -28,8 +28,8 @@
 #include <QSharedDataPointer>
 
 #include <QString>
+class QJsonObject;
 class QStringList;
-class QTextStream;
 
 namespace Akonadi
 {
@@ -67,7 +67,7 @@ public:
         bool isEmpty() const;
         bool operator==(const HRID &other) const;
 
-        QTextStream &toJson(QTextStream &stream) const;
+        void toJson(QJsonObject &json) const;
 
         qint64 id;
         QString remoteId;
@@ -113,7 +113,7 @@ public:
     QString rid() const;
     QString gid() const;
 
-    QTextStream &toJson(QTextStream &stream) const;
+    void toJson(QJsonObject &json) const;
 private:
     QSharedDataPointer<ScopePrivate> d;
     friend class ScopePrivate;

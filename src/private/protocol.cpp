@@ -26,6 +26,8 @@
 #include <type_traits>
 #include <typeinfo>
 
+#include <QJsonObject>
+#include <QJsonArray>
 #include <QHash>
 
 #include <cassert>
@@ -194,93 +196,67 @@ bool Command::operator==(const Command &other) const
     return mType == other.mType;
 }
 
-QTextStream &Command::toJson(QTextStream &stream) const
+void Command::toJson(QJsonObject &json) const
 {
-    bool response = mType & Command::_ResponseBit;
-    stream << "{\"reponse\": " << (response ? "true" : "false") << ",\n"
-           << "\"type\": \"";
+    json[QStringLiteral("response")] = static_cast<bool>(mType & Command::_ResponseBit);
 
-#define case_label(x, class)    case Command::x: { \
-    stream << #x << "\",\n" \
-           << "\"foo\": "; \
-    static_cast<const Akonadi::Protocol::class *>(this)->toJson(stream); \
-    stream << ",\n"; \
-    } break;
-#define case_commandlabel(x, cmd, resp) \
-case Command::x: { \
-    stream << #x << "\",\n" \
-           << "\"foo\": "; \
-    static_cast<const Akonadi::Protocol::cmd *>(this)->toJson(stream); \
-    } break; \
-case Command::x | Command::_ResponseBit: { \
-    stream << #x << "\",\n" \
-           << "\"foo\": "; \
-    static_cast<const Akonadi::Protocol::resp *>(this)->toJson(stream); \
+#define case_label(x)    case Command::x: { \
+    json[QStringLiteral("type")] = QStringLiteral(#x); \
     } break;
 
-    switch (mType)
+    switch (mType & ~Command::_ResponseBit)
     {
-        case Command::Invalid:
-            stream << "Invalid" << "\"";
-            break;
+        case_label(Invalid)
+        case_label(Hello)
 
-        case Command::Hello | Command::_ResponseBit:
-        {
-            stream << "Hello" << "\",\n";
-            stream << "\"foo\": ";
-            static_cast<const Akonadi::Protocol::HelloResponse *>(this)->toJson(stream);
-        }
-            break;
-        case_commandlabel(Login, LoginCommand, LoginResponse);
-        case_commandlabel(Logout, LogoutCommand, LogoutResponse);
+        case_label(Login)
+        case_label(Logout)
 
-        case_commandlabel(Transaction, TransactionCommand, TransactionResponse);
+        case_label(Transaction)
 
-        case_commandlabel(CreateItem, CreateItemCommand, CreateItemResponse);
-        case_commandlabel(CopyItems, CopyItemsCommand, CopyItemsResponse);
-        case_commandlabel(DeleteItems, DeleteItemsCommand, DeleteItemsResponse);
-        case_commandlabel(FetchItems, FetchItemsCommand, FetchItemsResponse);
-        case_commandlabel(LinkItems, LinkItemsCommand, LinkItemsResponse);
-        case_commandlabel(ModifyItems, ModifyItemsCommand, ModifyItemsResponse);
-        case_commandlabel(MoveItems, MoveItemsCommand, MoveItemsResponse);
+        case_label(CreateItem)
+        case_label(CopyItems)
+        case_label(DeleteItems)
+        case_label(FetchItems)
+        case_label(LinkItems)
+        case_label(ModifyItems)
+        case_label(MoveItems)
 
-        case_commandlabel(CreateCollection, CreateCollectionCommand, CreateCollectionResponse);
-        case_commandlabel(CopyCollection, CopyCollectionCommand, CopyCollectionResponse);
-        case_commandlabel(DeleteCollection, DeleteCollectionCommand, DeleteCollectionResponse);
-        case_commandlabel(FetchCollections, FetchCollectionsCommand, FetchCollectionsResponse);
-        case_commandlabel(FetchCollectionStats, FetchCollectionStatsCommand, FetchCollectionStatsResponse);
-        case_commandlabel(ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse);
-        case_commandlabel(MoveCollection, MoveCollectionCommand, MoveCollectionResponse);
+        case_label(CreateCollection)
+        case_label(CopyCollection)
+        case_label(DeleteCollection)
+        case_label(FetchCollections)
+        case_label(FetchCollectionStats)
+        case_label(ModifyCollection)
+        case_label(MoveCollection)
 
-        case_commandlabel(Search, SearchCommand, SearchResponse);
-        case_commandlabel(SearchResult, SearchResultCommand, SearchResultResponse);
-        case_commandlabel(StoreSearch, StoreSearchCommand, StoreSearchResponse);
+        case_label(Search)
+        case_label(SearchResult)
+        case_label(StoreSearch)
 
-        case_commandlabel(CreateTag, CreateTagCommand, CreateTagResponse);
-        case_commandlabel(DeleteTag, DeleteTagCommand, DeleteTagResponse);
-        case_commandlabel(FetchTags, FetchTagsCommand, FetchTagsResponse);
-        case_commandlabel(ModifyTag, ModifyTagCommand, ModifyTagResponse);
+        case_label(CreateTag)
+        case_label(DeleteTag)
+        case_label(FetchTags)
+        case_label(ModifyTag)
 
-        case_commandlabel(FetchRelations, FetchRelationsCommand, FetchRelationsResponse);
-        case_commandlabel(ModifyRelation, ModifyRelationCommand, ModifyRelationResponse);
-        case_commandlabel(RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse);
+        case_label(FetchRelations)
+        case_label(ModifyRelation)
+        case_label(RemoveRelations)
 
-        case_commandlabel(SelectResource, SelectResourceCommand, SelectResourceResponse);
+        case_label(SelectResource)
 
-        case_commandlabel(StreamPayload, StreamPayloadCommand, StreamPayloadResponse);
-        case_commandlabel(CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse);
-        case_commandlabel(ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse);
+        case_label(StreamPayload)
+        case_label(CreateSubscription)
+        case_label(ModifySubscription)
 
-        case_label(DebugChangeNotification, DebugChangeNotification);
-        case_label(ItemChangeNotification, ItemChangeNotification);
-        case_label(CollectionChangeNotification, CollectionChangeNotification);
-        case_label(TagChangeNotification, TagChangeNotification);
-        case_label(RelationChangeNotification, RelationChangeNotification);
-        case_label(SubscriptionChangeNotification, SubscriptionChangeNotification);
+        case_label(DebugChangeNotification)
+        case_label(ItemChangeNotification)
+        case_label(CollectionChangeNotification)
+        case_label(TagChangeNotification)
+        case_label(RelationChangeNotification)
+        case_label(SubscriptionChangeNotification)
     }
 #undef case_label
-    stream << "}";
-    return stream;
 }
 
 DataStream &operator<<(DataStream &stream, const Command &cmd)
@@ -297,6 +273,80 @@ QDebug operator<<(QDebug dbg, const Command &cmd)
 {
     return dbg.noquote() << ((cmd.mType & Command::_ResponseBit) ? "Response:" : "Command:")
                          << static_cast<Command::Type>(cmd.mType & ~Command::_ResponseBit) << "\n";
+}
+
+void toJson(const Akonadi::Protocol::Command *command, QJsonObject &json)
+{
+#define case_notificationlabel(x, class)    case Command::x: { \
+    static_cast<const Akonadi::Protocol::class *>(command)->toJson(json); \
+    } break;
+#define case_commandlabel(x, cmd, resp) \
+case Command::x: { \
+      static_cast<const Akonadi::Protocol::cmd *>(command)->toJson(json); \
+    } break; \
+case Command::x | Command::_ResponseBit: { \
+      static_cast<const Akonadi::Protocol::resp *>(command)->toJson(json); \
+    } break;
+
+    switch (command->mType)
+    {
+        case Command::Invalid:
+            break;
+
+        case Command::Hello | Command::_ResponseBit:
+            {
+                static_cast<const Akonadi::Protocol::HelloResponse *>(command)->toJson(json);
+            }
+            break;
+        case_commandlabel(Login, LoginCommand, LoginResponse)
+        case_commandlabel(Logout, LogoutCommand, LogoutResponse)
+
+        case_commandlabel(Transaction, TransactionCommand, TransactionResponse)
+
+        case_commandlabel(CreateItem, CreateItemCommand, CreateItemResponse)
+        case_commandlabel(CopyItems, CopyItemsCommand, CopyItemsResponse)
+        case_commandlabel(DeleteItems, DeleteItemsCommand, DeleteItemsResponse)
+        case_commandlabel(FetchItems, FetchItemsCommand, FetchItemsResponse)
+        case_commandlabel(LinkItems, LinkItemsCommand, LinkItemsResponse)
+        case_commandlabel(ModifyItems, ModifyItemsCommand, ModifyItemsResponse)
+        case_commandlabel(MoveItems, MoveItemsCommand, MoveItemsResponse)
+
+        case_commandlabel(CreateCollection, CreateCollectionCommand, CreateCollectionResponse)
+        case_commandlabel(CopyCollection, CopyCollectionCommand, CopyCollectionResponse)
+        case_commandlabel(DeleteCollection, DeleteCollectionCommand, DeleteCollectionResponse)
+        case_commandlabel(FetchCollections, FetchCollectionsCommand, FetchCollectionsResponse)
+        case_commandlabel(FetchCollectionStats, FetchCollectionStatsCommand, FetchCollectionStatsResponse)
+        case_commandlabel(ModifyCollection, ModifyCollectionCommand, ModifyCollectionResponse)
+        case_commandlabel(MoveCollection, MoveCollectionCommand, MoveCollectionResponse)
+
+        case_commandlabel(Search, SearchCommand, SearchResponse)
+        case_commandlabel(SearchResult, SearchResultCommand, SearchResultResponse)
+        case_commandlabel(StoreSearch, StoreSearchCommand, StoreSearchResponse)
+
+        case_commandlabel(CreateTag, CreateTagCommand, CreateTagResponse)
+        case_commandlabel(DeleteTag, DeleteTagCommand, DeleteTagResponse)
+        case_commandlabel(FetchTags, FetchTagsCommand, FetchTagsResponse)
+        case_commandlabel(ModifyTag, ModifyTagCommand, ModifyTagResponse)
+
+        case_commandlabel(FetchRelations, FetchRelationsCommand, FetchRelationsResponse)
+        case_commandlabel(ModifyRelation, ModifyRelationCommand, ModifyRelationResponse)
+        case_commandlabel(RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse)
+
+        case_commandlabel(SelectResource, SelectResourceCommand, SelectResourceResponse)
+
+        case_commandlabel(StreamPayload, StreamPayloadCommand, StreamPayloadResponse)
+        case_commandlabel(CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse)
+        case_commandlabel(ModifySubscription, ModifySubscriptionCommand, ModifySubscriptionResponse)
+
+        case_notificationlabel(DebugChangeNotification, DebugChangeNotification)
+        case_notificationlabel(ItemChangeNotification, ItemChangeNotification)
+        case_notificationlabel(CollectionChangeNotification, CollectionChangeNotification)
+        case_notificationlabel(TagChangeNotification, TagChangeNotification)
+        case_notificationlabel(RelationChangeNotification, RelationChangeNotification)
+        case_notificationlabel(SubscriptionChangeNotification, SubscriptionChangeNotification)
+    }
+#undef case_notificationlabel
+#undef case_commandlabel
 }
 
 /******************************************************************************/
@@ -334,16 +384,17 @@ bool Response::operator==(const Response &other) const
         && mErrorMsg == other.mErrorMsg;
 }
 
-QTextStream &Response::toJson(QTextStream &stream) const
+void Response::toJson(QJsonObject &json) const
 {
-    stream << "{"
-           << "\"parent\": ";
-    static_cast<const Command *>(this)->toJson(stream);
-    stream << ","
-           << "\"errcode\": " << mErrorCode << ","
-           << "\"errstr\": \"" << mErrorMsg << "\""
-           << "}";
-    return stream;
+    static_cast<const Command *>(this)->toJson(json);
+    if (isError()) {
+        QJsonObject error;
+        error[QStringLiteral("code")] = errorCode();
+        error[QStringLiteral("message")] = errorMessage();
+        json[QStringLiteral("error")] = error;
+    } else {
+        json[QStringLiteral("error")] = false;
+    }
 }
 
 DataStream &operator<<(DataStream &stream, const Response &cmd)
@@ -557,31 +608,23 @@ bool ItemFetchScope::fetch(FetchFlags flags) const
     }
 }
 
-QTextStream &ItemFetchScope::toJson(QTextStream &stream) const
+void ItemFetchScope::toJson(QJsonObject &json) const
 {
-    stream << "{ \"type\": \"fetchscope\","
-           << "\"flags\": " << mFlags << ","
-           << "\"TagFetchScope\": [";
+    json[QStringLiteral("flags")] = static_cast<int>(mFlags);
+    QJsonArray tagFetchArray;
     for (const auto &tag : qAsConst(mTagFetchScope)) {
-        stream << "\"" << tag << "\",";
+        tagFetchArray.append(QString::fromUtf8(tag));
     }
-    if (!mTagFetchScope.isEmpty()) {
-        stream.seek(-1);
-    }
-    stream << "],"
-           << "\"ChangedSince\": \"" << mChangedSince.toString() << "\","
-           << "\"AncestorDepth\":" << static_cast<std::underlying_type<AncestorDepth>::type>(mAncestorDepth) << ","
-           << "\"RequestedParts\": [";
+    json[QStringLiteral("TagFetchScope")] = tagFetchArray;
 
+    json[QStringLiteral("ChangedSince")] = mChangedSince.toString();
+    json[QStringLiteral("AncestorDepth")] = static_cast<std::underlying_type<AncestorDepth>::type>(mAncestorDepth);
+
+    QJsonArray requestedPartsArray;
     for (const auto &part : qAsConst(mRequestedParts)) {
-        stream << "\"" << part << "\",";
+        requestedPartsArray.append(QString::fromUtf8(part));
     }
-    if (!mRequestedParts.isEmpty()) {
-        stream.seek(-1);
-    }
-    stream << "]"
-           << "}";
-    return stream;
+    json[QStringLiteral("RequestedParts")] = requestedPartsArray;
 }
 
 QDebug operator<<(QDebug dbg, ItemFetchScope::AncestorDepth depth)
@@ -673,27 +716,23 @@ bool ScopeContext::operator==(const ScopeContext &other) const
     return mColCtx == other.mColCtx && mTagCtx == other.mTagCtx;
 }
 
-QTextStream &ScopeContext::toJson(QTextStream &stream) const
+void ScopeContext::toJson(QJsonObject &json) const
 {
-    stream << "{\"scopeContext\":";
     if (isEmpty()) {
-        stream << "\"empty\"";
+        json[QStringLiteral("scopeContext")] = false;
     } else if (hasContextId(ScopeContext::Tag)) {
-        stream << "\"tag\",";
-        stream << "\"TagID\": " << contextId(ScopeContext::Tag);
+        json[QStringLiteral("scopeContext")] = QStringLiteral("tag");
+        json[QStringLiteral("TagID")] = contextId(ScopeContext::Tag);
     } else if (hasContextId(ScopeContext::Collection)) {
-        stream << "\"collection\"";
-        stream << "\"ColID\":" << contextId(ScopeContext::Collection);
+        json[QStringLiteral("scopeContext")] = QStringLiteral("collection");
+        json[QStringLiteral("ColID")] = contextId(ScopeContext::Collection);
     } else if (hasContextRID(ScopeContext::Tag)) {
-        stream << "\"tagrid\"";
-        stream << "\"TagRID\": \"" << contextRID(ScopeContext::Tag) << "\"";
+        json[QStringLiteral("scopeContext")] = QStringLiteral("tagrid");
+        json[QStringLiteral("TagRID")] = contextRID(ScopeContext::Tag);
     } else if (hasContextRID(ScopeContext::Collection)) {
-        stream << "\"colrid\",";
-        stream << "\"ColRID\": \"" << contextRID(ScopeContext::Collection) << "\"";
+        json[QStringLiteral("scopeContext")] = QStringLiteral("colrid");
+        json[QStringLiteral("ColRID")] = contextRID(ScopeContext::Collection);
     }
-    stream << "}";
-
-    return stream;
 }
 
 DataStream &operator<<(DataStream &stream, const ScopeContext &context)
@@ -902,23 +941,16 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
     return true;
 }
 
-QTextStream &ChangeNotification::toJson(QTextStream &stream) const
+void ChangeNotification::toJson(QJsonObject &json) const
 {
-    stream << "{"
-           << "\"parent\": ";
-    static_cast<const Command *>(this)->toJson(stream);
-    stream << ","
-           << "\"session\": \"" << mSessionId << "\","
-           << "\"metadata\": [";
+    static_cast<const Command *>(this)->toJson(json);
+    json[QStringLiteral("session")] = QString::fromUtf8(mSessionId);
+
+    QJsonArray metadata;
     for (const auto &m : qAsConst(mMetaData)) {
-        stream << "\"" << m << "\",";
+        metadata.append(QString::fromUtf8(m));
     }
-    if (!mMetaData.isEmpty()) {
-        stream.seek(-1);
-    }
-    stream << "]"
-           << "}";
-    return stream;
+    json[QStringLiteral("metadata")] = metadata;
 }
 
 DataStream &operator<<(DataStream &stream, const ChangeNotification &ntf)

@@ -347,7 +347,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
             mHeader << "\n";
         }
     }
-    mHeader << "    QTextStream &toJson(QTextStream &stream) const;\n";
+    mHeader << "    void toJson(QJsonObject &stream) const;\n";
 
     // End of class
     mHeader << "protected:\n";
@@ -620,87 +620,108 @@ void CppGenerator::writeImplClass(ClassNode const *node)
              "\n";
 
     // toJson
-    mImpl << "QTextStream &" << node->className() << "::toJson(QTextStream &stream) const\n"
-             "{\n"
-             "    stream << \"{\";\n";
+    mImpl << "void " << node->className() << "::toJson(QJsonObject &json) const\n"
+             "{\n";
+    if (!parentClass.isEmpty()) {
+        mImpl << "    static_cast<const " << parentClass << " *>(this)->toJson(json);\n";
+    } else if (serializeProperties.isEmpty()) {
+        mImpl << "    Q_UNUSED(json);\n";
+    }
     for (auto prop : qAsConst(serializeProperties)) {
-        mImpl << "    stream << \"\\\"" << prop->name() << "\\\": \";\n";
         if (prop->isPointer()) {
-            mImpl << "           " << prop->mVariableName() << "->toJson(stream);\n"
-                  << "    stream << \",\\n\";\n";
+            mImpl << "    {\n"
+                     "        QJsonObject jsonObject;\n"
+                     "        " << prop->mVariableName() << "->toJson(jsonObject);\n"
+                     "        json[QStringLiteral(\"" << prop->name() << "\")] = jsonObject;\n"
+                     "    }\n";
         } else if (TypeHelper::isContainer(prop->type())) {
-            mImpl << "    stream << \" [\\n\";\n"
-                     "    for (const auto &type : qAsConst(" << prop->mVariableName() << ")) {\n";
-            if (TypeHelper::isPointerType(TypeHelper::containerType(prop->type()))) {
-                mImpl << "        stream << \"    \";\n"
-                         "        type->toJson(stream);\n"
-                         "        stream << \",\\n\";\n";
-            } else if (TypeHelper::isNumericType(TypeHelper::containerType(prop->type()))) {
-                mImpl << "        stream<< \"    \" << type << \",\\n\";\n";
-            } else if (TypeHelper::isBoolType(TypeHelper::containerType(prop->type()))) {
-                mImpl << "        stream << \"    \" << (type?\"true\":\"false\") << \",\\n\";\n";
-            } else if (TypeHelper::isBuiltInType(TypeHelper::containerType(prop->type()))) {
+            const auto &containerType = TypeHelper::containerType(prop->type());
+            mImpl << "    {\n"
+                     "        QJsonArray jsonArray;\n"
+                     "        for (const auto &type : qAsConst(" << prop->mVariableName() << ")) {\n";
+            if (TypeHelper::isPointerType(containerType)) {
+                mImpl << "            QJsonObject jsonObject;\n"
+                         "            type->toJson(jsonObject); /* " << containerType << " */\n"
+                         "            jsonArray.append(jsonObject);\n";
+            } else if (TypeHelper::isNumericType(containerType)) {
+                mImpl << "            jsonArray.append(type); /* "<<  containerType << " */\n";
+            } else if (TypeHelper::isBoolType(containerType)) {
+                mImpl << "            jsonArray.append(type); /* "<<  containerType << " */\n";
+            } else if (containerType == QStringLiteral("QByteArray")) {
+                mImpl << "            jsonArray.append(QString::fromUtf8(type)); /* "<<  containerType << "*/\n";
+            } else if (TypeHelper::isBuiltInType(containerType)) {
                 if (TypeHelper::containerType(prop->type()) == QStringLiteral("Akonadi::Protocol::ChangeNotification::Relation")) {
-                    mImpl << "        stream << \"    \";\n"
-                            "        type.toJson(stream);\n"
-                            "        stream << \",\\n\";\n";
+                    mImpl << "            QJsonObject jsonObject;\n"
+                             "            type.toJson(jsonObject); /* " << containerType << " */\n"
+                             "            jsonArray.append(jsonObject);\n";
                 } else {
-                    mImpl << "        stream << \"    \\\"\" << type << \"\\\",\\n\";\n";
+                    mImpl << "            jsonArray.append(type); /* "<<  containerType << " */\n";
                 }
             } else {
-                mImpl << "        stream << \"    \";\n"
-                         "        type.toJson(stream);\n"
-                         "        stream << \",\\n\";\n";
+                mImpl << "            QJsonObject jsonObject;\n"
+                         "            type.toJson(jsonObject); /* " << containerType << " */\n"
+                         "            jsonArray.append(jsonObject);\n";
             }
-            mImpl << "    }\n"
-                     "    if (!"<< prop->mVariableName() <<".isEmpty()) {\n"
-                     "        stream.seek(-2);\n"
-                     "    }\n"
-                     "    stream << \"],\\n\";\n";
+            mImpl << "        }\n"
+                  << "        json[QStringLiteral(\"" << prop->name() << "\")] = jsonArray;\n"
+                  << "    }\n";
+        } else if (prop->type() == QStringLiteral("uint")) {
+            mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = static_cast<int>(" <<  prop->mVariableName() << ");/* "<<  prop->type() << " */\n";
         } else if (TypeHelper::isNumericType(prop->type())) {
-            mImpl << "    stream << " << prop->mVariableName() << " << \",\\n\";\n";
+            mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " <<  prop->mVariableName() << ";/* "<<  prop->type() << " */\n";
         } else if (TypeHelper::isBoolType(prop->type())) {
-            mImpl << "    stream << (" << prop->mVariableName() << "?\"true\":\"false\") << \",\\n\";\n";
+            mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " <<  prop->mVariableName() << ";/* "<<  prop->type() << " */\n";
         } else if (TypeHelper::isBuiltInType(prop->type())) {
             if (prop->type() == QStringLiteral("QStringList")) {
-                mImpl << "    stream << \"[\" << " <<  prop->mVariableName() << ".join(QStringLiteral(\"\\\", \\\"\")) << \"],\\n\";\n";
+                mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = QJsonArray::fromStringList(" <<  prop->mVariableName() << ");/* "<<  prop->type() << " */\n";
             } else if (prop->type() == QStringLiteral("QDateTime")) {
-                mImpl << "    stream << " << prop->mVariableName() << ".toString() << \",\\n\";\n";
+                mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " <<  prop->mVariableName() << ".toString()/* "<<  prop->type() << " */;\n";
+            } else if (prop->type() == QStringLiteral("QByteArray")) {
+                mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = QString::fromUtf8(" <<  prop->mVariableName() << ")/* "<<  prop->type() << " */;\n";
             } else if (prop->type() == QStringLiteral("Scope")) {
-                mImpl << "    " << prop->mVariableName() << ".toJson(stream);\n"
-                      << "    stream << \",\\n\";\n";
+                mImpl << "    {\n"
+                         "        QJsonObject jsonObject;\n"
+                         "        " << prop->mVariableName() << ".toJson(jsonObject); /* " << prop->type() << " */\n"
+                         "        json[QStringLiteral(\"" << prop->name() << "\")] = " << "jsonObject;\n"
+                         "    }\n";
             } else if (prop->type() == QStringLiteral("Tristate")) {
                 mImpl << "    switch (" << prop->mVariableName() << ") {\n;"
                          "    case Tristate::True:\n"
-                         "        return stream << \"True\";\n"
+                         "        json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"True\");\n"
                          "    case Tristate::False:\n"
-                         "       return stream << \"False\";\n"
+                         "       json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"False\");\n"
                          "    case Tristate::Undefined:\n"
-                         "        return stream << \"Undefined\";\n"
-                         "    }\n"
-                         "    stream << \",\\n\";\n";
+                         "        json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"Undefined\");\n"
+                         "    }\n";
             } else if (prop->type() == QStringLiteral("Akonadi::Protocol::Attributes")) {
-               mImpl << "    stream << \"{\";\n"
-                        "    for ( auto key : " << prop->mVariableName() << ".keys() ) {\n"
-                        "        stream << \"\\\"\" << key <<  \"\\\": \\\"\" << " << prop->mVariableName() << ".value(key) << \"\\\",\\n\";\n"
-                        "    }\n"
-                        "    if (!" << prop->mVariableName() << ".isEmpty()) {\n"
-                        "        stream.seek(-2);\n"
-                        "    }\n"
-                        "    stream << \"},\\n\";\n";
+               mImpl << "    {\n"
+                        "        QJsonObject jsonObject;\n"
+                        "        auto i = " << prop->mVariableName() << ".constBegin();\n"
+                        "        const auto &end = " << prop->mVariableName() << ".constEnd();\n"
+                        "        while (i != end) {\n"
+                        "            jsonObject[QString::fromUtf8(i.key())] = QString::fromUtf8(i.value());\n"
+                        "            ++i;\n"
+                        "        }\n"
+                        "        json[QStringLiteral(\"" << prop->name() << "\")] = jsonObject;\n"
+                        "    }\n";
+            } else if (prop->type() == QStringLiteral("ModifySubscriptionCommand::ModifiedParts") ||
+                       prop->type() == QStringLiteral("ModifyTagCommand::ModifiedParts") ||
+                       prop->type() == QStringLiteral("ModifyCollectionCommand::ModifiedParts") ||
+                       prop->type() == QStringLiteral("ModifyItemsCommand::ModifiedParts") ||
+                       prop->type() == QStringLiteral("CreateItemCommand::MergeModes")) {
+                mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = static_cast<int>(" << prop->mVariableName() << ");/* "<<  prop->type() << "*/\n";
             } else {
-                mImpl << "    stream << \"\\\"\"  << " << prop->mVariableName() << " << \"\\\",\\n\";\n";
+                mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " << prop->mVariableName() << ";/* "<<  prop->type() << "*/\n";
             }
         } else {
-            mImpl << "    " << prop->mVariableName() << ".toJson(stream);\n"
-                     "    stream << \",\\n\";\n";
+            mImpl << "    {\n"
+                     "         QJsonObject jsonObject;\n"
+                     "         " << prop->mVariableName() << ".toJson(jsonObject); /* " << prop->type() << " */\n"
+                     "         json[QStringLiteral(\"" << prop->name() << "\")] = jsonObject;\n"
+                     "    }\n";
         }
     }
-    mImpl << "    stream.seek(-2);"
-             "    stream << \"}\";\n"
-             "\n"
-             "    return stream;\n"
-             "}\n"
+    mImpl << "}\n"
              "\n";
 }
 

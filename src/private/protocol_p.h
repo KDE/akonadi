@@ -24,6 +24,7 @@
 
 #include "akonadiprivate_export.h"
 
+#include <QJsonObject>
 #include <QSharedPointer>
 #include <QDebug>
 #include <QDateTime>
@@ -70,6 +71,8 @@ AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(
                                     Akonadi::Protocol::DataStream &stream,
                                     Akonadi::Protocol::Command &cmd);
 AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, const Akonadi::Protocol::Command &cmd);
+
+AKONADIPRIVATE_EXPORT void toJson(const  Command *cmd, QJsonObject &json);
 
 using CommandPtr = QSharedPointer<Command>;
 
@@ -154,7 +157,7 @@ public:
     inline bool isValid() const { return type() != Invalid; }
     inline bool isResponse() const { return mType & _ResponseBit; }
 
-    QTextStream &toJson(QTextStream &stream) const;
+    void toJson(QJsonObject &stream) const;
 protected:
     explicit Command(quint8 type);
 
@@ -168,6 +171,7 @@ private:
     friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &stream,
                                                                            Akonadi::Protocol::Command &cmd);
     friend AKONADIPRIVATE_EXPORT QDebug operator<<(::QDebug dbg, const Akonadi::Protocol::Command &cmd);
+    friend AKONADIPRIVATE_EXPORT void toJson(const Akonadi::Protocol::Command *cmd, QJsonObject &json);
 };
 
 } // namespace Protocol
@@ -212,7 +216,7 @@ public:
     inline int errorCode() const { return mErrorCode; }
     inline QString errorMessage() const { return mErrorMsg; }
 
-    QTextStream &toJson(QTextStream &stream) const;
+    void toJson(QJsonObject &json) const;
 protected:
     explicit Response(Command::Type type);
 
@@ -353,7 +357,7 @@ public:
     void setFetch(FetchFlags attributes, bool fetch = true);
     bool fetch(FetchFlags flags) const;
 
-    QTextStream &toJson(QTextStream &stream) const;
+    void toJson(QJsonObject &json) const;
 private:
     AncestorDepth mAncestorDepth;
     // 2 bytes free
@@ -432,7 +436,7 @@ public:
         return hasContextRID(type) ? ctx(type).toString() : QString();
     }
 
-    QTextStream &toJson(QTextStream &stream) const;
+    void toJson(QJsonObject &json) const;
 private:
     QVariant mColCtx;
     QVariant mTagCtx;
@@ -506,14 +510,11 @@ public:
                    && type == other.type;
         }
 
-        QTextStream &toJson(QTextStream &stream) const
+        void toJson(QJsonObject &json) const
         {
-            stream << "{\n"
-                   << "    \"leftId\": " << leftId << ",\n"
-                   << "    \"rightId\": " << rightId << ",\n"
-                   << "    \"type\": \"" << type << "\"\n"
-                   << "}";
-            return stream;
+            json[QStringLiteral("leftId")] = leftId;
+            json[QStringLiteral("rightId")] = rightId;
+            json[QStringLiteral("type")] = type;
         }
 
         qint64 leftId;
@@ -538,7 +539,7 @@ public:
 
     static bool appendAndCompress(ChangeNotificationList &list, const ChangeNotificationPtr &msg);
 
-    QTextStream &toJson(QTextStream &stream) const;
+    void toJson(QJsonObject &json) const;
 protected:
     explicit ChangeNotification(Command::Type type);
     ChangeNotification(const ChangeNotification &other);

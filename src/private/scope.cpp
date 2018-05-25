@@ -21,6 +21,8 @@
 #include "scope_p.h"
 #include "datastream_p_p.h"
 
+#include <QJsonArray>
+#include <QJsonObject>
 #include <QStringList>
 
 #include "imapset_p.h"
@@ -102,6 +104,12 @@ bool Scope::HRID::isEmpty() const
 bool Scope::HRID::operator==(const HRID &other) const
 {
     return id == other.id && remoteId == other.remoteId;
+}
+
+void Scope::HRID::toJson(QJsonObject &json) const
+{
+    json[QStringLiteral("ID")] = id;
+    json[QStringLiteral("RemoteID")] = remoteId;
 }
 
 Scope::Scope()
@@ -305,44 +313,38 @@ QString Scope::gid() const
     return d->gidSet.at(0);
 }
 
-QTextStream &Akonadi::Scope::HRID::toJson(QTextStream &stream) const
+void Scope::toJson(QJsonObject &json) const
 {
-    stream << "{\"ID\": " << id << ", \"RemoteID\": \"" << remoteId << "\"}";
-    return stream;
-}
-
-QTextStream &Scope::toJson(QTextStream& stream) const
-{
-    stream << "{";
     switch (scope()) {
     case Scope::Uid:
-        stream << "\"UID\": \"" << uidSet().toImapSequenceSet() << "\"";
+        json[QStringLiteral("type")] = QStringLiteral("UID");
+        json[QStringLiteral("value")] = QString::fromUtf8(uidSet().toImapSequenceSet());
         break;
     case Scope::Rid:
-        stream << "\"RID\": [\"" << ridSet().join(QStringLiteral("\" , \"")) << "\"]";
+        json[QStringLiteral("type")] = QStringLiteral("RID");
+        json[QStringLiteral("value")] = QJsonArray::fromStringList(ridSet());
         break;
     case Scope::Gid:
-        stream << "\"GID\": [\"" << gidSet().join(QStringLiteral("\" , \"")) << "\"]";
+        json[QStringLiteral("type")] = QStringLiteral("GID");
+        json[QStringLiteral("value")] = QJsonArray::fromStringList(gidSet());
         break;
     case Scope::HierarchicalRid:
         {
             const auto &chain = hridChain();
-            stream << "\"HRID\": [";
+            QJsonArray hridArray;
             for (const auto &hrid : chain) {
-                hrid.toJson(stream);
-                stream << ",";
+                QJsonObject obj;
+                hrid.toJson(obj);
+                hridArray.append(obj);
             }
-            if (!chain.isEmpty()) {
-                stream.seek(-1);
-            }
-            stream << "]";
+            json[QStringLiteral("type")] = QStringLiteral("HRID");
+            json[QStringLiteral("value")] = hridArray;
         }
         break;
     default:
-        stream << "None";
+        json[QStringLiteral("type")] = QStringLiteral("invalid");
+        json[QStringLiteral("value")] = scope();
     }
-    stream << "}";
-    return stream;
 }
 
 Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::Scope &scope)
