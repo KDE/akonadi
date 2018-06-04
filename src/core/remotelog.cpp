@@ -27,11 +27,10 @@ namespace {
 
 static const auto initRemoteLogger = []() {
     qAddPreRoutine([]() {
-        if (qApp->thread() != QThread::currentThread()) {
-            QTimer::singleShot(0, qApp, []() { akInitRemoteLog(); });
-        } else {
-            akInitRemoteLog();
-        };
+        // Initialize remote logging from event loop, this way applications like
+        // Akonadi Console or TestRunner have a chance to change AKONADI_INSTANCE
+        // before the RemoteLog class initialize
+        QTimer::singleShot(0, qApp, []() { akInitRemoteLog(); });
     });
     return true;
 }();
