@@ -176,7 +176,7 @@ void TagEditWidget::Private::deleteTag()
                                 "Do you really want to remove the tag <resource>%1</resource>?",
                                 tag.name());
     const QString caption = i18nc("@title", "Delete tag");
-    if (KMessageBox::questionYesNo(d, caption, text, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::Yes) {
+    if (KMessageBox::questionYesNo(d, text, caption, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::Yes) {
         new Akonadi::TagDeleteJob(tag, this);
     }
 }
