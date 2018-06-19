@@ -87,17 +87,17 @@ public:
     /**
      * Returns the collection id. Only valid after the job succeeded.
      */
-    Collection::Id collection() const;
+    Q_REQUIRED_RESULT Collection::Id collection() const;
 
     /**
      * Returns the collection path. Only valid after the job succeeded.
      */
-    QString path() const;
+    Q_REQUIRED_RESULT QString path() const;
 
     /**
      * Returns the path delimiter for collections.
      */
-    static QString pathDelimiter();
+    Q_REQUIRED_RESULT static QString pathDelimiter();
 
 protected:
     void doStart() override;

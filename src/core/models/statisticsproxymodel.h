@@ -75,7 +75,7 @@ public:
     /**
      * Return true if we display tooltips, otherwise false
      */
-    bool isToolTipEnabled() const;
+    Q_REQUIRED_RESULT bool isToolTipEnabled() const;
 
     /**
      * @param enable Display extra statistics columns
@@ -86,13 +86,13 @@ public:
     /**
      * Return true if we display extra statistics columns, otherwise false
      */
-    bool isExtraColumnsEnabled() const;
+    Q_REQUIRED_RESULT bool isExtraColumnsEnabled() const;
 
-    QVariant extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const override;
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    Q_REQUIRED_RESULT QVariant extraColumnData(const QModelIndex &parent, int row, int extraColumn, int role) const override;
+    Q_REQUIRED_RESULT QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+    Q_REQUIRED_RESULT virtual QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
                                   Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
     void setSourceModel(QAbstractItemModel *model) override;

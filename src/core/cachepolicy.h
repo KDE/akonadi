@@ -100,7 +100,7 @@ public:
     /**
      * Returns the parts to permanently cache locally.
      */
-    QStringList localParts() const;
+    Q_REQUIRED_RESULT QStringList localParts() const;
 
     /**
      * Specifies the parts to permanently cache locally.
@@ -111,7 +111,7 @@ public:
      * Returns the cache timeout for non-permanently cached parts in minutes;
      * -1 means indefinitely.
      */
-    int cacheTimeout() const;
+    Q_REQUIRED_RESULT int cacheTimeout() const;
 
     /**
      * Sets cache timeout for non-permanently cached parts.
@@ -122,7 +122,7 @@ public:
     /**
      * Returns the interval check time in minutes, -1 for never.
      */
-    int intervalCheckTime() const;
+    Q_REQUIRED_RESULT int intervalCheckTime() const;
 
     /**
      * Sets interval check time.
@@ -134,7 +134,7 @@ public:
      * Returns whether the collection will be synced automatically when necessary,
      * i.e. as soon as it is accessed by a client.
      */
-    bool syncOnDemand() const;
+    Q_REQUIRED_RESULT bool syncOnDemand() const;
 
     /**
      * Sets whether the collection shall be synced automatically when necessary,
@@ -153,7 +153,7 @@ public:
      * @internal
      * @param other other cache policy
      */
-    bool operator==(const CachePolicy &other) const;
+    Q_REQUIRED_RESULT bool operator==(const CachePolicy &other) const;
 
 private:
     //@cond PRIVATE

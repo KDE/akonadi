@@ -93,7 +93,7 @@ public:
      * @see setCount()
      * @see unreadCount()
      */
-    qint64 count() const;
+    Q_REQUIRED_RESULT qint64 count() const;
 
     /**
      * Sets the number of items in this collection.
@@ -110,7 +110,7 @@ public:
      * @see setUnreadCount()
      * @see count()
      */
-    qint64 unreadCount() const;
+    Q_REQUIRED_RESULT qint64 unreadCount() const;
 
     /**
      * Sets the number of unread items in this collection.
@@ -127,7 +127,7 @@ public:
      * @see setSize()
      * @since 4.3
      */
-    qint64 size() const;
+    Q_REQUIRED_RESULT qint64 size() const;
 
     /**
      * Sets the total size of the items in this collection.

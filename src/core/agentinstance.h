@@ -96,22 +96,22 @@ public:
     /**
      * Returns whether the agent instance object is valid.
      */
-    bool isValid() const;
+    Q_REQUIRED_RESULT bool isValid() const;
 
     /**
      * Returns the agent type of this instance.
      */
-    AgentType type() const;
+    Q_REQUIRED_RESULT AgentType type() const;
 
     /**
      * Returns the unique identifier of the agent instance.
      */
-    QString identifier() const;
+    Q_REQUIRED_RESULT QString identifier() const;
 
     /**
      * Returns the user visible name of the agent instance.
      */
-    QString name() const;
+    Q_REQUIRED_RESULT QString name() const;
 
     /**
      * Sets the user visible @p name of the agent instance.
@@ -121,23 +121,23 @@ public:
     /**
      * Returns the status of the agent instance.
      */
-    Status status() const;
+    Q_REQUIRED_RESULT Status status() const;
 
     /**
      * Returns a textual presentation of the status of the agent instance.
      */
-    QString statusMessage() const;
+    Q_REQUIRED_RESULT QString statusMessage() const;
 
     /**
      * Returns the progress of the agent instance in percent, or -1 if no
      * progress information are available.
      */
-    int progress() const;
+    Q_REQUIRED_RESULT int progress() const;
 
     /**
      * Returns whether the agent instance is online currently.
      */
-    bool isOnline() const;
+    Q_REQUIRED_RESULT bool isOnline() const;
 
     /**
      * Sets @p online status of the agent instance.
@@ -171,7 +171,7 @@ public:
      * @internal
      * @param other other agent instance
      */
-    bool operator==(const AgentInstance &other) const;
+    Q_REQUIRED_RESULT bool operator==(const AgentInstance &other) const;
 
     /**
      * Tell the agent to abort its current operation.

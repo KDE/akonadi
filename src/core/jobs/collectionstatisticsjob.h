@@ -84,13 +84,13 @@ public:
     /**
      * Returns the fetched collection statistics.
      */
-    CollectionStatistics statistics() const;
+    Q_REQUIRED_RESULT CollectionStatistics statistics() const;
 
     /**
      * Returns the corresponding collection, if the job was executed successfully,
      * the collection is already updated.
      */
-    Collection collection() const;
+    Q_REQUIRED_RESULT Collection collection() const;
 
 protected:
     void doStart() override;

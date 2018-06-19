@@ -27,7 +27,7 @@ class AkonadiStarter : public QObject
     Q_OBJECT
 public:
     explicit AkonadiStarter(QObject *parent = nullptr);
-    bool start(bool verbose);
+    Q_REQUIRED_RESULT bool start(bool verbose);
 
 private Q_SLOTS:
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);

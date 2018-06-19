@@ -53,7 +53,7 @@ public:
     /**
      * Returns the relations.
      */
-    Relation::List relations() const;
+    Q_REQUIRED_RESULT Relation::List relations() const;
 
 Q_SIGNALS:
     /**

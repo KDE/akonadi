@@ -139,7 +139,7 @@ public:
     /**
      * Returns the unique identifier of the collection.
      */
-    Id id() const;
+    Q_REQUIRED_RESULT Id id() const;
 
     /**
      * Sets the remote @p id of the collection.
@@ -149,7 +149,7 @@ public:
     /**
      * Returns the remote id of the collection.
      */
-    QString remoteId() const;
+    Q_REQUIRED_RESULT QString remoteId() const;
 
     /**
      * Sets the remote @p revision of the collection.
@@ -168,24 +168,24 @@ public:
      * @note This method is supposed to be used by resources only.
      * @since 4.5
      */
-    QString remoteRevision() const;
+    Q_REQUIRED_RESULT QString remoteRevision() const;
 
     /**
      * Returns whether the collection is valid.
      */
-    bool isValid() const;
+    Q_REQUIRED_RESULT bool isValid() const;
 
     /**
      * Returns whether this collections's id equals the
      * id of the @p other collection.
      */
-    bool operator==(const Collection &other) const;
+    Q_REQUIRED_RESULT bool operator==(const Collection &other) const;
 
     /**
      * Returns whether the collection's id does not equal the id
      * of the @p other collection.
      */
-    bool operator!=(const Collection &other) const;
+    Q_REQUIRED_RESULT bool operator!=(const Collection &other) const;
 
     /**
      * Assigns the @p other to this collection and returns a reference to this
@@ -199,7 +199,7 @@ public:
      *
      * @since 4.8
      */
-    bool operator<(const Collection &other) const;
+    Q_REQUIRED_RESULT bool operator<(const Collection &other) const;
 
     /**
      * Returns the parent collection of this object.
@@ -207,7 +207,7 @@ public:
      *       from the Akonadi server.
      * @since 4.4
      */
-    Collection parentCollection() const;
+    Q_REQUIRED_RESULT Collection parentCollection() const;
 
     /**
      * Returns a reference to the parent collection of this object.
@@ -215,7 +215,7 @@ public:
      *       from the Akonadi server.
      * @since 4.4
      */
-    Collection &parentCollection();
+    Q_REQUIRED_RESULT Collection &parentCollection();
 
     /**
      * Set the parent collection of this object.
@@ -254,7 +254,7 @@ public:
     /**
      * Returns a list of all attributes of the collection.
      */
-    Attribute::List attributes() const;
+    Q_REQUIRED_RESULT Attribute::List attributes() const;
 
     /**
      * Removes and deletes all attributes of the collection.
@@ -304,7 +304,7 @@ public:
     /**
      * Returns the i18n'ed name of the collection.
      */
-    QString name() const;
+    Q_REQUIRED_RESULT QString name() const;
 
     /**
      * Returns the display name (EntityDisplayAttribute::displayName()) if set,
@@ -313,7 +313,7 @@ public:
      *
      * @since 4.11
      */
-    QString displayName() const;
+    Q_REQUIRED_RESULT QString displayName() const;
 
     /**
      * Sets the i18n'ed name of the collection.
@@ -325,7 +325,7 @@ public:
     /**
      * Returns the rights the user has on the collection.
      */
-    Rights rights() const;
+    Q_REQUIRED_RESULT Rights rights() const;
 
     /**
      * Sets the @p rights the user has on the collection.
@@ -337,7 +337,7 @@ public:
      * e.g. message/rfc822, x-akonadi/collection for a mail folder that
      * supports sub-folders.
     */
-    QStringList contentMimeTypes() const;
+    Q_REQUIRED_RESULT QStringList contentMimeTypes() const;
 
     /**
      * Sets the list of possible content mime @p types.
@@ -347,24 +347,24 @@ public:
     /**
      * Returns the root collection.
      */
-    static Collection root();
+    Q_REQUIRED_RESULT static Collection root();
 
     /**
      * Returns the mimetype used for collections.
      */
-    static QString mimeType();
+    Q_REQUIRED_RESULT static QString mimeType();
 
     /**
      * Returns the mimetype used for virtual collections
      *
      * @since 4.11
      */
-    static QString virtualMimeType();
+    Q_REQUIRED_RESULT static QString virtualMimeType();
 
     /**
      * Returns the identifier of the resource owning the collection.
      */
-    QString resource() const;
+    Q_REQUIRED_RESULT QString resource() const;
 
     /**
      * Sets the @p identifier of the resource owning the collection.
@@ -374,7 +374,7 @@ public:
     /**
      * Returns the cache policy of the collection.
      */
-    CachePolicy cachePolicy() const;
+    Q_REQUIRED_RESULT CachePolicy cachePolicy() const;
 
     /**
      * Sets the cache @p policy of the collection.
@@ -384,7 +384,7 @@ public:
     /**
      * Returns the collection statistics of the collection.
      */
-    CollectionStatistics statistics() const;
+    Q_REQUIRED_RESULT CollectionStatistics statistics() const;
 
     /**
      * Sets the collection @p statistics for the collection.
@@ -406,14 +406,14 @@ public:
      * @param type the type of url
      * @since 4.7
      */
-    QUrl url(UrlType type = UrlShort) const;
+    Q_REQUIRED_RESULT QUrl url(UrlType type = UrlShort) const;
 
     /**
      * Returns whether the collection is virtual, for example a search collection.
      *
      * @since 4.6
      */
-    bool isVirtual() const;
+    Q_REQUIRED_RESULT bool isVirtual() const;
 
     /**
      * Sets whether the collection is virtual or not.
@@ -449,7 +449,7 @@ public:
      * @since 4.14
      * @see localListPreference
      */
-    bool enabled() const;
+    Q_REQUIRED_RESULT bool enabled() const;
 
     /**
      * Describes the list preference value
@@ -491,7 +491,7 @@ public:
      * @since 4.14
      * @see setLocalListPreference
      */
-    ListPreference localListPreference(ListPurpose purpose) const;
+    Q_REQUIRED_RESULT ListPreference localListPreference(ListPurpose purpose) const;
 
     /**
      * Returns whether the collection should be listed or not for the specified purpose
@@ -500,7 +500,7 @@ public:
      * @since 4.14
      * @see setLocalListPreference, setEnabled
      */
-    bool shouldList(ListPurpose purpose) const;
+    Q_REQUIRED_RESULT bool shouldList(ListPurpose purpose) const;
 
     /**
      * Sets whether the collection should be listed or not for the specified purpose.
@@ -530,7 +530,7 @@ public:
      * Returns the referenced state of the collection.
      * @since 4.14
      */
-    bool referenced() const;
+    Q_REQUIRED_RESULT bool referenced() const;
 
     /**
      * Set during sync to indicate that the provided parts are only default values;

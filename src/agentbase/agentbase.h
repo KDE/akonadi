@@ -492,22 +492,22 @@ public:
      *  - 2 - Broken
      *  - 3 - NotConfigured
      */
-    virtual int status() const;
+    Q_REQUIRED_RESULT virtual int status() const;
 
     /**
      * This method returns an i18n'ed description of the current status code.
      */
-    virtual QString statusMessage() const;
+    Q_REQUIRED_RESULT virtual QString statusMessage() const;
 
     /**
      * This method returns the current progress of the agent in percentage.
      */
-    virtual int progress() const;
+    Q_REQUIRED_RESULT virtual int progress() const;
 
     /**
      * This method returns an i18n'ed description of the current progress.
      */
-    virtual QString progressMessage() const;
+    Q_REQUIRED_RESULT virtual QString progressMessage() const;
 
 public Q_SLOTS:
     /**
@@ -526,7 +526,7 @@ public:
     /**
      * This method returns the windows id, which should be used for dialogs.
      */
-    WId winIdForDialogs() const;
+    Q_REQUIRED_RESULT WId winIdForDialogs() const;
 
 #ifdef Q_OS_WIN
     /**
@@ -539,7 +539,7 @@ public:
     /**
      * Returns the instance identifier of this agent.
      */
-    QString identifier() const;
+    Q_REQUIRED_RESULT QString identifier() const;
 
     /**
      * This method is called when the agent is removed from
@@ -573,7 +573,7 @@ public:
      *
      * @since 4.3
      */
-    QString agentName() const;
+    Q_REQUIRED_RESULT QString agentName() const;
 
 Q_SIGNALS:
     /**

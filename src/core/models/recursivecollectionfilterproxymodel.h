@@ -82,7 +82,7 @@ public:
     /**
      * Returns the currently included mimetypes in the filter.
      */
-    QStringList contentMimeTypeInclusionFilters() const;
+    Q_REQUIRED_RESULT QStringList contentMimeTypeInclusionFilters() const;
 
     /**
      * Add search pattern

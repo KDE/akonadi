@@ -75,17 +75,17 @@ public:
     /**
      * @reimp
      */
-    bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
+    Q_REQUIRED_RESULT bool lessThan(const QModelIndex &left, const QModelIndex &right) const override;
 
     /**
      * @reimp
      */
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    Q_REQUIRED_RESULT bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
     /**
      * @reimp
      */
-    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
                           Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:

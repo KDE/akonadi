@@ -144,7 +144,7 @@ public:
      * Returns whether the payload of the modified item shall be
      * omitted from transmission to the Akonadi storage.
      */
-    bool ignorePayload() const;
+    Q_REQUIRED_RESULT bool ignorePayload() const;
 
     /**
      * Sets whether the GID shall be updated either from the gid parameter or
@@ -162,7 +162,7 @@ public:
      * Returns whether the GID should be updated.
      * @since 4.12
      */
-    bool updateGid() const;
+    Q_REQUIRED_RESULT bool updateGid() const;
 
     /**
      * Disables the check of the revision number.
@@ -176,14 +176,14 @@ public:
      *
      * @note Use this method only when using the single item constructor.
      */
-    Item item() const;
+    Q_REQUIRED_RESULT Item item() const;
 
     /**
      * Returns the modified and stored items including the changed revision number.
      *
      * @since 4.6
      */
-    Item::List items() const;
+    Q_REQUIRED_RESULT Item::List items() const;
 
     /**
      * Disables the automatic handling of conflicts.

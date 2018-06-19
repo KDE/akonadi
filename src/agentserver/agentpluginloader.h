@@ -39,7 +39,7 @@ public:
 
       @return the plugin for @p pluginName or 0 if the plugin is not found.
      */
-    QPluginLoader *load(const QString &pluginName);
+    Q_REQUIRED_RESULT QPluginLoader *load(const QString &pluginName);
 
 private:
     Q_DISABLE_COPY(AgentPluginLoader)

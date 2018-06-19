@@ -89,7 +89,7 @@ public:
      *
      * @since 4.13
      */
-    QStringList searchMimeTypes() const;
+    Q_REQUIRED_RESULT QStringList searchMimeTypes() const;
 
     /**
      * Sets list of collections to search in.
@@ -107,7 +107,7 @@ public:
      *
      * @since 4.13
      */
-    QVector<Collection> searchCollections() const;
+    Q_REQUIRED_RESULT QVector<Collection> searchCollections() const;
 
     /**
      * Sets whether resources should be queried too.
@@ -136,7 +136,7 @@ public:
      *
      * @since 4.13
      */
-    bool isRemoteSearchEnabled() const;
+    Q_REQUIRED_RESULT bool isRemoteSearchEnabled() const;
 
     /**
      * Sets whether the search should recurse into collections
@@ -154,7 +154,7 @@ public:
      *
      * @since 4.13
      */
-    bool isRecursive() const;
+    Q_REQUIRED_RESULT bool isRecursive() const;
 
     /**
      * Destroys the search create job.
@@ -167,7 +167,7 @@ public:
      *
      * @since 4.4
      */
-    Collection createdCollection() const;
+    Q_REQUIRED_RESULT Collection createdCollection() const;
 
 protected:
     /**

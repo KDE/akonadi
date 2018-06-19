@@ -142,7 +142,7 @@ public:
      * Returns the error string, if there has been an error, an empty
      * string otherwise.
      */
-    QString errorString() const override;
+    Q_REQUIRED_RESULT QString errorString() const override;
 
 Q_SIGNALS:
     /**

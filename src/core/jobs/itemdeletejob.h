@@ -134,7 +134,7 @@ public:
      * Returns the items passed on in the constructor.
      * @since 4.4
      */
-    Item::List deletedItems() const;
+    Q_REQUIRED_RESULT Item::List deletedItems() const;
 
 protected:
     void doStart() override;

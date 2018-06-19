@@ -47,8 +47,8 @@ public:
     void monitoredTagChanged(const Akonadi::Tag &tag);
     void monitoredTagRemoved(const Akonadi::Tag &tag);
 
-    QModelIndex indexForTag(qint64 tagId) const;
-    Tag tagForIndex(const QModelIndex &index) const;
+    Q_REQUIRED_RESULT QModelIndex indexForTag(qint64 tagId) const;
+    Q_REQUIRED_RESULT Tag tagForIndex(const QModelIndex &index) const;
 
     void removeTagsRecursively(qint64 parentTag);
 

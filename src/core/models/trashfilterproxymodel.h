@@ -62,7 +62,7 @@ public:
     ~TrashFilterProxyModel() override;
 
     void showTrash(bool enable);
-    bool trashIsShown() const;
+    Q_REQUIRED_RESULT bool trashIsShown() const;
 
 protected:
     /**

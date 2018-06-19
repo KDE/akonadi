@@ -129,7 +129,7 @@ public:
     /**
      * Returns the items that matched the search query.
      */
-    Item::List items() const;
+    Q_REQUIRED_RESULT Item::List items() const;
 
     /**
      * Search only for items of given mime types.
@@ -143,7 +143,7 @@ public:
      *
      * @since 4.13
      */
-    QStringList mimeTypes() const;
+    Q_REQUIRED_RESULT QStringList mimeTypes() const;
 
     /**
      * Search only in given collections.
@@ -166,7 +166,7 @@ public:
      *
      * @since 4.13
      */
-    Collection::List searchCollections() const;
+    Q_REQUIRED_RESULT Collection::List searchCollections() const;
 
     /**
      * Sets whether the search should recurse into collections
@@ -217,7 +217,7 @@ public:
      *
      * @since 4.13
      */
-    bool isRemoteSearchEnabled() const;
+    Q_REQUIRED_RESULT bool isRemoteSearchEnabled() const;
 
 Q_SIGNALS:
     /**

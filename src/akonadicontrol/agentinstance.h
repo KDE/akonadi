@@ -55,7 +55,7 @@ public:
     }
 
     /** Set/get the unique identifier of this AgentInstance */
-    QString identifier() const
+    Q_REQUIRED_RESULT QString identifier() const
     {
         return mIdentifier;
     }
@@ -65,32 +65,32 @@ public:
         mIdentifier = identifier;
     }
 
-    QString agentType() const
+    Q_REQUIRED_RESULT QString agentType() const
     {
         return mType;
     }
 
-    int status() const
+    Q_REQUIRED_RESULT int status() const
     {
         return mStatus;
     }
 
-    QString statusMessage() const
+    Q_REQUIRED_RESULT QString statusMessage() const
     {
         return mStatusMessage;
     }
 
-    int progress() const
+    Q_REQUIRED_RESULT int progress() const
     {
         return mPercent;
     }
 
-    bool isOnline() const
+    Q_REQUIRED_RESULT bool isOnline() const
     {
         return mOnline;
     }
 
-    QString resourceName() const
+    Q_REQUIRED_RESULT QString resourceName() const
     {
         return mResourceName;
     }
@@ -101,17 +101,17 @@ public:
     virtual void restartWhenIdle() = 0;
     virtual void configure(qlonglong windowId) = 0;
 
-    bool hasResourceInterface() const
+    Q_REQUIRED_RESULT bool hasResourceInterface() const
     {
         return mResourceInterface;
     }
 
-    bool hasAgentInterface() const
+    Q_REQUIRED_RESULT bool hasAgentInterface() const
     {
         return mAgentControlInterface && mAgentStatusInterface;
     }
 
-    bool hasPreprocessorInterface() const
+    Q_REQUIRED_RESULT bool hasPreprocessorInterface() const
     {
         return mPreprocessorInterface;
     }
@@ -141,9 +141,9 @@ public:
         return mPreprocessorInterface;
     }
 
-    bool obtainAgentInterface();
-    bool obtainResourceInterface();
-    bool obtainPreprocessorInterface();
+    Q_REQUIRED_RESULT bool obtainAgentInterface();
+    Q_REQUIRED_RESULT bool obtainResourceInterface();
+    Q_REQUIRED_RESULT bool obtainPreprocessorInterface();
 
 protected Q_SLOTS:
     void statusChanged(int status, const QString &statusMsg);

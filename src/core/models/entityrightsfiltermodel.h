@@ -86,17 +86,17 @@ public:
     /**
      * Returns the access rights that are used for filtering.
      */
-    Collection::Rights accessRights() const;
+    Q_REQUIRED_RESULT Collection::Rights accessRights() const;
 
     /**
      * @reimp
      */
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
 
     /**
      * @reimp
      */
-    QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
+    Q_REQUIRED_RESULT QModelIndexList match(const QModelIndex &start, int role, const QVariant &value, int hits = 1,
                           Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:

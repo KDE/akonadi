@@ -95,7 +95,7 @@ public:
     /**
      * Returns the created item with the new unique id, or an invalid item if the job failed.
      */
-    Item item() const;
+    Q_REQUIRED_RESULT Item item() const;
 
     enum MergeOption {
         NoMerge = 0, ///< Don't merge

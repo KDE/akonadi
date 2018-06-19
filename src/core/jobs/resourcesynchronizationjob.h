@@ -80,7 +80,7 @@ public:
      *
      * @since 4.8
      */
-    bool collectionTreeOnly() const;
+    Q_REQUIRED_RESULT bool collectionTreeOnly() const;
 
     /**
      * Sets the collectionTreeOnly property.
@@ -93,7 +93,7 @@ public:
     /**
      * Returns the resource that has been synchronized.
      */
-    AgentInstance resource() const;
+    Q_REQUIRED_RESULT AgentInstance resource() const;
 
     /* reimpl */
     void start() override;
@@ -102,7 +102,7 @@ public:
      * @since 5.1
      */
     void setTimeoutCountLimit(int count);
-    int timeoutCountLimit() const;
+    Q_REQUIRED_RESULT int timeoutCountLimit() const;
 
 private:
     //@cond PRIVATE

@@ -112,7 +112,7 @@ public:
     /**
      * Returns the fetched tags after the job has been completed.
      */
-    Tag::List tags() const;
+    Q_REQUIRED_RESULT Tag::List tags() const;
 
 Q_SIGNALS:
     /**

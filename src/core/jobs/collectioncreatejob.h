@@ -74,7 +74,7 @@ public:
     /**
      * Returns the created collection if the job was executed successfully.
      */
-    Collection collection() const;
+    Q_REQUIRED_RESULT Collection collection() const;
 
 protected:
     void doStart() override;

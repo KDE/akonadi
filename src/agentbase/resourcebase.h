@@ -206,7 +206,7 @@ public:
     /**
      * Returns the name of the resource.
      */
-    QString name() const;
+    Q_REQUIRED_RESULT QString name() const;
 
     /**
      * Enable or disable automatic progress reporting. By default, it is enabled.

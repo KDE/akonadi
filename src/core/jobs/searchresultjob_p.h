@@ -38,7 +38,7 @@ public:
     ~SearchResultJob() override;
 
     void setSearchId(const QByteArray &searchId);
-    QByteArray searchId() const;
+    Q_REQUIRED_RESULT QByteArray searchId() const;
 
     void setResult(const ImapSet &set);
     void setResult(const QVector<QByteArray> &remoteIds);

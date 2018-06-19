@@ -69,7 +69,7 @@ public:
     /**
      * Returns whether there are recorded changes.
      */
-    bool isEmpty() const;
+    Q_REQUIRED_RESULT bool isEmpty() const;
 
     /**
      * Removes the previously emitted change from the records.
@@ -87,7 +87,7 @@ public:
     /**
      * Debugging: dump current list of notifications, as saved on disk.
      */
-    QString dumpNotificationListToString() const;
+    Q_REQUIRED_RESULT QString dumpNotificationListToString() const;
 
 public Q_SLOTS:
     /**

@@ -39,7 +39,7 @@ public:
 
 public:
     AgentType();
-    bool load(const QString &fileName, AgentManager *manager);
+    Q_REQUIRED_RESULT bool load(const QString &fileName, AgentManager *manager);
     void save(QSettings *config) const;
 
     QString identifier;

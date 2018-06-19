@@ -64,12 +64,12 @@ public:
     ~QuotaColorProxyModel() override;
 
     void setWarningThreshold(qreal threshold);
-    qreal warningThreshold() const;
+    Q_REQUIRED_RESULT qreal warningThreshold() const;
 
     void setWarningColor(const QColor &color);
-    QColor warningColor() const;
+    Q_REQUIRED_RESULT QColor warningColor() const;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    Q_REQUIRED_RESULT QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 private:
     //@cond PRIVATE
     class Private;

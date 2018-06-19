@@ -90,21 +90,21 @@ public:
      */
     ~ItemModel() override;
 
-    int columnCount(const QModelIndex &parent = QModelIndex()) const override;
+    Q_REQUIRED_RESULT int columnCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
+    Q_REQUIRED_RESULT QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
 
-    int rowCount(const QModelIndex &parent = QModelIndex()) const override;
+    Q_REQUIRED_RESULT int rowCount(const QModelIndex &parent = QModelIndex()) const override;
 
-    QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
+    Q_REQUIRED_RESULT QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 
-    Qt::ItemFlags flags(const QModelIndex &index) const override;
+    Q_REQUIRED_RESULT Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    QMimeData *mimeData(const QModelIndexList &indexes) const override;
+    Q_REQUIRED_RESULT QMimeData *mimeData(const QModelIndexList &indexes) const override;
 
-    QStringList mimeTypes() const override;
+    Q_REQUIRED_RESULT QStringList mimeTypes() const override;
 
-    Qt::DropActions supportedDropActions() const override;
+    Q_REQUIRED_RESULT Qt::DropActions supportedDropActions() const override;
 
     /**
      * Sets the item fetch scope.
@@ -135,7 +135,7 @@ public:
     /**
      * Returns the item at the given @p index.
      */
-    Item itemForIndex(const QModelIndex &index) const;
+    Q_REQUIRED_RESULT Item itemForIndex(const QModelIndex &index) const;
 
     /**
      * Returns the model index for the given item, with the given column.
@@ -143,14 +143,14 @@ public:
      * @param item The item to find.
      * @param column The column for the returned index.
      */
-    QModelIndex indexForItem(const Akonadi::Item &item, const int column) const;
+    Q_REQUIRED_RESULT QModelIndex indexForItem(const Akonadi::Item &item, const int column) const;
 
-    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    Q_REQUIRED_RESULT bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
 
     /**
      * Returns the collection being displayed in the model.
      */
-    Collection collection() const;
+    Q_REQUIRED_RESULT Collection collection() const;
 
 public Q_SLOTS:
     /**

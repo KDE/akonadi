@@ -75,7 +75,7 @@ public:
     /**
      * Returns the requested collection.
      */
-    Collection collection() const;
+    Q_REQUIRED_RESULT Collection collection() const;
 
 protected:
     /**

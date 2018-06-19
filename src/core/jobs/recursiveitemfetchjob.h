@@ -133,7 +133,7 @@ public:
     /**
      * Returns the list of fetched items.
      */
-    Akonadi::Item::List items() const;
+    Q_REQUIRED_RESULT Akonadi::Item::List items() const;
 
     /**
      * Starts the recursive item fetch job.

@@ -48,7 +48,7 @@ public:
     /**
      * Returns the relation.
      */
-    Relation relation() const;
+    Q_REQUIRED_RESULT Relation relation() const;
 
 protected:
     void doStart() override;

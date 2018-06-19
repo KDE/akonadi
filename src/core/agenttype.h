@@ -83,48 +83,48 @@ public:
     /**
      * Returns whether the agent type is valid.
      */
-    bool isValid() const;
+    Q_REQUIRED_RESULT bool isValid() const;
 
     /**
      * Returns the unique identifier of the agent type.
      */
-    QString identifier() const;
+    Q_REQUIRED_RESULT QString identifier() const;
 
     /**
      * Returns the i18n'ed name of the agent type.
      */
-    QString name() const;
+    Q_REQUIRED_RESULT QString name() const;
 
     /**
      * Returns the description of the agent type.
      */
-    QString description() const;
+    Q_REQUIRED_RESULT QString description() const;
 
     /**
      * Returns the name of the icon of the agent type.
      */
-    QString iconName() const;
+    Q_REQUIRED_RESULT QString iconName() const;
 
     /**
      * Returns the icon of the agent type.
      */
-    QIcon icon() const;
+    Q_REQUIRED_RESULT QIcon icon() const;
 
     /**
      * Returns the list of supported mime types of the agent type.
      */
-    QStringList mimeTypes() const;
+    Q_REQUIRED_RESULT QStringList mimeTypes() const;
 
     /**
      * Returns the list of supported capabilities of the agent type.
      */
-    QStringList capabilities() const;
+    Q_REQUIRED_RESULT QStringList capabilities() const;
 
     /**
      * Returns a Map of custom properties of the agent type.
      * @since 4.12
      */
-    QVariantMap customProperties() const;
+    Q_REQUIRED_RESULT QVariantMap customProperties() const;
 
     /**
      * @internal

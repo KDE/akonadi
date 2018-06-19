@@ -90,14 +90,14 @@ public:
      *
      * @since 4.7
      */
-    Collection destinationCollection() const;
+    Q_REQUIRED_RESULT Collection destinationCollection() const;
 
     /**
      * Returns the list of items that where passed in the constructor.
      *
      * @since 4.7
      */
-    Akonadi::Item::List items() const;
+    Q_REQUIRED_RESULT Akonadi::Item::List items() const;
 
 protected:
     void doStart() override;

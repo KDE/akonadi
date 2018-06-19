@@ -45,7 +45,7 @@ public:
     /**
      * Returns the tags passed to the constructor.
      */
-    Tag::List tags() const;
+    Q_REQUIRED_RESULT Tag::List tags() const;
 
 protected:
     void doStart() override;

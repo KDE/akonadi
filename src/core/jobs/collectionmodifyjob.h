@@ -106,7 +106,7 @@ public:
      *
      * @since 4.4
      */
-    Collection collection() const;
+    Q_REQUIRED_RESULT Collection collection() const;
 
 protected:
     void doStart() override;

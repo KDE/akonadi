@@ -49,7 +49,7 @@ public:
     /**
      * Returns the modified tag.
      */
-    Tag tag() const;
+    Q_REQUIRED_RESULT Tag tag() const;
 
 protected:
     void doStart() override;

@@ -34,32 +34,32 @@ namespace Akonadi
  */
 namespace CollectionUtils
 {
-inline bool isVirtualParent(const Collection &collection)
+Q_REQUIRED_RESULT inline bool isVirtualParent(const Collection &collection)
 {
     return (collection.parentCollection() == Collection::root() && collection.isVirtual());
 }
 
-inline bool isReadOnly(const Collection &collection)
+Q_REQUIRED_RESULT inline bool isReadOnly(const Collection &collection)
 {
     return !(collection.rights() &Collection::CanCreateItem);
 }
 
-inline bool isRoot(const Collection &collection)
+Q_REQUIRED_RESULT inline bool isRoot(const Collection &collection)
 {
     return (collection == Collection::root());
 }
 
-inline bool isResource(const Collection &collection)
+Q_REQUIRED_RESULT inline bool isResource(const Collection &collection)
 {
     return (collection.parentCollection() == Collection::root());
 }
 
-inline bool isStructural(const Collection &collection)
+Q_REQUIRED_RESULT inline bool isStructural(const Collection &collection)
 {
     return collection.contentMimeTypes().isEmpty();
 }
 
-inline bool isFolder(const Collection &collection)
+Q_REQUIRED_RESULT inline bool isFolder(const Collection &collection)
 {
     return (!isRoot(collection) &&
             !isResource(collection) &&
@@ -67,7 +67,7 @@ inline bool isFolder(const Collection &collection)
             collection.resource() != QLatin1String("akonadi_search_resource"));
 }
 
-inline QString defaultIconName(const Collection &col)
+Q_REQUIRED_RESULT inline QString defaultIconName(const Collection &col)
 {
     if (CollectionUtils::isVirtualParent(col)) {
         return QStringLiteral("edit-find");
@@ -105,7 +105,7 @@ inline QString defaultIconName(const Collection &col)
     }
     return QStringLiteral("folder");
 }
-inline QString displayIconName(const Collection &col)
+Q_REQUIRED_RESULT inline QString displayIconName(const Collection &col)
 {
     QString iconName = defaultIconName(col);
     if (col.hasAttribute<EntityDisplayAttribute>() &&
@@ -119,7 +119,7 @@ inline QString displayIconName(const Collection &col)
     return iconName;
 
 }
-inline bool hasValidHierarchicalRID(const Collection &col)
+Q_REQUIRED_RESULT inline bool hasValidHierarchicalRID(const Collection &col)
 {
     if (col == Collection::root()) {
         return true;
@@ -129,7 +129,7 @@ inline bool hasValidHierarchicalRID(const Collection &col)
     }
     return hasValidHierarchicalRID(col.parentCollection());
 }
-inline bool hasValidHierarchicalRID(const Item &item)
+Q_REQUIRED_RESULT inline bool hasValidHierarchicalRID(const Item &item)
 {
     return !item.remoteId().isEmpty() && hasValidHierarchicalRID(item.parentCollection());
 }

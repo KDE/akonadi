@@ -138,7 +138,7 @@ public:
     /**
      * Returns the list of fetched collection.
      */
-    Collection::List collections() const;
+    Q_REQUIRED_RESULT Collection::List collections() const;
 
     /**
      * Sets the collection fetch scope.
@@ -167,7 +167,7 @@ public:
      * @see setFetchScope() for replacing the current collection fetch scope
      * @since 4.4
      */
-    CollectionFetchScope &fetchScope();
+    Q_REQUIRED_RESULT CollectionFetchScope &fetchScope();
 
 Q_SIGNALS:
     /**

@@ -66,12 +66,12 @@ public:
     /**
       Returns a new unique command tag for communication with the backend.
     */
-    qint64 newTag();
+    Q_REQUIRED_RESULT qint64 newTag();
 
     /**
       Return the tag used for the request.
     */
-    qint64 tag() const;
+    Q_REQUIRED_RESULT qint64 tag() const;
 
     /**
       Sends the @p command to the backend
@@ -112,7 +112,7 @@ public:
      */
     virtual void aboutToFinish();
 
-    int protocolVersion() const;
+    Q_REQUIRED_RESULT int protocolVersion() const;
 
     Job *q_ptr;
     Q_DECLARE_PUBLIC(Job)
