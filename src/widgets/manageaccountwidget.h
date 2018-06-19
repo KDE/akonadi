@@ -51,20 +51,20 @@ public:
 
     void setSpecialCollectionIdentifier(const QString &identifier);
 
-    QStringList mimeTypeFilter() const;
+    Q_REQUIRED_RESULT QStringList mimeTypeFilter() const;
     void setMimeTypeFilter(const QStringList &mimeTypeFilter);
 
-    QStringList capabilityFilter() const;
+    Q_REQUIRED_RESULT QStringList capabilityFilter() const;
     void setCapabilityFilter(const QStringList &capabilityFilter);
 
-    QStringList excludeCapabilities() const;
+    Q_REQUIRED_RESULT QStringList excludeCapabilities() const;
     void setExcludeCapabilities(const QStringList &excludeCapabilities);
 
     void setItemDelegate(QAbstractItemDelegate *delegate);
 
-    QAbstractItemView *view() const;
+    Q_REQUIRED_RESULT QAbstractItemView *view() const;
 
-    QPushButton *addAccountButton() const;
+    Q_REQUIRED_RESULT QPushButton *addAccountButton() const;
     void disconnectAddAccountButton();
 protected:
     bool eventFilter(QObject *obj, QEvent *event) override;

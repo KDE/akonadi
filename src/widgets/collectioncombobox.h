@@ -97,7 +97,7 @@ public:
      * Returns the content mimetype the collections are filtered by.
      * Don't assume this list has the original order.
      */
-    QStringList mimeTypeFilter() const;
+    Q_REQUIRED_RESULT QStringList mimeTypeFilter() const;
 
     /**
      * Sets the access @p rights the collections shall be filtered by.
@@ -107,7 +107,7 @@ public:
     /**
      * Returns the access rights the collections are filtered by.
      */
-    Collection::Rights accessRightsFilter() const;
+    Q_REQUIRED_RESULT Collection::Rights accessRightsFilter() const;
 
     /**
      * Sets the @p collection that shall be selected by default.
@@ -117,7 +117,7 @@ public:
     /**
      * Returns the current selection.
      */
-    Akonadi::Collection currentCollection() const;
+    Q_REQUIRED_RESULT Akonadi::Collection currentCollection() const;
 
     /**
      * @since 4.12
@@ -126,7 +126,7 @@ public:
     /**
      * @since 4.12
      */
-    bool excludeVirtualCollections() const;
+    Q_REQUIRED_RESULT bool excludeVirtualCollections() const;
 
 Q_SIGNALS:
     /**

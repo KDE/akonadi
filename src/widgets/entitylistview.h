@@ -134,7 +134,7 @@ public:
      *
      * @since 4.7
      */
-    bool isDropActionMenuEnabled() const;
+    Q_REQUIRED_RESULT bool isDropActionMenuEnabled() const;
 
 Q_SIGNALS:
     /**

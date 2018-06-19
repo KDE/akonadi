@@ -38,7 +38,7 @@ class AKONADI_XML_EXPORT XmlWriteJob : public Job
 public:
     XmlWriteJob(const Collection &root, const QString &fileName, QObject *parent = nullptr);
     XmlWriteJob(const Collection::List &roots, const QString &fileName, QObject *parent = nullptr);
-    ~XmlWriteJob();
+    ~XmlWriteJob() override;
 
 protected:
     /* reimpl. */ void doStart() override;

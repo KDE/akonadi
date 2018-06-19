@@ -45,12 +45,12 @@ public:
     explicit NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor);
     ~NotificationSubscriber();
 
-    inline QByteArray subscriber() const
+    Q_REQUIRED_RESULT inline QByteArray subscriber() const
     {
         return mSubscriber;
     }
 
-    QLocalSocket *socket() const
+    Q_REQUIRED_RESULT QLocalSocket *socket() const
     {
         return mSocket;
     }

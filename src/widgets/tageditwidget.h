@@ -43,7 +43,7 @@ public:
     ~TagEditWidget() override;
 
     void setSelection(const Akonadi::Tag::List &tags);
-    Akonadi::Tag::List selection() const;
+    Q_REQUIRED_RESULT Akonadi::Tag::List selection() const;
 
 protected:
     bool eventFilter(QObject *watched, QEvent *event) override;

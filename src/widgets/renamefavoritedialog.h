@@ -34,7 +34,7 @@ public:
     explicit RenameFavoriteDialog(const QString &caption, const QString &text, const QString &value, const QString &defaultName, QWidget *parent);
     ~RenameFavoriteDialog();
 
-    QString newName() const;
+    Q_REQUIRED_RESULT QString newName() const;
 
 protected:
 

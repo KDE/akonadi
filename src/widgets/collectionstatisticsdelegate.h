@@ -87,7 +87,7 @@ public:
     /**
      * Destroys the collection statistics delegate.
      */
-    ~CollectionStatisticsDelegate();
+    ~CollectionStatisticsDelegate() override;
 
     /**
      * @since 4.9.1

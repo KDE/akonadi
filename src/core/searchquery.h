@@ -67,24 +67,24 @@ public:
     ~SearchTerm();
 
     SearchTerm &operator=(const SearchTerm &other);
-    bool operator==(const SearchTerm &other) const;
+    Q_REQUIRED_RESULT bool operator==(const SearchTerm &other) const;
 
-    bool isNull() const;
+    Q_REQUIRED_RESULT bool isNull() const;
 
     /**
      * Returns key of this end term.
      */
-    QString key() const;
+    Q_REQUIRED_RESULT QString key() const;
 
     /**
      * Returns value of this end term.
      */
-    QVariant value() const;
+    Q_REQUIRED_RESULT QVariant value() const;
 
     /**
      * Returns relation between key and value.
      */
-    SearchTerm::Condition condition() const;
+    Q_REQUIRED_RESULT SearchTerm::Condition condition() const;
 
     /**
      * Adds a new subterm to this term.
@@ -98,12 +98,12 @@ public:
     /**
      * Returns all subterms, or an empty list if this is an end term.
      */
-    QList<SearchTerm> subTerms() const;
+    Q_REQUIRED_RESULT QList<SearchTerm> subTerms() const;
 
     /**
      * Returns relation in which all subterms are.
      */
-    SearchTerm::Relation relation() const;
+    Q_REQUIRED_RESULT SearchTerm::Relation relation() const;
 
     /**
      * Sets whether the entire term is negated.
@@ -113,7 +113,7 @@ public:
     /**
      * Returns whether the entire term is negated.
      */
-    bool isNegated() const;
+    Q_REQUIRED_RESULT bool isNegated() const;
 
 private:
     class Private;

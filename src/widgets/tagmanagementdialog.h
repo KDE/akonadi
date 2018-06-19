@@ -42,7 +42,7 @@ public:
     explicit TagManagementDialog(QWidget *parent = nullptr);
     ~TagManagementDialog() override;
 
-    QDialogButtonBox *buttons() const;
+    Q_REQUIRED_RESULT QDialogButtonBox *buttons() const;
 
 private:
     struct Private;

@@ -50,7 +50,7 @@ public:
     /**
      * Returns whether this collection is supposed to be indexed at all.
      */
-    bool indexingEnabled() const;
+    Q_REQUIRED_RESULT bool indexingEnabled() const;
 
     /**
      * Sets whether this collection should be indexed at all.

@@ -46,7 +46,7 @@ AKONADICORE_EXPORT void setTrashCollection(const QString &resource, const Collec
 /**
  * Get the trash collection for the given @p resource
  */
-AKONADICORE_EXPORT Collection getTrashCollection(const QString &resource);
+Q_REQUIRED_RESULT AKONADICORE_EXPORT Collection getTrashCollection(const QString &resource);
 }
 
 }

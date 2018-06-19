@@ -58,25 +58,25 @@ public:
 
        @see isValid(), lastError()
     */
-    bool loadFile(const QString &fileName);
+    Q_REQUIRED_RESULT bool loadFile(const QString &fileName);
 
     /**
       Writes the current document into the given file.
     */
-    bool writeToFile(const QString &fileName) const;
+    Q_REQUIRED_RESULT bool writeToFile(const QString &fileName) const;
 
     /**
       Returns true if the document could be parsed successfully.
       @see lastError()
     */
-    bool isValid() const;
+    Q_REQUIRED_RESULT bool isValid() const;
 
     /**
       Returns the last error occurred during file loading/parsing.
       Empty if isValid() returns @c true.
       @see isValid()
     */
-    QString lastError() const;
+    Q_REQUIRED_RESULT QString lastError() const;
 
     /**
       Returns the DOM document for this XML document.
@@ -86,47 +86,47 @@ public:
     /**
       Returns the DOM element representing @p collection.
     */
-    QDomElement collectionElement(const Collection &collection) const;
+    Q_REQUIRED_RESULT QDomElement collectionElement(const Collection &collection) const;
 
     /**
       Returns the DOM element representing the item with the given remote id
     */
-    QDomElement itemElementByRemoteId(const QString &rid) const;
+    Q_REQUIRED_RESULT QDomElement itemElementByRemoteId(const QString &rid) const;
 
     /**
      * Returns the DOM element representing the collection with the given remote id
      */
-    QDomElement collectionElementByRemoteId(const QString &rid) const;
+    Q_REQUIRED_RESULT QDomElement collectionElementByRemoteId(const QString &rid) const;
 
     /**
       Returns the collection with the given remote id.
     */
-    Collection collectionByRemoteId(const QString &rid) const;
+    Q_REQUIRED_RESULT Collection collectionByRemoteId(const QString &rid) const;
 
     /**
       Returns the item with the given remote id.
     */
-    Item itemByRemoteId(const QString &rid, bool includePayload = true) const;
+    Q_REQUIRED_RESULT Item itemByRemoteId(const QString &rid, bool includePayload = true) const;
 
     /**
       Returns the collections defined in this document.
     */
-    Collection::List collections() const;
+    Q_REQUIRED_RESULT Collection::List collections() const;
 
     /**
       Returns the tags defined in this document.
     */
-    Tag::List tags() const;
+    Q_REQUIRED_RESULT Tag::List tags() const;
 
     /**
       Returns the immediate child collections of @p parentCollection.
     */
-    Collection::List childCollections(const Collection &parentCollection) const;
+    Q_REQUIRED_RESULT Collection::List childCollections(const Collection &parentCollection) const;
 
     /**
       Returns the items in the given collection.
     */
-    Item::List items(const Collection &collection, bool includePayload = true) const;
+    Q_REQUIRED_RESULT Item::List items(const Collection &collection, bool includePayload = true) const;
 
 private:
     Q_DISABLE_COPY(XmlDocument)

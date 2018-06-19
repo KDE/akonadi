@@ -63,7 +63,7 @@ public:
     /**
      * Returns the resolve strategy the user choose.
      */
-    ConflictHandler::ResolveStrategy resolveStrategy() const;
+    Q_REQUIRED_RESULT ConflictHandler::ResolveStrategy resolveStrategy() const;
 
 private Q_SLOTS:
     void slotUseLocalItemChoosen();

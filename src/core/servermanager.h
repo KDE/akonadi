@@ -64,7 +64,7 @@ public:
      * the server is really running though) and @c false if an immediate error occurred.
      * @see Akonadi::Control::start()
      */
-    static bool start();
+    Q_REQUIRED_RESULT static bool start();
 
     /**
      * Stops the server. This methods returns immediately after the shutdown
@@ -73,7 +73,7 @@ public:
      * @return @c true if the shutdown command was sent successfully, @c false
      * otherwise
      */
-    static bool stop();
+    Q_REQUIRED_RESULT static bool stop();
 
     /**
      * Shows the Akonadi self test dialog, which tests Akonadi for various problems
@@ -87,13 +87,13 @@ public:
      * see state().
      * @see state()
      */
-    static bool isRunning();
+    Q_REQUIRED_RESULT static bool isRunning();
 
     /**
      * Returns the state of the server.
      * @since 4.5
      */
-    static State state();
+    Q_REQUIRED_RESULT static State state();
 
     /**
      * Returns the reason why the Server is broken, if known.
@@ -104,7 +104,7 @@ public:
      *
      * @since 5.6
      */
-    static QString brokenReason();
+    Q_REQUIRED_RESULT static QString brokenReason();
 
     /**
      * Returns the identifier of the Akonadi instance we are connected to. This is usually
@@ -112,13 +112,13 @@ public:
      * the AKONADI_INSTANCE environment variable to connect to a different one.
      * @since 4.10
      */
-    static QString instanceIdentifier();
+    Q_REQUIRED_RESULT static QString instanceIdentifier();
 
     /**
      * Returns @c true if we are connected to a non-default Akonadi server instance.
      * @since 4.10
      */
-    static bool hasInstanceIdentifier();
+    Q_REQUIRED_RESULT static bool hasInstanceIdentifier();
 
     /**
      * Types of known D-Bus services.
@@ -157,7 +157,7 @@ public:
      * @param identifier the agent identifier to include in the D-Bus name
      * @since 4.10
      */
-    static QString agentServiceName(ServiceAgentType agentType, const QString &identifier);
+    Q_REQUIRED_RESULT static QString agentServiceName(ServiceAgentType agentType, const QString &identifier);
 
     /**
      * Adds the multi-instance namespace to @p string if required (with '_' as separator).
@@ -165,7 +165,7 @@ public:
      * @param string the string to adapt
      * @since 4.10
      */
-    static QString addNamespace(const QString &string);
+    Q_REQUIRED_RESULT static QString addNamespace(const QString &string);
 
     /**
      * Returns the singleton instance of this class, for connecting to its
@@ -181,13 +181,13 @@ public:
      * Returns absolute path to akonadiserverrc file with Akonadi server
      * configuration.
      */
-    static QString serverConfigFilePath(OpenMode openMode);
+    Q_REQUIRED_RESULT static QString serverConfigFilePath(OpenMode openMode);
 
     /**
      * Returns absolute path to configuration file of an agent identified by
      * given @p identifier.
      */
-    static QString agentConfigFilePath(const QString &identifier);
+    Q_REQUIRED_RESULT static QString agentConfigFilePath(const QString &identifier);
 
     /**
      * Returns current Akonadi database generation identifier
@@ -206,7 +206,7 @@ public:
      *
      * @since 5.4
      */
-    static uint generation();
+    Q_REQUIRED_RESULT static uint generation();
 
 Q_SIGNALS:
     /**

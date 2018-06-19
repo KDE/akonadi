@@ -130,7 +130,7 @@ public:
      *
      * @since 4.5
      */
-    bool isDropActionMenuEnabled() const;
+    Q_REQUIRED_RESULT bool isDropActionMenuEnabled() const;
 
     /**
      * Return true if we use an manual sorting
@@ -139,7 +139,7 @@ public:
      * When automatic no show dnd menu between two items.
      * @since 4.8.1
      */
-    bool isManualSortingActive() const;
+    Q_REQUIRED_RESULT bool isManualSortingActive() const;
 
     /**
      * Set true if we automatic sorting

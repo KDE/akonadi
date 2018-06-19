@@ -63,12 +63,12 @@ public:
     /**
      * Destroys the cache policy page.
      */
-    ~CachePolicyPage();
+    ~CachePolicyPage() override;
 
     /**
      * Checks if the cache policy page can actually handle the given @p collection.
      */
-    bool canHandle(const Collection &collection) const override;
+    Q_REQUIRED_RESULT bool canHandle(const Collection &collection) const override;
 
     /**
      * Loads the page content from the given @p collection.

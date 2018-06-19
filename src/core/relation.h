@@ -84,7 +84,7 @@ public:
     /**
      * Returns the identifier of the left side of the relation.
      */
-    Item left() const;
+    Q_REQUIRED_RESULT Item left() const;
 
     /**
      * Sets the @p item of the right side of the relation.
@@ -94,7 +94,7 @@ public:
     /**
      * Returns the identifier of the right side of the relation.
      */
-    Item right() const;
+    Q_REQUIRED_RESULT Item right() const;
 
     /**
      * Sets the type of the relation.
@@ -104,7 +104,7 @@ public:
     /**
      * Returns the type of the relation.
      */
-    QByteArray type() const;
+    Q_REQUIRED_RESULT QByteArray type() const;
 
     /**
      * Sets the remote id of the relation.
@@ -114,9 +114,9 @@ public:
     /**
      * Returns the remote id of the relation.
      */
-    QByteArray remoteId() const;
+    Q_REQUIRED_RESULT QByteArray remoteId() const;
 
-    bool isValid() const;
+    Q_REQUIRED_RESULT bool isValid() const;
 
 private:
     struct Private;

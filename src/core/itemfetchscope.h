@@ -109,7 +109,7 @@ public:
      *
      * @see fetchPayloadPart()
      */
-    QSet<QByteArray> payloadParts() const;
+    Q_REQUIRED_RESULT QSet<QByteArray> payloadParts() const;
 
     /**
      * Sets which payload parts shall be fetched.
@@ -125,7 +125,7 @@ public:
      *
      * @see fetchFullPayload()
      */
-    bool fullPayload() const;
+    Q_REQUIRED_RESULT bool fullPayload() const;
 
     /**
      * Sets whether the full payload shall be fetched.
@@ -142,7 +142,7 @@ public:
      *
      * @see fetchAttribute()
      */
-    QSet<QByteArray> attributes() const;
+    Q_REQUIRED_RESULT QSet<QByteArray> attributes() const;
 
     /**
      * Sets whether the attribute of the given @p type should be fetched.
@@ -168,7 +168,7 @@ public:
      *
      * @see fetchAllAttributes()
      */
-    bool allAttributes() const;
+    Q_REQUIRED_RESULT bool allAttributes() const;
 
     /**
      * Sets whether all available attributes should be fetched.
@@ -184,7 +184,7 @@ public:
      *
      * @see setCacheOnly()
      */
-    bool cacheOnly() const;
+    Q_REQUIRED_RESULT bool cacheOnly() const;
 
     /**
      * Sets whether payload data should be requested from remote sources or just
@@ -211,7 +211,7 @@ public:
      *
      * @since 4.11
      */
-    bool checkForCachedPayloadPartsOnly() const;
+    Q_REQUIRED_RESULT bool checkForCachedPayloadPartsOnly() const;
 
     /**
      * Sets how many levels of ancestor collections should be included in the retrieval.
@@ -228,7 +228,7 @@ public:
      * @see setAncestorRetrieval()
      * @since 4.4
      */
-    AncestorRetrieval ancestorRetrieval() const;
+    Q_REQUIRED_RESULT AncestorRetrieval ancestorRetrieval() const;
 
     /**
      * Enables retrieval of the item modification time.
@@ -245,7 +245,7 @@ public:
      * @see setFetchModificationTime()
      * @since 4.6
      */
-    bool fetchModificationTime() const;
+    Q_REQUIRED_RESULT bool fetchModificationTime() const;
 
     /**
      * Enables retrieval of the item GID.
@@ -262,7 +262,7 @@ public:
      * @see setFetchGid()
      * @since 4.12
      */
-    bool fetchGid() const;
+    Q_REQUIRED_RESULT bool fetchGid() const;
 
     /**
      * Ignore retrieval errors while fetching items, and always deliver what is available.
@@ -283,12 +283,12 @@ public:
      * @see setIgnoreRetrievalErrors()
      * @since 4.10
      */
-    bool ignoreRetrievalErrors() const;
+    Q_REQUIRED_RESULT bool ignoreRetrievalErrors() const;
 
     /**
      * Returns @c true if there is nothing to fetch.
      */
-    bool isEmpty() const;
+    Q_REQUIRED_RESULT bool isEmpty() const;
 
     /**
      * Only fetch items that were added or modified after given timestamp
@@ -305,7 +305,7 @@ public:
     /**
      * Returns timestamp of the oldest item to fetch.
      */
-    QDateTime fetchChangedSince() const;
+    Q_REQUIRED_RESULT QDateTime fetchChangedSince() const;
 
     /**
      * Fetch remote identification for items.
@@ -326,7 +326,7 @@ public:
      * @see setFetchRemoteIdentification()
      * @since 4.12
      */
-    bool fetchRemoteIdentification() const;
+    Q_REQUIRED_RESULT bool fetchRemoteIdentification() const;
 
     /**
      * Fetch tags for items.
@@ -346,7 +346,7 @@ public:
      * @see setFetchTags()
      * @since 4.13
      */
-    bool fetchTags() const;
+    Q_REQUIRED_RESULT bool fetchTags() const;
 
     /**
      * Sets the tag fetch scope.
@@ -389,7 +389,7 @@ public:
      * @see setFetchScope() for replacing the current tag fetch scope
      * @since 4.15
      */
-    TagFetchScope tagFetchScope() const;
+    Q_REQUIRED_RESULT TagFetchScope tagFetchScope() const;
 
     /**
      * Returns whether to fetch list of virtual collections the item is linked to
@@ -405,7 +405,7 @@ public:
      * @see setFetchVirtualReferences()
      * @since 4.14
      */
-    bool fetchVirtualReferences() const;
+    Q_REQUIRED_RESULT bool fetchVirtualReferences() const;
 
     /**
      * Fetch relations for items.
@@ -423,7 +423,7 @@ public:
      * @see setFetchRelations()
      * @since 4.15
      */
-    bool fetchRelations() const;
+    Q_REQUIRED_RESULT bool fetchRelations() const;
 
 private:
     //@cond PRIVATE

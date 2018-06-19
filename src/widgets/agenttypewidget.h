@@ -71,13 +71,13 @@ public:
      * Returns the current agent type or an invalid agent type
      * if no agent type is selected.
      */
-    AgentType currentAgentType() const;
+    Q_REQUIRED_RESULT AgentType currentAgentType() const;
 
     /**
      * Returns the agent filter proxy model, use this to filter by
      * agent mimetype or capabilities.
      */
-    AgentFilterProxyModel *agentFilterProxyModel() const;
+    Q_REQUIRED_RESULT AgentFilterProxyModel *agentFilterProxyModel() const;
 
 Q_SIGNALS:
     /**

@@ -76,13 +76,13 @@ public:
      * Returns whether the given agent @p instance has a special collection of
      * the given @p type.
      */
-    bool hasCollection(const QByteArray &type, const AgentInstance &instance) const;
+    Q_REQUIRED_RESULT bool hasCollection(const QByteArray &type, const AgentInstance &instance) const;
 
     /**
      * Returns the special collection of the given @p type in the given agent
      * @p instance, or an invalid collection if such a collection is unknown.
      */
-    Akonadi::Collection collection(const QByteArray &type, const AgentInstance &instance) const;
+    Q_REQUIRED_RESULT Akonadi::Collection collection(const QByteArray &type, const AgentInstance &instance) const;
 
     /**
      * Registers the given @p collection as a special collection
@@ -93,14 +93,14 @@ public:
      * Registering a new collection of a previously registered type forgets the
      * old collection.
      */
-    bool registerCollection(const QByteArray &type, const Akonadi::Collection &collection);
+    Q_REQUIRED_RESULT bool registerCollection(const QByteArray &type, const Akonadi::Collection &collection);
 
     /**
      * Unregisters the given @p collection as a special collection.
      * @param type the special type of @c collection
      * @since 4.12
      */
-    bool unregisterCollection(const Collection &collection);
+    Q_REQUIRED_RESULT bool unregisterCollection(const Collection &collection);
 
     /**
      * unsets the special collection attribute which marks @p collection as being a special
@@ -123,13 +123,13 @@ public:
      * Returns whether the default resource has a special collection of
      * the given @p type.
      */
-    bool hasDefaultCollection(const QByteArray &type) const;
+    Q_REQUIRED_RESULT bool hasDefaultCollection(const QByteArray &type) const;
 
     /**
      * Returns the special collection of given @p type in the default
      * resource, or an invalid collection if such a collection is unknown.
      */
-    Akonadi::Collection defaultCollection(const QByteArray &type) const;
+    Q_REQUIRED_RESULT Akonadi::Collection defaultCollection(const QByteArray &type) const;
 
 Q_SIGNALS:
     /**

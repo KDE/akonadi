@@ -55,7 +55,7 @@ public:
      * @p intervalMinutes Minimum timeout interval in minutes.
      */
     void setMinimumInterval(int intervalMinutes);
-    int minimumInterval() const;
+    Q_REQUIRED_RESULT int minimumInterval() const;
 
 protected:
     virtual void init() override;

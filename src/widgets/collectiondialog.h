@@ -129,7 +129,7 @@ public:
     /**
      * Returns the mime types any of which the selected collection(s) shall support.
      */
-    QStringList mimeTypeFilter() const;
+    Q_REQUIRED_RESULT QStringList mimeTypeFilter() const;
 
     /**
      * Sets the access @p rights that the listed collections shall match with.
@@ -143,7 +143,7 @@ public:
      *
      * @since 4.4
      */
-    Collection::Rights accessRightsFilter() const;
+    Q_REQUIRED_RESULT Collection::Rights accessRightsFilter() const;
 
     /**
      * Sets the @p text that will be shown in the dialog.
@@ -171,19 +171,19 @@ public:
      * Returns the selection mode.
      * @see QAbstractItemView::selectionMode()
      */
-    QAbstractItemView::SelectionMode selectionMode() const;
+    Q_REQUIRED_RESULT QAbstractItemView::SelectionMode selectionMode() const;
 
     /**
      * Returns the selected collection if the selection mode is
      * QAbstractItemView::SingleSelection. If another selection mode was set,
      * or nothing is selected, an invalid collection is returned.
      */
-    Akonadi::Collection selectedCollection() const;
+    Q_REQUIRED_RESULT Akonadi::Collection selectedCollection() const;
 
     /**
      * Returns the list of selected collections.
      */
-    Akonadi::Collection::List selectedCollections() const;
+    Q_REQUIRED_RESULT Akonadi::Collection::List selectedCollections() const;
 
     /**
      * Change collection dialog options.
@@ -199,7 +199,7 @@ public:
     /**
       * @since 4.13
       */
-    bool useFolderByDefault() const;
+    Q_REQUIRED_RESULT bool useFolderByDefault() const;
     /**
      * Allow to specify collection content mimetype when we create new one.
      * @since 4.14.6
