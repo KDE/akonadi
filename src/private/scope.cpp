@@ -343,7 +343,7 @@ void Scope::toJson(QJsonObject &json) const
         break;
     default:
         json[QStringLiteral("type")] = QStringLiteral("invalid");
-        json[QStringLiteral("value")] = QJsonValue(scope());
+        json[QStringLiteral("value")] = QJsonValue(static_cast<int>(scope()));
     }
 }
 
