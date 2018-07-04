@@ -47,9 +47,12 @@ public:
     virtual ~ActionStateManager();
 
     /**
-     * Updates the states according to the selected @p collections and @p items.
+     * Updates the states according to the selected collections and items.
+     * @param collections selected collections (from the folder tree)
+     * @param favoriteCollections selected collections (among the ones marked as favorites)
+     * @param items selected items
      */
-    void updateState(const Collection::List &collections, const Item::List &items);
+    void updateState(const Collection::List &collections, const Collection::List &favoriteCollections, const Item::List &items);
 
     /**
      * Sets the @p receiver object that will actually update the states.

@@ -567,7 +567,7 @@ private Q_SLOTS:
         QFETCH(StateMap, stateMap);
 
         UnitActionStateManager manager(this);
-        manager.updateState(collections, Item::List());
+        manager.updateState(collections, collections, Item::List());
 
         QCOMPARE(stateMap.count(), mStateMap.count());
 

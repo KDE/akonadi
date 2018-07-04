@@ -457,23 +457,38 @@ public:
         }
 #endif
     }
+
+    static Akonadi::Collection::List collectionsForIndexes(const QModelIndexList& list)
+    {
+        Akonadi::Collection::List collectionList;
+        for (const QModelIndex &index : list) {
+            Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+            if (!collection.isValid()) {
+                continue;
+            }
+
+            const Collection parentCollection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
+            collection.setParentCollection(parentCollection);
+
+            collectionList << std::move(collection);
+        }
+        return collectionList;
+    }
+
     void updateActions()
     {
+        // favorite collections
+        Collection::List selectedFavoriteCollectionsList;
+        if (favoriteSelectionModel) {
+            const QModelIndexList rows = safeSelectedRows(favoriteSelectionModel);
+            selectedFavoriteCollectionsList = collectionsForIndexes(rows);
+        }
+
         // collect all selected collections
         Collection::List selectedCollectionsList;
         if (collectionSelectionModel) {
             const QModelIndexList rows = safeSelectedRows(collectionSelectionModel);
-            for (const QModelIndex &index : rows) {
-                Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
-                if (!collection.isValid()) {
-                    continue;
-                }
-
-                const Collection parentCollection = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
-                collection.setParentCollection(parentCollection);
-
-                selectedCollectionsList << collection;
-            }
+            selectedCollectionsList = collectionsForIndexes(rows);
         }
 
         // collect all selected items
@@ -493,7 +508,7 @@ public:
             }
         }
 
-        mActionStateManager.updateState(selectedCollectionsList, selectedItems);
+        mActionStateManager.updateState(selectedCollectionsList, selectedFavoriteCollectionsList, selectedItems);
         if (favoritesModel) {
             enableAction(StandardActionManager::SynchronizeFavoriteCollections, (favoritesModel->rowCount() > 0));
         }
@@ -1001,9 +1016,9 @@ public:
 
     void slotRemoveFromFavorites()
     {
-        Q_ASSERT(collectionSelectionModel);
+        Q_ASSERT(favoriteSelectionModel);
         Q_ASSERT(favoritesModel);
-        const QModelIndexList list = safeSelectedRows(collectionSelectionModel);
+        const QModelIndexList list = safeSelectedRows(favoriteSelectionModel);
         if (list.isEmpty()) {
             return;
         }
@@ -1021,9 +1036,9 @@ public:
 
     void slotRenameFavorite()
     {
-        Q_ASSERT(collectionSelectionModel);
+        Q_ASSERT(favoriteSelectionModel);
         Q_ASSERT(favoritesModel);
-        const QModelIndexList list = safeSelectedRows(collectionSelectionModel);
+        const QModelIndexList list = safeSelectedRows(favoriteSelectionModel);
         if (list.isEmpty()) {
             return;
         }
