@@ -290,7 +290,8 @@ public:
 
         qRegisterMetaType<Akonadi::Item::List>("Akonadi::Item::List");
     }
-    void enableAction(int type, bool enable)
+
+    void enableAction(int type, bool enable) // private slot, called by ActionStateManager
     {
         enableAction(static_cast<StandardActionManager::Type>(type), enable);
     }
@@ -366,7 +367,7 @@ public:
         }
     }
 
-    void updateAlternatingAction(int type)
+    void updateAlternatingAction(int type) // private slot, called by ActionStateManager
     {
         updateAlternatingAction(static_cast<StandardActionManager::Type>(type));
     }
@@ -415,12 +416,12 @@ public:
         }
     }
 
-    void updatePluralLabel(int type, int count)
+    void updatePluralLabel(int type, int count) // private slot, called by ActionStateManager
     {
         updatePluralLabel(static_cast<StandardActionManager::Type>(type), count);
     }
 
-    void updatePluralLabel(StandardActionManager::Type type, int count)
+    void updatePluralLabel(StandardActionManager::Type type, int count) // private slot, called by ActionStateManager
     {
         Q_ASSERT(type < StandardActionManager::LastType);
         if (actions[type] && pluralLabels.contains(type) && !pluralLabels.value(type).isEmpty()) {
@@ -428,7 +429,7 @@ public:
         }
     }
 
-    bool isFavoriteCollection(const Akonadi::Collection &collection)
+    bool isFavoriteCollection(const Akonadi::Collection &collection) // private slot, called by ActionStateManager
     {
         if (!favoritesModel) {
             return false;
