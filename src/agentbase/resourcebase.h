@@ -107,7 +107,8 @@ class ResourceBasePrivate;
  * Note that these three functions don't get the full payload of the items by default,
  * you need to change the item fetch scope of the change recorder to fetch the full
  * payload. This can be expensive with big payloads, though.<br>
- * Once you have handled changes in these methods, call changeCommitted().
+ * Once you have handled changes in itemAdded() and itemChanged(), call changeCommitted().
+ * Once you have handled changes in itemRemoved(), call changeProcessed();
  * These methods are called whenever a local item related to this resource is
  * added, modified or deleted. They are only called if the resource is online, otherwise
  * all changes are recorded and replayed as soon the resource is online again.
@@ -136,7 +137,8 @@ class ResourceBasePrivate;
  * - collectionAdded()
  * - collectionChanged()
  * - collectionRemoved()
- * Once you have handled changes in these methods call changeCommitted().
+ * Once you have handled changes in collectionAdded() and collectionChanged(), call changeCommitted().
+ * Once you have handled changes in collectionRemoved(), call changeProcessed();
  * These methods are called whenever a local collection related to this resource is
  * added, modified or deleted. They are only called if the resource is online, otherwise
  * all changes are recorded and replayed as soon the resource is online again.
