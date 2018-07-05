@@ -688,10 +688,13 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                 mImpl << "    switch (" << prop->mVariableName() << ") {\n;"
                          "    case Tristate::True:\n"
                          "        json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"True\");\n"
+                         "        break;\n"
                          "    case Tristate::False:\n"
-                         "       json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"False\");\n"
+                         "        json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"False\");\n"
+                         "        break;\n"
                          "    case Tristate::Undefined:\n"
                          "        json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"Undefined\");\n"
+                         "        break;\n"
                          "    }\n";
             } else if (prop->type() == QStringLiteral("Akonadi::Protocol::Attributes")) {
                mImpl << "    {\n"
