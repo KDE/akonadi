@@ -426,16 +426,22 @@ void StorageJanitor::verifyExternalParts()
         return;
     }
     while (qb.query().next()) {
-        QString partPath = ExternalPartStorage::resolveAbsolutePath(qb.query().value(0).toByteArray());
+        const auto filename = qb.query().value(0).toByteArray();
         const Entity::Id pimItemId = qb.query().value(1).value<Entity::Id>();
-        const Entity::Id id = qb.query().value(2).value<Entity::Id>();
+        const Entity::Id partId = qb.query().value(2).value<Entity::Id>();
+        QString partPath;
+        if (!filename.isEmpty()) {
+            partPath = ExternalPartStorage::resolveAbsolutePath(filename);
+        } else {
+            partPath = ExternalPartStorage::resolveAbsolutePath(ExternalPartStorage::nameForPartId(partId));
+        }
         if (existingFiles.contains(partPath)) {
             usedFiles.insert(partPath);
         } else {
-            inform(QLatin1Literal("Cleaning up missing external file: ") + partPath + QLatin1Literal(" for item: ") + QString::number(pimItemId) + QLatin1Literal(" on part: ") + QString::number(id));
+            inform(QLatin1Literal("Cleaning up missing external file: ") + partPath + QLatin1Literal(" for item: ") + QString::number(pimItemId) + QLatin1Literal(" on part: ") + QString::number(partId));
 
             Part part;
-            part.setId(id);
+            part.setId(partId);
             part.setPimItemId(pimItemId);
             part.setData(QByteArray());
             part.setDatasize(0);
