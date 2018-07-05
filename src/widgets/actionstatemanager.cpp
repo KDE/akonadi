@@ -74,7 +74,7 @@ void ActionStateManager::setReceiver(QObject *object)
     mReceiver = object;
 }
 
-void ActionStateManager::updateState(const Collection::List &collections, const Item::List &items)
+void ActionStateManager::updateState(const Collection::List &collections, const Collection::List &favoriteCollections, const Item::List &items)
 {
     const int collectionCount = collections.count();
     const bool singleCollectionSelected = (collectionCount == 1);
@@ -86,7 +86,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     const bool multipleItemsSelected = (itemCount > 1);
     const bool atLeastOneItemSelected = (singleItemSelected || multipleItemsSelected);
 
-    const bool listOfCollectionNotEmpty = collections.isEmpty() ? false : true;
+    const bool listOfCollectionNotEmpty = !collections.isEmpty();
     bool canDeleteCollections = listOfCollectionNotEmpty;
     if (canDeleteCollections) {
         for (const Collection &collection : collections) {
@@ -161,13 +161,6 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
             }
         }
     }
-    bool canRemoveFromFavoriteCollections = listOfCollectionNotEmpty;
-    for (const Collection &collection : collections) {
-        if (!isFavoriteCollection(collection)) {
-            canRemoveFromFavoriteCollections = false;
-            break;
-        }
-    }
 
     bool collectionsAreFolders = listOfCollectionNotEmpty;
 
@@ -235,10 +228,10 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
     // favorite collections specific actions
     enableAction(StandardActionManager::AddToFavoriteCollections, canAddToFavoriteCollections);
 
+    const bool canRemoveFromFavoriteCollections = !favoriteCollections.isEmpty();
     enableAction(StandardActionManager::RemoveFromFavoriteCollections, canRemoveFromFavoriteCollections);
 
-    enableAction(StandardActionManager::RenameFavoriteCollection, singleCollectionSelected &&  // we can rename only one collection at a time
-                 isFavoriteCollection(collection));    // it must be a favorite collection already
+    enableAction(StandardActionManager::RenameFavoriteCollection, favoriteCollections.count() == 1); // we can rename only one collection at a time
 
     // resource specific actions
     int resourceCollectionCount = 0;
