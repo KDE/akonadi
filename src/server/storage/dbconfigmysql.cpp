@@ -358,7 +358,7 @@ bool DbConfigMysql::startInternalServer()
 
         // first run, some MySQL versions need a mysql_install_db run for that
         const QString confFile = StandardDirs::locateResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
-        if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty() && !mMysqlInstallDbPath.isEmpty()) {
+        if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty()) {
             if (isMariaDB) {
                 initializeMariaDBDatabase(confFile, dataDir);
             } else if (localVersion >= MYSQL_VERSION_CHECK(5, 7, 6)) {
@@ -564,6 +564,13 @@ int DbConfigMysql::parseCommandLineToolsVersion() const
 
 bool DbConfigMysql::initializeMariaDBDatabase(const QString &confFile, const QString &dataDir) const
 {
+    // KDE Neon (and possible others) don't ship mysql_install_db, but it seems
+    // that MariaDB can initialize itself automatically on first start, it only
+    // needs that the datadir directory exists
+    if (mMysqlInstallDbPath.isEmpty()) {
+        return QDir().mkpath(dataDir);
+    }
+
     QFileInfo fi(mMysqlInstallDbPath);
     QDir dir = fi.dir();
     dir.cdUp();
@@ -591,6 +598,11 @@ bool DbConfigMysql::initializeMySQL5_7_6Database(const QString &confFile, const 
 
 bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QString &dataDir) const
 {
+    if (mMysqlInstallDbPath.isEmpty()) {
+        qCWarning(AKONADISERVER_LOG) << "mysql_install_db needed to intialize MySQL database wasn't found!";
+        return false;
+    }
+
     QFileInfo fi(mMysqlInstallDbPath);
     QDir dir = fi.dir();
     dir.cdUp();

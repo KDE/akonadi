@@ -220,7 +220,7 @@ void Connection::handleIncomingData()
 {
     Q_FOREVER {
 
-        if (m_connectionClosing || m_socket->state() != QLocalSocket::ConnectedState) {
+        if (m_connectionClosing || !m_socket || m_socket->state() != QLocalSocket::ConnectedState) {
             break;
         }
 
@@ -234,7 +234,7 @@ void Connection::handleIncomingData()
             loop.exec();
         }
 
-        if (m_connectionClosing || m_socket->state() != QLocalSocket::ConnectedState) {
+        if (m_connectionClosing || !m_socket || m_socket->state() != QLocalSocket::ConnectedState) {
             break;
         }
 
@@ -355,7 +355,7 @@ void Connection::handleIncomingData()
             delete m_currentHandler;
             m_currentHandler = nullptr;
 
-            if (m_socket->state() != QLocalSocket::ConnectedState) {
+            if (!m_socket || m_socket->state() != QLocalSocket::ConnectedState) {
                 Q_EMIT disconnected();
                 return;
             }

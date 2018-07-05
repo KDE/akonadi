@@ -203,16 +203,22 @@ void akInit(const QString &appName)
         QFile fileOld(infoOld.absoluteFilePath());
         const bool success = fileOld.remove();
         if (!success) {
-            qFatal("Cannot remove old log file - running on a readonly filesystem maybe?");
+            qFatal("Cannot remove old log file '%s': %s",
+                qUtf8Printable(fileOld.fileName()),
+                qUtf8Printable(fileOld.errorString()));
         }
     }
 
     QFileInfo info(errorLogFile);
     if (info.exists()) {
         QFile file(info.absoluteFilePath());
-        const bool success = file.copy(errorLogFile + QLatin1String(".old"));
+        const auto oldName = errorLogFile + QLatin1String(".old");
+        const bool success = file.copy(oldName);
         if (!success) {
-            qFatal("Cannot rename log file - running on a readonly filesystem maybe?");
+            qFatal("Cannot rename log file '%s' to '%s': %s",
+                   qUtf8Printable(file.fileName()),
+                   qUtf8Printable(oldName),
+                   qUtf8Printable(file.errorString()));
         }
     }
 
