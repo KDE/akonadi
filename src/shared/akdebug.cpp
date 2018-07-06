@@ -212,7 +212,7 @@ void akInit(const QString &appName)
     QFileInfo info(errorLogFile);
     if (info.exists()) {
         QFile file(info.absoluteFilePath());
-        const auto oldName = errorLogFile + QLatin1String(".old");
+        const QString oldName = errorLogFile + QLatin1String(".old");
         const bool success = file.copy(oldName);
         if (!success) {
             qFatal("Cannot rename log file '%s' to '%s': %s",
