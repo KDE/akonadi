@@ -38,6 +38,23 @@ Q_DECLARE_METATYPE(QVector<Tag>)
 Q_DECLARE_METATYPE(MimeType)
 Q_DECLARE_METATYPE(QList<QByteArray>)
 
+namespace Akonadi {
+namespace Server {
+
+class FakeDataStoreFactory : public DataStoreFactory
+{
+public:
+    FakeDataStoreFactory() = default;
+    ~FakeDataStoreFactory() override = default;
+    DataStore * createStore() override
+    {
+        return new FakeDataStore();
+    }
+};
+
+}
+}
+
 Akonadi::Server::FakeDataStore::FakeDataStore()
     : DataStore()
     , mPopulateDb(true)
@@ -49,13 +66,9 @@ FakeDataStore::~FakeDataStore()
 {
 }
 
-DataStore *FakeDataStore::self()
+void FakeDataStore::registerFactory()
 {
-    if (!sInstances.hasLocalData()) {
-        sInstances.setLocalData(new FakeDataStore());
-    }
-
-    return sInstances.localData();
+    sFactory.reset(new FakeDataStoreFactory);
 }
 
 bool FakeDataStore::init()

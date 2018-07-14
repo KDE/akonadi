@@ -118,6 +118,8 @@ FakeAkonadiServer::FakeAkonadiServer()
     qputenv("KDEHOME", qPrintable(basePath() + QLatin1String("/kdehome")));
 
     mClient = new FakeClient;
+
+    FakeDataStore::registerFactory();
 }
 
 FakeAkonadiServer::~FakeAkonadiServer()

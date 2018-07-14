@@ -32,10 +32,20 @@ class QTimer;
 #include "entities.h"
 #include "notificationcollector.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 namespace Server
 {
+
+class DataStore;
+class DataStoreFactory
+{
+public:
+    virtual ~DataStoreFactory() = default;
+    virtual DataStore *createStore();
+};
 
 class NotificationCollector;
 
@@ -350,6 +360,7 @@ private Q_SLOTS:
 
 protected:
     static QThreadStorage<DataStore *> sInstances;
+    static std::unique_ptr<DataStoreFactory> sFactory;
 
     QString m_connectionName;
     QSqlDatabase m_database;
@@ -368,6 +379,7 @@ protected:
 
     // Gives QueryBuilder access to addQueryToTransaction() and retryLastTransaction()
     friend class QueryBuilder;
+    friend class DataStoreFactory;
 
 };
 

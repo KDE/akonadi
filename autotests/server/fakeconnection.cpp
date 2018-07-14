@@ -37,16 +37,6 @@ FakeConnection::FakeConnection(QObject *parent)
 
 FakeConnection::~FakeConnection()
 {
-
-}
-
-DataStore *FakeConnection::storageBackend()
-{
-    if (!m_backend) {
-        m_backend = static_cast<FakeDataStore *>(FakeDataStore::self());
-    }
-
-    return m_backend;
 }
 
 NotificationCollector *FakeConnection::notificationCollector()

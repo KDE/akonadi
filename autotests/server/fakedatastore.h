@@ -25,13 +25,15 @@
 namespace Akonadi {
 namespace Server {
 
+class FakeDataStoreFactory;
 class FakeDataStore : public DataStore
 {
     Q_OBJECT
-
+    friend class FakeDataStoreFactory;
 public:
     ~FakeDataStore() override;
-    static DataStore *self();
+
+    static void registerFactory();
 
     bool init() override;
 

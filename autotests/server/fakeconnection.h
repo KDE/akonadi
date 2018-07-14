@@ -36,8 +36,6 @@ public:
     explicit FakeConnection(QObject *parent = nullptr);
     ~FakeConnection() override;
 
-    DataStore *storageBackend() override;
-
 public Q_SLOTS:
     Akonadi::Server::NotificationCollector *notificationCollector();
 

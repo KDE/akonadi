@@ -75,6 +75,14 @@ QThreadStorage<DataStore *> DataStore::sInstances;
         } \
     }
 
+DataStore *DataStoreFactory::createStore()
+{
+    return new DataStore();
+}
+
+std::unique_ptr<DataStoreFactory> DataStore::sFactory = std::make_unique<DataStoreFactory>();
+
+
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
@@ -231,7 +239,7 @@ NotificationCollector *DataStore::notificationCollector()
 DataStore *DataStore::self()
 {
     if (!sInstances.hasLocalData()) {
-        sInstances.setLocalData(new DataStore());
+        sInstances.setLocalData(sFactory->createStore());
     }
     return sInstances.localData();
 }
