@@ -93,14 +93,14 @@ public:
      * Registering a new collection of a previously registered type forgets the
      * old collection.
      */
-    Q_REQUIRED_RESULT bool registerCollection(const QByteArray &type, const Akonadi::Collection &collection);
+    bool registerCollection(const QByteArray &type, const Akonadi::Collection &collection);
 
     /**
      * Unregisters the given @p collection as a special collection.
      * @param type the special type of @c collection
      * @since 4.12
      */
-    Q_REQUIRED_RESULT bool unregisterCollection(const Collection &collection);
+    bool unregisterCollection(const Collection &collection);
 
     /**
      * unsets the special collection attribute which marks @p collection as being a special

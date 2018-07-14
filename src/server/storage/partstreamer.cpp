@@ -361,7 +361,7 @@ bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &
     }
 
     bool ok = streamPayload(part, partName);
-    if (ok && mCheckChanged) {
+    if (changed && ok && mCheckChanged) {
         *changed = mDataChanged;
     }
 

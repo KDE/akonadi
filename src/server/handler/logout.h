@@ -35,6 +35,8 @@ class Logout : public Handler
 {
     Q_OBJECT
 public:
+    ~Logout() override = default;
+
     bool parseStream() override;
 
 };

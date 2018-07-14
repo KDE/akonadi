@@ -36,6 +36,8 @@ class SearchPersistent : public Handler
 {
     Q_OBJECT
 public:
+    ~SearchPersistent() override = default;
+
     bool parseStream() override;
 };
 

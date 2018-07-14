@@ -37,10 +37,12 @@ namespace Server
   to be unique per resource, so this command should be issued before running any RID based
   collection commands.
 */
-class  ResourceSelect : public Handler
+class ResourceSelect : public Handler
 {
     Q_OBJECT
 public:
+    ~ResourceSelect() override = default;
+
     bool parseStream() override;
 };
 

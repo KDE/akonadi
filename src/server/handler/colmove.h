@@ -39,6 +39,8 @@ class ColMove : public Handler
 {
     Q_OBJECT
 public:
+    ~ColMove() override = default;
+
     bool parseStream() override;
 };
 

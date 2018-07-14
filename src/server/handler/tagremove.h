@@ -31,6 +31,8 @@ class TagRemove : public Handler
 {
     Q_OBJECT
 public:
+    ~TagRemove() override = default;
+
     bool parseStream() override;
 };
 

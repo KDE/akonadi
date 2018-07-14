@@ -514,7 +514,7 @@ public:
     /**
      * Returns the collection fetch strategy of the model.
      */
-    CollectionFetchStrategy collectionFetchStrategy() const;
+    Q_REQUIRED_RESULT CollectionFetchStrategy collectionFetchStrategy() const;
 
     Q_REQUIRED_RESULT QHash<int, QByteArray> roleNames() const override;
 
@@ -529,8 +529,8 @@ public:
 
     Q_REQUIRED_RESULT Qt::DropActions supportedDropActions() const override;
     Q_REQUIRED_RESULT QMimeData *mimeData(const QModelIndexList &indexes) const override;
-    Q_REQUIRED_RESULT bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
-    Q_REQUIRED_RESULT bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
+    bool dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent) override;
+    bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
 
     Q_REQUIRED_RESULT QModelIndex index(int row, int column, const QModelIndex &parent = QModelIndex()) const override;
     Q_REQUIRED_RESULT QModelIndex parent(const QModelIndex &index) const override;

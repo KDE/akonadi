@@ -197,7 +197,7 @@ Item ItemSerializer::convert(const Item &item, int mtid)
         qCDebug(AKONADICORE_LOG) << "  -> found a plugin that feels responsible, trying serialising the payload";
         QBuffer buffer;
         buffer.open(QIODevice::ReadWrite);
-        int version;
+        int version = 0;
         serialize(item, Item::FullPayload, buffer, version);
         buffer.seek(0);
         qCDebug(AKONADICORE_LOG) << "    -> serialized payload into" << buffer.size() << "bytes" << endl

@@ -34,6 +34,8 @@ class RelationStore : public Handler
     Q_OBJECT
 
 public:
+    ~RelationStore() override = default;
+
     bool parseStream() override;
 
 private:

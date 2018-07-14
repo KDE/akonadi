@@ -39,6 +39,8 @@ class Search : public Handler
     Q_OBJECT
 
 public:
+    ~Search() override = default;
+
     bool parseStream() override;
 
 private Q_SLOTS:

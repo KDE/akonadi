@@ -39,6 +39,8 @@ class AkAppend : public Handler
 {
     Q_OBJECT
 public:
+    ~AkAppend() override = default;
+
     bool parseStream() override;
 
 private:

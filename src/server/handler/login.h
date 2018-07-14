@@ -35,6 +35,8 @@ class Login : public Handler
 {
     Q_OBJECT
 public:
+    ~Login() override = default;
+
     bool parseStream() override;
 };
 

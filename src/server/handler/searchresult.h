@@ -36,6 +36,8 @@ class SearchResult : public Handler
 {
     Q_OBJECT
 public:
+    ~SearchResult() override = default;
+
     bool parseStream() override;
 
 private:

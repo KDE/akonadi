@@ -1016,11 +1016,11 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadTagNotification(QData
                 stream >> dummyIv;
             }
         }
-    }
-    if (version >= 5) {
-        msg->setOperation(static_cast<Protocol::TagChangeNotification::Operation>(operation));
-    } else {
-        msg->setOperation(mapTagOperation(static_cast<LegacyOp>(operation)));
+        if (version >= 5) {
+            msg->setOperation(static_cast<Protocol::TagChangeNotification::Operation>(operation));
+        } else {
+            msg->setOperation(mapTagOperation(static_cast<LegacyOp>(operation)));
+        }
     }
     msg->setResource(resource);
     return msg;
@@ -1124,12 +1124,11 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(
             }
             msg->setRelation(relation);
         }
-    }
-
-    if (version >= 5) {
-        msg->setOperation(static_cast<Protocol::RelationChangeNotification::Operation>(operation));
-    } else {
-        msg->setOperation(mapRelationOperation(static_cast<LegacyOp>(operation)));
+        if (version >= 5) {
+            msg->setOperation(static_cast<Protocol::RelationChangeNotification::Operation>(operation));
+        } else {
+            msg->setOperation(mapRelationOperation(static_cast<LegacyOp>(operation)));
+        }
     }
 
     return msg;

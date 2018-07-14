@@ -141,9 +141,9 @@ public:
         return mPreprocessorInterface;
     }
 
-    Q_REQUIRED_RESULT bool obtainAgentInterface();
-    Q_REQUIRED_RESULT bool obtainResourceInterface();
-    Q_REQUIRED_RESULT bool obtainPreprocessorInterface();
+    bool obtainAgentInterface();
+    bool obtainResourceInterface();
+    bool obtainPreprocessorInterface();
 
 protected Q_SLOTS:
     void statusChanged(int status, const QString &statusMsg);

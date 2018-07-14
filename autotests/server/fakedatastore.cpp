@@ -49,14 +49,6 @@ FakeDataStore::~FakeDataStore()
 {
 }
 
-NotificationCollector *FakeDataStore::notificationCollector()
-{
-    if (!mNotificationCollector) {
-        mNotificationCollector = new NotificationCollector(this);
-    }
-    return mNotificationCollector;
-}
-
 DataStore *FakeDataStore::self()
 {
     if (!sInstances.hasLocalData()) {

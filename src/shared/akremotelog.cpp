@@ -92,6 +92,7 @@ private Q_SLOTS:
                                                       QDBusConnection::sessionBus(), this);
         if (!mAkonadiConsoleInterface->isValid()) {
             delete mAkonadiConsoleInterface;
+            return;
         }
 
         connect(mAkonadiConsoleInterface, SIGNAL(enabledChanged(bool)),

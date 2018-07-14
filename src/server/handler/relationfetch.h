@@ -36,6 +36,8 @@ class RelationFetch : public Handler
 {
     Q_OBJECT
 public:
+    ~RelationFetch() override = default;
+
     bool parseStream() override;
 };
 

@@ -35,9 +35,10 @@ namespace Server
 class TransactionHandler : public Handler
 {
     Q_OBJECT
-    Q_ENUMS(Mode)
 
 public:
+    ~TransactionHandler() override = default;
+
     bool parseStream() override;
 };
 

@@ -55,6 +55,7 @@ public:
     FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
     FetchHelper(ResponseCollectorInterface *collector, Connection *connection,
                 CommandContext *context, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
+    ~FetchHelper() override = default;
 
     bool fetchItems();
 

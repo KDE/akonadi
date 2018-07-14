@@ -36,6 +36,8 @@ class TagFetch : public Handler
 {
     Q_OBJECT
 public:
+    ~TagFetch() override = default;
+
     bool parseStream() override;
 };
 

@@ -39,6 +39,8 @@ class Create : public Handler
 {
     Q_OBJECT
 public:
+    ~Create() override = default;
+
     bool parseStream() override;
 };
 

@@ -89,6 +89,7 @@ class List : public Handler
 
 public:
     List();
+    ~List() override = default;
 
     bool parseStream() override;
 

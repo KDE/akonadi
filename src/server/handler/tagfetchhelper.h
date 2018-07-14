@@ -39,6 +39,7 @@ class TagFetchHelper : public QObject
 
 public:
     TagFetchHelper(Connection *connection, const Scope &scope);
+    ~TagFetchHelper() override = default;
 
     bool fetchTags();
 

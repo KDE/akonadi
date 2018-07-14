@@ -106,7 +106,7 @@ public:
     /**
       Closes the database connection.
     */
-    virtual void close();
+    void close();
 
     /**
       Initializes the database. Should be called during startup by the main thread.
@@ -246,13 +246,13 @@ public:
     /**
       Returns true if there is a transaction in progress.
     */
-    virtual bool inTransaction() const;
+    bool inTransaction() const;
 
     /**
       Returns the notification collector of this DataStore object.
       Use this to listen to change notification signals.
     */
-    virtual NotificationCollector *notificationCollector();
+    NotificationCollector *notificationCollector();
 
     /**
       Returns the QSqlDatabase object. Use this for generating queries yourself.

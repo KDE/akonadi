@@ -46,10 +46,12 @@ namespace Server
   - based on a global uid set (UID)
   - based on a remote identifier within the currently selected collection (RID)
 */
-class  Remove : public Handler
+class Remove : public Handler
 {
     Q_OBJECT
 public:
+    ~Remove() override = default;
+
     bool parseStream() override;
 };
 

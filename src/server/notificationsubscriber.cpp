@@ -141,13 +141,11 @@ void NotificationSubscriber::disconnectSubscriber()
 {
     QMutexLocker locker(&mLock);
 
-    if (mManager) {
-        auto changeNtf = Protocol::SubscriptionChangeNotificationPtr::create();
-        changeNtf->setSubscriber(mSubscriber);
-        changeNtf->setSessionId(mSession);
-        changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Remove);
-        mManager->slotNotify({ changeNtf });
-    }
+    auto changeNtf = Protocol::SubscriptionChangeNotificationPtr::create();
+    changeNtf->setSubscriber(mSubscriber);
+    changeNtf->setSessionId(mSession);
+    changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Remove);
+    mManager->slotNotify({ changeNtf });
 
     disconnect(mSocket, &QLocalSocket::disconnected,
                this, &NotificationSubscriber::socketDisconnected);
@@ -178,13 +176,11 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
     mSubscriber = command.subscriberName();
     mSession = command.session();
 
-    if (mManager) {
-        auto changeNtf = Protocol::SubscriptionChangeNotificationPtr::create();
-        changeNtf->setSubscriber(mSubscriber);
-        changeNtf->setSessionId(mSession);
-        changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Add);
-        mManager->slotNotify({ changeNtf });
-    }
+    auto changeNtf = Protocol::SubscriptionChangeNotificationPtr::create();
+    changeNtf->setSubscriber(mSubscriber);
+    changeNtf->setSessionId(mSession);
+    changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Add);
+    mManager->slotNotify({ changeNtf });
 }
 
 void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscriptionCommand &command)

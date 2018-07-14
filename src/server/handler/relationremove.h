@@ -31,6 +31,8 @@ class RelationRemove : public Handler
 {
     Q_OBJECT
 public:
+    ~RelationRemove() override = default;
+
     bool parseStream() override;
 };
 

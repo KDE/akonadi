@@ -40,11 +40,13 @@ namespace Server
 
   Destination is a collection id.
 */
-class  Move : public Handler
+class Move : public Handler
 {
     Q_OBJECT
 
 public:
+    ~Move() override = default;
+
     bool parseStream() override;
 
 private Q_SLOTS:

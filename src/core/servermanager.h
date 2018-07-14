@@ -64,7 +64,7 @@ public:
      * the server is really running though) and @c false if an immediate error occurred.
      * @see Akonadi::Control::start()
      */
-    Q_REQUIRED_RESULT static bool start();
+    static bool start();
 
     /**
      * Stops the server. This methods returns immediately after the shutdown
@@ -73,7 +73,7 @@ public:
      * @return @c true if the shutdown command was sent successfully, @c false
      * otherwise
      */
-    Q_REQUIRED_RESULT static bool stop();
+    static bool stop();
 
     /**
      * Shows the Akonadi self test dialog, which tests Akonadi for various problems

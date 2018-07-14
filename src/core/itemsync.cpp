@@ -332,7 +332,6 @@ QString ItemSyncPrivate::jobDebuggingString() const
 
 void ItemSyncPrivate::execute()
 {
-    Q_Q(ItemSync);
     //shouldn't happen
     if (mFinished) {
         qCWarning(AKONADICORE_LOG) << "Call to execute() on finished job.";
@@ -364,7 +363,6 @@ void ItemSyncPrivate::execute()
 //process the current batch of items
 void ItemSyncPrivate::processBatch()
 {
-    Q_Q(ItemSync);
     if (mCurrentBatchRemoteItems.isEmpty() && !mDeliveryDone) {
         return;
     }

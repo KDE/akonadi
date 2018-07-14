@@ -32,6 +32,8 @@ class TagStore : public Handler
     Q_OBJECT
 
 public:
+    ~TagStore() override = default;
+
     bool parseStream() override;
 };
 

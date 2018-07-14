@@ -98,6 +98,8 @@ class Store : public Handler
     Q_OBJECT
 
 public:
+    ~Store() override = default;
+
     bool parseStream() override;
 
 private:

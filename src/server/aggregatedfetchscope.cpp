@@ -289,7 +289,6 @@ ItemFetchScope AggregatedItemFetchScope::toFetchScope() const
     d->mCachedScope.setTagFetchScope(d->tags);
     d->mCachedScope.setAncestorDepth(ancestorDepth());
 
-    ItemFetchScope::FetchFlags flags;
     d->mCachedScope.setFetch(ItemFetchScope::CacheOnly, cacheOnly());
     d->mCachedScope.setFetch(ItemFetchScope::FullPayload, fullPayload());
     d->mCachedScope.setFetch(ItemFetchScope::AllAttributes, allAttributes());

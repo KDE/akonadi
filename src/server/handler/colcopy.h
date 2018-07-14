@@ -50,6 +50,8 @@ class ColCopy : public Copy
 {
     Q_OBJECT
 public:
+    ~ColCopy() override = default;
+
     bool parseStream() override;
 
 private:

@@ -32,6 +32,8 @@ class TagAppend : public Handler
     Q_OBJECT
 
 public:
+    ~TagAppend() override = default;
+
     bool parseStream() override;
 };
 

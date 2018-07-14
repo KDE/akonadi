@@ -58,12 +58,12 @@ public:
 
        @see isValid(), lastError()
     */
-    Q_REQUIRED_RESULT bool loadFile(const QString &fileName);
+    bool loadFile(const QString &fileName);
 
     /**
       Writes the current document into the given file.
     */
-    Q_REQUIRED_RESULT bool writeToFile(const QString &fileName) const;
+    bool writeToFile(const QString &fileName) const;
 
     /**
       Returns true if the document could be parsed successfully.

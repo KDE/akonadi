@@ -115,8 +115,6 @@ public:
     virtual bool rollbackTransaction() override;
     virtual bool commitTransaction() override;
 
-    virtual NotificationCollector *notificationCollector() override;
-
     void setPopulateDb(bool populate);
 
 protected:

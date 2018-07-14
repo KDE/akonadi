@@ -55,6 +55,7 @@ class Copy : public Handler
 {
     Q_OBJECT
 public:
+    ~Copy() override = default;
 
     bool parseStream() override;
 

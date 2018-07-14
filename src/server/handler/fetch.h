@@ -36,6 +36,8 @@ class Fetch : public Handler
 {
     Q_OBJECT
 public:
+    ~Fetch() override = default;
+
     bool parseStream() override;
 };
 

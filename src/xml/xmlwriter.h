@@ -61,7 +61,7 @@ Q_REQUIRED_RESULT AKONADI_XML_EXPORT QDomElement collectionToElement(const Colle
 /**
   Serializes the given collection into a DOM element with the given parent.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT QDomElement writeCollection(const Collection &collection, QDomElement &parentElem);
+AKONADI_XML_EXPORT QDomElement writeCollection(const Collection &collection, QDomElement &parentElem);
 
 /**
   Creates an item element for the given document, not yet attached to the DOM tree
@@ -71,7 +71,7 @@ Q_REQUIRED_RESULT AKONADI_XML_EXPORT QDomElement itemToElement(const Item &item,
 /**
   Serializes the given item into a DOM element and attaches it to the given item.
 */
-Q_REQUIRED_RESULT AKONADI_XML_EXPORT QDomElement writeItem(const Item &item, QDomElement &parentElem);
+AKONADI_XML_EXPORT QDomElement writeItem(const Item &item, QDomElement &parentElem);
 }
 
 }
