@@ -20,7 +20,7 @@
 #ifndef AKONADI_SERVER_PARTSTREAMER_H
 #define AKONADI_SERVER_PARTSTREAMER_H
 
-#include <QObject>
+#include <QSharedPointer>
 
 #include "entities.h"
 
@@ -41,21 +41,16 @@ class PimItem;
 class Part;
 class Connection;
 
-class PartStreamer : public  QObject
+class PartStreamer
 {
-    Q_OBJECT
-
 public:
-    explicit PartStreamer(Connection *connection, const PimItem &pimItem, QObject *parent = nullptr);
+    explicit PartStreamer(Connection *connection, const PimItem &pimItem);
     ~PartStreamer();
 
     bool stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed = nullptr);
     bool streamAttribute(bool checkExists, const QByteArray &partName, const QByteArray &value, bool *changed = nullptr);
 
     QString error() const;
-
-Q_SIGNALS:
-    void responseAvailable(const Protocol::CommandPtr &response);
 
 private:
     bool streamPayload(Part &part, const QByteArray &partName);

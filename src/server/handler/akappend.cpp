@@ -112,9 +112,7 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
 
     // Handle individual parts
     qint64 partSizes = 0;
-    PartStreamer streamer(connection(), item, this);
-    connect(&streamer, &PartStreamer::responseAvailable,
-            this, static_cast<void(Handler::*)(const Protocol::CommandPtr &)>(&Handler::sendResponse));
+    PartStreamer streamer(connection(), item);
     Q_FOREACH (const QByteArray &partName, cmd.parts()) {
         qint64 partSize = 0;
         if (!streamer.stream(true, partName, partSize)) {
@@ -260,8 +258,6 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     }
 
     PartStreamer streamer(connection(), currentItem);
-    connect(&streamer, &PartStreamer::responseAvailable,
-            this, static_cast<void(Handler::*)(const Protocol::CommandPtr &)>(&Handler::sendResponse));
     Q_FOREACH (const QByteArray &partName, cmd.parts()) {
         bool changed = false;
         qint64 partSize = 0;

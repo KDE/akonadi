@@ -284,9 +284,7 @@ bool Store::parseStream()
     }
 
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Parts) {
-        PartStreamer streamer(connection(), item, this);
-        connect(&streamer, &PartStreamer::responseAvailable,
-                this, static_cast<void(Handler::*)(const Protocol::CommandPtr &)>(&Handler::sendResponse));
+        PartStreamer streamer(connection(), item);
         Q_FOREACH (const QByteArray &partName, cmd.parts()) {
             qint64 partSize = 0;
             if (!streamer.stream(true, partName, partSize)) {
@@ -299,9 +297,7 @@ bool Store::parseStream()
     }
 
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::Attributes) {
-        PartStreamer streamer(connection(), item, this);
-        connect(&streamer, &PartStreamer::responseAvailable,
-                this, static_cast<void(Handler::*)(const Protocol::CommandPtr &)>(&Handler::sendResponse));
+        PartStreamer streamer(connection(), item);
         const Protocol::Attributes attrs = cmd.attributes();
         for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
             bool changed = false;

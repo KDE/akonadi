@@ -42,9 +42,8 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 PartStreamer::PartStreamer(Connection *connection,
-                           const PimItem &pimItem, QObject *parent)
-    : QObject(parent)
-    , mConnection(connection)
+                           const PimItem &pimItem)
+    : mConnection(connection)
     , mItem(pimItem)
 {
     // Make sure the file_db_data path exists
@@ -66,7 +65,7 @@ Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partN
         auto resp = Protocol::StreamPayloadCommandPtr::create();
         resp->setPayloadName(partName);
         resp->setRequest(Protocol::StreamPayloadCommand::MetaData);
-        Q_EMIT responseAvailable(resp);
+        mConnection->sendResponse(resp);
     }
 
     const auto cmd = mConnection->readCommand();
@@ -118,7 +117,7 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
         auto resp = Protocol::StreamPayloadCommandPtr::create();
         resp->setPayloadName(metaPart.name());
         resp->setRequest(Protocol::StreamPayloadCommand::Data);
-        Q_EMIT responseAvailable(resp);
+        mConnection->sendResponse(resp);
     }
 
     const auto cmd = mConnection->readCommand();
@@ -215,7 +214,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         cmd->setPayloadName(metaPart.name());
         cmd->setRequest(Protocol::StreamPayloadCommand::Data);
         cmd->setDestination(QString::fromUtf8(filename));
-        Q_EMIT responseAvailable(cmd);
+        mConnection->sendResponse(cmd);
     }
 
     const auto cmd = mConnection->readCommand();
@@ -226,7 +225,7 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         return false;
     }
 
-    QFile file(ExternalPartStorage::resolveAbsolutePath(filename), this);
+    QFile file(ExternalPartStorage::resolveAbsolutePath(filename));
     if (!file.exists()) {
         mError = QStringLiteral("External payload file does not exist");
         qCCritical(AKONADISERVER_LOG) << mError;
@@ -259,7 +258,7 @@ bool PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData
         auto cmd = Protocol::StreamPayloadCommandPtr::create();
         cmd->setPayloadName(metaPart.name());
         cmd->setRequest(Protocol::StreamPayloadCommand::Data);
-        Q_EMIT responseAvailable(cmd);
+        mConnection->sendResponse(cmd);
     }
 
     const auto cmd = mConnection->readCommand();
