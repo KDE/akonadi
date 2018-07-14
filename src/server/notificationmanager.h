@@ -50,7 +50,6 @@ public:
     explicit NotificationManager();
     ~NotificationManager() override;
 
-    void connectNotificationCollector(NotificationCollector *collector);
     void forgetSubscriber(NotificationSubscriber *subscriber);
 
     AggregatedCollectionFetchScope *collectionFetchScope() const { return mCollectionFetchScope; }
@@ -62,7 +61,6 @@ public Q_SLOTS:
 
     void emitPendingNotifications();
 
-private Q_SLOTS:
     void slotNotify(const Akonadi::Protocol::ChangeNotificationList &msgs);
 
 protected:

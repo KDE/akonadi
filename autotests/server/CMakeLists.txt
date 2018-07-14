@@ -32,6 +32,7 @@ set(common_SRCS
     fakesearchmanager.cpp
     fakeitemretrievalmanager.cpp
     dbinitializer.cpp
+    inspectablenotificationcollector.cpp
     ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp
 )
 

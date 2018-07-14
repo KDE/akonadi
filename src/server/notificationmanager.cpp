@@ -125,13 +125,6 @@ void NotificationManager::forgetSubscriber(NotificationSubscriber *subscriber)
     mSubscribers.removeAll(subscriber);
 }
 
-void NotificationManager::connectNotificationCollector(NotificationCollector *collector)
-{
-    connect(collector, &NotificationCollector::notify,
-            this, &NotificationManager::slotNotify,
-            Qt::QueuedConnection);
-}
-
 void NotificationManager::slotNotify(const Protocol::ChangeNotificationList &msgs)
 {
     Q_ASSERT(QThread::currentThread() == thread());

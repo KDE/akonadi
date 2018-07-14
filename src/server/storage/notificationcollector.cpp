@@ -34,25 +34,26 @@
 
 #include "akonadiserver_debug.h"
 
+#include <QScopedValueRollback>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-NotificationCollector::NotificationCollector(QObject *parent)
-    : QObject(parent)
-    , mDb(nullptr)
-{
-}
-
 NotificationCollector::NotificationCollector(DataStore *db)
-    : QObject(db)
-    , mDb(db)
+    : mDb(db)
 {
-    connect(db, &DataStore::transactionCommitted, this, &NotificationCollector::transactionCommitted);
-    connect(db, &DataStore::transactionRolledBack, this, &NotificationCollector::transactionRolledBack);
-}
-
-NotificationCollector::~NotificationCollector()
-{
+    QObject::connect(db, &DataStore::transactionCommitted,
+                     [this]() {
+                         if (!mIgnoreTransactions) {
+                             dispatchNotifications();
+                         }
+                     });
+    QObject::connect(db, &DataStore::transactionRolledBack,
+                     [this]() {
+                         if (!mIgnoreTransactions) {
+                             clear();
+                         }
+                     });
 }
 
 void NotificationCollector::itemAdded(const PimItem &item,
@@ -234,16 +235,6 @@ void NotificationCollector::relationAdded(const Relation &relation)
 void NotificationCollector::relationRemoved(const Relation &relation)
 {
     relationNotification(Protocol::RelationChangeNotification::Remove, relation);
-}
-
-void NotificationCollector::transactionCommitted()
-{
-    dispatchNotifications();
-}
-
-void NotificationCollector::transactionRolledBack()
-{
-    clear();
 }
 
 void NotificationCollector::clear()
@@ -537,8 +528,8 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 ids.push_back(item->id());
             }
             // Prevent transactions inside FetchHelper to recursively call our slot
-            disconnect(mDb, &DataStore::transactionCommitted, this, &NotificationCollector::transactionCommitted);
-            disconnect(mDb, &DataStore::transactionRolledBack, this, &NotificationCollector::transactionRolledBack);
+            QScopedValueRollback<bool> ignoreTransactions(mIgnoreTransactions);
+            mIgnoreTransactions = true;
             CommandContext context;
             auto scope = fetchScope->toFetchScope();
             FetchHelper helper(Connection::self(), &context, Scope(ids), scope);
@@ -551,8 +542,6 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             } else {
                 qCWarning(AKONADISERVER_LOG) << "Failed to retrieve Items for notification!";
             }
-            connect(mDb, &DataStore::transactionCommitted, this, &NotificationCollector::transactionCommitted);
-            connect(mDb, &DataStore::transactionRolledBack, this, &NotificationCollector::transactionRolledBack);
         }
     }
 }
@@ -567,7 +556,7 @@ void NotificationCollector::dispatchNotification(const Protocol::ChangeNotificat
         }
     } else {
         completeNotification(msg);
-        Q_EMIT notify({ msg });
+        notify({msg});
     }
 }
 
@@ -577,7 +566,15 @@ void NotificationCollector::dispatchNotifications()
         for (auto &ntf : mNotifications) {
             completeNotification(ntf);
         }
-        Q_EMIT notify(mNotifications);
+        notify(std::move(mNotifications));
         clear();
+    }
+}
+
+void NotificationCollector::notify(Protocol::ChangeNotificationList msgs)
+{
+    if (auto mgr = AkonadiServer::instance()->notificationManager()) {
+        QMetaObject::invokeMethod(mgr, "slotNotify", Qt::QueuedConnection,
+                                  Q_ARG(Akonadi::Protocol::ChangeNotificationList, msgs));
     }
 }

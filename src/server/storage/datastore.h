@@ -373,7 +373,7 @@ protected:
     };
     QVector<TransactionQuery> m_transactionQueries;
     QByteArray mSessionId;
-    NotificationCollector *mNotificationCollector = nullptr;
+    std::unique_ptr<NotificationCollector> mNotificationCollector;
     QTimer *m_keepAliveTimer = nullptr;
     static bool s_hasForeignKeyConstraints;
 

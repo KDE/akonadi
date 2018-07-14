@@ -20,7 +20,7 @@
 #include "fakedatastore.h"
 #include "dbpopulator.h"
 #include "storage/dbconfig.h"
-#include "storage/notificationcollector.h"
+#include "inspectablenotificationcollector.h"
 #include "akonadischema.h"
 #include "storage/dbinitializer.h"
 
@@ -59,7 +59,7 @@ Akonadi::Server::FakeDataStore::FakeDataStore()
     : DataStore()
     , mPopulateDb(true)
 {
-    notificationCollector();
+    mNotificationCollector = std::make_unique<InspectableNotificationCollector>(this);
 }
 
 FakeDataStore::~FakeDataStore()

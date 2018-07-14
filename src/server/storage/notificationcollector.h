@@ -41,17 +41,9 @@ class DataStore;
   them after the current transaction has been successfully committed.
   Where possible, notifications are compressed.
 */
-class NotificationCollector : public QObject
+class NotificationCollector
 {
-    Q_OBJECT
-
 public:
-    /**
-      Create a new notification collector that is not attached to
-      a DataStore and just collects notifications until you emit them manually.
-    */
-    explicit NotificationCollector(QObject *parent = nullptr);
-
     /**
       Create a new notification collector for the given DataStore @p db.
       @param db The datastore using this notification collector.
@@ -61,7 +53,7 @@ public:
     /**
       Destroys this notification collector.
     */
-    ~NotificationCollector();
+    virtual ~NotificationCollector() = default;
 
     /**
       Sets the identifier of the session causing the changes.
@@ -219,9 +211,6 @@ public:
     */
     void dispatchNotifications();
 
-Q_SIGNALS:
-    void notify(const Akonadi::Protocol::ChangeNotificationList &msgs);
-
 private:
     void itemNotification(Protocol::ItemChangeNotification::Operation op,
                           const PimItem::List &items,
@@ -257,12 +246,14 @@ private:
     void clear();
 
     void completeNotification(const Protocol::ChangeNotificationPtr &msg);
-private Q_SLOTS:
-    void transactionCommitted();
-    void transactionRolledBack();
+
+protected:
+    virtual void notify(Protocol::ChangeNotificationList ntfs);
+
 private:
     DataStore *mDb;
     QByteArray mSessionId;
+    bool mIgnoreTransactions = false;
 
     Protocol::ChangeNotificationList mNotifications;
 };

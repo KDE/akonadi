@@ -68,7 +68,7 @@ Connection::Connection(QObject *parent)
 }
 
 Connection::Connection(quintptr socketDescriptor, QObject *parent)
-    : Connection(parent)
+    : AkThread(connectionIdentifier(this), QThread::InheritPriority, parent)
 {
     m_socketDescriptor = socketDescriptor;
     m_identifier = connectionIdentifier(this); // same as objectName()

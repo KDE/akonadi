@@ -23,6 +23,7 @@
 #include "fakesearchmanager.h"
 #include "fakeclient.h"
 #include "fakeitemretrievalmanager.h"
+#include "inspectablenotificationcollector.h"
 
 #include <QSettings>
 #include <QCoreApplication>
@@ -46,7 +47,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(Akonadi::Server::NotificationCollector*)
+Q_DECLARE_METATYPE(Akonadi::Server::InspectableNotificationCollector*)
 
 TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
                                   const Protocol::CommandPtr &response)
@@ -279,17 +280,15 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
 void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
     mConnection = new FakeConnection(socketDescriptor);
-    // Delete collection in its own thread
-    if (mNtfCollector) {
-        mNtfCollector->deleteLater();
-    }
 
     // Connection is it's own thread, so we have to make sure we get collector
     // from DataStore of the Connection's thread, not ours
+    NotificationCollector *collector = nullptr;
     QMetaObject::invokeMethod(mConnection, "notificationCollector", Qt::BlockingQueuedConnection,
-                              Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, mNtfCollector));
+                              Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, collector));
+    mNtfCollector = dynamic_cast<InspectableNotificationCollector*>(collector);
     Q_ASSERT(mNtfCollector);
-    mNotificationSpy.reset(new QSignalSpy(mNtfCollector, &Server::NotificationCollector::notify));
+    mNotificationSpy.reset(new QSignalSpy(mNtfCollector, &Server::InspectableNotificationCollector::notifySignal));
     Q_ASSERT(mNotificationSpy->isValid());
 }
 

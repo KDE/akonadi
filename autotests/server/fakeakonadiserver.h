@@ -34,7 +34,7 @@ class QEventLoop;
 namespace Akonadi {
 namespace Server {
 
-class NotificationCollector;
+class InspectableNotificationCollector;
 class FakeSearchManager;
 class FakeDataStore;
 class FakeConnection;
@@ -123,7 +123,7 @@ private:
 
     QEventLoop *mServerLoop = nullptr;
 
-    NotificationCollector *mNtfCollector = nullptr;
+    InspectableNotificationCollector *mNtfCollector = nullptr;
     QSharedPointer<QSignalSpy> mNotificationSpy;
 
     bool mPopulateDb;

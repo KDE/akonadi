@@ -90,11 +90,8 @@ DataStore::DataStore()
     : QObject()
     , m_dbOpened(false)
     , m_transactionLevel(0)
-    , mNotificationCollector(nullptr)
     , m_keepAliveTimer(nullptr)
 {
-    notificationCollector();
-
     if (DbConfig::configuredDatabase()->driverName() == QLatin1String("QMYSQL")) {
         // Send a dummy query to MySQL every 1 hour to keep the connection alive,
         // otherwise MySQL just drops the connection and our subsequent queries fail
@@ -225,15 +222,11 @@ bool DataStore::init()
 
 NotificationCollector *DataStore::notificationCollector()
 {
-    if (mNotificationCollector == nullptr) {
-        mNotificationCollector = new NotificationCollector(this);
-        auto notificationManager = AkonadiServer::instance()->notificationManager();
-        if (notificationManager) {
-            notificationManager->connectNotificationCollector(mNotificationCollector);
-        }
+    if (!mNotificationCollector) {
+        mNotificationCollector = std::make_unique<NotificationCollector>(this);
     }
 
-    return mNotificationCollector;
+    return mNotificationCollector.get();
 }
 
 DataStore *DataStore::self()
@@ -684,7 +677,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
     const PimItem::List items = itemsQuery.result();
 
     if (!items.isEmpty()) {
-        DataStore::self()->notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
+        mNotificationCollector->itemsTagsChanged(items, QSet<qint64>(), removedTags);
     }
 
     Q_FOREACH (const Tag &tag, tags) {
@@ -706,11 +699,11 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
             const QString rid = query.value(0).toString();
             const QByteArray resource = query.value(1).toByteArray();
 
-            DataStore::self()->notificationCollector()->tagRemoved(tag, resource, rid);
+            mNotificationCollector->tagRemoved(tag, resource, rid);
         }
 
         // And one for clients - without RID
-        DataStore::self()->notificationCollector()->tagRemoved(tag, QByteArray(), QString());
+        mNotificationCollector->tagRemoved(tag, QByteArray(), QString());
     }
 
     // Just remove the tags, table constraints will take care of the rest
@@ -1163,7 +1156,7 @@ bool DataStore::cleanupPimItems(const PimItem::List &items)
         }
         const Relation::List relations = relationQuery.result();
         for (const Relation &relation : relations) {
-            DataStore::self()->notificationCollector()->relationRemoved(relation);
+            mNotificationCollector->relationRemoved(relation);
         }
     }
 
