@@ -96,31 +96,31 @@ protected Q_SLOTS:
 protected:
     Connection(QObject *parent = nullptr); // used for testing
 
-    virtual void init() override;
-    virtual void quit() override;
+    void init() override;
+    void quit() override;
 
-    virtual Handler *findHandlerForCommand(Protocol::Command::Type cmd);
+    Handler *findHandlerForCommand(Protocol::Command::Type cmd);
 
 protected:
-    quintptr m_socketDescriptor;
+    quintptr m_socketDescriptor = {};
     QLocalSocket *m_socket = nullptr;
     QPointer<Handler> m_currentHandler;
-    ConnectionState m_connectionState;
+    ConnectionState m_connectionState = NonAuthenticated;
     mutable DataStore *m_backend = nullptr;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
-    bool m_verifyCacheOnRetrieval;
+    bool m_verifyCacheOnRetrieval = false;
     CommandContext m_context;
     QTimer *m_idleTimer = nullptr;
     QEventLoop *m_waitLoop = nullptr;
 
     QTime m_time;
-    qint64 m_totalTime;
+    qint64 m_totalTime = 0;
     QHash<QString, qint64> m_totalTimeByHandler;
     QHash<QString, qint64> m_executionsByHandler;
 
-    bool m_connectionClosing;
+    bool m_connectionClosing = false;
 
 private:
     void sendResponse(qint64 tag, const Protocol::CommandPtr &response);
@@ -129,7 +129,7 @@ private:
     void startTime();
     void stopTime(const QString &identifier);
     void reportTime() const;
-    bool m_reportTime;
+    bool m_reportTime = false;
 
 };
 

@@ -64,16 +64,6 @@ Q_GLOBAL_STATIC(QThreadStorage<QPointer<Connection>>, sConnectionStore)
 
 Connection::Connection(QObject *parent)
     : AkThread(connectionIdentifier(this), QThread::InheritPriority, parent)
-    , m_socketDescriptor(0)
-    , m_socket(nullptr)
-    , m_currentHandler(nullptr)
-    , m_connectionState(NonAuthenticated)
-    , m_backend(nullptr)
-    , m_verifyCacheOnRetrieval(false)
-    , m_idleTimer(nullptr)
-    , m_totalTime(0)
-    , m_connectionClosing(false)
-    , m_reportTime(false)
 {
 }
 
