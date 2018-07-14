@@ -36,17 +36,14 @@ namespace Server
 */
 class Search : public Handler
 {
-    Q_OBJECT
-
 public:
     ~Search() override = default;
 
     bool parseStream() override;
 
-private Q_SLOTS:
-    void slotResultsAvailable(const QSet<qint64> &results);
-
 private:
+    void processResults(const QSet<qint64> &results);
+
     Protocol::ItemFetchScope mFetchScope;
     QSet<qint64> mAllResults;
 };

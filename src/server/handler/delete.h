@@ -39,7 +39,6 @@ class Collection;
 */
 class Delete : public Handler
 {
-    Q_OBJECT
 public:
     ~Delete() override = default;
 

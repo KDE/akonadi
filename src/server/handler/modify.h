@@ -37,7 +37,6 @@ namespace Server
 */
 class Modify : public Handler
 {
-    Q_OBJECT
 public:
     ~Modify() override = default;
 

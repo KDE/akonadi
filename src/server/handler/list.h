@@ -38,22 +38,6 @@ namespace Server
   This command is used to get a (limited) listing of the available collections.
   It is different from the LIST command and is more similar to FETCH.
 
-  <h4>Syntax</h4>
-
-  Request:
-  @verbatim
-  request = tag " " command " " collection-id " " depth " (" filter-list ")" " (" option-list ")"
-  command = "LIST" | "LSUB" | "RID LIST" | "RID LSUB"
-  depth = number | "INF"
-  filter-list = *(filter-key " " filter-value)
-  filter-key = "RESOURCE" | "MIMETYPE" | "ENABLED" | "SYNC" | "DISPLAY" | "INDEX"
-  option-list = *(option-key " " option-value)
-  option-key = "STATISTICS"
-  @endverbatim
-
-  @c LIST will include all known collections, @c LSUB only those that are
-  subscribed or contains subscribed collections (cf. RFC 3501, LIST vs. LSUB).
-
   The @c RID command prefix indicates that @c collection-id is a remote identifier
   instead of a unique identifier. In this case a resource context has to be specified
   previously using the @c RESSELECT command.
@@ -71,13 +55,6 @@ namespace Server
     Possible values are @c 0 (the default), @c 1 for the direct parent node and @c INF for all,
     terminating with the root collection.
 
-  Response:
-  @verbatim
-  response = "*" collection-id " " parent-id " ("attribute-list")"
-  attribute-list = *(attribute-identifier " " attribute-value)
-  attribute-identifier = "NAME" | "MIMETYPE" | "REMOTEID" | "REMOTEREVISION" | "RESOURCE" | "VIRTUAL" | "MESSAGES" | "UNSEEN" | "SIZE" | "ANCESTORS" | "custom-attr-identifier
-  @endverbatim
-
   The name is encoded as an quoted UTF-8 string. There is no order defined for the
   single responses.
 
@@ -85,10 +62,8 @@ namespace Server
 */
 class List : public Handler
 {
-    Q_OBJECT
-
 public:
-    List();
+    List() = default;
     ~List() override = default;
 
     bool parseStream() override;
@@ -110,12 +85,12 @@ private:
 
     Resource mResource;
     QVector<MimeType::Id> mMimeTypes;
-    int mAncestorDepth;
-    bool mIncludeStatistics;
-    bool mEnabledCollections;
-    bool mCollectionsToDisplay;
-    bool mCollectionsToSynchronize;
-    bool mCollectionsToIndex;
+    int mAncestorDepth = 0;
+    bool mIncludeStatistics = false;
+    bool mEnabledCollections = false;
+    bool mCollectionsToDisplay = false;
+    bool mCollectionsToSynchronize = false;
+    bool mCollectionsToIndex = false;
     QSet<QByteArray> mAncestorAttributes;
     QMap<qint64 /*id*/, Collection> mCollections;
     QHash<qint64 /*id*/, Collection> mAncestors;

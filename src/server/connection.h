@@ -78,6 +78,8 @@ public:
 
     Protocol::CommandPtr readCommand();
 
+    void setState(ConnectionState state);
+
 public Q_SLOTS:
     virtual void sendResponse(const Protocol::CommandPtr &response);
 
@@ -88,7 +90,6 @@ Q_SIGNALS:
 protected Q_SLOTS:
     void handleIncomingData();
 
-    void slotConnectionStateChange(ConnectionState state);
     void slotConnectionIdle();
     void slotSocketDisconnected();
     void slotSendHello();
@@ -104,7 +105,7 @@ protected:
 protected:
     quintptr m_socketDescriptor = {};
     QLocalSocket *m_socket = nullptr;
-    QPointer<Handler> m_currentHandler;
+    std::unique_ptr<Handler> m_currentHandler;
     ConnectionState m_connectionState = NonAuthenticated;
     mutable DataStore *m_backend = nullptr;
     QList<QByteArray> m_statusMessageQueue;

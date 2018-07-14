@@ -33,7 +33,7 @@ bool Login::parseStream()
     }
 
     connection()->setSessionId(cmd.sessionId());
-    Q_EMIT connectionStateChange(Server::Authenticated);
+    connection()->setState(Server::Authenticated);
 
     return successResponse<Protocol::LoginResponse>();
 }

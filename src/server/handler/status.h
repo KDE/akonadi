@@ -33,7 +33,6 @@ namespace Server
  */
 class Status : public Handler
 {
-    Q_OBJECT
 public:
     ~Status() override = default;
 

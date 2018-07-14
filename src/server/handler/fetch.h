@@ -34,7 +34,6 @@ namespace Server
 */
 class Fetch : public Handler
 {
-    Q_OBJECT
 public:
     ~Fetch() override = default;
 

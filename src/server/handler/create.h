@@ -28,16 +28,9 @@ namespace Server
 
 /**
   @ingroup akonadi_server_handler
-
-  Handler for the CREATE command. CREATE is backward-compatible with RFC 3051,
-  except recursive collection creation.
-
-  Response:
-  A untagged response identical to AkList is sent for every created collection.
  */
 class Create : public Handler
 {
-    Q_OBJECT
 public:
     ~Create() override = default;
 

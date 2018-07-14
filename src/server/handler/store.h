@@ -34,33 +34,6 @@ namespace Server
 
   Handler for the item modification command.
 
-  <h4>Syntax</h4>
-  One of the following three:
-  @verbatim
-  <tag> STORE <uid-set> <modifications>
-  <tag> UID MOVE <uid-set> [<revision-check>] <modifications>
-  <tag> RID MOVE <remote-identifiers> [<revision-check>] <modifications>
-  @endverbatim
-
-  @c revision-check is one of the following and allowed iff one item was selected for modification:
-  @verbatim
-  NOREV
-  REV <int>
-  @endverbatim
-
-  @c modifcations is a parenthesized list containing any of the following:
-  @verbatim
-  SIZE <int>
-  [+-]FLAGS <flag-list>
-  REMOTEID <remote-identifier>
-  REMOTEREVISION <remote-revision>
-  GID <global-identifier>
-  DIRTY false
-  INVALIDATECACHE
-  <attribute-id> <attribute-value>
-  <part-id> <part-value>
-  @endverbatim
-
   <h4>Semantics</h4>
   Modifies the selected items. Item selection can happen within the usual three scopes:
   - based on a uid set relative to the currently selected collection
@@ -95,8 +68,6 @@ namespace Server
 
 class Store : public Handler
 {
-    Q_OBJECT
-
 public:
     ~Store() override = default;
 

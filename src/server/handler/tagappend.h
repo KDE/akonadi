@@ -29,8 +29,6 @@ namespace Server
 
 class TagAppend : public Handler
 {
-    Q_OBJECT
-
 public:
     ~TagAppend() override = default;
 

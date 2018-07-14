@@ -39,7 +39,6 @@ namespace Server
 */
 class ResourceSelect : public Handler
 {
-    Q_OBJECT
 public:
     ~ResourceSelect() override = default;
 

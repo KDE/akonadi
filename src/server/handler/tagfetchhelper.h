@@ -33,13 +33,11 @@ namespace Server
 
 class Connection;
 
-class TagFetchHelper : public QObject
+class TagFetchHelper
 {
-    Q_OBJECT
-
 public:
     TagFetchHelper(Connection *connection, const Scope &scope);
-    ~TagFetchHelper() override = default;
+    ~TagFetchHelper() = default;
 
     bool fetchTags();
 

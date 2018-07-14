@@ -68,8 +68,10 @@ bool Search::parseStream()
     request.setMimeTypes(cmd.mimeTypes());
     request.setQuery(cmd.query());
     request.setRemoteSearch(cmd.remote());
-    connect(&request, &SearchRequest::resultsAvailable,
-            this, &Search::slotResultsAvailable);
+    QObject::connect(&request, &SearchRequest::resultsAvailable,
+                     [this](const QSet<qint64> &results) {
+                        processResults(results);
+                     });
     request.exec();
 
     //qCDebug(AKONADISERVER_LOG) << "\tResult:" << uids;
@@ -78,7 +80,7 @@ bool Search::parseStream()
     return successResponse<Protocol::SearchResponse>();
 }
 
-void Search::slotResultsAvailable(const QSet<qint64> &results)
+void Search::processResults(const QSet<qint64> &results)
 {
     QSet<qint64> newResults = results;
     newResults.subtract(mAllResults);

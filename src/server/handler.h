@@ -46,13 +46,11 @@ AKONADI_EXCEPTION_MAKE_INSTANCE(HandlerException);
 
 /**
 The handler interfaces describes an entity capable of handling an AkonadiIMAP command.*/
-class Handler : public QObject
+class Handler
 {
-    Q_OBJECT
 public:
-    Handler();
-
-    ~Handler() override;
+    Handler() = default;
+    virtual ~Handler() = default;
 
     /**
      * Set the tag of the command to be processed, and thus of the response
@@ -67,7 +65,6 @@ public:
     quint64 tag() const;
 
     void setCommand(const Protocol::CommandPtr &cmd);
-
     Protocol::CommandPtr command() const;
 
     /**
@@ -114,22 +111,13 @@ public:
 
     bool checkScopeConstraints(const Scope &scope, int permittedScopes);
 
-public Q_SLOTS:
+protected:
     void sendResponse(const Protocol::CommandPtr &response);
 
-Q_SIGNALS:
-    /**
-     * Emitted whenever a handler wants the connection to change into a
-     * different state. The connection usually honors such requests, but
-     * the decision is up to it.
-     * @param state The new state the handler suggests to enter.
-     */
-    void connectionStateChange(ConnectionState state);
-
 private:
-    quint64 m_tag;
+    quint64 m_tag = 0;
     Connection *m_connection = nullptr;
-    bool m_sentFailureResponse;
+    bool m_sentFailureResponse = false;
 
 protected:
     Protocol::CommandPtr m_command;

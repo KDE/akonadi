@@ -31,8 +31,6 @@ class Relation;
 
 class RelationStore : public Handler
 {
-    Q_OBJECT
-
 public:
     ~RelationStore() override = default;
 

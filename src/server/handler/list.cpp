@@ -44,17 +44,6 @@ static bool intersect(const QVector<typename T::Id> &l1, const QVector<T> &l2)
     return false;
 }
 
-List::List()
-    : Handler()
-    , mAncestorDepth(0)
-    , mIncludeStatistics(false)
-    , mEnabledCollections(false)
-    , mCollectionsToDisplay(false)
-    , mCollectionsToSynchronize(false)
-    , mCollectionsToIndex(false)
-{
-}
-
 QStack<Collection> List::ancestorsForCollection(const Collection &col)
 {
     if (mAncestorDepth <= 0) {

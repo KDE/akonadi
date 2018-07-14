@@ -34,7 +34,6 @@ namespace Server
  */
 class RelationFetch : public Handler
 {
-    Q_OBJECT
 public:
     ~RelationFetch() override = default;
 

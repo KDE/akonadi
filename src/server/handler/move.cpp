@@ -156,8 +156,10 @@ bool Move::parseStream()
     ItemRetriever retriever(connection());
     retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
-    connect(&retriever, &ItemRetriever::itemsRetrieved,
-            this, &Move::itemsRetrieved);
+    QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,
+                     [this](const QList<qint64> &ids) {
+                        itemsRetrieved(ids);
+                     });
     if (!retriever.exec()) {
         return failureResponse(retriever.lastError());
     }

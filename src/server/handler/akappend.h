@@ -37,7 +37,6 @@ namespace Server
  */
 class AkAppend : public Handler
 {
-    Q_OBJECT
 public:
     ~AkAppend() override = default;
 

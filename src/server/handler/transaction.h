@@ -34,8 +34,6 @@ namespace Server
 */
 class TransactionHandler : public Handler
 {
-    Q_OBJECT
-
 public:
     ~TransactionHandler() override = default;
 

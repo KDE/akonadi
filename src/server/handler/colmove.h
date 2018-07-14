@@ -37,7 +37,6 @@ namespace Server
 */
 class ColMove : public Handler
 {
-    Q_OBJECT
 public:
     ~ColMove() override = default;
 

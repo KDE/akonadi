@@ -28,8 +28,7 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 TagFetchHelper::TagFetchHelper(Connection *connection, const Scope &scope)
-    : QObject()
-    , mConnection(connection)
+    : mConnection(connection)
     , mScope(scope)
 {
 }

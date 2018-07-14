@@ -32,14 +32,6 @@ namespace Server
 
   Handler for the item deletion command.
 
-  <h4>Syntax</h4>
-  One of the following three:
-  @verbatim
-  <tag> REMOVE <uid-set>
-  <tag> UID REMOVE <uid-set>
-  <tag> RID REMOVE <remote-identifier>
-  @endverbatim
-
   <h4>Semantics</h4>
   Removes the selected items. Item selection can happen within the usual three scopes:
   - based on a uid set relative to the currently selected collection
@@ -48,7 +40,6 @@ namespace Server
 */
 class Remove : public Handler
 {
-    Q_OBJECT
 public:
     ~Remove() override = default;
 

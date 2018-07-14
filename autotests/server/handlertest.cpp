@@ -23,12 +23,34 @@
 #include <aktest.h>
 #include <private/protocol_p.h>
 
+#include <typeinfo>
+
 #include "handler.h"
+#include "handler/create.h"
+#include "handler/list.h"
+#include "handler/searchpersistent.h"
+#include "handler/search.h"
+#include "handler/fetch.h"
+#include "handler/store.h"
+#include "handler/status.h"
+#include "handler/delete.h"
+#include "handler/modify.h"
+#include "handler/transaction.h"
+#include "handler/akappend.h"
+#include "handler/copy.h"
+#include "handler/colcopy.h"
+#include "handler/link.h"
+#include "handler/resourceselect.h"
+#include "handler/remove.h"
+#include "handler/move.h"
+#include "handler/colmove.h"
+#include "handler/login.h"
+#include "handler/logout.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << command << "Akonadi::Server::" #class;
+#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << command << QByteArray(typeid(Akonadi::Server::class).name());
 
 class HandlerTest : public QObject
 {
@@ -37,7 +59,7 @@ private:
     void setupTestData()
     {
         QTest::addColumn<Protocol::Command::Type>("command");
-        QTest::addColumn<QString>("className");
+        QTest::addColumn<QByteArray>("className");
     }
 
     void addAuthCommands()
@@ -86,10 +108,10 @@ private Q_SLOTS:
     void testFindAuthenticatedCommand()
     {
         QFETCH(Protocol::Command::Type, command);
-        QFETCH(QString, className);
+        QFETCH(QByteArray, className);
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command));
         QVERIFY(!handler.isNull());
-        QCOMPARE(handler->metaObject()->className(), className.toLatin1().constData());
+        QCOMPARE(QByteArray(typeid(*handler.get()).name()), className);
     }
 
     void testFindAuthenticatedCommandNegative_data()
@@ -103,7 +125,7 @@ private Q_SLOTS:
     void testFindAuthenticatedCommandNegative()
     {
         QFETCH(Protocol::Command::Type, command);
-        QFETCH(QString, className);
+        QFETCH(QByteArray, className);
 
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command));
         QVERIFY(handler.isNull());
@@ -118,11 +140,11 @@ private Q_SLOTS:
     void testFindNonAutenticatedCommand()
     {
         QFETCH(Protocol::Command::Type, command);
-        QFETCH(QString, className);
+        QFETCH(QByteArray, className);
 
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command));
         QVERIFY(!handler.isNull());
-        QCOMPARE(handler->metaObject()->className(), className.toLatin1().constData());
+        QCOMPARE(QByteArray(typeid(*handler.get()).name()), className);
     }
 
     void testFindNonAutenticatedCommandNegative_data()
@@ -136,7 +158,7 @@ private Q_SLOTS:
     void testFindNonAutenticatedCommandNegative()
     {
         QFETCH(Protocol::Command::Type, command);
-        QFETCH(QString, className);
+        QFETCH(QByteArray, className);
 
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command));
         QVERIFY(handler.isNull());
@@ -151,11 +173,11 @@ private Q_SLOTS:
     void testFindAlwaysCommand()
     {
         QFETCH(Protocol::Command::Type, command);
-        QFETCH(QString, className);
+        QFETCH(QByteArray, className);
 
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command));
         QVERIFY(!handler.isNull());
-        QCOMPARE(handler->metaObject()->className(), className.toLatin1().constData());
+        QCOMPARE(QByteArray(typeid(*handler.get()).name()), className);
     }
 
     void testFindAlwaysCommandNegative_data()
@@ -169,7 +191,7 @@ private Q_SLOTS:
     void testFindAlwaysCommandNegative()
     {
         QFETCH(Protocol::Command::Type, command);
-        QFETCH(QString, className);
+        QFETCH(QByteArray, className);
 
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command));
         QVERIFY(handler.isNull());

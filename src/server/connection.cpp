@@ -249,16 +249,16 @@ void Connection::handleIncomingData()
                 cmd = Protocol::deserialize(m_socket);
             } catch (const Akonadi::ProtocolException &e) {
                 qCWarning(AKONADISERVER_LOG) << "ProtocolException:" << e.what();
-                slotConnectionStateChange(Server::LoggingOut);
+                setState(Server::LoggingOut);
                 return;
             } catch (const std::exception &e) {
                 qCWarning(AKONADISERVER_LOG) << "Unknown exception:" << e.what();
-                slotConnectionStateChange(Server::LoggingOut);
+                setState(Server::LoggingOut);
                 return;
             }
             if (cmd->type() == Protocol::Command::Invalid) {
                 qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
-                slotConnectionStateChange(Server::LoggingOut);
+                setState(Server::LoggingOut);
                 return;
             }
 
@@ -269,18 +269,15 @@ void Connection::handleIncomingData()
                 Tracer::self()->connectionInput(m_identifier, tag, cmd);
             }
 
-            m_currentHandler = findHandlerForCommand(cmd->type());
+            m_currentHandler = std::unique_ptr<Handler>(findHandlerForCommand(cmd->type()));
             if (!m_currentHandler) {
                 qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type();
-                slotConnectionStateChange(Server::LoggingOut);
+                setState(Server::LoggingOut);
                 return;
             }
             if (m_reportTime) {
                 startTime();
             }
-            connect(m_currentHandler.data(), &Handler::connectionStateChange,
-                    this, &Connection::slotConnectionStateChange,
-                    Qt::DirectConnection);
 
             m_currentHandler->setConnection(this);
             m_currentHandler->setTag(tag);
@@ -342,8 +339,7 @@ void Connection::handleIncomingData()
             if (m_reportTime) {
                 stopTime(currentCommand);
             }
-            delete m_currentHandler;
-            m_currentHandler = nullptr;
+            m_currentHandler.reset();
 
             if (!m_socket || m_socket->state() != QLocalSocket::ConnectedState) {
                 Q_EMIT disconnected();
@@ -398,7 +394,7 @@ Handler *Connection::findHandlerForCommand(Protocol::Command::Type command)
     return handler;
 }
 
-void Connection::slotConnectionStateChange(ConnectionState state)
+void Connection::setState(ConnectionState state)
 {
     if (state == m_connectionState) {
         return;

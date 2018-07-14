@@ -29,8 +29,6 @@ namespace Server
 
 class TagStore : public Handler
 {
-    Q_OBJECT
-
 public:
     ~TagStore() override = default;
 

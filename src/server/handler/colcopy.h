@@ -48,7 +48,6 @@ namespace Server
  */
 class ColCopy : public Copy
 {
-    Q_OBJECT
 public:
     ~ColCopy() override = default;
 

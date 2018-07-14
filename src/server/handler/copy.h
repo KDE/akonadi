@@ -41,19 +41,11 @@ namespace Server
   - empty remote id
   - possible located in a different collection (and thus resource)
 
-  <h4>Syntax</h4>
-
-  Request:
-  @verbatim
-  request = tag " COPY " sequence-set " " collection-id
-  @endverbatim
-
   There is only the usual status response indicating success or failure of the
   COPY command
  */
 class Copy : public Handler
 {
-    Q_OBJECT
 public:
     ~Copy() override = default;
 
@@ -65,9 +57,7 @@ protected:
       The changes mentioned above are applied.
     */
     bool copyItem(const PimItem &item, const Collection &target);
-
-private Q_SLOTS:
-    void itemsRetrieved(const QList<qint64> &ids);
+    void processItems(const QList<qint64> &ids);
 
 private:
     Collection mTargetCollection;

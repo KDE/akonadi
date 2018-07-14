@@ -37,7 +37,6 @@ namespace Server
  */
 class Link : public Handler
 {
-    Q_OBJECT
 public:
     ~Link() override = default;
 

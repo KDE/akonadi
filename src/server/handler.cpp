@@ -57,17 +57,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Handler::Handler()
-    : QObject()
-    , m_connection(nullptr)
-    , m_sentFailureResponse(false)
-{
-}
-
-Handler::~Handler()
-{
-}
-
 Handler *Handler::findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd)
 {
     // allowed are LOGIN
@@ -87,26 +76,6 @@ Handler *Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd
     return nullptr;
 }
 
-void Handler::setTag(quint64 tag)
-{
-    m_tag = tag;
-}
-
-quint64 Handler::tag() const
-{
-    return m_tag;
-}
-
-void Handler::setCommand(const Protocol::CommandPtr &cmd)
-{
-    m_command = cmd;
-}
-
-Protocol::CommandPtr Handler::command() const
-{
-    return m_command;
-}
-
 Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd)
 {
     switch (cmd) {
@@ -119,12 +88,8 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
                    "Hello command is not allowed in this context");
         return nullptr;
     case Protocol::Command::Login:
-        Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
-                   "Login command is not allowed in this context");
         return nullptr;
     case Protocol::Command::Logout:
-        Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
-                   "Logout command is not allowed in this context");
         return nullptr;
     case Protocol::Command::_ResponseBit:
         Q_ASSERT_X(cmd != Protocol::Command::_ResponseBit, __FUNCTION__,
@@ -230,6 +195,26 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
     }
 
     return nullptr;
+}
+
+void Handler::setTag(quint64 tag)
+{
+    m_tag = tag;
+}
+
+quint64 Handler::tag() const
+{
+    return m_tag;
+}
+
+void Handler::setCommand(const Protocol::CommandPtr &cmd)
+{
+    m_command = cmd;
+}
+
+Protocol::CommandPtr Handler::command() const
+{
+    return m_command;
 }
 
 void Handler::setConnection(Connection *connection)
