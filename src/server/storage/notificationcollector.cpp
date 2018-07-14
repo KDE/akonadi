@@ -37,29 +37,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-
-namespace {
-
-class ItemCollector : public FetchHelper::ResponseCollectorInterface
-{
-public:
-    void addResponse(const Protocol::CommandPtr &response) override
-    {
-        mItems.push_back(response.staticCast<Protocol::FetchItemsResponse>());
-    }
-
-    QVector<Protocol::FetchItemsResponsePtr> items() const
-    {
-        return mItems;
-    }
-
-private:
-    QVector<Protocol::FetchItemsResponsePtr> mItems;
-};
-
-}
-
-
 NotificationCollector::NotificationCollector(QObject *parent)
     : QObject(parent)
     , mDb(nullptr)
@@ -562,12 +539,15 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             // Prevent transactions inside FetchHelper to recursively call our slot
             disconnect(mDb, &DataStore::transactionCommitted, this, &NotificationCollector::transactionCommitted);
             disconnect(mDb, &DataStore::transactionRolledBack, this, &NotificationCollector::transactionRolledBack);
-            ItemCollector collector;
             CommandContext context;
             auto scope = fetchScope->toFetchScope();
-            FetchHelper helper(&collector, Connection::self(), &context, Scope(ids), scope);
-            if (helper.fetchItems()) {
-                msg->setItems(collector.items());
+            FetchHelper helper(Connection::self(), &context, Scope(ids), scope);
+            QVector<Protocol::FetchItemsResponsePtr> fetchedItems;
+            std::function<void(Protocol::CommandPtr)> callback = [&fetchedItems](Protocol::CommandPtr cmd) {
+                fetchedItems.push_back(cmd.staticCast<Protocol::FetchItemsResponse>());
+            };
+            if (helper.fetchItems(std::move(callback))) {
+                msg->setItems(fetchedItems);
             } else {
                 qCWarning(AKONADISERVER_LOG) << "Failed to retrieve Items for notification!";
             }

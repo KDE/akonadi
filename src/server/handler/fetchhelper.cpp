@@ -69,38 +69,15 @@ using namespace Akonadi::Server;
 #define PROF_INC(name)
 #endif
 
-namespace {
-
-class ConnectionResponseCollector : public FetchHelper::ResponseCollectorInterface
-{
-public:
-    ConnectionResponseCollector(Connection *connection)
-        : mConnection(connection)
-    {}
-
-    ~ConnectionResponseCollector() override {}
-
-    void addResponse(const Protocol::CommandPtr &response) override
-    {
-        mConnection->sendResponse(response);
-    }
-
-private:
-    Connection *mConnection = nullptr;
-};
-
-}
-
 FetchHelper::FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope)
-    : FetchHelper(new ConnectionResponseCollector(connection), connection, connection->context(), scope, fetchScope)
+    : FetchHelper(connection, connection->context(), scope, fetchScope)
 {
 }
 
 
-FetchHelper::FetchHelper(ResponseCollectorInterface *collector, Connection *connection,
-                         CommandContext *context, const Scope &scope, const Protocol::ItemFetchScope &fetchScope)
-    : mCollector(collector)
-    , mConnection(connection)
+FetchHelper::FetchHelper(Connection *connection, CommandContext *context,
+                         const Scope &scope, const Protocol::ItemFetchScope &fetchScope)
+    : mConnection(connection)
     , mContext(context)
     , mScope(scope)
     , mFetchScope(fetchScope)
@@ -343,7 +320,7 @@ DataStore *FetchHelper::storageBackend() const
 }
 
 
-bool FetchHelper::fetchItems()
+bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCallback)
 {
     BEGIN_TIMER(fetch)
 
@@ -648,7 +625,11 @@ bool FetchHelper::fetchItems()
             response->setCachedParts(cachedParts);
         }
 
-        mCollector->addResponse(response);
+        if (itemCallback) {
+            itemCallback(std::move(response));
+        } else {
+            mConnection->sendResponse(std::move(response));
+        }
 
         itemQuery.next();
     }

@@ -30,6 +30,8 @@
 #include <private/scope_p.h>
 #include <private/protocol_p.h>
 
+#include <functional>
+
 class FetchHelperTest;
 
 namespace Akonadi
@@ -41,23 +43,13 @@ namespace Server
 class AggregatedItemFetchScope;
 class Connection;
 
-class FetchHelper : public QObject
+class FetchHelper
 {
-    Q_OBJECT
 public:
-    class ResponseCollectorInterface
-    {
-    public:
-        virtual ~ResponseCollectorInterface() {};
-        virtual void addResponse(const Protocol::CommandPtr &response) = 0;
-    };
-
     FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
-    FetchHelper(ResponseCollectorInterface *collector, Connection *connection,
-                CommandContext *context, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
-    ~FetchHelper() override = default;
+    FetchHelper(Connection *connection, CommandContext *context, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
 
-    bool fetchItems();
+    bool fetchItems(std::function<void(Protocol::CommandPtr)> &&callback = {});
 
 private:
     enum ItemQueryColumns {
@@ -90,7 +82,6 @@ private:
     static QByteArray relationsToByteArray(const Relation::List &relations);
 
 private:
-    ResponseCollectorInterface *mCollector = nullptr;
     Connection *mConnection = nullptr;
     CommandContext *mContext = nullptr;
     QHash<Collection::Id, QVector<Protocol::Ancestor>> mAncestorCache;
