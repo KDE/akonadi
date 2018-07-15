@@ -299,14 +299,14 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                     mHeader << ", ";
                 }
             }
-            mHeader << ");\n";
+            mHeader << ");";
         }
     }
 
-    mHeader << "    " << node->className() << "(const " << node->className() << " &other);\n"
-               "    ~" << node->className() << "();\n"
+    mHeader << "    " << node->className() << "(const " << node->className() << " &other) = default;\n"
+               "    ~" << node->className() << "() = default;\n"
                "\n"
-               "    " << node->className() << " &operator=(const " << node->className() << " &other);\n"
+               "    " << node->className() << " &operator=(const " << node->className() << " &other) = default;\n"
                "    bool operator==(const " << node->className() << " &other) const;\n"
                "    inline bool operator!=(const " << node->className() << " &other) const { return !operator==(other); }\n";
 
@@ -357,7 +357,19 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
     mHeader << "protected:\n";
     const auto properties = node->properties();
     for (auto prop : properties) {
-        mHeader << "    " << prop->type() << " " << prop->mVariableName() << ";\n";
+        mHeader << "    " << prop->type() << " " << prop->mVariableName();
+        const auto defaultValue = prop->defaultValue();
+        const bool isDefaultValue = !defaultValue.isEmpty();
+        const bool isNumeric = TypeHelper::isNumericType(prop->type());
+        const bool isBool = TypeHelper::isBoolType(prop->type());
+        if (isDefaultValue) {
+            mHeader << " = " << defaultValue;
+        } else if (isNumeric) {
+            mHeader << " = 0";
+        } else if (isBool) {
+            mHeader << " = false";
+        }
+        mHeader << ";\n";
     }
 
     mHeader << "\n"
@@ -441,22 +453,6 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                 if (arg != args.cend()) {
                     mImpl << "    " << startChar << " " << prop->mVariableName() << "(" << arg->name << ")\n";
                     startChar = ',';
-                } else {
-                    const bool isDefaultValue = !defaultValue.isEmpty();
-                    const bool isNumeric = TypeHelper::isNumericType(prop->type());
-                    const bool isBool = TypeHelper::isBoolType(prop->type());
-                    if (isDefaultValue || isNumeric || isBool) {
-                        mImpl << "    " << startChar << " " <<  prop->mVariableName() << "(";
-                        startChar = ',';
-                        if (isDefaultValue) {
-                            mImpl << defaultValue;
-                        } else if (isNumeric) {
-                            mImpl << "0";
-                        } else if (isBool) {
-                            mImpl << "false";
-                        }
-                        mImpl << ")\n";
-                    }
                 }
             }
             mImpl << "{\n"
@@ -464,40 +460,6 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                      "\n";
         }
     }
-
-    // Copy ctor
-    mImpl << node->className() << "::" << node->className() << "(const " << node->className() << "&other)\n";
-    char startChar = ':';
-    if (!parentClass.isEmpty()) {
-        mImpl << "    : " << parentClass << "(other)\n";
-        startChar = ',';
-    }
-    for (auto prop : properties) {
-        mImpl << "    " << startChar << " " << prop->mVariableName() << "(other." << prop->mVariableName() << ")\n";
-        startChar = ',';
-    }
-    mImpl << "{\n"
-             "}\n"
-             "\n";
-
-    // Dtor
-    mImpl << node->className() << "::~" << node->className() << "()\n"
-            "{\n"
-            "}\n"
-            "\n";
-
-    // Assignment operator
-    mImpl << node->className() << " &" << node->className() << "::operator=(const " << node->className() << " &other)\n"
-          << "{\n";
-    if (!parentClass.isEmpty()) {
-        mImpl << "    " << parentClass << "::operator=(other);\n";
-    }
-    for (auto prop : properties) {
-        mImpl << "    " << prop->mVariableName() << " = other." << prop->mVariableName() << ";\n";
-    }
-    mImpl << "    return *this;\n"
-             "}\n"
-             "\n";
 
 
     // Comparision operator

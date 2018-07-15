@@ -144,11 +144,11 @@ public:
         _ResponseBit = 0x80 // reserved
     };
 
-    explicit Command();
-    explicit Command(const Command &other);
-    ~Command();
+    explicit Command() = default;
+    explicit Command(const Command &other) = default;
+    ~Command() = default;
 
-    Command &operator=(const Command &other);
+    Command &operator=(const Command &other) = default;
 
     bool operator==(const Command &other) const;
     inline bool operator!=(const Command &other) const { return !operator==(other); }
@@ -161,7 +161,7 @@ public:
 protected:
     explicit Command(quint8 type);
 
-    quint8 mType;
+    quint8 mType = Invalid;
     // unused 7 bytes
 
 private:
@@ -198,9 +198,9 @@ using ResponsePtr = QSharedPointer<Response>;
 class AKONADIPRIVATE_EXPORT Response : public Command
 {
 public:
-    explicit Response();
-    explicit Response(const Response &other);
-    Response &operator=(const Response &other);
+    explicit Response() = default;
+    explicit Response(const Response &other) = default;
+    Response &operator=(const Response &other) = default;
 
     inline void setError(int code, const QString &message)
     {
@@ -314,11 +314,11 @@ public:
         AllAncestors
     };
 
-    explicit ItemFetchScope();
-    ItemFetchScope(const ItemFetchScope &other);
-    ~ItemFetchScope();
+    explicit ItemFetchScope() = default;
+    ItemFetchScope(const ItemFetchScope &other) = default;
+    ~ItemFetchScope() = default;
 
-    ItemFetchScope &operator=(const ItemFetchScope &other);
+    ItemFetchScope &operator=(const ItemFetchScope &other) = default;
 
     bool operator==(const ItemFetchScope &other) const;
     inline bool operator!=(const ItemFetchScope &other) const { return !operator==(other); }
@@ -359,9 +359,9 @@ public:
 
     void toJson(QJsonObject &json) const;
 private:
-    AncestorDepth mAncestorDepth;
+    AncestorDepth mAncestorDepth = NoAncestor;
     // 2 bytes free
-    FetchFlags mFlags;
+    FetchFlags mFlags = None;
     QVector<QByteArray> mRequestedParts;
     QDateTime mChangedSince;
     QSet<QByteArray> mTagFetchScope;
@@ -398,13 +398,13 @@ public:
         Tag
     };
 
-    explicit ScopeContext();
+    explicit ScopeContext() = default;
     ScopeContext(Type type, qint64 id);
     ScopeContext(Type type, const QString &id);
-    ScopeContext(const ScopeContext &other);
-    ~ScopeContext();
+    ScopeContext(const ScopeContext &other) = default;
+    ~ScopeContext() = default;
 
-    ScopeContext &operator=(const ScopeContext &other);
+    ScopeContext &operator=(const ScopeContext &other) = default;
 
     bool operator==(const ScopeContext &other) const;
     inline bool operator!=(const ScopeContext &other) const { return !operator==(other); }
@@ -522,7 +522,7 @@ public:
         QString type;
     };
 
-    ChangeNotification &operator=(const ChangeNotification &other);
+    ChangeNotification &operator=(const ChangeNotification &other) = default;
 
     bool operator==(const ChangeNotification &other) const;
     inline bool operator!=(const ChangeNotification &other) const { return !operator==(other); }
@@ -541,8 +541,10 @@ public:
 
     void toJson(QJsonObject &json) const;
 protected:
+    explicit ChangeNotification() = default;
     explicit ChangeNotification(Command::Type type);
-    ChangeNotification(const ChangeNotification &other);
+    ChangeNotification(const ChangeNotification &other) = default;
+    ChangeNotification(ChangeNotification &&other) = default;
 
     QByteArray mSessionId;
 

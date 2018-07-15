@@ -166,29 +166,9 @@ DataStream &operator>>(DataStream &stream, QSharedPointer<T> &ptr)
 
 /******************************************************************************/
 
-Command::Command()
-    : mType(Invalid)
-{
-}
-
-Command::Command(const Command &other)
-    : mType(other.mType)
-{
-}
-
 Command::Command(quint8 type)
     : mType(type)
 {
-}
-
-Command::~Command()
-{
-}
-
-Command& Command::operator=(const Command &other)
-{
-    mType = other.mType;
-    return *this;
 }
 
 bool Command::operator==(const Command &other) const
@@ -351,30 +331,10 @@ case Command::x | Command::_ResponseBit: { \
 
 /******************************************************************************/
 
-Response::Response()
-    : Response(Command::Invalid)
-{
-}
-
-Response::Response(const Response &other)
-    : Command(other)
-    , mErrorCode(other.mErrorCode)
-    , mErrorMsg(other.mErrorMsg)
-{
-}
-
 Response::Response(Command::Type type)
     : Command(type | Command::_ResponseBit)
     , mErrorCode(0)
 {
-}
-
-Response &Response::operator=(const Response &other)
-{
-    Command::operator=(other);
-    mErrorMsg = other.mErrorMsg;
-    mErrorCode = other.mErrorCode;
-    return *this;
 }
 
 bool Response::operator==(const Response &other) const
@@ -538,35 +498,6 @@ ResponsePtr Factory::response(Command::Type type)
 
 /******************************************************************************/
 
-ItemFetchScope::ItemFetchScope()
-    : mAncestorDepth(NoAncestor)
-    , mFlags(None)
-{
-}
-
-ItemFetchScope::ItemFetchScope(const ItemFetchScope &other)
-    : mAncestorDepth(other.mAncestorDepth)
-    , mFlags(other.mFlags)
-    , mRequestedParts(other.mRequestedParts)
-    , mChangedSince(other.mChangedSince)
-    , mTagFetchScope(other.mTagFetchScope)
-{
-}
-
-ItemFetchScope::~ItemFetchScope()
-{
-}
-
-ItemFetchScope &ItemFetchScope::operator=(const ItemFetchScope &other)
-{
-    mAncestorDepth = other.mAncestorDepth;
-    mFlags = other.mFlags;
-    mRequestedParts = other.mRequestedParts;
-    mChangedSince = other.mChangedSince;
-    mTagFetchScope = other.mTagFetchScope;
-    return *this;
-}
-
 bool ItemFetchScope::operator==(const ItemFetchScope &other) const
 {
     return mRequestedParts == other.mRequestedParts
@@ -671,11 +602,6 @@ QDebug operator<<(QDebug dbg, const ItemFetchScope &scope)
 
 /******************************************************************************/
 
-
-ScopeContext::ScopeContext()
-{
-}
-
 ScopeContext::ScopeContext(Type type, qint64 id)
 {
     if (type == ScopeContext::Tag) {
@@ -692,23 +618,6 @@ ScopeContext::ScopeContext(Type type, const QString &ctx)
     } else if (type == ScopeContext::Collection) {
         mColCtx = ctx;
     }
-}
-
-ScopeContext::ScopeContext(const ScopeContext &other)
-    : mColCtx(other.mColCtx)
-    , mTagCtx(other.mTagCtx)
-{
-}
-
-ScopeContext::~ScopeContext()
-{
-}
-
-ScopeContext &ScopeContext::operator=(const ScopeContext &other)
-{
-    mColCtx = other.mColCtx;
-    mTagCtx = other.mTagCtx;
-    return *this;
 }
 
 bool ScopeContext::operator==(const ScopeContext &other) const
@@ -803,21 +712,6 @@ QDebug operator<<(QDebug _dbg, const ScopeContext &ctx)
 ChangeNotification::ChangeNotification(Command::Type type)
     : Command(type)
 {
-}
-
-ChangeNotification::ChangeNotification(const ChangeNotification &other)
-    : Command(other)
-    , mSessionId(other.mSessionId)
-    , mMetaData(other.mMetaData)
-{
-}
-
-ChangeNotification &ChangeNotification::operator=(const ChangeNotification &other)
-{
-    *static_cast<Command*>(this) = static_cast<const Command&>(other);
-    mSessionId = other.mSessionId;
-    mMetaData = other.mMetaData;
-    return *this;
 }
 
 bool ChangeNotification::operator==(const ChangeNotification &other) const
