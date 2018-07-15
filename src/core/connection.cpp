@@ -37,6 +37,7 @@
 
 #include <private/protocol_exception_p.h>
 #include <private/standarddirs_p.h>
+#include <private/datastream_p_p.h>
 
 using namespace Akonadi;
 
@@ -267,9 +268,8 @@ void Connection::handleIncomingData()
     }
 
     while (mSocket->bytesAvailable() >= int(sizeof(qint64))) {
-        QDataStream stream(mSocket.data());
+        Protocol::DataStream stream(mSocket.data());
         qint64 tag;
-        // TODO: Verify the tag matches the last tag we sent
         stream >> tag;
 
         Protocol::CommandPtr cmd;
@@ -333,7 +333,7 @@ void Connection::doSendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
     }
 
     if (mSocket && mSocket->isOpen()) {
-        QDataStream stream(mSocket.data());
+        Protocol::DataStream stream(mSocket.data());
         stream << tag;
         try {
             Protocol::serialize(mSocket.data(), cmd);

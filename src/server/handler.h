@@ -34,7 +34,6 @@ namespace Server
 {
 
 class Response;
-class Connection;
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(HandlerException);
 
@@ -96,12 +95,14 @@ public:
     bool failureResponse(const QString &response);
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, bool>::type
-    successResponse(const QSharedPointer<T> &response = QSharedPointer<T>());
+    inline bool successResponse();
+    template<typename T>
+    inline bool successResponse(T &&response);
 
     template<typename T>
-    typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
-    sendResponse(const QSharedPointer<T> &response = QSharedPointer<T>());
+    inline void sendResponse(T &&response);
+    template<typename T>
+    inline void sendResponse();
 
     /**
      * Parse and handle the IMAP message using the streaming parser. The implementation MUST leave the trailing newline character(s) in the stream!
@@ -110,9 +111,6 @@ public:
     virtual bool parseStream() = 0;
 
     bool checkScopeConstraints(const Scope &scope, int permittedScopes);
-
-protected:
-    void sendResponse(const Protocol::CommandPtr &response);
 
 private:
     quint64 m_tag = 0;
@@ -124,18 +122,29 @@ protected:
 };
 
 template<typename T>
-typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, bool>::type
-Handler::successResponse(const QSharedPointer<T> &response)
+inline bool Handler::successResponse()
 {
-    sendResponse(response ? response : QSharedPointer<T>::create());
+    sendResponse<T>(T{});
     return true;
 }
 
 template<typename T>
-typename std::enable_if<std::is_base_of<Protocol::Command, T>::value, void>::type
-Handler::sendResponse(const QSharedPointer<T> &response)
+inline bool Handler::successResponse(T &&response)
 {
-    sendResponse(response.template staticCast<Protocol::Command>());
+    sendResponse<T>(std::move(response));
+    return true;
+}
+
+template<typename T>
+inline void Handler::sendResponse()
+{
+    m_connection->sendResponse<T>(T{});
+}
+
+template<typename T>
+inline void Handler::sendResponse(T &&response)
+{
+    m_connection->sendResponse<T>(std::move(response));
 }
 
 } // namespace Server

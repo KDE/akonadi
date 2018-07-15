@@ -380,11 +380,11 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QSet
     auto msg = Protocol::ItemChangeNotificationPtr::create();
     msg->setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
     msg->setOperation(mapItemOperation(static_cast<LegacyOp>(settings->value(QStringLiteral("op")).toInt())));
-    auto item = Protocol::FetchItemsResponsePtr::create();
-    item->setId(settings->value(QStringLiteral("uid")).toLongLong());
-    item->setRemoteId(settings->value(QStringLiteral("rid")).toString());
-    item->setMimeType(settings->value(QStringLiteral("mimeType")).toString());
-    msg->setItems({ item });
+    Protocol::FetchItemsResponse item;
+    item.setId(settings->value(QStringLiteral("uid")).toLongLong());
+    item.setRemoteId(settings->value(QStringLiteral("rid")).toString());
+    item.setMimeType(settings->value(QStringLiteral("mimeType")).toString());
+    msg->setItems({std::move(item)});
     msg->addMetadata("FETCH_ITEM");
     msg->setResource(settings->value(QStringLiteral("resource")).toByteArray());
     msg->setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
@@ -403,10 +403,10 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
     msg->setSessionId(settings->value(QStringLiteral("sessionId")).toByteArray());
     msg->setOperation(mapCollectionOperation(static_cast<LegacyOp>(settings->value(QStringLiteral("op")).toInt())));
-    auto collection = Protocol::FetchCollectionsResponsePtr::create();
-    collection->setId(settings->value(QStringLiteral("uid")).toLongLong());
-    collection->setRemoteId(settings->value(QStringLiteral("rid")).toString());
-    msg->setCollection(collection);
+    Protocol::FetchCollectionsResponse collection;
+    collection.setId(settings->value(QStringLiteral("uid")).toLongLong());
+    collection.setRemoteId(settings->value(QStringLiteral("rid")).toString());
+    msg->setCollection(std::move(collection));
     msg->addMetadata("FETCH_COLLECTION");
     msg->setResource(settings->value(QStringLiteral("resource")).toByteArray());
     msg->setParentCollection(settings->value(QStringLiteral("parentCol")).toLongLong());
@@ -450,7 +450,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
     QString remoteId, mimeType, remoteRevision;
     QSet<QByteArray> itemParts, addedFlags, removedFlags;
     QSet<qint64> addedTags, removedTags;
-    QVector<Protocol::FetchItemsResponsePtr> items;
+    QVector<Protocol::FetchItemsResponse> items;
 
     auto msg = Protocol::ItemChangeNotificationPtr::create();
 
@@ -464,11 +464,11 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
         stream >> mimeType;
         stream >> itemParts;
 
-        auto item = Protocol::FetchItemsResponsePtr::create();
-        item->setId(uid);
-        item->setRemoteId(remoteId);
-        item->setMimeType(mimeType);
-        items << item;
+        Protocol::FetchItemsResponse item;
+        item.setId(uid);
+        item.setRemoteId(remoteId);
+        item.setMimeType(mimeType);
+        items.push_back(std::move(item));
         msg->addMetadata("FETCH_ITEM");
     } else if (version >= 2) {
         stream >> operation;
@@ -484,27 +484,27 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
             QMap<QByteArray, QByteArray> babaMap;
             int cnt;
             for (int j = 0; j < entityCnt; ++j) {
-                auto item = Protocol::FetchItemsResponsePtr::create();
+                Protocol::FetchItemsResponse item;
                 stream >> i64;
-                item->setId(i64);
+                item.setId(i64);
                 stream >> i;
-                item->setRevision(i);
+                item.setRevision(i);
                 stream >> i64;
-                item->setParentId(i64);
+                item.setParentId(i64);
                 stream >> str;
-                item->setRemoteId(str);
+                item.setRemoteId(str);
                 stream >> str;
-                item->setRemoteRevision(str);
+                item.setRemoteRevision(str);
                 stream >> str;
-                item->setGid(str);
+                item.setGid(str);
                 stream >> i64;
-                item->setSize(i64);
+                item.setSize(i64);
                 stream >> str;
-                item->setMimeType(str);
+                item.setMimeType(str);
                 stream >> dt;
-                item->setMTime(dt);
+                item.setMTime(dt);
                 stream >> bav;
-                item->setFlags(bav);
+                item.setFlags(bav);
                 stream >> cnt;
                 QVector<Protocol::FetchTagsResponse> tags;
                 for (int k = 0; k < cnt; ++k) {
@@ -523,9 +523,9 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
                     tag.setAttributes(babaMap);
                     tags << tag;
                 }
-                item->setTags(tags);
+                item.setTags(tags);
                 stream >> i64v;
-                item->setVirtualReferences(i64v);
+                item.setVirtualReferences(i64v);
                 stream >> cnt;
                 QVector<Protocol::FetchRelationsResponse> relations;
                 for (int k = 0; k < cnt; ++k) {
@@ -544,7 +544,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
                     relation.setRemoteId(ba);
                     relations << relation;
                 }
-                item->setRelations(relations);
+                item.setRelations(relations);
                 stream >> cnt;
                 QVector<Protocol::Ancestor> ancestors;
                 for (int k = 0; k < cnt; ++k) {
@@ -559,7 +559,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
                     ancestor.setAttributes(babaMap);
                     ancestors << ancestor;
                 }
-                item->setAncestors(ancestors);
+                item.setAncestors(ancestors);
                 stream >> cnt;
                 QVector<Protocol::StreamPayloadResponse> parts;
                 for (int k = 0; k < cnt; ++k) {
@@ -580,10 +580,10 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
                     part.setData(ba);
                     parts << part;
                 }
-                item->setParts(parts);
+                item.setParts(parts);
                 stream >> bav;
-                item->setCachedParts(bav);
-                items << item;
+                item.setCachedParts(bav);
+                items.push_back(std::move(item));
             }
         } else {
             for (int j = 0; j < entityCnt; ++j) {
@@ -595,12 +595,12 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
                     qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
                     return msg;
                 }
-                auto item = Protocol::FetchItemsResponsePtr::create();
-                item->setId(uid);
-                item->setRemoteId(remoteId);
-                item->setRemoteRevision(remoteRevision);
-                item->setMimeType(mimeType);
-                items << item;
+                Protocol::FetchItemsResponse item;
+                item.setId(uid);
+                item.setRemoteId(remoteId);
+                item.setRemoteRevision(remoteRevision);
+                item.setMimeType(mimeType);
+                items.push_back(std::move(item));
             }
             msg->addMetadata("FETCH_ITEM");
         }
@@ -653,20 +653,20 @@ void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Prot
     // Version 7
 
     stream << int(msg.operation());
-    const auto items = msg.items();
+    const auto &items = msg.items();
     stream << items.count();
     for (const auto &item : items) {
-        stream << item->id()
-               << item->revision()
-               << item->parentId()
-               << item->remoteId()
-               << item->remoteRevision()
-               << item->gid()
-               << item->size()
-               << item->mimeType()
-               << item->mTime()
-               << item->flags();
-        const auto tags = item->tags();
+        stream << item.id()
+               << item.revision()
+               << item.parentId()
+               << item.remoteId()
+               << item.remoteRevision()
+               << item.gid()
+               << item.size()
+               << item.mimeType()
+               << item.mTime()
+               << item.flags();
+        const auto tags = item.tags();
         stream << tags.count();
         for (const auto &tag : tags) {
             stream << tag.id()
@@ -676,8 +676,8 @@ void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Prot
                    << tag.remoteId()
                    << tag.attributes();
         }
-        stream << item->virtualReferences();
-        const auto relations = item->relations();
+        stream << item.virtualReferences();
+        const auto relations = item.relations();
         stream << relations.count();
         for (const auto &relation : relations) {
             stream << relation.left()
@@ -687,7 +687,7 @@ void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Prot
                    << relation.type()
                    << relation.remoteId();
         }
-        const auto ancestors = item->ancestors();
+        const auto ancestors = item.ancestors();
         stream << ancestors.count();
         for (const auto &ancestor : ancestors) {
             stream << ancestor.id()
@@ -695,7 +695,7 @@ void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Prot
                    << ancestor.name()
                    << ancestor.attributes();
         }
-        const auto parts = item->parts();
+        const auto parts = item.parts();
         stream << parts.count();
         for (const auto &part : parts) {
             const auto metaData = part.metaData();
@@ -706,7 +706,7 @@ void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Prot
                    << static_cast<int>(metaData.storageType())
                    << part.data();
         }
-        stream << item->cachedParts();
+        stream << item.cachedParts();
     }
     stream << msg.resource();
     stream << msg.destinationResource();
@@ -740,10 +740,10 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
         stream >> dummyString;
         stream >> changedParts;
 
-        auto collection = Protocol::FetchCollectionsResponsePtr::create();
-        collection->setId(uid);
-        collection->setRemoteId(remoteId);
-        msg->setCollection(collection);
+        Protocol::FetchCollectionsResponse collection;
+        collection.setId(uid);
+        collection.setRemoteId(remoteId);
+        msg->setCollection(std::move(collection));
         msg->addMetadata("FETCH_COLLECTION");
     } else if (version >= 2) {
         stream >> operation;
@@ -757,21 +757,21 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
             bool b;
             int i;
             Tristate tristate;
-            auto collection = Protocol::FetchCollectionsResponsePtr::create();
+            Protocol::FetchCollectionsResponse collection;
             stream >> uid;
-            collection->setId(uid);
+            collection.setId(uid);
             stream >> uid;
-            collection->setParentId(uid);
+            collection.setParentId(uid);
             stream >> str;
-            collection->setName(str);
+            collection.setName(str);
             stream >> stringList;
-            collection->setMimeTypes(stringList);
+            collection.setMimeTypes(stringList);
             stream >> str;
-            collection->setRemoteId(str);
+            collection.setRemoteId(str);
             stream >> str;
-            collection->setRemoteRevision(str);
+            collection.setRemoteRevision(str);
             stream >> str;
-            collection->setResource(str);
+            collection.setResource(str);
 
             Protocol::FetchCollectionStatsResponse stats;
             stream >> i64;
@@ -780,12 +780,12 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
             stats.setUnseen(i64);
             stream >> i64;
             stats.setSize(i64);
-            collection->setStatistics(stats);
+            collection.setStatistics(stats);
 
             stream >> str;
-            collection->setSearchQuery(str);
+            collection.setSearchQuery(str);
             stream >> vb;
-            collection->setSearchCollections(vb);
+            collection.setSearchCollections(vb);
             stream >> entityCnt;
             QVector<Protocol::Ancestor> ancestors;
             for (int i = 0; i < entityCnt; ++i) {
@@ -805,7 +805,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
                     return msg;
                 }
             }
-            collection->setAncestors(ancestors);
+            collection.setAncestors(ancestors);
 
             Protocol::CachePolicy cachePolicy;
             stream >> b;
@@ -818,24 +818,24 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
             cachePolicy.setSyncOnDemand(b);
             stream >> stringList;
             cachePolicy.setLocalParts(stringList);
-            collection->setCachePolicy(cachePolicy);
+            collection.setCachePolicy(cachePolicy);
 
             stream >> attrs;
-            collection->setAttributes(attrs);
+            collection.setAttributes(attrs);
             stream >> b;
-            collection->setEnabled(b);
+            collection.setEnabled(b);
             stream >> reinterpret_cast<qint8&>(tristate);
-            collection->setDisplayPref(tristate);
+            collection.setDisplayPref(tristate);
             stream >> reinterpret_cast<qint8&>(tristate);
-            collection->setSyncPref(tristate);
+            collection.setSyncPref(tristate);
             stream >> reinterpret_cast<qint8&>(tristate);
-            collection->setIndexPref(tristate);
+            collection.setIndexPref(tristate);
             stream >> b;
-            collection->setReferenced(b);
+            collection.setReferenced(b);
             stream >> b;
-            collection->setIsVirtual(b);
+            collection.setIsVirtual(b);
 
-            msg->setCollection(collection);
+            msg->setCollection(std::move(collection));
         } else {
             for (int j = 0; j < entityCnt; ++j) {
                 stream >> uid;
@@ -846,11 +846,11 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotificatio
                     qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
                     return msg;
                 }
-                auto collection = Protocol::FetchCollectionsResponsePtr::create();
-                collection->setId(uid);
-                collection->setRemoteId(remoteId);
-                collection->setRemoteRevision(remoteRevision);
-                msg->setCollection(collection);
+                Protocol::FetchCollectionsResponse collection;
+                collection.setId(uid);
+                collection.setRemoteId(remoteId);
+                collection.setRemoteRevision(remoteRevision);
+                msg->setCollection(std::move(collection));
                 msg->addMetadata("FETCH_COLLECTION");
             }
         }
@@ -887,24 +887,24 @@ void Akonadi::ChangeRecorderPrivate::saveCollectionNotification(QDataStream &str
 {
     // Version 7
 
-    const auto col = msg.collection();
+    const auto &col = msg.collection();
 
     stream << int(msg.operation());
     stream << int(1);
-    stream << col->id();
-    stream << col->parentId();
-    stream << col->name();
-    stream << col->mimeTypes();
-    stream << col->remoteId();
-    stream << col->remoteRevision();
-    stream << col->resource();
-    const auto stats = col->statistics();
+    stream << col.id();
+    stream << col.parentId();
+    stream << col.name();
+    stream << col.mimeTypes();
+    stream << col.remoteId();
+    stream << col.remoteRevision();
+    stream << col.resource();
+    const auto stats = col.statistics();
     stream << stats.count();
     stream << stats.unseen();
     stream << stats.size();
-    stream << col->searchQuery();
-    stream << col->searchCollections();
-    const auto ancestors = col->ancestors();
+    stream << col.searchQuery();
+    stream << col.searchCollections();
+    const auto ancestors = col.ancestors();
     stream << ancestors.count();
     for (const auto &ancestor : ancestors) {
         stream << ancestor.id()
@@ -912,19 +912,19 @@ void Akonadi::ChangeRecorderPrivate::saveCollectionNotification(QDataStream &str
                << ancestor.name()
                << ancestor.attributes();
     }
-    const auto cachePolicy = col->cachePolicy();
+    const auto cachePolicy = col.cachePolicy();
     stream << cachePolicy.inherit();
     stream << cachePolicy.checkInterval();
     stream << cachePolicy.cacheTimeout();
     stream << cachePolicy.syncOnDemand();
     stream << cachePolicy.localParts();
-    stream << col->attributes();
-    stream << col->enabled();
-    stream << static_cast<qint8>(col->displayPref());
-    stream << static_cast<qint8>(col->syncPref());
-    stream << static_cast<qint8>(col->indexPref());
-    stream << col->referenced();
-    stream << col->isVirtual();
+    stream << col.attributes();
+    stream << col.enabled();
+    stream << static_cast<qint8>(col.displayPref());
+    stream << static_cast<qint8>(col.syncPref());
+    stream << static_cast<qint8>(col.indexPref());
+    stream << col.referenced();
+    stream << col.isVirtual();
 
 
     stream << msg.resource();
@@ -959,10 +959,10 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadTagNotification(QData
         stream >> dummyString;
         stream >> dummyBaV;
 
-        auto tag = Protocol::FetchTagsResponsePtr::create();
-        tag->setId(uid);
-        tag->setRemoteId(remoteId.toLatin1());
-        msg->setTag(tag);
+        Protocol::FetchTagsResponse tag;
+        tag.setId(uid);
+        tag.setRemoteId(remoteId.toLatin1());
+        msg->setTag(std::move(tag));
         msg->addMetadata("FETCH_TAG");
     } else if (version >= 2) {
         stream >> operation;
@@ -971,21 +971,21 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadTagNotification(QData
             QByteArray ba;
             QMap<QByteArray, QByteArray> attrs;
 
-            auto tag = Protocol::FetchTagsResponsePtr::create();
+            Protocol::FetchTagsResponse tag;
 
             stream >> uid;
-            tag->setId(uid);
+            tag.setId(uid);
             stream >> ba;
-            tag->setParentId(uid);
+            tag.setParentId(uid);
             stream >> attrs;
-            tag->setGid(ba);
+            tag.setGid(ba);
             stream >> ba;
-            tag->setType(ba);
+            tag.setType(ba);
             stream >> uid;
-            tag->setRemoteId(ba);
+            tag.setRemoteId(ba);
             stream >> ba;
-            tag->setAttributes(attrs);
-            msg->setTag(tag);
+            tag.setAttributes(attrs);
+            msg->setTag(std::move(tag));
 
             stream >> resource;
         } else {
@@ -998,10 +998,10 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadTagNotification(QData
                     qCWarning(AKONADICORE_LOG) << "Error reading saved notifications! Aborting";
                     return msg;
                 }
-                auto tag = Protocol::FetchTagsResponsePtr::create();
-                tag->setId(uid);
-                tag->setRemoteId(remoteId.toLatin1());
-                msg->setTag(tag);
+                Protocol::FetchTagsResponse tag;
+                tag.setId(uid);
+                tag.setRemoteId(remoteId.toLatin1());
+                msg->setTag(std::move(tag));
                 msg->addMetadata("FETCH_TAG");
             }
             stream >> resource;
@@ -1028,15 +1028,15 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadTagNotification(QData
 
 void Akonadi::ChangeRecorderPrivate::saveTagNotification(QDataStream &stream, const Protocol::TagChangeNotification &msg)
 {
-    const auto tag = msg.tag();
+    const auto &tag = msg.tag();
     stream << int(msg.operation());
     stream << int(1);
-    stream << tag->id();
-    stream << tag->parentId();
-    stream << tag->gid();
-    stream << tag->type();
-    stream << tag->remoteId();
-    stream << tag->attributes();
+    stream << tag.id();
+    stream << tag.parentId();
+    stream << tag.gid();
+    stream << tag.type();
+    stream << tag.remoteId();
+    stream << tag.attributes();
     stream << msg.resource();
 }
 
@@ -1058,23 +1058,23 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(
         stream >> operation;
         stream >> entityCnt;
         if (version >= 7) {
-            auto relation = Protocol::FetchRelationsResponsePtr::create();
+            Protocol::FetchRelationsResponse relation;
             qint64 i64;
             QByteArray ba;
             stream >> i64;
-            relation->setLeft(i64);
+            relation.setLeft(i64);
             stream >> ba;
-            relation->setLeftMimeType(ba);
+            relation.setLeftMimeType(ba);
             stream >> i64;
-            relation->setRight(i64);
+            relation.setRight(i64);
             stream >>ba;
-            relation->setRightMimeType(ba);
+            relation.setRightMimeType(ba);
             stream >> ba;
-            relation->setRemoteId(ba);
+            relation.setRemoteId(ba);
             stream >> ba;
-            relation->setType(ba);
+            relation.setType(ba);
 
-            msg->setRelation(relation);
+            msg->setRelation(std::move(relation));
 
         } else {
             for (int j = 0; j < entityCnt; ++j) {
@@ -1106,23 +1106,23 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(
                 stream >> dummyIv;
             }
 
-            auto relation = Protocol::FetchRelationsResponsePtr::create();
+            Protocol::FetchRelationsResponse relation;
             for (const QByteArray &part : qAsConst(itemParts)) {
                 const QByteArrayList p = part.split(' ');
                 if (p.size() < 2) {
                     continue;
                 }
                 if (p[0] == "LEFT") {
-                    relation->setLeft(p[1].toLongLong());
+                    relation.setLeft(p[1].toLongLong());
                 } else if (p[0] == "RIGHT") {
-                    relation->setRight(p[1].toLongLong());
+                    relation.setRight(p[1].toLongLong());
                 } else if (p[0] == "RID") {
-                    relation->setRemoteId(p[1]);
+                    relation.setRemoteId(p[1]);
                 } else if (p[0] == "TYPE") {
-                    relation->setType(p[1]);
+                    relation.setType(p[1]);
                 }
             }
-            msg->setRelation(relation);
+            msg->setRelation(std::move(relation));
         }
         if (version >= 5) {
             msg->setOperation(static_cast<Protocol::RelationChangeNotification::Operation>(operation));
@@ -1136,15 +1136,15 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadRelationNotification(
 
 void Akonadi::ChangeRecorderPrivate::saveRelationNotification(QDataStream &stream, const Protocol::RelationChangeNotification &msg)
 {
-    const auto rel = msg.relation();
+    const auto &rel = msg.relation();
     stream << int(msg.operation());
     stream << int(0);
-    stream << rel->left();
-    stream << rel->leftMimeType();
-    stream << rel->right();
-    stream << rel->rightMimeType();
-    stream << rel->remoteId();
-    stream << rel->type();
+    stream << rel.left();
+    stream << rel.leftMimeType();
+    stream << rel.right();
+    stream << rel.rightMimeType();
+    stream << rel.remoteId();
+    stream << rel.type();
 }
 
 Protocol::ItemChangeNotification::Operation ChangeRecorderPrivate::mapItemOperation(LegacyOp op) const

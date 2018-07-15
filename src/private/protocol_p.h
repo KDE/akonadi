@@ -485,7 +485,7 @@ using ChangeNotificationList = QVector<ChangeNotificationPtr>;
 class AKONADIPRIVATE_EXPORT ChangeNotification : public Command
 {
 public:
-    static QList<qint64> itemsToUids(const QVector<Akonadi::Protocol::FetchItemsResponsePtr> &items);
+    static QList<qint64> itemsToUids(const QVector<Akonadi::Protocol::FetchItemsResponse> &items);
 
     class Relation
     {

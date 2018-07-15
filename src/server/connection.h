@@ -30,8 +30,10 @@
 #include "entities.h"
 #include "global.h"
 #include "commandcontext.h"
+#include "tracer.h"
 
 #include <private/protocol_p.h>
+#include <private/datastream_p_p.h>
 
 class QEventLoop;
 
@@ -80,8 +82,11 @@ public:
 
     void setState(ConnectionState state);
 
-public Q_SLOTS:
-    virtual void sendResponse(const Protocol::CommandPtr &response);
+    template<typename T>
+    inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
+    sendResponse(T &&response);
+
+    void sendResponse(qint64 tag, const Protocol::CommandPtr &response);
 
 Q_SIGNALS:
     void disconnected();
@@ -101,6 +106,8 @@ protected:
     void quit() override;
 
     Handler *findHandlerForCommand(Protocol::Command::Type cmd);
+
+    qint64 currentTag() const;
 
 protected:
     quintptr m_socketDescriptor = {};
@@ -124,7 +131,9 @@ protected:
     bool m_connectionClosing = false;
 
 private:
-    void sendResponse(qint64 tag, const Protocol::CommandPtr &response);
+    template<typename T>
+    inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
+    sendResponse(qint64 tag, T &&response);
 
     /** For debugging */
     void startTime();
@@ -133,6 +142,33 @@ private:
     bool m_reportTime = false;
 
 };
+
+template<typename T>
+inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
+Connection::sendResponse(T &&response)
+{
+    sendResponse<T>(currentTag(), std::move(response));
+}
+
+template<typename T>
+inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
+Connection::sendResponse(qint64 tag, T &&response)
+{
+    if (Tracer::self()->currentTracer() != QLatin1String("null")) {
+        Tracer::self()->connectionOutput(m_identifier, tag, response);
+    }
+    Protocol::DataStream stream(m_socket);
+    stream << tag;
+    stream << std::move(response);
+    if (!m_socket->waitForBytesWritten()) {
+        if (m_socket->state() == QLocalSocket::ConnectedState) {
+            throw ProtocolException("Server write timeout");
+        } else {
+            // The client has disconnected before we managed to send our response,
+            // which is not an error
+        }
+    }
+}
 
 } // namespace Server
 } // namespace Akonadi

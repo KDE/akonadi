@@ -108,14 +108,13 @@ void Tracer::connectionOutput(const QString &identifier, const QByteArray &msg)
     mMutex.unlock();
 }
 
-void Akonadi::Server::Tracer::connectionOutput(const QString& identifier, qint64 tag, const Protocol::CommandPtr &cmd)
+void Tracer::connectionOutput(const QString &identifier, qint64 tag, const Protocol::CommandPtr &cmd)
 {
     QByteArray msg;
     if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
         QJsonObject json;
         json[QStringLiteral("tag")] = tag;
-        Akonadi::Protocol::toJson(cmd.data(), json);
-
+        Protocol::toJson(cmd.data(), json);
         QJsonDocument doc(json);
 
         msg = doc.toJson(QJsonDocument::Indented);
@@ -124,6 +123,7 @@ void Akonadi::Server::Tracer::connectionOutput(const QString& identifier, qint64
     }
     connectionOutput(identifier, msg);
 }
+
 
 void Tracer::signal(const QString &signalName, const QString &msg)
 {

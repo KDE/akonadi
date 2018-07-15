@@ -88,11 +88,11 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
-            auto collection = Protocol::FetchCollectionsResponsePtr::create(*resp);
-            collection->setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
-            collection->setAttributes({});
+            Protocol::FetchCollectionsResponse collection(*resp);
+            collection.setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
+            collection.setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
-            notification->setCollection(collection);
+            notification->setCollection(std::move(collection));
 
             QTest::newRow("create collection") << scenarios <<  notification;
         }
@@ -124,11 +124,11 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
-            auto collection = Protocol::FetchCollectionsResponsePtr::create(*resp);
-            collection->setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
-            collection->setAttributes({});
+            Protocol::FetchCollectionsResponse collection(*resp);
+            collection.setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
+            collection.setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
-            notification->setCollection(collection);
+            notification->setCollection(std::move(collection));
 
 
             QTest::newRow("create collection with local override") << scenarios <<  notification;
@@ -155,13 +155,13 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, resp)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
-            auto collection = Protocol::FetchCollectionsResponsePtr::create(*resp);
-            collection->setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
-            collection->setAttributes({});
+            Protocol::FetchCollectionsResponse collection(*resp);
+            collection.setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
+            collection.setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setSessionId("akonadi_fake_resource_0");
             notification->setParentCollection(0);
-            notification->setCollection(collection);
+            notification->setCollection(std::move(collection));
 
 
             QTest::newRow("create top-level collection") << scenarios <<  notification;

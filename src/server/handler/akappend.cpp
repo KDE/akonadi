@@ -300,10 +300,10 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
 bool AkAppend::sendResponse(const PimItem &item, Protocol::CreateItemCommand::MergeModes mergeModes)
 {
     if (mergeModes & Protocol::CreateItemCommand::Silent || mergeModes & Protocol::CreateItemCommand::None) {
-        auto resp = Protocol::FetchItemsResponsePtr::create();
-        resp->setId(item.id());
-        resp->setMTime(item.datetime());
-        Handler::sendResponse(resp);
+        Protocol::FetchItemsResponse resp;
+        resp.setId(item.id());
+        resp.setMTime(item.datetime());
+        Handler::sendResponse(std::move(resp));
         return true;
     }
 

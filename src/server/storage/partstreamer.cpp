@@ -62,10 +62,10 @@ QString PartStreamer::error() const
 Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partName)
 {
     {
-        auto resp = Protocol::StreamPayloadCommandPtr::create();
-        resp->setPayloadName(partName);
-        resp->setRequest(Protocol::StreamPayloadCommand::MetaData);
-        mConnection->sendResponse(resp);
+        Protocol::StreamPayloadCommand resp;
+        resp.setPayloadName(partName);
+        resp.setRequest(Protocol::StreamPayloadCommand::MetaData);
+        mConnection->sendResponse(std::move(resp));
     }
 
     const auto cmd = mConnection->readCommand();
@@ -114,10 +114,10 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
 
     // Request the actual data
     {
-        auto resp = Protocol::StreamPayloadCommandPtr::create();
-        resp->setPayloadName(metaPart.name());
-        resp->setRequest(Protocol::StreamPayloadCommand::Data);
-        mConnection->sendResponse(resp);
+        Protocol::StreamPayloadCommand resp;
+        resp.setPayloadName(metaPart.name());
+        resp.setRequest(Protocol::StreamPayloadCommand::Data);
+        mConnection->sendResponse(std::move(resp));
     }
 
     const auto cmd = mConnection->readCommand();
@@ -210,11 +210,11 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
     }
 
     {
-        auto cmd = Protocol::StreamPayloadCommandPtr::create();
-        cmd->setPayloadName(metaPart.name());
-        cmd->setRequest(Protocol::StreamPayloadCommand::Data);
-        cmd->setDestination(QString::fromUtf8(filename));
-        mConnection->sendResponse(cmd);
+        Protocol::StreamPayloadCommand cmd;
+        cmd.setPayloadName(metaPart.name());
+        cmd.setRequest(Protocol::StreamPayloadCommand::Data);
+        cmd.setDestination(QString::fromUtf8(filename));
+        mConnection->sendResponse(std::move(cmd));
     }
 
     const auto cmd = mConnection->readCommand();
@@ -255,10 +255,10 @@ bool PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData
     }
 
     {
-        auto cmd = Protocol::StreamPayloadCommandPtr::create();
-        cmd->setPayloadName(metaPart.name());
-        cmd->setRequest(Protocol::StreamPayloadCommand::Data);
-        mConnection->sendResponse(cmd);
+        Protocol::StreamPayloadCommand cmd;
+        cmd.setPayloadName(metaPart.name());
+        cmd.setRequest(Protocol::StreamPayloadCommand::Data);
+        mConnection->sendResponse(std::move(cmd));
     }
 
     const auto cmd = mConnection->readCommand();

@@ -49,7 +49,7 @@ public:
     FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
     FetchHelper(Connection *connection, CommandContext *context, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
 
-    bool fetchItems(std::function<void(Protocol::CommandPtr)> &&callback = {});
+    bool fetchItems(std::function<void(Protocol::FetchItemsResponse &&)> &&callback = {});
 
 private:
     enum ItemQueryColumns {

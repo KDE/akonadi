@@ -149,12 +149,12 @@ void Connection::slotSendHello()
 {
     SchemaVersion version = SchemaVersion::retrieveAll().first();
 
-    auto hello = Protocol::HelloResponsePtr::create();
-    hello->setServerName(QStringLiteral("Akonadi"));
-    hello->setMessage(QStringLiteral("Not Really IMAP server"));
-    hello->setProtocolVersion(Protocol::version());
-    hello->setGeneration(version.generation());
-    sendResponse(0, hello);
+    Protocol::HelloResponse hello;
+    hello.setServerName(QStringLiteral("Akonadi"));
+    hello.setMessage(QStringLiteral("Not Really IMAP server"));
+    hello.setProtocolVersion(Protocol::version());
+    hello.setGeneration(version.generation());
+    sendResponse(0, std::move(hello));
 }
 
 DataStore *Connection::storageBackend()
@@ -238,8 +238,7 @@ void Connection::handleIncomingData()
 
         QString currentCommand;
         while (m_socket->bytesAvailable() >= int(sizeof(qint64))) {
-            QDataStream stream(m_socket);
-
+            Protocol::DataStream stream(m_socket);
             qint64 tag = -1;
             stream >> tag;
             // TODO: Check tag is incremental sequence
@@ -394,6 +393,11 @@ Handler *Connection::findHandlerForCommand(Protocol::Command::Type command)
     return handler;
 }
 
+qint64 Connection::currentTag() const
+{
+    return m_currentHandler->tag();
+}
+
 void Connection::setState(ConnectionState state)
 {
     if (state == m_connectionState) {
@@ -490,7 +494,7 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
     if (Tracer::self()->currentTracer() != QLatin1String("null")) {
         Tracer::self()->connectionOutput(m_identifier, tag, response);
     }
-    QDataStream stream(m_socket);
+    Protocol::DataStream stream(m_socket);
     stream << tag;
     Protocol::serialize(m_socket, response);
     if (!m_socket->waitForBytesWritten()) {
@@ -503,11 +507,6 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
     }
 }
 
-void Connection::sendResponse(const Protocol::CommandPtr &response)
-{
-    Q_ASSERT(m_currentHandler);
-    sendResponse(m_currentHandler->tag(), response);
-}
 
 Protocol::CommandPtr Connection::readCommand()
 {
@@ -515,7 +514,7 @@ Protocol::CommandPtr Connection::readCommand()
         Protocol::DataStream::waitForData(m_socket, 10000); // 10 seconds, just in case client is busy
     }
 
-    QDataStream stream(m_socket);
+    Protocol::DataStream stream(m_socket);
     qint64 tag;
     stream >> tag;
 

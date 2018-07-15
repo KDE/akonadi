@@ -22,8 +22,11 @@
 
 #include <QObject>
 #include <QMutex>
+#include <QJsonObject>
+#include <QJsonDocument>
 
 #include "tracerinterface.h"
+#include "protocol_p.h"
 
 class QSettings;
 
@@ -59,6 +62,23 @@ public:
      * Destroys the global tracer instance.
      */
     ~Tracer() override;
+
+    template<typename T>
+    typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
+    connectionOutput(const QString &identifier, qint64 tag, const T &cmd) {
+        QByteArray msg;
+        if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
+            QJsonObject json;
+            json[QStringLiteral("tag")] = tag;
+            cmd.toJson(json);
+            QJsonDocument doc(json);
+
+            msg = doc.toJson(QJsonDocument::Indented);
+        } else {
+            msg = QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8();
+        }
+        connectionOutput(identifier, msg);
+    }
 
 public Q_SLOTS:
     /**

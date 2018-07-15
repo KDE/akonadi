@@ -313,25 +313,25 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
 
     msg->setParentDestCollection(collectionDest.id());
 
-    QVector<Protocol::FetchItemsResponsePtr> ntfItems;
+    QVector<Protocol::FetchItemsResponse> ntfItems;
     Q_FOREACH (const PimItem &item, items) {
-        auto i = Protocol::FetchItemsResponsePtr::create();
-        i->setId(item.id());
-        i->setRemoteId(item.remoteId());
-        i->setRemoteRevision(item.remoteRevision());
-        i->setMimeType(item.mimeType().name());
-        ntfItems.push_back(i);
+        Protocol::FetchItemsResponse i;
+        i.setId(item.id());
+        i.setRemoteId(item.remoteId());
+        i.setRemoteRevision(item.remoteRevision());
+        i.setMimeType(item.mimeType().name());
+        ntfItems.push_back(std::move(i));
     }
 
     /* Notify all virtual collections the items are linked to. */
-    QHash<qint64, Protocol::FetchItemsResponsePtr> virtItems;
+    QHash<qint64, Protocol::FetchItemsResponse> virtItems;
     for (const auto &ntfItem : ntfItems) {
-        virtItems.insert(ntfItem->id(), ntfItem);
+        virtItems.insert(ntfItem.id(), std::move(ntfItem));
     }
     auto iter = vCollections.constBegin(), endIter = vCollections.constEnd();
     for (; iter != endIter; ++iter) {
         auto copy = Protocol::ItemChangeNotificationPtr::create(*msg);
-        QVector<Protocol::FetchItemsResponsePtr> items;
+        QVector<Protocol::FetchItemsResponse> items;
         items.reserve(iter->size());
         for (const auto &item : qAsConst(*iter)) {
             items.append(virtItems.value(item.id()));
@@ -393,8 +393,8 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
     if (auto mgr = AkonadiServer::instance()->notificationManager()) {
         auto fetchScope = mgr->collectionFetchScope();
         // Make sure we have all the data
-        if (!fetchScope->fetchIdOnly() && msgCollection->name().isEmpty()) {
-            const auto col = Collection::retrieveById(msgCollection->id());
+        if (!fetchScope->fetchIdOnly() && msgCollection.name().isEmpty()) {
+            const auto col = Collection::retrieveById(msgCollection.id());
             const auto mts = col.mimeTypes();
             QStringList mimeTypes;
             mimeTypes.reserve(mts.size());
@@ -406,20 +406,20 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
         // Get up-to-date statistics
         if (fetchScope->fetchStatistics()) {
             Collection col;
-            col.setId(msgCollection->id());
+            col.setId(msgCollection.id());
             const auto stats = CollectionStatistics::self()->statistics(col);
-            msgCollection->setStatistics(Protocol::FetchCollectionStatsResponse(stats.count, stats.count - stats.read, stats.size));
+            msgCollection.setStatistics(Protocol::FetchCollectionStatsResponse(stats.count, stats.count - stats.read, stats.size));
         }
         // Get attributes
         const auto requestedAttrs = fetchScope->attributes();
-        auto msgColAttrs = msgCollection->attributes();
+        auto msgColAttrs = msgCollection.attributes();
         // TODO: This assumes that we have either none or all attributes in msgCollection
         if (msgColAttrs.isEmpty() && !requestedAttrs.isEmpty()) {
             SelectQueryBuilder<CollectionAttribute> qb;
             qb.addColumn(CollectionAttribute::typeFullColumnName());
             qb.addColumn(CollectionAttribute::valueFullColumnName());
             qb.addValueCondition(CollectionAttribute::collectionIdFullColumnName(),
-                                    Query::Equals, msgCollection->id());
+                                    Query::Equals, msgCollection.id());
             Query::Condition cond(Query::Or);
             for (const auto &attr : requestedAttrs) {
                 cond.addValueCondition(CollectionAttribute::typeFullColumnName(), Query::Equals, attr);
@@ -432,10 +432,10 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
             for (const auto &attr : attrs)  {
                 msgColAttrs.insert(attr.type(), attr.value());
             }
-            msgCollection->setAttributes(msgColAttrs);
+            msgCollection.setAttributes(msgColAttrs);
         }
     }
-    msg->setCollection(msgCollection);
+    msg->setCollection(std::move(msgCollection));
 
     if (!collection.enabled()) {
         msg->addMetadata("DISABLED");
@@ -460,20 +460,20 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
     msg->setSessionId(mSessionId);
     msg->setResource(resource);
     auto msgTag = HandlerHelper::fetchTagsResponse(tag, false);
-    msgTag->setRemoteId(remoteId.toUtf8());
+    msgTag.setRemoteId(remoteId.toUtf8());
     if (auto mgr = AkonadiServer::instance()->notificationManager()) {
         auto fetchScope = mgr->tagFetchScope();
-        if (!fetchScope->fetchIdOnly() && msgTag->gid().isEmpty()) {
-            msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag->id()), false);
+        if (!fetchScope->fetchIdOnly() && msgTag.gid().isEmpty()) {
+            msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag.id()), false);
         }
 
         const auto requestedAttrs = fetchScope->attributes();
-        auto msgTagAttrs = msgTag->attributes();
+        auto msgTagAttrs = msgTag.attributes();
         if (msgTagAttrs.isEmpty() && !requestedAttrs.isEmpty()) {
             SelectQueryBuilder<TagAttribute> qb;
             qb.addColumn(TagAttribute::typeFullColumnName());
             qb.addColumn(TagAttribute::valueFullColumnName());
-            qb.addValueCondition(TagAttribute::tagIdFullColumnName(), Query::Equals, msgTag->id());
+            qb.addValueCondition(TagAttribute::tagIdFullColumnName(), Query::Equals, msgTag.id());
             Query::Condition cond(Query::Or);
             for (const auto &attr : requestedAttrs) {
                 cond.addValueCondition(TagAttribute::typeFullColumnName(), Query::Equals, attr);
@@ -486,10 +486,10 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
             for (const auto &attr : attrs) {
                 msgTagAttrs.insert(attr.type(), attr.value());
             }
-            msgTag->setAttributes(msgTagAttrs);
+            msgTag.setAttributes(msgTagAttrs);
         }
     }
-    msg->setTag(msgTag);
+    msg->setTag(std::move(msgTag));
 
     dispatchNotification(msg);
 }
@@ -525,7 +525,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             const auto items = msg->items();
             ids.reserve(items.size());
             for (const auto &item : items) {
-                ids.push_back(item->id());
+                ids.push_back(item.id());
             }
             // Prevent transactions inside FetchHelper to recursively call our slot
             QScopedValueRollback<bool> ignoreTransactions(mIgnoreTransactions);
@@ -533,9 +533,9 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             CommandContext context;
             auto scope = fetchScope->toFetchScope();
             FetchHelper helper(Connection::self(), &context, Scope(ids), scope);
-            QVector<Protocol::FetchItemsResponsePtr> fetchedItems;
-            std::function<void(Protocol::CommandPtr)> callback = [&fetchedItems](Protocol::CommandPtr cmd) {
-                fetchedItems.push_back(cmd.staticCast<Protocol::FetchItemsResponse>());
+            QVector<Protocol::FetchItemsResponse> fetchedItems;
+            auto callback = [&fetchedItems](Protocol::FetchItemsResponse &&cmd) {
+                fetchedItems.push_back(std::move(cmd));
             };
             if (helper.fetchItems(std::move(callback))) {
                 msg->setItems(fetchedItems);

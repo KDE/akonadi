@@ -248,15 +248,10 @@ bool Handler::failureResponse(const QString &failureMessage)
         // FIXME: Error enums?
         r->setError(1, failureMessage);
 
-        sendResponse(r);
+        m_connection->sendResponse(m_tag, r);
     }
 
     return false;
-}
-
-void Handler::sendResponse(const Protocol::CommandPtr &response)
-{
-    m_connection->sendResponse(response);
 }
 
 bool Handler::checkScopeConstraints(const Akonadi::Scope &scope, int permittedScopes)

@@ -335,8 +335,8 @@ Protocol::ChangeNotificationList MonitorPrivate::splitMessage(const Protocol::It
     list.reserve(items.count());
     for (const auto &item : items) {
         auto copy = Protocol::ItemChangeNotificationPtr::create(baseMsg);
-        copy->setItems({ Protocol::FetchItemsResponsePtr::create(*item) });
-        list << copy;
+        copy->setItems({std::move(Protocol::FetchItemsResponse(item))});
+        list.push_back(std::move(copy));
     }
 
     return list;
@@ -357,7 +357,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
     if (msg->type() == Protocol::Command::TagChangeNotification) {
         const auto tagMsg = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
         if (tagMsg.metadata().contains("FETCH_TAG")) {
-            if (!tagCache->ensureCached({ tagMsg.tag()->id() }, mTagFetchScope)) {
+            if (!tagCache->ensureCached({ tagMsg.tag().id() }, mTagFetchScope)) {
                 return false;
             }
         }
@@ -476,7 +476,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
     } else if (msg->type() == Protocol::Command::CollectionChangeNotification && fetchCollections()) {
         const auto &colMsg = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);
         if (colMsg.metadata().contains("FETCH_COLLECTION")) {
-            if (!collectionCache->ensureCached(colMsg.collection()->id(), mCollectionFetchScope)) {
+            if (!collectionCache->ensureCached(colMsg.collection().id(), mCollectionFetchScope)) {
                 return false;
             }
         }
@@ -495,15 +495,15 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         const bool fetched = tagNtf.metadata().contains("FETCH_TAG");
         Tag tag;
         if (fetched) {
-            const auto tags = tagCache->retrieve({ tagNtf.tag()->id() });
+            const auto tags = tagCache->retrieve({ tagNtf.tag().id() });
             tag = tags.isEmpty() ? Tag() : tags.at(0);
         } else {
-            tag = ProtocolHelper::parseTag(*tagNtf.tag());
+            tag = ProtocolHelper::parseTag(tagNtf.tag());
         }
         someoneWasListening = emitTagNotification(tagNtf, tag);
     } else if (msg->type() == Protocol::Command::RelationChangeNotification) {
         const auto &relNtf = Protocol::cmdCast<Protocol::RelationChangeNotification>(msg);
-        const Relation rel = ProtocolHelper::parseRelationFetchResult(*relNtf.relation());
+        const Relation rel = ProtocolHelper::parseRelationFetchResult(relNtf.relation());
         someoneWasListening = emitRelationNotification(relNtf, rel);
     } else if (msg->type() == Protocol::Command::CollectionChangeNotification) {
         const auto &colNtf = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);
@@ -515,7 +515,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
 
         const bool fetched = colNtf.metadata().contains("FETCH_COLLECTION");
         //For removals this will retrieve an invalid collection. We'll deal with that in emitCollectionNotification
-        const Collection col = fetched ? collectionCache->retrieve(colNtf.collection()->id()) : ProtocolHelper::parseCollection(*colNtf.collection(), true);
+        const Collection col = fetched ? collectionCache->retrieve(colNtf.collection().id()) : ProtocolHelper::parseCollection(colNtf.collection(), true);
         //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
         //the changerecorder stored the notification or the notification was in the queue). In order to drop such invalid notifications we have to ignore them.
         if (col.isValid() || colNtf.operation() == Protocol::CollectionChangeNotification::Remove || !fetchCollections()) {
@@ -537,7 +537,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
             const auto ntfItems = itemNtf.items();
             items.reserve(ntfItems.size());
             for (const auto &ntfItem : ntfItems) {
-                items.push_back(ProtocolHelper::parseItemFetchResult(*ntfItem));
+                items.push_back(ProtocolHelper::parseItemFetchResult(ntfItem));
             }
         }
         //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
@@ -610,7 +610,7 @@ void MonitorPrivate::updatePendingStatistics(const Protocol::ChangeNotificationP
         const auto &colNtf = Protocol::cmdCast<Protocol::CollectionChangeNotification>(msg);
         if (colNtf.operation() == Protocol::CollectionChangeNotification::Remove) {
             // no need for statistics updates anymore
-            recentlyChangedCollections.remove(colNtf.collection()->id());
+            recentlyChangedCollections.remove(colNtf.collection().id());
         }
     }
 }
@@ -1311,10 +1311,10 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotificationPtr &msg
         case Protocol::CollectionChangeNotification::Modify:
         case Protocol::CollectionChangeNotification::Move:
         case Protocol::CollectionChangeNotification::Subscribe:
-            collectionCache->update(colNtf.collection()->id(), mCollectionFetchScope);
+            collectionCache->update(colNtf.collection().id(), mCollectionFetchScope);
             break;
         case Protocol::CollectionChangeNotification::Remove:
-            collectionCache->invalidate(colNtf.collection()->id());
+            collectionCache->invalidate(colNtf.collection().id());
             break;
         default:
             break;
@@ -1341,10 +1341,10 @@ void MonitorPrivate::invalidateCaches(const Protocol::ChangeNotificationPtr &msg
         const auto &tagNtf = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
         switch (tagNtf.operation()) {
         case Protocol::TagChangeNotification::Modify:
-            tagCache->update({ tagNtf.tag()->id() }, mTagFetchScope);
+            tagCache->update({ tagNtf.tag().id() }, mTagFetchScope);
             break;
         case Protocol::TagChangeNotification::Remove:
-            tagCache->invalidate({ tagNtf.tag()->id() });
+            tagCache->invalidate({ tagNtf.tag().id() });
             break;
         default:
             break;

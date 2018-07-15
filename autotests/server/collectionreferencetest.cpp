@@ -77,11 +77,11 @@ private Q_SLOTS:
         notificationTemplate->setParentCollection(0);
         notificationTemplate->setResource("testresource");
         notificationTemplate->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-        auto collection = Protocol::FetchCollectionsResponsePtr::create();
-        collection->setId(initializer.collection("col2").id());
-        collection->setRemoteId(QStringLiteral("col2"));
-        collection->setRemoteRevision(QStringLiteral(""));
-        notificationTemplate->setCollection(collection);
+        Protocol::FetchCollectionsResponse collection;
+        collection.setId(initializer.collection("col2").id());
+        collection.setRemoteId(QStringLiteral("col2"));
+        collection.setRemoteRevision(QStringLiteral(""));
+        notificationTemplate->setCollection(std::move(collection));
 
         {
             auto cmd = Protocol::FetchCollectionsCommandPtr::create();

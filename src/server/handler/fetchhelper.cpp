@@ -320,7 +320,7 @@ DataStore *FetchHelper::storageBackend() const
 }
 
 
-bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCallback)
+bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)> &&itemCallback)
 {
     BEGIN_TIMER(fetch)
 
@@ -436,31 +436,31 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCal
         const qint64 pimItemId = extractQueryResult(itemQuery, ItemQueryPimItemIdColumn).toLongLong();
         const int pimItemRev = extractQueryResult(itemQuery, ItemQueryRevColumn).toInt();
 
-        auto response = Protocol::FetchItemsResponsePtr::create();
-        response->setId(pimItemId);
-        response->setRevision(pimItemRev);
+        Protocol::FetchItemsResponse response;
+        response.setId(pimItemId);
+        response.setRevision(pimItemRev);
         const qint64 mimeTypeId = extractQueryResult(itemQuery, ItemQueryMimeTypeIdColumn).toLongLong();
         auto mtIter = mimeTypeIdNameCache.find(mimeTypeId);
         if (mtIter == mimeTypeIdNameCache.end()) {
             mtIter = mimeTypeIdNameCache.insert(mimeTypeId, MimeType::retrieveById(mimeTypeId).name());
         }
-        response->setMimeType(mtIter.value());
+        response.setMimeType(mtIter.value());
         if (mFetchScope.fetchRemoteId()) {
-            response->setRemoteId(extractQueryResult(itemQuery, ItemQueryPimItemRidColumn).toString());
+            response.setRemoteId(extractQueryResult(itemQuery, ItemQueryPimItemRidColumn).toString());
         }
-        response->setParentId(extractQueryResult(itemQuery, ItemQueryCollectionIdColumn).toLongLong());
+        response.setParentId(extractQueryResult(itemQuery, ItemQueryCollectionIdColumn).toLongLong());
 
         if (mFetchScope.fetchSize()) {
-            response->setSize(extractQueryResult(itemQuery, ItemQuerySizeColumn).toLongLong());
+            response.setSize(extractQueryResult(itemQuery, ItemQuerySizeColumn).toLongLong());
         }
         if (mFetchScope.fetchMTime()) {
-            response->setMTime(Utils::variantToDateTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn)));
+            response.setMTime(Utils::variantToDateTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn)));
         }
         if (mFetchScope.fetchRemoteRevision()) {
-            response->setRemoteRevision(extractQueryResult(itemQuery, ItemQueryRemoteRevisionColumn).toString());
+            response.setRemoteRevision(extractQueryResult(itemQuery, ItemQueryRemoteRevisionColumn).toString());
         }
         if (mFetchScope.fetchGID()) {
-            response->setGid(extractQueryResult(itemQuery, ItemQueryPimItemGidColumn).toString());
+            response.setGid(extractQueryResult(itemQuery, ItemQueryPimItemGidColumn).toString());
         }
 
         if (mFetchScope.fetchFlags()) {
@@ -481,7 +481,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCal
                 flags << flagNameIter.value();
                 flagQuery.next();
             }
-            response->setFlags(flags);
+            response.setFlags(flags);
         }
 
         if (mFetchScope.fetchTags()) {
@@ -511,10 +511,10 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCal
                 }
             } else {
                 for (qint64 tagId : qAsConst(tagIds)) {
-                    tags << *HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId));
+                    tags.push_back(HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId)));
                 }
             }
-            response->setTags(tags);
+            response.setTags(tags);
         }
 
         if (mFetchScope.fetchVirtualReferences()) {
@@ -531,7 +531,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCal
                 vRefs << vRefQuery.value(VRefQueryCollectionIdColumn).toLongLong();
                 vRefQuery.next();
             }
-            response->setVirtualReferences(vRefs);
+            response.setVirtualReferences(vRefs);
         }
 
         if (mFetchScope.fetchRelations()) {
@@ -549,13 +549,13 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCal
             const auto result = qb.result();
             relations.reserve(result.size());
             for (const Relation &rel : result) {
-                relations << *HandlerHelper::fetchRelationsResponse(rel);
+                relations.push_back(HandlerHelper::fetchRelationsResponse(rel));;
             }
-            response->setRelations(relations);
+            response.setRelations(relations);
         }
 
         if (mFetchScope.ancestorDepth() != Protocol::ItemFetchScope::NoAncestor) {
-            response->setAncestors(ancestorsForItem(response->parentId()));
+            response.setAncestors(ancestorsForItem(response.parentId()));
         }
 
         bool skipItem = false;
@@ -614,7 +614,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCal
                 partQuery.next();
             }
         }
-        response->setParts(parts);
+        response.setParts(parts);
 
         if (skipItem) {
             itemQuery.next();
@@ -622,7 +622,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::CommandPtr)> &&itemCal
         }
 
         if (mFetchScope.checkCachedPayloadPartsOnly()) {
-            response->setCachedParts(cachedParts);
+            response.setCachedParts(cachedParts);
         }
 
         if (itemCallback) {

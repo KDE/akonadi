@@ -847,7 +847,7 @@
     <param name="addedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
     <param name="removedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
 
-    <param name="items" type="QVector&lt;Akonadi::Protocol::FetchItemsResponsePtr&gt;" />
+    <param name="items" type="QVector&lt;Akonadi::Protocol::FetchItemsResponse&gt;" asReference="true" />
   </notification>
 
   <!-- Collection Change Notification //-->
@@ -869,7 +869,7 @@
     <param name="destinationResource" type="QByteArray" />
     <param name="changedParts" type="QSet&lt;QByteArray&gt;" />
 
-    <param name="collection" type="Akonadi::Protocol::FetchCollectionsResponsePtr" />
+    <param name="collection" type="Akonadi::Protocol::FetchCollectionsResponse" asReference="true" />
   </notification>
 
   <!-- Tag Change Notification //-->
@@ -884,7 +884,7 @@
     <param name="operation" type="TagChangeNotification::Operation" default="InvalidOp" />
     <param name="resource" type="QByteArray" />
 
-    <param name="tag" type="Akonadi::Protocol::FetchTagsResponsePtr" />
+    <param name="tag" type="Akonadi::Protocol::FetchTagsResponse" asReference="true" />
   </notification>
 
   <!-- Relation Change Notification //-->
@@ -897,7 +897,7 @@
 
     <param name="operation" type="RelationChangeNotification::Operation" default="InvalidOp" />
 
-    <param name="relation" type="Akonadi::Protocol::FetchRelationsResponsePtr" />
+    <param name="relation" type="Akonadi::Protocol::FetchRelationsResponse" asReference="true" />
   </notification>
 
   <!--Create Subscription //-->

@@ -105,13 +105,13 @@ class NotificationManagerTest : public QObject
     typedef QList<NotificationSubscriber *> NSList;
 
 
-    Protocol::FetchItemsResponsePtr itemResponse(qint64 id, const QString &rid, const QString &rrev, const QString &mt)
+    Protocol::FetchItemsResponse itemResponse(qint64 id, const QString &rid, const QString &rrev, const QString &mt)
     {
-        auto item = Protocol::FetchItemsResponsePtr::create();
-        item->setId(id);
-        item->setRemoteId(rid);
-        item->setRemoteRevision(rrev);
-        item->setMimeType(mt);
+        Protocol::FetchItemsResponse item;
+        item.setId(id);
+        item.setRemoteId(rid);
+        item.setRemoteRevision(rrev);
+        item.setMimeType(mt);
         return item;
     }
 
@@ -192,10 +192,10 @@ private Q_SLOTS:
         // Simulate adding a new resource
         auto colMsg = Protocol::CollectionChangeNotificationPtr::create();
         colMsg->setOperation(Protocol::CollectionChangeNotification::Add);
-        auto col = Protocol::FetchCollectionsResponsePtr::create();
-        col->setId(1);
-        col->setRemoteId(QStringLiteral("imap://user@some.domain/"));
-        colMsg->setCollection(col);
+        Protocol::FetchCollectionsResponse col;
+        col.setId(1);
+        col.setRemoteId(QStringLiteral("imap://user@some.domain/"));
+        colMsg->setCollection(std::move(col));
         colMsg->setParentCollection(0);
         colMsg->setSessionId("akonadi_imap_resource_0");
         colMsg->setResource("akonadi_imap_resource_0");
@@ -302,10 +302,12 @@ private Q_SLOTS:
         tagMsg->setOperation(Protocol::TagChangeNotification::Remove);
         tagMsg->setSessionId("randomSession");
         tagMsg->setResource("akonadi_random_resource_0");
-        auto tagMsgTag = Protocol::FetchTagsResponsePtr::create();
-        tagMsgTag->setId(1);
-        tagMsgTag->setRemoteId("TAG");
-        tagMsg->setTag(tagMsgTag);
+        {
+            Protocol::FetchTagsResponse tagMsgTag;
+            tagMsgTag.setId(1);
+            tagMsgTag.setRemoteId("TAG");
+            tagMsg->setTag(std::move(tagMsgTag));
+        }
         QTest::newRow("Tag removal - resource notification - matching resource source")
                 << false
                 << EmptyList(Entity::Id)
@@ -329,10 +331,12 @@ private Q_SLOTS:
         tagMsg = Protocol::TagChangeNotificationPtr::create();
         tagMsg->setOperation(Protocol::TagChangeNotification::Remove);
         tagMsg->setSessionId("randomSession");
-        tagMsgTag = Protocol::FetchTagsResponsePtr::create();
-        tagMsgTag->setId(1);
-        tagMsgTag->setRemoteId("TAG");
-        tagMsg->setTag(tagMsgTag);
+        {
+            Protocol::FetchTagsResponse tagMsgTag;
+            tagMsgTag.setId(1);
+            tagMsgTag.setRemoteId("TAG");
+            tagMsg->setTag(std::move(tagMsgTag));
+        }
         QTest::newRow("Tag removal - client notification - client source")
                 << false
                 << EmptyList(Entity::Id)

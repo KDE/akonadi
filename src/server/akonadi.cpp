@@ -18,6 +18,7 @@
  ***************************************************************************/
 
 #include "akonadi.h"
+#include "handler.h"
 #include "connection.h"
 #include "serveradaptor.h"
 #include "akonadiserver_debug.h"

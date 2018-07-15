@@ -431,7 +431,7 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
         }
 
         Q_FOREACH (const auto &item, msg.items()) {
-            if (isMimeTypeMonitored(item->mimeType())) {
+            if (isMimeTypeMonitored(item.mimeType())) {
                 TRACE_NTF("ACCEPTS ITEM: ACCEPTED - mimetype monitored");
                 return true;
             }
@@ -443,7 +443,7 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
 
     // we explicitly monitor that item or the collections it's in
     Q_FOREACH (const auto &item, msg.items()) {
-        if (mMonitoredItems.contains(item->id())) {
+        if (mMonitoredItems.contains(item.id())) {
             TRACE_NTF("ACCEPTS ITEM: ACCEPTED: item explicitly monitored");
             return true;
         }
@@ -466,8 +466,8 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
 {
     // Assumes mLock being locked by caller
 
-    const auto collection = msg.collection();
-    if (!collection || collection->id() < 0) {
+    const auto &collection = msg.collection();
+    if (collection.id() < 0) {
         return false;
     }
 
@@ -484,12 +484,12 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
         }
 
         //Deliver the notification if referenced from this session
-        if (CollectionReferenceManager::instance()->isReferenced(collection->id(), mSession)) {
+        if (CollectionReferenceManager::instance()->isReferenced(collection.id(), mSession)) {
             return true;
         }
 
         //Exclusive subscribers still want the notification
-        if (mExclusive && CollectionReferenceManager::instance()->isReferenced(collection->id())) {
+        if (mExclusive && CollectionReferenceManager::instance()->isReferenced(collection.id())) {
             return true;
         }
 
@@ -527,7 +527,7 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
     }
 
     // we explicitly monitor that colleciton, or all of them
-    if (isCollectionMonitored(collection->id())) {
+    if (isCollectionMonitored(collection.id())) {
         return true;
     }
 
@@ -540,7 +540,7 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
 {
     // Assumes mLock being locked by caller
 
-    if (msg.tag()->id() < 0) {
+    if (msg.tag().id() < 0) {
         return false;
     }
 
@@ -586,7 +586,7 @@ bool NotificationSubscriber::acceptsTagNotification(const Protocol::TagChangeNot
         return true;
     }
 
-    if (mMonitoredTags.contains(msg.tag()->id())) {
+    if (mMonitoredTags.contains(msg.tag().id())) {
         return true;
     }
 
@@ -674,11 +674,12 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
 
 Protocol::CollectionChangeNotificationPtr NotificationSubscriber::customizeCollection(const Protocol::CollectionChangeNotificationPtr &ntf)
 {
-    const bool isReferencedFromSession = CollectionReferenceManager::instance()->isReferenced(ntf->collection()->id(), mSession);
-    if (isReferencedFromSession != ntf->collection()->referenced()) {
+    const bool isReferencedFromSession = CollectionReferenceManager::instance()->isReferenced(ntf->collection().id(), mSession);
+    if (isReferencedFromSession != ntf->collection().referenced()) {
         auto copy = Protocol::CollectionChangeNotificationPtr::create(*ntf);
-        copy->setCollection(Protocol::FetchCollectionsResponsePtr::create(*ntf->collection()));
-        copy->collection()->setReferenced(isReferencedFromSession);
+        auto copyCol = ntf->collection();
+        copyCol.setReferenced(isReferencedFromSession);
+        copy->setCollection(std::move(copyCol));
         return copy;
     }
 

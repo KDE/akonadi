@@ -827,12 +827,12 @@ bool ChangeNotification::operator==(const ChangeNotification &other) const
         // metadata are not compared
 }
 
-QList<qint64> ChangeNotification::itemsToUids(const QVector<FetchItemsResponsePtr> &items)
+QList<qint64> ChangeNotification::itemsToUids(const QVector<FetchItemsResponse> &items)
 {
     QList<qint64> rv;
     rv.reserve(items.size());
     std::transform(items.cbegin(), items.cend(), std::back_inserter(rv),
-                    [](const FetchItemsResponsePtr &item) { return item->id(); });
+                    [](const FetchItemsResponse &item) { return item.id(); });
     return rv;
 }
 
@@ -891,9 +891,6 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
 
     if (msg->type() == Command::CollectionChangeNotification) {
         const auto &cmsg = Protocol::cmdCast<class CollectionChangeNotification>(msg);
-        if (!cmsg.collection()) { // drop the message if collection is null
-            return false;
-        }
         if (cmsg.operation() == CollectionChangeNotification::Modify) {
             // We are iterating from end, since there's higher probability of finding
             // matching notification
@@ -901,15 +898,12 @@ bool ChangeNotification::appendAndCompress(ChangeNotificationList &list, const C
                 --iter;
                 if ((*iter)->type() == Protocol::Command::CollectionChangeNotification) {
                     auto &it = Protocol::cmdCast<class CollectionChangeNotification>(*iter);
-                    const auto msgCol = cmsg.collection();
-                    const auto itCol = it.collection();
-                    if (!itCol) {
-                        continue; // WTH?!
-                    }
-                    if (msgCol->id() == itCol->id()
-                        && msgCol->remoteId() == itCol->remoteId()
-                        && msgCol->remoteRevision() == itCol->remoteRevision()
-                        && msgCol->resource() == itCol->resource()
+                    const auto &msgCol = cmsg.collection();
+                    const auto &itCol = it.collection();
+                    if (msgCol.id() == itCol.id()
+                        && msgCol.remoteId() == itCol.remoteId()
+                        && msgCol.remoteRevision() == itCol.remoteRevision()
+                        && msgCol.resource() == itCol.resource()
                         && cmsg.destinationResource() == it.destinationResource()
                         && cmsg.parentCollection() == it.parentCollection()
                         && cmsg.parentDestCollection() == it.parentDestCollection())

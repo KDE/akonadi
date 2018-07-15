@@ -342,6 +342,10 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                     mHeader << "    inline void " << prop->setterName() << varType
                             << prop->name() << ") { " << prop->mVariableName() << " = "
                             << prop->name() << "; }\n";
+                    if (!TypeHelper::isNumericType(prop->type()) && !TypeHelper::isBoolType(prop->type())) {
+                        mHeader << "    inline void " << prop->setterName() << "(" << prop->type() << " &&" << prop->name() << ") { "
+                                << prop->mVariableName() << " = std::move(" << prop->name() << "); }\n";
+                    }
                 }
             }
             mHeader << "\n";

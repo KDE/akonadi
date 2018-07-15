@@ -94,7 +94,7 @@ Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
     return cachePolicy;
 }
 
-Protocol::FetchCollectionsResponsePtr HandlerHelper::fetchCollectionsResponse(const Collection &col)
+Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col)
 {
     QStringList mimeTypes;
     mimeTypes.reserve(col.mimeTypes().size());
@@ -106,7 +106,7 @@ Protocol::FetchCollectionsResponsePtr HandlerHelper::fetchCollectionsResponse(co
                                     QStack<CollectionAttribute::List>(), false, mimeTypes);
 }
 
-Protocol::FetchCollectionsResponsePtr HandlerHelper::fetchCollectionsResponse(const Collection &col,
+Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col,
         const CollectionAttribute::List &attrs,
         bool includeStatistics,
         int ancestorDepth,
@@ -115,15 +115,15 @@ Protocol::FetchCollectionsResponsePtr HandlerHelper::fetchCollectionsResponse(co
         bool isReferenced,
         const QStringList &mimeTypes)
 {
-    auto response = Protocol::FetchCollectionsResponsePtr::create();
-    response->setId(col.id());
-    response->setParentId(col.parentId());
-    response->setName(col.name());
-    response->setMimeTypes(mimeTypes);
-    response->setRemoteId(col.remoteId());
-    response->setRemoteRevision(col.remoteRevision());
-    response->setResource(col.resource().name());
-    response->setIsVirtual(col.isVirtual());
+    Protocol::FetchCollectionsResponse response;
+    response.setId(col.id());
+    response.setParentId(col.parentId());
+    response.setName(col.name());
+    response.setMimeTypes(mimeTypes);
+    response.setRemoteId(col.remoteId());
+    response.setRemoteRevision(col.remoteRevision());
+    response.setResource(col.resource().name());
+    response.setIsVirtual(col.isVirtual());
 
     if (includeStatistics) {
         const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
@@ -132,41 +132,41 @@ Protocol::FetchCollectionsResponsePtr HandlerHelper::fetchCollectionsResponse(co
             statsResponse.setCount(stats.count);
             statsResponse.setUnseen(stats.count - stats.read);
             statsResponse.setSize(stats.size);
-            response->setStatistics(statsResponse);
+            response.setStatistics(statsResponse);
         }
     }
 
     if (!col.queryString().isEmpty()) {
-        response->setSearchQuery(col.queryString());
+        response.setSearchQuery(col.queryString());
         QVector<qint64> searchCols;
         const QStringList searchColIds = col.queryCollections().split(QLatin1Char(' '));
         searchCols.reserve(searchColIds.size());
         for (const QString &searchColId : searchColIds) {
             searchCols << searchColId.toLongLong();
         }
-        response->setSearchCollections(searchCols);
+        response.setSearchCollections(searchCols);
     }
 
     Protocol::CachePolicy cachePolicy = cachePolicyResponse(col);
-    response->setCachePolicy(cachePolicy);
+    response.setCachePolicy(cachePolicy);
 
     if (ancestorDepth) {
         QVector<Protocol::Ancestor> ancestorList
             = HandlerHelper::ancestorsResponse(ancestorDepth, ancestors, ancestorAttributes);
-        response->setAncestors(ancestorList);
+        response.setAncestors(ancestorList);
     }
 
-    response->setReferenced(isReferenced);
-    response->setEnabled(col.enabled());
-    response->setDisplayPref(static_cast<Tristate>(col.displayPref()));
-    response->setSyncPref(static_cast<Tristate>(col.syncPref()));
-    response->setIndexPref(static_cast<Tristate>(col.indexPref()));
+    response.setReferenced(isReferenced);
+    response.setEnabled(col.enabled());
+    response.setDisplayPref(static_cast<Tristate>(col.displayPref()));
+    response.setSyncPref(static_cast<Tristate>(col.syncPref()));
+    response.setIndexPref(static_cast<Tristate>(col.indexPref()));
 
     QMap<QByteArray, QByteArray> ra;
     for (const CollectionAttribute &attr : attrs) {
         ra.insert(attr.type(), attr.value());
     }
-    response->setAttributes(ra);
+    response.setAttributes(ra);
 
     return response;
 }
@@ -206,15 +206,15 @@ QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
     return rv;
 }
 
-Protocol::FetchTagsResponsePtr HandlerHelper::fetchTagsResponse(const Tag &tag,
+Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
         bool withRID,
         Connection *connection)
 {
-    auto response = Protocol::FetchTagsResponsePtr::create();
-    response->setId(tag.id());
-    response->setType(tag.tagType().name().toUtf8());
-    response->setParentId(tag.parentId());
-    response->setGid(tag.gid().toUtf8());
+    Protocol::FetchTagsResponse response;
+    response.setId(tag.id());
+    response.setType(tag.tagType().name().toUtf8());
+    response.setParentId(tag.parentId());
+    response.setGid(tag.gid().toUtf8());
 
     if (withRID && connection) {
         // Fail silently if retrieving tag RID is not allowed in current context
@@ -238,20 +238,20 @@ Protocol::FetchTagsResponsePtr HandlerHelper::fetchTagsResponse(const Tag &tag,
         if (!query.next()) {
             return response;
         }
-        response->setRemoteId(Utils::variantToByteArray(query.value(0)));
+        response.setRemoteId(Utils::variantToByteArray(query.value(0)));
     }
 
     return response;
 }
 
-Protocol::FetchRelationsResponsePtr HandlerHelper::fetchRelationsResponse(const Relation &relation)
+Protocol::FetchRelationsResponse HandlerHelper::fetchRelationsResponse(const Relation &relation)
 {
-    auto resp = Protocol::FetchRelationsResponsePtr::create();
-    resp->setLeft(relation.leftId());
-    resp->setLeftMimeType(relation.left().mimeType().name().toUtf8());
-    resp->setRight(relation.rightId());
-    resp->setRightMimeType(relation.right().mimeType().name().toUtf8());
-    resp->setType(relation.relationType().name().toUtf8());
+    Protocol::FetchRelationsResponse resp;
+    resp.setLeft(relation.leftId());
+    resp.setLeftMimeType(relation.left().mimeType().name().toUtf8());
+    resp.setRight(relation.rightId());
+    resp.setRightMimeType(relation.right().mimeType().name().toUtf8());
+    resp.setType(relation.relationType().name().toUtf8());
     return resp;
 }
 

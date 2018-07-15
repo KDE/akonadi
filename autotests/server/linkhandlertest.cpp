@@ -62,13 +62,13 @@ public:
         return resp;
     }
 
-    Protocol::FetchItemsResponsePtr itemResponse(qint64 id, const QString &rid, const QString &rrev, const QString &mimeType)
+    Protocol::FetchItemsResponse itemResponse(qint64 id, const QString &rid, const QString &rrev, const QString &mimeType)
     {
-        auto item = Protocol::FetchItemsResponsePtr::create();
-        item->setId(id);
-        item->setRemoteId(rid);
-        item->setRemoteRevision(rrev);
-        item->setMimeType(mimeType);
+        Protocol::FetchItemsResponse item;
+        item.setId(id);
+        item.setRemoteId(rid);
+        item.setRemoteRevision(rrev);
+        item.setMimeType(mimeType);
         return item;
     }
 
@@ -172,9 +172,9 @@ private Q_SLOTS:
 
         Q_FOREACH (const auto &entity, notification->items()) {
             if (expectFail) {
-                QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity->id()));
+                QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity.id()));
             } else {
-                QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity->id()));
+                QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity.id()));
             }
         }
     }
@@ -277,9 +277,9 @@ private Q_SLOTS:
 
         Q_FOREACH (const auto &entity, notification->items()) {
             if (expectFail) {
-                QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity->id()));
+                QVERIFY(Collection::relatesToPimItem(notification->parentCollection(), entity.id()));
             } else {
-                QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity->id()));
+                QVERIFY(!Collection::relatesToPimItem(notification->parentCollection(), entity.id()));
             }
         }
     }

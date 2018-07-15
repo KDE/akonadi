@@ -96,14 +96,14 @@ public:
         auto notification = Protocol::RelationChangeNotificationPtr::create();
         notification->setOperation(op);
         notification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
-        auto relation = Protocol::FetchRelationsResponsePtr::create();
-        relation->setLeft(item1.id());
-        relation->setLeftMimeType(item1.mimeType().name().toLatin1());
-        relation->setRight(item2.id());
-        relation->setRightMimeType(item2.mimeType().name().toLatin1());
-        relation->setRemoteId(rid.toLatin1());
-        relation->setType(type.toLatin1());
-        notification->setRelation(relation);
+        Protocol::FetchRelationsResponse relation;
+        relation.setLeft(item1.id());
+        relation.setLeftMimeType(item1.mimeType().name().toLatin1());
+        relation.setRight(item2.id());
+        relation.setRightMimeType(item2.mimeType().name().toLatin1());
+        relation.setRemoteId(rid.toLatin1());
+        relation.setType(type.toLatin1());
+        notification->setRelation(std::move(relation));
         return notification;
     }
 
@@ -138,7 +138,7 @@ private Q_SLOTS:
             itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification->setResource("testresource");
             itemNotification->setParentCollection(col1.id());
-            itemNotification->setItems({ initializer->fetchResponse(item1), initializer->fetchResponse(item2) });
+            itemNotification->setItems({ *initializer->fetchResponse(item1), *initializer->fetchResponse(item2) });
             itemNotification->setAddedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
 
             const auto notification = relationNotification(Protocol::RelationChangeNotification::Add, item1, item2, rel.remoteId());
@@ -212,7 +212,7 @@ private Q_SLOTS:
             itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification->setResource("testresource");
             itemNotification->setParentCollection(col1.id());
-            itemNotification->setItems({ initializer->fetchResponse(item1), initializer->fetchResponse(item2) });
+            itemNotification->setItems({ *initializer->fetchResponse(item1), *initializer->fetchResponse(item2) });
             itemNotification->setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type")) });
 
             const auto notification = relationNotification(Protocol::RelationChangeNotification::Remove, item1, item2, rel.remoteId());
@@ -231,7 +231,7 @@ private Q_SLOTS:
             itemNotification->setSessionId(FakeAkonadiServer::instanceName().toLatin1());
             itemNotification->setResource("testresource");
             itemNotification->setParentCollection(col1.id());
-            itemNotification->setItems({ initializer->fetchResponse(item1), initializer->fetchResponse(item2) });
+            itemNotification->setItems({ *initializer->fetchResponse(item1), *initializer->fetchResponse(item2) });
             itemNotification->setRemovedRelations({ Protocol::ItemChangeNotification::Relation(item1.id(), item2.id(), QStringLiteral("type2")) });
 
             const auto notification = relationNotification(Protocol::RelationChangeNotification::Remove, item1, item2, rel.remoteId(), QStringLiteral("type2"));

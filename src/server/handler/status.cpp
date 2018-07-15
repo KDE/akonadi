@@ -44,9 +44,9 @@ bool Status::parseStream()
         return failureResponse(QStringLiteral("Failed to query statistics."));
     }
 
-    auto resp = Protocol::FetchCollectionStatsResponsePtr::create();
-    resp->setCount(stats.count);
-    resp->setUnseen(stats.count - stats.read);
-    resp->setSize(stats.size);
-    return successResponse(resp);
+    Protocol::FetchCollectionStatsResponse resp;
+    resp.setCount(stats.count);
+    resp.setUnseen(stats.count - stats.read);
+    resp.setSize(stats.size);
+    return successResponse(std::move(resp));
 }

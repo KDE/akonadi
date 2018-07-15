@@ -85,7 +85,7 @@ private Q_SLOTS:
 
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "NAME");
-            notification->setCollection(Protocol::FetchCollectionsResponsePtr::create(*collectionTemplate));
+            notification->setCollection(*collectionTemplate);
             QTest::newRow("modify collection") << scenarios << Protocol::ChangeNotificationList{ notification } << QVariant::fromValue(QStringLiteral("New Name"));
         }
         {
@@ -97,11 +97,11 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create());
 
-            auto collection = Protocol::FetchCollectionsResponsePtr::create(*collectionTemplate);
-            collection->setEnabled(false);
+            Protocol::FetchCollectionsResponse collection(*collectionTemplate);
+            collection.setEnabled(false);
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "ENABLED");
-            notification->setCollection(collection);
+            notification->setCollection(std::move(collection));
             auto unsubscribeNotification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             unsubscribeNotification->setOperation(Protocol::CollectionChangeNotification::Unsubscribe);
             unsubscribeNotification->setCollection(collection);
@@ -117,13 +117,12 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create());
 
-            auto collection = Protocol::FetchCollectionsResponsePtr::create(*collectionTemplate);
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "ENABLED");
-            notification->setCollection(collection);
+            notification->setCollection(*collectionTemplate);
             auto subscribeNotification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             subscribeNotification->setOperation(Protocol::CollectionChangeNotification::Subscribe);
-            subscribeNotification->setCollection(collection);
+            subscribeNotification->setCollection(*collectionTemplate);
 
             QTest::newRow("enable collection") << scenarios << Protocol::ChangeNotificationList{ notification, subscribeNotification } << QVariant::fromValue(true);
         }
@@ -139,17 +138,17 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ClientCmd, cmd)
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::ModifyCollectionResponsePtr::create());
 
-            auto collection = Protocol::FetchCollectionsResponsePtr::create(*collectionTemplate);
-            collection->setEnabled(false);
-            collection->setSyncPref(Tristate::True);
-            collection->setDisplayPref(Tristate::True);
-            collection->setIndexPref(Tristate::True);
+            Protocol::FetchCollectionsResponse collection(*collectionTemplate);
+            collection.setEnabled(false);
+            collection.setSyncPref(Tristate::True);
+            collection.setDisplayPref(Tristate::True);
+            collection.setIndexPref(Tristate::True);
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "ENABLED" << "SYNC" << "DISPLAY" << "INDEX");
             notification->setCollection(collection);
             auto unsubscribeNotification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             unsubscribeNotification->setOperation(Protocol::CollectionChangeNotification::Unsubscribe);
-            unsubscribeNotification->setCollection(collection);
+            unsubscribeNotification->setCollection(std::move(collection));
 
             QTest::newRow("local override enable") << scenarios << Protocol::ChangeNotificationList{ notification, unsubscribeNotification } << QVariant::fromValue(true);
         }
@@ -185,11 +184,11 @@ private Q_SLOTS:
             QCOMPARE(*recvNtf, *expNtf);
             const auto notification = receivedNotifications.at(i).staticCast<Protocol::CollectionChangeNotification>();
             if (notification->changedParts().contains("NAME")) {
-                Collection col = Collection::retrieveById(notification->collection()->id());
+                Collection col = Collection::retrieveById(notification->collection().id());
                 QCOMPARE(col.name(), newValue.toString());
             }
             if (!notification->changedParts().intersects({ "ENABLED", "SYNC", "DISPLAY", "INDEX" })) {
-                Collection col = Collection::retrieveById(notification->collection()->id());
+                Collection col = Collection::retrieveById(notification->collection().id());
                 const bool sync = col.syncPref() == Collection::Undefined ? col.enabled() : col.syncPref() == Collection::True;
                 QCOMPARE(sync, newValue.toBool());
                 const bool display = col.displayPref() == Collection::Undefined ? col.enabled() : col.displayPref() == Collection::True;

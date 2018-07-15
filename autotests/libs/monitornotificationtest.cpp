@@ -112,7 +112,7 @@ void MonitorNotificationTest::testSingleMessage_impl(MonitorImpl *monitor, FakeC
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
     msg->setParentCollection(parent.id());
     msg->setOperation(Protocol::CollectionChangeNotification::Add);
-    msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
+    msg->setCollection(Protocol::FetchCollectionsResponse(added.id()));
     // With notification payloads most requests by-pass the pipeline as the
     // notification already contains everything. To force pipelineing we set
     // the internal metadata (normally set by ChangeRecorder)
@@ -183,7 +183,7 @@ void MonitorNotificationTest::testFillPipeline_impl(MonitorImpl *monitor, FakeCo
         auto msg = Protocol::CollectionChangeNotificationPtr::create();
         msg->setParentCollection(parent.id());
         msg->setOperation(Protocol::CollectionChangeNotification::Add);
-        msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
+        msg->setCollection(Protocol::FetchCollectionsResponse(added.id()));
         msg->addMetadata("FETCH_COLLECTION");
 
         data.insert(parent.id(), parent);
@@ -257,7 +257,7 @@ void MonitorNotificationTest::testMonitor_impl(MonitorImpl *monitor, FakeCollect
         auto msg = Protocol::CollectionChangeNotificationPtr::create();
         msg->setParentCollection(i % 2 ? 2 : added.id() - 1);
         msg->setOperation(Protocol::CollectionChangeNotification::Add);
-        msg->setCollection(Protocol::FetchCollectionsResponsePtr::create(added.id()));
+        msg->setCollection(Protocol::FetchCollectionsResponse(added.id()));
         msg->addMetadata("FETCH_COLLECTION");
 
         list << msg;

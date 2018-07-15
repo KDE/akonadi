@@ -53,13 +53,13 @@ public:
         FakeAkonadiServer::instance()->quit();
     }
 
-    Protocol::FetchItemsResponsePtr fetchResponse(quint64 id, const QString &rid, const QString &rrev, const QString &mt)
+    Protocol::FetchItemsResponse fetchResponse(quint64 id, const QString &rid, const QString &rrev, const QString &mt)
     {
-        auto item = Protocol::FetchItemsResponsePtr::create();
-        item->setId(id);
-        item->setRemoteId(rid);
-        item->setRemoteRevision(rrev);
-        item->setMimeType(mt);
+        Protocol::FetchItemsResponse item;
+        item.setId(id);
+        item.setRemoteId(rid);
+        item.setRemoteRevision(rrev);
+        item.setMimeType(mt);
         return item;
     }
 
@@ -142,7 +142,7 @@ private Q_SLOTS:
             QCOMPARE(notification->parentDestCollection(), newValue.toInt());
 
             Q_FOREACH (const auto &ntfItem, notification->items()) {
-                const PimItem item = PimItem::retrieveById(ntfItem->id());
+                const PimItem item = PimItem::retrieveById(ntfItem.id());
                 QCOMPARE(item.collectionId(), newValue.toInt());
             }
         }

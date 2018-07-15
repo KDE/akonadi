@@ -361,10 +361,10 @@ bool Store::parseStream()
             }
 
             if (!cmd.noResponse()) {
-                auto resp = Protocol::ModifyItemsResponsePtr::create();
-                resp->setId(item.id());
-                resp->setNewRevision(item.rev());
-                sendResponse(resp);
+                Protocol::ModifyItemsResponse resp;
+                resp.setId(item.id());
+                resp.setNewRevision(item.rev());
+                sendResponse(std::move(resp));
             }
         }
 
@@ -379,7 +379,7 @@ bool Store::parseStream()
         datetime = pimItems.first().datetime();
     }
 
-    auto resp = Protocol::ModifyItemsResponsePtr::create();
-    resp->setModificationDateTime(datetime);
-    return successResponse(resp);
+    Protocol::ModifyItemsResponse resp;
+    resp.setModificationDateTime(datetime);
+    return successResponse(std::move(resp));
 }
