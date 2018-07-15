@@ -186,6 +186,12 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
             break;
         }
     }
+    for (const Collection &collection : favoriteCollections) {
+        if (collectionCanHaveItems(collection)) {
+            atLeastOneCollectionCanHaveItems = true;
+            break;
+        }
+    }
 
     const Collection collection = (!collections.isEmpty() ? collections.first() : Collection());
 
