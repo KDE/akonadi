@@ -567,7 +567,10 @@ private Q_SLOTS:
         QFETCH(StateMap, stateMap);
 
         UnitActionStateManager manager(this);
-        manager.updateState(collections, collections, Item::List());
+        Collection::List favoriteCollections;
+        if (collections.contains(folderCollectionThree))
+            favoriteCollections << folderCollectionThree;
+        manager.updateState(collections, favoriteCollections, Item::List());
 
         QCOMPARE(stateMap.count(), mStateMap.count());
 
@@ -576,7 +579,10 @@ private Q_SLOTS:
             it.next();
             //qDebug() << it.key();
             QVERIFY(mStateMap.contains(it.key()));
-            QCOMPARE(it.value(), mStateMap.value(it.key()));
+            const bool expected = mStateMap.value(it.key());
+            if (it.value() != expected)
+                qWarning() << "Wrong state for" << it.key();
+            QCOMPARE(it.value(), expected);
         }
     }
 
