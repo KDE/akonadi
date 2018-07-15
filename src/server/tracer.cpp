@@ -32,6 +32,7 @@
 // #define DEFAULT_TRACER QLatin1String( "dbus" )
 #define DEFAULT_TRACER QStringLiteral( "null" )
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 Tracer *Tracer::mSelf = nullptr;
