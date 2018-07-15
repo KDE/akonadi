@@ -598,9 +598,10 @@ bool DbConfigMysql::initializeMySQL5_7_6Database(const QString &confFile, const 
 
 bool DbConfigMysql::initializeMySQLDatabase(const QString &confFile, const QString &dataDir) const
 {
+    // On FreeBSD MySQL 5.6 is also installed without mysql_install_db, so this
+    // might do the trick there as well.
     if (mMysqlInstallDbPath.isEmpty()) {
-        qCWarning(AKONADISERVER_LOG) << "mysql_install_db needed to intialize MySQL database wasn't found!";
-        return false;
+        return QDir().mkpath(dataDir);
     }
 
     QFileInfo fi(mMysqlInstallDbPath);
