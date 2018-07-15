@@ -111,7 +111,7 @@ private Q_SLOTS:
         QFETCH(QByteArray, className);
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command));
         QVERIFY(!handler.isNull());
-        QCOMPARE(QByteArray(typeid(*handler.get()).name()), className);
+        QCOMPARE(QByteArray(typeid(*handler.data()).name()), className);
     }
 
     void testFindAuthenticatedCommandNegative_data()
@@ -144,7 +144,7 @@ private Q_SLOTS:
 
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command));
         QVERIFY(!handler.isNull());
-        QCOMPARE(QByteArray(typeid(*handler.get()).name()), className);
+        QCOMPARE(QByteArray(typeid(*handler.data()).name()), className);
     }
 
     void testFindNonAutenticatedCommandNegative_data()
@@ -177,7 +177,7 @@ private Q_SLOTS:
 
         QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command));
         QVERIFY(!handler.isNull());
-        QCOMPARE(QByteArray(typeid(*handler.get()).name()), className);
+        QCOMPARE(QByteArray(typeid(*handler.data()).name()), className);
     }
 
     void testFindAlwaysCommandNegative_data()
