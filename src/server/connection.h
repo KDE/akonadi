@@ -35,7 +35,7 @@
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
 
-class QEventLoop;
+#include <memory>
 
 namespace Akonadi
 {
@@ -121,7 +121,6 @@ protected:
     bool m_verifyCacheOnRetrieval = false;
     CommandContext m_context;
     QTimer *m_idleTimer = nullptr;
-    QEventLoop *m_waitLoop = nullptr;
 
     QTime m_time;
     qint64 m_totalTime = 0;
