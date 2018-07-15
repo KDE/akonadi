@@ -303,10 +303,12 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
         }
     }
 
-    mHeader << "    " << node->className() << "(const " << node->className() << " &other) = default;\n"
+    mHeader << "    " << node->className() << "(const " << node->className() << " &) = default;\n"
+               "    " << node->className() << "(" << node->className() << " &&) = default;\n"
                "    ~" << node->className() << "() = default;\n"
                "\n"
-               "    " << node->className() << " &operator=(const " << node->className() << " &other) = default;\n"
+               "    " << node->className() << " &operator=(const " << node->className() << " &) = default;\n"
+               "    " << node->className() << " &operator=(" << node->className() << " &&) = default;\n"
                "    bool operator==(const " << node->className() << " &other) const;\n"
                "    inline bool operator!=(const " << node->className() << " &other) const { return !operator==(other); }\n";
 

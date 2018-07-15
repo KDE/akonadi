@@ -145,10 +145,12 @@ public:
     };
 
     explicit Command() = default;
-    explicit Command(const Command &other) = default;
+    explicit Command(const Command &) = default;
+    Command(Command &&) = default;
     ~Command() = default;
 
-    Command &operator=(const Command &other) = default;
+    Command &operator=(const Command &) = default;
+    Command &operator=(Command &&) = default;
 
     bool operator==(const Command &other) const;
     inline bool operator!=(const Command &other) const { return !operator==(other); }
@@ -199,8 +201,10 @@ class AKONADIPRIVATE_EXPORT Response : public Command
 {
 public:
     explicit Response() = default;
-    explicit Response(const Response &other) = default;
-    Response &operator=(const Response &other) = default;
+    explicit Response(const Response &) = default;
+    Response(Response &&) = default;
+    Response &operator=(const Response &) = default;
+    Response &operator=(Response &&) = default;
 
     inline void setError(int code, const QString &message)
     {
@@ -315,10 +319,12 @@ public:
     };
 
     explicit ItemFetchScope() = default;
-    ItemFetchScope(const ItemFetchScope &other) = default;
+    ItemFetchScope(const ItemFetchScope &) = default;
+    ItemFetchScope(ItemFetchScope &&other) = default;
     ~ItemFetchScope() = default;
 
-    ItemFetchScope &operator=(const ItemFetchScope &other) = default;
+    ItemFetchScope &operator=(const ItemFetchScope &) = default;
+    ItemFetchScope &operator=(ItemFetchScope &&) = default;
 
     bool operator==(const ItemFetchScope &other) const;
     inline bool operator!=(const ItemFetchScope &other) const { return !operator==(other); }
@@ -401,10 +407,12 @@ public:
     explicit ScopeContext() = default;
     ScopeContext(Type type, qint64 id);
     ScopeContext(Type type, const QString &id);
-    ScopeContext(const ScopeContext &other) = default;
+    ScopeContext(const ScopeContext &) = default;
+    ScopeContext(ScopeContext &&) = default;
     ~ScopeContext() = default;
 
-    ScopeContext &operator=(const ScopeContext &other) = default;
+    ScopeContext &operator=(const ScopeContext &) = default;
+    ScopeContext &operator=(ScopeContext &&) = default;
 
     bool operator==(const ScopeContext &other) const;
     inline bool operator!=(const ScopeContext &other) const { return !operator==(other); }
@@ -490,18 +498,18 @@ public:
     class Relation
     {
     public:
-        inline Relation()
-            : leftId(-1)
-            , rightId(-1)
-        {
-        }
-
+        Relation() = default;
+        Relation(const Relation &) = default;
+        Relation(Relation &&) = default;
         inline Relation(qint64 leftId, qint64 rightId, const QString &type)
             : leftId(leftId)
             , rightId(rightId)
             , type(type)
         {
         }
+
+        Relation &operator=(const Relation &) = default;
+        Relation &operator=(Relation &&) = default;
 
         inline bool operator==(const Relation &other) const
         {
@@ -517,12 +525,13 @@ public:
             json[QStringLiteral("type")] = type;
         }
 
-        qint64 leftId;
-        qint64 rightId;
+        qint64 leftId = -1;
+        qint64 rightId = -1;
         QString type;
     };
 
-    ChangeNotification &operator=(const ChangeNotification &other) = default;
+    ChangeNotification &operator=(const ChangeNotification &) = default;
+    ChangeNotification &operator=(ChangeNotification &&) = default;
 
     bool operator==(const ChangeNotification &other) const;
     inline bool operator!=(const ChangeNotification &other) const { return !operator==(other); }
@@ -543,8 +552,8 @@ public:
 protected:
     explicit ChangeNotification() = default;
     explicit ChangeNotification(Command::Type type);
-    ChangeNotification(const ChangeNotification &other) = default;
-    ChangeNotification(ChangeNotification &&other) = default;
+    ChangeNotification(const ChangeNotification &) = default;
+    ChangeNotification(ChangeNotification &&) = default;
 
     QByteArray mSessionId;
 
