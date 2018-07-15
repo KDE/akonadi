@@ -27,7 +27,6 @@
 #include "filetracer.h"
 #include "nulltracer.h"
 
-#include <private/protocol_p.h>
 #include <private/standarddirs_p.h>
 
 // #define DEFAULT_TRACER QLatin1String( "dbus" )

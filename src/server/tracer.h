@@ -26,7 +26,7 @@
 #include <QJsonDocument>
 
 #include "tracerinterface.h"
-#include "protocol_p.h"
+#include <private/protocol_p.h>
 
 class QSettings;
 
