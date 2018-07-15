@@ -69,12 +69,12 @@ function(add_akonadi_isolated_test)
         endfunction()
 
         find_program(MYSQLD_EXECUTABLE mysqld /usr/sbin /usr/local/sbin /usr/libexec /usr/local/libexec /opt/mysql/libexec /usr/mysql/bin)
-        if (MYSQLD_EXECUTABLE)
+        if (MYSQLD_EXECUTABLE AND NOT WIN32)
             _defineTest(${_name} "MYSQL" ${CONFIG_BACKENDS})
         endif()
 
         find_program(POSTGRES_EXECUTABLE postgres)
-        if (POSTGRES_EXECUTABLE)
+        if (POSTGRES_EXECUTABLE AND NOT WIN32)
             _defineTest(${_name} "PGSQL" ${CONFIG_BACKENDS})
         endif()
 
