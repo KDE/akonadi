@@ -66,7 +66,6 @@ class ResourceBasePrivate;
  * - a .desktop file similar to the following example
  *   \code
  * [Desktop Entry]
- * Encoding=UTF-8
  * Name=My Akonadi Resource
  * Type=AkonadiResource
  * Exec=akonadi_my_resource
