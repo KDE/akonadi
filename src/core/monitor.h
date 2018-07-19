@@ -827,6 +827,7 @@ private:
     Q_PRIVATE_SLOT(d_ptr, void invalidateCollectionCache(qint64))
     Q_PRIVATE_SLOT(d_ptr, void invalidateItemCache(qint64))
     Q_PRIVATE_SLOT(d_ptr, void invalidateTagCache(qint64))
+    Q_PRIVATE_SLOT(d_ptr, void updatePendingItem(const Akonadi::Item &))
 
     friend class ResourceBasePrivate;
     //@endcond
