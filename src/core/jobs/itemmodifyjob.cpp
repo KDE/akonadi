@@ -351,7 +351,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
         }
 
         for (const Item &item : qAsConst(d->mItems)) {
-            ChangeMediator::updatePendingItem(item);
+            ChangeMediator::invalidateItem(item);
         }
 
         return true;

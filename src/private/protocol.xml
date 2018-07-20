@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="59">
+<protocol version="60">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -846,6 +846,8 @@
     <param name="removedTags" type="QSet&lt;qint64&gt;" />
     <param name="addedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
     <param name="removedRelations" type="QSet&lt;Akonadi::Protocol::ChangeNotification::Relation&gt;" />
+
+    <param name="mustRetrieve" type="bool" default="false" />
 
     <param name="items" type="QVector&lt;Akonadi::Protocol::FetchItemsResponse&gt;" asReference="true" />
   </notification>

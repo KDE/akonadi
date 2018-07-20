@@ -487,7 +487,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
             }
         }
 
-        if (itemNtf.metadata().contains("FETCH_ITEM")) {
+        if (itemNtf.metadata().contains("FETCH_ITEM") || itemNtf.mustRetrieve()) {
             if (!itemCache->ensureCached(Protocol::ChangeNotification::itemsToUids(itemNtf.items()), mItemFetchScope)) {
                 return false;
             }
@@ -550,7 +550,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         if (itemNtf.operation() == Protocol::ItemChangeNotification::Move) {
             destParent = collectionCache->retrieve(itemNtf.parentDestCollection());
         }
-        const bool fetched = itemNtf.metadata().contains("FETCH_ITEM");
+        const bool fetched = itemNtf.metadata().contains("FETCH_ITEM") || itemNtf.mustRetrieve();
         //For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
         Item::List items;
         if (fetched) {

@@ -49,7 +49,6 @@ public:
     static void invalidateCollection(const Akonadi::Collection &collection);
     static void invalidateItem(const Akonadi::Item &item);
     static void invalidateTag(const Akonadi::Tag &tag);
-    static void updatePendingItem(const Akonadi::Item &item);
 
 private Q_SLOTS:
     void do_registerMonitor(QObject *monitor);
@@ -58,7 +57,6 @@ private Q_SLOTS:
     void do_invalidateCollection(const Akonadi::Collection &collection);
     void do_invalidateItem(const Akonadi::Item &item);
     void do_invalidateTag(const Akonadi::Tag &tag);
-    void do_updatePendingItem(const Akonadi::Item &item);
 
 private:
     QList<QObject *> m_monitors;

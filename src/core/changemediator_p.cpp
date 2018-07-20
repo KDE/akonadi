@@ -83,12 +83,6 @@ void ChangeMediator::invalidateTag(const Tag &tag)
     QMetaObject::invokeMethod(instance(), "do_invalidateTag", Q_ARG(Akonadi::Tag, tag));
 }
 
-/* static */
-void ChangeMediator::updatePendingItem(const Akonadi::Item &item)
-{
-    QMetaObject::invokeMethod(instance(), "do_updatePendingItem", Q_ARG(Akonadi::Item, item));
-}
-
 void ChangeMediator::do_registerMonitor(QObject *monitor)
 {
     m_monitors.append(monitor);
@@ -117,12 +111,5 @@ void ChangeMediator::do_invalidateTag(const Tag &tag)
 {
     for (QObject *monitor : qAsConst(m_monitors)) {
         QMetaObject::invokeMethod(monitor, "invalidateTagCache", Qt::AutoConnection, Q_ARG(qint64, tag.id()));
-    }
-}
-
-void ChangeMediator::do_updatePendingItem(const Akonadi::Item &item)
-{
-    for (QObject *monitor : qAsConst(m_monitors)) {
-        QMetaObject::invokeMethod(monitor, "updatePendingItem", Qt::AutoConnection, Q_ARG(Akonadi::Item, item));
     }
 }
