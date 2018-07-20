@@ -302,7 +302,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
     }
 
     if (!silent && (!addedFlags.isEmpty() || !removedFlags.isEmpty())) {
-        mNotificationCollector->itemsFlagsChanged(items, addedFlags, removedFlags, col);
+        notificationCollector()->itemsFlagsChanged(items, addedFlags, removedFlags, col);
     }
 
     setBoolPtr(flagsChanged, (addedFlags != removedFlags));
@@ -348,7 +348,7 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
     }
 
     if (!silent) {
-        mNotificationCollector->itemsFlagsChanged(appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
+        notificationCollector()->itemsFlagsChanged(appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
                 QSet<QByteArray>(), col);
     }
 
@@ -449,7 +449,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
     if (qb.query().numRowsAffected() != 0) {
         setBoolPtr(flagsChanged, true);
         if (!silent) {
-            mNotificationCollector->itemsFlagsChanged(items, QSet<QByteArray>(), removedFlags, col);
+            notificationCollector()->itemsFlagsChanged(items, QSet<QByteArray>(), removedFlags, col);
         }
     }
 
@@ -511,7 +511,7 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
     }
 
     if (!silent && (!addedTags.empty() || !removedTags.empty())) {
-        mNotificationCollector->itemsTagsChanged(items, addedTags, removedTags);
+        notificationCollector()->itemsTagsChanged(items, addedTags, removedTags);
     }
 
     setBoolPtr(tagsChanged, (addedTags != removedTags));
@@ -550,7 +550,7 @@ bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag,
     }
 
     if (!silent) {
-        mNotificationCollector->itemsTagsChanged(appendItems, QSet<qint64>() << tag.id(),
+        notificationCollector()->itemsTagsChanged(appendItems, QSet<qint64>() << tag.id(),
                 QSet<qint64>(), col);
     }
 
@@ -644,7 +644,7 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
     if (qb.query().numRowsAffected() != 0) {
         setBoolPtr(tagsChanged, true);
         if (!silent) {
-            mNotificationCollector->itemsTagsChanged(items, QSet<qint64>(), removedTags);
+            notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
         }
     }
 
@@ -677,7 +677,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
     const PimItem::List items = itemsQuery.result();
 
     if (!items.isEmpty()) {
-        mNotificationCollector->itemsTagsChanged(items, QSet<qint64>(), removedTags);
+        notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
     }
 
     Q_FOREACH (const Tag &tag, tags) {
@@ -699,11 +699,11 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
             const QString rid = query.value(0).toString();
             const QByteArray resource = query.value(1).toByteArray();
 
-            mNotificationCollector->tagRemoved(tag, resource, rid);
+            notificationCollector()->tagRemoved(tag, resource, rid);
         }
 
         // And one for clients - without RID
-        mNotificationCollector->tagRemoved(tag, QByteArray(), QString());
+        notificationCollector()->tagRemoved(tag, QByteArray(), QString());
     }
 
     // Just remove the tags, table constraints will take care of the rest
@@ -734,7 +734,7 @@ bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &par
         }
     }
 
-    mNotificationCollector->itemChanged(item, parts);
+    notificationCollector()->itemChanged(item, parts);
     return true;
 }
 
@@ -773,7 +773,7 @@ bool DataStore::appendCollection(Collection &collection)
         return false;
     }
 
-    mNotificationCollector->collectionAdded(collection);
+    notificationCollector()->collectionAdded(collection);
     return true;
 }
 
@@ -792,7 +792,7 @@ bool DataStore::cleanupCollection(Collection &collection)
 
     // generate the notification before actually removing the data
     // TODO: we should try to get rid of this, requires client side changes to resources and Monitor though
-    mNotificationCollector->itemsRemoved(items, collection, resource);
+    notificationCollector()->itemsRemoved(items, collection, resource);
 
     // remove all external payload parts
     QueryBuilder qb(Part::tableName(), QueryBuilder::Select);
@@ -817,7 +817,7 @@ bool DataStore::cleanupCollection(Collection &collection)
     }
 
     // delete the collection itself, referential actions will do the rest
-    mNotificationCollector->collectionRemoved(collection);
+    notificationCollector()->collectionRemoved(collection);
     return collection.remove();
 }
 
@@ -828,7 +828,7 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
     // delete the content
     const PimItem::List items = collection.items();
     const QByteArray resource = collection.resource().name().toLatin1();
-    mNotificationCollector->itemsRemoved(items, collection, resource);
+    notificationCollector()->itemsRemoved(items, collection, resource);
 
     for (const PimItem &item : items) {
         if (!item.clearFlags()) {   // TODO: move out of loop and use only a single query
@@ -859,7 +859,7 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
     }
 
     // delete the collection itself
-    mNotificationCollector->collectionRemoved(collection);
+    notificationCollector()->collectionRemoved(collection);
     return collection.remove();
 }
 
@@ -935,7 +935,7 @@ bool DataStore::moveCollection(Collection &collection, const Collection &newPare
         return false;
     }
 
-    mNotificationCollector->collectionMoved(collection, source, oldResource, newParent.resource().name().toLatin1());
+    notificationCollector()->collectionMoved(collection, source, oldResource, newParent.resource().name().toLatin1());
     return true;
 }
 
@@ -1109,7 +1109,7 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
 
 //   qCDebug(AKONADISERVER_LOG) << "appendPimItem: " << pimItem;
 
-    mNotificationCollector->itemAdded(pimItem, seen, collection);
+    notificationCollector()->itemAdded(pimItem, seen, collection);
     return true;
 }
 
@@ -1156,12 +1156,12 @@ bool DataStore::cleanupPimItems(const PimItem::List &items)
         }
         const Relation::List relations = relationQuery.result();
         for (const Relation &relation : relations) {
-            mNotificationCollector->relationRemoved(relation);
+            notificationCollector()->relationRemoved(relation);
         }
     }
 
     // generate the notification before actually removing the data
-    mNotificationCollector->itemsRemoved(items);
+    notificationCollector()->itemsRemoved(items);
 
     // FIXME: Create a single query to do this
     Q_FOREACH (const PimItem &item, items) {
@@ -1206,7 +1206,7 @@ bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &
         return false;
     }
 
-    mNotificationCollector->collectionChanged(col, QList<QByteArray>() << key);
+    notificationCollector()->collectionChanged(col, QList<QByteArray>() << key);
     return true;
 }
 
@@ -1227,7 +1227,7 @@ bool DataStore::removeCollectionAttribute(const Collection &col, const QByteArra
     }
 
     if (!result.isEmpty()) {
-        mNotificationCollector->collectionChanged(col, QList<QByteArray>() << key);
+        notificationCollector()->collectionChanged(col, QList<QByteArray>() << key);
         return true;
     }
     return false;
