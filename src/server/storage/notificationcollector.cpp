@@ -524,23 +524,43 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             QVector<qint64> ids;
             const auto items = msg->items();
             ids.reserve(items.size());
+            bool allHaveRID = true;
             for (const auto &item : items) {
                 ids.push_back(item.id());
+                allHaveRID &= !item.remoteId().isEmpty();
             }
-            // Prevent transactions inside FetchHelper to recursively call our slot
-            QScopedValueRollback<bool> ignoreTransactions(mIgnoreTransactions);
-            mIgnoreTransactions = true;
-            CommandContext context;
-            auto scope = fetchScope->toFetchScope();
-            FetchHelper helper(Connection::self(), &context, Scope(ids), scope);
-            QVector<Protocol::FetchItemsResponse> fetchedItems;
-            auto callback = [&fetchedItems](Protocol::FetchItemsResponse &&cmd) {
-                fetchedItems.push_back(std::move(cmd));
-            };
-            if (helper.fetchItems(std::move(callback))) {
-                msg->setItems(fetchedItems);
+
+            // FetchHelper may trigger ItemRetriever, which needs RemoteID. If we
+            // dont have one (maybe because the Resource has not stored it yet,
+            // we emit a notification without it and leave it up to the Monitor
+            // to retrieve the Item on demand - we should have a RID stored in
+            // Akonadi by then.
+            if (allHaveRID || msg->operation() != Protocol::ItemChangeNotification::Add) {
+
+                // Prevent transactions inside FetchHelper to recursively call our slot
+                QScopedValueRollback<bool> ignoreTransactions(mIgnoreTransactions);
+                mIgnoreTransactions = true;
+                CommandContext context;
+                auto scope = fetchScope->toFetchScope();
+                FetchHelper helper(Connection::self(), &context, Scope(ids), scope);
+                QVector<Protocol::FetchItemsResponse> fetchedItems;
+                auto callback = [&fetchedItems](Protocol::FetchItemsResponse &&cmd) {
+                    fetchedItems.push_back(std::move(cmd));
+                };
+                if (helper.fetchItems(std::move(callback))) {
+                    msg->setItems(fetchedItems);
+                } else {
+                    qCWarning(AKONADISERVER_LOG) << "Failed to retrieve Items for notification!";
+                }
             } else {
-                qCWarning(AKONADISERVER_LOG) << "Failed to retrieve Items for notification!";
+                QVector<Protocol::FetchItemsResponse> fetchedItems;
+                for (const auto &item : items) {
+                    Protocol::FetchItemsResponse resp;
+                    resp.setId(item.id());
+                    fetchedItems.push_back(std::move(resp));
+                }
+                msg->setItems(fetchedItems);
+                msg->setMustRetrieve(true);
             }
         }
     }

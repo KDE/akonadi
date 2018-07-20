@@ -129,7 +129,7 @@ void ChangeRecorderPrivate::loadNotifications()
     notificationsLoaded();
 }
 
-static const quint64 s_currentVersion = Q_UINT64_C(0x000700000000);
+static const quint64 s_currentVersion = Q_UINT64_C(0x000800000000);
 static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
 static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 
@@ -615,6 +615,11 @@ Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadItemNotification(QDat
             stream >> addedTags;
             stream >> removedTags;
         }
+        if (version >= 8) {
+            bool boolean;
+            stream >> boolean;
+            msg->setMustRetrieve(boolean);
+        }
     } else {
         qCWarning(AKONADICORE_LOG) << "Error version is not correct here" << version;
         return msg;
@@ -650,7 +655,7 @@ QSet<QByteArray> ChangeRecorderPrivate::encodeRelations(const QSet<Protocol::Ite
 
 void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Protocol::ItemChangeNotification &msg)
 {
-    // Version 7
+    // Version 8
 
     stream << int(msg.operation());
     const auto &items = msg.items();
@@ -717,6 +722,7 @@ void ChangeRecorderPrivate::saveItemNotification(QDataStream &stream, const Prot
     stream << msg.removedFlags() + encodeRelations(msg.removedRelations());
     stream << msg.addedTags();
     stream << msg.removedTags();
+    stream << msg.mustRetrieve();
 }
 
 Protocol::ChangeNotificationPtr ChangeRecorderPrivate::loadCollectionNotification(QDataStream &stream, quint64 version) const
