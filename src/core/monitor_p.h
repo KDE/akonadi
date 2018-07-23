@@ -192,12 +192,6 @@ public:
      */
     void invalidateTagCache(qint64 tagId);
 
-    /**
-     * This method is called by the ChangeMediator to update pending items with the outgoing changes.
-     * Currently this only serves to set RID on pending item notifications.
-     */
-    void updatePendingItem(const Akonadi::Item &item);
-
     void scheduleSubscriptionUpdate();
     void slotUpdateSubscription();
 
