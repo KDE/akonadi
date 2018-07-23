@@ -136,33 +136,21 @@ void MonitorPrivate::invalidateCollectionCache(qint64 id)
 void MonitorPrivate::invalidateItemCache(qint64 id)
 {
     itemCache->update(QList<Item::Id>() << id, mItemFetchScope);
+    // Also invalidate content of all any pending notification for given item
+    for (auto it = pendingNotifications.begin(), end = pendingNotifications.end(); it != end; ++it) {
+        if ((*it)->type() == Protocol::Command::ItemChangeNotification) {
+            auto &ntf = Protocol::cmdCast<Protocol::ItemChangeNotification>(*it);
+            const auto items = ntf.items();
+            if (std::any_of(items.cbegin(), items.cend(), [id](const Protocol::FetchItemsResponse &r) { return r.id() == id; })) {
+                ntf.setMustRetrieve(true);
+            }
+        }
+    }
 }
 
 void MonitorPrivate::invalidateTagCache(qint64 id)
 {
     tagCache->update({ id }, mTagFetchScope);
-}
-
-void MonitorPrivate::updatePendingItem(const Akonadi::Item &item)
-{
-    if (item.remoteId().isEmpty()) {
-        return;
-    }
-
-    for (auto &list : { pendingNotifications, pipeline }) {
-        for (auto &ntf : list) {
-            if (ntf->type() == Protocol::Command::ItemChangeNotification) {
-                auto pending = Protocol::cmdCast<Protocol::ItemChangeNotification>(ntf);
-                auto pendingItems = pending.items();
-                for (auto it = pendingItems.begin(), end = pendingItems.end(); it != end; ++it) {
-                    if (it->id() == item.id() && it->remoteId().isEmpty()) {
-                        it->setRemoteId(item.remoteId());
-                    }
-                }
-                pending.setItems(pendingItems);
-            }
-        }
-    }
 }
 
 int MonitorPrivate::pipelineSize() const
