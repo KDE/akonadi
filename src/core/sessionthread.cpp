@@ -21,6 +21,7 @@
 #include "session_p.h"
 #include "akonadicore_debug.h"
 
+#include <QCoreApplication>
 #include <QThread>
 #include <QEventLoop>
 #include <QTimer>
@@ -82,6 +83,8 @@ void SessionThread::doAddConnection(Connection *connection)
 
 void SessionThread::destroyConnection(Connection *connection)
 {
+    if (QCoreApplication::closingDown())
+        return;
     const bool invoke = QMetaObject::invokeMethod(this, "doDestroyConnection",
                                                   Qt::BlockingQueuedConnection,
                                                   Q_ARG(Akonadi::Connection*, connection));
