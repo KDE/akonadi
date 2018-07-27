@@ -195,6 +195,8 @@ public:
     void scheduleSubscriptionUpdate();
     void slotUpdateSubscription();
 
+    static Protocol::ModifySubscriptionCommand::ChangeType monitorTypeToProtocol(Monitor::Type type);
+
     /**
       @brief Class used to determine when to purge items in a Collection
 

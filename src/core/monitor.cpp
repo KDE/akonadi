@@ -151,11 +151,11 @@ void Monitor::setTypeMonitored(Monitor::Type type, bool monitored)
     Q_D(Monitor);
     if (!d->types.contains(type) && monitored) {
         d->types.insert(type);
-        d->pendingModification.startMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
+        d->pendingModification.startMonitoringType(MonitorPrivate::monitorTypeToProtocol(type));
         d->scheduleSubscriptionUpdate();
     } else if (!monitored) {
         if (d->types.remove(type)) {
-            d->pendingModification.stopMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
+            d->pendingModification.stopMonitoringType(MonitorPrivate::monitorTypeToProtocol(type));
             d->scheduleSubscriptionUpdate();
         }
     }
