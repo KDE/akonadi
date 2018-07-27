@@ -174,7 +174,8 @@ void MonitorPrivate::scheduleSubscriptionUpdate()
 
 void MonitorPrivate::slotUpdateSubscription()
 {
-    delete pendingModificationTimer;
+    Q_Q(Monitor);
+    pendingModificationTimer->deleteLater();
     pendingModificationTimer = nullptr;
 
     if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
@@ -565,7 +566,20 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         subscriber.setMonitoredTags(subNtf.tags());
         QSet<Monitor::Type> monitorTypes;
         Q_FOREACH (auto type, subNtf.types()) {
-            monitorTypes.insert(static_cast<Monitor::Type>(type));
+            if (type == Protocol::ModifySubscriptionCommand::NoType) {
+                continue;
+            }
+            monitorTypes.insert([](Protocol::ModifySubscriptionCommand::ChangeType type) {
+                switch (type) {
+                case Protocol::ModifySubscriptionCommand::ItemChanges: return Monitor::Items;
+                case Protocol::ModifySubscriptionCommand::CollectionChanges: return Monitor::Collections;
+                case Protocol::ModifySubscriptionCommand::TagChanges: return Monitor::Tags;
+                case Protocol::ModifySubscriptionCommand::RelationChanges: return Monitor::Relations;
+                case Protocol::ModifySubscriptionCommand::SubscriptionChanges: return Monitor::Subscribers;
+                case Protocol::ModifySubscriptionCommand::ChangeNotifications: return Monitor::Notifications;
+                default: Q_ASSERT(false); return Monitor::Items; //unreachable
+                }
+            }(type));
         }
         subscriber.setMonitoredTypes(monitorTypes);
         subscriber.setMonitoredMimeTypes(subNtf.mimeTypes());
@@ -811,7 +825,7 @@ void MonitorPrivate::handleCommands()
                     msubCmd->startMonitoringTag(tagId);
                 }
                 for (auto type : qAsConst(types)) {
-                    msubCmd->startMonitoringType(static_cast<Protocol::ModifySubscriptionCommand::ChangeType>(type));
+                    msubCmd->startMonitoringType(monitorTypeToProtocol(type));
                 }
                 for (const auto &mimetype : qAsConst(mimetypes)) {
                     msubCmd->startMonitoringMimeType(mimetype);
@@ -1435,5 +1449,27 @@ void MonitorPrivate::notifyCollectionStatisticsWatchers(Collection::Id collectio
         }
     }
 }
+
+Protocol::ModifySubscriptionCommand::ChangeType MonitorPrivate::monitorTypeToProtocol(Monitor::Type type)
+{
+    switch (type) {
+    case Monitor::Collections:
+        return Protocol::ModifySubscriptionCommand::CollectionChanges;
+    case Monitor::Items:
+        return Protocol::ModifySubscriptionCommand::ItemChanges;
+    case Monitor::Tags:
+        return Protocol::ModifySubscriptionCommand::TagChanges;
+    case Monitor::Relations:
+        return Protocol::ModifySubscriptionCommand::RelationChanges;
+    case Monitor::Subscribers:
+        return Protocol::ModifySubscriptionCommand::SubscriptionChanges;
+    case Monitor::Notifications:
+        return Protocol::ModifySubscriptionCommand::ChangeNotifications;
+    default:
+        Q_ASSERT(false);
+        return Protocol::ModifySubscriptionCommand::NoType;
+    }
+}
+
 
 // @endcond
