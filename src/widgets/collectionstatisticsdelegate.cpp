@@ -291,14 +291,23 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
             // where the folder text and the unread count will be drawn to
             QString folderName = text;
             QFontMetrics fm(painter->fontMetrics());
-            const int unreadWidth = fm.boundingRect(unread).width();
-            int folderWidth(fm.boundingRect(folderName).width());
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+            const int unreadWidth = fm.horizontalAdvance(unread);
+            int folderWidth(fm.horizontalAdvance(folderName));
+#else
+            const int unreadWidth = fm.width(unread);
+            int folderWidth(fm.width(folderName));
+#endif
             const bool enoughPlaceForText = (option.rect.width() > (folderWidth + unreadWidth + iconRect.width()));
 
             if (!enoughPlaceForText && (folderWidth + unreadWidth > textRect.width())) {
                 folderName = fm.elidedText(folderName, Qt::ElideRight,
                                            option.rect.width() - unreadWidth - iconRect.width());
-                folderWidth = fm.boundingRect(folderName).width();
+#if QT_VERSION >= QT_VERSION_CHECK(5, 11, 0)
+                folderWidth = fm.horizontalAdvance(folderName);
+#else
+                folderWidth = fm.width(folderName);
+#endif
             }
             QRect folderRect = textRect;
             QRect unreadRect = textRect;
