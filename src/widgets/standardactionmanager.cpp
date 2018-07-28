@@ -1451,7 +1451,9 @@ public:
                     }
                 }
 
-                menu->addMenu(popup);
+                if (!popup->isEmpty()) {
+                    menu->addMenu(popup);
+                }
 
             } else {
                 // insert an item
