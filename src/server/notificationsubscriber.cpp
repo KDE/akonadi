@@ -26,10 +26,10 @@
 #include "utils.h"
 
 #include <QLocalSocket>
-#include <QDataStream>
 #include <QPointer>
 
 #include <private/protocol_p.h>
+#include <private/datastream_p_p.h>
 #include <private/protocol_exception_p.h>
 
 using namespace Akonadi;
@@ -82,7 +82,7 @@ NotificationSubscriber::~NotificationSubscriber()
 void NotificationSubscriber::handleIncomingData()
 {
     while (mSocket->bytesAvailable() > (int) sizeof(qint64)) {
-        QDataStream stream(mSocket);
+        Protocol::DataStream stream(mSocket);
 
         // Ignored atm
         qint64 tag = -1;
@@ -717,7 +717,7 @@ void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::CommandPtr
 {
     Q_ASSERT(QThread::currentThread() == thread());
 
-    QDataStream stream(mSocket);
+    Protocol::DataStream stream(mSocket);
     stream << tag;
     try {
         Protocol::serialize(mSocket, cmd);
