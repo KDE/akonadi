@@ -55,6 +55,76 @@ struct Node {
     int type;
 };
 
+template<typename Key, typename Value>
+class RefCountedHash
+{
+    mutable Value *defaultValue = nullptr;
+public:
+    inline ~RefCountedHash()
+    {
+        delete defaultValue;
+    }
+
+    inline auto begin() { return mHash.begin(); }
+    inline auto end() { return mHash.end(); }
+    inline auto begin() const { return mHash.begin(); }
+    inline auto end() const { return mHash.end(); }
+    inline auto find(const Key &key) const { return mHash.find(key); }
+    inline auto find(const Key &key) { return mHash.find(key); }
+
+    inline bool size() const { return mHash.size(); }
+    inline bool isEmpty() const { return mHash.isEmpty(); }
+
+    inline void clear() { mHash.clear(); }
+    inline bool contains(const Key &key) const { return mHash.contains(key); }
+
+    inline const Value &value(const Key &key) const
+    {
+        auto it = mHash.find(key);
+        if (it == mHash.end()) {
+            return defaultValue ? *defaultValue : *(defaultValue = new Value());
+        }
+        return it->value;
+    }
+
+    inline const Value &operator[](const Key &key) const
+    {
+        return value(key);
+    }
+
+    inline auto ref(const Key &key, const Value &value)
+    {
+        auto it = mHash.find(key);
+        if (it != mHash.end()) {
+            ++(it->refCnt);
+            return it;
+        } else {
+            return mHash.insert(key, {1, std::move(value)});
+        }
+    }
+
+    inline void unref(const Key &key)
+    {
+        auto it = mHash.find(key);
+        if (it == mHash.end()) {
+            return;
+        }
+        --(it->refCnt);
+        if (it->refCnt == 0) {
+            mHash.erase(it);
+        }
+    }
+
+
+private:
+    template<typename V>
+    struct RefCountedValue {
+        uint8_t refCnt = 0;
+        V value;
+    };
+    QHash<Key, RefCountedValue<Value>> mHash;
+};
+
 namespace Akonadi
 {
 /**
@@ -134,7 +204,7 @@ public:
     QIcon iconForName(const QString &name) const;
 
     QHash<Collection::Id, Collection> m_collections;
-    QHash<Item::Id, Item> m_items;
+    RefCountedHash<Item::Id, Item> m_items;
     QHash<Collection::Id, QList<Node *> > m_childEntities;
     QSet<Collection::Id> m_populatedCols;
     QSet<Collection::Id> m_collectionsWithoutItems;

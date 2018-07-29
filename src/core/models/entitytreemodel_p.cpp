@@ -530,13 +530,14 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
             // part of monitor notifications. We only insert items which are not already in the model
             // considering their (possibly virtual) parent.
             bool isNewItem = true;
-            if (m_items.contains(item.id())) {
+            auto itemIt = m_items.find(item.id());
+            if (itemIt != m_items.end()) {
                 const Akonadi::Collection::List parents = getParentCollections(item);
                 for (const Akonadi::Collection &parent : parents) {
                     if (parent.id() == collectionId) {
                         qCWarning(AKONADICORE_LOG) << "Fetched an item which is already in the model";
                         // Update it in case the revision changed;
-                        m_items[item.id()].apply(item);
+                        itemIt->value.apply(item);
                         isNewItem = false;
                         break;
                     }
@@ -562,10 +563,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
 
         foreach (const Item &item, itemsToInsert) {
             const Item::Id itemId = item.id();
-            // Don't reinsert when listing virtual collections.
-            if (!m_items.contains(item.id())) {
-                m_items.insert(itemId, item);
-            }
+            m_items.ref(itemId, item);
 
             Node *node = new Node;
             node->id = itemId;
@@ -918,7 +916,7 @@ void EntityTreeModelPrivate::removeChildEntities(Collection::Id collectionId)
     const QList<Node *>::const_iterator end = childList.constEnd();
     for (; it != end; ++it) {
         if (Node::Item == (*it)->type) {
-            m_items.remove((*it)->id);
+            m_items.unref((*it)->id);
         } else {
             removeChildEntities((*it)->id);
             m_collections.remove((*it)->id);
@@ -1098,7 +1096,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
         row = q->rowCount();
     }
     q->beginInsertRows(parentIndex, row, row);
-    m_items.insert(item.id(), item);
+    m_items.ref(item.id(), item);
     Node *node = new Node;
     node->id = item.id();
     node->parent = collection.id();
@@ -1134,21 +1132,20 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item, con
         return;
     }
 
-    // TODO: Iterate over all (virtual) collections.
-    const Collection collection = parents.first();
+    for (const auto &collection : parents) {
+        Q_ASSERT(m_collections.contains(collection.id()));
+        Q_ASSERT(m_childEntities.contains(collection.id()));
 
-    Q_ASSERT(m_collections.contains(collection.id()));
-    Q_ASSERT(m_childEntities.contains(collection.id()));
+        const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
+        Q_ASSERT(row >= 0);
 
-    const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
-    Q_ASSERT(row >= 0);
+        const QModelIndex parentIndex = indexForCollection(m_collections.value(collection.id()));
 
-    const QModelIndex parentIndex = indexForCollection(m_collections.value(collection.id()));
-
-    q->beginRemoveRows(parentIndex, row, row);
-    m_items.remove(item.id());
-    delete m_childEntities[collection.id()].takeAt(row);
-    q->endRemoveRows();
+        q->beginRemoveRows(parentIndex, row, row);
+        m_items.unref(item.id());
+        delete m_childEntities[collection.id()].takeAt(row);
+        q->endRemoveRows();
+    }
 }
 
 void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &)
@@ -1161,21 +1158,20 @@ void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, con
         return;
     }
 
-    if (!m_items.contains(item.id())) {
+    auto itemIt = m_items.find(item.id());
+    if (itemIt == m_items.end()) {
         qCWarning(AKONADICORE_LOG) << "Got a stale 'changed' notification for an item which was already removed." << item.id() << item.remoteId();
         return;
     }
 
+    itemIt->value.apply(item);
     // Notifications about itemChange are always dispatched for real collection
     // and also all virtual collections the item belongs to. In order to preserve
     // the original storage collection when we need to have special handling for
     // notifications for virtual collections
     if (item.parentCollection().isVirtual()) {
-        const Collection originalParent = m_items[item.id()].parentCollection();
-        m_items[item.id()].apply(item);
-        m_items[item.id()].setParentCollection(originalParent);
-    } else {
-        m_items[item.id()].apply(item);
+        const Collection originalParent = itemIt->value.parentCollection();
+        itemIt->value.setParentCollection(originalParent);
     }
 
     const QModelIndexList indexes = indexesForItem(item);
@@ -1266,9 +1262,21 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
     const Collection::Id collectionId = collection.id();
     const Item::Id itemId = item.id();
 
-    Q_ASSERT(m_collections.contains(collectionId));
+    if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch &&
+            !m_collections.contains(collection.id())) {
+        qCWarning(AKONADICORE_LOG) << "Got a stale 'linked' notification for an item whose collection was already removed." << item.id() << item.remoteId();
+        return;
+    }
+
+    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains(collectionId) : true);
 
     if (m_mimeChecker.hasWantedMimeTypes() && !m_mimeChecker.isWantedItem(item)) {
+        return;
+    }
+
+    //Adding items to not yet populated collections would block fetchMore, resullting in only new items showing up in the collection
+    //This is only a problem with lazy population, otherwise fetchMore is not used at all
+    if ((m_itemPopulation == EntityTreeModel::LazyPopulation) && !m_populatedCols.contains(collectionId)) {
         return;
     }
 
@@ -1286,9 +1294,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
     const QModelIndex parentIndex = indexForCollection(m_collections.value(collectionId));
 
     q->beginInsertRows(parentIndex, row, row);
-    if (!m_items.contains(itemId)) {
-        m_items.insert(itemId, item);
-    }
+    m_items.ref(itemId, item);
     Node *node = new Node;
     node->id = itemId;
     node->parent = collectionId;
@@ -1314,8 +1320,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
         return;
     }
 
-    Q_ASSERT(m_collections.contains(collection.id()));
-
+    Q_ASSERT(m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch ? m_collections.contains(collection.id()) : true);
     const int row = indexOf<Node::Item>(m_childEntities.value(collection.id()), item.id());
     if (row < 0 || row >= m_childEntities[ collection.id() ].size()) {
         qCWarning(AKONADICORE_LOG) << "couldn't find index of unlinked item " << item.id() << collection.id() << row;
@@ -1327,6 +1332,7 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
 
     q->beginRemoveRows(parentIndex, row, row);
     delete m_childEntities[collection.id()].takeAt(row);
+    m_items.unref(item.id());
     q->endRemoveRows();
 }
 
@@ -1415,24 +1421,6 @@ void EntityTreeModelPrivate::updateJobDone(KJob *job)
     if (job->error()) {
         // TODO: handle job errors
         qCWarning(AKONADICORE_LOG) << "Job error:" << job->errorString();
-    } else {
-
-        //FIXME: This seems pretty pointless since we'll get an update through the monitor anyways
-        ItemModifyJob *modifyJob = qobject_cast<ItemModifyJob *>(job);
-        if (!modifyJob) {
-            return;
-        }
-
-        const Item item = modifyJob->item();
-
-        Q_ASSERT(item.isValid());
-
-        m_items[item.id()].apply(item);
-        const QModelIndexList list = indexesForItem(item);
-
-        for (const QModelIndex &index : list) {
-            dataChanged(index, index);
-        }
     }
 }
 
@@ -1673,7 +1661,7 @@ QList<Node *>::iterator EntityTreeModelPrivate::removeItems(QList<Node *>::itera
         Q_ASSERT(es.count(*it) == 1);
         // don't keep implicitly shared data alive
         Q_ASSERT(m_items.contains((*it)->id));
-        m_items.remove((*it)->id);
+        m_items.unref((*it)->id);
         // delete actual node
         delete *it;
         it = es.erase(it);
@@ -1864,7 +1852,7 @@ void EntityTreeModelPrivate::monitoredItemsRetrieved(KJob *job)
         node->type = Node::Item;
 
         m_childEntities[-1].append(node);
-        m_items.insert(item.id(), item);
+        m_items.ref(item.id(), item);
     }
 
     q->endResetModel();
