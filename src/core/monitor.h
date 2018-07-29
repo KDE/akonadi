@@ -807,6 +807,9 @@ Q_SIGNALS:
 
 protected:
     //@cond PRIVATE
+    void connectNotify(const QMetaMethod &signal) override;
+    void disconnectNotify(const QMetaMethod &signal) override;
+
     friend class EntityTreeModel;
     friend class EntityTreeModelPrivate;
     MonitorPrivate *d_ptr;

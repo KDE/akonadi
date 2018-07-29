@@ -50,12 +50,42 @@ namespace Akonadi
 class Monitor;
 class ChangeNotification;
 
+// A helper struct to wrap pointer to member function (which cannot be contained
+// in a regular ponter)
+struct SignalId {
+    constexpr SignalId() = default;
+
+    using Unit = uint;
+    static constexpr int Size = sizeof(&Monitor::itemAdded) / sizeof(Unit);
+    Unit data[sizeof(&Monitor::itemAdded) / sizeof(Unit)] = { 0 };
+
+    inline bool operator==(const SignalId &other) const {
+        for (int i = Size - 1; i >= 0; --i) {
+            if (data[i] != other.data[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+};
+
+inline uint qHash(const SignalId &sig)
+{
+    // The 4 LSBs of the address should be enough to give us a good hash
+    return sig.data[SignalId::Size - 1];
+}
+
 /**
  * @internal
  */
 class AKONADICORE_EXPORT MonitorPrivate
 {
 public:
+    enum ListenerAction {
+        AddListener,
+        RemoveListener
+    };
+
     MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent);
     virtual ~MonitorPrivate();
     void init();
@@ -82,6 +112,7 @@ public:
     ItemListCache *itemCache = nullptr;
     TagListCache *tagCache = nullptr;
     QMimeDatabase mimeDatabase;
+    QHash<SignalId, quint16> listeners;
 
     CommandBuffer mCommandBuffer;
 
@@ -194,6 +225,24 @@ public:
 
     void scheduleSubscriptionUpdate();
     void slotUpdateSubscription();
+
+    void updateListeners(const QMetaMethod &signal, ListenerAction action);
+
+    template<typename Signal>
+    void updateListener(Signal signal, ListenerAction action)
+    {
+        auto it = listeners.find(signalId(signal));
+        if (action == AddListener) {
+            if (it == listeners.end()) {
+                it = listeners.insert(signalId(signal), 0);
+            }
+            ++(*it);
+        } else {
+            if (--(*it) == 0) {
+                listeners.erase(it);
+            }
+        }
+    }
 
     static Protocol::ModifySubscriptionCommand::ChangeType monitorTypeToProtocol(Monitor::Type type);
 
@@ -328,6 +377,36 @@ private:
     void notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource);
     bool fetchCollections() const;
     bool fetchItems() const;
+
+    // A hack to "cast" pointer to member function to something we can easilly
+    // use as a key in the hashtable
+    template<typename Signal>
+    constexpr SignalId signalId(Signal signal) const
+    {
+        union {
+            Signal in;
+            SignalId out;
+        } h = {signal};
+        return h.out;
+    }
+
+    template<typename Signal>
+    bool hasListeners(Signal signal) const
+    {
+        auto it = listeners.find(signalId(signal));
+        return it != listeners.end();
+    }
+
+    template<typename Signal, typename ... Args>
+    bool emitToListeners(Signal signal, Args ... args)
+    {
+        Q_Q(Monitor);
+        if (hasListeners(signal)) {
+            Q_EMIT (q_ptr->*signal)(std::forward<Args>(args) ...);
+            return true;
+        }
+        return false;
+    }
 };
 
 }

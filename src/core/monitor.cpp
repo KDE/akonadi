@@ -25,10 +25,7 @@
 #include "itemfetchjob.h"
 #include "session.h"
 
-#include <qdebug.h>
-
-
-#include <iterator>
+#include <QMetaMethod>
 
 using namespace Akonadi;
 
@@ -370,6 +367,18 @@ void Monitor::setCollectionMoveTranslationEnabled(bool enabled)
 {
     Q_D(Monitor);
     d->collectionMoveTranslationEnabled = enabled;
+}
+
+void Monitor::connectNotify(const QMetaMethod &signal)
+{
+    Q_D(Monitor);
+    d->updateListeners(signal, MonitorPrivate::AddListener);
+}
+
+void Monitor::disconnectNotify(const QMetaMethod &signal)
+{
+    Q_D(Monitor);
+    d->updateListeners(signal, MonitorPrivate::RemoveListener);
 }
 
 #include "moc_monitor.cpp"
