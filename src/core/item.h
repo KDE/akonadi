@@ -997,7 +997,7 @@ Item::hasPayloadImpl() const
         return true;
     }
 
-    return tryToClone<T>(0);
+    return tryToClone<T>(nullptr);
 }
 
 template <typename T>
