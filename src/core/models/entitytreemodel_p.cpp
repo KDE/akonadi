@@ -369,14 +369,14 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
             continue;
         }
 
-        if (m_collections.contains(collectionId)) {
+        auto collectionIt = m_collections.find(collectionId);
+        if (collectionIt != m_collections.end()) {
             // This is probably the result of a parent of a previous collection already being in the model.
             // Replace the dummy collection with the real one and move on.
 
             // This could also be the result of a monitor signal having already inserted the collection
             // into this model. There's no way to tell, so we just emit dataChanged.
-
-            m_collections[collectionId] = collection;
+            *collectionIt = collection;
 
             const QModelIndex collectionIndex = indexForCollection(collection);
             dataChanged(collectionIndex, collectionIndex);
@@ -472,7 +472,7 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
             foreach (const Collection::Id &collectionId, collectionIt.value()) {
                 const auto col = m_collections.value(collectionId);
                 if (!m_mimeChecker.hasWantedMimeTypes() || m_mimeChecker.isWantedCollection(col)) {
-                    fetchItems(m_collections.value(collectionId));
+                    fetchItems(col);
                 } else {
                     // Consider collections that don't contain relevant mimetypes to be populated
                     m_populatedCols.insert(collectionId);
