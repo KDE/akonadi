@@ -101,10 +101,10 @@ private Q_SLOTS:
             collection.setEnabled(false);
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setChangedParts(QSet<QByteArray>() << "ENABLED");
-            notification->setCollection(std::move(collection));
+            notification->setCollection(collection);
             auto unsubscribeNotification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             unsubscribeNotification->setOperation(Protocol::CollectionChangeNotification::Unsubscribe);
-            unsubscribeNotification->setCollection(collection);
+            unsubscribeNotification->setCollection(std::move(collection));
 
             QTest::newRow("disable collection") << scenarios << Protocol::ChangeNotificationList{ notification, unsubscribeNotification} << QVariant::fromValue(false);
         }
