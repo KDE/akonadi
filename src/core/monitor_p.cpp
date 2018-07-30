@@ -33,6 +33,7 @@
 #include "changenotification.h"
 #include "protocolhelper_p.h"
 
+#include <utility>
 
 using namespace Akonadi;
 class operation;
@@ -175,8 +176,10 @@ void MonitorPrivate::scheduleSubscriptionUpdate()
 void MonitorPrivate::slotUpdateSubscription()
 {
     Q_Q(Monitor);
-    pendingModificationTimer->deleteLater();
-    pendingModificationTimer = nullptr;
+    if (pendingModificationTimer) {
+        pendingModificationTimer->stop();
+        std::exchange(pendingModificationTimer, nullptr)->deleteLater();
+    }
 
     if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
         pendingModification.setItemFetchScope(ProtocolHelper::itemFetchScopeToProtocol(mItemFetchScope));
