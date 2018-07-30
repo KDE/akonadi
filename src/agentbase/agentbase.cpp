@@ -481,6 +481,8 @@ void AgentBasePrivate::itemAdded(const Akonadi::Item &item, const Akonadi::Colle
 {
     if (mObserver) {
         mObserver->itemAdded(item, collection);
+    } else {
+        changeProcessed();
     }
 }
 
@@ -488,6 +490,8 @@ void AgentBasePrivate::itemChanged(const Akonadi::Item &item, const QSet<QByteAr
 {
     if (mObserver) {
         mObserver->itemChanged(item, partIdentifiers);
+    } else {
+        changeProcessed();
     }
 }
 
@@ -530,6 +534,8 @@ void AgentBasePrivate::itemRemoved(const Akonadi::Item &item)
 {
     if (mObserver) {
         mObserver->itemRemoved(item);
+    } else {
+        changeProcessed();
     }
 }
 
@@ -601,6 +607,7 @@ void AgentBasePrivate::itemsLinked(const Akonadi::Item::List &items, const Akona
 void AgentBasePrivate::itemsUnlinked(const Akonadi::Item::List &items, const Akonadi::Collection &collection)
 {
     if (!mObserver) {
+        changeProcessed();
         return;
     }
 
@@ -614,10 +621,6 @@ void AgentBasePrivate::itemsUnlinked(const Akonadi::Item::List &items, const Ako
 
 void AgentBasePrivate::tagAdded(const Akonadi::Tag &tag)
 {
-    if (!mObserver) {
-        return;
-    }
-
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->tagAdded(tag);
@@ -628,10 +631,6 @@ void AgentBasePrivate::tagAdded(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::tagChanged(const Akonadi::Tag &tag)
 {
-    if (!mObserver) {
-        return;
-    }
-
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->tagChanged(tag);
@@ -642,10 +641,6 @@ void AgentBasePrivate::tagChanged(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::tagRemoved(const Akonadi::Tag &tag)
 {
-    if (!mObserver) {
-        return;
-    }
-
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->tagRemoved(tag);
@@ -656,10 +651,6 @@ void AgentBasePrivate::tagRemoved(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags)
 {
-    if (!mObserver) {
-        return;
-    }
-
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->itemsTagsChanged(items, addedTags, removedTags);
@@ -670,10 +661,6 @@ void AgentBasePrivate::itemsTagsChanged(const Akonadi::Item::List &items, const 
 
 void AgentBasePrivate::relationAdded(const Akonadi::Relation &relation)
 {
-    if (!mObserver) {
-        return;
-    }
-
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->relationAdded(relation);
@@ -684,10 +671,6 @@ void AgentBasePrivate::relationAdded(const Akonadi::Relation &relation)
 
 void AgentBasePrivate::relationRemoved(const Akonadi::Relation &relation)
 {
-    if (!mObserver) {
-        return;
-    }
-
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->relationRemoved(relation);
@@ -700,10 +683,6 @@ void AgentBasePrivate::itemsRelationsChanged(const Akonadi::Item::List &items,
         const Akonadi::Relation::List &addedRelations,
         const Akonadi::Relation::List &removedRelations)
 {
-    if (!mObserver) {
-        return;
-    }
-
     AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->itemsRelationsChanged(items, addedRelations, removedRelations);
@@ -716,6 +695,8 @@ void AgentBasePrivate::collectionAdded(const Akonadi::Collection &collection, co
 {
     if (mObserver) {
         mObserver->collectionAdded(collection, parent);
+    } else {
+        changeProcessed();
     }
 }
 
@@ -724,6 +705,8 @@ void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection)
     AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (mObserver && observer2 == nullptr) {   // For ObserverV2 we use the variant with the part identifiers
         mObserver->collectionChanged(collection);
+    } else {
+        changeProcessed();
     }
 }
 
@@ -732,6 +715,8 @@ void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection, 
     AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (observer2) {
         observer2->collectionChanged(collection, changedAttributes);
+    } else {
+        changeProcessed();
     }
 }
 
@@ -754,6 +739,8 @@ void AgentBasePrivate::collectionRemoved(const Akonadi::Collection &collection)
 {
     if (mObserver) {
         mObserver->collectionRemoved(collection);
+    } else {
+        changeProcessed();
     }
 }
 
