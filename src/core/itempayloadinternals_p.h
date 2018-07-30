@@ -70,7 +70,7 @@ private:
     template <typename S>
     static Yes test(sfinae<S, &S::clone> *);
 public:
-    static const bool value = sizeof(test<T>(0)) == sizeof(Yes);
+    static const bool value = sizeof(test<T>(nullptr)) == sizeof(Yes);
 };
 
 template <typename T, bool b>
@@ -261,13 +261,13 @@ struct PayloadTrait<boost::shared_ptr<T>> {
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
     static inline bool isNull(const Type &p)
     {
-        return p.get() == 0;
+        return p.get() == nullptr;
     }
     template <typename U>
     static inline Type castFrom(const boost::shared_ptr<U> &p)
     {
         const Type sp = boost::dynamic_pointer_cast<T, U>(p);
-        if (sp.get() != 0 || p.get() == 0) {
+        if (sp.get() != nullptr || p.get() == nullptr) {
             return sp;
         }
         throw PayloadException("boost::dynamic_pointer_cast failed");
@@ -276,7 +276,7 @@ struct PayloadTrait<boost::shared_ptr<T>> {
     static inline bool canCastFrom(const boost::shared_ptr<U> &p)
     {
         const Type sp = boost::dynamic_pointer_cast<T, U>(p);
-        return sp.get() != 0 || p.get() == 0;
+        return sp.get() != nullptr || p.get() == nullptr;
     }
     template <typename U>
     static inline boost::shared_ptr<U> castTo(const Type &p)
@@ -381,13 +381,13 @@ struct PayloadTrait<std::shared_ptr<T>> {
     static const bool isPolymorphic = !std::is_same<ElementType, SuperElementType>::value;
     static inline bool isNull(const Type &p)
     {
-        return p.get() == 0;
+        return p.get() == nullptr;
     }
     template <typename U>
     static inline Type castFrom(const std::shared_ptr<U> &p)
     {
         const Type sp = std::dynamic_pointer_cast<T, U>(p);
-        if (sp.get() != 0 || p.get() == 0) {
+        if (sp.get() != nullptr || p.get() == nullptr) {
             return sp;
         }
         throw PayloadException("std::dynamic_pointer_cast failed");
@@ -396,7 +396,7 @@ struct PayloadTrait<std::shared_ptr<T>> {
     static inline bool canCastFrom(const std::shared_ptr<U> &p)
     {
         const Type sp = std::dynamic_pointer_cast<T, U>(p);
-        return sp.get() != 0 || p.get() == 0;
+        return sp.get() != nullptr || p.get() == nullptr;
     }
     template <typename U>
     static inline std::shared_ptr<U> castTo(const Type &p)
