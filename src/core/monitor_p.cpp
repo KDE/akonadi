@@ -1121,8 +1121,8 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChange
     case Protocol::CollectionChangeNotification::Add:
         return emitToListeners(&Monitor::collectionAdded, collection, parent);
     case Protocol::CollectionChangeNotification::Modify:
-        handled |= emitToListeners(qOverload<const Akonadi::Collection &>(&Monitor::collectionChanged), collection);
-        handled |= emitToListeners(qOverload<const Akonadi::Collection &, const QSet<QByteArray> &>(&Monitor::collectionChanged), collection, msg.changedParts());
+        handled |= emitToListeners(QOverload<const Akonadi::Collection &>::of(&Monitor::collectionChanged), collection);
+        handled |= emitToListeners(QOverload<const Akonadi::Collection &, const QSet<QByteArray> &>::of(&Monitor::collectionChanged), collection, msg.changedParts());
         return handled;
     case Protocol::CollectionChangeNotification::Move:
         return emitToListeners(&Monitor::collectionMoved, collection, parent, destination);
@@ -1377,8 +1377,8 @@ void MonitorPrivate::updateListeners(const QMetaMethod &signal, ListenerAction a
     UPDATE_LISTENERS(&Monitor::itemsUnlinked)
     UPDATE_LISTENERS(&Monitor::collectionAdded)
 
-    UPDATE_LISTENERS(qOverload<const Akonadi::Collection &>(&Monitor::collectionChanged))
-    UPDATE_LISTENERS((qOverload<const Akonadi::Collection &, const QSet<QByteArray> &>(&Monitor::collectionChanged)))
+    UPDATE_LISTENERS(QOverload<const Akonadi::Collection &>::of(&Monitor::collectionChanged))
+    UPDATE_LISTENERS((QOverload<const Akonadi::Collection &, const QSet<QByteArray> &>::of(&Monitor::collectionChanged)))
     UPDATE_LISTENERS(&Monitor::collectionMoved)
     UPDATE_LISTENERS(&Monitor::collectionRemoved)
     UPDATE_LISTENERS(&Monitor::collectionSubscribed)
