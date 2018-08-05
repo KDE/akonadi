@@ -156,6 +156,9 @@ QStringList ManageAccountWidget::excludeCapabilities() const
 void ManageAccountWidget::setExcludeCapabilities(const QStringList &excludeCapabilities)
 {
     d->mExcludeCapabilities = excludeCapabilities;
+    for (const QString &capability : qAsConst(d->mExcludeCapabilities)) {
+        d->ui->mAccountList->agentFilterProxyModel()->excludeCapabilities(capability);
+    }
 }
 
 void ManageAccountWidget::setItemDelegate(QAbstractItemDelegate *delegate)
