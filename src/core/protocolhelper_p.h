@@ -235,9 +235,10 @@ public:
     static TagFetchScope parseTagFetchScope(const Protocol::TagFetchScope &fetchScope);
 
     /**
-      Parses a single line from an item fetch job result into an Item object.
+     * Parses a single line from an item fetch job result into an Item object.
+     * FIXME: std::optional
      */
-    static Item parseItemFetchResult(const Protocol::FetchItemsResponse &data, ProtocolHelperValuePool *valuePool = nullptr);
+    static Item parseItemFetchResult(const Protocol::FetchItemsResponse &data, const ItemFetchScope *fetchScope = nullptr, ProtocolHelperValuePool *valuePool = nullptr);
     static Tag parseTagFetchResult(const Protocol::FetchTagsResponse &data);
     static Relation parseRelationFetchResult(const Protocol::FetchRelationsResponse &data);
 

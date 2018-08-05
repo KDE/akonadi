@@ -29,6 +29,7 @@
 #include "servermanager.h"
 #include "tagfetchscope.h"
 #include "persistentsearchattribute.h"
+#include "itemfetchscope.h"
 
 #include "private/protocol_p.h"
 #include "private/externalpartstorage_p.h"
@@ -607,13 +608,16 @@ static Item::Flags convertFlags(const QVector<QByteArray> &flags, ProtocolHelper
     return convertedFlags;
 }
 
-Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &data, ProtocolHelperValuePool *valuePool)
+Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &data,
+                                          const Akonadi::ItemFetchScope *fetchScope, ProtocolHelperValuePool *valuePool)
 {
     Item item;
     item.setId(data.id());
     item.setRevision(data.revision());
-    item.setRemoteId(data.remoteId());
-    item.setRemoteRevision(data.remoteRevision());
+    if (!fetchScope || fetchScope->fetchRemoteIdentification()) {
+        item.setRemoteId(data.remoteId());
+        item.setRemoteRevision(data.remoteRevision());
+    }
     item.setGid(data.gid());
     item.setStorageCollectionId(data.parentId());
 
@@ -629,7 +633,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
 
     item.setFlags(convertFlags(data.flags(), valuePool));
 
-    if (!data.tags().isEmpty()) {
+    if ((!fetchScope || fetchScope->fetchTags()) && !data.tags().isEmpty()) {
         Tag::List tags;
         tags.reserve(data.tags().size());
         Q_FOREACH (const Protocol::FetchTagsResponse &tag, data.tags()) {
@@ -638,7 +642,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         item.setTags(tags);
     }
 
-    if (!data.relations().isEmpty()) {
+    if ((!fetchScope || fetchScope->fetchRelations()) && !data.relations().isEmpty()) {
         Relation::List relations;
         relations.reserve(data.relations().size());
         Q_FOREACH (const Protocol::FetchRelationsResponse &rel, data.relations()) {
@@ -647,7 +651,7 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         item.d_ptr->mRelations = relations;
     }
 
-    if (!data.virtualReferences().isEmpty()) {
+    if ((!fetchScope || fetchScope->fetchVirtualReferences()) && !data.virtualReferences().isEmpty()) {
         Collection::List virtRefs;
         virtRefs.reserve(data.virtualReferences().size());
         Q_FOREACH (qint64 colId, data.virtualReferences()) {
@@ -674,6 +678,9 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
         const auto metaData = part.metaData();
         switch (ns) {
         case ProtocolHelper::PartPayload:
+            if (fetchScope && !fetchScope->fullPayload() && !fetchScope->payloadParts().contains(plainKey)) {
+                continue;
+            }
             ItemSerializer::deserialize(item, plainKey, part.data(), metaData.version(),
                                         static_cast<ItemSerializer::PayloadStorage>(metaData.storageType()));
             if (metaData.storageType() == Protocol::PartMetaData::Foreign) {
@@ -681,6 +688,9 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
             }
             break;
         case ProtocolHelper::PartAttribute: {
+            if (fetchScope && fetchScope->allAttributes() && !fetchScope->attributes().contains(plainKey)) {
+                continue;
+            }
             Attribute *attr = AttributeFactory::createAttribute(plainKey);
             Q_ASSERT(attr);
             if (metaData.storageType() == Protocol::PartMetaData::External) {

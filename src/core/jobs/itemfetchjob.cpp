@@ -218,7 +218,7 @@ bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
         return true;
     }
 
-    const Item item = ProtocolHelper::parseItemFetchResult(resp, d->mValuePool);
+    const Item item = ProtocolHelper::parseItemFetchResult(resp, nullptr, d->mValuePool);
     if (!item.isValid()) {
         return false;
     }

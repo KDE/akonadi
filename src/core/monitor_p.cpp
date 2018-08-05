@@ -546,7 +546,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
             const auto ntfItems = itemNtf.items();
             items.reserve(ntfItems.size());
             for (const auto &ntfItem : ntfItems) {
-                items.push_back(ProtocolHelper::parseItemFetchResult(ntfItem));
+                items.push_back(ProtocolHelper::parseItemFetchResult(ntfItem, &mItemFetchScope));
             }
         }
         //It is possible that the retrieval fails also in the non-removal case (e.g. because the item was meanwhile removed while
