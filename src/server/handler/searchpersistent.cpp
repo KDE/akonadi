@@ -71,21 +71,10 @@ bool SearchPersistent::parseStream()
     col.setResourceId(1);   // search resource
     col.setName(cmd.name());
     col.setIsVirtual(true);
-    if (!db->appendCollection(col)) {
-        return failureResponse("Unable to create persistent search");
-    }
-
-    if (!db->addCollectionAttribute(col, "AccessRights", "luD")) {
-        return failureResponse("Unable to set rights attribute on persistent search");
-    }
 
     const QStringList lstMimeTypes = cmd.mimeTypes();
-    for (const QString &mimeType : lstMimeTypes) {
-        const MimeType mt = MimeType::retrieveByNameOrCreate(mimeType);
-        if (!mt.isValid()) {
-            return failureResponse("Failed to create new mimetype");
-        }
-        col.addMimeType(mt);
+    if (!db->appendCollection(col, lstMimeTypes, {{"AccessRights", "luD"}})) {
+        return failureResponse("Unable to create persistent search");
     }
 
     if (!transaction.commit()) {

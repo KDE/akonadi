@@ -108,11 +108,6 @@ bool Create::parseStream()
     DataStore *db = connection()->storageBackend();
     Transaction transaction(db, QStringLiteral("CREATE"));
 
-    if (!db->appendCollection(collection)) {
-        return failureResponse(QStringLiteral("Could not create collection ") % cmd.name()
-                               % QStringLiteral(", resourceId: ") % QString::number(resourceId));
-    }
-
     QStringList effectiveMimeTypes = cmd.mimeTypes();
     if (effectiveMimeTypes.isEmpty()) {
         effectiveMimeTypes.reserve(parentContentTypes.count());
@@ -120,17 +115,10 @@ bool Create::parseStream()
             effectiveMimeTypes << mt.name();
         }
     }
-    if (!db->appendMimeTypeForCollection(collection.id(), effectiveMimeTypes)) {
-        return failureResponse(QStringLiteral("Unable to append mimetype for collection ") % cmd.name()
-                               % QStringLiteral(" resourceId: ") % QString::number(resourceId));
-    }
 
-    // store user defined attributes
-    const QMap<QByteArray, QByteArray> attrs = cmd.attributes();
-    for (auto iter = attrs.constBegin(), end = attrs.constEnd(); iter != end; ++iter) {
-        if (!db->addCollectionAttribute(collection, iter.key(), iter.value())) {
-            return failureResponse(QStringLiteral("Unable to add collection attribute."));
-        }
+    if (!db->appendCollection(collection, effectiveMimeTypes, cmd.attributes())) {
+        return failureResponse(QStringLiteral("Could not create collection ") % cmd.name()
+                               % QStringLiteral(", resourceId: ") % QString::number(resourceId));
     }
 
     if (!transaction.commit()) {

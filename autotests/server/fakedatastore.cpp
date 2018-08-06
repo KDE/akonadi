@@ -189,11 +189,14 @@ bool FakeDataStore::invalidateItemCache(const PimItem &item)
     return DataStore::invalidateItemCache(item);
 }
 
-bool FakeDataStore::appendCollection(Collection &collection)
+bool FakeDataStore::appendCollection(Collection &collection,
+                                     const QStringList &mimeTypes,
+                                     const QMap<QByteArray, QByteArray> &attributes)
 {
     mChanges.insert(QStringLiteral("appendCollection"),
-                    QVariantList() << QVariant::fromValue(collection));
-    return DataStore::appendCollection(collection);
+                    QVariantList() << QVariant::fromValue(collection)
+                    << mimeTypes << QVariant::fromValue(attributes));
+    return DataStore::appendCollection(collection, mimeTypes, attributes);
 }
 
 bool FakeDataStore::cleanupCollection(Collection &collection)
@@ -278,12 +281,13 @@ bool FakeDataStore::unhideAllPimItems()
 
 bool FakeDataStore::addCollectionAttribute(const Collection &col,
                                            const QByteArray &key,
-                                           const QByteArray &value)
+                                           const QByteArray &value,
+                                           bool silent)
 {
     mChanges.insert(QStringLiteral("addCollectionAttribute"),
                     QVariantList() << QVariant::fromValue(col)
-                    << key << value);
-    return DataStore::addCollectionAttribute(col, key, value);
+                    << key << value << silent);
+    return DataStore::addCollectionAttribute(col, key, value, silent);
 }
 
 bool FakeDataStore::removeCollectionAttribute(const Collection &col,
