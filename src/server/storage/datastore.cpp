@@ -765,12 +765,22 @@ bool DataStore::invalidateItemCache(const PimItem &item)
 }
 
 /* --- Collection ------------------------------------------------------ */
-bool DataStore::appendCollection(Collection &collection)
+bool DataStore::appendCollection(Collection &collection, const QStringList &mimeTypes, const QMap<QByteArray, QByteArray> &attributes)
 {
     // no need to check for already existing collection with the same name,
     // a unique index on parent + name prevents that in the database
     if (!collection.insert()) {
         return false;
+    }
+
+    if (!appendMimeTypeForCollection(collection.id(), mimeTypes)) {
+        return false;
+    }
+
+    for (auto it = attributes.cbegin(), end = attributes.cend(); it != end; ++it) {
+        if (!addCollectionAttribute(collection, it.key(), it.value(), true)) {
+            return false;
+        }
     }
 
     notificationCollector()->collectionAdded(collection);
@@ -1183,7 +1193,7 @@ bool DataStore::cleanupPimItems(const PimItem::List &items)
     return true;
 }
 
-bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &key, const QByteArray &value)
+bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &key, const QByteArray &value, bool silent)
 {
     SelectQueryBuilder<CollectionAttribute> qb;
     qb.addValueCondition(CollectionAttribute::collectionIdColumn(), Query::Equals, col.id());
@@ -1206,7 +1216,9 @@ bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &
         return false;
     }
 
-    notificationCollector()->collectionChanged(col, QList<QByteArray>() << key);
+    if (!silent) {
+        notificationCollector()->collectionChanged(col, QList<QByteArray>() << key);
+    }
     return true;
 }
 

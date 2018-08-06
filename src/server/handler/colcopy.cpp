@@ -48,24 +48,23 @@ bool ColCopy::copyCollection(const Collection &source, const Collection &target)
     }
 
     DataStore *db = connection()->storageBackend();
-    if (!db->appendCollection(col)) {
+
+    const auto sourceMimeTypes = source.mimeTypes();
+    QStringList mimeTypes;
+    mimeTypes.reserve(sourceMimeTypes.size());
+    std::transform(sourceMimeTypes.cbegin(), sourceMimeTypes.cend(), std::back_inserter(mimeTypes),
+                   [](const MimeType &mt) { return mt.name(); });
+
+    const auto sourceAttributes = source.attributes();
+    QMap<QByteArray, QByteArray> attributes;
+    for (const auto &attr : sourceAttributes) {
+        attributes.insert(attr.type(), attr.value());
+    }
+
+    if (!db->appendCollection(col, mimeTypes, attributes)) {
         return false;
     }
 
-    Q_FOREACH (const MimeType &mt, source.mimeTypes()) {
-        if (!col.addMimeType(mt)) {
-            return false;
-        }
-    }
-
-    Q_FOREACH (const CollectionAttribute &attr, source.attributes()) {
-        CollectionAttribute newAttr = attr;
-        newAttr.setId(-1);
-        newAttr.setCollectionId(col.id());
-        if (!newAttr.insert()) {
-            return false;
-        }
-    }
 
     // copy sub-collections
     const Collection::List lstCols = source.children();

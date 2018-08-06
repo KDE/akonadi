@@ -158,7 +158,7 @@ public:
     virtual bool invalidateItemCache(const PimItem &item);
 
     /* --- Collection ------------------------------------------------------ */
-    virtual bool appendCollection(Collection &collection);
+    virtual bool appendCollection(Collection &collection, const QStringList &mimeTypes, const QMap<QByteArray, QByteArray> &attributes);
 
     /// removes the given collection and all its content
     virtual bool cleanupCollection(Collection &collection);
@@ -224,7 +224,7 @@ public:
 
     /* --- Collection attributes ------------------------------------------ */
     virtual bool addCollectionAttribute(const Collection &col, const QByteArray &key,
-                                        const QByteArray &value);
+                                        const QByteArray &value, bool silent = false);
     /**
      * Removes the given collection attribute for @p col.
      * @throws HandlerException on database errors

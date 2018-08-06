@@ -79,7 +79,9 @@ public:
 
     virtual bool invalidateItemCache(const PimItem &item) override;
 
-    virtual bool appendCollection(Collection &collection) override;
+    virtual bool appendCollection(Collection &collection,
+                                  const QStringList &mimeTypes,
+                                  const QMap<QByteArray, QByteArray> &attributes) override;
 
     virtual bool cleanupCollection(Collection &collection) override;
     virtual bool cleanupCollection_slow(Collection &collection) override;
@@ -109,7 +111,8 @@ public:
 
     virtual bool addCollectionAttribute(const Collection &col,
                                         const QByteArray &key,
-                                        const QByteArray &value) override;
+                                        const QByteArray &value,
+                                        bool silent = false) override;
     virtual bool removeCollectionAttribute(const Collection &col,
                                            const QByteArray &key) override;
 
