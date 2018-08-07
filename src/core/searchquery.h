@@ -114,6 +114,8 @@ public:
     static QString toKey(SearchField field);
     static SearchField fromKey(const QString &key);
 
+    static SearchTerm inCollection(qint64 collection);
+
 private:
     QSharedDataPointer<SearchTermPrivate> d;
 };
@@ -346,6 +348,10 @@ public:
 
     static QString toKey(CollectionSearchField field);
     static CollectionSearchField fromKey(const QString &key);
+
+    static SearchTerm nameMatches(const QString &name);
+    static SearchTerm hasNamespaces(const QStringList &namespaces);
+    static SearchTerm hasMimeTypes(const QStringList &mimeTypes);
 };
 
 }
