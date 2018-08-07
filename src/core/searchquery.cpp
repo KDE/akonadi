@@ -248,6 +248,13 @@ SearchTerm::SearchField SearchTerm::fromKey(const QString &key)
     return searchFieldMapping().key(key);
 }
 
+SearchTerm SearchTerm::inCollection(qint64 collection)
+{
+    return SearchTerm(Collection, collection);
+}
+
+
+
 
 SearchQuery::SearchQuery(SearchTerm::Relation rel)
     : d(new Private)
@@ -566,3 +573,27 @@ Akonadi::CollectionSearchTerm::CollectionSearchField Akonadi::CollectionSearchTe
 {
     return collectionSearchFieldMapping().key(key);
 }
+
+SearchTerm CollectionSearchTerm::hasMimeTypes(const QStringList &mimeTypes)
+{
+    SearchTerm andTerm(RelAnd);
+    for (const auto &mt : mimeTypes) {
+        andTerm.addSubTerm(CollectionSearchTerm(MimeType, mt));
+    }
+    return andTerm;
+}
+
+SearchTerm CollectionSearchTerm::hasNamespaces(const QStringList &namespaces)
+{
+    SearchTerm andTerm(RelAnd);
+    for (const auto &ns : namespaces) {
+        andTerm.addSubTerm(CollectionSearchTerm(Namespace, ns));
+    }
+    return andTerm;
+}
+
+SearchTerm CollectionSearchTerm::nameMatches(const QString &name)
+{
+    return CollectionSearchTerm(Name, name, SearchTerm::CondContains);
+}
+
