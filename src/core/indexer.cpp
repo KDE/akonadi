@@ -40,7 +40,7 @@ QByteArray Indexer::index(const Item &item, const Collection &parent)
 QByteArray Indexer::index(const Collection &collection, const Collection &parent)
 {
     if (auto plugin = qobject_cast<CollectionIndexerInterface*>(
-            TypePluginLoader::defaultObjectForMimeType(QStringLiteral("directory/node")))) {
+            TypePluginLoader::defaultObjectForMimeType(Collection::mimeType()))) {
         return plugin->index(collection, parent);
     }
 
