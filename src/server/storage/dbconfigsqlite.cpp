@@ -140,6 +140,20 @@ bool DbConfigSqlite::useInternalServer() const
     return false;
 }
 
+
+bool DbConfigSqlite::setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma)
+{
+    if (!query.exec(QStringLiteral("PRAGMA %1").arg(pragma))) {
+        qCDebug(AKONADISERVER_LOG) << "Could not set sqlite PRAGMA " << pragma;
+        qCDebug(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
+        qCDebug(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
+        qCDebug(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+        return false;
+    }
+    return true;
+}
+
+
 void DbConfigSqlite::setup()
 {
     const QLatin1String connectionName("initConnection");
@@ -213,11 +227,7 @@ void DbConfigSqlite::setup()
         const int sqliteVersionMinor = list[1].toInt();
 
         // set synchronous mode to NORMAL; see http://www.sqlite.org/pragma.html#pragma_synchronous
-        if (!query.exec(QStringLiteral("PRAGMA synchronous = 1"))) {
-            qCDebug(AKONADISERVER_LOG) << "Could not set sqlite synchronous mode to NORMAL";
-            qCDebug(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
-            qCDebug(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
-            qCDebug(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+        if (!setPragma(db, query, QStringLiteral("synchronous=1"))) {
             db.close();
             return;
         }
@@ -229,11 +239,7 @@ void DbConfigSqlite::setup()
         }
 
         // set write-ahead-log mode; see http://www.sqlite.org/wal.html
-        if (!query.exec(QStringLiteral("PRAGMA journal_mode=wal"))) {
-            qCDebug(AKONADISERVER_LOG) << "Could not set sqlite write-ahead-log journal mode";
-            qCDebug(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
-            qCDebug(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
-            qCDebug(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+        if (!setPragma(db, query, QStringLiteral("journal_mode=wal"))) {
             db.close();
             return;
         }
@@ -249,6 +255,24 @@ void DbConfigSqlite::setup()
 
         const QString journalMode = query.value(0).toString();
         qCDebug(AKONADISERVER_LOG) << "sqlite journal mode is " << journalMode;
+
+        // as of sqlite 3.12 this is default, previously was 1024.
+        if (!setPragma(db, query, QStringLiteral("page_size=4096"))) {
+            db.close();
+            return;
+        }
+
+        // set cache_size to 100000 pages; see https://www.sqlite.org/pragma.html#pragma_cache_size
+        if (!setPragma(db, query, QStringLiteral("cache_size=100000"))) {
+            db.close();
+            return;
+        }
+
+        // construct temporary tables in memory; see https://www.sqlite.org/pragma.html#pragma_temp_store
+        if (!setPragma(db, query, QStringLiteral("temp_store=MEMORY"))) {
+            db.close();
+            return;
+        }
 
         db.close();
     }

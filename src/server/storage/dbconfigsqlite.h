@@ -73,6 +73,8 @@ public:
      */
     void setup() override;
 private:
+    bool setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma);
+
     Version mDriverVersion;
     QString mDatabaseName;
     QString mHostName;
