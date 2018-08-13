@@ -328,4 +328,8 @@
     <raw-sql backends="psql">UPDATE PartTable SET storage = cast(external as integer);</raw-sql>
     <raw-sql backends="psql">ALTER TABLE PartTable DROP COLUMN external;</raw-sql>
   </update>
+
+  <update version="36" abortOnFailure="true">
+    <complex-update backends="sqlite" />
+  </update>
 </updates>

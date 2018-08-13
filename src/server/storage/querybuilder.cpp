@@ -443,6 +443,7 @@ bool QueryBuilder::exec()
         qCCritical(AKONADISERVER_LOG) << "  Error code:" << mQuery.lastError().nativeErrorCode();
         qCCritical(AKONADISERVER_LOG) << "  DB error: " << mQuery.lastError().databaseText();
         qCCritical(AKONADISERVER_LOG) << "  Error text:" << mQuery.lastError().text();
+        qCCritical(AKONADISERVER_LOG) << "  Values:" << mQuery.boundValues();
         qCCritical(AKONADISERVER_LOG) << "  Query:" << statement;
         return false;
     }

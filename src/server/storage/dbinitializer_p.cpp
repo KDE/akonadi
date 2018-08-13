@@ -29,6 +29,12 @@ DbInitializerMySql::DbInitializerMySql(const QSqlDatabase &database)
 {
 }
 
+bool DbInitializerMySql::hasForeignKeyConstraints() const
+{
+    return true;
+}
+
+
 QString DbInitializerMySql::sqlType(const ColumnDescription &col, int size) const
 {
     if (col.type == QLatin1String("QString")) {
@@ -111,16 +117,18 @@ QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &t
                 QStringList(data.values()).join(QLatin1Char(',')));
 }
 
-QString DbInitializerMySql::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const
+QStringList DbInitializerMySql::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
 {
-    return QLatin1Literal("ALTER TABLE ") + table.name + QLatin1Literal(" ADD FOREIGN KEY (") + column.name
-           + QLatin1Literal(") REFERENCES ") + column.refTable + QLatin1Literal("Table(") + column.refColumn
-           + QLatin1Literal(") ") + buildReferentialAction(column.onUpdate, column.onDelete);
+    return {
+        QStringLiteral("ALTER TABLE %1 ADD FOREIGN KEY (%2) REFERENCES %4Table(%5) %6")
+                .arg(table.name, column.name, column.refTable, column.refColumn,
+                     buildReferentialAction(column.onUpdate, column.onDelete))
+    };
 }
 
-QString DbInitializerMySql::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
+QStringList DbInitializerMySql::buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
 {
-    return QLatin1Literal("ALTER TABLE ") + table.name + QLatin1Literal(" DROP FOREIGN KEY ") + fk.name;
+    return { QStringLiteral("ALTER TABLE %1 DROP FOREIGN KEY %2").arg(table.name, fk.name) };
 }
 
 //END MySQL
@@ -132,18 +140,35 @@ DbInitializerSqlite::DbInitializerSqlite(const QSqlDatabase &database)
 {
 }
 
+bool DbInitializerSqlite::hasForeignKeyConstraints() const
+{
+    return true;
+}
+
+
 QString DbInitializerSqlite::buildCreateTableStatement(const TableDescription &tableDescription) const
 {
     QStringList columns;
 
     columns.reserve(tableDescription.columns.count() + 1);
-    Q_FOREACH (const ColumnDescription &columnDescription, tableDescription.columns) {
+    for (const ColumnDescription &columnDescription : qAsConst(tableDescription.columns)) {
         columns.append(buildColumnStatement(columnDescription, tableDescription));
     }
 
     if (tableDescription.primaryKeyColumnCount() > 1) {
         columns.push_back(buildPrimaryKeyStatement(tableDescription));
     }
+    QStringList references;
+    for (const ColumnDescription &columnDescription : qAsConst(tableDescription.columns)) {
+        if (!columnDescription.refTable.isEmpty() && !columnDescription.refColumn.isEmpty()) {
+            const auto constraintName = QStringLiteral("%1%2_%3%4_fk").arg(tableDescription.name, columnDescription.name,
+                                                                           columnDescription.refTable, columnDescription.refColumn);
+            references << QStringLiteral("CONSTRAINT %1 FOREIGN KEY (%2) REFERENCES %3Table(%4) %5 DEFERRABLE INITIALLY DEFERRED")
+                            .arg(constraintName, columnDescription.name, columnDescription.refTable, columnDescription.refColumn,
+                                 buildReferentialAction(columnDescription.onUpdate, columnDescription.onDelete));
+        }
+    }
+    columns << references;
 
     return QStringLiteral("CREATE TABLE %1 (%2)").arg(tableDescription.name, columns.join(QStringLiteral(", ")));
 }
@@ -213,6 +238,35 @@ QString DbInitializerSqlite::sqlValue(const ColumnDescription &col, const QStrin
     return Akonadi::Server::DbInitializer::sqlValue(col, value);
 }
 
+QStringList DbInitializerSqlite::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &) const
+{
+    return buildUpdateForeignKeyConstraintsStatements(table);
+}
+
+QStringList DbInitializerSqlite::buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey &, const TableDescription &table) const
+{
+    return buildUpdateForeignKeyConstraintsStatements(table);
+}
+
+QStringList DbInitializerSqlite::buildUpdateForeignKeyConstraintsStatements(const TableDescription &table) const
+{
+    // Unforunately, SQLite does not support add or removing foreign keys through ALTER TABLE,
+    // this is the only way how to do it.
+    return {
+        QStringLiteral("PRAGMA foreign_key_check=OFF"),
+        QStringLiteral("BEGIN TRANSACTION"),
+        QStringLiteral("ALTER TABLE %1 RENAME TO %1_old").arg(table.name),
+        buildCreateTableStatement(table),
+        QStringLiteral("INSERT INTO %1 SELECT * FROM %1_old").arg(table.name),
+        QStringLiteral("DROP TABLE %1_old").arg(table.name),
+        QStringLiteral("COMMIT"),
+        QStringLiteral("PRAGMA foreign_key_check=ON")
+    };
+}
+
+
+
+
 //END Sqlite
 
 //BEGIN PostgreSQL
@@ -220,6 +274,11 @@ QString DbInitializerSqlite::sqlValue(const ColumnDescription &col, const QStrin
 DbInitializerPostgreSql::DbInitializerPostgreSql(const QSqlDatabase &database)
     : DbInitializer(database)
 {
+}
+
+bool DbInitializerPostgreSql::hasForeignKeyConstraints() const
+{
+    return true;
 }
 
 QString DbInitializerPostgreSql::sqlType(const ColumnDescription &col, int size) const
@@ -292,19 +351,20 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescripti
                 QStringList(data.values()).join(QLatin1Char(',')));
 }
 
-QString DbInitializerPostgreSql::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const
+QStringList DbInitializerPostgreSql::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
 {
     // constraints must have name in PostgreSQL
     const QString constraintName = table.name + column.name + QLatin1Literal("_") + column.refTable + column.refColumn + QLatin1Literal("_fk");
-    return QLatin1Literal("ALTER TABLE ") + table.name + QLatin1Literal(" ADD CONSTRAINT ") + constraintName + QLatin1Literal(" FOREIGN KEY (") + column.name
-           + QLatin1Literal(") REFERENCES ") + column.refTable + QLatin1Literal("Table(") + column.refColumn
-           + QLatin1Literal(") ") + buildReferentialAction(column.onUpdate, column.onDelete)
-           + QLatin1Literal(" DEFERRABLE INITIALLY DEFERRED");
+    return {
+        QStringLiteral("ALTER TABLE %1 ADD CONSTRAINT %2 FOREIGN KEY (%3) REFERENCES %4Table(%5) %6 DEFERRABLE INITIALLY DEFERRED")
+                .arg(table.name, constraintName, column.name, column.refTable, column.refColumn,
+                     buildReferentialAction(column.onUpdate, column.onDelete))
+    };
 }
 
-QString DbInitializerPostgreSql::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
+QStringList DbInitializerPostgreSql::buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
 {
-    return QLatin1Literal("ALTER TABLE ") + table.name + QLatin1Literal(" DROP CONSTRAINT ") + fk.name;
+    return { QStringLiteral("ALTER TABLE %1 DROP CONSTRAINT %2").arg(table.name, fk.name) };
 }
 
 //END PostgreSQL

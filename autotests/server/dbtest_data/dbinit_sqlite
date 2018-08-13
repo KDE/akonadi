@@ -28,7 +28,9 @@ CREATE TABLE CollectionTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                               queryString TEXT,
                               queryAttributes TEXT,
                               queryCollections TEXT,
-                              isVirtual BOOL DEFAULT 0)
+                              isVirtual BOOL DEFAULT 0,
+                              CONSTRAINT CollectionTableparentId_Collectionid_fk FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                              CONSTRAINT CollectionTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 INSERT INTO CollectionTable (isVirtual,name,parentId,resourceId) VALUES (1,'Search',NULL,1)
 
@@ -45,7 +47,9 @@ CREATE TABLE PimItemTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                            datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            atime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            dirty BOOL,
-                           size BIGINT NOT NULL DEFAULT 0)
+                           size BIGINT NOT NULL DEFAULT 0,
+                           CONSTRAINT PimItemTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                           CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE FlagTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                         name TEXT UNIQUE NOT NULL)
@@ -60,13 +64,16 @@ CREATE TABLE PartTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                         data LONGBLOB,
                         datasize BIGINT NOT NULL,
                         version INTEGER DEFAULT 0,
-                        storage TINYINT DEFAULT 0)
+                        storage TINYINT DEFAULT 0,
+                        CONSTRAINT PartTablepimItemId_PimItemid_fk FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                        CONSTRAINT PartTablepartTypeId_PartTypeid_fk FOREIGN KEY (partTypeId) REFERENCES PartTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 
 CREATE TABLE CollectionAttributeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                                        collectionId BIGINT NOT NULL,
                                        type LONGBLOB NOT NULL,
-                                       value LONGBLOB)
+                                       value LONGBLOB,
+                                       CONSTRAINT CollectionAttributeTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE TagTypeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                            name TEXT UNIQUE NOT NULL)
@@ -76,16 +83,21 @@ INSERT INTO TagTypeTable (name) VALUES ('PLAIN')
 CREATE TABLE TagTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                        gid TEXT NOT NULL,
                        parentId BIGINT,
-                       typeId BIGINT DEFAULT 1)
+                       typeId BIGINT DEFAULT 1,
+                       CONSTRAINT TagTableparentId_Tagid_fk FOREIGN KEY (parentId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                       CONSTRAINT TagTabletypeId_TagTypeid_fk FOREIGN KEY (typeId) REFERENCES TagTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE TagAttributeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                                 tagId BIGINT NOT NULL,
                                 type LONGBLOB NOT NULL,
-                                value LONGBLOB)
+                                value LONGBLOB,
+                                CONSTRAINT TagAttributeTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE TagRemoteIdResourceRelationTable (tagId BIGINT NOT NULL,
                                                resourceId BIGINT NOT NULL,
-                                               remoteId TEXT NOT NULL)
+                                               remoteId TEXT NOT NULL,
+                                               CONSTRAINT TagRemoteIdResourceRelationTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                               CONSTRAINT TagRemoteIdResourceRelationTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE RelationTypeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
                                 name TEXT UNIQUE NOT NULL)
@@ -95,23 +107,35 @@ INSERT INTO RelationTypeTable (name) VALUES ('GENERIC')
 CREATE TABLE RelationTable (leftId BIGINT NOT NULL,
                             rightId BIGINT NOT NULL,
                             typeId BIGINT DEFAULT 1,
-                            remoteId TEXT)
+                            remoteId TEXT,
+                            CONSTRAINT RelationTableleftId_PimItemid_fk FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTablerightId_PimItemid_fk FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+                            DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTabletypeId_RelationTypeid_fk FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE PimItemFlagRelation (PimItem_id BIGINT NOT NULL,
                                   Flag_id BIGINT NOT NULL,
-                                  PRIMARY KEY (PimItem_id, Flag_id))
+                                  PRIMARY KEY (PimItem_id, Flag_id),
+                                  CONSTRAINT PimItemFlagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                  CONSTRAINT PimItemFlagRelationFlag_id_Flagid_fk FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE PimItemTagRelation (PimItem_id BIGINT NOT NULL,
                                  Tag_id BIGINT NOT NULL,
-                                 PRIMARY KEY (PimItem_id, Tag_id))
+                                 PRIMARY KEY (PimItem_id, Tag_id),
+                                 CONSTRAINT PimItemTagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                 CONSTRAINT PimItemTagRelationTag_id_Tagid_fk FOREIGN KEY (Tag_id) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL,
                                          MimeType_id BIGINT NOT NULL,
-                                         PRIMARY KEY (Collection_id, MimeType_id))
+                                         PRIMARY KEY (Collection_id, MimeType_id),
+                                         CONSTRAINT CollectionMimeTypeRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                         CONSTRAINT CollectionMimeTypeRelationMimeType_id_MimeTypeid_fk FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
                                         PimItem_id BIGINT NOT NULL,
-                                        PRIMARY KEY (Collection_id, PimItem_id))
+                                        PRIMARY KEY (Collection_id, PimItem_id),
+                                        CONSTRAINT CollectionPimItemRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                        CONSTRAINT CollectionPimItemRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
 
 CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
 
@@ -184,3 +208,541 @@ CREATE INDEX CollectionMimeTypeRelation_MimeType_idIndex ON CollectionMimeTypeRe
 CREATE INDEX CollectionPimItemRelation_Collection_idIndex ON CollectionPimItemRelation (Collection_id)
 
 CREATE INDEX CollectionPimItemRelation_PimItem_idIndex ON CollectionPimItemRelation (PimItem_id)
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE CollectionTable RENAME TO CollectionTable_old
+
+CREATE TABLE CollectionTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                              remoteId TEXT,
+                              remoteRevision TEXT,
+                              name TEXT NOT NULL,
+                              parentId BIGINT,
+                              resourceId BIGINT NOT NULL,
+                              enabled BOOL NOT NULL DEFAULT 1,
+                              syncPref TINYINT DEFAULT 2,
+                              displayPref TINYINT DEFAULT 2,
+                              indexPref TINYINT DEFAULT 2,
+                              referenced BOOL NOT NULL DEFAULT 0,
+                              cachePolicyInherit BOOL NOT NULL DEFAULT 1,
+                              cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
+                              cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
+                              cachePolicySyncOnDemand BOOL NOT NULL DEFAULT 0,
+                              cachePolicyLocalParts TEXT,
+                              queryString TEXT,
+                              queryAttributes TEXT,
+                              queryCollections TEXT,
+                              isVirtual BOOL DEFAULT 0,
+                              CONSTRAINT CollectionTableparentId_Collectionid_fk FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                              CONSTRAINT CollectionTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO CollectionTable SELECT * FROM CollectionTable_old
+
+DROP TABLE CollectionTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE CollectionTable RENAME TO CollectionTable_old
+
+CREATE TABLE CollectionTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                              remoteId TEXT,
+                              remoteRevision TEXT,
+                              name TEXT NOT NULL,
+                              parentId BIGINT,
+                              resourceId BIGINT NOT NULL,
+                              enabled BOOL NOT NULL DEFAULT 1,
+                              syncPref TINYINT DEFAULT 2,
+                              displayPref TINYINT DEFAULT 2,
+                              indexPref TINYINT DEFAULT 2,
+                              referenced BOOL NOT NULL DEFAULT 0,
+                              cachePolicyInherit BOOL NOT NULL DEFAULT 1,
+                              cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
+                              cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
+                              cachePolicySyncOnDemand BOOL NOT NULL DEFAULT 0,
+                              cachePolicyLocalParts TEXT,
+                              queryString TEXT,
+                              queryAttributes TEXT,
+                              queryCollections TEXT,
+                              isVirtual BOOL DEFAULT 0,
+                              CONSTRAINT CollectionTableparentId_Collectionid_fk FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                              CONSTRAINT CollectionTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO CollectionTable SELECT * FROM CollectionTable_old
+
+DROP TABLE CollectionTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE PimItemTable RENAME TO PimItemTable_old
+
+CREATE TABLE PimItemTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                           rev INTEGER NOT NULL DEFAULT 0,
+                           remoteId TEXT,
+                           remoteRevision TEXT,
+                           gid TEXT,
+                           collectionId BIGINT,
+                           mimeTypeId BIGINT,
+                           datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           atime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           dirty BOOL,
+                           size BIGINT NOT NULL DEFAULT 0,
+                           CONSTRAINT PimItemTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                           CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO PimItemTable SELECT * FROM PimItemTable_old
+
+DROP TABLE PimItemTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE PimItemTable RENAME TO PimItemTable_old
+
+CREATE TABLE PimItemTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                           rev INTEGER NOT NULL DEFAULT 0,
+                           remoteId TEXT,
+                           remoteRevision TEXT,
+                           gid TEXT,
+                           collectionId BIGINT,
+                           mimeTypeId BIGINT,
+                           datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           atime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           dirty BOOL,
+                           size BIGINT NOT NULL DEFAULT 0,
+                           CONSTRAINT PimItemTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                           CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO PimItemTable SELECT * FROM PimItemTable_old
+
+DROP TABLE PimItemTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE PartTable RENAME TO PartTable_old
+
+CREATE TABLE PartTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        pimItemId BIGINT NOT NULL,
+                        partTypeId BIGINT NOT NULL,
+                        data LONGBLOB,
+                        datasize BIGINT NOT NULL,
+                        version INTEGER DEFAULT 0,
+                        storage TINYINT DEFAULT 0,
+                        CONSTRAINT PartTablepimItemId_PimItemid_fk FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                        CONSTRAINT PartTablepartTypeId_PartTypeid_fk FOREIGN KEY (partTypeId) REFERENCES PartTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+
+INSERT INTO PartTable SELECT * FROM PartTable_old
+
+DROP TABLE PartTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE PartTable RENAME TO PartTable_old
+
+CREATE TABLE PartTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        pimItemId BIGINT NOT NULL,
+                        partTypeId BIGINT NOT NULL,
+                        data LONGBLOB,
+                        datasize BIGINT NOT NULL,
+                        version INTEGER DEFAULT 0,
+                        storage TINYINT DEFAULT 0,
+                        CONSTRAINT PartTablepimItemId_PimItemid_fk FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                        CONSTRAINT PartTablepartTypeId_PartTypeid_fk FOREIGN KEY (partTypeId) REFERENCES PartTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+
+INSERT INTO PartTable SELECT * FROM PartTable_old
+
+DROP TABLE PartTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE CollectionAttributeTable RENAME TO CollectionAttributeTable_old
+
+CREATE TABLE CollectionAttributeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                                       collectionId BIGINT NOT NULL,
+                                       type LONGBLOB NOT NULL,
+                                       value LONGBLOB,
+                                       CONSTRAINT CollectionAttributeTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO CollectionAttributeTable SELECT * FROM CollectionAttributeTable_old
+
+DROP TABLE CollectionAttributeTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE TagTable RENAME TO TagTable_old
+
+CREATE TABLE TagTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                       gid TEXT NOT NULL,
+                       parentId BIGINT,
+                       typeId BIGINT DEFAULT 1,
+                       CONSTRAINT TagTableparentId_Tagid_fk FOREIGN KEY (parentId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                       CONSTRAINT TagTabletypeId_TagTypeid_fk FOREIGN KEY (typeId) REFERENCES TagTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO TagTable SELECT * FROM TagTable_old
+
+DROP TABLE TagTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE TagTable RENAME TO TagTable_old
+
+CREATE TABLE TagTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                       gid TEXT NOT NULL,
+                       parentId BIGINT,
+                       typeId BIGINT DEFAULT 1,
+                       CONSTRAINT TagTableparentId_Tagid_fk FOREIGN KEY (parentId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                       CONSTRAINT TagTabletypeId_TagTypeid_fk FOREIGN KEY (typeId) REFERENCES TagTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO TagTable SELECT * FROM TagTable_old
+
+DROP TABLE TagTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE TagAttributeTable RENAME TO TagAttributeTable_old
+
+
+CREATE TABLE TagAttributeTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                                tagId BIGINT NOT NULL,
+                                type LONGBLOB NOT NULL,
+                                value LONGBLOB,
+                                CONSTRAINT TagAttributeTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO TagAttributeTable SELECT * FROM TagAttributeTable_old
+
+DROP TABLE TagAttributeTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE TagRemoteIdResourceRelationTable RENAME TO TagRemoteIdResourceRelationTable_old
+
+CREATE TABLE TagRemoteIdResourceRelationTable (tagId BIGINT NOT NULL,
+                                               resourceId BIGINT NOT NULL,
+                                               remoteId TEXT NOT NULL,
+                                               CONSTRAINT TagRemoteIdResourceRelationTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                               CONSTRAINT TagRemoteIdResourceRelationTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO TagRemoteIdResourceRelationTable SELECT * FROM TagRemoteIdResourceRelationTable_old
+
+DROP TABLE TagRemoteIdResourceRelationTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE TagRemoteIdResourceRelationTable RENAME TO TagRemoteIdResourceRelationTable_old
+
+CREATE TABLE TagRemoteIdResourceRelationTable (tagId BIGINT NOT NULL,
+                                               resourceId BIGINT NOT NULL,
+                                               remoteId TEXT NOT NULL,
+                                               CONSTRAINT TagRemoteIdResourceRelationTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                               CONSTRAINT TagRemoteIdResourceRelationTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO TagRemoteIdResourceRelationTable SELECT * FROM TagRemoteIdResourceRelationTable_old
+
+DROP TABLE TagRemoteIdResourceRelationTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE RelationTable RENAME TO RelationTable_old
+
+CREATE TABLE RelationTable (leftId BIGINT NOT NULL,
+                            rightId BIGINT NOT NULL,
+                            typeId BIGINT DEFAULT 1,
+                            remoteId TEXT,
+                            CONSTRAINT RelationTableleftId_PimItemid_fk FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTablerightId_PimItemid_fk FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+                            DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTabletypeId_RelationTypeid_fk FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+
+INSERT INTO RelationTable SELECT * FROM RelationTable_old
+
+DROP TABLE RelationTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE RelationTable RENAME TO RelationTable_old
+
+CREATE TABLE RelationTable (leftId BIGINT NOT NULL,
+                            rightId BIGINT NOT NULL,
+                            typeId BIGINT DEFAULT 1,
+                            remoteId TEXT,
+                            CONSTRAINT RelationTableleftId_PimItemid_fk FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTablerightId_PimItemid_fk FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+                            DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTabletypeId_RelationTypeid_fk FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+
+INSERT INTO RelationTable SELECT * FROM RelationTable_old
+
+DROP TABLE RelationTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE RelationTable RENAME TO RelationTable_old
+
+CREATE TABLE RelationTable (leftId BIGINT NOT NULL,
+                            rightId BIGINT NOT NULL,
+                            typeId BIGINT DEFAULT 1,
+                            remoteId TEXT,
+                            CONSTRAINT RelationTableleftId_PimItemid_fk FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTablerightId_PimItemid_fk FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+                            DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTabletypeId_RelationTypeid_fk FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+
+INSERT INTO RelationTable SELECT * FROM RelationTable_old
+
+DROP TABLE RelationTable_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE PimItemFlagRelation RENAME TO PimItemFlagRelation_old
+
+CREATE TABLE PimItemFlagRelation (PimItem_id BIGINT NOT NULL,
+                                  Flag_id BIGINT NOT NULL,
+                                  PRIMARY KEY (PimItem_id, Flag_id),
+                                  CONSTRAINT PimItemFlagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                  CONSTRAINT PimItemFlagRelationFlag_id_Flagid_fk FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+
+INSERT INTO PimItemFlagRelation SELECT * FROM PimItemFlagRelation_old
+
+DROP TABLE PimItemFlagRelation_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE PimItemFlagRelation RENAME TO PimItemFlagRelation_old
+
+CREATE TABLE PimItemFlagRelation (PimItem_id BIGINT NOT NULL,
+                                  Flag_id BIGINT NOT NULL,
+                                  PRIMARY KEY (PimItem_id, Flag_id),
+                                  CONSTRAINT PimItemFlagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                  CONSTRAINT PimItemFlagRelationFlag_id_Flagid_fk FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+
+INSERT INTO PimItemFlagRelation SELECT * FROM PimItemFlagRelation_old
+
+DROP TABLE PimItemFlagRelation_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE PimItemTagRelation RENAME TO PimItemTagRelation_old
+
+CREATE TABLE PimItemTagRelation (PimItem_id BIGINT NOT NULL,
+                                 Tag_id BIGINT NOT NULL,
+                                 PRIMARY KEY (PimItem_id, Tag_id),
+                                 CONSTRAINT PimItemTagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                 CONSTRAINT PimItemTagRelationTag_id_Tagid_fk FOREIGN KEY (Tag_id) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO PimItemTagRelation SELECT * FROM PimItemTagRelation_old
+
+DROP TABLE PimItemTagRelation_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE PimItemTagRelation RENAME TO PimItemTagRelation_old
+
+CREATE TABLE PimItemTagRelation (PimItem_id BIGINT NOT NULL,
+                                 Tag_id BIGINT NOT NULL,
+                                 PRIMARY KEY (PimItem_id, Tag_id),
+                                 CONSTRAINT PimItemTagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                 CONSTRAINT PimItemTagRelationTag_id_Tagid_fk FOREIGN KEY (Tag_id) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO PimItemTagRelation SELECT * FROM PimItemTagRelation_old
+
+DROP TABLE PimItemTagRelation_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE CollectionMimeTypeRelation RENAME TO CollectionMimeTypeRelation_old
+
+CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL,
+                                         MimeType_id BIGINT NOT NULL,
+                                         PRIMARY KEY (Collection_id, MimeType_id),
+                                         CONSTRAINT CollectionMimeTypeRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                         CONSTRAINT CollectionMimeTypeRelationMimeType_id_MimeTypeid_fk FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO CollectionMimeTypeRelation SELECT * FROM CollectionMimeTypeRelation_old
+
+DROP TABLE CollectionMimeTypeRelation_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE CollectionMimeTypeRelation RENAME TO CollectionMimeTypeRelation_old
+
+CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL,
+                                         MimeType_id BIGINT NOT NULL,
+                                         PRIMARY KEY (Collection_id, MimeType_id),
+                                         CONSTRAINT CollectionMimeTypeRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                         CONSTRAINT CollectionMimeTypeRelationMimeType_id_MimeTypeid_fk FOREIGN KEY (MimeType_id) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO CollectionMimeTypeRelation SELECT * FROM CollectionMimeTypeRelation_old
+
+DROP TABLE CollectionMimeTypeRelation_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE CollectionPimItemRelation RENAME TO CollectionPimItemRelation_old
+
+CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
+                                        PimItem_id BIGINT NOT NULL,
+                                        PRIMARY KEY (Collection_id, PimItem_id),
+                                        CONSTRAINT CollectionPimItemRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                        CONSTRAINT CollectionPimItemRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO CollectionPimItemRelation SELECT * FROM CollectionPimItemRelation_old
+
+DROP TABLE CollectionPimItemRelation_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON
+
+PRAGMA foreign_key_check=OFF
+
+BEGIN TRANSACTION
+
+ALTER TABLE CollectionPimItemRelation RENAME TO CollectionPimItemRelation_old
+
+CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
+                                        PimItem_id BIGINT NOT NULL,
+                                        PRIMARY KEY (Collection_id, PimItem_id),
+                                        CONSTRAINT CollectionPimItemRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                        CONSTRAINT CollectionPimItemRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO CollectionPimItemRelation SELECT * FROM CollectionPimItemRelation_old
+
+DROP TABLE CollectionPimItemRelation_old
+
+COMMIT
+
+PRAGMA foreign_key_check=ON

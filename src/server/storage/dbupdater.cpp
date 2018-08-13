@@ -463,3 +463,114 @@ bool DbUpdater::complexUpdate_25()
 
     return true;
 }
+
+bool DbUpdater::complexUpdate_36()
+{
+    qCDebug(AKONADISERVER_LOG, "Starting database update to version 36");
+    Q_ASSERT(DbType::type(DataStore::self()->database()) == DbType::Sqlite);
+
+    QSqlQuery query(DataStore::self()->database());
+    if (!query.exec(QStringLiteral("PRAGMA foreign_key_checks=OFF"))) {
+        qCCritical(AKONADISERVER_LOG, "Failed to disable foreign key checks!");
+        return false;
+    }
+
+    const auto hasForeignKeys = [](const TableDescription &desc) {
+        return std::any_of(desc.columns.cbegin(), desc.columns.cend(),
+                           [](const ColumnDescription &col) {
+                               return !col.refTable.isEmpty() && !col.refColumn.isEmpty();
+                           });
+    };
+
+    const auto recreateTableWithForeignKeys = [](const TableDescription &table) -> QPair<bool, QSqlQuery> {
+        qCDebug(AKONADISERVER_LOG) << "Updating foreign keys in table" << table.name;
+
+        QSqlQuery query(DataStore::self()->database());
+
+        // Recover from possibly failed or interrupted update
+        // We don't care if this fails, it just means that there was no failed update
+        query.exec(QStringLiteral("ALTER TABLE %1_old RENAME TO %1").arg(table.name));
+        query.exec(QStringLiteral("DROP TABLE %1_new").arg(table.name));
+
+        qCDebug(AKONADISERVER_LOG, "\tCreating table %s_new with foreign keys", qUtf8Printable(table.name));
+        {
+            const auto initializer = DbInitializer::createInstance(DataStore::self()->database());
+            TableDescription copy = table;
+            copy.name += QStringLiteral("_new");
+            if (!query.exec(initializer->buildCreateTableStatement(copy))) {
+                // If this fails we will recover on next start
+                return {false, query};
+            }
+        }
+
+        qCDebug(AKONADISERVER_LOG, "\tCopying values from %s to %s_new (this may take a very long of time...)", qUtf8Printable(table.name), qUtf8Printable(table.name));
+        if (!query.exec(QStringLiteral("INSERT INTO %1_new SELECT * FROM %1").arg(table.name))) {
+            // If this fails, we will recover on next start
+            return {false, query};
+        }
+
+        qCDebug(AKONADISERVER_LOG, "\tSwapping %s_new for %s", qUtf8Printable(table.name), qUtf8Printable(table.name));
+        if (!query.exec(QStringLiteral("ALTER TABLE %1 RENAME TO %1_old").arg(table.name))) {
+            // If this fails we will recover on next start
+            return {false, query};
+        }
+
+        if (!query.exec(QStringLiteral("ALTER TABLE %1_new RENAME TO %1").arg(table.name))) {
+            // If this fails we will recover on next start
+            return {false, query};
+        }
+
+        qCDebug(AKONADISERVER_LOG, "\tRemoving table %s_old", qUtf8Printable(table.name));
+        if (!query.exec(QStringLiteral("DROP TABLE %1_old").arg(table.name))) {
+            // We don't care if this fails
+            qCWarning(AKONADISERVER_LOG, "Failed to DROP TABLE %s (not fatal, update will continue)", qUtf8Printable(table.name));
+            qCWarning(AKONADISERVER_LOG, "Error: %s", qUtf8Printable(query.lastError().text()));
+        }
+
+        qCDebug(AKONADISERVER_LOG) << "\tOptimizing table %s", qUtf8Printable(table.name);
+        if (!query.exec(QStringLiteral("ANALYZE %1").arg(table.name))) {
+            // We don't care if this fails
+            qCWarning(AKONADISERVER_LOG, "Failed to ANALYZE %s (not fatal, update will continue)", qUtf8Printable(table.name));
+            qCWarning(AKONADISERVER_LOG, "Error: %s", qUtf8Printable(query.lastError().text()));
+        }
+
+        qCDebug(AKONADISERVER_LOG) << "\tDone";
+        return {true, QSqlQuery()};
+    };
+
+    AkonadiSchema schema;
+    const auto tables = schema.tables();
+    for (const auto &table : tables) {
+        if (!hasForeignKeys(table)) {
+            continue;
+        }
+
+        const auto result = recreateTableWithForeignKeys(table);
+        if (!result.first) {
+            qCCritical(AKONADISERVER_LOG, "SQL error when updating table %s", qUtf8Printable(table.name));
+            qCCritical(AKONADISERVER_LOG, "Query: %s", qUtf8Printable(result.second.executedQuery()));
+            qCCritical(AKONADISERVER_LOG, "Error: %s", qUtf8Printable(result.second.lastError().text()));
+            return false;
+        }
+    }
+
+    const auto relations = schema.relations();
+    for (const auto &relation : relations) {
+        const RelationTableDescription table(relation);
+        const auto result = recreateTableWithForeignKeys(table);
+        if (!result.first) {
+            qCCritical(AKONADISERVER_LOG, "SQL error when updating relation table %s", qUtf8Printable(table.name));
+            qCCritical(AKONADISERVER_LOG, "Query: %s", qUtf8Printable(result.second.executedQuery()));
+            qCCritical(AKONADISERVER_LOG, "Error: %s", qUtf8Printable(result.second.lastError().text()));
+            return false;
+        }
+    }
+
+    qCDebug(AKONADISERVER_LOG) << "Running VACUUM to reduce DB size";
+    if (!query.exec(QStringLiteral("VACUUM"))) {
+        qCWarning(AKONADISERVER_LOG) << "Vacuum failed (not fatal, update will continue)";
+        qCWarning(AKONADISERVER_LOG) << "Error:" << query.lastError().text();
+    }
+
+    return true;
+}

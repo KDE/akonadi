@@ -36,6 +36,7 @@ namespace Server
 {
 
 class Schema;
+class DbUpdater;
 
 class TestInterface
 {
@@ -56,6 +57,7 @@ public:
  */
 class DbInitializer
 {
+    friend class DbUpdater;
 public:
     typedef QSharedPointer<DbInitializer> Ptr;
 
@@ -88,7 +90,7 @@ public:
      * This information can be used for query optimizations.
      * @note Result is invalid before run() has been called.
      */
-    bool hasForeignKeyConstraints() const;
+    virtual bool hasForeignKeyConstraints() const = 0;
 
     /**
      * Checks and creates missing indexes.
@@ -126,18 +128,18 @@ protected:
     virtual QString buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const = 0;
 
     /**
-     * Returns an SQL statement to add a foreign key constraint to an existing column @p column.
+     * Returns an SQL statements to add a foreign key constraint to an existing column @p column.
      * The default implementation returns an empty string, so any backend supporting foreign key constraints
      * must reimplement this.
      */
-    virtual QString buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const;
+    virtual QStringList buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const;
 
     /**
-     * Returns an SQL statement to remove the foreign key constraint @p fk from table @p table.
+     * Returns an SQL statements to remove the foreign key constraint @p fk from table @p table.
      * The default implementation returns an empty string, so any backend supporting foreign key constraints
      * must reimplement this.
      */
-    virtual QString buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const;
+    virtual QStringList buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const;
 
     static QString buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete);
     /// Use for multi-column primary keys during table creation
@@ -180,7 +182,6 @@ private:
     QString mErrorMsg;
     TestInterface *mTestInterface = nullptr;
     DbIntrospector::Ptr m_introspector;
-    bool m_noForeignKeyContraints;
     QStringList m_pendingIndexes;
     QStringList m_pendingForeignKeys;
     QStringList m_removedForeignKeys;

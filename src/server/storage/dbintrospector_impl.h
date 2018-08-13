@@ -40,6 +40,7 @@ class DbIntrospectorSqlite : public DbIntrospector
 {
 public:
     explicit DbIntrospectorSqlite(const QSqlDatabase &database);
+    QVector<ForeignKey> foreignKeyConstraints(const QString &tableName) override;
     QString hasIndexQuery(const QString &tableName, const QString &indexName) override;
 };
 

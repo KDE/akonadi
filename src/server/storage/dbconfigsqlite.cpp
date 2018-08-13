@@ -274,6 +274,12 @@ void DbConfigSqlite::setup()
             return;
         }
 
+        // enable foreign key support; see https://www.sqlite.org/pragma.html#pragma_foreign_keys
+        if (!setPragma(db, query, QStringLiteral("foreign_keys=ON"))) {
+            db.close();
+            return;
+        }
+
         db.close();
     }
 

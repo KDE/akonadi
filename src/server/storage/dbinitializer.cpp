@@ -61,7 +61,6 @@ DbInitializer::DbInitializer(const QSqlDatabase &database)
     : mDatabase(database)
     , mSchema(nullptr)
     , mTestInterface(nullptr)
-    , m_noForeignKeyContraints(false)
 {
     m_introspector = DbIntrospector::createInstance(mDatabase);
 }
@@ -173,36 +172,33 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
                         continue; // all good
                     }
 
-                    const QString statement = buildRemoveForeignKeyConstraintStatement(existingForeignKey, tableDescription);
-                    if (!statement.isEmpty()) {
+                    const auto statements = buildRemoveForeignKeyConstraintStatements(existingForeignKey, tableDescription);
+                    if (!statements.isEmpty()) {
                         qCDebug(AKONADISERVER_LOG) << "Found existing foreign constraint that doesn't match the schema:" << existingForeignKey.name
                                                    << existingForeignKey.column << existingForeignKey.refTable << existingForeignKey.refColumn;
-                        m_removedForeignKeys << statement;
+                        m_removedForeignKeys << statements;
                     }
                 }
 
-                const QString statement = buildAddForeignKeyConstraintStatement(tableDescription, column);
-                if (statement.isEmpty()) {   // not supported
-                    m_noForeignKeyContraints = true;
+                const auto statements = buildAddForeignKeyConstraintStatements(tableDescription, column);
+                if (statements.isEmpty()) {   // not supported
                     return;
                 }
 
-                m_pendingForeignKeys << statement;
+                m_pendingForeignKeys << statements;
 
             } else if (!existingForeignKey.column.isEmpty()) {
                 // constraint exists but we don't want one here
-                const QString statement = buildRemoveForeignKeyConstraintStatement(existingForeignKey, tableDescription);
-                if (!statement.isEmpty()) {
+                const auto statements = buildRemoveForeignKeyConstraintStatements(existingForeignKey, tableDescription);
+                if (!statements.isEmpty()) {
                     qCDebug(AKONADISERVER_LOG) << "Found unexpected foreign key constraint:" << existingForeignKey.name << existingForeignKey.column
                                                << existingForeignKey.refTable << existingForeignKey.refColumn;
-                    m_removedForeignKeys << statement;
+                    m_removedForeignKeys << statements;
                 }
             }
         }
     } catch (const DbException &e) {
         qCDebug(AKONADISERVER_LOG) << "Fixing foreign key constraints failed:" << e.what();
-        // we ignore this since foreign keys are only used for optimizations (not all backends support them anyway)
-        m_noForeignKeyContraints = true;
     }
 }
 
@@ -227,11 +223,6 @@ bool DbInitializer::checkRelation(const RelationDescription &relationDescription
 QString DbInitializer::errorMsg() const
 {
     return mErrorMsg;
-}
-
-bool DbInitializer::hasForeignKeyConstraints() const
-{
-    return !m_noForeignKeyContraints;
 }
 
 bool DbInitializer::updateIndexesAndConstraints()
@@ -346,18 +337,18 @@ QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDe
            .arg(indexDescription.isUnique ? QStringLiteral("UNIQUE") : QString(), indexName, tableDescription.name, columns.join(QLatin1Char(',')));
 }
 
-QString DbInitializer::buildAddForeignKeyConstraintStatement(const TableDescription &table, const ColumnDescription &column) const
+QStringList DbInitializer::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
 {
     Q_UNUSED(table);
     Q_UNUSED(column);
-    return QString();
+    return {};
 }
 
-QString DbInitializer::buildRemoveForeignKeyConstraintStatement(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
+QStringList DbInitializer::buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
 {
     Q_UNUSED(fk);
     Q_UNUSED(table);
-    return QString();
+    return {};
 }
 
 QString DbInitializer::buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete)

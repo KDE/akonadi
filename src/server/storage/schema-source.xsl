@@ -146,7 +146,6 @@ QVector&lt;RelationDescription&gt; <xsl:value-of select="$className"/>::relation
     r.firstColumn = QStringLiteral("<xsl:value-of select="@column1"/>");
     r.secondTable = QStringLiteral("<xsl:value-of select="@table2"/>");
     r.secondColumn = QStringLiteral("<xsl:value-of select="@column2"/>");
-
     <xsl:if test="count(index) > 0">
       <xsl:call-template name="indexes">
         <xsl:with-param name="var">r</xsl:with-param>

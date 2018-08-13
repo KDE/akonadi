@@ -21,6 +21,7 @@
 #include "dbintrospector_impl.h"
 #include "dbexception.h"
 #include "querybuilder.h"
+#include "datastore.h"
 
 #include "akonadiserver_debug.h"
 
@@ -81,6 +82,28 @@ QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints
 DbIntrospectorSqlite::DbIntrospectorSqlite(const QSqlDatabase &database)
     : DbIntrospector(database)
 {
+}
+
+QVector<DbIntrospector::ForeignKey> DbIntrospectorSqlite::foreignKeyConstraints(const QString &tableName)
+{
+    QSqlQuery query(DataStore::self()->database());
+    if (!query.exec(QStringLiteral("PRAGMA foreign_key_list(%1)").arg(tableName))) {
+        throw DbException(query);
+    }
+
+    QVector<ForeignKey> result;
+    while (query.next()) {
+        ForeignKey fk;
+        fk.column = query.value(3).toString();
+        fk.refTable = query.value(2).toString();
+        fk.refColumn = query.value(4).toString();
+        fk.onUpdate = query.value(5).toString();
+        fk.onDelete = query.value(6).toString();
+        fk.name = tableName + fk.column + QLatin1Char('_') + fk.refTable + fk.refColumn + QStringLiteral("_fk");
+        result.push_back(fk);
+    }
+
+    return result;
 }
 
 QString DbIntrospectorSqlite::hasIndexQuery(const QString &tableName, const QString &indexName)
