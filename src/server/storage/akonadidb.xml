@@ -67,7 +67,7 @@
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
     <column name="generation" type="int" default="0" allowNull="false" />
-    <data columns="version" values="35"/>
+    <data columns="version" values="36"/>
   </table>
 
   <table name="Resource">
@@ -106,6 +106,8 @@
     <column name="queryCollections" type="QString"/>
     <column name="isVirtual" type="bool" default="false"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
+    <index name="parentIndex" columns="parentId" unique="false"/>
+    <index name="resourceIndex" columns="resourceId" unique="false"/>
     <index name="enabledIndex" columns="enabled" unique="false"/>
     <index name="syncPrefIndex" columns="syncPref" unique="false"/>
     <index name="displayPrefIndex" columns="displayPref" unique="false"/>
@@ -141,6 +143,7 @@
     </column>
     <column name="size" type="qint64" default="0" allowNull="false"/>
     <index name="collectionIndex" columns="collectionId" unique="false"/>
+    <index name="mimeTypeIndex" columns="mimeTypeId" unique="false"/>
     <index name="gidIndex" columns="gid" unique="false"/>
     <index name="ridIndex" columns="remoteId" unique="false"/>
     <index name="idSortIndex" columns="id" unique="false" sort="DESC"/>
@@ -180,6 +183,7 @@
     <column name="storage" type="enum" enumType="Storage" default="Internal"/>
     <index name="pimItemIdTypeIndex" columns="pimItemId,partTypeId" unique="true"/>
     <index name="pimItemIdSortIndex" columns="pimItemId" unique="false" sort="DESC"/>
+    <index name="partTypeIndex" columns="partTypeId" unique="false"/>
   </table>
 
   <table name="CollectionAttribute">
@@ -201,6 +205,8 @@
     <column name="gid" type="QString" allowNull="false"/>
     <column name="parentId" type="qint64" refTable="Tag" refColumn="id" allowNull="true" methodName="parent"/>
     <column name="typeId" type="qint64" refTable="TagType" refColumn="id" onDelete="Restrict" default="1"/>
+    <index name="parentIndex" columns="parentId" unique="false"/>
+    <index name="typeIndex" columns="typeId" unique="false"/>
   </table>
 
   <table name="TagAttribute">
@@ -216,6 +222,8 @@
     <column name="resourceId"  type="qint64" allowNull="false" refTable="Resource" refColumn="id" onDelete="Cascade" />
     <column name="remoteId" type="QString" allowNull="false" />
     <index name="TagAndResourceIndex" columns="tagId,resourceId" unique="true"/>
+    <index name="tagIndex" columns="tagId" unique="false"/>
+    <index name="resourceIndex" columns="resourceId" unique="false"/>
   </table>
 
   <table name="RelationType">
@@ -230,6 +238,9 @@
     <column name="typeId" type="qint64" refTable="RelationType" refColumn="id" onDelete="Restrict" default="1"/>
     <column name="remoteId" type="QString" />
     <index name="RelationIndex" columns="leftId,rightId,typeId" unique="true"/>
+    <index name="leftIndex" columns="leftId" unique="false"/>
+    <index name="rightIndex" columns="rightId" unique="false"/>
+    <index name="typeIndex" columns="typeId" unique="false"/>
   </table>
 
   <relation table1="PimItem" column1="id" table2="Flag" column2="id">

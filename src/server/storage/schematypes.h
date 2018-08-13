@@ -107,7 +107,7 @@ public:
 };
 
 /**
-  * @short A helper class that describes the relation between to tables for the DbInitializer
+  * @short A helper class that describes the relation between two tables for the DbInitializer
   */
 class RelationDescription
 {

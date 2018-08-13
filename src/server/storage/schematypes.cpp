@@ -78,11 +78,19 @@ RelationTableDescription::RelationTableDescription(const RelationDescription &re
     column.refTable = relation.firstTable;
     column.refColumn = relation.firstColumn;
     columns.push_back(column);
+    IndexDescription index;
+    index.name = QStringLiteral("%1Index").arg(column.name);
+    index.columns = QStringList{column.name};
+    index.isUnique = false;
+    indexes.push_back(index);
 
     column.name = relation.secondTable + QLatin1Char('_') + relation.secondColumn;
     column.refTable = relation.secondTable;
     column.refColumn = relation.secondColumn;
     columns.push_back(column);
+    index.name = QStringLiteral("%1Index").arg(column.name);
+    index.columns = QStringList{column.name};
+    indexes.push_back(index);
 
-    indexes = relation.indexes;
+    indexes += relation.indexes;
 }
