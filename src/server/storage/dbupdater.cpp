@@ -195,7 +195,9 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
                     childElement = childElement.nextSiblingElement();
                 }
 
-                updates.insert(version, updateSet);
+                if (!updateSet.statements.isEmpty() || updateSet.complex) {
+                    updates.insert(version, updateSet);
+                }
             }
         }
         updateElement = updateElement.nextSiblingElement();

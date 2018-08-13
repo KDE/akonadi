@@ -165,4 +165,167 @@
     <raw-sql backends="mysql">ALTER TABLE CollectionPimItemRelation CHANGE Collection_id Collection_id BIGINT NOT NULL</raw-sql>
     <raw-sql backends="mysql">ALTER TABLE CollectionPimItemRelation CHANGE PimItem_id PimItem_id BIGINT NOT NULL</raw-sql>
   </update>
+
+  <update version="23" abortOnFailure="false">
+    <raw-sql backends="mysql,psql">UPDATE CollectionTable SET isVirtual = true WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual = true)</raw-sql>
+    <raw-sql backends="sqlite">UPDATE CollectionTable SET isVirtual = 1 WHERE resourceId IN (SELECT id FROM ResourceTable WHERE isVirtual = 1)</raw-sql>
+  </update>
+
+  <update version="24" abortOnFailure="false">
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER remoteId TYPE text USING convert_from(remoteId,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER remoteRevision TYPE text USING convert_from(remoteRevision,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER cachePolicyLocalParts TYPE text USING convert_from(cachePolicyLocalParts,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER queryString TYPE text USING convert_from(queryString,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE CollectionTable ALTER queryLanguage TYPE text USING convert_from(queryLanguage,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE FlagTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE MimeTypeTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE PartTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE PimItemTable ALTER remoteId TYPE text USING convert_from(remoteId,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE PimItemTable ALTER remoteRevision TYPE text USING convert_from(remoteRevision,'utf8');</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE ResourceTable ALTER name TYPE text USING convert_from(name,'utf8');</raw-sql>
+  </update>
+
+  <!-- adapt to new part type table layout
+    (1) perform complex update by populating PartTypeTable and updating partTypeId column in PartTable
+    (2) drop the old part name column in the part table
+  -->
+  <update version="25" abortOnFailure="true">
+    <complex-update backends="mysql,psql,sqlite" />
+  </update>
+
+  <update version="26" abortOnFailure="false">
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET queryAttributes = 'QUERYLANGUAGE SPARQL' WHERE queryLanguage = 'SPARQL';</raw-sql>
+    <raw-sql backends="mysql,psql">ALTER TABLE CollectionTable DROP COLUMN queryLanguage;</raw-sql>
+  </update>
+
+  <update version="28" abortOnFailure="false">
+    <raw-sql backends="mysql,psql,sqlite">UPDATE CollectionTable SET enabled = subscribed;</raw-sql>
+    <raw-sql backends="mysql,psql">ALTER TABLE CollectionTable DROP COLUMN subscribed;</raw-sql>
+  </update>
+
+  <!--
+   Update 30 fixes missing constraints on relation tables in PostgreSQL.
+   We cannot just let DbInitializer create the foreign keys there, because data
+   in the relation tables might reference rows from other tables that no longer
+   exist.
+  -->
+  <update version="30" abortOnFailure="false">
+    <!-- PimItemFlagRelation -->
+    <raw-sql backends="psql">DELETE FROM PimItemFlagRelation WHERE pimItem_id IN (
+                                SELECT pimItem_id FROM PimItemFlagRelation
+                                LEFT JOIN PimItemTable ON PimItemFlagRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL)
+    </raw-sql>
+    <raw-sql backends="psql">DELETE FROM PimItemFlagRelation WHERE flag_id IN (
+                                SELECT flag_id FROM PimItemFlagRelation
+                                LEFT JOIN FlagTable ON PimItemFlagRelation.flag_id = FlagTable.id
+                                WHERE FlagTable.id IS NULL)
+    </raw-sql>
+    <!-- PimItemTagRelation -->
+    <raw-sql backends="psql">DELETE FROM PimItemTagRelation WHERE pimItem_id IN (
+                                SELECT pimItem_id FROM PimItemTagRelation
+                                LEFT JOIN PimItemTable ON PimItemTagRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL)
+    </raw-sql>
+    <raw-sql backends="psql">DELETE FROM PimItemTagRelation WHERE tag_id IN (
+                                SELECT tag_id FROM PimItemTagRelation
+                                LEFT JOIN TagTable ON PimItemTagRelation.tag_id = TagTable.id
+                                WHERE TagTable.id IS NULL)
+    </raw-sql>
+    <!-- CollectionMimeTypeRelation -->
+    <raw-sql backends="psql">DELETE FROM CollectionMimeTypeRelation WHERE collection_id IN (
+                                SELECT collection_id FROM CollectionMimeTypeRelation
+                                LEFT JOIN CollectionTable ON CollectionMimeTypeRelation.collection_id = CollectionTable.id
+                                WHERE CollectionTable.id IS NULL)
+    </raw-sql>
+    <raw-sql backends="psql">DELETE FROM CollectionMimeTypeRelation WHERE mimeType_id IN (
+                                SELECT mimeType_id FROM CollectionMimeTypeRelation
+                                LEFT JOIN MimeTypeTable ON CollectionMimeTypeRelation.mimeType_id = MimeTypeTable.id
+                                WHERE MimeTypeTable.id IS NULL)
+    </raw-sql>
+    <!-- CollectionPimItemRelation -->
+    <raw-sql backends="psql">DELETE FROM CollectionPimItemRelation WHERE collection_id IN (
+                                SELECT collection_id FROM CollectionPimItemRelation
+                                LEFT JOIN CollectionTable ON CollectionPimItemRelation.collection_id = CollectionTable.id
+                                WHERE CollectionTable.id IS NULL)
+    </raw-sql>
+    <raw-sql backends="psql">DELETE FROM CollectionPimItemRelation WHERE pimItem_id IN (
+                                SELECT pimItem_id FROM CollectionPimItemRelation
+                                LEFT JOIN PimItemTable ON CollectionPimItemRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL)
+    </raw-sql>
+  </update>
+  <!--
+   Update 31 fixes missing constraints on relation tables in MySQL.
+   We cannot just let DbInitializer create the foreign keys there, because data
+   in the relation tables might reference rows from other tables that no longer
+   exist.
+  -->
+  <update version="31" abortOnFailure="false">
+    <!-- PimItemFlagRelation -->
+    <raw-sql backends="mysql">DELETE FROM PimItemFlagRelation WHERE pimItem_id IN (
+                                SELECT id FROM (
+                                SELECT pimItem_id AS id FROM PimItemFlagRelation
+                                LEFT JOIN PimItemTable ON PimItemFlagRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL) x)
+    </raw-sql>
+    <raw-sql backends="mysql">DELETE FROM PimItemFlagRelation WHERE flag_id IN (
+                                SELECT id FROM (
+                                SELECT flag_id AS id FROM PimItemFlagRelation
+                                LEFT JOIN FlagTable ON PimItemFlagRelation.flag_id = FlagTable.id
+                                WHERE FlagTable.id IS NULL) x)
+    </raw-sql>
+    <!-- PimItemTagRelation -->
+    <raw-sql backends="mysql">DELETE FROM PimItemTagRelation WHERE pimItem_id IN (
+                                SELECT id FROM (
+                                SELECT pimItem_id AS id FROM PimItemTagRelation
+                                LEFT JOIN PimItemTable ON PimItemTagRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL) x)
+    </raw-sql>
+    <raw-sql backends="mysql">DELETE FROM PimItemTagRelation WHERE tag_id IN (
+                                SELECT id FROM (
+                                SELECT tag_id AS id FROM PimItemTagRelation
+                                LEFT JOIN TagTable ON PimItemTagRelation.tag_id = TagTable.id
+                                WHERE TagTable.id IS NULL) x)
+    </raw-sql>
+    <!-- CollectionMimeTypeRelation -->
+    <raw-sql backends="mysql">DELETE FROM CollectionMimeTypeRelation WHERE collection_id IN (
+                                SELECT id FROM (
+                                SELECT collection_id AS id  FROM CollectionMimeTypeRelation
+                                LEFT JOIN CollectionTable ON CollectionMimeTypeRelation.collection_id = CollectionTable.id
+                                WHERE CollectionTable.id IS NULL) x)
+    </raw-sql>
+    <raw-sql backends="mysql">DELETE FROM CollectionMimeTypeRelation WHERE mimeType_id IN (
+                                SELECT id FROM (
+                                SELECT mimeType_id AS id FROM CollectionMimeTypeRelation
+                                LEFT JOIN MimeTypeTable ON CollectionMimeTypeRelation.mimeType_id = MimeTypeTable.id
+                                WHERE MimeTypeTable.id IS NULL) x)
+    </raw-sql>
+    <!-- CollectionPimItemRelation -->
+    <raw-sql backends="mysql">DELETE FROM CollectionPimItemRelation WHERE collection_id IN (
+                                SELECT id FROM (
+                                SELECT collection_id AS id FROM CollectionPimItemRelation
+                                LEFT JOIN CollectionTable ON CollectionPimItemRelation.collection_id = CollectionTable.id
+                                WHERE CollectionTable.id IS NULL) x)
+    </raw-sql>
+    <raw-sql backends="mysql">DELETE FROM CollectionPimItemRelation WHERE pimItem_id IN (
+                                SELECT id FROM (
+                                SELECT pimItem_id AS id FROM CollectionPimItemRelation
+                                LEFT JOIN PimItemTable ON CollectionPimItemRelation.pimItem_id = PimItemTable.id
+                                WHERE PimItemTable.id IS NULL) x)
+    </raw-sql>
+  </update>
+  <update version="33" abortOnFailure="false">
+    <raw-sql backends="psql">SELECT setval('tagtypetable_id_seq', (SELECT max(id) FROM TagTypeTable))</raw-sql>
+    <raw-sql backends="psql">SELECT setval('relationtypetable_id_seq', (SELECT max(id) FROM RelationTypeTable))</raw-sql>
+  </update>
+
+  <update version="35" abortOnFailure="true">
+    <raw-sql backends="mysql,sqlite">UPDATE PartTable SET storage = external;</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PartTable DROP COLUMN external;</raw-sql>
+    <!-- TODO: SQLITE: drop the column as well, but SQLite does not have DROP COLUMN //-->
+    <raw-sql backends="psql">UPDATE PartTable SET storage = cast(external as integer);</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE PartTable DROP COLUMN external;</raw-sql>
+  </update>
 </updates>

@@ -66,7 +66,8 @@
   <table name="SchemaVersion">
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
-    <data columns="version" values="22"/>
+    <column name="generation" type="int" default="0" allowNull="false" />
+    <data columns="version" values="36"/>
   </table>
 
   <table name="Resource">
@@ -78,36 +79,49 @@
   </table>
 
   <table name="Collection">
+    <enum name="Tristate">
+      <value name="False"/>
+      <value name="True"/>
+      <value name="Undefined"/>
+    </enum>
+
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
     <column name="name" type="QString" allowNull="false"/>
     <column name="parentId" type="qint64" refTable="Collection" refColumn="id" methodName="parent"/>
     <column name="resourceId" type="qint64" refTable="Resource" refColumn="id" allowNull="false"/>
-    <column name="subscribed" type="bool" default="true" allowNull="false"/>
+    <column name="enabled" type="bool" default="true" allowNull="false"/>
+    <column name="syncPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
+    <column name="displayPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
+    <column name="indexPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
+    <column name="referenced" type="bool" default="false" allowNull="false"/>
     <column name="cachePolicyInherit" type="bool" default="true" allowNull="false"/>
     <column name="cachePolicyCheckInterval" type="int" default="-1" allowNull="false"/>
     <column name="cachePolicyCacheTimeout" type="int" default="-1" allowNull="false"/>
     <column name="cachePolicySyncOnDemand" type="bool" default="false" allowNull="false"/>
     <column name="cachePolicyLocalParts" type="QString"/>
     <column name="queryString" type="QString" size="32768"/>
-    <column name="queryLanguage" type="QString"/>
+    <column name="queryAttributes" type="QString"/>
+    <column name="queryCollections" type="QString"/>
+    <column name="isVirtual" type="bool" default="false"/>
     <index name="parentAndNameIndex" columns="parentId,name" unique="true"/>
+    <index name="parentIndex" columns="parentId" unique="false"/>
+    <index name="resourceIndex" columns="resourceId" unique="false"/>
+    <index name="enabledIndex" columns="enabled" unique="false"/>
+    <index name="syncPrefIndex" columns="syncPref" unique="false"/>
+    <index name="displayPrefIndex" columns="displayPref" unique="false"/>
+    <index name="indexPrefIndex" columns="indexPref" unique="false"/>
     <reference name="children" table="Collection" key="parentId"/>
     <reference name="items" table="PimItem" key="collectionId"/>
     <reference name="attributes" table="CollectionAttribute" key="collectionId"/>
-    <data columns="parentId,name,resourceId" values="NULL,'Search',1"/>
+    <data columns="parentId,name,resourceId,isVirtual" values="NULL,'Search',1,true"/>
   </table>
 
   <table name="MimeType">
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="name" type="QString" allowNull="false" isUnique="true"/>
-    <data columns="name" values="'application/octet-stream'"/>
-    <data columns="name" values="'message/rfc822'"/>
-    <data columns="name" values="'text/calendar'"/>
-    <data columns="name" values="'text/vcard'"/>
-    <data columns="name" values="'inode/directory'"/>
   </table>
 
   <table name="PimItem">
@@ -115,12 +129,13 @@
     <column name="rev" type="int" default="0" allowNull="false"/>
     <column name="remoteId" type="QString"/>
     <column name="remoteRevision" type="QString"/>
+    <column name="gid" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
     <column name="mimeTypeId" type="qint64" refTable="MimeType" refColumn="id" onDelete="Restrict"/>
     <column name="datetime" type="QDateTime" default="QDateTime::currentDateTimeUtc()">
       <comment>create/modified time</comment>
     </column>
-    <column name="atime" type="QDateTime">
+    <column name="atime" type="QDateTime" default="QDateTime::currentDateTimeUtc()">
       <comment>read access time</comment>
     </column>
     <column name="dirty" type="bool">
@@ -128,6 +143,10 @@
     </column>
     <column name="size" type="qint64" default="0" allowNull="false"/>
     <index name="collectionIndex" columns="collectionId" unique="false"/>
+    <index name="mimeTypeIndex" columns="mimeTypeId" unique="false"/>
+    <index name="gidIndex" columns="gid" unique="false"/>
+    <index name="ridIndex" columns="remoteId" unique="false"/>
+    <index name="idSortIndex" columns="id" unique="false" sort="DESC"/>
     <reference name="parts" table="Part" key="pimItemId"/>
   </table>
 
@@ -135,26 +154,36 @@
     <comment>This meta data is stored inside akonadi to provide fast access.</comment>
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="name" type="QString" allowNull="false" isUnique="true"/>
-    <data columns="name" values="'important'"/>
-    <data columns="name" values="'has_attachment'"/>
-    <data columns="name" values="'spam'"/>
-    <data columns="name" values="'\\ANSWERED'"/>
-    <data columns="name" values="'\\FLAGGED'"/>
-    <data columns="name" values="'\\DELETED'"/>
-    <data columns="name" values="'\\SEEN'"/>
-    <data columns="name" values="'\\DRAFT'"/>
   </table>
 
+ <table name="PartType">
+   <comment>Table containing item part types.</comment>
+   <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+   <column name="name" type="QString" allowNull="false">
+     <comment>Part name, without namespace.</comment>
+   </column>
+   <column name="ns" type="QString" allowNull="false">
+     <comment>Part namespace.</comment>
+   </column>
+   <index name="partTypeNameIndex" columns="ns,name" unique="true"/>
+ </table>
+
   <table name="Part">
+    <enum name="Storage">
+      <value name="Internal"/>
+      <value name="External"/>
+      <value name="Foreign"/>
+    </enum>
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="pimItemId" type="qint64" refTable="PimItem" refColumn="id" allowNull="false"/>
-    <column name="name" type="QString" allowNull="false"/>
+    <column name="partTypeId" type="qint64" refTable="PartType" refColumn="id" allowNull="false" noUpdate="true" />
     <column name="data" type="QByteArray"/>
     <column name="datasize" type="qint64" allowNull="false"/>
     <column name="version" type="int" default="0"/>
-    <column name="external" type="bool" default="false" />
-    <index name="pimItemIdNameIndex" columns="pimItemId,name" unique="true"/>
-    <index name="pimItemNameIndex" columns="name" unique="false"/>
+    <column name="storage" type="enum" enumType="Storage" default="Internal"/>
+    <index name="pimItemIdTypeIndex" columns="pimItemId,partTypeId" unique="true"/>
+    <index name="pimItemIdSortIndex" columns="pimItemId" unique="false" sort="DESC"/>
+    <index name="partTypeIndex" columns="partTypeId" unique="false"/>
   </table>
 
   <table name="CollectionAttribute">
@@ -165,7 +194,60 @@
     <index name="collectionIndex" columns="collectionId" unique="false"/>
   </table>
 
-  <relation table1="PimItem" column1="id" table2="Flag" column2="id"/>
+  <table name="TagType">
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="name" type="QString" allowNull="false" isUnique="true"/>
+    <data columns="name" values="'PLAIN'"/>
+  </table>
+
+  <table name="Tag">
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="gid" type="QString" allowNull="false"/>
+    <column name="parentId" type="qint64" refTable="Tag" refColumn="id" allowNull="true" methodName="parent"/>
+    <column name="typeId" type="qint64" refTable="TagType" refColumn="id" onDelete="Restrict" default="1"/>
+    <index name="parentIndex" columns="parentId" unique="false"/>
+    <index name="typeIndex" columns="typeId" unique="false"/>
+  </table>
+
+  <table name="TagAttribute">
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="tagId" type="qint64" allowNull="false" refTable="Tag" refColumn="id"/>
+    <column name="type" type="QByteArray" allowNull="false"/>
+    <column name="value" type="QByteArray"/>
+    <index name="tagIndex" columns="tagId" unique="false"/>
+  </table>
+
+  <table name="TagRemoteIdResourceRelation" identificationColumn="">
+    <column name="tagId" type="qint64" allowNull="false" refTable="Tag" refColumn="id" onDelete="Cascade" />
+    <column name="resourceId"  type="qint64" allowNull="false" refTable="Resource" refColumn="id" onDelete="Cascade" />
+    <column name="remoteId" type="QString" allowNull="false" />
+    <index name="TagAndResourceIndex" columns="tagId,resourceId" unique="true"/>
+    <index name="tagIndex" columns="tagId"/>
+    <index name="resourceIndex" columns="resourceId"/>
+  </table>
+
+  <table name="RelationType">
+    <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
+    <column name="name" type="QString" allowNull="false" isUnique="true"/>
+    <data columns="name" values="'GENERIC'"/>
+  </table>
+
+  <table name="Relation" identificationColumn="">
+    <column name="leftId" type="qint64" allowNull="false" refTable="PimItem" refColumn="id" onDelete="Cascade" methodName="left" />
+    <column name="rightId"  type="qint64" allowNull="false" refTable="PimItem" refColumn="id" onDelete="Cascade" methodName="right" />
+    <column name="typeId" type="qint64" refTable="RelationType" refColumn="id" onDelete="Restrict" default="1"/>
+    <column name="remoteId" type="QString" />
+    <index name="RelationIndex" columns="leftId,rightId,typeId" unique="true"/>
+    <index name="leftIndex" columns="leftId" unique="false"/>
+    <index name="rightIndex" columns="rightId" unique="false"/>
+    <index name="typeIndex" columns="typeId" unique="false"/>
+  </table>
+
+  <relation table1="PimItem" column1="id" table2="Flag" column2="id">
+    <index name="pimItemIdSortIndex" columns="pimitem_id" unique="false" sort="DESC"/>
+  </relation>
+
+  <relation table1="PimItem" column1="id" table2="Tag" column2="id"/>
 
   <relation table1="Collection" column1="id" table2="MimeType" column2="id">
     <comment>Specifies allowed MimeType for a Collection</comment>

@@ -1,6 +1,7 @@
-CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0)
+CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0,
+                                 generation INTEGER NOT NULL DEFAULT 0)
 
-INSERT INTO SchemaVersionTable (version) VALUES (22)
+INSERT INTO SchemaVersionTable (version) VALUES (36)
 
 CREATE TABLE ResourceTable (id SERIAL PRIMARY KEY,
                             name TEXT UNIQUE NOT NULL,
@@ -14,76 +15,94 @@ CREATE TABLE CollectionTable (id SERIAL PRIMARY KEY,
                               name TEXT NOT NULL,
                               parentId int8,
                               resourceId int8 NOT NULL,
-                              subscribed BOOL NOT NULL DEFAULT true,
+                              enabled BOOL NOT NULL DEFAULT true,
+                              syncPref SMALLINT DEFAULT 2,
+                              displayPref SMALLINT DEFAULT 2,
+                              indexPref SMALLINT DEFAULT 2,
+                              referenced BOOL NOT NULL DEFAULT false,
                               cachePolicyInherit BOOL NOT NULL DEFAULT true,
                               cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
                               cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
                               cachePolicySyncOnDemand BOOL NOT NULL DEFAULT false,
                               cachePolicyLocalParts TEXT,
                               queryString TEXT,
-                              queryLanguage TEXT)
+                              queryAttributes TEXT,
+                              queryCollections TEXT,
+                              isVirtual BOOL DEFAULT false)
 
-INSERT INTO CollectionTable (name,parentId,resourceId) VALUES ('Search',NULL,1)
+INSERT INTO CollectionTable (isVirtual,name,parentId,resourceId) VALUES (true,'Search',NULL,1)
 
 CREATE TABLE MimeTypeTable (id SERIAL PRIMARY KEY,
                             name TEXT UNIQUE NOT NULL)
-
-INSERT INTO MimeTypeTable (name) VALUES ('application/octet-stream')
-
-INSERT INTO MimeTypeTable (name) VALUES ('message/rfc822')
-
-INSERT INTO MimeTypeTable (name) VALUES ('text/calendar')
-
-INSERT INTO MimeTypeTable (name) VALUES ('text/vcard')
-
-INSERT INTO MimeTypeTable (name) VALUES ('inode/directory')
 
 CREATE TABLE PimItemTable (id SERIAL PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
                            remoteId TEXT,
                            remoteRevision TEXT,
+                           gid TEXT,
                            collectionId int8,
                            mimeTypeId int8,
                            datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                           atime TIMESTAMP,
+                           atime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            dirty BOOL,
                            size int8 NOT NULL DEFAULT 0)
 
 CREATE TABLE FlagTable (id SERIAL PRIMARY KEY,
                         name TEXT UNIQUE NOT NULL)
 
-INSERT INTO FlagTable (name) VALUES ('important')
-
-INSERT INTO FlagTable (name) VALUES ('has_attachment')
-
-INSERT INTO FlagTable (name) VALUES ('spam')
-
-INSERT INTO FlagTable (name) VALUES ('\ANSWERED')
-
-INSERT INTO FlagTable (name) VALUES ('\FLAGGED')
-
-INSERT INTO FlagTable (name) VALUES ('\DELETED')
-
-INSERT INTO FlagTable (name) VALUES ('\SEEN')
-
-INSERT INTO FlagTable (name) VALUES ('\DRAFT')
+CREATE TABLE PartTypeTable (id SERIAL PRIMARY KEY,
+                            name TEXT NOT NULL,
+                            ns TEXT NOT NULL)
 
 CREATE TABLE PartTable (id SERIAL PRIMARY KEY,
                         pimItemId int8 NOT NULL,
-                        name TEXT NOT NULL,
+                        partTypeId int8 NOT NULL,
                         data BYTEA,
                         datasize int8 NOT NULL,
                         version INTEGER DEFAULT 0,
-                        external BOOL DEFAULT false)
+                        storage SMALLINT DEFAULT 0)
 
 CREATE TABLE CollectionAttributeTable (id SERIAL PRIMARY KEY,
                                        collectionId int8 NOT NULL,
                                        type BYTEA NOT NULL,
                                        value BYTEA)
 
+CREATE TABLE TagTypeTable (id SERIAL PRIMARY KEY,
+                           name TEXT UNIQUE NOT NULL)
+
+INSERT INTO TagTypeTable (name) VALUES ('PLAIN')
+
+CREATE TABLE TagTable (id SERIAL PRIMARY KEY,
+                       gid TEXT NOT NULL,
+                       parentId int8,
+                       typeId int8 DEFAULT 1)
+
+CREATE TABLE TagAttributeTable (id SERIAL PRIMARY KEY,
+                                tagId int8 NOT NULL,
+                                type BYTEA NOT NULL,
+                                value BYTEA)
+
+CREATE TABLE TagRemoteIdResourceRelationTable (tagId int8 NOT NULL,
+                                               resourceId int8 NOT NULL,
+                                               remoteId TEXT NOT NULL)
+
+CREATE TABLE RelationTypeTable (id SERIAL PRIMARY KEY,
+                                name TEXT UNIQUE NOT NULL)
+
+INSERT INTO RelationTypeTable (name) VALUES ('GENERIC')
+
+CREATE TABLE RelationTable (leftId int8 NOT NULL,
+                            rightId int8 NOT NULL,
+                            typeId int8 DEFAULT 1,
+                            remoteId TEXT)
+
 CREATE TABLE PimItemFlagRelation (PimItem_id int8 NOT NULL,
                                   Flag_id int8 NOT NULL,
                                   PRIMARY KEY (PimItem_id, Flag_id))
+
+CREATE TABLE PimItemTagRelation (PimItem_id int8 NOT NULL,
+                                 Tag_id int8 NOT NULL,
+                                 PRIMARY KEY (PimItem_id, Tag_id))
 
 CREATE TABLE CollectionMimeTypeRelation (Collection_id int8 NOT NULL,
                                          MimeType_id int8 NOT NULL,
@@ -95,13 +114,75 @@ CREATE TABLE CollectionPimItemRelation (Collection_id int8 NOT NULL,
 
 CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
 
+CREATE INDEX CollectionTable_parentIndex ON CollectionTable (parentId)
+
+CREATE INDEX CollectionTable_resourceIndex ON CollectionTable (resourceId)
+
+CREATE INDEX CollectionTable_enabledIndex ON CollectionTable (enabled)
+
+CREATE INDEX CollectionTable_syncPrefIndex ON CollectionTable (syncPref)
+
+CREATE INDEX CollectionTable_displayPrefIndex ON CollectionTable (displayPref)
+
+CREATE INDEX CollectionTable_indexPrefIndex ON CollectionTable (indexPref)
+
 CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
 
-CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
+CREATE INDEX PimItemTable_mimeTypeIndex ON PimItemTable (mimeTypeId)
 
-CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
+CREATE INDEX PimItemTable_gidIndex ON PimItemTable (gid)
+
+CREATE INDEX PimItemTable_ridIndex ON PimItemTable (remoteId)
+
+CREATE INDEX PimItemTable_idSortIndex ON PimItemTable (id DESC)
+
+CREATE UNIQUE INDEX PartTypeTable_partTypeNameIndex ON PartTypeTable (ns,name)
+
+CREATE UNIQUE INDEX PartTable_pimItemIdTypeIndex ON PartTable (pimItemId,partTypeId)
+
+CREATE INDEX PartTable_pimItemIdSortIndex ON PartTable (pimItemId DESC)
+
+CREATE INDEX PartTable_partTypeIndex ON PartTable (partTypeId)
 
 CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
+
+CREATE INDEX TagTable_parentIndex ON TagTable (parentId)
+
+CREATE INDEX TagTable_typeIndex ON TagTable (typeId)
+
+CREATE INDEX TagAttributeTable_tagIndex ON TagAttributeTable (tagId)
+
+CREATE UNIQUE INDEX TagRemoteIdResourceRelationTable_TagAndResourceIndex ON TagRemoteIdResourceRelationTable (tagId,resourceId)
+
+CREATE INDEX TagRemoteIdResourceRelationTable_tagIndex ON TagRemoteIdResourceRelationTable (tagId)
+
+CREATE INDEX TagRemoteIdResourceRelationTable_resourceIndex ON TagRemoteIdResourceRelationTable (resourceId)
+
+CREATE UNIQUE INDEX RelationTable_RelationIndex ON RelationTable (leftId,rightId,typeId)
+
+CREATE INDEX RelationTable_leftIndex ON RelationTable (leftId)
+
+CREATE INDEX RelationTable_rightIndex ON RelationTable (rightId)
+
+CREATE INDEX RelationTable_typeIndex ON RelationTable (typeId)
+
+CREATE INDEX PimItemFlagRelation_PimItem_idIndex ON PimItemFlagRelation (PimItem_id)
+
+CREATE INDEX PimItemFlagRelation_Flag_idIndex ON PimItemFlagRelation (Flag_id)
+
+CREATE INDEX PimItemFlagRelation_pimItemIdSortIndex ON PimItemFlagRelation (pimitem_id DESC)
+
+CREATE INDEX PimItemTagRelation_PimItem_idIndex ON PimItemTagRelation (PimItem_id)
+
+CREATE INDEX PimItemTagRelation_Tag_idIndex ON PimItemTagRelation (Tag_id)
+
+CREATE INDEX CollectionMimeTypeRelation_Collection_idIndex ON CollectionMimeTypeRelation (Collection_id)
+
+CREATE INDEX CollectionMimeTypeRelation_MimeType_idIndex ON CollectionMimeTypeRelation (MimeType_id)
+
+CREATE INDEX CollectionPimItemRelation_Collection_idIndex ON CollectionPimItemRelation (Collection_id)
+
+CREATE INDEX CollectionPimItemRelation_PimItem_idIndex ON CollectionPimItemRelation (PimItem_id)
 
 ALTER TABLE CollectionTable ADD CONSTRAINT CollectionTableparentId_Collectionid_fk FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
@@ -113,11 +194,33 @@ ALTER TABLE PimItemTable ADD CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOR
 
 ALTER TABLE PartTable ADD CONSTRAINT PartTablepimItemId_PimItemid_fk FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
+ALTER TABLE PartTable ADD CONSTRAINT PartTablepartTypeId_PartTypeid_fk FOREIGN KEY (partTypeId) REFERENCES PartTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
 ALTER TABLE CollectionAttributeTable ADD CONSTRAINT CollectionAttributeTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE TagTable ADD CONSTRAINT TagTableparentId_Tagid_fk FOREIGN KEY (parentId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE TagTable ADD CONSTRAINT TagTabletypeId_TagTypeid_fk FOREIGN KEY (typeId) REFERENCES TagTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE TagAttributeTable ADD CONSTRAINT TagAttributeTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE TagRemoteIdResourceRelationTable ADD CONSTRAINT TagRemoteIdResourceRelationTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE TagRemoteIdResourceRelationTable ADD CONSTRAINT TagRemoteIdResourceRelationTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE RelationTable ADD CONSTRAINT RelationTableleftId_PimItemid_fk FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE RelationTable ADD CONSTRAINT RelationTablerightId_PimItemid_fk FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE RelationTable ADD CONSTRAINT RelationTabletypeId_RelationTypeid_fk FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED
 
 ALTER TABLE PimItemFlagRelation ADD CONSTRAINT PimItemFlagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
 ALTER TABLE PimItemFlagRelation ADD CONSTRAINT PimItemFlagRelationFlag_id_Flagid_fk FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE PimItemTagRelation ADD CONSTRAINT PimItemTagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
+
+ALTER TABLE PimItemTagRelation ADD CONSTRAINT PimItemTagRelationTag_id_Tagid_fk FOREIGN KEY (Tag_id) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 
 ALTER TABLE CollectionMimeTypeRelation ADD CONSTRAINT CollectionMimeTypeRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED
 

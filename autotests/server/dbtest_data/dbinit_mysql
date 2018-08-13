@@ -1,7 +1,8 @@
-CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0)
-                                COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+CREATE TABLE SchemaVersionTable (version INTEGER NOT NULL DEFAULT 0,
+                                 generation INTEGER NOT NULL DEFAULT 0)
+                                 COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-INSERT INTO SchemaVersionTable (version) VALUES (22)
+INSERT INTO SchemaVersionTable (version) VALUES (36)
 
 CREATE TABLE ResourceTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                             name VARBINARY(255) NOT NULL UNIQUE,
@@ -16,42 +17,39 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               name VARBINARY(255) NOT NULL,
                               parentId BIGINT,
                               resourceId BIGINT NOT NULL,
-                              subscribed BOOL NOT NULL DEFAULT true,
+                              enabled BOOL NOT NULL DEFAULT true,
+                              syncPref TINYINT DEFAULT 2,
+                              displayPref TINYINT DEFAULT 2,
+                              indexPref TINYINT DEFAULT 2,
+                              referenced BOOL NOT NULL DEFAULT false,
                               cachePolicyInherit BOOL NOT NULL DEFAULT true,
                               cachePolicyCheckInterval INTEGER NOT NULL DEFAULT -1,
                               cachePolicyCacheTimeout INTEGER NOT NULL DEFAULT -1,
                               cachePolicySyncOnDemand BOOL NOT NULL DEFAULT false,
                               cachePolicyLocalParts VARBINARY(255),
                               queryString VARBINARY(32768),
-                              queryLanguage VARBINARY(255),
+                              queryAttributes VARBINARY(255),
+                              queryCollections VARBINARY(255),
+                              isVirtual BOOL DEFAULT false,
                               FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                               FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
                               COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-INSERT INTO CollectionTable (name,parentId,resourceId) VALUES ('Search',NULL,1)
+INSERT INTO CollectionTable (isVirtual,name,parentId,resourceId) VALUES (true,'Search',NULL,1)
 
 CREATE TABLE MimeTypeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                             name VARBINARY(255) NOT NULL UNIQUE)
                             COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-INSERT INTO MimeTypeTable (name) VALUES ('application/octet-stream')
-
-INSERT INTO MimeTypeTable (name) VALUES ('message/rfc822')
-
-INSERT INTO MimeTypeTable (name) VALUES ('text/calendar')
-
-INSERT INTO MimeTypeTable (name) VALUES ('text/vcard')
-
-INSERT INTO MimeTypeTable (name) VALUES ('inode/directory')
-
 CREATE TABLE PimItemTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                            rev INTEGER NOT NULL DEFAULT 0,
                            remoteId VARBINARY(255),
                            remoteRevision VARBINARY(255),
+                           gid VARBINARY(255),
                            collectionId BIGINT,
                            mimeTypeId BIGINT,
                            datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                           atime TIMESTAMP,
+                           atime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                            dirty BOOL,
                            size BIGINT NOT NULL DEFAULT 0,
                            FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
@@ -62,30 +60,20 @@ CREATE TABLE FlagTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         name VARBINARY(255) NOT NULL UNIQUE)
                         COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
-INSERT INTO FlagTable (name) VALUES ('important')
-
-INSERT INTO FlagTable (name) VALUES ('has_attachment')
-
-INSERT INTO FlagTable (name) VALUES ('spam')
-
-INSERT INTO FlagTable (name) VALUES ('\\ANSWERED')
-
-INSERT INTO FlagTable (name) VALUES ('\\FLAGGED')
-
-INSERT INTO FlagTable (name) VALUES ('\\DELETED')
-
-INSERT INTO FlagTable (name) VALUES ('\\SEEN')
-
-INSERT INTO FlagTable (name) VALUES ('\\DRAFT')
+CREATE TABLE PartTypeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                            name VARBINARY(255) NOT NULL,
+                            ns VARBINARY(255) NOT NULL)
+                            COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
 CREATE TABLE PartTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                         pimItemId BIGINT NOT NULL,
-                        name VARBINARY(255) NOT NULL,
+                        partTypeId BIGINT NOT NULL,
                         data LONGBLOB,
                         datasize BIGINT NOT NULL,
                         version INTEGER DEFAULT 0,
-                        external BOOL DEFAULT false,
-                        FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
+                        storage TINYINT DEFAULT 0,
+                        FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                        FOREIGN KEY (partTypeId) REFERENCES PartTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
                         COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
 CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
@@ -95,11 +83,61 @@ CREATE TABLE CollectionAttributeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY
                                        FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
                                        COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
+CREATE TABLE TagTypeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                           name VARBINARY(255) NOT NULL UNIQUE)
+                           COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+INSERT INTO TagTypeTable (name) VALUES ('PLAIN')
+
+CREATE TABLE TagTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                       gid VARBINARY(255) NOT NULL,
+                       parentId BIGINT,
+                       typeId BIGINT DEFAULT 1,
+                       FOREIGN KEY (parentId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                       FOREIGN KEY (typeId) REFERENCES TagTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT)
+                       COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+CREATE TABLE TagAttributeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                tagId BIGINT NOT NULL,
+                                type LONGBLOB NOT NULL,
+                                value LONGBLOB,
+                                FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
+                                COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+CREATE TABLE TagRemoteIdResourceRelationTable (tagId BIGINT NOT NULL,
+                                               resourceId BIGINT NOT NULL,
+                                               remoteId VARBINARY(255) NOT NULL,
+                                               FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                               FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
+                                               COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+CREATE TABLE RelationTypeTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+                                name VARBINARY(255) NOT NULL UNIQUE)
+                                COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+INSERT INTO RelationTypeTable (name) VALUES ('GENERIC')
+
+CREATE TABLE RelationTable (leftId BIGINT NOT NULL,
+                            rightId BIGINT NOT NULL,
+                            typeId BIGINT DEFAULT 1,
+                            remoteId VARBINARY(255),
+                            FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                            FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                            FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT)
+                            COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
 CREATE TABLE PimItemFlagRelation (PimItem_id BIGINT NOT NULL,
                                   Flag_id BIGINT NOT NULL,
                                   PRIMARY KEY (PimItem_id, Flag_id),
                                   FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                                   FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE) COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+
+CREATE TABLE PimItemTagRelation (PimItem_id BIGINT NOT NULL,
+                                 Tag_id BIGINT NOT NULL,
+                                 PRIMARY KEY (PimItem_id, Tag_id),
+                                 FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
+                                 FOREIGN KEY (Tag_id) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
+                                 COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
 
 CREATE TABLE CollectionMimeTypeRelation (Collection_id BIGINT NOT NULL,
                                          MimeType_id BIGINT NOT NULL,
@@ -115,13 +153,75 @@ CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
 
 CREATE UNIQUE INDEX CollectionTable_parentAndNameIndex ON CollectionTable (parentId,name)
 
+CREATE INDEX CollectionTable_parentIndex ON CollectionTable (parentId)
+
+CREATE INDEX CollectionTable_resourceIndex ON CollectionTable (resourceId)
+
+CREATE INDEX CollectionTable_enabledIndex ON CollectionTable (enabled)
+
+CREATE INDEX CollectionTable_syncPrefIndex ON CollectionTable (syncPref)
+
+CREATE INDEX CollectionTable_displayPrefIndex ON CollectionTable (displayPref)
+
+CREATE INDEX CollectionTable_indexPrefIndex ON CollectionTable (indexPref)
+
 CREATE INDEX PimItemTable_collectionIndex ON PimItemTable (collectionId)
 
-CREATE UNIQUE INDEX PartTable_pimItemIdNameIndex ON PartTable (pimItemId,name)
+CREATE INDEX PimItemTable_mimeTypeIndex ON PimItemTable (mimeTypeId)
 
-CREATE INDEX PartTable_pimItemNameIndex ON PartTable (name)
+CREATE INDEX PimItemTable_gidIndex ON PimItemTable (gid)
+
+CREATE INDEX PimItemTable_ridIndex ON PimItemTable (remoteId)
+
+CREATE INDEX PimItemTable_idSortIndex ON PimItemTable (id DESC)
+
+CREATE UNIQUE INDEX PartTypeTable_partTypeNameIndex ON PartTypeTable (ns,name)
+
+CREATE UNIQUE INDEX PartTable_pimItemIdTypeIndex ON PartTable (pimItemId,partTypeId)
+
+CREATE INDEX PartTable_pimItemIdSortIndex ON PartTable (pimItemId DESC)
+
+CREATE INDEX PartTable_partTypeIndex ON PartTable (partTypeId)
 
 CREATE INDEX CollectionAttributeTable_collectionIndex ON CollectionAttributeTable (collectionId)
+
+CREATE INDEX TagTable_parentIndex ON TagTable (parentId)
+
+CREATE INDEX TagTable_typeIndex ON TagTable (typeId)
+
+CREATE INDEX TagAttributeTable_tagIndex ON TagAttributeTable (tagId)
+
+CREATE UNIQUE INDEX TagRemoteIdResourceRelationTable_TagAndResourceIndex ON TagRemoteIdResourceRelationTable (tagId,resourceId)
+
+CREATE INDEX TagRemoteIdResourceRelationTable_tagIndex ON TagRemoteIdResourceRelationTable (tagId)
+
+CREATE INDEX TagRemoteIdResourceRelationTable_resourceIndex ON TagRemoteIdResourceRelationTable (resourceId)
+
+CREATE UNIQUE INDEX RelationTable_RelationIndex ON RelationTable (leftId,rightId,typeId)
+
+CREATE INDEX RelationTable_leftIndex ON RelationTable (leftId)
+
+CREATE INDEX RelationTable_rightIndex ON RelationTable (rightId)
+
+CREATE INDEX RelationTable_typeIndex ON RelationTable (typeId)
+
+CREATE INDEX PimItemFlagRelation_PimItem_idIndex ON PimItemFlagRelation (PimItem_id)
+
+CREATE INDEX PimItemFlagRelation_Flag_idIndex ON PimItemFlagRelation (Flag_id)
+
+CREATE INDEX PimItemFlagRelation_pimItemIdSortIndex ON PimItemFlagRelation (pimitem_id DESC)
+
+CREATE INDEX PimItemTagRelation_PimItem_idIndex ON PimItemTagRelation (PimItem_id)
+
+CREATE INDEX PimItemTagRelation_Tag_idIndex ON PimItemTagRelation (Tag_id)
+
+CREATE INDEX CollectionMimeTypeRelation_Collection_idIndex ON CollectionMimeTypeRelation (Collection_id)
+
+CREATE INDEX CollectionMimeTypeRelation_MimeType_idIndex ON CollectionMimeTypeRelation (MimeType_id)
+
+CREATE INDEX CollectionPimItemRelation_Collection_idIndex ON CollectionPimItemRelation (Collection_id)
+
+CREATE INDEX CollectionPimItemRelation_PimItem_idIndex ON CollectionPimItemRelation (PimItem_id)
 
 ALTER TABLE CollectionTable ADD FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
 
@@ -133,11 +233,33 @@ ALTER TABLE PimItemTable ADD FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(i
 
 ALTER TABLE PartTable ADD FOREIGN KEY (pimItemId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
 
+ALTER TABLE PartTable ADD FOREIGN KEY (partTypeId) REFERENCES PartTypeTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
 ALTER TABLE CollectionAttributeTable ADD FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE TagTable ADD FOREIGN KEY (parentId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE TagTable ADD FOREIGN KEY (typeId) REFERENCES TagTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT
+
+ALTER TABLE TagAttributeTable ADD FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE TagRemoteIdResourceRelationTable ADD FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE TagRemoteIdResourceRelationTable ADD FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE RelationTable ADD FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE RelationTable ADD FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE RelationTable ADD FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT
 
 ALTER TABLE PimItemFlagRelation ADD FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
 
 ALTER TABLE PimItemFlagRelation ADD FOREIGN KEY (Flag_id) REFERENCES FlagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE PimItemTagRelation ADD FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+
+ALTER TABLE PimItemTagRelation ADD FOREIGN KEY (Tag_id) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE
 
 ALTER TABLE CollectionMimeTypeRelation ADD FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE
 

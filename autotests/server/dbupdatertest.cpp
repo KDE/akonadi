@@ -35,45 +35,32 @@ void DbUpdaterTest::testMysqlUpdateStatements()
     const QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QMYSQL"));
     DbUpdater updater(db, QStringLiteral(":unittest_dbupdate.xml"));
 
-    UpdateSet::Map updateSets;
-    QVERIFY(updater.parseUpdateSets(1, updateSets));
-    QVERIFY(updateSets.contains(2));
-    QVERIFY(updateSets.contains(3));
-    QVERIFY(updateSets.contains(4));
-    QVERIFY(updateSets.contains(8));
-    QVERIFY(updateSets.contains(10));
-    QVERIFY(updateSets.contains(12));
-    QVERIFY(updateSets.contains(13));
-    QVERIFY(updateSets.contains(14));
-    QVERIFY(updateSets.contains(15));
-    QVERIFY(updateSets.contains(16));
-    QVERIFY(updateSets.contains(17));
-    QVERIFY(updateSets.contains(18));
-    QVERIFY(updateSets.contains(19));
-    QVERIFY(updateSets.contains(22));
-    QCOMPARE(updateSets.count(), 16);
+    {
+        UpdateSet::Map updateSets;
+        QVERIFY(updater.parseUpdateSets(1, updateSets));
+        const auto expectedSets ={ 2, 3, 4, 8, 10, 12, 13, 14, 15 ,16, 17, 18, 19, 20, 21, 22, 23,  25, 26, 28, 31, 35 };
+        for (const auto expected : expectedSets) {
+            QVERIFY(updateSets.contains(expected));
+        }
+        QCOMPARE(updateSets.count(), expectedSets.size());
+    }
 
-    updateSets.clear();
-    QVERIFY(updater.parseUpdateSets(13, updateSets));
-    QVERIFY(!updateSets.contains(2));
-    QVERIFY(!updateSets.contains(3));
-    QVERIFY(!updateSets.contains(4));
-    QVERIFY(!updateSets.contains(8));
-    QVERIFY(!updateSets.contains(10));
-    QVERIFY(!updateSets.contains(12));
-    QVERIFY(!updateSets.contains(13));
-    QVERIFY(updateSets.contains(14));
-    QVERIFY(updateSets.contains(15));
-    QVERIFY(updateSets.contains(16));
-    QVERIFY(updateSets.contains(17));
-    QVERIFY(updateSets.contains(18));
-    QVERIFY(updateSets.contains(19));
-    QVERIFY(updateSets.contains(22));
-    QCOMPARE(updateSets.count(), 9);
+    {
+        UpdateSet::Map updateSets;
+        QVERIFY(updater.parseUpdateSets(13, updateSets));
+        const auto expectedSets = { 14, 15 ,16, 17, 18, 19, 20, 21, 22, 23, 25, 26, 28, 31, 35 };
+        for (int i = 0; i < 13; ++i) {
+            QVERIFY(!updateSets.contains(i));
+        }
+        for (const auto expected : expectedSets) {
+            QVERIFY(updateSets.contains(expected));
+        }
+        QCOMPARE(updateSets.count(), expectedSets.size());
 
-    QCOMPARE(updateSets.value(14).statements.count(), 2);
-    QCOMPARE(updateSets.value(16).statements.count(), 11);
-    QCOMPARE(updateSets.value(22).statements.count(), 6);
+        QCOMPARE(updateSets.value(14).statements.count(), 2);
+        QCOMPARE(updateSets.value(16).statements.count(), 11);
+        QCOMPARE(updateSets.value(22).statements.count(), 6);
+    }
 }
 
 void DbUpdaterTest::testPsqlUpdateStatements()
@@ -81,44 +68,33 @@ void DbUpdaterTest::testPsqlUpdateStatements()
     const QSqlDatabase db = QSqlDatabase::addDatabase(QStringLiteral("QPSQL"));
     DbUpdater updater(db, QStringLiteral(":unittest_dbupdate.xml"));
 
-    UpdateSet::Map updateSets;
-    QVERIFY(updater.parseUpdateSets(1, updateSets));
-    QVERIFY(updateSets.contains(2));
-    QVERIFY(updateSets.contains(3));
-    QVERIFY(updateSets.contains(4));
-    QVERIFY(updateSets.contains(8));
-    QVERIFY(updateSets.contains(10));
-    QVERIFY(updateSets.contains(12));
-    QVERIFY(updateSets.contains(13));
-    QVERIFY(updateSets.contains(14));
-    QVERIFY(updateSets.contains(15));
-    QVERIFY(updateSets.contains(16));
-    QVERIFY(updateSets.contains(17));
-    QVERIFY(updateSets.contains(18));
-    QVERIFY(updateSets.contains(19));
-    QCOMPARE(updateSets.count(), 16);
+    {
+        UpdateSet::Map updateSets;
+        QVERIFY(updater.parseUpdateSets(1, updateSets));
+        const auto expectedSets = { 2, 3, 4, 8, 10, 12, 13, 14, 15, 16, 19, 23, 24, 25, 26, 28, 30, 33, 35 };
+        for (const auto expected : expectedSets) {
+            QVERIFY(updateSets.contains(expected));
+        }
+        QCOMPARE(updateSets.count(), expectedSets.size());
+    }
 
-    updateSets.clear();
-    QVERIFY(updater.parseUpdateSets(13, updateSets));
-    QVERIFY(!updateSets.contains(2));
-    QVERIFY(!updateSets.contains(3));
-    QVERIFY(!updateSets.contains(4));
-    QVERIFY(!updateSets.contains(8));
-    QVERIFY(!updateSets.contains(10));
-    QVERIFY(!updateSets.contains(12));
-    QVERIFY(!updateSets.contains(13));
-    QVERIFY(updateSets.contains(14));
-    QVERIFY(updateSets.contains(15));
-    QVERIFY(updateSets.contains(16));
-    QVERIFY(updateSets.contains(17));
-    QVERIFY(updateSets.contains(18));
-    QVERIFY(updateSets.contains(19));
-    QCOMPARE(updateSets.count(), 9);
+    {
+        UpdateSet::Map updateSets;
+        QVERIFY(updater.parseUpdateSets(13, updateSets));
+        const auto expectedSets = { 14, 15 ,16, 19, 23, 24, 25, 26, 28, 30, 33, 35 };
+        for (int i = 0; i < 13; ++i) {
+            QVERIFY(!updateSets.contains(i));
+        }
+        for (const auto expected : expectedSets) {
+            QVERIFY(updateSets.contains(expected));
+        }
+        QCOMPARE(updateSets.count(), expectedSets.size());
 
-    QCOMPARE(updateSets.value(14).statements.count(), 2);
-    QCOMPARE(updateSets.value(16).statements.count(), 11);
-    QCOMPARE(updateSets.value(17).statements.count(), 0);
-    QCOMPARE(updateSets.value(22).statements.count(), 0);
+        QCOMPARE(updateSets.value(14).statements.count(), 2);
+        QCOMPARE(updateSets.value(16).statements.count(), 11);
+        QCOMPARE(updateSets.value(17).statements.count(), 0);
+        QCOMPARE(updateSets.value(22).statements.count(), 0);
+    }
 }
 
 void DbUpdaterTest::cleanupTestCase()
