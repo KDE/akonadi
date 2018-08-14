@@ -175,7 +175,8 @@ void MonitorPrivate::scheduleSubscriptionUpdate()
 void MonitorPrivate::slotUpdateSubscription()
 {
     Q_Q(Monitor);
-    pendingModificationTimer->deleteLater();
+    if (pendingModificationTimer)
+        pendingModificationTimer->deleteLater();
     pendingModificationTimer = nullptr;
 
     if (pendingModificationChanges & Protocol::ModifySubscriptionCommand::ItemFetchScope) {
