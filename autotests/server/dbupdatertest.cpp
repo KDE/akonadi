@@ -42,7 +42,7 @@ void DbUpdaterTest::testMysqlUpdateStatements()
         for (const auto expected : expectedSets) {
             QVERIFY(updateSets.contains(expected));
         }
-        QCOMPARE(updateSets.count(), expectedSets.size());
+        QCOMPARE(std::size_t(updateSets.count()), expectedSets.size());
     }
 
     {
@@ -55,7 +55,7 @@ void DbUpdaterTest::testMysqlUpdateStatements()
         for (const auto expected : expectedSets) {
             QVERIFY(updateSets.contains(expected));
         }
-        QCOMPARE(updateSets.count(), expectedSets.size());
+        QCOMPARE(std::size_t(updateSets.count()), expectedSets.size());
 
         QCOMPARE(updateSets.value(14).statements.count(), 2);
         QCOMPARE(updateSets.value(16).statements.count(), 11);
