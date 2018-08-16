@@ -58,6 +58,11 @@ public:
 
         sInstance = this;
 
+        // Don't do remote logging for Akonadi Console because it deadlocks it
+        if (QCoreApplication::applicationName() == QLatin1String("akonadiconsole")) {
+            return;
+        }
+
         connect(&mWatcher, &QDBusServiceWatcher::serviceRegistered,
                 this, &RemoteLogger::serviceRegistered);
         connect(&mWatcher, &QDBusServiceWatcher::serviceUnregistered,
