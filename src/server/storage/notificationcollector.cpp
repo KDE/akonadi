@@ -542,6 +542,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 mIgnoreTransactions = true;
                 CommandContext context;
                 auto scope = fetchScope->toFetchScope();
+                scope.setFetch(Protocol::ItemFetchScope::CacheOnly);
                 FetchHelper helper(Connection::self(), &context, Scope(ids), scope);
                 QVector<Protocol::FetchItemsResponse> fetchedItems;
                 auto callback = [&fetchedItems](Protocol::FetchItemsResponse &&cmd) {
