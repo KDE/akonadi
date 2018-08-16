@@ -557,8 +557,13 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 for (const auto &item : items) {
                     Protocol::FetchItemsResponse resp;
                     resp.setId(item.id());
+                    resp.setRevision(item.revision());
                     resp.setMimeType(item.mimeType());
                     resp.setParentId(item.parentId());
+                    resp.setGid(item.gid());
+                    resp.setSize(item.size());
+                    resp.setMTime(item.mTime());
+                    resp.setFlags(item.flags());
                     fetchedItems.push_back(std::move(resp));
                 }
                 msg->setItems(fetchedItems);

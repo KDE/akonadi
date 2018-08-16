@@ -540,7 +540,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         const bool fetched = itemNtf.metadata().contains("FETCH_ITEM") || itemNtf.mustRetrieve();
         //For removals this will retrieve an empty set. We'll deal with that in emitItemNotification
         Item::List items;
-        if (fetched) {
+        if (fetched && fetchItems()) {
             items = itemCache->retrieve(Protocol::ChangeNotification::itemsToUids(itemNtf.items()));
         } else {
             const auto ntfItems = itemNtf.items();
