@@ -688,6 +688,9 @@ Item ProtocolHelper::parseItemFetchResult(const Protocol::FetchItemsResponse &da
             }
             break;
         case ProtocolHelper::PartAttribute: {
+            if (fetchScope && !fetchScope->allAttributes() && !fetchScope->attributes().contains(plainKey)) {
+                continue;
+            }
             Attribute *attr = AttributeFactory::createAttribute(plainKey);
             Q_ASSERT(attr);
             if (metaData.storageType() == Protocol::PartMetaData::External) {
