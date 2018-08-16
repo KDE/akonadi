@@ -329,7 +329,14 @@
     <raw-sql backends="psql">ALTER TABLE PartTable DROP COLUMN external;</raw-sql>
   </update>
 
+  <!-- Update 36 introduces foreign key support for SQLite //-->
   <update version="36" abortOnFailure="true">
     <complex-update backends="sqlite" />
+  </update>
+
+  <!-- Update 37 fixes TagRemoteIdResourceRelation RIDs being stored a BLOB instead of TEXT,
+  which broke querying tags by RID if the RID was passed as QString //-->
+  <update version="37" abortOnFailure="true">
+    <raw-sql backends="sqlite">UPDATE TagRemoteIdResourceRelationTable SET remoteId = printf('%s', remoteId)</raw-sql>
   </update>
 </updates>

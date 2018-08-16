@@ -109,7 +109,7 @@ bool TagAppend::parseStream()
             QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Update);
             qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId);
             qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, resourceId);
-            qb.setColumnValue(TagRemoteIdResourceRelation::remoteIdColumn(), cmd.remoteId());
+            qb.setColumnValue(TagRemoteIdResourceRelation::remoteIdColumn(), QString::fromUtf8(cmd.remoteId()));
             ret = qb.exec();
         } else {
             TagRemoteIdResourceRelation rel;
