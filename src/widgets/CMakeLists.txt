@@ -1,6 +1,8 @@
 set(akonadiwidgets_SRCS
     actionstatemanager.cpp
     agentactionmanager.cpp
+    agentconfigurationdialog.cpp
+    agentconfigurationwidget.cpp
     agentinstancewidget.cpp
     agenttypedialog.cpp
     agenttypewidget.cpp
@@ -51,6 +53,8 @@ set(akonadiwidgets_UI
 ecm_generate_headers(AkonadiWidgets_HEADERS
     HEADER_NAMES
     AgentActionManager
+    AgentConfigurationDialog
+    AgentConfigurationWidget
     AgentInstanceWidget
     AgentTypeDialog
     AgentTypeWidget

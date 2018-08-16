@@ -31,7 +31,7 @@ class AKONADIWIDGETS_EXPORT AgentConfigurationDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit AgentConfigurationDialog(const AgentInstance &instance, const QString &pluginPath, QWidget *parent = nullptr);
+    explicit AgentConfigurationDialog(const AgentInstance &instance, QWidget *parent = nullptr);
     ~AgentConfigurationDialog();
 
     void accept() override;

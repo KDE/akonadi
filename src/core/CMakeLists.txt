@@ -1,5 +1,8 @@
 
 set(akonadicore_base_SRCS
+    agentconfigurationbase.cpp
+    agentconfigurationfactorybase.cpp
+    agentconfigurationmanager.cpp
     agentinstance.cpp
     agentmanager.cpp
     agenttype.cpp
@@ -76,6 +79,8 @@ set(akonadicore_base_SRCS
 ecm_generate_headers(AkonadiCore_base_HEADERS
     HEADER_NAMES
     AbstractDifferencesReporter
+    AgentConfigurationBase
+    AgentConfigurationFactoryBase
     AgentInstance
     AgentManager
     AgentType

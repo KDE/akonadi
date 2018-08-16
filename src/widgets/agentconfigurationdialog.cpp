@@ -37,7 +37,7 @@ public:
 
 using namespace Akonadi;
 
-AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance, const QString &pluginPath, QWidget *parent)
+AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance, QWidget *parent)
     : QDialog(parent)
     , d(new Private)
 {
@@ -47,7 +47,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     auto l = new QVBoxLayout;
     setLayout(l);
 
-    d->widget = new AgentConfigurationWidget(instance, pluginPath, this);
+    d->widget = new AgentConfigurationWidget(instance, this);
     l->addWidget(d->widget);
 
     auto btnBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, this);

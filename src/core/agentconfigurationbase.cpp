@@ -18,6 +18,7 @@
 */
 
 #include "agentconfigurationbase.h"
+#include "agentmanager.h"
 #include "akonadicore_debug.h"
 
 #include <QDBusConnection>
@@ -26,8 +27,9 @@
 namespace Akonadi {
 class Q_DECL_HIDDEN AgentConfigurationBase::Private {
 public:
-    Private(KSharedConfigPtr config, const QVariantList &args)
+    Private(KSharedConfigPtr config, QWidget *parentWidget, const QVariantList &args)
         : config(config)
+        , parentWidget(parentWidget)
     {
         Q_ASSERT(args.size() >= 1);
         if (args.empty()) {
@@ -39,23 +41,22 @@ public:
 
     KSharedConfigPtr config;
     QString identifier;
+    QWidget *parentWidget = nullptr;
 };
 }
 
 using namespace Akonadi;
 
 AgentConfigurationBase::AgentConfigurationBase(KSharedConfigPtr config,
-                                               QObject *parentWidget,
+                                               QWidget *parentWidget,
                                                const QVariantList &args)
-    : QObject(parentWidget)
-    , d(new Private(config, args))
+    : QObject(reinterpret_cast<QObject*>(parentWidget))
+    , d(new Private(config, parentWidget, args))
 {
-    AgentConfigManager::self()->registerPlugin(d->identifier);
 }
 
 AgentConfigurationBase::~AgentConfigurationBase()
 {
-    AgentConfigManager::self()->unregisterPlugin(d->identifier);
 }
 
 KSharedConfigPtr AgentConfigurationBase::config() const
@@ -70,8 +71,15 @@ QString AgentConfigurationBase::identifier() const
 
 void AgentConfigurationBase::load()
 {
+    d->config->reparseConfiguration();
 }
 
 void AgentConfigurationBase::save() const
 {
+    d->config->sync();
+}
+
+QWidget *AgentConfigurationBase::parentWidget() const
+{
+    return d->parentWidget;
 }

@@ -35,7 +35,7 @@ class AKONADIWIDGETS_EXPORT AgentConfigurationWidget : public QWidget
 {
     Q_OBJECT
 public:
-    explicit AgentConfigurationWidget(const Akonadi::AgentInstance &instance, const QString &pluginPath, QWidget *parent = nullptr);
+    explicit AgentConfigurationWidget(const Akonadi::AgentInstance &instance, QWidget *parent = nullptr);
     ~AgentConfigurationWidget() override;
 
     void load();

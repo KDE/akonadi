@@ -63,8 +63,8 @@ namespace Akonadi {
  * @code
  * {
  *     "X-Akonadi-PluginType": "AgentConfig",
- *     "X-Akonadi-Library": exampleresourceconfig",
- *     "X-Akonadi-AgentConfig-Type: "akonadi_example_resource"
+ *     "X-Akonadi-Library": "exampleresourceconfig",
+ *     "X-Akonadi-AgentConfig-Type"": "akonadi_example_resource"
  * }
  * @endcode
  *
@@ -89,7 +89,7 @@ public:
      *
      * Subclasses must provide a constructor with this exact signature.
      */
-    explicit AgentConfigurationBase(KSharedConfigPtr config, QObject *parentWidget,
+    explicit AgentConfigurationBase(KSharedConfigPtr config, QWidget *parentWidget,
                                     const QVariantList &args);
 
     ~AgentConfigurationBase() override;
@@ -115,6 +115,8 @@ public:
     virtual void save() const;
 
 protected:
+    QWidget *parentWidget() const;
+
     /**
      * Returns KConfig object belongig to the current Akonadi agent instance.
      */

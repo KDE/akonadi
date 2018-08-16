@@ -22,6 +22,7 @@
 #include "core/agentconfigurationbase.h"
 #include "core/agentconfigurationfactorybase.h"
 #include "core/agentmanager.h"
+#include "core/servermanager.h"
 #include "akonadiwidgets_debug.h"
 
 #include <QCoreApplication>
@@ -79,7 +80,7 @@ public:
             loader.reset();
             return false;
         }
-        auto factory = qobject_cast<AgentConfigurationFactoryBase*>(loader->instance());
+        factory = qobject_cast<AgentConfigurationFactoryBase*>(loader->instance());
         if (!factory) {
             // will unload the QPluginLoader and thus delete the factory as well
             qCWarning(AKONADIWIDGETS_LOG) << "Config plugin" << pluginPath << "does not contain AgentConfigurationFactory!";
@@ -100,13 +101,15 @@ public:
 
 using namespace Akonadi;
 
-AgentConfigurationWidget::AgentConfigurationWidget(const Akonadi::AgentInstance &instance, const QString &pluginPath, QWidget *parent)
+AgentConfigurationWidget::AgentConfigurationWidget(const Akonadi::AgentInstance &instance, QWidget *parent)
     : QWidget(parent)
     , d(new Private(instance))
 {
     if (AgentConfigurationManager::self()->registerInstanceConfiguration(instance.identifier())) {
+        const auto pluginPath = AgentConfigurationManager::self()->findConfigPlugin(instance.type().identifier());
         if (d->loadPlugin(pluginPath)) {
-            KSharedConfigPtr config = KSharedConfig::openConfig();
+            const auto configPath = ServerManager::self()->agentConfigFilePath(instance.identifier());
+            KSharedConfigPtr config = KSharedConfig::openConfig(configPath);
             d->plugin = d->factory->create(config, this, { instance.identifier() });
         } else {
             d->setupErrorWidget(this, i18n("Failed to load configuration plugin"));

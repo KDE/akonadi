@@ -31,6 +31,7 @@ class AKONADICORE_EXPORT AgentConfigurationManager : public QObject
     Q_OBJECT
 public:
     static AgentConfigurationManager *self();
+    ~AgentConfigurationManager() override;
 
     bool registerInstanceConfiguration(const QString &instance);
     void unregisterInstanceConfiguration(const QString &instance);

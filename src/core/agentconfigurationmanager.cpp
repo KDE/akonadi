@@ -18,6 +18,7 @@
 */
 
 #include "agentconfigurationmanager_p.h"
+#include "akonadicore_debug.h"
 #include "servermanager.h"
 
 #include <QDBusConnectionInterface>
@@ -59,6 +60,9 @@ AgentConfigurationManager *AgentConfigurationManager::self()
     return sInstance;
 }
 
+AgentConfigurationManager::~AgentConfigurationManager()
+{
+}
 
 bool AgentConfigurationManager::registerInstanceConfiguration(const QString &instance)
 {
@@ -92,10 +96,15 @@ QString AgentConfigurationManager::findConfigPlugin(const QString &type) const
         for (const auto &lib : libs) {
             QPluginLoader loader(lib.absoluteFilePath());
             const auto metaData = loader.metaData().toVariantMap();
-            if (metaData.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("AgentConfig")) {
+            if (metaData.value(QStringLiteral("IID")).toString() != QLatin1String("org.freedesktop.Akonadi.AgentConfig")) {
                 continue;
             }
-            if (metaData.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString() != type) {
+            const auto md = metaData.value(QStringLiteral("MetaData")).toMap();
+            if (md.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("AgentConfig")) {
+                continue;
+            }
+            if (md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString() != type) {
+                qDebug() << md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString() << type;
                 continue;
             }
 
