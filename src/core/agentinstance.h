@@ -147,9 +147,13 @@ public:
     /**
      * Triggers the agent instance to show its configuration dialog.
      *
+     * @deprecated Use the new Akonadi::AgentConfigurationWidget and
+     * Akonadi::AgentConfigurationDialog to display configuration dialogs
+     * in-process
+     *
      * @param parent Parent window for the configuration dialog.
      */
-    void configure(QWidget *parent = nullptr);
+    AKONADICORE_DEPRECATED void configure(QWidget *parent = nullptr);
 
     /**
      * Triggers the agent instance to start synchronization.
