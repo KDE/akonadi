@@ -84,6 +84,7 @@ bool AgentConfigurationWidget::Private::loadPlugin(const QString &pluginPath)
         return false;
     }
 
+    qCDebug(AKONADIWIDGETS_LOG) << "Loaded agent configuration plugin" << pluginPath;
     return true;
 }
 
@@ -95,8 +96,9 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
     if (AgentConfigurationManager::self()->registerInstanceConfiguration(instance.identifier())) {
         const auto pluginPath = AgentConfigurationManager::self()->findConfigPlugin(instance.type().identifier());
         if (d->loadPlugin(pluginPath)) {
-            const auto configPath = ServerManager::self()->agentConfigFilePath(instance.identifier());
-            KSharedConfigPtr config = KSharedConfig::openConfig(configPath);
+            QString configName = instance.identifier() + QStringLiteral("rc");
+            configName = Akonadi::ServerManager::addNamespace(configName);
+            KSharedConfigPtr config = KSharedConfig::openConfig(configName);
             d->plugin = d->factory->create(config, this, { instance.identifier() });
         } else {
             // Hide this dialog and fallback to calling the out-of-process configuration
@@ -120,6 +122,8 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
     } else {
         d->setupErrorWidget(this, i18n("Failed to register %1 configuration dialog.", instance.name()));
     }
+
+    QTimer::singleShot(0, this, &AgentConfigurationWidget::load);
 }
 
 AgentConfigurationWidget::~AgentConfigurationWidget()

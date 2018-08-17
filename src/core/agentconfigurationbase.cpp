@@ -79,6 +79,7 @@ void AgentConfigurationBase::load()
 bool AgentConfigurationBase::save() const
 {
     d->config->sync();
+    d->config->reparseConfiguration();
     return true;
 }
 
