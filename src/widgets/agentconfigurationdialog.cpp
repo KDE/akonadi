@@ -19,13 +19,18 @@
 
 #include "agentconfigurationdialog.h"
 #include "agentconfigurationwidget.h"
+#include "agentconfigurationwidget_p.h"
+#include "agentconfigurationbase.h"
 #include "core/agentmanager.h"
 
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QPushButton>
+#include <QAction>
 
 #include <KLocalizedString>
+#include <KHelpMenu>
+#include <KAboutData>
 
 namespace Akonadi {
 class Q_DECL_HIDDEN AgentConfigurationDialog::Private
@@ -56,6 +61,20 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     connect(btnBox, &QDialogButtonBox::rejected, this, &AgentConfigurationDialog::reject);
     connect(btnBox->button(QDialogButtonBox::Apply), &QPushButton::clicked,
             d->widget.data(), &AgentConfigurationWidget::save);
+
+    if (auto aboutData = d->widget->d->plugin->aboutData()) {
+        KHelpMenu *helpMenu = new KHelpMenu(this, *aboutData, true);
+        helpMenu->action(KHelpMenu::menuDonate);
+        //Initialize menu
+        QMenu *menu = helpMenu->menu();
+        // HACK: the actions are populated from QGuiApplication so they would refer to the
+        // current application not to the agent, so we have to adjust the strings in some
+        // of the actions.
+        helpMenu->action(KHelpMenu::menuAboutApp)->setIcon(QIcon::fromTheme(aboutData->programIconName()));
+        helpMenu->action(KHelpMenu::menuHelpContents)->setText(i18n("%1 Handbook", aboutData->displayName()));
+        helpMenu->action(KHelpMenu::menuAboutApp)->setText(i18n("About %1", aboutData->displayName()));
+        btnBox->addButton(QDialogButtonBox::Help)->setMenu(menu);
+    }
 }
 
 AgentConfigurationDialog::~AgentConfigurationDialog()

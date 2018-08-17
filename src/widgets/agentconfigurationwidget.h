@@ -26,6 +26,7 @@
 namespace Akonadi {
 
 class AgentInstance;
+class AgentConfigurationDialog;
 /**
  * @brief A widget for displaying agent configuration in applications.
  *
@@ -44,6 +45,7 @@ public:
 private:
     class Private;
     friend class Private;
+    friend class AgentConfigurationDialog;
     QScopedPointer<Private> d;
 };
 

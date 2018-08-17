@@ -18,94 +18,75 @@
 */
 
 #include "agentconfigurationwidget.h"
+#include "agentconfigurationwidget_p.h"
 #include "agentconfigurationdialog.h"
+#include "akonadiwidgets_debug.h"
 #include "core/agentconfigurationmanager_p.h"
 #include "core/agentconfigurationbase.h"
 #include "core/agentconfigurationfactorybase.h"
 #include "core/agentmanager.h"
 #include "core/servermanager.h"
-#include "akonadiwidgets_debug.h"
 
 #include <QCoreApplication>
 #include <QFileInfo>
 #include <QDir>
-#include <QPluginLoader>
 #include <QJsonObject>
 #include <QJsonValue>
 #include <QStackedLayout>
-#include <QLabel>
 #include <QTimer>
+#include <QLabel>
 
 #include <KSharedConfig>
 #include <KLocalizedString>
 
 #include <memory>
 
-namespace Akonadi {
-
-namespace {
-
-struct PluginLoaderDeleter
-{
-    void operator()(QPluginLoader *loader) {
-        loader->unload();
-        delete loader;
-    }
-};
-
-}
-
-class Q_DECL_HIDDEN AgentConfigurationWidget::Private {
-public:
-    Private(const AgentInstance &instance)
-        : agentInstance(instance)
-    {
-    }
-
-    void setupErrorWidget(QWidget *parent, const QString &text)
-    {
-        auto layout = new QVBoxLayout;
-        layout->addStretch(2);
-        auto label = new QLabel(text, parent);
-        label->setAlignment(Qt::AlignCenter);
-        layout->addWidget(label);
-        layout->addStretch(2);
-
-        parent->setLayout(layout);
-    }
-
-    bool loadPlugin(const QString &pluginPath)
-    {
-        if (pluginPath.isEmpty()) {
-            qCDebug(AKONADIWIDGETS_LOG) << "Haven't found config plugin for" << agentInstance.type().identifier();
-            return false;
-        }
-        loader = decltype(loader)(new QPluginLoader(pluginPath));
-        if (!loader->load()) {
-            qCWarning(AKONADIWIDGETS_LOG) << "Failed to load config plugin" << pluginPath << ":" << loader->errorString();
-            loader.reset();
-            return false;
-        }
-        factory = qobject_cast<AgentConfigurationFactoryBase*>(loader->instance());
-        if (!factory) {
-            // will unload the QPluginLoader and thus delete the factory as well
-            qCWarning(AKONADIWIDGETS_LOG) << "Config plugin" << pluginPath << "does not contain AgentConfigurationFactory!";
-            loader.reset();
-            return false;
-        }
-
-        return true;
-    }
-
-    std::unique_ptr<QPluginLoader, PluginLoaderDeleter> loader;
-    QPointer<AgentConfigurationFactoryBase> factory = nullptr;
-    QPointer<AgentConfigurationBase> plugin = nullptr;
-    AgentInstance agentInstance;
-};
-
-}
-
 using namespace Akonadi;
+
+AgentConfigurationWidget::Private::Private(const AgentInstance &instance)
+    : agentInstance(instance)
+{
+}
+
+AgentConfigurationWidget::Private::~Private()
+{
+}
+
+void AgentConfigurationWidget::Private::setupErrorWidget(QWidget *parent, const QString &text)
+{
+    auto layout = new QVBoxLayout;
+    layout->addStretch(2);
+    auto label = new QLabel(text, parent);
+    label->setAlignment(Qt::AlignCenter);
+    layout->addWidget(label);
+    layout->addStretch(2);
+
+    parent->setLayout(layout);
+}
+
+bool AgentConfigurationWidget::Private::loadPlugin(const QString &pluginPath)
+{
+    if (pluginPath.isEmpty()) {
+        qCDebug(AKONADIWIDGETS_LOG) << "Haven't found config plugin for" << agentInstance.type().identifier();
+        return false;
+    }
+    loader = decltype(loader)(new QPluginLoader(pluginPath));
+    if (!loader->load()) {
+        qCWarning(AKONADIWIDGETS_LOG) << "Failed to load config plugin" << pluginPath << ":" << loader->errorString();
+        loader.reset();
+        return false;
+    }
+    factory = qobject_cast<AgentConfigurationFactoryBase*>(loader->instance());
+    if (!factory) {
+        // will unload the QPluginLoader and thus delete the factory as well
+        qCWarning(AKONADIWIDGETS_LOG) << "Config plugin" << pluginPath << "does not contain AgentConfigurationFactory!";
+        loader.reset();
+        return false;
+    }
+
+    return true;
+}
+
 
 AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance, QWidget *parent)
     : QWidget(parent)
@@ -162,4 +143,3 @@ void AgentConfigurationWidget::save()
         }
     }
 }
-

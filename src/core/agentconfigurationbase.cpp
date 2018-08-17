@@ -23,6 +23,7 @@
 
 #include <QDBusConnection>
 
+#include <KAboutData>
 
 namespace Akonadi {
 class Q_DECL_HIDDEN AgentConfigurationBase::Private {
@@ -41,6 +42,7 @@ public:
 
     KSharedConfigPtr config;
     QString identifier;
+    QScopedPointer<KAboutData> aboutData;
     QWidget *parentWidget = nullptr;
 };
 }
@@ -83,4 +85,14 @@ bool AgentConfigurationBase::save() const
 QWidget *AgentConfigurationBase::parentWidget() const
 {
     return d->parentWidget;
+}
+
+void AgentConfigurationBase::setKAboutData(const KAboutData &aboutData)
+{
+    d->aboutData.reset(new KAboutData(aboutData));
+}
+
+KAboutData *AgentConfigurationBase::aboutData() const
+{
+    return d->aboutData.data();
 }

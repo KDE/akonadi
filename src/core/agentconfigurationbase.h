@@ -26,6 +26,8 @@
 #include <QObject>
 #include <KSharedConfig>
 
+class KAboutData;
+
 namespace Akonadi {
 
 /**
@@ -117,6 +119,13 @@ public:
      */
     virtual bool save() const;
 
+    /**
+     * Returns about data for the currently configured component.
+     *
+     * May return a null pointer.
+     */
+    KAboutData *aboutData() const;
+
 protected:
     QWidget *parentWidget() const;
 
@@ -129,6 +138,12 @@ protected:
      * Returns identifier of the Akonadi agent instance currently being configured.
      */
     QString identifier() const;
+
+    /**
+     * When KAboutData is provided the dialog will also contian KHelpMenu with
+     * access to user help etc.
+     */
+    void setKAboutData(const KAboutData &aboutData);
 
 private:
     class Private;
