@@ -18,6 +18,7 @@
 */
 
 #include "agentconfigurationwidget.h"
+#include "agentconfigurationdialog.h"
 #include "core/agentconfigurationmanager_p.h"
 #include "core/agentconfigurationbase.h"
 #include "core/agentconfigurationfactorybase.h"
@@ -33,6 +34,7 @@
 #include <QJsonValue>
 #include <QStackedLayout>
 #include <QLabel>
+#include <QTimer>
 
 #include <KSharedConfig>
 #include <KLocalizedString>
@@ -74,6 +76,10 @@ public:
 
     bool loadPlugin(const QString &pluginPath)
     {
+        if (pluginPath.isEmpty()) {
+            qCDebug(AKONADIWIDGETS_LOG) << "Haven't found config plugin for" << agentInstance.type().identifier();
+            return false;
+        }
         loader = decltype(loader)(new QPluginLoader(pluginPath));
         if (!loader->load()) {
             qCWarning(AKONADIWIDGETS_LOG) << "Failed to load config plugin" << pluginPath << ":" << loader->errorString();
@@ -101,7 +107,7 @@ public:
 
 using namespace Akonadi;
 
-AgentConfigurationWidget::AgentConfigurationWidget(const Akonadi::AgentInstance &instance, QWidget *parent)
+AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance, QWidget *parent)
     : QWidget(parent)
     , d(new Private(instance))
 {
@@ -112,7 +118,21 @@ AgentConfigurationWidget::AgentConfigurationWidget(const Akonadi::AgentInstance 
             KSharedConfigPtr config = KSharedConfig::openConfig(configPath);
             d->plugin = d->factory->create(config, this, { instance.identifier() });
         } else {
-            d->setupErrorWidget(this, i18n("Failed to load configuration plugin"));
+            // Hide this dialog and fallback to calling the out-of-process configuration
+            if (auto dlg = qobject_cast<AgentConfigurationDialog*>(parent)) {
+                const_cast<AgentInstance&>(instance).configure(topLevelWidget()->parentWidget());
+                // If we are inside the AgentConfigurationDialog, hide the dialog
+                QTimer::singleShot(0, [dlg]() {
+                    dlg->reject();
+                });
+            } else {
+                const_cast<AgentInstance&>(instance).configure();
+                // Otherwise show a message that this is opened externally
+                d->setupErrorWidget(this, i18n("The configuration dialog has been opened in another window"));
+            }
+
+            // TODO: Re-enable once we can kill the fallback code above ^^
+            //d->setupErrorWidget(this, i18n("Failed to load configuration plugin"));
         }
     } else if (AgentConfigurationManager::self()->isInstanceRegistered(instance.identifier())) {
         d->setupErrorWidget(this, i18n("Configuration for this %1 is already opened elsewhere.", instance.name()));
@@ -135,8 +155,11 @@ void AgentConfigurationWidget::load()
 
 void AgentConfigurationWidget::save()
 {
+    qCDebug(AKONADIWIDGETS_LOG) << "Saving configuration for" << d->agentInstance.identifier();
     if (d->plugin) {
-        d->plugin->save();
+        if (d->plugin->save()) {
+            d->agentInstance.reconfigure();
+        }
     }
 }
 

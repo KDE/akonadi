@@ -74,9 +74,10 @@ void AgentConfigurationBase::load()
     d->config->reparseConfiguration();
 }
 
-void AgentConfigurationBase::save() const
+bool AgentConfigurationBase::save() const
 {
     d->config->sync();
+    return true;
 }
 
 QWidget *AgentConfigurationBase::parentWidget() const

@@ -69,6 +69,7 @@ bool AgentConfigurationManager::registerInstanceConfiguration(const QString &ins
     const auto serviceName = d->serviceName(instance);
     QDBusConnection conn = KDBusConnectionPool::threadConnection();
     if (conn.interface()->isServiceRegistered(serviceName)) {
+        qCDebug(AKONADICORE_LOG) << "Service " << serviceName << " is already registered";
         return false;
     }
 
@@ -104,7 +105,6 @@ QString AgentConfigurationManager::findConfigPlugin(const QString &type) const
                 continue;
             }
             if (md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString() != type) {
-                qDebug() << md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString() << type;
                 continue;
             }
 

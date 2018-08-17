@@ -107,12 +107,15 @@ public:
     /**
      * Reimplement to save new settings into the configuration object.
      *
+     * Return true if the configuration has been succesfully saved and should
+     * be applied to the agent, return false otherwise.
+     *
      * @warning Always remember call the base class implementation at the end
      * of your overriden method!
      *
      * @see config(), load()
      */
-    virtual void save() const;
+    virtual bool save() const;
 
 protected:
     QWidget *parentWidget() const;

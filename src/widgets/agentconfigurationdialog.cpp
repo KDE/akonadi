@@ -31,7 +31,7 @@ namespace Akonadi {
 class Q_DECL_HIDDEN AgentConfigurationDialog::Private
 {
 public:
-    AgentConfigurationWidget *widget = nullptr;
+    QScopedPointer<AgentConfigurationWidget> widget;
 };
 }
 
@@ -47,15 +47,15 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     auto l = new QVBoxLayout;
     setLayout(l);
 
-    d->widget = new AgentConfigurationWidget(instance, this);
-    l->addWidget(d->widget);
+    d->widget.reset(new AgentConfigurationWidget(instance, this));
+    l->addWidget(d->widget.data());
 
     auto btnBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, this);
     l->addWidget(btnBox);
     connect(btnBox, &QDialogButtonBox::accepted, this, &AgentConfigurationDialog::accept);
     connect(btnBox, &QDialogButtonBox::rejected, this, &AgentConfigurationDialog::reject);
     connect(btnBox->button(QDialogButtonBox::Apply), &QPushButton::clicked,
-            d->widget, &AgentConfigurationWidget::save);
+            d->widget.data(), &AgentConfigurationWidget::save);
 }
 
 AgentConfigurationDialog::~AgentConfigurationDialog()
