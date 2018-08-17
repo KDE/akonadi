@@ -34,6 +34,7 @@
 #include "session.h"
 #include "session_p.h"
 #include "statusadaptor.h"
+#include "agentconfigurationdialog.h"
 #include "private/standarddirs_p.h"
 
 #include "akonadiagentbase_debug.h"
@@ -50,6 +51,7 @@
 #include <QCommandLineParser>
 #include <QNetworkConfiguration>
 #include <QNetworkConfigurationManager>
+#include <QPointer>
 
 #include <signal.h>
 #include <stdlib.h>
@@ -1079,7 +1081,17 @@ void AgentBase::doSetOnline(bool online)
 void AgentBase::configure(WId windowId)
 {
     Q_UNUSED(windowId);
-    emit configurationDialogAccepted();
+
+    // Fallback if the agent implementes the new plugin-based configuration,
+    // but someone calls the deprecated configure() method
+    auto instance = Akonadi::AgentManager::self()->instance(identifier());
+    QPointer<AgentConfigurationDialog> dialog = new AgentConfigurationDialog(instance, nullptr);
+    if (dialog->exec()) {
+        Q_EMIT configurationDialogAccepted();
+    } else {
+        Q_EMIT configurationDialogRejected();
+    }
+    delete dialog;
 }
 
 #ifdef Q_OS_WIN //krazy:exclude=cpp
