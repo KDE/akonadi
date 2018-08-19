@@ -56,6 +56,7 @@ public:
     void signalCreationToJobTracker();
     void signalStartedToJobTracker();
     void delayedEmitResult();
+    void publishJob();
     /*
       Returns a string to display in akonadi console's job tracker. E.g. item ID.
      */

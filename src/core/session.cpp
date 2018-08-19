@@ -246,6 +246,23 @@ void SessionPrivate::addJob(Job *job)
     startNext();
 }
 
+void SessionPrivate::publishOtherJobs(Job *thanThisJob)
+{
+    int count = 0;
+    for (const auto& job : queue) {
+        if (job != thanThisJob) {
+            job->d_ptr->publishJob();
+            ++count;
+        }
+    }
+    if (count > 0) {
+        qCDebug(AKONADICORE_LOG) << "published" << count << "pending jobs to the job tracker";
+    }
+    if (currentJob && currentJob != thanThisJob) {
+        currentJob->d_ptr->signalStartedToJobTracker();
+    }
+}
+
 qint64 SessionPrivate::nextTag()
 {
     return theNextTag++;

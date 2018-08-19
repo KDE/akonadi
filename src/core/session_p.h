@@ -127,6 +127,8 @@ public:
 
     void clear(bool forceReconnect);
 
+    void publishOtherJobs(Job *thanThisJob);
+
     Session *mParent = nullptr;
     SessionThread *mSessionThread = nullptr;
     Connection *connection = nullptr;
