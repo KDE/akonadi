@@ -66,7 +66,7 @@ namespace Akonadi {
  * {
  *     "X-Akonadi-PluginType": "AgentConfig",
  *     "X-Akonadi-Library": "exampleresourceconfig",
- *     "X-Akonadi-AgentConfig-Type"": "akonadi_example_resource"
+ *     "X-Akonadi-AgentConfig-Type": "akonadi_example_resource"
  * }
  * @endcode
  *
