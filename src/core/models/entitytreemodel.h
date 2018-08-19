@@ -290,7 +290,7 @@ class EntityTreeModelPrivate;
  * - QVariant entityData( const Item &item, int column, int role = Qt::DisplayRole ) const;
  * -- Implement to return the data for a particular item and column. In the case of email for example, this would be the actual subject, sender and date of the email.
  *
- * @note The entityData methods are just for convenience. the QAbstractItemMOdel::data method can be overridden if required.
+ * @note The entityData methods are just for convenience. the QAbstractItemModel::data method can be overridden if required.
  *
  * The application writer must then properly configure proxy models for the views, so that the correct data is shown in the correct view.
  * That is the purpose of these lines in the above example
