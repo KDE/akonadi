@@ -50,6 +50,7 @@ public:
     std::unique_ptr<QPluginLoader, PluginLoaderDeleter> loader;
     QPointer<AgentConfigurationFactoryBase> factory = nullptr;
     QPointer<AgentConfigurationBase> plugin = nullptr;
+    QWidget *baseWidget = nullptr;
     AgentInstance agentInstance;
 };
 

@@ -42,6 +42,9 @@ public:
     void load();
     void save();
 
+protected:
+    void childEvent(QChildEvent *event) override;
+
 private:
     class Private;
     friend class Private;

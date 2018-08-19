@@ -35,6 +35,8 @@
 #include <QStackedLayout>
 #include <QTimer>
 #include <QLabel>
+#include <QVBoxLayout>
+#include <QChildEvent>
 
 #include <KSharedConfig>
 #include <KLocalizedString>
@@ -99,6 +101,9 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             QString configName = instance.identifier() + QStringLiteral("rc");
             configName = Akonadi::ServerManager::addNamespace(configName);
             KSharedConfigPtr config = KSharedConfig::openConfig(configName);
+            QVBoxLayout *layout = new QVBoxLayout(this);
+            layout->setMargin(0);
+            setLayout(layout);
             d->plugin = d->factory->create(config, this, { instance.identifier() });
         } else {
             // Hide this dialog and fallback to calling the out-of-process configuration
@@ -118,7 +123,7 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             //d->setupErrorWidget(this, i18n("Failed to load configuration plugin"));
         }
     } else if (AgentConfigurationManager::self()->isInstanceRegistered(instance.identifier())) {
-        d->setupErrorWidget(this, i18n("Configuration for this %1 is already opened elsewhere.", instance.name()));
+        d->setupErrorWidget(this, i18n("Configuration for %1 is already opened elsewhere.", instance.name()));
     } else {
         d->setupErrorWidget(this, i18n("Failed to register %1 configuration dialog.", instance.name()));
     }
@@ -146,4 +151,15 @@ void AgentConfigurationWidget::save()
             d->agentInstance.reconfigure();
         }
     }
+}
+
+void AgentConfigurationWidget::childEvent(QChildEvent *event)
+{
+    if (event->added()) {
+        if (auto widget = qobject_cast<QWidget*>(event->child())) {
+            layout()->addWidget(widget);
+        }
+    }
+
+    QWidget::childEvent(event);
 }
