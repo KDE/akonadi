@@ -1,5 +1,6 @@
 org.kde.pim.akonadiagentserver akonadi (Akonadi Agent Server)
 org.kde.pim.akonadiserver akonadi (Akonadi Server)
+org.kde.pim.akonadiserver.search akonadi (Akonadi Server Search Functionality)
 org.kde.pim.akonadiagentbase akonadi (Akonadi AgentBase Library)
 org.kde.pim.akonadiwidgets akonadi (Akonadi Widget Library)
 org.kde.pim.akonadiprivate akonadi (Akonadi Private Library)

@@ -25,6 +25,7 @@
 #include "searchhelper.h"
 #include "search/searchrequest.h"
 #include "search/searchmanager.h"
+#include "akonadiserver_search_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -50,12 +51,12 @@ bool Search::parseStream()
         collections += SearchHelper::matchSubcollectionsByMimeType(collectionIds, cmd.mimeTypes());
     }
 
-    qCDebug(AKONADISERVER_LOG) << "SEARCH:";
-    qCDebug(AKONADISERVER_LOG) << "\tQuery:" << cmd.query();
-    qCDebug(AKONADISERVER_LOG) << "\tMimeTypes:" << cmd.mimeTypes();
-    qCDebug(AKONADISERVER_LOG) << "\tCollections:" << collections;
-    qCDebug(AKONADISERVER_LOG) << "\tRemote:" << cmd.remote();
-    qCDebug(AKONADISERVER_LOG) << "\tRecursive" << recursive;
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "SEARCH:";
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "\tQuery:" << cmd.query();
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "\tMimeTypes:" << cmd.mimeTypes();
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "\tCollections:" << collections;
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "\tRemote:" << cmd.remote();
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "\tRecursive" << recursive;
 
     if (collections.isEmpty()) {
         return successResponse<Protocol::SearchResponse>();
@@ -74,8 +75,8 @@ bool Search::parseStream()
                      });
     request.exec();
 
-    //qCDebug(AKONADISERVER_LOG) << "\tResult:" << uids;
-    qCDebug(AKONADISERVER_LOG) << "\tResult:" << mAllResults.count() << "matches";
+    //qCDebug(AKONADISERVER_SEARCH_LOG) << "\tResult:" << uids;
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "\tResult:" << mAllResults.count() << "matches";
 
     return successResponse<Protocol::SearchResponse>();
 }

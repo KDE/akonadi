@@ -19,7 +19,7 @@
 
 #include "agentsearchengine.h"
 #include "entities.h"
-#include "akonadiserver_debug.h"
+#include "akonadiserver_search_debug.h"
 
 #include <private/dbus_p.h>
 
@@ -41,7 +41,7 @@ void AgentSearchEngine::addSearch(const Collection &collection)
         return;
     }
 
-    qCCritical(AKONADISERVER_LOG) << "Failed to connect to agent manager: " << agentMgr.lastError().message();
+    qCCritical(AKONADISERVER_SEARCH_LOG) << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }
 
 void AgentSearchEngine::removeSearch(qint64 id)
@@ -55,5 +55,5 @@ void AgentSearchEngine::removeSearch(qint64 id)
         return;
     }
 
-    qCCritical(AKONADISERVER_LOG) << "Failed to connect to agent manager: " << agentMgr.lastError().message();
+    qCCritical(AKONADISERVER_SEARCH_LOG) << "Failed to connect to agent manager: " << agentMgr.lastError().message();
 }

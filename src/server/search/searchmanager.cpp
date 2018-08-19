@@ -20,7 +20,7 @@
 
 #include "searchmanager.h"
 #include "abstractsearchplugin.h"
-#include "akonadiserver_debug.h"
+#include "akonadiserver_search_debug.h"
 
 #include "agentsearchengine.h"
 #include "notificationmanager.h"
@@ -84,7 +84,7 @@ void SearchManager::init()
         if (engineName == QLatin1String("Agent")) {
             mEngines.append(new AgentSearchEngine);
         } else {
-            qCCritical(AKONADISERVER_LOG) << "Unknown search engine type: " << engineName;
+            qCCritical(AKONADISERVER_SEARCH_LOG) << "Unknown search engine type: " << engineName;
         }
     }
 
@@ -157,33 +157,33 @@ void SearchManager::loadSearchPlugins()
     QStringList loadedPlugins;
     const QString pluginOverride = QString::fromLatin1(qgetenv("AKONADI_OVERRIDE_SEARCHPLUGIN"));
     if (!pluginOverride.isEmpty()) {
-        qCDebug(AKONADISERVER_LOG) << "Overriding the search plugins with: " << pluginOverride;
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Overriding the search plugins with: " << pluginOverride;
     }
 
     const QStringList dirs = QCoreApplication::libraryPaths();
     for (const QString &pluginDir : dirs) {
         QDir dir(pluginDir + QLatin1String("/akonadi"));
         const QStringList fileNames = dir.entryList(QDir::Files);
-        qCDebug(AKONADISERVER_LOG) << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << fileNames;
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "SEARCH MANAGER: searching in " << pluginDir + QLatin1String("/akonadi") << ":" << fileNames;
         for (const QString &fileName : fileNames) {
             const QString filePath = pluginDir % QLatin1String("/akonadi/") % fileName;
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
             if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
-                qCDebug(AKONADISERVER_LOG) << "===>" << fileName << metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString();
+                qCDebug(AKONADISERVER_SEARCH_LOG) << "===>" << fileName << metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString();
                 continue;
             }
 
             const QString libraryName = metadata.value(QStringLiteral("X-Akonadi-Library")).toString();
             if (loadedPlugins.contains(libraryName)) {
-                qCDebug(AKONADISERVER_LOG) << "Already loaded one version of this plugin, skipping: " << libraryName;
+                qCDebug(AKONADISERVER_SEARCH_LOG) << "Already loaded one version of this plugin, skipping: " << libraryName;
                 continue;
             }
 
             // When search plugin override is active, ignore all plugins except for the override
             if (!pluginOverride.isEmpty()) {
                 if (libraryName != pluginOverride) {
-                    qCDebug(AKONADISERVER_LOG) << libraryName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
+                    qCDebug(AKONADISERVER_SEARCH_LOG) << libraryName << "skipped because of AKONADI_OVERRIDE_SEARCHPLUGIN";
                     continue;
                 }
 
@@ -193,7 +193,7 @@ void SearchManager::loadSearchPlugins()
             }
 
             if (!loader->load()) {
-                qCCritical(AKONADISERVER_LOG) << "Failed to load search plugin" << libraryName << ":" << loader->errorString();
+                qCCritical(AKONADISERVER_SEARCH_LOG) << "Failed to load search plugin" << libraryName << ":" << loader->errorString();
                 continue;
             }
 
@@ -207,17 +207,17 @@ void SearchManager::initSearchPlugins()
 {
     for (QPluginLoader *loader : qAsConst(mPluginLoaders)) {
         if (!loader->load()) {
-            qCCritical(AKONADISERVER_LOG) << "Failed to load search plugin" << loader->fileName() << ":" << loader->errorString();
+            qCCritical(AKONADISERVER_SEARCH_LOG) << "Failed to load search plugin" << loader->fileName() << ":" << loader->errorString();
             continue;
         }
 
         AbstractSearchPlugin *plugin = qobject_cast<AbstractSearchPlugin *>(loader->instance());
         if (!plugin) {
-            qCCritical(AKONADISERVER_LOG) << loader->fileName() << "is not a valid Akonadi search plugin";
+            qCCritical(AKONADISERVER_SEARCH_LOG) << loader->fileName() << "is not a valid Akonadi search plugin";
             continue;
         }
 
-        qCDebug(AKONADISERVER_LOG) << "SearchManager: loaded search plugin" << loader->fileName();
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "SearchManager: loaded search plugin" << loader->fileName();
         mPlugins << plugin;
     }
 }
@@ -280,7 +280,7 @@ void SearchManager::updateSearch(const Collection &collection)
 void SearchManager::updateSearchImpl(const Collection &collection)
 {
     if (collection.queryString().size() >= 32768) {
-        qCWarning(AKONADISERVER_LOG) << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
+        qCWarning(AKONADISERVER_SEARCH_LOG) << "The query is at least 32768 chars long, which is the maximum size supported by the akonadi db schema. The query is therefore most likely truncated and will not be executed.";
         return;
     }
     if (collection.queryString().isEmpty()) {
@@ -321,7 +321,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
 
     //This happens if we try to search a virtual collection in recursive mode (because virtual collections are excluded from listCollectionsRecursive)
     if (queryCollections.isEmpty()) {
-        qCDebug(AKONADISERVER_LOG) << "No collections to search, you're probably trying to search a virtual collection.";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "No collections to search, you're probably trying to search a virtual collection.";
         return;
     }
 
@@ -374,15 +374,15 @@ void SearchManager::updateSearchImpl(const Collection &collection)
         DataStore::self()->notificationCollector()->itemsUnlinked(removedItems, collection);
     }
 
-    qCDebug(AKONADISERVER_LOG) << "Search update finished";
-    qCDebug(AKONADISERVER_LOG) << "All results:" << results.count();
-    qCDebug(AKONADISERVER_LOG) << "Removed results:" << toRemove.count();
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "Search update finished";
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "All results:" << results.count();
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "Removed results:" << toRemove.count();
 }
 
 void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
 {
     const Collection collection = sender()->property("SearchCollection").value<Collection>();
-    qCDebug(AKONADISERVER_LOG) << "searchUpdateResultsAvailable" << collection.id() << results.count() << "results";
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "searchUpdateResultsAvailable" << collection.id() << results.count() << "results";
 
     QSet<qint64> newMatches = results;
     QSet<qint64> existingMatches;
@@ -402,11 +402,11 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
         }
     }
 
-    qCDebug(AKONADISERVER_LOG) << "Got" << newMatches.count() << "results, out of which" << existingMatches.count() << "are already in the collection";
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "Got" << newMatches.count() << "results, out of which" << existingMatches.count() << "are already in the collection";
 
     newMatches = newMatches - existingMatches;
     if (newMatches.isEmpty()) {
-        qCDebug(AKONADISERVER_LOG) << "Added results: 0 (fast path)";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Added results: 0 (fast path)";
         return;
     }
 
@@ -429,13 +429,13 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
 
     const auto items = qb.result();
     if (items.count() != newMatches.count()) {
-        qCDebug(AKONADISERVER_LOG) << "Search backend returned" << (newMatches.count() - items.count()) << "results that no longer exist in Akonadi.";
-        qCDebug(AKONADISERVER_LOG) << "Please reindex collection" << collection.id();
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Search backend returned" << (newMatches.count() - items.count()) << "results that no longer exist in Akonadi.";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Please reindex collection" << collection.id();
         // TODO: Request the reindexing directly from here
     }
 
     if (items.isEmpty()) {
-        qCDebug(AKONADISERVER_LOG) << "Added results: 0 (no existing result)";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Added results: 0 (no existing result)";
         return;
     }
 
@@ -444,7 +444,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
     }
 
     if (!transaction.commit()) {
-        qCDebug(AKONADISERVER_LOG) << "Failed to commit transaction";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Failed to commit transaction";
         return;
     }
 
@@ -452,5 +452,5 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
     // Force collector to dispatch the notification now
     DataStore::self()->notificationCollector()->dispatchNotifications();
 
-    qCDebug(AKONADISERVER_LOG) << "Added results:" << items.count();
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "Added results:" << items.count();
 }
