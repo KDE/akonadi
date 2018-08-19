@@ -23,7 +23,7 @@
 #include "storage/selectquerybuilder.h"
 #include "dbusconnectionpool.h"
 #include "entities.h"
-#include "akonadiserver_debug.h"
+#include "akonadiserver_search_debug.h"
 
 #include <private/dbus_p.h>
 
@@ -69,7 +69,7 @@ void SearchTaskManager::registerInstance(const QString &id)
 {
     QMutexLocker locker(&mInstancesLock);
 
-    qCDebug(AKONADISERVER_LOG) << "SearchManager::registerInstance(" << id << ")";
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "SearchManager::registerInstance(" << id << ")";
 
     AgentSearchInstance *instance = mInstances.value(id);
     if (instance) {
@@ -78,12 +78,12 @@ void SearchTaskManager::registerInstance(const QString &id)
 
     instance = new AgentSearchInstance(id);
     if (!instance->init()) {
-        qCDebug(AKONADISERVER_LOG) << "Failed to initialize Search agent";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Failed to initialize Search agent";
         delete instance;
         return;
     }
 
-    qCDebug(AKONADISERVER_LOG) << "Registering search instance " << id;
+    qCDebug(AKONADISERVER_SEARCH_LOG) << "Registering search instance " << id;
     mInstances.insert(id, instance);
 }
 
@@ -93,7 +93,7 @@ void SearchTaskManager::unregisterInstance(const QString &id)
 
     QMap<QString, AgentSearchInstance *>::Iterator it = mInstances.find(id);
     if (it != mInstances.end()) {
-        qCDebug(AKONADISERVER_LOG) << "Unregistering search instance" << id;
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Unregistering search instance" << id;
         it.value()->deleteLater();
         mInstances.erase(it);
     }
@@ -132,14 +132,14 @@ void SearchTaskManager::addTask(SearchTask *task)
     do {
         const QString resourceId = query.value(1).toString();
         if (!mInstances.contains(resourceId)) {
-            qCDebug(AKONADISERVER_LOG) << "Resource" << resourceId << "does not implement Search interface, skipping";
+            qCDebug(AKONADISERVER_SEARCH_LOG) << "Resource" << resourceId << "does not implement Search interface, skipping";
         } else if (!agentManager.agentInstanceOnline(resourceId)) {
-            qCDebug(AKONADISERVER_LOG) << "Agent" << resourceId << "is offline, skipping";
+            qCDebug(AKONADISERVER_SEARCH_LOG) << "Agent" << resourceId << "is offline, skipping";
         } else if (agentManager.agentInstanceStatus(resourceId) > 2) {     // 2 == Broken, 3 == Not Configured
-            qCDebug(AKONADISERVER_LOG) << "Agent" << resourceId << "is broken or not configured";
+            qCDebug(AKONADISERVER_SEARCH_LOG) << "Agent" << resourceId << "is broken or not configured";
         } else {
             const qint64 collectionId = query.value(0).toLongLong();
-            qCDebug(AKONADISERVER_LOG) << "Enqueued search query (" << resourceId << ", " << collectionId << ")";
+            qCDebug(AKONADISERVER_SEARCH_LOG) << "Enqueued search query (" << resourceId << ", " << collectionId << ")";
             task->queries << qMakePair(resourceId,  collectionId);
         }
     } while (query.next());
@@ -155,18 +155,18 @@ void SearchTaskManager::pushResults(const QByteArray &searchId, const QSet<qint6
 {
     Q_UNUSED(searchId);
 
-    qCDebug(AKONADISERVER_LOG) << ids.count() << "results for search" << searchId << "pushed from" << connection->context()->resource().name();
+    qCDebug(AKONADISERVER_SEARCH_LOG) << ids.count() << "results for search" << searchId << "pushed from" << connection->context()->resource().name();
 
     QMutexLocker locker(&mLock);
     ResourceTask *task = mRunningTasks.take(connection->context()->resource().name());
     if (!task) {
-        qCDebug(AKONADISERVER_LOG) << "No running task for" << connection->context()->resource().name() << " - maybe it has timed out?";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "No running task for" << connection->context()->resource().name() << " - maybe it has timed out?";
         return;
     }
 
     if (task->parentTask->id != searchId) {
-        qCDebug(AKONADISERVER_LOG) << "Received results for different search - maybe the original task has timed out?";
-        qCDebug(AKONADISERVER_LOG) << "Search is" << searchId << ", but task is" << task->parentTask->id;
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Received results for different search - maybe the original task has timed out?";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Search is" << searchId << ", but task is" << task->parentTask->id;
         return;
     }
 
@@ -217,7 +217,7 @@ void SearchTaskManager::searchLoop()
     QMutexLocker locker(&mLock);
 
     Q_FOREVER {
-        qCDebug(AKONADISERVER_LOG) << "Search loop is waiting, will wake again in" << timeout << "ms";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "Search loop is waiting, will wake again in" << timeout << "ms";
         mWait.wait(&mLock, timeout);
 
         if (mShouldStop) {
@@ -244,7 +244,7 @@ void SearchTaskManager::searchLoop()
         while (!mPendingResults.isEmpty()) {
             ResourceTask *finishedTask = mPendingResults.first();
             mPendingResults.remove(0);
-            qCDebug(AKONADISERVER_LOG) << "Pending results from" << finishedTask->resourceId << "for collection" << finishedTask->collectionId << "for search" << finishedTask->parentTask->id << "available!";
+            qCDebug(AKONADISERVER_SEARCH_LOG) << "Pending results from" << finishedTask->resourceId << "for collection" << finishedTask->collectionId << "for search" << finishedTask->parentTask->id << "available!";
             SearchTask *parentTask = finishedTask->parentTask;
             QMutexLocker locker(&parentTask->sharedLock);
             // We need to append, this agent search task is shared
@@ -261,7 +261,7 @@ void SearchTaskManager::searchLoop()
             ResourceTask *task = it.value();
             if (now - task->timestamp > 60 * 1000) {
                 // Remove the task - and signal to parent task that it has "finished" without results
-                qCDebug(AKONADISERVER_LOG) << "Resource task" << task->resourceId << "for search" << task->parentTask->id << "timed out!";
+                qCDebug(AKONADISERVER_SEARCH_LOG) << "Resource task" << task->resourceId << "for search" << task->parentTask->id << "timed out!";
                 it = cancelRunningTask(it);
             } else {
                 ++it;
@@ -270,9 +270,9 @@ void SearchTaskManager::searchLoop()
 
         if (!mTasklist.isEmpty()) {
             SearchTask *task = mTasklist.first();
-            qCDebug(AKONADISERVER_LOG) << "Search task" << task->id << "available!";
+            qCDebug(AKONADISERVER_SEARCH_LOG) << "Search task" << task->id << "available!";
             if (task->queries.isEmpty()) {
-                qCDebug(AKONADISERVER_LOG) << "nothing to do for task";
+                qCDebug(AKONADISERVER_SEARCH_LOG) << "nothing to do for task";
                 QMutexLocker locker(&task->sharedLock);
                 //After this the AgentSearchTask will be destroyed
                 task->complete = true;
@@ -284,7 +284,7 @@ void SearchTaskManager::searchLoop()
             QVector<QPair<QString, qint64> >::iterator it = task->queries.begin();
             for (; it != task->queries.end();) {
                 if (!mRunningTasks.contains(it->first)) {
-                    qCDebug(AKONADISERVER_LOG) << "\t Sending query for collection" << it->second << "to resource" << it->first;
+                    qCDebug(AKONADISERVER_SEARCH_LOG) << "\t Sending query for collection" << it->second << "to resource" << it->first;
                     ResourceTask *rTask = new ResourceTask;
                     rTask->resourceId = it->first;
                     rTask->collectionId = it->second;
@@ -312,7 +312,7 @@ void SearchTaskManager::searchLoop()
             }
             // Yay! We managed to dispatch all requests!
             if (task->queries.isEmpty()) {
-                qCDebug(AKONADISERVER_LOG) << "All queries from task" << task->id << "dispatched!";
+                qCDebug(AKONADISERVER_SEARCH_LOG) << "All queries from task" << task->id << "dispatched!";
                 mTasklist.remove(0);
             }
 

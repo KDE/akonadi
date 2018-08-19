@@ -48,7 +48,7 @@ target_link_libraries(akonadi_unittest_common
 )
 
 macro(add_server_test _source)
-    set(_test ${_source} ../../src/server/akonadiserver_debug.cpp)
+    set(_test ${_source} ../../src/server/akonadiserver_debug.cpp ../../src/server/akonadiserver_search_debug.cpp)
     get_filename_component(_name ${_source} NAME_WE)
     qt5_add_resources(_test dbtest_data/dbtest_data.qrc)
     add_executable(${_name} ${_test})
