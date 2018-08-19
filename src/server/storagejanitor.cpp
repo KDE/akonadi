@@ -493,7 +493,8 @@ void StorageJanitor::findDirtyObjects()
     }
     const PimItem::List ridLessItems = iqb1.result();
     for (const PimItem &item : ridLessItems) {
-        inform(QLatin1Literal("Item \"") + QString::number(item.id()) + QLatin1Literal("\" has no RID."));
+        inform(QLatin1Literal("Item \"") + QString::number(item.id()) + QLatin1Literal("\" in collection \"") +
+                QString::number(item.collectionId()) + QLatin1Literal("\" has no RID."));
     }
     inform(QLatin1Literal("Found ") + QString::number(ridLessItems.size()) + QLatin1Literal(" items without RID."));
 

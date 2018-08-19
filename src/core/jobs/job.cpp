@@ -104,7 +104,12 @@ void JobPrivate::init(QObject *parent)
     } else {
         mParentJob->addSubjob(q);
     }
+    publishJob();
+}
 
+void JobPrivate::publishJob()
+{
+    Q_Q(Job);
     // if there's a job tracker running, tell it about the new job
     if (!s_jobtracker) {
         // Let's only check for the debugging console every 3 seconds, otherwise every single job
@@ -120,6 +125,7 @@ void JobPrivate::init(QObject *parent)
                                                   QStringLiteral("/jobtracker"),
                                                   QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
                                                   KDBusConnectionPool::threadConnection(), nullptr);
+                mSession->d->publishOtherJobs(q);
             } else {
                 s_lastTime.restart();
             }
