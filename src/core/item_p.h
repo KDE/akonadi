@@ -107,7 +107,7 @@ private:
 public:
     operator save_bool() const
     {
-        return get() ? &_save_bool::f : 0;
+        return get() ? &_save_bool::f : nullptr;
     }
 };
 

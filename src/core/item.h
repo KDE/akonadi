@@ -716,35 +716,35 @@ private:
 
     template <typename T>
     typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, void>::type
-    setPayloadImpl(const T &p, const int * /*disambiguate*/ = 0);
+    setPayloadImpl(const T &p, const int * /*disambiguate*/ = nullptr);
     template <typename T>
     typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, void >::type
     setPayloadImpl(const T &p);
 
     template <typename T>
     typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, T>::type
-    payloadImpl(const int * /*disambiguate*/ = 0) const;
+    payloadImpl(const int * /*disambiguate*/ = nullptr) const;
     template <typename T>
     typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, T >::type
     payloadImpl() const;
 
     template <typename T>
     typename std::enable_if<Internal::PayloadTrait<T>::isPolymorphic, bool>::type
-    hasPayloadImpl(const int * /*disambiguate*/ = 0) const;
+    hasPayloadImpl(const int * /*disambiguate*/ = nullptr) const;
     template <typename T>
     typename std::enable_if < !Internal::PayloadTrait<T>::isPolymorphic, bool >::type
     hasPayloadImpl() const;
 
     template <typename T>
     typename std::enable_if<Internal::is_shared_pointer<T>::value, bool>::type
-    tryToClone(T *ret, const int * /*disambiguate*/ = 0) const;
+    tryToClone(T *ret, const int * /*disambiguate*/ = nullptr) const;
     template <typename T>
     typename std::enable_if < !Internal::is_shared_pointer<T>::value, bool >::type
     tryToClone(T *ret) const;
 
     template <typename T, typename NewT>
     typename std::enable_if < !std::is_same<T, NewT>::value, bool >::type
-    tryToCloneImpl(T *ret, const int * /*disambiguate*/ = 0) const;
+    tryToCloneImpl(T *ret, const int * /*disambiguate*/ = nullptr) const;
     template <typename T, typename NewT>
     typename std::enable_if<std::is_same<T, NewT>::value, bool>::type
     tryToCloneImpl(T *ret) const;
@@ -997,7 +997,7 @@ Item::hasPayloadImpl() const
         return true;
     }
 
-    return tryToClone<T>(0);
+    return tryToClone<T>(nullptr);
 }
 
 template <typename T>
