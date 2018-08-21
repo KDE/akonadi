@@ -200,7 +200,7 @@ using ResponsePtr = QSharedPointer<Response>;
 class AKONADIPRIVATE_EXPORT Response : public Command
 {
 public:
-    explicit Response() = default;
+    explicit Response();
     explicit Response(const Response &) = default;
     Response(Response &&) = default;
     Response &operator=(const Response &) = default;

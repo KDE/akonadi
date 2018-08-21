@@ -331,6 +331,12 @@ case Command::x | Command::_ResponseBit: { \
 
 /******************************************************************************/
 
+Response::Response()
+    : Command(Command::Invalid | Command::_ResponseBit)
+    , mErrorCode(0)
+{
+}
+
 Response::Response(Command::Type type)
     : Command(type | Command::_ResponseBit)
     , mErrorCode(0)
