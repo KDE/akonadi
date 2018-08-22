@@ -513,7 +513,7 @@ void ItemSync::slotResult(KJob *job)
 void ItemSync::rollback()
 {
     Q_D(ItemSync);
-    qCWarning(AKONADICORE_LOG) << "The item sync is being rolled-back.";
+    qCDebug(AKONADICORE_LOG) << "The item sync is being rolled-back.";
     setError(UserCanceled);
     if (d->mCurrentTransaction) {
         d->mCurrentTransaction->rollback();
