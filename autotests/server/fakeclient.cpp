@@ -180,7 +180,7 @@ void FakeClient::run()
     mSocket->connectToServer(FakeAkonadiServer::socketFile());
     connect(mSocket, &QLocalSocket::disconnected, this, &FakeClient::connectionLost);
     connect(mSocket, QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
-            this, [this](QLocalSocket::LocalSocketError error) {
+            this, [this]() {
                 qWarning() << "Client socket error: " << mSocket->errorString();
                 connectionLost();
                 QVERIFY(false);
