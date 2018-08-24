@@ -33,8 +33,6 @@ class ProtocolTest : public QObject
     Q_OBJECT
 
 private Q_SLOTS:
-    void testProtocolVersion();
-
     void testFactory_data();
     void testFactory();
 

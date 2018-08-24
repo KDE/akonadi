@@ -26,22 +26,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Protocol;
 
-void ProtocolTest::testProtocolVersion()
-{
-    // So, this test started failing because you bumped protocol version in
-    // protocol.cpp. That means that you most probably changed something
-    // in the protocol. Before you just bump the number here to make the test
-    // pass, please please pretty please make sure to extend the respective
-    // test somewhere below to cover the change you've made. Protocol is the
-    // most critical part of Akonadi and we can't afford not having it tested
-    // properly.
-    //
-    // If it wasn't you who broke it, please go find that person who was too
-    // lazy to extend the test case and beat them with a stick. -- Dan
-
-    QCOMPARE(Akonadi::Protocol::version(), 59);
-}
-
 void ProtocolTest::testFactory_data()
 {
     QTest::addColumn<Command::Type>("type");
