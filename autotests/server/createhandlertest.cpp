@@ -89,8 +89,6 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
             Protocol::FetchCollectionsResponse collection(*resp);
-            collection.setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
-            collection.setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setCollection(std::move(collection));
 
@@ -125,8 +123,6 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
             Protocol::FetchCollectionsResponse collection(*resp);
-            collection.setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
-            collection.setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setCollection(std::move(collection));
 
@@ -156,8 +152,6 @@ private Q_SLOTS:
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateCollectionResponsePtr::create());
 
             Protocol::FetchCollectionsResponse collection(*resp);
-            collection.setMimeTypes({}); // CREATE ntf does not contain mimetypes and attrs
-            collection.setAttributes({});
             auto notification = Protocol::CollectionChangeNotificationPtr::create(*notificationTemplate);
             notification->setSessionId("akonadi_fake_resource_0");
             notification->setParentCollection(0);
