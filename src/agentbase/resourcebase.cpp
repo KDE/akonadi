@@ -1287,7 +1287,7 @@ void ResourceBase::cancelTask(const QString &msg)
 void ResourceBase::deferTask()
 {
     Q_D(ResourceBase);
-    qDebug() << "Deferring task" << d->scheduler->currentTask();
+    qCDebug(AKONADIAGENTBASE_LOG) << "Deferring task" << d->scheduler->currentTask();
     // Deferring a CollectionSync is just not implemented.
     // We'd need to d->mItemSyncer->rollback() but also to NOT call taskDone in slotItemSyncDone() here...
     Q_ASSERT(!d->mItemSyncer);
