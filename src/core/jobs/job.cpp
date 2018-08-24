@@ -149,7 +149,18 @@ void JobPrivate::signalCreationToJobTracker()
                                              << (mParentJob ? QString::number(reinterpret_cast<quintptr>(mParentJob), 16) : QString())
                                              << QString::fromLatin1(q->metaObject()->className())
                                              << jobDebuggingString();
-        s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobCreated"), argumentList);
+        QDBusPendingCall call = s_jobtracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);
+
+
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, q);
+        QObject::connect(watcher, &QDBusPendingCallWatcher::finished, q, [](QDBusPendingCallWatcher *w) {
+                QDBusPendingReply<QString, QByteArray> reply = *w;
+                if (reply.isError()) {
+                    s_jobtracker->deleteLater();
+                    s_jobtracker = nullptr;
+                }
+                w->deleteLater();
+        });
     }
 }
 
