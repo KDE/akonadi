@@ -79,7 +79,9 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
 
 Connection *Connection::self()
 {
-    Q_ASSERT(sConnectionStore->hasLocalData());
+    if (!sConnectionStore->hasLocalData()) {
+        return nullptr;
+    }
     return sConnectionStore->localData();
 }
 
