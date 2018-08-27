@@ -31,6 +31,7 @@
 #include "aggregatedfetchscope.h"
 #include "selectquerybuilder.h"
 #include "handler/fetchhelper.h"
+#include "connection.h"
 
 #include "akonadiserver_debug.h"
 
@@ -242,9 +243,9 @@ void NotificationCollector::clear()
     mNotifications.clear();
 }
 
-void NotificationCollector::setSessionId(const QByteArray &sessionId)
+void NotificationCollector::setConnection(Connection *connection)
 {
-    mSessionId = sessionId;
+    mConnection = connection;
 }
 
 void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::Operation op,
@@ -282,7 +283,9 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     }
 
     auto msg = Protocol::ItemChangeNotificationPtr::create();
-    msg->setSessionId(mSessionId);
+    if (mConnection) {
+        msg->setSessionId(mConnection->sessionId());
+    }
     msg->setOperation(op);
 
     msg->setItemParts(parts);
@@ -383,7 +386,9 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
 {
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
     msg->setOperation(op);
-    msg->setSessionId(mSessionId);
+    if (mConnection) {
+        msg->setSessionId(mConnection->sessionId());
+    }
     msg->setParentCollection(source);
     msg->setParentDestCollection(destination);
     msg->setDestinationResource(destResource);
@@ -457,7 +462,9 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
 {
     auto msg = Protocol::TagChangeNotificationPtr::create();
     msg->setOperation(op);
-    msg->setSessionId(mSessionId);
+    if (mConnection) {
+        msg->setSessionId(mConnection->sessionId());
+    }
     msg->setResource(resource);
     auto msgTag = HandlerHelper::fetchTagsResponse(tag, false);
     msgTag.setRemoteId(remoteId.toUtf8());
@@ -499,7 +506,9 @@ void NotificationCollector::relationNotification(Protocol::RelationChangeNotific
 {
     auto msg = Protocol::RelationChangeNotificationPtr::create();
     msg->setOperation(op);
-    msg->setSessionId(mSessionId);
+    if (mConnection) {
+        msg->setSessionId(mConnection->sessionId());
+    }
     msg->setRelation(HandlerHelper::fetchRelationsResponse(relation));
 
     dispatchNotification(msg);
@@ -535,7 +544,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             // we emit a notification without it and leave it up to the Monitor
             // to retrieve the Item on demand - we should have a RID stored in
             // Akonadi by then.
-            if (Connection::self() && (allHaveRID || msg->operation() != Protocol::ItemChangeNotification::Add)) {
+            if (mConnection && (allHaveRID || msg->operation() != Protocol::ItemChangeNotification::Add)) {
 
                 // Prevent transactions inside FetchHelper to recursively call our slot
                 QScopedValueRollback<bool> ignoreTransactions(mIgnoreTransactions);
@@ -543,7 +552,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 CommandContext context;
                 auto scope = fetchScope->toFetchScope();
                 scope.setFetch(Protocol::ItemFetchScope::CacheOnly);
-                FetchHelper helper(Connection::self(), &context, Scope(ids), scope);
+                FetchHelper helper(mConnection, &context, Scope(ids), scope);
                 QVector<Protocol::FetchItemsResponse> fetchedItems;
                 auto callback = [&fetchedItems](Protocol::FetchItemsResponse &&cmd) {
                     fetchedItems.push_back(std::move(cmd));

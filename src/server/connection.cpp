@@ -57,11 +57,6 @@ static QString connectionIdentifier(Connection *c) {
     return id;
 }
 
-namespace
-{
-Q_GLOBAL_STATIC(QThreadStorage<QPointer<Connection>>, sConnectionStore)
-}
-
 Connection::Connection(QObject *parent)
     : AkThread(connectionIdentifier(this), QThread::InheritPriority, parent)
 {
@@ -77,19 +72,9 @@ Connection::Connection(quintptr socketDescriptor, QObject *parent)
     m_verifyCacheOnRetrieval = settings.value(QStringLiteral("Cache/VerifyOnRetrieval"), m_verifyCacheOnRetrieval).toBool();
 }
 
-Connection *Connection::self()
-{
-    if (!sConnectionStore->hasLocalData()) {
-        return nullptr;
-    }
-    return sConnectionStore->localData();
-}
-
 void Connection::init()
 {
     AkThread::init();
-
-    sConnectionStore->setLocalData(this);
 
     QLocalSocket *socket = new QLocalSocket();
 
@@ -109,6 +94,7 @@ void Connection::init()
     connect(m_idleTimer, &QTimer::timeout,
             this, &Connection::slotConnectionIdle);
 
+    storageBackend()->notificationCollector()->setConnection(this);
 
     if (socket->state() == QLocalSocket::ConnectedState) {
         QTimer::singleShot(0, this, &Connection::handleIncomingData);
@@ -431,7 +417,6 @@ void Connection::setSessionId(const QByteArray &id)
     // this races with the use of objectName() in QThreadPrivate::start
     //thread()->setObjectName(objectName() + QStringLiteral("-Thread"));
     storageBackend()->setSessionId(id);
-    storageBackend()->notificationCollector()->setSessionId(id);
 }
 
 QByteArray Connection::sessionId() const

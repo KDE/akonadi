@@ -35,6 +35,7 @@ namespace Server
 {
 
 class DataStore;
+class Connection;
 
 /**
   Part of the DataStore, collects change notifications and emits
@@ -56,9 +57,9 @@ public:
     virtual ~NotificationCollector() = default;
 
     /**
-      Sets the identifier of the session causing the changes.
-    */
-    void setSessionId(const QByteArray &sessionId);
+     * Sets the connection that is causing the changes.
+     */
+    void setConnection(Connection *connection);
 
     /**
       Notify about an added item.
@@ -252,7 +253,7 @@ protected:
 
 private:
     DataStore *mDb;
-    QByteArray mSessionId;
+    Connection *mConnection = nullptr;
     bool mIgnoreTransactions = false;
 
     Protocol::ChangeNotificationList mNotifications;
