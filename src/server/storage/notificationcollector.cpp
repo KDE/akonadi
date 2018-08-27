@@ -535,7 +535,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             // we emit a notification without it and leave it up to the Monitor
             // to retrieve the Item on demand - we should have a RID stored in
             // Akonadi by then.
-            if (allHaveRID || msg->operation() != Protocol::ItemChangeNotification::Add) {
+            if (Connection::self() && (allHaveRID || msg->operation() != Protocol::ItemChangeNotification::Add)) {
 
                 // Prevent transactions inside FetchHelper to recursively call our slot
                 QScopedValueRollback<bool> ignoreTransactions(mIgnoreTransactions);
