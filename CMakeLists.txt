@@ -7,7 +7,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 
 # ECM setup
-set(KF5_VERSION "5.48.0")
+set(KF5_VERSION "5.49.0")
 
 find_package(ECM ${KF5_VERSION} CONFIG REQUIRED)
 
