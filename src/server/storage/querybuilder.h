@@ -250,6 +250,14 @@ public:
     */
     qint64 insertId();
 
+    /**
+      Indicate to the database to acquire an exclusive lock on the rows already during
+      SELECT statement.
+
+      Only makes sense in SELECT queries.
+     */
+    void setForUpdate(bool forUpdate = true);
+
 private:
     void buildQuery(QString *query);
     void bindValue(QString *query, const QVariant &value);
@@ -283,6 +291,7 @@ private:
     QMap< QString, QPair< JoinType, Query::Condition > > mJoins;
     int mLimit;
     bool mDistinct;
+    bool mForUpdate = false;
 #ifdef QUERYBUILDER_UNITTEST
     QString mStatement;
     friend class ::QueryBuilderTest;

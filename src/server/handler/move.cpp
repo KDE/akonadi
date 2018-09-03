@@ -39,6 +39,7 @@ void Move::itemsRetrieved(const QList<qint64> &ids)
     Transaction transaction(store, QStringLiteral("MOVE"));
 
     SelectQueryBuilder<PimItem> qb;
+    qb.setForUpdate();
     ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
     qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::NotEquals, mDestination.id());
 
