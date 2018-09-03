@@ -384,6 +384,7 @@ bool AkAppend::parseStream()
     } else {
         // Merging is always restricted to the same collection
         SelectQueryBuilder<PimItem> qb;
+        qb.setForUpdate();
         qb.addValueCondition(PimItem::collectionIdColumn(), Query::Equals, parentCol.id());
         Query::Condition rootCondition(Query::Or);
 
