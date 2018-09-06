@@ -155,7 +155,7 @@ void JobPrivate::signalCreationToJobTracker()
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, q);
         QObject::connect(watcher, &QDBusPendingCallWatcher::finished, q, [](QDBusPendingCallWatcher *w) {
                 QDBusPendingReply<QString, QByteArray> reply = *w;
-                if (reply.isError()) {
+                if (reply.isError() && s_jobtracker) {
                     s_jobtracker->deleteLater();
                     s_jobtracker = nullptr;
                 }
