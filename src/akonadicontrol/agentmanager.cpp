@@ -40,9 +40,6 @@
 
 #include <QCoreApplication>
 #include <QDir>
-#ifndef QT_NO_DEBUG
-#include <QFileSystemWatcher>
-#endif
 #include <QScopedPointer>
 #include <QSettings>
 #include <QDBusConnection>
@@ -54,9 +51,6 @@ static const bool enableAgentServerDefault = false;
 AgentManager::AgentManager(bool verbose, QObject *parent)
     : QObject(parent)
     , mAgentServer(nullptr)
-#ifndef QT_NO_DEBUG
-    , mAgentWatcher(new QFileSystemWatcher(this))
-#endif
     , mVerbose(verbose)
 {
     new AgentManagerAdaptor(this);
@@ -91,10 +85,6 @@ AgentManager::AgentManager(bool verbose, QObject *parent)
         connect(mAgentServer, &Akonadi::ProcessControl::unableToStart, this, &AgentManager::agentServerFailure);
         mAgentServer->start(QStringLiteral("akonadi_agent_server"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
     }
-
-#ifndef QT_NO_DEBUG
-    connect(mAgentWatcher, &QFileSystemWatcher::fileChanged, this, &AgentManager::agentExeChanged);
-#endif
 }
 
 void AgentManager::continueStartup()
@@ -111,18 +101,6 @@ void AgentManager::continueStartup()
     for (const AgentType &info : qAsConst(mAgents)) {
         Q_EMIT agentTypeAdded(info.identifier);
     }
-
-
-#ifndef QT_NO_DEBUG
-    const QStringList pathList = pluginInfoPathList();
-    for (const QString &path : pathList) {
-        QFileSystemWatcher *watcher = new QFileSystemWatcher(this);
-        watcher->addPath(path);
-
-        connect(watcher, &QFileSystemWatcher::directoryChanged,
-                this, &AgentManager::updatePluginInfos);
-    }
-#endif
 
     load();
     for (const AgentType &info : qAsConst(mAgents)) {
@@ -497,11 +475,6 @@ void AgentManager::updatePluginInfos()
 
 void AgentManager::readPluginInfos()
 {
-#ifndef QT_NO_DEBUG
-    if (!mAgentWatcher->files().isEmpty()) {
-        mAgentWatcher->removePaths(mAgentWatcher->files());
-    }
-#endif
     mAgents.clear();
 
     const QStringList pathList = pluginInfoPathList();
@@ -544,11 +517,6 @@ void AgentManager::readPluginInfos(const QDir &directory)
                     qCWarning(AKONADICONTROL_LOG) << "Executable" << agentInfo.exec << "for agent" << agentInfo.identifier << "could not be found!";
                     continue;
                 }
-#ifndef QT_NO_DEBUG
-                if (!mAgentWatcher->files().contains(executable)) {
-                    mAgentWatcher->addPath(executable);
-                }
-#endif
             }
 
             qCDebug(AKONADICONTROL_LOG) << "PLUGINS inserting: " << agentInfo.identifier << agentInfo.instanceCounter << agentInfo.capabilities;

@@ -28,9 +28,6 @@
 #include "agentinstance.h"
 
 class QDir;
-#ifndef QT_NO_DEBUG
-class QFileSystemWatcher;
-#endif
 
 namespace Akonadi
 {
@@ -375,9 +372,6 @@ private:
 
     Akonadi::ProcessControl *mAgentServer = nullptr;
     Akonadi::ProcessControl *mStorageController = nullptr;
-#ifndef QT_NO_DEBUG
-    QFileSystemWatcher *mAgentWatcher = nullptr;
-#endif
     bool mAgentServerEnabled;
     bool mVerbose;
 
