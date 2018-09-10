@@ -71,9 +71,10 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     d->Widget = new Akonadi::AgentTypeWidget(this);
     connect(d->Widget, &AgentTypeWidget::activated, this, &AgentTypeDialog::accept);
 
-    KFilterProxySearchLine *searchLine = new KFilterProxySearchLine(this);
+    QLineEdit *searchLine = new QLineEdit(this);
     layout->addWidget(searchLine);
-    searchLine->setProxy(d->Widget->agentFilterProxyModel());
+    searchLine->setClearButtonEnabled(true);
+    connect(searchLine, &QLineEdit::textChanged, d->Widget->agentFilterProxyModel(), &AgentFilterProxyModel::setFilterFixedString);
 
     layout->addWidget(d->Widget);
 
@@ -86,7 +87,7 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     layout->addWidget(buttonBox);
     d->readConfig();
 
-    searchLine->lineEdit()->setFocus();
+    searchLine->setFocus();
 }
 
 AgentTypeDialog::~AgentTypeDialog()
