@@ -28,11 +28,17 @@
     </method>
     <method name="synchronizeCollection">
       <arg name="collectionId" type="x" direction="in"/>
-      <arg name="recursive"  type="b" direction="in"/>      
+      <arg name="recursive"  type="b" direction="in"/>
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="synchronizeCollectionAttributes">
       <arg name="collectionId" type="x" direction="in"/>
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="synchronizeTags">
+      <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
+    </method>
+    <method name="synchronizeRelations">
       <annotation name="org.freedesktop.DBus.Method.NoReply" value="true"/>
     </method>
     <method name="setName">

@@ -166,6 +166,16 @@ public:
     void synchronizeCollectionTree();
 
     /**
+     * Triggers a synchronization of tags by the given agent instance.
+     */
+    void synchronizeTags();
+
+    /**
+     * Triggers a synchronization of relations by the given agent instance.
+     */
+    void synchronizeRelations();
+
+    /**
      * @internal
      * @param other other agent instance
      */

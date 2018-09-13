@@ -445,6 +445,24 @@ void AgentManager::agentInstanceSynchronizeCollection(const QString &identifier,
     mAgentInstances.value(identifier)->resourceInterface()->synchronizeCollection(collection, recursive);
 }
 
+void AgentManager::agentInstanceSynchronizeTags(const QString &identifier)
+{
+    if (!checkResourceInterface(identifier, QStringLiteral("agentInstanceSynchronizeTags"))) {
+        return;
+    }
+
+    mAgentInstances.value(identifier)->resourceInterface()->synchronizeTags();
+}
+
+void AgentManager::agentInstanceSynchronizeRelations(const QString &identifier)
+{
+    if (!checkResourceInterface(identifier, QStringLiteral("agentInstanceSynchronizeRelations"))) {
+        return;
+    }
+
+    mAgentInstances.value(identifier)->resourceInterface()->synchronizeRelations();
+}
+
 void AgentManager::restartAgentInstance(const QString &identifier)
 {
     if (!checkInstance(identifier)) {

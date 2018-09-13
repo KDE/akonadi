@@ -197,6 +197,18 @@ public Q_SLOTS:
     void agentInstanceSynchronizeCollection(const QString &identifier, qint64 collection, bool recursive);
 
     /**
+     * Trigger a synchronization of tags by the given resource agent.
+     * @param identifier The resource agent identifier.
+     */
+    void agentInstanceSynchronizeTags(const QString &identifier);
+
+    /**
+     * Trigger a synchronization of relations by the given resource agent.
+     * @param identifier The resource agent identifir.
+     */
+    void agentInstanceSynchronizeRelations(const QString &identifier);
+
+    /**
       Returns if the agent instance @p identifier is in online mode.
     */
     bool agentInstanceOnline(const QString &identifier);

@@ -82,6 +82,8 @@ public:
     void configure(const AgentInstance &instance, QWidget *parent);
     void synchronize(const AgentInstance &instance);
     void synchronizeCollectionTree(const AgentInstance &instance);
+    void synchronizeTags(const AgentInstance &instance);
+    void synchronizeRelations(const AgentInstance &instance);
 
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
     void createDBusInterface();
