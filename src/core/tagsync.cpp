@@ -29,6 +29,7 @@ class Item;
 #include "jobs/tagfetchjob.h"
 #include "jobs/tagcreatejob.h"
 #include "jobs/tagmodifyjob.h"
+#include "tagfetchscope.h"
 
 using namespace Akonadi;
 
@@ -79,6 +80,7 @@ void TagSync::doStart()
     // qCDebug(AKONADICORE_LOG);
     //This should include all tags, including the ones that don't have a remote id
     Akonadi::TagFetchJob *fetch = new Akonadi::TagFetchJob(this);
+    fetch->fetchScope().setFetchRemoteId(true);
     connect(fetch, &KJob::result, this, &TagSync::onLocalTagFetchDone);
 }
 

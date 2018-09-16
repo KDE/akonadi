@@ -69,18 +69,22 @@ using namespace Akonadi::Server;
 #define PROF_INC(name)
 #endif
 
-FetchHelper::FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope)
-    : FetchHelper(connection, connection->context(), scope, fetchScope)
+FetchHelper::FetchHelper(Connection *connection, const Scope &scope,
+                         const Protocol::ItemFetchScope &itemFetchScope,
+                         const Protocol::TagFetchScope &tagFetchScope)
+    : FetchHelper(connection, connection->context(), scope, itemFetchScope, tagFetchScope)
 {
 }
 
 
-FetchHelper::FetchHelper(Connection *connection, CommandContext *context,
-                         const Scope &scope, const Protocol::ItemFetchScope &fetchScope)
+FetchHelper::FetchHelper(Connection *connection, CommandContext *context, const Scope &scope,
+                         const Protocol::ItemFetchScope &itemFetchScope,
+                         const Protocol::TagFetchScope &tagFetchScope)
     : mConnection(connection)
     , mContext(context)
     , mScope(scope)
-    , mFetchScope(fetchScope)
+    , mItemFetchScope(itemFetchScope)
+    , mTagFetchScope(tagFetchScope)
 {
     std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
 }
@@ -148,22 +152,22 @@ QSqlQuery FetchHelper::buildItemQuery()
     int column = 0;
 #define ADD_COLUMN(colName, colId) { itemQuery.addColumn( colName ); mItemQueryColumnMap[colId] = column++; }
     ADD_COLUMN(PimItem::idFullColumnName(), ItemQueryPimItemIdColumn);
-    if (mFetchScope.fetchRemoteId()) {
+    if (mItemFetchScope.fetchRemoteId()) {
         ADD_COLUMN(PimItem::remoteIdFullColumnName(), ItemQueryPimItemRidColumn)
     }
     ADD_COLUMN(PimItem::mimeTypeIdFullColumnName(), ItemQueryMimeTypeIdColumn)
     ADD_COLUMN(PimItem::revFullColumnName(), ItemQueryRevColumn)
-    if (mFetchScope.fetchRemoteRevision()) {
+    if (mItemFetchScope.fetchRemoteRevision()) {
         ADD_COLUMN(PimItem::remoteRevisionFullColumnName(), ItemQueryRemoteRevisionColumn)
     }
-    if (mFetchScope.fetchSize()) {
+    if (mItemFetchScope.fetchSize()) {
         ADD_COLUMN(PimItem::sizeFullColumnName(), ItemQuerySizeColumn)
     }
-    if (mFetchScope.fetchMTime()) {
+    if (mItemFetchScope.fetchMTime()) {
         ADD_COLUMN(PimItem::datetimeFullColumnName(), ItemQueryDatetimeColumn)
     }
     ADD_COLUMN(PimItem::collectionIdFullColumnName(), ItemQueryCollectionIdColumn)
-    if (mFetchScope.fetchGID()) {
+    if (mItemFetchScope.fetchGID()) {
         ADD_COLUMN(PimItem::gidFullColumnName(), ItemQueryPimItemGidColumn)
     }
 #undef ADD_COLUMN
@@ -172,8 +176,8 @@ QSqlQuery FetchHelper::buildItemQuery()
 
     ItemQueryHelper::scopeToQuery(mScope, mContext, itemQuery);
 
-    if (mFetchScope.changedSince().isValid()) {
-        itemQuery.addValueCondition(PimItem::datetimeFullColumnName(), Query::GreaterOrEqual, mFetchScope.changedSince().toUTC());
+    if (mItemFetchScope.changedSince().isValid()) {
+        itemQuery.addValueCondition(PimItem::datetimeFullColumnName(), Query::GreaterOrEqual, mItemFetchScope.changedSince().toUTC());
     }
 
     if (!itemQuery.exec()) {
@@ -336,7 +340,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
 #if ENABLE_FETCH_PROFILING
     double scopeLocalElapsed = 0;
 #endif
-    if (!mFetchScope.cacheOnly() || isScopeLocal(mScope)) {
+    if (!mItemFetchScope.cacheOnly() || isScopeLocal(mScope)) {
 #if ENABLE_FETCH_PROFILING
         scopeLocalElapsed = scopeLocalTimer.elapsed();
 #endif
@@ -348,10 +352,10 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
         // From a resource perspective the only parts that can be fetched are payloads.
         ItemRetriever retriever(mConnection);
         retriever.setScope(mScope);
-        retriever.setRetrieveParts(mFetchScope.requestedPayloads());
-        retriever.setRetrieveFullPayload(mFetchScope.fullPayload());
-        retriever.setChangedSince(mFetchScope.changedSince());
-        if (!retriever.exec() && !mFetchScope.ignoreErrors()) {   // There we go, retrieve the missing parts from the resource.
+        retriever.setRetrieveParts(mItemFetchScope.requestedPayloads());
+        retriever.setRetrieveFullPayload(mItemFetchScope.fullPayload());
+        retriever.setChangedSince(mItemFetchScope.changedSince());
+        if (!retriever.exec() && !mItemFetchScope.ignoreErrors()) {   // There we go, retrieve the missing parts from the resource.
             if (mContext->resource().isValid()) {
                 throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1, resource %2) : %3")
                                        .arg(mContext->collectionId())
@@ -373,7 +377,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
     // error if query did not find any item and scope is not listing items but
     // a request for a specific item
     if (!itemQuery.isValid()) {
-        if (mFetchScope.ignoreErrors()) {
+        if (mItemFetchScope.ignoreErrors()) {
             return true;
         }
         switch (mScope.scope()) {
@@ -390,15 +394,15 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
     // build part query if needed
     BEGIN_TIMER(parts)
     QSqlQuery partQuery(DataStore::self()->database());
-    if (!mFetchScope.requestedParts().isEmpty() || mFetchScope.fullPayload() || mFetchScope.allAttributes()) {
-        partQuery = buildPartQuery(mFetchScope.requestedParts(), mFetchScope.fullPayload(), mFetchScope.allAttributes());
+    if (!mItemFetchScope.requestedParts().isEmpty() || mItemFetchScope.fullPayload() || mItemFetchScope.allAttributes()) {
+        partQuery = buildPartQuery(mItemFetchScope.requestedParts(), mItemFetchScope.fullPayload(), mItemFetchScope.allAttributes());
     }
     END_TIMER(parts)
 
     // build flag query if needed
     BEGIN_TIMER(flags)
     QSqlQuery flagQuery(DataStore::self()->database());
-    if (mFetchScope.fetchFlags()) {
+    if (mItemFetchScope.fetchFlags()) {
         flagQuery = buildFlagQuery();
     }
     END_TIMER(flags)
@@ -406,14 +410,14 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
     // build tag query if needed
     BEGIN_TIMER(tags)
     QSqlQuery tagQuery(DataStore::self()->database());
-    if (mFetchScope.fetchTags()) {
+    if (mItemFetchScope.fetchTags()) {
         tagQuery = buildTagQuery();
     }
     END_TIMER(tags)
 
     BEGIN_TIMER(vRefs)
     QSqlQuery vRefQuery(DataStore::self()->database());
-    if (mFetchScope.fetchVirtualReferences()) {
+    if (mItemFetchScope.fetchVirtualReferences()) {
         vRefQuery = buildVRefQuery();
     }
     END_TIMER(vRefs)
@@ -445,25 +449,25 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
             mtIter = mimeTypeIdNameCache.insert(mimeTypeId, MimeType::retrieveById(mimeTypeId).name());
         }
         response.setMimeType(mtIter.value());
-        if (mFetchScope.fetchRemoteId()) {
+        if (mItemFetchScope.fetchRemoteId()) {
             response.setRemoteId(extractQueryResult(itemQuery, ItemQueryPimItemRidColumn).toString());
         }
         response.setParentId(extractQueryResult(itemQuery, ItemQueryCollectionIdColumn).toLongLong());
 
-        if (mFetchScope.fetchSize()) {
+        if (mItemFetchScope.fetchSize()) {
             response.setSize(extractQueryResult(itemQuery, ItemQuerySizeColumn).toLongLong());
         }
-        if (mFetchScope.fetchMTime()) {
+        if (mItemFetchScope.fetchMTime()) {
             response.setMTime(Utils::variantToDateTime(extractQueryResult(itemQuery, ItemQueryDatetimeColumn)));
         }
-        if (mFetchScope.fetchRemoteRevision()) {
+        if (mItemFetchScope.fetchRemoteRevision()) {
             response.setRemoteRevision(extractQueryResult(itemQuery, ItemQueryRemoteRevisionColumn).toString());
         }
-        if (mFetchScope.fetchGID()) {
+        if (mItemFetchScope.fetchGID()) {
             response.setGid(extractQueryResult(itemQuery, ItemQueryPimItemGidColumn).toString());
         }
 
-        if (mFetchScope.fetchFlags()) {
+        if (mItemFetchScope.fetchFlags()) {
             QVector<QByteArray> flags;
             while (flagQuery.isValid()) {
                 const qint64 id = flagQuery.value(FlagQueryPimItemIdColumn).toLongLong();
@@ -484,11 +488,9 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
             response.setFlags(flags);
         }
 
-        if (mFetchScope.fetchTags()) {
+        if (mItemFetchScope.fetchTags()) {
             QVector<qint64> tagIds;
             QVector<Protocol::FetchTagsResponse> tags;
-            //We don't take the fetch scope into account yet. It's either id only or the full tag.
-            const bool fullTagsRequested = !mFetchScope.tagFetchScope().isEmpty();
             while (tagQuery.isValid()) {
                 PROF_INC(tagsCount)
                 const qint64 id = tagQuery.value(TagQueryItemIdColumn).toLongLong();
@@ -503,7 +505,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
             }
 
             tags.reserve(tagIds.count());
-            if (!fullTagsRequested) {
+            if (mTagFetchScope.fetchIdOnly()) {
                 for (qint64 tagId : qAsConst(tagIds)) {
                     Protocol::FetchTagsResponse resp;
                     resp.setId(tagId);
@@ -511,13 +513,13 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
                 }
             } else {
                 for (qint64 tagId : qAsConst(tagIds)) {
-                    tags.push_back(HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId)));
+                    tags.push_back(HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId), mTagFetchScope, mConnection));
                 }
             }
             response.setTags(tags);
         }
 
-        if (mFetchScope.fetchVirtualReferences()) {
+        if (mItemFetchScope.fetchVirtualReferences()) {
             QVector<qint64> vRefs;
             while (vRefQuery.isValid()) {
                 PROF_INC(vRefsCount)
@@ -534,7 +536,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
             response.setVirtualReferences(vRefs);
         }
 
-        if (mFetchScope.fetchRelations()) {
+        if (mItemFetchScope.fetchRelations()) {
             SelectQueryBuilder<Relation> qb;
             Query::Condition condition;
             condition.setSubQueryMode(Query::Or);
@@ -554,7 +556,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
             response.setRelations(relations);
         }
 
-        if (mFetchScope.ancestorDepth() != Protocol::ItemFetchScope::NoAncestor) {
+        if (mItemFetchScope.ancestorDepth() != Protocol::ItemFetchScope::NoAncestor) {
             response.setAncestors(ancestorsForItem(response.parentId()));
         }
 
@@ -585,13 +587,13 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
             metaPart.setSize(partQuery.value(PartQueryDataSizeColumn).toLongLong());
 
             const QByteArray data = Utils::variantToByteArray(partQuery.value(PartQueryDataColumn));
-            if (mFetchScope.checkCachedPayloadPartsOnly()) {
+            if (mItemFetchScope.checkCachedPayloadPartsOnly()) {
                 if (!data.isEmpty()) {
                     cachedParts << ptIter.value();
                 }
                 partQuery.next();
             } else {
-                if (mFetchScope.ignoreErrors() && data.isEmpty()) {
+                if (mItemFetchScope.ignoreErrors() && data.isEmpty()) {
                     //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
                     //This is not an error though, it's fine to have empty payload parts (to denote existing but not cached parts)
                     qCDebug(AKONADISERVER_LOG) << "item" << id << "has an empty payload part in parttable for part" << metaPart.name();
@@ -607,7 +609,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
                 }
                 partData.setMetaData(metaPart);
 
-                if (mFetchScope.requestedParts().contains(ptIter.value()) || mFetchScope.fullPayload() || mFetchScope.allAttributes()) {
+                if (mItemFetchScope.requestedParts().contains(ptIter.value()) || mItemFetchScope.fullPayload() || mItemFetchScope.allAttributes()) {
                     parts.append(partData);
                 }
 
@@ -621,7 +623,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
             continue;
         }
 
-        if (mFetchScope.checkCachedPayloadPartsOnly()) {
+        if (mItemFetchScope.checkCachedPayloadPartsOnly()) {
             response.setCachedParts(cachedParts);
         }
 
@@ -637,7 +639,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
 
     // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
     BEGIN_TIMER(aTime)
-    if (needsAccessTimeUpdate(mFetchScope.requestedParts()) || mFetchScope.fullPayload()) {
+    if (needsAccessTimeUpdate(mItemFetchScope.requestedParts()) || mItemFetchScope.fullPayload()) {
         updateItemAccessTime();
     }
     END_TIMER(aTime)
@@ -689,7 +691,7 @@ void FetchHelper::updateItemAccessTime()
 
 void FetchHelper::triggerOnDemandFetch()
 {
-    if (mContext->collectionId() <= 0 || mFetchScope.cacheOnly()) {
+    if (mContext->collectionId() <= 0 || mItemFetchScope.cacheOnly()) {
         return;
     }
 
@@ -712,7 +714,7 @@ void FetchHelper::triggerOnDemandFetch()
 
 QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentColId)
 {
-    if (mFetchScope.ancestorDepth() == Protocol::ItemFetchScope::NoAncestor || parentColId == 0) {
+    if (mItemFetchScope.ancestorDepth() == Protocol::ItemFetchScope::NoAncestor || parentColId == 0) {
         return QVector<Protocol::Ancestor>();
     }
     const auto it = mAncestorCache.constFind(parentColId);
@@ -722,7 +724,7 @@ QVector<Protocol::Ancestor> FetchHelper::ancestorsForItem(Collection::Id parentC
 
     QVector<Protocol::Ancestor> ancestors;
     Collection col = Collection::retrieveById(parentColId);
-    const int depthNum = mFetchScope.ancestorDepth() == Protocol::ItemFetchScope::ParentAncestor ? 1 : INT_MAX;
+    const int depthNum = mItemFetchScope.ancestorDepth() == Protocol::ItemFetchScope::ParentAncestor ? 1 : INT_MAX;
     for (int i = 0; i < depthNum; ++i) {
         if (!col.isValid()) {
             Protocol::Ancestor ancestor;

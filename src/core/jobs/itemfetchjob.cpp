@@ -25,6 +25,7 @@
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "session_p.h"
+#include "tagfetchscope.h"
 #include "private/protocol_p.h"
 
 
@@ -195,7 +196,8 @@ void ItemFetchJob::doStart()
         d->sendCommand(Protocol::FetchItemsCommandPtr::create(
                            d->mRequestedItems.isEmpty() ? Scope() : ProtocolHelper::entitySetToScope(d->mRequestedItems),
                            ProtocolHelper::commandContextToProtocol(d->mCollection, d->mCurrentTag, d->mRequestedItems),
-                           ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope)));
+                           ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope),
+                           ProtocolHelper::tagFetchScopeToProtocol(d->mFetchScope.tagFetchScope())));
     } catch (const Akonadi::Exception &e) {
         setError(Job::Unknown);
         setErrorText(QString::fromUtf8(e.what()));

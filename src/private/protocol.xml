@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="60">
+<protocol version="61">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -76,6 +76,8 @@
 
   <class name="TagFetchScope">
     <param name="fetchIdOnly" type="bool" default="false" />
+    <param name="fetchRemoteID" type="bool" default="false" />
+    <param name="fetchAllAttributes" type="bool" default="true" />
     <param name="attributes" type="QSet&lt;QByteArray&gt;" />
   </class>
 
@@ -229,8 +231,7 @@
     </ctor>
 
     <param name="scope" type="Scope"/>
-    <param name="attributes" type="QSet&lt;QByteArray&gt;"/>
-    <param name="idOnly" type="bool" />
+    <param name="fetchScope" type="Akonadi::Protocol::TagFetchScope" />
   </command>
 
   <response name="FetchTags">
@@ -260,13 +261,15 @@
     <ctor>
       <arg name="scope" />
       <arg name="scopeContext" default="ScopeContext()" />
-      <arg name="fetchScope" default="ItemFetchScope()" />
+      <arg name="itemFetchScope" default="ItemFetchScope()" />
+      <arg name="tagFetchScope" default="TagFetchScope()" />
     </ctor>
 
     <param name="scope" type="Scope" />
     <param name="scopeContext" type="Akonadi::Protocol::ScopeContext" />
-    <param name="fetchScope" type="Akonadi::Protocol::ItemFetchScope" />
-  </command>
+    <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope" />
+    <param name="tagFetchScope" type="Akonadi::Protocol::TagFetchScope" />
+</command>
 
   <response name="FetchItems">
     <ctor>
@@ -635,7 +638,8 @@
     <param name="mimeTypes" type="QStringList" />
     <param name="collections" type="QVector&lt;qint64&gt;" />
     <param name="query" type="QString" />
-    <param name="fetchScope" type="Akonadi::Protocol::ItemFetchScope" />
+    <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope" />
+    <param name="tagFetchScope" type="Akonadi::Protocol::TagFetchScope" />
     <param name="recursive" type="bool" />
     <param name="remote" type="bool" />
   </command>
@@ -1099,6 +1103,7 @@
     <param name="allMonitored" type="bool" />
     <param name="exclusive" type="bool" />
     <param name="itemFetchScope" type="Akonadi::Protocol::ItemFetchScope" />
+    <param name="tagFetchScope" type="Akonadi::Protocol::TagFetchScope" />
     <param name="collectionFetchScope" type="Akonadi::Protocol::CollectionFetchScope" />
   </notification>
 

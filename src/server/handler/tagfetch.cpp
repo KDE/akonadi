@@ -32,7 +32,7 @@ bool TagFetch::parseStream()
         return failureResponse("Only UID-based TAGFETCH is supported");
     }
 
-    TagFetchHelper helper(connection(),  cmd.scope());
+    TagFetchHelper helper(connection(),  cmd.scope(), cmd.fetchScope());
     if (!helper.fetchTags()) {
         return failureResponse("Failed to fetch tags");
     }

@@ -69,6 +69,28 @@ public:
     QSet<QByteArray> attributes() const;
 
     /**
+     * Sets whether to fetch tag remote ID.
+     *
+     * This option only has effect for Resources.
+     */
+    void setFetchRemoteId(bool fetchRemoteId);
+
+    /**
+     * Returns whether tag remote ID should be fetched.
+     */
+    bool fetchRemoteId() const;
+
+    /**
+     * Sets whether to fetch all attributes.
+     */
+    void setFetchAllAttributes(bool fetchAllAttributes);
+
+    /**
+     * Returns whether to fetch all attributes
+     */
+    bool fetchAllAttributes() const;
+
+    /**
      * Sets whether the attribute of the given @p type should be fetched.
      *
      * @param type The attribute type to fetch.

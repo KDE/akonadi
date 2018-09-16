@@ -27,6 +27,7 @@
 #include <tagcreatejob.h>
 #include <tag.h>
 #include <tagsync.h>
+#include <tagfetchscope.h>
 #include <resourceselectjob_p.h>
 #include <itemcreatejob.h>
 #include <itemfetchjob.h>
@@ -53,6 +54,7 @@ private Q_SLOTS:
     Tag::List getTags()
     {
         TagFetchJob *fetchJob = new TagFetchJob();
+        fetchJob->fetchScope().setFetchRemoteId(true);
         bool ret = fetchJob->exec();
         Q_ASSERT(ret);
         return fetchJob->tags();
@@ -123,7 +125,7 @@ private Q_SLOTS:
         }
 
         QHash<QString, Item::List> tagMembers;
-        tagMembers.insert(QString::fromLatin1(tag1.remoteId()), Item::List() << item1);
+        tagMembers.insert(QString::fromLatin1(tag1.remoteId()), { item1 });
 
         TagSync *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
@@ -138,6 +140,8 @@ private Q_SLOTS:
         tag1 = resultTags.first();
 
         ItemFetchJob *fetchJob = new ItemFetchJob(tag1);
+        fetchJob->fetchScope().setFetchTags(true);
+        fetchJob->fetchScope().tagFetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->items().count(), tagMembers.value(QString::fromLatin1(tag1.remoteId())).count());
         QCOMPARE(fetchJob->items(), tagMembers.value(QString::fromLatin1(tag1.remoteId())));

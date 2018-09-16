@@ -46,8 +46,12 @@ class Connection;
 class FetchHelper
 {
 public:
-    FetchHelper(Connection *connection, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
-    FetchHelper(Connection *connection, CommandContext *context, const Scope &scope, const Protocol::ItemFetchScope &fetchScope);
+    FetchHelper(Connection *connection, const Scope &scope,
+            const Protocol::ItemFetchScope &itemFetchScope,
+            const Protocol::TagFetchScope &tagFagScope);
+    FetchHelper(Connection *connection, CommandContext *context, const Scope &scope,
+            const Protocol::ItemFetchScope &itemFetchScope,
+            const Protocol::TagFetchScope &tagFetchScope);
 
     bool fetchItems(std::function<void(Protocol::FetchItemsResponse &&)> &&callback = {});
 
@@ -86,7 +90,8 @@ private:
     CommandContext *mContext = nullptr;
     QHash<Collection::Id, QVector<Protocol::Ancestor>> mAncestorCache;
     Scope mScope;
-    Protocol::ItemFetchScope mFetchScope;
+    Protocol::ItemFetchScope mItemFetchScope;
+    Protocol::TagFetchScope mTagFetchScope;
     int mItemQueryColumnMap[ItemQueryColumnCount];
 
     friend class ::FetchHelperTest;

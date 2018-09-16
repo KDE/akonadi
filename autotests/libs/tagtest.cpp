@@ -161,6 +161,7 @@ void TagTest::testRID()
 
     {
         TagFetchJob *fetchJob = new TagFetchJob(this);
+        fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
         QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
@@ -195,10 +196,8 @@ void TagTest::testRIDIsolation()
     qint64 tagId;
     {
         TagFetchJob *fetchJob = new TagFetchJob(this);
+        fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
-        Q_FOREACH (const Tag &tag, fetchJob->tags()) {
-            qDebug() << tag.gid();
-        }
         QCOMPARE(fetchJob->tags().count(), 1);
         QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
         QCOMPARE(fetchJob->tags().first().type(), QByteArray("mytype"));
@@ -219,6 +218,7 @@ void TagTest::testRIDIsolation()
 
     {
         TagFetchJob *fetchJob = new TagFetchJob(this);
+        fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().count(), 1);
         QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));

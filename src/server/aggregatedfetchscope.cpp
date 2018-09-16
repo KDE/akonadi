@@ -100,6 +100,8 @@ public:
     QSet<QByteArray> attrs;
     QHash<QByteArray, int> attrsCount;
     int fetchIdOnly = 0;
+    int fetchRemoteId = 0;
+    int fetchAllAttributes = 0;
 };
 
 class AggregatedItemFetchScopePrivate : public AggregatedFetchScopePrivate
@@ -228,9 +230,6 @@ void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope,
     if (newParts != oldParts) {
         d->applySet(oldParts, newParts, d->parts, d->partsCount);
     }
-    if (newScope.tagFetchScope() != oldScope.tagFetchScope()) {
-        d->applySet(oldScope.tagFetchScope(), newScope.tagFetchScope(), d->tags, d->tagsCount);
-    }
     if (newScope.ancestorDepth() != oldScope.ancestorDepth()) {
         updateAncestorDepth(oldScope.ancestorDepth(), newScope.ancestorDepth());
     }
@@ -264,9 +263,6 @@ void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope,
     if (newScope.fetchGID() != oldScope.fetchGID()) {
         setFetchGID(newScope.fetchGID());
     }
-    if (newScope.fetchTags() != oldScope.fetchTags()) {
-        setFetchTags(newScope.fetchTags());
-    }
     if (newScope.fetchRelations() != oldScope.fetchRelations()) {
         setFetchRelations(newScope.fetchRelations());
     }
@@ -286,7 +282,6 @@ ItemFetchScope AggregatedItemFetchScope::toFetchScope() const
 
     d->mCachedScope = ItemFetchScope();
     d->mCachedScope.setRequestedParts(setToVector(d->parts));
-    d->mCachedScope.setTagFetchScope(d->tags);
     d->mCachedScope.setAncestorDepth(ancestorDepth());
 
     d->mCachedScope.setFetch(ItemFetchScope::CacheOnly, cacheOnly());
@@ -299,7 +294,6 @@ ItemFetchScope AggregatedItemFetchScope::toFetchScope() const
     d->mCachedScope.setFetch(ItemFetchScope::Flags, fetchFlags());
     d->mCachedScope.setFetch(ItemFetchScope::RemoteID, fetchRemoteId());
     d->mCachedScope.setFetch(ItemFetchScope::GID, fetchGID());
-    d->mCachedScope.setFetch(ItemFetchScope::Tags, fetchTags());
     d->mCachedScope.setFetch(ItemFetchScope::Relations, fetchRelations());
     d->mCachedScope.setFetch(ItemFetchScope::VirtReferences, fetchVirtualReferences());
     d->mCachedScopeValid = true;
@@ -322,24 +316,6 @@ void AggregatedItemFetchScope::removeRequestedPart(const QByteArray &part)
 {
     LOCKED_D(AggregatedItemFetchScope)
     d->removeFromSet(part, d->parts, d->partsCount);
-}
-
-QSet<QByteArray> AggregatedItemFetchScope::tagFetchScope() const
-{
-    LOCKED_D(const AggregatedItemFetchScope)
-    return d->tags;
-}
-
-void AggregatedItemFetchScope::addTag(const QByteArray &tag)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->addToSet(tag, d->tags, d->tagsCount);
-}
-
-void AggregatedItemFetchScope::removeTag(const QByteArray &tag)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->removeFromSet(tag, d->tags, d->tagsCount);
 }
 
 ItemFetchScope::AncestorDepth AggregatedItemFetchScope::ancestorDepth() const
@@ -499,19 +475,6 @@ void AggregatedItemFetchScope::setFetchGID(bool fetchGid)
     d->updateBool(fetchGid, d->fetchGID);
 }
 
-bool AggregatedItemFetchScope::fetchTags() const
-{
-    LOCKED_D(const AggregatedItemFetchScope)
-    // Aggregation: return true if there's at least one subscriber who wants tags
-    return d->fetchTags > 0;
-}
-
-void AggregatedItemFetchScope::setFetchTags(bool fetchTags)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchTags, d->fetchTags);
-}
-
 bool AggregatedItemFetchScope::fetchRelations() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
@@ -561,11 +524,26 @@ void AggregatedTagFetchScope::apply(const Protocol::TagFetchScope &oldScope,
     if (newScope.fetchIdOnly() != oldScope.fetchIdOnly()) {
         setFetchIdOnly(newScope.fetchIdOnly());
     }
+    if (newScope.fetchRemoteID() != oldScope.fetchRemoteID()) {
+        setFetchRemoteId(newScope.fetchRemoteID());
+    }
+    if (newScope.fetchAllAttributes() != oldScope.fetchAllAttributes()) {
+        setFetchAllAttributes(newScope.fetchAllAttributes());
+    }
     if (newScope.attributes() != oldScope.attributes()) {
         d->applySet(oldScope.attributes(), newScope.attributes(), d->attrs, d->attrsCount);
     }
 }
 
+Protocol::TagFetchScope AggregatedTagFetchScope::toFetchScope() const
+{
+    Protocol::TagFetchScope tfs;
+    tfs.setFetchIdOnly(fetchIdOnly());
+    tfs.setFetchRemoteID(fetchRemoteId());
+    tfs.setFetchAllAttributes(fetchAllAttributes());
+    tfs.setAttributes(attributes());
+    return tfs;
+}
 
 bool AggregatedTagFetchScope::fetchIdOnly() const
 {
@@ -579,6 +557,30 @@ void AggregatedTagFetchScope::setFetchIdOnly(bool fetchIdOnly)
 {
     LOCKED_D(AggregatedTagFetchScope)
     d->updateBool(fetchIdOnly, d->fetchIdOnly);
+}
+
+bool AggregatedTagFetchScope::fetchRemoteId() const
+{
+    LOCKED_D(const AggregatedTagFetchScope)
+    return d->fetchRemoteId > 0;
+}
+
+void AggregatedTagFetchScope::setFetchRemoteId(bool fetchRemoteId)
+{
+    LOCKED_D(AggregatedTagFetchScope)
+    d->updateBool(fetchRemoteId, d->fetchRemoteId);
+}
+
+bool AggregatedTagFetchScope::fetchAllAttributes() const
+{
+    LOCKED_D(const AggregatedTagFetchScope)
+    return d->fetchAllAttributes > 0;
+}
+
+void AggregatedTagFetchScope::setFetchAllAttributes(bool fetchAllAttributes)
+{
+    LOCKED_D(AggregatedTagFetchScope)
+    d->updateBool(fetchAllAttributes, d->fetchAllAttributes);
 }
 
 QSet<QByteArray> AggregatedTagFetchScope::attributes() const

@@ -466,12 +466,13 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
         msg->setSessionId(mConnection->sessionId());
     }
     msg->setResource(resource);
-    auto msgTag = HandlerHelper::fetchTagsResponse(tag, false);
+    Protocol::FetchTagsResponse msgTag;
+    msgTag.setId(tag.id());
     msgTag.setRemoteId(remoteId.toUtf8());
     if (auto mgr = AkonadiServer::instance()->notificationManager()) {
         auto fetchScope = mgr->tagFetchScope();
         if (!fetchScope->fetchIdOnly() && msgTag.gid().isEmpty()) {
-            msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag.id()), false);
+            msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag.id()), fetchScope->toFetchScope(), mConnection);
         }
 
         const auto requestedAttrs = fetchScope->attributes();
@@ -550,9 +551,10 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 QScopedValueRollback<bool> ignoreTransactions(mIgnoreTransactions);
                 mIgnoreTransactions = true;
                 CommandContext context;
-                auto scope = fetchScope->toFetchScope();
-                scope.setFetch(Protocol::ItemFetchScope::CacheOnly);
-                FetchHelper helper(mConnection, &context, Scope(ids), scope);
+                auto itemFetchScope = fetchScope->toFetchScope();
+                auto tagFetchScope = mgr->tagFetchScope()->toFetchScope();
+                itemFetchScope.setFetch(Protocol::ItemFetchScope::CacheOnly);
+                FetchHelper helper(mConnection, &context, Scope(ids), itemFetchScope, tagFetchScope);
                 QVector<Protocol::FetchItemsResponse> fetchedItems;
                 auto callback = [&fetchedItems](Protocol::FetchItemsResponse &&cmd) {
                     fetchedItems.push_back(std::move(cmd));

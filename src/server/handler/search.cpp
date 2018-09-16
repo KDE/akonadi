@@ -62,7 +62,8 @@ bool Search::parseStream()
         return successResponse<Protocol::SearchResponse>();
     }
 
-    mFetchScope = cmd.fetchScope();
+    mItemFetchScope = cmd.itemFetchScope();
+    mTagFetchScope = cmd.tagFetchScope();
 
     SearchRequest request(connection()->sessionId());
     request.setCollections(collections);
@@ -97,6 +98,6 @@ void Search::processResults(const QSet<qint64> &results)
     Scope scope;
     scope.setUidSet(imapSet);
 
-    FetchHelper fetchHelper(connection(), scope, mFetchScope);
+    FetchHelper fetchHelper(connection(), scope, mItemFetchScope, mTagFetchScope);
     fetchHelper.fetchItems();
 }

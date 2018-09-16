@@ -381,17 +381,7 @@ Protocol::ItemFetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetc
     fs.setFetch(Protocol::ItemFetchScope::RemoteID, fetchScope.fetchRemoteIdentification());
     fs.setFetch(Protocol::ItemFetchScope::RemoteRevision, fetchScope.fetchRemoteIdentification());
     fs.setFetch(Protocol::ItemFetchScope::GID, fetchScope.fetchGid());
-    if (fetchScope.fetchTags()) {
-        fs.setFetch(Protocol::ItemFetchScope::Tags);
-        if (!fetchScope.tagFetchScope().fetchIdOnly()) {
-            if (fetchScope.tagFetchScope().attributes().isEmpty()) {
-                fs.setTagFetchScope({ "ALL" });
-            } else {
-                fs.setTagFetchScope(fetchScope.tagFetchScope().attributes());
-            }
-        }
-    }
-
+    fs.setFetch(Protocol::ItemFetchScope::Tags, fetchScope.fetchTags());
     fs.setFetch(Protocol::ItemFetchScope::VirtReferences, fetchScope.fetchVirtualReferences());
     fs.setFetch(Protocol::ItemFetchScope::MTime, fetchScope.fetchModificationTime());
     fs.setFetch(Protocol::ItemFetchScope::Relations, fetchScope.fetchRelations());
@@ -426,10 +416,10 @@ ItemFetchScope ProtocolHelper::parseItemFetchScope(const Protocol::ItemFetchScop
         ifs.setIgnoreRetrievalErrors(true);
     }
     switch (fetchScope.ancestorDepth()) {
-    case Protocol::Ancestor::ParentAncestor:
+        case Protocol::ItemFetchScope::ParentAncestor:
         ifs.setAncestorRetrieval(ItemFetchScope::Parent);
         break;
-    case Protocol::Ancestor::AllAncestors:
+        case Protocol::ItemFetchScope::AllAncestors:
         ifs.setAncestorRetrieval(ItemFetchScope::All);
         break;
     default:
@@ -447,14 +437,6 @@ ItemFetchScope ProtocolHelper::parseItemFetchScope(const Protocol::ItemFetchScop
     }
     if (fetchScope.fetch(Protocol::ItemFetchScope::Tags)) {
         ifs.setFetchTags(true);
-        const auto tfs = fetchScope.tagFetchScope();
-        if (tfs.isEmpty()) {
-            ifs.tagFetchScope().setFetchIdOnly(true);
-        } else if (QSet<QByteArray>({ "ALL" }) != tfs) {
-            for (const auto &attr : tfs) {
-                ifs.tagFetchScope().fetchAttribute(attr, true);
-            }
-        }
     }
     if (fetchScope.fetch(Protocol::ItemFetchScope::VirtReferences)) {
         ifs.setFetchVirtualReferences(true);
@@ -570,6 +552,8 @@ Protocol::TagFetchScope ProtocolHelper::tagFetchScopeToProtocol(const TagFetchSc
     Protocol::TagFetchScope tfs;
     tfs.setFetchIdOnly(fetchScope.fetchIdOnly());
     tfs.setAttributes(fetchScope.attributes());
+    tfs.setFetchRemoteID(fetchScope.fetchRemoteId());
+    tfs.setFetchAllAttributes(fetchScope.fetchAllAttributes());
     return tfs;
 }
 
@@ -577,6 +561,8 @@ TagFetchScope ProtocolHelper::parseTagFetchScope(const Protocol::TagFetchScope &
 {
     TagFetchScope tfs;
     tfs.setFetchIdOnly(fetchScope.fetchIdOnly());
+    tfs.setFetchRemoteId(fetchScope.fetchRemoteID());
+    tfs.setFetchAllAttributes(fetchScope.fetchAllAttributes());
     const auto attrs = fetchScope.attributes();
     for (const auto &attr : attrs) {
         tfs.fetchAttribute(attr, true);

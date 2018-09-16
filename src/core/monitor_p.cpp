@@ -136,7 +136,7 @@ void MonitorPrivate::invalidateCollectionCache(qint64 id)
 
 void MonitorPrivate::invalidateItemCache(qint64 id)
 {
-    itemCache->update(QList<Item::Id>() << id, mItemFetchScope);
+    itemCache->update({ id }, mItemFetchScope);
     // Also invalidate content of all any pending notification for given item
     for (auto it = pendingNotifications.begin(), end = pendingNotifications.end(); it != end; ++it) {
         if ((*it)->type() == Protocol::Command::ItemChangeNotification) {

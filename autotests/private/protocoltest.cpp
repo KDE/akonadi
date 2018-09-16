@@ -233,7 +233,6 @@ void ProtocolTest::testFetchScope()
 
     in.setRequestedParts(requestedParts);
     in.setChangedSince(QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), Qt::UTC));
-    in.setTagFetchScope({ "TAGID" });
     in.setAncestorDepth(ItemFetchScope::AllAncestors);
     in.setFetch(ItemFetchScope::CacheOnly);
     in.setFetch(ItemFetchScope::CheckCachedPayloadPartsOnly);
@@ -254,7 +253,6 @@ void ProtocolTest::testFetchScope()
     QCOMPARE(out.requestedParts(), expectedParts);
     QCOMPARE(out.requestedPayloads(), expectedPayloads);
     QCOMPARE(out.changedSince(), QDateTime(QDate(2015, 8, 10), QTime(23, 52, 20), Qt::UTC));
-    QCOMPARE(out.tagFetchScope(), QSet<QByteArray>{ "TAGID" });
     QCOMPARE(out.ancestorDepth(), ItemFetchScope::AllAncestors);
     QCOMPARE(out.fetch(ItemFetchScope::None), false);
     QCOMPARE(out.cacheOnly(), true);

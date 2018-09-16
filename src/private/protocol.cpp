@@ -508,7 +508,6 @@ bool ItemFetchScope::operator==(const ItemFetchScope &other) const
 {
     return mRequestedParts == other.mRequestedParts
             && mChangedSince == other.mChangedSince
-            && mTagFetchScope == other.mTagFetchScope
             && mAncestorDepth == other.mAncestorDepth
             && mFlags == other.mFlags;
 }
@@ -549,11 +548,6 @@ void ItemFetchScope::toJson(QJsonObject &json) const
 {
     json[QStringLiteral("flags")] = static_cast<int>(mFlags);
     QJsonArray tagFetchArray;
-    for (const auto &tag : qAsConst(mTagFetchScope)) {
-        tagFetchArray.append(QString::fromUtf8(tag));
-    }
-    json[QStringLiteral("TagFetchScope")] = tagFetchArray;
-
     json[QStringLiteral("ChangedSince")] = mChangedSince.toString();
     json[QStringLiteral("AncestorDepth")] = static_cast<std::underlying_type<AncestorDepth>::type>(mAncestorDepth);
 
@@ -581,7 +575,6 @@ DataStream &operator<<(DataStream &stream, const ItemFetchScope &scope)
 {
     return stream << scope.mRequestedParts
                   << scope.mChangedSince
-                  << scope.mTagFetchScope
                   << scope.mAncestorDepth
                   << scope.mFlags;
 }
@@ -590,7 +583,6 @@ DataStream &operator>>(DataStream &stream, ItemFetchScope &scope)
 {
     return stream >> scope.mRequestedParts
                   >> scope.mChangedSince
-                  >> scope.mTagFetchScope
                   >> scope.mAncestorDepth
                   >> scope.mFlags;
 }
@@ -599,7 +591,6 @@ QDebug operator<<(QDebug dbg, const ItemFetchScope &scope)
 {
     return dbg.noquote() << "FetchScope(\n"
             << "Fetch Flags:" << scope.mFlags << "\n"
-            << "Tag Fetch Scope:" << scope.mTagFetchScope << "\n"
             << "Changed Since:" << scope.mChangedSince << "\n"
             << "Ancestor Depth:" << scope.mAncestorDepth << "\n"
             << "Requested Parts:" << scope.mRequestedParts << ")\n";

@@ -42,7 +42,7 @@ bool Fetch::parseStream()
 
     CacheCleanerInhibitor inhibitor;
 
-    FetchHelper fetchHelper(connection(), cmd.scope(), cmd.fetchScope());
+    FetchHelper fetchHelper(connection(), cmd.scope(), cmd.itemFetchScope(), cmd.tagFetchScope());
     if (!fetchHelper.fetchItems()) {
         return failureResponse(QStringLiteral("Failed to fetch items"));
     }

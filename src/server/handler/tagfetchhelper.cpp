@@ -27,9 +27,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-TagFetchHelper::TagFetchHelper(Connection *connection, const Scope &scope)
+TagFetchHelper::TagFetchHelper(Connection *connection, const Scope &scope, const Protocol::TagFetchScope &fetchScope)
     : mConnection(connection)
     , mScope(scope)
+    , mFetchScope(fetchScope)
 {
 }
 
@@ -52,7 +53,7 @@ QSqlQuery TagFetchHelper::buildAttributeQuery() const
     return qb.query();
 }
 
-QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id)
+QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id, const Protocol::TagFetchScope &fetchScope)
 {
     QueryBuilder qb(TagAttribute::tableName());
     qb.addColumn(TagAttribute::tagIdColumn());
@@ -61,6 +62,13 @@ QSqlQuery TagFetchHelper::buildAttributeQuery(qint64 id)
     qb.addSortColumn(TagAttribute::tagIdColumn(), Query::Descending);
 
     qb.addValueCondition(TagAttribute::tagIdColumn(), Query::Equals, id);
+    if (!fetchScope.fetchAllAttributes() && !fetchScope.attributes().isEmpty()) {
+        QVariantList typeNames;
+        const auto attrs = fetchScope.attributes();
+        std::transform(attrs.cbegin(), attrs.cend(), std::back_inserter(typeNames),
+                [](const QByteArray &ba) { return QVariant(ba); });
+        qb.addValueCondition(TagAttribute::typeColumn(), Query::In, typeNames);
+    }
 
     if (!qb.exec()) {
         throw HandlerException("Unable to list tag attributes");
@@ -82,7 +90,7 @@ QSqlQuery TagFetchHelper::buildTagQuery()
     qb.addColumn(TagType::nameFullColumnName());
 
     // Expose tag's remote ID only to resources
-    if (mConnection->context()->resource().isValid()) {
+    if (mFetchScope.fetchRemoteID() && mConnection->context()->resource().isValid()) {
         qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
         Query::Condition joinCondition;
         joinCondition.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(),
@@ -102,11 +110,12 @@ QSqlQuery TagFetchHelper::buildTagQuery()
     return qb.query();
 }
 
-QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId)
+QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId,
+        const Protocol::TagFetchScope &fetchScope)
 {
     QMap<QByteArray, QByteArray> attributes;
 
-    QSqlQuery attributeQuery = buildAttributeQuery(tagId);
+    QSqlQuery attributeQuery = buildAttributeQuery(tagId, fetchScope);
     while (attributeQuery.isValid()) {
         attributes.insert(Utils::variantToByteArray(attributeQuery.value(1)),
                           Utils::variantToByteArray(attributeQuery.value(2)));
@@ -119,35 +128,40 @@ bool TagFetchHelper::fetchTags()
 {
 
     QSqlQuery tagQuery = buildTagQuery();
-    QSqlQuery attributeQuery = buildAttributeQuery();
+    QSqlQuery attributeQuery;
+    if (!mFetchScope.fetchIdOnly()) {
+        attributeQuery = buildAttributeQuery();
+    }
 
     while (tagQuery.isValid()) {
         const qint64 tagId = tagQuery.value(0).toLongLong();
         Protocol::FetchTagsResponse response;
         response.setId(tagId);
-        response.setGid(Utils::variantToByteArray(tagQuery.value(1)));
-        response.setParentId(tagQuery.value(2).toLongLong());
-        response.setType(Utils::variantToByteArray(tagQuery.value(3)));
-        if (mConnection->context()->resource().isValid()) {
-            response.setRemoteId(Utils::variantToByteArray(tagQuery.value(4)));
-        }
-
-        QMap<QByteArray, QByteArray> tagAttributes;
-        while (attributeQuery.isValid()) {
-            const qint64 id = attributeQuery.value(0).toLongLong();
-            if (id > tagId) {
-                attributeQuery.next();
-                continue;
-            } else if (id < tagId) {
-                break;
+        if (!mFetchScope.fetchIdOnly()) {
+            response.setGid(Utils::variantToByteArray(tagQuery.value(1)));
+            response.setParentId(tagQuery.value(2).toLongLong());
+            response.setType(Utils::variantToByteArray(tagQuery.value(3)));
+            if (mFetchScope.fetchRemoteID() && mConnection->context()->resource().isValid()) {
+                response.setRemoteId(Utils::variantToByteArray(tagQuery.value(4)));
             }
 
-            tagAttributes.insert(Utils::variantToByteArray(attributeQuery.value(1)),
-                                 Utils::variantToByteArray(attributeQuery.value(2)));
-            attributeQuery.next();
-        }
+            QMap<QByteArray, QByteArray> tagAttributes;
+            while (attributeQuery.isValid()) {
+                const qint64 id = attributeQuery.value(0).toLongLong();
+                if (id > tagId) {
+                    attributeQuery.next();
+                    continue;
+                } else if (id < tagId) {
+                    break;
+                }
 
-        response.setAttributes(tagAttributes);
+                tagAttributes.insert(Utils::variantToByteArray(attributeQuery.value(1)),
+                                     Utils::variantToByteArray(attributeQuery.value(2)));
+                attributeQuery.next();
+            }
+
+            response.setAttributes(tagAttributes);
+        }
 
         mConnection->sendResponse(std::move(response));
 

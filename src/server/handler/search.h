@@ -44,7 +44,8 @@ public:
 private:
     void processResults(const QSet<qint64> &results);
 
-    Protocol::ItemFetchScope mFetchScope;
+    Protocol::ItemFetchScope mItemFetchScope;
+    Protocol::TagFetchScope mTagFetchScope;
     QSet<qint64> mAllResults;
 };
 

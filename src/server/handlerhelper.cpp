@@ -206,39 +206,68 @@ QVector<Protocol::Ancestor> HandlerHelper::ancestorsResponse(int ancestorDepth,
     return rv;
 }
 
+
 Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
-        bool withRID,
+        const Protocol::TagFetchScope &tagFetchScope,
         Connection *connection)
 {
     Protocol::FetchTagsResponse response;
     response.setId(tag.id());
+    qCDebug(AKONADISERVER_LOG) << "TAGFETCH IDONLY" << tagFetchScope.fetchIdOnly();
+    if (tagFetchScope.fetchIdOnly()) {
+        return response;
+    }
+
     response.setType(tag.tagType().name().toUtf8());
     response.setParentId(tag.parentId());
     response.setGid(tag.gid().toUtf8());
-
-    if (withRID && connection) {
+    qCDebug(AKONADISERVER_LOG) << "TAGFETCH" << tagFetchScope.fetchRemoteID() << connection;
+    if (tagFetchScope.fetchRemoteID() && connection) {
+        qCDebug(AKONADISERVER_LOG) << connection->context()->resource().name();
         // Fail silently if retrieving tag RID is not allowed in current context
-        if (!connection->context()->resource().isValid()) {
-            return response;
+        if (connection->context()->resource().isValid()) {
+            QueryBuilder qb(TagRemoteIdResourceRelation::tableName());
+            qb.addColumn(TagRemoteIdResourceRelation::remoteIdColumn());
+            qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(),
+                                 Query::Equals,
+                                 connection->context()->resource().id());
+            qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(),
+                                 Query::Equals,
+                                 tag.id());
+            if (!qb.exec()) {
+                throw HandlerException("Unable to query Tag Remote ID");
+            }
+            QSqlQuery query = qb.query();
+            // RID may not be available
+            if (query.next()) {
+                response.setRemoteId(Utils::variantToByteArray(query.value(0)));
+            }
         }
+    }
 
-        QueryBuilder qb(TagRemoteIdResourceRelation::tableName());
-        qb.addColumn(TagRemoteIdResourceRelation::remoteIdColumn());
-        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(),
-                             Query::Equals,
-                             connection->context()->resource().id());
-        qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(),
-                             Query::Equals,
-                             tag.id());
+    if (tagFetchScope.fetchAllAttributes() || !tagFetchScope.attributes().isEmpty()) {
+        QueryBuilder qb(TagAttribute::tableName());
+        qb.addColumns({ TagAttribute::typeFullColumnName(),
+                        TagAttribute::valueFullColumnName() });
+        Query::Condition cond(Query::And);
+        cond.addValueCondition(TagAttribute::tagIdFullColumnName(), Query::Equals, tag.id());
+        if (!tagFetchScope.fetchAllAttributes() && !tagFetchScope.attributes().isEmpty()) {
+            QVariantList types;
+            const auto scope = tagFetchScope.attributes();
+            std::transform(scope.cbegin(), scope.cend(), std::back_inserter(types),
+                    [](const QByteArray &ba) { return QVariant(ba); });
+            cond.addValueCondition(TagAttribute::typeFullColumnName(), Query::In, types);
+        }
         if (!qb.exec()) {
-            throw HandlerException("Unable to query Tag Remote ID");
+            throw HandlerException("Unable to query Tag Attributes");
         }
         QSqlQuery query = qb.query();
-        // No RID for this tag
-        if (!query.next()) {
-            return response;
+        Protocol::Attributes attributes;
+        while (query.next()) {
+            attributes.insert(Utils::variantToByteArray(query.value(0)),
+                              Utils::variantToByteArray(query.value(1)));
         }
-        response.setRemoteId(Utils::variantToByteArray(query.value(0)));
+        response.setAttributes(attributes);
     }
 
     return response;

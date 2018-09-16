@@ -339,9 +339,6 @@ public:
     inline void setChangedSince(const QDateTime &changedSince) { mChangedSince = changedSince; }
     inline QDateTime changedSince() const { return mChangedSince; }
 
-    inline void setTagFetchScope(const QSet<QByteArray> &tagFetchScope) { mTagFetchScope = tagFetchScope; }
-    inline QSet<QByteArray> tagFetchScope() const { return mTagFetchScope; }
-
     inline void setAncestorDepth(AncestorDepth depth) { mAncestorDepth = depth; }
     inline AncestorDepth ancestorDepth() const { return mAncestorDepth; }
 
@@ -370,7 +367,6 @@ private:
     FetchFlags mFlags = None;
     QVector<QByteArray> mRequestedParts;
     QDateTime mChangedSince;
-    QSet<QByteArray> mTagFetchScope;
 
     friend AKONADIPRIVATE_EXPORT Akonadi::Protocol::DataStream &operator<<(Akonadi::Protocol::DataStream &stream,
                                                                            const Akonadi::Protocol::ItemFetchScope &scope);

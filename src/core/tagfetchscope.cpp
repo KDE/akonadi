@@ -29,6 +29,8 @@ struct Q_DECL_HIDDEN Akonadi::TagFetchScope::Private {
 
     QSet<QByteArray> mAttributes;
     bool mFetchIdOnly = false;
+    bool mFetchAllAttrs = true;
+    bool mFetchRemotId = false;
 };
 
 TagFetchScope::TagFetchScope()
@@ -51,6 +53,8 @@ TagFetchScope &TagFetchScope::operator=(const TagFetchScope &other)
 {
     d->mAttributes = other.d->mAttributes;
     d->mFetchIdOnly = other.d->mFetchIdOnly;
+    d->mFetchRemotId = other.d->mFetchRemotId;
+    d->mFetchAllAttrs = other.d->mFetchAllAttrs;
     return *this;
 }
 
@@ -78,3 +82,24 @@ bool TagFetchScope::fetchIdOnly() const
 {
     return d->mFetchIdOnly;
 }
+
+void TagFetchScope::setFetchRemoteId(bool fetchRemoteId)
+{
+    d->mFetchRemotId = fetchRemoteId;
+}
+
+bool TagFetchScope::fetchRemoteId() const
+{
+    return d->mFetchRemotId;
+}
+
+void TagFetchScope::setFetchAllAttributes(bool fetchAllAttrs)
+{
+    d->mFetchAllAttrs = fetchAllAttrs;
+}
+
+bool TagFetchScope::fetchAllAttributes() const
+{
+    return d->mFetchAllAttrs;
+}
+

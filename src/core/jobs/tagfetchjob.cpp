@@ -131,8 +131,7 @@ void TagFetchJob::doStart()
             return;
         }
     }
-    cmd->setAttributes(d->mFetchScope.attributes());
-    cmd->setIdOnly(d->mFetchScope.fetchIdOnly());
+    cmd->setFetchScope(ProtocolHelper::tagFetchScopeToProtocol(d->mFetchScope));
 
     d->sendCommand(cmd);
 }

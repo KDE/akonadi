@@ -20,6 +20,7 @@
 #include "itemsearchjob.h"
 
 #include "itemfetchscope.h"
+#include "tagfetchscope.h"
 #include "job_p.h"
 #include "protocolhelper_p.h"
 #include "searchquery.h"
@@ -87,7 +88,8 @@ public:
     QStringList mMimeTypes;
     bool mRecursive = false;
     bool mRemote = false;
-    ItemFetchScope mFetchScope;
+    ItemFetchScope mItemFetchScope;
+    TagFetchScope mTagFetchScope;
 
     Item::List mItems;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
@@ -151,14 +153,28 @@ void ItemSearchJob::setFetchScope(const ItemFetchScope &fetchScope)
 {
     Q_D(ItemSearchJob);
 
-    d->mFetchScope = fetchScope;
+    d->mItemFetchScope = fetchScope;
 }
 
 ItemFetchScope &ItemSearchJob::fetchScope()
 {
     Q_D(ItemSearchJob);
 
-    return d->mFetchScope;
+    return d->mItemFetchScope;
+}
+
+void ItemSearchJob::setTagFetchScope(const TagFetchScope &fetchScope)
+{
+    Q_D(ItemSearchJob);
+
+    d->mTagFetchScope = fetchScope;
+}
+
+TagFetchScope &ItemSearchJob::tagFetchScope()
+{
+    Q_D(ItemSearchJob);
+
+    return d->mTagFetchScope;
 }
 
 void ItemSearchJob::setSearchCollections(const Collection::List &collections)
@@ -226,7 +242,8 @@ void ItemSearchJob::doStart()
     cmd->setRecursive(d->mRecursive);
     cmd->setRemote(d->mRemote);
     cmd->setQuery(QString::fromUtf8(d->mQuery.toJSON()));
-    cmd->setFetchScope(ProtocolHelper::itemFetchScopeToProtocol(d->mFetchScope));
+    cmd->setItemFetchScope(ProtocolHelper::itemFetchScopeToProtocol(d->mItemFetchScope));
+    cmd->setTagFetchScope(ProtocolHelper::tagFetchScopeToProtocol(d->mTagFetchScope));
 
     d->sendCommand(cmd);
 }

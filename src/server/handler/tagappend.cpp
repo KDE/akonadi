@@ -125,12 +125,16 @@ bool TagAppend::parseStream()
 
     trx.commit();
 
-    // FIXME BIN
     Scope scope;
     ImapSet set;
     set.add(QVector<qint64>() << tagId);
     scope.setUidSet(set);
-    TagFetchHelper helper(connection(), scope);
+
+    Protocol::TagFetchScope fetchScope;
+    fetchScope.setFetchRemoteID(true);
+    fetchScope.setFetchAllAttributes(true);
+
+    TagFetchHelper helper(connection(), scope, fetchScope);
     if (!helper.fetchTags()) {
         return failureResponse("Failed to fetch the new tag");
     }

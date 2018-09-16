@@ -29,6 +29,7 @@
 namespace Akonadi
 {
 
+class TagFetchScope;
 class ItemFetchScope;
 class ItemSearchJobPrivate;
 class SearchQuery;
@@ -125,6 +126,22 @@ public:
      * @see setFetchScope() for replacing the current item fetch scope
      */
     ItemFetchScope &fetchScope();
+
+    /**
+     * Sets the tag fetch scope.
+     *
+     * The tag fetch scope affects what scope of tags for each Item will be
+     * retrieved.
+     */
+    void setTagFetchScope(const TagFetchScope &fetchScope);
+
+    /**
+     * Returns the tag fetch scope.
+     *
+     * Since this returns a reference it can be used to conveniently modify
+     * the current scope in-place.
+     */
+    TagFetchScope &tagFetchScope();
 
     /**
      * Returns the items that matched the search query.

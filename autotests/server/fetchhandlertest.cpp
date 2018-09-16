@@ -63,7 +63,9 @@ public:
     Protocol::FetchItemsCommandPtr createCommand(const Scope &scope, const Protocol::ScopeContext &ctx = Protocol::ScopeContext())
     {
         auto cmd = Protocol::FetchItemsCommandPtr::create(scope, ctx);
-        cmd->fetchScope().setFetch(Protocol::ItemFetchScope::IgnoreErrors);
+        auto fetchScope = cmd->itemFetchScope();
+        fetchScope.setFetch(Protocol::ItemFetchScope::IgnoreErrors);
+        cmd->setItemFetchScope(fetchScope);
         return cmd;
     }
 

@@ -319,14 +319,12 @@ bool AkAppend::sendResponse(const PimItem &item, Protocol::CreateItemCommand::Me
                         Protocol::ItemFetchScope::RemoteRevision |
                         Protocol::ItemFetchScope::Size |
                         Protocol::ItemFetchScope::Tags);
-    fetchScope.setTagFetchScope({ "GID" });
-
     ImapSet set;
     set.add(QVector<qint64>() << item.id());
     Scope scope;
     scope.setUidSet(set);
 
-    FetchHelper fetchHelper(connection(), scope, fetchScope);
+    FetchHelper fetchHelper(connection(), scope, fetchScope, Protocol::TagFetchScope{});
     if (!fetchHelper.fetchItems()) {
         return failureResponse("Failed to retrieve item");
     }

@@ -24,6 +24,7 @@
 #include <QSqlQuery>
 
 #include <private/scope_p.h>
+#include <private/protocol_p.h>
 
 namespace Akonadi
 {
@@ -36,21 +37,22 @@ class Connection;
 class TagFetchHelper
 {
 public:
-    TagFetchHelper(Connection *connection, const Scope &scope);
+    TagFetchHelper(Connection *connection, const Scope &scope, const Protocol::TagFetchScope &fetchScope);
     ~TagFetchHelper() = default;
 
     bool fetchTags();
 
-    static QMap<QByteArray, QByteArray> fetchTagAttributes(qint64 tagId);
+    static QMap<QByteArray, QByteArray> fetchTagAttributes(qint64 tagId, const Protocol::TagFetchScope &fetchScope);
 
 private:
     QSqlQuery buildTagQuery();
     QSqlQuery buildAttributeQuery() const;
-    static QSqlQuery buildAttributeQuery(qint64 id);
+    static QSqlQuery buildAttributeQuery(qint64 id, const Protocol::TagFetchScope &fetchScope);
 
 private:
     Connection *mConnection = nullptr;
     Scope mScope;
+    Protocol::TagFetchScope mFetchScope;
 };
 
 } // namespace Server

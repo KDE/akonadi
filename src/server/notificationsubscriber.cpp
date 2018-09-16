@@ -327,6 +327,7 @@ Protocol::SubscriptionChangeNotificationPtr NotificationSubscriber::toChangeNoti
     ntf->setAllMonitored(mAllMonitored);
     ntf->setExclusive(mExclusive);
     ntf->setItemFetchScope(mItemFetchScope);
+    ntf->setTagFetchScope(mTagFetchScope);
     ntf->setCollectionFetchScope(mCollectionFetchScope);
     return ntf;
 }

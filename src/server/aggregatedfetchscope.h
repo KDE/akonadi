@@ -69,10 +69,6 @@ public:
     void addRequestedPart(const QByteArray &part);
     void removeRequestedPart(const QByteArray &part);
 
-    QSet<QByteArray> tagFetchScope() const;
-    void addTag(const QByteArray &tag);
-    void removeTag(const QByteArray &tag);
-
     Protocol::ItemFetchScope::AncestorDepth ancestorDepth() const;
     void updateAncestorDepth(Protocol::ItemFetchScope::AncestorDepth oldDepth,
                              Protocol::ItemFetchScope::AncestorDepth newDepth);
@@ -97,8 +93,6 @@ public:
     void setFetchRemoteId(bool fetchRemoteId);
     bool fetchGID() const;
     void setFetchGID(bool fetchGid);
-    bool fetchTags() const;
-    void setFetchTags(bool fetchTags);
     bool fetchRelations() const;
     void setFetchRelations(bool fetchRelations);
     bool fetchVirtualReferences() const;
@@ -119,6 +113,7 @@ public:
 
     void apply(const Protocol::TagFetchScope &oldScope,
                const Protocol::TagFetchScope &newScope);
+    Protocol::TagFetchScope toFetchScope() const;
 
     QSet<QByteArray> attributes() const;
     void addAttribute(const QByteArray &attribute);
@@ -127,6 +122,11 @@ public:
     bool fetchIdOnly() const;
     void setFetchIdOnly(bool fetchIdOnly);
 
+    bool fetchRemoteId() const;
+    void setFetchRemoteId(bool fetchRemoteId);
+
+    bool fetchAllAttributes() const;
+    void setFetchAllAttributes(bool fetchAllAttributes);
 private:
     AggregatedTagFetchScopePrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedTagFetchScope)

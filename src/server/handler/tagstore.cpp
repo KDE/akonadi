@@ -144,9 +144,13 @@ bool TagStore::parseStream()
         ImapSet set;
         set.add(QVector<qint64>() << cmd.tagId());
 
+        Protocol::TagFetchScope fetchScope;
+        fetchScope.setFetchRemoteID(true);
+        fetchScope.setFetchAllAttributes(true);
+
         Scope scope;
         scope.setUidSet(set);
-        TagFetchHelper helper(connection(), scope);
+        TagFetchHelper helper(connection(), scope, fetchScope);
         if (!helper.fetchTags()) {
             return failureResponse("Failed to fetch response");
         }
