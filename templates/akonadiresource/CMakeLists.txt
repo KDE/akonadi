@@ -15,7 +15,7 @@ include(KDECMakeSettings)
 include(KDEFrameworkCompilerSettings NO_POLICY_SCOPE)
 include(ECMQtDeclareLoggingCategory)
 
-set(QT_MIN_VERSION "5.9.1")
+set(QT_MIN_VERSION "5.9.0")
 find_package(Qt5 ${QT_MIN_VERSION} REQUIRED Core DBus Gui)
 
 find_package(KF5Config ${KF5_MIN_VERSION} CONFIG REQUIRED)
