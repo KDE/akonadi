@@ -151,11 +151,11 @@ void JobPrivate::signalCreationToJobTracker()
                                              << jobDebuggingString();
         QDBusPendingCall call = s_jobtracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);
 
-
-        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, q);
-        QObject::connect(watcher, &QDBusPendingCallWatcher::finished, q, [](QDBusPendingCallWatcher *w) {
-                QDBusPendingReply<QString, QByteArray> reply = *w;
+        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, s_jobtracker);
+        QObject::connect(watcher, &QDBusPendingCallWatcher::finished, s_jobtracker, [](QDBusPendingCallWatcher *w) {
+                QDBusPendingReply<void> reply = *w;
                 if (reply.isError() && s_jobtracker) {
+                    qDebug() << reply.error().name() << reply.error().message();
                     s_jobtracker->deleteLater();
                     s_jobtracker = nullptr;
                 }
