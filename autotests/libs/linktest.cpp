@@ -62,6 +62,14 @@ private Q_SLOTS:
         Item::List items;
         items << Item(3) << Item(4) << Item(6);
 
+        // Force-retrieve payload from resource
+        ItemFetchJob *f = new ItemFetchJob(items, this);
+        f->fetchScope().fetchFullPayload();
+        AKVERIFYEXEC(f);
+        Q_FOREACH(const Item &item, f->items()) {
+            QVERIFY(item.hasPayload<QByteArray>());
+        }
+
         Monitor *monitor = new Monitor(this);
         monitor->setCollectionMonitored(col);
         monitor->itemFetchScope().fetchFullPayload();
@@ -83,7 +91,6 @@ private Q_SLOTS:
         QList<QVariant> arg = lspy.takeFirst();
         Item item = arg.at(0).value<Item>();
         QCOMPARE(item.mimeType(), QString::fromLatin1("application/octet-stream"));
-        qDebug() << "TEST" << item.id() << item.loadedPayloadParts() << item.payloadData();
         QVERIFY(item.hasPayload<QByteArray>());
 
         lspy.clear();
