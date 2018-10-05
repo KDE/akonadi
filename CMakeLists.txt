@@ -27,7 +27,7 @@ include(ECMQtDeclareLoggingCategory)
 include(CheckSymbolExists)
 
 include(KDEPackageAppTemplates)
-
+include(ECMMarkNonGuiExecutable)
 
 
 include(AkonadiMacros)
