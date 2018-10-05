@@ -16,7 +16,7 @@ set(CMAKE_MODULE_PATH ${ECM_MODULE_PATH} ${CMAKE_CURRENT_SOURCE_DIR}/cmake/modul
 include(GenerateExportHeader)
 include(ECMGenerateHeaders)
 include(ECMGeneratePriFile)
-include(CMakePackageConfigHelpers)
+
 include(ECMSetupVersion)
 include(FeatureSummary)
 include(KDEInstallDirs)
@@ -27,7 +27,7 @@ include(ECMQtDeclareLoggingCategory)
 include(CheckSymbolExists)
 
 include(KDEPackageAppTemplates)
-include(ECMMarkNonGuiExecutable)
+
 
 
 include(AkonadiMacros)
