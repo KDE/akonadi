@@ -55,6 +55,8 @@ public:
 
     bool fetchItems(std::function<void(Protocol::FetchItemsResponse &&)> &&callback = {});
 
+    void disableATimeUpdates();
+
 private:
     enum ItemQueryColumns {
         ItemQueryPimItemIdColumn,
@@ -93,6 +95,7 @@ private:
     Protocol::ItemFetchScope mItemFetchScope;
     Protocol::TagFetchScope mTagFetchScope;
     int mItemQueryColumnMap[ItemQueryColumnCount];
+    bool mUpdateATimeEnabled = true;
 
     friend class ::FetchHelperTest;
 };

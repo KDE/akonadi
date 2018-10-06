@@ -555,6 +555,9 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 auto tagFetchScope = mgr->tagFetchScope()->toFetchScope();
                 itemFetchScope.setFetch(Protocol::ItemFetchScope::CacheOnly);
                 FetchHelper helper(mConnection, &context, Scope(ids), itemFetchScope, tagFetchScope);
+                // The Item was just changed, which means the atime was
+                // updated, no need to do it again a couple milliseconds later.
+                helper.disableATimeUpdates();
                 QVector<Protocol::FetchItemsResponse> fetchedItems;
                 auto callback = [&fetchedItems](Protocol::FetchItemsResponse &&cmd) {
                     fetchedItems.push_back(std::move(cmd));

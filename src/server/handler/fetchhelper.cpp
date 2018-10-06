@@ -89,6 +89,11 @@ FetchHelper::FetchHelper(Connection *connection, CommandContext *context, const 
     std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
 }
 
+void FetchHelper::disableATimeUpdates()
+{
+    mUpdateATimeEnabled = false;
+}
+
 enum PartQueryColumns {
     PartQueryPimIdColumn,
     PartQueryTypeIdColumn,
@@ -639,7 +644,8 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
 
     // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)
     BEGIN_TIMER(aTime)
-    if (needsAccessTimeUpdate(mItemFetchScope.requestedParts()) || mItemFetchScope.fullPayload()) {
+    if (mUpdateATimeEnabled &&
+            (needsAccessTimeUpdate(mItemFetchScope.requestedParts()) || mItemFetchScope.fullPayload())) {
         updateItemAccessTime();
     }
     END_TIMER(aTime)
