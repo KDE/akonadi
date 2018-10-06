@@ -16,6 +16,7 @@ set(akonadicore_base_SRCS
     changenotificationdependenciesfactory.cpp
     changerecorder.cpp
     changerecorder_p.cpp
+    changerecorderjournal.cpp
     connection.cpp
     collection.cpp
     collectioncolorattribute.cpp

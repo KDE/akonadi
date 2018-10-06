@@ -51,54 +51,10 @@ public:
     QString notificationsFileName() const;
 
     void loadNotifications();
-    QQueue<Protocol::ChangeNotificationPtr> loadFrom(QFile *device, bool &needsFullSave) const;
     QString dumpNotificationListToString() const;
     void addToStream(QDataStream &stream, const Protocol::ChangeNotificationPtr &msg);
     void saveNotifications();
-    void saveTo(QIODevice *device);
 private:
-    enum LegacyType {
-        InvalidType,
-        Item,
-        Collection,
-        Tag,
-        Relation
-    };
-    enum LegacyOp {
-        InvalidOp,
-        Add,
-        Modify,
-        Move,
-        Remove,
-        Link,
-        Unlink,
-        Subscribe,
-        Unsubscribe,
-        ModifyFlags,
-        ModifyTags,
-        ModifyRelations
-    };
-
-    Protocol::ChangeNotificationPtr loadItemNotification(QSettings *settings) const;
-    Protocol::ChangeNotificationPtr loadCollectionNotification(QSettings *settings) const;
-    Protocol::ChangeNotificationPtr loadItemNotification(QDataStream &stream, quint64 version) const;
-    Protocol::ChangeNotificationPtr loadCollectionNotification(QDataStream &stream, quint64 version) const;
-    Protocol::ChangeNotificationPtr loadTagNotification(QDataStream &stream, quint64 version) const;
-    Protocol::ChangeNotificationPtr loadRelationNotification(QDataStream &stream, quint64 version) const;
-    void saveItemNotification(QDataStream &stream, const Protocol::ItemChangeNotification &ntf);
-    void saveCollectionNotification(QDataStream &stream, const Protocol::CollectionChangeNotification &ntf);
-    void saveTagNotification(QDataStream &stream, const Protocol::TagChangeNotification &ntf);
-    void saveRelationNotification(QDataStream &stream, const Protocol::RelationChangeNotification &ntf);
-
-    Protocol::ItemChangeNotification::Operation mapItemOperation(LegacyOp op) const;
-    Protocol::CollectionChangeNotification::Operation mapCollectionOperation(LegacyOp op) const;
-    Protocol::TagChangeNotification::Operation mapTagOperation(LegacyOp op) const;
-    Protocol::RelationChangeNotification::Operation mapRelationOperation(LegacyOp op) const;
-    LegacyType mapToLegacyType(Protocol::Command::Type type) const;
-
-    QSet<Protocol::ItemChangeNotification::Relation> extractRelations(QSet<QByteArray> &flags) const;
-    QSet<QByteArray> encodeRelations(const QSet<Protocol::ItemChangeNotification::Relation> &relations) const;
-
     void dequeueNotification();
     void notificationsLoaded();
     void writeStartOffset();
