@@ -78,7 +78,8 @@ bool DbConfigPostgresql::init(QSettings &settings)
             postgresSearchPath << QStringLiteral(POSTGRES_PATH);
         }
 #endif
-        postgresSearchPath << QStringLiteral("/usr/sbin")
+        postgresSearchPath << QStringLiteral("/usr/bin")
+                           << QStringLiteral("/usr/sbin")
                            << QStringLiteral("/usr/local/sbin");
         // Locale all versions in /usr/lib/postgresql (i.e. /usr/lib/postgresql/X.Y) in reversed
         // sorted order, so we search from the newest one to the oldest.
