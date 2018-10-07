@@ -29,9 +29,9 @@ namespace Akonadi
 {
 
 /**
- * @short Job that restores entites from trash
+ * @short Job that restores entities from trash
  *
- * This job restores the given entites from trash.
+ * This job restores the given entities from trash.
  * The EntityDeletedAttribute is removed and the item is restored to the stored restore collection.
  *
  * If the stored restore collection is not available, the root collection of the original resource is used.

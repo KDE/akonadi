@@ -86,7 +86,7 @@ void CppGenerator::writeHeaderFooter(DocumentNode const * /*node*/)
 void CppGenerator::writeImplHeader(DocumentNode const *node)
 {
     mImpl << "// This is an auto-generated file.\n"
-             "// Any changs to this file will be overwritten\n"
+             "// Any changes to this file will be overwritten\n"
              "\n"
              "namespace Akonadi {\n"
              "namespace Protocol {\n"
@@ -464,7 +464,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     }
 
 
-    // Comparision operator
+    // Comparison operator
     mImpl << "bool " << node->className() << "::operator==(const " << node->className() << " &other) const\n"
              "{\n";
     mImpl << "    return true // simplifies generation\n";

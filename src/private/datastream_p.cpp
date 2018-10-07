@@ -48,7 +48,7 @@ void DataStream::waitForData(QIODevice *device, int timeoutMs)
 {
 #ifdef Q_OS_WIN
     // Apparently readyRead() gets emitted sometimes even if there are no data
-    // so we will re-enter the wait again immediatelly
+    // so we will re-enter the wait again immediately
     while (device->bytesAvailable() == 0) {
         auto ls = qobject_cast<QLocalSocket*>(device);
         if (ls && ls->state() != QLocalSocket::ConnectedState) {

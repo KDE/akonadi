@@ -527,7 +527,7 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
         // else continue
     }
 
-    // we explicitly monitor that colleciton, or all of them
+    // we explicitly monitor that collection, or all of them
     if (isCollectionMonitored(collection.id())) {
         return true;
     }
@@ -648,7 +648,7 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
     }
 
     // session is ignored
-    // TODO: Should this afect SubscriptionChangeNotification and DebugChangeNotification?
+    // TODO: Should this affect SubscriptionChangeNotification and DebugChangeNotification?
     if (mIgnoredSessions.contains(msg.sessionId())) {
         return false;
     }

@@ -89,7 +89,7 @@ void ExternalPartStorageTest::testResolveAbsolutePath()
     }
     QCOMPARE(path, expectedFilePath);
 
-    // Create the file in the old flat heirarchy
+    // Create the file in the old flat hierarchy
     QFile(expectedBasePath + filename).open(QIODevice::WriteOnly);
     QCOMPARE(ExternalPartStorage::resolveAbsolutePath(filename, &exists), QString(expectedBasePath + filename));
     QVERIFY(exists);

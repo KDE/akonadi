@@ -105,7 +105,7 @@ void SearchManager::quit()
     conn.unregisterObject(QStringLiteral("/SearchManager"), QDBusConnection::UnregisterTree);
     conn.disconnectFromBus(conn.name());
 
-    // Make sure all childrens are deleted within context of this thread
+    // Make sure all children are deleted within context of this thread
     qDeleteAll(children());
 
     qDeleteAll(mEngines);

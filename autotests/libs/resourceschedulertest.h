@@ -34,7 +34,7 @@ public Q_SLOTS:
 
 private Q_SLOTS:
 
-    void testTaskComparision();
+    void testTaskComparison();
     void testChangeReplaySchedule();
     void testCustomTask();
     void testCompression();

@@ -58,7 +58,7 @@ public:
     };
 
     /**
-     * Starts the server. This method returns imediately and does not wait
+     * Starts the server. This method returns immediately and does not wait
      * until the server is actually up and running.
      * @return @c true if the start was possible (which not necessarily means
      * the server is really running though) and @c false if an immediate error occurred.

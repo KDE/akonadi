@@ -111,7 +111,7 @@ public:
         NoFilter, ///< No filtering, retrieve all collections
         Display,  ///< Only retrieve collections for display, taking the local preference and enabled into account.
         Sync,     ///< Only retrieve collections for synchronization, taking the local preference and enabled into account.
-        Index,    ///< Only retrieve collections for indxing, taking the local preference and enabled into account.
+        Index,    ///< Only retrieve collections for indexing, taking the local preference and enabled into account.
         Enabled   ///< Only retrieve enabled collections, ignoring the local preference.
     };
 
@@ -142,7 +142,7 @@ public:
     /**
      * Sets whether collection statistics should be included in the retrieved results.
      *
-     * @param include @c true to include collction statistics, @c false otherwise (the default).
+     * @param include @c true to include collection statistics, @c false otherwise (the default).
      */
     void setIncludeStatistics(bool include);
 

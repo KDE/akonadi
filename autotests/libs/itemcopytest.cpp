@@ -123,7 +123,7 @@ private Q_SLOTS:
         QCOMPARE(fetch->items().size(), 1);
         auto copiedItem = fetch->items().at(0);
 
-        // Copied payload should be completely stored inside Akondai
+        // Copied payload should be completely stored inside Akonadi
         QVERIFY(copiedItem.payloadPath().isEmpty());
         QVERIFY(copiedItem.hasPayload<QByteArray>());
         QCOMPARE(copiedItem.payload<QByteArray>(), item.payload<QByteArray>());

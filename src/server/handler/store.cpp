@@ -223,7 +223,7 @@ bool Store::parseStream()
 
     if (cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemovedTags) {
         if (!deleteTags(pimItems, cmd.removedTags(), tagsChanged)) {
-            return failureResponse("Unabel to remove item tags");
+            return failureResponse("Unable to remove item tags");
         }
     }
 
@@ -353,7 +353,7 @@ bool Store::parseStream()
                 }
             }
 
-            // flags change notification went separatly during command parsing
+            // flags change notification went separately during command parsing
             // GID-only changes are ignored to prevent resources from updating their storage when no actual change happened
             if (cmd.notify() && !changes.isEmpty() && !onlyFlagsChanged && !onlyGIDChanged) {
                 // Don't send FLAGS notification in itemChanged

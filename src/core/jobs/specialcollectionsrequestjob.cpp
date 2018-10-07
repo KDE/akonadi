@@ -149,7 +149,7 @@ void SpecialCollectionsRequestJobPrivate::releaseLock()
 void SpecialCollectionsRequestJobPrivate::nextResource()
 {
     if (mFoldersForResource.isEmpty()) {
-        qCDebug(AKONADICORE_LOG) << "All done! Comitting.";
+        qCDebug(AKONADICORE_LOG) << "All done! Committing.";
 
         mSpecialCollections->d->beginBatchRegister();
 

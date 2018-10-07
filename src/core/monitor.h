@@ -59,7 +59,7 @@ class Command;
  * - (+) pass-exit filter, ie. if the filter matches the notification is delivered,
  *   if not evaluation is continued
  * - (f) final filter, ie. evaluation ends here if the corresponding filter criteria is set,
- *   the notification is delievered depending on the result, evaluation is only continued
+ *   the notification is delivered depending on the result, evaluation is only continued
  *   if no filter criteria is defined
  *
  * The following filter are available, listed in evaluation order:
@@ -559,7 +559,7 @@ Q_SIGNALS:
     void itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection);
 
     /**
-     * This signal is emitted if a refernece to items is removed from a virtual collection
+     * This signal is emitted if a reference to items is removed from a virtual collection
      *
      * @param items The unlinked items
      * @param collection The collections the items are unlinked from

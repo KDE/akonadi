@@ -584,7 +584,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
 
             connect(job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)));
 
-            // Accpet the event so that it doesn't propagate.
+            // Accept the event so that it doesn't propagate.
             return true;
         } else {
 //       not a set of uris. Maybe vcards etc. Check if the parent supports them, and maybe do
@@ -787,7 +787,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
     return data;
 }
 
-// Always return false for actions which take place asyncronously, eg via a Job.
+// Always return false for actions which take place asynchronously, eg via a Job.
 bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     Q_D(EntityTreeModel);

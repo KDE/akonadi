@@ -65,7 +65,7 @@ public:
     void startNext();
     /// Disconnects a previously existing connection and tries to reconnect
     void forceReconnect();
-    /// Attemps to establish a connections to the Akonadi server.
+    /// Attempts to establish a connections to the Akonadi server.
     virtual void reconnect();
     void serverStateChanged(ServerManager::State);
     void socketDisconnected();

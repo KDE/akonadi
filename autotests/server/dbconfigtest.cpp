@@ -25,7 +25,7 @@
 #include <private/standarddirs_p.h>
 
 #include <storage/dbconfig.h>
-#include "config-akonadi.h"
+#include <config-akonadi.h>
 
 #define QL1S(x) QStringLiteral(x)
 

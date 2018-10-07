@@ -100,7 +100,7 @@ public:
      * Reimplement to load settings from the configuration object into widgets.
      *
      * @warning Always call the base class implementation at the beginning of
-     * your overriden method!
+     * your overridden method!
      *
      * @see config(), save()
      */
@@ -109,11 +109,11 @@ public:
     /**
      * Reimplement to save new settings into the configuration object.
      *
-     * Return true if the configuration has been succesfully saved and should
+     * Return true if the configuration has been successfully saved and should
      * be applied to the agent, return false otherwise.
      *
      * @warning Always remember call the base class implementation at the end
-     * of your overriden method!
+     * of your overridden method!
      *
      * @see config(), load()
      */
@@ -130,7 +130,7 @@ protected:
     QWidget *parentWidget() const;
 
     /**
-     * Returns KConfig object belongig to the current Akonadi agent instance.
+     * Returns KConfig object belonging to the current Akonadi agent instance.
      */
     KSharedConfigPtr config() const;
 
@@ -140,7 +140,7 @@ protected:
     QString identifier() const;
 
     /**
-     * When KAboutData is provided the dialog will also contian KHelpMenu with
+     * When KAboutData is provided the dialog will also contain KHelpMenu with
      * access to user help etc.
      */
     void setKAboutData(const KAboutData &aboutData);

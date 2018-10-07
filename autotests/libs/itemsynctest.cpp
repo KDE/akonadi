@@ -467,7 +467,7 @@ private Q_SLOTS:
     }
 
     /*
-     * This test verifies that ItemSync doesn't prematurly emit it's result if a job inside a transaction fails.
+     * This test verifies that ItemSync doesn't prematurely emit it's result if a job inside a transaction fails.
      * ItemSync is supposed to continue the sync but simply ignoring all delivered data.
      */
     void testFailingJob()

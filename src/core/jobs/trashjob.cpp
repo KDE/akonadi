@@ -57,7 +57,7 @@ public:
 //4.
     void selectResult(KJob *job);
 //3.
-    //Helper functions to recursivly set the attribute on deleted collections
+    //Helper functions to recursively set the attribute on deleted collections
     void setAttribute(const Akonadi::Collection::List &);
     void setAttribute(const Akonadi::Item::List &);
     //Set attributes after ensuring that move job was successful
@@ -206,7 +206,7 @@ void TrashJob::TrashJobPrivate::parentCollectionReceived(const Akonadi::Collecti
     if (trashCollection.isValid()) {    //Move the items to the correct collection if available
         ItemMoveJob *job = new ItemMoveJob(mCollectionItems.value(parentCollection), trashCollection, q);
         job->setProperty("MovedItems", parentCollection.id());
-        q->connect(job, SIGNAL(result(KJob*)), SLOT(setAttribute(KJob*))); //Wait until the move finished to set the attirbute
+        q->connect(job, SIGNAL(result(KJob*)), SLOT(setAttribute(KJob*))); //Wait until the move finished to set the attribute
         q->connect(job, SIGNAL(result(KJob*)), SLOT(selectResult(KJob*)));
     } else {
         setAttribute(mCollectionItems.value(parentCollection));

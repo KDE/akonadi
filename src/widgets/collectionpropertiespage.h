@@ -140,7 +140,7 @@ public:
     /**
      * Sets the page title.
      *
-     * @param title Translated, preferbly short tab title.
+     * @param title Translated, preferably short tab title.
      */
     void setPageTitle(const QString &title);
 

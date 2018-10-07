@@ -35,8 +35,6 @@
 #include "akonadistarter.h"
 #include "akonadi_version.h"
 
-#include <QSettings>
-
 #include <private/protocol_p.h>
 #include <private/dbus_p.h>
 #include <private/instance_p.h>

@@ -1082,7 +1082,7 @@ void AgentBase::configure(WId windowId)
 {
     Q_UNUSED(windowId);
 
-    // Fallback if the agent implementes the new plugin-based configuration,
+    // Fallback if the agent implements the new plugin-based configuration,
     // but someone calls the deprecated configure() method
     auto instance = Akonadi::AgentManager::self()->instance(identifier());
     QPointer<AgentConfigurationDialog> dialog = new AgentConfigurationDialog(instance, nullptr);

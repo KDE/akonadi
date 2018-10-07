@@ -51,7 +51,7 @@ class Monitor;
 class ChangeNotification;
 
 // A helper struct to wrap pointer to member function (which cannot be contained
-// in a regular ponter)
+// in a regular pointer)
 struct SignalId {
     constexpr SignalId() = default;
 
@@ -378,7 +378,7 @@ private:
     bool fetchCollections() const;
     bool fetchItems() const;
 
-    // A hack to "cast" pointer to member function to something we can easilly
+    // A hack to "cast" pointer to member function to something we can easily
     // use as a key in the hashtable
     template<typename Signal>
     constexpr SignalId signalId(Signal signal) const

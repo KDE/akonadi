@@ -353,7 +353,7 @@ void EtmPopulationTest::testReferenceCollection()
     //Signals for data-changed signal from the referencing
     QCOMPARE(spy.mSignals.count(QStringLiteral("dataChanged")), 2);
 
-    //Dereference the collection and it should dissapear again
+    //Dereference the collection and it should disappear again
     model->setCollectionReferenced(col5, false);
     QTRY_VERIFY(!getIndex(QStringLiteral("col5"), model).isValid());
     //Check that this random other collection is still available

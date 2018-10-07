@@ -82,7 +82,7 @@ public:
      * by the model.
      *
      * @see CollectionStatistics.
-     * @param enable whether to fetch collecton statistics
+     * @param enable whether to fetch collection statistics
      */
     void fetchCollectionStatistics(bool enable);
 

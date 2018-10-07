@@ -203,7 +203,7 @@ public:
 
     /**
      * Returns the parent collection of this object.
-     * @note This will of course only return a useful value if it was explictly retrieved
+     * @note This will of course only return a useful value if it was explictely retrieved
      *       from the Akonadi server.
      * @since 4.4
      */
@@ -211,7 +211,7 @@ public:
 
     /**
      * Returns a reference to the parent collection of this object.
-     * @note This will of course only return a useful value if it was explictly retrieved
+     * @note This will of course only return a useful value if it was explictely retrieved
      *       from the Akonadi server.
      * @since 4.4
      */
@@ -433,7 +433,7 @@ public:
      * to define if a collection should be included depending on the purpose.
      *
      * For example: A collection is by default enabled, meaning it is displayed to the user, synchronized by the resource,
-     * and indexed by the indexer. A disabled collection on the other hand is not displayed, sychronized or indexed.
+     * and indexed by the indexer. A disabled collection on the other hand is not displayed, synchronized or indexed.
      * The local list preference allows to locally override that default value for each purpose individually.
      *
      * The enabled state can be synchronized by backends.
@@ -458,7 +458,7 @@ public:
      */
     enum ListPreference {
         ListEnabled,  ///< Enable collection for specified purpose
-        ListDisabled, ///< Disable collectoin for specified purpose
+        ListDisabled, ///< Disable collection for specified purpose
         ListDefault   ///< Fallback to enabled state
     };
 

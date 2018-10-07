@@ -363,7 +363,7 @@ protected Q_SLOTS:
      * when delivering the result instead of creating new items to ensure conflict
      * detection will work.
      * @param parts The item parts that should be retrieved.
-     * @return false if there is an immeidate error when retrieving the items.
+     * @return false if there is an immediate error when retrieving the items.
      * @see itemsRetrieved()
      * @since 5.4
      *

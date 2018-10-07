@@ -35,7 +35,7 @@ ResourceSchedulerTest::ResourceSchedulerTest(QObject *parent):
     qRegisterMetaType<QSet<QByteArray> >();
 }
 
-void ResourceSchedulerTest::testTaskComparision()
+void ResourceSchedulerTest::testTaskComparison()
 {
     ResourceScheduler::Task t1;
     t1.type = ResourceScheduler::ChangeReplay;

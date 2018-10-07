@@ -81,7 +81,7 @@ void StorageJanitor::quit()
     conn.unregisterService(DBus::serviceName(DBus::StorageJanitor));
     conn.disconnectFromBus(conn.name());
 
-    // Make sure all childrens are deleted within context of this thread
+    // Make sure all children are deleted within context of this thread
     qDeleteAll(children());
 
     qCDebug(AKONADISERVER_LOG) << "chainup()";

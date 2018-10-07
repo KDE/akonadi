@@ -32,7 +32,7 @@
 
 static const QString serverContent1 = QStringLiteral(
         // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
-        // The dashes show the depth in the heirarchy
+        // The dashes show the depth in the hierarchy
         // Collections have a list of mimetypes they can contain, followed by an optional
         // displayName which is put into the EntityDisplayAttribute, followed by an optional order
         // which is the order in which the collections are returned from the job to the ETM.
@@ -184,7 +184,7 @@ void EntityTreeModelTest::testInitialFetch()
     QList<ExpectedSignal> expectedSignals;
 
     // First the model gets a signal about the first collection to be returned, which is not a top-level collection.
-    // It uses the parentCollection heirarchy to put placeholder collections in the model until the root is reached.
+    // It uses the parentCollection hierarchy to put placeholder collections in the model until the root is reached.
     // Then it inserts only one row and emits the correct signals. After that, when the other collections
     // arrive, dataChanged is emitted for them.
 

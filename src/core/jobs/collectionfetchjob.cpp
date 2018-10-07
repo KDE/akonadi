@@ -24,7 +24,6 @@
 #include "collection_p.h"
 #include "collectionfetchscope.h"
 #include "collectionutils.h"
-#include "protocolhelper_p.h"
 #include "private/protocol_p.h"
 
 #include "akonadicore_debug.h"
@@ -202,7 +201,7 @@ void CollectionFetchJob::doStart()
     if (!d->mBaseList.isEmpty()) {
         if (d->mType == Recursive) {
             // Because doStart starts several subjobs and @p cols could contain descendants of
-            // other elements in the list, if type is Recusrive, we could end up with duplicates in the result.
+            // other elements in the list, if type is Recursive, we could end up with duplicates in the result.
             // To fix this we require an initial fetch of @p cols with Base and RetrieveAncestors,
             // Iterate over that result removing intersections and then perform the Recursive fetch on
             // the remainder.

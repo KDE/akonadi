@@ -42,7 +42,6 @@
 #include <QDir>
 #include <QUuid>
 #include <QStandardPaths>
-#include <QFileDialog>
 
 using namespace Akonadi;
 

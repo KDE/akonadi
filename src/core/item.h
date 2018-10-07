@@ -243,7 +243,7 @@ public:
 
     /**
      * Returns the parent collection of this object.
-     * @note This will of course only return a useful value if it was explictly retrieved
+     * @note This will of course only return a useful value if it was explictely retrieved
      *       from the Akonadi server.
      * @since 4.4
      */
@@ -251,7 +251,7 @@ public:
 
     /**
      * Returns a reference to the parent collection of this object.
-     * @note This will of course only return a useful value if it was explictly retrieved
+     * @note This will of course only return a useful value if it was explictely retrieved
      *       from the Akonadi server.
      * @since 4.4
      */

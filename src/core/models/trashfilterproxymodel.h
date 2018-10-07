@@ -28,7 +28,7 @@ namespace Akonadi
 {
 
 /**
- * @short Filter model which hides/shows entites marked as trash
+ * @short Filter model which hides/shows entities marked as trash
  *
  * Filter model which either hides all entities marked as trash, or the ones not marked.
  * Subentities of collections marked as trash are also shown in the trash.

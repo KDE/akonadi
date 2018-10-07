@@ -67,12 +67,12 @@ void ImapParserTest::testParseQuotedString()
     QCOMPARE(result, QByteArray("quoted \"NIL\"   string inside"));
     QCOMPARE(consumed, 32);
 
-    // unqoted string
+    // unquoted string
     consumed = ImapParser::parseQuotedString(input, result, 1);
     QCOMPARE(result, QByteArray("quoted"));
     QCOMPARE(consumed, 7);
 
-    // whitespaces in qouted string
+    // whitespaces in quoted string
     consumed = ImapParser::parseQuotedString(input, result, 14);
     QCOMPARE(result, QByteArray("   string inside"));
     QCOMPARE(consumed, 32);
@@ -82,10 +82,10 @@ void ImapParserTest::testParseQuotedString()
     QCOMPARE(result, QByteArray("string"));
     QCOMPARE(consumed, 24);
 
-    // NIL and emptyness tests
+    // NIL and emptiness tests
     input = "NIL \"NIL\" \"\"";
 
-    // unqoted NIL
+    // unquoted NIL
     consumed = ImapParser::parseQuotedString(input, result, 0);
     QVERIFY(result.isNull());
     QCOMPARE(consumed, 3);

@@ -204,7 +204,7 @@ public Q_SLOTS:
 
     /**
      * Trigger a synchronization of relations by the given resource agent.
-     * @param identifier The resource agent identifir.
+     * @param identifier The resource agent identifier.
      */
     void agentInstanceSynchronizeRelations(const QString &identifier);
 

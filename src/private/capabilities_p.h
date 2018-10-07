@@ -21,7 +21,7 @@
 #define AKONADI_CAPABILITIES_P_H
 
 /**
-  @file capabilites_p.h Shared constants for agent capabilities.
+  @file capabilities_p.h Shared constants for agent capabilities.
 
   @todo Fill this file with the missing capabilities.
 */

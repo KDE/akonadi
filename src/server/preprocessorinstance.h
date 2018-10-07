@@ -46,7 +46,7 @@ class AgentInstance;
  * to PreprocessorManager (singleton).
  *
  * This class is NOT thread safe. The caller is responsible of protecting
- * agains concurrent access.
+ * against concurrent access.
  */
 class PreprocessorInstance : public QObject
 {

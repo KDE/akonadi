@@ -30,8 +30,8 @@ private Q_SLOTS:
     void testInheritance();
     void testParentCollection();
 
-    void testComparision_data();
-    void testComparision();
+    void testComparison_data();
+    void testComparison();
 };
 
 #endif

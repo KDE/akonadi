@@ -238,7 +238,7 @@ void TagSync::slotResult(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << "Error during TagSync: " << job->errorString() << job->metaObject()->className();
-        // pretent there were no errors
+        // pretend there were no errors
         Akonadi::Job::removeSubjob(job);
     } else {
         Akonadi::Job::slotResult(job);

@@ -286,7 +286,7 @@ public:
     void topLevelCollectionsFetched(const Akonadi::Collection::List &collectionList);
 
     /**
-      @returns True if @p item or one of its descemdants is hidden.
+      @returns True if @p item or one of its descendants is hidden.
     */
     bool isHidden(const Item &item) const;
     bool isHidden(const Collection &collection) const;

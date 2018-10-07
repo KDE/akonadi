@@ -665,7 +665,7 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     int row = 0;
 
     // Although we insert several Collections here, we only need to notify though the model
-    // about the top-level one. The rest will be found auotmatically by the view.
+    // about the top-level one. The rest will be found automatically by the view.
     q->beginInsertRows(parent, row, row);
 
     Collection::List::const_iterator it = ancestors.constBegin();

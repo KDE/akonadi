@@ -31,7 +31,7 @@ namespace Akonadi
 /**
  * @short Job that moves items/collection to trash.
  *
- * This job marks the given entites as trash and moves them to a given trash collection, if available.
+ * This job marks the given entities as trash and moves them to a given trash collection, if available.
  *
  * Priorities of trash collections are the following:
  * 1. keepTrashInCollection()
@@ -44,8 +44,8 @@ namespace Akonadi
  * The entity is marked as trash with the EntityDeletedAttribute.
  *
  * The restore collection in the EntityDeletedAttribute is set the following way:
- * -If entites are not moved to trash -> no restore collection
- * -If collection is deleted -> also subentites get collection.parentCollection as restore collection
+ * -If entities are not moved to trash -> no restore collection
+ * -If collection is deleted -> also subentities get collection.parentCollection as restore collection
  * -If multiple items are deleted -> all items get their parentCollection as restore collection
  *
  * Example:
@@ -81,7 +81,7 @@ public:
     /**
      * Creates a new trash job that marks all items in the list
      * @p items as trash, and moves it to the configured trash collection.
-     * The items can be in different collections/resources and will still be moved to the correct trash colleciton.
+     * The items can be in different collections/resources and will still be moved to the correct trash collection.
      *
      * If @p keepTrashInCollection is set, the item will not be moved to the configured trash collection.
      *

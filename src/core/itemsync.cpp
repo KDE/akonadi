@@ -498,7 +498,7 @@ void ItemSync::slotResult(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << "Error during ItemSync: " << job->errorString();
-        // pretent there were no errors
+        // pretend there were no errors
         Akonadi::Job::removeSubjob(job);
         // propagate the first error we got but continue, we might still be fed with stuff from a resource
         if (!error()) {

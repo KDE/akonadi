@@ -183,7 +183,7 @@ void TrashRestoreJob::TrashRestoreJobPrivate::itemsReceived(const Akonadi::Item:
             return;
         }
 
-        //Explicit target overides the resource
+        //Explicit target overrides the resource
         if (mTargetCollection.isValid()) {
             targetCollection = mTargetCollection;
         }

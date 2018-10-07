@@ -266,7 +266,7 @@ class EntityTreeModelPrivate;
  *
  * For example, the headerData for an EntityTreeModel will be different depending on whether it is in a view showing only Collections
  * in which case the header data should be "AddressBooks" for example, or only Items, in which case the headerData would be
- * for example "Family Name", "Given Name" and "Email addres" for contacts or "Subject", "Sender", "Date" in the case of emails.
+ * for example "Family Name", "Given Name" and "Email address" for contacts or "Subject", "Sender", "Date" in the case of emails.
  *
  * Additionally, the actual data shown in the rows of the model should be type specific.
  *

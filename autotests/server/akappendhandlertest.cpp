@@ -727,7 +727,7 @@ private Q_SLOTS:
             cmd->setMergeModes(Protocol::CreateItemCommand::RemoteID);
             scenarios << TestScenario::create(7, TestScenario::ClientCmd, cmd);
             auto rsp = Protocol::CreateItemResponsePtr::create();
-            rsp->setError(1, QStringLiteral("Multiple merge canddiates"));
+            rsp->setError(1, QStringLiteral("Multiple merge candidates"));
             scenarios << TestScenario::create(7, TestScenario::ServerCmd, rsp);
         }
         Notifications notifications = { notification, Protocol::ItemChangeNotificationPtr::create(*notification) };

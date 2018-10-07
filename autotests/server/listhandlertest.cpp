@@ -437,7 +437,7 @@ private Q_SLOTS:
 
     void testIncludeAncestors_data()
     {
-        //The collection we are quering contains a load of disabled collections (typical scenario with many shared folders)
+        //The collection we are querying contains a load of disabled collections (typical scenario with many shared folders)
         //The collection we are NOT querying contains a reasonable amount of enabled collections (to test the performance impact of the manually filtering by tree)
         initializer.reset(new DbInitializer);
         Resource res = initializer->createResource("testresource");

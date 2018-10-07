@@ -60,7 +60,7 @@ int main(int argc, char **argv)
     KAboutData aboutdata(QStringLiteral("akonadi-TES"),
                          i18n("Akonadi Testing Environment Setup"),
                          QStringLiteral("1.0"),
-                         i18n("Setup Environmnet"),
+                         i18n("Setup Environment"),
                          KAboutLicense::GPL,
                          i18n("(c) 2008 Igor Trindade Oliveira"));
 

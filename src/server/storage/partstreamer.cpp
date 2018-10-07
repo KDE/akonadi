@@ -128,7 +128,7 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
         return false;
     }
     const QByteArray newData = response.data();
-    // only use the data size with intenral payload parts, for foreign parts
+    // only use the data size with internal payload parts, for foreign parts
     // we use the size reported by client
     const auto newSize = (metaPart.storageType() == Protocol::PartMetaData::Internal)
                                 ? newData.size()

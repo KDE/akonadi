@@ -62,7 +62,7 @@ private:
     };
 
     static Protocol::ChangeNotificationPtr loadQSettingsItemNotification(QSettings *settings);
-    static Protocol::ChangeNotificationPtr loadQSettingsCollectionNotification(QSettings *settigs);
+    static Protocol::ChangeNotificationPtr loadQSettingsCollectionNotification(QSettings *settings);
 
     // More modern mechanisms
     static Protocol::ChangeNotificationPtr loadItemNotification(QDataStream &stream, quint64 version);

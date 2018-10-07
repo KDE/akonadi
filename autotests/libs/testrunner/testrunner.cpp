@@ -60,7 +60,7 @@ void TestRunner::processFinished(int exitCode)
 {
     // Only update the exit code when it is 0. This prevents overwriting a non-zero
     // value with 0. This can happen when multiple processes finish or triggerTermination
-    // is called after a proces has finished.
+    // is called after a process has finished.
     if (mExitCode == 0) {
         mExitCode = exitCode;
         qDebug() << exitCode;

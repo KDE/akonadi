@@ -41,7 +41,7 @@
  */
 
 // Forward-declare boost::shared_ptr so that we don't have to explicitly include
-// it. Caller that tries to use it will aready have it included anyway
+// it. Caller that tries to use it will already have it included anyway
 namespace boost
 {
 template<typename T> class shared_ptr;

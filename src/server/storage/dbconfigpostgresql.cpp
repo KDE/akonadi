@@ -201,7 +201,7 @@ bool DbConfigPostgresql::startInternalServer()
     if (postmaster.exists() && postmaster.open(QIODevice::ReadOnly)) {
         qCDebug(AKONADISERVER_LOG) << "Found a postmaster.pid pidfile, checking whether the server is still running...";
         QByteArray pid = postmaster.readLine();
-        // Remvoe newline character
+        // Remove newline character
         pid.truncate(pid.size() - 1);
         QFile proc(QString::fromLatin1("/proc/" + pid + "/stat"));
         // Check whether the process with the PID from pidfile still exists and whether

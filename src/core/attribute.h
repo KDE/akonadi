@@ -100,7 +100,7 @@ namespace Akonadi
  * @endcode
  *
  * Additionally, you need to register your attribute with Akonadi::AttributeFactory
- * for automatic deserialization during retrieving of collecitons or items:
+ * for automatic deserialization during retrieving of collections or items:
  *
  * @code
  * AttributeFactory::registerAttribute<SecrecyAttribute>();

@@ -28,7 +28,6 @@
 #include <QReadWriteLock>
 #include <QVector>
 #include <QHash>
-#include <QVector>
 
 
 namespace Akonadi {

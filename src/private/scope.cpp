@@ -306,7 +306,7 @@ QString Scope::rid() const
 QString Scope::gid() const
 {
     if (d->gidSet.size() != 1) {
-        // TODO: Error hanlding!
+        // TODO: Error handling!
         Q_ASSERT(d->gidSet.size() == 1);
         return QString();
     }

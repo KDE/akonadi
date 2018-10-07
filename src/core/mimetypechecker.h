@@ -39,7 +39,7 @@ class MimeTypeCheckerPrivate;
  * When it is necessary to decide whether an item has a certain MIME type
  * or whether a collection can contain a certain MIME type, direct string
  * comparison might not render the desired result because MIME types can
- * have aliases and be a node in an "inheritance" hierachy.
+ * have aliases and be a node in an "inheritance" hierarchy.
  *
  * For example a check like this
  * @code

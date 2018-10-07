@@ -96,7 +96,7 @@ void ItemTest::testParentCollection()
     QCOMPARE(b.parentCollection(), col);
 }
 
-void ItemTest::testComparision_data()
+void ItemTest::testComparison_data()
 {
     QTest::addColumn<Akonadi::Item>("itemA");
     QTest::addColumn<Akonadi::Item>("itemB");
@@ -109,7 +109,7 @@ void ItemTest::testComparision_data()
     QTest::newRow("both valid, different IDs") << Item(3) << Item(4) << false;
 }
 
-void ItemTest::testComparision()
+void ItemTest::testComparison()
 {
     QFETCH(Akonadi::Item, itemA);
     QFETCH(Akonadi::Item, itemB);

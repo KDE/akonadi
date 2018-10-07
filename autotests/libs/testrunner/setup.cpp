@@ -378,7 +378,7 @@ QString SetupTest::basePath() const
 #ifdef Q_OS_WIN
     // On Windows we are forced to share the same data directory as production instances
     // because there's no way to override QStandardPaths like we can on Unix.
-    // This means that on Windows we rely on Instances providing us the neccessary isolation
+    // This means that on Windows we rely on Instances providing us the necessary isolation
     return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation);
 #else
     QString sysTempDirPath = QDir::tempPath();
