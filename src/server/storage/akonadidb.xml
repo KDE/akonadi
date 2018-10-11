@@ -67,7 +67,7 @@
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
     <column name="generation" type="int" default="0" allowNull="false" />
-    <data columns="version" values="35"/>
+    <data columns="version" values="36"/>
   </table>
 
   <table name="Resource">
@@ -199,7 +199,7 @@
   <table name="Tag">
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="gid" type="QString" allowNull="false"/>
-    <column name="parentId" type="qint64" refTable="Tag" refColumn="id" allowNull="true" methodName="parent"/>
+    <column name="parentId" type="qint64" refTable="Tag" refColumn="id" allowNull="true" methodName="parent" default="-1"/>
     <column name="typeId" type="qint64" refTable="TagType" refColumn="id" onDelete="Restrict" default="1"/>
   </table>
 
