@@ -224,7 +224,7 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
       </xsl:when>
       <xsl:otherwise>
         (qb.query().isNull(valueIndex)) ?
-        <xsl:call-template name="data-type"/>() :
+        <xsl:call-template name="data-type"/>(<xsl:value-of select="@default"/>) :
         <xsl:choose>
           <xsl:when test="starts-with(@type,'QString')">
           Utils::variantToString( qb.query().value( valueIndex ) )
