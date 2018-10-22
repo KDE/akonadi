@@ -543,7 +543,6 @@ void StorageJanitor::findRIDDuplicates()
         }
         while (duplicates.query().next()) {
             const QString rid = duplicates.query().value(0).toString();
-            inform(QStringLiteral("Found duplicates ") + rid);
 
             Query::Condition condition(Query::And);
             condition.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, rid);
@@ -561,6 +560,13 @@ void StorageJanitor::findRIDDuplicates()
             while (items.query().next()) {
                 itemsIds.push_back(items.query().value(0));
             }
+            if (itemsIds.isEmpty()) {
+                // the mimetype filter may have dropped some entries from the
+                // duplicates query
+                continue;
+            }
+
+            inform(QStringLiteral("Found duplicates ") + rid);
 
             SelectQueryBuilder<Part> parts;
             parts.addValueCondition(Part::pimItemIdFullColumnName(), Query::In, QVariant::fromValue(itemsIds));
