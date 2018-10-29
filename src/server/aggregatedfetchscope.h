@@ -93,6 +93,8 @@ public:
     void setFetchRemoteId(bool fetchRemoteId);
     bool fetchGID() const;
     void setFetchGID(bool fetchGid);
+    bool fetchTags() const;
+    void setFetchTags(bool fetchTags);
     bool fetchRelations() const;
     void setFetchRelations(bool fetchRelations);
     bool fetchVirtualReferences() const;
