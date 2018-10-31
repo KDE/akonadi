@@ -322,13 +322,13 @@ void EntityTreeModelTest::testCollectionAdded()
 
     expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0, parentCollection, QVariantList() << addedCollection);
     expectedSignals << getExpectedSignal(RowsInserted, 0, 0, parentCollection, QVariantList() << addedCollection);
-    //The data changed signal comes from the item fetch job that is triggered because we have ImmediatePopulation enabled
+    // The data changed signal comes from the item fetch job that is triggered because we have ImmediatePopulation enabled
     expectedSignals << getExpectedSignal(DataChanged, 0, 0, parentCollection, QVariantList() << addedCollection);
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
-    // Give the model a change to run the event loop to process the signals.
+    // Give the model a chance to run the event loop to process the signals.
     QTest::qWait(0);
 
     QVERIFY(m_modelSpy->isEmpty());
@@ -377,7 +377,7 @@ void EntityTreeModelTest::testCollectionRemoved()
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
-    // Give the model a change to run the event loop to process the signals.
+    // Give the model a chance to run the event loop to process the signals.
     QTest::qWait(0);
 
     QVERIFY(m_modelSpy->isEmpty());
@@ -429,7 +429,7 @@ void EntityTreeModelTest::testCollectionChanged()
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
-    // Give the model a change to run the event loop to process the signals.
+    // Give the model a chance to run the event loop to process the signals.
     QTest::qWait(0);
 
     QVERIFY(m_modelSpy->isEmpty());
@@ -488,7 +488,7 @@ void EntityTreeModelTest::testItemMove()
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
-    // Give the model a change to run the event loop to process the signals.
+    // Give the model a chance to run the event loop to process the signals.
     QTest::qWait(0);
 
     QVERIFY(m_modelSpy->isEmpty());
@@ -537,7 +537,7 @@ void EntityTreeModelTest::testItemAdded()
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
-    // Give the model a change to run the event loop to process the signals.
+    // Give the model a chance to run the event loop to process the signals.
     QTest::qWait(0);
 
     QVERIFY(m_modelSpy->isEmpty());
@@ -593,7 +593,7 @@ void EntityTreeModelTest::testItemRemoved()
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
-    // Give the model a change to run the event loop to process the signals.
+    // Give the model a chance to run the event loop to process the signals.
     QTest::qWait(0);
 
     QVERIFY(m_modelSpy->isEmpty());
@@ -648,7 +648,7 @@ void EntityTreeModelTest::testItemChanged()
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
-    // Give the model a change to run the event loop to process the signals.
+    // Give the model a chance to run the event loop to process the signals.
     QTest::qWait(0);
 
     QVERIFY(m_modelSpy->isEmpty());
