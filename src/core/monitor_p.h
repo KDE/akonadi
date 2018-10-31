@@ -400,7 +400,6 @@ private:
     template<typename Signal, typename ... Args>
     bool emitToListeners(Signal signal, Args ... args)
     {
-        Q_Q(Monitor);
         if (hasListeners(signal)) {
             Q_EMIT (q_ptr->*signal)(std::forward<Args>(args) ...);
             return true;

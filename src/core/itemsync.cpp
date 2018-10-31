@@ -386,7 +386,6 @@ void ItemSyncPrivate::processBatch()
 
 void ItemSyncPrivate::processItems()
 {
-    Q_Q(ItemSync);
     // added / updated
     for (const Item &remoteItem : qAsConst(mCurrentBatchRemoteItems)) {
         if (remoteItem.remoteId().isEmpty()) {

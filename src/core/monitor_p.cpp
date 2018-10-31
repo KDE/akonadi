@@ -175,7 +175,6 @@ void MonitorPrivate::scheduleSubscriptionUpdate()
 
 void MonitorPrivate::slotUpdateSubscription()
 {
-    Q_Q(Monitor);
     if (pendingModificationTimer) {
         pendingModificationTimer->stop();
         std::exchange(pendingModificationTimer, nullptr)->deleteLater();

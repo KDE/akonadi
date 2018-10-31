@@ -904,6 +904,7 @@ AgentBase::~AgentBase()
 
 void AgentBase::debugAgent(int argc, char **argv)
 {
+    Q_UNUSED(argc);
 #ifdef Q_OS_WIN
     if (qEnvironmentVariableIsSet("AKONADI_DEBUG_WAIT")) {
         if (QByteArray(argv[0]).endsWith(qgetenv("AKONADI_DEBUG_WAIT") + ".exe")) {
@@ -913,6 +914,8 @@ void AgentBase::debugAgent(int argc, char **argv)
             DebugBreak();
         }
     }
+#else
+    Q_UNUSED(argv);
 #endif
 }
 
