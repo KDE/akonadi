@@ -99,20 +99,19 @@ private Q_SLOTS:
 private:
     QPair<FakeServerData *, Akonadi::EntityTreeModel *> populateModel(const QString &serverContent, const QString &mimeType = QString())
     {
-        FakeMonitor *fakeMonitor = new FakeMonitor(this);
+        const auto fakeMonitor = new FakeMonitor(this);
 
         fakeMonitor->setSession(m_fakeSession);
         fakeMonitor->setCollectionMonitored(Collection::root());
         if (!mimeType.isEmpty()) {
             fakeMonitor->setMimeTypeMonitored(mimeType);
         }
-        EntityTreeModel *model = new EntityTreeModel(fakeMonitor, this);
+        const auto model = new EntityTreeModel(fakeMonitor, this);
 
         m_modelSpy = new ModelSpy{model, this};
 
-        FakeServerData *serverData = new FakeServerData(model, m_fakeSession, fakeMonitor);
-        QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret(serverData, serverContent);
-        serverData->setCommands(initialFetchResponse);
+        const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor);
+        serverData->setCommands(FakeJobResponse::interpret(serverData, serverContent));
 
         // Give the model a chance to populate
         QTest::qWait(100);
@@ -126,6 +125,16 @@ private:
 
 };
 
+QModelIndex firstMatchedIndex(const QAbstractItemModel &model, const QString pattern)
+{
+    if (pattern.isEmpty()) {
+        return {};
+    }
+    const auto list = model.match(model.index(0, 0), Qt::DisplayRole, pattern, 1, Qt::MatchRecursive);
+    Q_ASSERT(!list.isEmpty());
+    return list.first();
+}
+
 void EntityTreeModelTest::initTestCase()
 {
     m_sessionName = "EntityTreeModelTest fake session";
@@ -137,17 +146,16 @@ void EntityTreeModelTest::initTestCase()
 
 void EntityTreeModelTest::testInitialFetch()
 {
-    FakeMonitor *fakeMonitor = new FakeMonitor(this);
+    const auto fakeMonitor = new FakeMonitor(this);
 
     fakeMonitor->setSession(m_fakeSession);
     fakeMonitor->setCollectionMonitored(Collection::root());
-    EntityTreeModel *model = new EntityTreeModel(fakeMonitor, this);
+    const auto model = new EntityTreeModel(fakeMonitor, this);
 
-    FakeServerData *serverData = new FakeServerData(model, m_fakeSession, fakeMonitor);
-    QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret(serverData, serverContent1);
-    serverData->setCommands(initialFetchResponse);
+    const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor);
+    serverData->setCommands(FakeJobResponse::interpret(serverData, serverContent1));
 
-    m_modelSpy = new ModelSpy{model, this};
+    m_modelSpy = new ModelSpy(model, this);
     m_modelSpy->startSpying();
 
     const QList<ExpectedSignal> expectedSignals {
@@ -227,20 +235,19 @@ void EntityTreeModelTest::testCollectionMove()
     QFETCH(QString, movedCollection);
     QFETCH(QString, targetCollection);
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent);
-    FakeServerData *serverData = testDrivers.first;
-    Akonadi::EntityTreeModel *model = testDrivers.second;
+    const auto testDrivers = populateModel(serverContent);
+    const auto serverData = testDrivers.first;
+    const auto model = testDrivers.second;
 
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, movedCollection, 1, Qt::MatchRecursive);
-    Q_ASSERT(!list.isEmpty());
-    QModelIndex movedIndex = list.first();
-    QString sourceCollection = movedIndex.parent().data().toString();
-    int sourceRow = movedIndex.row();
+    const auto movedIndex = firstMatchedIndex(*model, movedCollection);
+    Q_ASSERT(movedIndex.isValid());
+    const auto sourceCollection = movedIndex.parent().data().toString();
+    const auto  sourceRow = movedIndex.row();
 
-    FakeCollectionMovedCommand *moveCommand = new FakeCollectionMovedCommand(movedCollection, sourceCollection, targetCollection, serverData);
+    const auto moveCommand = new FakeCollectionMovedCommand(movedCollection, sourceCollection, targetCollection, serverData);
 
     m_modelSpy->startSpying();
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
+    serverData->setCommands({moveCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         {RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection, {movedCollection}},
@@ -276,13 +283,13 @@ void EntityTreeModelTest::testCollectionAdded()
     QFETCH(QString, addedCollection);
     QFETCH(QString, parentCollection);
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent);
-    FakeServerData *serverData = testDrivers.first;
+    const auto testDrivers = populateModel(serverContent);
+    const auto serverData = testDrivers.first;
 
-    FakeCollectionAddedCommand *addCommand = new FakeCollectionAddedCommand(addedCollection, parentCollection, serverData);
+    const auto addCommand = new FakeCollectionAddedCommand(addedCollection, parentCollection, serverData);
 
     m_modelSpy->startSpying();
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << addCommand);
+    serverData->setCommands({addCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         {RowsAboutToBeInserted, 0, 0, parentCollection, QVariantList{addedCollection}},
@@ -320,20 +327,18 @@ void EntityTreeModelTest::testCollectionRemoved()
     QFETCH(QString, serverContent);
     QFETCH(QString, removedCollection);
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent);
-    FakeServerData *serverData = testDrivers.first;
-    Akonadi::EntityTreeModel *model = testDrivers.second;
+    const auto testDrivers = populateModel(serverContent);
+    const auto serverData = testDrivers.first;
+    const auto model = testDrivers.second;
 
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, removedCollection, 1, Qt::MatchRecursive);
-    Q_ASSERT(!list.isEmpty());
-    QModelIndex removedIndex = list.first();
-    QString parentCollection = removedIndex.parent().data().toString();
-    int sourceRow = removedIndex.row();
+    const auto removedIndex = firstMatchedIndex(*model, removedCollection);
+    const auto parentCollection = removedIndex.parent().data().toString();
+    const auto sourceRow = removedIndex.row();
 
-    FakeCollectionRemovedCommand *removeCommand = new FakeCollectionRemovedCommand(removedCollection, parentCollection, serverData);
+    const auto removeCommand = new FakeCollectionRemovedCommand(removedCollection, parentCollection, serverData);
 
     m_modelSpy->startSpying();
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << removeCommand);
+    serverData->setCommands({removeCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         {RowsAboutToBeRemoved, sourceRow, sourceRow, parentCollection, QVariantList{removedCollection}},
@@ -372,21 +377,19 @@ void EntityTreeModelTest::testCollectionChanged()
     QFETCH(QString, collectionName);
     QFETCH(QString, monitoredMimeType);
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent, monitoredMimeType);
-    FakeServerData *serverData = testDrivers.first;
-    Akonadi::EntityTreeModel *model = testDrivers.second;
+    const auto testDrivers = populateModel(serverContent);
+    const auto serverData = testDrivers.first;
+    const auto model = testDrivers.second;
 
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, collectionName, 1, Qt::MatchRecursive);
-    Q_ASSERT(!list.isEmpty());
-    QModelIndex changedIndex = list.first();
-    QString parentCollection = changedIndex.parent().data().toString();
+    const auto changedIndex = firstMatchedIndex(*model, collectionName);
+    const auto parentCollection = changedIndex.parent().data().toString();
     qDebug() << parentCollection;
-    int changedRow = changedIndex.row();
+    const auto changedRow = changedIndex.row();
 
-    FakeCollectionChangedCommand *changeCommand = new FakeCollectionChangedCommand(collectionName, parentCollection, serverData);
+    const auto changeCommand = new FakeCollectionChangedCommand(collectionName, parentCollection, serverData);
 
     m_modelSpy->startSpying();
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
+    serverData->setCommands({changeCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         {DataChanged, changedRow, changedRow, parentCollection, QVariantList{collectionName}}
@@ -421,25 +424,21 @@ void EntityTreeModelTest::testItemMove()
     QFETCH(QString, movedItem);
     QFETCH(QString, targetCollection);
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent);
-    FakeServerData *serverData = testDrivers.first;
-    Akonadi::EntityTreeModel *model = testDrivers.second;
+    const auto testDrivers = populateModel(serverContent);
+    const auto serverData = testDrivers.first;
+    const auto model = testDrivers.second;
 
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, movedItem, 1, Qt::MatchRecursive);
-    Q_ASSERT(!list.isEmpty());
-    QModelIndex movedIndex = list.first();
-    QString sourceCollection = movedIndex.parent().data().toString();
-    int sourceRow = movedIndex.row();
+    const auto movedIndex = firstMatchedIndex(*model, movedItem);
+    const auto sourceCollection = movedIndex.parent().data().toString();
+    const auto sourceRow = movedIndex.row();
 
-    QModelIndexList targetList = model->match(model->index(0, 0), Qt::DisplayRole, targetCollection, 1, Qt::MatchRecursive);
-    Q_ASSERT(!targetList.isEmpty());
-    QModelIndex targetIndex = targetList.first();
-    int targetRow = model->rowCount(targetIndex);
+    const auto targetIndex = firstMatchedIndex(*model, targetCollection);
+    const auto targetRow = model->rowCount(targetIndex);
 
-    FakeItemMovedCommand *moveCommand = new FakeItemMovedCommand(movedItem, sourceCollection, targetCollection, serverData);
+    const auto moveCommand = new FakeItemMovedCommand(movedItem, sourceCollection, targetCollection, serverData);
 
     m_modelSpy->startSpying();
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
+    serverData->setCommands({moveCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         //Currently moves are implemented as remove + insert in the ETM.
@@ -481,20 +480,18 @@ void EntityTreeModelTest::testItemAdded()
     QFETCH(QString, addedItem);
     QFETCH(QString, parentCollection);
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent);
-    FakeServerData *serverData = testDrivers.first;
-    Akonadi::EntityTreeModel *model = testDrivers.second;
+    const auto testDrivers = populateModel(serverContent);
+    const auto serverData = testDrivers.first;
+    const auto model = testDrivers.second;
 
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, parentCollection, 1, Qt::MatchRecursive);
-    Q_ASSERT(!list.isEmpty());
-    QModelIndex parentIndex = list.first();
-    int targetRow = model->rowCount(parentIndex);
+    const auto parentIndex = firstMatchedIndex(*model, parentCollection);
+    const auto targetRow = model->rowCount(parentIndex);
 
-    FakeItemAddedCommand *addedCommand = new FakeItemAddedCommand(addedItem, parentCollection, serverData);
+    const auto addedCommand = new FakeItemAddedCommand(addedItem, parentCollection, serverData);
 
     m_modelSpy->startSpying();
 
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << addedCommand);
+    serverData->setCommands({addedCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         {RowsAboutToBeInserted, targetRow, targetRow, parentCollection, QVariantList{addedItem}},
@@ -536,20 +533,18 @@ void EntityTreeModelTest::testItemRemoved()
     QFETCH(QString, serverContent);
     QFETCH(QString, removedItem);
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent);
-    FakeServerData *serverData = testDrivers.first;
-    Akonadi::EntityTreeModel *model = testDrivers.second;
+    const auto testDrivers = populateModel(serverContent);
+    const auto serverData = testDrivers.first;
+    const auto model = testDrivers.second;
 
-    const QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, removedItem, 1, Qt::MatchRecursive);
-    Q_ASSERT(!list.isEmpty());
-    QModelIndex removedIndex = list.first();
-    const QString sourceCollection = removedIndex.parent().data().toString();
-    int sourceRow = removedIndex.row();
+    const auto removedIndex = firstMatchedIndex(*model, removedItem);
+    const auto sourceCollection = removedIndex.parent().data().toString();
+    const auto sourceRow = removedIndex.row();
 
-    FakeItemRemovedCommand *removeCommand = new FakeItemRemovedCommand(removedItem, sourceCollection, serverData);
+    const auto removeCommand = new FakeItemRemovedCommand(removedItem, sourceCollection, serverData);
 
     m_modelSpy->startSpying();
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << removeCommand);
+    serverData->setCommands({removeCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         {RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{removedItem}},
@@ -592,20 +587,18 @@ void EntityTreeModelTest::testItemChanged()
     QFETCH(QString, serverContent);
     QFETCH(QString, changedItem);
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent);
-    FakeServerData *serverData = testDrivers.first;
-    Akonadi::EntityTreeModel *model = testDrivers.second;
+    const auto testDrivers = populateModel(serverContent);
+    const auto serverData = testDrivers.first;
+    const auto model = testDrivers.second;
 
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, changedItem, 1, Qt::MatchRecursive);
-    Q_ASSERT(!list.isEmpty());
-    QModelIndex changedIndex = list.first();
-    QString parentCollection = changedIndex.parent().data().toString();
-    int sourceRow = changedIndex.row();
+    const auto changedIndex = firstMatchedIndex(*model, changedItem);
+    const auto parentCollection = changedIndex.parent().data().toString();
+    const auto sourceRow = changedIndex.row();
 
-    FakeItemChangedCommand *changeCommand = new FakeItemChangedCommand(changedItem, parentCollection, serverData);
+    const auto changeCommand = new FakeItemChangedCommand(changedItem, parentCollection, serverData);
 
     m_modelSpy->startSpying();
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
+    serverData->setCommands({changeCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         {DataChanged, sourceRow, sourceRow, QVariantList{changedItem}}
@@ -622,28 +615,27 @@ void EntityTreeModelTest::testItemChanged()
 
 void EntityTreeModelTest::testRemoveCollectionOnChanged()
 {
-    const QString serverContent = QStringLiteral(
-                                      "- C (inode/directory, text/directory)  'Col 1'     2"
-                                      "- - C (text/directory)                 'Col 2'     1"
-                                      "- - - I text/directory                 'Item 1'");
-    const QString collectionName = QStringLiteral("Col 2");
-    const QString monitoredMimeType = QStringLiteral("text/directory");
+    const auto serverContent = QStringLiteral(
+        "- C (inode/directory, text/directory)  'Col 1'     2"
+        "- - C (text/directory)                 'Col 2'     1"
+        "- - - I text/directory                 'Item 1'"
+    );
+    const auto collectionName = QStringLiteral("Col 2");
+    const auto monitoredMimeType = QStringLiteral("text/directory");
 
-    QPair<FakeServerData *, Akonadi::EntityTreeModel *> testDrivers = populateModel(serverContent, monitoredMimeType);
-    FakeServerData *serverData = testDrivers.first;
-    Akonadi::EntityTreeModel *model = testDrivers.second;
+    const auto testDrivers = populateModel(serverContent, monitoredMimeType);
+    const auto serverData = testDrivers.first;
+    const auto model = testDrivers.second;
 
-    QModelIndexList list = model->match(model->index(0, 0), Qt::DisplayRole, collectionName, 1, Qt::MatchRecursive);
-    Q_ASSERT(!list.isEmpty());
-    QModelIndex changedIndex = list.first();
-    Akonadi::Collection changedCol = changedIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
-    changedCol.setContentMimeTypes(QStringList() << QStringLiteral("foobar"));
-    QString parentCollection = changedIndex.parent().data().toString();
+    const auto changedIndex = firstMatchedIndex(*model, collectionName);
+    auto changedCol = changedIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
+    changedCol.setContentMimeTypes({QStringLiteral("foobar")});
+    const auto parentCollection = changedIndex.parent().data().toString();
 
-    FakeCollectionChangedCommand *changeCommand = new FakeCollectionChangedCommand(changedCol, serverData);
+    const auto changeCommand = new FakeCollectionChangedCommand(changedCol, serverData);
 
     m_modelSpy->startSpying();
-    serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
+    serverData->setCommands({changeCommand});
 
     const QList<ExpectedSignal> expectedSignals {
         {RowsAboutToBeRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList{collectionName}},

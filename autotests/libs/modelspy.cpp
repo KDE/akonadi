@@ -160,7 +160,7 @@ void ModelSpy::rowsAboutToBeInserted(const QModelIndex &parent, int start, int e
     if (!m_expectedSignals.isEmpty()) {
         verifySignal(RowsAboutToBeInserted, parent, start, end);
     } else {
-        append(QVariantList() << RowsAboutToBeInserted << QVariant::fromValue(parent) << start << end);
+        append(QVariantList{RowsAboutToBeInserted, QVariant::fromValue(parent), start, end});
     }
 }
 
@@ -169,7 +169,7 @@ void ModelSpy::rowsInserted(const QModelIndex &parent, int start, int end)
     if (!m_expectedSignals.isEmpty()) {
         verifySignal(RowsInserted, parent, start, end);
     } else {
-        append(QVariantList() << RowsInserted << QVariant::fromValue(parent) << start << end);
+        append(QVariantList{RowsInserted, QVariant::fromValue(parent), start, end});
     }
 }
 
@@ -178,7 +178,7 @@ void ModelSpy::rowsAboutToBeRemoved(const QModelIndex &parent, int start, int en
     if (!m_expectedSignals.isEmpty()) {
         verifySignal(RowsAboutToBeRemoved, parent, start, end);
     } else {
-        append(QVariantList() << RowsAboutToBeRemoved << QVariant::fromValue(parent) << start << end);
+        append(QVariantList{RowsAboutToBeRemoved, QVariant::fromValue(parent), start, end});
     }
 }
 
@@ -187,7 +187,7 @@ void ModelSpy::rowsRemoved(const QModelIndex &parent, int start, int end)
     if (!m_expectedSignals.isEmpty()) {
         verifySignal(RowsRemoved, parent, start, end);
     } else {
-        append(QVariantList() << RowsRemoved << QVariant::fromValue(parent) << start << end);
+        append(QVariantList{RowsRemoved, QVariant::fromValue(parent), start, end});
     }
 }
 
@@ -196,7 +196,7 @@ void ModelSpy::rowsAboutToBeMoved(const QModelIndex &srcParent, int start, int e
     if (!m_expectedSignals.isEmpty()) {
         verifySignal(RowsAboutToBeMoved, srcParent, start, end, destParent, destStart);
     } else {
-        append(QVariantList() << RowsAboutToBeMoved << QVariant::fromValue(srcParent) << start << end << QVariant::fromValue(destParent) << destStart);
+        append(QVariantList{RowsAboutToBeMoved, QVariant::fromValue(srcParent), start, end, QVariant::fromValue(destParent), destStart});
     }
 }
 
@@ -205,7 +205,7 @@ void ModelSpy::rowsMoved(const QModelIndex &srcParent, int start, int end, const
     if (!m_expectedSignals.isEmpty()) {
         verifySignal(RowsMoved, srcParent, start, end, destParent, destStart);
     } else {
-        append(QVariantList() << RowsMoved << QVariant::fromValue(srcParent) << start << end << QVariant::fromValue(destParent) << destStart);
+        append(QVariantList{RowsMoved, QVariant::fromValue(srcParent), start, end, QVariant::fromValue(destParent), destStart});
     }
 }
 
@@ -214,7 +214,7 @@ void ModelSpy::dataChanged(const QModelIndex &topLeft, const QModelIndex &bottom
     if (!m_expectedSignals.isEmpty()) {
         verifySignal(DataChanged, topLeft, bottomRight);
     } else {
-        append(QVariantList() << DataChanged << QVariant::fromValue(topLeft) << QVariant::fromValue(bottomRight));
+        append(QVariantList{DataChanged, QVariant::fromValue(topLeft), QVariant::fromValue(bottomRight)});
     }
 }
 
