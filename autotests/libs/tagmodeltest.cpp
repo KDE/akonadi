@@ -59,35 +59,6 @@ private Q_SLOTS:
     void testTagMoved();
 
 private:
-    ExpectedSignal getExpectedSignal(SignalType type, int start, int end, const QVariantList newData)
-    {
-        return getExpectedSignal(type, start, end, QVariant(), newData);
-    }
-
-    ExpectedSignal getExpectedSignal(SignalType type, int start, int end, const QVariant &parentData = QVariant(), const QVariantList newData = QVariantList())
-    {
-        ExpectedSignal expectedSignal;
-        expectedSignal.signalType = type;
-        expectedSignal.startRow = start;
-        expectedSignal.endRow = end;
-        expectedSignal.parentData = parentData;
-        expectedSignal.newData = newData;
-        return expectedSignal;
-    }
-
-    ExpectedSignal getExpectedSignal(SignalType type, int start, int end, const QVariant &sourceParentData, int destRow, const QVariant &destParentData, const QVariantList newData)
-    {
-        ExpectedSignal expectedSignal;
-        expectedSignal.signalType = type;
-        expectedSignal.startRow = start;
-        expectedSignal.endRow = end;
-        expectedSignal.sourceParentData = sourceParentData;
-        expectedSignal.destRow = destRow;
-        expectedSignal.parentData = destParentData;
-        expectedSignal.newData = newData;
-        return expectedSignal;
-    }
-
     QPair<FakeServerData *, Akonadi::TagModel *> populateModel(const QString &serverContent)
     {
         FakeMonitor *fakeMonitor = new FakeMonitor(this);
@@ -139,19 +110,18 @@ void TagModelTest::testInitialFetch()
     m_modelSpy = new ModelSpy{model, this};
     m_modelSpy->startSpying();
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0);
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 0);
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0, QStringLiteral("Tag 1"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 0, QStringLiteral("Tag 1"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 1, 1, QStringLiteral("Tag 1"));
-    expectedSignals << getExpectedSignal(RowsInserted, 1, 1, QStringLiteral("Tag 1"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0, QStringLiteral("Tag 2"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 0, QStringLiteral("Tag 2"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 1, 1);
-    expectedSignals << getExpectedSignal(RowsInserted, 1, 1);
-
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeInserted, 0, 0},
+        {RowsInserted, 0, 0},
+        {RowsAboutToBeInserted, 0, 0, QStringLiteral("Tag 1")},
+        {RowsInserted, 0, 0, QStringLiteral("Tag 1")},
+        {RowsAboutToBeInserted, 1, 1, QStringLiteral("Tag 1")},
+        {RowsInserted, 1, 1, QStringLiteral("Tag 1")},
+        {RowsAboutToBeInserted, 0, 0, QStringLiteral("Tag 2")},
+        {RowsInserted, 0, 0, QStringLiteral("Tag 2")},
+        {RowsAboutToBeInserted, 1, 1},
+        {RowsInserted, 1, 1}
+    };
     m_modelSpy->setExpectedSignals(expectedSignals);
 
     // Give the model a chance to run the event loop to process the signals.
@@ -200,11 +170,11 @@ void TagModelTest::testTagAdded()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << addCommand);
 
-    QList<ExpectedSignal> expectedSignals;
 
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, newRow, newRow, parentTag, QVariantList() << addedTag);
-    expectedSignals << getExpectedSignal(RowsInserted, newRow, newRow, parentTag, QVariantList() << addedTag);
-
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeInserted, newRow, newRow, parentTag, QVariantList{addedTag}},
+        {RowsInserted, newRow, newRow, parentTag, QVariantList{addedTag}}
+    };
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
@@ -246,10 +216,9 @@ void TagModelTest::testTagChanged()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(DataChanged, changedRow, changedRow, parentTag, QVariantList() << tagName);
-
+    const QList<ExpectedSignal> expectedSignals {
+        {DataChanged, changedRow, changedRow, parentTag, QVariantList{tagName}}
+    };
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
@@ -293,14 +262,12 @@ void TagModelTest::testTagRemoved()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << removeCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(RowsAboutToBeRemoved, sourceRow, sourceRow,
-                                         parentTag.isEmpty() ? QVariant() : parentTag,
-                                         QVariantList() << removedTag);
-    expectedSignals << getExpectedSignal(RowsRemoved, sourceRow, sourceRow,
-                                         parentTag.isEmpty() ? QVariant() : parentTag,
-                                         QVariantList() << removedTag);
+    const auto removedTagList = QVariantList{removedTag};
+    const auto parentTagVariant = parentTag.isEmpty() ? QVariant{} : parentTag;
+    const QList<ExpectedSignal> expectedSignals {
+        ExpectedSignal{RowsAboutToBeRemoved, sourceRow, sourceRow, parentTagVariant, QVariantList{removedTag}},
+        ExpectedSignal{RowsRemoved, sourceRow, sourceRow, parentTagVariant, QVariantList{removedTag}}
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -355,15 +322,12 @@ void TagModelTest::testTagMoved()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-    expectedSignals << getExpectedSignal(RowsAboutToBeMoved,
-                                         sourceRow, sourceRow, parentTag.isEmpty() ? QVariant() : parentTag,
-                                         destRow, newParent.isEmpty() ? QVariant() : newParent,
-                                         QVariantList() << changedTag);
-    expectedSignals << getExpectedSignal(RowsMoved,
-                                         sourceRow, sourceRow, parentTag.isEmpty() ? QVariant() : parentTag,
-                                         destRow, newParent.isEmpty() ? QVariant() : newParent,
-                                         QVariantList() << changedTag);
+    const auto parentTagVariant = parentTag.isEmpty() ? QVariant{} : parentTag;
+    const auto newParentVariant = newParent.isEmpty() ? QVariant{} : newParent;
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeMoved, sourceRow, sourceRow, parentTagVariant, destRow, newParentVariant, QVariantList{changedTag}},
+        {RowsMoved, sourceRow, sourceRow, parentTagVariant, destRow, newParentVariant, QVariantList{changedTag}}
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();

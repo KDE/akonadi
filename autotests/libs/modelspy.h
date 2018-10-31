@@ -37,12 +37,29 @@ enum SignalType {
 };
 
 struct ExpectedSignal {
+    ExpectedSignal(SignalType type, int start, int end, const QVariantList &newData)
+        : ExpectedSignal{type, start, end, {}, newData}
+    {
+    }
+
+    ExpectedSignal(SignalType type, int start, int end, const QVariant &parentData = QVariant(), const QVariantList &newData = QVariantList())
+        : signalType{type}, startRow{start}, endRow{end}, parentData{parentData}, newData{newData}
+    {
+    }
+
+    ExpectedSignal(SignalType type, int start, int end, const QVariant &sourceParentData, int destRow, const QVariant &destParentData, const QVariantList &newData)
+        : signalType{type}, startRow{start}, endRow{end}, parentData{destParentData}
+        , sourceParentData{sourceParentData}, destRow{destRow}, newData{newData}
+    {
+    }
+
+
     SignalType signalType;
     int startRow;
     int endRow;
     QVariant parentData;
     QVariant sourceParentData;
-    int destRow;
+    int destRow = 0;
     QVariantList newData;
 };
 

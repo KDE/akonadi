@@ -97,35 +97,6 @@ private Q_SLOTS:
     void testRemoveCollectionOnChanged();
 
 private:
-    ExpectedSignal getExpectedSignal(SignalType type, int start, int end, const QVariantList newData)
-    {
-        return getExpectedSignal(type, start, end, QVariant(), newData);
-    }
-
-    ExpectedSignal getExpectedSignal(SignalType type, int start, int end, const QVariant &parentData = QVariant(), const QVariantList newData = QVariantList())
-    {
-        ExpectedSignal expectedSignal;
-        expectedSignal.signalType = type;
-        expectedSignal.startRow = start;
-        expectedSignal.endRow = end;
-        expectedSignal.parentData = parentData;
-        expectedSignal.newData = newData;
-        return expectedSignal;
-    }
-
-    ExpectedSignal getExpectedSignal(SignalType type, int start, int end, const QVariant &sourceParentData, int destRow, const QVariant &destParentData, const QVariantList newData)
-    {
-        ExpectedSignal expectedSignal;
-        expectedSignal.signalType = type;
-        expectedSignal.startRow = start;
-        expectedSignal.endRow = end;
-        expectedSignal.sourceParentData = sourceParentData;
-        expectedSignal.destRow = destRow;
-        expectedSignal.parentData = destParentData;
-        expectedSignal.newData = newData;
-        return expectedSignal;
-    }
-
     QPair<FakeServerData *, Akonadi::EntityTreeModel *> populateModel(const QString &serverContent, const QString &mimeType = QString())
     {
         FakeMonitor *fakeMonitor = new FakeMonitor(this);
@@ -179,46 +150,44 @@ void EntityTreeModelTest::testInitialFetch()
     m_modelSpy = new ModelSpy{model, this};
     m_modelSpy->startSpying();
 
-    QList<ExpectedSignal> expectedSignals;
-
-    // First the model gets a signal about the first collection to be returned, which is not a top-level collection.
-    // It uses the parentCollection hierarchy to put placeholder collections in the model until the root is reached.
-    // Then it inserts only one row and emits the correct signals. After that, when the other collections
-    // arrive, dataChanged is emitted for them.
-
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0);
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 0);
-    expectedSignals << getExpectedSignal(DataChanged, 0, 0, QVariantList() << QStringLiteral("Col 4"));
-    expectedSignals << getExpectedSignal(DataChanged, 0, 0, QVariantList() << QStringLiteral("Col 3"));
-    // New collections are prepended
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList() << QStringLiteral("Col 2"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList() << QStringLiteral("Col 6"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList() << QStringLiteral("Col 7"));
-    expectedSignals << getExpectedSignal(DataChanged, 0, 0, QVariantList() << QStringLiteral("Col 1"));
-    // The items in the collections are appended.
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 3, QStringLiteral("Col 2"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 3, QStringLiteral("Col 2"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 1, QStringLiteral("Col 5"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 1, QStringLiteral("Col 5"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 1, 1, QStringLiteral("Col 4"));
-    expectedSignals << getExpectedSignal(RowsInserted, 1, 1, QStringLiteral("Col 4"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 1, 2, QStringLiteral("Col 3"));
-    expectedSignals << getExpectedSignal(RowsInserted, 1, 2, QStringLiteral("Col 3"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 1, QStringLiteral("Col 6"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 1, QStringLiteral("Col 6"));
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 3, QStringLiteral("Col 7"));
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 3, QStringLiteral("Col 7"));
-    expectedSignals << getExpectedSignal(DataChanged, 0, 0, QVariantList() << QStringLiteral("Col 1"));
-    expectedSignals << getExpectedSignal(DataChanged, 3, 3, QVariantList() << QStringLiteral("Col 3"));
-    expectedSignals << getExpectedSignal(DataChanged, 0, 0, QVariantList() << QStringLiteral("Col 5"));
-    expectedSignals << getExpectedSignal(DataChanged, 0, 0, QVariantList() << QStringLiteral("Col 4"));
-    expectedSignals << getExpectedSignal(DataChanged, 2, 2, QVariantList() << QStringLiteral("Col 2"));
-    expectedSignals << getExpectedSignal(DataChanged, 1, 1, QVariantList() << QStringLiteral("Col 7"));
-    expectedSignals << getExpectedSignal(DataChanged, 0, 0, QVariantList() << QStringLiteral("Col 6"));
-
+    const QList<ExpectedSignal> expectedSignals {
+        // First the model gets a signal about the first collection to be returned, which is not a top-level collection.
+        // It uses the parentCollection hierarchy to put placeholder collections in the model until the root is reached.
+        // Then it inserts only one row and emits the correct signals. After that, when the other collections
+        // arrive, dataChanged is emitted for them.
+        {RowsAboutToBeInserted, 0, 0},
+        {RowsInserted, 0, 0},
+        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 4")}},
+        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 3")}},
+        // New collections are prepended
+        {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
+        {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 2")}},
+        {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
+        {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 6")}},
+        {RowsAboutToBeInserted, 0, 0, QStringLiteral("Collection 1")},
+        {RowsInserted, 0, 0, QStringLiteral("Collection 1"), QVariantList{QStringLiteral("Col 7")}},
+        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 1")}},
+        // The items in the collections are appended.
+        {RowsAboutToBeInserted, 0, 3, QStringLiteral("Col 2")},
+        {RowsInserted, 0, 3, QStringLiteral("Col 2")},
+        {RowsAboutToBeInserted, 0, 1, QStringLiteral("Col 5")},
+        {RowsInserted, 0, 1, QStringLiteral("Col 5")},
+        {RowsAboutToBeInserted, 1, 1, QStringLiteral("Col 4")},
+        {RowsInserted, 1, 1, QStringLiteral("Col 4")},
+        {RowsAboutToBeInserted, 1, 2, QStringLiteral("Col 3")},
+        {RowsInserted, 1, 2, QStringLiteral("Col 3")},
+        {RowsAboutToBeInserted, 0, 1, QStringLiteral("Col 6")},
+        {RowsInserted, 0, 1, QStringLiteral("Col 6")},
+        {RowsAboutToBeInserted, 0, 3, QStringLiteral("Col 7")},
+        {RowsInserted, 0, 3, QStringLiteral("Col 7")},
+        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 1")}},
+        {DataChanged, 3, 3, QVariantList{QStringLiteral("Col 3")}},
+        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 5")}},
+        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 4")}},
+        {DataChanged, 2, 2, QVariantList{QStringLiteral("Col 2")}},
+        {DataChanged, 1, 1, QVariantList{QStringLiteral("Col 7")}},
+        {DataChanged, 0, 0, QVariantList{QStringLiteral("Col 6")}}
+    };
     m_modelSpy->setExpectedSignals(expectedSignals);
 
     // Give the model a chance to run the event loop to process the signals.
@@ -273,11 +242,10 @@ void EntityTreeModelTest::testCollectionMove()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection, QVariantList() << movedCollection);
-    expectedSignals << getExpectedSignal(RowsMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection , QVariantList() << movedCollection);
-
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection, {movedCollection}},
+        {RowsMoved, sourceRow, sourceRow, sourceCollection, 0, targetCollection , {movedCollection}}
+    };
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
@@ -316,12 +284,12 @@ void EntityTreeModelTest::testCollectionAdded()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << addCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, 0, 0, parentCollection, QVariantList() << addedCollection);
-    expectedSignals << getExpectedSignal(RowsInserted, 0, 0, parentCollection, QVariantList() << addedCollection);
-    // The data changed signal comes from the item fetch job that is triggered because we have ImmediatePopulation enabled
-    expectedSignals << getExpectedSignal(DataChanged, 0, 0, parentCollection, QVariantList() << addedCollection);
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeInserted, 0, 0, parentCollection, QVariantList{addedCollection}},
+        {RowsInserted, 0, 0, parentCollection, QVariantList{addedCollection}},
+        // The data changed signal comes from the item fetch job that is triggered because we have ImmediatePopulation enabled
+        {DataChanged, 0, 0, parentCollection, QVariantList{addedCollection}}
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -367,10 +335,10 @@ void EntityTreeModelTest::testCollectionRemoved()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << removeCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(RowsAboutToBeRemoved, sourceRow, sourceRow, parentCollection, QVariantList() << removedCollection);
-    expectedSignals << getExpectedSignal(RowsRemoved, sourceRow, sourceRow, parentCollection , QVariantList() << removedCollection);
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeRemoved, sourceRow, sourceRow, parentCollection, QVariantList{removedCollection}},
+        {RowsRemoved, sourceRow, sourceRow, parentCollection , QVariantList{removedCollection}}
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -420,9 +388,9 @@ void EntityTreeModelTest::testCollectionChanged()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(DataChanged, changedRow, changedRow, parentCollection, QVariantList() << collectionName);
+    const QList<ExpectedSignal> expectedSignals {
+        {DataChanged, changedRow, changedRow, parentCollection, QVariantList{collectionName}}
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -473,15 +441,15 @@ void EntityTreeModelTest::testItemMove()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << moveCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    //Currently moves are implemented as remove + insert in the ETM.
-    expectedSignals << getExpectedSignal(RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList() << movedItem);
-    expectedSignals << getExpectedSignal(RowsRemoved, sourceRow, sourceRow, sourceCollection, QVariantList() << movedItem);
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, targetRow, targetRow, targetCollection, QVariantList() << movedItem);
-    expectedSignals << getExpectedSignal(RowsInserted, targetRow, targetRow, targetCollection, QVariantList() << movedItem);
-//   expectedSignals << getExpectedSignal( RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
-//   expectedSignals << getExpectedSignal( RowsMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList() << movedItem );
+    const QList<ExpectedSignal> expectedSignals {
+        //Currently moves are implemented as remove + insert in the ETM.
+        {RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{movedItem}},
+        {RowsRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{movedItem}},
+        {RowsAboutToBeInserted, targetRow, targetRow, targetCollection, QVariantList{movedItem}},
+        {RowsInserted, targetRow, targetRow, targetCollection, QVariantList{movedItem}},
+        // {RowsAboutToBeMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList{movedItem}},
+        // {RowsMoved, sourceRow, sourceRow, sourceCollection, targetRow, targetCollection, QVariantList{movedItem}},
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -527,11 +495,11 @@ void EntityTreeModelTest::testItemAdded()
     m_modelSpy->startSpying();
 
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << addedCommand);
-    QList<ExpectedSignal> expectedSignals;
 
-    expectedSignals << getExpectedSignal(RowsAboutToBeInserted, targetRow, targetRow, parentCollection, QVariantList() << addedItem);
-    expectedSignals << getExpectedSignal(RowsInserted, targetRow, targetRow, parentCollection, QVariantList() << addedItem);
-
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeInserted, targetRow, targetRow, parentCollection, QVariantList{addedItem}},
+        {RowsInserted, targetRow, targetRow, parentCollection, QVariantList{addedItem}}
+    };
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
 
@@ -583,10 +551,10 @@ void EntityTreeModelTest::testItemRemoved()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << removeCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList() << removedItem);
-    expectedSignals << getExpectedSignal(RowsRemoved, sourceRow, sourceRow, sourceCollection, QVariantList() << removedItem);
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{removedItem}},
+        {RowsRemoved, sourceRow, sourceRow, sourceCollection, QVariantList{removedItem}}
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -639,9 +607,9 @@ void EntityTreeModelTest::testItemChanged()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-
-    expectedSignals << getExpectedSignal(DataChanged, sourceRow, sourceRow, QVariantList() << changedItem);
+    const QList<ExpectedSignal> expectedSignals {
+        {DataChanged, sourceRow, sourceRow, QVariantList{changedItem}}
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
@@ -677,9 +645,10 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
 
-    QList<ExpectedSignal> expectedSignals;
-    expectedSignals << getExpectedSignal(RowsAboutToBeRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList() << collectionName);
-    expectedSignals << getExpectedSignal(RowsRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList() << collectionName);
+    const QList<ExpectedSignal> expectedSignals {
+        {RowsAboutToBeRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList{collectionName}},
+        {RowsRemoved, changedIndex.row(), changedIndex.row(), parentCollection, QVariantList{collectionName}},
+    };
 
     m_modelSpy->setExpectedSignals(expectedSignals);
     serverData->processNotifications();
