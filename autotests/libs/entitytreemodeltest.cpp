@@ -137,8 +137,7 @@ private:
         }
         EntityTreeModel *model = new EntityTreeModel(fakeMonitor, this);
 
-        m_modelSpy = new ModelSpy(this);
-        m_modelSpy->setModel(model);
+        m_modelSpy = new ModelSpy{model, this};
 
         FakeServerData *serverData = new FakeServerData(model, m_fakeSession, fakeMonitor);
         QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret(serverData, serverContent);
@@ -177,8 +176,7 @@ void EntityTreeModelTest::testInitialFetch()
     QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret(serverData, serverContent1);
     serverData->setCommands(initialFetchResponse);
 
-    m_modelSpy = new ModelSpy(this);
-    m_modelSpy->setModel(model);
+    m_modelSpy = new ModelSpy{model, this};
     m_modelSpy->startSpying();
 
     QList<ExpectedSignal> expectedSignals;

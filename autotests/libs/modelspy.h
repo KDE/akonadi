@@ -52,9 +52,7 @@ class AKONADITESTFAKE_EXPORT ModelSpy : public QObject, public QList<QVariantLis
 {
     Q_OBJECT
 public:
-    explicit ModelSpy(QObject *parent);
-
-    void setModel(QAbstractItemModel *model);
+    explicit ModelSpy(QAbstractItemModel *model, QObject *parent = nullptr);
 
     bool isEmpty() const;
 
@@ -83,7 +81,7 @@ protected Q_SLOTS:
     void dataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
 private:
-    QAbstractItemModel *m_model = nullptr;
+    QAbstractItemModel *const m_model = nullptr;
     bool m_isSpying;
     QList<ExpectedSignal> m_expectedSignals;
 };

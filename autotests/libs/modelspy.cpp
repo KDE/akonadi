@@ -22,8 +22,8 @@
 #include <qdebug.h>
 #include <QTest>
 
-ModelSpy::ModelSpy(QObject *parent)
-    : QObject(parent), QList<QVariantList>(), m_isSpying(false)
+ModelSpy::ModelSpy(QAbstractItemModel *model, QObject *parent)
+    : QObject{parent}, m_model{model}, m_isSpying{false}
 {
     qRegisterMetaType<QModelIndex>("QModelIndex");
 }
@@ -31,12 +31,6 @@ ModelSpy::ModelSpy(QObject *parent)
 bool ModelSpy::isEmpty() const
 {
     return QList<QVariantList>::isEmpty() && m_expectedSignals.isEmpty();
-}
-
-void ModelSpy::setModel(QAbstractItemModel *model)
-{
-    Q_ASSERT(model);
-    m_model = model;
 }
 
 void ModelSpy::setExpectedSignals(const QList< ExpectedSignal > &expectedSignals)
