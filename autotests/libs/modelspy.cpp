@@ -22,6 +22,15 @@
 #include <qdebug.h>
 #include <QTest>
 
+QVariantList extractModelColumn(const QAbstractItemModel &model, const QModelIndex &parent, const int firstRow, const int lastRow)
+{
+    QVariantList result;
+    for (auto row = firstRow; row <= lastRow; ++row) {
+        result.append(model.index(row, 0, parent).data());
+    }
+    return result;
+}
+
 ModelSpy::ModelSpy(QAbstractItemModel *model, QObject *parent)
     : QObject{parent}, m_model{model}, m_isSpying{false}
 {
@@ -45,7 +54,7 @@ QList<ExpectedSignal> ModelSpy::expectedSignals() const
 
 void ModelSpy::verifySignal(SignalType type, const QModelIndex &parent, int start, int end)
 {
-    ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
+    const auto expectedSignal = m_expectedSignals.takeFirst();
     QCOMPARE(int(type), int(expectedSignal.signalType));
     QCOMPARE(parent.data(), expectedSignal.parentData);
     QCOMPARE(start, expectedSignal.startRow);
@@ -57,27 +66,25 @@ void ModelSpy::verifySignal(SignalType type, const QModelIndex &parent, int star
 
 void ModelSpy::verifySignal(SignalType type, const QModelIndex &parent, int start, int end, const QModelIndex &destParent, int destStart)
 {
-    ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
+    const auto expectedSignal = m_expectedSignals.takeFirst();
     QCOMPARE(int(type), int(expectedSignal.signalType));
     QCOMPARE(start, expectedSignal.startRow);
     QCOMPARE(end, expectedSignal.endRow);
     QCOMPARE(parent.data(), expectedSignal.sourceParentData);
     QCOMPARE(destParent.data(), expectedSignal.parentData);
     QCOMPARE(destStart, expectedSignal.destRow);
-    QVariantList moveList;
-    QModelIndex _parent = type == RowsAboutToBeMoved ? parent : destParent;
-    int _start = type == RowsAboutToBeMoved ? start : destStart;
-    int _end = type == RowsAboutToBeMoved ? end : destStart + (end - start);
-    for (int row = _start; row <= _end; ++row) {
-        moveList << m_model->index(row, 0, _parent).data();
+    if (type == RowsAboutToBeMoved) {
+        QCOMPARE(extractModelColumn(*m_model, parent, start, end), expectedSignal.newData);
+    } else {
+        const auto destEnd = destStart + (end - start);
+        QCOMPARE(extractModelColumn(*m_model, destParent, destStart, destEnd), expectedSignal.newData);
     }
-    QCOMPARE(moveList, expectedSignal.newData);
 }
 
 void ModelSpy::verifySignal(SignalType type, const QModelIndex &topLeft, const QModelIndex &bottomRight)
 {
     QCOMPARE(type, DataChanged);
-    ExpectedSignal expectedSignal = m_expectedSignals.takeFirst();
+    const auto expectedSignal = m_expectedSignals.takeFirst();
     QCOMPARE(int(type), int(expectedSignal.signalType));
     QModelIndex parent = topLeft.parent();
     //This check won't work for toplevel indexes
@@ -88,9 +95,7 @@ void ModelSpy::verifySignal(SignalType type, const QModelIndex &topLeft, const Q
     }
     QCOMPARE(topLeft.row(), expectedSignal.startRow);
     QCOMPARE(bottomRight.row(), expectedSignal.endRow);
-    for (int i = 0, row = topLeft.row(); row <= bottomRight.row(); ++row, ++i) {
-        QCOMPARE(expectedSignal.newData.at(i), m_model->index(row, 0, parent).data());
-    }
+    QCOMPARE(extractModelColumn(*m_model, parent, topLeft.row(), bottomRight.row()), expectedSignal.newData);
 }
 
 void ModelSpy::startSpying()
