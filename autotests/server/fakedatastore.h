@@ -42,59 +42,59 @@ public:
         return mChanges;
     }
 
-    virtual bool setItemsFlags(const PimItem::List &items,
+    bool setItemsFlags(const PimItem::List &items,
                                const QVector<Flag> &flags,
                                bool *flagsChanged = nullptr,
                                const Collection &col = Collection(),
                                bool silent = false) override;
-    virtual bool appendItemsFlags(const PimItem::List &items,
+    bool appendItemsFlags(const PimItem::List &items,
                                   const QVector<Flag> &flags,
                                   bool *flagsChanged = nullptr,
                                   bool checkIfExists = true,
                                   const Collection &col = Collection(),
                                   bool silent = false) override;
-    virtual bool removeItemsFlags(const PimItem::List &items,
+    bool removeItemsFlags(const PimItem::List &items,
                                   const QVector<Flag> &flags,
                                   bool *flagsChanged = nullptr,
                                   const Collection &col = Collection(),
                                   bool silent = false) override;
 
-    virtual bool setItemsTags(const PimItem::List &items,
+    bool setItemsTags(const PimItem::List &items,
                               const Tag::List &tags,
                               bool *tagsChanged = nullptr,
                               bool silent = false) override;
-    virtual bool appendItemsTags(const PimItem::List &items,
+    bool appendItemsTags(const PimItem::List &items,
                                  const Tag::List &tags,
                                  bool *tagsChanged = nullptr,
                                  bool checkIfExists = true,
                                  const Collection &col = Collection(),
                                  bool silent = false) override;
-    virtual bool removeItemsTags(const PimItem::List &items,
+    bool removeItemsTags(const PimItem::List &items,
                                  const Tag::List &tags,
                                  bool *tagsChanged = nullptr,
                                  bool silent = false) override;
 
-    virtual bool removeItemParts(const PimItem &item,
+    bool removeItemParts(const PimItem &item,
                                  const QSet<QByteArray> &parts)  override;
 
-    virtual bool invalidateItemCache(const PimItem &item) override;
+    bool invalidateItemCache(const PimItem &item) override;
 
-    virtual bool appendCollection(Collection &collection,
+    bool appendCollection(Collection &collection,
                                   const QStringList &mimeTypes,
                                   const QMap<QByteArray, QByteArray> &attributes) override;
 
-    virtual bool cleanupCollection(Collection &collection) override;
-    virtual bool cleanupCollection_slow(Collection &collection) override;
+    bool cleanupCollection(Collection &collection) override;
+    bool cleanupCollection_slow(Collection &collection) override;
 
-    virtual bool moveCollection(Collection &collection,
+    bool moveCollection(Collection &collection,
                                 const Collection &newParent) override;
 
     virtual bool appendMimeTypeForCollection(qint64 collectionId,
                                              const QStringList &mimeTypes) override;
 
-    virtual void activeCachePolicy(Collection &col) override;
+    void activeCachePolicy(Collection &col) override;
 
-    virtual bool appendPimItem(QVector<Part> &parts,
+    bool appendPimItem(QVector<Part> &parts,
                                const QVector<Flag> &flags,
                                const MimeType &mimetype,
                                const Collection &collection,
@@ -104,21 +104,21 @@ public:
                                const QString &gid,
                                PimItem &pimItem) override;
 
-    virtual bool cleanupPimItems(const PimItem::List &items) override;
+    bool cleanupPimItems(const PimItem::List &items) override;
 
-    virtual bool unhidePimItem(PimItem &pimItem) override;
-    virtual bool unhideAllPimItems() override;
+    bool unhidePimItem(PimItem &pimItem) override;
+    bool unhideAllPimItems() override;
 
-    virtual bool addCollectionAttribute(const Collection &col,
+    bool addCollectionAttribute(const Collection &col,
                                         const QByteArray &key,
                                         const QByteArray &value,
                                         bool silent = false) override;
-    virtual bool removeCollectionAttribute(const Collection &col,
+    bool removeCollectionAttribute(const Collection &col,
                                            const QByteArray &key) override;
 
-    virtual bool beginTransaction(const QString &name = QString()) override;
-    virtual bool rollbackTransaction() override;
-    virtual bool commitTransaction() override;
+    bool beginTransaction(const QString &name = QString()) override;
+    bool rollbackTransaction() override;
+    bool commitTransaction() override;
 
     void setPopulateDb(bool populate);
 
