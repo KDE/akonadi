@@ -93,7 +93,7 @@ bool TagStore::parseStream()
             // resource owns this tag, so we have to remove it to simulate tag
             // removal
             if (tagRidsCount == 0) {
-                if (!DataStore::self()->removeTags(Tag::List() << changedTag)) {
+                if (!storageBackend()->removeTags(Tag::List() << changedTag)) {
                     return failureResponse("Failed to remove tag");
                 }
                 tagRemoved = true;
@@ -138,7 +138,7 @@ bool TagStore::parseStream()
             return failureResponse("Failed to store changes");
         }
         if (!changes.isEmpty()) {
-            DataStore::self()->notificationCollector()->tagChanged(changedTag);
+            storageBackend()->notificationCollector()->tagChanged(changedTag);
         }
 
         ImapSet set;

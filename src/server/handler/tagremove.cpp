@@ -45,7 +45,7 @@ bool TagRemove::parseStream()
 
     const Tag::List tags = tagQuery.result();
 
-    if (!DataStore::self()->removeTags(tags)) {
+    if (!storageBackend()->removeTags(tags)) {
         return failureResponse(QStringLiteral("Failed to remove tags"));
     }
 

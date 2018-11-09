@@ -40,7 +40,7 @@ bool TagAppend::parseStream()
         return failureResponse(QStringLiteral("Only resources can create tags with remote ID"));
     }
 
-    Transaction trx(DataStore::self(), QStringLiteral("TAGAPPEND"));
+    Transaction trx(storageBackend(), QStringLiteral("TAGAPPEND"));
 
     TagType tagType;
     if (!cmd.type().isEmpty()) {
@@ -88,7 +88,7 @@ bool TagAppend::parseStream()
             }
         }
 
-        DataStore::self()->notificationCollector()->tagAdded(insertedTag);
+        storageBackend()->notificationCollector()->tagAdded(insertedTag);
     }
 
     if (!cmd.remoteId().isEmpty()) {

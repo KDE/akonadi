@@ -96,7 +96,7 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
         // This will hit an entry in cache inserted there in buildPimItem()
         const Flag::List flagList = HandlerHelper::resolveFlags(flags);
         bool flagsChanged = false;
-        if (!DataStore::self()->appendItemsFlags(PimItem::List() << item, flagList, &flagsChanged, false, parentCol, true)) {
+        if (!storageBackend()->appendItemsFlags({item}, flagList, &flagsChanged, false, parentCol, true)) {
             return failureResponse("Unable to append item flags.");
         }
     }
@@ -105,7 +105,7 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     if (!tags.isEmpty()) {
         const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
         bool tagsChanged = false;
-        if (!DataStore::self()->appendItemsTags(PimItem::List() << item, tagList, &tagsChanged, false, parentCol, true)) {
+        if (!storageBackend()->appendItemsTags({item}, tagList, &tagsChanged, false, parentCol, true)) {
             return failureResponse(QStringLiteral("Unable to append item tags."));
         }
     }
@@ -187,14 +187,12 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     if (cmd.flags().isEmpty() && !cmd.flagsOverwritten()) {
         bool flagsAdded = false, flagsRemoved = false;
         if (!cmd.addedFlags().isEmpty()) {
-            const Flag::List addedFlags = HandlerHelper::resolveFlags(cmd.addedFlags());
-            DataStore::self()->appendItemsFlags(PimItem::List() << currentItem, addedFlags,
-                                                &flagsAdded, true, col, true);
+            const auto addedFlags = HandlerHelper::resolveFlags(cmd.addedFlags());
+            storageBackend()->appendItemsFlags({currentItem}, addedFlags, &flagsAdded, true, col, true);
         }
         if (!cmd.removedFlags().isEmpty()) {
-            const Flag::List removedFlags = HandlerHelper::resolveFlags(cmd.removedFlags());
-            DataStore::self()->removeItemsFlags(PimItem::List() << currentItem, removedFlags,
-                                                &flagsRemoved, col, true);
+            const auto removedFlags = HandlerHelper::resolveFlags(cmd.removedFlags());
+            storageBackend()->removeItemsFlags({currentItem}, removedFlags, &flagsRemoved, col, true);
         }
         if (flagsAdded || flagsRemoved) {
             changedParts.insert(AKONADI_PARAM_FLAGS);
@@ -214,9 +212,8 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
                 flagNames.insert(currentFlagName);
             }
         }
-        const Flag::List flags = HandlerHelper::resolveFlags(flagNames);
-        DataStore::self()->setItemsFlags(PimItem::List() << currentItem, flags,
-                                         &flagsChanged, col, true);
+        const auto flags = HandlerHelper::resolveFlags(flagNames);
+        storageBackend()->setItemsFlags({currentItem}, flags, &flagsChanged, col, true);
         if (flagsChanged) {
             changedParts.insert(AKONADI_PARAM_FLAGS);
             needsUpdate = true;
@@ -226,14 +223,12 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     if (cmd.tags().isEmpty()) {
         bool tagsAdded = false, tagsRemoved = false;
         if (!cmd.addedTags().isEmpty()) {
-            const Tag::List addedTags = HandlerHelper::tagsFromScope(cmd.addedTags(), connection());
-            DataStore::self()->appendItemsTags(PimItem::List() << currentItem, addedTags,
-                                               &tagsAdded, true, col, true);
+            const auto addedTags = HandlerHelper::tagsFromScope(cmd.addedTags(), connection());
+            storageBackend()->appendItemsTags({currentItem}, addedTags, &tagsAdded, true, col, true);
         }
         if (!cmd.removedTags().isEmpty()) {
             const Tag::List removedTags = HandlerHelper::tagsFromScope(cmd.removedTags(), connection());
-            DataStore::self()->removeItemsTags(PimItem::List() << currentItem, removedTags,
-                                               &tagsRemoved, true);
+            storageBackend()->removeItemsTags({currentItem}, removedTags, &tagsRemoved, true);
         }
 
         if (tagsAdded || tagsRemoved) {
@@ -242,9 +237,8 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
         }
     } else {
         bool tagsChanged = false;
-        const Tag::List tags = HandlerHelper::tagsFromScope(cmd.tags(), connection());
-        DataStore::self()->setItemsTags(PimItem::List() << currentItem, tags,
-                                        &tagsChanged, true);
+        const auto tags = HandlerHelper::tagsFromScope(cmd.tags(), connection());
+        storageBackend()->setItemsTags({currentItem}, tags, &tagsChanged, true);
         if (tagsChanged) {
             changedParts.insert(AKONADI_PARAM_TAGS);
             needsUpdate = true;
@@ -334,11 +328,11 @@ bool AkAppend::sendResponse(const PimItem &item, Protocol::CreateItemCommand::Me
 
 bool AkAppend::notify(const PimItem &item, bool seen, const Collection &collection)
 {
-    DataStore::self()->notificationCollector()->itemAdded(item, seen, collection);
+    storageBackend()->notificationCollector()->itemAdded(item, seen, collection);
 
     if (PreprocessorManager::instance()->isActive()) {
         // enqueue the item for preprocessing
-        PreprocessorManager::instance()->beginHandleItem(item, DataStore::self());
+        PreprocessorManager::instance()->beginHandleItem(item, storageBackend());
     }
     return true;
 }
@@ -347,7 +341,7 @@ bool AkAppend::notify(const PimItem &item, const Collection &collection,
                       const QSet<QByteArray> &changedParts)
 {
     if (!changedParts.isEmpty()) {
-        DataStore::self()->notificationCollector()->itemChanged(item, changedParts, collection);
+        storageBackend()->notificationCollector()->itemChanged(item, changedParts, collection);
     }
     return true;
 }
@@ -360,8 +354,7 @@ bool AkAppend::parseStream()
     // unnecessary long time -> should we wrap the PimItem into one transaction
     // and try to insert Parts independently? In case we fail to insert a part,
     // it's not a problem as it can be re-fetched at any time, except for attributes.
-    DataStore *db = DataStore::self();
-    Transaction transaction(db, QStringLiteral("AKAPPEND"));
+    Transaction transaction(storageBackend(), QStringLiteral("AKAPPEND"));
     ExternalPartStorageTransaction storageTrx;
 
     PimItem item;

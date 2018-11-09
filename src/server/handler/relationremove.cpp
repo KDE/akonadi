@@ -56,7 +56,7 @@ bool RelationRemove::parseStream()
     }
     const Relation::List relations = relationQuery.result();
     for (const Relation &relation : relations) {
-        DataStore::self()->notificationCollector()->relationRemoved(relation);
+        storageBackend()->notificationCollector()->relationRemoved(relation);
     }
 
     // Get all PIM items that are part of the relation
@@ -70,7 +70,7 @@ bool RelationRemove::parseStream()
     }
     const PimItem::List items = itemsQuery.result();
     if (!items.isEmpty()) {
-        DataStore::self()->notificationCollector()->itemsRelationsChanged(items, Relation::List(), relations);
+        storageBackend()->notificationCollector()->itemsRelationsChanged(items, Relation::List(), relations);
     }
 
     QueryBuilder qb(Relation::tableName(), QueryBuilder::Delete);

@@ -119,8 +119,7 @@ void List::listCollection(const Collection &root, const QStack<Collection> &ance
 
     // write out collection details
     Collection dummy = root;
-    DataStore *db = connection()->storageBackend();
-    db->activeCachePolicy(dummy);
+    storageBackend()->activeCachePolicy(dummy);
 
     sendResponse(HandlerHelper::fetchCollectionsResponse(dummy, attributes, mIncludeStatistics,
                  mAncestorDepth, ancestors,
@@ -434,8 +433,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     const int querySizeLimit = 999;
     int mimetypeQueryStart = 0;
     int attributeQueryStart = 0;
-    QSqlQuery mimeTypeQuery(DataStore::self()->database());
-    QSqlQuery attributeQuery(DataStore::self()->database());
+    QSqlQuery mimeTypeQuery(storageBackend()->database());
+    QSqlQuery attributeQuery(storageBackend()->database());
     auto it = mCollections.begin();
     while (it != mCollections.end()) {
         const Collection col = it.value();

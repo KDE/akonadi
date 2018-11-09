@@ -109,8 +109,9 @@ bool RelationStore::parseStream()
         throw HandlerException("Relations can only be created for items within the same resource");
     } */
 
-    DataStore::self()->notificationCollector()->relationAdded(insertedRelation);
-    DataStore::self()->notificationCollector()->itemsRelationsChanged(items, Relation::List() << insertedRelation, Relation::List());
+    auto collector = storageBackend()->notificationCollector();
+    collector->relationAdded(insertedRelation);
+    collector->itemsRelationsChanged(items, {insertedRelation}, {});
 
     return successResponse<Protocol::ModifyRelationResponse>();
 }

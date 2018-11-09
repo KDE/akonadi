@@ -398,7 +398,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
     }
     // build part query if needed
     BEGIN_TIMER(parts)
-    QSqlQuery partQuery(DataStore::self()->database());
+    QSqlQuery partQuery(storageBackend()->database());
     if (!mItemFetchScope.requestedParts().isEmpty() || mItemFetchScope.fullPayload() || mItemFetchScope.allAttributes()) {
         partQuery = buildPartQuery(mItemFetchScope.requestedParts(), mItemFetchScope.fullPayload(), mItemFetchScope.allAttributes());
     }
@@ -406,7 +406,7 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
 
     // build flag query if needed
     BEGIN_TIMER(flags)
-    QSqlQuery flagQuery(DataStore::self()->database());
+    QSqlQuery flagQuery(storageBackend()->database());
     if (mItemFetchScope.fetchFlags()) {
         flagQuery = buildFlagQuery();
     }
@@ -414,14 +414,14 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
 
     // build tag query if needed
     BEGIN_TIMER(tags)
-    QSqlQuery tagQuery(DataStore::self()->database());
+    QSqlQuery tagQuery(storageBackend()->database());
     if (mItemFetchScope.fetchTags()) {
         tagQuery = buildTagQuery();
     }
     END_TIMER(tags)
 
     BEGIN_TIMER(vRefs)
-    QSqlQuery vRefQuery(DataStore::self()->database());
+    QSqlQuery vRefQuery(storageBackend()->database());
     if (mItemFetchScope.fetchVirtualReferences()) {
         vRefQuery = buildVRefQuery();
     }

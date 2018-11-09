@@ -89,6 +89,7 @@ public:
 
     void setConnection(Connection *connection);
     Connection *connection() const;
+    DataStore *storageBackend() const;
 
     bool failureResponse(const char *response);
     bool failureResponse(const QByteArray &response);

@@ -62,7 +62,7 @@ bool Delete::parseStream()
         }
     }
 
-    Transaction transaction(DataStore::self(), QStringLiteral("DELETE"));
+    Transaction transaction(storageBackend(), QStringLiteral("DELETE"));
 
     if (!deleteRecursive(collection)) {
         return failureResponse(QStringLiteral("Unable to delete collection"));

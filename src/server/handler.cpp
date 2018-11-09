@@ -227,6 +227,11 @@ Connection *Handler::connection() const
     return m_connection;
 }
 
+DataStore *Handler::storageBackend() const
+{
+    return m_connection->storageBackend();
+}
+
 bool Handler::failureResponse(const QByteArray &failureMessage)
 {
     return failureResponse(QString::fromUtf8(failureMessage));

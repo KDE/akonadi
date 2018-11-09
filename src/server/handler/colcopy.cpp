@@ -47,8 +47,6 @@ bool ColCopy::copyCollection(const Collection &source, const Collection &target)
         col.setRemoteRevision(QString());
     }
 
-    DataStore *db = connection()->storageBackend();
-
     const auto sourceMimeTypes = source.mimeTypes();
     QStringList mimeTypes;
     mimeTypes.reserve(sourceMimeTypes.size());
@@ -61,7 +59,7 @@ bool ColCopy::copyCollection(const Collection &source, const Collection &target)
         attributes.insert(attr.type(), attr.value());
     }
 
-    if (!db->appendCollection(col, mimeTypes, attributes)) {
+    if (!storageBackend()->appendCollection(col, mimeTypes, attributes)) {
         return false;
     }
 
@@ -108,8 +106,7 @@ bool ColCopy::parseStream()
         return failureResponse(retriever.lastError());
     }
 
-    DataStore *store = connection()->storageBackend();
-    Transaction transaction(store, QStringLiteral("COLCOPY"));
+    Transaction transaction(storageBackend(), QStringLiteral("COLCOPY"));
 
     if (!copyCollection(source, target)) {
         return failureResponse(QStringLiteral("Failed to copy collection"));
