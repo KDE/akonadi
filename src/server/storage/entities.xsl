@@ -82,7 +82,7 @@ QVector&lt;QString&gt; allDatabaseTables();
 </xsl:for-each>
 
 <xsl:for-each select="database/table">
-Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_TYPE );
+Q_DECLARE_TYPEINFO(Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_TYPE);
 </xsl:for-each>
 #endif
 
@@ -96,22 +96,22 @@ Q_DECLARE_TYPEINFO( Akonadi::Server::<xsl:value-of select="@name"/>, Q_MOVABLE_T
 #include &lt;utils.h&gt;
 #include &lt;akonadiserver_debug.h&gt;
 
-#include &lt;qsqldatabase.h&gt;
-#include &lt;qsqlquery.h&gt;
-#include &lt;qsqlerror.h&gt;
-#include &lt;qsqldriver.h&gt;
-#include &lt;qvariant.h&gt;
-#include &lt;QtCore/QHash&gt;
-#include &lt;QtCore/QMutex&gt;
-#include &lt;QtCore/QThread&gt;
+#include &lt;QSqlDatabase&gt;
+#include &lt;QSqlQuery&gt;
+#include &lt;QSqlError&gt;
+#include &lt;QSqlDriver&gt;
+#include &lt;QVariant&gt;
+#include &lt;QHash&gt;
+#include &lt;QMutex&gt;
+#include &lt;QThread&gt;
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
 static QStringList removeEntry(QStringList list, const QString&amp; entry)
 {
-  list.removeOne(entry);
-  return list;
+    list.removeOne(entry);
+    return list;
 }
 
 <xsl:for-each select="database/table">
@@ -124,15 +124,17 @@ static QStringList removeEntry(QStringList list, const QString&amp; entry)
 
 QVector&lt;QString&gt; Akonadi::Server::allDatabaseTables()
 {
-  static const QVector&lt;QString&gt; allTables = QVector&lt;QString&gt;()
-  <xsl:for-each select="database/table">
-    &lt;&lt; QStringLiteral( "<xsl:value-of select="@name"/>Table" )
-  </xsl:for-each>
-  <xsl:for-each select="database/relation">
-    &lt;&lt; QStringLiteral( "<xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation" )
-  </xsl:for-each>
-  ;
-  return allTables;
+    static const QVector&lt;QString&gt; allTables = {
+    <xsl:for-each select="database/table">
+        QStringLiteral("<xsl:value-of select="@name"/>Table"),
+    </xsl:for-each>
+    <xsl:for-each select="database/relation">
+        QStringLiteral("<xsl:value-of select="@table1"/><xsl:value-of select="@table2"/>Relation")
+        <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>
+    };
+
+    return allTables;
 }
 
 </xsl:if>
@@ -149,16 +151,16 @@ QVector&lt;QString&gt; Akonadi::Server::allDatabaseTables()
 </xsl:template>
 
 <xsl:template name="data-type">
-  <xsl:choose>
+    <xsl:choose>
     <xsl:when test="@type = 'enum'"><xsl:value-of select="../@name"/>::<xsl:value-of select="@enumType"/></xsl:when>
     <xsl:otherwise><xsl:value-of select="@type"/></xsl:otherwise>
-  </xsl:choose>
+    </xsl:choose>
 </xsl:template>
 
 <!-- generates function argument code for the current column -->
 <xsl:template name="argument">
-  <xsl:if test="starts-with(@type,'Q')">const </xsl:if><xsl:call-template name="data-type"/><xsl:text> </xsl:text>
-  <xsl:if test="starts-with(@type,'Q')">&amp;</xsl:if><xsl:value-of select="@name"/>
+    <xsl:if test="starts-with(@type,'Q')">const </xsl:if><xsl:call-template name="data-type"/><xsl:text> </xsl:text>
+    <xsl:if test="starts-with(@type,'Q')">&amp;</xsl:if><xsl:value-of select="@name"/>
 </xsl:template>
 
 <!-- signature of setter method -->
@@ -166,7 +168,7 @@ QVector&lt;QString&gt; Akonadi::Server::allDatabaseTables()
 <xsl:variable name="methodName">
   <xsl:value-of select="concat(translate(substring(@name,1,1),'abcdefghijklmnopqrstuvwxyz', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'), substring(@name,2))"/>
 </xsl:variable>
-set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
+set<xsl:value-of select="$methodName"/>(<xsl:call-template name="argument"/>)
 </xsl:template>
 
 <!-- field name list -->
@@ -184,39 +186,40 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
 <xsl:param name="lookupKey" select="$key"/>
 <xsl:param name="cache"/>
 <xsl:variable name="className"><xsl:value-of select="@name"/></xsl:variable>
-  <xsl:if test="$cache != ''">
-  if ( Private::cacheEnabled ) {
-    QMutexLocker lock(&amp;Private::cacheMutex);
-    QHash&lt;<xsl:value-of select="column[@name = $key]/@type"/>, <xsl:value-of select="$className"/>&gt;::const_iterator it = Private::<xsl:value-of select="$cache"/>.constFind(<xsl:value-of select="$lookupKey"/>);
-    if ( it != Private::<xsl:value-of select="$cache"/>.constEnd() ) {
-      return it.value();
+    <xsl:if test="$cache != ''">
+    if (Private::cacheEnabled) {
+        QMutexLocker lock(&amp;Private::cacheMutex);
+        auto it = Private::<xsl:value-of select="$cache"/>.constFind(<xsl:value-of select="$lookupKey"/>);
+        if (it != Private::<xsl:value-of select="$cache"/>.constEnd()) {
+            return it.value();
+        }
     }
-  }
-  </xsl:if>
-  QSqlDatabase db = DataStore::self()->database();
-  if ( !db.isOpen() )
-    return <xsl:value-of select="$className"/>();
+    </xsl:if>
+    QSqlDatabase db = DataStore::self()->database();
+    if (!db.isOpen()) {
+        return <xsl:value-of select="$className"/>();
+    }
 
-  QueryBuilder qb( tableName(), QueryBuilder::Select );
-  static const QStringList columns = removeEntry(columnNames(), <xsl:value-of select="$key"/>Column());
-  qb.addColumns( columns );
-  qb.addValueCondition( <xsl:value-of select="$key"/>Column(), Query::Equals, <xsl:value-of select="$key"/> );
-  <xsl:if test="$key2 != ''">
-  qb.addValueCondition( <xsl:value-of select="$key2"/>Column(), Query::Equals, <xsl:value-of select="$key2"/> );
-  </xsl:if>
-  if ( !qb.exec() ) {
-    qCWarning(AKONADISERVER_LOG) &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
-      &lt;&lt; <xsl:value-of select="$key"/> &lt;&lt; "from table" &lt;&lt; tableName()
-      &lt;&lt; qb.query().lastError().text();
-    return <xsl:value-of select="$className"/>();
-  }
-  if ( !qb.query().next() ) {
-    return <xsl:value-of select="$className"/>();
-  }
+    QueryBuilder qb(tableName(), QueryBuilder::Select);
+    static const QStringList columns = removeEntry(columnNames(), <xsl:value-of select="$key"/>Column());
+    qb.addColumns(columns);
+    qb.addValueCondition(<xsl:value-of select="$key"/>Column(), Query::Equals, <xsl:value-of select="$key"/>);
+    <xsl:if test="$key2 != ''">
+    qb.addValueCondition(<xsl:value-of select="$key2"/>Column(), Query::Equals, <xsl:value-of select="$key2"/>);
+    </xsl:if>
+    if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) &lt;&lt; "Error during selection of record with <xsl:value-of select="$key"/>"
+                                     &lt;&lt; <xsl:value-of select="$key"/> &lt;&lt; "from table" &lt;&lt; tableName()
+                                     &lt;&lt; qb.query().lastError().text();
+        return <xsl:value-of select="$className"/>();
+    }
+    if (!qb.query().next()) {
+        return <xsl:value-of select="$className"/>();
+    }
 
-  <!-- this indirection is required to prevent off-by-one access now that we skip the key column -->
-  int valueIndex = 0;
-  <xsl:for-each select="column">
+    <!-- this indirection is required to prevent off-by-one access now that we skip the key column -->
+    int valueIndex = 0;
+    <xsl:for-each select="column">
     const <xsl:call-template name="data-type"/> value<xsl:value-of select="position()"/> =
     <xsl:choose>
       <xsl:when test="@name=$key">
@@ -227,33 +230,33 @@ set<xsl:value-of select="$methodName"/>( <xsl:call-template name="argument"/> )
         <xsl:call-template name="data-type"/>(<xsl:value-of select="@default"/>) :
         <xsl:choose>
           <xsl:when test="starts-with(@type,'QString')">
-          Utils::variantToString( qb.query().value( valueIndex ) )
+            Utils::variantToString(qb.query().value( valueIndex))
           </xsl:when>
           <xsl:when test="starts-with(@type, 'enum')">
-          static_cast&lt;<xsl:value-of select="@enumType"/>&gt;(qb.query().value( valueIndex ).value&lt;int&gt;())
+            static_cast&lt;<xsl:value-of select="@enumType"/>&gt;(qb.query().value( valueIndex ).value&lt;int&gt;())
           </xsl:when>
           <xsl:when test="starts-with(@type, 'QDateTime')">
-          Utils::variantToDateTime(qb.query().value(valueIndex))
+            Utils::variantToDateTime(qb.query().value(valueIndex))
           </xsl:when>
           <xsl:otherwise>
-          qb.query().value( valueIndex ).value&lt;<xsl:value-of select="@type"/>&gt;()
+            qb.query().value( valueIndex ).value&lt;<xsl:value-of select="@type"/>&gt;()
           </xsl:otherwise>
         </xsl:choose>
-        ; ++valueIndex;
+           ; ++valueIndex;
       </xsl:otherwise>
     </xsl:choose>
   </xsl:for-each>
 
-  <xsl:value-of select="$className"/> rv(
-  <xsl:for-each select="column">
-    value<xsl:value-of select="position()"/>
-    <xsl:if test="position() != last()">,</xsl:if>
-  </xsl:for-each>
-  );
-  if ( Private::cacheEnabled ) {
-    Private::addToCache( rv );
-  }
-  return rv;
+    <xsl:value-of select="$className"/> rv(
+    <xsl:for-each select="column">
+        value<xsl:value-of select="position()"/>
+      <xsl:if test="position() != last()">,</xsl:if>
+    </xsl:for-each>
+    );
+    if (Private::cacheEnabled) {
+        Private::addToCache(rv);
+    }
+    return rv;
 </xsl:template>
 
 <!-- method name for n:1 referred records -->
