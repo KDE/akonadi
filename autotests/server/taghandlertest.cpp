@@ -135,7 +135,7 @@ private Q_SLOTS:
             Tag tag;
             tag.setId(1);
             tag.setTagType(type);
-            tag.setParentId(0);
+            tag.setParentId(-1);
 
             TagAttribute attribute;
             attribute.setTagId(1);
