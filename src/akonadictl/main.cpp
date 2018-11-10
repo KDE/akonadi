@@ -128,7 +128,7 @@ static bool checkAvailableAgentTypes()
         QDir dir(pluginDir);
         const QStringList plugins = dir.entryList(QStringList() << QStringLiteral("*.desktop"), QDir::Files);
         for (const QString &plugin : plugins) {
-            QSettings pluginInfo(pluginDir + QLatin1String("/") + plugin, QSettings::IniFormat);
+            QSettings pluginInfo(pluginDir + QLatin1Char('/') + plugin, QSettings::IniFormat);
             pluginInfo.beginGroup(QStringLiteral("Desktop Entry"));
             types << pluginInfo.value(QStringLiteral("X-Akonadi-Identifier")).toString();
         }

@@ -298,11 +298,11 @@ QString EntityOrderProxyModel::configString(const QModelIndex &index) const
 {
     Item::Id iId = index.data(EntityTreeModel::ItemIdRole).toLongLong();
     if (iId != -1) {
-        return QLatin1String("i") + QString::number(iId);
+        return QLatin1Char('i') + QString::number(iId);
     }
     Collection::Id cId = index.data(EntityTreeModel::CollectionIdRole).toLongLong();
     if (cId != -1) {
-        return QLatin1String("c") + QString::number(cId);
+        return QLatin1Char('c') + QString::number(cId);
     }
     Q_ASSERT(!"Invalid entity");
     return QString();
