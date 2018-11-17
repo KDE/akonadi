@@ -69,7 +69,7 @@ public:
     QVector<Collection> retrieveCollections(const Scope &scope,
                                             int depth, int ancestorDepth,
                                             const QString &resource = QString(),
-                                            CommandContext *context = Q_NULLPTR) const;
+                                            CommandContext *context = nullptr) const;
 
 public Q_SLOTS:
     void collectionAdded(const Collection &col);
@@ -116,7 +116,7 @@ CollectionTreeCache::Node *CollectionTreeCache::findNode(Node *root, Predicate p
         }
     }
 
-    return Q_NULLPTR;
+    return nullptr;
 }
 
 } // namespace Server

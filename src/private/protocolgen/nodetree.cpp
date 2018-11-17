@@ -60,7 +60,7 @@ const QVector<Node const *> &Node::children() const
 
 
 DocumentNode::DocumentNode(int version)
-    : Node(Document, Q_NULLPTR)
+    : Node(Document, nullptr)
     , mVersion(version)
 {}
 
