@@ -22,6 +22,8 @@
 
 #include <QXmlStreamReader>
 
+#include <memory>
+
 class Node;
 class DocumentNode;
 class EnumNode;
@@ -50,7 +52,7 @@ private:
     void printError(const QString &error);
 private:
     QXmlStreamReader mReader;
-    Node *mTree;
+    std::unique_ptr<Node> mTree;
 
 };
 

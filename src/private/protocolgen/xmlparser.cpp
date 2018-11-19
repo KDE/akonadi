@@ -28,18 +28,16 @@
 #define qPrintableRef(x) reinterpret_cast<const char *>(x.unicode())
 
 XmlParser::XmlParser()
-    : mTree(nullptr)
 {
 }
 
 XmlParser::~XmlParser()
 {
-    delete mTree;
 }
 
 Node const *XmlParser::tree() const
 {
-    return mTree;
+    return mTree.get();
 }
 
 
@@ -74,7 +72,7 @@ bool XmlParser::parseProtocol()
         return false;
     }
 
-    auto documentNode = new DocumentNode(attrs.value(QLatin1String("version")).toInt());
+    auto documentNode = std::make_unique<DocumentNode>(attrs.value(QLatin1String("version")).toInt());
 
     while (!mReader.atEnd() &&
         !(mReader.isEndElement() && mReader.name() == QLatin1String("protocol")))
@@ -87,7 +85,7 @@ bool XmlParser::parseProtocol()
                 elemName == QLatin1String("response") ||
                 elemName == QLatin1String("notification"))
             {
-                if (!parseCommand(documentNode)) {
+                if (!parseCommand(documentNode.get())) {
                     return false;
                 }
             } else {
@@ -97,7 +95,7 @@ bool XmlParser::parseProtocol()
         }
     }
 
-    mTree = documentNode;
+    mTree = std::move(documentNode);
 
     return true;
 }
