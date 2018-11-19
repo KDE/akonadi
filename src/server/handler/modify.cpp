@@ -31,6 +31,7 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
 #include "search/searchmanager.h"
+#include "akonadiserver_debug.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -140,8 +141,9 @@ bool Modify::parseStream()
     }
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::RemoteID) {
-        if (cmd.remoteId() != collection.remoteId()) {
+        if (cmd.remoteId() != collection.remoteId() && !cmd.remoteId().isEmpty()) {
             if (!connection()->isOwnerResource(collection)) {
+                qCWarning(AKONADISERVER_LOG) << "Invalid attempt to modify the collection remoteID from" << collection.remoteId() << "to" << cmd.remoteId();
                 return failureResponse("Only resources can modify remote identifiers");
             }
             collection.setRemoteId(cmd.remoteId());
