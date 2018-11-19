@@ -238,8 +238,9 @@ bool Store::parseStream()
     }
 
     if (item.isValid() && cmd.modifiedParts() & Protocol::ModifyItemsCommand::RemoteID) {
-        if (item.remoteId() != cmd.remoteId()) {
+        if (item.remoteId() != cmd.remoteId() && !cmd.remoteId().isEmpty()) {
             if (!connection()->isOwnerResource(item)) {
+                qCWarning(AKONADISERVER_LOG) << "Invalid attempt to modify the remoteID for item" << item.id() << "from" << item.remoteId() << "to" << cmd.remoteId();
                 return failureResponse("Only resources can modify remote identifiers");
             }
             item.setRemoteId(cmd.remoteId());
