@@ -76,8 +76,6 @@ EntityTreeModel::~EntityTreeModel()
         }
     }
 
-    d->m_rootNode = nullptr;
-
     delete d_ptr;
 }
 

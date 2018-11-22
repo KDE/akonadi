@@ -94,6 +94,10 @@ EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
 
 EntityTreeModelPrivate::~EntityTreeModelPrivate()
 {
+    if (m_needDeleteRootNode) {
+        delete m_rootNode;
+    }
+    m_rootNode = nullptr;
 }
 
 void EntityTreeModelPrivate::init(Monitor *monitor)
@@ -1463,6 +1467,7 @@ void EntityTreeModelPrivate::startFirstListJob()
         // Otherwise store it silently because it's not part of the usable model.
         delete m_rootNode;
         m_rootNode = new Node;
+        m_needDeleteRootNode = true;
         m_rootNode->id = m_rootCollection.id();
         m_rootNode->parent = -1;
         m_rootNode->type = Node::Collection;
@@ -1825,6 +1830,10 @@ void EntityTreeModelPrivate::endResetModel()
         qDeleteAll(list);
     }
     m_childEntities.clear();
+    if (m_needDeleteRootNode) {
+        m_needDeleteRootNode = false;
+        delete m_rootNode;
+    }
     m_rootNode = nullptr;
 
     q->endResetModel();
