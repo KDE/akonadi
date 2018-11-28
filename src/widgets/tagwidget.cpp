@@ -52,7 +52,7 @@ public:
 TagView::TagView(QWidget *parent)
     : QLineEdit(parent)
 {
-    setPlaceholderText(i18n("Click to Add Tags"));
+    setPlaceholderText(i18n("Click to add tags"));
     setReadOnly(true);
 }
 
