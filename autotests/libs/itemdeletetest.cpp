@@ -93,7 +93,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(fjob);
 
         const Item::List items = fjob->items();
-        QVERIFY(items.count() > 0);
+        QVERIFY(!items.isEmpty());
 
         fjob = new ItemFetchJob(items[ 0 ], this);
         AKVERIFYEXEC(fjob);
