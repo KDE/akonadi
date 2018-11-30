@@ -126,6 +126,16 @@ public:
      */
     KAboutData *aboutData() const;
 
+    /**
+     * Reimplement to restore dialog size.
+     */
+    virtual QSize restoreDialogSize() const;
+
+    /**
+     * Reimplement to save dialog size.
+     */
+    virtual void saveDialogSize(const QSize &size);
+
 protected:
     QWidget *parentWidget() const;
 

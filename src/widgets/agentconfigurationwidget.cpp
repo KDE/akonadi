@@ -152,6 +152,21 @@ void AgentConfigurationWidget::save()
     }
 }
 
+QSize AgentConfigurationWidget::restoreDialogSize() const
+{
+    if (d->plugin) {
+        return d->plugin->restoreDialogSize();
+    }
+    return {};
+}
+
+void AgentConfigurationWidget::saveDialogSize(const QSize &size)
+{
+    if (d->plugin) {
+        d->plugin->saveDialogSize(size);
+    }
+}
+
 void AgentConfigurationWidget::childEvent(QChildEvent *event)
 {
     if (event->added()) {

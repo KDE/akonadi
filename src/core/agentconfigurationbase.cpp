@@ -24,6 +24,7 @@
 #include <QDBusConnection>
 
 #include <KAboutData>
+#include <QSize>
 
 namespace Akonadi {
 class Q_DECL_HIDDEN AgentConfigurationBase::Private {
@@ -96,4 +97,14 @@ void AgentConfigurationBase::setKAboutData(const KAboutData &aboutData)
 KAboutData *AgentConfigurationBase::aboutData() const
 {
     return d->aboutData.data();
+}
+
+QSize AgentConfigurationBase::restoreDialogSize() const
+{
+    return {};
+}
+
+void AgentConfigurationBase::saveDialogSize(const QSize &size)
+{
+    Q_UNUSED(size);
 }

@@ -41,6 +41,8 @@ public:
 
     void load();
     void save();
+    QSize restoreDialogSize() const;
+    void saveDialogSize(const QSize &size);
 
 protected:
     void childEvent(QChildEvent *event) override;

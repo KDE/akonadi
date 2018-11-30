@@ -27,6 +27,7 @@
 #include <QDialogButtonBox>
 #include <QPushButton>
 #include <QAction>
+#include <QDebug>
 
 #include <KLocalizedString>
 #include <KHelpMenu>
@@ -36,15 +37,33 @@ namespace Akonadi {
 class Q_DECL_HIDDEN AgentConfigurationDialog::Private
 {
 public:
+    Private(AgentConfigurationDialog *qq)
+        : q(qq)
+    {
+
+    }
+    void restoreDialogSize();
+    AgentConfigurationDialog *q;
     QScopedPointer<AgentConfigurationWidget> widget;
 };
+
+void AgentConfigurationDialog::Private::restoreDialogSize()
+{
+    if (widget) {
+        const QSize size = widget->restoreDialogSize();
+        if (size.isValid()) {
+            q->resize(size);
+        }
+    }
+}
+
 }
 
 using namespace Akonadi;
 
 AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance, QWidget *parent)
     : QDialog(parent)
-    , d(new Private)
+    , d(new Private(this))
 {
     setWindowTitle(i18nc("%1 = agent name", "%1 Configuration", instance.name()));
     setWindowIcon(instance.type().icon());
@@ -76,10 +95,14 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
             btnBox->addButton(QDialogButtonBox::Help)->setMenu(menu);
         }
     }
+    d->restoreDialogSize();
 }
 
 AgentConfigurationDialog::~AgentConfigurationDialog()
 {
+    if (d->widget) {
+        d->widget->saveDialogSize(size());
+    }
 }
 
 void AgentConfigurationDialog::accept()
@@ -90,4 +113,3 @@ void AgentConfigurationDialog::accept()
 
     QDialog::accept();
 }
-
