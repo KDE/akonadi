@@ -49,8 +49,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     setWindowTitle(i18nc("%1 = agent name", "%1 Configuration", instance.name()));
     setWindowIcon(instance.type().icon());
 
-    auto l = new QVBoxLayout;
-    setLayout(l);
+    auto l = new QVBoxLayout(this);
 
     d->widget.reset(new AgentConfigurationWidget(instance, this));
     l->addWidget(d->widget.data());

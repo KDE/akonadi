@@ -103,7 +103,6 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             KSharedConfigPtr config = KSharedConfig::openConfig(configName);
             QVBoxLayout *layout = new QVBoxLayout(this);
             layout->setMargin(0);
-            setLayout(layout);
             d->plugin = d->factory->create(config, this, { instance.identifier() });
         } else {
             // Hide this dialog and fallback to calling the out-of-process configuration
