@@ -91,7 +91,7 @@ public:
      *
      * Subclasses must provide a constructor with this exact signature.
      */
-    explicit AgentConfigurationBase(KSharedConfigPtr config, QWidget *parentWidget,
+    explicit AgentConfigurationBase(const KSharedConfigPtr &config, QWidget *parentWidget,
                                     const QVariantList &args);
 
     ~AgentConfigurationBase() override;

@@ -35,7 +35,7 @@ public:
     explicit AgentConfigurationFactoryBase(QObject *parent = nullptr);
     ~AgentConfigurationFactoryBase() override = default;
 
-    virtual AgentConfigurationBase *create(KSharedConfigPtr config, QWidget *parent, const QVariantList &args) const = 0;
+    virtual AgentConfigurationBase *create(const KSharedConfigPtr &config, QWidget *parent, const QVariantList &args) const = 0;
 };
 
 }
@@ -46,7 +46,7 @@ public:
         Q_PLUGIN_METADATA(IID "org.freedesktop.Akonadi.AgentConfig" FILE metadata) \
     public: \
         FactoryName(QObject *parent = nullptr): Akonadi::AgentConfigurationFactoryBase(parent) {} \
-        Akonadi::AgentConfigurationBase *create(KSharedConfigPtr config, QWidget *parent, const QVariantList &args) const override { \
+        Akonadi::AgentConfigurationBase *create(const KSharedConfigPtr &config, QWidget *parent, const QVariantList &args) const override { \
             return new ClassName(config, parent, args); \
         } \
     };
