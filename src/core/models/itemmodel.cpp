@@ -338,7 +338,6 @@ QVariant ItemModel::headerData(int section, Qt::Orientation orientation, int rol
 
 void ItemModel::setCollection(const Collection &collection)
 {
-    qCDebug(AKONADICORE_LOG);
     if (d->collection == collection) {
         return;
     }

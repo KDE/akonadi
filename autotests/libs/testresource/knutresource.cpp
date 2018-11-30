@@ -376,13 +376,14 @@ void KnutResource::addSearch(const QString &query, const QString &queryLanguage,
     Q_UNUSED(query);
     Q_UNUSED(queryLanguage);
     Q_UNUSED(resultCollection);
-    qCDebug(KNUTRESOURCE_LOG);
+    qCDebug(KNUTRESOURCE_LOG) << "addSearch: query=" << query << ", queryLanguage="
+                              << queryLanguage << ", resultCollection=" << resultCollection.id();
 }
 
 void KnutResource::removeSearch(const Collection &resultCollection)
 {
     Q_UNUSED(resultCollection);
-    qCDebug(KNUTRESOURCE_LOG);
+    qCDebug(KNUTRESOURCE_LOG) << "removeSearch:" << resultCollection.id();
 }
 
 AKONADI_RESOURCE_MAIN(KnutResource)

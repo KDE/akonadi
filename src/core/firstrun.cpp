@@ -55,7 +55,6 @@ Firstrun::Firstrun(QObject *parent)
         deleteLater();
         return;
     }
-    qCDebug(AKONADICORE_LOG);
     if (KDBusConnectionPool::threadConnection().registerService(QLatin1String(FIRSTRUN_DBUSLOCK))) {
         findPendingDefaults();
         qCDebug(AKONADICORE_LOG) << mPendingDefaults;
