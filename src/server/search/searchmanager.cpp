@@ -157,7 +157,7 @@ void SearchManager::loadSearchPlugins()
     QStringList loadedPlugins;
     const QString pluginOverride = QString::fromLatin1(qgetenv("AKONADI_OVERRIDE_SEARCHPLUGIN"));
     if (!pluginOverride.isEmpty()) {
-        qCDebug(AKONADISERVER_SEARCH_LOG) << "Overriding the search plugins with: " << pluginOverride;
+        qCInfo(AKONADISERVER_SEARCH_LOG) << "Overriding the search plugins with: " << pluginOverride;
     }
 
     const QStringList dirs = QCoreApplication::libraryPaths();
@@ -170,7 +170,6 @@ void SearchManager::loadSearchPlugins()
             std::unique_ptr<QPluginLoader> loader(new QPluginLoader(filePath));
             const QVariantMap metadata = loader->metaData().value(QStringLiteral("MetaData")).toVariant().toMap();
             if (metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("SearchPlugin")) {
-                qCDebug(AKONADISERVER_SEARCH_LOG) << "===>" << fileName << metadata.value(QStringLiteral("X-Akonadi-PluginType")).toString();
                 continue;
             }
 
@@ -374,9 +373,9 @@ void SearchManager::updateSearchImpl(const Collection &collection)
         DataStore::self()->notificationCollector()->itemsUnlinked(removedItems, collection);
     }
 
-    qCDebug(AKONADISERVER_SEARCH_LOG) << "Search update finished";
-    qCDebug(AKONADISERVER_SEARCH_LOG) << "All results:" << results.count();
-    qCDebug(AKONADISERVER_SEARCH_LOG) << "Removed results:" << toRemove.count();
+    qCInfo(AKONADISERVER_SEARCH_LOG) << "Search update for collection" << collection.name() 
+                                     << "(" << collection.id() << ") finished:"
+                                     << "all results: " << results.count() << ", removed results:" << toRemove.count();
 }
 
 void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
@@ -444,7 +443,7 @@ void SearchManager::searchUpdateResultsAvailable(const QSet<qint64> &results)
     }
 
     if (!transaction.commit()) {
-        qCDebug(AKONADISERVER_SEARCH_LOG) << "Failed to commit transaction";
+        qCWarning(AKONADISERVER_SEARCH_LOG) << "Failed to commit search results transaction";
         return;
     }
 

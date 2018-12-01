@@ -72,7 +72,7 @@ DbInitializer::~DbInitializer()
 bool DbInitializer::run()
 {
     try {
-        qCDebug(AKONADISERVER_LOG) << "DbInitializer::run()";
+        qCInfo(AKONADISERVER_LOG) << "Running DB initializer";
 
         Q_FOREACH (const TableDescription &table, mSchema->tables()) {
             if (!checkTable(table)) {
@@ -97,7 +97,7 @@ bool DbInitializer::run()
         }
 #endif
 
-        qCDebug(AKONADISERVER_LOG) << "DbInitializer::run() done";
+        qCInfo(AKONADISERVER_LOG) << "DB initializer done";
         return true;
     } catch (const DbException &e) {
         mErrorMsg = QString::fromUtf8(e.what());
@@ -257,7 +257,7 @@ bool DbInitializer::updateIndexesAndConstraints()
             m_pendingForeignKeys.clear();
         }
     } catch (const DbException &e) {
-        qCDebug(AKONADISERVER_LOG) << "Updating index failed: " << e.what();
+        qCCritical(AKONADISERVER_LOG) << "Updating index failed: " << e.what();
         return false;
     }
 
@@ -298,7 +298,7 @@ QString DbInitializer::sqlType(const ColumnDescription &col, int size) const
         return QStringLiteral("TINYINT");
     }
 
-    qCDebug(AKONADISERVER_LOG) << "Invalid type" << col.type;
+    qCCritical(AKONADISERVER_LOG) << "Invalid type" << col.type;
     Q_ASSERT(false);
     return QString();
 }

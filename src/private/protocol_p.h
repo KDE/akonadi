@@ -176,11 +176,14 @@ private:
     friend AKONADIPRIVATE_EXPORT void toJson(const Akonadi::Protocol::Command *cmd, QJsonObject &json);
 };
 
+AKONADIPRIVATE_EXPORT QDebug operator<<(QDebug dbg, Command::Type type);
+
 } // namespace Protocol
 } // namespace Akonadi
 
 Q_DECLARE_METATYPE(Akonadi::Protocol::Command::Type)
 Q_DECLARE_METATYPE(Akonadi::Protocol::CommandPtr)
+
 
 
 namespace Akonadi {

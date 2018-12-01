@@ -73,6 +73,8 @@ AkonadiServer::AkonadiServer(QObject *parent)
 
 bool AkonadiServer::init()
 {
+    qCInfo(AKONADISERVER_LOG) << "Starting up the Akonadi Server...";
+
     const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
     QSettings settings(serverConfigFile, QSettings::IniFormat);
     // Restrict permission to 600, as the file might contain database password in plaintext

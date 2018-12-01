@@ -71,8 +71,7 @@ int Entity::countImpl(const QString &tableName, const QString &column, const QVa
     builder.addValueCondition(column, Query::Equals, value);
 
     if (!builder.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Error during counting records in table" << tableName
-                                   << builder.query().lastError().text();
+        qCWarning(AKONADISERVER_LOG) << "Error counting records in table" << tableName;
         return -1;
     }
 
@@ -90,8 +89,7 @@ bool Entity::removeImpl(const QString &tableName, const QString &column, const Q
     builder.addValueCondition(column, Query::Equals, value);
 
     if (!builder.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Error during deleting records from table"
-                                   << tableName << builder.query().lastError().text();
+        qCWarning(AKONADISERVER_LOG) << "Error during deleting records from table" << tableName;
         return false;
     }
     return true;
@@ -109,8 +107,7 @@ bool Entity::relatesToImpl(const QString &tableName, const QString &leftColumn, 
     builder.addValueCondition(rightColumn, Query::Equals, rightId);
 
     if (!builder.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Error during counting records in table" << tableName
-                                   << builder.query().lastError().text();
+        qCWarning(AKONADISERVER_LOG) << "Error during counting records in table" << tableName;
         return false;
     }
 
@@ -133,8 +130,7 @@ bool Entity::addToRelationImpl(const QString &tableName, const QString &leftColu
     qb.setIdentificationColumn(QString());
 
     if (!qb.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Error during adding a record to table" << tableName
-                                   << qb.query().lastError().text();
+        qCWarning(AKONADISERVER_LOG) << "Error during adding a record to table" << tableName;
         return false;
     }
 
@@ -153,8 +149,7 @@ bool Entity::removeFromRelationImpl(const QString &tableName, const QString &lef
     builder.addValueCondition(rightColumn, Query::Equals, rightId);
 
     if (!builder.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Error during removing a record from relation table" << tableName
-                                   << builder.query().lastError().text();
+        qCWarning(AKONADISERVER_LOG) << "Error during removing a record from relation table" << tableName;
         return false;
     }
 
@@ -180,8 +175,7 @@ bool Entity::clearRelationImpl(const QString &tableName, const QString &leftColu
         qFatal("Invalid enum value");
     }
     if (!builder.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Error during clearing relation table" << tableName
-                                   << "for id" << id << builder.query().lastError().text();
+        qCWarning(AKONADISERVER_LOG) << "Error during clearing relation table" << tableName << "for ID" << id;
         return false;
     }
 
