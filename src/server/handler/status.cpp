@@ -22,7 +22,6 @@
 #include "connection.h"
 #include "handlerhelper.h"
 #include "storage/datastore.h"
-#include "storage/countquerybuilder.h"
 #include "storage/collectionstatistics.h"
 
 #include <private/scope_p.h>

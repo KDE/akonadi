@@ -235,7 +235,9 @@ CollectionStatistics::Statistics CollectionStatistics::calculateCollectionStatis
         return { -1, -1, -1 };
     }
 
-    return { qb.query().value(0).toLongLong(),
-             qb.query().value(1).toLongLong(),
-             qb.query().value(2).toLongLong() };
+    auto result = Statistics{ qb.query().value(0).toLongLong(),
+                              qb.query().value(1).toLongLong(),
+                              qb.query().value(2).toLongLong() };
+    qb.query().finish();
+    return result;
 }

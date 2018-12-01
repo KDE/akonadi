@@ -242,6 +242,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
             if (query.next()) {
                 response.setRemoteId(Utils::variantToByteArray(query.value(0)));
             }
+            query.finish();
         }
     }
 
@@ -267,6 +268,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
             attributes.insert(Utils::variantToByteArray(query.value(0)),
                               Utils::variantToByteArray(query.value(1)));
         }
+        query.finish();
         response.setAttributes(attributes);
     }
 

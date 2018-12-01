@@ -38,7 +38,9 @@ static qint64 parentCollectionId(qint64 collectionId)
     if (!qb.query().next()) {
         return -1;
     }
-    return qb.query().value(0).toLongLong();
+    const auto parentId = qb.query().value(0).toLongLong();
+    qb.query().finish();
+    return parentId;
 }
 
 QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64> &ancestors, const QStringList &mimeTypes)
@@ -69,6 +71,7 @@ QVector<qint64> SearchHelper::matchSubcollectionsByMimeType(const QVector<qint64
     while (qb.query().next()) {
         candidateCollections[qb.query().value(1).toLongLong()].append(qb.query().value(0).toLongLong());
     }
+    qb.query().finish();
 
     // If the ancestors list contains root, then return what we got, since everything
     // is sub collection of root

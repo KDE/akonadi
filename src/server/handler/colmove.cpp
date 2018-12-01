@@ -26,7 +26,6 @@
 #include "storage/itemretriever.h"
 #include "storage/transaction.h"
 #include "storage/collectionqueryhelper.h"
-#include "storage/selectquerybuilder.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

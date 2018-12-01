@@ -208,6 +208,7 @@ void List::retrieveAttributes(const QVariantList &collectionIds)
             // qCDebug(AKONADISERVER_LOG) << "found attribute " << attr.type() << attr.value();
             mCollectionAttributes.insert(attributeQuery.value(0).toLongLong(), attr);
         }
+        attributeQuery.finish();
         start += size;
     }
 }
@@ -499,6 +500,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         listCollection(col, ancestorsForCollection(col), mimeTypes, attributes);
         it++;
     }
+    attributeQuery.finish();
+    mimeTypeQuery.finish();
 }
 
 bool List::parseStream()
