@@ -57,6 +57,8 @@
 #include <QFile>
 #include <QElapsedTimer>
 
+#include <functional>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -247,8 +249,8 @@ bool DataStore::hasDataStore()
 bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
                               bool *flagsChanged, const Collection &col_, bool silent)
 {
-    QSet<QByteArray> removedFlags;
-    QSet<QByteArray> addedFlags;
+    QSet<QString> removedFlags;
+    QSet<QString> addedFlags;
     QVariantList insIds;
     QVariantList insFlags;
     Query::Condition delConds(Query::Or);
@@ -260,7 +262,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
         const Flag::List itemFlags = item.flags();
         for (const Flag &flag : itemFlags) {
             if (!flags.contains(flag)) {
-                removedFlags << flag.name().toLatin1();
+                removedFlags << flag.name();
                 Query::Condition cond;
                 cond.addValueCondition(PimItemFlagRelation::leftFullColumnName(), Query::Equals, item.id());
                 cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id());
@@ -270,7 +272,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
 
         for (const Flag &flag : flags) {
             if (!itemFlags.contains(flag)) {
-                addedFlags << flag.name().toLatin1();
+                addedFlags << flag.name();
                 insIds << item.id();
                 insFlags << flag.id();
             }
@@ -302,7 +304,14 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
     }
 
     if (!silent && (!addedFlags.isEmpty() || !removedFlags.isEmpty())) {
-        notificationCollector()->itemsFlagsChanged(items, addedFlags, removedFlags, col);
+        QSet<QByteArray> addedFlagsBa, removedFlagsBa;
+        for (const auto &addedFlag : addedFlags) {
+            addedFlagsBa.insert(addedFlag.toLatin1());
+        }
+        for (const auto &removedFlag : removedFlags) {
+            removedFlagsBa.insert(removedFlag.toLatin1());
+        }
+        notificationCollector()->itemsFlagsChanged(items, addedFlagsBa, removedFlagsBa, col);
     }
 
     setBoolPtr(flagsChanged, (addedFlags != removedFlags));
@@ -348,8 +357,7 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
     }
 
     if (!silent) {
-        notificationCollector()->itemsFlagsChanged(appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
-                QSet<QByteArray>(), col);
+        notificationCollector()->itemsFlagsChanged(appendItems, {flag.name().toLatin1()}, {}, col);
     }
 
     return true;
@@ -413,7 +421,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
                                  bool *flagsChanged, const Collection &col_, bool silent)
 {
     Collection col = col_;
-    QSet<QByteArray> removedFlags;
+    QSet<QString> removedFlags;
     QVariantList itemsIds;
     QVariantList flagsIds;
 
@@ -428,7 +436,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
             col.setId(-2);
         }
         for (int i = 0; i < flags.count(); ++i) {
-            const QByteArray flagName = flags[i].name().toLatin1();
+            const QString flagName = flags[i].name();
             if (!removedFlags.contains(flagName)) {
                 flagsIds << flags[i].id();
                 removedFlags << flagName;
@@ -449,7 +457,11 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
     if (qb.query().numRowsAffected() != 0) {
         setBoolPtr(flagsChanged, true);
         if (!silent) {
-            notificationCollector()->itemsFlagsChanged(items, QSet<QByteArray>(), removedFlags, col);
+            QSet<QByteArray> removedFlagsBa;
+            for (const auto &remoteFlag : removedFlags) {
+                removedFlagsBa.insert(remoteFlag.toLatin1());
+            }
+            notificationCollector()->itemsFlagsChanged(items, {}, removedFlagsBa, col);
         }
     }
 
