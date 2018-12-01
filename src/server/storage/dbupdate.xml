@@ -339,4 +339,11 @@
   <update version="37" abortOnFailure="true">
     <raw-sql backends="sqlite">UPDATE TagRemoteIdResourceRelationTable SET remoteId = printf('%s', remoteId)</raw-sql>
   </update>
+
+  <update version="39" abortOnFailure="false">
+    <raw-sql backends="mysql">ALTER TABLE TagTable MODIFY COLUMN parentId BIGINT(20);</raw-sql>
+    <raw-sql backends="psql">ALTER TABLE TagTable ALTER COLUMN parentId DROP DEFAULT;</raw-sql>
+    <!-- FIXME: SQLite doesn't allow for a straight-forward migration, but this has never reached
+         a release, so we are mostly OK here. //-->
+  </update>
 </updates>
