@@ -289,8 +289,10 @@ bool Store::parseStream()
         PartStreamer streamer(connection(), item);
         Q_FOREACH (const QByteArray &partName, cmd.parts()) {
             qint64 partSize = 0;
-            if (!streamer.stream(true, partName, partSize)) {
-                return failureResponse(streamer.error());
+            try {
+                streamer.stream(true, partName, partSize);
+            } catch (const PartStreamerException &e) {
+                return failureResponse(e.what());
             }
 
             changes.insert(partName);
@@ -303,8 +305,10 @@ bool Store::parseStream()
         const Protocol::Attributes attrs = cmd.attributes();
         for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
             bool changed = false;
-            if (!streamer.streamAttribute(true, iter.key(), iter.value(), &changed)) {
-                return failureResponse(streamer.error());
+            try {
+                streamer.streamAttribute(true, iter.key(), iter.value(), &changed);
+            } catch (const PartStreamerException &e) {
+                return failureResponse(e.what());
             }
 
             if (changed) {

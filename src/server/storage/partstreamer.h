@@ -23,6 +23,7 @@
 #include <QSharedPointer>
 
 #include "entities.h"
+#include "exception.h"
 
 namespace Akonadi
 {
@@ -37,6 +38,8 @@ using CommandPtr = QSharedPointer<Command>;
 namespace Server
 {
 
+AKONADI_EXCEPTION_MAKE_INSTANCE(PartStreamerException);
+
 class PimItem;
 class Part;
 class Connection;
@@ -47,25 +50,29 @@ public:
     explicit PartStreamer(Connection *connection, const PimItem &pimItem);
     ~PartStreamer();
 
-    bool stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed = nullptr);
-    bool streamAttribute(bool checkExists, const QByteArray &partName, const QByteArray &value, bool *changed = nullptr);
+    /**
+     * @throws PartStreamException
+     */
+    void stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed = nullptr);
 
-    QString error() const;
+    /**
+     * @throws PartStreamerException
+     */
+    void streamAttribute(bool checkExists, const QByteArray &partName, const QByteArray &value, bool *changed = nullptr);
 
 private:
-    bool streamPayload(Part &part, const QByteArray &partName);
-    bool streamPayloadToFile(Part &part, const Protocol::PartMetaData &metaPart);
-    bool streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart);
-    bool streamForeignPayload(Part &part, const Protocol::PartMetaData &metaPart);
+    void streamPayload(Part &part, const QByteArray &partName);
+    void streamPayloadToFile(Part &part, const Protocol::PartMetaData &metaPart);
+    void streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart);
+    void streamForeignPayload(Part &part, const Protocol::PartMetaData &metaPart);
 
     Protocol::PartMetaData requestPartMetaData(const QByteArray &partName);
-    bool preparePart(bool checkExists, const QByteArray &partName, Part &part);
+    void preparePart(bool checkExists, const QByteArray &partName, Part &part);
 
     Connection *mConnection;
     PimItem mItem;
     bool mCheckChanged;
     bool mDataChanged;
-    QString mError;
 };
 
 } // namespace Server
