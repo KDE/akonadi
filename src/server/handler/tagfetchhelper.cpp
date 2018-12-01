@@ -112,6 +112,7 @@ QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId)
                           Utils::variantToByteArray(attributeQuery.value(2)));
         attributeQuery.next();
     }
+    attributeQuery.finish();
     return attributes;
 }
 
@@ -153,6 +154,8 @@ bool TagFetchHelper::fetchTags()
 
         tagQuery.next();
     }
+    attributeQuery.finish();
+    tagQuery.finish();
 
     return true;
 }

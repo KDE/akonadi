@@ -239,6 +239,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
             return response;
         }
         response.setRemoteId(Utils::variantToByteArray(query.value(0)));
+        query.finish();
     }
 
     return response;

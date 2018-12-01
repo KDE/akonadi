@@ -359,6 +359,7 @@ bool DbUpdater::complexUpdate_25()
             }
             qCDebug(AKONADISERVER_LOG) << "\t Moved part type" << partName << "to PartTypeTable";
         }
+        query.finish();
     }
 
     qCDebug(AKONADISERVER_LOG) << "Migrating data from PartTable to PartTable_new";

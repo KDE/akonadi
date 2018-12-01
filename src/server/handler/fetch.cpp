@@ -22,7 +22,6 @@
 #include "connection.h"
 #include "fetchhelper.h"
 #include "cachecleaner.h"
-#include "storage/selectquerybuilder.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

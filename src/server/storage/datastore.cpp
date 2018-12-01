@@ -399,6 +399,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
                     setBoolPtr(flagsChanged, true);
                 }
             }
+            query.finish();
         }
 
         if (!doAppendItemsFlag(items, flag, existing, col, silent)) {
@@ -600,6 +601,7 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
                     setBoolPtr(tagsChanged, true);
                 }
             }
+            query.finish();
         }
 
         if (!doAppendItemsTag(items, tag, existing, col, silent)) {
@@ -701,6 +703,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
 
             notificationCollector()->tagRemoved(tag, resource, rid);
         }
+        query.finish();
 
         // And one for clients - without RID
         notificationCollector()->tagRemoved(tag, QByteArray(), QString());
@@ -822,9 +825,11 @@ bool DataStore::cleanupCollection(Collection &collection)
                 ExternalPartStorage::resolveAbsolutePath(qb.query().value(0).toByteArray()));
         }
     } catch (const PartHelperException &e) {
+        qb.query().finish();
         qCDebug(AKONADISERVER_LOG) << e.what();
         return false;
     }
+    qb.query().finish();
 
     // delete the collection itself, referential actions will do the rest
     notificationCollector()->collectionRemoved(collection);
@@ -1055,6 +1060,7 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
             pimItems << item;
         } while (query.next() && query.value(0).toLongLong() == collectionId);
     }
+    query.finish();
 
     return map;
 }

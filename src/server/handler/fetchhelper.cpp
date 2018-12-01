@@ -299,6 +299,7 @@ bool FetchHelper::isScopeLocal(const Scope &scope)
 
     query.next();
     const QString resourceName = query.value(0).toString();
+    query.finish();
 
     org::freedesktop::Akonadi::AgentManager manager(DBus::serviceName(DBus::Control),
             QStringLiteral("/AgentManager"),
@@ -633,6 +634,11 @@ bool FetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse &&)
 
         itemQuery.next();
     }
+    tagQuery.finish();
+    flagQuery.finish();
+    partQuery.finish();
+    vRefQuery.finish();
+    itemQuery.finish();
     END_TIMER(processing)
 
     // update atime (only if the payload was actually requested, otherwise a simple resource sync prevents cache clearing)

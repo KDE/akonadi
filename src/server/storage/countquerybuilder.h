@@ -78,7 +78,9 @@ public:
             qCDebug(AKONADISERVER_LOG) << "Error during retrieving result of query:" << query().lastError().text();
             return -1;
         }
-        return query().value(0).toInt();
+        const auto result = query().value(0).toInt();
+        query().finish();
+        return result;
     }
 };
 

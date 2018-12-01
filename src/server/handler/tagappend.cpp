@@ -63,6 +63,7 @@ bool TagAppend::parseStream()
         if (qb.query().next()) {
             tagId = qb.query().value(0).toLongLong();
         }
+        qb.query().finish();
     }
     if (tagId < 0) {
         Tag insertedTag;

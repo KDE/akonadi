@@ -358,7 +358,7 @@ void StorageJanitor:: findOrphanedPimItemFlags()
         ++count;
         imapIds.append(sqb.query().value(0).toInt());
     }
-
+    sqb.query().finish();
     if (count > 0) {
         ImapSet set;
         set.add(imapIds);
@@ -393,6 +393,7 @@ void StorageJanitor::findOverlappingParts()
         inform(QLatin1Literal("Found overlapping part data: ") + qb.query().value(0).toString());
         // TODO: uh oh, this is bad, how do we recover from that?
     }
+    qb.query().finish();
 
     if (count > 0) {
         inform(QLatin1Literal("Found ") + QString::number(count) + QLatin1Literal(" overlapping parts - bad."));
@@ -449,6 +450,7 @@ void StorageJanitor::verifyExternalParts()
             part.update();
         }
     }
+    qb.query().finish();
     inform(QLatin1Literal("Found ") + QString::number(usedFiles.size()) + QLatin1Literal(" external parts."));
 
     // see what's left and move it to lost+found
@@ -560,6 +562,7 @@ void StorageJanitor::findRIDDuplicates()
             while (items.query().next()) {
                 itemsIds.push_back(items.query().value(0));
             }
+            items.query().finish();
             if (itemsIds.isEmpty()) {
                 // the mimetype filter may have dropped some entries from the
                 // duplicates query
@@ -588,7 +591,9 @@ void StorageJanitor::findRIDDuplicates()
                 inform(QStringLiteral("Error while deleting duplicates ") + items.query().lastError().text());
             }
         }
+        duplicates.query().finish();
     }
+    qb.query().finish();
 }
 
 void StorageJanitor::vacuum()
@@ -666,6 +671,7 @@ void StorageJanitor::checkSizeTreshold()
 
             inform(QStringLiteral("Moved part %1 from database into external file %2").arg(part.id()).arg(QString::fromLatin1(name)));
         }
+        query.finish();
     }
 
     {
@@ -710,6 +716,7 @@ void StorageJanitor::checkSizeTreshold()
             f.remove();
             inform(QStringLiteral("Moved part %1 from external file into database").arg(part.id()));
         }
+        query.finish();
     }
 }
 
@@ -753,6 +760,7 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
             inform(QStringLiteral("Migrated part %1 to new levelled cache").arg(id));
         }
     }
+    query.finish();
 }
 
 void StorageJanitor::findOrphanSearchIndexEntries()
@@ -819,12 +827,14 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         while (itemQuery.next()) {
             searchResults.remove(itemQuery.value(0).toLongLong());
         }
+        itemQuery.finish();
 
         if (!searchResults.isEmpty()) {
             inform(QStringLiteral("Collection %1 search index contains %2 orphan items. Scheduling reindexing").arg(colId).arg(searchResults.count()));
             iface.call(QDBus::NoBlock, QStringLiteral("reindexCollection"), colId);
         }
     }
+    query.finish();
 }
 
 

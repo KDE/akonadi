@@ -22,7 +22,6 @@
 #include "notificationmanager.h"
 #include "collectionreferencemanager.h"
 #include "aggregatedfetchscope.h"
-#include "storage/querybuilder.h"
 #include "utils.h"
 
 #include <QLocalSocket>

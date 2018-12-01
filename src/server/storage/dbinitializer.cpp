@@ -20,8 +20,8 @@
 
 #include "dbinitializer.h"
 #include "dbinitializer_p.h"
-#include "querybuilder.h"
 #include "dbexception.h"
+#include "dbtype.h"
 #include "schema.h"
 #include "entities.h"
 #include "akonadiserver_debug.h"

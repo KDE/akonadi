@@ -307,6 +307,7 @@ bool ItemRetriever::exec()
         }
         query.next();
     }
+    query.finish();
 
     // Post-check in case we only queried one item thus did not reach the check
     // at the beginning of the while() loop above
