@@ -177,7 +177,7 @@ void ItemSyncPrivate::checkDone()
 
     if (allProcessed() && !mFinished) {
         // prevent double result emission, can happen since checkDone() is called from all over the place
-        qCDebug(AKONADICORE_LOG) << "ItemSync of collection" mSyncCollection.id() << "finished";
+        qCDebug(AKONADICORE_LOG) << "ItemSync of collection" << mSyncCollection.id() << "finished";
         mFinished = true;
         q->emitResult();
     }
