@@ -56,14 +56,12 @@ AgentConfigurationWidget::Private::~Private()
 
 void AgentConfigurationWidget::Private::setupErrorWidget(QWidget *parent, const QString &text)
 {
-    auto layout = new QVBoxLayout;
+    QVBoxLayout *layout = new QVBoxLayout(parent);
     layout->addStretch(2);
     auto label = new QLabel(text, parent);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
     layout->addStretch(2);
-
-    parent->setLayout(layout);
 }
 
 bool AgentConfigurationWidget::Private::loadPlugin(const QString &pluginPath)
