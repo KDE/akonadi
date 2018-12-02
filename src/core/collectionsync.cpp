@@ -321,7 +321,7 @@ public:
 
         // At this point remoteChildren contains collections that don't exist locally yet
         if (!remoteChildren.isEmpty()) {
-            for (Collection c : remoteChildren) {  //krazy:exclude=foreach
+            for (Collection c : remoteChildren) {
                 c.setParentCollection(parentCollection);
                 remoteCollectionsToCreate.append(c);
             }
@@ -336,7 +336,7 @@ public:
         }
 
         // Recurse into children
-        Q_FOREACH (const Collection &c, originalChildren) {
+        for (const Collection &c : originalChildren) {
             processLocalCollections(remoteIdForCollection(c), c);
         }
     }
@@ -483,7 +483,7 @@ public:
         if (collectionsToCreate.isEmpty() && !hierarchicalRIDs) {
             collectionsToCreate = remoteCollections.take(RemoteId(newLocal.remoteId()));
         }
-        for (Collection col : qAsConst(collectionsToCreate)) {   //krazy:exclude=foreach
+        for (Collection col : qAsConst(collectionsToCreate)) {
             col.setParentCollection(newLocal);
             remoteCollectionsToCreate.append(col);
         }

@@ -636,7 +636,7 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
     setBoolPtr(tagsChanged, false);
     itemsIds.reserve(items.count());
 
-    Q_FOREACH (const PimItem &item, items) {
+    for (const PimItem &item : items) {
         itemsIds << item.id();
         for (int i = 0; i < tags.count(); ++i) {
             const qint64 tagId = tags[i].id();

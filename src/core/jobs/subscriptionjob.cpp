@@ -70,11 +70,11 @@ void SubscriptionJob::doStart()
         return;
     }
 
-    for (Collection col : qAsConst(d->mSub)) {   //krazy:exclude=foreach
+    for (Collection col : qAsConst(d->mSub)) {
         col.setEnabled(true);
         new CollectionModifyJob(col, this);
     }
-    for (Collection col : qAsConst(d->mUnsub)) { //krazy:exclude=foreach
+    for (Collection col : qAsConst(d->mUnsub)) {
         col.setEnabled(false);
         new CollectionModifyJob(col, this);
     }

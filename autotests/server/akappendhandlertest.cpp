@@ -121,7 +121,7 @@ public:
     void updateFlags(QVector<Flag> &flags, const QStringList &updatedFlags)
     {
         flags.clear();
-        Q_FOREACH (const QString &flagName, updatedFlags) {
+        for (const QString &flagName : updatedFlags) {
             Flag flag;
             flag.setName(flagName);
             flags << flag;

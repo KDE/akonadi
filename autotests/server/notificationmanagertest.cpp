@@ -372,19 +372,19 @@ private Q_SLOTS:
         TestableNotificationSubscriber subscriber;
 
         subscriber.setAllMonitored(allMonitored);
-        Q_FOREACH (Entity::Id id, monitoredCollections) {
+        for (Entity::Id id : monitoredCollections) {
             subscriber.setMonitoredCollection(id, true);
         }
-        Q_FOREACH (Entity::Id id, monitoredItems) {
+        for (Entity::Id id : monitoredItems) {
             subscriber.setMonitoredItem(id, true);
         }
-        Q_FOREACH (const QByteArray &res, monitoredResources) {
+        for (const QByteArray &res : monitoredResources) {
             subscriber.setMonitoredResource(res, true);
         }
-        Q_FOREACH (const QString &mimeType, monitoredMimeTypes) {
+        for (const QString &mimeType : monitoredMimeTypes) {
             subscriber.setMonitoredMimeType(mimeType, true);
         }
-        Q_FOREACH (const QByteArray &session, ignoredSessions) {
+        for (const QByteArray &session : ignoredSessions) {
             subscriber.setIgnoredSession(session, true);
         }
 

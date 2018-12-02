@@ -102,7 +102,7 @@ void CollectionReferenceManager::cleanup()
         return;
     }
     const QVector<Collection> colVect = qb.result();
-    for (Collection col : colVect) {   // krazy:exclude=foreach
+    for (Collection col : colVect) {
         col.setReferenced(false);
         col.update();
         if (AkonadiServer::instance()->cacheCleaner()) {

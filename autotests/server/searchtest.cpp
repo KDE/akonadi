@@ -59,7 +59,7 @@ public:
         col.setResource(res);
         col.setParentId(parent.isValid() ? parent.id() : 0);
         col.insert();
-        Q_FOREACH (const QString &mimeType, mimetypes) {
+        for (const QString &mimeType : mimetypes) {
             MimeType mt = MimeType::retrieveByName(mimeType);
             if (!mt.isValid()) {
                 mt = MimeType(mimeType);
