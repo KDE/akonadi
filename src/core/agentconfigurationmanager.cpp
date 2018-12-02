@@ -104,10 +104,9 @@ QString AgentConfigurationManager::findConfigPlugin(const QString &type) const
             if (md.value(QStringLiteral("X-Akonadi-PluginType")).toString() != QLatin1String("AgentConfig")) {
                 continue;
             }
-            if (md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString() != type) {
+            if (!type.startsWith(md.value(QStringLiteral("X-Akonadi-AgentConfig-Type")).toString())) {
                 continue;
             }
-
             return loader.fileName();
         }
     }
