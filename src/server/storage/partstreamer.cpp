@@ -54,10 +54,6 @@ PartStreamer::~PartStreamer()
 {
 }
 
-QString PartStreamer::error() const
-{
-    return mError;
-}
 
 Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partName)
 {
@@ -70,19 +66,18 @@ Protocol::PartMetaData PartStreamer::requestPartMetaData(const QByteArray &partN
 
     const auto cmd = mConnection->readCommand();
     if (!cmd->isValid() || Protocol::cmdCast<Protocol::Response>(cmd).isError()) {
-        mError = QStringLiteral("Client failed to provide part metadata");
-        return Protocol::PartMetaData();
+        throw PartStreamerException("Client failed to provide part metadata.");
     }
 
     return Protocol::cmdCast<Protocol::StreamPayloadResponse>(cmd).metaData();
 }
 
-bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
+void PartStreamer::streamPayload(Part &part, const QByteArray &partName)
 {
     Protocol::PartMetaData metaPart = requestPartMetaData(partName);
     if (metaPart.name().isEmpty()) {
-        mError = QStringLiteral("Part name is empty");
-        return false;
+        throw PartStreamerException(QStringLiteral("Client sent empty metadata for part '%1'.")
+                    .arg(QString::fromUtf8(partName)));
     }
     part.setVersion(metaPart.version());
 
@@ -94,17 +89,17 @@ bool PartStreamer::streamPayload(Part &part, const QByteArray &partName)
     }
 
     if (metaPart.storageType() == Protocol::PartMetaData::Foreign) {
-        return streamForeignPayload(part, metaPart);
+        streamForeignPayload(part, metaPart);
     } else if (part.datasize() > DbConfig::configuredDatabase()->sizeThreshold()) {
         //actual case when streaming storage is used: external payload is enabled,
         // data is big enough in a literal
-        return streamPayloadToFile(part, metaPart);
+        streamPayloadToFile(part, metaPart);
     } else {
-        return streamPayloadData(part, metaPart);
+        streamPayloadData(part, metaPart);
     }
 }
 
-bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart)
+void PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &metaPart)
 {
     // If the part WAS external previously, remove data file
     if (part.storage() == Part::External) {
@@ -123,9 +118,8 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
     const auto cmd = mConnection->readCommand();
     const auto &response = Protocol::cmdCast<Protocol::StreamPayloadResponse>(cmd);
     if (!response.isValid() || response.isError()) {
-        mError = QStringLiteral("Client failed to provide payload data");
-        qCCritical(AKONADISERVER_LOG) << mError;
-        return false;
+        throw PartStreamerException(QStringLiteral("Client failed to provide payload data for part ID %1 (%2).")
+                .arg(part.id()).arg(part.partType().name()));
     }
     const QByteArray newData = response.data();
     // only use the data size with internal payload parts, for foreign parts
@@ -134,8 +128,8 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
                                 ? newData.size()
                                 : metaPart.size();
     if (newSize != metaPart.size()) {
-        mError = QStringLiteral("Payload size mismatch");
-        return false;
+        throw PartStreamerException(QStringLiteral("Payload size mismatch: client advertised %1 bytes but sent %2 bytes.")
+                .arg(metaPart.size()).arg(newSize));
     }
 
     if (part.isValid()) {
@@ -147,15 +141,12 @@ bool PartStreamer::streamPayloadData(Part &part, const Protocol::PartMetaData &m
         part.setData(newData);
         part.setDatasize(newSize);
         if (!part.insert()) {
-            mError = QStringLiteral("Failed to insert part to database");
-            return false;
+            throw PartStreamerException("Failed to insert new part into database.");
         }
     }
-
-    return true;
 }
 
-bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData &metaPart)
+void PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData &metaPart)
 {
     QByteArray origData;
     if (!mDataChanged && mCheckChanged) {
@@ -192,20 +183,18 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
 
     if (part.isValid()) {
         if (!part.update()) {
-            mError = QStringLiteral("Failed to update part in database");
-            return false;
+            throw PartStreamerException(QStringLiteral("Failed to update part %1 in database.").arg(part.id()));
         }
     } else {
         if (!part.insert()) {
-            mError = QStringLiteral("Failed to insert part into database");
-            return false;
+            throw PartStreamerException(QStringLiteral("Failed to insert new part fo PimItem %1 into database.")
+                    .arg(part.pimItemId()));
         }
 
         filename = ExternalPartStorage::nameForPartId(part.id());
         part.setData(filename);
         if (!part.update()) {
-            mError = QStringLiteral("Failed to update part in database");
-            return false;
+            throw PartStreamerException(QStringLiteral("Failed to update part %1 in database.").arg(part.id()));
         }
     }
 
@@ -220,22 +209,17 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
     const auto cmd = mConnection->readCommand();
     const auto &response = Protocol::cmdCast<Protocol::Response>(cmd);
     if (!response.isValid() || response.isError()) {
-        mError = QStringLiteral("Client failed to store payload into file");
-        qCCritical(AKONADISERVER_LOG) << mError;
-        return false;
+        throw PartStreamerException("Client failed to store payload into file.");
     }
 
     QFile file(ExternalPartStorage::resolveAbsolutePath(filename));
     if (!file.exists()) {
-        mError = QStringLiteral("External payload file does not exist");
-        qCCritical(AKONADISERVER_LOG) << mError;
-        return false;
+        throw PartStreamerException(QStringLiteral("External payload file %1 does not exist.").arg(file.fileName()));
     }
 
     if (file.size() != metaPart.size()) {
-        mError = QStringLiteral("Payload size mismatch");
-        qCDebug(AKONADISERVER_LOG) << mError << ", client advertised" << metaPart.size() << "bytes, but the file is" << file.size() << "bytes!";
-        return false;
+        throw PartStreamerException(QStringLiteral("Payload size mismatch, client advertised %1 bytes, but the file is %2 bytes.")
+                    .arg(metaPart.size(), file.size()));
     }
 
     if (mCheckChanged && !mDataChanged) {
@@ -243,11 +227,9 @@ bool PartStreamer::streamPayloadToFile(Part &part, const Protocol::PartMetaData 
         // caller wants to know whether parts really differ
         mDataChanged = (origData != PartHelper::translateData(part));
     }
-
-    return true;
 }
 
-bool PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData &metaPart)
+void PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData &metaPart)
 {
     QByteArray origData;
     if (!mDataChanged && mCheckChanged) {
@@ -264,9 +246,7 @@ bool PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData
     const auto cmd = mConnection->readCommand();
     const auto response = Protocol::cmdCast<Protocol::StreamPayloadResponse>(cmd);
     if (!response.isValid() || response.isError()) {
-        mError = QStringLiteral("Client failed to store payload into file");
-        qCCritical(AKONADISERVER_LOG) << mError;
-        return false;
+        throw PartStreamerException("Client failed to store payload into file.");
     }
 
     // If the part was previously external, clean up the data
@@ -281,28 +261,24 @@ bool PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData
 
     if (part.isValid()) {
         if (!part.update()) {
-            mError = QStringLiteral("Failed to update part in database");
-            return false;
+            throw PartStreamerException(QStringLiteral("Failed to update part %1 in database.").arg(part.id()));
         }
     } else {
         if (!part.insert()) {
-            mError = QStringLiteral("Failed to insert part into database");
-            return false;
+            throw PartStreamerException(QStringLiteral("Failed to insert part for PimItem %1 into database.")
+                    .arg(part.pimItemId()));
         }
     }
 
     const QString filename = QString::fromUtf8(response.data());
     QFile file(filename);
     if (!file.exists()) {
-        mError = QStringLiteral("Foreign payload file does not exist");
-        qCCritical(AKONADISERVER_LOG) << mError;
-        return false;
+        throw PartStreamerException(QStringLiteral("Foreign payload file %1 does not exist.").arg(filename));
     }
 
     if (file.size() != metaPart.size()) {
-        mError = QStringLiteral("Payload size mismatch");
-        qCCritical(AKONADISERVER_LOG) << mError << ", client advertised" << metaPart.size() << "bytes, but the file size is" << file.size() << "bytes!";
-        return false;
+        throw PartStreamerException(QStringLiteral("Foreign payload size mismatch, client advertised %1 bytes, but the file size is %2 bytes.")
+                    .arg(metaPart.size(), file.size()));
     }
 
     if (mCheckChanged && !mDataChanged) {
@@ -310,13 +286,10 @@ bool PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData
         // caller wants to know whether parts really differ
         mDataChanged = (origData != PartHelper::translateData(part));
     }
-
-    return true;
 }
 
-bool PartStreamer::preparePart(bool checkExists, const QByteArray &partName, Part &part)
+void PartStreamer::preparePart(bool checkExists, const QByteArray &partName, Part &part)
 {
-    mError.clear();
     mDataChanged = false;
 
     const PartType partType = PartTypeHelper::fromFqName(partName);
@@ -326,8 +299,8 @@ bool PartStreamer::preparePart(bool checkExists, const QByteArray &partName, Par
         qb.addValueCondition(Part::pimItemIdColumn(), Query::Equals, mItem.id());
         qb.addValueCondition(Part::partTypeIdColumn(), Query::Equals, partType.id());
         if (!qb.exec()) {
-            mError = QStringLiteral("Unable to check item part existence");
-            return false;
+            throw PartStreamerException(QStringLiteral("Failed to check if part %1 exists in PimItem %2.")
+                    .arg(QString::fromUtf8(partName)).arg(mItem.id()));
         }
 
         const Part::List result = qb.result();
@@ -343,11 +316,9 @@ bool PartStreamer::preparePart(bool checkExists, const QByteArray &partName, Par
 
     part.setPartType(partType);
     part.setPimItemId(mItem.id());
-
-    return true;
 }
 
-bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed)
+void PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &partSize, bool *changed)
 {
     mCheckChanged = (changed != nullptr);
     if (changed != nullptr) {
@@ -355,21 +326,17 @@ bool PartStreamer::stream(bool checkExists, const QByteArray &partName, qint64 &
     }
 
     Part part;
-    if (!preparePart(checkExists, partName, part)) {
-        return false;
-    }
+    preparePart(checkExists, partName, part);
 
-    bool ok = streamPayload(part, partName);
-    if (changed && ok && mCheckChanged) {
+    streamPayload(part, partName);
+    if (changed && mCheckChanged) {
         *changed = mDataChanged;
     }
 
     partSize = part.datasize();
-
-    return ok;
 }
 
-bool PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName, const QByteArray &value, bool *changed)
+void PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName, const QByteArray &value, bool *changed)
 {
     mCheckChanged = (changed != nullptr);
     if (changed != nullptr) {
@@ -384,9 +351,7 @@ bool PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName
     }
 
     Part part;
-    if (!preparePart(checkExists, partName, part)) {
-        return false;
-    }
+    preparePart(checkExists, partName, part);
 
     if (part.isValid()) {
         if (mCheckChanged) {
@@ -401,15 +366,15 @@ bool PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName
         part.setVersion(0);
         if (storeInFile) {
             if (!part.insert()) {
-                mError = QStringLiteral("Failed to store part in database");
-                return false;
+                throw PartStreamerException(QStringLiteral("Failed to store attribute part for PimItem %1 in database.")
+                        .arg(part.pimItemId()));
             }
             PartHelper::update(&part, value, value.size());
         } else {
             part.setData(value);
             if (!part.insert()) {
-                mError = QStringLiteral("Failed to store part in database");
-                return false;
+                throw PartStreamerException(QStringLiteral("Failed to store attribute part for PimItem %1 in database.")
+                        .arg(part.pimItemId()));
             }
         }
     }
@@ -417,7 +382,5 @@ bool PartStreamer::streamAttribute(bool checkExists, const QByteArray &_partName
     if (mCheckChanged) {
         *changed = mDataChanged;
     }
-
-    return true;
 }
 

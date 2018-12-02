@@ -26,36 +26,68 @@
 #include <QHash>
 #include <QTimer>
 
+#include <chrono>
+#include <list>
+
+using namespace std::chrono_literals;
 using namespace Akonadi::Server;
 
+namespace {
+
 // After these seconds without activity the cache is cleaned
-#define CLEANUP_TIMEOUT 30 // seconds
+static constexpr auto CleanupTimeout = 60s;
+static constexpr int MaxCacheSize = 50;
 
-class Cache : public QObject
+/// LRU cache with limited size and auto-cleanup after given
+/// period of time
+class Cache
 {
-    Q_OBJECT
 public:
-
     Cache()
     {
-        connect(&m_cleanupTimer, &QTimer::timeout, this, &Cache::cleanup);
+        QObject::connect(&m_cleanupTimer, &QTimer::timeout, std::bind(&Cache::cleanup, this));
         m_cleanupTimer.setSingleShot(true);
     }
 
-    QSqlQuery query(const QString &queryStatement)
+    std::optional<QSqlQuery> query(const QString &queryStatement)
     {
-        m_cleanupTimer.start(CLEANUP_TIMEOUT * 1000);
-        return m_cache.value(queryStatement);
+        m_cleanupTimer.start(CleanupTimeout);
+        auto it = m_keys.find(queryStatement);
+        if (it == m_keys.end()) {
+            return std::nullopt;
+        }
+
+        auto node = **it;
+        m_queries.erase(*it);
+        m_queries.push_front(node);
+        *it = m_queries.begin();
+        return node.query;
     }
 
-public Q_SLOTS:
+    void insert(const QString &queryStatement, const QSqlQuery &query)
+    {
+        if (m_queries.size() >= MaxCacheSize) {
+            m_keys.remove(m_queries.back().queryStatement);
+            m_queries.pop_back();
+        }
+
+        m_queries.emplace_front(Node{queryStatement, query});
+        m_keys.insert(queryStatement, m_queries.begin());
+    }
+
     void cleanup()
     {
-        m_cache.clear();
+        m_keys.clear();
+        m_queries.clear();
     }
 
 public: // public, this is just a helper class
-    QHash<QString, QSqlQuery> m_cache;
+    struct Node {
+        QString queryStatement;
+        QSqlQuery query;
+    };
+    std::list<Node> m_queries;
+    QHash<QString, std::list<Node>::iterator> m_keys;
     QTimer m_cleanupTimer;
 };
 
@@ -70,16 +102,9 @@ static Cache *perThreadCache()
     return g_queryCache.localData();
 }
 
-bool QueryCache::contains(const QString &queryStatement)
-{
-    if (DbType::type(DataStore::self()->database()) == DbType::Sqlite) {
-        return false;
-    } else {
-        return perThreadCache()->m_cache.contains(queryStatement);
-    }
 }
 
-QSqlQuery QueryCache::query(const QString &queryStatement)
+std::optional<QSqlQuery> QueryCache::query(const QString &queryStatement)
 {
     return perThreadCache()->query(queryStatement);
 }
@@ -87,7 +112,7 @@ QSqlQuery QueryCache::query(const QString &queryStatement)
 void QueryCache::insert(const QString &queryStatement, const QSqlQuery &query)
 {
     if (DbType::type(DataStore::self()->database()) != DbType::Sqlite) {
-        perThreadCache()->m_cache.insert(queryStatement, query);
+        perThreadCache()->insert(queryStatement, query);
     }
 }
 
@@ -100,4 +125,3 @@ void QueryCache::clear()
     g_queryCache.localData()->cleanup();
 }
 
-#include <querycache.moc>

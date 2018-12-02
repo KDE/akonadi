@@ -144,10 +144,10 @@ bool DbConfigSqlite::useInternalServer() const
 bool DbConfigSqlite::setPragma(QSqlDatabase &db, QSqlQuery &query, const QString &pragma)
 {
     if (!query.exec(QStringLiteral("PRAGMA %1").arg(pragma))) {
-        qCDebug(AKONADISERVER_LOG) << "Could not set sqlite PRAGMA " << pragma;
-        qCDebug(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
-        qCDebug(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
-        qCDebug(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+        qCCritical(AKONADISERVER_LOG) << "Could not set sqlite PRAGMA " << pragma;
+        qCCritical(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
+        qCCritical(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
+        qCCritical(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
         return false;
     }
     return true;
@@ -162,10 +162,7 @@ void DbConfigSqlite::setup()
         QSqlDatabase db = QSqlDatabase::addDatabase(driverName(), connectionName);
 
         if (!db.isValid()) {
-            qCDebug(AKONADISERVER_LOG) << "Invalid database for "
-                                       << mDatabaseName
-                                       << " with driver "
-                                       << driverName();
+            qCCritical(AKONADISERVER_LOG) << "Invalid database for" << mDatabaseName << "with driver" << driverName();
             return;
         }
 
@@ -189,11 +186,8 @@ void DbConfigSqlite::setup()
 
         db.setDatabaseName(mDatabaseName);
         if (!db.open()) {
-            qCDebug(AKONADISERVER_LOG) << "Could not open sqlite database "
-                                       << mDatabaseName
-                                       << " with driver "
-                                       << driverName()
-                                       << " for initialization";
+            qCCritical(AKONADISERVER_LOG) << "Could not open sqlite database" << mDatabaseName << "with driver"
+                                          << driverName() << "for initialization";
             db.close();
             return;
         }
@@ -202,19 +196,19 @@ void DbConfigSqlite::setup()
 
         QSqlQuery query(db);
         if (!query.exec(QStringLiteral("SELECT sqlite_version()"))) {
-            qCDebug(AKONADISERVER_LOG) << "Could not query sqlite version";
-            qCDebug(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
-            qCDebug(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
-            qCDebug(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "Could not query sqlite version";
+            qCCritical(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
+            qCCritical(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
             db.close();
             return;
         }
 
         if (!query.next()) {   // should never occur
-            qCDebug(AKONADISERVER_LOG) << "Could not query sqlite version";
-            qCDebug(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
-            qCDebug(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
-            qCDebug(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "Could not query sqlite version";
+            qCCritical(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
+            qCCritical(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
             db.close();
             return;
         }
@@ -245,10 +239,10 @@ void DbConfigSqlite::setup()
         }
 
         if (!query.next()) {   // should never occur
-            qCDebug(AKONADISERVER_LOG) << "Could not query sqlite journal mode";
-            qCDebug(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
-            qCDebug(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
-            qCDebug(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "Could not query sqlite journal mode";
+            qCCritical(AKONADISERVER_LOG) << "Database: " << mDatabaseName;
+            qCCritical(AKONADISERVER_LOG) << "Query error: " << query.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "Database error: " << db.lastError().text();
             db.close();
             return;
         }

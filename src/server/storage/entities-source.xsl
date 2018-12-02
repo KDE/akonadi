@@ -326,6 +326,7 @@ QVector&lt;<xsl:value-of select="$className"/>&gt; <xsl:value-of select="$classN
             </xsl:for-each>
             ));
     }
+    query.finish();
     return rv;
 }
 

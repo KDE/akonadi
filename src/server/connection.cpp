@@ -176,7 +176,7 @@ void Connection::slotConnectionIdle()
             // But it is safer to abort and leave the connection open, until
             // a later operation causes the idle timer to fire (than crash
             // the akonadi server).
-            qCDebug(AKONADISERVER_LOG) << m_sessionId << "NOT Closing idle db connection; we are in transaction";
+            qCInfo(AKONADISERVER_LOG) << m_sessionId << "NOT Closing idle db connection; we are in transaction";
             return;
         }
         m_backend->close();
@@ -235,16 +235,19 @@ void Connection::handleIncomingData()
             try {
                 cmd = Protocol::deserialize(m_socket);
             } catch (const Akonadi::ProtocolException &e) {
-                qCWarning(AKONADISERVER_LOG) << "ProtocolException:" << e.what();
+                qCWarning(AKONADISERVER_LOG) << "ProtocolException while deserializing incoming data on connection"
+                                             << m_identifier << ":" <<  e.what();
                 setState(Server::LoggingOut);
                 return;
             } catch (const std::exception &e) {
-                qCWarning(AKONADISERVER_LOG) << "Unknown exception:" << e.what();
+                qCWarning(AKONADISERVER_LOG) << "Unknown exception while deserializing incoming data on connection"
+                                             << m_identifier << ":" << e.what();
                 setState(Server::LoggingOut);
                 return;
             }
             if (cmd->type() == Protocol::Command::Invalid) {
-                qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
+                qCWarning(AKONADISERVER_LOG) << "Received an invalid command on connection" << m_identifier
+                                             << ": resetting connection";
                 setState(Server::LoggingOut);
                 return;
             }
@@ -258,7 +261,8 @@ void Connection::handleIncomingData()
 
             m_currentHandler = std::unique_ptr<Handler>(findHandlerForCommand(cmd->type()));
             if (!m_currentHandler) {
-                qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type();
+                qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type()
+                                             << "on connection" << m_identifier;
                 setState(Server::LoggingOut);
                 return;
             }
@@ -272,34 +276,38 @@ void Connection::handleIncomingData()
             try {
                 if (!m_currentHandler->parseStream()) {
                     try {
-                        m_currentHandler->failureResponse("Unknown error while handling a command");
+                        m_currentHandler->failureResponse("Error while handling a command");
                     } catch (...) {
-                        qCWarning(AKONADISERVER_LOG) << "Unknown error while handling a command";
                         m_connectionClosing = true;
                     }
+                    qCWarning(AKONADISERVER_LOG) << "Error while handling command" << cmd->type()
+                                                 << "on connection" << m_identifier;
                 }
             } catch (const Akonadi::Server::HandlerException &e) {
                 if (m_currentHandler) {
                     try {
                         m_currentHandler->failureResponse(e.what());
                     } catch (...) {
-                        qCWarning(AKONADISERVER_LOG) << "Handler exception:" << e.what();
                         m_connectionClosing = true;
                     }
+                    qCWarning(AKONADISERVER_LOG) << "Handler exception when handling command" << cmd->type()
+                                                 << "on connection" << m_identifier << ":" << e.what();
                 }
             } catch (const Akonadi::Server::Exception &e) {
                 if (m_currentHandler) {
                     try {
                         m_currentHandler->failureResponse(QString::fromUtf8(e.type()) + QLatin1String(": ") + QString::fromUtf8(e.what()));
                     } catch (...) {
-                        qCWarning(AKONADISERVER_LOG) << e.type() << "exception:" << e.what();
                         m_connectionClosing = true;
                     }
+                    qCWarning(AKONADISERVER_LOG) << "General exception when handling command" << cmd->type()
+                                                 << "on connection" << m_identifier << ":" << e.what();
                 }
             } catch (const Akonadi::ProtocolException &e) {
                 // No point trying to send anything back to client, the connection is
                 // already messed up
-                qCWarning(AKONADISERVER_LOG) << "Protocol exception:" << e.what();
+                qCWarning(AKONADISERVER_LOG) << "Protocol exception when handling command" << cmd->type()
+                                             << "on connection" << m_identifier << ":" << e.what();
                 m_connectionClosing = true;
 #if defined(Q_OS_LINUX)
             } catch (abi::__forced_unwind&) {
@@ -313,12 +321,12 @@ void Connection::handleIncomingData()
                 throw;
 #endif
             } catch (...) {
-                qCCritical(AKONADISERVER_LOG) << "Unknown exception caught in Connection for session" << m_sessionId;
+                qCCritical(AKONADISERVER_LOG) << "Unknown exception while handling command" << cmd->type()
+                                              << "on connection" << m_identifier;
                 if (m_currentHandler) {
                     try {
                         m_currentHandler->failureResponse("Unknown exception caught");
                     } catch (...) {
-                        qCWarning(AKONADISERVER_LOG) << "Unknown exception caught";
                         m_connectionClosing = true;
                     }
                 }

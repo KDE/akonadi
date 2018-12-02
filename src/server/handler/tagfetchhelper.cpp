@@ -121,6 +121,7 @@ QMap<QByteArray, QByteArray> TagFetchHelper::fetchTagAttributes(qint64 tagId,
                           Utils::variantToByteArray(attributeQuery.value(2)));
         attributeQuery.next();
     }
+    attributeQuery.finish();
     return attributes;
 }
 
@@ -139,7 +140,12 @@ bool TagFetchHelper::fetchTags()
         response.setId(tagId);
         if (!mFetchScope.fetchIdOnly()) {
             response.setGid(Utils::variantToByteArray(tagQuery.value(1)));
-            response.setParentId(tagQuery.value(2).toLongLong());
+            if (tagQuery.value(2).isNull()) {
+                // client indicates invalid or null parent as ID -1
+                response.setParentId(-1);
+            } else {
+                response.setParentId(tagQuery.value(2).toLongLong());
+            }
             response.setType(Utils::variantToByteArray(tagQuery.value(3)));
             if (mFetchScope.fetchRemoteID() && mConnection->context()->resource().isValid()) {
                 response.setRemoteId(Utils::variantToByteArray(tagQuery.value(4)));
@@ -167,6 +173,8 @@ bool TagFetchHelper::fetchTags()
 
         tagQuery.next();
     }
+    attributeQuery.finish();
+    tagQuery.finish();
 
     return true;
 }

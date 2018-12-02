@@ -115,15 +115,19 @@ bool AkAppend::insertItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
     PartStreamer streamer(connection(), item);
     Q_FOREACH (const QByteArray &partName, cmd.parts()) {
         qint64 partSize = 0;
-        if (!streamer.stream(true, partName, partSize)) {
-            return failureResponse(streamer.error());
+        try {
+            streamer.stream(true, partName, partSize);
+        } catch (const PartStreamerException &e) {
+            return failureResponse(e.what());
         }
         partSizes += partSize;
     }
     const Protocol::Attributes attrs = cmd.attributes();
     for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
-        if (!streamer.streamAttribute(true, iter.key(), iter.value())) {
-            return failureResponse(streamer.error());
+        try {
+            streamer.streamAttribute(true, iter.key(), iter.value());
+        } catch (const PartStreamerException &e) {
+            return failureResponse(e.what());
         }
     }
 
@@ -255,8 +259,10 @@ bool AkAppend::mergeItem(const Protocol::CreateItemCommand &cmd,
     Q_FOREACH (const QByteArray &partName, cmd.parts()) {
         bool changed = false;
         qint64 partSize = 0;
-        if (!streamer.stream(true, partName, partSize, &changed)) {
-            return failureResponse(streamer.error());
+        try {
+            streamer.stream(true, partName, partSize, &changed);
+        } catch (const PartStreamerException &e) {
+            return failureResponse(e.what());
         }
 
         if (changed) {
@@ -427,9 +433,9 @@ bool AkAppend::parseStream()
             }
             storageTrx.commit();
         } else {
-            qCDebug(AKONADISERVER_LOG) << "Multiple merge candidates:";
+            qCWarning(AKONADISERVER_LOG) << "Multiple merge candidates:";
             for (const PimItem &item : result) {
-                qCDebug(AKONADISERVER_LOG) << "\tID:" << item.id() << ", RID:" << item.remoteId()
+                qCWarning(AKONADISERVER_LOG) << "\tID:" << item.id() << ", RID:" << item.remoteId()
                                            << ", GID:" << item.gid()
                                            << ", Collection:" << item.collection().name() << "(" << item.collectionId() << ")"
                                            << ", Resource:" << item.collection().resource().name() << "(" << item.collection().resourceId() << ")";

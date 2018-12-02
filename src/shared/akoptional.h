@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012 Volker Krause <vkrause@kde.org>
+    Copyright (C) 2018 Daniel Vrátil <dvratil@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -15,40 +15,23 @@
     along with this library; see the file COPYING.LIB.  If not, write to the
     Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
     02110-1301, USA.
- */
+*/
 
-#ifndef AKONADI_QUERYCACHE_H
-#define AKONADI_QUERYCACHE_H
+#ifndef AKOPTIONAL_H
+#define AKOPTIONAL_H
 
-#include <shared/akoptional.h>
+#ifdef __has_include
+    #if __has_include(<optional>)
+        #include <optional>
+    #endif
+    #if !defined(__cpp_lib_optional) && __has_include(<experimental/optional>)
+        #include <experimental/optional>
+        namespace std { using namespace experimental; }
+    #else
+        #error Compiler does not support std::optional or std::experimental::optional
+    #endif
+#else
+    #error Compiler does not support __has_include
+#endif
 
-class QString;
-class QSqlQuery;
-
-namespace Akonadi
-{
-namespace Server
-{
-
-/**
- * A per-thread cache (should be per session, but that'S the same for us) prepared
- * query cache.
- */
-namespace QueryCache
-{
-
-/// Returns the cached (and prepared) query for @p queryStatement
-std::optional<QSqlQuery> query(const QString &queryStatement);
-
-/// Insert @p query into the cache for @p queryStatement.
-void insert(const QString &queryStatement, const QSqlQuery &query);
-
-/// Clears all queries from current thread
-void clear();
-
-} // namespace QueryCache
-
-} // namespace Server
-} // namespace Akonadi
-
-#endif // AKONADI_QUERYCACHE_H
+#endif // AKOPTIONAL_H

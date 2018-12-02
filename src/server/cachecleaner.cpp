@@ -137,12 +137,12 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     if (qb.exec()) {
         const Part::List parts = qb.result();
         if (!parts.isEmpty()) {
-            qCDebug(AKONADISERVER_LOG) << "found" << parts.count() << "item parts to expire in collection" << collection.name();
+            qCInfo(AKONADISERVER_LOG) << "CacheCleaner found" << parts.count() << "item parts to expire in collection" << collection.name();
             // clear data field
             for (Part part : parts) {
                 try {
                     if (!PartHelper::truncate(part)) {
-                        qCDebug(AKONADISERVER_LOG) << "failed to update item part" << part.id();
+                        qCWarning(AKONADISERVER_LOG) << "CacheCleaner failed to expire item part" << part.id();
                     }
                 } catch (const PartHelperException &e) {
                     qCCritical(AKONADISERVER_LOG) << e.type() << e.what();

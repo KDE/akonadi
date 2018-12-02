@@ -240,7 +240,7 @@ bool ExternalPartStorage::beginTransaction()
 {
     QMutexLocker locker(&mTransactionLock);
     if (mTransactions.contains(QThread::currentThread())) {
-        qCDebug(AKONADIPRIVATE_LOG) << "Error: there is already a transaction in progress in this thread";
+        qCWarning(AKONADIPRIVATE_LOG) << "Error: there is already a transaction in progress in this thread";
         return false;
     }
 
@@ -258,7 +258,7 @@ bool ExternalPartStorage::commitTransaction()
     QMutexLocker locker(&mTransactionLock);
     auto iter = mTransactions.find(QThread::currentThread());
     if (iter == mTransactions.end()) {
-        qCDebug(AKONADIPRIVATE_LOG) << "Commit error: there is no transaction in progress in this thread";
+        qCWarning(AKONADIPRIVATE_LOG) << "Commit error: there is no transaction in progress in this thread";
         return false;
     }
 
@@ -274,7 +274,7 @@ bool ExternalPartStorage::rollbackTransaction()
     QMutexLocker locker(&mTransactionLock);
     auto iter = mTransactions.find(QThread::currentThread());
     if (iter == mTransactions.end()) {
-        qCDebug(AKONADIPRIVATE_LOG) << "Rollback error: there is no transaction in progress in this thread";
+        qCWarning(AKONADIPRIVATE_LOG) << "Rollback error: there is no transaction in progress in this thread";
         return false;
     }
 
@@ -315,7 +315,7 @@ bool ExternalPartStorage::replayTransaction(const QVector<Operation> &trx, bool 
                 if (!QFile::remove(op.filename)) {
                     // We failed to remove the file, but don't abort the rollback.
                     // This is an error, but does not cause data loss.
-                    qCDebug(AKONADIPRIVATE_LOG) << "Warning: failed to remove" << op.filename << "while rolling back a transaction";
+                    qCWarning(AKONADIPRIVATE_LOG) << "Warning: failed to remove" << op.filename << "while rolling back a transaction";
                 }
             }
         } else if (op.type == Operation::Delete) {
@@ -323,7 +323,7 @@ bool ExternalPartStorage::replayTransaction(const QVector<Operation> &trx, bool 
                 if (!QFile::remove(op.filename)) {
                     // We failed to remove the file, but don't abort the commit.
                     // This is an error, but does not cause data loss.
-                    qCDebug(AKONADIPRIVATE_LOG) << "Warning: failed to remove" << op.filename << "while committing a transaction";
+                    qCWarning(AKONADIPRIVATE_LOG) << "Warning: failed to remove" << op.filename << "while committing a transaction";
                 }
             } else {
                 // no-op: we did not actually delete the file yet

@@ -102,7 +102,7 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const
     if (resourceId.isEmpty() || type != DBus::Resource) {
         return;
     }
-    qCDebug(AKONADISERVER_LOG) << "Lost connection to resource" << serviceName << ", discarding cached interface";
+    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager lost connection to resource" << serviceName << ", discarding cached interface";
     mResourceInterfaces.remove(resourceId);
 }
 
@@ -124,8 +124,8 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
             DBusConnectionPool::threadConnection(),
             this);
     if (!iface || !iface->isValid()) {
-        qCCritical(AKONADISERVER_LOG) << QStringLiteral("Cannot connect to agent instance with identifier '%1', error message: '%2'")
-                                      .arg(id, iface ? iface->lastError().message() : QString());
+        qCCritical(AKONADISERVER_LOG, "Cannot connect to agent instance with identifier '%s', error message: '%s'",
+                   qUtf8Printable(id), qUtf8Printable(iface ? iface->lastError().message() : QString()));
         delete iface;
         return nullptr;
     }
@@ -139,9 +139,9 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
 void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
 {
     mLock->lockForWrite();
-    qCDebug(AKONADISERVER_LOG) << "posting retrieval request for items" << req->ids << " there are "
-                               << mPendingRequests.size() << " queues and "
-                               << mPendingRequests[req->resourceId].size() << " items in mine";
+    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager posting retrieval request for items" << req->ids
+                               << "to" <<req->resourceId << ". There are" << mPendingRequests.size() << "request queues and"
+                               << mPendingRequests[req->resourceId].size() << "items mine";
     mPendingRequests[req->resourceId].append(req);
     mLock->unlock();
 
@@ -215,7 +215,11 @@ void ItemRetrievalManager::processRequest()
 
 void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, const QString &errorMsg)
 {
-    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalJob finished for request" << request << ", error:" << errorMsg;
+    if (errorMsg.isEmpty()) {
+        qCInfo(AKONADISERVER_LOG) << "ItemRetrievalJob for request" << request << "finished";
+    } else {
+        qCWarning(AKONADISERVER_LOG) << "ItemRetrievalJob for request" << request << "finished with error:" << errorMsg;
+    }
     mLock->lockForWrite();
     request->errorMsg = errorMsg;
     request->processed = true;

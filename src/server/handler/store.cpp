@@ -57,7 +57,7 @@ bool Store::replaceFlags(const PimItem::List &item, const QSet<QByteArray> &flag
     DataStore *store = connection()->storageBackend();
 
     if (!store->setItemsFlags(item, flagList, &flagsChanged)) {
-        qCDebug(AKONADISERVER_LOG) << "Store::replaceFlags: Unable to replace flags";
+        qCWarning(AKONADISERVER_LOG) << "Store::replaceFlags: Unable to replace flags";
         return false;
     }
 
@@ -70,7 +70,7 @@ bool Store::addFlags(const PimItem::List &items, const QSet<QByteArray> &flags, 
     DataStore *store = connection()->storageBackend();
 
     if (!store->appendItemsFlags(items, flagList, &flagsChanged)) {
-        qCDebug(AKONADISERVER_LOG) << "Store::addFlags: Unable to add new item flags";
+        qCWarning(AKONADISERVER_LOG) << "Store::addFlags: Unable to add new item flags";
         return false;
     }
     return true;
@@ -92,7 +92,7 @@ bool Store::deleteFlags(const PimItem::List &items, const QSet<QByteArray> &flag
     }
 
     if (!store->removeItemsFlags(items, flagList, &flagsChanged)) {
-        qCDebug(AKONADISERVER_LOG) << "Store::deleteFlags: Unable to remove item flags";
+        qCWarning(AKONADISERVER_LOG) << "Store::deleteFlags: Unable to remove item flags";
         return false;
     }
     return true;
@@ -102,7 +102,7 @@ bool Store::replaceTags(const PimItem::List &item, const Scope &tags, bool &tags
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->setItemsTags(item, tagList, &tagsChanged)) {
-        qCDebug(AKONADISERVER_LOG) << "Store::replaceTags: unable to replace tags";
+        qCWarning(AKONADISERVER_LOG) << "Store::replaceTags: unable to replace tags";
         return false;
     }
     return true;
@@ -112,7 +112,7 @@ bool Store::addTags(const PimItem::List &items, const Scope &tags, bool &tagsCha
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->appendItemsTags(items, tagList, &tagsChanged)) {
-        qCDebug(AKONADISERVER_LOG) << "Store::addTags: Unable to add new item tags";
+        qCWarning(AKONADISERVER_LOG) << "Store::addTags: Unable to add new item tags";
         return false;
     }
     return true;
@@ -122,7 +122,7 @@ bool Store::deleteTags(const PimItem::List &items, const Scope &tags, bool &tags
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->removeItemsTags(items, tagList, &tagsChanged)) {
-        qCDebug(AKONADISERVER_LOG) << "Store::deleteTags: Unable to remove item tags";
+        qCWarning(AKONADISERVER_LOG) << "Store::deleteTags: Unable to remove item tags";
         return false;
     }
     return true;
@@ -289,8 +289,10 @@ bool Store::parseStream()
         PartStreamer streamer(connection(), item);
         Q_FOREACH (const QByteArray &partName, cmd.parts()) {
             qint64 partSize = 0;
-            if (!streamer.stream(true, partName, partSize)) {
-                return failureResponse(streamer.error());
+            try {
+                streamer.stream(true, partName, partSize);
+            } catch (const PartStreamerException &e) {
+                return failureResponse(e.what());
             }
 
             changes.insert(partName);
@@ -303,8 +305,10 @@ bool Store::parseStream()
         const Protocol::Attributes attrs = cmd.attributes();
         for (auto iter = attrs.cbegin(), end = attrs.cend(); iter != end; ++iter) {
             bool changed = false;
-            if (!streamer.streamAttribute(true, iter.key(), iter.value(), &changed)) {
-                return failureResponse(streamer.error());
+            try {
+                streamer.streamAttribute(true, iter.key(), iter.value(), &changed);
+            } catch (const PartStreamerException &e) {
+                return failureResponse(e.what());
             }
 
             if (changed) {

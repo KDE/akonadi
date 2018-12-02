@@ -20,7 +20,7 @@
 #include "searchresult.h"
 
 #include "connection.h"
-#include "storage/selectquerybuilder.h"
+#include "storage/querybuilder.h"
 #include "storage/itemqueryhelper.h"
 #include "search/searchtaskmanager.h"
 
@@ -53,6 +53,7 @@ bool SearchResult::parseStream()
         while (query.next()) {
             ids << query.value(0).toLongLong();
         }
+        query.finish();
     } else if (cmd.result().scope() == Scope::Uid && !cmd.result().isEmpty()) {
         const ImapSet result = cmd.result().uidSet();
         const ImapInterval::List lstInterval = result.intervals();

@@ -71,6 +71,7 @@ QVector< DbIntrospector::ForeignKey > DbIntrospectorMySql::foreignKeyConstraints
         fk.onDelete = qb.query().value(5).toString();
         result.push_back(fk);
     }
+    qb.query().finish();
 
     return result;
 }
@@ -187,6 +188,7 @@ QVector<DbIntrospector::ForeignKey> DbIntrospectorPostgreSql::foreignKeyConstrai
         fk.onDelete = qb.query().value(5).toString();
         result.push_back(fk);
     }
+    qb.query().finish();
 
     return result;
 }

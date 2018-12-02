@@ -77,7 +77,7 @@ int main(int argc, char **argv)
 
     const int result = app.exec();
 
-    qCDebug(AKONADISERVER_LOG) << "Shutting down AkonadiServer...";
+    qCInfo(AKONADISERVER_LOG) << "Shutting down AkonadiServer...";
     Akonadi::Server::AkonadiServer::instance()->quit();
 
     Q_CLEANUP_RESOURCE(akonadidb);

@@ -733,7 +733,7 @@ Relation ProtocolHelper::parseRelationFetchResult(const Protocol::FetchRelations
 bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArray &data, QByteArray &error)
 {
     const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
-    qCDebug(AKONADICORE_LOG) << filePath << fileName;
+    //qCDebug(AKONADICORE_LOG) << filePath << fileName;
     if (!filePath.startsWith(ExternalPartStorage::akonadiStoragePath())) {
         qCWarning(AKONADICORE_LOG) << "Invalid file path" << fileName;
         error = "Invalid file path";
@@ -750,7 +750,7 @@ bool ProtocolHelper::streamPayloadToFile(const QString &fileName, const QByteArr
         error = "Failed to store payload into file";
         return false;
     }
-    qCDebug(AKONADICORE_LOG) << "Wrote" << data.size() << "bytes to " << file.fileName();
+    //qCDebug(AKONADICORE_LOG) << "Wrote" << data.size() << "bytes to " << file.fileName();
 
     // Make sure stuff is written to disk
     file.close();

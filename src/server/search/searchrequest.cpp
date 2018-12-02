@@ -113,7 +113,7 @@ void SearchRequest::searchPlugins()
 
 void SearchRequest::exec()
 {
-    qCDebug(AKONADISERVER_SEARCH_LOG) << "Executing search" << mConnectionId;
+    qCInfo(AKONADISERVER_SEARCH_LOG) << "Executing search" << mConnectionId;
 
     //TODO should we move this to the AgentSearchManager as well? If we keep it here the agents can be searched in parallel
     //since the plugin search is executed in this thread directly.
@@ -121,7 +121,7 @@ void SearchRequest::exec()
 
     // If remote search is disabled, just finish here after searching the plugins
     if (!mRemoteSearch) {
-        qCDebug(AKONADISERVER_SEARCH_LOG) << "Search done" << mConnectionId << "(without remote search)";
+        qCInfo(AKONADISERVER_SEARCH_LOG) << "Search " << mConnectionId << "done (without remote search)";
         return;
     }
 
@@ -137,17 +137,16 @@ void SearchRequest::exec()
     task.sharedLock.lock();
     Q_FOREVER {
         if (task.complete) {
-            qCDebug(AKONADISERVER_SEARCH_LOG) << "All queries processed!";
             break;
-        } else {
-            task.notifier.wait(&task.sharedLock);
-
-            qCDebug(AKONADISERVER_SEARCH_LOG) << task.pendingResults.count() << "search results available in search" << task.id;
-            if (!task.pendingResults.isEmpty()) {
-                emitResults(task.pendingResults);
-            }
-            task.pendingResults.clear();
         }
+
+        task.notifier.wait(&task.sharedLock);
+
+        qCDebug(AKONADISERVER_SEARCH_LOG) << task.pendingResults.count() << "search results available in search" << task.id;
+        if (!task.pendingResults.isEmpty()) {
+            emitResults(task.pendingResults);
+        }
+        task.pendingResults.clear();
     }
 
     if (!task.pendingResults.isEmpty()) {
@@ -155,5 +154,5 @@ void SearchRequest::exec()
     }
     task.sharedLock.unlock();
 
-    qCDebug(AKONADISERVER_SEARCH_LOG) << "Search done" << mConnectionId;
+    qCInfo(AKONADISERVER_SEARCH_LOG) << "Search" << mConnectionId << "done (with remote search)";
 }

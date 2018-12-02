@@ -61,7 +61,8 @@ QStack<Collection> List::ancestorsForCollection(const Collection &col)
             parent = mCollections.value(parent.parentId());
         }
         if (!parent.isValid()) {
-            qCWarning(AKONADISERVER_LOG) << col.id();
+            qCWarning(AKONADISERVER_LOG) << "Found an invalid parent in ancestors of Collection" << col.name()
+                                         << "(ID:" << col.id() << ")";
             throw HandlerException("Found invalid parent in ancestors");
         }
         ancestors.prepend(parent);
@@ -208,6 +209,7 @@ void List::retrieveAttributes(const QVariantList &collectionIds)
             // qCDebug(AKONADISERVER_LOG) << "found attribute " << attr.type() << attr.value();
             mCollectionAttributes.insert(attributeQuery.value(0).toLongLong(), attr);
         }
+        attributeQuery.finish();
         start += size;
     }
 }
@@ -271,7 +273,6 @@ void List::retrieveCollections(const Collection &topParent, int depth)
             if (mCollectionsToSynchronize) {
                 qb.addCondition(filterCondition(Collection::syncPrefFullColumnName()));
             } else if (mCollectionsToDisplay) {
-                qCDebug(AKONADISERVER_LOG) << "only display";
                 qb.addCondition(filterCondition(Collection::displayPrefFullColumnName()));
             } else if (mCollectionsToIndex) {
                 qb.addCondition(filterCondition(Collection::indexPrefFullColumnName()));
@@ -438,7 +439,6 @@ void List::retrieveCollections(const Collection &topParent, int depth)
     auto it = mCollections.begin();
     while (it != mCollections.end()) {
         const Collection col = it.value();
-        // qCDebug(AKONADISERVER_LOG) << "col " << col.id();
 
         QStringList mimeTypes;
         {
@@ -450,9 +450,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 mimeTypeQuery.next(); //place at first record
             }
 
-            // qCDebug(AKONADISERVER_LOG) << mimeTypeQuery.isValid() << mimeTypeQuery.value(0).toLongLong();
             while (mimeTypeQuery.isValid() && mimeTypeQuery.value(0).toLongLong() < col.id()) {
-                qCDebug(AKONADISERVER_LOG) << "skipped: " << mimeTypeQuery.value(0).toLongLong() << mimeTypeQuery.value(2).toString();
                 if (!mimeTypeQuery.next()) {
                     break;
                 }
@@ -476,9 +474,7 @@ void List::retrieveCollections(const Collection &topParent, int depth)
                 attributeQuery.next(); //place at first record
             }
 
-            // qCDebug(AKONADISERVER_LOG) << attributeQuery.isValid() << attributeQuery.value(0).toLongLong();
             while (attributeQuery.isValid() && attributeQuery.value(0).toLongLong() < col.id()) {
-                qCDebug(AKONADISERVER_LOG) << "skipped: " << attributeQuery.value(0).toLongLong() << attributeQuery.value(1).toByteArray();
                 if (!attributeQuery.next()) {
                     break;
                 }
@@ -499,6 +495,8 @@ void List::retrieveCollections(const Collection &topParent, int depth)
         listCollection(col, ancestorsForCollection(col), mimeTypes, attributes);
         it++;
     }
+    attributeQuery.finish();
+    mimeTypeQuery.finish();
 }
 
 bool List::parseStream()

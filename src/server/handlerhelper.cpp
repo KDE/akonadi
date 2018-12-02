@@ -213,7 +213,6 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
 {
     Protocol::FetchTagsResponse response;
     response.setId(tag.id());
-    qCDebug(AKONADISERVER_LOG) << "TAGFETCH IDONLY" << tagFetchScope.fetchIdOnly();
     if (tagFetchScope.fetchIdOnly()) {
         return response;
     }
@@ -221,9 +220,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
     response.setType(tag.tagType().name().toUtf8());
     response.setParentId(tag.parentId());
     response.setGid(tag.gid().toUtf8());
-    qCDebug(AKONADISERVER_LOG) << "TAGFETCH" << tagFetchScope.fetchRemoteID() << connection;
     if (tagFetchScope.fetchRemoteID() && connection) {
-        qCDebug(AKONADISERVER_LOG) << connection->context()->resource().name();
         // Fail silently if retrieving tag RID is not allowed in current context
         if (connection->context()->resource().isValid()) {
             QueryBuilder qb(TagRemoteIdResourceRelation::tableName());
@@ -242,6 +239,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
             if (query.next()) {
                 response.setRemoteId(Utils::variantToByteArray(query.value(0)));
             }
+            query.finish();
         }
     }
 
@@ -267,6 +265,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
             attributes.insert(Utils::variantToByteArray(query.value(0)),
                               Utils::variantToByteArray(query.value(1)));
         }
+        query.finish();
         response.setAttributes(attributes);
     }
 

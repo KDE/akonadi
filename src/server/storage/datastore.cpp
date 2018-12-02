@@ -57,6 +57,8 @@
 #include <QFile>
 #include <QElapsedTimer>
 
+#include <functional>
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -247,8 +249,8 @@ bool DataStore::hasDataStore()
 bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
                               bool *flagsChanged, const Collection &col_, bool silent)
 {
-    QSet<QByteArray> removedFlags;
-    QSet<QByteArray> addedFlags;
+    QSet<QString> removedFlags;
+    QSet<QString> addedFlags;
     QVariantList insIds;
     QVariantList insFlags;
     Query::Condition delConds(Query::Or);
@@ -260,7 +262,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
         const Flag::List itemFlags = item.flags();
         for (const Flag &flag : itemFlags) {
             if (!flags.contains(flag)) {
-                removedFlags << flag.name().toLatin1();
+                removedFlags << flag.name();
                 Query::Condition cond;
                 cond.addValueCondition(PimItemFlagRelation::leftFullColumnName(), Query::Equals, item.id());
                 cond.addValueCondition(PimItemFlagRelation::rightFullColumnName(), Query::Equals, flag.id());
@@ -270,7 +272,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
 
         for (const Flag &flag : flags) {
             if (!itemFlags.contains(flag)) {
-                addedFlags << flag.name().toLatin1();
+                addedFlags << flag.name();
                 insIds << item.id();
                 insFlags << flag.id();
             }
@@ -302,7 +304,14 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
     }
 
     if (!silent && (!addedFlags.isEmpty() || !removedFlags.isEmpty())) {
-        notificationCollector()->itemsFlagsChanged(items, addedFlags, removedFlags, col);
+        QSet<QByteArray> addedFlagsBa, removedFlagsBa;
+        for (const auto &addedFlag : addedFlags) {
+            addedFlagsBa.insert(addedFlag.toLatin1());
+        }
+        for (const auto &removedFlag : removedFlags) {
+            removedFlagsBa.insert(removedFlag.toLatin1());
+        }
+        notificationCollector()->itemsFlagsChanged(items, addedFlagsBa, removedFlagsBa, col);
     }
 
     setBoolPtr(flagsChanged, (addedFlags != removedFlags));
@@ -343,13 +352,12 @@ bool DataStore::doAppendItemsFlag(const PimItem::List &items, const Flag &flag,
     qb2.setColumnValue(PimItemFlagRelation::rightColumn(), flagIds);
     qb2.setIdentificationColumn(QString());
     if (!qb2.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Failed to execute query:" << qb2.query().lastError();
+        qCWarning(AKONADISERVER_LOG) << "Failed to append flag" << flag.name() << "to Items" << appendIds;
         return false;
     }
 
     if (!silent) {
-        notificationCollector()->itemsFlagsChanged(appendItems, QSet<QByteArray>() << flag.name().toLatin1(),
-                QSet<QByteArray>(), col);
+        notificationCollector()->itemsFlagsChanged(appendItems, {flag.name().toLatin1()}, {}, col);
     }
 
     return true;
@@ -378,7 +386,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
             qb.addCondition(cond);
 
             if (!qb.exec()) {
-                qCDebug(AKONADISERVER_LOG) << "Failed to execute query:" << qb.query().lastError();
+                qCWarning(AKONADISERVER_LOG) << "Failed to retrieve existing flags for Items " << itemsIds;
                 return false;
             }
 
@@ -399,6 +407,7 @@ bool DataStore::appendItemsFlags(const PimItem::List &items, const QVector<Flag>
                     setBoolPtr(flagsChanged, true);
                 }
             }
+            query.finish();
         }
 
         if (!doAppendItemsFlag(items, flag, existing, col, silent)) {
@@ -413,7 +422,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
                                  bool *flagsChanged, const Collection &col_, bool silent)
 {
     Collection col = col_;
-    QSet<QByteArray> removedFlags;
+    QSet<QString> removedFlags;
     QVariantList itemsIds;
     QVariantList flagsIds;
 
@@ -428,7 +437,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
             col.setId(-2);
         }
         for (int i = 0; i < flags.count(); ++i) {
-            const QByteArray flagName = flags[i].name().toLatin1();
+            const QString flagName = flags[i].name();
             if (!removedFlags.contains(flagName)) {
                 flagsIds << flags[i].id();
                 removedFlags << flagName;
@@ -443,13 +452,18 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
     cond.addValueCondition(PimItemFlagRelation::leftFullColumnName(), Query::In, itemsIds);
     qb.addCondition(cond);
     if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to remove flags" << flags << "from Items" << itemsIds;
         return false;
     }
 
     if (qb.query().numRowsAffected() != 0) {
         setBoolPtr(flagsChanged, true);
         if (!silent) {
-            notificationCollector()->itemsFlagsChanged(items, QSet<QByteArray>(), removedFlags, col);
+            QSet<QByteArray> removedFlagsBa;
+            for (const auto &remoteFlag : removedFlags) {
+                removedFlagsBa.insert(remoteFlag.toLatin1());
+            }
+            notificationCollector()->itemsFlagsChanged(items, {}, removedFlagsBa, col);
         }
     }
 
@@ -496,6 +510,7 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
         QueryBuilder qb(PimItemTagRelation::tableName(), QueryBuilder::Delete);
         qb.addCondition(delConds);
         if (!qb.exec()) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to remove tags" << removedTags << "from Items";
             return false;
         }
     }
@@ -506,6 +521,7 @@ bool DataStore::setItemsTags(const PimItem::List &items, const Tag::List &tags,
         qb2.setColumnValue(PimItemTagRelation::rightColumn(), insTags);
         qb2.setIdentificationColumn(QString());
         if (!qb2.exec()) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to add tags" << addedTags << "to Items";
             return false;
         }
     }
@@ -545,13 +561,12 @@ bool DataStore::doAppendItemsTag(const PimItem::List &items, const Tag &tag,
     qb2.setColumnValue(PimItemTagRelation::rightColumn(), tagIds);
     qb2.setIdentificationColumn(QString());
     if (!qb2.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Failed to execute query:" << qb2.query().lastError();
+        qCWarning(AKONADISERVER_LOG) << "Failed to append tag" << tag << "to Items" << appendItems;
         return false;
     }
 
     if (!silent) {
-        notificationCollector()->itemsTagsChanged(appendItems, QSet<qint64>() << tag.id(),
-                QSet<qint64>(), col);
+        notificationCollector()->itemsTagsChanged(appendItems, {tag.id()}, {}, col);
     }
 
     return true;
@@ -580,7 +595,7 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
             qb.addCondition(cond);
 
             if (!qb.exec()) {
-                qCDebug(AKONADISERVER_LOG) << "Failed to execute query:" << qb.query().lastError();
+                qCWarning(AKONADISERVER_LOG) << "Failed to retrieve existing tag" << tag << "for Items" << itemsIds;
                 return false;
             }
 
@@ -600,6 +615,7 @@ bool DataStore::appendItemsTags(const PimItem::List &items, const Tag::List &tag
                     setBoolPtr(tagsChanged, true);
                 }
             }
+            query.finish();
         }
 
         if (!doAppendItemsTag(items, tag, existing, col, silent)) {
@@ -638,6 +654,7 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
     cond.addValueCondition(PimItemTagRelation::leftFullColumnName(), Query::In, itemsIds);
     qb.addCondition(cond);
     if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to remove tags" << tagsIds << "from Items" << itemsIds;
         return false;
     }
 
@@ -671,7 +688,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
     itemsQuery.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::In, removedTagsIds);
 
     if (!itemsQuery.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Failed to execute query: " << itemsQuery.query().lastError();
+        qCWarning(AKONADISERVER_LOG) << "Removing tags failed: failed to query Items for given tags" << removedTagsIds;
         return false;
     }
     const PimItem::List items = itemsQuery.result();
@@ -689,7 +706,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
         qb.addColumn(Resource::nameFullColumnName());
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdFullColumnName(), Query::Equals, tag.id());
         if (!qb.exec()) {
-            qCDebug(AKONADISERVER_LOG) << "Failed to execute query: " << qb.query().lastError();
+            qCWarning(AKONADISERVER_LOG) << "Removing tags failed: failed to retrieve RIDs for tag" << tag.id();
             return false;
         }
 
@@ -701,6 +718,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
 
             notificationCollector()->tagRemoved(tag, resource, rid);
         }
+        query.finish();
 
         // And one for clients - without RID
         notificationCollector()->tagRemoved(tag, QByteArray(), QString());
@@ -710,7 +728,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
     QueryBuilder qb(Tag::tableName(), QueryBuilder::Delete);
     qb.addValueCondition(Tag::idColumn(), Query::In, removedTagsIds);
     if (!qb.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Failed to execute query: " << itemsQuery.query().lastError();
+        qCWarning(AKONADISERVER_LOG) << "Failed to remove tags" << removedTagsIds;
         return false;
     }
 
@@ -726,10 +744,16 @@ bool DataStore::removeItemParts(const PimItem &item, const QSet<QByteArray> &par
     qb.addValueCondition(Part::pimItemIdFullColumnName(), Query::Equals, item.id());
     qb.addCondition(PartTypeHelper::conditionFromFqNames(parts));
 
-    qb.exec();
+    if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) << "Removing item parts failed: failed to query parts" << parts << "from Item " << item.id();
+        return false;
+    }
+
     const Part::List existingParts = qb.result();
     for (Part part : qAsConst(existingParts)) {  //krazy:exclude=foreach
         if (!PartHelper::remove(&part)) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to remove part" << part.id() << "(" << part.partType().ns()
+                                         << ":" << part.partType().name() << ") from Item" << item.id();
             return false;
         }
     }
@@ -750,6 +774,7 @@ bool DataStore::invalidateItemCache(const PimItem &item)
     qb.addValueCondition(PimItem::dirtyFullColumnName(), Query::Equals, false);
 
     if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to invalidate cache for Item" << item.id();
         return false;
     }
 
@@ -757,6 +782,8 @@ bool DataStore::invalidateItemCache(const PimItem &item)
     // clear data field
     for (Part part : parts) {
         if (!PartHelper::truncate(part)) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to truncate payload part" << part.id() << "(" << part.partType().ns()
+                                         << ":" << part.partType().name() << ") of Item" << item.id();
             return false;
         }
     }
@@ -770,15 +797,21 @@ bool DataStore::appendCollection(Collection &collection, const QStringList &mime
     // no need to check for already existing collection with the same name,
     // a unique index on parent + name prevents that in the database
     if (!collection.insert()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to append Collection" << collection.name() << "in resource"
+                                     << collection.resource().name();
         return false;
     }
 
     if (!appendMimeTypeForCollection(collection.id(), mimeTypes)) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to append mimetypes" << mimeTypes << "to new collection" << collection.name()
+                                     << "(ID" << collection.id() << ") in resource" << collection.resource().name();
         return false;
     }
 
     for (auto it = attributes.cbegin(), end = attributes.cend(); it != end; ++it) {
         if (!addCollectionAttribute(collection, it.key(), it.value(), true)) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << it.key() << "to new collection" << collection.name()
+                                         << "(ID" << collection.id() << ") in resource" << collection.resource().name();
             return false;
         }
     }
@@ -813,6 +846,8 @@ bool DataStore::cleanupCollection(Collection &collection)
     qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
     if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to cleanup collection" << collection.name() << "(ID" << collection.id() << "):"
+                                     << "Failed to query existing payload parts";
         return false;
     }
 
@@ -822,9 +857,12 @@ bool DataStore::cleanupCollection(Collection &collection)
                 ExternalPartStorage::resolveAbsolutePath(qb.query().value(0).toByteArray()));
         }
     } catch (const PartHelperException &e) {
-        qCDebug(AKONADISERVER_LOG) << e.what();
+        qb.query().finish();
+        qCWarning(AKONADISERVER_LOG) << "PartHelperException while cleaning up collection" << collection.name()
+                                     << "(ID" << collection.id() << "):" << e.what();
         return false;
     }
+    qb.query().finish();
 
     // delete the collection itself, referential actions will do the rest
     notificationCollector()->collectionRemoved(collection);
@@ -842,17 +880,26 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
 
     for (const PimItem &item : items) {
         if (!item.clearFlags()) {   // TODO: move out of loop and use only a single query
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() <<")"
+                                         << "failed: error clearing items flags";
             return false;
         }
         if (!PartHelper::remove(Part::pimItemIdColumn(), item.id())) {     // TODO: reduce to single query
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() <<")"
+                                         << "failed: error clearing item payload parts";
+
             return false;
         }
 
-        if (!PimItem::remove(PimItem::idColumn(), item.id())) {     // TODO: move into single query
+        if (!PimItem::remove(PimItem::idColumn(), item.id())) {     // TODO: move into single querya
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() <<")"
+                                         << "failed: error clearing items";
             return false;
         }
 
         if (!Entity::clearRelation<CollectionPimItemRelation>(item.id(), Entity::Right)) {     // TODO: move into single query
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() <<")"
+                                         << "failed: error clearing linked items";
             return false;
         }
     }
@@ -864,6 +911,8 @@ bool DataStore::cleanupCollection_slow(Collection &collection)
     // delete attributes
     Q_FOREACH (CollectionAttribute attr, collection.attributes()) { //krazy:exclude=foreach
         if (!attr.remove()) {
+            qCWarning(AKONADISERVER_LOG) << "Slow cleanup of collection" << collection.name() << "(ID" << collection.id() << ")"
+                                         << "failed: error clearing attribute" << attr.type();
             return false;
         }
     }
@@ -883,6 +932,8 @@ static bool recursiveSetResourceId(const Collection &collection, qint64 resource
     qb.setColumnValue(Collection::remoteIdColumn(), QVariant());
     qb.setColumnValue(Collection::remoteRevisionColumn(), QVariant());
     if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to set resource ID" << resourceId << "to collection"
+                                     << collection.name() << "(ID" << collection.id() << ")";
         return false;
     }
 
@@ -897,6 +948,8 @@ static bool recursiveSetResourceId(const Collection &collection, qint64 resource
     qb.setColumnValue(PimItem::atimeColumn(), now);
     qb.setColumnValue(PimItem::dirtyColumn(), true);
     if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed reset RID/RREV for PimItems in Collection" << collection.name()
+                                     << "(ID" << collection.id() << ")";
         return false;
     }
 
@@ -916,7 +969,13 @@ bool DataStore::moveCollection(Collection &collection, const Collection &newPare
         return true;
     }
 
-    if (!m_dbOpened || !newParent.isValid()) {
+    if (!m_dbOpened) {
+        return false;
+    }
+
+    if (!newParent.isValid()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to move collection" << collection.name() << "(ID"
+                                     << collection.id() << "): invalid destination";
         return false;
     }
 
@@ -942,6 +1001,8 @@ bool DataStore::moveCollection(Collection &collection, const Collection &newPare
     }
 
     if (!collection.update()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to move Collection" << collection.name() << "(ID" << collection.id() << ")"
+                                     << "into Collection" << collection.name() << "(ID" << collection.id() << ")";
         return false;
     }
 
@@ -961,6 +1022,7 @@ bool DataStore::appendMimeTypeForCollection(qint64 collectionId, const QStringLi
             return false;
         }
         if (!Collection::addMimeType(collectionId, mt.id())) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to append mimetype" << mt.name() << "to Collection" << collectionId;
             return false;
         }
     }
@@ -1001,8 +1063,7 @@ QVector<Collection> DataStore::virtualCollections(const PimItem &item)
     qb.addValueCondition(CollectionPimItemRelation::rightFullColumnName(), Query::Equals, item.id());
 
     if (!qb.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Error during selection of records from table CollectionPimItemRelation"
-                                   << qb.query().lastError().text();
+        qCWarning(AKONADISERVER_LOG) << "Failed to query virtual collections which PimItem" << item.id() << "belongs into";
         return QVector<Collection>();
     }
 
@@ -1035,8 +1096,7 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
     }
 
     if (!qb.exec()) {
-        qCDebug(AKONADISERVER_LOG) << "Error during selection of records from table CollectionPimItemRelation"
-                                   << qb.query().lastError().text();
+        qCWarning(AKONADISERVER_LOG) << "Failed to query virtual Collections which PimItems" << items << "belong into";
         return QMap<Entity::Id, QList<PimItem> >();
     }
 
@@ -1055,6 +1115,7 @@ QMap<Entity::Id, QList<PimItem> > DataStore::virtualCollections(const PimItem::L
             pimItems << item;
         } while (query.next() && query.value(0).toLongLong() == collectionId);
     }
+    query.finish();
 
     return map;
 }
@@ -1088,6 +1149,8 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
     pimItem.setAtime(QDateTime::currentDateTimeUtc());
 
     if (!pimItem.insert()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to append new PimItem into Collection" << collection.name()
+                                     << "(ID" << collection.id() << ")";
         return false;
     }
 
@@ -1103,6 +1166,7 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
 
 //      qCDebug(AKONADISERVER_LOG) << "Insert from DataStore::appendPimItem";
             if (!PartHelper::insert(&(*it))) {
+                qCWarning(AKONADISERVER_LOG) << "Failed to add part" << it->partType().name() << "to new PimItem" << pimItem.id();
                 return false;
             }
         }
@@ -1113,6 +1177,7 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
         seen |= (flag.name() == QLatin1String(AKONADI_FLAG_SEEN)
                  || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
         if (!pimItem.addFlag(flag)) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to add flag" << flag.name() << "to new PimItem" << pimItem.id();
             return false;
         }
     }
@@ -1176,16 +1241,20 @@ bool DataStore::cleanupPimItems(const PimItem::List &items)
     // FIXME: Create a single query to do this
     Q_FOREACH (const PimItem &item, items) {
         if (!item.clearFlags()) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to clean up flags from PimItem" << item.id();
             return false;
         }
         if (!PartHelper::remove(Part::pimItemIdColumn(), item.id())) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to clean up parts from PimItem" << item.id();
             return false;
         }
         if (!PimItem::remove(PimItem::idColumn(), item.id())) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to remove PimItem" << item.id();
             return false;
         }
 
         if (!Entity::clearRelation<CollectionPimItemRelation>(item.id(), Entity::Right)) {
+            qCWarning(AKONADISERVER_LOG) << "Failed to remove PimItem" << item.id() << "from linked collections";
             return false;
         }
     }
@@ -1199,11 +1268,14 @@ bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &
     qb.addValueCondition(CollectionAttribute::collectionIdColumn(), Query::Equals, col.id());
     qb.addValueCondition(CollectionAttribute::typeColumn(), Query::Equals, key);
     if (!qb.exec()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name()
+                                     << "(ID" << col.id() << "): Failed to query existing attribute";
         return false;
     }
 
     if (!qb.result().isEmpty()) {
-        qCDebug(AKONADISERVER_LOG) << "Attribute" << key << "already exists for collection" << col.id();
+        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name()
+                                     << "(ID" << col.id() << "): Attribute already exists";
         return false;
     }
 
@@ -1213,6 +1285,8 @@ bool DataStore::addCollectionAttribute(const Collection &col, const QByteArray &
     attr.setValue(value);
 
     if (!attr.insert()) {
+        qCWarning(AKONADISERVER_LOG) << "Failed to append attribute" << key << "to Collection" << col.name()
+                                     << "(ID" << col.id() << ")";
         return false;
     }
 
@@ -1349,7 +1423,7 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
 
         if (!res) {
             // Don't do another deadlock detection here, just give up.
-            qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR:";
+            qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR when retrying transaction";
             qCCritical(AKONADISERVER_LOG) << "  Error code:" << query.lastError().nativeErrorCode();
             qCCritical(AKONADISERVER_LOG) << "  DB error: " << query.lastError().databaseText();
             qCCritical(AKONADISERVER_LOG) << "  Error text:" << query.lastError().text();
