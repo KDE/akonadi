@@ -73,12 +73,15 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
     d->widget.reset(new AgentConfigurationWidget(instance, this));
     l->addWidget(d->widget.data());
 
-    auto btnBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel, this);
+    auto btnBox = new QDialogButtonBox(d->widget->standardButtons(), this);
     l->addWidget(btnBox);
     connect(btnBox, &QDialogButtonBox::accepted, this, &AgentConfigurationDialog::accept);
     connect(btnBox, &QDialogButtonBox::rejected, this, &AgentConfigurationDialog::reject);
-    connect(btnBox->button(QDialogButtonBox::Apply), &QPushButton::clicked,
-            d->widget.data(), &AgentConfigurationWidget::save);
+    if (QPushButton *applyButton = btnBox->button(QDialogButtonBox::Apply)) {
+        connect(applyButton, &QPushButton::clicked,
+                d->widget.data(), &AgentConfigurationWidget::save);
+    }
+
 
     if (auto plugin = d->widget->d->plugin) {
         if (auto aboutData = plugin->aboutData()) {
