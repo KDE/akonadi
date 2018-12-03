@@ -24,6 +24,7 @@
 #include <QDBusConnection>
 
 #include <KAboutData>
+#include <QDialogButtonBox>
 #include <QSize>
 
 namespace Akonadi {
@@ -107,4 +108,9 @@ QSize AgentConfigurationBase::restoreDialogSize() const
 void AgentConfigurationBase::saveDialogSize(const QSize &size)
 {
     Q_UNUSED(size);
+}
+
+QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() const
+{
+    return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
 }

@@ -40,6 +40,7 @@
 
 #include <KSharedConfig>
 #include <KLocalizedString>
+#include <QDialogButtonBox>
 
 #include <memory>
 
@@ -163,6 +164,14 @@ void AgentConfigurationWidget::saveDialogSize(const QSize &size)
     if (d->plugin) {
         d->plugin->saveDialogSize(size);
     }
+}
+
+QDialogButtonBox::StandardButtons AgentConfigurationWidget::standardButtons() const
+{
+    if (d->plugin) {
+        return d->plugin->standardButtons();
+    }
+    return QDialogButtonBox::Ok | QDialogButtonBox::Apply | QDialogButtonBox::Cancel;
 }
 
 void AgentConfigurationWidget::childEvent(QChildEvent *event)

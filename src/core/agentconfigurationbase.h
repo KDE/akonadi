@@ -25,6 +25,7 @@
 
 #include <QObject>
 #include <KSharedConfig>
+#include <QDialogButtonBox>
 
 class KAboutData;
 
@@ -135,6 +136,8 @@ public:
      * Reimplement to save dialog size.
      */
     virtual void saveDialogSize(const QSize &size);
+
+    virtual QDialogButtonBox::StandardButtons standardButtons() const;
 
 protected:
     QWidget *parentWidget() const;

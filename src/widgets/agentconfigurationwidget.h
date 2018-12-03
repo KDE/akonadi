@@ -20,6 +20,7 @@
 #ifndef AKONADI_AGENTCONFIGURATIOWIDGET_H
 #define AKONADI_AGENTCONFIGURATIOWIDGET_H
 
+#include <QDialogButtonBox>
 #include <QWidget>
 #include "akonadiwidgets_export.h"
 
@@ -43,6 +44,7 @@ public:
     void save();
     QSize restoreDialogSize() const;
     void saveDialogSize(const QSize &size);
+    QDialogButtonBox::StandardButtons standardButtons() const;
 
 protected:
     void childEvent(QChildEvent *event) override;
