@@ -44,6 +44,7 @@ public:
     }
     void restoreDialogSize();
     AgentConfigurationDialog *q;
+    QPushButton *okButton = nullptr;
     QScopedPointer<AgentConfigurationWidget> widget;
 };
 
@@ -81,7 +82,10 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
         connect(applyButton, &QPushButton::clicked,
                 d->widget.data(), &AgentConfigurationWidget::save);
     }
-
+    if ((d->okButton = btnBox->button(QDialogButtonBox::Ok))) {
+        connect(d->widget.data(), &AgentConfigurationWidget::enableOkButton,
+                d->okButton, &QPushButton::setEnabled);
+    }
 
     if (auto plugin = d->widget->d->plugin) {
         if (auto aboutData = plugin->aboutData()) {

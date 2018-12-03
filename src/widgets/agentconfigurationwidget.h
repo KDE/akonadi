@@ -46,6 +46,9 @@ public:
     void saveDialogSize(const QSize &size);
     QDialogButtonBox::StandardButtons standardButtons() const;
 
+Q_SIGNALS:
+    void enableOkButton(bool enabled);
+
 protected:
     void childEvent(QChildEvent *event) override;
 
