@@ -26,11 +26,10 @@
 #include "intervalcheck.h"
 #include "search/searchmanager.h"
 #include "akonadi.h"
-#include "handler/search.h"
 #include "notificationmanager.h"
 #include "aggregatedfetchscope.h"
 #include "selectquerybuilder.h"
-#include "handler/fetchhelper.h"
+#include "handler/itemfetchhelper.h"
 #include "connection.h"
 
 #include "akonadiserver_debug.h"
@@ -556,7 +555,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 auto itemFetchScope = fetchScope->toFetchScope();
                 auto tagFetchScope = mgr->tagFetchScope()->toFetchScope();
                 itemFetchScope.setFetch(Protocol::ItemFetchScope::CacheOnly);
-                FetchHelper helper(mConnection, &context, Scope(ids), itemFetchScope, tagFetchScope);
+                ItemFetchHelper helper(mConnection, &context, Scope(ids), itemFetchScope, tagFetchScope);
                 // The Item was just changed, which means the atime was
                 // updated, no need to do it again a couple milliseconds later.
                 helper.disableATimeUpdates();

@@ -49,37 +49,37 @@ set(libakonadiserver_SRCS
     handlerhelper.cpp
     intervalcheck.cpp
     collectionreferencemanager.cpp
-    handler/akappend.cpp
-    handler/copy.cpp
-    handler/colcopy.cpp
-    handler/colmove.cpp
-    handler/create.cpp
-    handler/delete.cpp
-    handler/fetch.cpp
-    handler/fetchhelper.cpp
-    handler/link.cpp
-    handler/list.cpp
-    handler/login.cpp
-    handler/logout.cpp
-    handler/modify.cpp
-    handler/move.cpp
-    handler/remove.cpp
-    handler/resourceselect.cpp
-    handler/relationstore.cpp
-    handler/relationremove.cpp
-    handler/relationfetch.cpp
-    handler/search.cpp
+    handler/collectioncopyhandler.cpp
+    handler/collectioncreatehandler.cpp
+    handler/collectiondeletehandler.cpp
+    handler/collectionfetchhandler.cpp
+    handler/collectionmodifyhandler.cpp
+    handler/collectionmovehandler.cpp
+    handler/collectionstatsfetchhandler.cpp
+    handler/itemcopyhandler.cpp
+    handler/itemcreatehandler.cpp
+    handler/itemdeletehandler.cpp
+    handler/itemfetchhandler.cpp
+    handler/itemfetchhelper.cpp
+    handler/itemlinkhandler.cpp
+    handler/itemmodifyhandler.cpp
+    handler/itemmovehandler.cpp
+    handler/loginhandler.cpp
+    handler/logouthandler.cpp
+    handler/relationfetchhandler.cpp
+    handler/relationmodifyhandler.cpp
+    handler/relationremovehandler.cpp
+    handler/resourceselecthandler.cpp
+    handler/searchhandler.cpp
     handler/searchhelper.cpp
-    handler/searchpersistent.cpp
-    handler/searchresult.cpp
-    handler/status.cpp
-    handler/store.cpp
-    handler/tagappend.cpp
-    handler/tagfetch.cpp
+    handler/searchcreatehandler.cpp
+    handler/searchresulthandler.cpp
+    handler/tagcreatehandler.cpp
+    handler/tagdeletehandler.cpp
+    handler/tagfetchhandler.cpp
     handler/tagfetchhelper.cpp
-    handler/tagremove.cpp
-    handler/tagstore.cpp
-    handler/transaction.cpp
+    handler/tagmodifyhandler.cpp
+    handler/transactionhandler.cpp
     search/agentsearchengine.cpp
     search/agentsearchinstance.cpp
     search/searchtaskmanager.cpp

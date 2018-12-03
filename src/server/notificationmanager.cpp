@@ -25,7 +25,6 @@
 #include "akonadiserver_debug.h"
 #include "aggregatedfetchscope.h"
 #include "storage/collectionstatistics.h"
-#include "handler/fetchhelper.h"
 #include "handlerhelper.h"
 
 #include <private/standarddirs_p.h>

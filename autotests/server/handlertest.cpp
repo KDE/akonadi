@@ -26,26 +26,27 @@
 #include <typeinfo>
 
 #include "handler.h"
-#include "handler/create.h"
-#include "handler/list.h"
-#include "handler/searchpersistent.h"
-#include "handler/search.h"
-#include "handler/fetch.h"
-#include "handler/store.h"
-#include "handler/status.h"
-#include "handler/delete.h"
-#include "handler/modify.h"
-#include "handler/transaction.h"
-#include "handler/akappend.h"
-#include "handler/copy.h"
-#include "handler/colcopy.h"
-#include "handler/link.h"
-#include "handler/resourceselect.h"
-#include "handler/remove.h"
-#include "handler/move.h"
-#include "handler/colmove.h"
-#include "handler/login.h"
-#include "handler/logout.h"
+#include "handler/collectioncreatehandler.h"
+#include "handler/collectionfetchhandler.h"
+#include "handler/collectionstatsfetchhandler.h"
+#include "handler/collectiondeletehandler.h"
+#include "handler/collectionmodifyhandler.h"
+#include "handler/collectioncopyhandler.h"
+#include "handler/collectiondeletehandler.h"
+#include "handler/collectionmovehandler.h"
+#include "handler/searchcreatehandler.h"
+#include "handler/searchhandler.h"
+#include "handler/itemfetchhandler.h"
+#include "handler/itemdeletehandler.h"
+#include "handler/itemmodifyhandler.h"
+#include "handler/itemcreatehandler.h"
+#include "handler/itemcopyhandler.h"
+#include "handler/itemlinkhandler.h"
+#include "handler/itemmovehandler.h"
+#include "handler/resourceselecthandler.h"
+#include "handler/transactionhandler.h"
+#include "handler/loginhandler.h"
+#include "handler/logouthandler.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -64,34 +65,34 @@ private:
 
     void addAuthCommands()
     {
-        MAKE_CMD_ROW(Protocol::Command::CreateCollection, Create)
-        MAKE_CMD_ROW(Protocol::Command::FetchCollections, List)
-        MAKE_CMD_ROW(Protocol::Command::StoreSearch, SearchPersistent)
-        MAKE_CMD_ROW(Protocol::Command::Search, Search)
-        MAKE_CMD_ROW(Protocol::Command::FetchItems, Fetch)
-        MAKE_CMD_ROW(Protocol::Command::ModifyItems, Store)
-        MAKE_CMD_ROW(Protocol::Command::FetchCollectionStats, Status)
-        MAKE_CMD_ROW(Protocol::Command::DeleteCollection, Delete)
-        MAKE_CMD_ROW(Protocol::Command::ModifyCollection, Modify)
+        MAKE_CMD_ROW(Protocol::Command::CreateCollection, CollectionCreateHandler)
+        MAKE_CMD_ROW(Protocol::Command::FetchCollections, CollectionFetchHandler)
+        MAKE_CMD_ROW(Protocol::Command::StoreSearch, SearchCreateHandler)
+        MAKE_CMD_ROW(Protocol::Command::Search, SearchHandler)
+        MAKE_CMD_ROW(Protocol::Command::FetchItems, ItemFetchHandler)
+        MAKE_CMD_ROW(Protocol::Command::ModifyItems, ItemModifyHandler)
+        MAKE_CMD_ROW(Protocol::Command::FetchCollectionStats, CollectionStatsFetchHandler)
+        MAKE_CMD_ROW(Protocol::Command::DeleteCollection, CollectionDeleteHandler)
+        MAKE_CMD_ROW(Protocol::Command::ModifyCollection, CollectionModifyHandler)
         MAKE_CMD_ROW(Protocol::Command::Transaction, TransactionHandler)
-        MAKE_CMD_ROW(Protocol::Command::CreateItem, AkAppend)
-        MAKE_CMD_ROW(Protocol::Command::CopyItems, Copy)
-        MAKE_CMD_ROW(Protocol::Command::CopyCollection, ColCopy)
-        MAKE_CMD_ROW(Protocol::Command::LinkItems, Link)
-        MAKE_CMD_ROW(Protocol::Command::SelectResource, ResourceSelect)
-        MAKE_CMD_ROW(Protocol::Command::DeleteItems, Remove)
-        MAKE_CMD_ROW(Protocol::Command::MoveItems, Move)
-        MAKE_CMD_ROW(Protocol::Command::MoveCollection, ColMove)
+        MAKE_CMD_ROW(Protocol::Command::CreateItem, ItemCreateHandler)
+        MAKE_CMD_ROW(Protocol::Command::CopyItems, ItemCopyHandler)
+        MAKE_CMD_ROW(Protocol::Command::CopyCollection, CollectionCopyHandler)
+        MAKE_CMD_ROW(Protocol::Command::LinkItems, ItemLinkHandler)
+        MAKE_CMD_ROW(Protocol::Command::SelectResource, ResourceSelectHandler)
+        MAKE_CMD_ROW(Protocol::Command::DeleteItems, ItemDeleteHandler)
+        MAKE_CMD_ROW(Protocol::Command::MoveItems, ItemMoveHandler)
+        MAKE_CMD_ROW(Protocol::Command::MoveCollection, CollectionMoveHandler)
     }
 
     void addNonAuthCommands()
     {
-        MAKE_CMD_ROW(Protocol::Command::Login, Login)
+        MAKE_CMD_ROW(Protocol::Command::Login, LoginHandler)
     }
 
     void addAlwaysCommands()
     {
-        MAKE_CMD_ROW(Protocol::Command::Logout, Logout)
+        MAKE_CMD_ROW(Protocol::Command::Logout, LogoutHandler)
     }
 
     void addInvalidCommands()

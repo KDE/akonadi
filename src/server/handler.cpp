@@ -23,35 +23,34 @@
 
 #include "connection.h"
 
-#include "handler/akappend.h"
-#include "handler/copy.h"
-#include "handler/colcopy.h"
-#include "handler/colmove.h"
-#include "handler/create.h"
-#include "handler/delete.h"
-#include "handler/fetch.h"
-#include "handler/link.h"
-#include "handler/list.h"
-#include "handler/login.h"
-#include "handler/logout.h"
-#include "handler/modify.h"
-#include "handler/move.h"
-#include "handler/remove.h"
-#include "handler/resourceselect.h"
-#include "handler/search.h"
-#include "handler/searchpersistent.h"
-#include "handler/searchresult.h"
-#include "handler/status.h"
-#include "handler/store.h"
-#include "handler/transaction.h"
-#include "handler/tagappend.h"
-#include "handler/tagfetch.h"
-#include "handler/tagremove.h"
-#include "handler/tagstore.h"
-#include "handler/relationstore.h"
-#include "handler/relationremove.h"
-#include "handler/relationfetch.h"
-
+#include "handler/collectioncopyhandler.h"
+#include "handler/collectioncreatehandler.h"
+#include "handler/collectiondeletehandler.h"
+#include "handler/collectionfetchhandler.h"
+#include "handler/collectionmodifyhandler.h"
+#include "handler/collectionmovehandler.h"
+#include "handler/collectionstatsfetchhandler.h"
+#include "handler/itemcopyhandler.h"
+#include "handler/itemcreatehandler.h"
+#include "handler/itemdeletehandler.h"
+#include "handler/itemfetchhandler.h"
+#include "handler/itemlinkhandler.h"
+#include "handler/itemmodifyhandler.h"
+#include "handler/itemmovehandler.h"
+#include "handler/loginhandler.h"
+#include "handler/logouthandler.h"
+#include "handler/relationfetchhandler.h"
+#include "handler/relationremovehandler.h"
+#include "handler/relationmodifyhandler.h"
+#include "handler/resourceselecthandler.h"
+#include "handler/searchcreatehandler.h"
+#include "handler/searchhandler.h"
+#include "handler/searchresulthandler.h"
+#include "handler/tagcreatehandler.h"
+#include "handler/tagdeletehandler.h"
+#include "handler/tagfetchhandler.h"
+#include "handler/tagmodifyhandler.h"
+#include "handler/transactionhandler.h"
 #include "storage/querybuilder.h"
 
 using namespace Akonadi;
@@ -61,7 +60,7 @@ Handler *Handler::findHandlerForCommandNonAuthenticated(Protocol::Command::Type 
 {
     // allowed are LOGIN
     if (cmd == Protocol::Command::Login) {
-        return new Login();
+        return new LoginHandler();
     }
 
     return nullptr;
@@ -71,7 +70,7 @@ Handler *Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd
 {
     // allowed is LOGOUT
     if (cmd == Protocol::Command::Logout) {
-        return new Logout();
+        return new LogoutHandler();
     }
     return nullptr;
 }
@@ -100,60 +99,60 @@ Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd
         return new TransactionHandler();
 
     case Protocol::Command::CreateItem:
-        return new AkAppend();
+        return new ItemCreateHandler();
     case Protocol::Command::CopyItems:
-        return new Copy();
+        return new ItemCopyHandler();
     case Protocol::Command::DeleteItems:
-        return new Remove();
+        return new ItemDeleteHandler();
     case Protocol::Command::FetchItems:
-        return new Fetch();
+        return new ItemFetchHandler();
     case Protocol::Command::LinkItems:
-        return new Link();
+        return new ItemLinkHandler();
     case Protocol::Command::ModifyItems:
-        return new Store();
+        return new ItemModifyHandler();
     case Protocol::Command::MoveItems:
-        return new Move();
+        return new ItemMoveHandler();
 
     case Protocol::Command::CreateCollection:
-        return new Create();
+        return new CollectionCreateHandler();
     case Protocol::Command::CopyCollection:
-        return new ColCopy();
+        return new CollectionCopyHandler();
     case Protocol::Command::DeleteCollection:
-        return new Delete();
+        return new CollectionDeleteHandler();
     case Protocol::Command::FetchCollections:
-        return new List();
+        return new CollectionFetchHandler();
     case Protocol::Command::FetchCollectionStats:
-        return new Status();
+        return new CollectionStatsFetchHandler();
     case Protocol::Command::ModifyCollection:
-        return new Modify();
+        return new CollectionModifyHandler();
     case Protocol::Command::MoveCollection:
-        return new ColMove();
+        return new CollectionMoveHandler();
 
     case Protocol::Command::Search:
-        return new Search();
+        return new SearchHandler();
     case Protocol::Command::SearchResult:
-        return new SearchResult();
+        return new SearchResultHandler();
     case Protocol::Command::StoreSearch:
-        return new SearchPersistent();
+        return new SearchCreateHandler();
 
     case Protocol::Command::CreateTag:
-        return new TagAppend();
+        return new TagCreateHandler();
     case Protocol::Command::DeleteTag:
-        return new TagRemove();
+        return new TagDeleteHandler();
     case Protocol::Command::FetchTags:
-        return new TagFetch();
+        return new TagFetchHandler();
     case Protocol::Command::ModifyTag:
-        return new TagStore();
+        return new TagModifyHandler();
 
     case Protocol::Command::FetchRelations:
-        return new RelationFetch();
+        return new RelationFetchHandler();
     case Protocol::Command::ModifyRelation:
-        return new RelationStore();
+        return new RelationModifyHandler();
     case Protocol::Command::RemoveRelations:
-        return new RelationRemove();
+        return new RelationRemoveHandler();
 
     case Protocol::Command::SelectResource:
-        return new ResourceSelect();
+        return new ResourceSelectHandler();
 
     case Protocol::Command::StreamPayload:
         Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,

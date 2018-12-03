@@ -17,7 +17,6 @@
     02110-1301, USA.
 */
 #include <QObject>
-#include <handler/modify.h>
 
 #include <storage/entity.h>
 
