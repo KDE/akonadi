@@ -42,14 +42,14 @@ struct ExpectedSignal {
     {
     }
 
-    ExpectedSignal(SignalType type, int start, int end, const QVariant &parentData = QVariant(), const QVariantList &newData = QVariantList())
-        : signalType{type}, startRow{start}, endRow{end}, parentData{parentData}, newData{newData}
+    ExpectedSignal(SignalType type, int start, int end, const QVariant &parentData = {}, const QVariantList &newData = {})
+        : signalType(type), startRow(start), endRow(end), parentData(parentData), newData(newData)
     {
     }
 
     ExpectedSignal(SignalType type, int start, int end, const QVariant &sourceParentData, int destRow, const QVariant &destParentData, const QVariantList &newData)
-        : signalType{type}, startRow{start}, endRow{end}, parentData{destParentData}
-        , sourceParentData{sourceParentData}, destRow{destRow}, newData{newData}
+        : signalType(type), startRow(start), endRow(end), parentData(destParentData)
+        , sourceParentData(sourceParentData), destRow(destRow), newData(newData)
     {
     }
 
