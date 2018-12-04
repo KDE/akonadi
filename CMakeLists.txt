@@ -3,7 +3,16 @@ cmake_minimum_required(VERSION 3.5)
 set(PIM_VERSION "5.10.44")
 project(Akonadi VERSION ${PIM_VERSION})
 
-set(CMAKE_CXX_STANDARD 14)
+if (MSVC)
+    # On Windows our target compiler is MSVC 15, which supports C++17, so
+    # we can enable it. MSVC does not ship experimental/optional and similar
+    # and disallows use of C++17 classes in C++14 mode.
+    set(CMAKE_CXX_STANDARD 17)
+else()
+    # On Linux, MacOS and BSD we need to support older compilers that only
+    # offer C++14.
+    set(CMAKE_CXX_STANDARD 14)
+endif()
 
 
 # ECM setup
