@@ -228,7 +228,7 @@ struct TypedPayload {
     int metaTypeId;
 };
 
-struct BySharedPointerAndMetaTypeID : std::unary_function<TypedPayload, bool> {
+struct BySharedPointerAndMetaTypeID {
     const int spid;
     const int mtid;
     BySharedPointerAndMetaTypeID(int spid, int mtid)
