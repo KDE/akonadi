@@ -577,6 +577,7 @@ public:
 // We know that auto_ptr is deprecated, but we still want to handle the case
 // without compilers yelling at us all the time just because item.h gets included
 // virtually everywhere
+#if __cplusplus < 201703L
 #ifdef __GNUC__
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -592,6 +593,7 @@ public:
 #pragma clang diagnostic pop
 #else
 #pragma GCC diagnostic pop
+#endif
 #endif
 #endif
     template <typename T> void setPayload(std::unique_ptr<T> p);
@@ -1040,6 +1042,7 @@ void Item::setPayload(T *p)
     p->You_MUST_NOT_use_a_pointer_as_payload;
 }
 
+#if __cplusplus < 201703L
 #ifdef __GNUC__
 #ifdef __clang__
 #pragma clang diagnostic push
@@ -1059,6 +1062,7 @@ void Item::setPayload(std::auto_ptr<T> p)
 #pragma clang diagnostic pop
 #else
 #pragma GCC diagnostic pop
+#endif
 #endif
 #endif
 
