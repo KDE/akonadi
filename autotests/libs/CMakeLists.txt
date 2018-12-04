@@ -79,6 +79,7 @@ target_link_libraries(akonaditestfake
         Qt5::Network
         KF5::DBusAddons
         KF5::AkonadiPrivate
+        akonadi_shared
 )
 
 add_executable(akonadi-firstrun
