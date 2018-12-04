@@ -103,6 +103,7 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             QVBoxLayout *layout = new QVBoxLayout(this);
             layout->setMargin(0);
             d->plugin = d->factory->create(config, this, { instance.identifier() });
+            connect(d->plugin.data(), &AgentConfigurationBase::enableOkButton, this, &AgentConfigurationWidget::enableOkButton);
         } else {
             // Hide this dialog and fallback to calling the out-of-process configuration
             if (auto dlg = qobject_cast<AgentConfigurationDialog*>(parent)) {

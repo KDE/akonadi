@@ -158,6 +158,9 @@ protected:
      */
     void setKAboutData(const KAboutData &aboutData);
 
+Q_SIGNALS:
+    void enableOkButton(bool enabled);
+
 private:
     class Private;
     friend class Private;
