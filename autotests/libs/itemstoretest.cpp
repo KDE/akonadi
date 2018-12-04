@@ -196,6 +196,7 @@ void ItemStoreTest::testRemoteId()
     AKVERIFYEXEC(fetch);
     QCOMPARE(fetch->items().count(), 1);
     item = fetch->items().at(0);
+    QEXPECT_FAIL("clear", "Clearing RID by clients is currently forbidden to avoid conflicts.", Continue);
     QCOMPARE(item.remoteId().toUtf8(), exprid.toUtf8());
 
     // no longer pretend to be a resource
