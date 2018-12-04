@@ -4,7 +4,7 @@ set(PIM_VERSION "5.10.44")
 project(Akonadi VERSION ${PIM_VERSION})
 
 if (MSVC)
-    # On Windows our target compiler is MSVC 15, which supports C++17, so
+    # On Windows our target compiler is MSVC 14.14, which supports C++17, so
     # we can enable it. MSVC does not ship experimental/optional and similar
     # and disallows use of C++17 classes in C++14 mode.
     set(CMAKE_CXX_STANDARD 17)
@@ -238,6 +238,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_C_COMPILER MATCHES "icc" OR (CMAKE_CXX_COMP
     set(CMAKE_CXX_FLAGS_DEBUGFULL "-g3 -fno-inline" CACHE STRING "Flags used by the C++ compiler during debugfull builds." FORCE)
     set(CMAKE_C_FLAGS_DEBUGFULL   "-g3 -fno-inline" CACHE STRING "Flags used by the C compiler during debugfull builds." FORCE)
     mark_as_advanced(CMAKE_CXX_FLAGS_DEBUGFULL CMAKE_C_FLAGS_DEBUGFULL)
+elseif (MSVC)
+    # This sets the __cplusplus macro to a real value based on the version of C++ specified by
+    # the /std switch. Without it MSVC keeps reporting C++98, so feature detection doesn't work.
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
 endif()
 
 
