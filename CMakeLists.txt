@@ -12,6 +12,7 @@ else()
     # On Linux, MacOS and BSD we need to support older compilers that only
     # offer C++14.
     set(CMAKE_CXX_STANDARD 14)
+    set(WITH_3RDPARTY_OPTIONAL TRUE)
 endif()
 
 

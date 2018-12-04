@@ -38,7 +38,7 @@ namespace QueryCache
 {
 
 /// Returns the cached (and prepared) query for @p queryStatement
-std::optional<QSqlQuery> query(const QString &queryStatement);
+akOptional<QSqlQuery> query(const QString &queryStatement);
 
 /// Insert @p query into the cache for @p queryStatement.
 void insert(const QString &queryStatement, const QSqlQuery &query);

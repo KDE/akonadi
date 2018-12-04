@@ -20,24 +20,26 @@
 #ifndef AKOPTIONAL_H
 #define AKOPTIONAL_H
 
-#ifdef __has_include
-    #if __has_include(<optional>)
-        #include <optional>
-        #if defined(_MSC_VER) && !defined(__cpp_lib_optional)
-            // Pretend MSVC supports feature test macros
-            #define __cpp_lib_optional 1
-        #endif
-    #endif
-    #if !defined(__cpp_lib_optional)
-        #if __has_include(<experimental/optional>)
-            #include <experimental/optional>
-            namespace std { using namespace experimental; }
-        #else
-            #error Compiler does not support std::optional or std::experimental::optional
-        #endif
-    #endif
+#include "config-akonadi.h"
+
+#ifdef WITH_3RDPARTY_OPTIONAL
+    // Unlike std::experimental::optional<> from GCC, this one provides
+    // full interface described in N3793
+    #include "optional.hpp" // from 3rdparty/Optional
+    namespace Akonadi {
+        template<typename T>
+        using akOptional = std::experimental::optional<T>;
+        using nullopt_t = std::experimental::nullopt_t;
+        constexpr nullopt_t nullopt{nullopt_t::init()};
+    }
 #else
-    #error Compiler does not support __has_include
+    #include <optional>
+    namespace Akonadi {
+        template<typename T>
+        using akOptional = std::optional<T>;
+        using nullopt_t = std::nullopt_t;
+        constexpr nullopt_t nullopt{nullopt_t::init()};
+    }
 #endif
 
 #endif // AKOPTIONAL_H

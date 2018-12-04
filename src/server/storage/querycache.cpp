@@ -30,6 +30,7 @@
 #include <list>
 
 using namespace std::chrono_literals;
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 namespace {
@@ -49,12 +50,12 @@ public:
         m_cleanupTimer.setSingleShot(true);
     }
 
-    std::optional<QSqlQuery> query(const QString &queryStatement)
+    akOptional<QSqlQuery> query(const QString &queryStatement)
     {
         m_cleanupTimer.start(CleanupTimeout);
         auto it = m_keys.find(queryStatement);
         if (it == m_keys.end()) {
-            return std::nullopt;
+            return nullopt;
         }
 
         auto node = **it;
@@ -104,7 +105,7 @@ static Cache *perThreadCache()
 
 }
 
-std::optional<QSqlQuery> QueryCache::query(const QString &queryStatement)
+akOptional<QSqlQuery> QueryCache::query(const QString &queryStatement)
 {
     return perThreadCache()->query(queryStatement);
 }

@@ -364,7 +364,7 @@ bool QueryBuilder::exec()
 
 #ifndef QUERYBUILDER_UNITTEST
     auto query = QueryCache::query(statement);
-    if (query) {
+    if (query.has_value()) {
         mQuery = std::move(*query);
     } else {
         mQuery.clear();
