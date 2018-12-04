@@ -28,11 +28,13 @@
             #define __cpp_lib_optional 1
         #endif
     #endif
-    #if !defined(__cpp_lib_optional) && __has_include(<experimental/optional>)
-        #include <experimental/optional>
-        namespace std { using namespace experimental; }
-    #else
-        #error Compiler does not support std::optional or std::experimental::optional
+    #if !defined(__cpp_lib_optional)
+        #if __has_include(<experimental/optional>)
+            #include <experimental/optional>
+            namespace std { using namespace experimental; }
+        #else
+            #error Compiler does not support std::optional or std::experimental::optional
+        #endif
     #endif
 #else
     #error Compiler does not support __has_include
