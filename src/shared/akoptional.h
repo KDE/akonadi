@@ -23,6 +23,10 @@
 #ifdef __has_include
     #if __has_include(<optional>)
         #include <optional>
+        #if defined(_MSC_VER) && !defined(__cpp_lib_optional)
+            // Pretend MSVC supports feature test macros
+            #define __cpp_lib_optional 1
+        #endif
     #endif
     #if !defined(__cpp_lib_optional) && __has_include(<experimental/optional>)
         #include <experimental/optional>
