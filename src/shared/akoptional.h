@@ -23,8 +23,7 @@
 #ifdef __has_include
     #if __has_include(<optional>) && !defined(_MSC_VER) // MSVC won't let us use <optional> in C++14 despite having it
         #include <optional>
-    #endif
-    #if !defined(__cpp_lib_optional) && __has_include(<experimental/optional>)
+    #elif __has_include(<experimental/optional>)
         #include <experimental/optional>
         namespace std { using namespace experimental; }
     #else
