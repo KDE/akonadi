@@ -29,16 +29,14 @@
     namespace Akonadi {
         template<typename T>
         using akOptional = std::experimental::optional<T>;
-        using nullopt_t = std::experimental::nullopt_t;
-        constexpr nullopt_t nullopt{nullopt_t::init()};
+        constexpr auto nullopt = std::experimental::nullopt;
     }
 #else
     #include <optional>
     namespace Akonadi {
         template<typename T>
         using akOptional = std::optional<T>;
-        using nullopt_t = std::nullopt_t;
-        constexpr nullopt_t nullopt{nullopt_t::init()};
+        constexpr auto nullopt = std::nullopt;
     }
 #endif
 
