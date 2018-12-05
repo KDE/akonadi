@@ -31,6 +31,7 @@
 #include "selectquerybuilder.h"
 #include "handler/itemfetchhelper.h"
 #include "connection.h"
+#include "shared/akranges.h"
 
 #include "akonadiserver_debug.h"
 
@@ -157,7 +158,8 @@ void NotificationCollector::collectionChanged(const Collection &collection,
     if (changes.contains(AKONADI_PARAM_ENABLED) || changes.contains(AKONADI_PARAM_REFERENCED)) {
         CollectionStatistics::self()->invalidateCollection(collection);
     }
-    collectionNotification(Protocol::CollectionChangeNotification::Modify, collection, collection.parentId(), -1, resource, changes.toSet());
+    collectionNotification(Protocol::CollectionChangeNotification::Modify, collection, collection.parentId(),
+                           -1, resource, changes | toQSet);
 }
 
 void NotificationCollector::collectionMoved(const Collection &collection,

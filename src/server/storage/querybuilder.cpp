@@ -20,12 +20,13 @@
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
 
-
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
 #include "storage/querycache.h"
 #include "storage/storagedebugger.h"
 #endif
+
+#include <shared/akranges.h>
 
 #include <QSqlRecord>
 #include <QSqlError>

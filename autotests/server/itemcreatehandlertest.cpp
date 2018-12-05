@@ -29,6 +29,7 @@
 #include "fakeentities.h"
 
 #include <shared/aktest.h>
+#include <shared/akranges.h>
 
 #include <QTest>
 
@@ -844,7 +845,7 @@ private Q_SLOTS:
             QCOMPARE(actualItem.collectionId(), pimItem.collectionId());
             QCOMPARE(actualItem.mimeTypeId(), pimItem.mimeTypeId());
 
-            const QList<Flag> actualFlags = actualItem.flags().toList();
+            const auto actualFlags = actualItem.flags() | toQList;
             QCOMPARE(actualFlags.count(), flags.count());
             Q_FOREACH (const Flag &flag, flags) {
                 const QList<Flag>::const_iterator actualFlagIter =
@@ -856,7 +857,7 @@ private Q_SLOTS:
                 QVERIFY(actualFlag.isValid());
             }
 
-            const QList<Tag> actualTags = actualItem.tags().toList();
+            const auto actualTags = actualItem.tags() | toQList;
             QCOMPARE(actualTags.count(), tags.count());
             Q_FOREACH (const FakeTag &tag, tags) {
                 const QList<Tag>::const_iterator actualTagIter =
@@ -879,7 +880,7 @@ private Q_SLOTS:
                 }
             }
 
-            const QList<Part> actualParts = actualItem.parts().toList();
+            const auto actualParts = actualItem.parts() | toQList;
             QCOMPARE(actualParts.count(), parts.count());
             Q_FOREACH (const FakePart &part, parts) {
                 const QList<Part>::const_iterator actualPartIter =

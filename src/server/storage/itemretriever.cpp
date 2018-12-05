@@ -31,7 +31,7 @@
 #include "storage/selectquerybuilder.h"
 #include "utils.h"
 
-
+#include <shared/akranges.h>
 #include <private/protocol_p.h>
 
 #include <QEventLoop>
@@ -321,7 +321,7 @@ bool ItemRetriever::exec()
     query.finish();
 
     if (!readyItems.isEmpty()) {
-        Q_EMIT itemsRetrieved(readyItems.toList());
+        Q_EMIT itemsRetrieved(readyItems | toQList);
     }
 
     QEventLoop eventLoop;

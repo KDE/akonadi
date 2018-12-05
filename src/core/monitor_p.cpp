@@ -33,6 +33,8 @@
 #include "changenotification.h"
 #include "protocolhelper_p.h"
 
+#include <shared/akranges.h>
+
 #include <utility>
 
 using namespace Akonadi;
@@ -468,7 +470,7 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
 
         // Make sure all tags for ModifyTags operation are in cache too
         if (itemNtf.operation() == Protocol::ItemChangeNotification::ModifyTags) {
-            if (!tagCache->ensureCached((itemNtf.addedTags() + itemNtf.removedTags()).toList(), mTagFetchScope)) {
+            if (!tagCache->ensureCached((itemNtf.addedTags() + itemNtf.removedTags()) | toQList, mTagFetchScope)) {
                 return false;
             }
         }
@@ -950,7 +952,7 @@ void MonitorPrivate::slotNotify(const Protocol::ChangeNotificationPtr &msg)
                 }
             } else {
                 const Protocol::ChangeNotificationList split = splitMessage(itemNtf, !supportsBatch);
-                pendingNotifications << split.toList();
+                pendingNotifications << (split | toQList);
                 appendedMessages += split.count();
             }
         }
@@ -1045,8 +1047,8 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
 
     Tag::List addedTags, removedTags;
     if (msg.operation() == Protocol::ItemChangeNotification::ModifyTags) {
-        addedTags = tagCache->retrieve(msg.addedTags().toList());
-        removedTags = tagCache->retrieve(msg.removedTags().toList());
+        addedTags = tagCache->retrieve(msg.addedTags() | toQList);
+        removedTags = tagCache->retrieve(msg.removedTags() | toQList);
     }
 
     Item::List its = items;
@@ -1082,7 +1084,7 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
         handled |= emitToListeners(&Monitor::itemsUnlinked, its, col);
         return handled;
     case Protocol::ItemChangeNotification::ModifyTags:
-        return emitToListeners(&Monitor::itemsTagsChanged, its, Akonadi::vectorToSet(addedTags), Akonadi::vectorToSet(removedTags));
+        return emitToListeners(&Monitor::itemsTagsChanged, its, addedTags | toQSet, removedTags | toQSet);
     case Protocol::ItemChangeNotification::ModifyRelations:
         return emitToListeners(&Monitor::itemsRelationsChanged, its, addedRelations, removedRelations);
     default:

@@ -96,17 +96,6 @@ static inline QDateTime variantToDateTime(const QVariant &variant)
     }
 }
 
-template<typename T>
-static inline QSet<T> vectorToSet(const QVector<T> &v)
-{
-    QSet<T> set;
-    set.reserve(v.size());
-    for (const T &t : v) {
-        set.insert(t);
-    }
-    return set;
-}
-
 /**
  * Returns the socket @p directory that is passed to this method or the one
  * the user has overwritten via the config file.

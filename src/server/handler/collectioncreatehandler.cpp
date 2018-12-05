@@ -111,9 +111,9 @@ bool CollectionCreateHandler::parseStream()
     QStringList effectiveMimeTypes = cmd.mimeTypes();
     if (effectiveMimeTypes.isEmpty()) {
         effectiveMimeTypes.reserve(parentContentTypes.count());
-        for (const MimeType &mt : qAsConst(parentContentTypes)) {
-            effectiveMimeTypes << mt.name();
-        }
+        std::transform(parentContentTypes.cbegin(), parentContentTypes.cend(),
+                       std::back_inserter(effectiveMimeTypes),
+                       std::bind(&MimeType::name, std::placeholders::_1));
     }
 
     if (!db->appendCollection(collection, effectiveMimeTypes, cmd.attributes())) {

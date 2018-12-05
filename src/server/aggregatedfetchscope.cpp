@@ -19,7 +19,7 @@
 
 #include "aggregatedfetchscope.h"
 #include <private/protocol_p.h>
-#include <shared/vectorhelper.h>
+#include <shared/akranges.h>
 
 #include <QMutex>
 #include <QMutexLocker>
@@ -225,8 +225,8 @@ void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope,
 {
     LOCKED_D(AggregatedItemFetchScope);
 
-    const auto newParts = vectorToSet(newScope.requestedParts());
-    const auto oldParts = vectorToSet(oldScope.requestedParts());
+    const auto newParts = newScope.requestedParts() | toQSet;
+    const auto oldParts = oldScope.requestedParts() | toQSet;
     if (newParts != oldParts) {
         d->applySet(oldParts, newParts, d->parts, d->partsCount);
     }
@@ -284,7 +284,7 @@ ItemFetchScope AggregatedItemFetchScope::toFetchScope() const
     }
 
     d->mCachedScope = ItemFetchScope();
-    d->mCachedScope.setRequestedParts(setToVector(d->parts));
+    d->mCachedScope.setRequestedParts(d->parts | toQVector);
     d->mCachedScope.setAncestorDepth(ancestorDepth());
 
     d->mCachedScope.setFetch(ItemFetchScope::CacheOnly, cacheOnly());

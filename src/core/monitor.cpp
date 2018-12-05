@@ -25,6 +25,8 @@
 #include "itemfetchjob.h"
 #include "session.h"
 
+#include <shared/akranges.h>
+
 #include <QMetaMethod>
 
 using namespace Akonadi;
@@ -309,7 +311,7 @@ QVector<Monitor::Type> Monitor::typesMonitored() const
 QStringList Monitor::mimeTypesMonitored() const
 {
     Q_D(const Monitor);
-    return d->mimetypes.toList();
+    return d->mimetypes | toQList;
 }
 
 int Monitor::numMimeTypesMonitored() const
@@ -321,7 +323,7 @@ int Monitor::numMimeTypesMonitored() const
 QList<QByteArray> Monitor::resourcesMonitored() const
 {
     Q_D(const Monitor);
-    return d->resources.toList();
+    return d->resources | toQList;
 }
 
 int Monitor::numResourcesMonitored() const
