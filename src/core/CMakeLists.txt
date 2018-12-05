@@ -336,7 +336,6 @@ install(FILES
     ${AkonadiCore_models_HEADERS}
     ${AkonadiCore_jobs_HEADERS}
     ${AkonadiCore_HEADERS}
-    ../shared/akranges.h
     qtest_akonadi.h
     itempayloadinternals_p.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore COMPONENT Devel
