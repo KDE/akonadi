@@ -17,7 +17,7 @@ endif()
 
 
 # ECM setup
-set(KF5_VERSION "5.51.0")
+set(KF5_VERSION "5.53.0")
 
 find_package(ECM ${KF5_VERSION} CONFIG REQUIRED)
 
