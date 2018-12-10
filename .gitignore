@@ -4,6 +4,6 @@
 *.kdev4
 .swp.*
 .*.swp
-/build/
+/build*/
 CMakeLists.txt.user*
 *.unc-backup*
