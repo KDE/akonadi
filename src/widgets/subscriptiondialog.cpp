@@ -167,14 +167,12 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
 
     d->filterRecursiveCollectionFilter
         = new Akonadi::RecursiveCollectionFilterProxyModel(this);
-    d->filterRecursiveCollectionFilter->setDynamicSortFilter(true);
     d->filterRecursiveCollectionFilter->setSourceModel(d->model);
     d->filterRecursiveCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
 
     d->filterRecursiveCollectionFilter->setSortRole(Qt::DisplayRole);
     d->filterRecursiveCollectionFilter->setSortCaseSensitivity(Qt::CaseSensitive);
     d->filterRecursiveCollectionFilter->setSortLocaleAware(true);
-    d->filterRecursiveCollectionFilter->setDynamicSortFilter(true);
 
 
     if (!mimetypes.isEmpty()) {
