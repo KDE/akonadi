@@ -73,6 +73,7 @@ public:
 
     void modelLoaded()
     {
+        filterRecursiveCollectionFilter->sort(0, Qt::AscendingOrder);
         collectionView->setEnabled(true);
         collectionView->expandAll();
         mOkButton->setEnabled(true);
@@ -169,6 +170,13 @@ void SubscriptionDialog::init(const QStringList &mimetypes)
     d->filterRecursiveCollectionFilter->setDynamicSortFilter(true);
     d->filterRecursiveCollectionFilter->setSourceModel(d->model);
     d->filterRecursiveCollectionFilter->setFilterCaseSensitivity(Qt::CaseInsensitive);
+
+    d->filterRecursiveCollectionFilter->setSortRole(Qt::DisplayRole);
+    d->filterRecursiveCollectionFilter->setSortCaseSensitivity(Qt::CaseSensitive);
+    d->filterRecursiveCollectionFilter->setSortLocaleAware(true);
+    d->filterRecursiveCollectionFilter->setDynamicSortFilter(true);
+
+
     if (!mimetypes.isEmpty()) {
         d->filterRecursiveCollectionFilter->addContentMimeTypeInclusionFilters(mimetypes);
     }
