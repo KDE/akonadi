@@ -37,11 +37,11 @@ using namespace Akonadi;
 class SubscriptionModel::Private
 {
 public:
-    Private(SubscriptionModel *parent) : q(parent), showHiddenCollection(false) {}
+    Private(SubscriptionModel *parent) : q(parent) {}
     SubscriptionModel *q;
     QHash<Collection::Id, bool> subscriptions;
     QSet<Collection::Id> changes;
-    bool showHiddenCollection;
+    bool showHiddenCollection = false;
 
     Collection::List changedSubscriptions(bool subscribed)
     {
