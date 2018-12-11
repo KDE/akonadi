@@ -156,6 +156,7 @@ void SubscriptionDialog::showHiddenCollection(bool showHidden)
 
 void SubscriptionDialog::init(const QStringList &mimetypes)
 {
+    setAttribute(Qt::WA_DeleteOnClose);
     setWindowTitle(i18n("Local Subscriptions"));
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
