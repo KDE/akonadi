@@ -88,7 +88,7 @@ QVariant QuotaColorProxyModel::data(const QModelIndex &index, int role) const
                 const qreal percentage = (100.0 * quota->currentValue()) / quota->maximumValue();
 
                 if (percentage >= d->mThreshold) {
-                    return (role == Qt::ForegroundRole ? d->mColor : d->mColor.name());
+                    return d->mColor;
                 }
             }
         }
