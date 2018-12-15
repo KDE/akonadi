@@ -82,7 +82,7 @@ public:
             }
         }
 
-        serverProtocolVersion = -1,
+        serverProtocolVersion = -1;
         checkStatusChanged();
     }
 
