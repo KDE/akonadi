@@ -30,6 +30,7 @@
 #include <QFileInfo>
 #include <QMutex>
 #include <QLoggingCategory>
+#include <QDateTime>
 
 #include <KCrash/KCrash>
 
@@ -118,9 +119,36 @@ public:
             return;
         }
 #endif
-        const QByteArray buf = msg.toUtf8();
+        QByteArray buf;
+        QTextStream str(&buf);
+        str << QDateTime::currentDateTime().toString(Qt::ISODate) << " [";
+        switch (type) {
+        case QtDebugMsg:
+            str << "DEBUG";
+            break;
+        case QtInfoMsg:
+            str << "INFO ";
+            break;
+        case QtWarningMsg:
+            str << "WARN ";
+            break;
+        case QtFatalMsg:
+            str << "FATAL";
+            break;
+        case QtCriticalMsg:
+            str << "CRITICAL";
+            break;
+        }
+        str << "] " << context.category << ": ";
+        if (context.file && *context.file && context.line) {
+            str << context.file << ":" << context.line << ": ";
+        }
+        if (context.function && *context.function) {
+            str << context.function << ": ";
+        }
+        str << msg << "\n";
+        str.flush();
         file.write(buf.constData(), buf.size());
-        file.write("\n");
         file.flush();
 
         if (origHandler) {
