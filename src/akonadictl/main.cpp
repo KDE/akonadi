@@ -23,7 +23,6 @@
 #include <QStringList>
 #include <QSettings>
 #include <QDBusConnection>
-#include <QDBusConnectionInterface>
 #include <QPluginLoader>
 
 #include <KAboutData>

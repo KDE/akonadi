@@ -28,7 +28,8 @@
 #include "servermanager.h"
 
 #include <QDBusInterface>
-#include <QDBusConnectionInterface>
+#include <QDBusPendingReply>
+#include <QDBusPendingCallWatcher>
 
 #include <QPushButton>
 #include <KLocalizedString>

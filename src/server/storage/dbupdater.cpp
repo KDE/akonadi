@@ -34,7 +34,7 @@
 #include <QCoreApplication>
 #include <QMetaMethod>
 #include <QDBusConnection>
-#include <QDBusConnectionInterface>
+#include <QDBusError>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QThread>

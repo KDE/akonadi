@@ -28,7 +28,6 @@
 #include <QLoggingCategory>
 
 #include <QDBusConnection>
-#include <QDBusConnectionInterface>
 #include <QDBusInterface>
 #include <QDBusPendingCallWatcher>
 #include <QDBusPendingReply>

@@ -28,7 +28,6 @@
 
 #include <QTimer>
 #include <QDBusInterface>
-#include <QDBusConnectionInterface>
 
 using namespace Akonadi;
 
