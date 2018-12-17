@@ -110,10 +110,15 @@ public:
         return mIter != other.mIter;
     }
 
+    bool operator<(const LazyIterator<Iterator, TransformFn> &other) const
+    {
+        return mIter < other.mIter;
+    }
+
     auto operator*() const
     {
         return std::move(getValue<TransformFn>(mIter));
-   }
+    }
 
     auto operator-(const LazyIterator<Iterator, TransformFn> &other) const
     {
