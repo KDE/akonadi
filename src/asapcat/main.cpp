@@ -40,11 +40,7 @@ int main(int argc, char **argv)
 
     Session session(args[0]);
     QObject::connect(&session, &Session::disconnected, QCoreApplication::instance(), &QCoreApplication::quit);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     QMetaObject::invokeMethod(&session, &Session::connectToHost, Qt::QueuedConnection);
-#else
-    QMetaObject::invokeMethod(&session, "connectToHost", Qt::QueuedConnection);
-#endif
 
     const int result = app.exec();
     session.printStats();

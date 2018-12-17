@@ -316,11 +316,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
                 handler->setConflictingItems(d->mItems.first(), d->mItems.first());
                 connect(handler, &ConflictHandler::conflictResolved, this, [d]() { d->conflictResolved(); });
                 connect(handler, &ConflictHandler::error, this, [d](const QString &str) { d->conflictResolveError(str); });
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
                 QMetaObject::invokeMethod(handler, &ConflictHandler::start, Qt::QueuedConnection);
-#else
-                QMetaObject::invokeMethod(handler, "start", Qt::QueuedConnection);
-#endif
                 return true;
             }
         }

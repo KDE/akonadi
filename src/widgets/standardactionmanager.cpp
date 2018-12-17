@@ -962,13 +962,7 @@ public:
             return;
         }
 
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
         QMetaObject::invokeMethod(q, [this, items] {slotDeleteItemsDeferred(items); }, Qt::QueuedConnection);
-#else
-        QMetaObject::invokeMethod(q, "slotDeleteItemsDeferred",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(Akonadi::Item::List, items));
-#endif
     }
 
     void slotDeleteItemsDeferred(const Akonadi::Item::List &items)

@@ -68,11 +68,7 @@ void ConflictHandler::slotOtherItemFetched(KJob *job)
     }
 
     mConflictingItem = fetchJob->items().at(0);
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     QMetaObject::invokeMethod(this, &ConflictHandler::resolve, Qt::QueuedConnection);
-#else
-    QMetaObject::invokeMethod(this, "resolve", Qt::QueuedConnection);
-#endif
 }
 
 void ConflictHandler::resolve()

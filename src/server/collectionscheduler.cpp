@@ -126,18 +126,10 @@ void CollectionScheduler::quit()
 void CollectionScheduler::inhibit(bool inhibit)
 {
     if (inhibit) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
         const bool success = QMetaObject::invokeMethod(mScheduler, &PauseableTimer::pause, Qt::QueuedConnection);
-#else
-        const bool success = QMetaObject::invokeMethod(mScheduler, "pause", Qt::QueuedConnection);
-#endif
         Q_ASSERT(success); Q_UNUSED(success);
     } else {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
         const bool success = QMetaObject::invokeMethod(mScheduler, &PauseableTimer::resume, Qt::QueuedConnection);
-#else
-        const bool success = QMetaObject::invokeMethod(mScheduler, "resume", Qt::QueuedConnection);
-#endif
         Q_ASSERT(success); Q_UNUSED(success);
     }
 }
@@ -157,13 +149,7 @@ void CollectionScheduler::collectionAdded(qint64 collectionId)
     Collection collection = Collection::retrieveById(collectionId);
     DataStore::self()->activeCachePolicy(collection);
     if (shouldScheduleCollection(collection)) {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
         QMetaObject::invokeMethod(this, [this, collection]() {scheduleCollection(collection);}, Qt::QueuedConnection);
-#else
-        QMetaObject::invokeMethod(this, "scheduleCollection",
-                                  Qt::QueuedConnection,
-                                  Q_ARG(Collection, collection));
-#endif
     }
 }
 

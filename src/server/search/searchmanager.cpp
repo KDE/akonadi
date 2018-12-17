@@ -226,11 +226,7 @@ void SearchManager::scheduleSearchUpdate()
     // Reset if the timer is active (use QueuedConnection to invoke start() from
     // the thread the QTimer lives in instead of caller's thread, otherwise crashes
     // and weird things can happen.
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     QMetaObject::invokeMethod(mSearchUpdateTimer, QOverload<>::of(&QTimer::start), Qt::QueuedConnection);
-#else
-    QMetaObject::invokeMethod(mSearchUpdateTimer, "start", Qt::QueuedConnection);
-#endif
 }
 
 void SearchManager::searchUpdateTimeout()
@@ -244,13 +240,7 @@ void SearchManager::searchUpdateTimeout()
 
 void SearchManager::updateSearchAsync(const Collection &collection)
 {
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     QMetaObject::invokeMethod(this, [this, collection]() { updateSearchImpl(collection); }, Qt::QueuedConnection);
-#else
-    QMetaObject::invokeMethod(this, "updateSearchImpl",
-                              Qt::QueuedConnection,
-                              Q_ARG(Collection, collection));
-#endif
 }
 
 void SearchManager::updateSearch(const Collection &collection)
@@ -264,13 +254,7 @@ void SearchManager::updateSearch(const Collection &collection)
     }
     mUpdatingCollections.insert(collection.id());
     mLock.unlock();
-#if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     QMetaObject::invokeMethod(this, [this, collection]() { updateSearchImpl(collection); }, Qt::BlockingQueuedConnection);
-#else
-    QMetaObject::invokeMethod(this, "updateSearchImpl",
-                              Qt::BlockingQueuedConnection,
-                              Q_ARG(Collection, collection));
-#endif
     mLock.lock();
     mUpdatingCollections.remove(collection.id());
     mLock.unlock();
