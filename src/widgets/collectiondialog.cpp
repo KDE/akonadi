@@ -106,8 +106,8 @@ public:
         mRightsFilterModel = new EntityRightsFilterModel(mParent);
         mRightsFilterModel->setSourceModel(mMimeTypeFilterModel);
 
-        mFilterCollection = new KRecursiveFilterProxyModel(mParent);
-        mFilterCollection->setDynamicSortFilter(true);
+        mFilterCollection = new QSortFilterProxyModel(mParent);
+        mFilterCollection->setRecursiveFilteringEnabled(true);
         mFilterCollection->setSourceModel(mRightsFilterModel);
         mFilterCollection->setFilterCaseSensitivity(Qt::CaseInsensitive);
         mView->setModel(mFilterCollection);
@@ -173,7 +173,7 @@ public:
     EntityTreeView *mView = nullptr;
     AsyncSelectionHandler *mSelectionHandler = nullptr;
     QLabel *mTextLabel = nullptr;
-    KRecursiveFilterProxyModel *mFilterCollection = nullptr;
+    QSortFilterProxyModel *mFilterCollection = nullptr;
     QCheckBox *mUseByDefault = nullptr;
     QStringList mContentMimeTypes;
     QDialogButtonBox *mButtonBox = nullptr;
