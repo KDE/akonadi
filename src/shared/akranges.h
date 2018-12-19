@@ -78,15 +78,35 @@ struct has_method<T, Op, void_type<Op<T>>>: std::true_type
 template <typename T>
 using push_back = decltype(std::declval<T>().push_back({}));
 
-template<typename Iterator, typename TransformFn = void*>
-struct LazyIterator : public std::iterator<
-                        typename Iterator::iterator_category,
-                        typename Iterator::value_type,
-                        typename Iterator::difference_type,
-                        typename Iterator::pointer,
-                        typename Iterator::reference>
+template<typename Fn, typename Arg>
+struct transformType
+{
+    using type = decltype(std::declval<Fn>()(Arg{}));
+};
+
+template<typename Arg>
+struct transformType<void*, Arg>
+{
+    using type = Arg;
+};
+
+template<typename Fn, typename ValueType>
+struct transformIteratorType
+{
+    using type = typename transformType<Fn, ValueType>::type;
+};
+
+template<typename Iterator, typename TransformFn = void*,
+         typename IteratorValueType = typename transformIteratorType<TransformFn, typename Iterator::value_type>::type>
+struct LazyIterator
 {
 public:
+    using iterator_category = typename Iterator::iterator_category;
+    using value_type = IteratorValueType;
+    using difference_type = typename Iterator::difference_type;
+    using pointer = IteratorValueType *;         // FIXME: preserve const-ness
+    using reference = const IteratorValueType &; // FIXME: preserve const-ness
+
     LazyIterator(const Iterator &iter): mIter(iter) {};
     LazyIterator(const Iterator &iter, const TransformFn &fn)
         : mIter(iter), mFn(fn) {}
@@ -140,7 +160,7 @@ private:
     }
 
     template<typename T>
-    typename std::enable_if<!std::is_same<T, void*>::value, typename Iterator::value_type>::type
+    typename std::enable_if<!std::is_same<T, void*>::value, value_type>::type
     getValue(const Iterator &iter, std::true_type = {}) const
     {
         return mFn(*iter);
@@ -156,7 +176,7 @@ struct Range
 public:
     using iterator = Iterator;
     using lazy_iterator = LazyIterator<Iterator, TransformFn>;
-    using value_type = typename Iterator::value_type;
+    using value_type = typename transformIteratorType<TransformFn, typename Iterator::value_type>::type;
 
     Range(Iterator &&begin, Iterator &&end)
         : mBegin(std::move(begin)), mEnd(std::move(end)) {}

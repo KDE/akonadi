@@ -150,6 +150,16 @@ private Q_SLOTS:
             QCOMPARE(range(in.begin() + 2, in.begin() + 5) | transform([](int i) { return i  * 2; }) | toQList, out);
         }
     }
+
+    void testTransformType()
+    {
+        {
+            QStringList in = { QStringLiteral("foo"), QStringLiteral("foobar"), QStringLiteral("foob") };
+            QList<int> out = { 3, 6, 4 };
+            QCOMPARE(in | transform([](const auto &str) { return str.size(); }) | toQList, out);
+        }
+    }
+
 };
 
 QTEST_GUILESS_MAIN(AkRangesTest)
