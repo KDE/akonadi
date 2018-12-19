@@ -133,6 +133,23 @@ private Q_SLOTS:
         }
     }
 
+    void testCreateRange()
+    {
+        {
+            QList<int> in = { 1, 2, 3, 4, 5, 6 };
+            QList<int> out = { 3, 4, 5 };
+            QCOMPARE(range(in.begin() + 2, in.begin() + 5) | toQList, out);
+        }
+    }
+
+    void testRangeWithTransform()
+    {
+        {
+            QList<int> in = { 1, 2, 3, 4, 5, 6 };
+            QList<int> out = { 6, 8, 10 };
+            QCOMPARE(range(in.begin() + 2, in.begin() + 5) | transform([](int i) { return i  * 2; }) | toQList, out);
+        }
+    }
 };
 
 QTEST_GUILESS_MAIN(AkRangesTest)

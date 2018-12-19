@@ -32,6 +32,8 @@
 #include <QDebug>
 #include <algorithm>
 #include <functional>
+#include <utility>
+#include <type_traits>
 
 namespace Akonadi {
 
@@ -130,14 +132,13 @@ public:
         return mIter;
     }
 private:
-    /*
     template<typename T>
     typename std::enable_if<std::is_same<T, void*>::value, typename Iterator::value_type>::type
     getValue(const Iterator &iter) const
     {
         return *iter;
     }
-    */
+
     template<typename T>
     typename std::enable_if<!std::is_same<T, void*>::value, typename Iterator::value_type>::type
     getValue(const Iterator &iter, std::true_type = {}) const
@@ -154,12 +155,13 @@ struct Range
 {
 public:
     using iterator = Iterator;
+    using lazy_iterator = LazyIterator<Iterator, TransformFn>;
     using value_type = typename Iterator::value_type;
 
     Range(Iterator &&begin, Iterator &&end)
-        : mBegin(begin), mEnd(end) {}
+        : mBegin(std::move(begin)), mEnd(std::move(end)) {}
     Range(Iterator &&begin, Iterator &&end, const TransformFn &fn)
-        : mBegin(begin, fn), mEnd(end, fn) {}
+        : mBegin(std::move(begin), fn), mEnd(std::move(end), fn) {}
 
     LazyIterator<Iterator, TransformFn> begin() const
     {
@@ -224,10 +226,20 @@ operator|(const InContainer &in, const Akonadi::detail::To_<OutContainer> &)
 
 template<typename InContainer, typename TransformFn,
          typename It = typename InContainer::const_iterator>
-auto operator|(const InContainer &in, const Akonadi::detail::Transform_<TransformFn> &t)
+typename std::enable_if<!Akonadi::detail::IsRange<InContainer>::value, Akonadi::detail::Range<It, TransformFn>>::type
+operator|(const InContainer &in, const Akonadi::detail::Transform_<TransformFn> &t)
 {
     using namespace Akonadi::detail;
     return Range<It, TransformFn>(in.cbegin(), in.cend(), *reinterpret_cast<const TransformFn*>(&t));
+}
+
+template<typename InRange, typename TransformFn,
+         typename It = typename InRange::lazy_iterator>
+typename std::enable_if<Akonadi::detail::IsRange<InRange>::value, Akonadi::detail::Range<It, TransformFn>>::type
+operator|(const InRange &in, const Akonadi::detail::Transform_<TransformFn> &t)
+{
+    using namespace Akonadi::detail;
+    return Range<It, TransformFn>(in.begin(), in.end(), *reinterpret_cast<const TransformFn*>(&t));
 }
 
 namespace Akonadi {
@@ -240,6 +252,13 @@ template<typename TransformFn>
 detail::Transform_<TransformFn> transform(TransformFn &&fn)
 {
     return detail::Transform_<TransformFn>(std::forward<TransformFn>(fn));
+}
+
+template<typename Iterator1, typename Iterator2,
+         typename It = typename std::remove_reference<Iterator1>::type>
+detail::Range<It> range(Iterator1 begin, Iterator2 end)
+{
+    return detail::Range<It>(std::move(begin), std::move(end));
 }
 
 } // namespace Akonadi
