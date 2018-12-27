@@ -1,6 +1,6 @@
 /*
     Copyright 2008 Ingo Klöcker <kloecker@kde.org>
-    Copyright 2010-2018 Laurent Montel <montel@kde.org>
+    Copyright 2010-2019 Laurent Montel <montel@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
