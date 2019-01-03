@@ -96,110 +96,138 @@ struct transformIteratorType
     using type = typename transformType<Fn, ValueType>::type;
 };
 
-template<typename Iterator, typename TransformFn = void*,
-         typename IteratorValueType = typename transformIteratorType<TransformFn, typename Iterator::value_type>::type>
-struct LazyIterator
+template<typename Fn, typename ValueType>
+using transformIteratorType_t = typename transformIteratorType<Fn, ValueType>::type;
+
+template<typename IterImpl,
+         typename Iterator
+        >
+struct IteratorBase
 {
 public:
     using iterator_category = typename Iterator::iterator_category;
-    using value_type = IteratorValueType;
+    using value_type = typename Iterator::value_type;
     using difference_type = typename Iterator::difference_type;
-    using pointer = IteratorValueType *;         // FIXME: preserve const-ness
-    using reference = const IteratorValueType &; // FIXME: preserve const-ness
+    using pointer = typename Iterator::pointer;
+    using reference = typename Iterator::reference;
 
-    LazyIterator(const Iterator &iter): mIter(iter) {};
-    LazyIterator(const Iterator &iter, const TransformFn &fn)
-        : mIter(iter), mFn(fn) {}
+    IteratorBase(const IteratorBase<IterImpl, Iterator> &other)
+        : mIter(other.mIter)
+    {}
 
-    LazyIterator<Iterator, TransformFn> &operator++()
+    IterImpl &operator++()
     {
         mIter++;
-        return *this;
+        return *static_cast<IterImpl*>(this);
     }
-    LazyIterator<Iterator, TransformFn> operator++(int)
-    {
-        auto ret = *this;
-        ++(*this);
-        return ret;
-    };
 
-    bool operator==(const LazyIterator<Iterator, TransformFn> &other) const
+    IterImpl operator++(int)
+    {
+        auto ret = static_cast<IterImpl*>(this);
+        ++(*static_cast<IterImpl*>(this));
+        return ret;
+    }
+
+    bool operator==(const IterImpl &other) const
     {
         return mIter == other.mIter;
     }
-    bool operator!=(const LazyIterator<Iterator, TransformFn> &other) const
+
+    bool operator!=(const IterImpl &other) const
     {
-        return mIter != other.mIter;
+        return !(*this == other);
     }
 
-    bool operator<(const LazyIterator<Iterator, TransformFn> &other) const
+    bool operator<(const IterImpl &other) const
     {
         return mIter < other.mIter;
     }
 
     auto operator*() const
     {
-        return std::move(getValue<TransformFn>(mIter));
+        return *mIter;
     }
 
-    auto operator-(const LazyIterator<Iterator, TransformFn> &other) const
+    auto operator-(const IterImpl &other) const
     {
         return mIter - other.mIter;
     }
 
-    const Iterator &iter() const
-    {
-        return mIter;
-    }
-private:
-    template<typename T>
-    typename std::enable_if<std::is_same<T, void*>::value, typename Iterator::value_type>::type
-    getValue(const Iterator &iter) const
-    {
-        return *iter;
-    }
-
-    template<typename T>
-    typename std::enable_if<!std::is_same<T, void*>::value, value_type>::type
-    getValue(const Iterator &iter, std::true_type = {}) const
-    {
-        return mFn(*iter);
-    }
+protected:
+    IteratorBase(const Iterator &iter)
+        : mIter(iter)
+    {}
 
     Iterator mIter;
-    TransformFn mFn = {};
 };
 
-template<typename Iterator, typename TransformFn = void*>
+template<typename Iterator,
+         typename TransformFn,
+         typename IteratorValueType = transformIteratorType_t<TransformFn, typename Iterator::value_type>
+        >
+struct TransformIterator : public IteratorBase<TransformIterator<Iterator, TransformFn>, Iterator>
+{
+public:
+    using value_type = IteratorValueType;
+    using pointer = IteratorValueType *;         // FIXME: preserve const-ness
+    using reference = const IteratorValueType &; // FIXME: preserve const-ness
+
+    TransformIterator(const Iterator &iter, const TransformFn &fn)
+        : IteratorBase<TransformIterator<Iterator, TransformFn>, Iterator>(iter)
+        , mFn(fn)
+    {}
+
+    auto operator*() const
+    {
+        return mFn(*(this->mIter));
+    }
+
+private:
+    TransformFn mFn;
+};
+
+
+template<typename Iterator>
 struct Range
 {
 public:
     using iterator = Iterator;
-    using lazy_iterator = LazyIterator<Iterator, TransformFn>;
-    using value_type = typename transformIteratorType<TransformFn, typename Iterator::value_type>::type;
+    using const_iterator = Iterator;
+    using value_type = typename Iterator::value_type;
 
     Range(Iterator &&begin, Iterator &&end)
-        : mBegin(std::move(begin)), mEnd(std::move(end)) {}
-    Range(Iterator &&begin, Iterator &&end, const TransformFn &fn)
-        : mBegin(std::move(begin), fn), mEnd(std::move(end), fn) {}
+        : mBegin(std::move(begin))
+        , mEnd(std::move(end))
+    {}
 
-    LazyIterator<Iterator, TransformFn> begin() const
+    Iterator begin() const
     {
         return mBegin;
     }
-    LazyIterator<Iterator, TransformFn> end() const
+
+    Iterator cbegin() const
+    {
+        return mBegin;
+    }
+
+    Iterator end() const
+    {
+        return mEnd;
+    }
+
+    Iterator cend() const
     {
         return mEnd;
     }
 
     auto size() const
     {
-        return mEnd.iter() - mBegin.iter();
+        return mEnd - mBegin;
     }
 
 private:
-    LazyIterator<Iterator, TransformFn> mBegin;
-    LazyIterator<Iterator, TransformFn> mEnd;
+    Iterator mBegin;
+    Iterator mEnd;
 };
 
 
@@ -216,50 +244,44 @@ struct Transform_
 };
 
 } // namespace detail
-
 } // namespace Akonadi
 
-
-template<typename InRange, template<typename> class OutContainer,
-         typename T = typename InRange::value_type>
-typename std::enable_if<Akonadi::detail::IsRange<InRange>::value, OutContainer<T>>::type
-operator|(const InRange &in, const Akonadi::detail::To_<OutContainer> &)
+// Generic operator| for To_<> convertor
+template<typename InContainer,
+         template<typename> class OutContainer,
+         typename T = typename InContainer::value_type
+        >
+auto operator|(const InContainer &in,
+               const Akonadi::detail::To_<OutContainer> &) -> OutContainer<T>
 {
-    using namespace Akonadi::detail;
-    return copyContainer<InRange, OutContainer<T>>(
-            in, has_method<OutContainer<T>, push_back>{});
-}
-
-// Magic to pipe container with a toQFoo object as a conversion
-template<typename InContainer, template<typename> class OutContainer,
-         typename T = typename InContainer::value_type>
-typename std::enable_if<!Akonadi::detail::IsRange<InContainer>::value, OutContainer<T>>::type
-operator|(const InContainer &in, const Akonadi::detail::To_<OutContainer> &)
-{
-    static_assert(!std::is_same<InContainer, OutContainer<T>>::value,
-            "Wait, are you trying to convert a container to the same type?");
-
     using namespace Akonadi::detail;
     return copyContainer<InContainer, OutContainer<T>>(
             in, has_method<OutContainer<T>, push_back>{});
 }
 
-template<typename InContainer, typename TransformFn,
-         typename It = typename InContainer::const_iterator>
-typename std::enable_if<!Akonadi::detail::IsRange<InContainer>::value, Akonadi::detail::Range<It, TransformFn>>::type
-operator|(const InContainer &in, const Akonadi::detail::Transform_<TransformFn> &t)
+// Specialization for case when InContainer and OutContainer are identical
+template<template<typename> class InContainer,
+         typename T
+        >
+auto operator|(const InContainer<T> &in,
+               const Akonadi::detail::To_<InContainer> &) -> InContainer<T>
 {
-    using namespace Akonadi::detail;
-    return Range<It, TransformFn>(in.cbegin(), in.cend(), *reinterpret_cast<const TransformFn*>(&t));
+    return in;
 }
 
-template<typename InRange, typename TransformFn,
-         typename It = typename InRange::lazy_iterator>
-typename std::enable_if<Akonadi::detail::IsRange<InRange>::value, Akonadi::detail::Range<It, TransformFn>>::type
-operator|(const InRange &in, const Akonadi::detail::Transform_<TransformFn> &t)
+
+
+// Generic operator| for transform()
+template<typename InContainer,
+         typename TransformFn,
+         typename It = typename InContainer::const_iterator
+        >
+auto operator|(const InContainer &in,
+               const Akonadi::detail::Transform_<TransformFn> &t)
 {
     using namespace Akonadi::detail;
-    return Range<It, TransformFn>(in.begin(), in.end(), *reinterpret_cast<const TransformFn*>(&t));
+    using OutIt = TransformIterator<It, TransformFn>;
+    return Range<OutIt>(OutIt(in.cbegin(), t.mFn), OutIt(in.cend(), t.mFn));
 }
 
 namespace Akonadi {
@@ -275,7 +297,8 @@ detail::Transform_<TransformFn> transform(TransformFn &&fn)
 }
 
 template<typename Iterator1, typename Iterator2,
-         typename It = typename std::remove_reference<Iterator1>::type>
+         typename It = std::remove_reference_t<Iterator1>
+        >
 detail::Range<It> range(Iterator1 begin, Iterator2 end)
 {
     return detail::Range<It>(std::move(begin), std::move(end));
