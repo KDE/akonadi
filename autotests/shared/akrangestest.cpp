@@ -22,6 +22,7 @@
 
 #include <shared/akranges.h>
 
+#include <iostream>
 
 using namespace Akonadi;
 
@@ -160,6 +161,32 @@ private Q_SLOTS:
         }
     }
 
+    void testFilter()
+    {
+        {
+            QList<int> in = { 1, 2, 3, 4, 5, 6, 7, 8 };
+            QList<int> out = { 2, 4, 6, 8 };
+            QCOMPARE(in | filter([](int i) { return i % 2 == 0; })
+                        | toQList,
+                     out);
+        }
+    }
+
+    void testFilterTransform()
+    {
+        {
+            QStringList in = { QStringLiteral("foo"), QStringLiteral("foobar"), QStringLiteral("foob") };
+            QList<int> out = { 6 };
+            QCOMPARE(in | transform([](const auto &str) { return str.size(); })
+                        | filter([](int i) { return i > 5; })
+                        | toQList,
+                     out);
+            QCOMPARE(in | filter([](const auto &str) { return str.size() > 5; })
+                        | transform([](const auto &str) { return str.size(); })
+                        | toQList,
+                     out);
+        }
+    }
 };
 
 QTEST_GUILESS_MAIN(AkRangesTest)

@@ -30,6 +30,7 @@
 #include <QVector>
 #include <QSet>
 #include <QDebug>
+
 #include <algorithm>
 #include <functional>
 #include <utility>
@@ -50,7 +51,9 @@ OutContainer copyContainer(const InContainer &in, std::true_type)
 {
     OutContainer rv;
     rv.reserve(in.size());
-    std::move(std::begin(in), std::end(in), std::back_inserter(rv));
+    for (auto &&v : in) {
+        rv.push_back(std::move(v));
+    }
     return rv;
 }
 
@@ -117,14 +120,14 @@ public:
 
     IterImpl &operator++()
     {
-        mIter++;
+        ++static_cast<IterImpl*>(this)->mIter;
         return *static_cast<IterImpl*>(this);
     }
 
     IterImpl operator++(int)
     {
-        auto ret = static_cast<IterImpl*>(this);
-        ++(*static_cast<IterImpl*>(this));
+        auto ret = *static_cast<IterImpl*>(this);
+        ++static_cast<IterImpl*>(this)->mIter;
         return ret;
     }
 
@@ -135,7 +138,7 @@ public:
 
     bool operator!=(const IterImpl &other) const
     {
-        return !(*this == other);
+        return !(*static_cast<const IterImpl*>(this) == other);
     }
 
     bool operator<(const IterImpl &other) const
@@ -143,14 +146,14 @@ public:
         return mIter < other.mIter;
     }
 
-    auto operator*() const
-    {
-        return *mIter;
-    }
-
     auto operator-(const IterImpl &other) const
     {
         return mIter - other.mIter;
+    }
+
+    auto operator*() const
+    {
+        return *mIter;
     }
 
 protected:
@@ -184,6 +187,43 @@ public:
 
 private:
     TransformFn mFn;
+};
+
+template<typename Iterator,
+         typename Predicate
+        >
+class FilterIterator : public IteratorBase<FilterIterator<Iterator, Predicate>, Iterator>
+{
+public:
+    FilterIterator(const Iterator &iter, const Iterator &end, const Predicate &predicate)
+        : IteratorBase<FilterIterator<Iterator, Predicate>, Iterator>(iter)
+        , mPredicate(predicate), mEnd(end)
+    {
+        while (this->mIter != mEnd && !mPredicate(*this->mIter)) {
+            ++this->mIter;
+        }
+    }
+
+    FilterIterator<Iterator, Predicate> &operator++()
+    {
+        if (this->mIter != mEnd) {
+            do {
+                ++this->mIter;
+            } while (this->mIter != mEnd && !mPredicate(*this->mIter));
+        }
+        return *this;
+    }
+
+    FilterIterator<Iterator, Predicate> operator++(int)
+    {
+        auto it = *this;
+        ++(*this);
+        return it;
+    }
+
+private:
+    Predicate mPredicate;
+    Iterator mEnd;
 };
 
 
@@ -237,10 +277,21 @@ using IsRange = typename std::is_same<T, Range<typename T::iterator>>;
 template<typename TransformFn>
 struct Transform_
 {
-    using Fn = TransformFn;
+    Transform_(const TransformFn &fn)
+        : mFn(fn)
+    {}
 
-    Transform_(TransformFn &&fn): mFn(std::forward<TransformFn>(fn)) {}
-    TransformFn &&mFn;
+    const TransformFn &mFn;
+};
+
+template<typename PredicateFn>
+struct Filter_
+{
+    Filter_(const PredicateFn &fn)
+        : mFn(fn)
+    {}
+
+    const PredicateFn &mFn;
 };
 
 } // namespace detail
@@ -273,16 +324,30 @@ auto operator|(const InContainer<T> &in,
 
 // Generic operator| for transform()
 template<typename InContainer,
-         typename TransformFn,
-         typename It = typename InContainer::const_iterator
+         typename TransformFn
         >
 auto operator|(const InContainer &in,
                const Akonadi::detail::Transform_<TransformFn> &t)
 {
     using namespace Akonadi::detail;
-    using OutIt = TransformIterator<It, TransformFn>;
+    using OutIt = TransformIterator<typename InContainer::const_iterator, TransformFn>;
     return Range<OutIt>(OutIt(in.cbegin(), t.mFn), OutIt(in.cend(), t.mFn));
 }
+
+
+// Generic operator| for filter()
+template<typename InContainer,
+         typename PredicateFn
+        >
+auto operator|(const InContainer &in,
+               const Akonadi::detail::Filter_<PredicateFn> &p)
+{
+    using namespace Akonadi::detail;
+    using OutIt = FilterIterator<typename InContainer::const_iterator, PredicateFn>;
+    return Range<OutIt>(OutIt(in.cbegin(), in.cend(), p.mFn),
+                        OutIt(in.cend(), in.cend(), p.mFn));
+}
+
 
 namespace Akonadi {
 
@@ -294,6 +359,12 @@ template<typename TransformFn>
 detail::Transform_<TransformFn> transform(TransformFn &&fn)
 {
     return detail::Transform_<TransformFn>(std::forward<TransformFn>(fn));
+}
+
+template<typename PredicateFn>
+detail::Filter_<PredicateFn> filter(PredicateFn &&fn)
+{
+    return detail::Filter_<PredicateFn>(std::forward<PredicateFn>(fn));
 }
 
 template<typename Iterator1, typename Iterator2,
