@@ -21,6 +21,7 @@
 #include "standarddirs_p.h"
 #include "instance_p.h"
 #include "akonadi-prefix.h"
+#include "akonadiprivate_debug.h"
 
 #include <QCoreApplication>
 #include <QStandardPaths>
@@ -104,14 +105,35 @@ QString StandardDirs::agentConfigFile(const QString &identifier, FileAccessMode 
 QString StandardDirs::saveDir(const char *resource, const QString &relPath)
 {
     const QString fullRelPath = buildFullRelPath(resource, relPath);
+    QString fullPath;
     if (qstrncmp(resource, "config", 6) == 0) {
-        return QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + fullRelPath;
+        fullPath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + fullRelPath;
     } else if (qstrncmp(resource, "data", 4) == 0) {
-        return QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + fullRelPath;
+        fullPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + fullRelPath;
     } else {
         qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
         return {};
     }
+
+    // ensure directory exists or is created
+    QFileInfo fileInfo(fullPath);
+    if (fileInfo.exists()) {
+        if (fileInfo.isDir()) {
+            return fullPath;
+        } else {
+            qCWarning(AKONADIPRIVATE_LOG) << "StandardDirs::saveDir: '" << fileInfo.absoluteFilePath()
+                                          << "' exists but is not a directory";
+        }
+    } else {
+        if (!QDir::home().mkpath(fileInfo.absoluteFilePath())) {
+            qCWarning(AKONADIPRIVATE_LOG) << "StandardDirs::saveDir: failed to create directory '"
+                                          << fileInfo.absoluteFilePath() << "'";
+        } else {
+            return fullPath;
+        }
+    }
+
+    return {};
 }
 
 QString StandardDirs::locateResourceFile(const char *resource, const QString &relPath)
