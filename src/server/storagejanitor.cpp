@@ -307,7 +307,7 @@ void StorageJanitor::findOrphanedItems()
         if (col == -1) {
             return;
         }
-        qb.setColumnValue(PimItem::collectionIdFullColumnName(), col);
+        qb.setColumnValue(PimItem::collectionIdColumn(), col);
         QVector<ImapSet::Id> imapIds;
         imapIds.reserve(orphans.count());
         for (const PimItem &item : qAsConst(orphans)) {

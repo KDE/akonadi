@@ -369,7 +369,14 @@ bool QueryBuilder::exec()
         mQuery = std::move(*query);
     } else {
         mQuery.clear();
-        mQuery.prepare(statement);
+        if (!mQuery.prepare(statement)) {
+            qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR while PREPARING QUERY:";
+            qCCritical(AKONADISERVER_LOG) << "  Error code:" << mQuery.lastError().nativeErrorCode();
+            qCCritical(AKONADISERVER_LOG) << "  DB error: " << mQuery.lastError().databaseText();
+            qCCritical(AKONADISERVER_LOG) << "  Error text:" << mQuery.lastError().text();
+            qCCritical(AKONADISERVER_LOG) << "  Query:" << statement;
+            return false;
+        }
         QueryCache::insert(statement, mQuery);
     }
 
