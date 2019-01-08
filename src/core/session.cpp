@@ -327,14 +327,15 @@ SessionPrivate::~SessionPrivate()
 
 void SessionPrivate::init(const QByteArray &id)
 {
-    qCDebug(AKONADICORE_LOG) << id;
-
     if (!id.isEmpty()) {
         sessionId = id;
     } else {
         sessionId = QCoreApplication::instance()->applicationName().toUtf8()
                     + '-' + QByteArray::number(qrand());
     }
+
+    qCDebug(AKONADICORE_LOG) << "Initializing session with ID" << id;
+
     connected = false;
     theNextTag = 2;
     jobRunning = false;

@@ -87,19 +87,15 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
     setProperty("transactionsDisabled", true);
 
     Collection dragSourceCollection;
-    using namespace std::placeholders;
     if (!items.isEmpty() && items.first().parentCollection().isValid()) {
         // Check if all items have the same parent collection ID
         const Collection parent = items.first().parentCollection();
-        if (std::find_if(items.constBegin(), items.constEnd(),
-        [parent](const Item & item) -> bool {
-        return item.parentCollection() != parent;
-        })
-        == items.constEnd()) {
+        if (!std::any_of(items.cbegin(), items.cend(),
+                        [parent](const Item &item) {
+                            return item.parentCollection() != parent;
+                        })) {
             dragSourceCollection = parent;
         }
-
-        qCDebug(AKONADICORE_LOG) << items.first().parentCollection().id() << dragSourceCollection.id();
     }
 
     if (dragSourceCollection.isValid()) {

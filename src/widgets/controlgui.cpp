@@ -169,7 +169,7 @@ bool ControlGui::Private::exec()
 
 void ControlGui::Private::serverStateChanged(ServerManager::State state)
 {
-    qCDebug(AKONADIWIDGETS_LOG) << state;
+    qCDebug(AKONADIWIDGETS_LOG) << "Server state changed to" << state;
     if (mEventLoop && mEventLoop->isRunning()) {
         // ignore transient states going into the right direction
         if ((mStarting && (state == ServerManager::Starting || state == ServerManager::Upgrading)) ||

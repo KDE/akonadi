@@ -484,7 +484,7 @@ Qt::ItemFlags FavoriteCollectionsModel::flags(const QModelIndex &index) const
 void FavoriteCollectionsModel::pasteJobDone(KJob *job)
 {
     if (job->error()) {
-        qCDebug(AKONADICORE_LOG) << job->errorString();
+        qCDebug(AKONADICORE_LOG) << "Paste job error:" << job->errorString();
     }
 }
 

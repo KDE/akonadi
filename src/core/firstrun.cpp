@@ -57,7 +57,7 @@ Firstrun::Firstrun(QObject *parent)
     }
     if (KDBusConnectionPool::threadConnection().registerService(QLatin1String(FIRSTRUN_DBUSLOCK))) {
         findPendingDefaults();
-        qCDebug(AKONADICORE_LOG) << mPendingDefaults;
+        qCDebug(AKONADICORE_LOG) << "D-Bus lock acquired, pending defaults:" << mPendingDefaults;
         setupNext();
     } else {
         qCDebug(AKONADICORE_LOG) << "D-Bus lock found, so someone else does the work for us already.";

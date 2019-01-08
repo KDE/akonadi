@@ -211,9 +211,9 @@ void ItemSync::setFullSyncItems(const Item::List &items)
     }
     d->mRemoteItemQueue += items;
     d->mTotalItemsProcessed += items.count();
-    qCDebug(AKONADICORE_LOG) << "Received: " << items.count()
-                             << "In total: " << d->mTotalItemsProcessed
-                             << " Wanted: " << d->mTotalItems;
+    qCDebug(AKONADICORE_LOG) << "Received batch: " << items.count()
+                             << "Already processed: " << d->mTotalItemsProcessed
+                             << "Expected total amount: " << d->mTotalItems;
     if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItemsProcessed == d->mTotalItems)) {
         d->mDeliveryDone = true;
     }
@@ -226,7 +226,7 @@ void ItemSync::setTotalItems(int amount)
     Q_ASSERT(!d->mIncremental);
     Q_ASSERT(amount >= 0);
     setStreamingEnabled(true);
-    qCDebug(AKONADICORE_LOG) << amount;
+    qCDebug(AKONADICORE_LOG) << "Expected total amount:" << amount;
     d->mTotalItems = amount;
     setTotalAmount(KJob::Bytes, amount);
     if (!d->mDisableAutomaticDeliveryDone && (d->mTotalItems == 0)) {

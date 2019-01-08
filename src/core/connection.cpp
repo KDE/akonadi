@@ -140,7 +140,6 @@ void Connection::doReconnect()
             }
             options.insert(pair.first(), pair.last());
         }
-        qCDebug(AKONADICORE_LOG) << protocol << options;
 
         if (protocol == "unix") {
             serverAddress = options.value(QStringLiteral("path"));
@@ -154,7 +153,7 @@ void Connection::doReconnect()
         const QString connectionConfigFile = StandardDirs::connectionConfigFile();
         const QFileInfo fileInfo(connectionConfigFile);
         if (!fileInfo.exists()) {
-            qCDebug(AKONADICORE_LOG) << "Akonadi Client Session: connection config file '"
+            qCWarning(AKONADICORE_LOG) << "Akonadi Client Session: connection config file '"
                                         "akonadi/akonadiconnectionrc' can not be found!";
         }
 
