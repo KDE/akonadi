@@ -971,7 +971,7 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
                 emit q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
             }
 
-            qCDebug(AKONADIAGENTBASE_LOG) << "Preparing collection sync of collection" <<
+            qCDebug(AKONADIAGENTBASE_LOG) << "Preparing collection sync of collection"
                                           << currentCollection.id() << currentCollection.displayName();
             Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
             fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
