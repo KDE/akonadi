@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2018  Daniel Vrátil <dvratil@kde.org>
+    Copyright (C) 2018 - 2019  Daniel Vrátil <dvratil@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -27,6 +27,8 @@
 #error AkRanges requires QT_STRICT_ITERATORS to be enabled.
 #endif
 
+#include "aktraits.h"
+
 #include <QVector>
 #include <QSet>
 #include <QDebug>
@@ -46,8 +48,11 @@ struct To_
     template<typename T> using Container = Cont<T>;
 };
 
-template<typename InContainer, typename OutContainer>
-OutContainer copyContainer(const InContainer &in, std::true_type)
+template<typename InContainer,
+         typename OutContainer,
+         AK_REQUIRES(AkTraits::isAppendable<OutContainer> && AkTraits::isReservable<OutContainer>)
+        >
+OutContainer copyContainer(const InContainer &in)
 {
     OutContainer rv;
     rv.reserve(in.size());
@@ -57,40 +62,30 @@ OutContainer copyContainer(const InContainer &in, std::true_type)
     return rv;
 }
 
-template<typename InContainer, typename OutContainer>
-OutContainer copyContainer(const InContainer &in, std::false_type)
+template<typename InContainer,
+         typename OutContainer,
+         AK_REQUIRES(AkTraits::isInsertable<OutContainer>)
+        >
+OutContainer copyContainer(const InContainer &in)
 {
     OutContainer rv;
     for (const auto &v : in) {
-        rv.insert(v); // can't use std::inserter on QSet, sadly :/
+        rv.insert(v);
     }
     return rv;
 }
 
-template <typename...>
-using void_type = void;
+template<typename ...>
+using void_t = void;
 
-template <typename, template <typename> class, typename = void_type<>>
-struct has_method: std::false_type
-{};
-
-template <typename T, template <typename> class Op>
-struct has_method<T, Op, void_type<Op<T>>>: std::true_type
-{};
-
-template <typename T>
-using push_back = decltype(std::declval<T>().push_back({}));
+template<typename Fn, typename Arg,
+         typename = void>
+struct transformType;
 
 template<typename Fn, typename Arg>
-struct transformType
+struct transformType<Fn, Arg, void_t<decltype(std::declval<Fn>()(std::declval<Arg>()))>>
 {
-    using type = decltype(std::declval<Fn>()(Arg{}));
-};
-
-template<typename Arg>
-struct transformType<void*, Arg>
-{
-    using type = Arg;
+    using type = decltype(std::declval<Fn>()(std::declval<Arg>()));
 };
 
 template<typename Fn, typename ValueType>
@@ -270,27 +265,18 @@ private:
     Iterator mEnd;
 };
 
-
 template<typename T>
 using IsRange = typename std::is_same<T, Range<typename T::iterator>>;
 
 template<typename TransformFn>
 struct Transform_
 {
-    Transform_(const TransformFn &fn)
-        : mFn(fn)
-    {}
-
     const TransformFn &mFn;
 };
 
 template<typename PredicateFn>
 struct Filter_
 {
-    Filter_(const PredicateFn &fn)
-        : mFn(fn)
-    {}
-
     const PredicateFn &mFn;
 };
 
@@ -306,11 +292,11 @@ auto operator|(const InContainer &in,
                const Akonadi::detail::To_<OutContainer> &) -> OutContainer<T>
 {
     using namespace Akonadi::detail;
-    return copyContainer<InContainer, OutContainer<T>>(
-            in, has_method<OutContainer<T>, push_back>{});
+    return copyContainer<InContainer, OutContainer<T>>(in);
 }
 
 // Specialization for case when InContainer and OutContainer are identical
+// Create a copy, but for Qt container this is very cheap due to implicit sharing.
 template<template<typename> class InContainer,
          typename T
         >
@@ -351,22 +337,28 @@ auto operator|(const InContainer &in,
 
 namespace Akonadi {
 
+/// Non-lazily convert given range or container to QVector
 static constexpr auto toQVector = detail::To_<QVector>{};
+/// Non-lazily convert given range or container to QSet
 static constexpr auto toQSet = detail::To_<QSet>{};
+/// Non-lazily convert given range or container to QList
 static constexpr auto toQList = detail::To_<QList>{};
 
+/// Lazily transform each element of a range or container using given transformation
 template<typename TransformFn>
 detail::Transform_<TransformFn> transform(TransformFn &&fn)
 {
-    return detail::Transform_<TransformFn>(std::forward<TransformFn>(fn));
+    return detail::Transform_<TransformFn>{std::forward<TransformFn>(fn)};
 }
 
+/// Lazily filters a range or container by applying given predicate on each element
 template<typename PredicateFn>
 detail::Filter_<PredicateFn> filter(PredicateFn &&fn)
 {
-    return detail::Filter_<PredicateFn>(std::forward<PredicateFn>(fn));
+    return detail::Filter_<PredicateFn>{std::forward<PredicateFn>(fn)};
 }
 
+/// Create a range, a view on a container from the given pair fo iterators
 template<typename Iterator1, typename Iterator2,
          typename It = std::remove_reference_t<Iterator1>
         >
