@@ -245,7 +245,8 @@ bool Tag::isImmutable() const
 
 QDebug &operator<<(QDebug &debug, const Tag &tag)
 {
-    debug << "Akonadi::Tag( ID " << tag.id() << ", GID " << tag.gid() << ", parent" << tag.parent().id() << ")";
+    QDebugStateSaver saver(debug);
+    debug.nospace() << "Akonadi::Tag(ID " << tag.id() << ", GID " << tag.gid() << ", parent tag ID " << tag.parent().id() << ")";
     return debug;
 }
 
