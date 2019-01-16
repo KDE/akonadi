@@ -67,6 +67,11 @@ Q_REQUIRED_RESULT inline bool isFolder(const Collection &collection)
             collection.resource() != QLatin1String("akonadi_search_resource"));
 }
 
+Q_REQUIRED_RESULT inline bool isUnifiedMailbox(const Collection &collection)
+{
+    return collection.resource() == QLatin1String("akonadi_unifiedmailbox_agent");
+}
+
 Q_REQUIRED_RESULT inline QString defaultIconName(const Collection &col)
 {
     if (CollectionUtils::isVirtualParent(col)) {

@@ -75,7 +75,7 @@ public:
     bool isSubscribable(Collection::Id id)
     {
         Collection col = q->collectionForId(id);
-        if (CollectionUtils::isStructural(col) || col.isVirtual()) {
+        if (CollectionUtils::isStructural(col) || col.isVirtual() || CollectionUtils::isUnifiedMailbox(col)) {
             return false;
         }
         if (col.hasAttribute<SpecialCollectionAttribute>()) {
