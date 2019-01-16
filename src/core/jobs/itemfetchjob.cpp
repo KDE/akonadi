@@ -69,7 +69,7 @@ public:
         mEmitTimer->stop(); // in case we are called by result()
         if (!mPendingItems.isEmpty()) {
             if (!q->error()) {
-                emit q->itemsReceived(mPendingItems);
+                Q_EMIT q->itemsReceived(mPendingItems);
             }
             mPendingItems.clear();
         }
@@ -237,7 +237,7 @@ bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
             d->mEmitTimer->start();
         }
     } else if (d->mDeliveryOptions & EmitItemsIndividually) {
-        emit itemsReceived(Item::List() << item);
+        Q_EMIT itemsReceived(Item::List() << item);
     }
 
     return false;

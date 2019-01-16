@@ -51,7 +51,7 @@ void TransportResourceBasePrivate::fetchResult(KJob *job)
 {
     if (job->error()) {
         const Item::Id id = job->property("id").toLongLong();
-        emit transportResult(id, static_cast<int>(TransportResourceBase::TransportFailed), job->errorText());
+        Q_EMIT transportResult(id, static_cast<int>(TransportResourceBase::TransportFailed), job->errorText());
         return;
     }
 
@@ -76,7 +76,7 @@ void TransportResourceBase::itemSent(const Item &item,
                                      TransportResult result,
                                      const QString &message)
 {
-    emit d->transportResult(item.id(), static_cast<int>(result), message);
+    Q_EMIT d->transportResult(item.id(), static_cast<int>(result), message);
 }
 
 #include "moc_transportresourcebase_p.cpp"

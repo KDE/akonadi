@@ -56,7 +56,7 @@ void ChangeRecorderPrivate::slotNotify(const Protocol::ChangeNotificationPtr &ms
     // with change recording disabled this will automatically take care of dispatching notification messages and saving
     MonitorPrivate::slotNotify(msg);
     if (enableChangeRecording && pendingNotifications.size() != oldChanges) {
-        emit q->changesAdded();
+        Q_EMIT q->changesAdded();
     }
 }
 

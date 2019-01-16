@@ -42,14 +42,14 @@ bool AsyncSelectionHandler::scanSubTree(const QModelIndex &index, bool searchFor
         const Item::Id id = index.data(EntityTreeModel::ItemIdRole).toLongLong();
 
         if (mItem.id() == id) {
-            emit itemAvailable(index);
+            Q_EMIT itemAvailable(index);
             return true;
         }
     } else {
         const Collection::Id id = index.data(EntityTreeModel::CollectionIdRole).toLongLong();
 
         if (mCollection.id() == id) {
-            emit collectionAvailable(index);
+            Q_EMIT collectionAvailable(index);
             return true;
         }
     }

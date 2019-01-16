@@ -80,7 +80,7 @@ void ChangeRecorder::replayNext()
         // This is necessary when none of the notifications were accepted / processed
         // above, and so there is no one to call changeProcessed() and the ChangeReplay task
         // will be stuck forever in the ResourceScheduler.
-        emit nothingToReplay();
+        Q_EMIT nothingToReplay();
     }
 }
 

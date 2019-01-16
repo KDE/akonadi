@@ -243,5 +243,5 @@ void TagModelPrivate::tagsFetchDone(KJob *job)
         return;
     }
 
-    emit q->populated();
+    Q_EMIT q->populated();
 }

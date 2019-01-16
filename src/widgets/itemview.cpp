@@ -98,7 +98,7 @@ void ItemView::Private::itemActivated(const QModelIndex &index)
         return;
     }
 
-    emit mParent->activated(item);
+    Q_EMIT mParent->activated(item);
 }
 
 void ItemView::Private::itemCurrentChanged(const QModelIndex &index)
@@ -109,7 +109,7 @@ void ItemView::Private::itemCurrentChanged(const QModelIndex &index)
         return;
     }
 
-    emit mParent->currentChanged(item);
+    Q_EMIT mParent->currentChanged(item);
 }
 
 void ItemView::Private::itemClicked(const QModelIndex &index)
@@ -120,7 +120,7 @@ void ItemView::Private::itemClicked(const QModelIndex &index)
         return;
     }
 
-    emit mParent->clicked(item);
+    Q_EMIT mParent->clicked(item);
 }
 
 void ItemView::Private::itemDoubleClicked(const QModelIndex &index)
@@ -131,7 +131,7 @@ void ItemView::Private::itemDoubleClicked(const QModelIndex &index)
         return;
     }
 
-    emit mParent->doubleClicked(item);
+    Q_EMIT mParent->doubleClicked(item);
 }
 
 ItemView::ItemView(QWidget *parent)

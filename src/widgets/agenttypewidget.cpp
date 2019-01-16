@@ -71,7 +71,7 @@ public:
     void typeActivated(const QModelIndex &index)
     {
         if (index.flags() & (Qt::ItemIsSelectable | Qt::ItemIsEnabled)) {
-            emit mParent->activated();
+            Q_EMIT mParent->activated();
         }
     }
 
@@ -93,7 +93,7 @@ void AgentTypeWidget::Private::currentAgentTypeChanged(const QModelIndex &curren
         previousType = previousIndex.data(AgentTypeModel::TypeRole).value<AgentType>();
     }
 
-    emit mParent->currentChanged(currentType, previousType);
+    Q_EMIT mParent->currentChanged(currentType, previousType);
 }
 
 AgentTypeWidget::AgentTypeWidget(QWidget *parent)

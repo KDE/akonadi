@@ -212,7 +212,7 @@ private:
             node->entity.setId(id);
             node->invalid = true;
         }
-        emit dataAvailable();
+        Q_EMIT dataAvailable();
     }
 
     void extractResult(EntityCacheNode<T> *node, KJob *job) const;
@@ -496,7 +496,7 @@ private:
             }
         }
 
-        emit dataAvailable();
+        Q_EMIT dataAvailable();
     }
 
     void extractResults(KJob *job, typename T::List &entities) const;

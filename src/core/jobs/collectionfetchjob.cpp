@@ -78,7 +78,7 @@ public:
         mEmitTimer->stop(); // in case we are called by result()
         if (!mPendingCollections.isEmpty()) {
             if (!q->error() || mScope.ignoreRetrievalErrors()) {
-                emit q->collectionsReceived(mPendingCollections);
+                Q_EMIT q->collectionsReceived(mPendingCollections);
             }
             mPendingCollections.clear();
         }

@@ -196,7 +196,7 @@ void StatisticsProxyModel::Private::_k_sourceDataChanged(const QModelIndex &topL
         const int lastColumn = q->columnCount() - 1;
         proxyBottomRight = proxyBottomRight.sibling(proxyBottomRight.row(), lastColumn);
     }
-    emit q->dataChanged(proxyTopLeft, proxyBottomRight, roles);
+    Q_EMIT q->dataChanged(proxyTopLeft, proxyBottomRight, roles);
 }
 
 void StatisticsProxyModel::setSourceModel(QAbstractItemModel *model)

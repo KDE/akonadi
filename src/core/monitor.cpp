@@ -74,7 +74,7 @@ void Monitor::setCollectionMonitored(const Collection &collection, bool monitore
         }
     }
 
-    emit collectionMonitored(collection, monitored);
+    Q_EMIT collectionMonitored(collection, monitored);
 }
 
 void Monitor::setItemMonitored(const Item &item, bool monitored)
@@ -91,7 +91,7 @@ void Monitor::setItemMonitored(const Item &item, bool monitored)
         }
     }
 
-    emit itemMonitored(item,  monitored);
+    Q_EMIT itemMonitored(item,  monitored);
 }
 
 void Monitor::setResourceMonitored(const QByteArray &resource, bool monitored)
@@ -108,7 +108,7 @@ void Monitor::setResourceMonitored(const QByteArray &resource, bool monitored)
         }
     }
 
-    emit resourceMonitored(resource, monitored);
+    Q_EMIT resourceMonitored(resource, monitored);
 }
 
 void Monitor::setMimeTypeMonitored(const QString &mimetype, bool monitored)
@@ -125,7 +125,7 @@ void Monitor::setMimeTypeMonitored(const QString &mimetype, bool monitored)
         }
     }
 
-    emit mimeTypeMonitored(mimetype, monitored);
+    Q_EMIT mimeTypeMonitored(mimetype, monitored);
 }
 
 void Monitor::setTagMonitored(const Akonadi::Tag &tag, bool monitored)
@@ -142,7 +142,7 @@ void Monitor::setTagMonitored(const Akonadi::Tag &tag, bool monitored)
         }
     }
 
-    emit tagMonitored(tag, monitored);
+    Q_EMIT tagMonitored(tag, monitored);
 }
 
 void Monitor::setTypeMonitored(Monitor::Type type, bool monitored)
@@ -159,7 +159,7 @@ void Monitor::setTypeMonitored(Monitor::Type type, bool monitored)
         }
     }
 
-    emit typeMonitored(type, monitored);
+    Q_EMIT typeMonitored(type, monitored);
 }
 
 void Akonadi::Monitor::setAllMonitored(bool monitored)
@@ -174,7 +174,7 @@ void Akonadi::Monitor::setAllMonitored(bool monitored)
     d->pendingModification.setAllMonitored(monitored);
     d->scheduleSubscriptionUpdate();
 
-    emit allMonitored(monitored);
+    Q_EMIT allMonitored(monitored);
 }
 
 void Monitor::setExclusive(bool exclusive)

@@ -161,7 +161,7 @@ void CollectionRequester::Private::_k_slotOpenDialog()
 
     const Akonadi::Collection collection = dlg->selectedCollection();
     q->setCollection(collection);
-    emit q->collectionChanged(collection);
+    Q_EMIT q->collectionChanged(collection);
 }
 
 CollectionRequester::CollectionRequester(QWidget *parent)
@@ -198,7 +198,7 @@ void CollectionRequester::setCollection(const Collection &collection)
     }
 
     d->edit->setText(name);
-    emit collectionChanged(collection);
+    Q_EMIT collectionChanged(collection);
     d->fetchCollection(collection);
 }
 

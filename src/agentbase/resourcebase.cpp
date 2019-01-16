@@ -647,7 +647,7 @@ void ResourceBasePrivate::slotDeliveryDone(KJob *job)
     Q_Q(ResourceBase);
     Q_ASSERT(scheduler->currentTask().type == ResourceScheduler::FetchItem);
     if (job->error()) {
-        emit q->error(i18nc("@info", "Error while creating item: %1", job->errorString()));
+        Q_EMIT q->error(i18nc("@info", "Error while creating item: %1", job->errorString()));
     }
     scheduler->itemFetchDone(QString());
 }
@@ -657,7 +657,7 @@ void ResourceBase::collectionAttributesRetrieved(const Collection &collection)
     Q_D(ResourceBase);
     Q_ASSERT(d->scheduler->currentTask().type == ResourceScheduler::SyncCollectionAttributes);
     if (!collection.isValid()) {
-        emit attributesSynchronized(d->scheduler->currentTask().collection.id());
+        Q_EMIT attributesSynchronized(d->scheduler->currentTask().collection.id());
         d->scheduler->taskDone();
         return;
     }
@@ -671,9 +671,9 @@ void ResourceBasePrivate::slotCollectionAttributesSyncDone(KJob *job)
     Q_Q(ResourceBase);
     Q_ASSERT(scheduler->currentTask().type == ResourceScheduler::SyncCollectionAttributes);
     if (job->error()) {
-        emit q->error(i18nc("@info", "Error while updating collection: %1", job->errorString()));
+        Q_EMIT q->error(i18nc("@info", "Error while updating collection: %1", job->errorString()));
     }
-    emit q->attributesSynchronized(scheduler->currentTask().collection.id());
+    Q_EMIT q->attributesSynchronized(scheduler->currentTask().collection.id());
     scheduler->taskDone();
 }
 
@@ -690,7 +690,7 @@ void ResourceBasePrivate::slotDeleteResourceCollectionDone(KJob *job)
 {
     Q_Q(ResourceBase);
     if (job->error()) {
-        emit q->error(job->errorString());
+        Q_EMIT q->error(job->errorString());
         scheduler->taskDone();
     } else {
         const CollectionFetchJob *fetchJob = static_cast<const CollectionFetchJob *>(job);
@@ -709,7 +709,7 @@ void ResourceBasePrivate::slotCollectionDeletionDone(KJob *job)
 {
     Q_Q(ResourceBase);
     if (job->error()) {
-        emit q->error(job->errorString());
+        Q_EMIT q->error(job->errorString());
     }
 
     scheduler->taskDone();
@@ -757,12 +757,12 @@ void ResourceBasePrivate::changeCommittedResult(KJob *job)
     Q_Q(ResourceBase);
     if (qobject_cast<CollectionModifyJob *>(job)) {
         if (job->error()) {
-            emit q->error(i18nc("@info", "Updating local collection failed: %1.", job->errorText()));
+            Q_EMIT q->error(i18nc("@info", "Updating local collection failed: %1.", job->errorText()));
         }
         mChangeRecorder->d_ptr->invalidateCache(static_cast<CollectionModifyJob *>(job)->collection());
     } else {
         if (job->error()) {
-            emit q->error(i18nc("@info", "Updating local items failed: %1.", job->errorText()));
+            Q_EMIT q->error(i18nc("@info", "Updating local items failed: %1.", job->errorText()));
         }
         // Item and tag cache is invalidated by modify job
     }
@@ -781,7 +781,7 @@ QString ResourceBase::requestItemDelivery(const QList<qint64> &uids, const QByte
     Q_D(ResourceBase);
     if (!isOnline()) {
         const QString errorMsg = i18nc("@info", "Cannot fetch item in offline mode.");
-        emit error(errorMsg);
+        Q_EMIT error(errorMsg);
         return errorMsg;
     }
 
@@ -877,7 +877,7 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
     mCollectionSyncer = nullptr;
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
-            emit q->error(job->errorString());
+            Q_EMIT q->error(job->errorString());
         }
     } else {
         if (scheduler->currentTask().type == ResourceScheduler::SyncAll) {
@@ -944,7 +944,7 @@ void ResourceBasePrivate::slotLocalListDone(KJob *job)
 {
     Q_Q(ResourceBase);
     if (job->error()) {
-        emit q->error(job->errorString());
+        Q_EMIT q->error(job->errorString());
     } else {
         Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
         std::sort(cols.begin(), cols.end(), sortCollectionsForSync);
@@ -968,7 +968,7 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
         contentTypes.removeAll(Collection::virtualMimeType());
         if (!contentTypes.isEmpty() || col.isVirtual()) {
             if (mAutomaticProgressReporting) {
-                emit q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
+                Q_EMIT q->status(AgentBase::Running, i18nc("@info:status", "Syncing folder '%1'", currentCollection.displayName()));
             }
 
             qCDebug(AKONADIAGENTBASE_LOG) << "Preparing collection sync of collection"
@@ -1274,7 +1274,7 @@ void ResourceBase::cancelTask(const QString &msg)
 {
     cancelTask();
 
-    emit error(msg);
+    Q_EMIT error(msg);
 }
 
 void ResourceBase::deferTask()
@@ -1421,7 +1421,7 @@ void ResourceBasePrivate::slotItemSyncDone(KJob *job)
     mItemSyncer = nullptr;
     Q_Q(ResourceBase);
     if (job->error() && job->error() != Job::UserCanceled) {
-        emit q->error(job->errorString());
+        Q_EMIT q->error(job->errorString());
     }
     if (scheduler->currentTask().type == ResourceScheduler::FetchItems) {
         scheduler->currentTask().sendDBusReplies((job->error() && job->error() != Job::UserCanceled) ? job->errorString() : QString());
@@ -1433,10 +1433,10 @@ void ResourceBasePrivate::slotDelayedEmitProgress()
 {
     Q_Q(ResourceBase);
     if (mAutomaticProgressReporting) {
-        emit q->percent(mUnemittedProgress);
+        Q_EMIT q->percent(mUnemittedProgress);
 
         for (const QVariantMap &statusMap : qAsConst(mUnemittedAdvancedStatus)) {
-            emit q->advancedStatus(statusMap);
+            Q_EMIT q->advancedStatus(statusMap);
         }
     }
     mUnemittedProgress = 0;
@@ -1611,7 +1611,7 @@ void ResourceBasePrivate::slotTagSyncDone(KJob *job)
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
             qCWarning(AKONADIAGENTBASE_LOG) << "TagSync failed: " << job->errorString();
-            emit q->error(job->errorString());
+            Q_EMIT q->error(job->errorString());
         }
     }
 
@@ -1641,7 +1641,7 @@ void ResourceBasePrivate::slotRelationSyncDone(KJob *job)
     if (job->error()) {
         if (job->error() != Job::UserCanceled) {
             qCWarning(AKONADIAGENTBASE_LOG) << "RelationSync failed: " << job->errorString();
-            emit q->error(job->errorString());
+            Q_EMIT q->error(job->errorString());
         }
     }
 

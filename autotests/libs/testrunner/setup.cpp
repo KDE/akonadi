@@ -87,7 +87,7 @@ void SetupTest::setupAgents()
     }
 
     if (isSetupDone()) {
-        emit setupDone();
+        Q_EMIT setupDone();
     }
 }
 
@@ -111,7 +111,7 @@ void SetupTest::agentCreationResult(KJob *job)
     }
 
     if (isSetupDone()) {
-        emit setupDone();
+        Q_EMIT setupDone();
     }
 }
 
@@ -125,7 +125,7 @@ void SetupTest::synchronizationResult(KJob *job)
     }
 
     if (isSetupDone()) {
-        emit setupDone();
+        Q_EMIT setupDone();
     }
 }
 
@@ -404,7 +404,7 @@ void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)
 {
     if (mTrackAkonadiProcess || exitCode != EXIT_SUCCESS) {
         qWarning() << "Akonadi server process was terminated externally!";
-        emit serverExited(exitCode);
+        Q_EMIT serverExited(exitCode);
     }
     mAkonadiDaemonProcess = nullptr;
 }

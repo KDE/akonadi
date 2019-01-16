@@ -75,7 +75,7 @@ void AgentInstanceModel::Private::instanceChanged(const AgentInstance &instance)
             mInstances[i] = instance;
 
             const QModelIndex idx = mParent->index(i, 0);
-            emit mParent->dataChanged(idx, idx);
+            Q_EMIT mParent->dataChanged(idx, idx);
 
             return;
         }
@@ -238,7 +238,7 @@ bool AgentInstanceModel::setData(const QModelIndex &index, const QVariant &value
     switch (role) {
     case OnlineRole:
         instance.setIsOnline(value.toBool());
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
         return true;
     default:
         return false;

@@ -103,7 +103,7 @@ void TagWidget::clearTags()
     if (!d->mTags.isEmpty()) {
         d->mTags.clear();
         d->mTagView->clear();
-        emit selectionChanged(d->mTags);
+        Q_EMIT selectionChanged(d->mTags);
     }
 }
 
@@ -133,7 +133,7 @@ void TagWidget::editTags()
     if (dlg->exec() == QDialog::Accepted) {
         d->mTags = dlg->selection();
         updateView();
-        emit selectionChanged(d->mTags);
+        Q_EMIT selectionChanged(d->mTags);
     }
 }
 

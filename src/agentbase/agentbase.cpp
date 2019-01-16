@@ -1069,11 +1069,11 @@ void AgentBase::setOnlineInternal(bool state)
 
     const QString newMessage = d->defaultReadyMessage();
     if (d->mStatusMessage != newMessage && d->mStatusCode != AgentBase::Broken) {
-        emit status(d->mStatusCode, newMessage);
+        Q_EMIT status(d->mStatusCode, newMessage);
     }
 
     doSetOnline(state);
-    emit onlineChanged(state);
+    Q_EMIT onlineChanged(state);
 }
 
 void AgentBase::doSetOnline(bool online)
@@ -1285,7 +1285,7 @@ void AgentBase::setAgentName(const QString &name)
 
     d->setProgramName();
 
-    emit agentNameChanged(d->mName);
+    Q_EMIT agentNameChanged(d->mName);
 }
 
 QString AgentBase::agentName() const
@@ -1316,12 +1316,12 @@ KSharedConfigPtr AgentBase::config()
 
 void AgentBase::abort()
 {
-    emit abortRequested();
+    Q_EMIT abortRequested();
 }
 
 void AgentBase::reconfigure()
 {
-    emit reloadConfiguration();
+    Q_EMIT reloadConfiguration();
 }
 
 #include "moc_agentbase.cpp"

@@ -97,7 +97,7 @@ void PartFetcherPrivate::fetchJobDone(KJob *job)
 
     m_item = item;
 
-    emit q->emitResult();
+    Q_EMIT q->emitResult();
 }
 
 PartFetcher::PartFetcher(const QModelIndex &index, const QByteArray &partName, QObject *parent)

@@ -79,11 +79,11 @@ void SpecialCollectionsPrivate::emitChanged(const QString &resourceId)
     } else {
         qCDebug(AKONADICORE_LOG) << "Emitting changed for" << resourceId;
         const AgentInstance agentInstance = AgentManager::self()->instance(resourceId);
-        emit q->collectionsChanged(agentInstance);
+        Q_EMIT q->collectionsChanged(agentInstance);
         // first compare with local value then with config value (which also updates the local value)
         if (resourceId == mDefaultResourceId || resourceId == defaultResourceId()) {
             qCDebug(AKONADICORE_LOG) << "Emitting defaultFoldersChanged.";
-            emit q->defaultCollectionsChanged();
+            Q_EMIT q->defaultCollectionsChanged();
         }
     }
 }

@@ -741,7 +741,7 @@ protected:
       * void ExampleResource::onItemRemovedFinished(KJob *job)
       * {
       *     if (job->error()) {
-      *         emit status(Broken, job->errorString());
+      *         Q_EMIT status(Broken, job->errorString());
       *         deferTask();
       *         setTemporaryOffline(300);
       *         return;

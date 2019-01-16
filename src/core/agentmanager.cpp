@@ -56,7 +56,7 @@ void AgentManagerPrivate::agentTypeAdded(const QString &identifier)
     if (mTypes.isEmpty()) {
         // The Akonadi ServerManager assumes that the server is up and running as soon
         // as it knows about at least one agent type.
-        // If we emit the typeAdded() signal here, it therefore thinks the server is
+        // If we Q_EMIT the typeAdded() signal here, it therefore thinks the server is
         // running. However, the AgentManager does not know about all agent types yet,
         // as the server might still have pending agentTypeAdded() signals, even though
         // it internally knows all agent types already.
@@ -72,7 +72,7 @@ void AgentManagerPrivate::agentTypeAdded(const QString &identifier)
     if (type.isValid()) {
         mTypes.insert(identifier, type);
 
-        emit mParent->typeAdded(type);
+        Q_EMIT mParent->typeAdded(type);
     }
 }
 
@@ -83,7 +83,7 @@ void AgentManagerPrivate::agentTypeRemoved(const QString &identifier)
     }
 
     const AgentType type = mTypes.take(identifier);
-    emit mParent->typeRemoved(type);
+    Q_EMIT mParent->typeRemoved(type);
 }
 
 void AgentManagerPrivate::agentInstanceAdded(const QString &identifier)
@@ -101,11 +101,11 @@ void AgentManagerPrivate::agentInstanceAdded(const QString &identifier)
         const bool newAgentInstance = !mInstances.contains(identifier);
         if (newAgentInstance) {
             mInstances.insert(identifier, instance);
-            emit mParent->instanceAdded(instance);
+            Q_EMIT mParent->instanceAdded(instance);
         } else {
             mInstances.remove(identifier);
             mInstances.insert(identifier, instance);
-            emit mParent->instanceStatusChanged(instance);
+            Q_EMIT mParent->instanceStatusChanged(instance);
         }
     }
 }
@@ -117,7 +117,7 @@ void AgentManagerPrivate::agentInstanceRemoved(const QString &identifier)
     }
 
     const AgentInstance instance = mInstances.take(identifier);
-    emit mParent->instanceRemoved(instance);
+    Q_EMIT mParent->instanceRemoved(instance);
 }
 
 void AgentManagerPrivate::agentInstanceStatusChanged(const QString &identifier, int status, const QString &msg)
@@ -130,7 +130,7 @@ void AgentManagerPrivate::agentInstanceStatusChanged(const QString &identifier, 
     instance.d->mStatus = status;
     instance.d->mStatusMessage = msg;
 
-    emit mParent->instanceStatusChanged(instance);
+    Q_EMIT mParent->instanceStatusChanged(instance);
 }
 
 void AgentManagerPrivate::agentInstanceProgressChanged(const QString &identifier, uint progress, const QString &msg)
@@ -145,7 +145,7 @@ void AgentManagerPrivate::agentInstanceProgressChanged(const QString &identifier
         instance.d->mStatusMessage = msg;
     }
 
-    emit mParent->instanceProgressChanged(instance);
+    Q_EMIT mParent->instanceProgressChanged(instance);
 }
 
 void AgentManagerPrivate::agentInstanceWarning(const QString &identifier, const QString &msg)
@@ -155,7 +155,7 @@ void AgentManagerPrivate::agentInstanceWarning(const QString &identifier, const 
     }
 
     AgentInstance &instance = mInstances[identifier];
-    emit mParent->instanceWarning(instance, msg);
+    Q_EMIT mParent->instanceWarning(instance, msg);
 }
 
 void AgentManagerPrivate::agentInstanceError(const QString &identifier, const QString &msg)
@@ -165,7 +165,7 @@ void AgentManagerPrivate::agentInstanceError(const QString &identifier, const QS
     }
 
     AgentInstance &instance = mInstances[identifier];
-    emit mParent->instanceError(instance, msg);
+    Q_EMIT mParent->instanceError(instance, msg);
 }
 
 void AgentManagerPrivate::agentInstanceOnlineChanged(const QString &identifier, bool state)
@@ -176,7 +176,7 @@ void AgentManagerPrivate::agentInstanceOnlineChanged(const QString &identifier, 
 
     AgentInstance &instance = mInstances[identifier];
     instance.d->mIsOnline = state;
-    emit mParent->instanceOnline(instance, state);
+    Q_EMIT mParent->instanceOnline(instance, state);
 }
 
 void AgentManagerPrivate::agentInstanceNameChanged(const QString &identifier, const QString &name)
@@ -188,7 +188,7 @@ void AgentManagerPrivate::agentInstanceNameChanged(const QString &identifier, co
     AgentInstance &instance = mInstances[identifier];
     instance.d->mName = name;
 
-    emit mParent->instanceNameChanged(instance);
+    Q_EMIT mParent->instanceNameChanged(instance);
 }
 
 void AgentManagerPrivate::readAgentTypes()
@@ -200,7 +200,7 @@ void AgentManagerPrivate::readAgentTypes()
             const AgentType agentType = fillAgentType(type);
             if (agentType.isValid()) {
                 mTypes.insert(type, agentType);
-                emit mParent->typeAdded(agentType);
+                Q_EMIT mParent->typeAdded(agentType);
             }
         }
     }
@@ -215,7 +215,7 @@ void AgentManagerPrivate::readAgentInstances()
             const AgentInstance agentInstance = fillAgentInstance(instance);
             if (agentInstance.isValid()) {
                 mInstances.insert(instance, agentInstance);
-                emit mParent->instanceAdded(agentInstance);
+                Q_EMIT mParent->instanceAdded(agentInstance);
             }
         }
     }

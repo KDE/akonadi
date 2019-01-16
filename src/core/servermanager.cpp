@@ -96,14 +96,14 @@ public:
 
         if (mState != state) {
             mState = state;
-            emit instance->stateChanged(state);
+            Q_EMIT instance->stateChanged(state);
             if (state == ServerManager::Running) {
-                emit instance->started();
+                Q_EMIT instance->started();
                 if (!mFirstRunner && Internal::clientType() == Internal::User && !ServerManager::hasInstanceIdentifier()) {
                     mFirstRunner = new Firstrun(instance);
                 }
             } else if (state == ServerManager::NotRunning || state == ServerManager::Broken) {
-                emit instance->stopped();
+                Q_EMIT instance->stopped();
             }
             if (state == ServerManager::Starting || state == ServerManager::Stopping) {
                 QMetaObject::invokeMethod(mSafetyTimer.data(), QOverload<>::of(&QTimer::start), Qt::QueuedConnection);   // in case we are in a different thread

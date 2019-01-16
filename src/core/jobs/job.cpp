@@ -196,7 +196,7 @@ void JobPrivate::startQueued()
     Q_Q(Job);
     mStarted = true;
 
-    emit q->aboutToStart(q);
+    Q_EMIT q->aboutToStart(q);
     q->doStart();
     QTimer::singleShot(0, q, [this]() { startNext(); });
     QMetaObject::invokeMethod(q, "signalStartedToJobTracker", Qt::QueuedConnection);
@@ -409,7 +409,7 @@ void Job::slotResult(KJob *job)
 void Job::emitWriteFinished()
 {
     d_ptr->mWriteFinished = true;
-    emit writeFinished(this);
+    Q_EMIT writeFinished(this);
 }
 
 #include "moc_job.cpp"

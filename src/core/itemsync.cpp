@@ -157,7 +157,7 @@ void ItemSyncPrivate::checkDone()
         //and wait until the transaction is committed to process the next batch
         if (mTransactionMode == ItemSync::MultipleTransactions || (mDeliveryDone && mRemoteItemQueue.isEmpty())) {
             if (mCurrentTransaction) {
-                q->emit transactionCommitted();
+                q->Q_EMIT transactionCommitted();
                 mCurrentTransaction->commit();
                 mCurrentTransaction = nullptr;
             }
@@ -169,11 +169,11 @@ void ItemSyncPrivate::checkDone()
         execute();
         //We don't have enough items, request more
         if (!mProcessingBatch) {
-            q->emit readyForNextBatch(mBatchSize - mRemoteItemQueue.size());
+            q->Q_EMIT readyForNextBatch(mBatchSize - mRemoteItemQueue.size());
         }
         return;
     }
-    q->emit readyForNextBatch(mBatchSize);
+    q->Q_EMIT readyForNextBatch(mBatchSize);
 
     if (allProcessed() && !mFinished) {
         // prevent double result emission, can happen since checkDone() is called from all over the place

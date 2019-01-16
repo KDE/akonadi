@@ -115,7 +115,7 @@ void CollectionView::Private::itemClicked(const QModelIndex &index)
         return;
     }
 
-    emit mParent->clicked(collection);
+    Q_EMIT mParent->clicked(collection);
 }
 
 void CollectionView::Private::itemCurrentChanged(const QModelIndex &index)
@@ -129,7 +129,7 @@ void CollectionView::Private::itemCurrentChanged(const QModelIndex &index)
         return;
     }
 
-    emit mParent->currentChanged(collection);
+    Q_EMIT mParent->currentChanged(collection);
 }
 
 CollectionView::CollectionView(QWidget *parent)

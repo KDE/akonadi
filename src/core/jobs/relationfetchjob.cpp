@@ -54,7 +54,7 @@ public:
         mEmitTimer->stop(); // in case we are called by result()
         if (!mPendingRelations.isEmpty()) {
             if (!q->error()) {
-                emit q->relationsReceived(mPendingRelations);
+                Q_EMIT q->relationsReceived(mPendingRelations);
             }
             mPendingRelations.clear();
         }

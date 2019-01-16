@@ -54,7 +54,7 @@ public:
         mEmitTimer->stop(); // in case we are called by result()
         if (!mPendingTags.isEmpty()) {
             if (!q->error()) {
-                emit q->tagsReceived(mPendingTags);
+                Q_EMIT q->tagsReceived(mPendingTags);
             }
             mPendingTags.clear();
         }

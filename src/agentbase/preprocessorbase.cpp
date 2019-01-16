@@ -45,7 +45,7 @@ void PreprocessorBase::finishProcessing(ProcessingResult result)
     Q_UNUSED(result);
 
     d->mInDelayedProcessing = false;
-    emit d->itemProcessed(d->mDelayedProcessingItemId);
+    Q_EMIT d->itemProcessed(d->mDelayedProcessingItemId);
 }
 
 void PreprocessorBase::setFetchScope(const ItemFetchScope &fetchScope)

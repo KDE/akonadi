@@ -67,14 +67,14 @@ void PreprocessorBasePrivate::itemFetched(KJob *job)
     Q_Q(PreprocessorBase);
 
     if (job->error()) {
-        emit itemProcessed(PreprocessorBase::ProcessingFailed);
+        Q_EMIT itemProcessed(PreprocessorBase::ProcessingFailed);
         return;
     }
 
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
 
     if (fetchJob->items().isEmpty()) {
-        emit itemProcessed(PreprocessorBase::ProcessingFailed);
+        Q_EMIT itemProcessed(PreprocessorBase::ProcessingFailed);
         return;
     }
 
@@ -88,7 +88,7 @@ void PreprocessorBasePrivate::itemFetched(KJob *job)
 
         // TODO: Handle the different status codes appropriately
 
-        emit itemProcessed(item.id());
+        Q_EMIT itemProcessed(item.id());
 
         qCDebug(AKONADIAGENTBASE_LOG) << "PreprocessorBase: item processed, signal emitted (" << item.id() << ")";
         break;

@@ -291,7 +291,7 @@ void Akonadi::ResourceScheduler::scheduleCustomTask(QObject *receiver, const cha
 void ResourceScheduler::taskDone()
 {
     if (isEmpty()) {
-        emit status(AgentBase::Idle, i18nc("@info:status Application ready for work", "Ready"));
+        Q_EMIT status(AgentBase::Idle, i18nc("@info:status Application ready for work", "Ready"));
     }
 
     if (s_resourcetracker) {
@@ -403,46 +403,46 @@ void ResourceScheduler::executeNext()
 
     switch (mCurrentTask.type) {
     case SyncAll:
-        emit executeFullSync();
+        Q_EMIT executeFullSync();
         break;
     case SyncCollectionTree:
-        emit executeCollectionTreeSync();
+        Q_EMIT executeCollectionTreeSync();
         break;
     case SyncCollection:
-        emit executeCollectionSync(mCurrentTask.collection);
+        Q_EMIT executeCollectionSync(mCurrentTask.collection);
         break;
     case SyncCollectionAttributes:
-        emit executeCollectionAttributesSync(mCurrentTask.collection);
+        Q_EMIT executeCollectionAttributesSync(mCurrentTask.collection);
         break;
     case SyncTags:
-        emit executeTagSync();
+        Q_EMIT executeTagSync();
         break;
     case FetchItem:
-        emit executeItemFetch(mCurrentTask.items.at(0), mCurrentTask.itemParts);
+        Q_EMIT executeItemFetch(mCurrentTask.items.at(0), mCurrentTask.itemParts);
         break;
     case FetchItems:
-        emit executeItemsFetch(mCurrentTask.items, mCurrentTask.itemParts);
+        Q_EMIT executeItemsFetch(mCurrentTask.items, mCurrentTask.itemParts);
         break;
     case DeleteResourceCollection:
-        emit executeResourceCollectionDeletion();
+        Q_EMIT executeResourceCollectionDeletion();
         break;
     case InvalideCacheForCollection:
-        emit executeCacheInvalidation(mCurrentTask.collection);
+        Q_EMIT executeCacheInvalidation(mCurrentTask.collection);
         break;
     case ChangeReplay:
-        emit executeChangeReplay();
+        Q_EMIT executeChangeReplay();
         break;
     case RecursiveMoveReplay:
-        emit executeRecursiveMoveReplay(mCurrentTask.argument.value<RecursiveMover *>());
+        Q_EMIT executeRecursiveMoveReplay(mCurrentTask.argument.value<RecursiveMover *>());
         break;
     case SyncAllDone:
-        emit fullSyncComplete();
+        Q_EMIT fullSyncComplete();
         break;
     case SyncCollectionTreeDone:
-        emit collectionTreeSyncComplete();
+        Q_EMIT collectionTreeSyncComplete();
         break;
     case SyncRelations:
-        emit executeRelationSync();
+        Q_EMIT executeRelationSync();
         break;
     case Custom: {
         const QByteArray methodSig = mCurrentTask.methodName + QByteArray("(QVariant)");

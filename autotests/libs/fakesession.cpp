@@ -58,7 +58,7 @@ public:
             return;
         }
 
-        emit q_ptr->reconnected();
+        Q_EMIT q_ptr->reconnected();
         connected = true;
         startNext();
     }
@@ -66,7 +66,7 @@ public:
     /* reimp */
     void addJob(Job *job) override
     {
-        emit q_ptr->jobAdded(job);
+        Q_EMIT q_ptr->jobAdded(job);
         // Return immediately so that no actual communication happens with the server and
         // the started jobs are completed.
         if (m_mode == FakeSession::EndJobsImmediately) {

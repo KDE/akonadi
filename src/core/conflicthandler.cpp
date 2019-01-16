@@ -57,13 +57,13 @@ void ConflictHandler::start()
 void ConflictHandler::slotOtherItemFetched(KJob *job)
 {
     if (job->error()) {
-        emit error(job->errorText());   //TODO: extend error message
+        Q_EMIT error(job->errorText());   //TODO: extend error message
         return;
     }
 
     ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
     if (fetchJob->items().isEmpty()) {
-        emit error(i18n("Did not find other item for conflict handling"));
+        Q_EMIT error(i18n("Did not find other item for conflict handling"));
         return;
     }
 
@@ -110,16 +110,16 @@ void ConflictHandler::useLocalItem()
 void ConflictHandler::slotUseLocalItemFinished(KJob *job)
 {
     if (job->error()) {
-        emit error(job->errorText());   //TODO: extend error message
+        Q_EMIT error(job->errorText());   //TODO: extend error message
     } else {
-        emit conflictResolved();
+        Q_EMIT conflictResolved();
     }
 }
 
 void ConflictHandler::useOtherItem()
 {
     // We can just ignore the local item here and leave everything as it is.
-    emit conflictResolved();
+    Q_EMIT conflictResolved();
 }
 
 void ConflictHandler::useBothItems()
@@ -133,9 +133,9 @@ void ConflictHandler::useBothItems()
 void ConflictHandler::slotUseBothItemsFinished(KJob *job)
 {
     if (job->error()) {
-        emit error(job->errorText());   //TODO: extend error message
+        Q_EMIT error(job->errorText());   //TODO: extend error message
     } else {
-        emit conflictResolved();
+        Q_EMIT conflictResolved();
     }
 }
 

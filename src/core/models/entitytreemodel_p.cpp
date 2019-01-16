@@ -384,7 +384,7 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
 
             const QModelIndex collectionIndex = indexForCollection(collection);
             dataChanged(collectionIndex, collectionIndex);
-            emit q->collectionFetched(collectionId);
+            Q_EMIT q->collectionFetched(collectionId);
             continue;
         }
 
@@ -1351,7 +1351,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 
     if (!m_collectionTreeFetched && m_pendingCollectionFetchJobs.isEmpty()) {
         m_collectionTreeFetched = true;
-        emit q_ptr->collectionTreeFetched(Akonadi::valuesToVector(m_collections));
+        Q_EMIT q_ptr->collectionTreeFetched(Akonadi::valuesToVector(m_collections));
     }
 
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
@@ -1385,7 +1385,7 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
     }
 
     m_populatedCols.insert(collectionId);
-    emit q_ptr->collectionPopulated(collectionId);
+    Q_EMIT q_ptr->collectionPopulated(collectionId);
 
     // If collections are not in the model, there will be no valid index for them.
     if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
@@ -1716,7 +1716,7 @@ void EntityTreeModelPrivate::dataChanged(const QModelIndex &top, const QModelInd
         rightIndex = bottom.sibling(bottom.row(), q->entityColumnCount(EntityTreeModel::ItemListHeaders) - 1);
     }
 
-    emit q->dataChanged(top, rightIndex);
+    Q_EMIT q->dataChanged(top, rightIndex);
 }
 
 QModelIndex EntityTreeModelPrivate::indexForCollection(const Collection &collection) const
@@ -1881,7 +1881,7 @@ void EntityTreeModelPrivate::fillModel()
             m_monitor->numItemsMonitored() != 0) {
         m_rootCollection = Collection(-1);
         m_collectionTreeFetched = true;
-        emit q_ptr->collectionTreeFetched(collections);     // there are no collections to fetch
+        Q_EMIT q_ptr->collectionTreeFetched(collections);     // there are no collections to fetch
 
         Item::List items;
         items.reserve(m_monitor->itemsMonitoredEx().size());

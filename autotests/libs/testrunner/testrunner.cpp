@@ -47,7 +47,7 @@ void TestRunner::run()
     if (!mProcess->waitForStarted()) {
         qWarning() << mArguments << "failed to start!";
         mExitCode = 255;
-        emit finished();
+        Q_EMIT finished();
     }
 }
 
@@ -65,14 +65,14 @@ void TestRunner::processFinished(int exitCode)
         mExitCode = exitCode;
         qDebug() << exitCode;
     }
-    emit finished();
+    Q_EMIT finished();
 }
 
 void TestRunner::processError(QProcess::ProcessError error)
 {
     qWarning() << mArguments << "exited with an error:" << error;
     mExitCode = 255;
-    emit finished();
+    Q_EMIT finished();
 }
 
 void TestRunner::terminate()

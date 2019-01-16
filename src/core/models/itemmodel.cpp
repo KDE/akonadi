@@ -373,7 +373,7 @@ void ItemModel::setCollection(const Collection &collection)
         connect(job, &ItemFetchJob::result, this, [this](KJob *job) { d->listingDone(job); });
     }
 
-    emit collectionChanged(collection);
+    Q_EMIT collectionChanged(collection);
 }
 
 void ItemModel::setFetchScope(const ItemFetchScope &fetchScope)

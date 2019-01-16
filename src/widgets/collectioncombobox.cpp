@@ -109,7 +109,7 @@ void CollectionComboBox::Private::activated(int index)
 {
     const QModelIndex modelIndex = mParent->model()->index(index, 0);
     if (modelIndex.isValid()) {
-        emit mParent->currentChanged(modelIndex.data(EntityTreeModel::CollectionRole).value<Collection>());
+        Q_EMIT mParent->currentChanged(modelIndex.data(EntityTreeModel::CollectionRole).value<Collection>());
     }
 }
 

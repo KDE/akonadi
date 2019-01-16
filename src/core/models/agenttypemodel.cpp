@@ -48,14 +48,14 @@ void AgentTypeModel::Private::typeAdded(const AgentType &agentType)
 {
     mTypes.append(agentType);
 
-    emit mParent->layoutChanged();
+    Q_EMIT mParent->layoutChanged();
 }
 
 void AgentTypeModel::Private::typeRemoved(const AgentType &agentType)
 {
     mTypes.removeAll(agentType);
 
-    emit mParent->layoutChanged();
+    Q_EMIT mParent->layoutChanged();
 }
 
 AgentTypeModel::AgentTypeModel(QObject *parent)

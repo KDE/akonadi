@@ -655,7 +655,7 @@ void MonitorPrivate::slotStatisticsChangedFinished(KJob *job)
     } else {
         CollectionStatisticsJob *statisticsJob = static_cast<CollectionStatisticsJob *>(job);
         Q_ASSERT(statisticsJob->collection().isValid());
-        emit q_ptr->collectionStatisticsChanged(statisticsJob->collection().id(),
+        Q_EMIT q_ptr->collectionStatisticsChanged(statisticsJob->collection().id(),
                                                 statisticsJob->statistics());
     }
 }
@@ -668,7 +668,7 @@ void MonitorPrivate::slotFlushRecentlyChangedCollections()
             fetchStatistics(collection);
         } else {
             static const CollectionStatistics dummyStatistics;
-            emit q_ptr->collectionStatisticsChanged(collection, dummyStatistics);
+            Q_EMIT q_ptr->collectionStatisticsChanged(collection, dummyStatistics);
         }
     }
     recentlyChangedCollections.clear();

@@ -362,7 +362,7 @@ void Akonadi::FavoriteCollectionsModel::setFavoriteLabel(const Collection &colle
     }
 
     const QModelIndex index = mapFromSource(idx);
-    emit dataChanged(index, index);
+    Q_EMIT dataChanged(index, index);
 }
 
 QVariant Akonadi::FavoriteCollectionsModel::data(const QModelIndex &index, int role) const

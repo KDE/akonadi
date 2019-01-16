@@ -89,11 +89,11 @@ void EntityListView::Private::itemClicked(const QModelIndex &index)
 
     const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
-        emit mParent->clicked(collection);
+        Q_EMIT mParent->clicked(collection);
     } else {
         const Item item = index.model()->data(index, EntityTreeModel::ItemRole).value<Item>();
         if (item.isValid()) {
-            emit mParent->clicked(item);
+            Q_EMIT mParent->clicked(item);
         }
     }
 }
@@ -106,11 +106,11 @@ void EntityListView::Private::itemDoubleClicked(const QModelIndex &index)
 
     const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
-        emit mParent->doubleClicked(collection);
+        Q_EMIT mParent->doubleClicked(collection);
     } else {
         const Item item = index.model()->data(index, EntityTreeModel::ItemRole).value<Item>();
         if (item.isValid()) {
-            emit mParent->doubleClicked(item);
+            Q_EMIT mParent->doubleClicked(item);
         }
     }
 }
@@ -123,11 +123,11 @@ void EntityListView::Private::itemCurrentChanged(const QModelIndex &index)
 
     const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (collection.isValid()) {
-        emit mParent->currentChanged(collection);
+        Q_EMIT mParent->currentChanged(collection);
     } else {
         const Item item = index.model()->data(index, EntityTreeModel::ItemRole).value<Item>();
         if (item.isValid()) {
-            emit mParent->currentChanged(item);
+            Q_EMIT mParent->currentChanged(item);
         }
     }
 }

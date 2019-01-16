@@ -132,7 +132,7 @@ public:
         enableAction(DeleteAgentInstance, deleteActionEnabled);
         enableAction(ConfigureAgentInstance, configureActionEnabled);
 
-        emit q->actionStateUpdated();
+        Q_EMIT q->actionStateUpdated();
     }
 
     AgentInstance::List selectedAgentInstances() const

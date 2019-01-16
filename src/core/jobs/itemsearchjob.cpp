@@ -59,7 +59,7 @@ public:
         mEmitTimer->stop(); // in case we are called by result()
         if (!mPendingItems.isEmpty()) {
             if (!q->error()) {
-                emit q->itemsReceived(mPendingItems);
+                Q_EMIT q->itemsReceived(mPendingItems);
             }
             mPendingItems.clear();
         }

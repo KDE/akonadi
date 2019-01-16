@@ -49,7 +49,7 @@ public:
 
     void emitDataAvailable()
     {
-        emit Cache::dataAvailable();
+        Q_EMIT Cache::dataAvailable();
     }
 
     T retrieve(typename T::Id id) const override

@@ -512,7 +512,7 @@ public:
         if (favoritesModel) {
             enableAction(StandardActionManager::SynchronizeFavoriteCollections, (favoritesModel->rowCount() > 0));
         }
-        emit q->actionStateUpdated();
+        Q_EMIT q->actionStateUpdated();
     }
 
 #ifndef QT_NO_CLIPBOARD

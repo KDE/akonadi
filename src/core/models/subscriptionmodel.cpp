@@ -69,7 +69,7 @@ public:
             }
         }
         q->endResetModel();
-        emit q->loaded();
+        Q_EMIT q->loaded();
     }
 
     bool isSubscribable(Collection::Id id)
@@ -174,7 +174,7 @@ bool SubscriptionModel::setData(const QModelIndex &index, const QVariant &value,
         } else {
             d->changes.insert(col);
         }
-        emit dataChanged(index, index);
+        Q_EMIT dataChanged(index, index);
         return true;
     }
     return CollectionModel::setData(index, value, role);

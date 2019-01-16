@@ -114,7 +114,7 @@ void AgentInstanceWidget::Private::currentAgentInstanceChanged(const QModelIndex
         previousInstance = previousIndex.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
     }
 
-    emit mParent->currentChanged(currentInstance, previousInstance);
+    Q_EMIT mParent->currentChanged(currentInstance, previousInstance);
 }
 
 void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked(const QModelIndex &currentIndex)
@@ -124,7 +124,7 @@ void AgentInstanceWidget::Private::currentAgentInstanceDoubleClicked(const QMode
         currentInstance = currentIndex.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
     }
 
-    emit mParent->doubleClicked(currentInstance);
+    Q_EMIT mParent->doubleClicked(currentInstance);
 }
 
 void AgentInstanceWidget::Private::currentAgentInstanceClicked(const QModelIndex &currentIndex)
@@ -134,7 +134,7 @@ void AgentInstanceWidget::Private::currentAgentInstanceClicked(const QModelIndex
         currentInstance = currentIndex.data(AgentInstanceModel::InstanceRole).value<AgentInstance>();
     }
 
-    emit mParent->clicked(currentInstance);
+    Q_EMIT mParent->clicked(currentInstance);
 }
 
 AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)

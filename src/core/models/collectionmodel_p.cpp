@@ -114,7 +114,7 @@ void CollectionModelPrivate::collectionStatisticsChanged(Collection::Id collecti
         Collection col = collections.value(collection);
         QModelIndex startIndex = indexForId(col.id());
         QModelIndex endIndex = indexForId(col.id(), q->columnCount(q->parent(startIndex)) - 1);
-        emit q->dataChanged(startIndex, endIndex);
+        Q_EMIT q->dataChanged(startIndex, endIndex);
     } else {
         qCWarning(AKONADICORE_LOG) << "Got statistics response for non-existing collection:" << collection;
     }
@@ -153,7 +153,7 @@ void CollectionModelPrivate::collectionsChanged(const Collection::List &cols)
             collections[col.id()] = col;
             QModelIndex startIndex = indexForId(col.id());
             QModelIndex endIndex = indexForId(col.id(), q->columnCount(q->parent(startIndex)) - 1);
-            emit q->dataChanged(startIndex, endIndex);
+            Q_EMIT q->dataChanged(startIndex, endIndex);
             continue;
         }
         // ... otherwise we add it to the set of collections we need to handle.
