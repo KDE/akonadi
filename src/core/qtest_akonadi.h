@@ -49,9 +49,9 @@
         qputenv("LC_ALL", "C"); \
         qunsetenv("KDE_COLOR_DEBUG"); \
         QApplication app(argc, argv); \
-        app.setApplicationName(QLatin1String("qttest")); \
-        app.setOrganizationDomain(QLatin1String("kde.org")); \
-        app.setOrganizationName(QLatin1String("KDE")); \
+        app.setApplicationName(QStringLiteral("qttest")); \
+        app.setOrganizationDomain(QStringLiteral("kde.org")); \
+        app.setOrganizationName(QStringLiteral("KDE")); \
         QGuiApplication::setQuitOnLastWindowClosed(false); \
         qRegisterMetaType<QList<QUrl>>(); \
         int result = 0; \
