@@ -289,6 +289,12 @@ struct Filter_
     const PredicateFn &mFn;
 };
 
+template<typename EachFun>
+struct ForEach_
+{
+    const EachFun &mFn;
+};
+
 } // namespace detail
 } // namespace Akonadi
 
@@ -326,7 +332,7 @@ auto operator|(const InContainer &in,
 {
     using namespace Akonadi::detail;
     using OutIt = TransformIterator<InContainer, TransformFn>;
-    return Range<OutIt>(OutIt(in.cbegin(), t.mFn, in), OutIt(in.cend(), t.mFn, in));
+    return Range<OutIt>(OutIt(std::cbegin(in), t.mFn, in), OutIt(std::cend(in), t.mFn, in));
 }
 
 
@@ -339,8 +345,20 @@ auto operator|(const InContainer &in,
 {
     using namespace Akonadi::detail;
     using OutIt = FilterIterator<InContainer, PredicateFn>;
-    return Range<OutIt>(OutIt(in.cbegin(), in.cend(), p.mFn, in),
-                        OutIt(in.cend(), in.cend(), p.mFn, in));
+    return Range<OutIt>(OutIt(std::cbegin(in), std::cend(in), p.mFn, in),
+                        OutIt(std::cend(in), std::cend(in), p.mFn, in));
+}
+
+
+// Generic operator| fo foreach()
+template<typename InContainer,
+         typename EachFun
+        >
+auto operator|(const InContainer &in,
+               const Akonadi::detail::ForEach_<EachFun> &fun)
+{
+    std::for_each(std::cbegin(in), std::cend(in), fun.mFn);
+    return in;
 }
 
 
@@ -367,6 +385,12 @@ detail::Filter_<PredicateFn> filter(PredicateFn &&fn)
     return detail::Filter_<PredicateFn>{std::forward<PredicateFn>(fn)};
 }
 
+template<typename EachFun>
+detail::ForEach_<EachFun> forEach(EachFun &&fn)
+{
+    return detail::ForEach_<EachFun>{std::forward<EachFun>(fn)};
+}
+
 /// Create a range, a view on a container from the given pair fo iterators
 template<typename Iterator1, typename Iterator2,
          typename It = std::remove_reference_t<Iterator1>
@@ -375,6 +399,8 @@ detail::Range<It> range(Iterator1 begin, Iterator2 end)
 {
     return detail::Range<It>(std::move(begin), std::move(end));
 }
+
+
 
 } // namespace Akonadi
 

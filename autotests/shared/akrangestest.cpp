@@ -227,6 +227,26 @@ private Q_SLOTS:
                         | toQList,
                  out);
     }
+
+    void testForEach()
+    {
+        const QList<int> in = { 1, 2, 3, 4, 5, 6 };
+        {
+            QList<int> out;
+            in | forEach([&out](int v) { out.push_back(v); });
+            QCOMPARE(out, in);
+        }
+        {
+            QList<int> out;
+            QCOMPARE(in | forEach([&out](int v) { out.push_back(v); })
+                        | filter([](int v){ return v % 2 == 0; })
+                        | transform([](int v) { return v * 2; })
+                        | toQList,
+                     QList<int>({ 4, 8, 12 }));
+            QCOMPARE(out, in);
+        }
+
+    }
 };
 
 QTEST_GUILESS_MAIN(AkRangesTest)
