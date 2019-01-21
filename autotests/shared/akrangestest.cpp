@@ -187,6 +187,46 @@ private Q_SLOTS:
                      out);
         }
     }
+
+    void testTemporaryContainer()
+    {
+        const auto func = []{
+            QStringList rv;
+            for (int i = 0; i < 5; i++) {
+                rv.push_back(QString::number(i));
+            }
+            return rv;
+        };
+        {
+            QList<int> out = { 0, 2, 4 };
+            QCOMPARE(func() | transform([](const auto &str) { return str.toInt(); })
+                            | filter([](int i) { return i % 2 == 0; })
+                            | toQList,
+                     out);
+        }
+        {
+            QList<int> out = { 0, 2, 4 };
+            QCOMPARE(func() | filter([](const auto &v) { return v.toInt() % 2 == 0; })
+                            | transform([](const auto &str) { return str.toInt(); })
+                            | toQList,
+                     out);
+        }
+    }
+
+    void testTemporaryRange()
+    {
+        const auto func = []{
+            QStringList rv;
+            for (int i = 0; i < 5; ++i) {
+                rv.push_back(QString::number(i));
+            }
+            return rv | transform([](const auto &str) { return str.toInt(); });
+        };
+        QList<int> out = { 1, 3 };
+        QCOMPARE(func() | filter([](int i) { return i % 2 == 1; })
+                        | toQList,
+                 out);
+    }
 };
 
 QTEST_GUILESS_MAIN(AkRangesTest)

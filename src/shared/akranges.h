@@ -98,7 +98,8 @@ template<typename Fn, typename ValueType>
 using transformIteratorType_t = typename transformIteratorType<Fn, ValueType>::type;
 
 template<typename IterImpl,
-         typename Iterator
+         typename Container,
+         typename Iterator = typename Container::const_iterator
         >
 struct IteratorBase
 {
@@ -109,8 +110,8 @@ public:
     using pointer = typename Iterator::pointer;
     using reference = typename Iterator::reference;
 
-    IteratorBase(const IteratorBase<IterImpl, Iterator> &other)
-        : mIter(other.mIter)
+    IteratorBase(const IteratorBase<IterImpl, Container> &other)
+        : mIter(other.mIter), mContainer(other.mContainer)
     {}
 
     IterImpl &operator++()
@@ -152,26 +153,31 @@ public:
     }
 
 protected:
-    IteratorBase(const Iterator &iter)
-        : mIter(iter)
+    IteratorBase(const Iterator &iter, const Container &container)
+        : mIter(iter), mContainer(container)
+    {}
+    IteratorBase(const Iterator &iter, Container &&container)
+        : mIter(iter), mContainer(std::move(container))
     {}
 
     Iterator mIter;
+    Container mContainer;
 };
 
-template<typename Iterator,
+template<typename Container,
          typename TransformFn,
+         typename Iterator = typename Container::const_iterator,
          typename IteratorValueType = transformIteratorType_t<TransformFn, typename Iterator::value_type>
         >
-struct TransformIterator : public IteratorBase<TransformIterator<Iterator, TransformFn>, Iterator>
+struct TransformIterator : public IteratorBase<TransformIterator<Container, TransformFn>, Container>
 {
 public:
     using value_type = IteratorValueType;
     using pointer = IteratorValueType *;         // FIXME: preserve const-ness
     using reference = const IteratorValueType &; // FIXME: preserve const-ness
 
-    TransformIterator(const Iterator &iter, const TransformFn &fn)
-        : IteratorBase<TransformIterator<Iterator, TransformFn>, Iterator>(iter)
+    TransformIterator(const Iterator &iter, const TransformFn &fn, const Container &container)
+        : IteratorBase<TransformIterator<Container, TransformFn>, Container>(iter, container)
         , mFn(fn)
     {}
 
@@ -184,14 +190,17 @@ private:
     TransformFn mFn;
 };
 
-template<typename Iterator,
-         typename Predicate
+template<typename Container,
+         typename Predicate,
+         typename Iterator = typename Container::const_iterator
         >
-class FilterIterator : public IteratorBase<FilterIterator<Iterator, Predicate>, Iterator>
+class FilterIterator : public IteratorBase<FilterIterator<Container, Predicate>, Container>
 {
 public:
-    FilterIterator(const Iterator &iter, const Iterator &end, const Predicate &predicate)
-        : IteratorBase<FilterIterator<Iterator, Predicate>, Iterator>(iter)
+    FilterIterator(const Iterator &iter, const Iterator &end,
+                   const Predicate &predicate,
+                   const Container &container)
+        : IteratorBase<FilterIterator<Container, Predicate>, Container>(iter, container)
         , mPredicate(predicate), mEnd(end)
     {
         while (this->mIter != mEnd && !mPredicate(*this->mIter)) {
@@ -199,7 +208,7 @@ public:
         }
     }
 
-    FilterIterator<Iterator, Predicate> &operator++()
+    auto &operator++()
     {
         if (this->mIter != mEnd) {
             do {
@@ -209,7 +218,7 @@ public:
         return *this;
     }
 
-    FilterIterator<Iterator, Predicate> operator++(int)
+    auto operator++(int)
     {
         auto it = *this;
         ++(*this);
@@ -316,8 +325,8 @@ auto operator|(const InContainer &in,
                const Akonadi::detail::Transform_<TransformFn> &t)
 {
     using namespace Akonadi::detail;
-    using OutIt = TransformIterator<typename InContainer::const_iterator, TransformFn>;
-    return Range<OutIt>(OutIt(in.cbegin(), t.mFn), OutIt(in.cend(), t.mFn));
+    using OutIt = TransformIterator<InContainer, TransformFn>;
+    return Range<OutIt>(OutIt(in.cbegin(), t.mFn, in), OutIt(in.cend(), t.mFn, in));
 }
 
 
@@ -329,9 +338,9 @@ auto operator|(const InContainer &in,
                const Akonadi::detail::Filter_<PredicateFn> &p)
 {
     using namespace Akonadi::detail;
-    using OutIt = FilterIterator<typename InContainer::const_iterator, PredicateFn>;
-    return Range<OutIt>(OutIt(in.cbegin(), in.cend(), p.mFn),
-                        OutIt(in.cend(), in.cend(), p.mFn));
+    using OutIt = FilterIterator<InContainer, PredicateFn>;
+    return Range<OutIt>(OutIt(in.cbegin(), in.cend(), p.mFn, in),
+                        OutIt(in.cend(), in.cend(), p.mFn, in));
 }
 
 
