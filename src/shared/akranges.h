@@ -28,6 +28,7 @@
 #endif
 
 #include "aktraits.h"
+#include "akhelpers.h"
 
 #include <QVector>
 #include <QSet>
@@ -74,28 +75,6 @@ OutContainer copyContainer(const InContainer &in)
     }
     return rv;
 }
-
-template<typename ...>
-using void_t = void;
-
-template<typename Fn, typename Arg,
-         typename = void>
-struct transformType;
-
-template<typename Fn, typename Arg>
-struct transformType<Fn, Arg, void_t<decltype(std::declval<Fn>()(std::declval<Arg>()))>>
-{
-    using type = decltype(std::declval<Fn>()(std::declval<Arg>()));
-};
-
-template<typename Fn, typename ValueType>
-struct transformIteratorType
-{
-    using type = typename transformType<Fn, ValueType>::type;
-};
-
-template<typename Fn, typename ValueType>
-using transformIteratorType_t = typename transformIteratorType<Fn, ValueType>::type;
 
 template<typename IterImpl,
          typename Container,
@@ -166,11 +145,22 @@ protected:
 
 template<typename Container,
          typename TransformFn,
-         typename Iterator = typename Container::const_iterator,
-         typename IteratorValueType = transformIteratorType_t<TransformFn, typename Iterator::value_type>
+         typename Iterator = typename Container::const_iterator
         >
 struct TransformIterator : public IteratorBase<TransformIterator<Container, TransformFn>, Container>
 {
+private:
+    template<typename ... T>
+    struct ResultOf;
+
+    template<typename R, typename ... Args>
+    struct ResultOf<R(Args ...)> {
+        using type = R;
+    };
+
+    template<typename ... Ts>
+    using FuncHelper = decltype(Akonadi::invoke(std::declval<Ts>() ...))(Ts ...);
+    using IteratorValueType = typename ResultOf<FuncHelper<TransformFn, typename Iterator::value_type>>::type;
 public:
     using value_type = IteratorValueType;
     using pointer = IteratorValueType *;         // FIXME: preserve const-ness
@@ -179,11 +169,12 @@ public:
     TransformIterator(const Iterator &iter, const TransformFn &fn, const Container &container)
         : IteratorBase<TransformIterator<Container, TransformFn>, Container>(iter, container)
         , mFn(fn)
-    {}
+    {
+    }
 
     auto operator*() const
     {
-        return mFn(*(this->mIter));
+        return Akonadi::invoke(mFn, *this->mIter);
     }
 
 private:
@@ -203,7 +194,7 @@ public:
         : IteratorBase<FilterIterator<Container, Predicate>, Container>(iter, container)
         , mPredicate(predicate), mEnd(end)
     {
-        while (this->mIter != mEnd && !mPredicate(*this->mIter)) {
+        while (this->mIter != mEnd && !Akonadi::invoke(mPredicate, *this->mIter)) {
             ++this->mIter;
         }
     }
@@ -213,7 +204,7 @@ public:
         if (this->mIter != mEnd) {
             do {
                 ++this->mIter;
-            } while (this->mIter != mEnd && !mPredicate(*this->mIter));
+            } while (this->mIter != mEnd && !Akonadi::invoke(mPredicate, *this->mIter));
         }
         return *this;
     }
@@ -280,19 +271,19 @@ using IsRange = typename std::is_same<T, Range<typename T::iterator>>;
 template<typename TransformFn>
 struct Transform_
 {
-    const TransformFn &mFn;
+    TransformFn mFn;
 };
 
 template<typename PredicateFn>
 struct Filter_
 {
-    const PredicateFn &mFn;
+    PredicateFn mFn;
 };
 
 template<typename EachFun>
 struct ForEach_
 {
-    const EachFun &mFn;
+    EachFun mFn;
 };
 
 } // namespace detail
@@ -355,9 +346,12 @@ template<typename InContainer,
          typename EachFun
         >
 auto operator|(const InContainer &in,
-               const Akonadi::detail::ForEach_<EachFun> &fun)
+               Akonadi::detail::ForEach_<EachFun> fun)
 {
-    std::for_each(std::cbegin(in), std::cend(in), fun.mFn);
+    std::for_each(std::cbegin(in), std::cend(in),
+                  [&fun](const auto &val) {
+                      Akonadi::invoke(fun.mFn, val);
+                  });
     return in;
 }
 
@@ -385,6 +379,7 @@ detail::Filter_<PredicateFn> filter(PredicateFn &&fn)
     return detail::Filter_<PredicateFn>{std::forward<PredicateFn>(fn)};
 }
 
+/// Non-lazily call EachFun for each element of the container or range
 template<typename EachFun>
 detail::ForEach_<EachFun> forEach(EachFun &&fn)
 {

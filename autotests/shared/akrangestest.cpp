@@ -26,6 +26,48 @@
 
 using namespace Akonadi;
 
+namespace {
+
+int transformFreeFunc(int i)
+{
+    return i * 2;
+}
+
+struct TransformHelper
+{
+public:
+    static int transform(int i)
+    {
+        return transformFreeFunc(i);
+    }
+
+    int operator()(int i) const
+    {
+        return transformFreeFunc(i);
+    }
+};
+
+bool filterFreeFunc(int i)
+{
+    return i % 2 == 0;
+}
+
+struct FilterHelper
+{
+public:
+    static bool filter(int i)
+    {
+        return filterFreeFunc(i);
+    }
+
+    bool operator()(int i)
+    {
+        return filterFreeFunc(i);
+    }
+};
+
+}
+
 class AkRangesTest : public QObject
 {
     Q_OBJECT
@@ -66,6 +108,9 @@ private Q_SLOTS:
         QList<int> in = { 1, 2, 3, 4, 5 };
         QList<int> out = { 2, 4, 6, 8, 10 };
         QCOMPARE(in | transform([](int i) { return i * 2; }) | toQList, out);
+        QCOMPARE(in | transform(transformFreeFunc) | toQList, out);
+        QCOMPARE(in | transform(&TransformHelper::transform) | toQList, out);
+        QCOMPARE(in | transform(TransformHelper()) | toQList, out);
     }
 
 private:
@@ -148,7 +193,10 @@ private Q_SLOTS:
         {
             QList<int> in = { 1, 2, 3, 4, 5, 6 };
             QList<int> out = { 6, 8, 10 };
-            QCOMPARE(range(in.begin() + 2, in.begin() + 5) | transform([](int i) { return i  * 2; }) | toQList, out);
+            QCOMPARE(range(in.begin() + 2, in.begin() + 5)
+                        | transform([](int i) { return i  * 2; })
+                        | toQList,
+                     out);
         }
     }
 
@@ -169,6 +217,9 @@ private Q_SLOTS:
             QCOMPARE(in | filter([](int i) { return i % 2 == 0; })
                         | toQList,
                      out);
+            QCOMPARE(in | filter(filterFreeFunc) | toQList, out);
+            QCOMPARE(in | filter(&FilterHelper::filter) | toQList, out);
+            QCOMPARE(in | filter(FilterHelper()) | toQList, out);
         }
     }
 
@@ -177,12 +228,12 @@ private Q_SLOTS:
         {
             QStringList in = { QStringLiteral("foo"), QStringLiteral("foobar"), QStringLiteral("foob") };
             QList<int> out = { 6 };
-            QCOMPARE(in | transform([](const auto &str) { return str.size(); })
+            QCOMPARE(in | transform(&QString::size)
                         | filter([](int i) { return i > 5; })
                         | toQList,
                      out);
             QCOMPARE(in | filter([](const auto &str) { return str.size() > 5; })
-                        | transform([](const auto &str) { return str.size(); })
+                        | transform(&QString::size)
                         | toQList,
                      out);
         }
@@ -228,6 +279,29 @@ private Q_SLOTS:
                  out);
     }
 
+private:
+    struct ForEachCallable
+    {
+    public:
+        ForEachCallable(QList<int> &out)
+            : mOut(out) {}
+
+        void operator()(int i) {
+            mOut.push_back(i);
+        }
+
+        static void append(int i) {
+            sOut.push_back(i);
+        }
+        static void clear() {
+            sOut.clear();
+        }
+        static QList<int> sOut;
+    private:
+        QList<int> &mOut;
+    };
+
+private Q_SLOTS:
     void testForEach()
     {
         const QList<int> in = { 1, 2, 3, 4, 5, 6 };
@@ -235,6 +309,16 @@ private Q_SLOTS:
             QList<int> out;
             in | forEach([&out](int v) { out.push_back(v); });
             QCOMPARE(out, in);
+        }
+        {
+            QList<int> out;
+            in | forEach(ForEachCallable(out));
+            QCOMPARE(out, in);
+        }
+        {
+            ForEachCallable::clear();
+            in | forEach(&ForEachCallable::append);
+            QCOMPARE(ForEachCallable::sOut, in);
         }
         {
             QList<int> out;
@@ -248,6 +332,8 @@ private Q_SLOTS:
 
     }
 };
+
+QList<int> AkRangesTest::ForEachCallable::sOut;
 
 QTEST_GUILESS_MAIN(AkRangesTest)
 
