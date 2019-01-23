@@ -58,6 +58,25 @@ QString DbConfigMysql::databaseName() const
     return mDatabaseName;
 }
 
+static QString findExecutable(const QString &bin)
+{
+    static const QStringList mysqldSearchPath = {
+        QStringLiteral("/usr/bin"),
+        QStringLiteral("/usr/sbin"),
+        QStringLiteral("/usr/local/sbin"),
+        QStringLiteral("/usr/local/libexec"),
+        QStringLiteral("/usr/libexec"),
+        QStringLiteral("/opt/mysql/libexec"),
+        QStringLiteral("/opt/local/lib/mysql5/bin"),
+        QStringLiteral("/opt/mysql/sbin"),
+    };
+    QString path = QStandardPaths::findExecutable(bin);
+    if (path.isEmpty()) { // No results in PATH; fall back to hardcoded list.
+        path = QStandardPaths::findExecutable(bin, mysqldSearchPath);
+    }
+    return path;
+}
+
 bool DbConfigMysql::init(QSettings &settings)
 {
     // determine default settings depending on the driver
@@ -76,20 +95,11 @@ bool DbConfigMysql::init(QSettings &settings)
         defaultServerPath = QStringLiteral(MYSQLD_EXECUTABLE);
     }
 #endif
-    const QStringList mysqldSearchPath = QStringList()
-                                         << QStringLiteral("/usr/bin")
-                                         << QStringLiteral("/usr/sbin")
-                                         << QStringLiteral("/usr/local/sbin")
-                                         << QStringLiteral("/usr/local/libexec")
-                                         << QStringLiteral("/usr/libexec")
-                                         << QStringLiteral("/opt/mysql/libexec")
-                                         << QStringLiteral("/opt/local/lib/mysql5/bin")
-                                         << QStringLiteral("/opt/mysql/sbin");
     if (defaultServerPath.isEmpty()) {
-        defaultServerPath = QStandardPaths::findExecutable(QStringLiteral("mysqld"), mysqldSearchPath);
+        defaultServerPath = findExecutable(QStringLiteral("mysqld"));
     }
 
-    const QString mysqladminPath = QStandardPaths::findExecutable(QStringLiteral("mysqladmin"), mysqldSearchPath);
+    const QString mysqladminPath = findExecutable(QStringLiteral("mysqladmin"));
     if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
         defaultCleanShutdownCommand = QStringLiteral("%1 --defaults-file=%2/mysql.conf --socket=%3/mysql.socket shutdown")
@@ -99,10 +109,10 @@ bool DbConfigMysql::init(QSettings &settings)
 #endif
     }
 
-    mMysqlInstallDbPath = QStandardPaths::findExecutable(QStringLiteral("mysql_install_db"), mysqldSearchPath);
+    mMysqlInstallDbPath = findExecutable(QStringLiteral("mysql_install_db"));
     qCDebug(AKONADISERVER_LOG) << "Found mysql_install_db: " << mMysqlInstallDbPath;
 
-    mMysqlCheckPath = QStandardPaths::findExecutable(QStringLiteral("mysqlcheck"), mysqldSearchPath);
+    mMysqlCheckPath = findExecutable(QStringLiteral("mysqlcheck"));
     qCDebug(AKONADISERVER_LOG) << "Found mysqlcheck: " << mMysqlCheckPath;
 
     mInternalServer = settings.value(QStringLiteral("QMYSQL/StartServer"), defaultInternalServer).toBool();
