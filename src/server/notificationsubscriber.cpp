@@ -47,6 +47,10 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
     , mExclusive(false)
     , mNotificationDebugging(false)
 {
+    if (mManager) {
+        mManager->collectionFetchScope()->addSubscriber();
+        mManager->tagFetchScope()->addSubscriber();
+    }
 }
 
 NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, quintptr socketDescriptor)
@@ -162,6 +166,10 @@ void NotificationSubscriber::disconnectSubscriber()
     for (const auto &attr : attrs) {
         cfs->removeAttribute(attr);
     }
+    cfs->removeSubscriber();
+
+    auto tfs = mManager->tagFetchScope();
+    tfs->removeSubscriber();
 
     mManager->forgetSubscriber(this);
     deleteLater();
@@ -267,6 +275,8 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         const auto newScope = command.tagFetchScope();
         mManager->tagFetchScope()->apply(mTagFetchScope, newScope);
         mTagFetchScope = newScope;
+        if (!newScope.fetchIdOnly())
+            Q_ASSERT(!mManager->tagFetchScope()->fetchIdOnly());
     }
 
     if (mManager) {

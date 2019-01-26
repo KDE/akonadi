@@ -756,10 +756,17 @@ void TagTest::testMonitor()
         TagCreateJob *createjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createjob);
         createdTag = createjob->tag();
+        QCOMPARE(createdTag.type(), tag.type());
+        QCOMPARE(createdTag.name(), tag.name());
+        QCOMPARE(createdTag.gid(), tag.gid());
         //We usually pick up signals from the previous tests as well (due to server-side notification caching)
         QTRY_VERIFY(addedSpy.count() >= 1);
         QTRY_COMPARE(addedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
-        QVERIFY(addedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
+        const Akonadi::Tag notifiedTag = addedSpy.last().first().value<Akonadi::Tag>();
+        QCOMPARE(notifiedTag.type(), createdTag.type());
+        QCOMPARE(notifiedTag.gid(), createdTag.gid());
+        QVERIFY(notifiedTag.hasAttribute<Akonadi::TagAttribute>());
+        QCOMPARE(notifiedTag.name(), createdTag.name()); // requires the TagAttribute
     }
 
     {
