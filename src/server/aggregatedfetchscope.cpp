@@ -89,6 +89,7 @@ class AggregatedCollectionFetchScopePrivate : public AggregatedFetchScopePrivate
 public:
     QSet<QByteArray> attrs;
     QHash<QByteArray, int> attrsCount;
+    int subscribers = 0;
     int fetchIdOnly = 0;
     int fetchStats = 0;
 };
@@ -99,6 +100,7 @@ class AggregatedTagFetchScopePrivate : public AggregatedFetchScopePrivate
 public:
     QSet<QByteArray> attrs;
     QHash<QByteArray, int> attrsCount;
+    int subscribers = 0;
     int fetchIdOnly = 0;
     int fetchRemoteId = 0;
     int fetchAllAttributes = 0;
@@ -186,7 +188,7 @@ bool AggregatedCollectionFetchScope::fetchIdOnly() const
     LOCKED_D(const AggregatedCollectionFetchScope)
     // Aggregation: we can return true only if everyone wants fetchIdOnly,
     // otherwise there's at least one subscriber who wants everything
-    return d->fetchIdOnly == 0;
+    return d->fetchIdOnly == d->subscribers;
 }
 
 void AggregatedCollectionFetchScope::setFetchIdOnly(bool fetchIdOnly)
@@ -208,6 +210,17 @@ void AggregatedCollectionFetchScope::setFetchStatistics(bool fetchStats)
     d->updateBool(fetchStats, d->fetchStats);
 }
 
+void AggregatedCollectionFetchScope::addSubscriber()
+{
+    LOCKED_D(AggregatedCollectionFetchScope)
+    ++d->subscribers;
+}
+
+void AggregatedCollectionFetchScope::removeSubscriber()
+{
+    LOCKED_D(AggregatedCollectionFetchScope)
+    --d->subscribers;
+}
 
 
 AggregatedItemFetchScope::AggregatedItemFetchScope()
@@ -567,7 +580,7 @@ bool AggregatedTagFetchScope::fetchIdOnly() const
     LOCKED_D(const AggregatedTagFetchScope)
     // Aggregation: we can return true only if everyone wants fetchIdOnly,
     // otherwise there's at least one subscriber who wants everything
-    return d->fetchIdOnly == 0;
+    return d->fetchIdOnly == d->subscribers;
 }
 
 void AggregatedTagFetchScope::setFetchIdOnly(bool fetchIdOnly)
@@ -616,6 +629,18 @@ void AggregatedTagFetchScope::removeAttribute(const QByteArray &attribute)
 {
     LOCKED_D(AggregatedTagFetchScope)
     d->removeFromSet(attribute, d->attrs, d->attrsCount);
+}
+
+void AggregatedTagFetchScope::addSubscriber()
+{
+    LOCKED_D(AggregatedTagFetchScope)
+    ++d->subscribers;
+}
+
+void AggregatedTagFetchScope::removeSubscriber()
+{
+    LOCKED_D(AggregatedTagFetchScope)
+    --d->subscribers;
 }
 
 #undef LOCKED_D

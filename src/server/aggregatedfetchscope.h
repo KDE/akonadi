@@ -49,6 +49,9 @@ public:
     bool fetchStatistics() const;
     void setFetchStatistics(bool fetchStats);
 
+    void addSubscriber();
+    void removeSubscriber();
+
 private:
     AggregatedCollectionFetchScopePrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedCollectionFetchScope)
@@ -120,6 +123,9 @@ public:
     QSet<QByteArray> attributes() const;
     void addAttribute(const QByteArray &attribute);
     void removeAttribute(const QByteArray &attribute);
+
+    void addSubscriber();
+    void removeSubscriber();
 
     bool fetchIdOnly() const;
     void setFetchIdOnly(bool fetchIdOnly);
