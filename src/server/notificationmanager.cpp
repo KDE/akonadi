@@ -27,6 +27,7 @@
 #include "storage/collectionstatistics.h"
 #include "handlerhelper.h"
 
+#include <shared/akranges.h>
 #include <private/standarddirs_p.h>
 #include <private/scope_p.h>
 
@@ -189,18 +190,18 @@ void NotificationManager::emitPendingNotifications()
     }
 
     if (mDebugNotifications == 0) {
-        for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
-            if (subscriber) {
+        mSubscribers
+            | filter(IsNotNull)
+            | forEach([this](const auto &subscriber) {
                 mNotifyThreadPool->start(new NotifyRunnable(subscriber, mNotifications));
-            }
-        }
+              });
     } else {
         // When debugging notification we have to use a non-threaded approach
         // so that we can work with return value of notify()
         for (const auto &notification : qAsConst(mNotifications)) {
             QVector<QByteArray> listeners;
             for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
-                if (subscriber && subscriber->notify(notification)) {
+               if (subscriber && subscriber->notify(notification)) {
                     listeners.push_back(subscriber->subscriber());
                 }
             }
@@ -219,9 +220,9 @@ void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificati
     debugNtf->setNotification(ntf);
     debugNtf->setListeners(listeners);
     debugNtf->setTimestamp(QDateTime::currentMSecsSinceEpoch());
-    for (NotificationSubscriber *subscriber : qAsConst(mSubscribers)) {
-        if (subscriber) {
-            mNotifyThreadPool->start(new NotifyRunnable(subscriber, { debugNtf }));
-        }
-    }
+    mSubscribers
+        | filter(IsNotNull)
+        | forEach([this, &debugNtf](const auto &subscriber) {
+              mNotifyThreadPool->start(new NotifyRunnable(subscriber, {debugNtf}));
+          });
 }

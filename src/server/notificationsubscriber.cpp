@@ -27,6 +27,7 @@
 #include <QLocalSocket>
 #include <QPointer>
 
+#include <shared/akranges.h>
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
 #include <private/protocol_exception_p.h>
@@ -162,10 +163,9 @@ void NotificationSubscriber::disconnectSubscriber()
     if (mCollectionFetchScope.includeStatistics()) {
         cfs->setFetchStatistics(false);
     }
-    const auto attrs = mCollectionFetchScope.attributes();
-    for (const auto &attr : attrs) {
-        cfs->removeAttribute(attr);
-    }
+    mCollectionFetchScope.attributes() | forEach([&cfs](const auto &attr) {
+            cfs->removeAttribute(attr);
+    });
     cfs->removeSubscriber();
 
     auto tfs = mManager->tagFetchScope();
@@ -284,14 +284,13 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
             // Did the caller just subscribed to subscription changes?
             if (command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges)) {
                 // If yes, then send them list of all existing subscribers
-                Q_FOREACH (const NotificationSubscriber *subscriber, mManager->mSubscribers) {
-                    // Send them back to caller
-                    if (subscriber) {
+                mManager->mSubscribers
+                    | filter(IsNotNull)
+                    | forEach([this](const auto &subscriber) {
                         QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
                                                   Q_ARG(Akonadi::Protocol::ChangeNotificationPtr,
-                                                        subscriber->toChangeNotification()));
-                    }
-                }
+                                                  subscriber->toChangeNotification()));
+                    });
             }
             if (command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::ChangeNotifications)) {
                 if (!mNotificationDebugging) {
@@ -365,13 +364,10 @@ bool NotificationSubscriber::isMimeTypeMonitored(const QString &mimeType) const
     }
 
     const QStringList lst = mt.aliases();
-    for (const QString &alias : lst) {
-        if (mMonitoredMimeTypes.contains(alias)) {
-            return true;
-        }
-    }
-
-    return false;
+    return std::any_of(lst.cbegin(), lst.cend(),
+                [this](const auto &mt) {
+                    return mMonitoredMimeTypes.contains(mt);
+                });
 }
 
 bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::ItemChangeNotification &msg) const

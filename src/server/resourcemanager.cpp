@@ -23,6 +23,7 @@
 #include "storage/transaction.h"
 #include "resourcemanageradaptor.h"
 
+#include <shared/akranges.h>
 #include <private/capabilities_p.h>
 
 #include <QDBusConnection>
@@ -58,15 +59,12 @@ void ResourceManager::addResourceInstance(const QString &name, const QStringList
 
 void ResourceManager::removeResourceInstance(const QString &name)
 {
-    DataStore *db = DataStore::self();
-
     // remove items and collections
     Resource resource = Resource::retrieveByName(name);
     if (resource.isValid()) {
-        const QVector<Collection> collections = resource.collections();
-        for (/*sic!*/ Collection collection : collections) {
-            db->cleanupCollection(collection);
-        }
+        resource.collections() | forEach([](Collection col) {
+                DataStore::self()->cleanupCollection(col);
+            });
 
         // remove resource
         resource.remove();
@@ -75,13 +73,9 @@ void ResourceManager::removeResourceInstance(const QString &name)
 
 QStringList ResourceManager::resourceInstances() const
 {
-    QStringList result;
-    const auto resources = Resource::retrieveAll();
-    result.reserve(resources.size());
-    for (const Resource &res : resources) {
-        result.append(res.name());
-    }
-    return result;
+    return Resource::retrieveAll()
+            | transform(&Resource::name)
+            | toQList;
 }
 
 ResourceManager *ResourceManager::self()
