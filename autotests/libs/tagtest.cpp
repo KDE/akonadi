@@ -770,16 +770,20 @@ void TagTest::testMonitor()
     }
 
     {
-        QSignalSpy modifedSpy(&monitor, SIGNAL(tagChanged(Akonadi::Tag)));
-        QVERIFY(modifedSpy.isValid());
+        QSignalSpy modifiedSpy(&monitor, SIGNAL(tagChanged(Akonadi::Tag)));
+        QVERIFY(modifiedSpy.isValid());
         createdTag.setName(QStringLiteral("name3"));
 
         TagModifyJob *modJob = new TagModifyJob(createdTag, this);
         AKVERIFYEXEC(modJob);
         //We usually pick up signals from the previous tests as well (due to server-side notification caching)
-        QTRY_VERIFY(modifedSpy.count() >= 1);
-        QTRY_COMPARE(modifedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
-        QVERIFY(modifedSpy.last().first().value<Akonadi::Tag>().hasAttribute<Akonadi::TagAttribute>());
+        QTRY_VERIFY(modifiedSpy.count() >= 1);
+        QTRY_COMPARE(modifiedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
+        const Akonadi::Tag notifiedTag = modifiedSpy.last().first().value<Akonadi::Tag>();
+        QCOMPARE(notifiedTag.type(), createdTag.type());
+        QCOMPARE(notifiedTag.gid(), createdTag.gid());
+        QVERIFY(notifiedTag.hasAttribute<Akonadi::TagAttribute>());
+        QCOMPARE(notifiedTag.name(), createdTag.name()); // requires the TagAttribute
     }
 
     {
@@ -789,6 +793,11 @@ void TagTest::testMonitor()
         AKVERIFYEXEC(deletejob);
         QTRY_VERIFY(removedSpy.count() >= 1);
         QTRY_COMPARE(removedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
+        const Akonadi::Tag notifiedTag = removedSpy.last().first().value<Akonadi::Tag>();
+        QCOMPARE(notifiedTag.type(), createdTag.type());
+        QCOMPARE(notifiedTag.gid(), createdTag.gid());
+        QVERIFY(notifiedTag.hasAttribute<Akonadi::TagAttribute>());
+        QCOMPARE(notifiedTag.name(), createdTag.name()); // requires the TagAttribute
     }
 }
 
