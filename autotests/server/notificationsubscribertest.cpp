@@ -20,7 +20,6 @@
 #include <aktest.h>
 
 #include "entities.h"
-#include "notificationmanager.h"
 #include "notificationsubscriber.h"
 
 #include <QObject>
@@ -98,7 +97,7 @@ public:
     Protocol::ChangeNotificationList emittedNotifications;
 };
 
-class NotificationManagerTest : public QObject
+class NotificationSubscriberTest : public QObject
 {
     Q_OBJECT
 
@@ -399,6 +398,6 @@ private Q_SLOTS:
     }
 };
 
-AKTEST_MAIN(NotificationManagerTest)
+AKTEST_MAIN(NotificationSubscriberTest)
 
-#include "notificationmanagertest.moc"
+#include "notificationsubscribertest.moc"
