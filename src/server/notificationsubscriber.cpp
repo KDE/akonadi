@@ -49,6 +49,7 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
     , mNotificationDebugging(false)
 {
     if (mManager) {
+        mManager->itemFetchScope()->addSubscriber();
         mManager->collectionFetchScope()->addSubscriber();
         mManager->tagFetchScope()->addSubscriber();
     }
@@ -170,6 +171,9 @@ void NotificationSubscriber::disconnectSubscriber()
 
     auto tfs = mManager->tagFetchScope();
     tfs->removeSubscriber();
+
+    auto ifs = mManager->itemFetchScope();
+    ifs->removeSubscriber();
 
     mManager->forgetSubscriber(this);
     deleteLater();

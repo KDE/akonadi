@@ -103,6 +103,9 @@ public:
     bool fetchVirtualReferences() const;
     void setFetchVirtualReferences(bool fetchVRefs);
 
+    void addSubscriber();
+    void removeSubscriber();
+
 private:
     AggregatedItemFetchScopePrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedItemFetchScope)
