@@ -116,6 +116,7 @@ public:
     QHash<QByteArray, int> partsCount;
     QSet<QByteArray> tags;
     QHash<QByteArray, int> tagsCount;
+    int subscribers = 0;
     int ancestors[3] = { 0, 0, 0 }; // 3 = size of AncestorDepth enum
     int cacheOnly = 0;
     int fullPayload = 0;
@@ -363,7 +364,7 @@ bool AggregatedItemFetchScope::cacheOnly() const
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: we can return true only if everyone wants cached data only,
     // otherwise there's at least one subscriber who wants uncached data
-    return d->cacheOnly == 0;
+    return d->cacheOnly == d->subscribers;
 }
 
 void AggregatedItemFetchScope::setCacheOnly(bool cacheOnly)
@@ -444,7 +445,7 @@ bool AggregatedItemFetchScope::ignoreErrors() const
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: return true only if everyone wants to ignore errors, otherwise
     // there's at least one subscriber who does not want to ignore them
-    return d->ignoreErrors == 0;
+    return d->ignoreErrors == d->subscribers;
 }
 
 void AggregatedItemFetchScope::setIgnoreErrors(bool ignoreErrors)
@@ -531,7 +532,17 @@ void AggregatedItemFetchScope::setFetchVirtualReferences(bool fetchVRefs)
     d->updateBool(fetchVRefs, d->fetchVRefs);
 }
 
+void AggregatedItemFetchScope::addSubscriber()
+{
+    LOCKED_D(AggregatedItemFetchScope)
+    ++d->subscribers;
+}
 
+void AggregatedItemFetchScope::removeSubscriber()
+{
+    LOCKED_D(AggregatedItemFetchScope)
+    --d->subscribers;
+}
 
 
 
