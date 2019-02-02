@@ -27,13 +27,15 @@
 using namespace Akonadi::Server;
 
 AkThread::AkThread(const QString &objectName, StartMode startMode, QThread::Priority priority, QObject *parent)
-    : QObject(parent)
+    : QObject(parent), m_startMode(startMode)
 {
     setObjectName(objectName);
-    QThread *thread = new QThread();
-    thread->setObjectName(objectName + QStringLiteral("-Thread"));
-    moveToThread(thread);
-    thread->start(priority);
+    if (startMode != NoThread) {
+        QThread *thread = new QThread();
+        thread->setObjectName(objectName + QStringLiteral("-Thread"));
+        moveToThread(thread);
+        thread->start(priority);
+    }
 
     if (startMode == AutoStart) {
         startThread();
@@ -51,6 +53,7 @@ AkThread::~AkThread()
 
 void AkThread::startThread()
 {
+    Q_ASSERT(m_startMode != NoThread);
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     const bool init = QMetaObject::invokeMethod(this, &AkThread::init, Qt::QueuedConnection);
 #else
@@ -62,6 +65,8 @@ void AkThread::startThread()
 
 void AkThread::quitThread()
 {
+    if (m_startMode == NoThread)
+        return;
     qCDebug(AKONADISERVER_LOG) << "Shutting down" << objectName() << "...";
 #if QT_VERSION >= QT_VERSION_CHECK(5, 10, 0)
     const bool invoke = QMetaObject::invokeMethod(this, &AkThread::quit, Qt::QueuedConnection);
@@ -81,13 +86,12 @@ void AkThread::quitThread()
 void AkThread::init()
 {
     Q_ASSERT(thread() == QThread::currentThread());
-    Q_ASSERT(thread() != qApp->thread());
 }
 
 void AkThread::quit()
 {
+    Q_ASSERT(m_startMode != NoThread);
     Q_ASSERT(thread() == QThread::currentThread());
-    Q_ASSERT(thread() != qApp->thread());
 
     if (DataStore::hasDataStore()) {
         DataStore::self()->close();
@@ -95,4 +99,3 @@ void AkThread::quit()
 
     thread()->quit();
 }
-

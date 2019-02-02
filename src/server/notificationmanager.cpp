@@ -32,6 +32,7 @@
 #include <private/standarddirs_p.h>
 #include <private/scope_p.h>
 
+#include <QCoreApplication>
 #include <QSettings>
 #include <QThreadPool>
 #include <QPointer>
@@ -42,8 +43,8 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-NotificationManager::NotificationManager()
-    : AkThread(QStringLiteral("NotificationManager"))
+NotificationManager::NotificationManager(StartMode startMode)
+    : AkThread(QStringLiteral("NotificationManager"), startMode)
     , mTimer(nullptr)
     , mNotifyThreadPool(nullptr)
     , mDebugNotifications(0)
