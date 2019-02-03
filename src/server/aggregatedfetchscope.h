@@ -40,14 +40,9 @@ public:
                const Protocol::CollectionFetchScope &newScope);
 
     QSet<QByteArray> attributes() const;
-    void addAttribute(const QByteArray &attribute);
-    void removeAttribute(const QByteArray &attribute);
 
     bool fetchIdOnly() const;
-    void setFetchIdOnly(bool fetchIdOnly);
-
     bool fetchStatistics() const;
-    void setFetchStatistics(bool fetchStats);
 
     void addSubscriber();
     void removeSubscriber();
@@ -69,39 +64,24 @@ public:
     Protocol::ItemFetchScope toFetchScope() const;
 
     QSet<QByteArray> requestedParts() const;
-    void addRequestedPart(const QByteArray &part);
-    void removeRequestedPart(const QByteArray &part);
 
     Protocol::ItemFetchScope::AncestorDepth ancestorDepth() const;
     void updateAncestorDepth(Protocol::ItemFetchScope::AncestorDepth oldDepth,
                              Protocol::ItemFetchScope::AncestorDepth newDepth);
 
     bool cacheOnly() const;
-    void setCacheOnly(bool cacheOnly);
     bool fullPayload() const;
-    void setFullPayload(bool fullPayload);
     bool allAttributes() const;
-    void setAllAttributes(bool allAttributes);
     bool fetchSize() const;
-    void setFetchSize(bool fetchSize);
     bool fetchMTime() const;
-    void setFetchMTime(bool fetchMTime);
     bool fetchRemoteRevision() const;
-    void setFetchRemoteRevision(bool remoteRevision);
     bool ignoreErrors() const;
-    void setIgnoreErrors(bool ignoreErrors);
     bool fetchFlags() const;
-    void setFetchFlags(bool fetchFlags);
     bool fetchRemoteId() const;
-    void setFetchRemoteId(bool fetchRemoteId);
     bool fetchGID() const;
-    void setFetchGID(bool fetchGid);
     bool fetchTags() const;
-    void setFetchTags(bool fetchTags);
     bool fetchRelations() const;
-    void setFetchRelations(bool fetchRelations);
     bool fetchVirtualReferences() const;
-    void setFetchVirtualReferences(bool fetchVRefs);
 
     void addSubscriber();
     void removeSubscriber();
@@ -124,20 +104,14 @@ public:
     Protocol::TagFetchScope toFetchScope() const;
 
     QSet<QByteArray> attributes() const;
-    void addAttribute(const QByteArray &attribute);
-    void removeAttribute(const QByteArray &attribute);
 
     void addSubscriber();
     void removeSubscriber();
 
     bool fetchIdOnly() const;
-    void setFetchIdOnly(bool fetchIdOnly);
-
     bool fetchRemoteId() const;
-    void setFetchRemoteId(bool fetchRemoteId);
-
     bool fetchAllAttributes() const;
-    void setFetchAllAttributes(bool fetchAllAttributes);
+
 private:
     AggregatedTagFetchScopePrivate * const d_ptr;
     Q_DECLARE_PRIVATE(AggregatedTagFetchScope)
