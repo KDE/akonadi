@@ -43,23 +43,28 @@ private Q_SLOTS:
         QSet<QByteArray> attrs = {"FOO"};
         tagScopeA.setAttributes(attrs);
         tagScopeA.setFetchIdOnly(true);
+        tagScopeA.setFetchAllAttributes(false);
         scope.apply(oldTagScope, tagScopeA);
         QCOMPARE(scope.attributes(), attrs);
         QVERIFY(scope.fetchIdOnly());
+        QVERIFY(!scope.fetchAllAttributes());
 
         // second subscriber, B
         Protocol::TagFetchScope tagScopeB = tagScopeA;
         tagScopeB.setFetchIdOnly(false);
+        tagScopeB.setFetchAllAttributes(true);
         scope.addSubscriber();
         scope.apply(oldTagScope, tagScopeB);
         QCOMPARE(scope.attributes(), attrs);
         QVERIFY(!scope.fetchIdOnly());
+        QVERIFY(scope.fetchAllAttributes());
 
         // then B goes away
         scope.apply(tagScopeB, oldTagScope);
         scope.removeSubscriber();
         QCOMPARE(scope.attributes(), attrs);
         QVERIFY(scope.fetchIdOnly());
+        QVERIFY(!scope.fetchAllAttributes());
 
         // A goes away
         scope.apply(tagScopeA, oldTagScope);

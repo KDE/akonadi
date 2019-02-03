@@ -61,6 +61,7 @@ private Q_SLOTS:
         createCmd.setSession("session1");
         subscriberA.registerSubscriber(createCmd);
         QVERIFY(!manager.tagFetchScope()->fetchIdOnly());
+        QVERIFY(manager.tagFetchScope()->fetchAllAttributes()); // default is true
         QVERIFY(!manager.collectionFetchScope()->fetchIdOnly());
         QVERIFY(!manager.collectionFetchScope()->fetchStatistics());
 
@@ -69,6 +70,7 @@ private Q_SLOTS:
         {
             Protocol::TagFetchScope tagFetchScope;
             tagFetchScope.setFetchIdOnly(true);
+            tagFetchScope.setFetchAllAttributes(false);
             modifyCmd.setTagFetchScope(tagFetchScope);
 
             Protocol::CollectionFetchScope collectionFetchScope;
@@ -92,6 +94,7 @@ private Q_SLOTS:
         }
         subscriberA.modifySubscription(modifyCmd);
         QVERIFY(manager.tagFetchScope()->fetchIdOnly());
+        QVERIFY(!manager.tagFetchScope()->fetchAllAttributes());
         QVERIFY(manager.collectionFetchScope()->fetchIdOnly());
         QVERIFY(manager.collectionFetchScope()->fetchStatistics());
         QVERIFY(manager.itemFetchScope()->fullPayload());
@@ -101,6 +104,7 @@ private Q_SLOTS:
         TestableNotificationSubscriber subscriberB(&manager);
         subscriberB.registerSubscriber(createCmd);
         QVERIFY(!manager.tagFetchScope()->fetchIdOnly()); // A and B don't agree, so: false
+        QVERIFY(manager.tagFetchScope()->fetchAllAttributes());
         QVERIFY(!manager.collectionFetchScope()->fetchIdOnly());
         QVERIFY(manager.collectionFetchScope()->fetchStatistics()); // at least one - so still true
         QVERIFY(manager.itemFetchScope()->fullPayload());
@@ -118,6 +122,7 @@ private Q_SLOTS:
         // give it the same settings
         subscriberB.modifySubscription(modifyCmd);
         QVERIFY(manager.tagFetchScope()->fetchIdOnly()); // now they agree
+        QVERIFY(!manager.tagFetchScope()->fetchAllAttributes());
         QVERIFY(manager.collectionFetchScope()->fetchIdOnly());
         QVERIFY(manager.collectionFetchScope()->fetchStatistics()); // no change for the "at least one" settings
 
@@ -126,12 +131,14 @@ private Q_SLOTS:
         modifyCmd.setCollectionFetchScope(Protocol::CollectionFetchScope());
         subscriberB.modifySubscription(modifyCmd);
         QVERIFY(!manager.tagFetchScope()->fetchIdOnly());
+        QVERIFY(manager.tagFetchScope()->fetchAllAttributes());
         QVERIFY(!manager.collectionFetchScope()->fetchIdOnly());
         QVERIFY(manager.collectionFetchScope()->fetchStatistics());
 
         // B goes away
         subscriberB.disconnectSubscriber();
         QVERIFY(manager.tagFetchScope()->fetchIdOnly()); // B cleaned up after itself, so A can have id-only again
+        QVERIFY(!manager.tagFetchScope()->fetchAllAttributes());
         QVERIFY(manager.collectionFetchScope()->fetchIdOnly());
         QVERIFY(manager.collectionFetchScope()->fetchStatistics());
 

@@ -103,7 +103,7 @@ public:
     int subscribers = 0;
     int fetchIdOnly = 0;
     int fetchRemoteId = 0;
-    int fetchAllAttributes = 0;
+    int doNotFetchAllAttributes = 0;
 };
 
 class AggregatedItemFetchScopePrivate : public AggregatedFetchScopePrivate
@@ -615,13 +615,15 @@ void AggregatedTagFetchScope::setFetchRemoteId(bool fetchRemoteId)
 bool AggregatedTagFetchScope::fetchAllAttributes() const
 {
     LOCKED_D(const AggregatedTagFetchScope)
-    return d->fetchAllAttributes > 0;
+    // The default value for fetchAllAttributes is true, so we return false only if every subscriber said "do not fetch all attributes"
+    return d->doNotFetchAllAttributes != d->subscribers;
 }
 
 void AggregatedTagFetchScope::setFetchAllAttributes(bool fetchAllAttributes)
 {
     LOCKED_D(AggregatedTagFetchScope)
-    d->updateBool(fetchAllAttributes, d->fetchAllAttributes);
+    // Count the number of subscribers who call with false
+    d->updateBool(!fetchAllAttributes, d->doNotFetchAllAttributes);
 }
 
 QSet<QByteArray> AggregatedTagFetchScope::attributes() const
