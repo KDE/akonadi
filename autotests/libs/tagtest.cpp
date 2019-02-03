@@ -64,6 +64,7 @@ private Q_SLOTS:
     void testModifyItemWithTagByGID();
     void testModifyItemWithTagByRID();
     void testMonitor();
+    void testTagAttributeConfusionBug();
     void testFetchItemsByTag();
 };
 
@@ -799,6 +800,61 @@ void TagTest::testMonitor()
         QVERIFY(notifiedTag.hasAttribute<Akonadi::TagAttribute>());
         QCOMPARE(notifiedTag.name(), createdTag.name()); // requires the TagAttribute
     }
+}
+
+void TagTest::testTagAttributeConfusionBug()
+{
+    // Create two tags
+    Tag firstTag;
+    {
+        firstTag.setGid("gid");
+        firstTag.setName(QStringLiteral("display name"));
+        TagCreateJob *createjob = new TagCreateJob(firstTag, this);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        firstTag = createjob->tag();
+    }
+    Tag secondTag;
+    {
+        secondTag.setGid("AnotherGID");
+        secondTag.setName(QStringLiteral("another name"));
+        TagCreateJob *createjob = new TagCreateJob(secondTag, this);
+        AKVERIFYEXEC(createjob);
+        QVERIFY(createjob->tag().isValid());
+        secondTag = createjob->tag();
+    }
+
+    Akonadi::Monitor monitor;
+    monitor.setTypeMonitored(Akonadi::Monitor::Tags);
+
+    const QList<Tag::Id> firstTagIdList{ firstTag.id() };
+
+    // Modify attribute on the first tag
+    // and check the notification
+    {
+        QSignalSpy modifiedSpy(&monitor, &Akonadi::Monitor::tagChanged);
+
+        firstTag.setName(QStringLiteral("renamed"));
+        TagModifyJob *modJob = new TagModifyJob(firstTag, this);
+        AKVERIFYEXEC(modJob);
+
+        TagFetchJob *fetchJob = new TagFetchJob(firstTagIdList, this);
+        QVERIFY(fetchJob->fetchScope().fetchAllAttributes());
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().size(), 1);
+        QCOMPARE(fetchJob->tags().first().name(), firstTag.name());
+
+        QTRY_VERIFY(modifiedSpy.count() >= 1);
+        QTRY_COMPARE(modifiedSpy.last().first().value<Akonadi::Tag>().id(), firstTag.id());
+        const Akonadi::Tag notifiedTag = modifiedSpy.last().first().value<Akonadi::Tag>();
+        QCOMPARE(notifiedTag.name(), firstTag.name());
+    }
+
+    // Cleanup
+    TagDeleteJob *deleteJob = new TagDeleteJob(firstTag, this);
+    AKVERIFYEXEC(deleteJob);
+    TagDeleteJob *anotherDeleteJob = new TagDeleteJob(secondTag, this);
+    AKVERIFYEXEC(anotherDeleteJob);
 }
 
 void TagTest::testFetchItemsByTag()

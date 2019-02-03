@@ -258,6 +258,7 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
                     [](const QByteArray &ba) { return QVariant(ba); });
             cond.addValueCondition(TagAttribute::typeFullColumnName(), Query::In, types);
         }
+        qb.addCondition(cond);
         if (!qb.exec()) {
             throw HandlerException("Unable to query Tag Attributes");
         }
