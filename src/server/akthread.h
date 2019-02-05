@@ -34,7 +34,8 @@ class AkThread : public QObject
 public:
     enum StartMode {
         AutoStart,
-        ManualStart
+        ManualStart,
+        NoThread // for unit-tests
     };
 
     explicit AkThread(const QString &objectName, QThread::Priority priority = QThread::InheritPriority,
@@ -52,6 +53,8 @@ protected Q_SLOTS:
     virtual void init();
     virtual void quit();
 
+private:
+    StartMode m_startMode;
 };
 
 }

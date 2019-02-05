@@ -47,7 +47,7 @@ class NotificationManager : public AkThread
     Q_OBJECT
 
 public:
-    explicit NotificationManager();
+    explicit NotificationManager(StartMode startMode = AutoStart);
     ~NotificationManager() override;
 
     void forgetSubscriber(NotificationSubscriber *subscriber);

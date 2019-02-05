@@ -171,19 +171,15 @@ void Connection::doReconnect()
         serverAddress = connectionSettings.value(method, defaultAddressForTypeAndMethod(mConnectionType, method)).toString();
     }
 
-    // create sockets if not yet done, note that this does not yet allow changing socket types on the fly
-    // but that's probably not something we need to support anyway
-    if (!mSocket) {
-        mSocket.reset(new QLocalSocket(this));
-        connect(mSocket.data(), static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
-        [this](QLocalSocket::LocalSocketError) {
-            qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
-            Q_EMIT socketError(mSocket->errorString());
-            Q_EMIT socketDisconnected();
-        });
-        connect(mSocket.data(), &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
-        connect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);
-    }
+    mSocket.reset(new QLocalSocket(this));
+    connect(mSocket.data(), static_cast<void(QLocalSocket::*)(QLocalSocket::LocalSocketError)>(&QLocalSocket::error), this,
+            [this](QLocalSocket::LocalSocketError) {
+        qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
+        Q_EMIT socketError(mSocket->errorString());
+        Q_EMIT socketDisconnected();
+    });
+    connect(mSocket.data(), &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
+    connect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);
 
     // actually do connect
     qCDebug(AKONADICORE_LOG) << "connectToServer" << serverAddress;
@@ -234,7 +230,6 @@ void Connection::doCloseConnection()
 
     if (mSocket) {
         mSocket->close();
-        mSocket->readAll();
         mSocket.reset();
     }
 }
@@ -267,7 +262,6 @@ void Connection::handleIncomingData()
         if (!cmd || (cmd->type() == Protocol::Command::Invalid)) {
             qCWarning(AKONADICORE_LOG) << "Invalid command, the world is going to end!";
             mSocket->close();
-            mSocket->readAll();
             reconnect();
             return;
         }
@@ -325,14 +319,12 @@ void Connection::doSendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
         } catch (const Akonadi::ProtocolException &e) {
             qCWarning(AKONADICORE_LOG) << "Protocol Exception:" << QString::fromUtf8(e.what());
             mSocket->close();
-            mSocket->readAll();
             reconnect();
             return;
         }
         if (!mSocket->waitForBytesWritten()) {
             qCWarning(AKONADICORE_LOG) << "Socket write timeout";
             mSocket->close();
-            mSocket->readAll();
             reconnect();
             return;
         }

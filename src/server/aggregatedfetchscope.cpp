@@ -103,7 +103,7 @@ public:
     int subscribers = 0;
     int fetchIdOnly = 0;
     int fetchRemoteId = 0;
-    int fetchAllAttributes = 0;
+    int doNotFetchAllAttributes = 0;
 };
 
 class AggregatedItemFetchScopePrivate : public AggregatedFetchScopePrivate
@@ -156,10 +156,10 @@ void AggregatedCollectionFetchScope::apply(const Protocol::CollectionFetchScope 
     LOCKED_D(AggregatedCollectionFetchScope)
 
     if (newScope.includeStatistics() != oldScope.includeStatistics()) {
-        setFetchStatistics(newScope.includeStatistics());
+        d->updateBool(newScope.includeStatistics(), d->fetchStats);
     }
     if (newScope.fetchIdOnly() != oldScope.fetchIdOnly()) {
-        setFetchIdOnly(newScope.fetchIdOnly());
+        d->updateBool(newScope.fetchIdOnly(), d->fetchIdOnly);
     }
     if (newScope.attributes() != oldScope.attributes()) {
         d->applySet(oldScope.attributes(), newScope.attributes(), d->attrs, d->attrsCount);
@@ -172,18 +172,6 @@ QSet<QByteArray> AggregatedCollectionFetchScope::attributes() const
     return d->attrs;
 }
 
-void AggregatedCollectionFetchScope::addAttribute(const QByteArray &attribute)
-{
-    LOCKED_D(AggregatedCollectionFetchScope)
-    d->addToSet(attribute, d->attrs, d->attrsCount);
-}
-
-void AggregatedCollectionFetchScope::removeAttribute(const QByteArray &attribute)
-{
-    LOCKED_D(AggregatedCollectionFetchScope)
-    d->removeFromSet(attribute, d->attrs, d->attrsCount);
-}
-
 bool AggregatedCollectionFetchScope::fetchIdOnly() const
 {
     LOCKED_D(const AggregatedCollectionFetchScope)
@@ -192,23 +180,11 @@ bool AggregatedCollectionFetchScope::fetchIdOnly() const
     return d->fetchIdOnly == d->subscribers;
 }
 
-void AggregatedCollectionFetchScope::setFetchIdOnly(bool fetchIdOnly)
-{
-    LOCKED_D(AggregatedCollectionFetchScope)
-    d->updateBool(fetchIdOnly, d->fetchIdOnly);
-}
-
 bool AggregatedCollectionFetchScope::fetchStatistics() const
 {
     LOCKED_D(const AggregatedCollectionFetchScope);
     // Aggregation: return true if at least one subscriber wants stats
     return d->fetchStats > 0;
-}
-
-void AggregatedCollectionFetchScope::setFetchStatistics(bool fetchStats)
-{
-    LOCKED_D(AggregatedCollectionFetchScope);
-    d->updateBool(fetchStats, d->fetchStats);
 }
 
 void AggregatedCollectionFetchScope::addSubscriber()
@@ -248,43 +224,43 @@ void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope,
         updateAncestorDepth(oldScope.ancestorDepth(), newScope.ancestorDepth());
     }
     if (newScope.cacheOnly() != oldScope.cacheOnly()) {
-        setCacheOnly(newScope.cacheOnly());
+        d->updateBool(newScope.cacheOnly(), d->cacheOnly);
     }
     if (newScope.fullPayload() != oldScope.fullPayload()) {
-        setFullPayload(newScope.fullPayload());
+        d->updateBool(newScope.fullPayload(), d->fullPayload);
     }
     if (newScope.allAttributes() != oldScope.allAttributes()) {
-        setAllAttributes(newScope.allAttributes());
+        d->updateBool(newScope.allAttributes(), d->allAttributes);
     }
     if (newScope.fetchSize() != oldScope.fetchSize()) {
-        setFetchSize(newScope.fetchSize());
+        d->updateBool(newScope.fetchSize(), d->fetchSize);
     }
     if (newScope.fetchMTime() != oldScope.fetchMTime()) {
-        setFetchMTime(newScope.fetchMTime());
+        d->updateBool(newScope.fetchMTime(), d->fetchMTime);
     }
     if (newScope.fetchRemoteRevision() != oldScope.fetchRemoteRevision()) {
-        setFetchRemoteRevision(newScope.fetchRemoteRevision());
+        d->updateBool(newScope.fetchRemoteRevision(), d->fetchRRev);
     }
     if (newScope.ignoreErrors() != oldScope.ignoreErrors()) {
-        setIgnoreErrors(newScope.ignoreErrors());
+        d->updateBool(newScope.ignoreErrors(), d->ignoreErrors);
     }
     if (newScope.fetchFlags() != oldScope.fetchFlags()) {
-        setFetchFlags(newScope.fetchFlags());
+        d->updateBool(newScope.fetchFlags(), d->fetchFlags);
     }
     if (newScope.fetchRemoteId() != oldScope.fetchRemoteId()) {
-        setFetchRemoteId(newScope.fetchRemoteId());
+        d->updateBool(newScope.fetchRemoteId(), d->fetchRID);
     }
     if (newScope.fetchGID() != oldScope.fetchGID()) {
-        setFetchGID(newScope.fetchGID());
+        d->updateBool(newScope.fetchGID(), d->fetchGID);
     }
     if (newScope.fetchTags() != oldScope.fetchTags()) {
-        setFetchTags(newScope.fetchTags());
+        d->updateBool(newScope.fetchTags(), d->fetchTags);
     }
     if (newScope.fetchRelations() != oldScope.fetchRelations()) {
-        setFetchRelations(newScope.fetchRelations());
+        d->updateBool(newScope.fetchRelations(), d->fetchRelations);
     }
     if (newScope.fetchVirtualReferences() != oldScope.fetchVirtualReferences()) {
-        setFetchVirtualReferences(newScope.fetchVirtualReferences());
+        d->updateBool(newScope.fetchVirtualReferences(), d->fetchVRefs);
     }
 
     d->mCachedScopeValid = false;
@@ -324,18 +300,6 @@ QSet<QByteArray> AggregatedItemFetchScope::requestedParts() const
     return d->parts;
 }
 
-void AggregatedItemFetchScope::addRequestedPart(const QByteArray &part)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->addToSet(part, d->parts, d->partsCount);
-}
-
-void AggregatedItemFetchScope::removeRequestedPart(const QByteArray &part)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->removeFromSet(part, d->parts, d->partsCount);
-}
-
 ItemFetchScope::AncestorDepth AggregatedItemFetchScope::ancestorDepth() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
@@ -367,24 +331,12 @@ bool AggregatedItemFetchScope::cacheOnly() const
     return d->cacheOnly == d->subscribers;
 }
 
-void AggregatedItemFetchScope::setCacheOnly(bool cacheOnly)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(cacheOnly, d->cacheOnly);
-}
-
 bool AggregatedItemFetchScope::fullPayload() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: return true if there's at least one subscriber who wants the
     // full payload
     return d->fullPayload > 0;
-}
-
-void AggregatedItemFetchScope::setFullPayload(bool fullPayload)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fullPayload, d->fullPayload);
 }
 
 bool AggregatedItemFetchScope::allAttributes() const
@@ -395,23 +347,11 @@ bool AggregatedItemFetchScope::allAttributes() const
     return d->allAttributes > 0;
 }
 
-void AggregatedItemFetchScope::setAllAttributes(bool allAttributes)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(allAttributes, d->allAttributes);
-}
-
 bool AggregatedItemFetchScope::fetchSize() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: return true if there's at least one subscriber who wants size
     return d->fetchSize > 0;
-}
-
-void AggregatedItemFetchScope::setFetchSize(bool fetchSize)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchSize, d->fetchSize);
 }
 
 bool AggregatedItemFetchScope::fetchMTime() const
@@ -421,23 +361,11 @@ bool AggregatedItemFetchScope::fetchMTime() const
     return d->fetchMTime > 0;
 }
 
-void AggregatedItemFetchScope::setFetchMTime(bool fetchMTime)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchMTime, d->fetchMTime);
-}
-
 bool AggregatedItemFetchScope::fetchRemoteRevision() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: return true if there's at least one subscriber who wants rrev
     return d->fetchRRev > 0;
-}
-
-void AggregatedItemFetchScope::setFetchRemoteRevision(bool remoteRevision)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(remoteRevision, d->fetchRRev);
 }
 
 bool AggregatedItemFetchScope::ignoreErrors() const
@@ -448,23 +376,11 @@ bool AggregatedItemFetchScope::ignoreErrors() const
     return d->ignoreErrors == d->subscribers;
 }
 
-void AggregatedItemFetchScope::setIgnoreErrors(bool ignoreErrors)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(ignoreErrors, d->ignoreErrors);
-}
-
 bool AggregatedItemFetchScope::fetchFlags() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: return true if there's at least one subscriber who wants flags
     return d->fetchFlags > 0;
-}
-
-void AggregatedItemFetchScope::setFetchFlags(bool fetchFlags)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchFlags, d->fetchFlags);
 }
 
 bool AggregatedItemFetchScope::fetchRemoteId() const
@@ -474,23 +390,11 @@ bool AggregatedItemFetchScope::fetchRemoteId() const
     return d->fetchRID > 0;
 }
 
-void AggregatedItemFetchScope::setFetchRemoteId(bool fetchRemoteId)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchRemoteId, d->fetchRID);
-}
-
 bool AggregatedItemFetchScope::fetchGID() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: return true if there's at least one subscriber who wants GID
     return d->fetchGID > 0;
-}
-
-void AggregatedItemFetchScope::setFetchGID(bool fetchGid)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchGid, d->fetchGID);
 }
 
 bool AggregatedItemFetchScope::fetchTags() const
@@ -500,12 +404,6 @@ bool AggregatedItemFetchScope::fetchTags() const
     return d->fetchTags > 0;
 }
 
-void AggregatedItemFetchScope::setFetchTags(bool fetchTags)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchTags, d->fetchTags);
-}
-
 bool AggregatedItemFetchScope::fetchRelations() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
@@ -513,23 +411,11 @@ bool AggregatedItemFetchScope::fetchRelations() const
     return d->fetchRelations > 0;
 }
 
-void AggregatedItemFetchScope::setFetchRelations(bool fetchRelations)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchRelations, d->fetchRelations);
-}
-
 bool AggregatedItemFetchScope::fetchVirtualReferences() const
 {
     LOCKED_D(const AggregatedItemFetchScope)
     // Aggregation: return true if there's at least one subscriber who wants vrefs
     return d->fetchVRefs > 0;
-}
-
-void AggregatedItemFetchScope::setFetchVirtualReferences(bool fetchVRefs)
-{
-    LOCKED_D(AggregatedItemFetchScope)
-    d->updateBool(fetchVRefs, d->fetchVRefs);
 }
 
 void AggregatedItemFetchScope::addSubscriber()
@@ -563,13 +449,14 @@ void AggregatedTagFetchScope::apply(const Protocol::TagFetchScope &oldScope,
     LOCKED_D(AggregatedTagFetchScope)
 
     if (newScope.fetchIdOnly() != oldScope.fetchIdOnly()) {
-        setFetchIdOnly(newScope.fetchIdOnly());
+        d->updateBool(newScope.fetchIdOnly(), d->fetchIdOnly);
     }
     if (newScope.fetchRemoteID() != oldScope.fetchRemoteID()) {
-        setFetchRemoteId(newScope.fetchRemoteID());
+        d->updateBool(newScope.fetchRemoteID(), d->fetchRemoteId);
     }
     if (newScope.fetchAllAttributes() != oldScope.fetchAllAttributes()) {
-        setFetchAllAttributes(newScope.fetchAllAttributes());
+        // Count the number of subscribers who call with false
+        d->updateBool(!newScope.fetchAllAttributes(), d->doNotFetchAllAttributes);
     }
     if (newScope.attributes() != oldScope.attributes()) {
         d->applySet(oldScope.attributes(), newScope.attributes(), d->attrs, d->attrsCount);
@@ -594,52 +481,23 @@ bool AggregatedTagFetchScope::fetchIdOnly() const
     return d->fetchIdOnly == d->subscribers;
 }
 
-void AggregatedTagFetchScope::setFetchIdOnly(bool fetchIdOnly)
-{
-    LOCKED_D(AggregatedTagFetchScope)
-    d->updateBool(fetchIdOnly, d->fetchIdOnly);
-}
-
 bool AggregatedTagFetchScope::fetchRemoteId() const
 {
     LOCKED_D(const AggregatedTagFetchScope)
     return d->fetchRemoteId > 0;
 }
 
-void AggregatedTagFetchScope::setFetchRemoteId(bool fetchRemoteId)
-{
-    LOCKED_D(AggregatedTagFetchScope)
-    d->updateBool(fetchRemoteId, d->fetchRemoteId);
-}
-
 bool AggregatedTagFetchScope::fetchAllAttributes() const
 {
     LOCKED_D(const AggregatedTagFetchScope)
-    return d->fetchAllAttributes > 0;
-}
-
-void AggregatedTagFetchScope::setFetchAllAttributes(bool fetchAllAttributes)
-{
-    LOCKED_D(AggregatedTagFetchScope)
-    d->updateBool(fetchAllAttributes, d->fetchAllAttributes);
+    // The default value for fetchAllAttributes is true, so we return false only if every subscriber said "do not fetch all attributes"
+    return d->doNotFetchAllAttributes != d->subscribers;
 }
 
 QSet<QByteArray> AggregatedTagFetchScope::attributes() const
 {
     LOCKED_D(const AggregatedTagFetchScope)
     return d->attrs;
-}
-
-void AggregatedTagFetchScope::addAttribute(const QByteArray &attribute)
-{
-    LOCKED_D(AggregatedTagFetchScope)
-    d->addToSet(attribute, d->attrs, d->attrsCount);
-}
-
-void AggregatedTagFetchScope::removeAttribute(const QByteArray &attribute)
-{
-    LOCKED_D(AggregatedTagFetchScope)
-    d->removeFromSet(attribute, d->attrs, d->attrsCount);
 }
 
 void AggregatedTagFetchScope::addSubscriber()

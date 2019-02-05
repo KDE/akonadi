@@ -152,27 +152,23 @@ void NotificationSubscriber::disconnectSubscriber()
     changeNtf->setOperation(Protocol::SubscriptionChangeNotification::Remove);
     mManager->slotNotify({ changeNtf });
 
-    disconnect(mSocket, &QLocalSocket::disconnected,
-               this, &NotificationSubscriber::socketDisconnected);
-    mSocket->close();
+    if (mSocket) {
+        disconnect(mSocket, &QLocalSocket::disconnected,
+                   this, &NotificationSubscriber::socketDisconnected);
+        mSocket->close();
+    }
 
-    // Unregister ourselves from the aggergated collection fetch scope
+    // Unregister ourselves from the aggregated collection fetch scope
     auto cfs = mManager->collectionFetchScope();
-    if (mCollectionFetchScope.fetchIdOnly()) {
-        cfs->setFetchIdOnly(false);
-    }
-    if (mCollectionFetchScope.includeStatistics()) {
-        cfs->setFetchStatistics(false);
-    }
-    mCollectionFetchScope.attributes() | forEach([&cfs](const auto &attr) {
-            cfs->removeAttribute(attr);
-    });
+    cfs->apply(mCollectionFetchScope, Protocol::CollectionFetchScope());
     cfs->removeSubscriber();
 
     auto tfs = mManager->tagFetchScope();
+    tfs->apply(mTagFetchScope, Protocol::TagFetchScope());
     tfs->removeSubscriber();
 
     auto ifs = mManager->itemFetchScope();
+    ifs->apply(mItemFetchScope, Protocol::ItemFetchScope());
     ifs->removeSubscriber();
 
     mManager->forgetSubscriber(this);
