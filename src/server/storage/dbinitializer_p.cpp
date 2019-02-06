@@ -253,14 +253,14 @@ QStringList DbInitializerSqlite::buildUpdateForeignKeyConstraintsStatements(cons
     // Unforunately, SQLite does not support add or removing foreign keys through ALTER TABLE,
     // this is the only way how to do it.
     return {
-        QStringLiteral("PRAGMA foreign_key_check=OFF"),
+        QStringLiteral("PRAGMA defer_foreign_keys=ON"),
         QStringLiteral("BEGIN TRANSACTION"),
         QStringLiteral("ALTER TABLE %1 RENAME TO %1_old").arg(table.name),
         buildCreateTableStatement(table),
         QStringLiteral("INSERT INTO %1 SELECT * FROM %1_old").arg(table.name),
         QStringLiteral("DROP TABLE %1_old").arg(table.name),
         QStringLiteral("COMMIT"),
-        QStringLiteral("PRAGMA foreign_key_check=ON")
+        QStringLiteral("PRAGMA defer_foreign_keys=OFF")
     };
 }
 

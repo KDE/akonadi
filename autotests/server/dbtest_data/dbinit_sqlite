@@ -209,7 +209,7 @@ CREATE INDEX CollectionPimItemRelation_Collection_idIndex ON CollectionPimItemRe
 
 CREATE INDEX CollectionPimItemRelation_PimItem_idIndex ON CollectionPimItemRelation (PimItem_id)
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -244,9 +244,9 @@ DROP TABLE CollectionTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -281,37 +281,9 @@ DROP TABLE CollectionTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
-
-BEGIN TRANSACTION
-
-ALTER TABLE PimItemTable RENAME TO PimItemTable_old
-
-CREATE TABLE PimItemTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                           rev INTEGER NOT NULL DEFAULT 0,
-                           remoteId TEXT,
-                           remoteRevision TEXT,
-                           gid TEXT,
-                           collectionId BIGINT,
-                           mimeTypeId BIGINT,
-                           datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                           atime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                           dirty BOOL,
-                           size BIGINT NOT NULL DEFAULT 0,
-                           CONSTRAINT PimItemTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
-                           CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
-
-INSERT INTO PimItemTable SELECT * FROM PimItemTable_old
-
-DROP TABLE PimItemTable_old
-
-COMMIT
-
-PRAGMA foreign_key_check=ON
-
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -337,9 +309,37 @@ DROP TABLE PimItemTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
+
+BEGIN TRANSACTION
+
+ALTER TABLE PimItemTable RENAME TO PimItemTable_old
+
+CREATE TABLE PimItemTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                           rev INTEGER NOT NULL DEFAULT 0,
+                           remoteId TEXT,
+                           remoteRevision TEXT,
+                           gid TEXT,
+                           collectionId BIGINT,
+                           mimeTypeId BIGINT,
+                           datetime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           atime TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           dirty BOOL,
+                           size BIGINT NOT NULL DEFAULT 0,
+                           CONSTRAINT PimItemTablecollectionId_Collectionid_fk FOREIGN KEY (collectionId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                           CONSTRAINT PimItemTablemimeTypeId_MimeTypeid_fk FOREIGN KEY (mimeTypeId) REFERENCES MimeTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO PimItemTable SELECT * FROM PimItemTable_old
+
+DROP TABLE PimItemTable_old
+
+COMMIT
+
+PRAGMA defer_foreign_keys=OFF
+
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -362,9 +362,9 @@ DROP TABLE PartTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -387,9 +387,9 @@ DROP TABLE PartTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -407,30 +407,9 @@ DROP TABLE CollectionAttributeTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
-
-BEGIN TRANSACTION
-
-ALTER TABLE TagTable RENAME TO TagTable_old
-
-CREATE TABLE TagTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
-                       gid TEXT NOT NULL,
-                       parentId BIGINT,
-                       typeId BIGINT DEFAULT 1,
-                       CONSTRAINT TagTableparentId_Tagid_fk FOREIGN KEY (parentId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
-                       CONSTRAINT TagTabletypeId_TagTypeid_fk FOREIGN KEY (typeId) REFERENCES TagTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
-
-INSERT INTO TagTable SELECT * FROM TagTable_old
-
-DROP TABLE TagTable_old
-
-COMMIT
-
-PRAGMA foreign_key_check=ON
-
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -449,9 +428,30 @@ DROP TABLE TagTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
+
+BEGIN TRANSACTION
+
+ALTER TABLE TagTable RENAME TO TagTable_old
+
+CREATE TABLE TagTable (id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                       gid TEXT NOT NULL,
+                       parentId BIGINT,
+                       typeId BIGINT DEFAULT 1,
+                       CONSTRAINT TagTableparentId_Tagid_fk FOREIGN KEY (parentId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                       CONSTRAINT TagTabletypeId_TagTypeid_fk FOREIGN KEY (typeId) REFERENCES TagTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO TagTable SELECT * FROM TagTable_old
+
+DROP TABLE TagTable_old
+
+COMMIT
+
+PRAGMA defer_foreign_keys=OFF
+
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -470,29 +470,9 @@ DROP TABLE TagAttributeTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
-
-BEGIN TRANSACTION
-
-ALTER TABLE TagRemoteIdResourceRelationTable RENAME TO TagRemoteIdResourceRelationTable_old
-
-CREATE TABLE TagRemoteIdResourceRelationTable (tagId BIGINT NOT NULL,
-                                               resourceId BIGINT NOT NULL,
-                                               remoteId TEXT NOT NULL,
-                                               CONSTRAINT TagRemoteIdResourceRelationTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
-                                               CONSTRAINT TagRemoteIdResourceRelationTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
-
-INSERT INTO TagRemoteIdResourceRelationTable SELECT * FROM TagRemoteIdResourceRelationTable_old
-
-DROP TABLE TagRemoteIdResourceRelationTable_old
-
-COMMIT
-
-PRAGMA foreign_key_check=ON
-
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -510,9 +490,29 @@ DROP TABLE TagRemoteIdResourceRelationTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
+
+BEGIN TRANSACTION
+
+ALTER TABLE TagRemoteIdResourceRelationTable RENAME TO TagRemoteIdResourceRelationTable_old
+
+CREATE TABLE TagRemoteIdResourceRelationTable (tagId BIGINT NOT NULL,
+                                               resourceId BIGINT NOT NULL,
+                                               remoteId TEXT NOT NULL,
+                                               CONSTRAINT TagRemoteIdResourceRelationTabletagId_Tagid_fk FOREIGN KEY (tagId) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                               CONSTRAINT TagRemoteIdResourceRelationTableresourceId_Resourceid_fk FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO TagRemoteIdResourceRelationTable SELECT * FROM TagRemoteIdResourceRelationTable_old
+
+DROP TABLE TagRemoteIdResourceRelationTable_old
+
+COMMIT
+
+PRAGMA defer_foreign_keys=OFF
+
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -534,33 +534,9 @@ DROP TABLE RelationTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
-
-BEGIN TRANSACTION
-
-ALTER TABLE RelationTable RENAME TO RelationTable_old
-
-CREATE TABLE RelationTable (leftId BIGINT NOT NULL,
-                            rightId BIGINT NOT NULL,
-                            typeId BIGINT DEFAULT 1,
-                            remoteId TEXT,
-                            CONSTRAINT RelationTableleftId_PimItemid_fk FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
-                            CONSTRAINT RelationTablerightId_PimItemid_fk FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
-                            DEFERRABLE INITIALLY DEFERRED,
-                            CONSTRAINT RelationTabletypeId_RelationTypeid_fk FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
-
-
-INSERT INTO RelationTable SELECT * FROM RelationTable_old
-
-DROP TABLE RelationTable_old
-
-COMMIT
-
-PRAGMA foreign_key_check=ON
-
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -582,9 +558,33 @@ DROP TABLE RelationTable_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
+
+BEGIN TRANSACTION
+
+ALTER TABLE RelationTable RENAME TO RelationTable_old
+
+CREATE TABLE RelationTable (leftId BIGINT NOT NULL,
+                            rightId BIGINT NOT NULL,
+                            typeId BIGINT DEFAULT 1,
+                            remoteId TEXT,
+                            CONSTRAINT RelationTableleftId_PimItemid_fk FOREIGN KEY (leftId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTablerightId_PimItemid_fk FOREIGN KEY (rightId) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE
+                            DEFERRABLE INITIALLY DEFERRED,
+                            CONSTRAINT RelationTabletypeId_RelationTypeid_fk FOREIGN KEY (typeId) REFERENCES RelationTypeTable(id) ON UPDATE CASCADE ON DELETE RESTRICT DEFERRABLE INITIALLY DEFERRED)
+
+
+INSERT INTO RelationTable SELECT * FROM RelationTable_old
+
+DROP TABLE RelationTable_old
+
+COMMIT
+
+PRAGMA defer_foreign_keys=OFF
+
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -603,10 +603,10 @@ DROP TABLE PimItemFlagRelation_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -625,29 +625,9 @@ DROP TABLE PimItemFlagRelation_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
-
-BEGIN TRANSACTION
-
-ALTER TABLE PimItemTagRelation RENAME TO PimItemTagRelation_old
-
-CREATE TABLE PimItemTagRelation (PimItem_id BIGINT NOT NULL,
-                                 Tag_id BIGINT NOT NULL,
-                                 PRIMARY KEY (PimItem_id, Tag_id),
-                                 CONSTRAINT PimItemTagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
-                                 CONSTRAINT PimItemTagRelationTag_id_Tagid_fk FOREIGN KEY (Tag_id) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
-
-INSERT INTO PimItemTagRelation SELECT * FROM PimItemTagRelation_old
-
-DROP TABLE PimItemTagRelation_old
-
-COMMIT
-
-PRAGMA foreign_key_check=ON
-
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -665,9 +645,29 @@ DROP TABLE PimItemTagRelation_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
+
+BEGIN TRANSACTION
+
+ALTER TABLE PimItemTagRelation RENAME TO PimItemTagRelation_old
+
+CREATE TABLE PimItemTagRelation (PimItem_id BIGINT NOT NULL,
+                                 Tag_id BIGINT NOT NULL,
+                                 PRIMARY KEY (PimItem_id, Tag_id),
+                                 CONSTRAINT PimItemTagRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                 CONSTRAINT PimItemTagRelationTag_id_Tagid_fk FOREIGN KEY (Tag_id) REFERENCES TagTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO PimItemTagRelation SELECT * FROM PimItemTagRelation_old
+
+DROP TABLE PimItemTagRelation_old
+
+COMMIT
+
+PRAGMA defer_foreign_keys=OFF
+
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -685,9 +685,9 @@ DROP TABLE CollectionMimeTypeRelation_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -705,29 +705,9 @@ DROP TABLE CollectionMimeTypeRelation_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
 
-PRAGMA foreign_key_check=OFF
-
-BEGIN TRANSACTION
-
-ALTER TABLE CollectionPimItemRelation RENAME TO CollectionPimItemRelation_old
-
-CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
-                                        PimItem_id BIGINT NOT NULL,
-                                        PRIMARY KEY (Collection_id, PimItem_id),
-                                        CONSTRAINT CollectionPimItemRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
-                                        CONSTRAINT CollectionPimItemRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
-
-INSERT INTO CollectionPimItemRelation SELECT * FROM CollectionPimItemRelation_old
-
-DROP TABLE CollectionPimItemRelation_old
-
-COMMIT
-
-PRAGMA foreign_key_check=ON
-
-PRAGMA foreign_key_check=OFF
+PRAGMA defer_foreign_keys=ON
 
 BEGIN TRANSACTION
 
@@ -745,4 +725,24 @@ DROP TABLE CollectionPimItemRelation_old
 
 COMMIT
 
-PRAGMA foreign_key_check=ON
+PRAGMA defer_foreign_keys=OFF
+
+PRAGMA defer_foreign_keys=ON
+
+BEGIN TRANSACTION
+
+ALTER TABLE CollectionPimItemRelation RENAME TO CollectionPimItemRelation_old
+
+CREATE TABLE CollectionPimItemRelation (Collection_id BIGINT NOT NULL,
+                                        PimItem_id BIGINT NOT NULL,
+                                        PRIMARY KEY (Collection_id, PimItem_id),
+                                        CONSTRAINT CollectionPimItemRelationCollection_id_Collectionid_fk FOREIGN KEY (Collection_id) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED,
+                                        CONSTRAINT CollectionPimItemRelationPimItem_id_PimItemid_fk FOREIGN KEY (PimItem_id) REFERENCES PimItemTable(id) ON UPDATE CASCADE ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)
+
+INSERT INTO CollectionPimItemRelation SELECT * FROM CollectionPimItemRelation_old
+
+DROP TABLE CollectionPimItemRelation_old
+
+COMMIT
+
+PRAGMA defer_foreign_keys=OFF
