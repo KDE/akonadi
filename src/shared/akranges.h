@@ -257,7 +257,7 @@ public:
 
     auto size() const
     {
-        return mEnd - mBegin;
+        return std::distance(mBegin, mEnd);
     }
 
 private:
