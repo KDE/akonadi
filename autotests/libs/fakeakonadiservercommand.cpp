@@ -24,7 +24,7 @@
 #include "fakeserverdata.h"
 #include "entitydisplayattribute.h"
 #include "tagattribute.h"
-#include "vectorhelper.h"
+#include "akranges.h"
 
 using namespace Akonadi;
 
@@ -105,12 +105,12 @@ Tag FakeAkonadiServerCommand::getTagByDisplayName(const QString &displayName) co
 void FakeJobResponse::doCommand()
 {
     if (m_type == RespondToCollectionFetch) {
-        emit_collectionsFetched(Akonadi::valuesToVector(m_collections));
+        emit_collectionsFetched(m_collections | values | toQVector);
     } else if (m_type == RespondToItemFetch) {
         setProperty("FetchCollectionId", m_parentCollection.id());
-        emit_itemsFetched(Akonadi::valuesToVector(m_items));
+        emit_itemsFetched(m_items | values | toQVector);
     } else if (m_type == RespondToTagFetch) {
-        emit_tagsFetched(Akonadi::valuesToVector(m_tags));
+        emit_tagsFetched(m_tags | values | toQVector);
     }
 }
 

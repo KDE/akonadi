@@ -72,6 +72,11 @@ class AkRangesTest : public QObject
 {
     Q_OBJECT
 private Q_SLOTS:
+    void initTestCase()
+    {
+        qSetGlobalQHashSeed(0);
+    }
+
     void testContainerConversion()
     {
         {
@@ -330,6 +335,33 @@ private Q_SLOTS:
             QCOMPARE(out, in);
         }
 
+    }
+
+private:
+    template<template<typename, typename> class Container>
+    void testKeysValuesHelper()
+    {
+        const Container<int, QString> in = {
+            { 1, QStringLiteral("1") },
+            { 2, QStringLiteral("2") },
+            { 3, QStringLiteral("3") }
+        };
+
+        {
+            const QList<int> out = { 1, 2, 3 };
+            QCOMPARE(out, in | keys | toQList);
+        }
+        {
+            const QStringList out = { QStringLiteral("1"), QStringLiteral("2"), QStringLiteral("3") };
+            QCOMPARE(out, in | values | toQList);
+        }
+    }
+
+private Q_SLOTS:
+    void testKeysValues()
+    {
+        testKeysValuesHelper<QMap>();
+        testKeysValuesHelper<QHash>();
     }
 };
 

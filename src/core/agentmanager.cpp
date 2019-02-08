@@ -19,14 +19,14 @@
 
 #include "agentmanager.h"
 #include "agentmanager_p.h"
-#include "vectorhelper.h"
 
 #include "agenttype_p.h"
 #include "agentinstance_p.h"
 #include "KDBusConnectionPool"
 #include "servermanager.h"
-
 #include "collection.h"
+
+#include "shared/akranges.h"
 
 #include <QDBusServiceWatcher>
 #include <QWidget>
@@ -399,7 +399,7 @@ AgentType::List AgentManager::types() const
     if (d->mTypes.isEmpty()) {
         d->readAgentTypes();
     }
-    return Akonadi::valuesToVector(d->mTypes);
+    return d->mTypes | values | toQVector;
 }
 
 AgentType AgentManager::type(const QString &identifier) const
@@ -409,7 +409,7 @@ AgentType AgentManager::type(const QString &identifier) const
 
 AgentInstance::List AgentManager::instances() const
 {
-    return Akonadi::valuesToVector(d->mInstances);
+    return d->mInstances | values | toQVector;
 }
 
 AgentInstance AgentManager::instance(const QString &identifier) const

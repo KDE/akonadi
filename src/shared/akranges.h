@@ -49,6 +49,9 @@ struct To_
     template<typename T> using Container = Cont<T>;
 };
 
+struct Values_ {};
+struct Keys_ {};
+
 template<typename InContainer,
          typename OutContainer,
          AK_REQUIRES(AkTraits::isAppendable<OutContainer> && AkTraits::isReservable<OutContainer>)
@@ -222,6 +225,34 @@ private:
 };
 
 
+template<typename Container,
+         int Pos,
+         typename Iterator = typename Container::const_key_value_iterator>
+class AssociativeContainerIterator
+    : public IteratorBase<AssociativeContainerIterator<Container, Pos>, Container, Iterator>
+{
+public:
+    using value_type = std::remove_const_t<std::remove_reference_t<
+                            typename std::tuple_element<Pos, typename Iterator::value_type>::type>>;
+    using pointer = std::add_pointer_t<value_type>;
+    using reference = std::add_lvalue_reference_t<value_type>;
+
+    AssociativeContainerIterator(const Iterator &iter, const Container &container)
+        : IteratorBase<AssociativeContainerIterator<Container, Pos>, Container, Iterator>(iter, container)
+    {}
+
+    auto operator*() const
+    {
+        return std::get<Pos>(*this->mIter);
+    }
+};
+
+template<typename Container>
+using AssociativeContainerKeyIterator = AssociativeContainerIterator<Container, 0>;
+template<typename Container>
+using AssociativeContainerValueIterator = AssociativeContainerIterator<Container, 1>;
+
+
 template<typename Iterator>
 struct Range
 {
@@ -356,6 +387,27 @@ auto operator|(const InContainer &in,
 }
 
 
+// Generic operator| for keys
+template<typename InContainer>
+auto operator|(const InContainer &in, Akonadi::detail::Keys_)
+{
+    using namespace Akonadi::detail;
+    using OutIt = AssociativeContainerKeyIterator<InContainer>;
+    return Range<OutIt>(OutIt(in.constKeyValueBegin(), in),
+                        OutIt(in.constKeyValueEnd(), in));
+}
+
+
+// Generic operator| for values
+template<typename InContainer>
+auto operator|(const InContainer &in, Akonadi::detail::Values_)
+{
+    using namespace Akonadi::detail;
+    using OutIt = AssociativeContainerValueIterator<InContainer>;
+    return Range<OutIt>(OutIt(in.constKeyValueBegin(), in),
+                        OutIt(in.constKeyValueEnd(), in));
+}
+
 namespace Akonadi {
 
 /// Non-lazily convert given range or container to QVector
@@ -364,6 +416,10 @@ static constexpr auto toQVector = detail::To_<QVector>{};
 static constexpr auto toQSet = detail::To_<QSet>{};
 /// Non-lazily convert given range or container to QList
 static constexpr auto toQList = detail::To_<QList>{};
+/// Lazily extract values from an associative container
+static constexpr auto values = detail::Values_{};
+/// Lazily extract keys from an associative container
+static constexpr auto keys = detail::Keys_{};
 
 /// Lazily transform each element of a range or container using given transformation
 template<typename TransformFn>
@@ -394,8 +450,6 @@ detail::Range<It> range(Iterator1 begin, Iterator2 end)
 {
     return detail::Range<It>(std::move(begin), std::move(end));
 }
-
-
 
 } // namespace Akonadi
 

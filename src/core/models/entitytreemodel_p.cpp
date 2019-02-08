@@ -23,7 +23,7 @@
 #include "agentmanagerinterface.h"
 #include "monitor_p.h" // For friend ref/deref
 #include "servermanager.h"
-#include "vectorhelper.h"
+#include "akranges.h"
 
 #include <KLocalizedString>
 
@@ -1351,7 +1351,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 
     if (!m_collectionTreeFetched && m_pendingCollectionFetchJobs.isEmpty()) {
         m_collectionTreeFetched = true;
-        Q_EMIT q_ptr->collectionTreeFetched(Akonadi::valuesToVector(m_collections));
+        Q_EMIT q_ptr->collectionTreeFetched(m_collections | values | toQVector);
     }
 
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
