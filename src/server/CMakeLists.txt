@@ -16,6 +16,7 @@ akonadi_run_xsltproc(
     XSL ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities.xsl
     XML ${AKONADI_DB_SCHEMA}
     BASENAME entities
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities-source.xsl ${CMAKE_CURRENT_SOURCE_DIR}/storage/entities-header.xsl
 )
 
 akonadi_run_xsltproc(
@@ -23,6 +24,7 @@ akonadi_run_xsltproc(
     XML ${AKONADI_DB_SCHEMA}
     CLASSNAME AkonadiSchema
     BASENAME akonadischema
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/storage/schema-source.xsl ${CMAKE_CURRENT_SOURCE_DIR}/storage/schema-header.xsl
 )
 
 akonadi_add_xmllint_test(
