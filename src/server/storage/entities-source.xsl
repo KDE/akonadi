@@ -349,28 +349,21 @@ QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$clas
 <xsl:value-of select="$className"/><xsl:text> </xsl:text><xsl:value-of select="$className"/>::retrieveByNameOrCreate( const <xsl:value-of select="column[@name = 'name']/@type"/> &amp;name)
 {
   static QMutex lock;
+  QMutexLocker locker(&amp;lock);
   auto rv = retrieveByName(name);
   if (rv.isValid()) {
     return rv;
   }
 
-  if (lock.tryLock()) {
-    rv.setName(name);
-    if (!rv.insert()) {
-      lock.unlock();
-      return <xsl:value-of select="$className"/>();
-    }
-
-    if (Private::cacheEnabled) {
-      Private::addToCache(rv);
-    }
-    lock.unlock();
-    return rv;
+  rv.setName(name);
+  if (!rv.insert()) {
+    return <xsl:value-of select="$className"/>();
   }
 
-  lock.lock();
-  lock.unlock();
-  return retrieveByName(name);
+  if (Private::cacheEnabled) {
+    Private::addToCache(rv);
+  }
+  return rv;
 }
 </xsl:if>
 
@@ -389,29 +382,22 @@ QVector&lt; <xsl:value-of select="$className"/> &gt; <xsl:value-of select="$clas
 <xsl:text>PartType PartType::retrieveByFQNameOrCreate( const QString &amp; ns, const QString &amp; name )</xsl:text>
 {
   static QMutex lock;
+  QMutexLocker locker(&amp;lock);
   PartType rv = retrieveByFQName(ns, name);
   if (rv.isValid()) {
     return rv;
   }
 
-  if (lock.tryLock()) {
-    rv.setNs(ns);
-    rv.setName(name);
-    if (!rv.insert()) {
-      lock.unlock();
-      return PartType();
-    }
-
-    if (Private::cacheEnabled) {
-      Private::addToCache(rv);
-    }
-    lock.unlock();
-    return rv;
+  rv.setNs(ns);
+  rv.setName(name);
+  if (!rv.insert()) {
+    return PartType();
   }
 
-  lock.lock();
-  lock.unlock();
-  return retrieveByFQName(ns, name);
+  if (Private::cacheEnabled) {
+    Private::addToCache(rv);
+  }
+  return rv;
 }
 </xsl:if>
 
