@@ -251,7 +251,8 @@ private Q_SLOTS:
             for (int i = 0; i < revision; ++i) {
                 const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(i);
                 const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
-                QVERIFY2(!QFile::exists(filePath), qPrintable(filePath));
+                // TRY because the deletion happens in another thread
+                QTRY_VERIFY2(!QFile::exists(filePath), qPrintable(filePath));
             }
         } else if (storage == Part::Foreign) {
             QCOMPARE(data, expectedPartData);
@@ -270,7 +271,7 @@ private Q_SLOTS:
             for (int i = 0; i <= 100; ++i) {
                 const QByteArray fileName = QByteArray::number(part.id()) + "_r" + QByteArray::number(i);
                 const QString filePath = ExternalPartStorage::resolveAbsolutePath(fileName);
-                QVERIFY2(!QFile::exists(filePath), qPrintable(filePath));
+                QTRY_VERIFY2(!QFile::exists(filePath), qPrintable(filePath));
             }
         }
     }

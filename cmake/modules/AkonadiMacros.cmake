@@ -29,7 +29,7 @@ function(akonadi_run_xsltproc)
 
     set(options )
     set(oneValueArgs XSL XML CLASSNAME BASENAME)
-    set(multiValueArgs )
+    set(multiValueArgs DEPENDS)
     cmake_parse_arguments(XSLT "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
     if (NOT XSLT_XSL)
         message(FATAL_ERROR "Required argument XSL missing in AKONADI_RUN_XSLTPROC() call")
@@ -69,6 +69,7 @@ function(akonadi_run_xsltproc)
             ${xml_relpath}
         DEPENDS ${XSLT_XSL}
             ${XSLT_XML}
+            ${XSLT_DEPENDS}
     )
 
     set_property(SOURCE
