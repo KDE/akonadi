@@ -285,7 +285,7 @@ void SessionPrivate::serverStateChanged(ServerManager::State state)
             job->kill(KJob::EmitResult);
         }
     } else if (state == ServerManager::Stopping) {
-        delete connection;
+        sessionThread()->destroyConnection(connection);
         connection = nullptr;
     }
 }
