@@ -27,11 +27,13 @@
 #include "collectionfetchscope.h"
 #include "collectionmovejob.h"
 
-
 #include "cachepolicy.h"
 
 #include <KLocalizedString>
 #include <QHash>
+#include <QList>
+
+#include <functional>
 
 using namespace Akonadi;
 
@@ -259,9 +261,35 @@ public:
                 if (matchLocalAndRemoteCollection(localCollection, remoteCollection)) {
                     matched = true;
 
-                    // Check if the local and remote collections differ and thus if
-                    // we need to update it
-                    if (collectionNeedsUpdate(localCollection, remoteCollection)) {
+                    // "Virtual" flag cannot be updated: we need to recreate
+                    // the collection from scratch.
+                    if (localCollection.isVirtual() != remoteCollection.isVirtual()) {
+                        // Mark the local collection and all its children for deletion and re-creation
+                        QList<QPair<Collection/*local*/, Collection/*remote*/>> parents = {{localCollection,remoteCollection}};
+                        while (!parents.empty()) {
+                            auto parent = parents.takeFirst();
+                            qCDebug(AKONADICORE_LOG) << "Local collection " << parent.first.name() << " will be recreated";
+                            localCollectionsToRemove.push_back(parent.first);
+                            remoteCollectionsToCreate.push_back(parent.second);
+                            for (auto it = localChildren.begin(), end = localChildren.end(); it != end;) {
+                                if (it->parentCollection() == parent.first) {
+                                    Collection remoteParent;
+                                    auto remoteIt = std::find_if(remoteChildren.begin(), remoteChildren.end(),
+                                                                 std::bind(&CollectionSync::Private::matchLocalAndRemoteCollection,
+                                                                           this, parent.first, std::placeholders::_1));
+                                    if (remoteIt != remoteChildren.end()) {
+                                        remoteParent = *remoteIt;
+                                        remoteEnd = remoteChildren.erase(remoteIt);
+                                    }
+                                    parents.push_back({*it, remoteParent});
+                                    it = localChildren.erase(it);
+                                    localEnd = end = localChildren.end();
+                                } else {
+                                    ++it;
+                                }
+                            }
+                        }
+                    } else if (collectionNeedsUpdate(localCollection, remoteCollection)) {
                         // We need to store both local and remote collections, so that
                         // we can copy over attributes to be preserved
                         remoteCollectionsToUpdate.append(qMakePair(localCollection, remoteCollection));
