@@ -105,6 +105,16 @@ void CollectionAttributeTest::testAttributes()
     QFETCH(QByteArray, attr1);
     QFETCH(QByteArray, attr2);
 
+    struct Cleanup {
+        Cleanup(const Collection &col) : m_col(col) {}
+        ~Cleanup() {
+            // cleanup
+            CollectionDeleteJob *del = new CollectionDeleteJob(m_col);
+            AKVERIFYEXEC(del);
+        }
+        Collection m_col;
+    };
+
     // add a custom attribute
     TestAttribute *attr = new TestAttribute();
     attr->deserialize(attr1);
@@ -116,6 +126,7 @@ void CollectionAttributeTest::testAttributes()
     AKVERIFYEXEC(create);
     col = create->collection();
     QVERIFY(col.isValid());
+    Cleanup cleanup(col);
 
     attr = col.attribute<TestAttribute>();
     QVERIFY(attr != nullptr);
@@ -173,10 +184,11 @@ void CollectionAttributeTest::testAttributes()
     attr = col.attribute<TestAttribute>();
     QVERIFY(attr == nullptr);
 
-    // cleanup
-    CollectionDeleteJob *del = new CollectionDeleteJob(col, this);
-    AKVERIFYEXEC(del);
-
+    // Give the knut resource a bit of time to modify the collection and add a remote ID (after adding)
+    // and reparent attributes (after modifying).
+    // Otherwise we can delete it faster than it can do that, and we end up with a confusing warning
+    // "No such collection" from the resource's modify job.
+    QTest::qWait(100); // ideally we'd loop over "fetch and check there's a remote id"
 }
 
 void CollectionAttributeTest::testDefaultAttributes()
@@ -213,7 +225,7 @@ void CollectionAttributeTest::testCollectionRightsAttribute()
     }
 }
 
-void CollectionAttributeTest::testCollectionIdentifcationAttribute()
+void CollectionAttributeTest::testCollectionIdentificationAttribute()
 {
     QByteArray id("identifier");
     QByteArray ns("namespace");

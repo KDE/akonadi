@@ -31,7 +31,7 @@ private Q_SLOTS:
     void testAttributes();
     void testDefaultAttributes();
     void testCollectionRightsAttribute();
-    void testCollectionIdentifcationAttribute();
+    void testCollectionIdentificationAttribute();
 };
 
 #endif
