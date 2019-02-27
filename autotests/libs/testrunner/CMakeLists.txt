@@ -11,6 +11,7 @@ set(akonaditest_SRCS
 add_executable(akonaditest ${akonaditest_SRCS})
 
 target_link_libraries(akonaditest
+  KF5::AkonadiPrivate
   KF5::AkonadiCore 
   KF5::I18n
   KF5::ConfigCore

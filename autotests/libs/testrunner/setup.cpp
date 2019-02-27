@@ -22,6 +22,7 @@
 #include <agentinstance.h>
 #include <agentinstancecreatejob.h>
 #include <resourcesynchronizationjob.h>
+#include <private/standarddirs_p.h>
 
 #include <KConfig>
 #include <kconfiggroup.h>
@@ -45,7 +46,7 @@ bool SetupTest::startAkonadiDaemon()
                 this, &SetupTest::slotAkonadiDaemonProcessFinished);
     }
 
-    mAkonadiDaemonProcess->setProgram(QStringLiteral("akonadi_control"),
+    mAkonadiDaemonProcess->setProgram(Akonadi::StandardDirs::findExecutable(QStringLiteral("akonadi_control")),
                                       { QStringLiteral("--instance"), instanceId() });
     mAkonadiDaemonProcess->start();
     const bool started = mAkonadiDaemonProcess->waitForStarted(5000);

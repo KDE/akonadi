@@ -23,6 +23,7 @@
 #include <shared/akapplication.h>
 
 #include <private/instance_p.h>
+#include <private/standarddirs_p.h>
 
 #include <QTimer>
 
@@ -171,6 +172,9 @@ static bool listContains(const QStringList &list, const QString &pattern)
 
 void ProcessControl::start()
 {
+    // Prefer akonadiserver from the builddir
+    mApplication = StandardDirs::findExecutable(mApplication);
+
 #ifdef Q_OS_UNIX
     QString agentValgrind = akGetEnv("AKONADI_VALGRIND");
     if (!agentValgrind.isEmpty() && (mApplication.contains(agentValgrind) || listContains(mArguments, agentValgrind))) {
