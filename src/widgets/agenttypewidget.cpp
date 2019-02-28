@@ -101,7 +101,7 @@ AgentTypeWidget::AgentTypeWidget(QWidget *parent)
     , d(new Private(this))
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     d->mView = new QListView(this);
     d->mView->setItemDelegate(new AgentTypeWidgetDelegate(d->mView));
@@ -268,7 +268,7 @@ void AgentTypeWidgetDelegate::drawFocus(QPainter *painter, const QStyleOptionVie
         QPalette::ColorGroup cg = (option.state & QStyle::State_Enabled)
                                   ? QPalette::Normal : QPalette::Disabled;
         o.backgroundColor = option.palette.color(cg, (option.state & QStyle::State_Selected)
-                            ? QPalette::Highlight : QPalette::Background);
+                            ? QPalette::Highlight : QPalette::Window);
         QApplication::style()->drawPrimitive(QStyle::PE_FrameFocusRect, &o, painter);
     }
 }

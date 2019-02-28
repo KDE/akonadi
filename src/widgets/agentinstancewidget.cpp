@@ -142,7 +142,7 @@ AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
     , d(new Private(this))
 {
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
 
     d->mView = new QListView(this);
     d->mView->setContextMenuPolicy(Qt::NoContextMenu);

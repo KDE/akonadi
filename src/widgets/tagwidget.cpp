@@ -79,7 +79,7 @@ TagWidget::TagWidget(QWidget *parent)
     connect(monitor, &Monitor::tagAdded, this, &TagWidget::updateView);
 
     QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setMargin(0);
+    layout->setContentsMargins(0, 0, 0, 0);
     d->mTagView = new TagView(this);
     connect(d->mTagView, &TagView::clearTags, this, &TagWidget::clearTags);
     layout->addWidget(d->mTagView);

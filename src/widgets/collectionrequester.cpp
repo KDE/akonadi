@@ -116,7 +116,7 @@ void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
 void CollectionRequester::Private::init()
 {
     QHBoxLayout *hbox = new QHBoxLayout(q);
-    hbox->setMargin(0);
+    hbox->setContentsMargins(0, 0, 0, 0);
 
     edit = new QLineEdit(q);
     edit->setReadOnly(true);

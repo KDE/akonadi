@@ -186,7 +186,7 @@ TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool ena
     , d(new Private(model, this))
 {
     QVBoxLayout *topLayout = new QVBoxLayout(this);
-    topLayout->setMargin(0);
+    topLayout->setContentsMargins(0, 0, 0, 0);
 
     QItemSelectionModel *selectionModel = new QItemSelectionModel(d->m_model, this);
     d->m_checkableProxy = new KCheckableProxyModel(this);
