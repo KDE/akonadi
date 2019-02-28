@@ -70,11 +70,7 @@ bool ItemModifyHandler::addFlags(const PimItem::List &items, const QSet<QByteArr
     DataStore *store = connection()->storageBackend();
 
     if (!store->appendItemsFlags(items, flagList, &flagsChanged)) {
-<<<<<<< HEAD:src/server/handler/itemmodifyhandler.cpp
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::addFlags: Unable to add new item flags";
-=======
-        qCWarning(AKONADISERVER_LOG) << "Store::addFlags: Unable to add new item flags";
->>>>>>> origin/Applications/18.12:src/server/handler/store.cpp
         return false;
     }
     return true;
@@ -96,11 +92,7 @@ bool ItemModifyHandler::deleteFlags(const PimItem::List &items, const QSet<QByte
     }
 
     if (!store->removeItemsFlags(items, flagList, &flagsChanged)) {
-<<<<<<< HEAD:src/server/handler/itemmodifyhandler.cpp
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::deleteFlags: Unable to remove item flags";
-=======
-        qCWarning(AKONADISERVER_LOG) << "Store::deleteFlags: Unable to remove item flags";
->>>>>>> origin/Applications/18.12:src/server/handler/store.cpp
         return false;
     }
     return true;
@@ -110,11 +102,7 @@ bool ItemModifyHandler::replaceTags(const PimItem::List &item, const Scope &tags
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->setItemsTags(item, tagList, &tagsChanged)) {
-<<<<<<< HEAD:src/server/handler/itemmodifyhandler.cpp
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::replaceTags: unable to replace tags";
-=======
-        qCWarning(AKONADISERVER_LOG) << "Store::replaceTags: unable to replace tags";
->>>>>>> origin/Applications/18.12:src/server/handler/store.cpp
         return false;
     }
     return true;
@@ -124,11 +112,7 @@ bool ItemModifyHandler::addTags(const PimItem::List &items, const Scope &tags, b
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->appendItemsTags(items, tagList, &tagsChanged)) {
-<<<<<<< HEAD:src/server/handler/itemmodifyhandler.cpp
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::addTags: Unable to add new item tags";
-=======
-        qCWarning(AKONADISERVER_LOG) << "Store::addTags: Unable to add new item tags";
->>>>>>> origin/Applications/18.12:src/server/handler/store.cpp
         return false;
     }
     return true;
@@ -138,11 +122,7 @@ bool ItemModifyHandler::deleteTags(const PimItem::List &items, const Scope &tags
 {
     const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
     if (!connection()->storageBackend()->removeItemsTags(items, tagList, &tagsChanged)) {
-<<<<<<< HEAD:src/server/handler/itemmodifyhandler.cpp
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::deleteTags: Unable to remove item tags";
-=======
-        qCWarning(AKONADISERVER_LOG) << "Store::deleteTags: Unable to remove item tags";
->>>>>>> origin/Applications/18.12:src/server/handler/store.cpp
         return false;
     }
     return true;
