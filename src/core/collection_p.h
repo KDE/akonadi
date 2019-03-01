@@ -48,6 +48,7 @@ public:
         , referencedChanged(false)
         , contentTypesChanged(false)
         , cachePolicyChanged(false)
+        , attributesChanged(false)
         , isVirtual(false)
         , mId(id)
         , mParent(nullptr)
@@ -85,6 +86,7 @@ public:
         referenced = other.referenced;
         referencedChanged = other.referencedChanged;
         keepLocalChanges = other.keepLocalChanges;
+        attributesChanged = other.attributesChanged;
     }
 
     ~CollectionPrivate()
@@ -100,6 +102,7 @@ public:
         enabledChanged = false;
         listPreferenceChanged = false;
         referencedChanged = false;
+        attributesChanged = false;
         mDeletedAttributes.clear();
     }
 
@@ -121,6 +124,7 @@ public:
     bool referencedChanged: 1;
     bool contentTypesChanged: 1;
     bool cachePolicyChanged: 1;
+    bool attributesChanged : 1;
     bool isVirtual: 1;
     // 2 bytes padding here
 

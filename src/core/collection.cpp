@@ -177,6 +177,7 @@ void Collection::addAttribute(Attribute *attr)
     }
     d_ptr->mAttributes.insert(attr->type(), attr);
     d_ptr->mDeletedAttributes.remove(attr->type());
+    d_ptr->attributesChanged = true;
 }
 
 void Collection::removeAttribute(const QByteArray &type)
@@ -459,4 +460,9 @@ void Collection::setKeepLocalChanges(const QSet<QByteArray> &parts)
 QSet<QByteArray> Collection::keepLocalChanges() const
 {
     return d_ptr->keepLocalChanges;
+}
+
+void Collection::markAttributesChanged()
+{
+    d_ptr->attributesChanged = true;
 }

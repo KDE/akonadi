@@ -549,6 +549,8 @@ private:
     friend class CollectionModifyJob;
     friend class ProtocolHelper;
 
+    void markAttributesChanged();
+
     //@cond PRIVATE
     QSharedDataPointer<CollectionPrivate> d_ptr;
     friend class CollectionPrivate;
@@ -566,6 +568,7 @@ inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
     if (hasAttribute(dummy.type())) {
         T *attr = dynamic_cast<T *>(attribute(dummy.type()));
         if (attr) {
+            markAttributesChanged();
             return attr;
         }
         //Reuse 5250
