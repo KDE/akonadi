@@ -439,7 +439,7 @@ void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
 
 void ItemSyncPrivate::slotLocalChangeDone(KJob *job)
 {
-    if (job->error()) {
+    if (job->error() && job->error() != Job::KilledJobError) {
         qCWarning(AKONADICORE_LOG) << "Creating/updating items from the akonadi database failed:" << job->errorString();
     }
     mPendingJobs--;
