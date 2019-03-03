@@ -174,7 +174,7 @@ bool Store::parseStream()
             }
 
             // check and update revisions
-            if (pimItems.at(i).rev() != (int) cmd.oldRevision()) {
+            if (pimItem.rev() != (int) cmd.oldRevision()) {
                 const QString error = QStringLiteral("[LLCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with revision %5; the item was modified elsewhere and has revision %6, aborting STORE.");
                 return failureResponse(error.arg(pimItem.collection().resource().name())
                                             .arg(pimItem.id())
@@ -334,11 +334,11 @@ bool Store::parseStream()
         // run update query and prepare change notifications
         for (int i = 0; i < pimItems.count(); ++i) {
 
+            PimItem &item = pimItems[i];
             if (revisionNeedsUpdate) {
-                pimItems[i].setRev(pimItems[i].rev() + 1);
+                item.setRev(item.rev() + 1);
             }
 
-            PimItem &item = pimItems[i];
             item.setDatetime(modificationtime);
             item.setAtime(modificationtime);
             if (!connection()->isOwnerResource(item) && payloadChanged(changes)) {
