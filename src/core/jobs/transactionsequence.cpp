@@ -133,8 +133,6 @@ void TransactionSequence::slotResult(KJob *job)
                 d->mState = TransactionSequencePrivate::Committing;
                 TransactionCommitJob *job = new TransactionCommitJob(this);
                 connect(job, &TransactionCommitJob::result, [d](KJob *job) { d->commitResult(job);});
-            } else if (d->mState == TransactionSequencePrivate::RollingBack) {
-                emitResult();
             }
         }
     } else {
