@@ -1415,8 +1415,8 @@ QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
             res = query.exec();
         }
         if (StorageDebugger::instance()->isSQLDebuggingEnabled()) {
-            StorageDebugger::instance()->queryExecuted(reinterpret_cast<qint64>(this),
-                                                       query, t.elapsed());
+            Q_EMIT StorageDebugger::instance()->queryExecuted(reinterpret_cast<qint64>(this),
+                                                              query, t.elapsed());
         } else {
             StorageDebugger::instance()->incSequence();
         }

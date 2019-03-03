@@ -100,7 +100,7 @@ void CollectionModifyJob::doStart()
     if (d->mCollection.d_ptr->referencedChanged) {
         cmd->setReferenced(d->mCollection.referenced());
     }
-    if (!d->mCollection.attributes().isEmpty()) {
+    if (d->mCollection.d_ptr->attributesChanged) {
         cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
     }
     if (auto attr = d->mCollection.attribute<Akonadi::PersistentSearchAttribute>()) {

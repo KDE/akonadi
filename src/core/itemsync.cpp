@@ -157,7 +157,7 @@ void ItemSyncPrivate::checkDone()
         //and wait until the transaction is committed to process the next batch
         if (mTransactionMode == ItemSync::MultipleTransactions || (mDeliveryDone && mRemoteItemQueue.isEmpty())) {
             if (mCurrentTransaction) {
-                q->Q_EMIT transactionCommitted();
+                Q_EMIT q->transactionCommitted();
                 mCurrentTransaction->commit();
                 mCurrentTransaction = nullptr;
             }
@@ -169,11 +169,11 @@ void ItemSyncPrivate::checkDone()
         execute();
         //We don't have enough items, request more
         if (!mProcessingBatch) {
-            q->Q_EMIT readyForNextBatch(mBatchSize - mRemoteItemQueue.size());
+            Q_EMIT q->readyForNextBatch(mBatchSize - mRemoteItemQueue.size());
         }
         return;
     }
-    q->Q_EMIT readyForNextBatch(mBatchSize);
+    Q_EMIT q->readyForNextBatch(mBatchSize);
 
     if (allProcessed() && !mFinished) {
         // prevent double result emission, can happen since checkDone() is called from all over the place
@@ -439,7 +439,7 @@ void ItemSyncPrivate::slotLocalDeleteDone(KJob *job)
 
 void ItemSyncPrivate::slotLocalChangeDone(KJob *job)
 {
-    if (job->error()) {
+    if (job->error() && job->error() != Job::KilledJobError) {
         qCWarning(AKONADICORE_LOG) << "Creating/updating items from the akonadi database failed:" << job->errorString();
     }
     mPendingJobs--;
