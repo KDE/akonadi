@@ -136,6 +136,9 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
     inform("Flushing collection statistics memory cache...");
     CollectionStatistics::self()->expireCache();
 
+    inform("Making sure virtual search resource and collections exist");
+    ensureSearchCollection();
+
     /* TODO some ideas for further checks:
      * the collection tree is non-cyclic
      * content type constraints of collections are not violated
@@ -833,6 +836,35 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         }
     }
     query.finish();
+}
+
+void StorageJanitor::ensureSearchCollection()
+{
+    static const auto searchResourceName = QStringLiteral("akonadi_search_resource");
+
+    auto searchResource = Resource::retrieveByName(searchResourceName);
+    if (!searchResource.isValid()) {
+        searchResource.setName(searchResourceName);
+        searchResource.setIsVirtual(true);
+        if (!searchResource.insert()) {
+            inform(QStringLiteral("Failed to create Search resource."));
+            return;
+        }
+    }
+
+    auto searchCols = Collection::retrieveFiltered(Collection::resourceIdColumn(), searchResource.id());
+    if (searchCols.isEmpty()) {
+        Collection searchCol;
+        searchCol.setId(1);
+        searchCol.setName(QStringLiteral("Search"));
+        searchCol.setResource(searchResource);
+        searchCol.setIndexPref(Collection::False);
+        searchCol.setIsVirtual(true);
+        if (!searchCol.insert()) {
+            inform(QStringLiteral("Failed to create Search Collection"));
+            return;
+        }
+    }
 }
 
 

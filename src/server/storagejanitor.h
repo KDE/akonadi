@@ -137,6 +137,13 @@ private:
      */
     void findOrphanSearchIndexEntries();
 
+    /**
+     * Make sure that the "Search" collection in the virtual search resource
+     * exists. It is only created during database initialization, so if user
+     * somehow manages to delete it, their search would be completely borked.
+     */
+    void ensureSearchCollection();
+
 private:
     qint64 m_lostFoundCollectionId;
 };
