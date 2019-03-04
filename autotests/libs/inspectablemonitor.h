@@ -33,7 +33,7 @@ class InspectableMonitor;
 class InspectableMonitorPrivate : public Akonadi::MonitorPrivate
 {
 public:
-    InspectableMonitorPrivate(FakeMonitorDependeciesFactory *dependenciesFactory, InspectableMonitor *parent);
+    InspectableMonitorPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableMonitor *parent);
     ~InspectableMonitorPrivate()
     {
     }
@@ -48,7 +48,7 @@ class AKONADITESTFAKE_EXPORT InspectableMonitor : public Akonadi::Monitor
 {
     Q_OBJECT
 public:
-    explicit InspectableMonitor(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = nullptr);
+    explicit InspectableMonitor(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent = nullptr);
 
     FakeNotificationConnection *notificationConnection() const
     {

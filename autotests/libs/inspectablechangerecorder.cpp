@@ -21,13 +21,13 @@
 
 #include "changerecorder_p.h"
 
-InspectableChangeRecorderPrivate::InspectableChangeRecorderPrivate(FakeMonitorDependeciesFactory *dependenciesFactory, InspectableChangeRecorder *parent)
+InspectableChangeRecorderPrivate::InspectableChangeRecorderPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableChangeRecorder *parent)
     : ChangeRecorderPrivate(dependenciesFactory, parent)
 {
 
 }
 
-InspectableChangeRecorder::InspectableChangeRecorder(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent)
+InspectableChangeRecorder::InspectableChangeRecorder(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent)
     : ChangeRecorder(new Akonadi::ChangeRecorderPrivate(dependenciesFactory, this), parent)
 {
     QTimer::singleShot(0, this, &InspectableChangeRecorder::doConnectToNotificationManager);

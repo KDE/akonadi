@@ -82,7 +82,7 @@ void MonitorNotificationTest::testSingleMessage()
 
     FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
     FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
-    FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
+    FakeMonitorDependenciesFactory *depsFactory = new FakeMonitorDependenciesFactory(itemCache, collectionCache);
 
     if (!useChangeRecorder) {
         testSingleMessage_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
@@ -153,7 +153,7 @@ void MonitorNotificationTest::testFillPipeline()
 
     FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
     FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
-    FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
+    FakeMonitorDependenciesFactory *depsFactory = new FakeMonitorDependenciesFactory(itemCache, collectionCache);
 
     if (!useChangeRecorder) {
         testFillPipeline_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);
@@ -223,7 +223,7 @@ void MonitorNotificationTest::testMonitor()
 
     FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
     FakeItemCache *itemCache = new FakeItemCache(m_fakeSession);
-    FakeMonitorDependeciesFactory *depsFactory = new FakeMonitorDependeciesFactory(itemCache, collectionCache);
+    FakeMonitorDependenciesFactory *depsFactory = new FakeMonitorDependenciesFactory(itemCache, collectionCache);
 
     if (!useChangeRecorder) {
         testMonitor_impl(new InspectableMonitor(depsFactory, this), collectionCache, itemCache);

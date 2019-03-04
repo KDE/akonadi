@@ -33,7 +33,7 @@ class InspectableChangeRecorder;
 class InspectableChangeRecorderPrivate : public Akonadi::ChangeRecorderPrivate
 {
 public:
-    InspectableChangeRecorderPrivate(FakeMonitorDependeciesFactory *dependenciesFactory, InspectableChangeRecorder *parent);
+    InspectableChangeRecorderPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableChangeRecorder *parent);
     ~InspectableChangeRecorderPrivate()
     {
     }
@@ -48,7 +48,7 @@ class AKONADITESTFAKE_EXPORT InspectableChangeRecorder : public Akonadi::ChangeR
 {
     Q_OBJECT
 public:
-    explicit InspectableChangeRecorder(FakeMonitorDependeciesFactory *dependenciesFactory, QObject *parent = nullptr);
+    explicit InspectableChangeRecorder(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent = nullptr);
 
     FakeNotificationConnection *notificationConnection() const
     {

@@ -144,11 +144,11 @@ private:
     Akonadi::CommandBuffer *mBuffer;
 };
 
-class FakeMonitorDependeciesFactory : public Akonadi::ChangeNotificationDependenciesFactory
+class FakeMonitorDependenciesFactory : public Akonadi::ChangeNotificationDependenciesFactory
 {
 public:
 
-    FakeMonitorDependeciesFactory(FakeItemCache *itemCache_, FakeCollectionCache *collectionCache_)
+    FakeMonitorDependenciesFactory(FakeItemCache *itemCache_, FakeCollectionCache *collectionCache_)
         : Akonadi::ChangeNotificationDependenciesFactory()
         , itemCache(itemCache_)
         , collectionCache(collectionCache_)
