@@ -66,6 +66,7 @@ private Q_SLOTS:
     void testMonitor();
     void testTagAttributeConfusionBug();
     void testFetchItemsByTag();
+    void tagModifyJobShouldOnlySendModifiedAttributes();
 };
 
 void TagTest::initTestCase()
@@ -352,7 +353,6 @@ void TagTest::testModify()
     {
         Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("display name"));
-        tag.addAttribute(attr);
         tag.setParent(Tag(0));
         tag.setType("mytype");
         TagModifyJob *modJob = new TagModifyJob(tag, this);
@@ -455,7 +455,6 @@ void TagTest::testAttributes()
         TagAttribute *attr = tag.attribute<TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("name"));
         attr->setInToolbar(true);
-        tag.addAttribute(attr);
         TagCreateJob *createjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
@@ -888,6 +887,64 @@ void TagTest::testFetchItemsByTag()
 
     TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
+}
+
+void TagTest::tagModifyJobShouldOnlySendModifiedAttributes()
+{
+    // Given a tag with an attribute
+    Tag tag(QStringLiteral("tagWithAttr"));
+    auto *attr = new Akonadi::TagAttribute;
+    attr->setDisplayName(QStringLiteral("display name"));
+    tag.addAttribute(attr);
+    {
+        auto *createjob = new TagCreateJob(tag, this);
+        AKVERIFYEXEC(createjob);
+        tag = createjob->tag();
+    }
+
+    // When one job modifies this attribute, and another one does an unrelated modify job
+    Tag attrModTag(tag.id());
+    Akonadi::TagAttribute *modAttr = attrModTag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
+    modAttr->setDisplayName(QStringLiteral("modified"));
+    TagModifyJob *attrModJob = new TagModifyJob(attrModTag, this);
+    AKVERIFYEXEC(attrModJob);
+
+    tag.setType(Tag::GENERIC);
+    // this job shouldn't send the old attribute again
+    auto *modJob = new TagModifyJob(tag, this);
+    AKVERIFYEXEC(modJob);
+
+    // Then the tag should have both the modified attribute and the modified type
+    {
+        auto *fetchJob = new TagFetchJob(this);
+        fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().size(), 1);
+        const Tag fetchedTag = fetchJob->tags().at(0);
+        QVERIFY(fetchedTag.hasAttribute<Akonadi::TagAttribute>());
+        QCOMPARE(fetchedTag.attribute<Akonadi::TagAttribute>()->displayName(), QStringLiteral("modified"));
+        QCOMPARE(fetchedTag.type(), Tag::GENERIC);
+    }
+
+    // And when adding a new attribute next to the old one
+    auto *attr2 = AttributeFactory::createAttribute("SecondType");
+    tag.addAttribute(attr2);
+    // this job shouldn't send the old attribute again
+    auto *modJob2 = new TagModifyJob(tag, this);
+    AKVERIFYEXEC(modJob2);
+
+    // Then the tag should have the modified attribute and the second one
+    {
+        auto *fetchJob = new TagFetchJob(this);
+        fetchJob->fetchScope().setFetchAllAttributes(true);
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->tags().size(), 1);
+        const Tag fetchedTag = fetchJob->tags().at(0);
+        QVERIFY(fetchedTag.hasAttribute<Akonadi::TagAttribute>());
+        QCOMPARE(fetchedTag.attribute<Akonadi::TagAttribute>()->displayName(), QStringLiteral("modified"));
+        QCOMPARE(fetchedTag.type(), Tag::GENERIC);
+        QVERIFY(fetchedTag.attribute("SecondType"));
+    }
 }
 
 #include "tagtest.moc"

@@ -549,7 +549,7 @@ private:
     friend class CollectionModifyJob;
     friend class ProtocolHelper;
 
-    void markAttributesChanged();
+    void markAttributeModified(const QByteArray &type);
 
     //@cond PRIVATE
     QSharedDataPointer<CollectionPrivate> d_ptr;
@@ -564,15 +564,15 @@ inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
 {
     Q_UNUSED(option);
 
-    const T dummy;
-    if (hasAttribute(dummy.type())) {
-        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+    const QByteArray type = T().type();
+    if (hasAttribute(type)) {
+        T *attr = dynamic_cast<T *>(attribute(type));
         if (attr) {
-            markAttributesChanged();
+            markAttributeModified(type);
             return attr;
         }
         //Reuse 5250
-        qWarning() << "Found attribute of unknown type" << dummy.type()
+        qWarning() << "Found attribute of unknown type" << type
                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 

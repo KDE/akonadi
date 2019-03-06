@@ -23,6 +23,7 @@
 #include "collection.h"
 #include "cachepolicy.h"
 #include "collectionstatistics.h"
+#include "attributestorage_p.h"
 
 #include "qstringlist.h"
 
@@ -48,7 +49,6 @@ public:
         , referencedChanged(false)
         , contentTypesChanged(false)
         , cachePolicyChanged(false)
-        , attributesChanged(false)
         , isVirtual(false)
         , mId(id)
         , mParent(nullptr)
@@ -62,10 +62,7 @@ public:
         mId = other.mId;
         mRemoteId = other.mRemoteId;
         mRemoteRevision = other.mRemoteRevision;
-        for (Attribute *attr : qAsConst(other.mAttributes)) {
-            mAttributes.insert(attr->type(), attr->clone());
-        }
-        mDeletedAttributes = other.mDeletedAttributes;
+        mAttributeStorage = other.mAttributeStorage;
         if (other.mParent) {
             mParent = new Collection(*(other.mParent));
         }
@@ -86,12 +83,10 @@ public:
         referenced = other.referenced;
         referencedChanged = other.referencedChanged;
         keepLocalChanges = other.keepLocalChanges;
-        attributesChanged = other.attributesChanged;
     }
 
     ~CollectionPrivate()
     {
-        qDeleteAll(mAttributes);
         delete mParent;
     }
 
@@ -102,8 +97,7 @@ public:
         enabledChanged = false;
         listPreferenceChanged = false;
         referencedChanged = false;
-        attributesChanged = false;
-        mDeletedAttributes.clear();
+        mAttributeStorage.resetChangeLog();
     }
 
     static Collection newRoot()
@@ -124,16 +118,14 @@ public:
     bool referencedChanged: 1;
     bool contentTypesChanged: 1;
     bool cachePolicyChanged: 1;
-    bool attributesChanged : 1;
     bool isVirtual: 1;
     // 2 bytes padding here
 
     Collection::Id mId;
     QString mRemoteId;
     QString mRemoteRevision;
-    QHash<QByteArray, Attribute *> mAttributes;
-    QSet<QByteArray> mDeletedAttributes;
     mutable Collection *mParent;
+    AttributeStorage mAttributeStorage;
     QString name;
     QString resource;
     CollectionStatistics statistics;

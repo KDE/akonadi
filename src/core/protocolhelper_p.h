@@ -40,6 +40,7 @@
 #include <type_traits>
 #include <functional>
 #include <cassert>
+#include <set>
 
 namespace Akonadi
 {
@@ -136,6 +137,7 @@ public:
     static Protocol::Attributes attributesToProtocol(const Item &item, bool ns = false);
     static Protocol::Attributes attributesToProtocol(const Collection &collection, bool ns = false);
     static Protocol::Attributes attributesToProtocol(const Tag &entity, bool ns = false);
+    static Protocol::Attributes attributesToProtocol(const std::vector<Attribute *> &modifiedAttributes, bool ns = false);
 
     /**
       Encodes part label and namespace.

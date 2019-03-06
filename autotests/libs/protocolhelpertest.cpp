@@ -19,6 +19,7 @@
 
 #include "test_utils.h"
 #include "protocolhelper.cpp"
+#include "attributestorage.cpp"
 
 using namespace Akonadi;
 

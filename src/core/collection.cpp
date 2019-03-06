@@ -166,48 +166,32 @@ bool Akonadi::Collection::operator<(const Collection &other) const
 
 void Collection::addAttribute(Attribute *attr)
 {
-    Q_ASSERT(attr);
-    Attribute *existing = d_ptr->mAttributes.value(attr->type());
-    if (existing) {
-        if (attr == existing) {
-            return;
-        }
-        d_ptr->mAttributes.remove(attr->type());
-        delete existing;
-    }
-    d_ptr->mAttributes.insert(attr->type(), attr);
-    d_ptr->mDeletedAttributes.remove(attr->type());
-    d_ptr->attributesChanged = true;
+    d_ptr->mAttributeStorage.addAttribute(attr);
 }
 
 void Collection::removeAttribute(const QByteArray &type)
 {
-    d_ptr->mDeletedAttributes.insert(type);
-    delete d_ptr->mAttributes.take(type);
+    d_ptr->mAttributeStorage.removeAttribute(type);
 }
 
 bool Collection::hasAttribute(const QByteArray &type) const
 {
-    return d_ptr->mAttributes.contains(type);
+    return d_ptr->mAttributeStorage.hasAttribute(type);
 }
 
 Attribute::List Collection::attributes() const
 {
-    return d_ptr->mAttributes.values();
+    return d_ptr->mAttributeStorage.attributes();
 }
 
 void Akonadi::Collection::clearAttributes()
 {
-    for (Attribute *attr : qAsConst(d_ptr->mAttributes)) {
-        d_ptr->mDeletedAttributes.insert(attr->type());
-        delete attr;
-    }
-    d_ptr->mAttributes.clear();
+    return d_ptr->mAttributeStorage.clearAttributes();
 }
 
 Attribute *Collection::attribute(const QByteArray &type) const
 {
-    return d_ptr->mAttributes.value(type);
+    return d_ptr->mAttributeStorage.attribute(type);
 }
 
 Collection &Collection::parentCollection()
@@ -462,7 +446,7 @@ QSet<QByteArray> Collection::keepLocalChanges() const
     return d_ptr->keepLocalChanges;
 }
 
-void Collection::markAttributesChanged()
+void Collection::markAttributeModified(const QByteArray &type)
 {
-    d_ptr->attributesChanged = true;
+    d_ptr->mAttributeStorage.markAttributeModified(type);
 }

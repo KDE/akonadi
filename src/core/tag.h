@@ -198,9 +198,12 @@ public:
 
 private:
     bool checkAttribute(Attribute *attr, const QByteArray &type) const;
+    void markAttributeModified(const QByteArray &type);
 
     //@cond PRIVATE
     friend class TagModifyJob;
+    friend class TagFetchJob;
+    friend class ProtocolHelper;
 
     QSharedDataPointer<TagPrivate> d_ptr;
     //@endcond
@@ -213,10 +216,11 @@ inline T *Tag::attribute(CreateOption option)
 {
     Q_UNUSED(option);
 
-    const T dummy;
-    if (hasAttribute(dummy.type())) {
-        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
-        if (checkAttribute(attr, dummy.type())) {
+    const QByteArray type = T().type();
+    if (hasAttribute(type)) {
+        T *attr = dynamic_cast<T *>(attribute(type));
+        if (checkAttribute(attr, type)) {
+            markAttributeModified(type);
             return attr;
         }
     }

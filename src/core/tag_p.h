@@ -21,6 +21,7 @@
 #ifndef TAG_P_H
 #define TAG_P_H
 
+#include "attributestorage_p.h"
 #include "tag.h"
 
 namespace Akonadi
@@ -44,15 +45,16 @@ public:
             parent.reset(new Tag(*other.parent));
         }
         type = other.type;
-        for (Attribute *attr : qAsConst(other.mAttributes)) {
-            mAttributes.insert(attr->type(), attr->clone());
-        }
-        mDeletedAttributes = other.mDeletedAttributes;
+        mAttributeStorage = other.mAttributeStorage;
     }
 
     ~TagPrivate()
     {
-        qDeleteAll(mAttributes);
+    }
+
+    void resetChangeLog()
+    {
+        mAttributeStorage.resetChangeLog();
     }
 
     // 4 bytes padding here (after QSharedData)
@@ -62,8 +64,7 @@ public:
     QByteArray remoteId;
     QScopedPointer<Tag> parent;
     QByteArray type;
-    QHash<QByteArray, Attribute *> mAttributes;
-    QSet<QByteArray> mDeletedAttributes;
+    AttributeStorage mAttributeStorage;
 };
 
 }

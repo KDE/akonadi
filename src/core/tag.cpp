@@ -122,47 +122,32 @@ QUrl Tag::url() const
 
 void Tag::addAttribute(Attribute *attr)
 {
-    const QByteArray typeAttr = attr->type();
-    Attribute *existing = d_ptr->mAttributes.value(typeAttr);
-    if (existing) {
-        if (attr == existing) {
-            return;
-        }
-        d_ptr->mAttributes.remove(typeAttr);
-        delete existing;
-    }
-    d_ptr->mAttributes.insert(typeAttr, attr);
-    d_ptr->mDeletedAttributes.remove(typeAttr);
+   d_ptr->mAttributeStorage.addAttribute(attr);
 }
 
 void Tag::removeAttribute(const QByteArray &type)
 {
-    d_ptr->mDeletedAttributes.insert(type);
-    delete d_ptr->mAttributes.take(type);
+    d_ptr->mAttributeStorage.removeAttribute(type);
 }
 
 bool Tag::hasAttribute(const QByteArray &type) const
 {
-    return d_ptr->mAttributes.contains(type);
+    return d_ptr->mAttributeStorage.hasAttribute(type);
 }
 
 Attribute::List Tag::attributes() const
 {
-    return d_ptr->mAttributes.values();
+    return d_ptr->mAttributeStorage.attributes();
 }
 
 void Tag::clearAttributes()
 {
-    for (Attribute *attr : qAsConst(d_ptr->mAttributes)) {
-        d_ptr->mDeletedAttributes.insert(attr->type());
-        delete attr;
-    }
-    d_ptr->mAttributes.clear();
+    d_ptr->mAttributeStorage.clearAttributes();
 }
 
 Attribute *Tag::attribute(const QByteArray &type) const
 {
-    return d_ptr->mAttributes.value(type);
+    return d_ptr->mAttributeStorage.attribute(type);
 }
 
 void Tag::setId(Tag::Id identifier)
@@ -267,4 +252,9 @@ bool Tag::checkAttribute(Attribute *attr, const QByteArray &type) const
     qCWarning(AKONADICORE_LOG) << "Found attribute of unknown type" << type
                                << ". Did you forget to call AttributeFactory::registerAttribute()?";
     return false;
+}
+
+void Tag::markAttributeModified(const QByteArray &type)
+{
+    d_ptr->mAttributeStorage.markAttributeModified(type);
 }

@@ -100,8 +100,8 @@ void CollectionModifyJob::doStart()
     if (d->mCollection.d_ptr->referencedChanged) {
         cmd->setReferenced(d->mCollection.referenced());
     }
-    if (d->mCollection.d_ptr->attributesChanged) {
-        cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection));
+    if (d->mCollection.d_ptr->mAttributeStorage.hasModifiedAttributes()) {
+        cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection.d_ptr->mAttributeStorage.modifiedAttributes()));
     }
     if (auto attr = d->mCollection.attribute<Akonadi::PersistentSearchAttribute>()) {
         cmd->setPersistentSearchCollections(attr->queryCollections());
@@ -109,8 +109,8 @@ void CollectionModifyJob::doStart()
         cmd->setPersistentSearchRecursive(attr->isRecursive());
         cmd->setPersistentSearchRemote(attr->isRemoteSearchEnabled());
     }
-    if (!d->mCollection.d_ptr->mDeletedAttributes.isEmpty()) {
-        cmd->setRemovedAttributes(d->mCollection.d_ptr->mDeletedAttributes);
+    if (!d->mCollection.d_ptr->mAttributeStorage.deletedAttributes().empty()) {
+        cmd->setRemovedAttributes(d->mCollection.d_ptr->mAttributeStorage.deletedAttributes());
     }
 
     if (cmd->modifiedParts() == Protocol::ModifyCollectionCommand::None) {

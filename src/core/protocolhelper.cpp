@@ -23,6 +23,7 @@
 #include "collectionstatistics.h"
 #include "item_p.h"
 #include "collection_p.h"
+#include "tag_p.h"
 #include "exceptionbase.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
@@ -205,6 +206,16 @@ Protocol::Attributes ProtocolHelper::attributesToProtocol(const Tag &tag, bool n
     return attributesToProtocolImpl(tag, ns);
 }
 
+Protocol::Attributes ProtocolHelper::attributesToProtocol(const std::vector<Attribute *> &modifiedAttributes, bool ns)
+{
+    Protocol::Attributes attributes;
+    for (const Attribute *attr : modifiedAttributes) {
+        attributes.insert(ProtocolHelper::encodePartIdentifier(ns ? ProtocolHelper::PartAttribute : ProtocolHelper::PartGlobal, attr->type()),
+                          attr->serialized());
+    }
+    return attributes;
+}
+
 Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsResponse &data, bool requireParent)
 {
     Collection collection(data.id());
@@ -254,6 +265,7 @@ Tag ProtocolHelper::parseTag(const Protocol::FetchTagsResponse &data)
     tag.setType(data.type());
     tag.setParent(Tag(data.parentId()));
     parseAttributes(data.attributes(), &tag);
+    tag.d_ptr->resetChangeLog();
 
     return tag;
 }
@@ -717,6 +729,7 @@ Tag ProtocolHelper::parseTagFetchResult(const Protocol::FetchTagsResponse &data)
     tag.setParent(data.parentId() > 0 ? Tag(data.parentId()) : Tag());
 
     parseAttributes(data.attributes(), &tag);
+    tag.d_ptr->resetChangeLog();
     return tag;
 }
 

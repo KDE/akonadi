@@ -65,18 +65,19 @@ void TagModifyJob::doStart()
     if (d->mTag.parent().isValid() && !d->mTag.isImmutable()) {
         cmd->setParentId(d->mTag.parent().id());
     }
-    if (!d->mTag.d_ptr->mDeletedAttributes.isEmpty()) {
-        cmd->setRemovedAttributes(d->mTag.d_ptr->mDeletedAttributes);
+    if (!d->mTag.d_ptr->mAttributeStorage.deletedAttributes().isEmpty()) {
+        cmd->setRemovedAttributes(d->mTag.d_ptr->mAttributeStorage.deletedAttributes());
     }
-
-    cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mTag));
+    if (d->mTag.d_ptr->mAttributeStorage.hasModifiedAttributes()) {
+        cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mTag.d_ptr->mAttributeStorage.modifiedAttributes()));
+    }
 
     d->sendCommand(cmd);
 }
 
 bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    //Q_D(TagModifyJob);
+    Q_D(TagModifyJob);
 
     if (response->isResponse()) {
         if (response->type() == Protocol::Command::FetchTags) {
@@ -87,6 +88,7 @@ bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
             return false;
         } else if (response->type() == Protocol::Command::ModifyTag) {
             // Done.
+            d->mTag.d_ptr->resetChangeLog();
             return true;
         }
     }
