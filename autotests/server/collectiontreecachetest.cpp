@@ -132,8 +132,8 @@ private Q_SLOTS:
         auto expCols = qb.result();
 
         const auto sort = [](const Collection &l, const Collection &r) { return l.id() < r.id(); };
-        qSort(allCols.begin(), allCols.end(), sort);
-        qSort(expCols.begin(), expCols.end(), sort);
+        std::sort(allCols.begin(), allCols.end(), sort);
+        std::sort(expCols.begin(), expCols.end(), sort);
 
         QCOMPARE(allCols.size(), expCols.size());
         QCOMPARE(allCols, expCols);
