@@ -308,9 +308,6 @@ public:
         mRemoteId = other.mRemoteId;
         mRemoteRevision = other.mRemoteRevision;
         mPayloadPath = other.mPayloadPath;
-        Q_FOREACH (Attribute *attr, other.mAttributes) {
-            mAttributes.insert(attr->type(), attr->clone());
-        }
         if (other.mParent) {
             mParent = new Collection(*(other.mParent));
         }
@@ -338,15 +335,14 @@ public:
         changelog->deletedFlags(this) = changelog->deletedFlags(&other);
         changelog->addedTags(this) = changelog->addedTags(&other);
         changelog->deletedTags(this) = changelog->deletedTags(&other);
-        changelog->deletedAttributes(this) = changelog->deletedAttributes(&other);
+        changelog->attributeStorage(this) = changelog->attributeStorage(&other);
     }
 
     ~ItemPrivate()
     {
-        qDeleteAll(mAttributes);
         delete mParent;
 
-        ItemChangeLog::instance()->clearItemChangelog(this);
+        ItemChangeLog::instance()->removeItem(this);
     }
 
     void resetChangeLog()
@@ -440,7 +436,6 @@ public:
     QString mRemoteId;
     QString mRemoteRevision;
     mutable QString mPayloadPath;
-    QHash<QByteArray, Attribute *> mAttributes;
     mutable Collection *mParent;
     mutable _detail::clone_ptr<Internal::PayloadBase> mLegacyPayload;
     mutable PayloadContainer mPayloads;

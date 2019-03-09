@@ -225,7 +225,8 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
         cmd->setParts(parts);
     }
 
-    const auto deletedAttributes = ItemChangeLog::instance()->deletedAttributes(item.d_ptr);
+    const AttributeStorage &attributeStorage = ItemChangeLog::instance()->attributeStorage(item.d_ptr);
+    const QSet<QByteArray> deletedAttributes = attributeStorage.deletedAttributes();
     if (!deletedAttributes.isEmpty()) {
         QSet<QByteArray> removedParts;
         removedParts.reserve(deletedAttributes.size());
@@ -234,11 +235,13 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
         }
         cmd->setRemovedParts(removedParts);
     }
+    if (attributeStorage.hasModifiedAttributes()) {
+        cmd->setAttributes(ProtocolHelper::attributesToProtocol(attributeStorage.modifiedAttributes()));
+    }
 
     // nothing to do
     if (cmd->modifiedParts() == Protocol::ModifyItemsCommand::None
         && mParts.isEmpty()
-        && item.attributes().isEmpty()
         && !cmd->invalidateCache()) {
         return cmd;
     }
@@ -251,8 +254,6 @@ Protocol::ModifyItemsCommandPtr ItemModifyJobPrivate::fullCommand() const
     if (item.d_ptr->mSizeChanged) {
         cmd->setItemSize(item.size());
     }
-
-    cmd->setAttributes(ProtocolHelper::attributesToProtocol(item));
 
     return cmd;
 }

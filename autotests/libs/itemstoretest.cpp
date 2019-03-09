@@ -382,3 +382,41 @@ void ItemStoreTest::testRemoteIdRace()
     QVERIFY(fetchJob->items().first().remoteId().isEmpty());
 }
 
+void ItemStoreTest::itemModifyJobShouldOnlySendModifiedAttributes()
+{
+    // Given an item with an attribute (created on the server)
+    Item item;
+    item.setMimeType(QStringLiteral("text/directory"));
+    item.attribute<TestAttribute>(Item::AddIfMissing)->data = "initial";
+    ItemCreateJob *job = new ItemCreateJob(item, res1_foo);
+    AKVERIFYEXEC(job);
+    item = job->item();
+    QCOMPARE(item.attributes().count(), 1);
+
+    // When one job modifies this attribute, and another one does an unrelated change
+    Item item1(item.id());
+    item1.attribute<TestAttribute>(Item::AddIfMissing)->data = "modified";
+    ItemModifyJob *mjob = new ItemModifyJob(item1);
+    mjob->disableRevisionCheck();
+    AKVERIFYEXEC(mjob);
+
+    item.setFlag("added_test_flag_1");
+    // this job shouldn't send the old attribute again
+    ItemModifyJob *mjob2 = new ItemModifyJob(item);
+    mjob2->disableRevisionCheck();
+    AKVERIFYEXEC(mjob2);
+
+    // Then the item has the new value for the attribute (the other one didn't send the old attribute value)
+    {
+        auto *fetchJob = new ItemFetchJob(Item(item.id()));
+        ItemFetchScope fetchScope;
+        fetchScope.fetchAllAttributes(true);
+        fetchJob->setFetchScope(fetchScope);
+        AKVERIFYEXEC(fetchJob);
+        QCOMPARE(fetchJob->items().size(), 1);
+        const Item fetchedItem = fetchJob->items().first();
+        QCOMPARE(fetchedItem.flags().count(), 1);
+        QCOMPARE(fetchedItem.attributes().count(), 1);
+        QCOMPARE(fetchedItem.attribute<TestAttribute>()->data, "modified");
+    }
+}

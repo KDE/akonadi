@@ -229,49 +229,32 @@ bool Akonadi::Item::operator<(const Item &other) const
 
 void Item::addAttribute(Attribute *attr)
 {
-    Q_ASSERT(attr);
-    Attribute *existing = d_ptr->mAttributes.value(attr->type());
-    if (existing) {
-        if (attr == existing) {
-            return;
-        }
-        d_ptr->mAttributes.remove(attr->type());
-        delete existing;
-    }
-    d_ptr->mAttributes.insert(attr->type(), attr);
-    ItemChangeLog::instance()->deletedAttributes(d_ptr).remove(attr->type());
+    ItemChangeLog::instance()->attributeStorage(d_ptr).addAttribute(attr);
 }
 
 void Item::removeAttribute(const QByteArray &type)
 {
-    ItemChangeLog::instance()->deletedAttributes(d_ptr).insert(type);
-    delete d_ptr->mAttributes.take(type);
+    ItemChangeLog::instance()->attributeStorage(d_ptr).removeAttribute(type);
 }
 
 bool Item::hasAttribute(const QByteArray &type) const
 {
-    return d_ptr->mAttributes.contains(type);
+    return ItemChangeLog::instance()->attributeStorage(d_ptr).hasAttribute(type);
 }
 
 Attribute::List Item::attributes() const
 {
-    return d_ptr->mAttributes.values();
+    return ItemChangeLog::instance()->attributeStorage(d_ptr).attributes();
 }
 
 void Akonadi::Item::clearAttributes()
 {
-    ItemChangeLog *changelog = ItemChangeLog::instance();
-    QSet<QByteArray> &deletedAttributes = changelog->deletedAttributes(d_ptr);
-    for (Attribute *attr : qAsConst(d_ptr->mAttributes)) {
-        deletedAttributes.insert(attr->type());
-        delete attr;
-    }
-    d_ptr->mAttributes.clear();
+    ItemChangeLog::instance()->attributeStorage(d_ptr).clearAttributes();
 }
 
 Attribute *Item::attribute(const QByteArray &type) const
 {
-    return d_ptr->mAttributes.value(type);
+    return ItemChangeLog::instance()->attributeStorage(d_ptr).attribute(type);
 }
 
 Collection &Item::parentCollection()
@@ -747,22 +730,8 @@ void Item::apply(const Item &other)
     setParentCollection(other.parentCollection());
     setStorageCollectionId(other.storageCollectionId());
 
-    QList<QByteArray> attrs;
-    attrs.reserve(other.attributes().count());
-    const Akonadi::Attribute::List lstAttrs = other.attributes();
-    for (Attribute *attribute : lstAttrs) {
-        addAttribute(attribute->clone());
-        attrs.append(attribute->type());
-    }
-
-    QMutableHashIterator<QByteArray, Attribute *> it(d_ptr->mAttributes);
-    while (it.hasNext()) {
-        it.next();
-        if (!attrs.contains(it.key())) {
-            delete it.value();
-            it.remove();
-        }
-    }
+    ItemChangeLog *changelog = ItemChangeLog::instance();
+    changelog->attributeStorage(d_ptr) = changelog->attributeStorage(other.d_ptr);
 
     ItemSerializer::apply(*this, other);
     d_ptr->resetChangeLog();

@@ -57,9 +57,19 @@ Tag::List &ItemChangeLog::deletedTags(const ItemPrivate *priv)
     return m_deletedTags[const_cast<ItemPrivate *>(priv)];
 }
 
-QSet<QByteArray> &ItemChangeLog::deletedAttributes(const ItemPrivate *priv)
+AttributeStorage &ItemChangeLog::attributeStorage(const ItemPrivate *priv)
 {
-    return m_deletedAttributes[const_cast<ItemPrivate *>(priv)];
+    return m_attributeStorage[const_cast<ItemPrivate *>(priv)];
+}
+
+void ItemChangeLog::removeItem(const ItemPrivate *priv)
+{
+    ItemPrivate *p = const_cast<ItemPrivate *>(priv);
+    m_addedFlags.remove(p);
+    m_deletedFlags.remove(p);
+    m_addedTags.remove(p);
+    m_deletedTags.remove(p);
+    m_attributeStorage.remove(p);
 }
 
 void ItemChangeLog::clearItemChangelog(const ItemPrivate *priv)
@@ -69,5 +79,5 @@ void ItemChangeLog::clearItemChangelog(const ItemPrivate *priv)
     m_deletedFlags.remove(p);
     m_addedTags.remove(p);
     m_deletedTags.remove(p);
-    m_deletedAttributes.remove(p);
+    m_attributeStorage[p].resetChangeLog(); // keep the attributes
 }

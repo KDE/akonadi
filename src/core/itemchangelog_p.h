@@ -25,6 +25,7 @@
 #include "item.h"
 
 #include "akonaditests_export.h"
+#include "attributestorage_p.h"
 
 namespace Akonadi
 {
@@ -40,8 +41,9 @@ public:
     Tag::List &addedTags(const ItemPrivate *priv);
     Tag::List &deletedTags(const ItemPrivate *priv);
 
-    QSet<QByteArray> &deletedAttributes(const ItemPrivate *priv);
+    AttributeStorage &attributeStorage(const ItemPrivate *priv);
 
+    void removeItem(const ItemPrivate *priv);
     void clearItemChangelog(const ItemPrivate *priv);
 
 private:
@@ -53,7 +55,7 @@ private:
     QHash<ItemPrivate *, Item::Flags> m_deletedFlags;
     QHash<ItemPrivate *, Tag::List> m_addedTags;
     QHash<ItemPrivate *, Tag::List> m_deletedTags;
-    QHash<ItemPrivate *, QSet<QByteArray>> m_deletedAttributes;
+    QHash<ItemPrivate *, AttributeStorage> m_attributeStorage;
 };
 
 } // namespace Akonadi
