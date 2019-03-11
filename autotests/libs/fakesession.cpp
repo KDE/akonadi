@@ -23,6 +23,7 @@
 #include "private/protocol_p.h"
 
 #include <QCoreApplication>
+#include <QTimer>
 
 class FakeSessionPrivate : public SessionPrivate
 {
@@ -58,9 +59,13 @@ public:
             return;
         }
 
-        Q_EMIT q_ptr->reconnected();
-        connected = true;
-        startNext();
+        // Like Session does: delay the actual disconnect+reconnect
+        QTimer::singleShot(10, q_ptr, [&]() {
+            socketDisconnected();
+            Q_EMIT q_ptr->reconnected();
+            connected = true;
+            startNext();
+        });
     }
 
     /* reimp */
