@@ -68,13 +68,16 @@ private Q_SLOTS:
         QCOMPARE(sessionQueueSpy.size(), 2);
         QCOMPARE(job1DoneSpy.size(), 0);
 
-        QVERIFY(AkonadiTest::akWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+        QSignalSpy job1AboutToStartSpy(job1, &Job::aboutToStart);
+        QVERIFY(job1AboutToStartSpy.wait());
+
         QCOMPARE(job1DoneSpy.size(), 0);
 
         job1->done();
         QCOMPARE(job1DoneSpy.size(), 1);
 
-        QVERIFY(AkonadiTest::akWaitForSignal(job2, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+        QSignalSpy job2AboutToStartSpy(job2, &Job::aboutToStart);
+        QVERIFY(job2AboutToStartSpy.wait());
         QCOMPARE(job2DoneSpy.size(), 0);
         job2->done();
 
@@ -100,11 +103,12 @@ private Q_SLOTS:
         QVERIFY(job2DoneSpy.isValid());
 
         QCOMPARE(sessionQueueSpy.size(), 2);
-        QVERIFY(AkonadiTest::akWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+        QSignalSpy job1AboutToStartSpy(job1, &Job::aboutToStart);
+        QVERIFY(job1AboutToStartSpy.wait());
 
         // one job running, one queued, now kill the session
         session.clear();
-        QVERIFY(AkonadiTest::akWaitForSignal(&session, SIGNAL(reconnected()), 1));
+        QVERIFY(sessionReconnectSpy.wait());
 
         QCOMPARE(job1DoneSpy.size(), 1);
         QCOMPARE(job2DoneSpy.size(), 1);
@@ -129,7 +133,8 @@ private Q_SLOTS:
         QVERIFY(job2DoneSpy.isValid());
 
         QCOMPARE(sessionQueueSpy.size(), 2);
-        QVERIFY(AkonadiTest::akWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+        QSignalSpy job1AboutToStartSpy(job1, &Job::aboutToStart);
+        QVERIFY(job1AboutToStartSpy.wait());
 
         // one job running, one queued, now kill the waiting job
         QVERIFY(job2->kill(KJob::EmitResult));
@@ -161,7 +166,8 @@ private Q_SLOTS:
         QVERIFY(job2DoneSpy.isValid());
 
         QCOMPARE(sessionQueueSpy.size(), 2);
-        QVERIFY(AkonadiTest::akWaitForSignal(job1, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+        QSignalSpy job1AboutToStartSpy(job1, &Job::aboutToStart);
+        QVERIFY(job1AboutToStartSpy.wait());
 
         // one job running, one queued, now kill the running one
         QVERIFY(job1->kill(KJob::EmitResult));
@@ -170,7 +176,8 @@ private Q_SLOTS:
         QCOMPARE(job2DoneSpy.size(), 0);
 
         // session needs to reconnect, then execute the next job
-        QVERIFY(AkonadiTest::akWaitForSignal(job2, SIGNAL(aboutToStart(Akonadi::Job*)), 1));
+        QSignalSpy job2AboutToStartSpy(job2, &Job::aboutToStart);
+        QVERIFY(job2AboutToStartSpy.wait());
         QCOMPARE(sessionReconnectSpy.size(), 1);
         job2->done();
 
