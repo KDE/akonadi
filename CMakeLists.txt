@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(PIM_VERSION "5.10.48")
+set(PIM_VERSION "5.10.80")
 project(Akonadi VERSION ${PIM_VERSION})
 
 if (MSVC)
