@@ -135,15 +135,16 @@ void TransactionSequence::slotResult(KJob *job)
                 connect(job, &TransactionCommitJob::result, [d](KJob *job) { d->commitResult(job);});
             }
         }
+    } else if (job->error() == KJob::KilledJobError) {
+        Job::slotResult(job);
     } else {
         setError(job->error());
         setErrorText(job->errorText());
         removeSubjob(job);
 
-        // cancel all subjobs in case someone else is listening (such as ItemSync), but without notifying ourselves again
+        // cancel all subjobs in case someone else is listening (such as ItemSync)
         foreach (KJob *job, subjobs()) {
-            disconnect(job, &KJob::result, this, &TransactionSequence::slotResult);
-            job->kill(EmitResult);
+            job->kill(KJob::EmitResult);
         }
         clearSubjobs();
 
@@ -165,6 +166,8 @@ void TransactionSequence::commit()
 
     if (d->mState == TransactionSequencePrivate::Running) {
         d->mState = TransactionSequencePrivate::WaitingForSubjobs;
+    } else if (d->mState == TransactionSequencePrivate::RollingBack) {
+        return;
     } else {
         // we never got any subjobs, that means we never started a transaction
         // so we can just quit here
@@ -231,7 +234,16 @@ void TransactionSequence::rollback()
         return;
     }
 
-    // TODO cancel not yet executed sub-jobs here
+    const auto jobList = subjobs();
+    for (KJob *job : jobList) {
+        // Killing the current subjob means forcibly closing the akonadiserver socket
+        // (with a bit of delay since it happens in a secondary thread)
+        // which means the next job gets disconnected
+        // and the itemsync finishes with error "Cannot connect to the Akonadi service.", not ideal
+        if (job != d->mCurrentSubJob) {
+            job->kill(KJob::EmitResult);
+        }
+    }
 
     d->mState = TransactionSequencePrivate::RollingBack;
     TransactionRollbackJob *job = new TransactionRollbackJob(this);

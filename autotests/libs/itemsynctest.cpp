@@ -61,6 +61,18 @@ private:
         return fetch->items();
     }
 
+    void createItems(const Collection &col, int itemCount)
+    {
+        for (int i = 0; i < itemCount; ++i) {
+            Item item(QStringLiteral("application/octet-stream"));
+            item.setRemoteId(QStringLiteral("rid") + QString::number(i));
+            item.setGid(QStringLiteral("gid") + QString::number(i));
+            item.setPayload<QByteArray>("payload1");
+            ItemCreateJob *job = new ItemCreateJob(item, col);
+            AKVERIFYEXEC(job);
+        }
+    }
+
 private Q_SLOTS:
     void initTestCase()
     {
@@ -467,7 +479,7 @@ private Q_SLOTS:
     }
 
     /*
-     * This test verifies that ItemSync doesn't prematurely emit it's result if a job inside a transaction fails.
+     * This test verifies that ItemSync doesn't prematurely emit its result if a job inside a transaction fails.
      * ItemSync is supposed to continue the sync but simply ignoring all delivered data.
      */
     void testFailingJob()
@@ -519,11 +531,11 @@ private Q_SLOTS:
     }
 
     /*
-     * This test verifies that ItemSync doesn't prematurly emit it's result if a job inside a transaction fails, due to a duplicate.
+     * This test verifies that ItemSync doesn't prematurely emit its result if a job inside a transaction fails, due to a duplicate.
      * This case used to break the TransactionSequence.
      * ItemSync is supposed to continue the sync but simply ignoring all delivered data.
      */
-    void testFailingDueToDuplicateJob()
+    void testFailingDueToDuplicateItem()
     {
         const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
@@ -579,6 +591,7 @@ private Q_SLOTS:
 
     void testFullSyncManyItems()
     {
+        // Given a collection with 1000 items
         const Collection col = Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
         QVERIFY(col.isValid());
 
@@ -588,22 +601,11 @@ private Q_SLOTS:
         QVERIFY(addedSpy.isValid());
 
         const int itemCount = 1000;
-        for (int i = 0; i < itemCount; ++i) {
-            Item item(QStringLiteral("application/octet-stream"));
-            item.setRemoteId(QStringLiteral("rid") + QString::number(i));
-            item.setGid(QStringLiteral("gid") + QString::number(i));
-            item.setPayload<QByteArray>("payload1");
-            ItemCreateJob *job = new ItemCreateJob(item, col);
-            AKVERIFYEXEC(job);
-        }
-
+        createItems(col, itemCount);
         QTRY_COMPARE(addedSpy.count(), itemCount);
         addedSpy.clear();
 
         const Item::List origItems = fetchItems(col);
-
-        //Since the item sync affects the knut resource we ensure we actually managed to load all items
-        //This needs to be adjusted should the testdataset change
         QCOMPARE(origItems.size(), itemCount);
 
         QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
@@ -617,6 +619,7 @@ private Q_SLOTS:
             QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
             QVERIFY(transactionSpy.isValid());
             syncer->setFullSyncItems(origItems);
+
             AKVERIFYEXEC(syncer);
             QCOMPARE(transactionSpy.count(), 1);
         }
@@ -630,6 +633,40 @@ private Q_SLOTS:
 
         // delete all items; QBENCHMARK leads to the whole method being called more than once
         ItemDeleteJob *job = new ItemDeleteJob(resultItems);
+        AKVERIFYEXEC(job);
+    }
+
+    void testUserCancel()
+    {
+        // Given a collection with 100 items
+        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
+        QVERIFY(col.isValid());
+
+        const Item::List itemsToDelete = fetchItems(col);
+        if (!itemsToDelete.isEmpty()) {
+            ItemDeleteJob *deleteJob = new ItemDeleteJob(itemsToDelete);
+            AKVERIFYEXEC(deleteJob);
+        }
+
+        const int itemCount = 100;
+        createItems(col, itemCount);
+        const Item::List origItems = fetchItems(col);
+        QCOMPARE(origItems.size(), itemCount);
+
+        // and an ItemSync running
+        ItemSync *syncer = new ItemSync(col);
+        syncer->setTransactionMode(ItemSync::SingleTransaction);
+        syncer->setFullSyncItems(origItems);
+
+        // When the user cancels the ItemSync
+        QTimer::singleShot(10, syncer, &ItemSync::rollback);
+
+        // Then the itemsync should finish at some point, and not crash
+        QVERIFY(!syncer->exec());
+        QCOMPARE(syncer->errorString(), QStringLiteral("User canceled operation."));
+
+        // Cleanup
+        ItemDeleteJob *job = new ItemDeleteJob(origItems);
         AKVERIFYEXEC(job);
     }
 };
