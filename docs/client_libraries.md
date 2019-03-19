@@ -10,15 +10,14 @@ server [agents](@ref agents), are considered clients.
 <!--
 Additional information about Akonadi:
 
-- <a href="http://api.kde.org/kdesupport-api/akonadi-apidocs/">Akonadi Server documentation</a>
+- <a href="https://api.kde.org/kdesupport-api/akonadi-apidocs/">Akonadi Server documentation</a>
 - \ref akonadi_history
 - <a href="https://community.kde.org/KDE_PIM/Akonadi">Website</a>
-- <a href="https://techbase.kde.org/index.php?title=Projects/PIM/Akonadi">Wiki</a>
+- <a href="https://techbase.kde.org/KDE_PIM/Akonadi">Wiki</a>
 
 Tools for developers:
 
-- <a href="http://my.cdash.org/index.php?project=kdepimlibs">CDash</a>
-- <a href="https://bugs.kde.org/buglist.cgi?query_format=advanced&product=Akonadi&component=libakonadi&bug_status=UNCONFIRMED&bug_status=NEW&bug_status=ASSIGNED&bug_status=REOPENED">Bugtracker</a>
+- <a href="https://bugs.kde.org/buglist.cgi?query_format=advanced&product=Akonadi&component=libakonadi&bug_status=REPORTED&bug_status=CONFIRMED&bug_status=ASSIGNED&bug_status=REOPENED">Bugtracker</a>
 //-->
 
 # Akonadi Objects # {#objects}
@@ -495,7 +494,7 @@ Collection::List getCollections(const QList<Collection::Id> &idsToGet)
 # Resources # {#resources}
 The KDEPIM module includes resources for handling many types of PIM data, such as imap email, vcard files and vcard directories, ical event files etc. These cover many of the sources for your PIM data, but in the case that you need to use data from another source (for example a website providing a contacts storage service and an api), you simply have to write a new resource.
 
-http://techbase.kde.org/Development/Tutorials/Akonadi/Resources
+https://techbase.kde.org/Development/Tutorials/Akonadi/Resources
 
 # Serializers # {#serializers}
 Serializers provide the functionality of converting raw data, for example from a file, to a strongly typed object of PIM data. For example, the addressee serializer reads data from a file and creates a KABC::Addressee object.

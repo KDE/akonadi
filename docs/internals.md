@@ -2,7 +2,7 @@
 
 ## Lazy Model Population ##
 
-NOTE: This page is not part of the Akonadi API. It is provided as internal documentation for Akonadi maintainers. It was originally a blog post here: http://steveire.wordpress.com/2009/10/06/cache-invalidation-in-akonadi-models/
+NOTE: This page is not part of the Akonadi API. It is provided as internal documentation for Akonadi maintainers. It was originally a blog post here: https://steveire.wordpress.com/2009/10/06/cache-invalidation-in-akonadi-models/
 @internal
 
 If using EntityTreeModel::LazyPopulation with your model, items will be fetched into the model when the collection they are a part of is selected. This ensures that the model is as sparsely populated as possible for performance reasons. As a consequence however, it is necessary to purge unused items from the model too. This is handled automatically when using an Akonadi::SelectionProxyModel.

@@ -88,7 +88,7 @@ set(Boost_MINIMUM_VERSION "1.34.0")
 find_package(Boost ${Boost_MINIMUM_VERSION})
 set_package_properties(Boost PROPERTIES
     DESCRIPTION "Boost C++ Libraries"
-    URL "http://www.boost.org"
+    URL "https://www.boost.org"
     TYPE REQUIRED
 )
 
@@ -162,7 +162,7 @@ if(AKONADI_BUILD_QSQLITE)
     set(SQLITE_MIN_VERSION 3.6.23)
     find_package(Sqlite ${SQLITE_MIN_VERSION})
     set_package_properties(Sqlite PROPERTIES
-        URL "http://www.sqlite.org"
+        URL "https://www.sqlite.org"
         DESCRIPTION "The Sqlite database library"
         TYPE ${SQLITE_TYPE}
         PURPOSE "Required by the Sqlite backend"

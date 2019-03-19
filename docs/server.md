@@ -7,11 +7,11 @@ from within KDE, you almost certainly want the [client library documentation][cl
 This API reference is more useful to people implementing client libraries or
 working on the Akonadi server itself.
 
-For additional information, see the <a href="http://community.kde.org/KDE_PIM/Akonadi">Akonadi website</a>.
+For additional information, see the <a href="https://community.kde.org/KDE_PIM/Akonadi">Akonadi website</a>.
 
 ## Architecture ##
 
-<img src="http://community.kde.org/images.community/8/8e/Akonadi_Architecture.png"/>
+<img src="https://community.kde.org/images.community/8/8e/Akonadi_Architecture.png"/>
 
 The Akonadi framework uses a client/server architecture. The Akonadi server has the following primary tasks:
 * Abstract access to data from arbitrary sources, using toolkit-agnostic protocols and data formats
