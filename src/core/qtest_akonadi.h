@@ -83,7 +83,8 @@ void checkTestIsIsolated()
 void setAllResourcesOffline()
 {
     // switch all resources offline to reduce interference from them
-    Q_FOREACH (Akonadi::AgentInstance agent, Akonadi::AgentManager::self()->instances()) {    //krazy:exclude=foreach
+    const auto lst = Akonadi::AgentManager::self()->instances();
+    for (Akonadi::AgentInstance agent : lst) {
         agent.setIsOnline(false);
     }
 }
