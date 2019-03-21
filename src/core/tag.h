@@ -217,10 +217,10 @@ inline T *Tag::attribute(CreateOption option)
     Q_UNUSED(option);
 
     const QByteArray type = T().type();
+    markAttributeModified(type);
     if (hasAttribute(type)) {
         T *attr = dynamic_cast<T *>(attribute(type));
         if (checkAttribute(attr, type)) {
-            markAttributeModified(type);
             return attr;
         }
     }
