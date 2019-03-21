@@ -233,10 +233,13 @@ inline T *Tag::attribute(CreateOption option)
 template <typename T>
 inline T *Tag::attribute() const
 {
-    const T dummy;
-    if (hasAttribute(dummy.type())) {
-        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
-        if (checkAttribute(attr, dummy.type())) {
+    const QByteArray type = T().type();
+    if (hasAttribute(type)) {
+        T *attr = dynamic_cast<T *>(attribute(type));
+        if (checkAttribute(attr, type)) {
+            // FIXME: Make this a truly const method so that callers may not modify
+            // the attribute returned from here.
+            const_cast<Tag*>(this)->markAttributeModified(type);
             return attr;
         }
     }

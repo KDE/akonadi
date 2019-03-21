@@ -254,7 +254,11 @@ void Akonadi::Item::clearAttributes()
 
 Attribute *Item::attribute(const QByteArray &type) const
 {
-    return ItemChangeLog::instance()->attributeStorage(d_ptr).attribute(type);
+    // FIXME: Createa a truly const and non-const overloads of this method
+    // so only non-const access marks the attribute as modified
+    auto &storage = ItemChangeLog::instance()->attributeStorage(d_ptr);
+    storage.markAttributeModified(type);
+    return attribute(type);
 }
 
 Collection &Item::parentCollection()
