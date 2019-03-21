@@ -565,10 +565,10 @@ inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
     Q_UNUSED(option);
 
     const T dummy;
+    markAttributesChanged();
     if (hasAttribute(dummy.type())) {
         T *attr = dynamic_cast<T *>(attribute(dummy.type()));
         if (attr) {
-            markAttributesChanged();
             return attr;
         }
         //Reuse 5250
@@ -585,14 +585,10 @@ template <typename T>
 inline T *Akonadi::Collection::attribute() const
 {
     const QByteArray type = T().type();
+    const_cast<Collection*>(this)->markAttributesChanged();
     if (hasAttribute(type)) {
         T *attr = dynamic_cast<T *>(attribute(type));
         if (attr) {
-            // FIXME: This method returns a non-const pointer, so callers may still modify the
-            // attribute. Unfortunately, just making this function return a const pointer and
-            // creating a non-const overload does not work, as many users of this function abuse the
-            // non-const pointer and modify the attribute even on a const object.
-            const_cast<Collection*>(this)->markAttributesChanged();
             return attr;
         }
         //reuse 5250

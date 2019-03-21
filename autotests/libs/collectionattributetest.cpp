@@ -240,3 +240,18 @@ void CollectionAttributeTest::testCollectionIdentificationAttribute()
     QCOMPARE(parsed.identifier(), id);
     QCOMPARE(parsed.collectionNamespace(), ns);
 }
+
+void CollectionAttributeTest::testDetach()
+{
+    // GIVEN a collection with an attribute
+    Collection col;
+    col.attribute<TestAttribute>(Akonadi::Collection::AddIfMissing);
+    Collection col2 = col; // and a copy, so that non-const access detaches
+
+    // WHEN
+    TestAttribute *attr = col2.attribute<TestAttribute>(Akonadi::Collection::AddIfMissing);
+    TestAttribute *attr2 = col2.attribute<TestAttribute>();
+
+    // THEN
+    QCOMPARE(attr, attr2);
+}
