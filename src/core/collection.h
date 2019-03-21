@@ -584,14 +584,19 @@ inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
 template <typename T>
 inline T *Akonadi::Collection::attribute() const
 {
-    const T dummy;
-    if (hasAttribute(dummy.type())) {
-        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
+    const QByteArray type = T().type();
+    if (hasAttribute(type)) {
+        T *attr = dynamic_cast<T *>(attribute(type));
         if (attr) {
+            // FIXME: This method returns a non-const pointer, so callers may still modify the
+            // attribute. Unfortunately, just making this function return a const pointer and
+            // creating a non-const overload does not work, as many users of this function abuse the
+            // non-const pointer and modify the attribute even on a const object.
+            const_cast<Collection*>(this)->markAttributesChanged();
             return attr;
         }
         //reuse 5250
-        qWarning() << "Found attribute of unknown type" << dummy.type()
+        qWarning() << "Found attribute of unknown type" << type
                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
