@@ -145,8 +145,14 @@ void Tag::clearAttributes()
     d_ptr->mAttributeStorage.clearAttributes();
 }
 
-Attribute *Tag::attribute(const QByteArray &type) const
+const Attribute *Tag::attribute(const QByteArray &type) const
 {
+    return d_ptr->mAttributeStorage.attribute(type);
+}
+
+Attribute *Tag::attribute(const QByteArray &type)
+{
+    markAttributeModified(type);
     return d_ptr->mAttributeStorage.attribute(type);
 }
 
@@ -244,7 +250,7 @@ Tag Tag::genericTag(const QString &name)
     return tag;
 }
 
-bool Tag::checkAttribute(Attribute *attr, const QByteArray &type) const
+bool Tag::checkAttribute(const Attribute *attr, const QByteArray &type) const
 {
     if (attr) {
         return true;

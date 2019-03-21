@@ -97,8 +97,14 @@ void AttributeStorage::clearAttributes()
     mModifiedAttributes.clear();
 }
 
-Attribute *AttributeStorage::attribute(const QByteArray &type) const
+const Attribute *AttributeStorage::attribute(const QByteArray &type) const
 {
+    return mAttributes.value(type);
+}
+
+Attribute *AttributeStorage::attribute(const QByteArray &type)
+{
+    markAttributeModified(type);
     return mAttributes.value(type);
 }
 

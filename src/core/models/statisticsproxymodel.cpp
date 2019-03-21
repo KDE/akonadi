@@ -103,7 +103,7 @@ public:
                    .arg(i18n("Unread Messages")).arg(collection.statistics().unreadCount());
 
         if (collection.hasAttribute<CollectionQuotaAttribute>()) {
-            CollectionQuotaAttribute *quota = collection.attribute<CollectionQuotaAttribute>();
+            const CollectionQuotaAttribute *quota = collection.attribute<CollectionQuotaAttribute>();
             if (quota->currentValue() > -1 && quota->maximumValue() > 0) {
                 qreal percentage = (100.0 * quota->currentValue()) / quota->maximumValue();
 

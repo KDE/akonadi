@@ -116,13 +116,15 @@ public:
     /**
      * Returns the attribute of the given type @p name if available, 0 otherwise.
      */
-    Attribute *attribute(const QByteArray &name) const;
+    const Attribute *attribute(const QByteArray &name) const;
+    Attribute *attribute(const QByteArray &name);
 
     /**
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
-        AddIfMissing    ///< Creates the attribute if it is missing
+        AddIfMissing,    ///< Creates the attribute if it is missing
+        DontCreate       ///< Does not create an attribute if it is missing (default)
     };
 
     /**
@@ -133,13 +135,13 @@ public:
      * @param option The create options.
      */
     template <typename T>
-    inline T *attribute(CreateOption option);
+    inline T *attribute(CreateOption option = DontCreate);
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
     template <typename T>
-    inline T *attribute() const;
+    inline const T *attribute() const;
 
     /**
      * Removes and deletes the attribute of the requested type.
@@ -197,7 +199,7 @@ public:
     static Tag genericTag(const QString &name);
 
 private:
-    bool checkAttribute(Attribute *attr, const QByteArray &type) const;
+    bool checkAttribute(const Attribute *attr, const QByteArray &type) const;
     void markAttributeModified(const QByteArray &type);
 
     //@cond PRIVATE
@@ -214,32 +216,28 @@ AKONADICORE_EXPORT uint qHash(const Akonadi::Tag &);
 template <typename T>
 inline T *Tag::attribute(CreateOption option)
 {
-    Q_UNUSED(option);
-
     const QByteArray type = T().type();
     if (hasAttribute(type)) {
         T *attr = dynamic_cast<T *>(attribute(type));
         if (checkAttribute(attr, type)) {
-            markAttributeModified(type);
             return attr;
         }
+    } else if (option == AddIfMissing) {
+        T *attr = new T();
+        addAttribute(attr);
+        return attr;
     }
 
-    T *attr = new T();
-    addAttribute(attr);
-    return attr;
+    return nullptr;
 }
 
 template <typename T>
-inline T *Tag::attribute() const
+inline const T *Tag::attribute() const
 {
     const QByteArray type = T().type();
     if (hasAttribute(type)) {
-        T *attr = dynamic_cast<T *>(attribute(type));
+        const T *attr = dynamic_cast<const T *>(attribute(type));
         if (checkAttribute(attr, type)) {
-            // FIXME: Make this a truly const method so that callers may not modify
-            // the attribute returned from here.
-            const_cast<Tag*>(this)->markAttributeModified(type);
             return attr;
         }
     }

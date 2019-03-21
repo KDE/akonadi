@@ -109,8 +109,7 @@ QVariant TagModel::data(const QModelIndex &index, int role) const
     case TagRole:
         return QVariant::fromValue(tag);
     case Qt::DecorationRole: {
-        TagAttribute *attr = tag.attribute<TagAttribute>();
-        if (attr) {
+        if (const TagAttribute *attr = tag.attribute<TagAttribute>()) {
             return QIcon::fromTheme(attr->iconName());
         } else {
             return QVariant();

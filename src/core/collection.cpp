@@ -189,7 +189,13 @@ void Akonadi::Collection::clearAttributes()
     return d_ptr->mAttributeStorage.clearAttributes();
 }
 
-Attribute *Collection::attribute(const QByteArray &type) const
+Attribute *Collection::attribute(const QByteArray &type)
+{
+    markAttributeModified(type);
+    return d_ptr->mAttributeStorage.attribute(type);
+}
+
+const Attribute *Collection::attribute(const QByteArray &type) const
 {
     return d_ptr->mAttributeStorage.attribute(type);
 }
@@ -236,8 +242,7 @@ void Collection::setName(const QString &name)
 
 Collection::Rights Collection::rights() const
 {
-    CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>();
-    if (attr) {
+    if (const auto attr = attribute<CollectionRightsAttribute>()) {
         return attr->rights();
     } else {
         return AllRights;
@@ -246,8 +251,7 @@ Collection::Rights Collection::rights() const
 
 void Collection::setRights(Rights rights)
 {
-    CollectionRightsAttribute *attr = attribute<CollectionRightsAttribute>(AddIfMissing);
-    attr->setRights(rights);
+    attribute<CollectionRightsAttribute>(AddIfMissing)->setRights(rights);
 }
 
 QStringList Collection::contentMimeTypes() const

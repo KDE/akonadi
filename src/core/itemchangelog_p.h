@@ -41,7 +41,8 @@ public:
     Tag::List &addedTags(const ItemPrivate *priv);
     Tag::List &deletedTags(const ItemPrivate *priv);
 
-    AttributeStorage &attributeStorage(const ItemPrivate *priv);
+    const AttributeStorage &attributeStorage(const ItemPrivate *priv);
+    AttributeStorage &attributeStorage(ItemPrivate *priv);
 
     void removeItem(const ItemPrivate *priv);
     void clearItemChangelog(const ItemPrivate *priv);
