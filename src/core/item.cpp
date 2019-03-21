@@ -258,7 +258,7 @@ Attribute *Item::attribute(const QByteArray &type) const
     // so only non-const access marks the attribute as modified
     auto &storage = ItemChangeLog::instance()->attributeStorage(d_ptr);
     storage.markAttributeModified(type);
-    return attribute(type);
+    return storage.attribute(type);
 }
 
 Collection &Item::parentCollection()
