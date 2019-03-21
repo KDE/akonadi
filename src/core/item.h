@@ -812,6 +812,7 @@ inline T *Item::attribute() const
     if (hasAttribute(dummy.type())) {
         T *attr = dynamic_cast<T *>(attribute(dummy.type()));
         if (attr) {
+            
             return attr;
         }
         //reuse 5250
