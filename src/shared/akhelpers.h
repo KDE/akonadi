@@ -70,7 +70,7 @@ auto invoke(Type T::* fun, T1 &&t1, Args && ... args) ->
 }
 
 template<typename T, typename Type, typename T1, typename ... Args>
-auto invoke(Type T::* fun, T1 &&t1, Args && ... args) ->
+auto invoke(Type T::* fun, T1 &&t1, Args && ...) ->
     std::enable_if_t<!is_member_function_pointer_v<decltype(fun)>
                      && std::is_base_of<T1, std::decay_t<T1>>::value,
                      std::result_of_t<decltype(fun)(T1, Args ...)>>
@@ -79,7 +79,7 @@ auto invoke(Type T::* fun, T1 &&t1, Args && ... args) ->
 }
 
 template<typename T, typename Type, typename T1, typename ... Args>
-auto invoke(Type T::* fun, T1 &&t1, Args && ... args) ->
+auto invoke(Type T::* fun, T1 &&t1, Args && ...) ->
     std::enable_if_t<!is_member_function_pointer_v<decltype(fun)>
                      && is_reference_wrapper_v<std::decay_t<T1>>,
                      std::result_of_t<decltype(fun)(T1, Args ...)>>
@@ -88,7 +88,7 @@ auto invoke(Type T::* fun, T1 &&t1, Args && ... args) ->
 }
 
 template<typename T, typename Type, typename T1, typename ... Args>
-auto invoke(Type T::* fun, T1 &&t1, Args && ... args) ->
+auto invoke(Type T::* fun, T1 &&t1, Args && ...) ->
     std::enable_if_t<!is_member_function_pointer_v<decltype(fun)>
                      && !std::is_base_of<T1, std::decay_t<T1>>::value
                      && !is_reference_wrapper_v<std::decay_t<T1>>,
