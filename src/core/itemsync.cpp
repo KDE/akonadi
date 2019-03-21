@@ -165,6 +165,14 @@ void ItemSyncPrivate::checkDone()
         }
     }
     mProcessingBatch = false;
+
+    if (q->error() == Job::UserCanceled && mTransactionJobs == 0 && !mFinished) {
+        qCDebug(AKONADICORE_LOG) << "ItemSync of collection" << mSyncCollection.id() << "finished due to user cancelling";
+        mFinished = true;
+        q->emitResult();
+        return;
+    }
+
     if (!mRemoteItemQueue.isEmpty()) {
         execute();
         //We don't have enough items, request more
@@ -363,7 +371,12 @@ void ItemSyncPrivate::execute()
 //process the current batch of items
 void ItemSyncPrivate::processBatch()
 {
+    Q_Q(ItemSync);
     if (mCurrentBatchRemoteItems.isEmpty() && !mDeliveryDone) {
+        return;
+    }
+    if (q->error() == Job::UserCanceled) {
+        checkDone();
         return;
     }
 
@@ -517,7 +530,7 @@ void ItemSync::rollback()
     if (d->mCurrentTransaction) {
         d->mCurrentTransaction->rollback();
     }
-    d->mDeliveryDone = true; // user wont deliver more data
+    d->mDeliveryDone = true; // user won't deliver more data
     d->execute(); // end this in an ordered way, since we have an error set no real change will be done
 }
 
