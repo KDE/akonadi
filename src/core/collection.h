@@ -565,10 +565,10 @@ inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
     Q_UNUSED(option);
 
     const QByteArray type = T().type();
+    markAttributeModified(type); // do this first in case it detaches
     if (hasAttribute(type)) {
         T *attr = dynamic_cast<T *>(attribute(type));
         if (attr) {
-            markAttributeModified(type);
             return attr;
         }
         //Reuse 5250
