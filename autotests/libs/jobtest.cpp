@@ -112,7 +112,7 @@ private Q_SLOTS:
 
         QCOMPARE(job1DoneSpy.size(), 1);
         QCOMPARE(job2DoneSpy.size(), 1);
-        QCOMPARE(sessionReconnectSpy.size(), 1); // the first one is missed as it happens directly from the ctor
+        QCOMPARE(sessionReconnectSpy.size(), 2);
     }
 
     void testKillQueuedJob()
@@ -145,7 +145,7 @@ private Q_SLOTS:
         job1->done();
         QCOMPARE(job1DoneSpy.size(), 1);
         QCOMPARE(job2DoneSpy.size(), 1);
-        QCOMPARE(sessionReconnectSpy.size(), 0); // the first one is missed as it happens directly from the ctor
+        QCOMPARE(sessionReconnectSpy.size(), 1);
     }
 
     void testKillRunningJob()
@@ -178,12 +178,62 @@ private Q_SLOTS:
         // session needs to reconnect, then execute the next job
         QSignalSpy job2AboutToStartSpy(job2, &Job::aboutToStart);
         QVERIFY(job2AboutToStartSpy.wait());
-        QCOMPARE(sessionReconnectSpy.size(), 1);
+        QCOMPARE(sessionReconnectSpy.size(), 2);
         job2->done();
 
         QCOMPARE(job1DoneSpy.size(), 1);
         QCOMPARE(job2DoneSpy.size(), 1);
-        QCOMPARE(sessionReconnectSpy.size(), 1); // the first one is missed as it happens directly from the ctor
+        QCOMPARE(sessionReconnectSpy.size(), 2);
+    }
+
+    void testKillRunningSubjob()
+    {
+        FakeSession session("fakeSession", FakeSession::EndJobsManually);
+
+        QSignalSpy sessionQueueSpy(&session, &FakeSession::jobAdded);
+        QSignalSpy sessionReconnectSpy(&session, &Session::reconnected);
+
+        FakeJob *parentJob = new FakeJob(&session);
+        parentJob->setObjectName(QStringLiteral("parentJob"));
+        QSignalSpy parentJobDoneSpy(parentJob, &KJob::result);
+
+        FakeJob *subjob = new FakeJob(parentJob);
+        subjob->setObjectName(QStringLiteral("subjob"));
+        QSignalSpy subjobDoneSpy(subjob, &KJob::result);
+
+        FakeJob *subjob2 = new FakeJob(parentJob);
+        subjob2->setObjectName(QStringLiteral("subjob2"));
+        QSignalSpy subjob2DoneSpy(subjob2, &KJob::result);
+
+        FakeJob *nextJob = new FakeJob(&session);
+        nextJob->setObjectName(QStringLiteral("nextJob"));
+        QSignalSpy nextJobDoneSpy(nextJob, &KJob::result);
+
+        QCOMPARE(sessionQueueSpy.size(), 2);
+        QSignalSpy parentJobAboutToStart(parentJob, &Job::aboutToStart);
+        QVERIFY(parentJobAboutToStart.wait());
+
+        QSignalSpy subjobAboutToStart(subjob, &Job::aboutToStart);
+        QVERIFY(subjobAboutToStart.wait());
+
+        // one parent job, one subjob running (another one waiting), now kill the running subjob
+        QVERIFY(subjob->kill(KJob::EmitResult));
+
+        QCOMPARE(subjobDoneSpy.size(), 1);
+        QCOMPARE(subjob2DoneSpy.size(), 0);
+
+        // Note that killing a subjob aborts the whole parent job
+        // Since the session only knows about the parent
+        QCOMPARE(parentJobDoneSpy.size(), 1);
+
+        // session needs to reconnect, then execute the next job
+        QSignalSpy nextJobAboutToStartSpy(nextJob, &Job::aboutToStart);
+        QVERIFY(nextJobAboutToStartSpy.wait());
+        QCOMPARE(sessionReconnectSpy.size(), 2);
+        nextJob->done();
+
+        QCOMPARE(subjob2DoneSpy.size(), 0);
+        QCOMPARE(nextJobDoneSpy.size(), 1);
     }
 };
 
