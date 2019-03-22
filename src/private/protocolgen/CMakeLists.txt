@@ -10,6 +10,7 @@ set(protocolgen_SRCS
 )
 
 add_executable(protocolgen ${protocolgen_SRCS})
+set_target_properties(protocolgen PROPERTIES MACOSX_BUNDLE FALSE)
 target_link_libraries(protocolgen
     Qt5::Core
 )

@@ -15,6 +15,7 @@ qt5_add_dbus_interfaces(akonadictl_SRCS
 )
 
 add_executable(akonadictl ${akonadictl_SRCS})
+set_target_properties(akonadictl PROPERTIES MACOSX_BUNDLE FALSE)
 set_target_properties(akonadictl PROPERTIES OUTPUT_NAME akonadictl)
 ecm_mark_nongui_executable(akonadictl)
 target_link_libraries(akonadictl

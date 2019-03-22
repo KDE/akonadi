@@ -9,6 +9,7 @@ set(akonadi_agent_server_srcs
 ecm_qt_declare_logging_category(akonadi_agent_server_srcs HEADER akonadiagentserver_debug.h IDENTIFIER AKONADIAGENTSERVER_LOG CATEGORY_NAME org.kde.pim.akonadiagentserver)
 
 add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
+set_target_properties(akonadi_agent_server PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_agent_server
     akonadi_shared
@@ -25,7 +26,8 @@ set(akonadi_agent_launcher_SRCS
     akonadiagentserver_debug.cpp
 )
 
-add_executable(akonadi_agent_launcher MACOSX_BUNDLE ${akonadi_agent_launcher_SRCS})
+add_executable(akonadi_agent_launcher ${akonadi_agent_launcher_SRCS})
+set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_agent_launcher
     akonadi_shared
@@ -34,20 +36,9 @@ target_link_libraries(akonadi_agent_launcher
     Qt5::Widgets
 )
 
-if(Q_WS_MAC)
-  set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/../Info.plist.template)
-  set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_GUI_IDENTIFIER "org.kde.Akonadi.agentlauncher")
-  set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE_BUNDLE_NAME "Akonadi Agent Launcher")
-endif()
-
 # Install both helper apps.
-if(Q_WS_MAC)
-  install(TARGETS akonadi_agent_launcher
-          DESTINATION ${AKONADI_BUNDLE_PATH})
-else()
-  install(TARGETS akonadi_agent_launcher
+install(TARGETS akonadi_agent_launcher
           DESTINATION ${BIN_INSTALL_DIR})
-endif()
 
 install(TARGETS akonadi_agent_server
         ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})

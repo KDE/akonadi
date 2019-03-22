@@ -7,6 +7,7 @@ set(akonadi_rds_srcs
 )
 
 add_executable(akonadi_rds ${akonadi_rds_srcs})
+set_target_properties(akonadi_rds PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_rds
     akonadi_shared

@@ -32,6 +32,7 @@ ecm_generate_headers(AkonadiXml_HEADERS
 )
 
 add_executable(akonadi2xml akonadi2xml.cpp)
+set_target_properties(akonadi2xml PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi2xml
     KF5::AkonadiXml

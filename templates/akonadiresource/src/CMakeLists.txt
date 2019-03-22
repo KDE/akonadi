@@ -24,6 +24,7 @@ qt5_add_dbus_adaptor(%{APPNAMELC}resource_SRCS
 )
 
 add_executable(akonadi_%{APPNAMELC}_resource ${%{APPNAMELC}resource_SRCS})
+set_target_properties(akonadi_%{APPNAMELC}_resource PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_%{APPNAMELC}_resource
     Qt5::DBus

@@ -4,6 +4,7 @@ set(asapcat_srcs
 )
 
 add_executable(asapcat ${asapcat_srcs})
+set_target_properties(asapcat PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(asapcat
     akonadi_shared
