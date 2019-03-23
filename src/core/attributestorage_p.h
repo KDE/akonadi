@@ -48,7 +48,8 @@ public:
     bool hasAttribute(const QByteArray &type) const;
     Attribute::List attributes() const;
     void clearAttributes();
-    Attribute *attribute(const QByteArray &type) const;
+    const Attribute *attribute(const QByteArray &type) const;
+    Attribute *attribute(const QByteArray &type);
     void markAttributeModified(const QByteArray &type);
     void resetChangeLog();
 

@@ -573,7 +573,7 @@ public:
             Q_FOREACH (Attribute *remoteAttr, upd.attributes()) {
                 if (ignoreAttributeChanges(remote, remoteAttr->type()) && local.hasAttribute(remoteAttr->type())) {
                     //We don't want to overwrite the attribute changes with the defaults provided by the resource.
-                    Attribute *localAttr = local.attribute(remoteAttr->type());
+                    const Attribute *localAttr = local.attribute(remoteAttr->type());
                     upd.removeAttribute(localAttr->type());
                     upd.addAttribute(localAttr->clone());
                 }

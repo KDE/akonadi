@@ -293,6 +293,10 @@ public:
 
     /**
      * Returns a list of all attributes of the item.
+     *
+     * @warning Do not modify the attributes returned from this method,
+     * the change will not be reflected when updating the Item through
+     * ItemModifyJob.
      */
     Attribute::List attributes() const;
 
@@ -304,13 +308,15 @@ public:
     /**
      * Returns the attribute of the given type @p name if available, 0 otherwise.
      */
-    Attribute *attribute(const QByteArray &name) const;
+    Attribute *attribute(const QByteArray &name);
+    const Attribute *attribute(const QByteArray &name) const;
 
     /**
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
-        AddIfMissing    ///< Creates the attribute if it is missing
+        AddIfMissing,   ///< Creates the attribute if it is missing
+        DontCreate      ///< Do not create the attribute if it is missing (default)
     };
 
     /**
@@ -321,13 +327,13 @@ public:
      * @param option The create options.
      */
     template <typename T>
-    inline T *attribute(CreateOption option);
+    inline T *attribute(CreateOption option = DontCreate);
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
     template <typename T>
-    inline T *attribute() const;
+    inline const T *attribute() const;
 
     /**
      * Removes and deletes the attribute of the requested type.
@@ -787,36 +793,31 @@ AKONADICORE_EXPORT uint qHash(const Akonadi::Item &item);
 template <typename T>
 inline T *Item::attribute(Item::CreateOption option)
 {
-    Q_UNUSED(option);
-
-    const T dummy;
-    if (hasAttribute(dummy.type())) {
-        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
-        if (attr) {
+    const QByteArray type = T().type();
+    if (hasAttribute(type)) {
+        if (T *attr = dynamic_cast<T *>(attribute(type))) {
             return attr;
         }
-        //Reuse 5250
-        qWarning() << "Found attribute of unknown type" << dummy.type()
+        qWarning() << "Found attribute of unknown type" << type
                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    } else if (option == AddIfMissing) {
+        T *attr = new T();
+        addAttribute(attr);
+        return attr;
     }
 
-    T *attr = new T();
-    addAttribute(attr);
-    return attr;
+    return nullptr;
 }
 
 template <typename T>
-inline T *Item::attribute() const
+inline const T *Item::attribute() const
 {
-    const T dummy;
-    if (hasAttribute(dummy.type())) {
-        T *attr = dynamic_cast<T *>(attribute(dummy.type()));
-        if (attr) {
-            
+    const QByteArray type = T().type();
+    if (hasAttribute(type)) {
+        if (const T *attr = dynamic_cast<const T *>(attribute(type))) {
             return attr;
         }
-        //reuse 5250
-        qWarning() << "Found attribute of unknown type" << dummy.type()
+        qWarning() << "Found attribute of unknown type" << type
                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
 
@@ -826,15 +827,13 @@ inline T *Item::attribute() const
 template <typename T>
 inline void Item::removeAttribute()
 {
-    const T dummy;
-    removeAttribute(dummy.type());
+    removeAttribute(T().type());
 }
 
 template <typename T>
 inline bool Item::hasAttribute() const
 {
-    const T dummy;
-    return hasAttribute(dummy.type());
+    return hasAttribute(T().type());
 }
 
 template <typename T>

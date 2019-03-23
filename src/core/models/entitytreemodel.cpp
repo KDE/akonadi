@@ -317,7 +317,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
             return d->m_pendingCutCollections.contains(node->id);
         case Qt::BackgroundRole: {
             if (collection.hasAttribute<EntityDisplayAttribute>()) {
-                EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>();
+                const EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>();
                 QColor color = eda->backgroundColor();
                 if (color.isValid()) {
                     return color;
@@ -368,7 +368,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
             return d->m_pendingCutItems.contains(node->id);
         case Qt::BackgroundRole: {
             if (item.hasAttribute<EntityDisplayAttribute>()) {
-                EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>();
+                const EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>();
                 const QColor color = eda->backgroundColor();
                 if (color.isValid()) {
                     return color;

@@ -129,7 +129,7 @@ void CollectionMaintenancePage::load(const Collection &col)
     init(col);
     if (col.isValid()) {
         d->updateLabel(col.statistics().count(), col.statistics().unreadCount(), col.statistics().size());
-        Akonadi::IndexPolicyAttribute *attr = col.attribute<Akonadi::IndexPolicyAttribute>();
+        const Akonadi::IndexPolicyAttribute *attr = col.attribute<Akonadi::IndexPolicyAttribute>();
         const bool indexingWasEnabled(!attr || attr->indexingEnabled());
         d->ui.enableIndexingChkBox->setChecked(indexingWasEnabled);
         if (indexingWasEnabled) {

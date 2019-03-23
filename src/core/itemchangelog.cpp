@@ -57,7 +57,12 @@ Tag::List &ItemChangeLog::deletedTags(const ItemPrivate *priv)
     return m_deletedTags[const_cast<ItemPrivate *>(priv)];
 }
 
-AttributeStorage &ItemChangeLog::attributeStorage(const ItemPrivate *priv)
+AttributeStorage &ItemChangeLog::attributeStorage(ItemPrivate *priv)
+{
+    return m_attributeStorage[priv];
+}
+
+const AttributeStorage &ItemChangeLog::attributeStorage(const ItemPrivate *priv)
 {
     return m_attributeStorage[const_cast<ItemPrivate *>(priv)];
 }

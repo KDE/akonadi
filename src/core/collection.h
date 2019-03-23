@@ -253,6 +253,10 @@ public:
 
     /**
      * Returns a list of all attributes of the collection.
+     *
+     * @warning Do not modify the attributes returned from this method,
+     * the change will not be reflected when updating the Collection
+     * through CollectionModifyJob.
      */
     Q_REQUIRED_RESULT Attribute::List attributes() const;
 
@@ -264,30 +268,32 @@ public:
     /**
      * Returns the attribute of the given type @p name if available, 0 otherwise.
      */
-    Attribute *attribute(const QByteArray &name) const;
+    Attribute *attribute(const QByteArray &name);
+    const Attribute *attribute(const QByteArray &name) const;
 
     /**
      * Describes the options that can be passed to access attributes.
      */
     enum CreateOption {
-        AddIfMissing    ///< Creates the attribute if it is missing
+        AddIfMissing,    ///< Creates the attribute if it is missing
+        DontCreate       ///< Default value
     };
 
     /**
      * Returns the attribute of the requested type.
-     * If the collection has no attribute of that type yet, a new one
-     * is created and added to the entity.
+     * If the collection has no attribute of that type yet, passing AddIfMissing
+     * as an argument will create and add it to the entity
      *
      * @param option The create options.
      */
     template <typename T>
-    inline T *attribute(CreateOption option);
+    inline T *attribute(CreateOption option = DontCreate);
 
     /**
      * Returns the attribute of the requested type or 0 if it is not available.
      */
     template <typename T>
-    inline T *attribute() const;
+    inline const T *attribute() const;
 
     /**
      * Removes and deletes the attribute of the requested type.
@@ -562,40 +568,30 @@ AKONADICORE_EXPORT uint qHash(const Akonadi::Collection &collection);
 template <typename T>
 inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
 {
-    Q_UNUSED(option);
-
     const QByteArray type = T().type();
-    markAttributeModified(type); // do this first in case it detaches
     if (hasAttribute(type)) {
-        T *attr = dynamic_cast<T *>(attribute(type));
-        if (attr) {
+        if (T *attr = dynamic_cast<T *>(attribute(type))) {
             return attr;
         }
-        //Reuse 5250
         qWarning() << "Found attribute of unknown type" << type
                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
+    } else if (option == AddIfMissing) {
+        T *attr = new T();
+        addAttribute(attr);
+        return attr;
     }
 
-    T *attr = new T();
-    addAttribute(attr);
-    return attr;
+    return nullptr;
 }
 
 template <typename T>
-inline T *Akonadi::Collection::attribute() const
+inline const T *Akonadi::Collection::attribute() const
 {
     const QByteArray type = T().type();
     if (hasAttribute(type)) {
-        T *attr = dynamic_cast<T *>(attribute(type));
-        if (attr) {
-            // FIXME: This method returns a non-const pointer, so callers may still modify the
-            // attribute. Unfortunately, just making this function return a const pointer and
-            // creating a non-const overload does not work, as many users of this function abuse the
-            // non-const pointer and modify the attribute even on a const object.
-            const_cast<Collection*>(this)->markAttributeModified(type);
+        if (const T *attr = dynamic_cast<const T *>(attribute(type))) {
             return attr;
         }
-        //reuse 5250
         qWarning() << "Found attribute of unknown type" << type
                    << ". Did you forget to call AttributeFactory::registerAttribute()?";
     }
@@ -606,15 +602,13 @@ inline T *Akonadi::Collection::attribute() const
 template <typename T>
 inline void Akonadi::Collection::removeAttribute()
 {
-    const T dummy;
-    removeAttribute(dummy.type());
+    removeAttribute(T().type());
 }
 
 template <typename T>
 inline bool Akonadi::Collection::hasAttribute() const
 {
-    const T dummy;
-    return hasAttribute(dummy.type());
+    return hasAttribute(T().type());
 }
 
 } // namespace Akonadi
