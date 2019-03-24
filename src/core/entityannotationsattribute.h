@@ -52,7 +52,7 @@ public:
     QMap<QByteArray, QByteArray> annotations() const;
 
     void insert(const QByteArray &key, const QString &value);
-    QString value(const QByteArray &key);
+    QString value(const QByteArray &key) const;
     bool contains(const QByteArray &key) const;
 
     QByteArray type() const override;

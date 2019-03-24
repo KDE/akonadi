@@ -49,7 +49,7 @@ void EntityAnnotationsAttribute::insert(const QByteArray &key, const QString &va
     mAnnotations.insert(key, value.toUtf8());
 }
 
-QString EntityAnnotationsAttribute::value(const QByteArray &key)
+QString EntityAnnotationsAttribute::value(const QByteArray &key) const
 {
     return QString::fromUtf8(mAnnotations.value(key).data());
 }
