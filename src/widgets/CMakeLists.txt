@@ -72,7 +72,6 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     ETMViewStateSaver
     ItemView
     ManageAccountWidget
-    RenameFavoriteDialog
     StandardActionManager
     SubscriptionDialog
     TagManagementDialog
