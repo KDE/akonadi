@@ -421,32 +421,32 @@ bool QueryBuilder::exec()
         if (mDatabaseType == DbType::PostgreSQL) {
             const QString dbError = mQuery.lastError().databaseText();
             if (dbError.contains(QLatin1String("40P01" /* deadlock_detected */))) {
-                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
-                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
+                qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+                qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction();
             }
         } else if (mDatabaseType == DbType::MySQL) {
             const QString lastErrorStr = mQuery.lastError().nativeErrorCode();
             const int error = lastErrorStr.isEmpty() ? -1 : lastErrorStr.toInt();
             if (error == 1213 /* ER_LOCK_DEADLOCK */) {
-                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
-                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
+                qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+                qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction();
             } else if (error == 1205 /* ER_LOCK_WAIT_TIMEOUT */) {
-                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
-                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
+                qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
+                qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction();
             }
         } else if (mDatabaseType == DbType::Sqlite && !DbType::isSystemSQLite(DataStore::self()->database())) {
             const QString lastErrorStr = mQuery.lastError().nativeErrorCode();
             const int error = lastErrorStr.isEmpty() ? -1 : lastErrorStr.toInt();
             if (error == 6 /* SQLITE_LOCKED */) {
-                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
-                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
+                qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
+                qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction(true);
             } else if (error == 5 /* SQLITE_BUSY */) {
-                qCDebug(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
-                qCDebug(AKONADISERVER_LOG) << mQuery.lastError().text();
+                qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
+                qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
                 return retryLastTransaction(true);
             }
         } else if (mDatabaseType == DbType::Sqlite) {

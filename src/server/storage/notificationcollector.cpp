@@ -431,7 +431,8 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
             }
             qb.addCondition(cond);
             if (!qb.exec()) {
-                qCWarning(AKONADISERVER_LOG) << "Failed to obtain collection attributes!";
+                qCWarning(AKONADISERVER_LOG) << "NotificationCollector failed to query attributes for Collection"
+                                             << collection.name() << "(ID" << collection.id() << ")";
             }
             const auto attrs = qb.result();
             for (const auto &attr : attrs)  {
@@ -488,7 +489,7 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
             }
             qb.addCondition(cond);
             if (!qb.exec()) {
-                qCWarning(AKONADISERVER_LOG) << "Failed to obtain tag attributes!";
+                qCWarning(AKONADISERVER_LOG) << "NotificationCollection failed to query attributes for Tag" << tag.id();
             }
             const auto attrs = qb.result();
             for (const auto &attr : attrs) {
@@ -522,7 +523,8 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
         const auto mgr = AkonadiServer::instance()->notificationManager();
         if (mgr && msg->operation() != Protocol::ItemChangeNotification::Remove) {
             if (mDb->inTransaction()) {
-                qCWarning(AKONADISERVER_LOG) << "FetchHelper requested from within a transaction, aborting, since this would deadlock!";
+                qCWarning(AKONADISERVER_LOG) << "NotificationCollector requested FetchHelper from within a transaction."
+                                             << "Aborting since this would deadlock!";
                 return;
             }
             auto fetchScope = mgr->itemFetchScope();
@@ -565,7 +567,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 if (helper.fetchItems(std::move(callback))) {
                     msg->setItems(fetchedItems);
                 } else {
-                    qCWarning(AKONADISERVER_LOG) << "Failed to retrieve Items for notification!";
+                    qCWarning(AKONADISERVER_LOG) << "NotificationCollector railed to retrieve Items for notification!";
                 }
             } else {
                 QVector<Protocol::FetchItemsResponse> fetchedItems;

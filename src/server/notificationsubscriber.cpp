@@ -97,16 +97,16 @@ void NotificationSubscriber::handleIncomingData()
         try {
             cmd = Protocol::deserialize(mSocket);
         } catch (const Akonadi::ProtocolException &e) {
-            qCWarning(AKONADISERVER_LOG) << "ProtocolException:" << e.what();
+            qCWarning(AKONADISERVER_LOG) << "ProtocolException while reading from notification bus for" << mSubscriber << ":" << e.what();
             disconnectSubscriber();
             return;
         } catch (const std::exception &e) {
-            qCWarning(AKONADISERVER_LOG) << "Unknown exception:" << e.what();
+            qCWarning(AKONADISERVER_LOG) << "Unknown exception while reading from notification bus for" << mSubscriber << ":" << e.what();
             disconnectSubscriber();
             return;
         }
         if (cmd->type() == Protocol::Command::Invalid) {
-            qCWarning(AKONADISERVER_LOG) << "Received an invalid command: resetting connection";
+            qCWarning(AKONADISERVER_LOG) << "Invalid command while reading from notification bus for " << mSubscriber << ", resetting connection";
             disconnectSubscriber();
             return;
         }
@@ -118,7 +118,7 @@ void NotificationSubscriber::handleIncomingData()
             break;
         case Protocol::Command::ModifySubscription:
             if (mSubscriber.isEmpty()) {
-                qCWarning(AKONADISERVER_LOG) << "Received ModifySubscription command before RegisterSubscriber";
+                qCWarning(AKONADISERVER_LOG) << "Notification subscriber received ModifySubscription command before RegisterSubscriber";
                 disconnectSubscriber();
                 return;
             }
@@ -129,7 +129,7 @@ void NotificationSubscriber::handleIncomingData()
             disconnectSubscriber();
             break;
         default:
-            qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd->type() << "received by NotificationSubscriber" << mSubscriber;
+            qCWarning(AKONADISERVER_LOG) << "Notification subscriber for" << mSubscriber << "received an invalid command" << cmd->type();
             disconnectSubscriber();
             break;
         }
@@ -138,7 +138,7 @@ void NotificationSubscriber::handleIncomingData()
 
 void NotificationSubscriber::socketDisconnected()
 {
-    qCDebug(AKONADISERVER_LOG) << "Subscriber" << mSubscriber << "disconnected";
+    qCInfo(AKONADISERVER_LOG) << "Subscriber" << mSubscriber << "disconnected";
     disconnectSubscriber();
 }
 
@@ -179,7 +179,7 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
 {
     QMutexLocker locker(&mLock);
 
-    qCDebug(AKONADISERVER_LOG) << "Subscriber" << this << "identified as" << command.subscriberName();
+    qCInfo(AKONADISERVER_LOG) << "Subscriber" << this << "identified as" << command.subscriberName();
     mSubscriber = command.subscriberName();
     mSession = command.session();
 
@@ -677,7 +677,7 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
         return acceptsDebugChangeNotification(static_cast<const Protocol::DebugChangeNotification &>(msg));
 
     default:
-        qCDebug(AKONADISERVER_LOG) << "Received invalid change notification!";
+        qCWarning(AKONADISERVER_LOG) << "NotificationSubscriber" << mSubscriber << "received an invalid notification type" << msg.type();
         return false;
     }
 }
@@ -733,12 +733,12 @@ void NotificationSubscriber::writeCommand(qint64 tag, const Protocol::CommandPtr
         Protocol::serialize(mSocket, cmd);
         if (!mSocket->waitForBytesWritten()) {
             if (mSocket->state() == QLocalSocket::ConnectedState) {
-                qCWarning(AKONADISERVER_LOG) << "Notification socket write timeout!";
+                qCWarning(AKONADISERVER_LOG) << "NotificationSubscriber for" << mSubscriber << ": timeout writing into stream";
             } else {
                 // client has disconnected, just discard the message
             }
         }
     } catch (const ProtocolException &e) {
-        qCWarning(AKONADISERVER_LOG) << "Notification protocol exception:" << e.what();
+        qCWarning(AKONADISERVER_LOG) << "ProtocolException while writing into stream for subscriber" << mSubscriber << ":" << e.what();
     }
 }

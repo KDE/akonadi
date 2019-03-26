@@ -434,9 +434,9 @@ bool AkAppend::parseStream()
             }
             storageTrx.commit();
         } else {
-            qCDebug(AKONADISERVER_LOG) << "Multiple merge candidates:";
+            qCWarning(AKONADISERVER_LOG) << "Multiple merge candidates:";
             for (const PimItem &item : result) {
-                qCDebug(AKONADISERVER_LOG) << "\tID:" << item.id() << ", RID:" << item.remoteId()
+                qCWarning(AKONADISERVER_LOG) << "\tID:" << item.id() << ", RID:" << item.remoteId()
                                            << ", GID:" << item.gid()
                                            << ", Collection:" << item.collection().name() << "(" << item.collectionId() << ")"
                                            << ", Resource:" << item.collection().resource().name() << "(" << item.collection().resourceId() << ")";

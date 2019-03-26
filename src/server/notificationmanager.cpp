@@ -106,7 +106,7 @@ void NotificationManager::registerConnection(quintptr socketDescriptor)
     Q_ASSERT(thread() == QThread::currentThread());
 
     NotificationSubscriber *subscriber = new NotificationSubscriber(this, socketDescriptor);
-    qCDebug(AKONADISERVER_LOG) << "New notification connection (registered as" << subscriber << ")";
+    qCInfo(AKONADISERVER_LOG) << "New notification connection (registered as" << subscriber << ")";
     connect(subscriber, &NotificationSubscriber::notificationDebuggingChanged,
             this, [this](bool enabled) {
                 if (enabled) {

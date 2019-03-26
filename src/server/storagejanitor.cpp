@@ -84,7 +84,6 @@ void StorageJanitor::quit()
     // Make sure all children are deleted within context of this thread
     qDeleteAll(children());
 
-    qCDebug(AKONADISERVER_LOG) << "chainup()";
     AkThread::quit();
 }
 
@@ -227,7 +226,6 @@ void StorageJanitor::findOrphanedResources()
         inform(QStringLiteral("ERROR: no known resources. This must be a mistake?"));
         return;
     }
-    qCDebug(AKONADISERVER_LOG) << "Known resources:" << knownResources;
     qbres.addValueCondition(Resource::nameFullColumnName(), Query::NotIn, QVariant(knownResources));
     qbres.addValueCondition(Resource::idFullColumnName(), Query::NotEquals, 1);   // skip akonadi_search_resource
     if (!qbres.exec()) {
