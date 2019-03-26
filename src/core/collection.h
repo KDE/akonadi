@@ -569,6 +569,7 @@ template <typename T>
 inline T *Akonadi::Collection::attribute(Collection::CreateOption option)
 {
     const QByteArray type = T().type();
+    markAttributeModified(type); // do this first in case it detaches
     if (hasAttribute(type)) {
         if (T *attr = dynamic_cast<T *>(attribute(type))) {
             return attr;
