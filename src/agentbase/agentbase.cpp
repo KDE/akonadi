@@ -707,7 +707,7 @@ void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection)
     AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (mObserver && observer2 == nullptr) {   // For ObserverV2 we use the variant with the part identifiers
         mObserver->collectionChanged(collection);
-    } else {
+    } else if (!mObserver) {
         changeProcessed();
     }
 }
