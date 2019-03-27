@@ -104,14 +104,18 @@ const Attribute *AttributeStorage::attribute(const QByteArray &type) const
 
 Attribute *AttributeStorage::attribute(const QByteArray &type)
 {
-    markAttributeModified(type);
-    return mAttributes.value(type);
+    Attribute *attr = mAttributes.value(type);
+    if (attr)
+        markAttributeModified(type);
+    return attr;
 }
 
 void AttributeStorage::markAttributeModified(const QByteArray &type)
 {
-    mDeletedAttributes.remove(type);
-    mModifiedAttributes.insert(type);
+    if (mAttributes.contains(type)) {
+        mDeletedAttributes.remove(type);
+        mModifiedAttributes.insert(type);
+    }
 }
 
 void AttributeStorage::resetChangeLog()

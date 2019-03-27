@@ -155,6 +155,9 @@ void CollectionAttributeTest::testAttributes()
     QVERIFY(attrB != nullptr);
     QCOMPARE(attrB->serialized(), QByteArray(attr1));
 
+    // this will mark the attribute as modified in the storage, but should not create trouble further down
+    QVERIFY(!col.attribute("does_not_exist"));
+
     // modify a custom attribute
     col.attribute<TestAttribute>(Collection::AddIfMissing)->deserialize(attr2);
     CollectionModifyJob *modify = new CollectionModifyJob(col, this);
