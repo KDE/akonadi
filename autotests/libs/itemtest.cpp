@@ -22,7 +22,7 @@
 
 #include "item.h"
 
-#include <qtest.h>
+#include <QTest>
 #include <collection.h>
 
 #include <memory>

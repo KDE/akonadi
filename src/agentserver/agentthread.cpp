@@ -23,7 +23,7 @@
 #include <QWidget> // Needed for WId
 
 #include <shared/akdebug.h>
-#include <qmetaobject.h>
+#include <QMetaObject>
 
 using namespace Akonadi;
 

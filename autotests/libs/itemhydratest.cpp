@@ -21,7 +21,7 @@
 
 #include <memory>
 #include "item.h"
-#include <qtest.h>
+#include <QTest>
 #include <QDebug>
 #include <QSharedPointer>
 #include <QTemporaryFile>

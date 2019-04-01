@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include <qtest.h>
+#include <QTest>
 
 #include <krecursivefilterproxymodel.h>
 #include <QStandardItemModel>

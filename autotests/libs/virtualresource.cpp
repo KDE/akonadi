@@ -24,7 +24,7 @@
 #include <akonadi/resourceselectjob_p.h>
 #include <akonadi/servermanager.h>
 #include <akonadi/session_p.h>
-#include <qdbusinterface.h>
+#include <QDBusInterface>
 #include <dbusconnectionpool.h>
 #include <QStringList>
 

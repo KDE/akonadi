@@ -20,7 +20,7 @@
 #include <QObject>
 
 #include "monitor_p.h"
-#include <qtest.h>
+#include <QTest>
 #include <qtest_akonadi.h>
 
 using namespace Akonadi;

@@ -22,7 +22,7 @@
 
 #include "entitytreemodel.h"
 
-#include <qdebug.h>
+#include <QDebug>
 
 using namespace Akonadi;
 

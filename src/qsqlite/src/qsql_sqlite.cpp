@@ -40,16 +40,16 @@
 
 #include "qsql_sqlite.h"
 
-#include <qcoreapplication.h>
-#include <qdatetime.h>
-#include <qvariant.h>
-#include <qsqlerror.h>
-#include <qsqlfield.h>
-#include <qsqlindex.h>
-#include <qsqlquery.h>
-#include <qstringlist.h>
-#include <qvector.h>
-#include <qdebug.h>
+#include <QCoreApplication>
+#include <QDateTime>
+#include <QVariant>
+#include <QSqlError>
+#include <QSqlField>
+#include <QSqlIndex>
+#include <QSqlQuery>
+#include <QStringList>
+#include <QVector>
+#include <QDebug>
 
 #include <QtSql/private/qsqldriver_p.h>
 #include <QtSql/private/qsqlcachedresult_p.h>
@@ -62,7 +62,7 @@
 
 #include <sqlite3.h>
 
-#include <qthread.h>
+#include <QThread>
 #include "sqlite_blocking.h"
 
 Q_DECLARE_OPAQUE_POINTER(sqlite3 *)

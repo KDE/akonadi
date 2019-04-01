@@ -18,7 +18,7 @@
 #include "tagselectwidgettest.h"
 #include "../src/widgets/tagselectwidget.h"
 #include "../src/widgets/tageditwidget.h"
-#include <qtest.h>
+#include <QTest>
 TagSelectWidgetTest::TagSelectWidgetTest(QObject *parent)
     : QObject(parent)
 {

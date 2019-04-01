@@ -17,7 +17,7 @@
 
 #include "newmailnotifierattributetest.h"
 #include "newmailnotifierattribute.h"
-#include <qtest.h>
+#include <QTest>
 using namespace Akonadi;
 NewMailNotifierAttributeTest::NewMailNotifierAttributeTest(QObject *parent)
     : QObject(parent)

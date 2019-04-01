@@ -36,7 +36,7 @@
 
 #include <kcolorscheme.h>
 #include <KLocalizedString>
-#include <qtextbrowser.h>
+#include <QTextBrowser>
 #include <QDialogButtonBox>
 #include <KWindowConfig>
 

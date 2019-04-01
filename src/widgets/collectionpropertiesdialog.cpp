@@ -30,7 +30,7 @@
 
 #include <ksharedconfig.h>
 #include <KConfigGroup>
-#include <qtabwidget.h>
+#include <QTabWidget>
 
 #include <QDialogButtonBox>
 

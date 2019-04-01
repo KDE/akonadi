@@ -27,7 +27,7 @@
 #include "pastehelper_p.h"
 #include "session.h"
 
-#include <qdebug.h>
+#include <QDebug>
 #include <QUrl>
 
 #include <QMimeData>

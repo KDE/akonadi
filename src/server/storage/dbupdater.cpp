@@ -42,7 +42,7 @@
 #include <QDomDocument>
 #include <QFile>
 #include <QTime>
-#include <qsqlresult.h>
+#include <QSqlResult>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
