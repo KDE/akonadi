@@ -17,7 +17,7 @@
 
 #include "pop3resourceattributetest.h"
 #include "pop3resourceattribute.h"
-#include <qtest.h>
+#include <QTest>
 Pop3ResourceAttributeTest::Pop3ResourceAttributeTest(QObject *parent)
     : QObject(parent)
 {

@@ -19,7 +19,7 @@
 
 #include "imapparsertest.h"
 #include "private/imapparser_p.h"
-#include <qtest.h>
+#include <QTest>
 
 #include <QBuffer>
 

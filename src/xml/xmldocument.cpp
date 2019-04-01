@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 
 #include <qdom.h>
-#include <qfile.h>
+#include <QFile>
 
 #ifdef HAVE_LIBXML2
 #include <libxml/parser.h>

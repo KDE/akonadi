@@ -26,7 +26,7 @@
 
 #include <KConfig>
 #include <kconfiggroup.h>
-#include <qdebug.h>
+#include <QDebug>
 #include <KProcess>
 
 #include <QCoreApplication>

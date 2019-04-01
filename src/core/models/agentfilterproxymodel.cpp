@@ -23,7 +23,7 @@
 #include "agentinstancemodel.h"
 
 
-#include <qdebug.h>
+#include <QDebug>
 
 #include <QStringList>
 #include <QMimeDatabase>

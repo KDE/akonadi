@@ -20,7 +20,7 @@
 #include <collectionstatistics.h>
 #include <collection.h>
 #include <entitytreemodel.h>
-#include <qtest.h>
+#include <QTest>
 
 #include <statisticsproxymodel.h>
 #include <QStandardItemModel>

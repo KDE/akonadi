@@ -20,7 +20,7 @@
 #include "imapsettest.h"
 #include "private/imapset_p.h"
 
-#include <qtest.h>
+#include <QTest>
 
 QTEST_MAIN(ImapSetTest)
 

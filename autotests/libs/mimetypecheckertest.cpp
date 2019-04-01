@@ -28,7 +28,7 @@
 #include <QMimeDatabase>
 
 
-#include <qtest.h>
+#include <QTest>
 
 QTEST_MAIN(MimeTypeCheckerTest)
 

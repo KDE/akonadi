@@ -20,7 +20,7 @@
 
 #include "../src/agentbase/resourcescheduler_p.h"
 
-#include <qtest.h>
+#include <QTest>
 #include <QSignalSpy>
 
 using namespace Akonadi;

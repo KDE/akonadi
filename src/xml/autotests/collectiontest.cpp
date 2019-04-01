@@ -23,8 +23,8 @@
 
 #include "entitydisplayattribute.h"
 
-#include <qtest.h>
-#include <qdebug.h>
+#include <QTest>
+#include <QDebug>
 #include <QStringList>
 using namespace Akonadi;
 

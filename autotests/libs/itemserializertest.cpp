@@ -23,7 +23,7 @@
 #include "item.h"
 #include "itemserializer_p.h"
 
-#include <qtest.h>
+#include <QTest>
 
 using namespace Akonadi;
 

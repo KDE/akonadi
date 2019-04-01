@@ -18,7 +18,7 @@
 */
 
 #include "../sharedvaluepool_p.h"
-#include <qtest.h>
+#include <QTest>
 
 #include <QVector>
 #include <QSet>

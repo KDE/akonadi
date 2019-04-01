@@ -33,7 +33,7 @@
 
 #include "akonaditests_export.h"
 
-#include <qobject.h>
+#include <QObject>
 #include <QQueue>
 #include <QVariant>
 #include <QHash>

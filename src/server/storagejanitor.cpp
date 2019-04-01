@@ -45,7 +45,7 @@
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDir>
-#include <qdiriterator.h>
+#include <QDirIterator>
 #include <QDateTime>
 
 #include <algorithm>
