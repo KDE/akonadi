@@ -38,6 +38,12 @@ TagModifyJob::TagModifyJob(const Akonadi::Tag &tag, QObject *parent)
     d->mTag = tag;
 }
 
+Tag TagModifyJob::tag() const
+{
+    Q_D(const TagModifyJob);
+    return d->mTag;
+}
+
 void TagModifyJob::doStart()
 {
     Q_D(TagModifyJob);

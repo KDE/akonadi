@@ -32,6 +32,7 @@ set(akonadicore_base_SRCS
     exception.cpp
     firstrun.cpp
     gidextractor.cpp
+    interface.cpp
     item.cpp
     itemchangelog.cpp
     itemfetchscope.cpp
@@ -56,6 +57,7 @@ set(akonadicore_base_SRCS
     session.cpp
     sessionthread.cpp
     specialcollections.cpp
+    storage.cpp
     tag.cpp
     tagfetchscope.cpp
     tagsync.cpp
@@ -85,6 +87,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     Error
     ExceptionBase
     GidExtractorInterface
+    Interface
     Item
     ItemFetchScope
     ItemMonitor
@@ -99,6 +102,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     ServerManager
     Session
     SpecialCollections
+    Storage
     Supertrait
     Tag
     TagFetchScope
