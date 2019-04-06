@@ -34,20 +34,17 @@
 #include "collectiondeletejob.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
-#include "collectionselectjob_p.h"
 #include "collectionstatistics.h"
 #include "collectionstatisticsjob.h"
-#include "collectionpathresolver_p.h"
-#include "collectionutils_p.h"
+#include "collectionutils.h"
 #include "control.h"
 #include "item.h"
-#include "kmime/messageparts.h"
 #include "resourceselectjob_p.h"
 #include "collectionfetchscope.h"
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(CollectionJobTest, NoGUI)
+QTEST_AKONADIMAIN(CollectionJobTest)
 
 void CollectionJobTest::initTestCase()
 {
@@ -71,7 +68,15 @@ static Collection findCol(const Collection::List &list, const QString &name)
 template <class T> static void compareLists(const QList<T> &l1, const QList<T> &l2)
 {
     QCOMPARE(l1.count(), l2.count());
-    foreach (const T entry, l1) {
+    foreach (const T &entry, l1) {
+        QVERIFY(l2.contains(entry));
+    }
+}
+
+template <class T> static void compareLists(const QVector<T> &l1, const QVector<T> &l2)
+{
+    QCOMPARE(l1.count(), l2.count());
+    foreach (const T &entry, l1) {
         QVERIFY(l2.contains(entry));
     }
 }
@@ -103,7 +108,7 @@ void CollectionJobTest::testTopLevelList()
     QCOMPARE(list.count(), 4);
     Collection col;
 
-    col = findCol(list, "res1");
+    col = findCol(list, QStringLiteral("res1"));
     QVERIFY(col.isValid());
     res1ColId = col.id(); // for the next test
     QVERIFY(res1ColId > 0);
@@ -111,14 +116,14 @@ void CollectionJobTest::testTopLevelList()
     QCOMPARE(col.parentCollection(), Collection::root());
     QCOMPARE(col.resource(), QStringLiteral("akonadi_knut_resource_0"));
 
-    QVERIFY(findCol(list, "res2").isValid());
-    res2ColId = findCol(list, "res2").id();
+    QVERIFY(findCol(list, QStringLiteral("res2")).isValid());
+    res2ColId = findCol(list, QStringLiteral("res2")).id();
     QVERIFY(res2ColId > 0);
-    QVERIFY(findCol(list, "res3").isValid());
-    res3ColId = findCol(list, "res3").id();
+    QVERIFY(findCol(list, QStringLiteral("res3")).isValid());
+    res3ColId = findCol(list, QStringLiteral("res3")).id();
     QVERIFY(res3ColId > 0);
 
-    col = findCol(list, "Search");
+    col = findCol(list, QStringLiteral("Search"));
     searchColId = col.id();
     QVERIFY(col.isValid());
     QVERIFY(CollectionUtils::isVirtualParent(col));
@@ -150,17 +155,17 @@ void CollectionJobTest::testFolderList()
     Collection col;
     QStringList contentTypes;
 
-    col = findCol(list, "foo");
+    col = findCol(list, QStringLiteral("foo"));
     QVERIFY(col.isValid());
     QCOMPARE(col.parentCollection().id(), res1ColId);
     QVERIFY(CollectionUtils::isFolder(col));
-    contentTypes << "message/rfc822" << "text/calendar" << "text/directory"
-                 << "application/octet-stream" << "inode/directory";
+    contentTypes << QStringLiteral("message/rfc822") << QStringLiteral("text/calendar") << QStringLiteral("text/directory")
+                 << QStringLiteral("application/octet-stream") << QStringLiteral("inode/directory");
     compareLists(col.contentMimeTypes(), contentTypes);
 
-    QVERIFY(findCol(list, "bar").isValid());
-    QCOMPARE(findCol(list, "bar").parentCollection(), col);
-    QVERIFY(findCol(list, "bla").isValid());
+    QVERIFY(findCol(list, QStringLiteral("bar")).isValid());
+    QCOMPARE(findCol(list, QStringLiteral("bar")).parentCollection(), col);
+    QVERIFY(findCol(list, QStringLiteral("bla")).isValid());
 }
 
 class ResultSignalTester : public QObject
@@ -203,7 +208,7 @@ void CollectionJobTest::testNonRecursiveFolderList()
     Collection::List list = job->collections();
 
     QCOMPARE(list.count(), 1);
-    QVERIFY(findCol(list, "res1").isValid());
+    QVERIFY(findCol(list, QStringLiteral("res1")).isValid());
 }
 
 void CollectionJobTest::testEmptyFolderList()
@@ -228,48 +233,48 @@ void CollectionJobTest::testResourceFolderList()
 {
     // non-existing resource
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
-    job->fetchScope().setResource("i_dont_exist");
+    job->fetchScope().setResource(QStringLiteral("i_dont_exist"));
     QVERIFY(!job->exec());
 
     // recursive listing of all collections of an existing resource
     job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
-    job->fetchScope().setResource("akonadi_knut_resource_0");
+    job->fetchScope().setResource(QStringLiteral("akonadi_knut_resource_0"));
     AKVERIFYEXEC(job);
 
     Collection::List list = job->collections();
     QCOMPARE(list.count(), 5);
-    QVERIFY(findCol(list, "res1").isValid());
-    QVERIFY(findCol(list, "foo").isValid());
-    QVERIFY(findCol(list, "bar").isValid());
-    QVERIFY(findCol(list, "bla").isValid());
-    int fooId = findCol(list, "foo").id();
+    QVERIFY(findCol(list, QStringLiteral("res1")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("foo")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("bar")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("bla")).isValid());
+    int fooId = findCol(list, QStringLiteral("foo")).id();
 
     // limited listing of a resource
     job = new CollectionFetchJob(Collection(fooId), CollectionFetchJob::Recursive);
-    job->fetchScope().setResource("akonadi_knut_resource_0");
+    job->fetchScope().setResource(QStringLiteral("akonadi_knut_resource_0"));
     AKVERIFYEXEC(job);
 
     list = job->collections();
     QCOMPARE(list.count(), 3);
-    QVERIFY(findCol(list, "bar").isValid());
-    QVERIFY(findCol(list, "bla").isValid());
+    QVERIFY(findCol(list, QStringLiteral("bar")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("bla")).isValid());
 }
 
 void CollectionJobTest::testMimeTypeFilter()
 {
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive);
-    job->fetchScope().setContentMimeTypes(QStringList() << "message/rfc822");
+    job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("message/rfc822"));
     AKVERIFYEXEC(job);
 
     Collection::List list = job->collections();
     QCOMPARE(list.count(), 2);
-    QVERIFY(findCol(list, "res1").isValid());
-    QVERIFY(findCol(list, "foo").isValid());
-    int fooId = findCol(list, "foo").id();
+    QVERIFY(findCol(list, QStringLiteral("res1")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("foo")).isValid());
+    int fooId = findCol(list, QStringLiteral("foo")).id();
 
     // limited listing of a resource
     job = new CollectionFetchJob(Collection(fooId), CollectionFetchJob::Recursive);
-    job->fetchScope().setContentMimeTypes(QStringList() << "message/rfc822");
+    job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("message/rfc822"));
     AKVERIFYEXEC(job);
 
     list = job->collections();
@@ -277,7 +282,7 @@ void CollectionJobTest::testMimeTypeFilter()
 
     // non-existing mimetype
     job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
-    job->fetchScope().setContentMimeTypes(QStringList() << "something/non-existing");
+    job->fetchScope().setContentMimeTypes(QStringList() << QStringLiteral("something/non-existing"));
     AKVERIFYEXEC(job);
     QCOMPARE(job->collections().size(), 0);
 }
@@ -289,57 +294,57 @@ void CollectionJobTest::testCreateDeleteFolder_data()
 
     Collection col;
     QTest::newRow("empty") << col << false;
-    col.setName("new folder");
+    col.setName(QStringLiteral("new folder"));
     col.parentCollection().setId(res3ColId);
     QTest::newRow("simple") << col << true;
 
     col.parentCollection().setId(res3ColId);
-    col.setName("foo");
+    col.setName(QStringLiteral("foo"));
     QTest::newRow("existing in different resource") << col << true;
 
-    col.setName("mail folder");
+    col.setName(QStringLiteral("mail folder"));
     QStringList mimeTypes;
-    mimeTypes << "inode/directory" << "message/rfc822";
+    mimeTypes << QStringLiteral("inode/directory") << QStringLiteral("message/rfc822");
     col.setContentMimeTypes(mimeTypes);
-    col.setRemoteId("remote id");
+    col.setRemoteId(QStringLiteral("remote id"));
     CachePolicy policy;
     policy.setInheritFromParent(false);
     policy.setIntervalCheckTime(60);
-    policy.setLocalParts(QStringList(MessagePart::Envelope));
+    policy.setLocalParts({QStringLiteral("PLD:ENVELOPE")});
     policy.setSyncOnDemand(true);
     policy.setCacheTimeout(120);
     col.setCachePolicy(policy);
     QTest::newRow("complex") << col << true;
 
     col = Collection();
-    col.setName("New Folder");
+    col.setName(QStringLiteral("New Folder"));
     col.parentCollection().setId(searchColId);
     QTest::newRow("search folder") << col << false;
 
     col.parentCollection().setId(res2ColId);
-    col.setName("foo2");
+    col.setName(QStringLiteral("foo2"));
     QTest::newRow("already existing") << col << false;
 
     col.parentCollection().setId(res2ColId);   // Sibling of collection 'foo2'
-    col.setName("foo2 ");
+    col.setName(QStringLiteral("foo2 "));
     QTest::newRow("name of an sibling with an additional ending space") << col << true;
 
-    col.setName("Bla");
+    col.setName(QStringLiteral("Bla"));
     col.parentCollection().setId(2);
     QTest::newRow("already existing with different case") << col << true;
 
-    CollectionPathResolver *resolver = new CollectionPathResolver("res2/foo2", this);
+    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res2/foo2"), this);
     AKVERIFYEXEC(resolver);
     col.parentCollection().setId(resolver->collection());
-    col.setName("new folder");
+    col.setName(QStringLiteral("new folder"));
     QTest::newRow("parent noinferior") << col << false;
 
     col.parentCollection().setId(INT_MAX);
     QTest::newRow("missing parent") << col << false;
 
     col = Collection();
-    col.setName("rid parent");
-    col.parentCollection().setRemoteId("8");
+    col.setName(QStringLiteral("rid parent"));
+    col.parentCollection().setRemoteId(QStringLiteral("8"));
     QTest::newRow("rid parent") << col << false;   // missing resource context
 }
 
@@ -420,7 +425,7 @@ void CollectionJobTest::testStatistics()
     QCOMPARE(s.unreadCount(), 0ll);
 
     // folder with attributes and content
-    CollectionPathResolver *resolver = new CollectionPathResolver("res1/foo", this);;
+    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
     AKVERIFYEXEC(resolver);
     statistics = new CollectionStatisticsJob(Collection(resolver->collection()), this);
     AKVERIFYEXEC(statistics);
@@ -435,8 +440,8 @@ void CollectionJobTest::testModify_data()
     QTest::addColumn<qint64>("uid");
     QTest::addColumn<QString>("rid");
 
-    QTest::newRow("uid") << collectionIdFromPath("res1/foo") << QString();
-    QTest::newRow("rid") << -1ll << QString("10");
+    QTest::newRow("uid") << collectionIdFromPath(QStringLiteral("res1/foo")) << QString();
+    QTest::newRow("rid") << -1ll << QStringLiteral("10");
 }
 
 #define RESET_COLLECTION_ID \
@@ -449,12 +454,13 @@ void CollectionJobTest::testModify()
     QFETCH(QString, rid);
 
     if (!rid.isEmpty()) {
-        ResourceSelectJob *rjob = new ResourceSelectJob("akonadi_knut_resource_0");
+        ResourceSelectJob *rjob = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(rjob);
     }
 
-    QStringList reference;
-    reference << "text/calendar" << "text/directory" << "message/rfc822" << "application/octet-stream" << "inode/directory";
+    const QStringList reference = { QStringLiteral("text/calendar"), QStringLiteral("text/directory"), QStringLiteral("message/rfc822"),
+                                    QStringLiteral("application/octet-stream"), QStringLiteral("inode/directory")
+                                  };
 
     Collection col;
     RESET_COLLECTION_ID;
@@ -517,7 +523,7 @@ void CollectionJobTest::testModify()
 
     // renaming
     RESET_COLLECTION_ID;
-    col.setName("foo (renamed)");
+    col.setName(QStringLiteral("foo (renamed)"));
     mod = new CollectionModifyJob(col, this);
     AKVERIFYEXEC(mod);
 
@@ -525,10 +531,10 @@ void CollectionJobTest::testModify()
     AKVERIFYEXEC(ljob);
     QCOMPARE(ljob->collections().count(), 1);
     col = ljob->collections().first();
-    QCOMPARE(col.name(), QString("foo (renamed)"));
+    QCOMPARE(col.name(), QStringLiteral("foo (renamed)"));
 
     RESET_COLLECTION_ID;
-    col.setName("foo");
+    col.setName(QStringLiteral("foo"));
     mod = new CollectionModifyJob(col, this);
     AKVERIFYEXEC(mod);
 }
@@ -545,7 +551,7 @@ void CollectionJobTest::testIllegalModify()
 
     // rename to already existing name
     col = Collection(res1ColId);
-    col.setName("res2");
+    col.setName(QStringLiteral("res2"));
     mod = new CollectionModifyJob(col, this);
     QVERIFY(!mod->exec());
 }
@@ -581,7 +587,7 @@ void CollectionJobTest::testUtf8CollectionName()
     QCOMPARE(list->collections().first().name(), col.name());
 
     // modify collection
-    col.setContentMimeTypes(QStringList("message/rfc822'"));
+    col.setContentMimeTypes( { QStringLiteral("message/rfc822") } );
     CollectionModifyJob *modify = new CollectionModifyJob(col, this);
     AKVERIFYEXEC(modify);
 
@@ -652,11 +658,11 @@ void CollectionJobTest::testRecursiveMultiList()
 
     // check if everything is there
     QCOMPARE(list.count(), 4 + 2);
-    QVERIFY(findCol(list, "foo").isValid());
-    QVERIFY(findCol(list, "bar").isValid());
-    QVERIFY(findCol(list, "bla").isValid());     //There are two bla folders, but we only check for one.
-    QVERIFY(findCol(list, "foo2").isValid());
-    QVERIFY(findCol(list, "space folder").isValid());
+    QVERIFY(findCol(list, QStringLiteral("foo")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("bar")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("bla")).isValid());     //There are two bla folders, but we only check for one.
+    QVERIFY(findCol(list, QStringLiteral("foo2")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("space folder")).isValid());
 }
 
 void CollectionJobTest::testNonOverlappingRootList()
@@ -684,17 +690,17 @@ void CollectionJobTest::testNonOverlappingRootList()
 
     // check if everything is there
     QCOMPARE(list.count(), 2);
-    QVERIFY(findCol(list, "res1").isValid());
-    QVERIFY(findCol(list, "res2").isValid());
+    QVERIFY(findCol(list, QStringLiteral("res1")).isValid());
+    QVERIFY(findCol(list, QStringLiteral("res2")).isValid());
 }
 
 void CollectionJobTest::testRidFetch()
 {
     Collection col;
-    col.setRemoteId("10");
+    col.setRemoteId(QStringLiteral("10"));
 
     CollectionFetchJob *job = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
-    job->fetchScope().setResource("akonadi_knut_resource_0");
+    job->fetchScope().setResource(QStringLiteral("akonadi_knut_resource_0"));
     AKVERIFYEXEC(job);
     QCOMPARE(job->collections().count(), 1);
     col = job->collections().first();
@@ -714,11 +720,11 @@ void CollectionJobTest::testRidCreateDelete()
 {
     QFETCH(QString, remoteId);
     Collection collection;
-    collection.setName("rid create");
-    collection.parentCollection().setRemoteId("8");
+    collection.setName(QStringLiteral("rid create"));
+    collection.parentCollection().setRemoteId(QStringLiteral("8"));
     collection.setRemoteId(remoteId);
 
-    ResourceSelectJob *resSel = new ResourceSelectJob("akonadi_knut_resource_2");
+    ResourceSelectJob *resSel = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
     AKVERIFYEXEC(resSel);
 
     CollectionCreateJob *createJob = new CollectionCreateJob(collection, this);
@@ -746,20 +752,20 @@ void CollectionJobTest::testRidCreateDelete()
 void CollectionJobTest::testAncestorRetrieval()
 {
     Collection col;
-    col.setRemoteId("10");
+    col.setRemoteId(QStringLiteral("10"));
 
     CollectionFetchJob *job = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
-    job->fetchScope().setResource("akonadi_knut_resource_0");
+    job->fetchScope().setResource(QStringLiteral("akonadi_knut_resource_0"));
     job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
     AKVERIFYEXEC(job);
     QCOMPARE(job->collections().count(), 1);
     col = job->collections().first();
     QVERIFY(col.isValid());
     QVERIFY(col.parentCollection().isValid());
-    QCOMPARE(col.parentCollection().remoteId(), QString("6"));
+    QCOMPARE(col.parentCollection().remoteId(), QStringLiteral("6"));
     QCOMPARE(col.parentCollection().parentCollection(), Collection::root());
 
-    ResourceSelectJob *select = new ResourceSelectJob("akonadi_knut_resource_0", this);
+    ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
     AKVERIFYEXEC(select);
     Collection col2(col);
     col2.setId(-1);   // make it invalid but keep the ancestor chain
@@ -776,7 +782,7 @@ void CollectionJobTest::testAncestorAttributeRetrieval()
     Akonadi::Collection baseCol;
     {
         baseCol.setParentCollection(Akonadi::Collection(res1ColId));
-        baseCol.setName("base");
+        baseCol.setName(QStringLiteral("base"));
         baseCol.attribute<TestAttribute>(Collection::AddIfMissing)->data = "new";
         Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(baseCol);
         AKVERIFYEXEC(create);
@@ -785,7 +791,7 @@ void CollectionJobTest::testAncestorAttributeRetrieval()
     {
         Akonadi::Collection col;
         col.setParentCollection(baseCol);
-        col.setName("enabled");
+        col.setName(QStringLiteral("enabled"));
         Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
         AKVERIFYEXEC(create);
 
@@ -808,7 +814,7 @@ void CollectionJobTest::testListPreference()
     Akonadi::Collection baseCol;
     {
         baseCol.setParentCollection(Akonadi::Collection(res1ColId));
-        baseCol.setName("base");
+        baseCol.setName(QStringLiteral("base"));
         Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(baseCol);
         AKVERIFYEXEC(create);
         baseCol = create->collection();
@@ -817,7 +823,7 @@ void CollectionJobTest::testListPreference()
         Akonadi::Collection col;
         col.setParentCollection(baseCol);
         col.setEnabled(true);
-        col.setName("enabled");
+        col.setName(QStringLiteral("enabled"));
         Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
         AKVERIFYEXEC(create);
 
@@ -832,7 +838,7 @@ void CollectionJobTest::testListPreference()
     {
         Akonadi::Collection col;
         col.setParentCollection(baseCol);
-        col.setName("disabledPref");
+        col.setName(QStringLiteral("disabledPref"));
         col.setEnabled(true);
         col.setLocalListPreference(Collection::ListDisplay, Collection::ListDisabled);
         col.setLocalListPreference(Collection::ListSync, Collection::ListDisabled);
@@ -850,7 +856,7 @@ void CollectionJobTest::testListPreference()
     {
         Akonadi::Collection col;
         col.setParentCollection(baseCol);
-        col.setName("enabledPref");
+        col.setName(QStringLiteral("enabledPref"));
         col.setEnabled(false);
         col.setLocalListPreference(Collection::ListDisplay, Collection::ListEnabled);
         col.setLocalListPreference(Collection::ListSync, Collection::ListEnabled);
@@ -902,7 +908,7 @@ void CollectionJobTest::testReference()
     Akonadi::Collection baseCol;
     {
         baseCol.setParentCollection(Akonadi::Collection(res1ColId));
-        baseCol.setName("base");
+        baseCol.setName(QStringLiteral("base"));
         Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(baseCol);
         AKVERIFYEXEC(create);
         baseCol = create->collection();
@@ -911,7 +917,7 @@ void CollectionJobTest::testReference()
     {
         Akonadi::Collection col;
         col.setParentCollection(baseCol);
-        col.setName("referenced");
+        col.setName(QStringLiteral("referenced"));
         col.setEnabled(false);
         {
             Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);

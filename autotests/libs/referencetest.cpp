@@ -40,7 +40,7 @@
 
 using namespace Akonadi;
 
-QTEST_AKONADIMAIN(ReferenceTest, NoGUI)
+QTEST_AKONADIMAIN(ReferenceTest)
 
 void ReferenceTest::initTestCase()
 {
@@ -57,7 +57,7 @@ void ReferenceTest::testReference()
     Akonadi::Collection baseCol;
     {
         baseCol.setParentCollection(Akonadi::Collection(res1ColId));
-        baseCol.setName("base");
+        baseCol.setName(QStringLiteral("base"));
         Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(baseCol);
         AKVERIFYEXEC(create);
         baseCol = create->collection();
@@ -66,7 +66,7 @@ void ReferenceTest::testReference()
     {
         Akonadi::Collection col;
         col.setParentCollection(baseCol);
-        col.setName("referenced");
+        col.setName(QStringLiteral("referenced"));
         col.setEnabled(false);
         {
             Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
@@ -107,7 +107,7 @@ void ReferenceTest::testReferenceFromMultiSession()
     Akonadi::Collection baseCol;
     {
         baseCol.setParentCollection(Akonadi::Collection(res1ColId));
-        baseCol.setName("base");
+        baseCol.setName(QStringLiteral("base"));
         baseCol.setEnabled(false);
         Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(baseCol);
         AKVERIFYEXEC(create);
@@ -117,7 +117,7 @@ void ReferenceTest::testReferenceFromMultiSession()
     {
         Akonadi::Collection col;
         col.setParentCollection(baseCol);
-        col.setName("referenced");
+        col.setName(QStringLiteral("referenced"));
         col.setEnabled(false);
         {
             Akonadi::CollectionCreateJob *create = new Akonadi::CollectionCreateJob(col);
@@ -147,7 +147,9 @@ void ReferenceTest::testReferenceFromMultiSession()
             AKVERIFYEXEC(modify);
 
             //We want a signal only in the session that referenced the collection
-            QVERIFY(QTest::kWaitForSignal(monitor1, SIGNAL(collectionChanged(Akonadi::Collection)), 1000));
+            QSignalSpy spyMonitor1(monitor1, SIGNAL(collectionChanged(Akonadi::Collection)));
+            QVERIFY(spyMonitor1.wait());
+
             QTest::qWait(100);
             QCOMPARE(cmodspy1.count(), 1);
             QCOMPARE(cmodspy2.count(), 0);
@@ -176,7 +178,9 @@ void ReferenceTest::testReferenceFromMultiSession()
             AKVERIFYEXEC(modify);
 
             //We want a signal only in the session that referenced the collection
-            QVERIFY(QTest::kWaitForSignal(monitor2, SIGNAL(collectionChanged(Akonadi::Collection)), 1000));
+            QSignalSpy spyMonitor2(monitor2, SIGNAL(collectionChanged(Akonadi::Collection)));
+            QVERIFY(spyMonitor2.wait());
+
             QTest::qWait(100);
             //FIXME The first session still gets the notification since it has the session referenced
             QCOMPARE(cmodspy1.count(), 1);
@@ -204,7 +208,9 @@ void ReferenceTest::testReferenceFromMultiSession()
             AKVERIFYEXEC(modify);
 
             //We want a signal only in the session that referenced the collection
-            QVERIFY(QTest::kWaitForSignal(monitor1, SIGNAL(collectionChanged(Akonadi::Collection)), 1000));
+            QSignalSpy spyMonitor1(monitor1, SIGNAL(collectionChanged(Akonadi::Collection)));
+            QVERIFY(spyMonitor1.wait());
+
             QTest::qWait(100);
             QCOMPARE(cmodspy1.count(), 1);
             //FIXME here we still get a notification for dereferenced because we don't filter correctly

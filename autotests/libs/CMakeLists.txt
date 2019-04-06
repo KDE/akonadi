@@ -156,6 +156,9 @@ add_akonadi_isolated_test(
 add_akonadi_isolated_test(SOURCE itemsynctest.cpp)
 add_akonadi_isolated_test(SOURCE linktest.cpp)
 add_akonadi_isolated_test(SOURCE cachetest.cpp)
+add_akonadi_isolated_test(SOURCE collectionjobtest.cpp)
+add_akonadi_isolated_test(SOURCE collectionmodifytest.cpp)
+add_akonadi_isolated_test(SOURCE referencetest.cpp)
 
 # FIXME: This is very unstable on Jenkins
 #add_akonadi_isolated_test(servermanagertest.cpp)
