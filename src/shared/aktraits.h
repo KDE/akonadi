@@ -73,7 +73,7 @@ namespace detail {
     #define DECLARE_HAS_METHOD_GENERIC(fun, R, ...)                 \
         DECLARE_HAS_METHOD_GENERIC_IMPL(fun, fun, R(T::*)(__VA_ARGS__))
 
-    DECLARE_HAS_METHOD_GENERIC_CONST(size, int)
+    DECLARE_HAS_METHOD_GENERIC_CONST(size, int, void)
     DECLARE_HAS_METHOD_GENERIC(push_back, void, const typename T::value_type &)
     DECLARE_HAS_METHOD_GENERIC(insert, typename T::iterator, const typename T::value_type &)
     DECLARE_HAS_METHOD_GENERIC(reserve, void, int)
