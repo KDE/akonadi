@@ -214,8 +214,6 @@ public:
     /**
      * Returns all explicitly fetched attributes.
      *
-     * Undefined if fetchAllAttributes() returns true.
-     *
      * @see fetchAttribute()
      */
     Q_REQUIRED_RESULT QSet<QByteArray> attributes() const;

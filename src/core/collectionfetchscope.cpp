@@ -34,7 +34,6 @@ public:
         : ancestorDepth(CollectionFetchScope::None)
         , listFilter(CollectionFetchScope::Enabled)
         , statistics(false)
-        , fetchAllAttributes(false)
         , fetchIdOnly(true)
         , mIgnoreRetrievalErrors(false)
     {
@@ -55,7 +54,6 @@ public:
         } else if (ancestorFetchScope && !other.ancestorFetchScope) {
             ancestorFetchScope.reset(nullptr);
         }
-        fetchAllAttributes = other.fetchAllAttributes;
         fetchIdOnly = other.fetchIdOnly;
         mIgnoreRetrievalErrors = other.mIgnoreRetrievalErrors;
     }
@@ -68,7 +66,6 @@ public:
     QSet<QByteArray> attributes;
     QScopedPointer<CollectionFetchScope> ancestorFetchScope;
     bool statistics;
-    bool fetchAllAttributes;
     bool fetchIdOnly;
     bool mIgnoreRetrievalErrors;
 };
