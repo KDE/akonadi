@@ -270,8 +270,6 @@ include_directories(
 )
 
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x060000)
-add_definitions(-DQT_STRICT_ITERATORS)
-
 add_subdirectory(src)
 add_subdirectory(icons)
 
