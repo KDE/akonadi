@@ -157,6 +157,8 @@ void ItemSyncPrivate::checkDone()
         //and wait until the transaction is committed to process the next batch
         if (mTransactionMode == ItemSync::MultipleTransactions || (mDeliveryDone && mRemoteItemQueue.isEmpty())) {
             if (mCurrentTransaction) {
+                // Note that mCurrentTransaction->commit() is a no-op if we're already rolling back
+                // so this signal is a bit misleading (but it's only used by unittests it seems)
                 Q_EMIT q->transactionCommitted();
                 mCurrentTransaction->commit();
                 mCurrentTransaction = nullptr;
@@ -454,6 +456,7 @@ void ItemSyncPrivate::slotLocalChangeDone(KJob *job)
 {
     if (job->error() && job->error() != Job::KilledJobError) {
         qCWarning(AKONADICORE_LOG) << "Creating/updating items from the akonadi database failed:" << job->errorString();
+        mRemoteItemQueue.clear(); // don't try to process any more items after a rollback
     }
     mPendingJobs--;
     mProgress++;

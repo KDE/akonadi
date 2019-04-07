@@ -61,7 +61,7 @@ private:
         return fetch->items();
     }
 
-    void createItems(const Collection &col, int itemCount)
+    static void createItems(const Collection &col, int itemCount)
     {
         for (int i = 0; i < itemCount; ++i) {
             Item item(QStringLiteral("application/octet-stream"));
@@ -73,14 +73,13 @@ private:
         }
     }
 
-private Q_SLOTS:
-    void initTestCase()
+    static Item duplicateItem(const Item &item, const Collection &col)
     {
-        AkonadiTest::checkTestIsIsolated();
-        Control::start();
-        AkonadiTest::setAllResourcesOffline();
-        qRegisterMetaType<KJob *>();
-        qRegisterMetaType<ItemSync::TransactionMode>();
+        Item duplicate = item;
+        duplicate.setId(-1);
+        ItemCreateJob *job = new ItemCreateJob(duplicate, col);
+        [job]() { AKVERIFYEXEC(job); }();
+        return job->item();
     }
 
     static Item modifyItem(Item item)
@@ -89,6 +88,16 @@ private Q_SLOTS:
         item.setFlag(QByteArray("\\READ") + QByteArray::number(counter));
         counter++;
         return item;
+    }
+
+private Q_SLOTS:
+    void initTestCase()
+    {
+        AkonadiTest::checkTestIsIsolated();
+        Control::start();
+        AkonadiTest::setAllResourcesOffline();
+        qRegisterMetaType<KJob *>();
+        qRegisterMetaType<ItemSync::TransactionMode>();
     }
 
     void testFullSync()
@@ -542,12 +551,7 @@ private Q_SLOTS:
         Item::List origItems = fetchItems(col);
 
         //Create a duplicate that will trigger an error during the first batch
-        Item duplicate = origItems.first();
-        duplicate.setId(-1);
-        {
-            ItemCreateJob *job = new ItemCreateJob(duplicate, col);
-            AKVERIFYEXEC(job);
-        }
+        Item dupe = duplicateItem(origItems.at(0), col);
         origItems = fetchItems(col);
 
         ItemSync *syncer = new ItemSync(col);
@@ -587,6 +591,48 @@ private Q_SLOTS:
 
         syncer->deliveryDone();
         QTRY_COMPARE(spy.count(), 1);
+
+        // cleanup
+        ItemDeleteJob *del = new ItemDeleteJob(dupe, this);
+        AKVERIFYEXEC(del);
+    }
+
+    void testFullSyncFailingDueToDuplicateItem()
+    {
+        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        QVERIFY(col.isValid());
+        Item::List origItems = fetchItems(col);
+        //Create a duplicate that will trigger an error during the first batch
+        Item dupe = duplicateItem(origItems.at(0), col);
+        origItems = fetchItems(col);
+
+        Akonadi::Monitor monitor;
+        monitor.setCollectionMonitored(col);
+        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QVERIFY(deletedSpy.isValid());
+        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QVERIFY(addedSpy.isValid());
+        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QVERIFY(changedSpy.isValid());
+
+        ItemSync *syncer = new ItemSync(col);
+        syncer->setTransactionMode(ItemSync::SingleTransaction);
+        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QVERIFY(transactionSpy.isValid());
+        syncer->setFullSyncItems(origItems);
+        QVERIFY(!syncer->exec());
+        QCOMPARE(transactionSpy.count(), 1);
+
+        Item::List resultItems = fetchItems(col);
+        QCOMPARE(resultItems.count(), origItems.count());
+        QTest::qWait(100);
+        QCOMPARE(deletedSpy.count(), 1); // ## is this correct?
+        QCOMPARE(addedSpy.count(), 1); // ## is this correct?
+        QCOMPARE(changedSpy.count(), 0);
+
+        // cleanup
+        ItemDeleteJob *del = new ItemDeleteJob(dupe, this);
+        AKVERIFYEXEC(del);
     }
 
     void testFullSyncManyItems()
