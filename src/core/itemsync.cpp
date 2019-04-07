@@ -442,6 +442,7 @@ void ItemSyncPrivate::slotLocalChangeDone(KJob *job)
 {
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << "Creating/updating items from the akonadi database failed:" << job->errorString();
+        mRemoteItemQueue.clear(); // don't try to process any more items after a rollback
     }
     mPendingJobs--;
     mProgress++;
