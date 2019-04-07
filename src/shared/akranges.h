@@ -20,13 +20,6 @@
 #ifndef AKONADI_AKRANGES_H
 #define AKONADI_AKRANGES_H
 
-#ifndef QT_STRICT_ITERATORS
-// Without strict iterator QVector<T>::iterator is just a typedef to T*,
-// which breaks some of the template magic below. QT_STRICT_ITERATORS
-// are a good thing anyway...
-#error AkRanges requires QT_STRICT_ITERATORS to be enabled.
-#endif
-
 #include "aktraits.h"
 #include "akhelpers.h"
 
@@ -38,6 +31,7 @@
 #include <functional>
 #include <utility>
 #include <type_traits>
+#include <iterator>
 
 namespace Akonadi {
 
@@ -79,6 +73,37 @@ OutContainer copyContainer(const InContainer &in)
     return rv;
 }
 
+template<typename Iterator>
+struct IteratorTrait {
+    using iterator_category = typename Iterator::iterator_category;
+    using value_type = typename Iterator::value_type;
+    using difference_type = typename Iterator::difference_type;
+    using pointer = typename Iterator::pointer;
+    using reference = typename Iterator::reference;
+};
+
+// Without QT_STRICT_ITERATORS QVector and QList iterators do not satisfy STL
+// iterator concepts since they are nothing more but typedefs to T* - for those
+// we need to provide custom traits.
+template<typename Iterator>
+struct IteratorTrait<Iterator*> {
+    // QTypedArrayData::iterator::iterator_category
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = Iterator;
+    using difference_type = int;
+    using pointer = Iterator*;
+    using reference = Iterator&;
+};
+
+template<typename Iterator>
+struct IteratorTrait<const Iterator *> {
+    using iterator_category = std::random_access_iterator_tag;
+    using value_type = Iterator;
+    using difference_type = int;
+    using pointer = const Iterator *;
+    using reference = const Iterator &;
+};
+
 template<typename IterImpl,
          typename Container,
          typename Iterator = typename Container::const_iterator
@@ -86,11 +111,11 @@ template<typename IterImpl,
 struct IteratorBase
 {
 public:
-    using iterator_category = typename Iterator::iterator_category;
-    using value_type = typename Iterator::value_type;
-    using difference_type = typename Iterator::difference_type;
-    using pointer = typename Iterator::pointer;
-    using reference = typename Iterator::reference;
+    using iterator_category = typename IteratorTrait<Iterator>::iterator_category;
+    using value_type = typename IteratorTrait<Iterator>::value_type;
+    using difference_type = typename IteratorTrait<Iterator>::difference_type;
+    using pointer = typename IteratorTrait<Iterator>::pointer;
+    using reference = typename IteratorTrait<Iterator>::reference;
 
     IteratorBase(const IteratorBase<IterImpl, Container> &other)
         : mIter(other.mIter), mContainer(other.mContainer)
@@ -163,7 +188,7 @@ private:
 
     template<typename ... Ts>
     using FuncHelper = decltype(Akonadi::invoke(std::declval<Ts>() ...))(Ts ...);
-    using IteratorValueType = typename ResultOf<FuncHelper<TransformFn, typename Iterator::value_type>>::type;
+    using IteratorValueType = typename ResultOf<FuncHelper<TransformFn, typename IteratorTrait<Iterator>::value_type>>::type;
 public:
     using value_type = IteratorValueType;
     using pointer = IteratorValueType *;         // FIXME: preserve const-ness
@@ -259,7 +284,7 @@ struct Range
 public:
     using iterator = Iterator;
     using const_iterator = Iterator;
-    using value_type = typename Iterator::value_type;
+    using value_type = typename detail::IteratorTrait<Iterator>::value_type;
 
     Range(Iterator &&begin, Iterator &&end)
         : mBegin(std::move(begin))
