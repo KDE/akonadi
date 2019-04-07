@@ -1,11 +1,10 @@
 #
 # Convenience macros to add akonadi testrunner unit-tests
 #
-# Set AKONADI_RUN_ISOLATED_TESTS to true to enable running the test
-# Set AKONADI_RUN_MYSQL_ISOLATED_TESTS to true to run the tests against MySQL
-# Set AKONADI_RUN_PGSQL_ISOLATED_TESTS to true to run the tests against PostgreSQL
-# Set AKONADI_RUN_SQLITE_ISOLATED_TESTS to true to run the tests against SQLite
-# Set AKONADI_TESTS_XML to true if you provided per-test configuration XML files
+# Set AKONADI_RUN_MYSQL_ISOLATED_TESTS to false to prevent run the tests against MySQL
+# Set AKONADI_RUN_PGSQL_ISOLATED_TESTS to false to prevent run the tests against PostgreSQL
+# Set AKONADI_RUN_SQLITE_ISOLATED_TESTS to false to prevent run the tests against SQLite
+# Set AKONADI_TESTS_XML to true if you want qtestlib to generate (per backend) XML files with the test results
 #
 # You still need to provide the test environment, see akonadi/autotests/libs/unittestenv
 # copy the unittestenv directory to your unit test directory and update the files
@@ -57,7 +56,7 @@ function(add_akonadi_isolated_test)
                 LIST(FIND "${backends}" ${lcbackend} enableBackend)
                 if (${backendsLen} EQUAL 0 OR ${enableBackend} GREATER -1)
                     set(configFile ${CMAKE_CURRENT_SOURCE_DIR}/unittestenv/config.xml)
-                    if (AKONADI_TEST_XML)
+                    if (AKONADI_TESTS_XML)
                         set(extraOptions -xml -o "${TEST_RESULT_OUTPUT_PATH}/${lcbackend}-${name}.xml")
                     endif()
                     add_test(NAME akonadi-${lcbackend}-${name}
