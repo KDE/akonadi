@@ -57,6 +57,13 @@ public:
     void setMinimumInterval(int intervalMinutes);
     Q_REQUIRED_RESULT int minimumInterval() const;
 
+    /**
+     * @return the timestamp (in seconds since epoch) when collectionExpired
+     * will next be called on the given collection, or 0 if we don't know about the collection.
+     * Only used by the unittest.
+     */
+    uint nextScheduledTime(qint64 collectionId) const;
+
 protected:
     void init() override;
     void quit() override;
@@ -67,20 +74,29 @@ protected:
      * @return Return cache timeout in minutes
      */
     virtual int collectionScheduleInterval(const Collection &collection) = 0;
+    /**
+     * Called when it's time to do something on that collection.
+     * Notice: this method is called in the secondary thread
+     */
     virtual void collectionExpired(const Collection &collection) = 0;
 
     void inhibit(bool inhibit = true);
 
-protected Q_SLOTS:
+private Q_SLOTS:
     void schedulerTimeout();
     void startScheduler();
     void scheduleCollection(/*sic!*/ Collection collection, bool shouldStartScheduler = true);
 
-protected:
-    QMutex mScheduleLock;
-    QMultiMap<uint /*timestamp*/, Collection> mSchedule;
+private:
+    using ScheduleMap = QMultiMap<uint /*timestamp*/, Collection>;
+    ScheduleMap::const_iterator constFind(qint64 collectionId) const;
+    ScheduleMap::iterator find(qint64 collectionId);
+    ScheduleMap::const_iterator constLowerBound(qint64 collectionId) const;
+
+    mutable QMutex mScheduleLock;
+    ScheduleMap mSchedule;
     PauseableTimer *mScheduler = nullptr;
-    int mMinInterval;
+    int mMinInterval = 5;
 };
 
 } // namespace Server

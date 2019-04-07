@@ -26,6 +26,7 @@ set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp PROPERTY SKIP_AU
 set(common_SRCS
     unittestschema.cpp
     fakeconnection.cpp
+    fakecollectionscheduler.cpp
     fakedatastore.cpp
     fakeclient.cpp
     fakeakonadiserver.cpp
@@ -90,6 +91,7 @@ add_server_test(notificationmanagertest.cpp)
 add_server_test(parttypehelpertest.cpp)
 add_server_test(collectionstatisticstest.cpp)
 add_server_test(aggregatedfetchscopetest.cpp)
+add_server_test(collectionschedulertest.cpp)
 
 if (SQLITE_FOUND) # tests using the fake server need the QSQLITE3 plugin
 add_server_test(partstreamertest.cpp)

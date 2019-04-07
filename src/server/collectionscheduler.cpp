@@ -48,7 +48,7 @@ public:
 
     void start(int interval)
     {
-        mStarted = QDateTime::currentDateTime();
+        mStarted = QDateTime::currentDateTimeUtc();
         mPaused = QDateTime();
         setInterval(interval);
         QTimer::start(interval);
@@ -72,7 +72,7 @@ public:
             return;
         }
 
-        mPaused = QDateTime::currentDateTime();
+        mPaused = QDateTime::currentDateTimeUtc();
         QTimer::stop();
     }
 
@@ -86,7 +86,7 @@ public:
         start(qMax(0, remainder));
         mPaused = QDateTime();
         // Update mStarted so that pause() can be called repeatedly
-        mStarted = QDateTime::currentDateTime();
+        mStarted = QDateTime::currentDateTimeUtc();
     }
 
     bool isPaused() const
@@ -106,8 +106,6 @@ using namespace Akonadi::Server;
 
 CollectionScheduler::CollectionScheduler(const QString &threadName, QThread::Priority priority, QObject *parent)
     : AkThread(threadName, priority, parent)
-    , mScheduler(nullptr)
-    , mMinInterval(5)
 {
 }
 
@@ -115,6 +113,7 @@ CollectionScheduler::~CollectionScheduler()
 {
 }
 
+// Called in secondary thread
 void CollectionScheduler::quit()
 {
     delete mScheduler;
@@ -139,8 +138,19 @@ int CollectionScheduler::minimumInterval() const
     return mMinInterval;
 }
 
+uint CollectionScheduler::nextScheduledTime(qint64 collectionId) const
+{
+    QMutexLocker locker(&mScheduleLock);
+    const auto i = constFind(collectionId);
+    if (i != mSchedule.cend()) {
+        return i.key();
+    }
+    return 0;
+}
+
 void CollectionScheduler::setMinimumInterval(int intervalMinutes)
 {
+    // No mutex -- you can only call this before starting the thread
     mMinInterval = intervalMinutes;
 }
 
@@ -156,58 +166,52 @@ void CollectionScheduler::collectionAdded(qint64 collectionId)
 void CollectionScheduler::collectionChanged(qint64 collectionId)
 {
     QMutexLocker locker(&mScheduleLock);
-    for (const Collection &collection : qAsConst(mSchedule)) {
-        if (collection.id() == collectionId) {
-            Collection changed = Collection::retrieveById(collectionId);
-            DataStore::self()->activeCachePolicy(changed);
-            if (hasChanged(collection, changed)) {
-                if (shouldScheduleCollection(changed)) {
-                    locker.unlock();
-                    // Scheduling the changed collection will automatically remove the old one
-                    scheduleCollection(changed);
-                } else {
-                    locker.unlock();
-                    // If the collection should no longer be scheduled then remove it
-                    collectionRemoved(collectionId);
-                }
+    const auto it = constFind(collectionId);
+    if (it != mSchedule.cend()) {
+        const Collection oldCollection = it.value();
+        Collection changed = Collection::retrieveById(collectionId);
+        DataStore::self()->activeCachePolicy(changed);
+        if (hasChanged(oldCollection, changed)) {
+            if (shouldScheduleCollection(changed)) {
+                locker.unlock();
+                // Scheduling the changed collection will automatically remove the old one
+                QMetaObject::invokeMethod(this, [this, changed]() {scheduleCollection(changed);}, Qt::QueuedConnection);
+            } else {
+                locker.unlock();
+                // If the collection should no longer be scheduled then remove it
+                collectionRemoved(collectionId);
             }
-
-            return;
         }
+    } else {
+        // We don't know the collection yet, but maybe now it can be scheduled
+        collectionAdded(collectionId);
     }
-
-    // We don't know the collection yet, but maybe now it can be scheduled
-    collectionAdded(collectionId);
 }
 
 void CollectionScheduler::collectionRemoved(qint64 collectionId)
 {
     QMutexLocker locker(&mScheduleLock);
-    for (const Collection &collection : qAsConst(mSchedule)) {
-        if (collection.id() == collectionId) {
-            const uint key = mSchedule.key(collection);
-            const bool reschedule = (key == mSchedule.constBegin().key());
-            mSchedule.remove(key);
-            locker.unlock();
+    auto it = find(collectionId);
+    if (it != mSchedule.end()) {
+        const bool reschedule = it == mSchedule.begin();
+        mSchedule.erase(it);
 
-            // If we just remove currently scheduled collection, schedule the next one
-            if (reschedule) {
-                startScheduler();
-            }
-
-            return;
+        // If we just remove currently scheduled collection, schedule the next one
+        if (reschedule) {
+            QMetaObject::invokeMethod(this, &CollectionScheduler::startScheduler, Qt::QueuedConnection);
         }
     }
 }
 
+// Called in secondary thread
 void CollectionScheduler::startScheduler()
 {
+    QMutexLocker locker(&mScheduleLock);
     // Don't restart timer if we are paused.
     if (mScheduler->isPaused()) {
         return;
     }
 
-    QMutexLocker locker(&mScheduleLock);
     if (mSchedule.isEmpty()) {
         // Stop the timer. It will be started again once some collection is scheduled
         mScheduler->stop();
@@ -220,12 +224,13 @@ void CollectionScheduler::startScheduler()
     mScheduler->start(qMax(0, (int)(next - QDateTime::currentDateTimeUtc().toTime_t()) * 1000));
 }
 
+// Called in secondary thread
 void CollectionScheduler::scheduleCollection(Collection collection, bool shouldStartScheduler)
 {
     QMutexLocker locker(&mScheduleLock);
-    auto i = std::find(mSchedule.cbegin(), mSchedule.cend(), collection);
-    if (i != mSchedule.cend()) {
-        mSchedule.remove(i.key(), i.value());
+    auto i = find(collection.id());
+    if (i != mSchedule.end()) {
+        mSchedule.erase(i);
     }
 
     DataStore::self()->activeCachePolicy(collection);
@@ -235,18 +240,19 @@ void CollectionScheduler::scheduleCollection(Collection collection, bool shouldS
     }
 
     const int expireMinutes = qMax(mMinInterval, collectionScheduleInterval(collection));
+    // TODO: port to qint64 and toSecsSinceEpoch
     uint nextCheck = QDateTime::currentDateTimeUtc().toTime_t() + (expireMinutes * 60);
 
     // Check whether there's another check scheduled within a minute after this one.
     // If yes, then delay this check so that it's scheduled together with the others
     // This is a minor optimization to reduce wakeups and SQL queries
-    QMap<uint, Collection>::iterator it = mSchedule.lowerBound(nextCheck);
-    if (it != mSchedule.end() && it.key() - nextCheck < 60) {
+    auto it = constLowerBound(nextCheck);
+    if (it != mSchedule.cend() && it.key() - nextCheck < 60) {
         nextCheck = it.key();
 
         // Also check whether there's another checked scheduled within a minute before
         // this one.
-    } else if (it != mSchedule.begin()) {
+    } else if (it != mSchedule.cbegin()) {
         --it;
         if (nextCheck - it.key() < 60) {
             nextCheck = it.key();
@@ -260,6 +266,23 @@ void CollectionScheduler::scheduleCollection(Collection collection, bool shouldS
     }
 }
 
+CollectionScheduler::ScheduleMap::const_iterator CollectionScheduler::constFind(qint64 collectionId) const
+{
+    return std::find_if(mSchedule.cbegin(), mSchedule.cend(), [collectionId](const Collection &c) { return c.id() == collectionId; });
+}
+
+CollectionScheduler::ScheduleMap::iterator CollectionScheduler::find(qint64 collectionId)
+{
+    return std::find_if(mSchedule.begin(), mSchedule.end(), [collectionId](const Collection &c) { return c.id() == collectionId; });
+}
+
+// separate method so we call the const version of QMap::lowerBound
+CollectionScheduler::ScheduleMap::const_iterator CollectionScheduler::constLowerBound(qint64 collectionId) const
+{
+    return mSchedule.lowerBound(collectionId);
+}
+
+// Called in secondary thread
 void CollectionScheduler::init()
 {
     AkThread::init();
@@ -293,16 +316,18 @@ void CollectionScheduler::init()
     startScheduler();
 }
 
+// Called in secondary thread
 void CollectionScheduler::schedulerTimeout()
 {
+    QMutexLocker locker(&mScheduleLock);
+
     // Call stop() explicitly to reset the timer
     mScheduler->stop();
 
-    mScheduleLock.lock();
     const uint timestamp = mSchedule.constBegin().key();
     const QList<Collection> collections = mSchedule.values(timestamp);
     mSchedule.remove(timestamp);
-    mScheduleLock.unlock();
+    locker.unlock();
 
     for (const Collection &collection : collections) {
         collectionExpired(collection);
