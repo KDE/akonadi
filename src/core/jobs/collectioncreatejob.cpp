@@ -75,7 +75,7 @@ void CollectionCreateJob::doStart()
     cmd->setIsVirtual(d->mCollection.isVirtual());
     cmd->setEnabled(d->mCollection.enabled());
     cmd->setDisplayPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
-    cmd->setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListDisplay)));
+    cmd->setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListSync)));
     cmd->setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
     cmd->setCachePolicy(ProtocolHelper::cachePolicyToProtocol(d->mCollection.cachePolicy()));
     Protocol::Attributes attrs;
