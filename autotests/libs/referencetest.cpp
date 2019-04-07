@@ -236,5 +236,3 @@ void ReferenceTest::testReferenceFromMultiSession()
     CollectionDeleteJob *deleteJob = new CollectionDeleteJob(baseCol);
     AKVERIFYEXEC(deleteJob);
 }
-
-#include "referencetest.moc"
