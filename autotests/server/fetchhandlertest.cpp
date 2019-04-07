@@ -46,13 +46,8 @@ public:
     {
         qRegisterMetaType<Akonadi::Server::Tag::List>();
 
-        try {
-            FakeAkonadiServer::instance()->setPopulateDb(false);
-            FakeAkonadiServer::instance()->init();
-        } catch (const FakeAkonadiServerException &e) {
-            qWarning() << "Server exception: " << e.what();
-            qFatal("Fake Akonadi Server failed to start up, aborting test");
-        }
+        FakeAkonadiServer::instance()->setPopulateDb(false);
+        FakeAkonadiServer::instance()->init();
     }
 
     ~FetchHandlerTest()

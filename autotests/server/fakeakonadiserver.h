@@ -114,6 +114,7 @@ protected:
 
 private:
     explicit FakeAkonadiServer();
+    void initFake();
 
     FakeDataStore *mDataStore = nullptr;
     FakeSearchManager *mSearchManager = nullptr;

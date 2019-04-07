@@ -54,12 +54,7 @@ public:
         QSettings settings(serverConfigFile, QSettings::IniFormat);
         settings.setValue(QStringLiteral("General/SizeThreshold"), 5);
 
-        try {
-            FakeAkonadiServer::instance()->init();
-        } catch (const FakeAkonadiServerException &e) {
-            qWarning() << "Server exception: " << e.what();
-            qFatal("Fake Akonadi Server failed to start up, aborting test");
-        }
+        FakeAkonadiServer::instance()->init();
     }
 
     ~PartStreamerTest()

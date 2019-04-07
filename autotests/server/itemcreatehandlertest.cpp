@@ -54,12 +54,7 @@ public:
         QSettings settings(serverConfigFile, QSettings::IniFormat);
         settings.setValue(QStringLiteral("General/SizeThreshold"), std::numeric_limits<qint64>::max());
 
-        try {
-            FakeAkonadiServer::instance()->init();
-        } catch (const FakeAkonadiServerException &e) {
-            qWarning() << e.what();
-            qFatal("Fake Akonadi Server failed to start up, aborting test");
-        }
+        FakeAkonadiServer::instance()->init();
     }
 
     ~ItemCreateHandlerTest()

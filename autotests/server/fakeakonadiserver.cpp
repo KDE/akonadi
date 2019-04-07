@@ -184,6 +184,17 @@ void FakeAkonadiServer::disableItemRetrievalManager()
 
 bool FakeAkonadiServer::init()
 {
+    try {
+        initFake();
+    } catch (const FakeAkonadiServerException &e) {
+        qWarning() << "Server exception: " << e.what();
+        qFatal("Fake Akonadi Server failed to start up, aborting test");
+    }
+    return true;
+}
+
+void FakeAkonadiServer::initFake()
+{
     qDebug() << "==== Fake Akonadi Server starting up ====";
 
     qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
@@ -239,10 +250,7 @@ bool FakeAkonadiServer::init()
         mRetrievalManager = new FakeItemRetrievalManager();
     }
 
-    const QString socketFile = basePath() + QLatin1String("/local/share/akonadi/akonadiserver.socket");
-
     qDebug() << "==== Fake Akonadi Server started ====";
-    return true;
 }
 
 bool FakeAkonadiServer::quit()

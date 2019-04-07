@@ -63,13 +63,8 @@ public:
     {
         qRegisterMetaType<Akonadi::Server::Relation::List>();
 
-        try {
-            FakeAkonadiServer::instance()->setPopulateDb(false);
-            FakeAkonadiServer::instance()->init();
-        } catch (const FakeAkonadiServerException &e) {
-            qDebug() << "Server exception: " << e.what();
-            qFatal("Fake Akonadi Server failed to start up, aborting test");
-        }
+        FakeAkonadiServer::instance()->setPopulateDb(false);
+        FakeAkonadiServer::instance()->init();
 
         RelationType type;
         type.setName(QStringLiteral("type"));
