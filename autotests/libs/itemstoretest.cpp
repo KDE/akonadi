@@ -420,3 +420,91 @@ void ItemStoreTest::itemModifyJobShouldOnlySendModifiedAttributes()
         QCOMPARE(fetchedItem.attribute<TestAttribute>()->data, "modified");
     }
 }
+
+class ParallelJobsRunner
+{
+public:
+    ParallelJobsRunner(int count)
+        : numSessions(count)
+    {
+        sessions.reserve(numSessions);
+        modifyJobs.reserve(numSessions);
+        for (int i = 0 ; i < numSessions; ++i) {
+            auto session = new Session(QByteArray::number(i));
+            sessions.push_back(session);
+        }
+    }
+
+    ~ParallelJobsRunner()
+    {
+        qDeleteAll(sessions);
+    }
+
+    void addJob(ItemModifyJob *mjob)
+    {
+        modifyJobs.push_back(mjob);
+        QObject::connect(mjob, &KJob::result, [mjob, this]() {
+            if (mjob->error()) {
+                errors.append(mjob->errorString());
+            }
+            doneJobs.push_back(mjob);
+        });
+    }
+
+    void waitForAllJobs()
+    {
+        for (int i = 0 ; i < modifyJobs.count(); ++i) {
+            ItemModifyJob *mjob = modifyJobs.at(i);
+            if (!doneJobs.contains(mjob)) {
+                QSignalSpy spy(mjob, &ItemModifyJob::result);
+                QVERIFY(spy.wait());
+                if (mjob->error())
+                    qWarning() << mjob->errorString();
+                QCOMPARE(mjob->error(), KJob::NoError);
+            }
+        }
+        QVERIFY2(errors.isEmpty(), qPrintable(errors.join(QLatin1String("; "))));
+    }
+
+    const int numSessions;
+    std::vector<Session *> sessions;
+    QVector<ItemModifyJob *> modifyJobs, doneJobs;
+    QStringList errors;
+};
+
+void ItemStoreTest::testParallelJobsAddingAttributes()
+{
+    // Given an item (created on the server)
+    Item::Id itemId;
+    {
+        Item item;
+        item.setMimeType(QStringLiteral("text/directory"));
+        ItemCreateJob *job = new ItemCreateJob(item, res1_foo);
+        AKVERIFYEXEC(job);
+        itemId = job->item().id();
+        QVERIFY(itemId >= 0);
+    }
+
+    // When adding N attributes from N different sessions (e.g. threads or processes)
+    ParallelJobsRunner runner(10);
+    for (int i = 0 ; i < runner.numSessions; ++i) {
+        Item item(itemId);
+        Attribute *attr = AttributeFactory::createAttribute("type" + QByteArray::number(i));
+        QVERIFY(attr);
+        attr->deserialize("attr" + QByteArray::number(i));
+        item.addAttribute(attr);
+        ItemModifyJob *mjob = new ItemModifyJob(item, runner.sessions.at(i));
+        runner.addJob(mjob);
+    }
+    runner.waitForAllJobs();
+
+    // Then the item should have all attributes
+    ItemFetchJob *fetchJob = new ItemFetchJob(Item(itemId));
+    ItemFetchScope fetchScope;
+    fetchScope.fetchAllAttributes(true);
+    fetchJob->setFetchScope(fetchScope);
+    AKVERIFYEXEC(fetchJob);
+    QCOMPARE(fetchJob->items().size(), 1);
+    const Item fetchedItem = fetchJob->items().first();
+    QCOMPARE(fetchedItem.attributes().count(), runner.numSessions);
+}

@@ -128,6 +128,7 @@ protected:
     bool m_connectionClosing = false;
 
 private:
+    void parseStream(const Protocol::CommandPtr &cmd);
     template<typename T>
     inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
     sendResponse(qint64 tag, T &&response);

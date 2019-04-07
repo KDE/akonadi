@@ -287,6 +287,9 @@ public:
         return m_dbOpened;
     }
 
+    bool doRollback();
+    void transactionKilledByDB();
+
 Q_SIGNALS:
     /**
       Emitted if a transaction has been successfully committed.
@@ -330,55 +333,29 @@ private:
      */
     static QDateTime dateTimeToQDateTime(const QByteArray &dateTime);
 
-    /**
-     * Adds the @p query to current transaction, so that it can be replayed in
-     * case the transaction deadlocks or timeouts.
-     *
-     * When DataStore is not in transaction or SQLite is configured, this method
-     * does nothing.
-     *
-     * All queries will automatically be removed when transaction is committed.
-     *
-     * This method should only be used by QueryBuilder.
-     */
-    void addQueryToTransaction(const QString &statement, const QVector<QVariant> &bindValues, bool isBatch);
-
-    /**
-     * Tries to execute all queries from last transaction again. If any of the
-     * queries fails, the entire transaction is rolled back and fails.
-     *
-     * This method can only be used by QueryBuilder when database rolls back
-     * transaction due to deadlock or timeout.
-     *
-     * @return Returns an invalid query when error occurs, or the last replayed
-     *         query on success.
-     */
-    QSqlQuery retryLastTransaction(bool rollbackFirst);
-
 private Q_SLOTS:
     void sendKeepAliveQuery();
 
 protected:
-    static QThreadStorage<DataStore *> sInstances;
     static std::unique_ptr<DataStoreFactory> sFactory;
+    std::unique_ptr<NotificationCollector> mNotificationCollector;
 
+private:
+    void cleanupAfterRollback();
     QString m_connectionName;
     QSqlDatabase m_database;
     bool m_dbOpened;
+    bool m_transactionKilledByDB = false;
     uint m_transactionLevel;
     struct TransactionQuery {
         QString query;
         QVector<QVariant> boundValues;
         bool isBatch;
     };
-    QVector<TransactionQuery> m_transactionQueries;
     QByteArray mSessionId;
-    std::unique_ptr<NotificationCollector> mNotificationCollector;
     QTimer *m_keepAliveTimer = nullptr;
     static bool s_hasForeignKeyConstraints;
 
-    // Gives QueryBuilder access to addQueryToTransaction() and retryLastTransaction()
-    friend class QueryBuilder;
     friend class DataStoreFactory;
 
 };

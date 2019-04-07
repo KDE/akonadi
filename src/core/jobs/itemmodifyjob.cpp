@@ -55,7 +55,7 @@ Protocol::PartMetaData ItemModifyJobPrivate::preparePart(const QByteArray &partN
 {
     ProtocolHelper::PartNamespace ns; // dummy
     const QByteArray partLabel = ProtocolHelper::decodePartIdentifier(partName, ns);
-    if (!mParts.remove(partLabel)) {
+    if (!mParts.contains(partLabel)) {
         // Error?
         return Protocol::PartMetaData();
     }

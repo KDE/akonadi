@@ -19,6 +19,7 @@
 
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
+#include "dbexception.h"
 
 #ifndef QUERYBUILDER_UNITTEST
 #include "storage/datastore.h"
@@ -346,17 +347,6 @@ void QueryBuilder::buildQuery(QString *statement)
     }
 }
 
-bool QueryBuilder::retryLastTransaction(bool rollback)
-{
-#ifndef QUERYBUILDER_UNITTEST
-    mQuery = DataStore::self()->retryLastTransaction(rollback);
-    return !mQuery.lastError().isValid();
-#else
-    Q_UNUSED(rollback);
-    return true;
-#endif
-}
-
 bool QueryBuilder::exec()
 {
     QString statement;
@@ -412,20 +402,15 @@ bool QueryBuilder::exec()
         }
     }
 
-    // Add the query to DataStore so that we can replay it in case transaction deadlocks.
-    // The method does nothing when this query is not executed within a transaction.
-    // We don't care whether the query was successful or not. In case of error, the caller
-    // will rollback the transaction anyway, and all cached queries will be removed.
-    DataStore::self()->addQueryToTransaction(statement, mBindValues, isBatch);
-
     if (!ret) {
+        bool needsRetry = false;
         // Handle transaction deadlocks and timeouts by attempting to replay the transaction.
         if (mDatabaseType == DbType::PostgreSQL) {
             const QString dbError = mQuery.lastError().databaseText();
             if (dbError.contains(QLatin1String("40P01" /* deadlock_detected */))) {
                 qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
                 qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
-                return retryLastTransaction();
+                needsRetry = true;
             }
         } else if (mDatabaseType == DbType::MySQL) {
             const QString lastErrorStr = mQuery.lastError().nativeErrorCode();
@@ -433,11 +418,12 @@ bool QueryBuilder::exec()
             if (error == 1213 /* ER_LOCK_DEADLOCK */) {
                 qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
                 qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
-                return retryLastTransaction();
+                needsRetry = true;
             } else if (error == 1205 /* ER_LOCK_WAIT_TIMEOUT */) {
                 qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
                 qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
-                return retryLastTransaction();
+                // Not sure retrying helps, maybe error is good enough.... but doesn't hurt to retry a few times before giving up.
+                needsRetry = true;
             }
         } else if (mDatabaseType == DbType::Sqlite && !DbType::isSystemSQLite(DataStore::self()->database())) {
             const QString lastErrorStr = mQuery.lastError().nativeErrorCode();
@@ -445,16 +431,23 @@ bool QueryBuilder::exec()
             if (error == 6 /* SQLITE_LOCKED */) {
                 qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction deadlock, retrying transaction";
                 qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
-                return retryLastTransaction(true);
+                DataStore::self()->doRollback();
+                needsRetry = true;
             } else if (error == 5 /* SQLITE_BUSY */) {
                 qCWarning(AKONADISERVER_LOG) << "QueryBuilder::exec(): database reported transaction timeout, retrying transaction";
                 qCWarning(AKONADISERVER_LOG) << mQuery.lastError().text();
-                return retryLastTransaction(true);
+                DataStore::self()->doRollback();
+                needsRetry = true;
             }
         } else if (mDatabaseType == DbType::Sqlite) {
             // We can't have a transaction deadlock in SQLite when using driver shipped
             // with Qt, because it does not support concurrent transactions and DataStore
             // serializes them through a global lock.
+        }
+
+        if (needsRetry) {
+            DataStore::self()->transactionKilledByDB();
+            throw DbDeadlockException(mQuery);
         }
 
         qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR:";

@@ -21,6 +21,7 @@
 #include "datastore.h"
 
 #include "akonadi.h"
+#include "collectionstatistics.h"
 #include "dbconfig.h"
 #include "dbinitializer.h"
 #include "dbupdater.h"
@@ -65,7 +66,7 @@ using namespace Akonadi::Server;
 static QMutex sTransactionMutex;
 bool DataStore::s_hasForeignKeyConstraints = false;
 
-QThreadStorage<DataStore *> DataStore::sInstances;
+static QThreadStorage<DataStore *> sInstances;
 
 #define TRANSACTION_MUTEX_LOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.lock()
 #define TRANSACTION_MUTEX_UNLOCK if ( DbType::isSystemSQLite( m_database ) ) sTransactionMutex.unlock()
@@ -178,7 +179,6 @@ void DataStore::close()
     QueryCache::clear();
     m_database.close();
     m_database = QSqlDatabase();
-    m_transactionQueries.clear();
     QSqlDatabase::removeDatabase(m_connectionName);
 
     StorageDebugger::instance()->removeConnection(reinterpret_cast<qint64>(this));
@@ -1361,83 +1361,28 @@ QDateTime DataStore::dateTimeToQDateTime(const QByteArray &dateTime)
     return QDateTime::fromString(QString::fromLatin1(dateTime), QStringLiteral("yyyy-MM-dd hh:mm:ss"));
 }
 
-void DataStore::addQueryToTransaction(const QString &statement, const QVector<QVariant> &bindValues, bool isBatch)
+bool DataStore::doRollback()
 {
-    // This is used for replaying deadlocked transactions, so only record queries
-    // for backends that support concurrent transactions.
-    if (!inTransaction() || DbType::isSystemSQLite(m_database)) {
-        return;
+    QSqlDriver *driver = m_database.driver();
+    QElapsedTimer timer; timer.start();
+    driver->rollbackTransaction();
+    StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
+                                                   false, timer.elapsed(),
+                                                   m_database.lastError().text());
+    if (m_database.lastError().isValid()) {
+        TRANSACTION_MUTEX_UNLOCK;
+        debugLastDbError("DataStore::rollbackTransaction");
+        return false;
     }
-
-    m_transactionQueries.append({ statement, bindValues, isBatch });
+    TRANSACTION_MUTEX_UNLOCK;
+    return true;
 }
 
-QSqlQuery DataStore::retryLastTransaction(bool rollbackFirst)
+void DataStore::transactionKilledByDB()
 {
-    if (!inTransaction() || DbType::isSystemSQLite(m_database)) {
-        return QSqlQuery();
-    }
-
-    if (rollbackFirst) {
-        // In some cases the SQL database won't rollback the failed transaction, so
-        // we need to do it manually
-        QElapsedTimer timer; timer.start();
-        m_database.driver()->rollbackTransaction();
-        StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
-                                                       false, timer.elapsed(),
-                                                       m_database.lastError().text());
-    }
-
-    // The database has rolled back the actual transaction, so reset the counter
-    // to 0 and start a new one in beginTransaction(). Then restore the level
-    // because this has to be completely transparent to the original caller
-    const int oldTransactionLevel = m_transactionLevel;
-    m_transactionLevel = 0;
-    if (!beginTransaction(QStringLiteral("RETRY LAST TRX"))) {
-        m_transactionLevel = oldTransactionLevel;
-        return QSqlQuery();
-    }
-    m_transactionLevel = oldTransactionLevel;
-
-    QSqlQuery lastQuery;
-    for (auto q = m_transactionQueries.begin(), qEnd = m_transactionQueries.end(); q != qEnd; ++q) {
-        QSqlQuery query(database());
-        query.prepare(q->query);
-        for (int i = 0, total = q->boundValues.count(); i < total; ++i) {
-            query.bindValue(QLatin1Char(':') + QString::number(i), q->boundValues.at(i));
-        }
-
-        bool res = false;
-        QElapsedTimer t; t.start();
-        if (q->isBatch) {
-            res = query.execBatch();
-        } else {
-            res = query.exec();
-        }
-        if (StorageDebugger::instance()->isSQLDebuggingEnabled()) {
-            Q_EMIT StorageDebugger::instance()->queryExecuted(reinterpret_cast<qint64>(this),
-                                                              query, t.elapsed());
-        } else {
-            StorageDebugger::instance()->incSequence();
-        }
-
-        if (!res) {
-            // Don't do another deadlock detection here, just give up.
-            qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR when retrying transaction";
-            qCCritical(AKONADISERVER_LOG) << "  Error code:" << query.lastError().nativeErrorCode();
-            qCCritical(AKONADISERVER_LOG) << "  DB error: " << query.lastError().databaseText();
-            qCCritical(AKONADISERVER_LOG) << "  Error text:" << query.lastError().text();
-            qCCritical(AKONADISERVER_LOG) << "  Query:" << query.executedQuery();
-
-            // Return the last query, because that's what caller expects to retrieve
-            // from QueryBuilder. It is in error state anyway.
-            return query;
-        }
-
-        lastQuery = query;
-    }
-
-    return lastQuery;
+    m_transactionKilledByDB = true;
+    cleanupAfterRollback();
+    Q_EMIT transactionRolledBack();
 }
 
 bool DataStore::beginTransaction(const QString &name)
@@ -1446,7 +1391,8 @@ bool DataStore::beginTransaction(const QString &name)
         return false;
     }
 
-    if (m_transactionLevel == 0) {
+    if (m_transactionLevel == 0 || m_transactionKilledByDB) {
+        m_transactionKilledByDB = false;
         QElapsedTimer timer;
         timer.start();
         TRANSACTION_MUTEX_LOCK;
@@ -1499,22 +1445,10 @@ bool DataStore::rollbackTransaction()
 
     --m_transactionLevel;
 
-    if (m_transactionLevel == 0) {
-        QSqlDriver *driver = m_database.driver();
+    if (m_transactionLevel == 0 && !m_transactionKilledByDB) {
+        doRollback();
+        cleanupAfterRollback();
         Q_EMIT transactionRolledBack();
-        QElapsedTimer timer; timer.start();
-        driver->rollbackTransaction();
-        StorageDebugger::instance()->removeTransaction(reinterpret_cast<qint64>(this),
-                                                       false, timer.elapsed(),
-                                                       m_database.lastError().text());
-        if (m_database.lastError().isValid()) {
-            TRANSACTION_MUTEX_UNLOCK;
-            debugLastDbError("DataStore::rollbackTransaction");
-            return false;
-        }
-        TRANSACTION_MUTEX_UNLOCK;
-
-        m_transactionQueries.clear();
     }
 
     return true;
@@ -1532,6 +1466,10 @@ bool DataStore::commitTransaction()
     }
 
     if (m_transactionLevel == 1) {
+        if (m_transactionKilledByDB) {
+            qCWarning(AKONADISERVER_LOG) << "DataStore::commitTransaction(): Cannot commit, transaction was killed by mysql deadlock handling!";
+            return false;
+        }
         QSqlDriver *driver = m_database.driver();
         QElapsedTimer timer;
         timer.start();
@@ -1548,8 +1486,6 @@ bool DataStore::commitTransaction()
             m_transactionLevel--;
             Q_EMIT transactionCommitted();
         }
-
-        m_transactionQueries.clear();
     } else {
         m_transactionLevel--;
     }
@@ -1567,4 +1503,15 @@ void DataStore::sendKeepAliveQuery()
         QSqlQuery query(m_database);
         query.exec(QStringLiteral("SELECT 1"));
     }
+}
+
+void DataStore::cleanupAfterRollback()
+{
+    MimeType::invalidateCompleteCache();
+    Flag::invalidateCompleteCache();
+    Resource::invalidateCompleteCache();
+    Collection::invalidateCompleteCache();
+    PartType::invalidateCompleteCache();
+    CollectionStatistics::self()->expireCache();
+    QueryCache::clear();
 }

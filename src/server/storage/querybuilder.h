@@ -270,8 +270,6 @@ private:
      */
     void sqliteAdaptUpdateJoin(Query::Condition &cond);
 
-    bool retryLastTransaction(bool rollback = false);
-
 private:
     QString mTable;
     DbType::Type mDatabaseType;

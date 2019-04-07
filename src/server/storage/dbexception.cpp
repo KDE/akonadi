@@ -35,3 +35,8 @@ const char *DbException::type() const throw()
 {
     return "Database Exception";
 }
+
+DbDeadlockException::DbDeadlockException(const QSqlQuery &query)
+    : DbException(query, "Database deadlock, unsuccessful after multiple retries")
+{
+}

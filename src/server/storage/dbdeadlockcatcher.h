@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2012 Volker Krause <vkrause@kde.org>
+    Copyright (c) 2019 David Faure <faure@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,33 +17,45 @@
     02110-1301, USA.
 */
 
-#ifndef DBEXCEPTION_H
-#define DBEXCEPTION_H
+#ifndef AKONADI_DBDEADLOCKCATCHER_H
+#define AKONADI_DBDEADLOCKCATCHER_H
 
-#include "exception.h"
-
-class QSqlQuery;
+#include "dbexception.h"
 
 namespace Akonadi
 {
+
 namespace Server
 {
 
-/** Exception for reporting SQL errors. */
-class DbException : public Exception
+/**
+  This class catches DbDeadlockException (as emitted by QueryBuilder)
+  and retries execution of the method when it happens, as required by
+  SQL databases.
+*/
+class DbDeadlockCatcher
 {
 public:
-    explicit DbException(const QSqlQuery &query, const char *what = nullptr);
-    const char *type() const throw() override;
-};
+    template <typename Func>
+    explicit DbDeadlockCatcher(Func &&func) { callFunc(func, 0); }
 
-class DbDeadlockException : public DbException
-{
-public:
-    explicit DbDeadlockException(const QSqlQuery &query);
+private:
+    static const int MaxRecursion = 5;
+    template <typename Func>
+    void callFunc(Func &&func, int recursionCounter) {
+        try {
+            func();
+        } catch(const DbDeadlockException &) {
+            if (recursionCounter == MaxRecursion) {
+                throw;
+             } else {
+                callFunc(func, ++recursionCounter); // recurse
+            }
+        }
+    }
 };
 
 } // namespace Server
 } // namespace Akonadi
 
-#endif // DBEXCEPTION_H
+#endif

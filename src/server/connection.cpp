@@ -28,6 +28,7 @@
 #include <QThreadStorage>
 
 #include "storage/datastore.h"
+#include "storage/dbdeadlockcatcher.h"
 #include "handler.h"
 #include "notificationmanager.h"
 
@@ -194,6 +195,19 @@ void Connection::slotSocketDisconnected()
     Q_EMIT disconnected();
 }
 
+void Connection::parseStream(const Protocol::CommandPtr &cmd)
+{
+    if (!m_currentHandler->parseStream()) {
+        try {
+            m_currentHandler->failureResponse("Error while handling a command");
+        } catch (...) {
+            m_connectionClosing = true;
+        }
+        qCWarning(AKONADISERVER_LOG) << "Error while handling command" << cmd->type()
+                                     << "on connection" << m_identifier;
+    }
+}
+
 void Connection::handleIncomingData()
 {
     Q_FOREVER {
@@ -274,15 +288,7 @@ void Connection::handleIncomingData()
             m_currentHandler->setTag(tag);
             m_currentHandler->setCommand(cmd);
             try {
-                if (!m_currentHandler->parseStream()) {
-                    try {
-                        m_currentHandler->failureResponse("Error while handling a command");
-                    } catch (...) {
-                        m_connectionClosing = true;
-                    }
-                    qCWarning(AKONADISERVER_LOG) << "Error while handling command" << cmd->type()
-                                                 << "on connection" << m_identifier;
-                }
+                DbDeadlockCatcher catcher([this, cmd]() { parseStream(cmd); });
             } catch (const Akonadi::Server::HandlerException &e) {
                 if (m_currentHandler) {
                     try {

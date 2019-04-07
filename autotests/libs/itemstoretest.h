@@ -39,6 +39,7 @@ private Q_SLOTS:
     void testModificationTime();
     void testRemoteIdRace();
     void itemModifyJobShouldOnlySendModifiedAttributes();
+    void testParallelJobsAddingAttributes();
 };
 
 #endif
