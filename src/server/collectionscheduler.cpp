@@ -150,6 +150,11 @@ CollectionScheduler::TimePoint CollectionScheduler::nextScheduledTime(qint64 col
     return {};
 }
 
+std::chrono::milliseconds CollectionScheduler::currentTimerInterval() const
+{
+    return std::chrono::milliseconds(mScheduler->isActive() ? mScheduler->interval() : 0);
+}
+
 void CollectionScheduler::setMinimumInterval(int intervalMinutes)
 {
     // No mutex -- you can only call this before starting the thread

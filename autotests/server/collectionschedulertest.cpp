@@ -31,6 +31,7 @@ using TimePoint = CollectionScheduler::TimePoint;
 
 using namespace std::literals::chrono_literals;
 
+
 class CollectionSchedulerTest : public QObject
 {
     Q_OBJECT
@@ -56,6 +57,8 @@ private Q_SLOTS:
         }
         QCOMPARE(sched.nextScheduledTime(4).time_since_epoch(), TimePoint::duration::zero()); // ColC is skipped because syncPref=false
         QCOMPARE(sched.nextScheduledTime(314).time_since_epoch(), TimePoint::duration::zero()); // no such collection
+        QVERIFY(sched.currentTimerInterval() > 4min);
+        QVERIFY(sched.currentTimerInterval() < 6min);
     }
 
     // (not that this feature is really used right now, it defaults to 5 and CacheCleaner sets it to 5)
@@ -71,6 +74,8 @@ private Q_SLOTS:
         QTRY_VERIFY(sched.nextScheduledTime(2).time_since_epoch() > TimePoint::duration::zero());
         QVERIFY(sched.nextScheduledTime(2) > now + 9min);
         QVERIFY(sched.nextScheduledTime(2) < now + 11min);
+        QVERIFY(sched.currentTimerInterval() > 9min);
+        QVERIFY(sched.currentTimerInterval() < 11min);
     }
 
     void shouldRemoveAndAddCollectionFromSchedule()
@@ -87,6 +92,8 @@ private Q_SLOTS:
         QTRY_COMPARE(sched.nextScheduledTime(2).time_since_epoch(), TimePoint::duration::zero());
         QCOMPARE(sched.nextScheduledTime(1), timeForRoot); // unchanged
         QCOMPARE(sched.nextScheduledTime(3), timeForColB); // unchanged
+        QVERIFY(sched.currentTimerInterval() > 4min); // unchanged
+        QVERIFY(sched.currentTimerInterval() < 6min); // unchanged
 
         // AND WHEN re-adding the collection
         QTest::qWait(1000); // we only have precision to the second...
@@ -97,6 +104,8 @@ private Q_SLOTS:
         QCOMPARE(sched.nextScheduledTime(2), timeForColB);
         QCOMPARE(sched.nextScheduledTime(1), timeForRoot); // unchanged
         QCOMPARE(sched.nextScheduledTime(3), timeForColB); // unchanged
+        QVERIFY(sched.currentTimerInterval() > 4min); // unchanged
+        QVERIFY(sched.currentTimerInterval() < 6min); // unchanged
     }
 
     void shouldHonourIntervalChange()
@@ -117,6 +126,8 @@ private Q_SLOTS:
         // "in 20 minutes" is 15 minutes later than "in 5 minutes"
         QTRY_VERIFY(sched.nextScheduledTime(2) >= timeForColB + 14min);
         QVERIFY(sched.nextScheduledTime(2) <= timeForColB + 16min);
+        QVERIFY(sched.currentTimerInterval() > 4min); // unchanged
+        QVERIFY(sched.currentTimerInterval() < 6min); // unchanged
     }
 };
 

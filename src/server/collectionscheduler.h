@@ -66,6 +66,11 @@ public:
      */
     TimePoint nextScheduledTime(qint64 collectionId) const;
 
+    /**
+     * @return the next timeout
+     */
+    std::chrono::milliseconds currentTimerInterval() const;
+
 protected:
     void init() override;
     void quit() override;
