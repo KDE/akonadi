@@ -442,7 +442,7 @@ bool ItemCreateHandler::parseStream()
             }
             // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
             // something we don't want
-            return failureResponse(QStringLiteral("Multiple merge candidates, aborting"));
+            return failureResponse(QStringLiteral("Multiple merge candidates in collection '%1', aborting").arg(item.collection().name()));
         }
     }
 
