@@ -52,7 +52,7 @@ private Q_SLOTS:
         // Collections root (1), ColA (2), ColB (3), ColD (5), virtual (6) and virtual2 (7)
         // should have a check scheduled in 5 minutes (default value)
         for (qint64 collectionId : {1, 2, 3, 5, 6, 7}) {
-            QVERIFY(sched.nextScheduledTime(collectionId) > now + 4min);
+            QVERIFY2(sched.nextScheduledTime(collectionId) > now + 4min, qPrintable(QString::number(collectionId)));
             QVERIFY(sched.nextScheduledTime(collectionId) < now + 6min);
         }
         QCOMPARE(sched.nextScheduledTime(4).time_since_epoch(), TimePoint::duration::zero()); // ColC is skipped because syncPref=false

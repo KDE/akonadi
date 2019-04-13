@@ -302,13 +302,6 @@ void CollectionScheduler::init()
     // Only retrieve enabled collections and referenced collections, we don't care
     // about anything else
     SelectQueryBuilder<Collection> qb;
-    Query::Condition orCondition(Query::Or);
-    orCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, (int)Akonadi::Tristate::True);
-    Query::Condition andCondition(Query::And);
-    andCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, (int)Akonadi::Tristate::Undefined);
-    andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
-    orCondition.addCondition(andCondition);
-    qb.addCondition(orCondition);
     if (!qb.exec()) {
         qCWarning(AKONADISERVER_LOG) << "Failed to query initial collections for scheduler!";
         qCWarning(AKONADISERVER_LOG) << "Not a fatal error, no collections will be scheduled for sync or cache expiration!";

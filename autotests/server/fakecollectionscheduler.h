@@ -37,7 +37,7 @@ public:
 protected:
     void init() override;
 
-    bool shouldScheduleCollection(const Collection &) override { return true; }
+    bool shouldScheduleCollection(const Collection &) override;
     bool hasChanged(const Collection &collection, const Collection &changed) override;
     int collectionScheduleInterval(const Collection &collection) override;
     void collectionExpired(const Collection &collection) override;

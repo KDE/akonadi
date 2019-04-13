@@ -37,6 +37,11 @@ void FakeCollectionScheduler::init()
     m_initCalled.release();
 }
 
+bool FakeCollectionScheduler::shouldScheduleCollection(const Collection &collection)
+{
+    return (collection.syncPref() == Collection::True) || ((collection.syncPref() == Collection::Undefined) && collection.enabled());
+}
+
 bool FakeCollectionScheduler::hasChanged(const Collection &collection, const Collection &changed)
 {
     Q_ASSERT(collection.id() == changed.id());
