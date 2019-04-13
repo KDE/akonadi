@@ -27,6 +27,9 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using TimePoint = CollectionScheduler::TimePoint;
+
+using namespace std::literals::chrono_literals;
 
 class CollectionSchedulerTest : public QObject
 {
@@ -43,16 +46,16 @@ private Q_SLOTS:
         // WHEN
         FakeCollectionScheduler sched;
         sched.waitForInit();
-        const qint64 now = QDateTime::currentSecsSinceEpoch();
+        const TimePoint now(std::chrono::steady_clock::now());
         // THEN
         // Collections root (1), ColA (2), ColB (3), ColD (5), virtual (6) and virtual2 (7)
         // should have a check scheduled in 5 minutes (default value)
         for (qint64 collectionId : {1, 2, 3, 5, 6, 7}) {
-            QVERIFY(sched.nextScheduledTime(collectionId) > now + 4 * 60);
-            QVERIFY(sched.nextScheduledTime(collectionId) < now + 6 * 60);
+            QVERIFY(sched.nextScheduledTime(collectionId) > now + 4min);
+            QVERIFY(sched.nextScheduledTime(collectionId) < now + 6min);
         }
-        QCOMPARE(sched.nextScheduledTime(4), 0); // ColC is skipped because syncPref=false
-        QCOMPARE(sched.nextScheduledTime(314), 0); // no such collection
+        QCOMPARE(sched.nextScheduledTime(4).time_since_epoch(), TimePoint::duration::zero()); // ColC is skipped because syncPref=false
+        QCOMPARE(sched.nextScheduledTime(314).time_since_epoch(), TimePoint::duration::zero()); // no such collection
     }
 
     // (not that this feature is really used right now, it defaults to 5 and CacheCleaner sets it to 5)
@@ -64,10 +67,10 @@ private Q_SLOTS:
         sched.setMinimumInterval(10);
         sched.waitForInit();
         // THEN
-        const qint64 now = QDateTime::currentSecsSinceEpoch();
-        QTRY_VERIFY(sched.nextScheduledTime(2) > 0);
-        QVERIFY(sched.nextScheduledTime(2) > now + 9 * 60);
-        QVERIFY(sched.nextScheduledTime(2) < now + 11 * 60);
+        const TimePoint now(std::chrono::steady_clock::now());
+        QTRY_VERIFY(sched.nextScheduledTime(2).time_since_epoch() > TimePoint::duration::zero());
+        QVERIFY(sched.nextScheduledTime(2) > now + 9min);
+        QVERIFY(sched.nextScheduledTime(2) < now + 11min);
     }
 
     void shouldRemoveAndAddCollectionFromSchedule()
@@ -81,7 +84,7 @@ private Q_SLOTS:
         // WHEN
         sched.collectionRemoved(2);
         // THEN
-        QTRY_COMPARE(sched.nextScheduledTime(2), 0);
+        QTRY_COMPARE(sched.nextScheduledTime(2).time_since_epoch(), TimePoint::duration::zero());
         QCOMPARE(sched.nextScheduledTime(1), timeForRoot); // unchanged
         QCOMPARE(sched.nextScheduledTime(3), timeForColB); // unchanged
 
@@ -89,7 +92,7 @@ private Q_SLOTS:
         QTest::qWait(1000); // we only have precision to the second...
         sched.collectionAdded(2);
         // THEN
-        QTRY_VERIFY(sched.nextScheduledTime(2) > 0);
+        QTRY_VERIFY(sched.nextScheduledTime(2).time_since_epoch() > TimePoint::duration::zero());
         // This is unchanged, even though it would normally have been 1s later. See "minor optimization" in scheduler.
         QCOMPARE(sched.nextScheduledTime(2), timeForColB);
         QCOMPARE(sched.nextScheduledTime(1), timeForRoot); // unchanged
@@ -112,8 +115,8 @@ private Q_SLOTS:
         sched.collectionChanged(2);
         // THEN
         // "in 20 minutes" is 15 minutes later than "in 5 minutes"
-        QTRY_VERIFY(sched.nextScheduledTime(2) >= timeForColB + 14 * 60);
-        QVERIFY(sched.nextScheduledTime(2) <= timeForColB + 16 * 60);
+        QTRY_VERIFY(sched.nextScheduledTime(2) >= timeForColB + 14min);
+        QVERIFY(sched.nextScheduledTime(2) <= timeForColB + 16min);
     }
 };
 

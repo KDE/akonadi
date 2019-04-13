@@ -57,12 +57,14 @@ public:
     void setMinimumInterval(int intervalMinutes);
     Q_REQUIRED_RESULT int minimumInterval() const;
 
+    using TimePoint = std::chrono::steady_clock::time_point;
+
     /**
      * @return the timestamp (in seconds since epoch) when collectionExpired
      * will next be called on the given collection, or 0 if we don't know about the collection.
      * Only used by the unittest.
      */
-    uint nextScheduledTime(qint64 collectionId) const;
+    TimePoint nextScheduledTime(qint64 collectionId) const;
 
 protected:
     void init() override;
@@ -88,10 +90,10 @@ private Q_SLOTS:
     void scheduleCollection(/*sic!*/ Collection collection, bool shouldStartScheduler = true);
 
 private:
-    using ScheduleMap = QMultiMap<uint /*timestamp*/, Collection>;
+    using ScheduleMap = QMultiMap<TimePoint /*timestamp*/, Collection>;
     ScheduleMap::const_iterator constFind(qint64 collectionId) const;
     ScheduleMap::iterator find(qint64 collectionId);
-    ScheduleMap::const_iterator constLowerBound(qint64 collectionId) const;
+    ScheduleMap::const_iterator constLowerBound(TimePoint timestamp) const;
 
     mutable QMutex mScheduleLock;
     ScheduleMap mSchedule;

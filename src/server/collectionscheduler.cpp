@@ -27,6 +27,8 @@
 #include <QDateTime>
 #include <QTimer>
 
+using namespace std::literals::chrono_literals;
+
 namespace Akonadi
 {
 namespace Server
@@ -138,14 +140,14 @@ int CollectionScheduler::minimumInterval() const
     return mMinInterval;
 }
 
-uint CollectionScheduler::nextScheduledTime(qint64 collectionId) const
+CollectionScheduler::TimePoint CollectionScheduler::nextScheduledTime(qint64 collectionId) const
 {
     QMutexLocker locker(&mScheduleLock);
     const auto i = constFind(collectionId);
     if (i != mSchedule.cend()) {
         return i.key();
     }
-    return 0;
+    return {};
 }
 
 void CollectionScheduler::setMinimumInterval(int intervalMinutes)
@@ -219,9 +221,10 @@ void CollectionScheduler::startScheduler()
     }
 
     // Get next collection to expire and start the timer
-    const uint next = mSchedule.constBegin().key();
-    // cast next - now() to int, so that we get negative result when next is in the past
-    mScheduler->start(qMax(0, (int)(next - QDateTime::currentDateTimeUtc().toTime_t()) * 1000));
+    const auto next = mSchedule.constBegin().key();
+    // TimePoint uses a signed representation internally (int64_t), so we get negative result when next is in the past
+    const auto delayUntilNext = next - std::chrono::steady_clock::now();
+    mScheduler->start(qMax<qint64>(0, std::chrono::duration_cast<std::chrono::milliseconds>(delayUntilNext).count()));
 }
 
 // Called in secondary thread
@@ -240,21 +243,20 @@ void CollectionScheduler::scheduleCollection(Collection collection, bool shouldS
     }
 
     const int expireMinutes = qMax(mMinInterval, collectionScheduleInterval(collection));
-    // TODO: port to qint64 and toSecsSinceEpoch
-    uint nextCheck = QDateTime::currentDateTimeUtc().toTime_t() + (expireMinutes * 60);
+    TimePoint nextCheck(std::chrono::steady_clock::now() + std::chrono::minutes(expireMinutes));
 
     // Check whether there's another check scheduled within a minute after this one.
     // If yes, then delay this check so that it's scheduled together with the others
     // This is a minor optimization to reduce wakeups and SQL queries
     auto it = constLowerBound(nextCheck);
-    if (it != mSchedule.cend() && it.key() - nextCheck < 60) {
+    if (it != mSchedule.cend() && it.key() - nextCheck < 1min) {
         nextCheck = it.key();
 
         // Also check whether there's another checked scheduled within a minute before
         // this one.
     } else if (it != mSchedule.cbegin()) {
         --it;
-        if (nextCheck - it.key() < 60) {
+        if (nextCheck - it.key() < 1min) {
             nextCheck = it.key();
         }
     }
@@ -277,9 +279,9 @@ CollectionScheduler::ScheduleMap::iterator CollectionScheduler::find(qint64 coll
 }
 
 // separate method so we call the const version of QMap::lowerBound
-CollectionScheduler::ScheduleMap::const_iterator CollectionScheduler::constLowerBound(qint64 collectionId) const
+CollectionScheduler::ScheduleMap::const_iterator CollectionScheduler::constLowerBound(TimePoint timestamp) const
 {
-    return mSchedule.lowerBound(collectionId);
+    return mSchedule.lowerBound(timestamp);
 }
 
 // Called in secondary thread
@@ -323,7 +325,7 @@ void CollectionScheduler::schedulerTimeout()
     // Call stop() explicitly to reset the timer
     mScheduler->stop();
 
-    const uint timestamp = mSchedule.constBegin().key();
+    const auto timestamp = mSchedule.constBegin().key();
     const QList<Collection> collections = mSchedule.values(timestamp);
     mSchedule.remove(timestamp);
     locker.unlock();
