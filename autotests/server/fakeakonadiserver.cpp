@@ -289,7 +289,7 @@ void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
     mConnection = new FakeConnection(socketDescriptor);
 
-    // Connection is it's own thread, so we have to make sure we get collector
+    // Connection is its own thread, so we have to make sure we get collector
     // from DataStore of the Connection's thread, not ours
     NotificationCollector *collector = nullptr;
     QMetaObject::invokeMethod(mConnection, "notificationCollector", Qt::BlockingQueuedConnection,
