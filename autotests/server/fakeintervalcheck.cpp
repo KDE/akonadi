@@ -17,43 +17,43 @@
     02110-1301, USA.
 */
 
-#include "fakecollectionscheduler.h"
+#include "fakeintervalcheck.h"
 
 using namespace Akonadi::Server;
 
-FakeCollectionScheduler::FakeCollectionScheduler(QObject *parent)
-    : CollectionScheduler(QStringLiteral("FakeCollectionScheduler"), QThread::NormalPriority, parent)
+FakeIntervalCheck::FakeIntervalCheck(QObject *parent)
+    : IntervalCheck(parent)
 {
 }
 
-void FakeCollectionScheduler::waitForInit()
+void FakeIntervalCheck::waitForInit()
 {
     m_initCalled.acquire();
 }
 
-void FakeCollectionScheduler::init()
+void FakeIntervalCheck::init()
 {
-    CollectionScheduler::init();
+    IntervalCheck::init();
     m_initCalled.release();
 }
 
-bool FakeCollectionScheduler::shouldScheduleCollection(const Collection &collection)
+bool FakeIntervalCheck::shouldScheduleCollection(const Collection &collection)
 {
     return (collection.syncPref() == Collection::True) || ((collection.syncPref() == Collection::Undefined) && collection.enabled());
 }
 
-bool FakeCollectionScheduler::hasChanged(const Collection &collection, const Collection &changed)
+bool FakeIntervalCheck::hasChanged(const Collection &collection, const Collection &changed)
 {
     Q_ASSERT(collection.id() == changed.id());
     return collection.cachePolicyCheckInterval() != changed.cachePolicyCheckInterval();
 }
 
-int FakeCollectionScheduler::collectionScheduleInterval(const Collection &collection)
+int FakeIntervalCheck::collectionScheduleInterval(const Collection &collection)
 {
     return collection.cachePolicyCheckInterval();
 }
 
-void FakeCollectionScheduler::collectionExpired(const Collection &collection)
+void FakeIntervalCheck::collectionExpired(const Collection &collection)
 {
     Q_UNUSED(collection);
     // Nothing here. The granularity is in whole minutes, we don't have time to wait for that in a unittest.

@@ -60,8 +60,6 @@ protected Q_SLOTS:
 private:
     QHash<int, QDateTime> mLastChecks;
     QHash<QString, QDateTime> mLastCollectionTreeSyncs;
-
-    static IntervalCheck *s_instance;
 };
 
 } // namespace Server

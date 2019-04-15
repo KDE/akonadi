@@ -54,7 +54,7 @@ public:
     CacheCleaner *cacheCleaner();
 
     /**
-     * Can return a nullptr
+     * Returns the IntervalCheck instance. Never nullptr.
      */
     IntervalCheck *intervalChecker();
 

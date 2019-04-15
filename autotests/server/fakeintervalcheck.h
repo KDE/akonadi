@@ -17,21 +17,21 @@
     02110-1301, USA.
 */
 
-#ifndef FAKECOLLECTIONSCHEDULER_H
-#define FAKECOLLECTIONSCHEDULER_H
+#ifndef FAKEINTERVALCHECK_H
+#define FAKEINTERVALCHECK_H
 
-#include "collectionscheduler.h"
+#include <intervalcheck.h>
 
 #include <QSemaphore>
 
 namespace Akonadi {
 namespace Server {
 
-class FakeCollectionScheduler : public CollectionScheduler
+class FakeIntervalCheck : public IntervalCheck
 {
     Q_OBJECT
 public:
-    FakeCollectionScheduler(QObject *parent = nullptr);
+    FakeIntervalCheck(QObject *parent = nullptr);
     void waitForInit();
 
 protected:

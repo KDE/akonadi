@@ -139,9 +139,7 @@ void NotificationCollector::collectionAdded(const Collection &collection,
     if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
         cleaner->collectionAdded(collection.id());
     }
-    if (auto checker = AkonadiServer::instance()->intervalChecker()) {
-        checker->collectionAdded(collection.id());
-    }
+    AkonadiServer::instance()->intervalChecker()->collectionAdded(collection.id());
     collectionNotification(Protocol::CollectionChangeNotification::Add, collection, collection.parentId(), -1, resource);
 }
 
@@ -152,9 +150,7 @@ void NotificationCollector::collectionChanged(const Collection &collection,
     if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
         cleaner->collectionChanged(collection.id());
     }
-    if (auto checker = AkonadiServer::instance()->intervalChecker()) {
-        checker->collectionChanged(collection.id());
-    }
+    AkonadiServer::instance()->intervalChecker()->collectionChanged(collection.id());
     if (changes.contains(AKONADI_PARAM_ENABLED)) {
         CollectionStatistics::self()->invalidateCollection(collection);
     }
@@ -170,9 +166,7 @@ void NotificationCollector::collectionMoved(const Collection &collection,
     if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
         cleaner->collectionChanged(collection.id());
     }
-    if (auto checker = AkonadiServer::instance()->intervalChecker()) {
-        checker->collectionChanged(collection.id());
-    }
+    AkonadiServer::instance()->intervalChecker()->collectionChanged(collection.id());
     collectionNotification(Protocol::CollectionChangeNotification::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource);
 }
 
@@ -182,9 +176,7 @@ void NotificationCollector::collectionRemoved(const Collection &collection,
     if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
         cleaner->collectionRemoved(collection.id());
     }
-    if (auto checker = AkonadiServer::instance()->intervalChecker()) {
-        checker->collectionRemoved(collection.id());
-    }
+    AkonadiServer::instance()->intervalChecker()->collectionRemoved(collection.id());
     CollectionStatistics::self()->invalidateCollection(collection);
     collectionNotification(Protocol::CollectionChangeNotification::Remove, collection, collection.parentId(), -1, resource);
 }
@@ -207,9 +199,7 @@ void NotificationCollector::collectionUnsubscribed(const Collection &collection,
     if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
         cleaner->collectionRemoved(collection.id());
     }
-    if (auto checker = AkonadiServer::instance()->intervalChecker()) {
-        checker->collectionRemoved(collection.id());
-    }
+    AkonadiServer::instance()->intervalChecker()->collectionRemoved(collection.id());
     CollectionStatistics::self()->invalidateCollection(collection);
     collectionNotification(Protocol::CollectionChangeNotification::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
 }

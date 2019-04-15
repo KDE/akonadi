@@ -24,6 +24,7 @@
 #include "fakeclient.h"
 #include "fakeitemretrievalmanager.h"
 #include "inspectablenotificationcollector.h"
+#include "fakeintervalcheck.h"
 
 #include <QSettings>
 #include <QCoreApplication>
@@ -250,6 +251,8 @@ void FakeAkonadiServer::initFake()
         mRetrievalManager = new FakeItemRetrievalManager();
     }
 
+    mIntervalCheck = new FakeIntervalCheck();
+
     qDebug() << "==== Fake Akonadi Server started ====";
 }
 
@@ -275,6 +278,8 @@ bool FakeAkonadiServer::quit()
     if (mDataStore) {
         mDataStore->close();
     }
+
+    delete mIntervalCheck;
 
     qDebug() << "==== Fake Akonadi Server shut down ====";
     return true;

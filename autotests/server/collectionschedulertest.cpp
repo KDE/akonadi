@@ -21,7 +21,7 @@
 
 #include <shared/aktest.h>
 #include "fakeakonadiserver.h"
-#include "fakecollectionscheduler.h"
+#include "fakeintervalcheck.h"
 
 #include <QTest>
 
@@ -45,7 +45,7 @@ private Q_SLOTS:
     void shouldInitializeSyncIntervals()
     {
         // WHEN
-        FakeCollectionScheduler sched;
+        FakeIntervalCheck sched;
         sched.waitForInit();
         const TimePoint now(std::chrono::steady_clock::now());
         // THEN
@@ -65,7 +65,7 @@ private Q_SLOTS:
     void shouldObeyMinimumInterval()
     {
         // GIVEN
-        FakeCollectionScheduler sched;
+        FakeIntervalCheck sched;
         // WHEN
         sched.setMinimumInterval(10);
         sched.waitForInit();
@@ -81,7 +81,7 @@ private Q_SLOTS:
     void shouldRemoveAndAddCollectionFromSchedule()
     {
         // GIVEN
-        FakeCollectionScheduler sched;
+        FakeIntervalCheck sched;
         sched.waitForInit();
         const auto timeForRoot = sched.nextScheduledTime(1);
         const auto timeForColB = sched.nextScheduledTime(3);
@@ -111,7 +111,7 @@ private Q_SLOTS:
     void shouldHonourIntervalChange()
     {
         // GIVEN
-        FakeCollectionScheduler sched;
+        FakeIntervalCheck sched;
         sched.waitForInit();
         const auto timeForColB = sched.nextScheduledTime(3);
         Collection colA = Collection::retrieveByName(QStringLiteral("Collection A"));

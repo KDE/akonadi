@@ -79,8 +79,6 @@ protected:
     bool shouldScheduleCollection(const Collection &collection) override;
 
 private:
-    static CacheCleaner *sInstance;
-
     friend class CacheCleanerInhibitor;
 
 };

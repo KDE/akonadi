@@ -26,7 +26,7 @@ set_property(SOURCE ${CMAKE_CURRENT_BINARY_DIR}/dbpopulator.cpp PROPERTY SKIP_AU
 set(common_SRCS
     unittestschema.cpp
     fakeconnection.cpp
-    fakecollectionscheduler.cpp
+    fakeintervalcheck.cpp
     fakedatastore.cpp
     fakeclient.cpp
     fakeakonadiserver.cpp
