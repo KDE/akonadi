@@ -23,7 +23,6 @@
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
-#include "collectionreferencemanager.h"
 #include "intervalcheck.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
@@ -64,7 +63,6 @@ bool CollectionModifyHandler::parseStream()
     DataStore *db = connection()->storageBackend();
     Transaction transaction(db, QStringLiteral("MODIFY"));
     QList<QByteArray> changes;
-    bool referencedChanged = false;
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::MimeTypes) {
         QStringList mts = cmd.mimeTypes();
@@ -224,19 +222,6 @@ bool CollectionModifyHandler::parseStream()
         }
     }
 
-    if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::Referenced) {
-        const bool wasReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(collection.id(), connection()->sessionId());
-        connection()->collectionReferenceManager()->referenceCollection(connection()->sessionId(), collection, cmd.referenced());
-        const bool referenced = connection()->collectionReferenceManager()->isReferenced(collection.id());
-        if (cmd.referenced() != wasReferencedFromSession) {
-            changes.append(AKONADI_PARAM_REFERENCED);
-        }
-        if (referenced != collection.referenced()) {
-            referencedChanged = true;
-            collection.setReferenced(referenced);
-        }
-    }
-
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::RemovedAttributes) {
         Q_FOREACH (const QByteArray &attr, cmd.removedAttributes()) {
             if (db->removeCollectionAttribute(collection, attr)) {
@@ -284,10 +269,6 @@ bool CollectionModifyHandler::parseStream()
     if (!changes.isEmpty()) {
         if (collection.hasPendingChanges() && !collection.update()) {
             return failureResponse("Unable to update collection");
-        }
-        //This must be after the collection was updated in the db. The resource will immediately request a copy of the collection.
-        if (AkonadiServer::instance()->intervalChecker() && collection.referenced() && referencedChanged) {
-            AkonadiServer::instance()->intervalChecker()->requestCollectionSync(collection);
         }
         db->notificationCollector()->collectionChanged(collection, changes);
         //For backwards compatibility. Must be after the changed notification (otherwise the compression removes it).

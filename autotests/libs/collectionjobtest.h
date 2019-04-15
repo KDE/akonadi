@@ -54,7 +54,6 @@ private Q_SLOTS:
     void testAncestorRetrieval();
     void testAncestorAttributeRetrieval();
     void testListPreference();
-    void testReference();
 };
 
 #endif

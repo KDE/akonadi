@@ -45,8 +45,6 @@ public:
         , listPreferenceChanged(false)
         , enabled(true)
         , enabledChanged(false)
-        , referenced(false)
-        , referencedChanged(false)
         , contentTypesChanged(false)
         , cachePolicyChanged(false)
         , isVirtual(false)
@@ -80,8 +78,6 @@ public:
         syncPreference = other.syncPreference;
         indexPreference = other.indexPreference;
         listPreferenceChanged = other.listPreferenceChanged;
-        referenced = other.referenced;
-        referencedChanged = other.referencedChanged;
         keepLocalChanges = other.keepLocalChanges;
     }
 
@@ -96,7 +92,6 @@ public:
         cachePolicyChanged = false;
         enabledChanged = false;
         listPreferenceChanged = false;
-        referencedChanged = false;
         mAttributeStorage.resetChangeLog();
     }
 
@@ -114,8 +109,6 @@ public:
     bool listPreferenceChanged: 1;
     bool enabled: 1;
     bool enabledChanged: 1;
-    bool referenced: 1;
-    bool referencedChanged: 1;
     bool contentTypesChanged: 1;
     bool cachePolicyChanged: 1;
     bool isVirtual: 1;

@@ -50,7 +50,6 @@ set(libakonadiserver_SRCS
     handler.cpp
     handlerhelper.cpp
     intervalcheck.cpp
-    collectionreferencemanager.cpp
     handler/collectioncopyhandler.cpp
     handler/collectioncreatehandler.cpp
     handler/collectiondeletehandler.cpp

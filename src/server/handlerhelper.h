@@ -90,7 +90,6 @@ public:
             int ancestorDepth = 0,
             const QStack<Collection> &ancestors = QStack<Collection>(),
             const QStack<CollectionAttribute::List> &ancestorAttributes = QStack<CollectionAttribute::List>(),
-            bool isReferenced = false,
             const QStringList &mimeTypes = QStringList());
 
     /**

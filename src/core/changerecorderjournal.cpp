@@ -623,8 +623,7 @@ Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadCollectionNotif
             collection.setSyncPref(tristate);
             stream >> reinterpret_cast<qint8&>(tristate);
             collection.setIndexPref(tristate);
-            stream >> b;
-            collection.setReferenced(b);
+            stream >> b; // read the deprecated "isReferenced" value
             stream >> b;
             collection.setIsVirtual(b);
 
@@ -716,7 +715,7 @@ void Akonadi::ChangeRecorderJournalWriter::saveCollectionNotification(QDataStrea
     stream << static_cast<qint8>(col.displayPref());
     stream << static_cast<qint8>(col.syncPref());
     stream << static_cast<qint8>(col.indexPref());
-    stream << col.referenced();
+    stream << false; // write the deprecated "isReferenced" value
     stream << col.isVirtual();
 
 

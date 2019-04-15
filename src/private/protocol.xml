@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="61">
+<protocol version="62">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -531,7 +531,6 @@
     <param name="displayPref" type="Tristate" default="Tristate::Undefined" />
     <param name="syncPref" type="Tristate" default="Tristate::Undefined" />
     <param name="indexPref" type="Tristate" default="Tristate::Undefined" />
-    <param name="referenced" type="bool" />
     <param name="isVirtual" type="bool" />
   </response>
 
@@ -550,7 +549,6 @@
       <value name="RemovedAttributes" value="128" />
       <value name="Attributes" value="256" />
       <value name="ListPreferences" value="512" />
-      <value name="Referenced" value="1024" />
     </flag>
 
     <ctor>
@@ -606,9 +604,6 @@
     </param>
     <param name="indexPref" type="Tristate" default="Tristate::Undefined">
       <depends enum="modifiedParts" value="ModifyCollectionCommand::ListPreferences" />
-    </param>
-    <param name="referenced" type="bool">
-      <depends enum="modifiedParts" value="ModifyCollectionCommand::Referenced" />
     </param>
   </command>
 

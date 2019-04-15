@@ -165,7 +165,6 @@ Akonadi::Protocol::FetchCollectionsResponsePtr DbInitializer::listResponse(const
         ancs.push_back(Akonadi::Protocol::Ancestor(0));
         resp->setAncestors(ancs);
     }
-    resp->setReferenced(col.referenced());
     resp->setEnabled(col.enabled());
     resp->setDisplayPref(static_cast<Tristate>(col.displayPref()));
     resp->setSyncPref(static_cast<Tristate>(col.syncPref()));

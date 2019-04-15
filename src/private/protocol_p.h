@@ -615,7 +615,6 @@ Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotificationList)
 #define AKONADI_PARAM_PLD                          "PLD:"
 #define AKONADI_PARAM_PLD_RFC822                   "PLD:RFC822"
 #define AKONADI_PARAM_RECURSIVE                    "RECURSIVE"
-#define AKONADI_PARAM_REFERENCED                   "REFERENCED"
 #define AKONADI_PARAM_REMOTE                       "REMOTE"
 #define AKONADI_PARAM_REMOTEID                     "REMOTEID"
 #define AKONADI_PARAM_REMOTEREVISION               "REMOTEREVISION"

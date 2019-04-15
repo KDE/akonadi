@@ -67,7 +67,7 @@
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
     <column name="generation" type="int" default="0" allowNull="false" />
-    <data columns="version" values="39"/>
+    <data columns="version" values="40"/>
   </table>
 
   <table name="Resource">
@@ -95,7 +95,6 @@
     <column name="syncPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
     <column name="displayPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
     <column name="indexPref" type="enum" enumType="Tristate" default="Tristate::Undefined"/>
-    <column name="referenced" type="bool" default="false" allowNull="false"/>
     <column name="cachePolicyInherit" type="bool" default="true" allowNull="false"/>
     <column name="cachePolicyCheckInterval" type="int" default="-1" allowNull="false"/>
     <column name="cachePolicyCacheTimeout" type="int" default="-1" allowNull="false"/>

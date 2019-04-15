@@ -33,7 +33,6 @@
 #include "notificationmanager.h"
 
 #include "tracer.h"
-#include "collectionreferencemanager.h"
 
 #include <cassert>
 
@@ -121,7 +120,6 @@ void Connection::quit()
     }
 
     Tracer::self()->endConnection(m_identifier, QString());
-    collectionReferenceManager()->removeSession(m_sessionId);
 
     delete m_socket;
     m_socket = nullptr;
@@ -152,11 +150,6 @@ DataStore *Connection::storageBackend()
         m_backend = DataStore::self();
     }
     return m_backend;
-}
-
-CollectionReferenceManager *Connection::collectionReferenceManager()
-{
-    return CollectionReferenceManager::instance();
 }
 
 Connection::~Connection()

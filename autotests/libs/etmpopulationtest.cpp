@@ -139,9 +139,7 @@ private Q_SLOTS:
     void testAddMonitoringCollections();
     void testRemoveMonitoringCollections();
     void testDisplayFilter();
-    void testReferenceCollection();
     void testLoadingOfHiddenCollection();
-    void testSwitchFromReferenceToEnabled();
 
 private:
     Collection res;
@@ -319,50 +317,6 @@ void EtmPopulationTest::testDisplayFilter()
     AKVERIFYEXEC(deleteJob);
 }
 
-void EtmPopulationTest::testReferenceCollection()
-{
-    Collection col5 = createCollection(QStringLiteral("col5"), monitorCol, false);
-    QVERIFY(col5.isValid());
-
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
-    model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
-    model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
-    model->setListFilter(Akonadi::CollectionFetchScope::Display);
-
-    QTRY_VERIFY(model->isFullyPopulated());
-    QVERIFY(!getIndex(QStringLiteral("col5"), model).isValid());
-    //Check that this random other collection is actually available
-    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
-
-    ModelSignalSpy spy(*model);
-
-    //Reference the collection and it should appear in the model
-    model->setCollectionReferenced(col5, true);
-
-    QTRY_VERIFY(getIndex(QStringLiteral("col5"), model).isValid());
-    QTRY_VERIFY(getIndex(QStringLiteral("col5"), model).data(Akonadi::EntityTreeModel::IsPopulatedRole).toBool());
-    //Check that this random other collection is still available
-    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
-    //Verify the etms collection has been updated accordingly
-    QTRY_VERIFY(getIndex(QStringLiteral("col5"), model).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().referenced());
-
-    //Ensure all signals have been delivered to the spy
-    QTest::qWait(0);
-    QCOMPARE(spy.mSignals.count(QStringLiteral("rowsInserted")), 1);
-    //Signals for data-changed signal from the referencing
-    QCOMPARE(spy.mSignals.count(QStringLiteral("dataChanged")), 2);
-
-    //Dereference the collection and it should disappear again
-    model->setCollectionReferenced(col5, false);
-    QTRY_VERIFY(!getIndex(QStringLiteral("col5"), model).isValid());
-    //Check that this random other collection is still available
-    QVERIFY(getIndex(QStringLiteral("col1"), model).isValid());
-
-    Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
-    AKVERIFYEXEC(deleteJob);
-}
-
 /*
  * Col5 and it's ancestors should be included although the ancestors don't match the mimetype filter.
  */
@@ -379,34 +333,6 @@ void EtmPopulationTest::testLoadingOfHiddenCollection()
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
     QVERIFY(getIndex(QStringLiteral("col5"), model).isValid());
-
-    Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
-    AKVERIFYEXEC(deleteJob);
-}
-
-void EtmPopulationTest::testSwitchFromReferenceToEnabled()
-{
-    Collection col5 = createCollection(QStringLiteral("col5"), monitorCol, false, QStringList() << QStringLiteral("application/test") << Collection::mimeType());
-    QVERIFY(col5.isValid());
-    Collection col6 = createCollection(QStringLiteral("col6"), col5, true, QStringList() << QStringLiteral("application/test"));
-    QVERIFY(col6.isValid());
-
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
-    model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
-    model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
-    model->setListFilter(Akonadi::CollectionFetchScope::Display);
-    QTRY_VERIFY(model->isFullyPopulated());
-    model->setCollectionReferenced(col5, true);
-    QTRY_VERIFY(getIndex(QStringLiteral("col5"), model).data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>().referenced());
-
-    //Dereference and enable the collection
-    col5.setEnabled(true);
-    model->setCollectionReferenced(col5, false);
-
-    //Index and child should stay in model since both are enabled
-    QVERIFY(getIndex(QStringLiteral("col5"), model).isValid());
-    QVERIFY(getIndex(QStringLiteral("col6"), model).isValid());
 
     Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
     AKVERIFYEXEC(deleteJob);

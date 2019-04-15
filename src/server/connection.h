@@ -46,7 +46,6 @@ class Handler;
 class Response;
 class DataStore;
 class Collection;
-class CollectionReferenceManager;
 
 /**
     An Connection represents one connection of a client to the server.
@@ -59,8 +58,6 @@ public:
     ~Connection() override;
 
     virtual DataStore *storageBackend();
-
-    CollectionReferenceManager *collectionReferenceManager();
 
     CommandContext *context() const;
 

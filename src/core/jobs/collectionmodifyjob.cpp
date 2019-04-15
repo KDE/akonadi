@@ -97,9 +97,6 @@ void CollectionModifyJob::doStart()
         cmd->setSyncPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListSync)));
         cmd->setIndexPref(ProtocolHelper::listPreference(d->mCollection.localListPreference(Collection::ListIndex)));
     }
-    if (d->mCollection.d_ptr->referencedChanged) {
-        cmd->setReferenced(d->mCollection.referenced());
-    }
     if (d->mCollection.d_ptr->mAttributeStorage.hasModifiedAttributes()) {
         cmd->setAttributes(ProtocolHelper::attributesToProtocol(d->mCollection.d_ptr->mAttributeStorage.modifiedAttributes()));
     }

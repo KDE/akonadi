@@ -1312,7 +1312,7 @@ void ResourceBasePrivate::slotCollectionListDone(KJob *job)
         const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
         for (const Collection &collection : list) {
             //We also get collections that should not be synced but are part of the tree.
-            if (collection.shouldList(Collection::ListSync) || collection.referenced()) {
+            if (collection.shouldList(Collection::ListSync)) {
                 if (mScheduleAttributeSyncBeforeCollectionSync) {
                     scheduler->scheduleAttributesSync(collection);
                 }

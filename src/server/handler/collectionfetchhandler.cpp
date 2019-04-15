@@ -23,7 +23,6 @@
 
 #include "connection.h"
 #include "handlerhelper.h"
-#include "collectionreferencemanager.h"
 #include "storage/datastore.h"
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
@@ -82,15 +81,6 @@ CollectionAttribute::List CollectionFetchHandler::getAttributes(const Collection
         ++it;
     }
 
-    // We need the reference and enabled status, to not need to request the server multiple times.
-    // Mostly interesting for ancestors for i.e. updates provided by the monitor.
-    const bool isReferenced = connection()->collectionReferenceManager()->isReferenced(col.id(), connection()->sessionId());
-    if (isReferenced) {
-        CollectionAttribute attr;
-        attr.setType(AKONADI_PARAM_REFERENCED);
-        attr.setValue("TRUE");
-        attributes << attr;
-    }
     {
         CollectionAttribute attr;
         attr.setType(AKONADI_PARAM_ENABLED);
@@ -106,11 +96,6 @@ void CollectionFetchHandler::listCollection(const Collection &root,
                                             const QStringList &mimeTypes,
                                             const CollectionAttribute::List &attributes)
 {
-    const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(root.id(), connection()->sessionId());
-    //We always expose referenced collections to the resource as referenced (although it's a different session)
-    //Otherwise syncing wouldn't work.
-    const bool resourceIsSynchronizing = root.referenced() && mCollectionsToSynchronize && connection()->context()->resource().isValid();
-
     QStack<CollectionAttribute::List> ancestorAttributes;
     //backwards compatibility, collectionToByteArray will automatically fall-back to id + remoteid
     if (!mAncestorAttributes.isEmpty()) {
@@ -127,7 +112,6 @@ void CollectionFetchHandler::listCollection(const Collection &root,
     sendResponse(HandlerHelper::fetchCollectionsResponse(dummy, attributes, mIncludeStatistics,
                  mAncestorDepth, ancestors,
                  ancestorAttributes,
-                 isReferencedFromSession || resourceIsSynchronizing,
                  mimeTypes));
 }
 
@@ -139,7 +123,6 @@ static Query::Condition filterCondition(const QString &column)
     andCondition.addValueCondition(column, Query::Equals, (int)Collection::Undefined);
     andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
     orCondition.addCondition(andCondition);
-    orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
     return orCondition;
 }
 
@@ -242,7 +225,6 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
      * * First all collections that match the given criteria are queried
      * * We then filter the false positives:
      * ** all collections out that are not part of the tree we asked for are filtered
-     * ** all collections that are referenced but not by this session or by the owning resource are filtered
      * * Finally we complete the tree by adding missing collections
      *
      * Mimetypes and attributes are also retrieved in single queries to avoid spawning two queries per collection (the N+1 problem).
@@ -279,10 +261,7 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
             } else if (mCollectionsToIndex) {
                 qb.addCondition(filterCondition(Collection::indexPrefFullColumnName()));
             } else if (mEnabledCollections) {
-                Query::Condition orCondition(Query::Or);
-                orCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
-                orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
-                qb.addCondition(orCondition);
+                qb.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
             }
             if (mResource.isValid()) {
                 qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, mResource.id());
@@ -334,19 +313,6 @@ void CollectionFetchHandler::retrieveCollections(const Collection &topParent, in
                     continue;
                 }
             }
-
-            //If we matched referenced collections we need to ensure the collection was referenced from this session
-            const bool isReferencedFromSession = connection()->collectionReferenceManager()->isReferenced(it->id(), connection()->sessionId());
-            //The collection is referenced, but not from this session. We need to reevaluate the filter condition
-            if (it->referenced() && !isReferencedFromSession) {
-                //Don't include the collection when only looking for enabled collections.
-                //However, a referenced collection should be still synchronized by the resource, so we exclude this case.
-                if (!checkFilterCondition(*it) && !(mCollectionsToSynchronize && connection()->context()->resource().isValid())) {
-                    it = mCollections.erase(it);
-                    continue;
-                }
-            }
-
             ++it;
         }
     }

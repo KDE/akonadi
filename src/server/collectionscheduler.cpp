@@ -301,7 +301,6 @@ void CollectionScheduler::init()
     andCondition.addValueCondition(Collection::syncPrefFullColumnName(), Query::Equals, (int)Akonadi::Tristate::Undefined);
     andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
     orCondition.addCondition(andCondition);
-    orCondition.addValueCondition(Collection::referencedFullColumnName(), Query::Equals, true);
     qb.addCondition(orCondition);
     if (!qb.exec()) {
         qCWarning(AKONADISERVER_LOG) << "Failed to query initial collections for scheduler!";

@@ -155,7 +155,7 @@ void NotificationCollector::collectionChanged(const Collection &collection,
     if (auto checker = AkonadiServer::instance()->intervalChecker()) {
         checker->collectionChanged(collection.id());
     }
-    if (changes.contains(AKONADI_PARAM_ENABLED) || changes.contains(AKONADI_PARAM_REFERENCED)) {
+    if (changes.contains(AKONADI_PARAM_ENABLED)) {
         CollectionStatistics::self()->invalidateCollection(collection);
     }
     collectionNotification(Protocol::CollectionChangeNotification::Modify, collection, collection.parentId(),
@@ -407,7 +407,7 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
             for (const auto &mt : mts) {
                 mimeTypes.push_back(mt.name());
             }
-            msgCollection = HandlerHelper::fetchCollectionsResponse(col, {}, false, 0, {}, {}, false, mimeTypes);
+            msgCollection = HandlerHelper::fetchCollectionsResponse(col, {}, false, 0, {}, {}, mimeTypes);
         }
         // Get up-to-date statistics
         if (fetchScope->fetchStatistics()) {

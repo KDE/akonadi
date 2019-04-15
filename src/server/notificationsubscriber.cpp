@@ -20,7 +20,6 @@
 #include "notificationsubscriber.h"
 #include "akonadiserver_debug.h"
 #include "notificationmanager.h"
-#include "collectionreferencemanager.h"
 #include "aggregatedfetchscope.h"
 #include "utils.h"
 
@@ -398,22 +397,6 @@ bool NotificationSubscriber::acceptsItemNotification(const Protocol::ItemChangeN
         return false;
     }
 
-    if (CollectionReferenceManager::instance()->isReferenced(msg.parentCollection())) {
-        //We always want notifications that affect the parent resource (like an item added to a referenced collection)
-        const bool notificationForParentResource = (mSession == msg.resource());
-        const bool accepts = mExclusive
-                             || isCollectionMonitored(msg.parentCollection())
-                             || isMoveDestinationResourceMonitored(msg)
-                             || notificationForParentResource;
-        TRACE_NTF("ACCEPTS ITEM: parent col referenced"
-                  << "exclusive:" << mExclusive << ","
-                  << "parent monitored:" << isCollectionMonitored(msg.parentCollection()) << ","
-                  << "destination monitored:" << isMoveDestinationResourceMonitored(msg) << ","
-                  << "ntf for parent resource:" << notificationForParentResource << ":"
-                  << "ACCEPTED:" << accepts);
-        return accepts;
-    }
-
     if (mAllMonitored) {
         TRACE_NTF("ACCEPTS ITEM: all monitored");
         return true;
@@ -489,25 +472,8 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
             return true;
         }
 
-        //Deliver the notification if referenced from this session
-        if (CollectionReferenceManager::instance()->isReferenced(collection.id(), mSession)) {
-            return true;
-        }
-
-        //Exclusive subscribers still want the notification
-        if (mExclusive && CollectionReferenceManager::instance()->isReferenced(collection.id())) {
-            return true;
-        }
-
-        //The session belonging to this monitor referenced or dereferenced the collection. We always want this notification.
-        //The referencemanager no longer holds a reference, so we have to check this way.
-        if (msg.changedParts().contains(AKONADI_PARAM_REFERENCED) && mSession == msg.sessionId()) {
-            return true;
-        }
-
-        // If the collection is not referenced, monitored or the subscriber is not
-        // exclusive (i.e. if we got here), then the subscriber does not care about
-        // this one, so drop it
+        // If the subscriber is not exclusive (i.e. if we got here), then the subscriber does
+        // not care about this one, so drop it
         return false;
     }
 
@@ -678,20 +644,6 @@ bool NotificationSubscriber::acceptsNotification(const Protocol::ChangeNotificat
     }
 }
 
-Protocol::CollectionChangeNotificationPtr NotificationSubscriber::customizeCollection(const Protocol::CollectionChangeNotificationPtr &ntf)
-{
-    const bool isReferencedFromSession = CollectionReferenceManager::instance()->isReferenced(ntf->collection().id(), mSession);
-    if (isReferencedFromSession != ntf->collection().referenced()) {
-        auto copy = Protocol::CollectionChangeNotificationPtr::create(*ntf);
-        auto copyCol = ntf->collection();
-        copyCol.setReferenced(isReferencedFromSession);
-        copy->setCollection(std::move(copyCol));
-        return copy;
-    }
-
-    return ntf;
-}
-
 bool NotificationSubscriber::notify(const Protocol::ChangeNotificationPtr &notification)
 {
     // Guard against this object being deleted while we are waiting for the lock
@@ -702,12 +654,8 @@ bool NotificationSubscriber::notify(const Protocol::ChangeNotificationPtr &notif
     }
 
     if (acceptsNotification(*notification)) {
-        auto ntf = notification;
-        if (ntf->type() == Protocol::Command::CollectionChangeNotification) {
-            ntf = customizeCollection(notification.staticCast<Protocol::CollectionChangeNotification>());
-        }
         QMetaObject::invokeMethod(this, "writeNotification", Qt::QueuedConnection,
-                                  Q_ARG(Akonadi::Protocol::ChangeNotificationPtr, ntf));
+                                  Q_ARG(Akonadi::Protocol::ChangeNotificationPtr, notification));
         return true;
     }
     return false;

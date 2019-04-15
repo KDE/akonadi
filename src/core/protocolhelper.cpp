@@ -237,7 +237,6 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
     collection.setLocalListPreference(Collection::ListDisplay, parsePreference(data.displayPref()));
     collection.setLocalListPreference(Collection::ListIndex, parsePreference(data.indexPref()));
     collection.setLocalListPreference(Collection::ListSync, parsePreference(data.syncPref()));
-    collection.setReferenced(data.referenced());
 
     if (!data.searchQuery().isEmpty()) {
         auto attr = collection.attribute<PersistentSearchAttribute>(Collection::AddIfMissing);

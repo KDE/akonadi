@@ -103,7 +103,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
     }
 
     return fetchCollectionsResponse(col, col.attributes(), false, 0, QStack<Collection>(),
-                                    QStack<CollectionAttribute::List>(), false, mimeTypes);
+                                    QStack<CollectionAttribute::List>(), mimeTypes);
 }
 
 Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col,
@@ -112,7 +112,6 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
         int ancestorDepth,
         const QStack<Collection> &ancestors,
         const QStack<CollectionAttribute::List> &ancestorAttributes,
-        bool isReferenced,
         const QStringList &mimeTypes)
 {
     Protocol::FetchCollectionsResponse response;
@@ -156,7 +155,6 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
         response.setAncestors(ancestorList);
     }
 
-    response.setReferenced(isReferenced);
     response.setEnabled(col.enabled());
     response.setDisplayPref(static_cast<Tristate>(col.displayPref()));
     response.setSyncPref(static_cast<Tristate>(col.syncPref()));

@@ -415,7 +415,7 @@ Collection::ListPreference Collection::localListPreference(Collection::ListPurpo
 bool Collection::shouldList(Collection::ListPurpose purpose) const
 {
     if (localListPreference(purpose) == ListDefault) {
-        return enabled() || referenced();
+        return enabled();
     }
     return (localListPreference(purpose) == ListEnabled);
 }
@@ -427,17 +427,6 @@ void Collection::setShouldList(ListPurpose purpose, bool list)
     } else {
         setLocalListPreference(purpose, list ? ListEnabled : ListDisabled);
     }
-}
-
-void Collection::setReferenced(bool referenced)
-{
-    d_ptr->referencedChanged = true;
-    d_ptr->referenced = referenced;
-}
-
-bool Collection::referenced() const
-{
-    return d_ptr->referenced;
 }
 
 void Collection::setKeepLocalChanges(const QSet<QByteArray> &parts)
