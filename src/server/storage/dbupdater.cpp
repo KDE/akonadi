@@ -100,7 +100,8 @@ bool DbUpdater::run()
             success = m_database.transaction();
             if (success) {
                 hasTransaction = true;
-                for (const QString &statement : qAsConst(it.value().statements)) {
+                const QStringList statements = it.value().statements;
+                for (const QString &statement : statements) {
                     QSqlQuery query(m_database);
                     success = query.exec(statement);
                     if (!success) {
