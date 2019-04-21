@@ -76,8 +76,8 @@ private Q_SLOTS:
 
         qRegisterMetaType<Akonadi::Collection>();
         qRegisterMetaType<Akonadi::Item>();
-        QSignalSpy lspy(monitor, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)));
-        QSignalSpy uspy(monitor, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy lspy(monitor, &Monitor::itemLinked);
+        QSignalSpy uspy(monitor, &Monitor::itemUnlinked);
         QVERIFY(lspy.isValid());
         QVERIFY(uspy.isValid());
 

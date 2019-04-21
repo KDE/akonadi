@@ -136,9 +136,9 @@ private:
 
     void replayNextAndProcess(ChangeRecorder *rec, Akonadi::Item::Id expectedUid)
     {
-        QSignalSpy nothingSpy(rec, SIGNAL(nothingToReplay()));
+        QSignalSpy nothingSpy(rec, &ChangeRecorder::nothingToReplay);
         QVERIFY(nothingSpy.isValid());
-        QSignalSpy itemChangedSpy(rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy itemChangedSpy(rec, &Monitor::itemChanged);
         QVERIFY(itemChangedSpy.isValid());
 
         rec->replayNext();
@@ -155,9 +155,9 @@ private:
 
     void replayNextAndExpectNothing(ChangeRecorder *rec)
     {
-        QSignalSpy nothingSpy(rec, SIGNAL(nothingToReplay()));
+        QSignalSpy nothingSpy(rec, &ChangeRecorder::nothingToReplay);
         QVERIFY(nothingSpy.isValid());
-        QSignalSpy itemChangedSpy(rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy itemChangedSpy(rec, &Monitor::itemChanged);
         QVERIFY(itemChangedSpy.isValid());
 
         rec->replayNext(); // emits nothingToReplay immediately
@@ -176,7 +176,7 @@ private:
         rec->itemFetchScope().setCacheOnly(true);
 
         // Ensure we listen to a signal, otherwise MonitorPrivate::isLazilyIgnored will ignore notifications
-        QSignalSpy *spy = new QSignalSpy(rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy *spy = new QSignalSpy(rec, &Monitor::itemChanged);
         spy->setParent(rec);
 
         return rec;

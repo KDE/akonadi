@@ -145,7 +145,7 @@ void FavoriteProxyTest::testItemAdded()
 
     //Survive a reset
     {
-        QSignalSpy resetSpy(model, SIGNAL(modelReset()));
+        QSignalSpy resetSpy(model, &QAbstractItemModel::modelReset);
         model->reset();
         QTRY_COMPARE(resetSpy.count(), 1);
         //the collection is in the favorites model

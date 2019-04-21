@@ -196,7 +196,7 @@ private Q_SLOTS:
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
         syncer->setAutoDelete(false);
-        QSignalSpy spy(syncer, SIGNAL(result(KJob*)));
+        QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
         QTest::qWait(10);
@@ -308,7 +308,7 @@ private Q_SLOTS:
         CollectionSync *syncer = new CollectionSync(resource, this);
         syncer->setHierarchicalRemoteIds(hierarchicalRIDs);
         syncer->setAutoDelete(false);
-        QSignalSpy spy(syncer, SIGNAL(result(KJob*)));
+        QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
         QTest::qWait(10);

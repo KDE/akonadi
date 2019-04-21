@@ -133,7 +133,7 @@ private Q_SLOTS:
     void testItemCache()
     {
         ItemCache cache(1);
-        QSignalSpy spy(&cache, SIGNAL(dataAvailable()));
+        QSignalSpy spy(&cache, &EntityCacheBase::dataAvailable);
         QVERIFY(spy.isValid());
 
         ItemFetchScope scope;
@@ -153,7 +153,7 @@ private Q_SLOTS:
         ItemFetchScope scope;
 
         EntityListCache<Item, ItemFetchJob, ItemFetchScope> cache(3);
-        QSignalSpy spy(&cache, SIGNAL(dataAvailable()));
+        QSignalSpy spy(&cache, &EntityCacheBase::dataAvailable);
         QVERIFY(spy.isValid());
 
         cache.request(QList<Item::Id>() << 1 << 2 << 3, scope);

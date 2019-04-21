@@ -244,7 +244,7 @@ void TagTest::testDelete()
 {
     Akonadi::Monitor monitor;
     monitor.setTypeMonitored(Monitor::Tags);
-    QSignalSpy spy(&monitor, SIGNAL(tagRemoved(Akonadi::Tag)));
+    QSignalSpy spy(&monitor, &Monitor::tagRemoved);
 
     Tag tag1;
     {
@@ -312,7 +312,7 @@ void TagTest::testDeleteRIDIsolation()
 
     Akonadi::Monitor monitor;
     monitor.setTypeMonitored(Akonadi::Monitor::Tags);
-    QSignalSpy signalSpy(&monitor, SIGNAL(tagRemoved(Akonadi::Tag)));
+    QSignalSpy signalSpy(&monitor, &Monitor::tagRemoved);
 
     TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
@@ -524,7 +524,7 @@ void TagTest::testTagItem()
 
     item1.setTag(tag);
 
-    QSignalSpy tagsSpy(&monitor, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)));
+    QSignalSpy tagsSpy(&monitor, &Monitor::itemsTagsChanged);
     QVERIFY(tagsSpy.isValid());
 
     ItemModifyJob *modJob = new ItemModifyJob(item1, this);
@@ -747,7 +747,7 @@ void TagTest::testMonitor()
 
     Akonadi::Tag createdTag;
     {
-        QSignalSpy addedSpy(&monitor, SIGNAL(tagAdded(Akonadi::Tag)));
+        QSignalSpy addedSpy(&monitor, &Monitor::tagAdded);
         QVERIFY(addedSpy.isValid());
         Tag tag;
         tag.setGid("gid2");
@@ -770,7 +770,7 @@ void TagTest::testMonitor()
     }
 
     {
-        QSignalSpy modifiedSpy(&monitor, SIGNAL(tagChanged(Akonadi::Tag)));
+        QSignalSpy modifiedSpy(&monitor, &Monitor::tagChanged);
         QVERIFY(modifiedSpy.isValid());
         createdTag.setName(QStringLiteral("name3"));
 
@@ -787,7 +787,7 @@ void TagTest::testMonitor()
     }
 
     {
-        QSignalSpy removedSpy(&monitor, SIGNAL(tagRemoved(Akonadi::Tag)));
+        QSignalSpy removedSpy(&monitor, &Monitor::tagRemoved);
         QVERIFY(removedSpy.isValid());
         TagDeleteJob *deletejob = new TagDeleteJob(createdTag, this);
         AKVERIFYEXEC(deletejob);

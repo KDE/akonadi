@@ -286,7 +286,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
 
     //Create another item, it should not be added to the ETM although the signal is emitted from the monitor, but we should be able to fetchMore
     {
-        QSignalSpy addedSpy(changeRecorder, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(changeRecorder, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
         Item item2;
         item2.setMimeType(QStringLiteral("application/octet-stream"));
@@ -332,7 +332,7 @@ void LazyPopulationTest::testPurgeEmptyCollection()
     QVERIFY(monitorIndex.isValid());
 
     //fetch the collection so we remember the empty status
-    QSignalSpy populatedSpy(model, SIGNAL(collectionPopulated(Akonadi::Collection::Id)));
+    QSignalSpy populatedSpy(model, &EntityTreeModel::collectionPopulated);
     model->setData(monitorIndex, QVariant(), EntityTreeModel::CollectionRefRole);
     model->fetchMore(monitorIndex);
     //Wait for collection to be fetched
@@ -344,7 +344,7 @@ void LazyPopulationTest::testPurgeEmptyCollection()
 
     //create an item
     {
-        QSignalSpy addedSpy(monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
         Item item1;
         item1.setMimeType(QStringLiteral("application/octet-stream"));

@@ -139,7 +139,7 @@ void RelationTest::testMonitor()
     Relation rel(Relation::GENERIC, item1, item2);
 
     {
-        QSignalSpy addedSpy(&monitor, SIGNAL(relationAdded(Akonadi::Relation)));
+        QSignalSpy addedSpy(&monitor, &Monitor::relationAdded);
         QVERIFY(addedSpy.isValid());
 
         RelationCreateJob *createjob = new RelationCreateJob(rel, this);
@@ -151,7 +151,7 @@ void RelationTest::testMonitor()
     }
 
     {
-        QSignalSpy removedSpy(&monitor, SIGNAL(relationRemoved(Akonadi::Relation)));
+        QSignalSpy removedSpy(&monitor, &Monitor::relationRemoved);
         QVERIFY(removedSpy.isValid());
         RelationDeleteJob *deleteJob = new RelationDeleteJob(rel, this);
         AKVERIFYEXEC(deleteJob);

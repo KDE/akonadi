@@ -34,20 +34,20 @@ InspectableMonitor::InspectableMonitor(FakeMonitorDependenciesFactory *dependenc
 {
     // Make sure signals don't get optimized away.
     // TODO: Make this parametrizable in the test class.
-    connect(this, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(itemLinked(Akonadi::Item,Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(itemRemoved(Akonadi::Item)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(itemUnlinked(Akonadi::Item,Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)), SIGNAL(dummySignal()));
+    connect(this, &Akonadi::Monitor::itemAdded, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::itemChanged, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::itemLinked, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::itemMoved, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::itemRemoved, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::itemUnlinked, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::collectionAdded, this, &InspectableMonitor::dummySignal);
     connect(this, SIGNAL(collectionChanged(Akonadi::Collection)), SIGNAL(dummySignal()));
     connect(this, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(collectionRemoved(Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)), SIGNAL(dummySignal()));
-    connect(this, SIGNAL(collectionUnsubscribed(Akonadi::Collection)), SIGNAL(dummySignal()));
+    connect(this, &Akonadi::Monitor::collectionMoved, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::collectionRemoved, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::collectionStatisticsChanged, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::collectionSubscribed, this, &InspectableMonitor::dummySignal);
+    connect(this, &Akonadi::Monitor::collectionUnsubscribed, this, &InspectableMonitor::dummySignal);
 
     QTimer::singleShot(0, this, [this]() { doConnectToNotificationManager(); });
 }

@@ -39,12 +39,12 @@ class ModelSignalSpy : public QObject
 public:
     explicit ModelSignalSpy(QAbstractItemModel &model)
     {
-        connect(&model, SIGNAL(rowsInserted(QModelIndex,int,int)), this, SLOT(onRowsInserted(QModelIndex,int,int)));
-        connect(&model, SIGNAL(rowsRemoved(QModelIndex,int,int)), this, SLOT(onRowsRemoved(QModelIndex,int,int)));
-        connect(&model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)), this, SLOT(onRowsMoved(QModelIndex,int,int,QModelIndex,int)));
-        connect(&model, SIGNAL(dataChanged(QModelIndex,QModelIndex)), this, SLOT(onDataChanged(QModelIndex,QModelIndex)));
-        connect(&model, SIGNAL(layoutChanged()), this, SLOT(onLayoutChanged()));
-        connect(&model, SIGNAL(modelReset()), this, SLOT(onModelReset()));
+        connect(&model, &QAbstractItemModel::rowsInserted, this, &ModelSignalSpy::onRowsInserted);
+        connect(&model, &QAbstractItemModel::rowsRemoved, this, &ModelSignalSpy::onRowsRemoved);
+        connect(&model, &QAbstractItemModel::rowsMoved, this, &ModelSignalSpy::onRowsMoved);
+        connect(&model, &QAbstractItemModel::dataChanged, this, &ModelSignalSpy::onDataChanged);
+        connect(&model, &QAbstractItemModel::layoutChanged, this, &ModelSignalSpy::onLayoutChanged);
+        connect(&model, &QAbstractItemModel::modelReset, this, &ModelSignalSpy::onModelReset);
     }
 
     QStringList mSignals;

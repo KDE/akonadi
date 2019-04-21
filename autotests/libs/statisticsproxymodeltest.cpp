@@ -213,7 +213,7 @@ void StatisticsProxyModelTest::shouldHandleDataChanged()
     // Given a extra-columns proxy with three extra columns
     StatisticsProxyModel pm;
     pm.setSourceModel(&m_model);
-    QSignalSpy dataChangedSpy(&pm, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+    QSignalSpy dataChangedSpy(&pm, &QAbstractItemModel::dataChanged);
 
     // When ETM says the collection changed
     m_model.item(0, 0)->setData(QStringLiteral("a"), Qt::EditRole);
@@ -230,7 +230,7 @@ void StatisticsProxyModelTest::shouldHandleDataChangedInExtraColumn()
     // Given a extra-columns proxy with three extra columns
     StatisticsProxyModel pm;
     pm.setSourceModel(&m_model);
-    QSignalSpy dataChangedSpy(&pm, SIGNAL(dataChanged(QModelIndex,QModelIndex)));
+    QSignalSpy dataChangedSpy(&pm, &QAbstractItemModel::dataChanged);
 
     // When the proxy wants to signal a change in an extra column
     Akonadi::Collection c1(1);

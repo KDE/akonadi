@@ -105,58 +105,58 @@ void ModelSpy::startSpying()
     // If a signal is connected to a slot multiple times, the slot gets called multiple times.
     // As we're doing start and stop spying all the time, we disconnect here first to make sure.
 
-    disconnect(m_model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-               this, SLOT(rowsAboutToBeInserted(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-               this, SLOT(rowsInserted(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-               this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-               this, SLOT(rowsRemoved(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
-               this, SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
-    disconnect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-               this, SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeInserted,
+               this, &ModelSpy::rowsAboutToBeInserted);
+    disconnect(m_model, &QAbstractItemModel::rowsInserted,
+               this, &ModelSpy::rowsInserted);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved,
+               this, &ModelSpy::rowsAboutToBeRemoved);
+    disconnect(m_model, &QAbstractItemModel::rowsRemoved,
+               this, &ModelSpy::rowsRemoved);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeMoved,
+               this, &ModelSpy::rowsAboutToBeMoved);
+    disconnect(m_model, &QAbstractItemModel::rowsMoved,
+               this, &ModelSpy::rowsMoved);
 
-    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-               this, SLOT(dataChanged(QModelIndex,QModelIndex)));
+    disconnect(m_model, &QAbstractItemModel::dataChanged,
+               this, &ModelSpy::dataChanged);
 
-    connect(m_model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-            SLOT(rowsAboutToBeInserted(QModelIndex,int,int)));
-    connect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-            SLOT(rowsInserted(QModelIndex,int,int)));
-    connect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-            SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
-    connect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-            SLOT(rowsRemoved(QModelIndex,int,int)));
-    connect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
-            SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
-    connect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-            SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
+    connect(m_model, &QAbstractItemModel::rowsAboutToBeInserted,
+            this, &ModelSpy::rowsAboutToBeInserted);
+    connect(m_model, &QAbstractItemModel::rowsInserted,
+            this, &ModelSpy::rowsInserted);
+    connect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved,
+            this, &ModelSpy::rowsAboutToBeRemoved);
+    connect(m_model, &QAbstractItemModel::rowsRemoved,
+            this, &ModelSpy::rowsRemoved);
+    connect(m_model, &QAbstractItemModel::rowsAboutToBeMoved,
+            this, &ModelSpy::rowsAboutToBeMoved);
+    connect(m_model, &QAbstractItemModel::rowsMoved,
+            this, &ModelSpy::rowsMoved);
 
-    connect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-            SLOT(dataChanged(QModelIndex,QModelIndex)));
+    connect(m_model, &QAbstractItemModel::dataChanged,
+            this, &ModelSpy::dataChanged);
 
 }
 
 void ModelSpy::stopSpying()
 {
     m_isSpying = false;
-    disconnect(m_model, SIGNAL(rowsAboutToBeInserted(QModelIndex,int,int)),
-               this, SLOT(rowsAboutToBeInserted(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsInserted(QModelIndex,int,int)),
-               this, SLOT(rowsInserted(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsAboutToBeRemoved(QModelIndex,int,int)),
-               this, SLOT(rowsAboutToBeRemoved(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsRemoved(QModelIndex,int,int)),
-               this, SLOT(rowsRemoved(QModelIndex,int,int)));
-    disconnect(m_model, SIGNAL(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)),
-               this, SLOT(rowsAboutToBeMoved(QModelIndex,int,int,QModelIndex,int)));
-    disconnect(m_model, SIGNAL(rowsMoved(QModelIndex,int,int,QModelIndex,int)),
-               this, SLOT(rowsMoved(QModelIndex,int,int,QModelIndex,int)));
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeInserted,
+               this, &ModelSpy::rowsAboutToBeInserted);
+    disconnect(m_model, &QAbstractItemModel::rowsInserted,
+               this, &ModelSpy::rowsInserted);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeRemoved,
+               this, &ModelSpy::rowsAboutToBeRemoved);
+    disconnect(m_model, &QAbstractItemModel::rowsRemoved,
+               this, &ModelSpy::rowsRemoved);
+    disconnect(m_model, &QAbstractItemModel::rowsAboutToBeMoved,
+               this, &ModelSpy::rowsAboutToBeMoved);
+    disconnect(m_model, &QAbstractItemModel::rowsMoved,
+               this, &ModelSpy::rowsMoved);
 
-    disconnect(m_model, SIGNAL(dataChanged(QModelIndex,QModelIndex)),
-               this, SLOT(dataChanged(QModelIndex,QModelIndex)));
+    disconnect(m_model, &QAbstractItemModel::dataChanged,
+               this, &ModelSpy::dataChanged);
 
 }
 

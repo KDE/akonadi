@@ -38,9 +38,9 @@ private Q_SLOTS:
     void testResourceManagement()
     {
         qRegisterMetaType<Akonadi::AgentInstance>();
-        QSignalSpy spyAddInstance(AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)));
+        QSignalSpy spyAddInstance(AgentManager::self(), &AgentManager::instanceAdded);
         QVERIFY(spyAddInstance.isValid());
-        QSignalSpy spyRemoveInstance(AgentManager::self(), SIGNAL(instanceRemoved(Akonadi::AgentInstance)));
+        QSignalSpy spyRemoveInstance(AgentManager::self(), &AgentManager::instanceRemoved);
         QVERIFY(spyRemoveInstance.isValid());
 
         AgentType type = AgentManager::self()->type(QStringLiteral("akonadi_knut_resource"));

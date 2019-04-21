@@ -112,16 +112,16 @@ private Q_SLOTS:
 
         Akonadi::Monitor monitor;
         monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
         QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
         ItemSync *syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
-        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         syncer->setFullSyncItems(origItems);
         AKVERIFYEXEC(syncer);
@@ -158,21 +158,21 @@ private Q_SLOTS:
 
         Akonadi::Monitor monitor;
         monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
         QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
         ItemSync *syncer = new ItemSync(col);
-        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         syncer->setTransactionMode(transactionMode);
         syncer->setBatchSize(1);
         syncer->setAutoDelete(false);
         syncer->setStreamingEnabled(true);
-        QSignalSpy spy(syncer, SIGNAL(result(KJob*)));
+        QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setTotalItems(origItems.count());
         QTest::qWait(0);
@@ -226,16 +226,16 @@ private Q_SLOTS:
 
         Akonadi::Monitor monitor;
         monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
         QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
         {
             ItemSync *syncer = new ItemSync(col);
-            QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+            QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
             QVERIFY(transactionSpy.isValid());
             syncer->setTransactionMode(ItemSync::SingleTransaction);
             syncer->setIncrementalSyncItems(origItems, Item::List());
@@ -270,7 +270,7 @@ private Q_SLOTS:
         {
             ItemSync *syncer = new ItemSync(col);
             syncer->setTransactionMode(ItemSync::SingleTransaction);
-            QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+            QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
             QVERIFY(transactionSpy.isValid());
             syncer->setIncrementalSyncItems(resultItems, delItems);
             AKVERIFYEXEC(syncer);
@@ -299,19 +299,19 @@ private Q_SLOTS:
 
         Akonadi::Monitor monitor;
         monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
         QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
         ItemSync *syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
-        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         syncer->setAutoDelete(false);
-        QSignalSpy spy(syncer, SIGNAL(result(KJob*)));
+        QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
         QTest::qWait(0);
@@ -353,16 +353,16 @@ private Q_SLOTS:
 
         Akonadi::Monitor monitor;
         monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
         QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
         ItemSync *syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
-        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         syncer->setIncrementalSyncItems(Item::List(), Item::List());
         AKVERIFYEXEC(syncer);
@@ -386,17 +386,17 @@ private Q_SLOTS:
 
         Akonadi::Monitor monitor;
         monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
         QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
         ItemSync *syncer = new ItemSync(col);
-        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
-        QSignalSpy spy(syncer, SIGNAL(result(KJob*)));
+        QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
         syncer->setTransactionMode(ItemSync::MultipleTransactions);
@@ -498,9 +498,9 @@ private Q_SLOTS:
         Item::List origItems = fetchItems(col);
 
         ItemSync *syncer = new ItemSync(col);
-        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
-        QSignalSpy spy(syncer, SIGNAL(result(KJob*)));
+        QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
         syncer->setTransactionMode(ItemSync::MultipleTransactions);
@@ -555,9 +555,9 @@ private Q_SLOTS:
         origItems = fetchItems(col);
 
         ItemSync *syncer = new ItemSync(col);
-        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
-        QSignalSpy spy(syncer, SIGNAL(result(KJob*)));
+        QSignalSpy spy(syncer, &KJob::result);
         QVERIFY(spy.isValid());
         syncer->setStreamingEnabled(true);
         syncer->setTransactionMode(ItemSync::MultipleTransactions);
@@ -608,16 +608,16 @@ private Q_SLOTS:
 
         Akonadi::Monitor monitor;
         monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
         QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
         ItemSync *syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
-        QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+        QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
         QVERIFY(transactionSpy.isValid());
         syncer->setFullSyncItems(origItems);
         QVERIFY(!syncer->exec());
@@ -643,7 +643,7 @@ private Q_SLOTS:
 
         Akonadi::Monitor monitor;
         monitor.setCollectionMonitored(col);
-        QSignalSpy addedSpy(&monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
+        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
         QVERIFY(addedSpy.isValid());
 
         const int itemCount = 1000;
@@ -654,15 +654,15 @@ private Q_SLOTS:
         const Item::List origItems = fetchItems(col);
         QCOMPARE(origItems.size(), itemCount);
 
-        QSignalSpy deletedSpy(&monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
         QVERIFY(deletedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
+        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
         QVERIFY(changedSpy.isValid());
 
         QBENCHMARK {
             ItemSync *syncer = new ItemSync(col);
             syncer->setTransactionMode(ItemSync::SingleTransaction);
-            QSignalSpy transactionSpy(syncer, SIGNAL(transactionCommitted()));
+            QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
             QVERIFY(transactionSpy.isValid());
             syncer->setFullSyncItems(origItems);
 

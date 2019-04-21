@@ -58,7 +58,7 @@ void ItemFetchTest::testFetch()
 
     // listing of a non-empty folder
     job = new ItemFetchJob(Collection(colId2), this);
-    QSignalSpy spy(job, SIGNAL(itemsReceived(Akonadi::Item::List)));
+    QSignalSpy spy(job, &ItemFetchJob::itemsReceived);
     QVERIFY(spy.isValid());
     AKVERIFYEXEC(job);
     Item::List items = job->items();

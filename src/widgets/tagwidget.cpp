@@ -63,7 +63,7 @@ void TagView::contextMenuEvent(QContextMenuEvent *event)
     }
 
     QMenu menu;
-    menu.addAction(i18n("Clear"), this, SIGNAL(clearTags()));
+    menu.addAction(i18n("Clear"), this, &TagView::clearTags);
 
     menu.exec(event->globalPos());
 }

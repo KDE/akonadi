@@ -134,7 +134,7 @@ void CollectionJobTest::testFolderList()
 {
     // recursive list of physical folders
     CollectionFetchJob *job = new CollectionFetchJob(Collection(res1ColId), CollectionFetchJob::Recursive);
-    QSignalSpy spy(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)));
+    QSignalSpy spy(job, &CollectionFetchJob::collectionsReceived);
     QVERIFY(spy.isValid());
     AKVERIFYEXEC(job);
     Collection::List list = job->collections();
@@ -192,8 +192,8 @@ void CollectionJobTest::testSignalOrder()
     toFetch << Collection(res2ColId);
     CollectionFetchJob *job = new CollectionFetchJob(toFetch, CollectionFetchJob::Recursive);
     ResultSignalTester spy;
-    connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)), &spy, SLOT(onCollectionsReceived(Akonadi::Collection::List)));
-    connect(job, SIGNAL(result(KJob*)), &spy, SLOT(onCollectionRetrievalDone(KJob*)));
+    connect(job, &CollectionFetchJob::collectionsReceived, &spy, &ResultSignalTester::onCollectionsReceived);
+    connect(job, &KJob::result, &spy, &ResultSignalTester::onCollectionRetrievalDone);
     AKVERIFYEXEC(job);
 
     QCOMPARE(spy.receivedSignals.size(), 2);
@@ -639,7 +639,7 @@ void CollectionJobTest::testRecursiveMultiList()
     toFetch << Collection(res1ColId);
     toFetch << Collection(res2ColId);
     CollectionFetchJob *job = new CollectionFetchJob(toFetch, CollectionFetchJob::Recursive);
-    QSignalSpy spy(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)));
+    QSignalSpy spy(job, &CollectionFetchJob::collectionsReceived);
     QVERIFY(spy.isValid());
     AKVERIFYEXEC(job);
 
@@ -671,7 +671,7 @@ void CollectionJobTest::testNonOverlappingRootList()
     toFetch << Collection(res1ColId);
     toFetch << Collection(res2ColId);
     CollectionFetchJob *job = new CollectionFetchJob(toFetch, CollectionFetchJob::NonOverlappingRoots);
-    QSignalSpy spy(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)));
+    QSignalSpy spy(job, &CollectionFetchJob::collectionsReceived);
     QVERIFY(spy.isValid());
     AKVERIFYEXEC(job);
 

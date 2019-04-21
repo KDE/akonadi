@@ -107,17 +107,17 @@ void MonitorTest::testMonitor()
     qRegisterMetaType<Akonadi::Item>();
     qRegisterMetaType<Akonadi::CollectionStatistics>();
     qRegisterMetaType<QSet<QByteArray> >();
-    QSignalSpy caddspy(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
+    QSignalSpy caddspy(monitor, &Monitor::collectionAdded);
     QSignalSpy cmodspy(monitor, SIGNAL(collectionChanged(Akonadi::Collection,QSet<QByteArray>)));
-    QSignalSpy cmvspy(monitor, SIGNAL(collectionMoved(Akonadi::Collection,Akonadi::Collection,Akonadi::Collection)));
-    QSignalSpy crmspy(monitor, SIGNAL(collectionRemoved(Akonadi::Collection)));
-    QSignalSpy cstatspy(monitor, SIGNAL(collectionStatisticsChanged(Akonadi::Collection::Id,Akonadi::CollectionStatistics)));
-    QSignalSpy cSubscribedSpy(monitor, SIGNAL(collectionSubscribed(Akonadi::Collection,Akonadi::Collection)));
-    QSignalSpy cUnsubscribedSpy(monitor, SIGNAL(collectionUnsubscribed(Akonadi::Collection)));
-    QSignalSpy iaddspy(monitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
-    QSignalSpy imodspy(monitor, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)));
-    QSignalSpy imvspy(monitor, SIGNAL(itemMoved(Akonadi::Item,Akonadi::Collection,Akonadi::Collection)));
-    QSignalSpy irmspy(monitor, SIGNAL(itemRemoved(Akonadi::Item)));
+    QSignalSpy cmvspy(monitor, &Monitor::collectionMoved);
+    QSignalSpy crmspy(monitor, &Monitor::collectionRemoved);
+    QSignalSpy cstatspy(monitor, &Monitor::collectionStatisticsChanged);
+    QSignalSpy cSubscribedSpy(monitor, &Monitor::collectionSubscribed);
+    QSignalSpy cUnsubscribedSpy(monitor, &Monitor::collectionUnsubscribed);
+    QSignalSpy iaddspy(monitor, &Monitor::itemAdded);
+    QSignalSpy imodspy(monitor, &Monitor::itemChanged);
+    QSignalSpy imvspy(monitor, &Monitor::itemMoved);
+    QSignalSpy irmspy(monitor, &Monitor::itemRemoved);
 
     QVERIFY(caddspy.isValid());
     QVERIFY(cmodspy.isValid());
@@ -438,7 +438,7 @@ void MonitorTest::testVirtualCollectionsMonitoring()
     Monitor *monitor = new Monitor(this);
     monitor->setCollectionMonitored(Collection(1));       // top-level 'Search' collection
 
-    QSignalSpy caddspy(monitor, SIGNAL(collectionAdded(Akonadi::Collection,Akonadi::Collection)));
+    QSignalSpy caddspy(monitor, &Monitor::collectionAdded);
     QVERIFY(caddspy.isValid());
 
     SearchCreateJob *job = new SearchCreateJob(QStringLiteral("Test search collection"), Akonadi::SearchQuery(), this);
