@@ -399,7 +399,7 @@ bool ItemCreateHandler::parseStream()
         if (cmd.mergeModes() & Protocol::CreateItemCommand::GID && !item.remoteId().isEmpty()) {
             mergeCondition = Query::Condition(Query::And);
             mergeCondition.addValueCondition(PimItem::remoteIdColumn(), Query::Equals, item.remoteId());
-            mergeCondition.addValueCondition(PimItem::gidColumn(), Query::Equals, QStringLiteral(""));
+            mergeCondition.addValueCondition(PimItem::gidColumn(), Query::Equals, QString());
             rootCondition.addCondition(mergeCondition);
         }
         qb.addCondition(rootCondition);

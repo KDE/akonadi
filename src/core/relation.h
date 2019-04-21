@@ -25,9 +25,9 @@
 namespace Akonadi
 {
 class Relation;
-}
 
 AKONADICORE_EXPORT unsigned int qHash(const Akonadi::Relation &);
+}
 
 #include <QSharedPointer>
 #include <QByteArray>

@@ -266,8 +266,8 @@ void TagModelTest::testTagRemoved()
     const auto removedTagList = QVariantList{removedTag};
     const auto parentTagVariant = parentTag.isEmpty() ? QVariant{} : parentTag;
     const QList<ExpectedSignal> expectedSignals {
-        ExpectedSignal{RowsAboutToBeRemoved, sourceRow, sourceRow, parentTagVariant, QVariantList{removedTag}},
-        ExpectedSignal{RowsRemoved, sourceRow, sourceRow, parentTagVariant, QVariantList{removedTag}}
+        ExpectedSignal{RowsAboutToBeRemoved, sourceRow, sourceRow, parentTagVariant, removedTagList},
+        ExpectedSignal{RowsRemoved, sourceRow, sourceRow, parentTagVariant, removedTagList}
     };
 
     m_modelSpy->setExpectedSignals(expectedSignals);

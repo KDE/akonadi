@@ -871,7 +871,7 @@ private Q_SLOTS:
                     qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, actualTag.id());
                     QVERIFY(qb.exec());
                     QCOMPARE(qb.result().size(), 1);
-                    QCOMPARE(qb.result()[0].remoteId(), tag.remoteId());
+                    QCOMPARE(qb.result().at(0).remoteId(), tag.remoteId());
                 }
             }
 
