@@ -114,7 +114,7 @@ check_symbol_exists(malloc_trim "malloc.h" HAVE_MALLOC_TRIM)
 ############### Build Options ###############
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(BUILD_TOOLS "Build and install tools for development and testing purposes." TRUE)
-option(NO_REGENERATE_MIME "Don't regenerate mime file (only for developper)" FALSE )
+option(NO_REGENERATE_MIME "Don't regenerate mime file (developer-only option)" FALSE )
 
 if(BUILD_TESTING)
    set(BUILD_TOOLS TRUE)
