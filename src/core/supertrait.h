@@ -23,13 +23,22 @@
 namespace Akonadi
 {
 
+namespace Internal {
+template<typename T> struct check_type{ typedef void type; };
+}
+
 /**
   @internal
-  @see super_class
+  @see SuperClass
 */
-template <typename Super>
+template <typename Super, typename = void>
 struct SuperClassTrait {
     typedef Super Type;
+};
+
+template <typename Class>
+struct SuperClassTrait<Class, typename Internal::check_type<typename Class::SuperClass>::type> {
+    typedef typename Class::SuperClass Type;
 };
 
 /**
@@ -43,6 +52,10 @@ struct SuperClassTrait {
     template <> struct SuperClass<MyClass> : public SuperClassTrait<MyBaseClass>{};
   }
   @endcode
+
+  Alternatively, define a typedef "SuperClass" in your type, pointing to the base class.
+  This avoids having to include this header file if that's inconvenient from a dependency
+  point of view.
 */
 template <typename Class> struct SuperClass : public SuperClassTrait<Class> {};
 }

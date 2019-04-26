@@ -37,7 +37,8 @@ private Q_SLOTS:
     void testItemCopy();
     void testEmptyPayload();
     void testPointerPayload();
-    void testPolymorphicPayload();
+    void testPolymorphicPayloadWithTrait();
+    void testPolymorphicPayloadWithTypedef();
     void testNullPointerPayload();
     void testQSharedPointerPayload();
     void testHasPayload();

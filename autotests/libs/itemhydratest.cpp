@@ -64,6 +64,8 @@ struct Gerd: public Volker {
     {
         return new Gerd(*this);
     }
+
+    typedef Volker SuperClass;
 };
 
 typedef std::shared_ptr<Gerd> GerdPtr;
@@ -79,7 +81,6 @@ Q_DECLARE_METATYPE(Gerd)
 namespace Akonadi
 {
 template <> struct SuperClass<Rudi> : public SuperClassTrait<Volker> {};
-template <> struct SuperClass<Gerd> : public SuperClassTrait<Volker> {};
 }
 
 QTEST_MAIN(ItemHydra)
@@ -215,7 +216,7 @@ void ItemHydra::testPointerPayload()
     QCOMPARE(w.use_count(), (long)0);
 }
 
-void ItemHydra::testPolymorphicPayload()
+void ItemHydra::testPolymorphicPayloadWithTrait()
 {
     VolkerPtr p(new Rudi);
 
@@ -242,6 +243,43 @@ void ItemHydra::testPolymorphicPayload()
         bool caughtException = false;
         try {
             GerdPtr p3 = i1.payload<GerdPtr>();
+        } catch (const Akonadi::PayloadException &e) {
+            qDebug() << e.what();
+            caughtException = true;
+        }
+        QVERIFY(caughtException);
+
+        QCOMPARE(p.use_count(), (long)2);
+    }
+}
+
+void ItemHydra::testPolymorphicPayloadWithTypedef()
+{
+    VolkerPtr p(new Gerd);
+
+    {
+        Item i1;
+        i1.setPayload(p);
+        QVERIFY(i1.hasPayload());
+        QVERIFY(i1.hasPayload<VolkerPtr>());
+        QVERIFY(!i1.hasPayload<RudiPtr>());
+        QVERIFY(i1.hasPayload<GerdPtr>());
+        QCOMPARE(p.use_count(), (long)2);
+        {
+            auto p2 = std::dynamic_pointer_cast<Gerd, Volker>(i1.payload< VolkerPtr >());
+            QCOMPARE(p.use_count(), (long)3);
+            QCOMPARE(p2->who, QStringLiteral("Gerd"));
+        }
+
+        {
+            auto p2 = i1.payload< GerdPtr >();
+            QCOMPARE(p.use_count(), (long)3);
+            QCOMPARE(p2->who, QStringLiteral("Gerd"));
+        }
+
+        bool caughtException = false;
+        try {
+            auto p3 = i1.payload<RudiPtr>();
         } catch (const Akonadi::PayloadException &e) {
             qDebug() << e.what();
             caughtException = true;
