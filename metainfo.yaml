@@ -8,16 +8,16 @@ public_lib: true
 libraries:
     - qmake: AkonadiCore
       cmake: KF5::AkonadiCore
-      cmakename: KF5AkonadiCore
+cmakename: KF5AkonadiCore
     - qmake: AkonadiAgentBase
       cmake: KF5::AkonadiAgentBase
-      cmakename: KF5AkonadiAgentBase
+cmakename: KF5AkonadiAgentBase
     - qmake: AkonadiWidgets
       cmake: KF5::AkonadiWidgets
-      cmakename: KF5AkonadiWidgets
+cmakename: KF5AkonadiWidgets
     - qmake: AkonadiXml
       cmake: KF5::AkonadiXml
-      cmakename: KF5AkonadiXml
+cmakename: KF5AkonadiXml
 irc: akonadi
 
 group_info:
