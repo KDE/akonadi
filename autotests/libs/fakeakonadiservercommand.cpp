@@ -105,12 +105,12 @@ Tag FakeAkonadiServerCommand::getTagByDisplayName(const QString &displayName) co
 void FakeJobResponse::doCommand()
 {
     if (m_type == RespondToCollectionFetch) {
-        emit_collectionsFetched(m_collections | values | toQVector);
+        Q_EMIT emit_collectionsFetched(m_collections | values | toQVector);
     } else if (m_type == RespondToItemFetch) {
         setProperty("FetchCollectionId", m_parentCollection.id());
-        emit_itemsFetched(m_items | values | toQVector);
+        Q_EMIT emit_itemsFetched(m_items | values | toQVector);
     } else if (m_type == RespondToTagFetch) {
-        emit_tagsFetched(m_tags | values | toQVector);
+        Q_EMIT emit_tagsFetched(m_tags | values | toQVector);
     }
 }
 
@@ -363,7 +363,7 @@ void FakeCollectionMovedCommand::doCommand()
 
     collection.setParentCollection(target);
 
-    emit_monitoredCollectionMoved(collection, source, target);
+    Q_EMIT emit_monitoredCollectionMoved(collection, source, target);
 }
 
 void FakeCollectionAddedCommand::doCommand()
@@ -382,7 +382,7 @@ void FakeCollectionAddedCommand::doCommand()
     eda->setDisplayName(m_collectionName);
     collection.addAttribute(eda);
 
-    emit_monitoredCollectionAdded(collection, parent);
+    Q_EMIT emit_monitoredCollectionAdded(collection, parent);
 }
 
 void FakeCollectionRemovedCommand::doCommand()
@@ -391,13 +391,13 @@ void FakeCollectionRemovedCommand::doCommand()
 
     Q_ASSERT(collection.isValid());
 
-    emit_monitoredCollectionRemoved(collection);
+    Q_EMIT emit_monitoredCollectionRemoved(collection);
 }
 
 void FakeCollectionChangedCommand::doCommand()
 {
     if (m_collection.isValid()) {
-        emit_monitoredCollectionChanged(m_collection);
+        Q_EMIT emit_monitoredCollectionChanged(m_collection);
         return;
     }
     Collection collection = getCollectionByDisplayName(m_collectionName);
@@ -405,7 +405,7 @@ void FakeCollectionChangedCommand::doCommand()
 
     Q_ASSERT(collection.isValid());
 
-    emit_monitoredCollectionChanged(collection);
+    Q_EMIT emit_monitoredCollectionChanged(collection);
 }
 
 void FakeItemMovedCommand::doCommand()
@@ -420,7 +420,7 @@ void FakeItemMovedCommand::doCommand()
 
     item.setParentCollection(target);
 
-    emit_monitoredItemMoved(item, source, target);
+    Q_EMIT emit_monitoredItemMoved(item, source, target);
 }
 
 void FakeItemAddedCommand::doCommand()
@@ -438,7 +438,7 @@ void FakeItemAddedCommand::doCommand()
     eda->setDisplayName(m_itemName);
     item.addAttribute(eda);
 
-    emit_monitoredItemAdded(item, parent);
+    Q_EMIT emit_monitoredItemAdded(item, parent);
 }
 
 void FakeItemRemovedCommand::doCommand()
@@ -447,7 +447,7 @@ void FakeItemRemovedCommand::doCommand()
 
     Q_ASSERT(item.isValid());
 
-    emit_monitoredItemRemoved(item);
+    Q_EMIT emit_monitoredItemRemoved(item);
 }
 
 void FakeItemChangedCommand::doCommand()
@@ -458,7 +458,7 @@ void FakeItemChangedCommand::doCommand()
     Q_ASSERT(item.isValid());
     Q_ASSERT(parent.isValid());
 
-    emit_monitoredItemChanged(item, QSet<QByteArray>());
+    Q_EMIT emit_monitoredItemChanged(item, QSet<QByteArray>());
 }
 
 void FakeTagAddedCommand::doCommand()
@@ -471,7 +471,7 @@ void FakeTagAddedCommand::doCommand()
     tag.setRemoteId("remoteId " + QByteArray::number(tag.id()));
     tag.setParent(parent);
 
-    emit_monitoredTagAdded(tag);
+    Q_EMIT emit_monitoredTagAdded(tag);
 }
 
 void FakeTagChangedCommand::doCommand()
@@ -480,7 +480,7 @@ void FakeTagChangedCommand::doCommand()
 
     Q_ASSERT(tag.isValid());
 
-    emit_monitoredTagChanged(tag);
+    Q_EMIT emit_monitoredTagChanged(tag);
 }
 
 void FakeTagMovedCommand::doCommand()
@@ -492,7 +492,7 @@ void FakeTagMovedCommand::doCommand()
 
     tag.setParent(newParent);
 
-    emit_monitoredTagChanged(tag);
+    Q_EMIT emit_monitoredTagChanged(tag);
 }
 
 void FakeTagRemovedCommand::doCommand()
@@ -501,5 +501,5 @@ void FakeTagRemovedCommand::doCommand()
 
     Q_ASSERT(tag.isValid());
 
-    emit_monitoredTagRemoved(tag);
+    Q_EMIT emit_monitoredTagRemoved(tag);
 }

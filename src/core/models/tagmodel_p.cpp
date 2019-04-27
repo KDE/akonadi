@@ -214,7 +214,7 @@ void TagModelPrivate::monitoredTagChanged(const Tag &tag)
         }
 
         const QModelIndex index = indexForTag(tag.id());
-        q->dataChanged(index, index);
+        Q_EMIT q->dataChanged(index, index);
     }
 }
 

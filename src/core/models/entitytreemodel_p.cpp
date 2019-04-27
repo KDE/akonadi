@@ -179,7 +179,7 @@ void EntityTreeModelPrivate::changeFetchState(const Collection &parent)
         // Because we are called delayed, it is possible that @p parent has been deleted.
         return;
     }
-    q->dataChanged(collectionIndex, collectionIndex);
+    Q_EMIT q->dataChanged(collectionIndex, collectionIndex);
 }
 
 void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &instance)

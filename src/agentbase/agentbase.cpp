@@ -382,7 +382,7 @@ void AgentBasePrivate::init()
     new Akonadi__ControlAdaptor(q);
     new Akonadi__StatusAdaptor(q);
     if (!KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/"), q, QDBusConnection::ExportAdaptors)) {
-        q->error(i18n("Unable to register object at dbus: %1", KDBusConnectionPool::threadConnection().lastError().message()));
+        Q_EMIT q->error(i18n("Unable to register object at dbus: %1", KDBusConnectionPool::threadConnection().lastError().message()));
     }
 
     mSettings = new QSettings(ServerManager::agentConfigFilePath(mId), QSettings::IniFormat);
