@@ -30,7 +30,7 @@
 #include <entitydisplayattribute.h>
 #include <entitytreemodel_p.h>
 
-static const QString serverContent1 = QStringLiteral(
+static const char serverContent1[] =
         // The format of these lines are first a type, either 'C' or 'I' for Item and collection.
         // The dashes show the depth in the hierarchy
         // Collections have a list of mimetypes they can contain, followed by an optional
@@ -59,7 +59,7 @@ static const QString serverContent1 = QStringLiteral(
         "- - - I text/directory                 'Item 12'"
         "- - - I text/directory                 'Item 13'"
         "- - - I message/rfc822                 'Item 14'"
-        "- - - I message/rfc822                 'Item 15'");
+        "- - - I message/rfc822                 'Item 15'";
 
 /**
  * This test verifies that the ETM reacts as expected to signals from the monitor.
@@ -153,7 +153,7 @@ void EntityTreeModelTest::testInitialFetch()
     const auto model = new EntityTreeModel(fakeMonitor, this);
 
     const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor);
-    serverData->setCommands(FakeJobResponse::interpret(serverData, serverContent1));
+    serverData->setCommands(FakeJobResponse::interpret(serverData, QString::fromLatin1(serverContent1)));
 
     m_modelSpy = new ModelSpy(model, this);
     m_modelSpy->startSpying();
@@ -375,7 +375,7 @@ void EntityTreeModelTest::testCollectionChanged()
 {
     QFETCH(QString, serverContent);
     QFETCH(QString, collectionName);
-    QFETCH(QString, monitoredMimeType);
+    QFETCH(QString, monitoredMimeType); // ##### TODO: this is unused. Is this test correct?
 
     const auto testDrivers = populateModel(serverContent);
     const auto serverData = testDrivers.first;

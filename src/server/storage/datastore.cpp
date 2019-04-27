@@ -305,10 +305,10 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
 
     if (!silent && (!addedFlags.isEmpty() || !removedFlags.isEmpty())) {
         QSet<QByteArray> addedFlagsBa, removedFlagsBa;
-        for (const auto &addedFlag : addedFlags) {
+        for (const auto &addedFlag : qAsConst(addedFlags)) {
             addedFlagsBa.insert(addedFlag.toLatin1());
         }
-        for (const auto &removedFlag : removedFlags) {
+        for (const auto &removedFlag : qAsConst(removedFlags)) {
             removedFlagsBa.insert(removedFlag.toLatin1());
         }
         notificationCollector()->itemsFlagsChanged(items, addedFlagsBa, removedFlagsBa, col);
@@ -460,7 +460,7 @@ bool DataStore::removeItemsFlags(const PimItem::List &items, const QVector<Flag>
         setBoolPtr(flagsChanged, true);
         if (!silent) {
             QSet<QByteArray> removedFlagsBa;
-            for (const auto &remoteFlag : removedFlags) {
+            for (const auto &remoteFlag : qAsConst(removedFlags)) {
                 removedFlagsBa.insert(remoteFlag.toLatin1());
             }
             notificationCollector()->itemsFlagsChanged(items, {}, removedFlagsBa, col);

@@ -371,7 +371,7 @@ private:
     void fetchStatistics(Collection::Id colId)
     {
         CollectionStatisticsJob *job = new CollectionStatisticsJob(Collection(colId), session);
-        QObject::connect(job, SIGNAL(result(KJob *)), q_ptr, SLOT(slotStatisticsChangedFinished(KJob *)));
+        QObject::connect(job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotStatisticsChangedFinished(KJob*)));
     }
 
     void notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource);

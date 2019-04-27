@@ -54,10 +54,10 @@ Connection::Connection(ConnectionType connType, const QByteArray &sessionId,
     const QByteArray sessionLogFile = qgetenv("AKONADI_SESSION_LOGFILE");
     if (!sessionLogFile.isEmpty()) {
         mLogFile = new QFile(QStringLiteral("%1.%2.%3.%4-%5").arg(QString::fromLatin1(sessionLogFile))
-                             .arg(QString::number(QApplication::applicationPid()))
-                             .arg(QString::number(reinterpret_cast<qulonglong>(this), 16))
-                             .arg(QString::fromLatin1(mSessionId.replace('/', '_')))
-                             .arg(connType == CommandConnection ? QStringLiteral("Cmd") : QStringLiteral("Ntf")));
+                             .arg(QApplication::applicationPid())
+                             .arg(QString::number(reinterpret_cast<qulonglong>(this), 16),
+                                  QString::fromLatin1(mSessionId.replace('/', '_')),
+                                  connType == CommandConnection ? QStringLiteral("Cmd") : QStringLiteral("Ntf")));
         if (!mLogFile->open(QIODevice::WriteOnly | QIODevice::Truncate)) {
             qCWarning(AKONADICORE_LOG) << "Failed to open Akonadi Session log file" << mLogFile->fileName();
             delete mLogFile;

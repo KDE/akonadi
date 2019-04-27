@@ -88,7 +88,7 @@ bool DbInitializer::run()
 
 #ifndef DBINITIALIZER_UNITTEST
         // Now finally check and set the generation identifier if necessary
-        SchemaVersion version = SchemaVersion::retrieveAll().first();
+        SchemaVersion version = SchemaVersion::retrieveAll().at(0);
         if (version.generation() == 0) {
             version.setGeneration(QDateTime::currentDateTimeUtc().toTime_t());
             version.update();

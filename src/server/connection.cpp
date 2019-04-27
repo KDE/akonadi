@@ -134,7 +134,7 @@ void Connection::quit()
 
 void Connection::slotSendHello()
 {
-    SchemaVersion version = SchemaVersion::retrieveAll().first();
+    SchemaVersion version = SchemaVersion::retrieveAll().at(0);
 
     Protocol::HelloResponse hello;
     hello.setServerName(QStringLiteral("Akonadi"));

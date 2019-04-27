@@ -547,7 +547,6 @@ bool ItemFetchScope::fetch(FetchFlags flags) const
 void ItemFetchScope::toJson(QJsonObject &json) const
 {
     json[QStringLiteral("flags")] = static_cast<int>(mFlags);
-    QJsonArray tagFetchArray;
     json[QStringLiteral("ChangedSince")] = mChangedSince.toString();
     json[QStringLiteral("AncestorDepth")] = static_cast<std::underlying_type<AncestorDepth>::type>(mAncestorDepth);
 

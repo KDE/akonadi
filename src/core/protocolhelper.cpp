@@ -134,7 +134,6 @@ void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors
 void ProtocolHelper::parseAncestors(const QVector<Protocol::Ancestor> &ancestors, Collection *collection)
 {
     static const Collection::Id rootCollectionId = Collection::root().id();
-    QList<QByteArray> parentIds;
 
     Collection *current = collection;
     for (const Protocol::Ancestor &ancestor : ancestors) {
@@ -544,7 +543,7 @@ CollectionFetchScope ProtocolHelper::parseCollectionFetchScope(const Protocol::C
     if (cfs.ancestorRetrieval() != CollectionFetchScope::None) {
         cfs.ancestorFetchScope().setFetchIdOnly(fetchScope.ancestorFetchIdOnly());
         const auto attrs = fetchScope.ancestorAttributes();
-        for (const auto attr : attrs) {
+        for (const auto &attr : attrs) {
             cfs.ancestorFetchScope().fetchAttribute(attr, true);
         }
     }

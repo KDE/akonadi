@@ -37,12 +37,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-static QVector<QByteArray> localFlagsToPreserve = QVector<QByteArray>() << "$ATTACHMENT"
-        << "$INVITATION"
-        << "$ENCRYPTED"
-        << "$SIGNED"
-        << "$WATCHED";
-
 bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                                      Collection &parentCol)
 {
@@ -205,6 +199,13 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
     } else {
         bool flagsChanged = false;
         QSet<QByteArray> flagNames = cmd.flags();
+
+        static QVector<QByteArray> localFlagsToPreserve = {
+            "$ATTACHMENT",
+            "$INVITATION",
+            "$ENCRYPTED",
+            "$SIGNED",
+            "$WATCHED" };
 
         // Make sure we don't overwrite some local-only flags that can't come
         // through from Resource during ItemSync, like $ATTACHMENT, because the

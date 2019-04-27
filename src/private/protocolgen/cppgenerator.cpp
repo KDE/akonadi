@@ -447,7 +447,6 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                 startChar = ':';
             }
             for (auto prop : properties) {
-                const auto defaultValue = prop->defaultValue();
                 auto arg = std::find_if(args.cbegin(), args.cend(),
                                         [prop](const CtorNode::Argument &arg) {
                                             return arg.name == prop->name();
@@ -507,7 +506,6 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             writeImplPropertyDependencies(prop);
             mImpl << "}\n\n";
         } else if (!prop->dependencies().isEmpty()) {
-            QString varType;
             if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
                 mImpl << "void " << node->className() << "::" << prop->setterName()
                       << "(" << prop->type() << " val)\n"
