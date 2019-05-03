@@ -56,144 +56,144 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Handler *Handler::findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd)
+std::unique_ptr<Handler> Handler::findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd)
 {
     // allowed are LOGIN
     if (cmd == Protocol::Command::Login) {
-        return new LoginHandler();
+        return std::make_unique<LoginHandler>();
     }
 
-    return nullptr;
+    return {};
 }
 
-Handler *Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd)
+std::unique_ptr<Handler> Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd)
 {
     // allowed is LOGOUT
     if (cmd == Protocol::Command::Logout) {
-        return new LogoutHandler();
+        return std::make_unique<LogoutHandler>();
     }
     return nullptr;
 }
 
-Handler *Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd)
+std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd)
 {
     switch (cmd) {
     case Protocol::Command::Invalid:
         Q_ASSERT_X(cmd != Protocol::Command::Invalid, __FUNCTION__,
                    "Invalid command is not allowed");
-        return nullptr;
+        return {};
     case Protocol::Command::Hello:
         Q_ASSERT_X(cmd != Protocol::Command::Hello, __FUNCTION__,
                    "Hello command is not allowed in this context");
-        return nullptr;
+        return {};
     case Protocol::Command::Login:
-        return nullptr;
+        return {};
     case Protocol::Command::Logout:
-        return nullptr;
+        return {};
     case Protocol::Command::_ResponseBit:
         Q_ASSERT_X(cmd != Protocol::Command::_ResponseBit, __FUNCTION__,
                    "ResponseBit is not a valid command type");
-        return nullptr;
+        return {};
 
     case Protocol::Command::Transaction:
-        return new TransactionHandler();
+        return std::make_unique<TransactionHandler>();
 
     case Protocol::Command::CreateItem:
-        return new ItemCreateHandler();
+        return std::make_unique<ItemCreateHandler>();
     case Protocol::Command::CopyItems:
-        return new ItemCopyHandler();
+        return std::make_unique<ItemCopyHandler>();
     case Protocol::Command::DeleteItems:
-        return new ItemDeleteHandler();
+        return std::make_unique<ItemDeleteHandler>();
     case Protocol::Command::FetchItems:
-        return new ItemFetchHandler();
+        return std::make_unique<ItemFetchHandler>();
     case Protocol::Command::LinkItems:
-        return new ItemLinkHandler();
+        return std::make_unique<ItemLinkHandler>();
     case Protocol::Command::ModifyItems:
-        return new ItemModifyHandler();
+        return std::make_unique<ItemModifyHandler>();
     case Protocol::Command::MoveItems:
-        return new ItemMoveHandler();
+        return std::make_unique<ItemMoveHandler>();
 
     case Protocol::Command::CreateCollection:
-        return new CollectionCreateHandler();
+        return std::make_unique<CollectionCreateHandler>();
     case Protocol::Command::CopyCollection:
-        return new CollectionCopyHandler();
+        return std::make_unique<CollectionCopyHandler>();
     case Protocol::Command::DeleteCollection:
-        return new CollectionDeleteHandler();
+        return std::make_unique<CollectionDeleteHandler>();
     case Protocol::Command::FetchCollections:
-        return new CollectionFetchHandler();
+        return std::make_unique<CollectionFetchHandler>();
     case Protocol::Command::FetchCollectionStats:
-        return new CollectionStatsFetchHandler();
+        return std::make_unique<CollectionStatsFetchHandler>();
     case Protocol::Command::ModifyCollection:
-        return new CollectionModifyHandler();
+        return std::make_unique<CollectionModifyHandler>();
     case Protocol::Command::MoveCollection:
-        return new CollectionMoveHandler();
+        return std::make_unique<CollectionMoveHandler>();
 
     case Protocol::Command::Search:
-        return new SearchHandler();
+        return std::make_unique<SearchHandler>();
     case Protocol::Command::SearchResult:
-        return new SearchResultHandler();
+        return std::make_unique<SearchResultHandler>();
     case Protocol::Command::StoreSearch:
-        return new SearchCreateHandler();
+        return std::make_unique<SearchCreateHandler>();
 
     case Protocol::Command::CreateTag:
-        return new TagCreateHandler();
+        return std::make_unique<TagCreateHandler>();
     case Protocol::Command::DeleteTag:
-        return new TagDeleteHandler();
+        return std::make_unique<TagDeleteHandler>();
     case Protocol::Command::FetchTags:
-        return new TagFetchHandler();
+        return std::make_unique<TagFetchHandler>();
     case Protocol::Command::ModifyTag:
-        return new TagModifyHandler();
+        return std::make_unique<TagModifyHandler>();
 
     case Protocol::Command::FetchRelations:
-        return new RelationFetchHandler();
+        return std::make_unique<RelationFetchHandler>();
     case Protocol::Command::ModifyRelation:
-        return new RelationModifyHandler();
+        return std::make_unique<RelationModifyHandler>();
     case Protocol::Command::RemoveRelations:
-        return new RelationRemoveHandler();
+        return std::make_unique<RelationRemoveHandler>();
 
     case Protocol::Command::SelectResource:
-        return new ResourceSelectHandler();
+        return std::make_unique<ResourceSelectHandler>();
 
     case Protocol::Command::StreamPayload:
         Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
                    "StreamPayload command is not allowed in this context");
-        return nullptr;
+        return {};
 
     case Protocol::Command::ItemChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::ItemChangeNotification, __FUNCTION__,
                    "ItemChangeNotification command is not allowed on this connection");
-        return nullptr;
+        return {};
     case Protocol::Command::CollectionChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::CollectionChangeNotification, __FUNCTION__,
                    "CollectionChangeNotification command is not allowed on this connection");
-        return nullptr;
+        return {};
     case Protocol::Command::TagChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::TagChangeNotification, __FUNCTION__,
                    "TagChangeNotification command is not allowed on this connection");
-        return nullptr;
+        return {};
     case Protocol::Command::RelationChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::RelationChangeNotification, __FUNCTION__,
                    "RelationChangeNotification command is not allowed on this connection");
-        return nullptr;
+        return {};
     case Protocol::Command::SubscriptionChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::SubscriptionChangeNotification, __FUNCTION__,
                    "SubscriptionChangeNotification command is not allowed on this connection");
-        return nullptr;
+        return {};
     case Protocol::Command::DebugChangeNotification:
         Q_ASSERT_X(cmd != Protocol::Command::DebugChangeNotification, __FUNCTION__,
                    "DebugChangeNotification command is not allowed on this connection");
-        return nullptr;
+        return {};
     case Protocol::Command::ModifySubscription:
         Q_ASSERT_X(cmd != Protocol::Command::ModifySubscription, __FUNCTION__,
                    "ModifySubscription command is not allowed on this connection");
-        return nullptr;
+        return {};
     case Protocol::Command::CreateSubscription:
         Q_ASSERT_X(cmd != Protocol::Command::CreateSubscription, __FUNCTION__,
                    "CreateSubscription command is not allowed on this connection");
-        return nullptr;
+        return {};
     }
 
-    return nullptr;
+    return {};
 }
 
 void Handler::setTag(quint64 tag)

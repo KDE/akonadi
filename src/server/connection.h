@@ -100,7 +100,7 @@ protected:
     void init() override;
     void quit() override;
 
-    Handler *findHandlerForCommand(Protocol::Command::Type cmd);
+    std::unique_ptr<Handler> findHandlerForCommand(Protocol::Command::Type cmd);
 
     qint64 currentTag() const;
 

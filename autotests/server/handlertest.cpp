@@ -99,6 +99,15 @@ private:
     {
         //MAKE_CMD_ROW(Protocol::Command::Invalid, UnknownCommandHandler)
     }
+
+    template<typename T>
+    QByteArray typeName(const T &t)
+    {
+        const auto &v = *t.get();
+        return typeid(v).name();
+    }
+
+
 private Q_SLOTS:
     void testFindAuthenticatedCommand_data()
     {
@@ -110,9 +119,9 @@ private Q_SLOTS:
     {
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command));
-        QVERIFY(!handler.isNull());
-        QCOMPARE(QByteArray(typeid(*handler.data()).name()), className);
+        const auto handler = Handler::findHandlerForCommandAuthenticated(command);
+        QVERIFY(handler);
+        QCOMPARE(typeName(handler), className);
     }
 
     void testFindAuthenticatedCommandNegative_data()
@@ -128,8 +137,8 @@ private Q_SLOTS:
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAuthenticated(command));
-        QVERIFY(handler.isNull());
+        const auto handler = Handler::findHandlerForCommandAuthenticated(command);
+        QVERIFY(!handler);
     }
 
     void testFindNonAutenticatedCommand_data()
@@ -143,26 +152,10 @@ private Q_SLOTS:
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command));
-        QVERIFY(!handler.isNull());
-        QCOMPARE(QByteArray(typeid(*handler.data()).name()), className);
-    }
 
-    void testFindNonAutenticatedCommandNegative_data()
-    {
-        setupTestData();
-        addAuthCommands();
-        addAlwaysCommands();
-        addInvalidCommands();
-    }
-
-    void testFindNonAutenticatedCommandNegative()
-    {
-        QFETCH(Protocol::Command::Type, command);
-        QFETCH(QByteArray, className);
-
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandNonAuthenticated(command));
-        QVERIFY(handler.isNull());
+        auto handler = Handler::findHandlerForCommandNonAuthenticated(command);
+        QVERIFY(handler);
+        QCOMPARE(typeName(handler), className);
     }
 
     void testFindAlwaysCommand_data()
@@ -176,9 +169,9 @@ private Q_SLOTS:
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command));
-        QVERIFY(!handler.isNull());
-        QCOMPARE(QByteArray(typeid(*handler.data()).name()), className);
+        const auto handler = Handler::findHandlerForCommandAlwaysAllowed(command);
+        QVERIFY(handler);
+        QCOMPARE(typeName(handler), className);
     }
 
     void testFindAlwaysCommandNegative_data()
@@ -194,8 +187,8 @@ private Q_SLOTS:
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
 
-        QScopedPointer<Handler> handler(Handler::findHandlerForCommandAlwaysAllowed(command));
-        QVERIFY(handler.isNull());
+        const auto handler = Handler::findHandlerForCommandAlwaysAllowed(command);
+        QVERIFY(!handler);
     }
 };
 

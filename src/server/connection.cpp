@@ -266,7 +266,7 @@ void Connection::handleIncomingData()
                 Tracer::self()->connectionInput(m_identifier, tag, cmd);
             }
 
-            m_currentHandler = std::unique_ptr<Handler>(findHandlerForCommand(cmd->type()));
+            m_currentHandler = findHandlerForCommand(cmd->type());
             if (!m_currentHandler) {
                 qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type()
                                              << "on connection" << m_identifier;
@@ -365,9 +365,9 @@ CommandContext *Connection::context() const
     return const_cast<CommandContext *>(&m_context);
 }
 
-Handler *Connection::findHandlerForCommand(Protocol::Command::Type command)
+std::unique_ptr<Handler> Connection::findHandlerForCommand(Protocol::Command::Type command)
 {
-    Handler *handler = Handler::findHandlerForCommandAlwaysAllowed(command);
+    auto handler = Handler::findHandlerForCommandAlwaysAllowed(command);
     if (handler) {
         return handler;
     }
