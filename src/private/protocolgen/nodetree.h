@@ -36,7 +36,7 @@ public:
     };
 
     Node(NodeType type, Node *parent);
-    ~Node();
+    virtual ~Node();
 
     NodeType type() const;
     Node *parent() const;
@@ -164,6 +164,7 @@ public:
     };
 
     PropertyNode(const QString &name, const QString &type, ClassNode *parent);
+    ~PropertyNode();
 
     QString type() const;
     QString name() const;
