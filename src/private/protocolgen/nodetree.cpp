@@ -231,6 +231,11 @@ PropertyNode::PropertyNode(const QString &name, const QString &type, ClassNode *
     , mAsReference(false)
 {}
 
+PropertyNode::~PropertyNode()
+{
+    delete mSetter;
+}
+
 QString PropertyNode::type() const
 {
     return mType;
