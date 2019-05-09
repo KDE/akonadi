@@ -40,7 +40,7 @@ private Q_SLOTS:
     void testCreateCollection()
     {
         auto monitor = getTestMonitor();
-        QSignalSpy spy(monitor, &Monitor::collectionAdded);
+        QSignalSpy spy(monitor.get(), &Monitor::collectionAdded);
 
         Collection col;
         col.setName(QLatin1String("test_collection"));

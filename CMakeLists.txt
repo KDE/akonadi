@@ -38,7 +38,7 @@ include(CheckSymbolExists)
 
 include(KDEPackageAppTemplates)
 include(ECMMarkNonGuiExecutable)
-
+include(ECMAddTests)
 
 include(AkonadiMacros)
 

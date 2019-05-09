@@ -9,8 +9,7 @@ macro(add_unit_test _source)
         ${Akonadi_SOURCE_DIR}/src/akonadicontrol/agenttype.cpp
     )
     get_filename_component(_name ${_source} NAME_WE)
-    add_executable(${_name} ${_test})
-    add_test(NAME AkonadiControl-${_name} COMMAND ${_name})
+    ecm_add_test(TEST_NAME ${_name} NAME_PREFIX "AkonadiControl-" ${_test})
     add_dependencies(${_name} akonadi_control)
     if (ENABLE_ASAN)
         set_tests_properties(AkonadiControl-${_name} PROPERTIES

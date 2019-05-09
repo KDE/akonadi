@@ -97,7 +97,7 @@ bool trackAkonadiProcess(bool track)
     }
 }
 
-Akonadi::Monitor *getTestMonitor()
+std::unique_ptr<Akonadi::Monitor> getTestMonitor()
 {
     auto m = new Akonadi::Monitor();
     m->fetchCollection(true);
@@ -111,7 +111,7 @@ Akonadi::Monitor *getTestMonitor()
     QSignalSpy readySpy(m, &Akonadi::Monitor::monitorReady);
     readySpy.wait();
 
-    return m;
+    return std::unique_ptr<Akonadi::Monitor>(m);
 }
 
 #endif

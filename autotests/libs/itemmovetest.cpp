@@ -144,17 +144,17 @@ private Q_SLOTS:
         QEXPECT_FAIL("", "Check not yet implemented by the server.", Continue);
         QVERIFY(!store->exec());
 
-        Monitor *monitor = getTestMonitor();
-        QSignalSpy itemMovedSpy(monitor, &Monitor::itemsMoved);
+        auto monitor = getTestMonitor();
+        QSignalSpy itemMovedSpy(monitor.get(), &Monitor::itemsMoved);
         // Wait for the notifciation so that it does not disturb the next test
         QTRY_COMPARE(itemMovedSpy.count(), 1);
     }
 
     void testMoveNotifications()
     {
-        Monitor *monitor = getTestMonitor();
-        QSignalSpy itemMovedSpy(monitor, &Monitor::itemsMoved);
-        QSignalSpy itemAddedSpy(monitor, &Monitor::itemAdded);
+        auto monitor = getTestMonitor();
+        QSignalSpy itemMovedSpy(monitor.get(), &Monitor::itemsMoved);
+        QSignalSpy itemAddedSpy(monitor.get(), &Monitor::itemAdded);
 
         Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
         Item item(QStringLiteral("application/octet-stream"));
