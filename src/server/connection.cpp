@@ -309,7 +309,7 @@ void Connection::handleIncomingData()
                 qCWarning(AKONADISERVER_LOG) << "Protocol exception when handling command" << cmd->type()
                                              << "on connection" << m_identifier << ":" << e.what();
                 m_connectionClosing = true;
-#if defined(Q_OS_LINUX)
+#if defined(Q_OS_LINUX) && !defined(_LIBCPP_VERSION)
             } catch (abi::__forced_unwind&) {
                 // HACK: NPTL throws __forced_unwind during thread cancellation and
                 // we *must* rethrow it otherwise the program aborts. Due to the issue
