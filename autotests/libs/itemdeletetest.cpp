@@ -59,7 +59,7 @@ private Q_SLOTS:
     void testDelete()
     {
         auto monitor = getTestMonitor();
-        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+        QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         ItemFetchJob *fjob = new ItemFetchJob(Item(1), this);
         AKVERIFYEXEC(fjob);
@@ -81,7 +81,7 @@ private Q_SLOTS:
     void testDeleteFromUnselectedCollection()
     {
         auto monitor = getTestMonitor();
-        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+        QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         const QString path = QStringLiteral("res1") +
                              CollectionPathResolver::pathDelimiter() +
@@ -115,7 +115,7 @@ private Q_SLOTS:
     void testRidDelete()
     {
         auto monitor = getTestMonitor();
-        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+        QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         {
             ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
@@ -154,7 +154,7 @@ private Q_SLOTS:
     void testTagDelete()
     {
         auto monitor = getTestMonitor();
-        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+        QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         // Create tag
         Tag tag;
@@ -198,7 +198,7 @@ private Q_SLOTS:
     void testCollectionDelete()
     {
         auto monitor = getTestMonitor();
-        QSignalSpy spy(monitor, &Monitor::itemsRemoved);
+        QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         const Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
         ItemFetchJob *fjob = new ItemFetchJob(col, this);
