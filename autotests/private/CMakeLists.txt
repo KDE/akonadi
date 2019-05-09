@@ -6,8 +6,7 @@ include_directories(${Akonadi_SOURCE_DIR}/src/private
 macro(add_unit_test _source)
     set(_test ${_source})
     get_filename_component(_name ${_source} NAME_WE)
-    add_executable(${_name} ${_source})
-    add_test(NAME AkonadiPrivate-${_name} COMMAND ${_name})
+    ecm_add_test(TEST_NAME ${_name} NAME_PREFIX "AkonadiPrivate-" ${_source})
     if (ENABLE_ASAN)
         set_tests_properties(AkonadiPrivate-${_name} PROPERTIES
                              ENVIRONMENT ASAN_OPTIONS=symbolize=1

@@ -1,6 +1,5 @@
 set(QT_REQUIRED_VERSION "5.9.0")
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED Test DBus)
-include(ECMAddTests)
 
 
 if(${EXECUTABLE_OUTPUT_PATH})
@@ -27,9 +26,7 @@ include_directories(
 macro(add_akonadi_test _source)
   set(_test ${_source} ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp)
   get_filename_component(_name ${_source} NAME_WE)
-  add_executable( ${_name} ${_test} )
-  add_test(NAME ${_name} COMMAND ${_name} )
-  ecm_mark_as_test(akonadi-${_name})
+  ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1;QT_NO_CPU_FEATURE=sse4.2")
   target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiPrivate KF5::DBusAddons KF5::I18n)
 endmacro()
@@ -42,9 +39,7 @@ macro(add_akonadi_test_widgets _source)
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
   )
   get_filename_component(_name ${_source} NAME_WE)
-  add_executable( ${_name} ${_test} )
-  add_test(NAME ${_name} COMMAND ${_name} )
-  ecm_mark_as_test(akonadi-${_name})
+  ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1;QT_NO_CPU_FEATURE=sse4.2")
   target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiWidgets KF5::AkonadiPrivate KF5::DBusAddons)
 endmacro()

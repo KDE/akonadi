@@ -51,8 +51,7 @@ macro(add_server_test _source)
     set(_test ${_source} ../../src/server/akonadiserver_debug.cpp ../../src/server/akonadiserver_search_debug.cpp)
     get_filename_component(_name ${_source} NAME_WE)
     qt5_add_resources(_test dbtest_data/dbtest_data.qrc)
-    add_executable(${_name} ${_test})
-    add_test(NAME AkonadiServer-${_name} COMMAND ${_name})
+    ecm_add_test(TEST_NAME ${_name} NAME_PREFIX "AkonadiServer-" ${_test})
     if (ENABLE_ASAN)
         set_tests_properties(AkonadiServer-${_name} PROPERTIES
                              ENVIRONMENT ASAN_OPTIONS=symbolize=1
