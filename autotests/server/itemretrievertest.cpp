@@ -300,8 +300,8 @@ private Q_SLOTS:
         // Setup
         for (int step = 0; step < 2; ++step) {
             DbInitializer dbInitializer;
-            FakeItemRetrievalJobFactory factory(dbInitializer);
-            ItemRetrievalManager mgr(&factory);
+            auto *factory = new FakeItemRetrievalJobFactory(dbInitializer);
+            ItemRetrievalManager mgr{std::unique_ptr<AbstractItemRetrievalJobFactory>(factory)};
             QTest::qWait(100);
 
             // Given a PimItem with existing parts
@@ -315,7 +315,7 @@ private Q_SLOTS:
             }
 
             Q_FOREACH (const auto &availablePart, availableParts) {
-                factory.addJobResult(item.id(), availablePart.first, availablePart.second);
+                factory->addJobResult(item.id(), availablePart.first, availablePart.second);
             }
 
             if (step == 0) {
@@ -333,7 +333,7 @@ private Q_SLOTS:
                 }
 
                 // Check that the factory had exactly one retrieval job
-                QCOMPARE(factory.jobsCount(), expectedRetrievalJobs);
+                QCOMPARE(factory->jobsCount(), expectedRetrievalJobs);
 
             } else {
                 QVector<ClientThread *> threads;
