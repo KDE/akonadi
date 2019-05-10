@@ -19,7 +19,8 @@ function(add_akonadi_isolated_test)
         cmake_parse_arguments(CONFIG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
         set(_test ${CONFIG_SOURCE})
         get_filename_component(_name ${CONFIG_SOURCE} NAME_WE)
-        ecm_add_test(TEST_NAME ${_name} ${_test} ${CONFIG_ADDITIONAL_SOURCES})
+        add_executable(${_name} ${_test} ${CONFIG_ADDITIONAL_SOURCES})
+        ecm_mark_as_test(${_name})
         target_link_libraries(${_name}
                               Qt5::Test Qt5::Gui Qt5::Widgets Qt5::Network KF5::KIOCore
                               KF5::AkonadiCore KF5::AkonadiPrivate KF5::DBusAddons
@@ -58,10 +59,21 @@ function(add_akonadi_isolated_test)
                     if (AKONADI_TESTS_XML)
                         set(extraOptions -xml -o "${TEST_RESULT_OUTPUT_PATH}/${lcbackend}-${name}.xml")
                     endif()
-                    add_test(NAME akonadi-${lcbackend}-${name}
+                    set(_test_name akonadi-${lcbackend}-${name})
+                    add_test(NAME ${_test_name}
                              COMMAND ${_testrunner} -c "${configFile}" -b ${lcbackend}
                                      ${_executable} ${extraOptions}
                     )
+                    # Taken from ECMAddTests.cmake
+                    if (CMAKE_LIBRARY_OUTPUT_DIRECTORY)
+                        if(CMAKE_HOST_SYSTEM MATCHES "Windows")
+                          set(PATHSEP ";")
+                        else() # e.g. Linux
+                          set(PATHSEP ":")
+                        endif()
+                        set(_plugin_path $ENV{QT_PLUGIN_PATH})
+                        set_property(TEST ${_testname} PROPERTY ENVIRONMENT QT_PLUGIN_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${PATHSEP}${_plugin_path})
+                      endif()
                 endif()
             endif()
         endfunction()
