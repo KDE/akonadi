@@ -46,13 +46,13 @@ class ItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
 };
 
 ItemRetrievalManager::ItemRetrievalManager(QObject *parent)
-    : ItemRetrievalManager(new ItemRetrievalJobFactory, parent)
+    : ItemRetrievalManager(std::make_unique<ItemRetrievalJobFactory>(), parent)
 {
 }
 
-ItemRetrievalManager::ItemRetrievalManager(AbstractItemRetrievalJobFactory *factory, QObject *parent)
+ItemRetrievalManager::ItemRetrievalManager(std::unique_ptr<AbstractItemRetrievalJobFactory> factory, QObject *parent)
     : AkThread(QStringLiteral("ItemRetrievalManager"), QThread::HighPriority, parent)
-    , mJobFactory(factory)
+    , mJobFactory(std::move(factory))
 {
     qDBusRegisterMetaType<QByteArrayList>();
 

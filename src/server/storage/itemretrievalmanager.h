@@ -55,7 +55,7 @@ class ItemRetrievalManager : public AkThread
     Q_OBJECT
 public:
     explicit ItemRetrievalManager(QObject *parent = nullptr);
-    explicit ItemRetrievalManager(AbstractItemRetrievalJobFactory *factory, QObject *parent = nullptr);
+    explicit ItemRetrievalManager(std::unique_ptr<AbstractItemRetrievalJobFactory> factory, QObject *parent = nullptr);
     ~ItemRetrievalManager() override;
 
     /**
@@ -85,7 +85,7 @@ private Q_SLOTS:
 protected:
     static ItemRetrievalManager *sInstance;
 
-    AbstractItemRetrievalJobFactory *mJobFactory = nullptr;
+    std::unique_ptr<AbstractItemRetrievalJobFactory> mJobFactory;
 
     /// Protects mPendingRequests and every Request object posted to it
     QReadWriteLock *mLock = nullptr;
