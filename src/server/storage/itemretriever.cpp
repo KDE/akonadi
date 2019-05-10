@@ -48,10 +48,12 @@ ItemRetriever::ItemRetriever(Connection *connection)
     , mRecursive(false)
     , mCanceled(false)
 {
-    connect(mConnection, &Connection::disconnected,
-    this, [this]() {
-        mCanceled = true;
-    });
+    if (mConnection) {
+        connect(mConnection, &Connection::disconnected,
+                this, [this]() {
+                    mCanceled = true;
+                });
+    }
 }
 
 Connection *ItemRetriever::connection() const
