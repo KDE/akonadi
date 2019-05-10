@@ -50,7 +50,11 @@ void AttributeFactoryTest::testUnknownAttribute()
     item.setMimeType(QStringLiteral("text/directory"));
     item.setPayload<QByteArray>("payload");
     TestAttribute *ta = new TestAttribute;
-    QVERIFY(AttributeFactory::createAttribute(ta->type()));     // DefaultAttribute
+    {
+        auto *created = AttributeFactory::createAttribute(ta->type()); // DefaultAttribute
+        QVERIFY(created != nullptr);
+        delete created;
+    }
     ta->data = "lalala";
     item.addAttribute(ta);
     ItemCreateJob *cjob = new ItemCreateJob(item, res1);
@@ -76,7 +80,11 @@ void AttributeFactoryTest::testRegisteredAttribute()
     item.setMimeType(QStringLiteral("text/directory"));
     item.setPayload<QByteArray>("payload");
     TestAttribute *ta = new TestAttribute;
-    QVERIFY(AttributeFactory::createAttribute(ta->type()) != nullptr);
+    {
+        auto *created = AttributeFactory::createAttribute(ta->type());
+        QVERIFY(created != nullptr);
+        delete created;
+    }
     ta->data = "lalala";
     item.addAttribute(ta);
     ItemCreateJob *cjob = new ItemCreateJob(item, res1);
