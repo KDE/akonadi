@@ -29,7 +29,6 @@
 
 class NotificationManagerTest;
 class QThreadPool;
-class QEventLoop;
 
 namespace Akonadi
 {
@@ -81,7 +80,6 @@ private:
     AggregatedItemFetchScope *mItemFetchScope = nullptr;
     AggregatedTagFetchScope *mTagFetchScope = nullptr;
 
-    QEventLoop *mEventLoop = nullptr;
     bool mWaiting = false;
     bool mQuitting = false;
 
