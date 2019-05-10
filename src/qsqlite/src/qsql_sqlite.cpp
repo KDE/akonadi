@@ -581,7 +581,7 @@ void QSQLiteResult::detachFromResultSet()
 
 QVariant QSQLiteResult::handle() const
 {
-    return qVariantFromValue(d_func()->stmt);
+    return QVariant::fromValue(d_func()->stmt);
 }
 
 /////////////////////////////////////////////////////////
