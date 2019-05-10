@@ -20,8 +20,7 @@ function(add_akonadi_isolated_test)
         cmake_parse_arguments(CONFIG "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
         set(_test ${CONFIG_SOURCE})
         get_filename_component(_name ${CONFIG_SOURCE} NAME_WE)
-        add_executable(${_name} ${_test} ${CONFIG_ADDITIONAL_SOURCES})
-        ecm_mark_as_test(${_name})
+        ecm_add_test(TEST_NAME ${_name} ${_test} ${CONFIG_ADDITIONAL_SOURCES})
         target_link_libraries(${_name}
                               Qt5::Test Qt5::Gui Qt5::Widgets Qt5::Network KF5::KIOCore
                               KF5::AkonadiCore KF5::AkonadiPrivate KF5::DBusAddons
