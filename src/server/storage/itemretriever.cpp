@@ -226,7 +226,7 @@ bool ItemRetriever::exec()
     }
 
     QHash<qint64, QString> resourceIdNameCache;
-    QVector<ItemRetrievalRequest *> requests;
+    std::vector<std::unique_ptr<ItemRetrievalRequest>> requests;
     QHash<qint64 /* collection */, ItemRetrievalRequest *> colRequests;
     QHash<qint64 /* item */, ItemRetrievalRequest *> itemRequests;
     QVector<qint64> readyItems;
@@ -281,7 +281,7 @@ bool ItemRetriever::exec()
                 lastRequest->parts = parts;
                 colRequests.insert(collectionId, lastRequest);
                 itemRequests.insert(pimItemId, lastRequest);
-                requests << lastRequest;
+                requests.emplace_back(lastRequest);
             } else {
                 lastRequest->ids.push_back(pimItemId);
                 itemRequests.insert(pimItemId, lastRequest);
@@ -329,15 +329,21 @@ bool ItemRetriever::exec()
     QEventLoop eventLoop;
     connect(ItemRetrievalManager::instance(), &ItemRetrievalManager::requestFinished,
             this, [&](ItemRetrievalRequest *finishedRequest) {
-        if (requests.removeOne(finishedRequest)) {
+        const auto it = std::find_if(requests.begin(), requests.end(), [finishedRequest](const auto &ptr) {
+            return ptr.get() == finishedRequest;
+        });
+        if (it != requests.end()) {
             if (mCanceled) {
+                requests.erase(it); // deletes finishedRequest
                 eventLoop.exit(1);
             } else if (!finishedRequest->errorMsg.isEmpty()) {
                 mLastError = finishedRequest->errorMsg.toUtf8();
+                requests.erase(it); // deletes finishedRequest
                 eventLoop.exit(1);
             } else {
                 Q_EMIT itemsRetrieved(finishedRequest->ids);
-                if (requests.isEmpty()) {
+                requests.erase(it); // deletes finishedRequest
+                if (requests.empty()) {
                     eventLoop.quit();
                 }
             }
@@ -351,10 +357,9 @@ bool ItemRetriever::exec()
 
     auto it = requests.begin();
     while (it != requests.end()) {
-        auto request = (*it);
+        auto request = (*it).get();
         if ((!mFullPayload && request->parts.isEmpty()) || request->ids.isEmpty()) {
             it = requests.erase(it);
-            delete request;
             continue;
         }
         // TODO: how should we handle retrieval errors here? so far they have been ignored,
@@ -371,7 +376,7 @@ bool ItemRetriever::exec()
         }
         ++it;
     }
-    if (!requests.isEmpty()) {
+    if (!requests.empty()) {
         if (eventLoop.exec()) {
             return false;
         }
