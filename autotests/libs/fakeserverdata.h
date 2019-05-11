@@ -39,7 +39,7 @@ public:
     FakeServerData(EntityTreeModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = nullptr);
     FakeServerData(TagModel *model, FakeSession *session, FakeMonitor *monitor, QObject *parent = nullptr);
 
-    void setCommands(QList<FakeAkonadiServerCommand *> list);
+    void setCommands(const QList<FakeAkonadiServerCommand *> &list);
 
     Collection::Id nextCollectionId() const
     {
