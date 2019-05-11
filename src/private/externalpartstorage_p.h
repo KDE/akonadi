@@ -95,8 +95,6 @@ private:
     bool replayTransaction(const QVector<Operation> &trx, bool commit);
     void addToTransaction(const QVector<Operation> &ops);
 
-    static ExternalPartStorage *sInstance;
-
     mutable QMutex mTransactionLock;
     QHash<QThread *, QVector<Operation>> mTransactions;
 };

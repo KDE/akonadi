@@ -28,8 +28,6 @@
 
 using namespace Akonadi;
 
-ExternalPartStorage *ExternalPartStorage::sInstance = nullptr;
-
 ExternalPartStorageTransaction::ExternalPartStorageTransaction()
 {
     ExternalPartStorage::self()->beginTransaction();
@@ -58,12 +56,8 @@ ExternalPartStorage::ExternalPartStorage()
 
 ExternalPartStorage *ExternalPartStorage::self()
 {
-    static QMutex instanceLock;
-    QMutexLocker locker(&instanceLock);
-    if (!sInstance) {
-        sInstance = new ExternalPartStorage();
-    }
-    return sInstance;
+    static ExternalPartStorage sInstance;
+    return &sInstance;
 }
 
 QString ExternalPartStorage::resolveAbsolutePath(const QByteArray &filename, bool *exists, bool legacyFallback)
