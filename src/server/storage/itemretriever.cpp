@@ -48,10 +48,12 @@ ItemRetriever::ItemRetriever(Connection *connection)
     , mRecursive(false)
     , mCanceled(false)
 {
-    connect(mConnection, &Connection::disconnected,
-    this, [this]() {
-        mCanceled = true;
-    });
+    if (mConnection) {
+        connect(mConnection, &Connection::disconnected,
+                this, [this]() {
+                    mCanceled = true;
+                });
+    }
 }
 
 Connection *ItemRetriever::connection() const
@@ -341,8 +343,11 @@ bool ItemRetriever::exec()
             }
         }
     }, Qt::UniqueConnection);
-    connect(mConnection, &Connection::connectionClosing,
-            &eventLoop, [&eventLoop]() { eventLoop.exit(1); });
+
+    if (mConnection) {
+        connect(mConnection, &Connection::connectionClosing,
+                &eventLoop, [&eventLoop]() { eventLoop.exit(1); });
+    }
 
     auto it = requests.begin();
     while (it != requests.end()) {

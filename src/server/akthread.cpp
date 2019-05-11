@@ -82,12 +82,13 @@ void AkThread::init()
 
 void AkThread::quit()
 {
-    Q_ASSERT(m_startMode != NoThread);
     Q_ASSERT(thread() == QThread::currentThread());
 
     if (DataStore::hasDataStore()) {
         DataStore::self()->close();
     }
 
-    thread()->quit();
+    if (m_startMode != NoThread) {
+        thread()->quit();
+    }
 }

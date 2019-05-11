@@ -79,10 +79,6 @@ void NotificationManager::init()
 void NotificationManager::quit()
 {
     mQuitting = true;
-    if (mEventLoop) {
-        mEventLoop->quit();
-        return;
-    }
 
     mTimer->stop();
     delete mTimer;
