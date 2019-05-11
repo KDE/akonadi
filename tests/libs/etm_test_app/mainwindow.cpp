@@ -37,7 +37,7 @@ MainWindow::MainWindow(QWidget *parent, Qt::WindowFlags flags)
     monitor->setSession(session);
 
     m_model = new EntityTreeModel(monitor, this);
-    m_serverData = new FakeServerData(m_model, session, monitor);
+    m_serverData = new FakeServerData(m_model, session, monitor, this);
 
     QList<FakeAkonadiServerCommand *> initialFetchResponse =  FakeJobResponse::interpret(m_serverData, QStringLiteral(
                 "- C (inode/directory) 'Col 1' 4"

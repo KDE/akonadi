@@ -43,6 +43,7 @@ class TagModelTest : public QObject
     Q_OBJECT
 private Q_SLOTS:
     void initTestCase();
+    void cleanupTestCase();
 
     void testInitialFetch();
 
@@ -71,7 +72,7 @@ private:
 
         m_modelSpy = new ModelSpy{model, this};
 
-        const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor);
+        const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
         serverData->setCommands(FakeJobResponse::interpret(serverData, serverContent));
 
         // Give the model a chance to populate
@@ -104,6 +105,11 @@ void TagModelTest::initTestCase()
     qRegisterMetaType<QModelIndex>("QModelIndex");
 }
 
+void TagModelTest::cleanupTestCase()
+{
+    delete m_fakeSession;
+}
+
 void TagModelTest::testInitialFetch()
 {
     const auto fakeMonitor = new FakeMonitor(this);
@@ -112,7 +118,7 @@ void TagModelTest::testInitialFetch()
     fakeMonitor->setCollectionMonitored(Collection::root());
     const auto model = new TagModel(fakeMonitor, this);
 
-    const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor);
+    const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
     const auto initialFetchResponse =  FakeJobResponse::interpret(serverData, serverContent1);
     serverData->setCommands(initialFetchResponse);
 
