@@ -106,7 +106,7 @@ void Connection::init()
     try {
         slotSendHello();
     } catch (const ProtocolException &e) {
-        qCWarning(AKONADISERVER_LOG) << "Protocol Exception sending \"hello\":" << e.what();
+        qCWarning(AKONADISERVER_LOG) << "Protocol Exception sending \"hello\" on connection" << m_identifier << ":" << e.what();
         m_socket->disconnectFromServer();
     }
 }
