@@ -167,7 +167,7 @@ void MonitorPrivate::scheduleSubscriptionUpdate()
         return;
     }
 
-    pendingModificationTimer = new QTimer();
+    pendingModificationTimer = new QTimer(q_ptr);
     pendingModificationTimer->setSingleShot(true);
     pendingModificationTimer->setInterval(0);
     pendingModificationTimer->start();

@@ -61,10 +61,10 @@ FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonito
 }
 
 
-void FakeServerData::setCommands(QList< FakeAkonadiServerCommand * > list)
+void FakeServerData::setCommands(const QList<FakeAkonadiServerCommand *> &list)
 {
     m_communicationQueue.clear();
-    Q_FOREACH (FakeAkonadiServerCommand *command, list) {
+    for (FakeAkonadiServerCommand *command : list) {
         m_communicationQueue << command;
     }
 }
@@ -76,6 +76,7 @@ void FakeServerData::processNotifications()
         if (respondTo == FakeAkonadiServerCommand::Notification) {
             FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
             command->doCommand();
+            delete command;
         } else {
             return;
         }
@@ -123,6 +124,7 @@ bool FakeServerData::returnCollections(Collection::Id fetchColId)
         if (!m_communicationQueue.isEmpty()) {
             returnEntities(fetchColId);
         }
+        delete command;
         return true;
     }
     return false;
@@ -138,6 +140,7 @@ void FakeServerData::returnItems(Item::Id fetchColId)
         if (!m_communicationQueue.isEmpty()) {
             returnEntities(fetchColId);
         }
+        delete command;
     }
 }
 
@@ -148,5 +151,6 @@ void FakeServerData::returnTags()
     if (commType == FakeAkonadiServerCommand::RespondToTagFetch) {
         FakeAkonadiServerCommand *command = m_communicationQueue.dequeue();
         command->doCommand();
+        delete command;
     }
 }
