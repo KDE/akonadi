@@ -282,10 +282,10 @@ bool checkAndRemoveTmpCluster(const QDir &baseDir, const QString &clusterName)
 bool runPgUpgrade(const QString &pgUpgrade, const QDir &baseDir, const QString &oldBinPath, const QString &newBinPath, const QString &oldDbData, const QString &newDbData)
 {
     QProcess process;
-    const auto args = { QString(QStringLiteral("--old-bindir=%1").arg(oldBinPath)),
-                        QString(QStringLiteral("--new-bindir=%1").arg(newBinPath)),
-                        QString(QStringLiteral("--old-datadir=%1").arg(oldDbData)),
-                        QString(QStringLiteral("--new-datadir=%1").arg(newDbData)) };
+    const QStringList args = { QString(QStringLiteral("--old-bindir=%1").arg(oldBinPath)),
+                               QString(QStringLiteral("--new-bindir=%1").arg(newBinPath)),
+                               QString(QStringLiteral("--old-datadir=%1").arg(oldDbData)),
+                               QString(QStringLiteral("--new-datadir=%1").arg(newDbData)) };
     qCInfo(AKONADISERVER_LOG) << "Postgres cluster update: starting pg_upgrade to upgrade your Akonadi DB cluster";
     qCDebug(AKONADISERVER_LOG) << "Executing pg_upgrade" << QStringList(args);
     process.setWorkingDirectory(baseDir.path());
