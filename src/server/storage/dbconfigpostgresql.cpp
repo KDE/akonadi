@@ -22,6 +22,7 @@
 #include "akonadiserver_debug.h"
 
 #include <private/standarddirs_p.h>
+#include <shared/akoptional.h>
 
 #include <QDir>
 #include <QProcess>
@@ -29,12 +30,18 @@
 #include <QSqlError>
 #include <QSqlQuery>
 #include <QStandardPaths>
+#include <QRegularExpression>
+#include <QRegularExpressionMatch>
 
 #include <config-akonadi.h>
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
+#include <chrono>
 
+using namespace std::chrono_literals;
+
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 DbConfigPostgresql::DbConfigPostgresql()
@@ -60,6 +67,7 @@ bool DbConfigPostgresql::init(QSettings &settings)
     QString defaultOptions;
     QString defaultServerPath;
     QString defaultInitDbPath;
+    QString defaultPgUpgradePath;
     QString defaultPgData;
 
 #ifndef Q_WS_WIN // We assume that PostgreSQL is running as service on Windows
@@ -81,7 +89,7 @@ bool DbConfigPostgresql::init(QSettings &settings)
         postgresSearchPath << QStringLiteral("/usr/bin")
                            << QStringLiteral("/usr/sbin")
                            << QStringLiteral("/usr/local/sbin");
-        // Locale all versions in /usr/lib/postgresql (i.e. /usr/lib/postgresql/X.Y) in reversed
+        // Locate all versions in /usr/lib/postgresql (i.e. /usr/lib/postgresql/X.Y) in reversed
         // sorted order, so we search from the newest one to the oldest.
         QStringList postgresVersionedSearchPaths;
         QDir versionedDir(QStringLiteral("/usr/lib/postgresql"));
@@ -100,6 +108,7 @@ bool DbConfigPostgresql::init(QSettings &settings)
         defaultServerPath = QStandardPaths::findExecutable(QStringLiteral("pg_ctl"), postgresSearchPath);
         defaultInitDbPath = QStandardPaths::findExecutable(QStringLiteral("initdb"), postgresSearchPath);
         defaultHostName = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
+        defaultPgUpgradePath = QStandardPaths::findExecutable(QStringLiteral("pg_upgrade"), postgresSearchPath);
         defaultPgData = StandardDirs::saveDir("data", QStringLiteral("db_data"));
     }
 
@@ -128,6 +137,11 @@ bool DbConfigPostgresql::init(QSettings &settings)
         mInitDbPath = defaultInitDbPath;
     }
     qCDebug(AKONADISERVER_LOG) << "Found initdb:" << mServerPath;
+    mPgUpgradePath = settings.value(QStringLiteral("UpgradePath"), defaultPgUpgradePath).toString();
+    if (mInternalServer && mPgUpgradePath.isEmpty()) {
+        mPgUpgradePath = defaultPgUpgradePath;
+    }
+    qCDebug(AKONADISERVER_LOG) << "Found pg_upgrade:" << mPgUpgradePath;
     mPgData = settings.value(QStringLiteral("PgData"), defaultPgData).toString();
     if (mPgData.isEmpty()) {
         mPgData = defaultPgData;
@@ -180,6 +194,181 @@ bool DbConfigPostgresql::useInternalServer() const
     return mInternalServer;
 }
 
+akOptional<DbConfigPostgresql::Versions> DbConfigPostgresql::checkPgVersion() const
+{
+    // Contains major version of Postgres that creted the cluster
+    QFile pgVersionFile(QStringLiteral("%1/PG_VERSION").arg(mPgData));
+    if (!pgVersionFile.open(QIODevice::ReadOnly)) {
+        return nullopt;
+    }
+    const auto clusterVersion = pgVersionFile.readAll().toInt();
+
+    QProcess pgctl;
+    pgctl.start(mServerPath, { QStringLiteral("--version") }, QIODevice::ReadOnly);
+    if (!pgctl.waitForFinished()) {
+        return nullopt;
+    }
+    // Looks like "pg_ctl (PostgreSQL) 11.2"
+    const auto output = QString::fromUtf8(pgctl.readAll());
+
+    // Get the major version from major.minor
+    QRegularExpression re(QStringLiteral("\\(PostgreSQL\\) ([0-9]+).[0-9]+"));
+    const auto match = re.match(output);
+    if (!match.hasMatch()) {
+        return nullopt;
+    }
+    const auto serverVersion = match.captured(1).toInt();
+
+    qDebug(AKONADISERVER_LOG) << "Detected psql versions - cluster:" << clusterVersion << ", server:" << serverVersion;
+    return {{ clusterVersion, serverVersion }};
+}
+
+bool DbConfigPostgresql::runInitDb(const QString &newDbPath)
+{
+    // Make sure the cluster directory exists
+    if (!QDir(newDbPath).exists()) {
+        if (!QDir().mkpath(newDbPath)) {
+            return false;
+        }
+    }
+
+#ifdef Q_OS_LINUX
+    // It is recommended to disable CoW feature when running on Btrfs to improve
+    // database performance. This only has effect when done on empty directory,
+    // so we only call this before calling initdb
+    if (Utils::getDirectoryFileSystem(newDbPath) == QLatin1String("btrfs")) {
+        Utils::disableCoW(newDbPath);
+    }
+#endif
+
+    // call 'initdb --pgdata=/home/user/.local/share/akonadi/data_db'
+    return execute(mInitDbPath, { QStringLiteral("--pgdata=%1").arg(newDbPath),
+                                  QStringLiteral("--locale=en_US.UTF-8") /* TODO: check locale */ }) == 0;
+}
+
+namespace {
+
+akOptional<QString> findBinPathForVersion(int version)
+{
+    // First we need to find where the previous PostgreSQL version binaries are available
+    const auto oldBinSearchPaths = {
+        QStringLiteral("/usr/lib64/pgsql/postgresql-%1/bin").arg(version), // Fedora & friends
+        QStringLiteral("/usr/lib/pgsql/postgresql-%1/bin").arg(version),
+        QStringLiteral("/usr/lib/postgresql/%1/bin").arg(version), // Debian-based
+        // TODO: Check other distros as well, they might do things differently.
+    };
+
+    for (const auto &path : oldBinSearchPaths) {
+        if (QDir(path).exists()) {
+            return path;
+        }
+    }
+
+    return nullopt;
+}
+
+bool checkAndRemoveTmpCluster(const QDir &baseDir, const QString &clusterName)
+{
+    if (baseDir.exists(clusterName)) {
+        qCInfo(AKONADISERVER_LOG) << "Postgres cluster update:" << clusterName << "cluster already exists, trying to remove it first";
+        if (!QDir(baseDir.path() + QDir::separator() + clusterName).removeRecursively()) {
+            qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: failed to remove" << clusterName << "cluster from some previous run, not performing auto-upgrade";
+            return false;
+        }
+    }
+    return true;
+}
+
+bool runPgUpgrade(const QString &pgUpgrade, const QDir &baseDir, const QString &oldBinPath, const QString &newBinPath, const QString &oldDbData, const QString &newDbData)
+{
+    QProcess process;
+    const auto args = { QStringLiteral("--old-bindir=%1").arg(oldBinPath),
+                        QStringLiteral("--new-bindir=%1").arg(newBinPath),
+                        QStringLiteral("--old-datadir=%1").arg(oldDbData),
+                        QStringLiteral("--new-datadir=%1").arg(newDbData) };
+    qCInfo(AKONADISERVER_LOG) << "Postgres cluster update: starting pg_upgrade to upgrade your Akonadi DB cluster";
+    qCDebug(AKONADISERVER_LOG) << "Executing pg_upgrade" << QStringList(args);
+    process.setWorkingDirectory(baseDir.path());
+    process.start(pgUpgrade, args);
+    process.waitForFinished(std::chrono::milliseconds(1h).count());
+    if (process.exitCode() != 0) {
+        qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: pg_upgrade finished with exit code" << process.exitCode() << ", please run migration manually.";
+        return false;
+    }
+
+    qCDebug(AKONADISERVER_LOG) << "Postgres cluster update: pg_upgrade finished successfully.";
+    return true;
+}
+
+bool swapClusters(QDir &baseDir, const QString &oldDbDataCluster, const QString &newDbDataCluster)
+{
+    // If everything went fine, swap the old and new clusters
+    if (!baseDir.rename(QStringLiteral("db_data"), oldDbDataCluster)) {
+        qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: failed to rename old db_data to" << oldDbDataCluster;
+        return false;
+    }
+    if (!baseDir.rename(newDbDataCluster, QStringLiteral("db_data"))) {
+        qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: failed to rename" << newDbDataCluster << "to db_data, rolling back";
+        if (!baseDir.rename(oldDbDataCluster, QStringLiteral("db_data"))) {
+            qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: failed to roll back from" << oldDbDataCluster << "to db_data.";
+            return false;
+        }
+        qCDebug(AKONADISERVER_LOG) << "Postgres cluster update: rollback successful.";
+        return false;
+    }
+
+    return true;
+}
+
+}
+
+bool DbConfigPostgresql::upgradeCluster(int clusterVersion)
+{
+    const auto oldDbDataCluster = QStringLiteral("old_db_data");
+    const auto newDbDataCluster = QStringLiteral("new_db_data");
+
+    QDir baseDir(mPgData); // db_data
+    baseDir.cdUp(); // move to its parent folder
+
+    const auto oldBinPath = findBinPathForVersion(clusterVersion);
+    if (!oldBinPath.has_value()) {
+        qCDebug(AKONADISERVER_LOG) << "Postgres cluster update: failed to find Postgres server for version" << clusterVersion;
+        return false;
+    }
+    const auto newBinPath = QFileInfo(mServerPath).path();
+
+    if (!checkAndRemoveTmpCluster(baseDir, oldDbDataCluster)) {
+        return false;
+    }
+    if (!checkAndRemoveTmpCluster(baseDir, newDbDataCluster)) {
+        return false;
+    }
+
+    // Next, initialize a new cluster
+    const QString newDbData = baseDir.path() + QDir::separator() + newDbDataCluster;
+    qCInfo(AKONADISERVER_LOG) << "Postgres cluster upgrade: creating a new cluster for current Postgres server";
+    if (!runInitDb(newDbData)) {
+        qCWarning(AKONADISERVER_LOG) << "Postgres cluster update: failed to initialize new db cluster";
+        return false;
+    }
+
+    // Now migrate the old cluster from the old version into the new cluster
+    if (!runPgUpgrade(mPgUpgradePath, baseDir, *oldBinPath, newBinPath, mPgData, newDbData)) {
+        return false;
+    }
+
+    if (!swapClusters(baseDir, oldDbDataCluster, newDbDataCluster)) {
+        return false;
+    }
+
+    // Drop the old cluster
+    if (!QDir(baseDir.path() + QDir::separator() + oldDbDataCluster).removeRecursively()) {
+        qCInfo(AKONADISERVER_LOG) << "Postgres cluster update: failed to remove" << oldDbDataCluster << "cluster (not an issue, continuing)";
+    }
+
+    return true;
+}
+
 bool DbConfigPostgresql::startInternalServer()
 {
     // We defined the mHostName to the socket directory, during init
@@ -230,19 +419,16 @@ bool DbConfigPostgresql::startInternalServer()
 
     // postgres data directory not initialized yet, so call initdb on it
     if (!QFile::exists(QStringLiteral("%1/PG_VERSION").arg(mPgData))) {
-#ifdef Q_OS_LINUX
-        // It is recommended to disable CoW feature when running on Btrfs to improve
-        // database performance. This only has effect when done on empty directory,
-        // so we only call this before calling initdb
-        if (Utils::getDirectoryFileSystem(mPgData) == QLatin1String("btrfs")) {
-            Utils::disableCoW(mPgData);
+    } else {
+        const auto versions = checkPgVersion();
+        if (versions.has_value() && (versions->clusterVersion < versions->pgServerVersion)) {
+            qCInfo(AKONADISERVER_LOG) << "Cluster PG_VERSION is" << versions->clusterVersion << ", PostgreSQL server is version " << versions->pgServerVersion << ", will attempt to upgrade the cluster";
+            if (upgradeCluster(versions->clusterVersion)) {
+                qCInfo(AKONADISERVER_LOG) << "Succesfully upgraded db cluster from Postgres" << versions->clusterVersion << "to" << versions->pgServerVersion;
+            } else {
+                qCWarning(AKONADISERVER_LOG) << "Postgres db cluster upgrade failed, Akonadi will fail to start. Sorry.";
+            }
         }
-#endif
-
-        // call 'initdb --pgdata=/home/user/.local/share/akonadi/data_db'
-        execute(mInitDbPath, { QStringLiteral("--pgdata=%1").arg(mPgData),
-                               QStringLiteral("--locale=en_US.UTF-8") // TODO: check locale
-                             });
     }
 
     // synthesize the postgres command

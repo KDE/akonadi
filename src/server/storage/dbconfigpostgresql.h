@@ -22,6 +22,8 @@
 
 #include "dbconfig.h"
 
+#include <shared/akoptional.h>
+
 namespace Akonadi
 {
 namespace Server
@@ -73,6 +75,14 @@ public:
     void stopInternalServer() override;
 
 private:
+    struct Versions {
+        int clusterVersion = 0;
+        int pgServerVersion = 0;
+    };
+    akOptional<Versions> checkPgVersion() const;
+    bool upgradeCluster(int clusterVersion);
+    bool runInitDb(const QString &dbDataPath);
+
     bool checkServerIsRunning();
 
     QString mDatabaseName;
@@ -84,6 +94,7 @@ private:
     QString mServerPath;
     QString mInitDbPath;
     QString mPgData;
+    QString mPgUpgradePath;
     bool mInternalServer;
 };
 
