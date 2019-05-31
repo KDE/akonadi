@@ -259,11 +259,11 @@ bool FakeDataStore::appendPimItem(QVector<Part> &parts,
                                     remote_id, remoteRevision, gid, pimItem);
 }
 
-bool FakeDataStore::cleanupPimItems(const PimItem::List &items)
+bool FakeDataStore::cleanupPimItems(const PimItem::List &items, bool silent)
 {
     mChanges.insert(QStringLiteral("cleanupPimItems"),
-                    QVariantList() << QVariant::fromValue(items));
-    return DataStore::cleanupPimItems(items);
+                    QVariantList() << QVariant::fromValue(items) << silent);
+    return DataStore::cleanupPimItems(items, silent);
 }
 
 bool FakeDataStore::unhidePimItem(PimItem &pimItem)

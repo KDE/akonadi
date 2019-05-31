@@ -103,6 +103,8 @@ class DataStore : public QObject
 {
     Q_OBJECT
 public:
+    const constexpr static bool Silent = true;
+
     /**
       Closes the database connection and destroys the DataStore object.
     */
@@ -199,7 +201,7 @@ public:
     /**
      * Removes the pim item and all referenced data ( e.g. flags )
      */
-    virtual bool cleanupPimItems(const PimItem::List &items);
+    virtual bool cleanupPimItems(const PimItem::List &items, bool silent = false);
 
     /**
      * Unhides the specified PimItem. Emits the itemAdded() notification as

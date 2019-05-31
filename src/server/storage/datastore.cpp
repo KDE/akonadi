@@ -1158,29 +1158,31 @@ bool DataStore::unhideAllPimItems()
     return false;
 }
 
-bool DataStore::cleanupPimItems(const PimItem::List &items)
+bool DataStore::cleanupPimItems(const PimItem::List &items, bool silent)
 {
     // generate relation removed notifications
-    for (const PimItem &item : items) {
-        SelectQueryBuilder<Relation> relationQuery;
-        relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, item.id());
-        relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, item.id());
-        relationQuery.setSubQueryMode(Query::Or);
+    if (!silent) {
+        for (const PimItem &item : items) {
+            SelectQueryBuilder<Relation> relationQuery;
+            relationQuery.addValueCondition(Relation::leftIdFullColumnName(), Query::Equals, item.id());
+            relationQuery.addValueCondition(Relation::rightIdFullColumnName(), Query::Equals, item.id());
+            relationQuery.setSubQueryMode(Query::Or);
 
-        if (!relationQuery.exec()) {
-            throw HandlerException("Failed to obtain relations");
+            if (!relationQuery.exec()) {
+                throw HandlerException("Failed to obtain relations");
+            }
+            const Relation::List relations = relationQuery.result();
+            for (const Relation &relation : relations) {
+                notificationCollector()->relationRemoved(relation);
+            }
         }
-        const Relation::List relations = relationQuery.result();
-        for (const Relation &relation : relations) {
-            notificationCollector()->relationRemoved(relation);
-        }
+
+        // generate the notification before actually removing the data
+        notificationCollector()->itemsRemoved(items);
     }
 
-    // generate the notification before actually removing the data
-    notificationCollector()->itemsRemoved(items);
-
     // FIXME: Create a single query to do this
-    Q_FOREACH (const PimItem &item, items) {
+    for (const auto &item : items) {
         if (!item.clearFlags()) {
             return false;
         }

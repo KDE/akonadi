@@ -27,6 +27,8 @@ namespace Akonadi
 namespace Server
 {
 
+class Transaction;
+
 /**
   @ingroup akonadi_server_handler
 
@@ -61,6 +63,8 @@ private:
     bool notify(const PimItem &item, bool seen, const Collection &collection);
     bool notify(const PimItem &item, const Collection &collection,
                 const QSet<QByteArray> &changedParts);
+
+    void recoverFromMultipleMergeCandidates(const PimItem::List &items, const Collection &collection);
 };
 
 } // namespace Server
