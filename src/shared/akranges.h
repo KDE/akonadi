@@ -342,6 +342,18 @@ struct ForEach_
     EachFun mFn;
 };
 
+template<typename Predicate>
+struct All_
+{
+    Predicate mFn;
+};
+
+template<typename Predicate>
+struct Any_
+{
+    Predicate mFn;
+};
+
 } // namespace detail
 } // namespace Akonadi
 
@@ -411,6 +423,25 @@ auto operator|(const InContainer &in,
     return in;
 }
 
+// Generic operator| for all
+template<typename InContainer,
+         typename PredicateFn
+        >
+auto operator|(const InContainer &in,
+               Akonadi::detail::All_<PredicateFn> fun)
+{
+    return std::all_of(std::cbegin(in), std::cend(in), fun.mFn);
+}
+
+// Generic operator| for any
+template<typename InContainer,
+         typename PredicateFn
+        >
+auto operator|(const InContainer &in,
+               Akonadi::detail::Any_<PredicateFn> fun)
+{
+    return std::any_of(std::cbegin(in), std::cend(in), fun.mFn);
+}
 
 // Generic operator| for keys
 template<typename InContainer>
@@ -432,6 +463,7 @@ auto operator|(const InContainer &in, Akonadi::detail::Values_)
     return Range<OutIt>(OutIt(in.constKeyValueBegin(), in),
                         OutIt(in.constKeyValueEnd(), in));
 }
+
 
 namespace Akonadi {
 
@@ -474,6 +506,20 @@ template<typename Iterator1, typename Iterator2,
 detail::Range<It> range(Iterator1 begin, Iterator2 end)
 {
     return detail::Range<It>(std::move(begin), std::move(end));
+}
+
+/// Non-lazily check that all elements in the range satisfy given predicate
+template<typename Predicate>
+detail::All_<Predicate> all(Predicate &&fn)
+{
+    return detail::All_<Predicate>{std::forward<Predicate>(fn)};
+}
+
+/// Non-lazily check that at least one element in range satisfies the given predicate
+template<typename Predicate>
+detail::Any_<Predicate> any(Predicate &&fn)
+{
+    return detail::Any_<Predicate>{std::forward<Predicate>(fn)};
 }
 
 } // namespace Akonadi

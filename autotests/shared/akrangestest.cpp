@@ -363,6 +363,20 @@ private Q_SLOTS:
         testKeysValuesHelper<QMap>();
         testKeysValuesHelper<QHash>();
     }
+
+    void testAll()
+    {
+        const QList<int> vals = { 2, 4, 6, 8, 10 };
+        QVERIFY(vals | all([](int v) { return v % 2 == 0; }));
+        QVERIFY(!(vals | all([](int v) { return v % 2 == 1; })));
+    }
+
+    void testAny()
+    {
+        const QList<int> vals = { 1, 3, 5, 7, 9 };
+        QVERIFY(vals | any([](int v) { return v % 2 == 1; }));
+        QVERIFY(!(vals | any([](int v) { return v % 2 == 0; })));
+    }
 };
 
 QList<int> AkRangesTest::ForEachCallable::sOut;
