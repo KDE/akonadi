@@ -104,7 +104,7 @@ public:
                                const QString &gid,
                                PimItem &pimItem) override;
 
-    bool cleanupPimItems(const PimItem::List &items) override;
+    bool cleanupPimItems(const PimItem::List &items, bool silent = false) override;
 
     bool unhidePimItem(PimItem &pimItem) override;
     bool unhideAllPimItems() override;

@@ -30,7 +30,11 @@
 #include "storage/partstreamer.h"
 #include "storage/parthelper.h"
 #include "storage/selectquerybuilder.h"
+#include "storage/itemretrievalmanager.h"
 #include <private/externalpartstorage_p.h>
+
+#include "shared/akranges.h"
+#include "shared/akscopeguard.h"
 
 #include <numeric> //std::accumulate
 
@@ -353,6 +357,60 @@ bool ItemCreateHandler::notify(const PimItem &item, const Collection &collection
     return true;
 }
 
+void ItemCreateHandler::recoverFromMultipleMergeCandidates(const PimItem::List &items, const Collection &collection)
+{
+    // HACK HACK HACK: When this happens within ItemSync, we are running inside a client-side
+    // transaction, so just calling commit here won't have any effect, since this handler will
+    // ultimately fail and the client will rollback the transaction. To circumvent this, we
+    // will forcibly commit the transaction, do our changes here within a new transaction and
+    // then we open a new transaction so that the client won't notice.
+
+    int transactionDepth = 0;
+    while (storageBackend()->inTransaction()) {
+        ++transactionDepth;
+        storageBackend()->commitTransaction();
+    }
+    const AkScopeGuard restoreTransaction([&]() {
+        for (int i = 0; i < transactionDepth; ++i) {
+            storageBackend()->beginTransaction(QStringLiteral("RestoredTransactionAfterMMCRecovery"));
+        }
+    });
+
+    Transaction transaction(storageBackend(), QStringLiteral("MMC Recovery Transaction"));
+
+    // If any of the conflicting items is dirty or does not have a remote ID, we don't want to remove
+    // them as it would cause data loss. There's a chance next changeReplay will fix this, so
+    // next time the ItemSync hits this multiple merge candidates, all changes will be committed
+    // and this check will succeed
+    if (items | any([](const auto &item) { return item.dirty() || item.remoteId().isEmpty(); })) {
+        qCWarning(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery failed: at least one of the candidates has uncommitted changes!";
+        return;
+    }
+
+    // This cannot happen with ItemSync, but in theory could happen during individual GID merge.
+    if (items | any([collection](const auto &item) { return item.collectionId() != collection.id(); })) {
+        qCWarning(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery failed: all candidates do not belong to the same collection.";
+        return;
+    }
+
+    storageBackend()->cleanupPimItems(items, DataStore::Silent);
+    if (!transaction.commit()) {
+        qCWarning(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery failed: failed to commit database transaction.";
+        return;
+    }
+
+
+    // Schedule a new sync of the collection, one that will succeed
+    const auto resource = collection.resource().name();
+    QMetaObject::invokeMethod(ItemRetrievalManager::instance(), "triggerCollectionSync",
+                              Qt::QueuedConnection,
+                              Q_ARG(QString, resource), Q_ARG(qint64, collection.id()));
+
+    qCInfo(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery successful: conflicting items" << (items | transform([](const auto &i) { return i.id(); }) | toQVector)
+                              << "in collection" << collection.name() << "(ID:" << collection.id() << ") were removed and a new sync was scheduled in the resource"
+                              << resource;
+}
+
 bool ItemCreateHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::CreateItemCommand>(m_command);
@@ -369,7 +427,6 @@ bool ItemCreateHandler::parseStream()
     if (!buildPimItem(cmd, item, parentCol)) {
         return false;
     }
-
 
     if (cmd.mergeModes() == Protocol::CreateItemCommand::None) {
         if (!insertItem(cmd, item, parentCol)) {
@@ -434,15 +491,19 @@ bool ItemCreateHandler::parseStream()
             }
             storageTrx.commit();
         } else {
-            qCWarning(AKONADISERVER_LOG) << "Multiple merge candidates:";
+            qCWarning(AKONADISERVER_LOG) << "Multiple merge candidates, will attempt to recover:";
             for (const PimItem &item : result) {
                 qCWarning(AKONADISERVER_LOG) << "\tID:" << item.id() << ", RID:" << item.remoteId()
                                            << ", GID:" << item.gid()
                                            << ", Collection:" << item.collection().name() << "(" << item.collectionId() << ")"
                                            << ", Resource:" << item.collection().resource().name() << "(" << item.collection().resourceId() << ")";
             }
-            // Nor GID or RID are guaranteed to be unique, so make sure we don't merge
-            // something we don't want
+
+            transaction.commit(); // commit the current transaction, before we attempt MMC recovery
+            recoverFromMultipleMergeCandidates(result, parentCol);
+
+            // Even if the recovery was successful, indicate error to force the client to abort the
+            // sync, since we've interfered with the overall state.
             return failureResponse(QStringLiteral("Multiple merge candidates in collection '%1', aborting").arg(item.collection().name()));
         }
     }
