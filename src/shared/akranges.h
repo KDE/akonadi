@@ -46,28 +46,24 @@ struct To_
 struct Values_ {};
 struct Keys_ {};
 
-template<typename InContainer,
-         typename OutContainer,
-         AK_REQUIRES(AkTraits::isAppendable<OutContainer> && AkTraits::isReservable<OutContainer>)
-        >
-OutContainer copyContainer(const InContainer &in)
+template<typename RangeLike, typename OutContainer,
+         AK_REQUIRES(AkTraits::isAppendable<OutContainer> && AkTraits::isReservable<OutContainer>)>
+OutContainer copyContainer(const RangeLike &range)
 {
     OutContainer rv;
-    rv.reserve(in.size());
-    for (auto &&v : in) {
+    rv.reserve(range.size());
+    for (auto &&v : range) {
         rv.push_back(std::move(v));
     }
     return rv;
 }
 
-template<typename InContainer,
-         typename OutContainer,
-         AK_REQUIRES(AkTraits::isInsertable<OutContainer>)
-        >
-OutContainer copyContainer(const InContainer &in)
+template<typename RangeLike, typename OutContainer,
+         AK_REQUIRES(AkTraits::isInsertable<OutContainer>)>
+OutContainer copyContainer(const RangeLike &range)
 {
     OutContainer rv;
-    for (const auto &v : in) {
+    for (const auto &v : range) {
         rv.insert(v);
     }
     return rv;
@@ -104,10 +100,7 @@ struct IteratorTrait<const Iterator *> {
     using reference = const Iterator &;
 };
 
-template<typename IterImpl,
-         typename Container,
-         typename Iterator = typename Container::const_iterator
-        >
+template<typename IterImpl, typename RangeLike, typename Iterator = typename RangeLike::const_iterator>
 struct IteratorBase
 {
 public:
@@ -117,8 +110,8 @@ public:
     using pointer = typename IteratorTrait<Iterator>::pointer;
     using reference = typename IteratorTrait<Iterator>::reference;
 
-    IteratorBase(const IteratorBase<IterImpl, Container> &other)
-        : mIter(other.mIter), mContainer(other.mContainer)
+    IteratorBase(const IteratorBase<IterImpl, RangeLike> &other)
+        : mIter(other.mIter), mRange(other.mRange)
     {}
 
     IterImpl &operator++()
@@ -160,22 +153,19 @@ public:
     }
 
 protected:
-    IteratorBase(const Iterator &iter, const Container &container)
-        : mIter(iter), mContainer(container)
+    IteratorBase(const Iterator &iter, const RangeLike &range)
+        : mIter(iter), mRange(range)
     {}
-    IteratorBase(const Iterator &iter, Container &&container)
-        : mIter(iter), mContainer(std::move(container))
+    IteratorBase(const Iterator &iter, RangeLike &&range)
+        : mIter(iter), mRange(std::move(range))
     {}
 
     Iterator mIter;
-    Container mContainer;
+    RangeLike mRange;
 };
 
-template<typename Container,
-         typename TransformFn,
-         typename Iterator = typename Container::const_iterator
-        >
-struct TransformIterator : public IteratorBase<TransformIterator<Container, TransformFn>, Container>
+template<typename RangeLike, typename TransformFn, typename Iterator = typename RangeLike::const_iterator>
+struct TransformIterator : public IteratorBase<TransformIterator<RangeLike, TransformFn>, RangeLike>
 {
 private:
     template<typename ... T>
@@ -194,8 +184,8 @@ public:
     using pointer = IteratorValueType *;         // FIXME: preserve const-ness
     using reference = const IteratorValueType &; // FIXME: preserve const-ness
 
-    TransformIterator(const Iterator &iter, const TransformFn &fn, const Container &container)
-        : IteratorBase<TransformIterator<Container, TransformFn>, Container>(iter, container)
+    TransformIterator(const Iterator &iter, const TransformFn &fn, const RangeLike &range)
+        : IteratorBase<TransformIterator<RangeLike, TransformFn>, RangeLike>(iter, range)
         , mFn(fn)
     {
     }
@@ -209,17 +199,12 @@ private:
     TransformFn mFn;
 };
 
-template<typename Container,
-         typename Predicate,
-         typename Iterator = typename Container::const_iterator
-        >
-class FilterIterator : public IteratorBase<FilterIterator<Container, Predicate>, Container>
+template<typename RangeLike, typename Predicate, typename Iterator = typename RangeLike::const_iterator>
+class FilterIterator : public IteratorBase<FilterIterator<RangeLike, Predicate>, RangeLike>
 {
 public:
-    FilterIterator(const Iterator &iter, const Iterator &end,
-                   const Predicate &predicate,
-                   const Container &container)
-        : IteratorBase<FilterIterator<Container, Predicate>, Container>(iter, container)
+    FilterIterator(const Iterator &iter, const Iterator &end, const Predicate &predicate, const RangeLike &range)
+        : IteratorBase<FilterIterator<RangeLike, Predicate>, RangeLike>(iter, range)
         , mPredicate(predicate), mEnd(end)
     {
         while (this->mIter != mEnd && !Akonadi::invoke(mPredicate, *this->mIter)) {
@@ -250,9 +235,7 @@ private:
 };
 
 
-template<typename Container,
-         int Pos,
-         typename Iterator = typename Container::const_key_value_iterator>
+template<typename Container, int Pos, typename Iterator = typename Container::const_key_value_iterator>
 class AssociativeContainerIterator
     : public IteratorBase<AssociativeContainerIterator<Container, Pos>, Container, Iterator>
 {
@@ -358,110 +341,82 @@ struct Any_
 } // namespace Akonadi
 
 // Generic operator| for To_<> convertor
-template<typename InContainer,
-         template<typename> class OutContainer,
-         typename T = typename InContainer::value_type
-        >
-auto operator|(const InContainer &in,
-               const Akonadi::detail::To_<OutContainer> &) -> OutContainer<T>
+template<typename RangeLike, template<typename> class OutContainer, typename T = typename RangeLike::value_type>
+auto operator|(const RangeLike &range, const Akonadi::detail::To_<OutContainer> &) -> OutContainer<T>
 {
     using namespace Akonadi::detail;
-    return copyContainer<InContainer, OutContainer<T>>(in);
+    return copyContainer<RangeLike, OutContainer<T>>(range);
 }
 
 // Specialization for case when InContainer and OutContainer are identical
 // Create a copy, but for Qt container this is very cheap due to implicit sharing.
-template<template<typename> class InContainer,
-         typename T
-        >
-auto operator|(const InContainer<T> &in,
-               const Akonadi::detail::To_<InContainer> &) -> InContainer<T>
+template<template<typename> class InContainer, typename T>
+auto operator|(const InContainer<T> &in, const Akonadi::detail::To_<InContainer> &) -> InContainer<T>
 {
     return in;
 }
 
-
-
 // Generic operator| for transform()
-template<typename InContainer,
-         typename TransformFn
-        >
-auto operator|(const InContainer &in,
-               const Akonadi::detail::Transform_<TransformFn> &t)
+template<typename RangeLike, typename TransformFn>
+auto operator|(const RangeLike &range, const Akonadi::detail::Transform_<TransformFn> &t)
 {
     using namespace Akonadi::detail;
-    using OutIt = TransformIterator<InContainer, TransformFn>;
-    return Range<OutIt>(OutIt(std::cbegin(in), t.mFn, in), OutIt(std::cend(in), t.mFn, in));
+    using OutIt = TransformIterator<RangeLike, TransformFn>;
+    return Range<OutIt>(OutIt(std::cbegin(range), t.mFn, range), OutIt(std::cend(range), t.mFn, range));
 }
-
 
 // Generic operator| for filter()
-template<typename InContainer,
-         typename PredicateFn
-        >
-auto operator|(const InContainer &in,
-               const Akonadi::detail::Filter_<PredicateFn> &p)
+template<typename RangeLike, typename PredicateFn>
+auto operator|(const RangeLike &range, const Akonadi::detail::Filter_<PredicateFn> &p)
 {
     using namespace Akonadi::detail;
-    using OutIt = FilterIterator<InContainer, PredicateFn>;
-    return Range<OutIt>(OutIt(std::cbegin(in), std::cend(in), p.mFn, in),
-                        OutIt(std::cend(in), std::cend(in), p.mFn, in));
+    using OutIt = FilterIterator<RangeLike, PredicateFn>;
+    return Range<OutIt>(OutIt(std::cbegin(range), std::cend(range), p.mFn, range),
+                        OutIt(std::cend(range), std::cend(range), p.mFn, range));
 }
 
-
 // Generic operator| fo foreach()
-template<typename InContainer,
-         typename EachFun
-        >
-auto operator|(const InContainer &in,
-               Akonadi::detail::ForEach_<EachFun> fun)
+template<typename RangeLike, typename EachFun>
+auto operator|(const RangeLike&range, Akonadi::detail::ForEach_<EachFun> fun)
 {
-    std::for_each(std::cbegin(in), std::cend(in),
+    std::for_each(std::cbegin(range), std::cend(range),
                   [&fun](const auto &val) {
                       Akonadi::invoke(fun.mFn, val);
                   });
-    return in;
+    return range;
 }
 
 // Generic operator| for all
-template<typename InContainer,
-         typename PredicateFn
-        >
-auto operator|(const InContainer &in,
-               Akonadi::detail::All_<PredicateFn> fun)
+template<typename RangeLike, typename PredicateFn>
+auto operator|(const RangeLike &range, Akonadi::detail::All_<PredicateFn> fun)
 {
-    return std::all_of(std::cbegin(in), std::cend(in), fun.mFn);
+    return std::all_of(std::cbegin(range), std::cend(range), fun.mFn);
 }
 
 // Generic operator| for any
-template<typename InContainer,
-         typename PredicateFn
-        >
-auto operator|(const InContainer &in,
-               Akonadi::detail::Any_<PredicateFn> fun)
+template<typename RangeLike, typename PredicateFn>
+auto operator|(const RangeLike &range, Akonadi::detail::Any_<PredicateFn> fun)
 {
-    return std::any_of(std::cbegin(in), std::cend(in), fun.mFn);
+    return std::any_of(std::cbegin(range), std::cend(range), fun.mFn);
 }
 
 // Generic operator| for keys
-template<typename InContainer>
-auto operator|(const InContainer &in, Akonadi::detail::Keys_)
+template<typename Container>
+auto operator|(const Container &in, Akonadi::detail::Keys_)
 {
     using namespace Akonadi::detail;
-    using OutIt = AssociativeContainerKeyIterator<InContainer>;
-    return Range<OutIt>(OutIt(in.constKeyValueBegin(), in),
-                        OutIt(in.constKeyValueEnd(), in));
+    using OutIt = AssociativeContainerKeyIterator<Container>;
+    return Range<OutIt>(OutIt(in.constKeyValueBegin(), in), OutIt(in.constKeyValueEnd(), in));
 }
 
 
 // Generic operator| for values
-template<typename InContainer>
-auto operator|(const InContainer &in, Akonadi::detail::Values_)
+template<typename Container>
+auto operator|(const Container &in, Akonadi::detail::Values_)
 {
     using namespace Akonadi::detail;
-    using OutIt = AssociativeContainerValueIterator<InContainer>;
-    return Range<OutIt>(OutIt(in.constKeyValueBegin(), in),
-                        OutIt(in.constKeyValueEnd(), in));
+    using OutIt = AssociativeContainerValueIterator<Container>;
+    return Range<OutIt>(OutIt(in.constKeyValueBegin(), in), OutIt(in.constKeyValueEnd(), in));
 }
 
 
