@@ -281,7 +281,7 @@ void Connection::handleIncomingData()
             m_currentHandler->setTag(tag);
             m_currentHandler->setCommand(cmd);
             try {
-                DbDeadlockCatcher catcher([this, cmd]() { parseStream(cmd); });
+                DbDeadlockCatcher catcher([this, &cmd]() { parseStream(cmd); });
             } catch (const Akonadi::Server::HandlerException &e) {
                 if (m_currentHandler) {
                     try {
