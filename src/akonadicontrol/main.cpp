@@ -83,9 +83,9 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    new ControlManager;
+    ControlManager controlManager;
 
-    sAgentManager = new AgentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
+    AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
     KCrash::setEmergencySaveFunction(crashHandler);
 
     QGuiApplication::setFallbackSessionManagementEnabled(false);
@@ -97,10 +97,5 @@ int main(int argc, char **argv)
     QObject::connect(qApp, &QGuiApplication::commitDataRequest, disableSessionManagement);
     QObject::connect(qApp, &QGuiApplication::saveStateRequest, disableSessionManagement);
 
-    int retval = app.exec();
-
-    delete sAgentManager;
-    sAgentManager = nullptr;
-
-    return retval;
+    return app.exec();
 }
