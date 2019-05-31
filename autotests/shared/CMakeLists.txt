@@ -19,3 +19,4 @@ macro(add_unit_test _source)
 endmacro()
 
 add_unit_test(akrangestest.cpp)
+add_unit_test(akscopeguardtest.cpp)
