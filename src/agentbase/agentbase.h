@@ -37,6 +37,8 @@
 class Akonadi__ControlAdaptor;
 class Akonadi__StatusAdaptor;
 
+class KAboutData;
+
 namespace Akonadi
 {
 
@@ -471,13 +473,13 @@ public:
         QApplication app(argc, argv);
         debugAgent(argc, argv);
         const QString id = parseArguments(argc, argv);
-        T *r = new T(id);
+        T r(id);
 
         // check if T also inherits AgentBase::Observer and
         // if it does, automatically register it on itself
-        Observer *observer = dynamic_cast<Observer *>(r);
+        Observer *observer = dynamic_cast<Observer *>(&r);
         if (observer != nullptr) {
-            r->registerObserver(observer);
+            r.registerObserver(observer);
         }
         return init(r);
     }
@@ -770,10 +772,12 @@ protected:
      */
     virtual void doSetOnline(bool online);
 
+    virtual KAboutData aboutData() const;
+
 private:
     //@cond PRIVATE
     static QString parseArguments(int argc, char **argv);
-    static int init(AgentBase *r);
+    static int init(AgentBase &r);
     void setOnlineInternal(bool state);
 
     // D-Bus interface stuff

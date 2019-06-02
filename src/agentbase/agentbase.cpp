@@ -43,6 +43,7 @@
 #include <KSharedConfig>
 
 #include <Kdelibs4ConfigMigrator>
+#include <KAboutData>
 
 #include <QSettings>
 #include <QTimer>
@@ -959,12 +960,11 @@ QString AgentBase::parseArguments(int argc, char **argv)
 
 // @endcond
 
-int AgentBase::init(AgentBase *r)
+int AgentBase::init(AgentBase &r)
 {
     KLocalizedString::setApplicationDomain("libakonadi5");
-    int rv = qApp->exec();
-    delete r;
-    return rv;
+    KAboutData::setApplicationData(r.aboutData());
+    return qApp->exec();
 }
 
 int AgentBase::status() const
@@ -1079,6 +1079,11 @@ void AgentBase::setOnlineInternal(bool state)
 void AgentBase::doSetOnline(bool online)
 {
     Q_UNUSED(online);
+}
+
+KAboutData AgentBase::aboutData() const
+{
+    return KAboutData(qApp->applicationName(), agentName(), qApp->applicationVersion());
 }
 
 void AgentBase::configure(WId windowId)

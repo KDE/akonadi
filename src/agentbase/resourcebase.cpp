@@ -54,6 +54,7 @@
 
 #include "akonadiagentbase_debug.h"
 #include <KLocalizedString>
+#include <KAboutData>
 
 #include <QHash>
 #include <QTimer>
@@ -603,11 +604,11 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     return identifier;
 }
 
-int ResourceBase::init(ResourceBase *r)
+int ResourceBase::init(ResourceBase &r)
 {
-    int rv = qApp->exec();
-    delete r;
-    return rv;
+    KLocalizedString::setApplicationDomain("libakonadi5");
+    KAboutData::setApplicationData(r.aboutData());
+    return qApp->exec();
 }
 
 void ResourceBasePrivate::slotAbortRequested()

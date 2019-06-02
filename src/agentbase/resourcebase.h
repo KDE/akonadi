@@ -187,13 +187,13 @@ public:
         QApplication app(argc, argv);
         debugAgent(argc, argv);
         const QString id = parseArguments(argc, argv);
-        T *r = new T(id);
+        T r(id);
 
         // check if T also inherits AgentBase::Observer and
         // if it does, automatically register it on itself
-        Observer *observer = dynamic_cast<Observer *>(r);
+        Observer *observer = dynamic_cast<Observer *>(&r);
         if (observer != nullptr) {
-            r->registerObserver(observer);
+            r.registerObserver(observer);
         }
 
         return init(r);
@@ -842,7 +842,7 @@ protected:
 
 private:
     static QString parseArguments(int argc, char **argv);
-    static int init(ResourceBase *r);
+    static int init(ResourceBase &r);
 
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
