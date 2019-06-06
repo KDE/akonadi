@@ -122,7 +122,7 @@ bool AkonadiServer::init()
     const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % suffix;
     const QString cmdPipe = settings.value(QStringLiteral("Connection/NamedPipe"), defaultCmdPipe).toString();
     if (!mCmdServer->listen(cmdPipe)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << cmdPipe;
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << cmdPipe << ":" << mCmdServer->errorString();
         quit();
         return false;
     }
@@ -130,7 +130,7 @@ bool AkonadiServer::init()
     const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % suffix;
     const QString ntfPipe = settings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultNtfPipe).toString();
     if (!mNtfServer->listen(ntfPipe)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << ntfPipe;
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << ntfPipe << ":" << mNtfServer->errorString();
         quit();
         return false;
     }
@@ -144,7 +144,7 @@ bool AkonadiServer::init()
     const QString cmdSocketFile = socketDir % QStringLiteral("/akonadiserver-cmd.socket");
     QFile::remove(cmdSocketFile);
     if (!mCmdServer->listen(cmdSocketFile)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << cmdSocketFile;
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << cmdSocketFile << ":" << mCmdServer->errorString();
         quit();
         return false;
     }
@@ -152,7 +152,7 @@ bool AkonadiServer::init()
     const QString ntfSocketFile = socketDir % QStringLiteral("/akonadiserver-ntf.socket");
     QFile::remove(ntfSocketFile);
     if (!mNtfServer->listen(ntfSocketFile)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << ntfSocketFile;
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << ntfSocketFile << ":" << mNtfServer->errorString();
         quit();
         return false;
     }
