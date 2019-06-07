@@ -29,13 +29,13 @@ class AkScopeGuardTest : public QObject
     Q_OBJECT
 
 private:
-    static void staticMethod() noexcept
+    static void staticMethod()
     {
         Q_ASSERT(!mCalled);
         mCalled = true;
     }
 
-    void regularMethod() noexcept
+    void regularMethod()
     {
         Q_ASSERT(!mCalled);
         mCalled = true;
@@ -47,7 +47,7 @@ private Q_SLOTS:
     {
         mCalled = false;
         {
-            AkScopeGuard guard([&]() noexcept {
+            AkScopeGuard guard([&]() {
                 Q_ASSERT(!mCalled);
                 mCalled = true;
             });
@@ -76,7 +76,7 @@ private Q_SLOTS:
     void testStdFunction()
     {
         mCalled = false;
-        std::function<void() noexcept> func = [&]() noexcept {
+        std::function<void()> func = [&]() {
             Q_ASSERT(!mCalled);
             mCalled = true;
         };

@@ -28,7 +28,7 @@ namespace Akonadi {
 class AkScopeGuard
 {
 public:
-    template<typename U>
+   template<typename U>
     AkScopeGuard(U &&fun)
         : mFun(std::move(fun))
     {}
@@ -38,13 +38,13 @@ public:
     AkScopeGuard &operator=(const AkScopeGuard &) = delete;
     AkScopeGuard &operator=(AkScopeGuard &&) = delete;
 
-    ~AkScopeGuard() noexcept
+    ~AkScopeGuard()
     {
         mFun();
     }
 
 private:
-    std::function<void() noexcept> mFun;
+    std::function<void()> mFun;
 };
 
 } // namespace Akonadi
