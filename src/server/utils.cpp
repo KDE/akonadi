@@ -21,6 +21,7 @@
 
 #include "utils.h"
 #include "akonadiserver_debug.h"
+#include "instance_p.h"
 
 #include <private/standarddirs_p.h>
 
@@ -32,13 +33,13 @@
 #if !defined(Q_OS_WIN)
 #include <cstdlib>
 #include <sys/types.h>
+#include <sys/un.h>
 #include <cerrno>
-#include <pwd.h>
 #include <unistd.h>
 
 static QString akonadiSocketDirectory();
 static bool checkSocketDirectory(const QString &path);
-static bool createSocketDirectory(const QString &link, const QString &tmpl);
+static bool createSocketDirectory(const QString &link, const QString &identifier);
 #endif
 
 #ifdef Q_OS_LINUX
@@ -51,7 +52,7 @@ static bool createSocketDirectory(const QString &link, const QString &tmpl);
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-QString Utils::preferredSocketDirectory(const QString &defaultDirectory)
+QString Utils::preferredSocketDirectory(const QString &defaultDirectory, int fnLengthHint)
 {
     const QString serverConfigFile = StandardDirs::serverConfigFile(StandardDirs::ReadWrite);
     const QSettings serverSettings(serverConfigFile, QSettings::IniFormat);
@@ -87,6 +88,10 @@ QString Utils::preferredSocketDirectory(const QString &defaultDirectory)
     if (!dirInfo.exists()) {
         QDir::home().mkpath(dirInfo.absoluteFilePath());
     }
+
+    if (socketDir.length() + 1 + fnLengthHint >= static_cast<int>(sizeof(sockaddr_un::sun_path))) {
+        qCCritical(AKONADISERVER_LOG) << "akonadiSocketDirectory() length is too long to be used by the system.";
+    }
 #endif
     return socketDir;
 }
@@ -101,25 +106,14 @@ QString akonadiSocketDirectory()
         return QString();
     }
 
-    const uid_t uid = getuid();
-    const struct passwd *pw_ent = getpwuid(uid);
-    if (!pw_ent) {
-        qCCritical(AKONADISERVER_LOG) << "Could not get passwd entry for user id" << uid;
-        return QString();
-    }
-
-    const QString link = StandardDirs::saveDir("data") + QLatin1Char('/') + QLatin1String("socket-") + hostname;
-    QString tmpl = QLatin1String("akonadi-") + QString::fromLocal8Bit(pw_ent->pw_name) + QLatin1String(".XXXXXX");
-
-    // Workaround for QLocalServer encoding bug
-    // basically replace non-latin characters
-    tmpl = QString::fromLatin1(tmpl.toLatin1());
+    const QString identifier = Instance::hasIdentifier() ? Instance::identifier() : QLatin1String("default");
+    const QString link = StandardDirs::saveDir("data") + QStringLiteral("/socket-%1-%2").arg(hostname, identifier);
 
     if (checkSocketDirectory(link)) {
         return QFileInfo(link).symLinkTarget();
     }
 
-    if (createSocketDirectory(link, tmpl)) {
+    if (createSocketDirectory(link, identifier)) {
         return QFileInfo(link).symLinkTarget();
     }
 
@@ -150,18 +144,14 @@ static bool checkSocketDirectory(const QString &path)
     return true;
 }
 
-static bool createSocketDirectory(const QString &link, const QString &tmpl)
+static bool createSocketDirectory(const QString &link, const QString &identifier)
 {
-    QString directory = QStringLiteral("%1%2%3").arg(QDir::tempPath()).arg(QDir::separator()).arg(tmpl);
+    const QString directory = QStringLiteral("%1/%2").arg(StandardDirs::saveDir("runtime"), identifier);
 
-    QByteArray directoryString = directory.toLocal8Bit();
-
-    if (!mkdtemp(directoryString.data())) {
-        qCCritical(AKONADISERVER_LOG) << "Creating socket directory with template" << directoryString << "failed:" << strerror(errno);
+    if (!QDir().mkpath(directory)) {
+        qCCritical(AKONADISERVER_LOG) << "Creating socket directory with name" << directory << "failed:" << strerror(errno);
         return false;
     }
-
-    directory = QString::fromLocal8Bit(directoryString);
 
     QFile::remove(link);
 
@@ -177,6 +167,7 @@ static bool createSocketDirectory(const QString &link, const QString &tmpl)
 QString Utils::getDirectoryFileSystem(const QString &directory)
 {
 #ifndef Q_OS_LINUX
+    Q_UNUSED(directory);
     return QString();
 #else
     QString bestMatchPath;

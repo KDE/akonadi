@@ -110,6 +110,8 @@ QString StandardDirs::saveDir(const char *resource, const QString &relPath)
         fullPath = QStandardPaths::writableLocation(QStandardPaths::GenericConfigLocation) + fullRelPath;
     } else if (qstrncmp(resource, "data", 4) == 0) {
         fullPath = QStandardPaths::writableLocation(QStandardPaths::GenericDataLocation) + fullRelPath;
+    } else if (qstrncmp(resource, "runtime", 7) == 0) {
+        fullPath = QStandardPaths::writableLocation(QStandardPaths::RuntimeLocation) + fullRelPath;
     } else {
         qt_assert_x(__FUNCTION__, "Invalid resource type", __FILE__, __LINE__);
         return {};
