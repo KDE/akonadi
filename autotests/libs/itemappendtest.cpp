@@ -55,6 +55,7 @@ void ItemAppendTest::testItemAppend_data()
     QTest::newRow("whitespace") << QStringLiteral("remote id");
     QTest::newRow("quotes") << QStringLiteral("\"remote\" id");
     QTest::newRow("brackets") << QStringLiteral("[remote id]");
+    QTest::newRow("RID length limit") << QStringLiteral("a").repeated(1024);
 }
 
 void ItemAppendTest::testItemAppend()
@@ -399,3 +400,4 @@ void ItemAppendTest::testForeignPayload()
     QVERIFY(file.exists());
     QVERIFY(file.remove());
 }
+

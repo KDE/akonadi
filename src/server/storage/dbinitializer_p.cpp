@@ -19,7 +19,9 @@
  ***************************************************************************/
 
 #include "storage/dbinitializer_p.h"
+#include <shared/akranges.h>
 
+using namespace Akonadi;
 using namespace Akonadi::Server;
 
 //BEGIN MySQL
@@ -64,7 +66,10 @@ QString DbInitializerMySql::buildCreateTableStatement(const TableDescription &ta
     }
     columns << references;
 
-    const QString tableProperties = QStringLiteral(" COLLATE=utf8_general_ci DEFAULT CHARSET=utf8");
+    QString tableProperties = QStringLiteral(" COLLATE=utf8_general_ci DEFAULT CHARSET=utf8");
+    if (tableDescription.columns | any([](const auto &col) { return col.type == QLatin1String("QString") && col.size > 255; })) {
+        tableProperties += QStringLiteral(" ROW_FORMAT=DYNAMIC");
+    }
 
     return QStringLiteral("CREATE TABLE %1 (%2) %3").arg(tableDescription.name, columns.join(QStringLiteral(", ")), tableProperties);
 }

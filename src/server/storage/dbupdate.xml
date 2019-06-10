@@ -346,4 +346,10 @@
     <!-- FIXME: SQLite doesn't allow for a straight-forward migration, but this has never reached
          a release, so we are mostly OK here. //-->
   </update>
+
+  <update version="41" abortOnFailure="true">
+    <!-- Allow for up to 1024-character long indexes, used for PimItem.remoteId //-->
+    <raw-sql backends="mysql">ALTER TABLE PimItemTable ROW_FORMAT=DYNAMIC</raw-sql>
+    <raw-sql backends="mysql">ALTER TABLE PimItemTable MODIFY COLUMN remoteId VARBINARY(1024)</raw-sql>
+  </update>
 </updates>

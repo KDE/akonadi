@@ -67,7 +67,7 @@
     <comment>Contains the schema version of the database.</comment>
     <column name="version" type="int" default="0" allowNull="false"/>
     <column name="generation" type="int" default="0" allowNull="false" />
-    <data columns="version" values="40"/>
+    <data columns="version" values="41"/>
   </table>
 
   <table name="Resource">
@@ -126,7 +126,7 @@
   <table name="PimItem">
     <column name="id" type="qint64" allowNull="false" isAutoIncrement="true" isPrimaryKey="true"/>
     <column name="rev" type="int" default="0" allowNull="false"/>
-    <column name="remoteId" type="QString"/>
+    <column name="remoteId" type="QString" size="1024"/>
     <column name="remoteRevision" type="QString"/>
     <column name="gid" type="QString"/>
     <column name="collectionId" type="qint64" refTable="Collection" refColumn="id"/>
