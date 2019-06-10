@@ -427,7 +427,7 @@ bool DbConfigPostgresql::startInternalServer()
             Utils::disableCoW(mPgData);
         }
 #endif
-        // call 'initdb --pgdata=/home/user/.local/share/akoandi/db_data'
+        // call 'initdb --pgdata=/home/user/.local/share/akonadi/db_data'
         execute(mInitDbPath, { QStringLiteral("--pgdata=%1").arg(mPgData),
                                QStringLiteral("--locale=en_US.UTF-8") // TODO: check locale
                              });
