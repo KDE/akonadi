@@ -42,6 +42,8 @@ using namespace Akonadi::Server;
 
 #define MYSQL_VERSION_CHECK(major, minor, patch) ((major << 16) | (minor << 8) | patch)
 
+static const QString s_mysqlSocketFileName = QStringLiteral("mysql.socket");
+
 DbConfigMysql::DbConfigMysql()
     : mInternalServer(true)
     , mDatabaseProcess(nullptr)
@@ -86,7 +88,8 @@ bool DbConfigMysql::init(QSettings &settings)
     QString defaultCleanShutdownCommand;
 
 #ifndef Q_OS_WIN
-    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")),
+                                                                    s_mysqlSocketFileName.length());
 #endif
 
     const bool defaultInternalServer = true;
@@ -102,8 +105,8 @@ bool DbConfigMysql::init(QSettings &settings)
     const QString mysqladminPath = findExecutable(QStringLiteral("mysqladmin"));
     if (!mysqladminPath.isEmpty()) {
 #ifndef Q_OS_WIN
-        defaultCleanShutdownCommand = QStringLiteral("%1 --defaults-file=%2/mysql.conf --socket=%3/mysql.socket shutdown")
-                                      .arg(mysqladminPath, StandardDirs::saveDir("data"), socketDirectory);
+        defaultCleanShutdownCommand = QStringLiteral("%1 --defaults-file=%2/mysql.conf --socket=%3/%4 shutdown")
+                                      .arg(mysqladminPath, StandardDirs::saveDir("data"), socketDirectory, s_mysqlSocketFileName);
 #else
         defaultCleanShutdownCommand = QString::fromLatin1("%1 shutdown --shared-memory").arg(mysqladminPath);
 #endif
@@ -118,7 +121,7 @@ bool DbConfigMysql::init(QSettings &settings)
     mInternalServer = settings.value(QStringLiteral("QMYSQL/StartServer"), defaultInternalServer).toBool();
 #ifndef Q_OS_WIN
     if (mInternalServer) {
-        defaultOptions = QStringLiteral("UNIX_SOCKET=%1/mysql.socket").arg(socketDirectory);
+        defaultOptions = QStringLiteral("UNIX_SOCKET=%1/%2").arg(socketDirectory, s_mysqlSocketFileName);
     }
 #endif
 
@@ -200,8 +203,9 @@ bool DbConfigMysql::startInternalServer()
     const QString akDir   = StandardDirs::saveDir("data");
     const QString dataDir = StandardDirs::saveDir("data", QStringLiteral("db_data"));
 #ifndef Q_OS_WIN
-    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
-    const QString socketFile = QStringLiteral("%1/mysql.socket").arg(socketDirectory);
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")),
+                                                                    s_mysqlSocketFileName.length());
+    const QString socketFile = QStringLiteral("%1/%2").arg(socketDirectory, s_mysqlSocketFileName);
     const QString pidFileName = QStringLiteral("%1/mysql.pid").arg(socketDirectory);
 #endif
 
@@ -302,7 +306,7 @@ bool DbConfigMysql::startInternalServer()
         return false;
     }
 
-    // If mysql.socket file exists, check if also the server process is still running,
+    // If mysql socket file exists, check if also the server process is still running,
     // else we can safely remove the socket file (cleanup after a system crash, etc.)
     QFile pidFile(pidFileName);
     if (QFile::exists(socketFile) && pidFile.open(QIODevice::ReadOnly)) {
@@ -348,7 +352,7 @@ bool DbConfigMysql::startInternalServer()
 #endif
 
 #ifndef Q_OS_WIN
-    // If mysql.socket file does not exists, then we must start the server,
+    // If mysql socket file does not exists, then we must start the server,
     // otherwise we reconnect to it
     if (!QFile::exists(socketFile)) {
         // move mysql error log file out of the way
@@ -403,7 +407,7 @@ bool DbConfigMysql::startInternalServer()
             QThread::msleep(100);
         }
     } else {
-        qCDebug(AKONADISERVER_LOG) << "Found mysql.socket file, reconnecting to the database";
+        qCDebug(AKONADISERVER_LOG) << "Found " << qPrintable(s_mysqlSocketFileName) << " file, reconnecting to the database";
     }
 #endif
 
@@ -442,7 +446,7 @@ bool DbConfigMysql::startInternalServer()
                                            QStringLiteral("--check-upgrade"),
                                            QStringLiteral("--auto-repair"),
 #ifndef Q_OS_WIN
-                                           QStringLiteral("--socket=%1/mysql.socket").arg(socketDirectory),
+                                           QStringLiteral("--socket=%1/%2").arg(socketDirectory, s_mysqlSocketFileName),
 #endif
                                            mDatabaseName
                                          });
@@ -514,8 +518,9 @@ void DbConfigMysql::processFinished(int exitCode, QProcess::ExitStatus exitStatu
 #ifndef Q_OS_WIN
     // when the server stopped unexpectedly, make sure to remove the stale socket file since otherwise
     // it can not be started again
-    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
-    const QString socketFile = QStringLiteral("%1/mysql.socket").arg(socketDirectory);
+    const QString socketDirectory = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")),
+                                                                    s_mysqlSocketFileName.length());
+    const QString socketFile = QStringLiteral("%1/%2").arg(socketDirectory, s_mysqlSocketFileName);
     QFile::remove(socketFile);
 #endif
 

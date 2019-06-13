@@ -99,8 +99,10 @@ static inline QDateTime variantToDateTime(const QVariant &variant)
 /**
  * Returns the socket @p directory that is passed to this method or the one
  * the user has overwritten via the config file.
+ * The passed @p fnLengthHint will also ensure the absolute file path length of the
+ * directory + separator + hint would not overflow the system limitation.
  */
-QString preferredSocketDirectory(const QString &directory);
+QString preferredSocketDirectory(const QString &directory, int fnLengthHint = -1);
 
 /**
  * Returns name of filesystem that @p directory is stored on. This

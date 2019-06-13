@@ -140,8 +140,11 @@ bool AkonadiServer::init()
     connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("NamedPipe"));
     connectionSettings.setValue(QStringLiteral("Notifications/NamedPipe"), ntfPipe);
 #else
-    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"));
-    const QString cmdSocketFile = socketDir % QStringLiteral("/akonadiserver-cmd.socket");
+    const QString cmdSocketName = QStringLiteral("akonadiserver-cmd.socket");
+    const QString ntfSocketName = QStringLiteral("akonadiserver-ntf.socket");
+    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"),
+                                                              qMax(cmdSocketName.length(), ntfSocketName.length()));
+    const QString cmdSocketFile = socketDir % QLatin1Char('/') % cmdSocketName;
     QFile::remove(cmdSocketFile);
     if (!mCmdServer->listen(cmdSocketFile)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << cmdSocketFile << ":" << mCmdServer->errorString();
@@ -149,7 +152,7 @@ bool AkonadiServer::init()
         return false;
     }
 
-    const QString ntfSocketFile = socketDir % QStringLiteral("/akonadiserver-ntf.socket");
+    const QString ntfSocketFile = socketDir % QLatin1Char('/') % ntfSocketName;
     QFile::remove(ntfSocketFile);
     if (!mNtfServer->listen(ntfSocketFile)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << ntfSocketFile << ":" << mNtfServer->errorString();
