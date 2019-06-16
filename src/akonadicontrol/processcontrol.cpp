@@ -118,16 +118,16 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
                 Q_EMIT restarted();
             } else {
                 if (mFailedToStart) {
-                    qCWarning(AKONADICONTROL_LOG, "Application '%s' failed to start!", qPrintable(mApplication));
+                    qCCritical(AKONADICONTROL_LOG, "Application '%s' failed to start!", qPrintable(mApplication));
                 } else {
-                    qCWarning(AKONADICONTROL_LOG, "Application '%s' crashed too often. Giving up!", qPrintable(mApplication));
+                    qCCritical(AKONADICONTROL_LOG, "Application '%s' crashed too often. Giving up!", qPrintable(mApplication));
                 }
                 mPolicy = StopOnCrash;
                 Q_EMIT unableToStart();
                 return;
             }
         } else {
-            qCWarning(AKONADICONTROL_LOG, "Application '%s' crashed. No restart!", qPrintable(mApplication));
+            qCCritical(AKONADICONTROL_LOG, "Application '%s' crashed. No restart!", qPrintable(mApplication));
         }
     } else {
         if (exitCode != 0) {
@@ -135,7 +135,7 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
                       qPrintable(mApplication), exitCode, qPrintable(mProcess.errorString()));
             if (mPolicy == RestartOnCrash) {
                 if (mCrashCount > s_maxCrashCount) {
-                    qCWarning(AKONADICONTROL_LOG) << mApplication << "crashed too often and will not be restarted!";
+                    qCCritical(AKONADICONTROL_LOG) << mApplication << "crashed too often and will not be restarted!";
                     mPolicy = StopOnCrash;
                     Q_EMIT unableToStart();
                     return;
@@ -150,10 +150,10 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
         } else {
             if (mRestartOnceOnExit) {
                 mRestartOnceOnExit = false;
-                qCWarning(AKONADICONTROL_LOG, "Restarting application '%s'.", qPrintable(mApplication));
+                qCInfo(AKONADICONTROL_LOG, "Restarting application '%s'.", qPrintable(mApplication));
                 start();
             } else {
-                qCWarning(AKONADICONTROL_LOG, "Application '%s' exited normally...", qPrintable(mApplication));
+                qCInfo(AKONADICONTROL_LOG, "Application '%s' exited normally...", qPrintable(mApplication));
                 Q_EMIT unableToStart();
             }
         }

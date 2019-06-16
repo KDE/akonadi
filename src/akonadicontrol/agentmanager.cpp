@@ -114,7 +114,7 @@ void AgentManager::continueStartup()
                qPrintable(Akonadi::DBus::serviceName(Akonadi::DBus::Control)),
                qPrintable(QDBusConnection::sessionBus().lastError().message()));
     }
-    qCDebug(AKONADICONTROL_LOG) << "Akonadi server is now operational.";
+    qCInfo(AKONADICONTROL_LOG) << "Akonadi server is now operational.";
 }
 
 AgentManager::~AgentManager()
