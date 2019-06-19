@@ -22,9 +22,7 @@
 
 
 #include <QSettings>
-#include <QDataStream>
 #include <QEventLoop>
-#include <QGlobalStatic>
 #include <QThreadStorage>
 
 #include "storage/datastore.h"
@@ -40,7 +38,6 @@
 #include <cxxabi.h>
 #endif
 
-#include <QElapsedTimer>
 
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>

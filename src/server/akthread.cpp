@@ -22,7 +22,6 @@
 #include "akonadiserver_debug.h"
 
 #include <QThread>
-#include <QCoreApplication>
 
 using namespace Akonadi::Server;
 

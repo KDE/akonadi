@@ -25,7 +25,6 @@
 
 #include <QVector>
 #include <QSet>
-#include <QDebug>
 
 #include <algorithm>
 #include <functional>

@@ -23,8 +23,6 @@
 
 #include <QCoreApplication>
 #include <QThread>
-#include <QEventLoop>
-#include <QTimer>
 
 Q_DECLARE_METATYPE(Akonadi::Connection::ConnectionType)
 Q_DECLARE_METATYPE(Akonadi::Connection *)

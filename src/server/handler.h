@@ -19,7 +19,6 @@
 #ifndef AKONADIHANDLER_H
 #define AKONADIHANDLER_H
 
-#include <QObject>
 
 #include "global.h"
 #include "exception.h"

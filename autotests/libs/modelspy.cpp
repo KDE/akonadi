@@ -19,7 +19,6 @@
 
 #include "modelspy.h"
 
-#include <QDebug>
 #include <QTest>
 
 QVariantList extractModelColumn(const QAbstractItemModel &model, const QModelIndex &parent, const int firstRow, const int lastRow)

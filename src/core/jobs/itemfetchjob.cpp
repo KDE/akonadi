@@ -29,7 +29,6 @@
 #include "private/protocol_p.h"
 
 
-#include <QDebug>
 
 #include <QTimer>
 

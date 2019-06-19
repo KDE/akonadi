@@ -20,7 +20,6 @@
 #ifndef AKONADI_CONNECTION_H
 #define AKONADI_CONNECTION_H
 
-#include <QPointer>
 #include <QThread>
 #include <QTimer>
 #include <QLocalSocket>

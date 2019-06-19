@@ -22,9 +22,7 @@
 #define UTILS_H
 
 #include <QVariant>
-#include <QVector>
 #include <QDateTime>
-#include <QSet>
 
 #include "storage/datastore.h"
 #include "storage/dbtype.h"

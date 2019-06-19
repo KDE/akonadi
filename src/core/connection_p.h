@@ -21,8 +21,6 @@
 #define CONNECTIONTHREAD_P_H
 
 #include <QThread>
-#include <QMutex>
-#include <QQueue>
 #include <QLocalSocket>
 #include <QScopedPointer>
 

@@ -19,7 +19,6 @@
 
 #include "akremotelog.h"
 
-#include <QDebug>
 #include <QString>
 #include <QCoreApplication>
 #include <QTimer>
@@ -31,10 +30,7 @@
 #include <QDBusInterface>
 #include <QDBusPendingCallWatcher>
 #include <QDBusPendingReply>
-#include <QDBusReply>
 #include <QDBusServiceWatcher>
-#include <QScopedPointer>
-#include <QRegularExpression>
 
 #include <private/instance_p.h>
 

@@ -23,13 +23,12 @@
 
 #include <private/standarddirs_p.h>
 
-#include <QDateTime>
+#include <QSqlError>
 #include <QDir>
 #include <QProcess>
 #include <QThread>
 #include <QRegularExpression>
 #include <QSqlDriver>
-#include <QSqlError>
 #include <QSqlQuery>
 #include <QCoreApplication>
 #include <QStandardPaths>

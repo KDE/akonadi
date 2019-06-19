@@ -23,7 +23,6 @@
 #include "entitytreemodel.h"
 #include "mimetypechecker.h"
 
-#include <QDebug>
 
 using namespace Akonadi;
 

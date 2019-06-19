@@ -24,15 +24,12 @@
 #include "commandbuffer_p.h"
 #include <private/instance_p.h>
 
-#include <QDataStream>
 #include <QFile>
 #include <QAbstractEventDispatcher>
 #include <QFileInfo>
 #include <QSettings>
-#include <QElapsedTimer>
 #include <QApplication>
 #include <QDateTime>
-#include <QEventLoop>
 #include <QTimer>
 
 #include <private/protocol_exception_p.h>

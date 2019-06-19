@@ -27,7 +27,6 @@
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
-#include <QDateTime>
 #include <QTemporaryFile>
 #include <QDir>
 #include <QDesktopServices>

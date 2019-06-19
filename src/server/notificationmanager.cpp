@@ -31,13 +31,10 @@
 #include <private/standarddirs_p.h>
 #include <private/scope_p.h>
 
-#include <QCoreApplication>
 #include <QSettings>
 #include <QThreadPool>
 #include <QPointer>
 #include <QDateTime>
-#include <QEventLoop>
-#include <QLocalSocket>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;

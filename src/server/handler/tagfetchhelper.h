@@ -20,7 +20,6 @@
 #ifndef AKONADI_TAGFETCHHELPER_H
 #define AKONADI_TAGFETCHHELPER_H
 
-#include <QObject>
 #include <QSqlQuery>
 
 #include <private/scope_p.h>

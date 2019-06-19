@@ -27,12 +27,6 @@
 #include "core/agentmanager.h"
 #include "core/servermanager.h"
 
-#include <QCoreApplication>
-#include <QFileInfo>
-#include <QDir>
-#include <QJsonObject>
-#include <QJsonValue>
-#include <QStackedLayout>
 #include <QTimer>
 #include <QLabel>
 #include <QVBoxLayout>

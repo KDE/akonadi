@@ -21,7 +21,6 @@
 #include "agentmanager.h"
 #include "akonadicore_debug.h"
 
-#include <QDBusConnection>
 
 #include <KAboutData>
 #include <QDialogButtonBox>

@@ -27,7 +27,6 @@
 #include "protocolhelper_p.h"
 #include "private/protocol_p.h"
 
-#include <QDebug>
 #include <KLocalizedString>
 
 namespace Akonadi

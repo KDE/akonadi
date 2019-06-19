@@ -22,7 +22,6 @@
 
 #include <QObject>
 #include <QVector>
-#include <QMutex>
 
 #include "connection_p.h"
 

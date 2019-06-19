@@ -25,7 +25,6 @@
 #include <QCoreApplication>
 #include <QPluginLoader>
 #include <QDir>
-#include <QFileInfo>
 
 #include <KDBusConnectionPool>
 

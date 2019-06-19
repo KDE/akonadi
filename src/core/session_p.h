@@ -31,7 +31,6 @@
 #include <QThreadStorage>
 #include <QMetaObject>
 #include <QFile>
-#include <QMutex>
 
 namespace Akonadi
 {
