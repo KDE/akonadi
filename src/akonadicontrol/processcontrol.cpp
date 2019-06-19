@@ -44,7 +44,7 @@ ProcessControl::ProcessControl(QObject *parent)
     , mRestartOnceOnExit(false)
     , mShutdownTimeout(1000)
 {
-    connect(&mProcess, QOverload<QProcess::ProcessError>::of(&QProcess::error),
+    connect(&mProcess, &QProcess::errorOccurred,
             this, &ProcessControl::slotError);
     connect(&mProcess, QOverload<int,QProcess::ExitStatus>::of(&QProcess::finished),
             this, &ProcessControl::slotFinished);
