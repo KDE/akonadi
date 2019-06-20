@@ -382,6 +382,6 @@ bool DbConfigPostgresql::checkServerIsRunning()
         return false;
     }
 
-    const QByteArray output = pgCtl.readAllStandardOutput();
-    return output.startsWith("pg_ctl: server is running");
+    // "pg_ctl status" exits with 0 when server is running and a non-zero code when not.
+    return pgCtl.exitCode() == 0;
 }
