@@ -17,7 +17,7 @@ endif()
 
 
 # ECM setup
-set(KF5_MIN_VERSION "5.58.0")
+set(KF5_MIN_VERSION "5.59.0")
 
 find_package(ECM ${KF5_MIN_VERSION} CONFIG REQUIRED)
 
@@ -325,11 +325,7 @@ install(EXPORT
     FILE KF5AkonadiTargets.cmake
     NAMESPACE KF5::)
 
-if (${ECM_VERSION} STRGREATER "5.58.0")
-    install(FILES akonadi.categories akonadi.renamecategories  DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
-else()
-    install(FILES akonadi.categories akonadi.renamecategories  DESTINATION ${KDE_INSTALL_CONFDIR})
-endif()
+install(FILES akonadi.categories akonadi.renamecategories  DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h
