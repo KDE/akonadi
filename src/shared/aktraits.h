@@ -39,14 +39,16 @@ namespace detail {
     template<typename T, typename ... Ts>
     struct conjunction<T, Ts...> : std::conditional_t<bool(T::value), conjunction<Ts...>, T> {};
 
-    /// Check for presence of member type
-    template<typename, typename = void_t<>>
-    struct hasMember {
-        static constexpr bool value = false;
-    };
+    #define DECLARE_HAS_MEBER_TYPE(type_name) \
+        template<typename T, typename U = void_t<>> \
+        struct hasMember_##type_name { \
+            static constexpr bool value = false; \
+        }; \
+        \
+        template<typename T> \
+        struct hasMember_##type_name<T, void_t<typename T:: type_name>> : std::true_type {};
 
-    template<typename T>
-    struct hasMember<T, void_t<T>> : std::true_type {};
+    DECLARE_HAS_MEBER_TYPE(value_type)
 
     /// TODO: Use Boost TTI instead?
     #define DECLARE_HAS_METHOD_GENERIC_IMPL(name, fun, sign)        \
@@ -109,7 +111,7 @@ namespace detail {
     template<typename T>
     struct isContainer : conjunction<
         std::is_constructible<T>,
-        hasMember<typename T::value_type>,
+        hasMember_value_type<T>,
         has_begin<T>,
         has_begin<const T>,
         has_end<T>,

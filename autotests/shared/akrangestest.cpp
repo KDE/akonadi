@@ -77,6 +77,21 @@ private Q_SLOTS:
         qSetGlobalQHashSeed(0);
     }
 
+    void testTraits()
+    {
+        QVERIFY(Akonadi::AkTraits::isAppendable<QVector<int>>);
+        QVERIFY(!Akonadi::AkTraits::isInsertable<QVector<int>>);
+        QVERIFY(Akonadi::AkTraits::isReservable<QVector<int>>);
+
+        QVERIFY(!Akonadi::AkTraits::isAppendable<QSet<int>>);
+        QVERIFY(Akonadi::AkTraits::isInsertable<QSet<int>>);
+        QVERIFY(Akonadi::AkTraits::isReservable<QSet<int>>);
+
+        QVERIFY(!Akonadi::AkTraits::isAppendable<QString>);
+        QVERIFY(!Akonadi::AkTraits::isInsertable<QString>);
+        QVERIFY(Akonadi::AkTraits::isReservable<QString>);
+    }
+
     void testContainerConversion()
     {
         {
