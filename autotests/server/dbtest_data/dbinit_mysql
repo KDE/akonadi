@@ -33,7 +33,7 @@ CREATE TABLE CollectionTable (id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
                               isVirtual BOOL DEFAULT false,
                               FOREIGN KEY (parentId) REFERENCES CollectionTable(id) ON UPDATE CASCADE ON DELETE CASCADE,
                               FOREIGN KEY (resourceId) REFERENCES ResourceTable(id) ON UPDATE CASCADE ON DELETE CASCADE)
-                              COLLATE=utf8_general_ci DEFAULT CHARSET=utf8
+                              COLLATE=utf8_general_ci DEFAULT CHARSET=utf8 ROW_FORMAT=DYNAMIC
 
 INSERT INTO CollectionTable (isVirtual,name,parentId,resourceId) VALUES (true,'Search',NULL,1)
 
