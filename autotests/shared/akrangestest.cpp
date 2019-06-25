@@ -108,18 +108,32 @@ private Q_SLOTS:
         }
     }
 
+    void testAssociativeContainerConversion()
+    {
+        QVector<std::pair<int, QString>> in = {{1, QStringLiteral("One")}, {2, QStringLiteral("Two")}, {3, QStringLiteral("Three")}};
+        QMap<int, QString> out = {{1, QStringLiteral("One")}, {2, QStringLiteral("Two")}, {3, QStringLiteral("Three")}};
+        QCOMPARE(in | Akonadi::toQMap, out);
+    }
+
     void testRangeConversion()
     {
         {
             QList<int> in = { 1, 2, 3, 4, 5 };
             Akonadi::detail::Range<QList<int>::const_iterator> range(in.cbegin(), in.cend());
-            QCOMPARE(in | Akonadi::toQVector, QVector<int>::fromList(in));
+            QCOMPARE(range | Akonadi::toQVector, QVector<int>::fromList(in));
         }
 
         {
             QVector<int> in = { 1, 2, 3, 4, 5 };
             Akonadi::detail::Range<QVector<int>::const_iterator> range(in.cbegin(), in.cend());
-            QCOMPARE(in | toQList, in.toList());
+            QCOMPARE(range | toQList, in.toList());
+        }
+
+        {
+            QVector<std::pair<int, QString>> in = {{1, QStringLiteral("One")}, {2, QStringLiteral("Two")}, {3, QStringLiteral("Three")}};
+            QMap<int, QString> out = {{1, QStringLiteral("One")}, {2, QStringLiteral("Two")}, {3, QStringLiteral("Three")}};
+            Akonadi::detail::Range<QVector<std::pair<int, QString>>::const_iterator> range(in.cbegin(), in.cend());
+            QCOMPARE(range | Akonadi::toQMap, out);
         }
     }
 

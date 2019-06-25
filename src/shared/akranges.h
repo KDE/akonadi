@@ -25,6 +25,7 @@
 
 #include <QVector>
 #include <QSet>
+#include <QMap>
 
 #include <algorithm>
 #include <functional>
@@ -40,6 +41,12 @@ template<template<typename> class Cont>
 struct To_
 {
     template<typename T> using Container = Cont<T>;
+};
+
+template<template<typename, typename> class Cont>
+struct ToAssoc_
+{
+    template<typename Key, typename Value> using Container = Cont<Key, Value>;
 };
 
 struct Values_ {};
@@ -65,6 +72,16 @@ OutContainer copyContainer(const RangeLike &range)
     rv.reserve(range.size());
     for (const auto &v : range) {
         rv.insert(v);
+    }
+    return rv;
+}
+
+template<typename RangeList, typename OutContainer>
+OutContainer copyAssocContainer(const RangeList &range)
+{
+    OutContainer rv;
+    for (const auto &v : range) {
+        rv.insert(v.first, v.second);
     }
     return rv;
 }
@@ -356,6 +373,16 @@ auto operator|(const InContainer<T> &in, const Akonadi::detail::To_<InContainer>
     return in;
 }
 
+// Generic operator| for ToAssoc_<> convertor
+template<typename RangeLike, template<typename, typename> class OutContainer,
+         typename T = typename RangeLike::value_type>
+auto operator|(const RangeLike &range, const Akonadi::detail::ToAssoc_<OutContainer> &) ->
+    OutContainer<typename T::first_type, typename T::second_type>
+{
+    using namespace Akonadi::detail;
+    return copyAssocContainer<RangeLike, OutContainer<typename T::first_type, typename T::second_type>>(range);
+}
+
 // Generic operator| for transform()
 template<typename RangeLike, typename TransformFn>
 auto operator|(const RangeLike &range, const Akonadi::detail::Transform_<TransformFn> &t)
@@ -428,6 +455,8 @@ static constexpr auto toQVector = detail::To_<QVector>{};
 static constexpr auto toQSet = detail::To_<QSet>{};
 /// Non-lazily convert given range or container to QList
 static constexpr auto toQList = detail::To_<QList>{};
+/// Non-lazily convert given range or container of pairs to QMap
+static constexpr auto toQMap = detail::ToAssoc_<QMap>{};
 /// Lazily extract values from an associative container
 static constexpr auto values = detail::Values_{};
 /// Lazily extract keys from an associative container
