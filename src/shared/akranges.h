@@ -46,7 +46,7 @@ struct Values_ {};
 struct Keys_ {};
 
 template<typename RangeLike, typename OutContainer,
-         AK_REQUIRES(AkTraits::isAppendable<OutContainer> && AkTraits::isReservable<OutContainer>)>
+         AK_REQUIRES(AkTraits::isAppendable<OutContainer>)>
 OutContainer copyContainer(const RangeLike &range)
 {
     OutContainer rv;
@@ -62,6 +62,7 @@ template<typename RangeLike, typename OutContainer,
 OutContainer copyContainer(const RangeLike &range)
 {
     OutContainer rv;
+    rv.reserve(range.size());
     for (const auto &v : range) {
         rv.insert(v);
     }
