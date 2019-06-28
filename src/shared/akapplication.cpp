@@ -32,10 +32,9 @@
 
 AkApplicationBase *AkApplicationBase::sInstance = nullptr;
 
-AkApplicationBase::AkApplicationBase(int &argc, char **argv, const QLoggingCategory &loggingCategory)
+AkApplicationBase::AkApplicationBase(std::unique_ptr<QCoreApplication> app, const QLoggingCategory &loggingCategory)
     : QObject(nullptr)
-    , mArgc(argc)
-    , mArgv(argv)
+    , mApp(std::move(app))
     , mLoggingCategory(loggingCategory)
 {
     Q_ASSERT(!sInstance);
@@ -59,7 +58,7 @@ AkApplicationBase *AkApplicationBase::instance()
 
 void AkApplicationBase::init()
 {
-    akInit(QString::fromLatin1(mArgv[0]));
+    akInit(mApp->applicationName());
     akInitRemoteLog();
 
     if (!QDBusConnection::sessionBus().isConnected()) {
