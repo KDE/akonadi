@@ -52,7 +52,7 @@ void crashHandler(int)
 
 int main(int argc, char **argv)
 {
-    AkGuiApplication app(argc, argv, AKONADICONTROL_LOG());
+    AkUniqueGuiApplication app(argc, argv, Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock), AKONADICONTROL_LOG());
     app.setDescription(QStringLiteral("Akonadi Control Process\nDo not run this manually, use 'akonadictl' instead to start/stop Akonadi."));
 
     KAboutData aboutData(QStringLiteral("akonadi_control"),
@@ -64,20 +64,8 @@ int main(int argc, char **argv)
 
     app.parseCommandLine();
 
-    // try to acquire the lock first, that means there is no second instance trying to start up at the same time
-    // registering the real service name happens in AgentManager::continueStartup(), when everything is in fact up and running
-    if (!QDBusConnection::sessionBus().registerService(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock))) {
-        // We couldn't register. Most likely, it's already running.
-        const QString lastError = QDBusConnection::sessionBus().lastError().message();
-        if (lastError.isEmpty()) {
-            qCWarning(AKONADICONTROL_LOG) << "Unable to register service as" << Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock) << "Maybe it's already running?";
-        } else {
-            qCWarning(AKONADICONTROL_LOG) << "Unable to register service as" << Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock) << "Error was:" << lastError;
-        }
-        return -1;
-    }
-
     // older Akonadi server versions don't use the lock service yet, so check if one is already running before we try to start another one
+    // TODO: Remove this legacy check?
     if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Control))) {
         qCWarning(AKONADICONTROL_LOG) << "Another Akonadi control process is already running.";
         return -1;

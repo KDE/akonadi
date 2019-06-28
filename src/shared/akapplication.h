@@ -23,6 +23,10 @@
 #include <QObject>
 #include <QCommandLineParser>
 #include <QLoggingCategory>
+#include <QDBusConnection>
+#include <QDBusError>
+
+#include <memory>
 
 class QCoreApplication;
 class QApplication;
@@ -55,16 +59,15 @@ public:
     int exec();
 
 protected:
-    AkApplicationBase(int &argc, char **argv, const QLoggingCategory &loggingCategory);
+    AkApplicationBase(std::unique_ptr<QCoreApplication> app, const QLoggingCategory &loggingCategory);
     void init();
-    QScopedPointer<QCoreApplication> mApp;
+
+    std::unique_ptr<QCoreApplication> mApp;
 
 private Q_SLOTS:
     void pollSessionBus() const;
 
 private:
-    int mArgc;
-    char **mArgv;
     QString mInstanceId;
     const QLoggingCategory &mLoggingCategory;
     static AkApplicationBase *sInstance;
@@ -77,10 +80,43 @@ class AkApplicationImpl : public AkApplicationBase
 {
 public:
     AkApplicationImpl(int &argc, char **argv, const QLoggingCategory &loggingCategory = *QLoggingCategory::defaultCategory())
-        : AkApplicationBase(argc, argv, loggingCategory)
+        : AkApplicationBase(std::make_unique<T>(argc, argv), loggingCategory)
     {
-        mApp.reset(new T(argc, argv));
         init();
+    }
+};
+
+template<typename T>
+class AkUniqueApplicationImpl : public AkApplicationBase
+{
+public:
+    AkUniqueApplicationImpl(int &argc, char **argv, const QString &serviceName, const QLoggingCategory &loggingCategory = *QLoggingCategory::defaultCategory())
+        : AkApplicationBase(std::make_unique<T>(argc, argv), loggingCategory)
+    {
+        registerUniqueServiceOrTerminate(serviceName, loggingCategory);
+        init();
+    }
+
+private:
+    void registerUniqueServiceOrTerminate(const QString &serviceName, const QLoggingCategory &log)
+    {
+        auto bus = QDBusConnection::sessionBus();
+        if (!bus.isConnected()) {
+            qCCritical(log, "Session bus not found. Is DBus running?");
+            exit(1);
+        }
+
+        if (!bus.registerService(serviceName)) {
+            // We couldn't register. Most likely, it's already running.
+            const QString lastError = bus.lastError().message();
+            if (lastError.isEmpty()) {
+                qCInfo(log, "Service %s already registered, terminating now.", qUtf8Printable(serviceName));
+                exit(0); // already running, so it's OK. Terminate now.
+            } else {
+                qCCritical(log, "Unable to register service as %s due to an error: %s", qUtf8Printable(serviceName), qUtf8Printable(lastError));
+                exit(1); // :(
+            }
+        }
     }
 };
 
@@ -93,5 +129,6 @@ QString akGetEnv(const char *name, const QString &defaultValue = QString());
 typedef AkApplicationImpl<QCoreApplication> AkCoreApplication;
 typedef AkApplicationImpl<QApplication> AkApplication;
 typedef AkApplicationImpl<QGuiApplication> AkGuiApplication;
+typedef AkUniqueApplicationImpl<QGuiApplication> AkUniqueGuiApplication;
 
 #endif
