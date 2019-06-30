@@ -255,6 +255,7 @@ akOptional<QString> findBinPathForVersion(int version)
         QStringLiteral("/usr/lib64/pgsql/postgresql-%1/bin").arg(version), // Fedora & friends
         QStringLiteral("/usr/lib/pgsql/postgresql-%1/bin").arg(version),
         QStringLiteral("/usr/lib/postgresql/%1/bin").arg(version), // Debian-based
+        QStringLiteral("/opt/pgsql-%1/bin").arg(version), // Arch Linux
         // TODO: Check other distros as well, they might do things differently.
     };
 
