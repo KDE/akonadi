@@ -26,6 +26,7 @@
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
 #include "storage/collectionqueryhelper.h"
+#include "shared/akranges.h"
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -47,17 +48,8 @@ bool CollectionCopyHandler::copyCollection(const Collection &source, const Colle
         col.setRemoteRevision(QString());
     }
 
-    const auto sourceMimeTypes = source.mimeTypes();
-    QStringList mimeTypes;
-    mimeTypes.reserve(sourceMimeTypes.size());
-    std::transform(sourceMimeTypes.cbegin(), sourceMimeTypes.cend(), std::back_inserter(mimeTypes),
-                   [](const MimeType &mt) { return mt.name(); });
-
-    const auto sourceAttributes = source.attributes();
-    QMap<QByteArray, QByteArray> attributes;
-    for (const auto &attr : sourceAttributes) {
-        attributes.insert(attr.type(), attr.value());
-    }
+    const auto mimeTypes = source.mimeTypes() | transform([](const auto &mt) { return mt.name(); }) | toQList;
+    const auto attributes = source.attributes() | transform([](const auto &attr) { return std::make_pair(attr.type(), attr.value()); }) | toQMap;
 
     if (!storageBackend()->appendCollection(col, mimeTypes, attributes)) {
         return false;
@@ -73,7 +65,8 @@ bool CollectionCopyHandler::copyCollection(const Collection &source, const Colle
     }
 
     // copy items
-    Q_FOREACH (const PimItem &item, source.items()) {
+    const auto items = source.items();
+    for (const auto &item : items) {
         if (!copyItem(item, col)) {
             return false;
         }

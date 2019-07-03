@@ -23,7 +23,7 @@
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/selectquerybuilder.h"
-
+#include "shared/akranges.h"
 
 #include <private/scope_p.h>
 
@@ -52,25 +52,16 @@ bool CollectionCreateHandler::parseStream()
 
         // check if parent can contain a sub-folder
         parentContentTypes = parent.mimeTypes();
-        bool found = false, foundVirtual = false;
-        for (const MimeType &mt : qAsConst(parentContentTypes)) {
-            const QString mtName{mt.name()};
-            if (mtName == QLatin1String("inode/directory")) {
-                found = true;
-            } else if (mtName == QLatin1String("application/x-vnd.akonadi.collection.virtual")) {
-                foundVirtual = true;
-            }
-            if (found && foundVirtual) {
-                break;
-            }
-        }
-        if (!found && !foundVirtual) {
+        const bool canContainCollections = parentContentTypes | any([](const auto &mt) { return mt.name() == CollectionMimeType; });
+        const bool canContainVirtualCollections = parentContentTypes | any([](const auto &mt) { return mt.name() == VirtualCollectionMimeType; });
+
+        if (!canContainCollections && !canContainVirtualCollections) {
             return failureResponse(QStringLiteral("Parent collection can not contain sub-collections"));
         }
 
         // If only virtual collections are supported, force every new collection to
         // be virtual. Otherwise depend on VIRTUAL attribute in the command
-        if (foundVirtual && !found) {
+        if (canContainVirtualCollections && !canContainCollections) {
             forceVirtual = true;
         }
 
@@ -110,15 +101,11 @@ bool CollectionCreateHandler::parseStream()
 
     QStringList effectiveMimeTypes = cmd.mimeTypes();
     if (effectiveMimeTypes.isEmpty()) {
-        effectiveMimeTypes.reserve(parentContentTypes.count());
-        std::transform(parentContentTypes.cbegin(), parentContentTypes.cend(),
-                       std::back_inserter(effectiveMimeTypes),
-                       std::bind(&MimeType::name, std::placeholders::_1));
+        effectiveMimeTypes = parentContentTypes | transform([](const auto &mt) { return mt.name(); }) | toQList;
     }
 
     if (!db->appendCollection(collection, effectiveMimeTypes, cmd.attributes())) {
-        return failureResponse(QStringLiteral("Could not create collection ") % cmd.name()
-                               % QStringLiteral(", resourceId: ") % QString::number(resourceId));
+        return failureResponse(QStringLiteral("Could not create collection %1, resourceId %2").arg(cmd.name()).arg(resourceId));
     }
 
     if (!transaction.commit()) {

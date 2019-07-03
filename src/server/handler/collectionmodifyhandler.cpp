@@ -30,6 +30,7 @@
 #include "storage/selectquerybuilder.h"
 #include "storage/collectionqueryhelper.h"
 #include "search/searchmanager.h"
+#include "shared/akranges.h"
 #include "akonadiserver_debug.h"
 
 using namespace Akonadi;
@@ -185,13 +186,9 @@ bool CollectionModifyHandler::parseStream()
             collection.setQueryAttributes(QString::fromLatin1(queryAttributes.join(' ')));
         }
 
-        QStringList cols;
-        cols.reserve(cmd.persistentSearchCollections().size());
         QVector<qint64> inCols = cmd.persistentSearchCollections();
         std::sort(inCols.begin(), inCols.end());
-        for (qint64 col : qAsConst(inCols)) {
-            cols.append(QString::number(col));
-        }
+        const auto cols = inCols | transform([](const auto col) { return QString::number(col); }) | toQList;
         const QString colStr = cols.join(QLatin1Char(' '));
         if (colStr != collection.queryCollections()) {
             collection.setQueryCollections(colStr);

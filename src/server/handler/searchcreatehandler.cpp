@@ -26,6 +26,7 @@
 #include "storage/entity.h"
 #include "storage/transaction.h"
 #include "search/searchmanager.h"
+#include <shared/akranges.h>
 #include "akonadiserver_debug.h"
 
 using namespace Akonadi;
@@ -55,13 +56,9 @@ bool SearchCreateHandler::parseStream()
         queryAttributes << QStringLiteral(AKONADI_PARAM_RECURSIVE);
     }
 
-    QStringList queryCollections;
     QVector<qint64> queryColIds = cmd.queryCollections();
     std::sort(queryColIds.begin(), queryColIds.end());
-    queryCollections.reserve(queryColIds.size());
-    for (qint64 col : qAsConst(queryColIds)) {
-        queryCollections.append(QString::number(col));
-    }
+    const auto queryCollections = queryColIds | transform([](const auto id) { return QString::number(id); }) | toQList;
 
     Collection col;
     col.setQueryString(cmd.query());

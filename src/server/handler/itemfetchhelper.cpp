@@ -31,6 +31,7 @@
 #include "storage/parthelper.h"
 #include "storage/parttypehelper.h"
 #include "storage/transaction.h"
+#include "shared/akranges.h"
 
 #include "utils.h"
 #include "intervalcheck.h"
@@ -511,17 +512,18 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
                 tagQuery.next();
             }
 
-            tags.reserve(tagIds.count());
             if (mTagFetchScope.fetchIdOnly()) {
-                for (qint64 tagId : qAsConst(tagIds)) {
-                    Protocol::FetchTagsResponse resp;
-                    resp.setId(tagId);
-                    tags << resp;
-                }
+                tags = tagIds | transform([](const auto tagId) {
+                                        Protocol::FetchTagsResponse resp;
+                                        resp.setId(tagId);
+                                        return resp;
+                                    })
+                              | toQVector;
             } else {
-                for (qint64 tagId : qAsConst(tagIds)) {
-                    tags.push_back(HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId), mTagFetchScope, mConnection));
-                }
+                tags = tagIds | transform([this](const auto tagId) {
+                                    return HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId), mTagFetchScope, mConnection);
+                                })
+                              | toQVector;
             }
             response.setTags(tags);
         }

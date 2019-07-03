@@ -642,5 +642,13 @@ Q_DECLARE_METATYPE(Akonadi::Protocol::ChangeNotificationList)
 
 // special resource names
 #define AKONADI_SEARCH_RESOURCE                    "akonadi_search_resource"
+
+namespace Akonadi {
+
+static const QString CollectionMimeType = QStringLiteral("inode/directory");
+static const QString VirtualCollectionMimeType = QStringLiteral("application/x-vnd.akonadi.collection.virtual");
+
+}
+
 #endif
 

@@ -23,6 +23,7 @@
 #include "connection.h"
 #include "storage/datastore.h"
 #include "storage/querybuilder.h"
+#include <shared/akranges.h>
 
 #include <private/imapset_p.h>
 
@@ -42,10 +43,7 @@ bool TagModifyHandler::parseStream()
 
     // Retrieve all tag's attributes
     const TagAttribute::List attributes = TagAttribute::retrieveFiltered(TagAttribute::tagIdFullColumnName(), cmd.tagId());
-    QMap<QByteArray, TagAttribute> attributesMap;
-    for (const TagAttribute &attribute : attributes) {
-        attributesMap.insert(attribute.type(), attribute);
-    }
+    const auto attributesMap = attributes | transform([](const auto &attr) { return std::make_pair(attr.type(), attr); }) | toQMap;
 
     if (cmd.modifiedParts() & Protocol::ModifyTagCommand::ParentId) {
         if (cmd.parentId() != changedTag.parentId()) {

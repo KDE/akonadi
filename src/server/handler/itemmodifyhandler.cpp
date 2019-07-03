@@ -30,6 +30,7 @@
 #include "storage/itemretriever.h"
 #include "storage/parttypehelper.h"
 #include "storage/partstreamer.h"
+#include <shared/akranges.h>
 #include <private/externalpartstorage_p.h>
 
 
@@ -43,12 +44,7 @@ using namespace Akonadi::Server;
 
 static bool payloadChanged(const QSet<QByteArray> &changes)
 {
-    for (const QByteArray &change : changes) {
-        if (change.startsWith(AKONADI_PARAM_PLD)) {
-            return true;
-        }
-    }
-    return false;
+    return changes | any([](const auto &change) { return change.startsWith(AKONADI_PARAM_PLD); });
 }
 
 bool ItemModifyHandler::replaceFlags(const PimItem::List &item, const QSet<QByteArray> &flags, bool &flagsChanged)
