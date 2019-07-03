@@ -392,7 +392,7 @@ QString SetupTest::basePath() const
     #endif
 
     const QDir sysTempDir(sysTempDirPath);
-    const QString tempDir = QStringLiteral("/akonadi_testrunner-%1/")
+    const QString tempDir = QStringLiteral("/aktestrunner-%1/")
                             .arg(QCoreApplication::instance()->applicationPid());
     if (!sysTempDir.exists(tempDir)) {
         sysTempDir.mkdir(tempDir);
