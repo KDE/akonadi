@@ -39,7 +39,7 @@
 
 static QString akonadiSocketDirectory();
 static bool checkSocketDirectory(const QString &path);
-static bool createSocketDirectory(const QString &link, const QString &identifier);
+static bool createSocketDirectory(const QString &link);
 #endif
 
 #ifdef Q_OS_LINUX
@@ -89,8 +89,10 @@ QString Utils::preferredSocketDirectory(const QString &defaultDirectory, int fnL
         QDir::home().mkpath(dirInfo.absoluteFilePath());
     }
 
-    if (socketDir.length() + 1 + fnLengthHint >= static_cast<int>(sizeof(sockaddr_un::sun_path))) {
-        qCCritical(AKONADISERVER_LOG) << "akonadiSocketDirectory() length is too long to be used by the system.";
+    const std::size_t totalLength = socketDir.length() + 1 + fnLengthHint;
+    const std::size_t maxLen = sizeof(sockaddr_un::sun_path);
+    if (totalLength >= maxLen) {
+        qCCritical(AKONADISERVER_LOG) << "akonadiSocketDirectory() length of" << totalLength << "is longer than the system limit" << maxLen;
     }
 #endif
     return socketDir;
@@ -113,7 +115,7 @@ QString akonadiSocketDirectory()
         return QFileInfo(link).symLinkTarget();
     }
 
-    if (createSocketDirectory(link, identifier)) {
+    if (createSocketDirectory(link)) {
         return QFileInfo(link).symLinkTarget();
     }
 
@@ -144,9 +146,9 @@ static bool checkSocketDirectory(const QString &path)
     return true;
 }
 
-static bool createSocketDirectory(const QString &link, const QString &identifier)
+static bool createSocketDirectory(const QString &link)
 {
-    const QString directory = QStringLiteral("%1/%2").arg(StandardDirs::saveDir("runtime"), identifier);
+    const QString directory = StandardDirs::saveDir("runtime");
 
     if (!QDir().mkpath(directory)) {
         qCCritical(AKONADISERVER_LOG) << "Creating socket directory with name" << directory << "failed:" << strerror(errno);
