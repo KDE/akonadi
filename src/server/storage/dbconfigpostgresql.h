@@ -74,6 +74,9 @@ public:
      */
     void stopInternalServer() override;
 
+protected:
+    QStringList postgresSearchPaths(const QString &versionedPath) const;
+
 private:
     struct Versions {
         int clusterVersion = 0;

@@ -20,17 +20,29 @@
 #include <QObject>
 #include <QTest>
 #include <QSettings>
+#include <QTemporaryDir>
 
 #include <aktest.h>
 #include <private/standarddirs_p.h>
+#include <shared/akranges.h>
 
 #include <storage/dbconfig.h>
+#include <storage/dbconfigpostgresql.h>
 #include <config-akonadi.h>
 
 #define QL1S(x) QStringLiteral(x)
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+
+class TestableDbConfigPostgresql : public DbConfigPostgresql
+{
+public:
+    QStringList postgresSearchPaths(const QTemporaryDir &dir)
+    {
+        return DbConfigPostgresql::postgresSearchPaths(dir.path());
+    }
+};
 
 class DbConfigTest : public QObject
 {
@@ -57,6 +69,29 @@ private Q_SLOTS:
         QCOMPARE(cfg->databaseName(), QL1S("akonadi"));
         QCOMPARE(cfg->useInternalServer(), true);
         QCOMPARE(cfg->sizeThreshold(), 4096ll);
+    }
+
+    void testPostgresVersionedLookup()
+    {
+        QTemporaryDir dir;
+        QVERIFY(dir.isValid());
+
+        const QStringList versions{QStringLiteral("10.2"), QStringLiteral("10.0"), QStringLiteral("9.5"), QStringLiteral("12.4"),
+                                   QStringLiteral("8.0"), QStringLiteral("12.0")};
+        for (const auto &version : versions) {
+            QVERIFY(QDir(dir.path()).mkdir(version));
+        }
+
+        TestableDbConfigPostgresql dbConfig;
+        const auto paths = dbConfig.postgresSearchPaths(dir)
+                                | filter([&dir](const auto &path) { return path.startsWith(dir.path()); })
+                                | transform([&dir](const auto &path) {
+                                        return QString(path).remove(dir.path() + QStringLiteral("/")).remove(QStringLiteral("/bin")); })
+                                | toQList;
+
+        const QStringList expected{QStringLiteral("12.4"), QStringLiteral("12.0"), QStringLiteral("10.2"),
+                                   QStringLiteral("10.0"), QStringLiteral("9.5"), QStringLiteral("8.0")};
+        QCOMPARE(paths, expected);
     }
 };
 

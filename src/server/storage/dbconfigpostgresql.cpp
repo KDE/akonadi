@@ -23,6 +23,7 @@
 
 #include <private/standarddirs_p.h>
 #include <shared/akoptional.h>
+#include <shared/akranges.h>
 
 #include <QDir>
 #include <QProcess>
@@ -60,6 +61,80 @@ QString DbConfigPostgresql::databaseName() const
     return mDatabaseName;
 }
 
+namespace {
+
+struct VersionCompare {
+
+    bool operator()(const QFileInfo &lhsFi, const QFileInfo &rhsFi) const
+    {
+        const auto lhs = parseVersion(lhsFi.fileName());
+        if (!lhs.has_value()) {
+            return false;
+        }
+        const auto rhs = parseVersion(rhsFi.fileName());
+        if (!rhs.has_value()) {
+            return true;
+        }
+
+        return std::tie(lhs->major, lhs->minor) < std::tie(rhs->major, rhs->minor);
+    }
+
+private:
+    struct Version {
+        int major;
+        int minor;
+    };
+    akOptional<Version> parseVersion(const QString &name) const
+    {
+        const auto dotIdx = name.indexOf(QLatin1Char('.'));
+        if (dotIdx == -1) {
+            return {};
+        }
+        bool ok = false;
+        const auto major = name.leftRef(dotIdx).toInt(&ok);
+        if (!ok) {
+            return {};
+        }
+        const auto minor = name.midRef(dotIdx + 1).toInt(&ok);
+        if (!ok) {
+            return {};
+        }
+        return Version{major, minor};
+    }
+};
+
+}
+
+QStringList DbConfigPostgresql::postgresSearchPaths(const QString &versionedPath) const
+{
+    QStringList paths;
+
+#ifdef POSTGRES_PATH
+    const QString dir(QStringLiteral(POSTGRES_PATH));
+    if (QDir(dir).exists()) {
+        paths.push_back(QStringLiteral(POSTGRES_PATH));
+    }
+#endif
+    paths << QStringLiteral("/usr/bin")
+          << QStringLiteral("/usr/sbin")
+          << QStringLiteral("/usr/local/sbin");
+
+    // Locate all versions in /usr/lib/postgresql (i.e. /usr/lib/postgresql/X.Y) in reversed
+    // sorted order, so we search from the newest one to the oldest.
+    QDir versionedDir(versionedPath);
+    if (versionedDir.exists()) {
+        auto versionedDirs = versionedDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::NoSort);
+        qDebug() << versionedDirs;
+        std::sort(versionedDirs.begin(), versionedDirs.end(), VersionCompare());
+        std::reverse(versionedDirs.begin(), versionedDirs.end());
+        paths += versionedDirs | transform([](const auto &dir) -> QString {
+                                    return dir.absoluteFilePath() + QStringLiteral("/bin"); })
+                               | toQList;
+    }
+
+    return paths;
+}
+
 bool DbConfigPostgresql::init(QSettings &settings)
 {
     // determine default settings depending on the driver
@@ -78,37 +153,12 @@ bool DbConfigPostgresql::init(QSettings &settings)
 
     mInternalServer = settings.value(QStringLiteral("QPSQL/StartServer"), defaultInternalServer).toBool();
     if (mInternalServer) {
-        QStringList postgresSearchPath;
+        const auto paths = postgresSearchPaths(QStringLiteral("/usr/lib/postgresql"));
 
-#ifdef POSTGRES_PATH
-        const QString dir(QStringLiteral(POSTGRES_PATH));
-        if (QDir(dir).exists()) {
-            postgresSearchPath << QStringLiteral(POSTGRES_PATH);
-        }
-#endif
-        postgresSearchPath << QStringLiteral("/usr/bin")
-                           << QStringLiteral("/usr/sbin")
-                           << QStringLiteral("/usr/local/sbin");
-        // Locate all versions in /usr/lib/postgresql (i.e. /usr/lib/postgresql/X.Y) in reversed
-        // sorted order, so we search from the newest one to the oldest.
-        QStringList postgresVersionedSearchPaths;
-        QDir versionedDir(QStringLiteral("/usr/lib/postgresql"));
-        if (versionedDir.exists()) {
-            const auto versionedDirs = versionedDir.entryInfoList(QDir::Dirs | QDir::NoDotAndDotDot, QDir::Name | QDir::Reversed);
-            for (const auto &path : versionedDirs) {
-                // Don't break once PostgreSQL 10 is released, but something more future-proof will be needed
-                if (path.fileName().startsWith(QLatin1String("10."))) {
-                    postgresVersionedSearchPaths.prepend(path.absoluteFilePath() + QStringLiteral("/bin"));
-                } else {
-                    postgresVersionedSearchPaths.append(path.absoluteFilePath() + QStringLiteral("/bin"));
-                }
-            }
-        }
-        postgresSearchPath.append(postgresVersionedSearchPaths);
-        defaultServerPath = QStandardPaths::findExecutable(QStringLiteral("pg_ctl"), postgresSearchPath);
-        defaultInitDbPath = QStandardPaths::findExecutable(QStringLiteral("initdb"), postgresSearchPath);
+        defaultServerPath = QStandardPaths::findExecutable(QStringLiteral("pg_ctl"), paths);
+        defaultInitDbPath = QStandardPaths::findExecutable(QStringLiteral("initdb"), paths);
         defaultHostName = Utils::preferredSocketDirectory(StandardDirs::saveDir("data", QStringLiteral("db_misc")));
-        defaultPgUpgradePath = QStandardPaths::findExecutable(QStringLiteral("pg_upgrade"), postgresSearchPath);
+        defaultPgUpgradePath = QStandardPaths::findExecutable(QStringLiteral("pg_upgrade"), paths);
         defaultPgData = StandardDirs::saveDir("data", QStringLiteral("db_data"));
     }
 
