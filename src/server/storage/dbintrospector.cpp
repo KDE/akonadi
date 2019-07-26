@@ -76,7 +76,10 @@ bool DbIntrospector::hasColumn(const QString &tableName, const QString &columnNa
     QStringList columns = m_columnCache.value(tableName);
 
     if (columns.isEmpty()) {
-        const QSqlRecord table = m_database.record(tableName.toLower());
+        // QPSQL requires the name to be lower case, but it breaks compatibility with existing
+        // tables with other drivers (see BKO#409234). Yay for abstraction...
+        const auto name = (DbType::type(m_database) == DbType::PostgreSQL) ? tableName.toLower() : tableName;
+        const QSqlRecord table = m_database.record(name);
         const int numTables = table.count();
         columns.reserve(numTables);
         for (int i = 0; i < numTables; ++i) {
