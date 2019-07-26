@@ -60,11 +60,10 @@ QString DBus::serviceName(DBus::ServiceType serviceType)
     return QString();
 }
 
-QString DBus::parseAgentServiceName(const QString &serviceName, DBus::AgentType &agentType)
+akOptional<DBus::AgentService> DBus::parseAgentServiceName(const QString &serviceName)
 {
-    agentType = Unknown;
     if (!serviceName.startsWith(QLatin1String("org.freedesktop.Akonadi."))) {
-        return QString();
+        return nullopt;
     }
     const QStringList parts = serviceName.mid(24).split(QLatin1Char('.'));
     if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
@@ -72,18 +71,17 @@ QString DBus::parseAgentServiceName(const QString &serviceName, DBus::AgentType 
         // switch on parts.at( 0 )
         const QString &partFirst = parts.constFirst();
         if (partFirst == QLatin1String("Agent")) {
-            agentType = Agent;
+            return AgentService{parts.at(1), DBus::Agent};
         } else if (partFirst == QLatin1String("Resource")) {
-            agentType = Resource;
+            return AgentService{parts.at(1), DBus::Resource};
         } else if (partFirst == QLatin1String("Preprocessor")) {
-            agentType = Preprocessor;
+            return AgentService{parts.at(1), DBus::Preprocessor};
         } else {
-            return QString();
+            return nullopt;
         }
-        return parts.at(1);
     }
 
-    return QString();
+    return nullopt;
 }
 
 QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType agentType)

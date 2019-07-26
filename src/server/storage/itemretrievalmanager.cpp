@@ -97,13 +97,12 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const
     if (oldOwner.isEmpty()) {
         return;
     }
-    DBus::AgentType type = DBus::Unknown;
-    const QString resourceId = DBus::parseAgentServiceName(serviceName, type);
-    if (resourceId.isEmpty() || type != DBus::Resource) {
+    const auto service = DBus::parseAgentServiceName(serviceName);
+    if (!service.has_value() || service->agentType != DBus::Resource) {
         return;
     }
     qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager lost connection to resource" << serviceName << ", discarding cached interface";
-    mResourceInterfaces.remove(resourceId);
+    mResourceInterfaces.remove(service->serviceName);
 }
 
 // called within the retrieval thread

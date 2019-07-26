@@ -22,7 +22,9 @@
 
 #include "akonadiprivate_export.h"
 
-class QString;
+#include <QString>
+
+#include "akoptional.h"
 
 /**
  * Helper methods for obtaining D-Bus identifiers.
@@ -63,18 +65,22 @@ enum AgentType {
     Preprocessor
 };
 
+struct AgentService {
+    QString serviceName{};
+    DBus::AgentType agentType{DBus::Unknown};
+};
+
 /**
  * Parses a D-Bus service name and checks if it belongs to an agent of this instance.
  * @param serviceName The service name to parse.
- * @param agentType Output parameter containing the agent type.
  * @return The identifier of the agent, empty string if that's not an agent (or an agent of a different Akonadi instance)
  */
-AKONADIPRIVATE_EXPORT  QString parseAgentServiceName(const QString &serviceName, DBus::AgentType &agentType);
+AKONADIPRIVATE_EXPORT akOptional<AgentService> parseAgentServiceName(const QString &serviceName);
 
 /**
  * Returns the D-Bus service name of the agent @p agentIdentifier for type @p agentType.
  */
-AKONADIPRIVATE_EXPORT  QString agentServiceName(const QString &agentIdentifier, DBus::AgentType agentType);
+AKONADIPRIVATE_EXPORT QString agentServiceName(const QString &agentIdentifier, DBus::AgentType agentType);
 
 }
 

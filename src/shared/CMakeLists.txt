@@ -16,6 +16,7 @@ target_link_libraries(akonadi_shared
 
 ecm_generate_headers(shared_HEADERS
     HEADER_NAMES
+    AkOptional
     VectorHelper
     REQUIRED_HEADERS shared_HEADERS
 )

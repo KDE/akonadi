@@ -75,11 +75,10 @@ private Q_SLOTS:
 
         akTestSetInstanceIdentifier(instanceId);
 
-        DBus::AgentType parsedType;
-        QString parsedName = DBus::parseAgentServiceName(serviceName, parsedType);
-
-        QCOMPARE(parsedName, agentId);
-        QCOMPARE(parsedType, agentType);
+        const auto service = DBus::parseAgentServiceName(serviceName);
+        QVERIFY(service.has_value());
+        QCOMPARE(service->serviceName, agentId);
+        QCOMPARE(service->agentType, agentType);
     }
 
     void testAgentServiceName()

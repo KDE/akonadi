@@ -627,27 +627,29 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
         }
     }
 
-    Akonadi::DBus::AgentType agentType = Akonadi::DBus::Unknown;
-    const QString agentIdentifier = Akonadi::DBus::parseAgentServiceName(name, agentType);
-    switch (agentType) {
+    const auto service = Akonadi::DBus::parseAgentServiceName(name);
+    if (!service.has_value()) {
+        return;
+    }
+    switch (service->agentType) {
     case Akonadi::DBus::Agent: {
         // An agent service went up or down
         if (newOwner.isEmpty()) {
             return; // It went down: we don't care here.
         }
 
-        if (!mAgentInstances.contains(agentIdentifier)) {
+        if (!mAgentInstances.contains(service->serviceName)) {
             return;
         }
 
-        const AgentInstance::Ptr instance = mAgentInstances.value(agentIdentifier);
+        const AgentInstance::Ptr instance = mAgentInstances.value(service->serviceName);
         const bool restarting = instance->hasAgentInterface();
         if (!instance->obtainAgentInterface()) {
             return;
         }
 
         if (!restarting) {
-            Q_EMIT agentInstanceAdded(agentIdentifier);
+            Q_EMIT agentInstanceAdded(service->serviceName);
         }
 
         break;
@@ -658,11 +660,11 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             return; // It went down: we don't care here.
         }
 
-        if (!mAgentInstances.contains(agentIdentifier)) {
+        if (!mAgentInstances.contains(service->serviceName)) {
             return;
         }
 
-        mAgentInstances.value(agentIdentifier)->obtainResourceInterface();
+        mAgentInstances.value(service->serviceName)->obtainResourceInterface();
 
         break;
     }
@@ -680,9 +682,9 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
         // The order of interface deletions depends on Qt but we handle both cases.
 
         // Check if we "know" about it.
-        qCDebug(AKONADICONTROL_LOG) << "Preprocessor " << agentIdentifier << " is going up or down...";
+        qCDebug(AKONADICONTROL_LOG) << "Preprocessor " << service->serviceName << " is going up or down...";
 
-        if (!mAgentInstances.contains(agentIdentifier)) {
+        if (!mAgentInstances.contains(service->serviceName)) {
             qCDebug(AKONADICONTROL_LOG) << "But it isn't registered as agent... not mine (anymore?)";
             return; // not our agent (?)
         }
@@ -699,25 +701,25 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             if (newOwner.isEmpty()) {
                 // The preprocessor went down. Unregister it on server side.
 
-                preProcessorManager.unregisterInstance(agentIdentifier);
+                preProcessorManager.unregisterInstance(service->serviceName);
 
             } else {
 
                 // The preprocessor went up. Register it on server side.
 
-                if (!mAgentInstances.value(agentIdentifier)->obtainPreprocessorInterface()) {
+                if (!mAgentInstances.value(service->serviceName)->obtainPreprocessorInterface()) {
                     // Hm.. couldn't hook up its preprocessor interface..
                     // Make sure we don't have it in the preprocessor chain
-                    qCWarning(AKONADICONTROL_LOG) << "Couldn't obtain preprocessor interface for instance" << agentIdentifier;
+                    qCWarning(AKONADICONTROL_LOG) << "Couldn't obtain preprocessor interface for instance" << service->serviceName;
 
-                    preProcessorManager.unregisterInstance(agentIdentifier);
+                    preProcessorManager.unregisterInstance(service->serviceName);
                     return;
                 }
 
-                qCDebug(AKONADICONTROL_LOG) << "Registering preprocessor instance" << agentIdentifier;
+                qCDebug(AKONADICONTROL_LOG) << "Registering preprocessor instance" << service->serviceName;
 
                 // Add to the preprocessor chain
-                preProcessorManager.registerInstance(agentIdentifier);
+                preProcessorManager.registerInstance(service->serviceName);
             }
         }
 

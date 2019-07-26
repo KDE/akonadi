@@ -337,6 +337,7 @@ install(FILES
     ${AkonadiCore_HEADERS}
     qtest_akonadi.h
     itempayloadinternals_p.h
+    ${Akonadi_BINARY_DIR}/config-akonadi.h
     DESTINATION ${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore COMPONENT Devel
 )
 
