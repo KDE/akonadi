@@ -58,17 +58,12 @@ ItemRetrievalManager::ItemRetrievalManager(std::unique_ptr<AbstractItemRetrieval
 
     Q_ASSERT(sInstance == nullptr);
     sInstance = this;
-
-    mLock = new QReadWriteLock();
-    mWaitCondition = new QWaitCondition();
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()
 {
     quitThread();
 
-    delete mWaitCondition;
-    delete mLock;
     sInstance = nullptr;
 }
 
@@ -102,7 +97,7 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const
         return;
     }
     qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager lost connection to resource" << serviceName << ", discarding cached interface";
-    mResourceInterfaces.remove(service->serviceName);
+    mResourceInterfaces.erase(service->serviceName);
 }
 
 // called within the retrieval thread
@@ -112,71 +107,42 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
         return nullptr;
     }
 
-    org::freedesktop::Akonadi::Resource *iface = mResourceInterfaces.value(id);
-    if (iface && iface->isValid()) {
-        return iface;
+    auto ifaceIt = mResourceInterfaces.find(id);
+    if (ifaceIt != mResourceInterfaces.cend() && ifaceIt->second->isValid()) {
+        return ifaceIt->second.get();
     }
 
-    delete iface;
-    iface = new org::freedesktop::Akonadi::Resource(DBus::agentServiceName(id, DBus::Resource),
-            QStringLiteral("/"),
-            DBusConnectionPool::threadConnection(),
-            this);
-    if (!iface || !iface->isValid()) {
+    auto iface = std::make_unique<org::freedesktop::Akonadi::Resource>(
+            DBus::agentServiceName(id, DBus::Resource), QStringLiteral("/"), DBusConnectionPool::threadConnection());
+    if (!iface->isValid()) {
         qCCritical(AKONADISERVER_LOG, "Cannot connect to agent instance with identifier '%s', error message: '%s'",
                    qUtf8Printable(id), qUtf8Printable(iface ? iface->lastError().message() : QString()));
-        delete iface;
         return nullptr;
     }
     // DBus calls can take some time to reply -- e.g. if a huge local mbox has to be parsed first.
     iface->setTimeout(5 * 60 * 1000);   // 5 minutes, rather than 25 seconds
-    mResourceInterfaces.insert(id, iface);
-    return iface;
+    std::tie(ifaceIt, std::ignore) = mResourceInterfaces.emplace(id, std::move(iface));
+    return ifaceIt->second.get();
 }
 
 // called from any thread
 void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
 {
-    mLock->lockForWrite();
+    QWriteLocker locker(&mLock);
     qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager posting retrieval request for items" << req->ids
                                << "to" <<req->resourceId << ". There are" << mPendingRequests.size() << "request queues and"
                                << mPendingRequests[req->resourceId].size() << "items mine";
     mPendingRequests[req->resourceId].append(req);
-    mLock->unlock();
+    locker.unlock();
 
     Q_EMIT requestAdded();
-#if 0
-    mLock->lockForRead();
-    Q_FOREVER {
-        //qCDebug(AKONADISERVER_LOG) << "checking if request for item" << req->id << "has been processed...";
-        if (req->processed) {
-            QScopedPointer<ItemRetrievalRequest> reqDeleter(req);
-            Q_ASSERT(!mPendingRequests[req->resourceId].contains(req));
-            const QString errorMsg = req->errorMsg;
-            mLock->unlock();
-            if (errorMsg.isEmpty()) {
-                qCDebug(AKONADISERVER_LOG) << "request for items" << req->ids << "succeeded";
-                return;
-            } else {
-                qCDebug(AKONADISERVER_LOG) << "request for items" << req->ids << "failed:" << errorMsg;
-                throw ItemRetrieverException(errorMsg);
-            }
-        } else {
-            qCDebug(AKONADISERVER_LOG) << "request for items" << req->ids << "still pending - waiting";
-            mWaitCondition->wait(mLock);
-            qCDebug(AKONADISERVER_LOG) << "continuing";
-        }
-    }
-
-    throw ItemRetrieverException("WTF?");
-#endif
 }
 
 // called within the retrieval thread
 void ItemRetrievalManager::processRequest()
 {
     QVector<QPair<AbstractItemRetrievalJob *, QString> > newJobs;
-    mLock->lockForWrite();
+    QWriteLocker locker(&mLock);
     // look for idle resources
     for (auto it = mPendingRequests.begin(); it != mPendingRequests.end();) {
         if (it.value().isEmpty()) {
@@ -198,7 +164,7 @@ void ItemRetrievalManager::processRequest()
     }
 
     bool nothingGoingOn = mPendingRequests.isEmpty() && mCurrentJobs.isEmpty() && newJobs.isEmpty();
-    mLock->unlock();
+    locker.unlock();
 
     if (nothingGoingOn) {   // someone asked as to process requests although everything is done already, he might still be waiting
         return;
@@ -219,7 +185,7 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
     } else {
         qCWarning(AKONADISERVER_LOG) << "ItemRetrievalJob for request" << request << "finished with error:" << errorMsg;
     }
-    mLock->lockForWrite();
+    QWriteLocker locker(&mLock);
     request->errorMsg = errorMsg;
     request->processed = true;
     Q_ASSERT(mCurrentJobs.contains(request->resourceId));
@@ -236,23 +202,21 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
             ++it;
         }
     }
-    mLock->unlock();
+    locker.unlock();
     Q_EMIT requestFinished(request);
     Q_EMIT requestAdded(); // trigger processRequest() again, in case there is more in the queues
 }
 
 void ItemRetrievalManager::triggerCollectionSync(const QString &resource, qint64 colId)
 {
-    org::freedesktop::Akonadi::Resource *interface = resourceInterface(resource);
-    if (interface) {
+    if (auto *interface = resourceInterface(resource)) {
         interface->synchronizeCollection(colId);
     }
 }
 
 void ItemRetrievalManager::triggerCollectionTreeSync(const QString &resource)
 {
-    org::freedesktop::Akonadi::Resource *interface = resourceInterface(resource);
-    if (interface) {
+    if (auto *interface = resourceInterface(resource)) {
         interface->synchronizeCollectionTree();
     }
 }

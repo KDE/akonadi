@@ -22,12 +22,15 @@
 
 #include "itemretriever.h"
 #include "akthread.h"
+#include <shared/akstd.h>
 
 #include <QHash>
 #include <QObject>
+#include <QReadWriteLock>
+#include <QWaitCondition>
 
-class QReadWriteLock;
-class QWaitCondition;
+#include <unordered_map>
+
 class OrgFreedesktopAkonadiResourceInterface;
 
 namespace Akonadi
@@ -88,16 +91,16 @@ protected:
     std::unique_ptr<AbstractItemRetrievalJobFactory> mJobFactory;
 
     /// Protects mPendingRequests and every Request object posted to it
-    QReadWriteLock *mLock = nullptr;
+    QReadWriteLock mLock;
     /// Used to let requesting threads wait until the request has been processed
-    QWaitCondition *mWaitCondition = nullptr;
+    QWaitCondition mWaitCondition;
     /// Pending requests queues, one per resource
     QHash<QString, QList<ItemRetrievalRequest *> > mPendingRequests;
     /// Currently running jobs, one per resource
     QHash<QString, AbstractItemRetrievalJob *> mCurrentJobs;
 
     // resource dbus interface cache
-    QHash<QString, OrgFreedesktopAkonadiResourceInterface *> mResourceInterfaces;
+    std::unordered_map<QString, std::unique_ptr<OrgFreedesktopAkonadiResourceInterface>> mResourceInterfaces;
 };
 
 } // namespace Server
