@@ -9,15 +9,9 @@ libraries:
     - qmake: AkonadiCore
       cmake: KF5::AkonadiCore
 cmakename: KF5AkonadiCore
-    - qmake: AkonadiAgentBase
-      cmake: KF5::AkonadiAgentBase
-cmakename: KF5AkonadiAgentBase
-    - qmake: AkonadiWidgets
-      cmake: KF5::AkonadiWidgets
-cmakename: KF5AkonadiWidgets
-    - qmake: AkonadiXml
-      cmake: KF5::AkonadiXml
-cmakename: KF5AkonadiXml
+# TODO: kapidox currently assumes: one product == one metainfo.yaml == one cmake config file
+# listing KF5AkonadiAgentBase, KF5AkonadiAgentBase, KF5AkonadiWidgets, KF5AkonadiXml as separate
+# packages in CMake's worldview needs changing kapidox first -> https://bugs.kde.org/show_bug.cgi?id=410452
 irc: akonadi
 
 group_info:
