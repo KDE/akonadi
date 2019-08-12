@@ -74,15 +74,21 @@ find_package(KF5WidgetsAddons ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5WindowSystem ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5XmlGui ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5Crash ${KF5_MIN_VERSION} CONFIG REQUIRED)
-
 find_package(Qt5Designer NO_MODULE)
 set_package_properties(Qt5Designer PROPERTIES
    PURPOSE "Required to build the Qt Designer plugins"
    TYPE OPTIONAL
 )
 
-find_package(KF5DesignerPlugin ${KF5_MIN_VERSION} CONFIG)
-set_package_properties(KF5DesignerPlugin PROPERTIES DESCRIPTION "KF5 designer plugin" TYPE OPTIONAL)
+set(USE_NEW_DESIGNERPLUGIN_MACRO false)
+if (ECM_VERSION VERSION_GREATER "5.61.0")
+       option(BUILD_DESIGNERPLUGIN "Build plugin for Qt Designer" ON)
+       add_feature_info(DESIGNERPLUGIN ${BUILD_DESIGNERPLUGIN} "Build plugin for Qt Designer")
+       set(USE_NEW_DESIGNERPLUGIN_MACRO true)
+else()
+       find_package(KF5DesignerPlugin ${KF5_MIN_VERSION} CONFIG)
+       set_package_properties(KF5DesignerPlugin PROPERTIES DESCRIPTION "KF5 designer plugin" TYPE OPTIONAL)
+endif()
 
 set(Boost_MINIMUM_VERSION "1.34.0")
 find_package(Boost ${Boost_MINIMUM_VERSION})
