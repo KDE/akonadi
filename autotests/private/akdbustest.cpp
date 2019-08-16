@@ -46,24 +46,25 @@ private Q_SLOTS:
         QTest::addColumn<QString>("serviceName");
         QTest::addColumn<QString>("agentId");
         QTest::addColumn<DBus::AgentType>("agentType");
+        QTest::addColumn<bool>("valid");
 
         // generic invalid
-        QTest::newRow("empty") << QString() << QString() << QString() << DBus::Unknown;
-        QTest::newRow("wrong base") << QString() << "org.freedesktop.Agent.foo" << QString() << DBus::Unknown;
-        QTest::newRow("wrong type") << QString() << "org.freedesktop.Akonadi.Randomizer.akonadi_maildir_resource_0" << QString() << DBus::Unknown;
-        QTest::newRow("too long") << QString() << "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo.bar" << QString() << DBus::Unknown;
+        QTest::newRow("empty") << QString() << QString() << QString() << DBus::Unknown << false;
+        QTest::newRow("wrong base") << QString() << "org.freedesktop.Agent.foo" << QString() << DBus::Unknown << false;
+        QTest::newRow("wrong type") << QString() << "org.freedesktop.Akonadi.Randomizer.akonadi_maildir_resource_0" << QString() << DBus::Unknown << false;
+        QTest::newRow("too long") << QString() << "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo.bar" << QString() << DBus::Unknown << false;
 
         // single instance cases
-        QTest::newRow("agent, no multi-instance") << QString() << "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0" << "akonadi_maildir_resource_0" << DBus::Agent;
-        QTest::newRow("resource, no multi-instance") << QString() << "org.freedesktop.Akonadi.Resource.akonadi_maildir_resource_0" << "akonadi_maildir_resource_0" << DBus::Resource;
-        QTest::newRow("preproc, no multi-instance") << QString() << "org.freedesktop.Akonadi.Preprocessor.akonadi_maildir_resource_0" << "akonadi_maildir_resource_0" << DBus::Preprocessor;
-        QTest::newRow("multi-instance name in single-instance setup") << QString() <<  "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo" << QString() << DBus::Unknown;
+        QTest::newRow("agent, no multi-instance") << QString() << "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0" << "akonadi_maildir_resource_0" << DBus::Agent << true;
+        QTest::newRow("resource, no multi-instance") << QString() << "org.freedesktop.Akonadi.Resource.akonadi_maildir_resource_0" << "akonadi_maildir_resource_0" << DBus::Resource << true;
+        QTest::newRow("preproc, no multi-instance") << QString() << "org.freedesktop.Akonadi.Preprocessor.akonadi_maildir_resource_0" << "akonadi_maildir_resource_0" << DBus::Preprocessor << true;
+        QTest::newRow("multi-instance name in single-instance setup") << QString() <<  "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo" << QString() << DBus::Unknown << false;
 
         // multi-instance cases
-        QTest::newRow("agent, multi-instance") << "foo" << "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo" << "akonadi_maildir_resource_0" << DBus::Agent;
-        QTest::newRow("resource, multi-instance") << "foo" << "org.freedesktop.Akonadi.Resource.akonadi_maildir_resource_0.foo" << "akonadi_maildir_resource_0" << DBus::Resource;
-        QTest::newRow("preproc, multi-instance") << "foo" << "org.freedesktop.Akonadi.Preprocessor.akonadi_maildir_resource_0.foo" << "akonadi_maildir_resource_0" << DBus::Preprocessor;
-        QTest::newRow("single-instance name in multi-instance setup") << "foo" <<  "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0" << QString() << DBus::Unknown;
+        QTest::newRow("agent, multi-instance") << "foo" << "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo" << "akonadi_maildir_resource_0" << DBus::Agent << true;
+        QTest::newRow("resource, multi-instance") << "foo" << "org.freedesktop.Akonadi.Resource.akonadi_maildir_resource_0.foo" << "akonadi_maildir_resource_0" << DBus::Resource << true;
+        QTest::newRow("preproc, multi-instance") << "foo" << "org.freedesktop.Akonadi.Preprocessor.akonadi_maildir_resource_0.foo" << "akonadi_maildir_resource_0" << DBus::Preprocessor << true;
+        QTest::newRow("single-instance name in multi-instance setup") << "foo" <<  "org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0" << QString() << DBus::Unknown << false;
     }
 
     void testParseAgentServiceName()
@@ -72,13 +73,16 @@ private Q_SLOTS:
         QFETCH(QString, serviceName);
         QFETCH(QString, agentId);
         QFETCH(DBus::AgentType, agentType);
+        QFETCH(bool, valid);
 
         akTestSetInstanceIdentifier(instanceId);
 
         const auto service = DBus::parseAgentServiceName(serviceName);
-        QVERIFY(service.has_value());
-        QCOMPARE(service->serviceName, agentId);
-        QCOMPARE(service->agentType, agentType);
+        QCOMPARE(service.has_value(), valid);
+        if (service.has_value()) {
+            QCOMPARE(service->serviceName, agentId);
+            QCOMPARE(service->agentType, agentType);
+        }
     }
 
     void testAgentServiceName()
