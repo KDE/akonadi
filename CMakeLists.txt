@@ -13,6 +13,7 @@ else()
     # offer C++14.
     set(CMAKE_CXX_STANDARD 14)
     set(WITH_3RDPARTY_OPTIONAL TRUE)
+    set(WITH_3RDPARTY_VARIANT TRUE)
 endif()
 
 
