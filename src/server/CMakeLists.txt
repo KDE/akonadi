@@ -121,6 +121,10 @@ set(libakonadiserver_SRCS
     storage/parthelper.cpp
     storage/partstreamer.cpp
     storage/storagedebugger.cpp
+    storage/qb/column.cpp
+    storage/qb/condition.cpp
+    storage/qb/query.cpp
+    storage/qb/selectquery.cpp
     tracer.cpp
     utils.cpp
     dbustracer.cpp

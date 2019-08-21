@@ -91,6 +91,7 @@ add_server_test(parttypehelpertest.cpp)
 add_server_test(collectionstatisticstest.cpp)
 add_server_test(aggregatedfetchscopetest.cpp)
 add_server_test(collectionschedulertest.cpp)
+add_server_test(selectquerytest.cpp)
 
 if (SQLITE_FOUND) # tests using the fake server need the QSQLITE3 plugin
 add_server_test(partstreamertest.cpp)
