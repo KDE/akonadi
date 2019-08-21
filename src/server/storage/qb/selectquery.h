@@ -1,5 +1,4 @@
 /*
-    Copyright (c) 2007 Volker Krause <vkrause@kde.org>
     Copyright (c) 2019 Daniel Vrátil <dvratil@kde.org>
 
     This library is free software; you can redistribute it and/or modify it

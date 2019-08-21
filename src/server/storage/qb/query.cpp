@@ -21,18 +21,27 @@
 #include "query.h"
 #include "../datastore.h"
 
+using namespace Akonadi::Server;
 using namespace Akonadi::Server::Qb;
 
+
+#ifdef QUERYBUILDER_UNITTEST
+Query::Query(DataStore &) {}
+#else
 Query::Query(DataStore &db)
-#ifndef QUERYBUILDER_UNITTEST
     : mDatabaseType(DbType::type(db.database()))
     , mQuery(db.database())
-#endif
 {}
+#endif
 
 void Query::setDatabaseType(DbType::Type type)
 {
     mDatabaseType = type;
+}
+
+DbType::Type Query::databaseType() const
+{
+    return mDatabaseType;
 }
 
 QSqlQuery &Query::query()

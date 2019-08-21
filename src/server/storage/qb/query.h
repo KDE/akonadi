@@ -82,6 +82,7 @@ protected:
     */
     explicit Query(DataStore &db);
 
+    DbType::Type databaseType() const;
 private:
     DbType::Type mDatabaseType = DbType::Unknown;
     QSqlQuery mQuery;

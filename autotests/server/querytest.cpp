@@ -25,28 +25,39 @@
 
 #include "storage/qb/query.cpp"
 #include "storage/qb/selectquery.cpp"
+#include "storage/qb/insertquery.cpp"
+#include "storage/qb/updatequery.cpp"
+#include "storage/qb/deletequery.cpp"
 #include "fakedatastore.h"
 
 using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE(Qb::SelectQuery);
+Q_DECLARE_METATYPE(Qb::InsertQuery);
+Q_DECLARE_METATYPE(Qb::UpdateQuery);
+Q_DECLARE_METATYPE(Qb::DeleteQuery);
 Q_DECLARE_METATYPE(Qb::Query::BoundValues);
+Q_DECLARE_METATYPE(DbType::Type);
 
-class SelectQueryTest : public QObject
+class QueryTest : public QObject
 {
     Q_OBJECT
 
-    using BoundValues = QMap<QString, QVariant>;
-private Q_SLOTS:
-    void testQuery_data()
-    {
-        using BoundValues = Qb::Query::BoundValues;
+    using BoundValues = Qb::Query::BoundValues;
 
+public:
+    QueryTest()
+    {
+        FakeDataStore::registerFactory();
+    }
+
+private Q_SLOTS:
+    void testSelectQuery_data()
+    {
         QTest::addColumn<Qb::SelectQuery>("query");
         QTest::addColumn<QString>("sql");
         QTest::addColumn<BoundValues>("boundValues");
 
-        FakeDataStore::registerFactory();
         auto &db = *DataStore::self();
 
         QTest::newRow("Simple select")
@@ -175,11 +186,11 @@ private Q_SLOTS:
             << BoundValues{42, 100, 101};
     }
 
-    void testQuery()
+    void testSelectQuery()
     {
         QFETCH(Qb::SelectQuery, query);
         QFETCH(QString, sql);
-        QFETCH(Query::BoundValues, boundValues);
+        QFETCH(BoundValues, boundValues);
 
         QString buffer;
         QTextStream str(&buffer);
@@ -188,8 +199,134 @@ private Q_SLOTS:
         QCOMPARE(*str.string(), sql);
         QCOMPARE(query.boundValues(), boundValues);
     }
+
+    void testInsertQuery_data()
+    {
+        QTest::addColumn<Qb::InsertQuery>("query");
+        QTest::addColumn<QString>("sql");
+        QTest::addColumn<BoundValues>("boundValues");
+        QTest::addColumn<DbType::Type>("db");
+
+        auto &db = *DataStore::self();
+
+        QTest::newRow("Simple insert")
+            << Qb::Insert(db)
+                .into(QStringLiteral("table"))
+                .value(QStringLiteral("col1"), 42)
+                .value(QStringLiteral("col2"), QStringLiteral("boohoo"))
+                .value(QStringLiteral("col3"), true)
+            << QStringLiteral("INSERT INTO table (col1, col2, col3) VALUES (?, ?, ?)")
+            << BoundValues{42, QStringLiteral("boohoo"), true};
+        auto query = Qb::Insert(db)
+            .into(QStringLiteral("table"))
+            .value(QStringLiteral("col2"), 42)
+            .returning(QStringLiteral("col1"));
+        query.setDatabaseType(DbType::PostgreSQL);
+        QTest::newRow("Returning")
+            << query
+            << QStringLiteral("INSERT INTO table (col2) VALUES (?) RETURNING col1")
+            << BoundValues{42};
+    }
+
+    void testInsertQuery()
+    {
+        QFETCH(Qb::InsertQuery, query);
+        QFETCH(QString, sql);
+        QFETCH(BoundValues, boundValues);
+
+        QString buffer;
+        QTextStream stream(&buffer);
+        stream << query;
+
+        QCOMPARE(*stream.string(), sql);
+        QCOMPARE(query.boundValues(), boundValues);
+    }
+
+    void testUpdateQuery_data()
+    {
+        QTest::addColumn<Qb::UpdateQuery>("query");
+        QTest::addColumn<QString>("sql");
+        QTest::addColumn<BoundValues>("boundValues");
+
+        auto &db = *DataStore::self();
+
+        QTest::newRow("Simple update")
+            << Qb::Update(db)
+                .table(QStringLiteral("table"))
+                .value(QStringLiteral("col1"), 42)
+                .value(QStringLiteral("col2"), QStringLiteral("boohoo"))
+                .value(QStringLiteral("col3"), true)
+            << QStringLiteral("UPDATE table SET col1 = ?, col2 = ?, col3 = ?")
+            << BoundValues{42, QStringLiteral("boohoo"), true};
+        QTest::newRow("Update with WHERE")
+            << Qb::Update(db)
+                .table(QStringLiteral("table"))
+                .value(QStringLiteral("col1"), 42)
+                .where({QStringLiteral("col2"), Qb::Compare::Equals, 1})
+            << QStringLiteral("UPDATE table SET col1 = ? WHERE (col2 = ?)")
+            << BoundValues{42, 1};
+        QTest::newRow("Update with complex WHERE")
+            << Qb::Update(db)
+                .table(QStringLiteral("table"))
+                .value(QStringLiteral("col1"), 42)
+                .where(Qb::And({{QStringLiteral("col2"), Qb::Compare::Equals, 1},
+                                Qb::Or({{QStringLiteral("col2"), QStringLiteral("col3")},
+                                        {QStringLiteral("col3"), Qb::Compare::Equals, 2}})}))
+            << QStringLiteral("UPDATE table SET col1 = ? WHERE ((col2 = ?) AND ((col2 = col3) OR (col3 = ?)))")
+            << BoundValues{42, 1, 2};
+    }
+
+    void testUpdateQuery()
+    {
+        QFETCH(Qb::UpdateQuery, query);
+        QFETCH(QString, sql);
+        QFETCH(BoundValues, boundValues);
+
+        QString buffer;
+        QTextStream stream(&buffer);
+        stream << query;
+
+        QCOMPARE(*stream.string(), sql);
+        QCOMPARE(query.boundValues(), boundValues);
+    }
+
+    void testDeleteQuery_data()
+    {
+        QTest::addColumn<Qb::DeleteQuery>("query");
+        QTest::addColumn<QString>("sql");
+        QTest::addColumn<BoundValues>("boundValues");
+
+        auto &db = *DataStore::self();
+
+        QTest::newRow("Simple delete")
+            << Qb::Delete(db)
+                .table(QStringLiteral("table"))
+            << QStringLiteral("DELETE FROM table")
+            << BoundValues{};
+        QTest::newRow("Delete with WHERE")
+            << Qb::Delete(db)
+                .table(QStringLiteral("table"))
+                .where({QStringLiteral("col1"), Qb::Compare::Equals, 42})
+            << QStringLiteral("DELETE FROM table WHERE (col1 = ?)")
+            << BoundValues{42};
+    }
+
+    void testDeleteQuery()
+    {
+        QFETCH(Qb::DeleteQuery, query);
+        QFETCH(QString, sql);
+        QFETCH(BoundValues, boundValues);
+
+        QString buffer;
+        QTextStream stream(&buffer);
+        stream << query;
+
+        QCOMPARE(*stream.string(), sql);
+        QCOMPARE(query.boundValues(), boundValues);
+    }
+
 };
 
-QTEST_GUILESS_MAIN(SelectQueryTest)
+QTEST_GUILESS_MAIN(QueryTest)
 
-#include "selectquerytest.moc"
+#include "querytest.moc"
