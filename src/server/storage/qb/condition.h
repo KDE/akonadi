@@ -28,6 +28,8 @@
 #include <QVariant>
 #include <QVector>
 
+#include <initializer_list>
+
 class QTextStream;
 
 namespace Akonadi
@@ -105,16 +107,14 @@ inline ConditionStmt On(ConditionStmt &&stmt)
     return std::move(stmt);
 }
 
-template<typename ... Condition>
-inline ConditionStmt And(Condition && ... conditions)
+inline ConditionStmt And(std::initializer_list<ConditionStmt> conditions)
 {
-    return ConditionStmt(Logic::And, {conditions ...});
+    return ConditionStmt(Logic::And, conditions);
 }
 
-template<typename ... Condition>
-inline ConditionStmt Or(Condition && ... conditions)
+inline ConditionStmt Or(std::initializer_list<ConditionStmt> conditions)
 {
-    return ConditionStmt(Logic::Or, {conditions ...});
+    return ConditionStmt(Logic::Or, conditions);
 }
 
 } // namespace Qb

@@ -81,6 +81,13 @@ private Q_SLOTS:
                 .from(QStringLiteral("table"))
             << QStringLiteral("SELECT DISTINCT col1 FROM table")
             << BoundValues{};
+        QTest::newRow("Group by")
+            << Qb::Select(db)
+                .columns(QStringLiteral("col1"), Qb::Count().as(QStringLiteral("cnt")))
+                .from(QStringLiteral("table"))
+                .groupBy(QStringLiteral("col1"))
+            << QStringLiteral("SELECT col1, COUNT(*) AS cnt FROM table GROUP BY col1")
+            << BoundValues{};
         QTest::newRow("Limit")
             << Qb::Select(db)
                 .column(QStringLiteral("col1"))
@@ -122,10 +129,50 @@ private Q_SLOTS:
             << Qb::Select(db)
                 .columns(QStringLiteral("t2.col1"))
                 .from(QStringLiteral("t1"))
-                .innerJoin(QStringLiteral("t2"), Qb::On(Qb::And(Qb::ConditionStmt{QStringLiteral("t1.col1"), QStringLiteral("t2.col1")},
-                                                                Qb::ConditionStmt{QStringLiteral("t1.col1"), Qb::Compare::Equals, QStringLiteral("bla")})))
+                .innerJoin(QStringLiteral("t2"),
+                           Qb::On(Qb::And({{QStringLiteral("t1.col1"), QStringLiteral("t2.col1")},
+                                           {QStringLiteral("t1.col1"), Qb::Compare::Equals, QStringLiteral("bla")}})))
             << QStringLiteral("SELECT t2.col1 FROM t1 INNER JOIN t2 ON ((t1.col1 = t2.col1) AND (t1.col1 = ?))")
             << BoundValues{QStringLiteral("bla")};
+        QTest::newRow("Simple where, compare columns")
+            << Qb::Select(db)
+                .columns(QStringLiteral("col1"))
+                .from(QStringLiteral("table1"))
+                .where({QStringLiteral("col1"), QStringLiteral("col2")})
+            << QStringLiteral("SELECT col1 FROM table1 WHERE (col1 = col2)")
+            << BoundValues{};
+        QTest::newRow("Simple where, compare value")
+            << Qb::Select(db)
+                .columns(QStringLiteral("col1"))
+                .from(QStringLiteral("table1"))
+                .where({QStringLiteral("col1"), Qb::Compare::Equals, true})
+            << QStringLiteral("SELECT col1 FROM table1 WHERE (col1 = ?)")
+            << BoundValues{true};
+        QTest::newRow("Where with AND")
+            << Qb::Select(db)
+                .columns(QStringLiteral("col1"))
+                .from(QStringLiteral("table1"))
+                .where(Qb::And({{QStringLiteral("col1"), Qb::Compare::Equals, 42},
+                                {QStringLiteral("col2"), Qb::Compare::Equals, QStringLiteral("someValue")}}))
+            << QStringLiteral("SELECT col1 FROM table1 WHERE ((col1 = ?) AND (col2 = ?))")
+            << BoundValues{42, QStringLiteral("someValue")};
+        QTest::newRow("Where with OR")
+            << Qb::Select(db)
+                .columns(QStringLiteral("col1"))
+                .from(QStringLiteral("table"))
+                .where(Qb::Or({{QStringLiteral("col1"), Qb::Compare::Equals, 42},
+                                {QStringLiteral("col1"), Qb::Compare::GreaterOrEqual, 100}}))
+            << QStringLiteral("SELECT col1 FROM table WHERE ((col1 = ?) OR (col1 >= ?))")
+            << BoundValues{42,100};
+        QTest::newRow("Where with nested conditions")
+            << Qb::Select(db)
+                .columns(QStringLiteral("col1"))
+                .from(QStringLiteral("table"))
+                .where(Qb::And({{QStringLiteral("col1"), Qb::Compare::Equals, 42},
+                                Qb::Or({{QStringLiteral("col2"), Qb::Compare::Equals, 100},
+                                        {QStringLiteral("col2"), Qb::Compare::Equals, 101}})}))
+            << QStringLiteral("SELECT col1 FROM table WHERE ((col1 = ?) AND ((col2 = ?) OR (col2 = ?)))")
+            << BoundValues{42, 100, 101};
     }
 
     void testQuery()
