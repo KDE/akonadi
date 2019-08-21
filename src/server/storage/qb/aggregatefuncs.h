@@ -60,6 +60,23 @@ protected:
     }
 };
 
+class Count : public AggregateStmt
+{
+public:
+    explicit Count()
+        : AggregateStmt(QStringLiteral("*"))
+    {}
+    explicit Count(const QString &columnName)
+        : AggregateStmt(columnName)
+    {}
+
+protected:
+    QString serializeColumn(const QString &column) const override
+    {
+        return QStringLiteral("COUNT(%1)").arg(column);
+    }
+};
+
 } // namespace Qb
 } // namespace Server
 } // namespace Akonadi

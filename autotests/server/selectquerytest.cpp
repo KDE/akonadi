@@ -68,6 +68,12 @@ private Q_SLOTS:
                 .from(QStringLiteral("table"))
             << QStringLiteral("SELECT SUM(col1) AS cnt FROM table")
             << BoundValues{};
+        QTest::newRow("Aggregate (count)")
+            << Qb::Select(db)
+                .column(Qb::Count().as(QStringLiteral("cnt")))
+                .from(QStringLiteral("table"))
+            << QStringLiteral("SELECT COUNT(*) AS cnt FROM table")
+            << BoundValues{};
         QTest::newRow("Distinct")
             << Qb::Select(db)
                 .distinct()
