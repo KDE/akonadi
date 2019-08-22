@@ -50,7 +50,9 @@ namespace Qb
 class InsertQuery : public Query
 {
 public:
+#ifdef QUERYBUILDER_UNITTEST
     explicit InsertQuery() = default;
+#endif
     explicit InsertQuery(DataStore &db);
 
     /**
@@ -74,14 +76,13 @@ public:
     InsertQuery &returning(const QString &column);
 
     /**
-      Returns the ID of the newly created record (only valid for INSERT queries)
+      Returns the ID of the newly created record.
       @note This will assert when being used with returning() called
       with an empty string.
-      @returns -1 if invalid
     */
-    qint64 insertId() const;
+    akOptional<qint64> insertId();
 
-    QTextStream &serialize(QTextStream &stream) const;
+    QTextStream &serialize(QTextStream &stream) const override;
 
     BoundValues bindValues() const override;
 
@@ -100,10 +101,5 @@ InsertQuery Insert(DataStore &db)
 } // namespace Qb
 } // namespace Server
 } // namespace Akonadi
-
-inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::InsertQuery &query)
-{
-    return query.serialize(stream);
-}
 
 #endif

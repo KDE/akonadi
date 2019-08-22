@@ -107,7 +107,9 @@ public:
 class SelectQuery : public Query
 {
 public:
+#ifdef QUERYBUILDER_UNITTEST
     explicit SelectQuery() = default;
+#endif
     explicit SelectQuery(DataStore &db);
 
     SelectQuery &from(const TableStmt &table);
@@ -193,7 +195,7 @@ public:
      */
     SelectQuery &forUpdate();
 
-    QTextStream &serialize(QTextStream &stream) const;
+    QTextStream &serialize(QTextStream &stream) const override;
 
     BoundValues bindValues() const override;
 
@@ -218,25 +220,5 @@ SelectQuery Select(DataStore &db)
 } // namespace Qb
 } // namespace Server
 } // namespace Akonadi
-
-inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::SelectQuery &query)
-{
-    return query.serialize(stream);
-}
-
-inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::TableStmt &table)
-{
-    return table.serialize(stream);
-}
-
-inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::JoinStmt &join)
-{
-    return join.serialize(stream);
-}
-
-inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::OrderByStmt &order)
-{
-    return order.serialize(stream);
-}
 
 #endif

@@ -37,7 +37,9 @@ namespace Qb
 class UpdateQuery : public Query
 {
 public:
+#ifdef QUERYBUILDER_UNITTEST
     explicit UpdateQuery() = default;
+#endif
     explicit UpdateQuery(DataStore &db);
 
     UpdateQuery &table(const QString &table);
@@ -47,7 +49,7 @@ public:
     UpdateQuery &where(const ConditionStmt &condition);
     UpdateQuery &where(ConditionStmt &&condition);
 
-    QTextStream &serialize(QTextStream &stream) const;
+    QTextStream &serialize(QTextStream &stream) const override;
     BoundValues bindValues() const override;
 
 private:
@@ -64,11 +66,5 @@ UpdateQuery Update(DataStore &db)
 } // namespace Qb
 } // namespace Server
 } // namespace Akonadi
-
-inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::UpdateQuery &query)
-{
-    return query.serialize(stream);
-}
-
 
 #endif

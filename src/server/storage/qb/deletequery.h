@@ -35,7 +35,9 @@ namespace Qb
 class DeleteQuery : public Query
 {
 public:
+#ifdef QUERYBUILDER_UNITTEST
     explicit DeleteQuery() = default;
+#endif
     explicit DeleteQuery(DataStore &db);
 
     DeleteQuery &table(const QString &table);
@@ -43,8 +45,8 @@ public:
     DeleteQuery &where(const ConditionStmt &condition);
     DeleteQuery &where(ConditionStmt &&condition);
 
-    QTextStream &serialize(QTextStream &stream) const;
-    BoundValues bindValues() const;
+    QTextStream &serialize(QTextStream &stream) const override;
+    BoundValues bindValues() const override;
 
 private:
     akOptional<QString> mTable;
@@ -59,10 +61,5 @@ DeleteQuery Delete(DataStore &db)
 } // namespace Qb
 } // namespace Server
 } // namepsace Akonadi
-
-QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::DeleteQuery &query)
-{
-    return query.serialize(stream);
-}
 
 #endif

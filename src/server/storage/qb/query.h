@@ -29,9 +29,7 @@
 #include <QMap>
 #include <QVariantList>
 
-#ifdef QUERYBUILDER_UNITTEST
-class QueryBuilderTest;
-#endif
+class QTextStream;
 
 namespace Akonadi
 {
@@ -51,7 +49,6 @@ class Query
 public:
     using BoundValues = QVariantList;
 
-    Query() = default;
     virtual ~Query() = default;
 
     /**
@@ -70,32 +67,34 @@ public:
     */
     bool exec();
 
-    /**
-     * Returns bound values for the query.
-     */
-    BoundValues boundValues() const;
-
+    virtual QTextStream &serialize(QTextStream &in) const = 0;
     virtual BoundValues bindValues() const = 0;
+
 protected:
     /**
       Creates a new query builder.
     */
+#ifdef QUERYBUILDER_UNITTEST
+    explicit Query() = default;
+#endif
     explicit Query(DataStore &db);
 
     DbType::Type databaseType() const;
 private:
-    DbType::Type mDatabaseType = DbType::Unknown;
-    QSqlQuery mQuery;
-    mutable akOptional<BoundValues> mBoundValues;
-
-#ifdef QUERYBUILDER_UNITTEST
-    QString mStatement;
-    friend class ::QueryBuilderTest;
+#ifndef QUERYBUILDER_UNITTEST
+    DataStore &mDb;
 #endif
+    QSqlQuery mQuery;
+    DbType::Type mDatabaseType = DbType::Unknown;
 };
 
 } // namespace Qb
 } // namespace Server
 } // namespace Akonadi
+
+inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::Query &query)
+{
+    return query.serialize(stream);
+}
 
 #endif

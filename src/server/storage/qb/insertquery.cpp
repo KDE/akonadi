@@ -19,8 +19,10 @@
 
 #include "insertquery.h"
 
+#include <QSqlRecord>
 #include <QTextStream>
 
+using namespace Akonadi;
 using namespace Akonadi::Server::Qb;
 
 InsertQuery::InsertQuery(DataStore &db)
@@ -45,10 +47,27 @@ InsertQuery &InsertQuery::returning(const QString &column)
     return *this;
 }
 
-qint64 InsertQuery::insertId() const
+akOptional<qint64> InsertQuery::insertId()
 {
-    Q_ASSERT(!mReturning.isEmpty());
-    return mInsertId;
+    if (databaseType() == DbType::PostgreSQL) {
+        query().next();
+        if (mReturning.isEmpty()) {
+            return {};
+        }
+        return query().record().value(mReturning).toLongLong();
+    } else {
+        const QVariant v = query().lastInsertId();
+        if (!v.isValid()) {
+            return {};
+        }
+        bool ok;
+        const qint64 insertId = v.toLongLong(&ok);
+        if (!ok) {
+            return {};
+        }
+        return insertId;
+    }
+    return {};
 }
 
 QTextStream &InsertQuery::serialize(QTextStream &stream) const

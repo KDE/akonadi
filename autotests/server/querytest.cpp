@@ -28,7 +28,6 @@
 #include "storage/qb/insertquery.cpp"
 #include "storage/qb/updatequery.cpp"
 #include "storage/qb/deletequery.cpp"
-#include "fakedatastore.h"
 
 using namespace Akonadi::Server;
 
@@ -37,19 +36,12 @@ Q_DECLARE_METATYPE(Qb::InsertQuery);
 Q_DECLARE_METATYPE(Qb::UpdateQuery);
 Q_DECLARE_METATYPE(Qb::DeleteQuery);
 Q_DECLARE_METATYPE(Qb::Query::BoundValues);
-Q_DECLARE_METATYPE(DbType::Type);
 
 class QueryTest : public QObject
 {
     Q_OBJECT
 
     using BoundValues = Qb::Query::BoundValues;
-
-public:
-    QueryTest()
-    {
-        FakeDataStore::registerFactory();
-    }
 
 private Q_SLOTS:
     void testSelectQuery_data()
@@ -58,63 +50,61 @@ private Q_SLOTS:
         QTest::addColumn<QString>("sql");
         QTest::addColumn<BoundValues>("boundValues");
 
-        auto &db = *DataStore::self();
-
         QTest::newRow("Simple select")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .column(QStringLiteral("col1"))
                 .column(Qb::ColumnStmt(QStringLiteral("col2")).as(QStringLiteral("alias")))
                 .from(QStringLiteral("table"))
             << QStringLiteral("SELECT col1, col2 AS alias FROM table")
             << BoundValues{};
         QTest::newRow("Table alias")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .column(QStringLiteral("col1"))
                 .from(TableStmt(QStringLiteral("table")).as(QStringLiteral("t1")))
             << QStringLiteral("SELECT col1 FROM table AS t1")
             << BoundValues{};
         QTest::newRow("Aggregate (sum)")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .column(Qb::Sum(QStringLiteral("col1")).as(QStringLiteral("cnt")))
                 .from(QStringLiteral("table"))
             << QStringLiteral("SELECT SUM(col1) AS cnt FROM table")
             << BoundValues{};
         QTest::newRow("Aggregate (count)")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .column(Qb::Count().as(QStringLiteral("cnt")))
                 .from(QStringLiteral("table"))
             << QStringLiteral("SELECT COUNT(*) AS cnt FROM table")
             << BoundValues{};
         QTest::newRow("Distinct")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .distinct()
                 .column(QStringLiteral("col1"))
                 .from(QStringLiteral("table"))
             << QStringLiteral("SELECT DISTINCT col1 FROM table")
             << BoundValues{};
         QTest::newRow("Group by")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("col1"), Qb::Count().as(QStringLiteral("cnt")))
                 .from(QStringLiteral("table"))
                 .groupBy(QStringLiteral("col1"))
             << QStringLiteral("SELECT col1, COUNT(*) AS cnt FROM table GROUP BY col1")
             << BoundValues{};
         QTest::newRow("Limit")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .column(QStringLiteral("col1"))
                 .from(QStringLiteral("table"))
                 .limit(10)
             << QStringLiteral("SELECT col1 FROM table LIMIT 10")
             << BoundValues{};
         QTest::newRow("Order by")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .column(QStringLiteral("col1"))
                 .from(QStringLiteral("table"))
                 .orderBy(QStringLiteral("col2"), Qb::SortDirection::DESC)
             << QStringLiteral("SELECT col1 FROM table ORDER BY col2 DESC")
             << BoundValues{};
         QTest::newRow("Order by multiple columns")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .column(QStringLiteral("col1"))
                 .from(QStringLiteral("table"))
                 .orderBy(QStringLiteral("col1"), Qb::SortDirection::DESC)
@@ -122,7 +112,7 @@ private Q_SLOTS:
             << QStringLiteral("SELECT col1 FROM table ORDER BY col1 DESC, col2 ASC")
             << BoundValues{};
         QTest::newRow("Left join")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("t1.col1"), QStringLiteral("t2.col2"))
                 .from(TableStmt(QStringLiteral("table1")).as(QStringLiteral("t1")))
                 .leftJoin(TableStmt(QStringLiteral("table2")).as(QStringLiteral("t2")),
@@ -130,14 +120,14 @@ private Q_SLOTS:
             << QStringLiteral("SELECT t1.col1, t2.col2 FROM table1 AS t1 LEFT JOIN table2 AS t2 ON (t1.col1 = t2.col1)")
             << BoundValues{};
         QTest::newRow("Right join")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("t1.col1"), ColumnStmt(QStringLiteral("table2.col2")).as(QStringLiteral("name")))
                 .from(TableStmt(QStringLiteral("table1")).as(QStringLiteral("t1")))
                 .rightJoin(QStringLiteral("table2"), Qb::On(QStringLiteral("table2.col1"), Qb::Compare::Less, 10))
             << QStringLiteral("SELECT t1.col1, table2.col2 AS name FROM table1 AS t1 RIGHT JOIN table2 ON (table2.col1 < ?)")
             << BoundValues{10};
         QTest::newRow("Inner join")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("t2.col1"))
                 .from(QStringLiteral("t1"))
                 .innerJoin(QStringLiteral("t2"),
@@ -146,21 +136,21 @@ private Q_SLOTS:
             << QStringLiteral("SELECT t2.col1 FROM t1 INNER JOIN t2 ON ((t1.col1 = t2.col1) AND (t1.col1 = ?))")
             << BoundValues{QStringLiteral("bla")};
         QTest::newRow("Simple where, compare columns")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("col1"))
                 .from(QStringLiteral("table1"))
                 .where({QStringLiteral("col1"), QStringLiteral("col2")})
             << QStringLiteral("SELECT col1 FROM table1 WHERE (col1 = col2)")
             << BoundValues{};
         QTest::newRow("Simple where, compare value")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("col1"))
                 .from(QStringLiteral("table1"))
                 .where({QStringLiteral("col1"), Qb::Compare::Equals, true})
             << QStringLiteral("SELECT col1 FROM table1 WHERE (col1 = ?)")
             << BoundValues{true};
         QTest::newRow("Where with AND")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("col1"))
                 .from(QStringLiteral("table1"))
                 .where(Qb::And({{QStringLiteral("col1"), Qb::Compare::Equals, 42},
@@ -168,7 +158,7 @@ private Q_SLOTS:
             << QStringLiteral("SELECT col1 FROM table1 WHERE ((col1 = ?) AND (col2 = ?))")
             << BoundValues{42, QStringLiteral("someValue")};
         QTest::newRow("Where with OR")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("col1"))
                 .from(QStringLiteral("table"))
                 .where(Qb::Or({{QStringLiteral("col1"), Qb::Compare::Equals, 42},
@@ -176,7 +166,7 @@ private Q_SLOTS:
             << QStringLiteral("SELECT col1 FROM table WHERE ((col1 = ?) OR (col1 >= ?))")
             << BoundValues{42,100};
         QTest::newRow("Where with nested conditions")
-            << Qb::Select(db)
+            << Qb::SelectQuery()
                 .columns(QStringLiteral("col1"))
                 .from(QStringLiteral("table"))
                 .where(Qb::And({{QStringLiteral("col1"), Qb::Compare::Equals, 42},
@@ -192,12 +182,12 @@ private Q_SLOTS:
         QFETCH(QString, sql);
         QFETCH(BoundValues, boundValues);
 
-        QString buffer;
-        QTextStream str(&buffer);
-        str << query;
+        QString stmt;
+        QTextStream stream(&stmt);
+        query.serialize(stream);
 
-        QCOMPARE(*str.string(), sql);
-        QCOMPARE(query.boundValues(), boundValues);
+        QCOMPARE(stmt, sql);
+        QCOMPARE(query.bindValues(), boundValues);
     }
 
     void testInsertQuery_data()
@@ -205,19 +195,16 @@ private Q_SLOTS:
         QTest::addColumn<Qb::InsertQuery>("query");
         QTest::addColumn<QString>("sql");
         QTest::addColumn<BoundValues>("boundValues");
-        QTest::addColumn<DbType::Type>("db");
-
-        auto &db = *DataStore::self();
 
         QTest::newRow("Simple insert")
-            << Qb::Insert(db)
+            << Qb::InsertQuery()
                 .into(QStringLiteral("table"))
                 .value(QStringLiteral("col1"), 42)
                 .value(QStringLiteral("col2"), QStringLiteral("boohoo"))
                 .value(QStringLiteral("col3"), true)
             << QStringLiteral("INSERT INTO table (col1, col2, col3) VALUES (?, ?, ?)")
             << BoundValues{42, QStringLiteral("boohoo"), true};
-        auto query = Qb::Insert(db)
+        auto query = Qb::InsertQuery()
             .into(QStringLiteral("table"))
             .value(QStringLiteral("col2"), 42)
             .returning(QStringLiteral("col1"));
@@ -234,12 +221,12 @@ private Q_SLOTS:
         QFETCH(QString, sql);
         QFETCH(BoundValues, boundValues);
 
-        QString buffer;
-        QTextStream stream(&buffer);
-        stream << query;
+        QString stmt;
+        QTextStream stream(&stmt);
+        query.serialize(stream);
 
-        QCOMPARE(*stream.string(), sql);
-        QCOMPARE(query.boundValues(), boundValues);
+        QCOMPARE(stmt, sql);
+        QCOMPARE(query.bindValues(), boundValues);
     }
 
     void testUpdateQuery_data()
@@ -248,10 +235,8 @@ private Q_SLOTS:
         QTest::addColumn<QString>("sql");
         QTest::addColumn<BoundValues>("boundValues");
 
-        auto &db = *DataStore::self();
-
         QTest::newRow("Simple update")
-            << Qb::Update(db)
+            << Qb::UpdateQuery()
                 .table(QStringLiteral("table"))
                 .value(QStringLiteral("col1"), 42)
                 .value(QStringLiteral("col2"), QStringLiteral("boohoo"))
@@ -259,14 +244,14 @@ private Q_SLOTS:
             << QStringLiteral("UPDATE table SET col1 = ?, col2 = ?, col3 = ?")
             << BoundValues{42, QStringLiteral("boohoo"), true};
         QTest::newRow("Update with WHERE")
-            << Qb::Update(db)
+            << Qb::UpdateQuery()
                 .table(QStringLiteral("table"))
                 .value(QStringLiteral("col1"), 42)
                 .where({QStringLiteral("col2"), Qb::Compare::Equals, 1})
             << QStringLiteral("UPDATE table SET col1 = ? WHERE (col2 = ?)")
             << BoundValues{42, 1};
         QTest::newRow("Update with complex WHERE")
-            << Qb::Update(db)
+            << Qb::UpdateQuery()
                 .table(QStringLiteral("table"))
                 .value(QStringLiteral("col1"), 42)
                 .where(Qb::And({{QStringLiteral("col2"), Qb::Compare::Equals, 1},
@@ -282,12 +267,12 @@ private Q_SLOTS:
         QFETCH(QString, sql);
         QFETCH(BoundValues, boundValues);
 
-        QString buffer;
-        QTextStream stream(&buffer);
-        stream << query;
+        QString stmt;
+        QTextStream stream(&stmt);
+        query.serialize(stream);
 
-        QCOMPARE(*stream.string(), sql);
-        QCOMPARE(query.boundValues(), boundValues);
+        QCOMPARE(stmt, sql);
+        QCOMPARE(query.bindValues(), boundValues);
     }
 
     void testDeleteQuery_data()
@@ -296,15 +281,13 @@ private Q_SLOTS:
         QTest::addColumn<QString>("sql");
         QTest::addColumn<BoundValues>("boundValues");
 
-        auto &db = *DataStore::self();
-
         QTest::newRow("Simple delete")
-            << Qb::Delete(db)
+            << Qb::DeleteQuery()
                 .table(QStringLiteral("table"))
             << QStringLiteral("DELETE FROM table")
             << BoundValues{};
         QTest::newRow("Delete with WHERE")
-            << Qb::Delete(db)
+            << Qb::DeleteQuery()
                 .table(QStringLiteral("table"))
                 .where({QStringLiteral("col1"), Qb::Compare::Equals, 42})
             << QStringLiteral("DELETE FROM table WHERE (col1 = ?)")
@@ -317,12 +300,12 @@ private Q_SLOTS:
         QFETCH(QString, sql);
         QFETCH(BoundValues, boundValues);
 
-        QString buffer;
-        QTextStream stream(&buffer);
-        stream << query;
+        QString stmt;
+        QTextStream stream(&stmt);
+        query.serialize(stream);
 
-        QCOMPARE(*stream.string(), sql);
-        QCOMPARE(query.boundValues(), boundValues);
+        QCOMPARE(stmt, sql);
+        QCOMPARE(query.bindValues(), boundValues);
     }
 
 };

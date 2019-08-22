@@ -24,6 +24,21 @@
 
 using namespace Akonadi::Server::Qb;
 
+inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::TableStmt &table)
+{
+    return table.serialize(stream);
+}
+
+inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::JoinStmt &join)
+{
+    return join.serialize(stream);
+}
+
+inline QTextStream &operator<<(QTextStream &stream, const Akonadi::Server::Qb::OrderByStmt &order)
+{
+    return order.serialize(stream);
+}
+
 QTextStream &operator<<(QTextStream &stream, SortDirection dir)
 {
     switch (dir) {
