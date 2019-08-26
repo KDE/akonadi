@@ -380,7 +380,7 @@ QString DbInitializer::buildPrimaryKeyStatement(const TableDescription &table)
             cols.push_back(column.name);
         }
     }
-    return QLatin1Literal("PRIMARY KEY (") + cols.join(QStringLiteral(", ")) + QLatin1Char(')');
+    return QLatin1Literal("PRIMARY KEY (") + cols.join(QLatin1String(", ")) + QLatin1Char(')');
 }
 
 void DbInitializer::execQuery(const QString &queryString)

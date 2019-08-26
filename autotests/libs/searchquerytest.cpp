@@ -33,13 +33,13 @@ private:
     {
         *ok = false;
         QCOMPARE(term.subTerms().count(), 0);
-        QVERIFY(json.contains(QStringLiteral("key")));
+        QVERIFY(json.contains(QLatin1String("key")));
         QCOMPARE(json[QStringLiteral("key")].toString(), term.key());
-        QVERIFY(json.contains(QStringLiteral("value")));
+        QVERIFY(json.contains(QLatin1String("value")));
         QCOMPARE(json[QStringLiteral("value")], term.value());
-        QVERIFY(json.contains(QStringLiteral("cond")));
+        QVERIFY(json.contains(QLatin1String("cond")));
         QCOMPARE(static_cast<SearchTerm::Condition>(json[QStringLiteral("cond")].toInt()), term.condition());
-        QVERIFY(json.contains(QStringLiteral("negated")));
+        QVERIFY(json.contains(QLatin1String("negated")));
         QCOMPARE(json[QStringLiteral("negated")].toBool(), term.isNegated());
         *ok = true;
     }

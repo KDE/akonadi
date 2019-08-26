@@ -30,7 +30,7 @@ public:
     bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const override
     {
         const QModelIndex modelIndex = sourceModel()->index(sourceRow, 0, sourceParent);
-        return !modelIndex.data().toString().contains(QStringLiteral("three"));
+        return !modelIndex.data().toString().contains(QLatin1String("three"));
     }
 
 };

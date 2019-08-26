@@ -746,7 +746,7 @@ bool AgentManager::checkResourceInterface(const QString &identifier, const QStri
         return false;
     }
 
-    if (!mAgents[mAgentInstances[identifier]->agentType()].capabilities.contains(QStringLiteral("Resource"))) {
+    if (!mAgents[mAgentInstances[identifier]->agentType()].capabilities.contains(QLatin1String("Resource"))) {
         return false;
     }
 

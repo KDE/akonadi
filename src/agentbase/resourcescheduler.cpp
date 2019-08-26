@@ -172,7 +172,7 @@ void ResourceScheduler::scheduleItemsFetch(const Item::List &items, const QSet<Q
     for (const auto &item : items) {
         ids.push_back(QString::number(item.id()));
     }
-    signalTaskToTracker(t, "FetchItems", ids.join(QStringLiteral(", ")));
+    signalTaskToTracker(t, "FetchItems", ids.join(QLatin1String(", ")));
     scheduleNext();
 }
 
@@ -685,7 +685,7 @@ QTextStream &Akonadi::operator<<(QTextStream &d, const ResourceScheduler::Task &
             for (const auto &item : qAsConst(task.items)) {
                 ids.push_back(QString::number(item.id()));
             }
-            d << "items " << ids.join(QStringLiteral(", ")) << " ";
+            d << "items " << ids.join(QLatin1String(", ")) << " ";
         }
         if (!task.methodName.isEmpty()) {
             d << task.methodName << " " << task.argument.toString();

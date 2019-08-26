@@ -396,10 +396,10 @@ private Q_SLOTS:
             Collection resultCol = job->collections().first();
             if (keepLocalChanges) {
                 QCOMPARE(resultCol.displayName(), QString::fromLatin1("foo"));
-                QVERIFY(resultCol.contentMimeTypes().contains(QStringLiteral("foo")));
+                QVERIFY(resultCol.contentMimeTypes().contains(QLatin1String("foo")));
             } else {
                 QCOMPARE(resultCol.displayName(), QString::fromLatin1("default"));
-                QVERIFY(resultCol.contentMimeTypes().contains(QStringLiteral("default")));
+                QVERIFY(resultCol.contentMimeTypes().contains(QLatin1String("default")));
             }
         }
     }

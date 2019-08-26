@@ -115,7 +115,7 @@ static bool checkSearchSupportStatus()
     }
 
     // There's always at least server-search available
-    std::cerr << "Akonadi Server Search Support: available (" << searchMethods.join(QStringLiteral(", ")).toStdString() << ")" << std::endl;
+    std::cerr << "Akonadi Server Search Support: available (" << searchMethods.join(QLatin1String(", ")).toStdString() << ")" << std::endl;
     return true;
 }
 
@@ -141,7 +141,7 @@ static bool checkAvailableAgentTypes()
     if (types.isEmpty()) {
         std::cerr << "No agent types found!" << std::endl;
     } else {
-        std::cerr << types.join(QStringLiteral(", ")).toStdString() << std::endl;
+        std::cerr << types.join(QLatin1String(", ")).toStdString() << std::endl;
     }
 
     return true;

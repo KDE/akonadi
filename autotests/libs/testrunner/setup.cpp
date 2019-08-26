@@ -159,7 +159,7 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
                 copyDirectory(fi.absoluteFilePath(), dst + QLatin1Char('/') + fi.fileName());
             }
         } else {
-            if (fi.fileName().startsWith(QStringLiteral("akonadi_")) && fi.fileName().endsWith(QStringLiteral("rc"))) {
+            if (fi.fileName().startsWith(QLatin1String("akonadi_")) && fi.fileName().endsWith(QLatin1String("rc"))) {
                 // namespace according to instance identifier
                 const QString baseName = fi.fileName().left(fi.fileName().size() - 2);
                 const QString dstPath = dst + QLatin1Char('/') + Akonadi::ServerManager::addNamespace(baseName) + QStringLiteral("rc");

@@ -209,7 +209,7 @@ void SelfTestDialog::testSQLDriver()
                                          "The following drivers are installed: %2.\n"
                                          "Make sure the required driver is installed.")
                                          .subs(driver)
-                                         .subs(availableDrivers.join(QStringLiteral(", ")));
+                                         .subs(availableDrivers.join(QLatin1String(", ")));
     QStandardItem *item = nullptr;
     if (availableDrivers.contains(driver)) {
         item = report(Success, ki18n("Database driver found."), detailsOk);

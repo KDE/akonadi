@@ -114,13 +114,13 @@ public:
     {
         if (map.isEmpty()) {
             return SearchTerm();
-        } else if (map.contains(QStringLiteral("key"))) {
+        } else if (map.contains(QLatin1String("key"))) {
             SearchTerm term(map[QStringLiteral("key")].toString(),
                             map[QStringLiteral("value")],
                             static_cast<SearchTerm::Condition>(map[QStringLiteral("cond")].toInt()));
             term.setIsNegated(map[QStringLiteral("negated")].toBool());
             return term;
-        } else if (map.contains(QStringLiteral("rel"))) {
+        } else if (map.contains(QLatin1String("rel"))) {
             SearchTerm term(static_cast<SearchTerm::Relation>(map[QStringLiteral("rel")].toInt()));
             term.setIsNegated(map[QStringLiteral("negated")].toBool());
             const QList<QVariant> list = map[QStringLiteral("subTerms")].toList();
@@ -304,7 +304,7 @@ SearchQuery SearchQuery::fromJSON(const QByteArray &jsonData)
     SearchQuery query;
     const QJsonObject obj = json.object();
     query.d->rootTerm = Private::JSONToTerm(obj.toVariantMap());
-    if (obj.contains(QStringLiteral("limit"))) {
+    if (obj.contains(QLatin1String("limit"))) {
         query.d->limit = obj.value(QStringLiteral("limit")).toInt();
     }
     return query;

@@ -157,8 +157,8 @@ static void compareItems(AbstractDifferencesReporter *reporter, const Akonadi::I
         }
 
         reporter->addProperty(AbstractDifferencesReporter::ConflictMode, i18n("Flags"),
-                              localFlags.join(QStringLiteral(", ")),
-                              otherFlags.join(QStringLiteral(", ")));
+                              localFlags.join(QLatin1String(", ")),
+                              otherFlags.join(QLatin1String(", ")));
     }
 
     QHash<QByteArray, QByteArray> localAttributes;

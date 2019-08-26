@@ -715,7 +715,7 @@ void CppGenerator::writeImplPropertyDependencies(const PropertyNode* node)
             }
             if (!values.isEmpty()) {
                 mImpl << "    m" << key[0].toUpper() << key.midRef(1) << " |= " << enumType << "("
-                      << values.join(QStringLiteral(" | ")) << ");\n";
+                      << values.join(QLatin1String(" | ")) << ");\n";
                 values.clear();
             }
         }
@@ -724,7 +724,7 @@ void CppGenerator::writeImplPropertyDependencies(const PropertyNode* node)
 
     if (!values.isEmpty()) {
         mImpl << "    m" << key[0].toUpper() << key.midRef(1) << " |= " << enumType << "("
-              << values.join(QStringLiteral(" | ")) << ");\n";
+              << values.join(QLatin1String(" | ")) << ");\n";
     }
 }
 

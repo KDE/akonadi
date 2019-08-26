@@ -148,5 +148,5 @@ void TagWidget::updateView()
             tagsNames << tag.name();
         }
     }
-    d->mTagView->setText(tagsNames.join(QStringLiteral(", ")));
+    d->mTagView->setText(tagsNames.join(QLatin1String(", ")));
 }

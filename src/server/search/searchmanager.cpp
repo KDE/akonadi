@@ -271,8 +271,8 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     }
 
     const QStringList queryAttributes = collection.queryAttributes().split(QLatin1Char(' '));
-    const bool remoteSearch =  queryAttributes.contains(QStringLiteral(AKONADI_PARAM_REMOTE));
-    bool recursive = queryAttributes.contains(QStringLiteral(AKONADI_PARAM_RECURSIVE));
+    const bool remoteSearch =  queryAttributes.contains(QLatin1String(AKONADI_PARAM_REMOTE));
+    bool recursive = queryAttributes.contains(QLatin1String(AKONADI_PARAM_RECURSIVE));
 
     QStringList queryMimeTypes;
     const QVector<MimeType> mimeTypes = collection.mimeTypes();

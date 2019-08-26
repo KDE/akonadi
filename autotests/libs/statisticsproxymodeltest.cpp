@@ -178,9 +178,9 @@ void StatisticsProxyModelTest::shouldShowExtraColumns()
     QVERIFY(!secondParent.parent().isValid());
     QCOMPARE(indexToText(pm.index(0, 0, secondParent).parent()), indexToText(secondParent));
     QCOMPARE(indexToText(pm.index(0, 3, secondParent).parent()), indexToText(secondParent));
-    QVERIFY(indexToText(pm.index(0, 4)).startsWith(QStringLiteral("0,4,")));
+    QVERIFY(indexToText(pm.index(0, 4)).startsWith(QLatin1String("0,4,")));
     QCOMPARE(indexToText(pm.index(0, 4, secondParent).parent()), indexToText(secondParent));
-    QVERIFY(indexToText(pm.index(0, 5)).startsWith(QStringLiteral("0,5,")));
+    QVERIFY(indexToText(pm.index(0, 5)).startsWith(QLatin1String("0,5,")));
     QCOMPARE(indexToText(pm.index(0, 5, secondParent).parent()), indexToText(secondParent));
 
     QCOMPARE(pm.index(0, 0).sibling(0, 4).column(), 4);
