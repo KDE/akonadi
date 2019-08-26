@@ -116,4 +116,15 @@ static const auto IsNotNull = [](auto ptr) { return (bool)ptr; };
 
 } // namespace Akonadi
 
+
+constexpr inline QStringView operator "" _sv(const char16_t *ptr, size_t len)
+{
+    return QStringView(ptr, len);
+}
+
+constexpr inline QLatin1String operator "" _ls(const char *ptr, size_t len) noexcept
+{
+    return QLatin1String(ptr, len);
+}
+
 #endif

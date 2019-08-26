@@ -19,6 +19,7 @@
 */
 
 #include "condition.h"
+#include "shared/akhelpers.h"
 
 #include <QTextStream>
 
@@ -28,9 +29,9 @@ QTextStream &operator<<(QTextStream &stream, Logic logic)
 {
     switch (logic) {
     case Logic::And:
-        return stream << QStringViewLiteral(" AND ");
+        return stream << u" AND "_sv;
     case Logic::Or:
-        return stream << QStringViewLiteral(" OR ");
+        return stream << u" OR "_sv;
     }
 }
 
@@ -38,27 +39,27 @@ QTextStream &operator<<(QTextStream &stream, Compare comp)
 {
     switch (comp) {
     case Compare::Equals:
-        return stream << QStringViewLiteral(" = ");
+        return stream << u" = "_sv;
     case Compare::NotEquals:
-        return stream << QStringViewLiteral(" <> ");
+        return stream << u" <> "_sv;
     case Compare::Is:
-        return stream << QStringViewLiteral(" IS ");
+        return stream << u" IS "_sv;
     case Compare::IsNot:
-        return stream << QStringViewLiteral(" IS NOT ");
+        return stream << u" IS NOT "_sv;
     case Compare::Less:
-        return stream << QStringViewLiteral(" < ");
+        return stream << u" < "_sv;
     case Compare::LessOrEqual:
-        return stream << QStringViewLiteral(" <= ");
+        return stream << u" <= "_sv;
     case Compare::Greater:
-        return stream << QStringViewLiteral(" > ");
+        return stream << u" > "_sv;
     case Compare::GreaterOrEqual:
-        return stream << QStringViewLiteral(" >= ");
+        return stream << u" >= "_sv;
     case Compare::In:
-        return stream << QStringViewLiteral(" IN ");
+        return stream << u" IN "_sv;
     case Compare::NotIn:
-        return stream << QStringViewLiteral(" NOT IN ");
+        return stream << u" NOT IN "_sv;
     case Compare::Like:
-        return stream << QStringViewLiteral(" LIKE ");
+        return stream << u" LIKE "_sv;
     }
 }
 
@@ -92,10 +93,10 @@ QTextStream &ConditionStmt::serialize(QTextStream &stream) const
             return stream;
         },
         [&stream](const ValueCondition &cond) mutable -> QTextStream & {
-            return stream << '(' << cond.column << cond.comp << QStringViewLiteral("?)");
+            return stream << '(' << cond.column << cond.comp << u"?)"_sv;
         },
         [&stream](const ColumnCondition &cond) mutable -> QTextStream & {
-            return stream << '(' << cond.lhCol << QStringViewLiteral(" = ") << cond.rhCol << ')';
+            return stream << '(' << cond.lhCol << u" = "_sv << cond.rhCol << ')';
         },
         [&stream](const SubConditions &cond) mutable -> QTextStream & {
             stream << '(';

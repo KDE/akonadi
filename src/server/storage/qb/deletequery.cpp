@@ -18,6 +18,7 @@
 */
 
 #include "deletequery.h"
+#include "shared/akhelpers.h"
 
 #include <QTextStream>
 
@@ -49,10 +50,10 @@ QTextStream &DeleteQuery::serialize(QTextStream &stream) const
 {
     Q_ASSERT_X(mTable.has_value(), __func__, "DELETE query must specify table to delete from.");
 
-    stream << QStringViewLiteral("DELETE FROM ") << *mTable;
+    stream << u"DELETE FROM "_sv << *mTable;
 
     if (mCondition.has_value()) {
-        stream << QStringViewLiteral(" WHERE ") << *mCondition;
+        stream << u" WHERE "_sv << *mCondition;
     }
 
     return stream;

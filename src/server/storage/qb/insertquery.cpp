@@ -18,6 +18,7 @@
 */
 
 #include "insertquery.h"
+#include "shared/akhelpers.h"
 
 #include <QSqlRecord>
 #include <QTextStream>
@@ -75,24 +76,24 @@ QTextStream &InsertQuery::serialize(QTextStream &stream) const
     Q_ASSERT_X(mTable.has_value(), __func__, "INSERT query must specify table.");
     Q_ASSERT_X(!mValues.empty(), __func__, "INSERT query must have at least one value.");
 
-    stream << QStringViewLiteral("INSERT INTO ") << *mTable << QStringViewLiteral(" (");
+    stream << u"INSERT INTO "_sv << *mTable << u" ("_sv;
     for (auto it = mValues.cbegin(), end = mValues.cend(); it != end; ++it) {
         if (it != mValues.cbegin()) {
-            stream << QStringViewLiteral(", ");
+            stream << u", "_sv;
         }
         stream << it.key();
     }
-    stream << QStringViewLiteral(") VALUES (");
+    stream << u") VALUES ("_sv;
     for (int i = 0; i < mValues.size(); ++i) {
         if (i > 0) {
-            stream << QStringViewLiteral(", ");
+            stream << u", "_sv;
         }
         stream << '?';
     }
     stream << ')';
 
     if (databaseType() == DbType::PostgreSQL && !mReturning.isEmpty()) {
-        stream << QStringViewLiteral(" RETURNING ") << mReturning;
+        stream << u" RETURNING "_sv << mReturning;
     }
 
     return stream;

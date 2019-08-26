@@ -18,6 +18,7 @@
 */
 
 #include "updatequery.h"
+#include "shared/akhelpers.h"
 
 #include <QTextStream>
 
@@ -56,16 +57,16 @@ QTextStream &UpdateQuery::serialize(QTextStream &stream) const
     Q_ASSERT_X(mTable.has_value(), __func__, "UPDATE query must specify table to update");
     Q_ASSERT_X(!mValues.empty(), __func__, "UPDATE query must update at least one value");
 
-    stream << QStringViewLiteral("UPDATE ") << *mTable << QStringViewLiteral(" SET ");
+    stream << u"UPDATE "_sv << *mTable << u" SET "_sv;
     for (auto it = mValues.cbegin(), end = mValues.cend(); it != end; ++it) {
         if (it != mValues.cbegin()) {
-            stream << QStringViewLiteral(", ");
+            stream << u", "_sv;
         }
-        stream << it.key() << QStringViewLiteral(" = ?");
+        stream << it.key() << u" = ?"_sv;
     }
 
     if (mCondition.has_value()) {
-        stream << QStringViewLiteral(" WHERE ") << *mCondition;
+        stream << u" WHERE "_sv << *mCondition;
     }
 
     return stream;

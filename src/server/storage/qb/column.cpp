@@ -18,6 +18,7 @@
 */
 
 #include "column.h"
+#include "shared/akhelpers.h"
 
 #include <QTextStream>
 
@@ -33,7 +34,7 @@ QString ColumnStmt::serialize() const
 {
     QString result = serializeColumn(mColumn);
     if (!mAlias.isEmpty()) {
-        result += QStringViewLiteral(" AS ") + mAlias;
+        result += u" AS "_sv + mAlias;
     }
     return result;
 }

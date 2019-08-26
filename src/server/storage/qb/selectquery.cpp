@@ -19,8 +19,8 @@
 */
 
 #include "selectquery.h"
-
-#include <shared/akranges.h>
+#include "shared/akhelpers.h"
+#include "shared/akranges.h"
 
 using namespace Akonadi::Server::Qb;
 
@@ -43,9 +43,9 @@ QTextStream &operator<<(QTextStream &stream, SortDirection dir)
 {
     switch (dir) {
     case SortDirection::ASC:
-        return stream << QStringViewLiteral(" ASC");
+        return stream << u" ASC"_sv;
     case SortDirection::DESC:
-        return stream << QStringViewLiteral(" DESC");
+        return stream << u" DESC"_sv;
     }
 }
 
@@ -67,7 +67,7 @@ QTextStream &TableStmt::serialize(QTextStream &stream) const
         mTable
     );
     if (!mAlias.isEmpty()) {
-        stream << QStringViewLiteral(" AS ") << mAlias;
+        stream << u" AS "_sv << mAlias;
     }
     return stream;
 }
@@ -89,17 +89,17 @@ QTextStream &JoinStmt::serialize(QTextStream &stream) const
 {
     switch (type) {
     case Type::Left:
-        stream << QStringViewLiteral(" LEFT JOIN ");
+        stream << u" LEFT JOIN "_sv;
         break;
     case Type::Right:
-        stream << QStringViewLiteral(" RIGHT JOIN ");
+        stream << u" RIGHT JOIN "_sv;
         break;
     case Type::Inner:
-        stream << QStringViewLiteral(" INNER JOIN ");
+        stream << u" INNER JOIN "_sv;
         break;
     }
 
-    return stream << table << QStringViewLiteral(" ON ") << onStmt;
+    return stream << table << u" ON "_sv << onStmt;
 }
 
 Query::BoundValues JoinStmt::bindValues() const
@@ -213,46 +213,46 @@ QTextStream &SelectQuery::serialize(QTextStream &stream) const
     Q_ASSERT_X(!mColumns.empty(), __func__, "SELECT query must specify at least one column.");
 
 
-    stream << QStringViewLiteral("SELECT ");
+    stream << u"SELECT "_sv;
     if (mDistinct) {
-        stream << QStringViewLiteral("DISTINCT ");
+        stream << u"DISTINCT "_sv;
     }
     for (auto col = mColumns.cbegin(), end = mColumns.cend(); col != end; ++col) {
         if (col != mColumns.cbegin()) {
-            stream << QStringViewLiteral(", ");
+            stream << u", "_sv;
         }
         stream << *col;
     }
-    stream << QStringViewLiteral(" FROM ") << *mTable;
+    stream << u" FROM "_sv << *mTable;
 
     for (const auto &join : mJoins) {
         join.serialize(stream);
     }
 
     if (mWhere.has_value()) {
-        stream << QStringViewLiteral(" WHERE ") << *mWhere;
+        stream << u" WHERE "_sv << *mWhere;
     }
 
     if (!mGroupBy.isEmpty()) {
-        stream << QStringViewLiteral(" GROUP BY ") << mGroupBy.join(QStringLiteral(", "));
+        stream << u" GROUP BY "_sv << mGroupBy.join(", "_ls);
     }
 
     if (mHaving.has_value()) {
-        stream << QStringViewLiteral(" HAVING ") << *mHaving;
+        stream << u" HAVING "_sv << *mHaving;
     }
 
     if (!mOrderBy.isEmpty()) {
-        stream << QStringViewLiteral(" ORDER BY ");
+        stream << u" ORDER BY "_sv;
         for (auto order = mOrderBy.cbegin(), end = mOrderBy.cend(); order != end; ++order) {
             if (order != mOrderBy.cbegin()) {
-                stream << QStringViewLiteral(", ");
+                stream << u", "_sv;
             }
             stream << *order;
         }
     }
 
     if (mLimit.has_value()) {
-        stream << QStringViewLiteral(" LIMIT ") << *mLimit;
+        stream << u" LIMIT "_sv << *mLimit;
     }
 
     return stream;
