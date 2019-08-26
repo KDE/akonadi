@@ -79,9 +79,9 @@ private Q_SLOTS:
         QVERIFY(rec->isEmpty());
         for (const QString &action : qAsConst(actions)) {
             qDebug() << action;
-            if (action == QStringLiteral("rn")) {
+            if (action == QLatin1String("rn")) {
                 replayNextAndExpectNothing(rec);
-            } else if (action == QStringLiteral("reload")) {
+            } else if (action == QLatin1String("reload")) {
                 // Check saving and loading from disk
                 delete rec;
                 rec = createChangeRecorder();

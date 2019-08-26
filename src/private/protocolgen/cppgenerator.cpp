@@ -613,10 +613,10 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                 mImpl << "            jsonArray.append(type); /* "<<  containerType << " */\n";
             } else if (TypeHelper::isBoolType(containerType)) {
                 mImpl << "            jsonArray.append(type); /* "<<  containerType << " */\n";
-            } else if (containerType == QStringLiteral("QByteArray")) {
+            } else if (containerType == QLatin1String("QByteArray")) {
                 mImpl << "            jsonArray.append(QString::fromUtf8(type)); /* "<<  containerType << "*/\n";
             } else if (TypeHelper::isBuiltInType(containerType)) {
-                if (TypeHelper::containerType(prop->type()) == QStringLiteral("Akonadi::Protocol::ChangeNotification::Relation")) {
+                if (TypeHelper::containerType(prop->type()) == QLatin1String("Akonadi::Protocol::ChangeNotification::Relation")) {
                     mImpl << "            QJsonObject jsonObject;\n"
                              "            type.toJson(jsonObject); /* " << containerType << " */\n"
                              "            jsonArray.append(jsonObject);\n";
@@ -631,26 +631,26 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             mImpl << "        }\n"
                   << "        json[QStringLiteral(\"" << prop->name() << "\")] = jsonArray;\n"
                   << "    }\n";
-        } else if (prop->type() == QStringLiteral("uint")) {
+        } else if (prop->type() == QLatin1String("uint")) {
             mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = static_cast<int>(" <<  prop->mVariableName() << ");/* "<<  prop->type() << " */\n";
         } else if (TypeHelper::isNumericType(prop->type())) {
             mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " <<  prop->mVariableName() << ";/* "<<  prop->type() << " */\n";
         } else if (TypeHelper::isBoolType(prop->type())) {
             mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " <<  prop->mVariableName() << ";/* "<<  prop->type() << " */\n";
         } else if (TypeHelper::isBuiltInType(prop->type())) {
-            if (prop->type() == QStringLiteral("QStringList")) {
+            if (prop->type() == QLatin1String("QStringList")) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = QJsonArray::fromStringList(" <<  prop->mVariableName() << ");/* "<<  prop->type() << " */\n";
-            } else if (prop->type() == QStringLiteral("QDateTime")) {
+            } else if (prop->type() == QLatin1String("QDateTime")) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " <<  prop->mVariableName() << ".toString()/* "<<  prop->type() << " */;\n";
-            } else if (prop->type() == QStringLiteral("QByteArray")) {
+            } else if (prop->type() == QLatin1String("QByteArray")) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = QString::fromUtf8(" <<  prop->mVariableName() << ")/* "<<  prop->type() << " */;\n";
-            } else if (prop->type() == QStringLiteral("Scope")) {
+            } else if (prop->type() == QLatin1String("Scope")) {
                 mImpl << "    {\n"
                          "        QJsonObject jsonObject;\n"
                          "        " << prop->mVariableName() << ".toJson(jsonObject); /* " << prop->type() << " */\n"
                          "        json[QStringLiteral(\"" << prop->name() << "\")] = " << "jsonObject;\n"
                          "    }\n";
-            } else if (prop->type() == QStringLiteral("Tristate")) {
+            } else if (prop->type() == QLatin1String("Tristate")) {
                 mImpl << "    switch (" << prop->mVariableName() << ") {\n;"
                          "    case Tristate::True:\n"
                          "        json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"True\");\n"
@@ -662,7 +662,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                          "        json[QStringLiteral(\"" << prop->name() << "\")] = QStringLiteral(\"Undefined\");\n"
                          "        break;\n"
                          "    }\n";
-            } else if (prop->type() == QStringLiteral("Akonadi::Protocol::Attributes")) {
+            } else if (prop->type() == QLatin1String("Akonadi::Protocol::Attributes")) {
                mImpl << "    {\n"
                         "        QJsonObject jsonObject;\n"
                         "        auto i = " << prop->mVariableName() << ".constBegin();\n"
@@ -673,11 +673,11 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                         "        }\n"
                         "        json[QStringLiteral(\"" << prop->name() << "\")] = jsonObject;\n"
                         "    }\n";
-            } else if (prop->type() == QStringLiteral("ModifySubscriptionCommand::ModifiedParts") ||
-                       prop->type() == QStringLiteral("ModifyTagCommand::ModifiedParts") ||
-                       prop->type() == QStringLiteral("ModifyCollectionCommand::ModifiedParts") ||
-                       prop->type() == QStringLiteral("ModifyItemsCommand::ModifiedParts") ||
-                       prop->type() == QStringLiteral("CreateItemCommand::MergeModes")) {
+            } else if (prop->type() == QLatin1String("ModifySubscriptionCommand::ModifiedParts") ||
+                       prop->type() == QLatin1String("ModifyTagCommand::ModifiedParts") ||
+                       prop->type() == QLatin1String("ModifyCollectionCommand::ModifiedParts") ||
+                       prop->type() == QLatin1String("ModifyItemsCommand::ModifiedParts") ||
+                       prop->type() == QLatin1String("CreateItemCommand::MergeModes")) {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = static_cast<int>(" << prop->mVariableName() << ");/* "<<  prop->type() << "*/\n";
             } else {
                 mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " << prop->mVariableName() << ";/* "<<  prop->type() << "*/\n";

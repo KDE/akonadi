@@ -236,7 +236,7 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
         if (child.isNull()) {
             continue;
         }
-        if (child.tagName() == QStringLiteral("item") || child.tagName() == QStringLiteral("collection")) {
+        if (child.tagName() == QLatin1String("item") || child.tagName() == QStringLiteral("collection")) {
             newElem.appendChild(child);   // reparents
             --i; // children, despite being const is modified by the reparenting
         }
@@ -355,7 +355,7 @@ QSet<qint64> KnutResource::parseQuery(const QString &queryString)
     QSet<qint64> resultSet;
     Akonadi::SearchQuery query = Akonadi::SearchQuery::fromJSON(queryString.toLatin1());
     foreach (const Akonadi::SearchTerm &term, query.term().subTerms()) {
-        if (term.key() == QStringLiteral("resource")) {
+        if (term.key() == QLatin1String("resource")) {
             resultSet << term.value().toInt();
         }
     }

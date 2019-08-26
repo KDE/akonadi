@@ -146,7 +146,7 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
     const auto entries = srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     for (const auto &fi : entries) {
         if (fi.isDir()) {
-            if (fi.fileName() == QStringLiteral("akonadi")) {
+            if (fi.fileName() == QLatin1String("akonadi")) {
                 // namespace according to instance identifier
 #ifdef Q_OS_WIN
                 const bool isXdgConfig = src.contains(QLatin1String("/xdgconfig/"));

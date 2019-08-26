@@ -38,7 +38,7 @@ QSet<qint64> TestSearchPlugin::parseQuery(const QString &queryString)
     QSet<qint64> resultSet;
     Akonadi::SearchQuery query = Akonadi::SearchQuery::fromJSON(queryString.toLatin1());
     foreach (const Akonadi::SearchTerm &term, query.term().subTerms()) {
-        if (term.key() == QStringLiteral("plugin")) {
+        if (term.key() == QLatin1String("plugin")) {
             resultSet << term.value().toInt();
         }
     }

@@ -53,7 +53,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(list);
         Collection col;
         foreach (const Collection &c, list->collections()) {
-            if (c.name() == QStringLiteral("linkTestFolder")) {
+            if (c.name() == QLatin1String("linkTestFolder")) {
                 col = c;
             }
         }
