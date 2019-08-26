@@ -259,7 +259,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         QString type;
         int iFirstSpace = entityString.indexOf(QLatin1Char(' '));
         type = entityString.left(iFirstSpace);
-        entityString = entityString.remove(0, iFirstSpace + 1).trimmed();
+        entityString.remove(0, iFirstSpace + 1).trimmed();
         if (iFirstSpace > 0 && !entityString.isEmpty()) {
             QString displayName;
             QString optionalSection = entityString;
@@ -303,7 +303,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         entityString = entityString.trimmed();
         int iFirstSpace = entityString.indexOf(QLatin1Char(' '));
         QString type = entityString.left(iFirstSpace);
-        entityString = entityString.remove(0, iFirstSpace + 1).trimmed();
+        entityString.remove(0, iFirstSpace + 1).trimmed();
         tag.setType(type.toLatin1());
 
         if (iFirstSpace > 0 && !entityString.isEmpty()) {
