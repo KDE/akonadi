@@ -22,12 +22,16 @@
 #define AKONADI_QUERY_H
 
 #include "../dbtype.h"
+#include "queryiterator.h"
 #include "shared/akoptional.h"
 
 #include <QString>
 #include <QSqlQuery>
+#include <QSqlError>
 #include <QMap>
 #include <QVariantList>
+
+#include <iterator>
 
 class QTextStream;
 
@@ -61,6 +65,13 @@ public:
       Returns the query, only valid after exec().
     */
     QSqlQuery &query();
+    /**
+     * Returns query error, only valid after exec.
+     */
+    QSqlError &error() const;
+
+    QueryResultIterator begin();
+    QueryResultIterator end();
 
     /**
       Executes the query, returns true on success.
