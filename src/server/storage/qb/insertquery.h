@@ -90,10 +90,9 @@ private:
     akOptional<QString> mTable;
     QString mReturning = QStringLiteral("id");
     QVariantMap mValues;
-    qint64 mInsertId = -1;
 };
 
-InsertQuery Insert(DataStore &db)
+inline InsertQuery Insert(DataStore &db)
 {
     return InsertQuery(db);
 }

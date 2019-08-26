@@ -58,7 +58,7 @@ private:
     akOptional<ConditionStmt> mCondition;
 };
 
-UpdateQuery Update(DataStore &db)
+inline UpdateQuery Update(DataStore &db)
 {
     return UpdateQuery(db);
 }

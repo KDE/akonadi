@@ -21,6 +21,7 @@
 #define AKONADI_SERVER_QUERYITERATOR_H_
 
 #include <QSqlQuery>
+#include <QVariant>
 
 #include <iterator>
 
@@ -35,24 +36,58 @@ class QueryResultIterator;
 class QueryResult
 {
 public:
+    QueryResult(const QueryResult &) = default;
+    QueryResult &operator=(const QueryResult &) = default;
+    QueryResult(QueryResult &&) = default;
+    QueryResult &operator=(QueryResult &&) = default;
+    ~QueryResult() = default;
+
+    bool operator==(const QueryResult &other) const
+    {
+        // TODO: user should never compare two iterators from different queries
+        // but if they do, we should catch it here...
+        return mQuery.isValid() == other.mQuery.isValid()
+                || mQuery.at() == other.mQuery.at();
+    }
+
     auto at(int index) const
     {
-        return mQuery.at(index);
+        return mQuery.isValid() ? mQuery.value(index) : QVariant{};
     }
 
     template<typename T>
     T at(int index) const
     {
-        const auto &value = mQuery.at(index);
+        if (!mQuery.isValid()) {
+            return T{};
+        }
+
+        const auto value = at(index);
         Q_ASSERT(value.canConvert<T>());
         return value.value<T>();
     }
 
 private:
     friend class QueryResultIterator;
-    QueryResult(const QSqlQuery &query)
+    explicit QueryResult(const QSqlQuery &query)
         : mQuery(query)
+    {
+        Q_ASSERT(mQuery.at() == QSql::BeforeFirstRow);
+        mQuery.next(); // move to the first row
+    }
+
+    explicit QueryResult()
     {}
+
+    bool next()
+    {
+        return mQuery.next();
+    }
+
+    bool isValid() const
+    {
+        return mQuery.isValid();
+    }
 
     QSqlQuery mQuery;
 };
@@ -70,8 +105,11 @@ public:
 
     using End = bool;
 
-    QueryResultIterator(QueryResultIterator &other) = default;
-    QueryResultIterator &operator=(QueryResultIterator &other) = default;
+    QueryResultIterator(const QueryResultIterator &) = default;
+    QueryResultIterator &operator=(const QueryResultIterator &) = default;
+    QueryResultIterator(QueryResultIterator &&) = default;
+    QueryResultIterator &operator=(QueryResultIterator &&) = default;
+    ~QueryResultIterator() = default;
 
     reference operator*() const
     {
@@ -85,52 +123,47 @@ public:
 
     QueryResultIterator &operator++()
     {
-        if (mQuery.next()) {
-            mResult = QueryResult{mQuery};
-        } else {
-            mEnd = true;
-        }
-
+        mResult.next();
         return *this;
     }
 
     QueryResultIterator operator++(int num)
     {
-        if (mEnd) {
+        if (!mResult.isValid()) {
             return *this;
         }
 
-        const auto prevResult = mResult;
-        for (int i = 0; i < num; ++i) {
-            if (!mQuery.next()) {
-                mEnd = true;
-                return prevResult;
-            }
-        }
+        auto prevResult = mResult;
+        for (int i = 0; i < num && mResult.isValid(); ++i, mResult.next());
 
-        mResult = QueryResult{mQuery};
-        return *this;
+        return QueryResultIterator(std::move(prevResult));
     }
 
-    bool operator==(QueryResultIterator &other) const
+    bool operator==(const QueryResultIterator &other) const
     {
-        return mEnd == other.mEnd || mResult == other.mResult;
+        return mResult == other.mResult;
     }
 
-    inline bool operator!=(QueryResultIterator &other) const
+    inline bool operator!=(const QueryResultIterator &other) const
     {
         return !(*this == other);
     }
 
 private:
-    friend class Qb::Query;
-    explicit QueryResultIterator(QSqlQuery &query);
-    explicit QueryResultIterator(End);
+    friend class Query;
+    explicit QueryResultIterator(const QSqlQuery &query)
+        : mResult(query)
+    {}
+
+    explicit QueryResultIterator(QueryResult &&result)
+        : mResult(std::move(result))
+    {}
+
+    explicit QueryResultIterator(End)
+    {}
 
 private:
-    QSqlQuery mQuery;
     QueryResult mResult;
-    End mEnd = false;
 };
 
 } // namespace Qb

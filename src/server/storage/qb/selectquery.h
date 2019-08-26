@@ -164,11 +164,13 @@ public:
       Add a WHERE condition
     */
     SelectQuery &where(const ConditionStmt &condition);
+    SelectQuery &where(ConditionStmt &&condition);
 
     /**
       Add a HAVING condition
     */
     SelectQuery &having(const ConditionStmt &condition);
+    SelectQuery &having(ConditionStmt &&condition);
 
     /**
       Add sort column.
@@ -212,7 +214,7 @@ private:
     bool mForUpdate = false;
 };
 
-SelectQuery Select(DataStore &db)
+inline SelectQuery Select(DataStore &db)
 {
     return SelectQuery(db);
 }

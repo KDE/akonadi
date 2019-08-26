@@ -65,6 +65,31 @@ QSqlQuery &Query::query()
     return mQuery;
 }
 
+QSqlError Query::error() const
+{
+    return mQuery.lastError();
+}
+
+int Query::size() const
+{
+    return mQuery.size();
+}
+
+void Query::finish()
+{
+    return mQuery.finish();
+}
+
+QueryResultIterator Query::begin() const
+{
+    return QueryResultIterator(mQuery);
+}
+
+QueryResultIterator Query::end() const
+{
+    return QueryResultIterator(QueryResultIterator::End(true));
+}
+
 #ifdef QUERYBUILDER_UNITTEST
 bool Query::exec()
 {
@@ -76,13 +101,13 @@ bool Query::exec()
 namespace
 {
 
-akOptional<QSqlQuery> prepareQuery(const QString &statement)
+akOptional<QSqlQuery> prepareQuery(const QSqlDatabase &db, const QString &statement)
 {
     auto query = QueryCache::query(statement);
     if (query.has_value()) {
         return query;
     } else {
-        QSqlQuery query;
+        QSqlQuery query(db);
         if (!query.prepare(statement)) {
             qCCritical(AKONADISERVER_LOG) << "DATABASE ERROR while PREPARING QUERY:";
             qCCritical(AKONADISERVER_LOG) << "  Error code:" << query.lastError().nativeErrorCode();
@@ -130,7 +155,7 @@ bool Query::exec()
     QTextStream stream(&statement);
     serialize(stream);
 
-    auto query = prepareQuery(statement);
+    auto query = prepareQuery(mDb.database(), statement);
     if (!query) {
         return false;
     }

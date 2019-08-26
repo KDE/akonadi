@@ -68,10 +68,22 @@ public:
     /**
      * Returns query error, only valid after exec.
      */
-    QSqlError &error() const;
+    QSqlError error() const;
 
-    QueryResultIterator begin();
-    QueryResultIterator end();
+    QueryResultIterator begin() const;
+    QueryResultIterator end() const;
+
+    /**
+     * Returns the size of the result (number of returned rows)
+     *
+     * Returns -1 if the size cannot be determined or the database does not support it.
+     */
+    int size() const;
+
+    /**
+     * Marks the query as finished, freeing results from the memory
+     */
+    void finish();
 
     /**
       Executes the query, returns true on success.

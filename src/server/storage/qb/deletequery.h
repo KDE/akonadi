@@ -40,7 +40,7 @@ public:
 #endif
     explicit DeleteQuery(DataStore &db);
 
-    DeleteQuery &table(const QString &table);
+    DeleteQuery &from(const QString &table);
 
     DeleteQuery &where(const ConditionStmt &condition);
     DeleteQuery &where(ConditionStmt &&condition);
@@ -53,7 +53,7 @@ private:
     akOptional<ConditionStmt> mCondition;
 };
 
-DeleteQuery Delete(DataStore &db)
+inline DeleteQuery Delete(DataStore &db)
 {
     return DeleteQuery(db);
 }

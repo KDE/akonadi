@@ -28,7 +28,7 @@ DeleteQuery::DeleteQuery(DataStore &db)
     : Query(db)
 {}
 
-DeleteQuery &DeleteQuery::table(const QString &table)
+DeleteQuery &DeleteQuery::from(const QString &table)
 {
     mTable = table;
     return *this;

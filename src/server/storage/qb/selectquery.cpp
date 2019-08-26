@@ -115,7 +115,10 @@ QTextStream &OrderByStmt::serialize(QTextStream &stream) const
 
 SelectQuery::SelectQuery(DataStore &db)
     : Query(db)
-{}
+{
+    // Enable forward-only mode in SELECT queries - this is a memory optimization
+    query().setForwardOnly(true);
+}
 
 SelectQuery &SelectQuery::from(const TableStmt &table)
 {
@@ -159,9 +162,21 @@ SelectQuery &SelectQuery::where(const ConditionStmt &cond)
     return *this;
 }
 
+SelectQuery &SelectQuery::where(ConditionStmt &&cond)
+{
+    mWhere = std::move(cond);
+    return *this;
+}
+
 SelectQuery &SelectQuery::having(const ConditionStmt &cond)
 {
     mHaving = cond;
+    return *this;
+}
+
+SelectQuery &SelectQuery::having(ConditionStmt &&cond)
+{
+    mHaving = std::move(cond);
     return *this;
 }
 
