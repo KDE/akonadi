@@ -165,7 +165,7 @@ void DbInitializer::checkForeignKeys(const TableDescription &tableDescription)
             if (!column.refTable.isEmpty() && !column.refColumn.isEmpty()) {
                 if (!existingForeignKey.column.isEmpty()) {
                     // there's a constraint on this column, check if it's the correct one
-                    if (QString::compare(existingForeignKey.refTable, column.refTable + QLatin1Literal("table"), Qt::CaseInsensitive) == 0
+                    if (QString::compare(existingForeignKey.refTable, column.refTable + QLatin1String("table"), Qt::CaseInsensitive) == 0
                             && QString::compare(existingForeignKey.refColumn, column.refColumn, Qt::CaseInsensitive) == 0
                             && QString::compare(existingForeignKey.onUpdate, referentialActionToString(column.onUpdate), Qt::CaseInsensitive) == 0
                             && QString::compare(existingForeignKey.onDelete, referentialActionToString(column.onDelete), Qt::CaseInsensitive) == 0) {
@@ -353,8 +353,8 @@ QStringList DbInitializer::buildRemoveForeignKeyConstraintStatements(const DbInt
 
 QString DbInitializer::buildReferentialAction(ColumnDescription::ReferentialAction onUpdate, ColumnDescription::ReferentialAction onDelete)
 {
-    return QLatin1Literal("ON UPDATE ") + referentialActionToString(onUpdate)
-           + QLatin1Literal(" ON DELETE ") + referentialActionToString(onDelete);
+    return QLatin1String("ON UPDATE ") + referentialActionToString(onUpdate)
+           + QLatin1String(" ON DELETE ") + referentialActionToString(onDelete);
 }
 
 QString DbInitializer::referentialActionToString(ColumnDescription::ReferentialAction action)
@@ -380,7 +380,7 @@ QString DbInitializer::buildPrimaryKeyStatement(const TableDescription &table)
             cols.push_back(column.name);
         }
     }
-    return QLatin1Literal("PRIMARY KEY (") + cols.join(QLatin1String(", ")) + QLatin1Char(')');
+    return QLatin1String("PRIMARY KEY (") + cols.join(QLatin1String(", ")) + QLatin1Char(')');
 }
 
 void DbInitializer::execQuery(const QString &queryString)

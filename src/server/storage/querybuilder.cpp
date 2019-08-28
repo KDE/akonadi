@@ -334,7 +334,7 @@ void QueryBuilder::buildQuery(QString *statement)
     }
 
     if (mLimit > 0) {
-        *statement += QLatin1Literal(" LIMIT ") + QString::number(mLimit);
+        *statement += QLatin1String(" LIMIT ") + QString::number(mLimit);
     }
 
     if (mType == Select && mForUpdate) {
@@ -342,7 +342,7 @@ void QueryBuilder::buildQuery(QString *statement)
             // SQLite does not support SELECT ... FOR UPDATE syntax, because it does
             // table-level locking
         } else {
-            *statement += QLatin1Literal(" FOR UPDATE");
+            *statement += QLatin1String(" FOR UPDATE");
         }
     }
 }

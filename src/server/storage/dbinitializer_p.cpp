@@ -40,7 +40,7 @@ bool DbInitializerMySql::hasForeignKeyConstraints() const
 QString DbInitializerMySql::sqlType(const ColumnDescription &col, int size) const
 {
     if (col.type == QLatin1String("QString")) {
-        return QLatin1Literal("VARBINARY(") + QString::number(size <= 0 ? 255 : size) + QLatin1Literal(")");
+        return QLatin1String("VARBINARY(") + QString::number(size <= 0 ? 255 : size) + QLatin1String(")");
     } else {
         return DbInitializer::sqlType(col, size);
     }
@@ -359,7 +359,7 @@ QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescripti
 QStringList DbInitializerPostgreSql::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
 {
     // constraints must have name in PostgreSQL
-    const QString constraintName = table.name + column.name + QLatin1Literal("_") + column.refTable + column.refColumn + QLatin1Literal("_fk");
+    const QString constraintName = table.name + column.name + QLatin1String("_") + column.refTable + column.refColumn + QLatin1String("_fk");
     return {
         QStringLiteral("ALTER TABLE %1 ADD CONSTRAINT %2 FOREIGN KEY (%3) REFERENCES %4Table(%5) %6 DEFERRABLE INITIALLY DEFERRED")
                 .arg(table.name, constraintName, column.name, column.refTable, column.refColumn,

@@ -30,7 +30,7 @@
 
 QString debugString()
 {
-    return QString(QLatin1Literal("[QSQLITE3: ") + QString::number(quint64(QThread::currentThreadId())) + QLatin1Literal("] "));
+    return QString(QLatin1String("[QSQLITE3: ") + QString::number(quint64(QThread::currentThreadId())) + QLatin1String("] "));
 }
 
 /* Based on example in http://www.sqlite.org/unlock_notify.html */

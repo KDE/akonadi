@@ -37,7 +37,7 @@ static QString makeServiceName(const char *base)
     if (!Instance::hasIdentifier()) {
         return QLatin1String(base);
     }
-    return QLatin1String(base) % QLatin1Literal(".") % Instance::identifier();
+    return QLatin1String(base) % QLatin1String(".") % Instance::identifier();
 }
 
 QString DBus::serviceName(DBus::ServiceType serviceType)

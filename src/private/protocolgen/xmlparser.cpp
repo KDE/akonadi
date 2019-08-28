@@ -52,7 +52,7 @@ bool XmlParser::parse(const QString &filename)
     mReader.setDevice(&file);
     while (!mReader.atEnd()) {
         mReader.readNext();
-        if (mReader.isStartElement() && mReader.name() == QLatin1Literal("protocol")) {
+        if (mReader.isStartElement() && mReader.name() == QLatin1String("protocol")) {
             if (!parseProtocol()) {
                 return false;
             }
