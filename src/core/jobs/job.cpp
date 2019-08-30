@@ -121,7 +121,7 @@ void JobPrivate::publishJob()
             }
             const QString suffix  = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
             if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
-                s_jobtracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole") + suffix,
+                s_jobtracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole") + suffix,
                                                   QStringLiteral("/jobtracker"),
                                                   QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
                                                   KDBusConnectionPool::threadConnection(), nullptr);

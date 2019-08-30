@@ -46,7 +46,7 @@ QString buildFullRelPath(const char *resource, const QString &relPath)
 #endif
 
     if (Akonadi::Instance::hasIdentifier()) {
-        fullRelPath += QStringLiteral("/instance/") + Akonadi::Instance::identifier();
+        fullRelPath += QLatin1String("/instance/") + Akonadi::Instance::identifier();
     }
     if (!relPath.isEmpty()) {
         fullRelPath += QLatin1Char('/') + relPath;
@@ -64,7 +64,7 @@ QString StandardDirs::configFile(const QString &configFile, FileAccessMode openM
     }
 
 
-    auto path = QStandardPaths::locate(QStandardPaths::GenericConfigLocation, QStringLiteral("akonadi/") + configFile);
+    auto path = QStandardPaths::locate(QStandardPaths::GenericConfigLocation, QLatin1String("akonadi/") + configFile);
     // HACK: when using instance namespaces, ignore the non-namespaced file
     if (Akonadi::Instance::hasIdentifier() && path.startsWith(QStandardPaths::writableLocation(QStandardPaths::ConfigLocation))) {
         path.clear();
@@ -185,7 +185,7 @@ QString StandardDirs::locateResourceFile(const char *resource, const QString &re
     }
 
     // Fallback to global instance path in generic locations
-    path = locateFile(genericLocation, QStringLiteral("/akonadi/") + relPath);
+    path = locateFile(genericLocation, QLatin1String("/akonadi/") + relPath);
     if (!path.isEmpty()) {
         return path;
     }

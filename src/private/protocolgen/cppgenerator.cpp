@@ -497,7 +497,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                 mImpl << "    m" << setter->append[0].toUpper() << setter->append.midRef(1) << " << val;\n";
             }
             if (!setter->remove.isEmpty()) {
-                const QString mVar = QStringLiteral("m") + setter->remove[0].toUpper() + setter->remove.midRef(1);
+                const QString mVar = QLatin1String("m") + setter->remove[0].toUpper() + setter->remove.midRef(1);
                 mImpl << "    auto it = std::find(" << mVar << ".begin(), " << mVar << ".end(), val);\n"
                         "    if (it != " << mVar << ".end()) {\n"
                         "        " << mVar << ".erase(it);\n"

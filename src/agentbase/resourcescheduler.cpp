@@ -529,7 +529,7 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
     if (!s_resourcetracker) {
         const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
         if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
-            s_resourcetracker = new QDBusInterface(QStringLiteral("org.kde.akonadiconsole") + suffix,
+            s_resourcetracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole") + suffix,
                                                    QStringLiteral("/resourcesJobtracker"),
                                                    QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
                                                    KDBusConnectionPool::threadConnection(), nullptr);

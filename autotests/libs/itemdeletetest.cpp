@@ -83,9 +83,9 @@ private Q_SLOTS:
         auto monitor = getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
-        const QString path = QStringLiteral("res1") +
+        const QString path = QLatin1String("res1") +
                              CollectionPathResolver::pathDelimiter() +
-                             QStringLiteral("foo");
+                             QLatin1String("foo");
         CollectionPathResolver *rjob = new CollectionPathResolver(path, this);
         AKVERIFYEXEC(rjob);
 
