@@ -303,7 +303,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
             QRect folderRect = textRect;
             QRect unreadRect = textRect;
             folderRect.setRight(textRect.left() + folderWidth);
-            unreadRect = QRect(folderRect.right(), folderRect.top(), unreadRect.width(), unreadRect.height());
+            unreadRect = QRect(folderRect.right(), folderRect.top(), unreadWidth, unreadRect.height());
 
             // Draw folder name and unread count
             painter->drawText(folderRect, Qt::AlignLeft | Qt::AlignVCenter, folderName);
