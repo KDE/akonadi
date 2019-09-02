@@ -619,7 +619,7 @@ void DbConfigPostgresql::stopInternalServer()
 
 bool DbConfigPostgresql::checkServerIsRunning()
 {
-    const QString command = QStringLiteral("%1").arg(mServerPath);
+    const QString command = mServerPath;
     QStringList arguments;
     arguments << QStringLiteral("status")
               << QStringLiteral("--pgdata=%1").arg(mPgData);
