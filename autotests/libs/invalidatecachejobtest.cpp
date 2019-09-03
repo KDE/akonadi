@@ -56,7 +56,7 @@ void InvalidateCacheJobTest::shouldClearPayload()
     AKVERIFYEXEC(listJob);
     const Item::List items = listJob->items();
     QVERIFY(!items.isEmpty());
-    auto it = std::find_if(items.cbegin(), items.cend(), [](const Item &item) { return item.remoteId() == QLatin1String("C"); });
+    auto it = std::find_if(items.cbegin(), items.cend(), [](const Item &item) { return item.remoteId() == QLatin1Char('C'); });
     QVERIFY(it != items.cend());
     const Item::Id itemId = it->id();
 

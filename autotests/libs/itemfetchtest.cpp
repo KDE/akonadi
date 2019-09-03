@@ -78,7 +78,7 @@ void ItemFetchTest::testFetch()
     // check if the fetch response is parsed correctly (note: order is undefined)
     Item item;
     foreach (const Item &it, items) {
-        if (it.remoteId() == QLatin1String("A")) {
+        if (it.remoteId() == QLatin1Char('A')) {
             item = it;
         }
     }
@@ -91,7 +91,7 @@ void ItemFetchTest::testFetch()
 
     item = Item();
     foreach (const Item &it, items) {
-        if (it.remoteId() == QLatin1String("B")) {
+        if (it.remoteId() == QLatin1Char('B')) {
             item = it;
         }
     }
@@ -101,7 +101,7 @@ void ItemFetchTest::testFetch()
 
     item = Item();
     foreach (const Item &it, items) {
-        if (it.remoteId() == QLatin1String("C")) {
+        if (it.remoteId() == QLatin1Char('C')) {
             item = it;
         }
     }
