@@ -130,7 +130,7 @@ void CacheCleaner::collectionExpired(const Collection &collection)
     const QStringList partNames = collection.cachePolicyLocalParts().split(QLatin1Char(' '));
     for (QString partName : partNames) {
         if (partName.startsWith(QLatin1String(AKONADI_PARAM_PLD))) {
-            partName = partName.mid(4);
+            partName.remove(0, 4);
         }
         qb.addValueCondition(PartType::nameFullColumnName(), Query::NotEquals, partName);
     }
