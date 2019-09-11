@@ -1,4 +1,5 @@
 set(akonadiagentbase_SRCS
+    accountsintegration.cpp
     agentbase.cpp
     agentsearchinterface.cpp
     preprocessorbase.cpp
@@ -14,6 +15,7 @@ ecm_qt_declare_logging_category(akonadiagentbase_SRCS HEADER akonadiagentbase_de
 
 ecm_generate_headers(AkonadiAgentBase_HEADERS
     HEADER_NAMES
+    AccountsIntegration
     AgentBase
     AgentSearchInterface
     PreprocessorBase
@@ -40,6 +42,8 @@ qt5_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi
     transportresourcebase_p.h Akonadi::TransportResourceBasePrivate transportadaptor Akonadi__TransportAdaptor)
 qt5_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.freedesktop.Akonadi.Agent.Search.xml
                      agentsearchinterface_p.h Akonadi::AgentSearchInterfacePrivate searchadaptor Akonadi__SearchAdaptor )
+qt5_add_dbus_adaptor(akonadiagentbase_SRCS ../interfaces/org.kde.Akonadi.Accounts.xml
+    accountsintegration.h Akonadi::AccountsIntegration accountsadaptor Akonadi__AccountsAdaptor)
 
 add_library(KF5AkonadiAgentBase ${akonadiagentbase_SRCS})
 
@@ -62,7 +66,13 @@ PRIVATE
     KF5::DBusAddons
     KF5::I18n
     Qt5::Network
+    akonadi_shared
 )
+
+if (WITH_ACCOUNTS)
+    target_link_libraries(KF5AkonadiAgentBase PRIVATE kaccounts ${ACCOUNTSQT_LIBRARIES})
+    target_include_directories(KF5AkonadiAgentBase PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
+endif()
 
 set_target_properties(KF5AkonadiAgentBase PROPERTIES
     VERSION ${AKONADI_VERSION_STRING}
