@@ -22,6 +22,11 @@
 #include "processcontrol.h"
 #include "akonadicontrol_debug.h"
 #include "akonadi_version.h"
+#include "config-akonadi.h"
+
+#ifdef WITH_ACCOUNTS
+#include "accountsintegration.h"
+#endif
 
 #include <shared/akapplication.h>
 
@@ -74,6 +79,9 @@ int main(int argc, char **argv)
     ControlManager controlManager;
 
     AgentManager agentManager(app.commandLineArguments().isSet(QStringLiteral("verbose")));
+#ifdef WITH_ACCOUNTS
+    AccountsIntegration accountsIntegration(agentManager);
+#endif
     KCrash::setEmergencySaveFunction(crashHandler);
 
     QGuiApplication::setFallbackSessionManagementEnabled(false);

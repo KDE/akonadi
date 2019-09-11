@@ -13,6 +13,10 @@ set(control_SRCS
     processcontrol.cpp
 )
 
+if (WITH_ACCOUNTS)
+    list(APPEND control_SRCS accountsintegration.cpp)
+endif()
+
 ecm_qt_declare_logging_category(control_SRCS HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol)
 
 qt5_add_dbus_adaptor(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml agentmanager.h AgentManager)
@@ -26,6 +30,7 @@ qt5_add_dbus_interfaces(control_SRCS
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Resource.xml
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Preprocessor.xml
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Server.xml
+    ${Akonadi_SOURCE_DIR}/src/interfaces/org.kde.Akonadi.Accounts.xml
 )
 qt5_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ResourceManager.xml resource_manager)
 qt5_add_dbus_interface(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.PreprocessorManager.xml preprocessor_manager)
@@ -48,6 +53,12 @@ target_link_libraries(akonadi_control
     Qt5::DBus
     Qt5::Gui
 )
+
+if (WITH_ACCOUNTS)
+    target_include_directories(akonadi_control PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
+    # We need Qt5::Xml because the Accounts framework leaks QDocument includes into public interface
+    target_link_libraries(akonadi_control ${ACCOUNTSQT_LIBRARIES} Qt5::Xml)
+endif()
 
 install(TARGETS akonadi_control
         ${KF5_INSTALL_TARGETS_DEFAULT_ARGS})
