@@ -1,0 +1,31 @@
+#include <tunables/global>
+
+profile mysqld_akonadi {
+  #include <abstractions/base>
+  #include <abstractions/nameservice>
+  #include <abstractions/user-tmp>
+
+  capability setgid,
+  capability setuid,
+
+  signal receive set=kill peer=/usr/bin/akonadiserver,
+  signal receive set=term peer=/usr/bin/akonadiserver,
+
+  /etc/mysql/ r,
+  /etc/mysql/** r,
+  @{sys}/devices/system/cpu/ r,
+  /{usr/,}bin/cat mrix,
+  /{usr/,}bin/chmod mrix,
+  /{usr/,}bin/dirname mrix,
+  /{usr/,}bin/hostname mrix,
+  /{usr/,}bin/mkdir mrix,
+  /{usr/,}bin/sed mrix,
+  /usr/bin/my_print_defaults mrix,
+  /usr/bin/mysql_install_db mrix,
+  /usr/bin/mysqladmin mrix,
+  /usr/bin/mysqlcheck mrix,
+  /usr/sbin/mysqld mrix,
+  /usr/share/mysql/** r,
+  owner @{HOME}/.local/share/akonadi/** rwk,
+  owner @{PROC}/@{pid}/loginuid r,
+}

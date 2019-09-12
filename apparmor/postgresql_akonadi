@@ -1,0 +1,20 @@
+#include <tunables/global>
+
+profile postgresql_akonadi {
+  #include <abstractions/base>
+  #include <abstractions/user-tmp>
+
+  capability setgid,
+  capability setuid,
+
+  /etc/passwd r,
+  /{usr/,}bin/dash mrix,
+  /{usr/,}bin/locale mrix,
+  /usr/lib/postgresql/*/bin/initdb mrix,
+  /usr/lib/postgresql/*/bin/pg_ctl mrix,
+  /usr/lib/postgresql/*/bin/postgres mrix,
+  /usr/share/postgresql/** r,
+  owner /dev/shm/PostgreSQL.* rw,
+  owner @{HOME}/.local/share/akonadi/** rwlk,
+  owner @{HOME}/.local/share/akonadi/db_data/** l,
+}

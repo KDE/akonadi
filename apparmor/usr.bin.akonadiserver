@@ -1,0 +1,42 @@
+#include <tunables/global>
+
+/usr/bin/akonadiserver {
+  #include <abstractions/base>
+  #include <abstractions/dbus-session-strict>
+  #include <abstractions/nameservice>
+  #include <abstractions/qt5>
+  #include <abstractions/user-tmp>
+
+  signal send set=kill peer=mysqld_akonadi,
+  signal send set=term peer=mysqld_akonadi,
+
+  /etc/xdg/** r,
+  /usr/bin/akonadiserver mr,
+  /usr/bin/mysql_install_db PUx -> mysqld_akonadi,
+  /usr/bin/mysqladmin PUx -> mysqld_akonadi,
+  /usr/bin/mysqlcheck PUx -> mysqld_akonadi,
+  /usr/lib/postgresql/*/bin/initdb PUx -> postgresql_akonadi,
+  /usr/lib/postgresql/*/bin/pg_ctl PUx -> postgresql_akonadi,
+  /usr/sbin/mysqld PUx -> mysqld_akonadi,
+  /usr/share/mime/mime.cache r,
+  /usr/share/mime/packages/ r,
+  /usr/share/mime/types r,
+  @{PROC}/sys/kernel/core_pattern r,
+  @{PROC}/sys/kernel/random/boot_id r,
+  owner @{HOME}/.local/share/mime/mime.cache r,
+  owner @{HOME}/.local/share/mime/packages/ r,
+  owner @{HOME}/.local/share/mime/types r,
+  owner @{HOME}/.config/* r,
+  owner @{HOME}/.config/QtProject/qtlogging.ini r,
+  owner @{HOME}/.config/akonadi* rw,
+  owner @{HOME}/.config/akonadi/ rw,
+  owner @{HOME}/.config/akonadi/* rwl,
+  owner @{HOME}/.config/akonadi/akonadiconnectionrc wl,
+  owner @{HOME}/.config/akonadi/akonadiconnectionrc.lock rwk,
+  owner @{HOME}/.config/akonadi/akonadiserverrc.lock rwk,
+  owner @{HOME}/.local/share/akonadi/ rw,
+  owner @{HOME}/.local/share/akonadi/* rwlk,
+  owner @{HOME}/.local/share/akonadi/** rwk,
+  owner @{PROC}/@{pid}/loginuid r,
+  owner @{PROC}/@{pid}/mounts r,
+}

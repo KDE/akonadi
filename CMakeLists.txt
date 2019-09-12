@@ -137,6 +137,7 @@ check_symbol_exists(malloc_trim "malloc.h" HAVE_MALLOC_TRIM)
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(BUILD_TOOLS "Build and install tools for development and testing purposes." TRUE)
 option(NO_REGENERATE_MIME "Don't regenerate mime file (developer-only option)" FALSE )
+option(INSTALL_APPARMOR "Install AppArmor profiles" TRUE)
 
 if(BUILD_TESTING)
    set(BUILD_TOOLS TRUE)
@@ -312,6 +313,9 @@ if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
 
+if(INSTALL_APPARMOR)
+   add_subdirectory(apparmor)
+endif()
 
 ############### install stuff ###############
 
