@@ -70,7 +70,7 @@ PRIVATE
 )
 
 if (WITH_ACCOUNTS)
-    target_link_libraries(KF5AkonadiAgentBase PRIVATE kaccounts ${ACCOUNTSQT_LIBRARIES})
+    target_link_libraries(KF5AkonadiAgentBase PRIVATE KAccounts ${ACCOUNTSQT_LIBRARIES})
     target_include_directories(KF5AkonadiAgentBase PRIVATE ${ACCOUNTSQT_INCLUDE_DIRS})
 endif()
 
