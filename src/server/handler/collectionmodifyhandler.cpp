@@ -35,6 +35,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 bool CollectionModifyHandler::parseStream()
 {
@@ -188,7 +189,7 @@ bool CollectionModifyHandler::parseStream()
 
         QVector<qint64> inCols = cmd.persistentSearchCollections();
         std::sort(inCols.begin(), inCols.end());
-        const auto cols = inCols | transform([](const auto col) { return QString::number(col); }) | toQList;
+        const auto cols = inCols | Views::transform([](const auto col) { return QString::number(col); }) | Actions::toQList;
         const QString colStr = cols.join(QLatin1Char(' '));
         if (colStr != collection.queryCollections()) {
             collection.setQueryCollections(colStr);

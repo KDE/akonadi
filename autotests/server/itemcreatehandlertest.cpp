@@ -840,7 +840,7 @@ private Q_SLOTS:
             QCOMPARE(actualItem.collectionId(), pimItem.collectionId());
             QCOMPARE(actualItem.mimeTypeId(), pimItem.mimeTypeId());
 
-            const auto actualFlags = actualItem.flags() | toQList;
+            const auto actualFlags = actualItem.flags() | AkRanges::Actions::toQList;
             QCOMPARE(actualFlags.count(), flags.count());
             Q_FOREACH (const Flag &flag, flags) {
                 const QList<Flag>::const_iterator actualFlagIter =
@@ -852,7 +852,7 @@ private Q_SLOTS:
                 QVERIFY(actualFlag.isValid());
             }
 
-            const auto actualTags = actualItem.tags() | toQList;
+            const auto actualTags = actualItem.tags() | AkRanges::Actions::toQList;
             QCOMPARE(actualTags.count(), tags.count());
             Q_FOREACH (const FakeTag &tag, tags) {
                 const QList<Tag>::const_iterator actualTagIter =
@@ -875,7 +875,7 @@ private Q_SLOTS:
                 }
             }
 
-            const auto actualParts = actualItem.parts() | toQList;
+            const auto actualParts = actualItem.parts() | AkRanges::Actions::toQList;
             QCOMPARE(actualParts.count(), parts.count());
             Q_FOREACH (const FakePart &part, parts) {
                 const QList<Part>::const_iterator actualPartIter =

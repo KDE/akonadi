@@ -323,7 +323,7 @@ bool ItemRetriever::exec()
     query.finish();
 
     if (!readyItems.isEmpty()) {
-        Q_EMIT itemsRetrieved(readyItems | toQList);
+        Q_EMIT itemsRetrieved(readyItems | AkRanges::Actions::toQList);
     }
 
     QEventLoop eventLoop;

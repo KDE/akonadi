@@ -33,24 +33,8 @@
 #include <type_traits>
 #include <iterator>
 
-namespace Akonadi {
-
+namespace AkRanges {
 namespace detail {
-
-template<template<typename> class Cont>
-struct To_
-{
-    template<typename T> using Container = Cont<T>;
-};
-
-template<template<typename, typename> class Cont>
-struct ToAssoc_
-{
-    template<typename Key, typename Value> using Container = Cont<Key, Value>;
-};
-
-struct Values_ {};
-struct Keys_ {};
 
 template<typename RangeLike, typename OutContainer,
          AK_REQUIRES(AkTraits::isAppendable<OutContainer>)>
@@ -71,7 +55,7 @@ OutContainer copyContainer(const RangeLike &range)
     OutContainer rv;
     rv.reserve(range.size());
     for (const auto &v : range) {
-        rv.insert(v);
+        rv.insert(v); // Qt containers lack move-enabled insert() overload
     }
     return rv;
 }
@@ -81,7 +65,7 @@ OutContainer copyAssocContainer(const RangeList &range)
 {
     OutContainer rv;
     for (const auto &v : range) {
-        rv.insert(v.first, v.second);
+        rv.insert(v.first, v.second); // Qt containers lack move-enabled insert() overload
     }
     return rv;
 }
@@ -221,7 +205,7 @@ class FilterIterator : public IteratorBase<FilterIterator<RangeLike, Predicate>,
 {
 public:
     FilterIterator(const Iterator &iter, const Iterator &end, const Predicate &predicate, const RangeLike &range)
-        : IteratorBase<FilterIterator<RangeLike, Predicate>, RangeLike>(iter, range)
+        : IteratorBase<FilterIterator, RangeLike>(iter, range)
         , mPredicate(predicate), mEnd(end)
     {
         while (this->mIter != mEnd && !Akonadi::invoke(mPredicate, *this->mIter)) {
@@ -324,51 +308,69 @@ private:
 template<typename T>
 using IsRange = typename std::is_same<T, Range<typename T::iterator>>;
 
-template<typename TransformFn>
-struct Transform_
+// Tags
+
+template<template<typename> class Cont>
+struct ToTag_
 {
-    TransformFn mFn;
+    template<typename T> using OutputContainer = Cont<T>;
 };
 
-template<typename PredicateFn>
-struct Filter_
+template<template<typename, typename> class Cont>
+struct ToAssocTag_
 {
-    PredicateFn mFn;
+    template<typename Key, typename Value> using OuputContainer = Cont<Key, Value>;
 };
 
-template<typename EachFun>
-struct ForEach_
+struct ValuesTag_ {};
+struct KeysTag_ {};
+
+
+template<typename UnaryOperation>
+struct TransformTag_
 {
-    EachFun mFn;
+    UnaryOperation mFn;
 };
 
-template<typename Predicate>
-struct All_
+template<typename UnaryPredicate>
+struct FilterTag_
 {
-    Predicate mFn;
+    UnaryPredicate mFn;
 };
 
-template<typename Predicate>
-struct Any_
+template<typename UnaryOperation>
+struct ForEachTag_
 {
-    Predicate mFn;
+    UnaryOperation mFn;
+};
+
+template<typename UnaryPredicate>
+struct AllTag_
+{
+    UnaryPredicate mFn;
+};
+
+template<typename UnaryPredicate>
+struct AnyTag_
+{
+    UnaryPredicate mFn;
 };
 
 } // namespace detail
-} // namespace Akonadi
+} // namespace AkRanges
 
 // Generic operator| for To_<> convertor
 template<typename RangeLike, template<typename> class OutContainer, typename T = typename RangeLike::value_type>
-auto operator|(const RangeLike &range, const Akonadi::detail::To_<OutContainer> &) -> OutContainer<T>
+auto operator|(const RangeLike &range, AkRanges::detail::ToTag_<OutContainer>) -> OutContainer<T>
 {
-    using namespace Akonadi::detail;
+    using namespace AkRanges::detail;
     return copyContainer<RangeLike, OutContainer<T>>(range);
 }
 
 // Specialization for case when InContainer and OutContainer are identical
 // Create a copy, but for Qt container this is very cheap due to implicit sharing.
 template<template<typename> class InContainer, typename T>
-auto operator|(const InContainer<T> &in, const Akonadi::detail::To_<InContainer> &) -> InContainer<T>
+auto operator|(const InContainer<T> &in, AkRanges::detail::ToTag_<InContainer>) -> InContainer<T>
 {
     return in;
 }
@@ -376,111 +378,131 @@ auto operator|(const InContainer<T> &in, const Akonadi::detail::To_<InContainer>
 // Generic operator| for ToAssoc_<> convertor
 template<typename RangeLike, template<typename, typename> class OutContainer,
          typename T = typename RangeLike::value_type>
-auto operator|(const RangeLike &range, const Akonadi::detail::ToAssoc_<OutContainer> &) ->
+auto operator|(const RangeLike &range, AkRanges::detail::ToAssocTag_<OutContainer>) ->
     OutContainer<typename T::first_type, typename T::second_type>
 {
-    using namespace Akonadi::detail;
+    using namespace AkRanges::detail;
     return copyAssocContainer<RangeLike, OutContainer<typename T::first_type, typename T::second_type>>(range);
 }
 
 // Generic operator| for transform()
-template<typename RangeLike, typename TransformFn>
-auto operator|(const RangeLike &range, const Akonadi::detail::Transform_<TransformFn> &t)
+template<typename RangeLike, typename UnaryOperation>
+auto operator|(const RangeLike &range, AkRanges::detail::TransformTag_<UnaryOperation> t)
 {
-    using namespace Akonadi::detail;
-    using OutIt = TransformIterator<RangeLike, TransformFn>;
+    using namespace AkRanges::detail;
+    using OutIt = TransformIterator<RangeLike, UnaryOperation>;
     return Range<OutIt>(OutIt(std::cbegin(range), t.mFn, range), OutIt(std::cend(range), t.mFn, range));
 }
 
 // Generic operator| for filter()
-template<typename RangeLike, typename PredicateFn>
-auto operator|(const RangeLike &range, const Akonadi::detail::Filter_<PredicateFn> &p)
+template<typename RangeLike, typename UnaryPredicate>
+auto operator|(const RangeLike &range, AkRanges::detail::FilterTag_<UnaryPredicate> p)
 {
-    using namespace Akonadi::detail;
-    using OutIt = FilterIterator<RangeLike, PredicateFn>;
+    using namespace AkRanges::detail;
+    using OutIt = FilterIterator<RangeLike, UnaryPredicate>;
     return Range<OutIt>(OutIt(std::cbegin(range), std::cend(range), p.mFn, range),
                         OutIt(std::cend(range), std::cend(range), p.mFn, range));
 }
 
 // Generic operator| fo foreach()
-template<typename RangeLike, typename EachFun>
-auto operator|(const RangeLike&range, Akonadi::detail::ForEach_<EachFun> fun)
+template<typename RangeLike, typename UnaryOperation>
+auto operator|(const RangeLike &range, AkRanges::detail::ForEachTag_<UnaryOperation> op)
 {
     std::for_each(std::cbegin(range), std::cend(range),
-                  [&fun](const auto &val) {
-                      Akonadi::invoke(fun.mFn, val);
+                  [op = std::move(op)](const auto &val) mutable {
+                      Akonadi::invoke(op.mFn, val);
                   });
     return range;
 }
 
 // Generic operator| for all
-template<typename RangeLike, typename PredicateFn>
-auto operator|(const RangeLike &range, Akonadi::detail::All_<PredicateFn> fun)
+template<typename RangeLike, typename UnaryPredicate>
+auto operator|(const RangeLike &range, AkRanges::detail::AllTag_<UnaryPredicate> p)
 {
-    return std::all_of(std::cbegin(range), std::cend(range), fun.mFn);
+    return std::all_of(std::cbegin(range), std::cend(range), p.mFn);
 }
 
 // Generic operator| for any
 template<typename RangeLike, typename PredicateFn>
-auto operator|(const RangeLike &range, Akonadi::detail::Any_<PredicateFn> fun)
+auto operator|(const RangeLike &range, AkRanges::detail::AnyTag_<PredicateFn> p)
 {
-    return std::any_of(std::cbegin(range), std::cend(range), fun.mFn);
+    return std::any_of(std::cbegin(range), std::cend(range), p.mFn);
 }
 
 // Generic operator| for keys
-template<typename Container>
-auto operator|(const Container &in, Akonadi::detail::Keys_)
+template<typename AssocContainer>
+auto operator|(const AssocContainer &in, AkRanges::detail::KeysTag_)
 {
-    using namespace Akonadi::detail;
-    using OutIt = AssociativeContainerKeyIterator<Container>;
+    using namespace AkRanges::detail;
+    using OutIt = AssociativeContainerKeyIterator<AssocContainer>;
     return Range<OutIt>(OutIt(in.constKeyValueBegin(), in), OutIt(in.constKeyValueEnd(), in));
 }
 
 
 // Generic operator| for values
-template<typename Container>
-auto operator|(const Container &in, Akonadi::detail::Values_)
+template<typename AssocContainer>
+auto operator|(const AssocContainer &in, AkRanges::detail::ValuesTag_)
 {
-    using namespace Akonadi::detail;
-    using OutIt = AssociativeContainerValueIterator<Container>;
+    using namespace AkRanges::detail;
+    using OutIt = AssociativeContainerValueIterator<AssocContainer>;
     return Range<OutIt>(OutIt(in.constKeyValueBegin(), in), OutIt(in.constKeyValueEnd(), in));
 }
 
+namespace AkRanges {
 
-namespace Akonadi {
+namespace Actions {
 
 /// Non-lazily convert given range or container to QVector
-static constexpr auto toQVector = detail::To_<QVector>{};
+static constexpr auto toQVector = detail::ToTag_<QVector>{};
 /// Non-lazily convert given range or container to QSet
-static constexpr auto toQSet = detail::To_<QSet>{};
+static constexpr auto toQSet = detail::ToTag_<QSet>{};
 /// Non-lazily convert given range or container to QList
-static constexpr auto toQList = detail::To_<QList>{};
+static constexpr auto toQList = detail::ToTag_<QList>{};
 /// Non-lazily convert given range or container of pairs to QMap
-static constexpr auto toQMap = detail::ToAssoc_<QMap>{};
+static constexpr auto toQMap = detail::ToAssocTag_<QMap>{};
+
+/// Non-lazily call UnaryOperation for each element of the container or range
+template<typename UnaryOperation>
+detail::ForEachTag_<UnaryOperation> forEach(UnaryOperation &&op)
+{
+    return detail::ForEachTag_<UnaryOperation>{std::forward<UnaryOperation>(op)};
+}
+
+/// Non-lazily check that all elements in the range satisfy given predicate
+template<typename UnaryPredicate>
+detail::AllTag_<UnaryPredicate> all(UnaryPredicate &&pred)
+{
+    return detail::AllTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
+}
+
+/// Non-lazily check that at least one element in range satisfies the given predicate
+template<typename UnaryPredicate>
+detail::AnyTag_<UnaryPredicate> any(UnaryPredicate &&pred)
+{
+    return detail::AnyTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
+}
+
+} // namespace Action
+
+namespace Views {
+
 /// Lazily extract values from an associative container
-static constexpr auto values = detail::Values_{};
+static constexpr auto values = detail::ValuesTag_{};
 /// Lazily extract keys from an associative container
-static constexpr auto keys = detail::Keys_{};
+static constexpr auto keys = detail::KeysTag_{};
 
 /// Lazily transform each element of a range or container using given transformation
-template<typename TransformFn>
-detail::Transform_<TransformFn> transform(TransformFn &&fn)
+template<typename UnaryOperation>
+detail::TransformTag_<UnaryOperation> transform(UnaryOperation &&op)
 {
-    return detail::Transform_<TransformFn>{std::forward<TransformFn>(fn)};
+    return detail::TransformTag_<UnaryOperation>{std::forward<UnaryOperation>(op)};
 }
 
 /// Lazily filters a range or container by applying given predicate on each element
-template<typename PredicateFn>
-detail::Filter_<PredicateFn> filter(PredicateFn &&fn)
+template<typename UnaryPredicate>
+detail::FilterTag_<UnaryPredicate> filter(UnaryPredicate &&pred)
 {
-    return detail::Filter_<PredicateFn>{std::forward<PredicateFn>(fn)};
-}
-
-/// Non-lazily call EachFun for each element of the container or range
-template<typename EachFun>
-detail::ForEach_<EachFun> forEach(EachFun &&fn)
-{
-    return detail::ForEach_<EachFun>{std::forward<EachFun>(fn)};
+    return detail::FilterTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
 }
 
 /// Create a range, a view on a container from the given pair fo iterators
@@ -492,20 +514,8 @@ detail::Range<It> range(Iterator1 begin, Iterator2 end)
     return detail::Range<It>(std::move(begin), std::move(end));
 }
 
-/// Non-lazily check that all elements in the range satisfy given predicate
-template<typename Predicate>
-detail::All_<Predicate> all(Predicate &&fn)
-{
-    return detail::All_<Predicate>{std::forward<Predicate>(fn)};
-}
+} // namespace View
 
-/// Non-lazily check that at least one element in range satisfies the given predicate
-template<typename Predicate>
-detail::Any_<Predicate> any(Predicate &&fn)
-{
-    return detail::Any_<Predicate>{std::forward<Predicate>(fn)};
-}
-
-} // namespace Akonadi
+} // namespace AkRanges
 
 #endif

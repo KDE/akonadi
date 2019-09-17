@@ -38,6 +38,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 NotificationManager::NotificationManager(StartMode startMode)
     : AkThread(QStringLiteral("NotificationManager"), startMode)
@@ -185,8 +186,8 @@ void NotificationManager::emitPendingNotifications()
 
     if (mDebugNotifications == 0) {
         mSubscribers
-            | filter(IsNotNull)
-            | forEach([this](const auto &subscriber) {
+            | Views::filter(IsNotNull)
+            | Actions::forEach([this](const auto &subscriber) {
                 mNotifyThreadPool->start(new NotifyRunnable(subscriber, mNotifications));
               });
     } else {
@@ -215,8 +216,8 @@ void NotificationManager::emitDebugNotification(const Protocol::ChangeNotificati
     debugNtf->setListeners(listeners);
     debugNtf->setTimestamp(QDateTime::currentMSecsSinceEpoch());
     mSubscribers
-        | filter(IsNotNull)
-        | forEach([this, &debugNtf](const auto &subscriber) {
+        | Views::filter(IsNotNull)
+        | Actions::forEach([this, &debugNtf](const auto &subscriber) {
               mNotifyThreadPool->start(new NotifyRunnable(subscriber, {debugNtf}));
           });
 }

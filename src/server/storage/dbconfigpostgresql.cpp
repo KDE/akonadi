@@ -44,6 +44,7 @@ using namespace std::chrono_literals;
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 DbConfigPostgresql::DbConfigPostgresql()
     : mHostPort(0)
@@ -127,9 +128,9 @@ QStringList DbConfigPostgresql::postgresSearchPaths(const QString &versionedPath
         qDebug() << versionedDirs;
         std::sort(versionedDirs.begin(), versionedDirs.end(), VersionCompare());
         std::reverse(versionedDirs.begin(), versionedDirs.end());
-        paths += versionedDirs | transform([](const auto &dir) -> QString {
+        paths += versionedDirs | Views::transform([](const auto &dir) -> QString {
                                     return dir.absoluteFilePath() + QStringLiteral("/bin"); })
-                               | toQList;
+                               | Actions::toQList;
     }
 
     return paths;

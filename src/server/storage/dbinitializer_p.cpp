@@ -67,7 +67,7 @@ QString DbInitializerMySql::buildCreateTableStatement(const TableDescription &ta
     columns << references;
 
     QString tableProperties = QStringLiteral(" COLLATE=utf8_general_ci DEFAULT CHARSET=utf8");
-    if (tableDescription.columns | any([](const auto &col) { return col.type == QLatin1String("QString") && col.size > 255; })) {
+    if (tableDescription.columns | AkRanges::Actions::any([](const auto &col) { return col.type == QLatin1String("QString") && col.size > 255; })) {
         tableProperties += QStringLiteral(" ROW_FORMAT=DYNAMIC");
     }
 

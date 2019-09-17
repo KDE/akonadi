@@ -32,6 +32,7 @@
 #include <QWidget>
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 // @cond PRIVATE
 
@@ -399,7 +400,7 @@ AgentType::List AgentManager::types() const
     if (d->mTypes.isEmpty()) {
         d->readAgentTypes();
     }
-    return d->mTypes | values | toQVector;
+    return d->mTypes | Views::values | Actions::toQVector;
 }
 
 AgentType AgentManager::type(const QString &identifier) const
@@ -409,7 +410,7 @@ AgentType AgentManager::type(const QString &identifier) const
 
 AgentInstance::List AgentManager::instances() const
 {
-    return d->mInstances | values | toQVector;
+    return d->mInstances | Views::values | Actions::toQVector;
 }
 
 AgentInstance AgentManager::instance(const QString &identifier) const

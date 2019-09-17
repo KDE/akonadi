@@ -44,7 +44,7 @@ using namespace Akonadi::Server;
 
 static bool payloadChanged(const QSet<QByteArray> &changes)
 {
-    return changes | any([](const auto &change) { return change.startsWith(AKONADI_PARAM_PLD); });
+    return changes | AkRanges::Actions::any([](const auto &change) { return change.startsWith(AKONADI_PARAM_PLD); });
 }
 
 bool ItemModifyHandler::replaceFlags(const PimItem::List &item, const QSet<QByteArray> &flags, bool &flagsChanged)

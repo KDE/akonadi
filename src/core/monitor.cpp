@@ -30,6 +30,7 @@
 #include <QMetaMethod>
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 Monitor::Monitor(QObject *parent)
     : QObject(parent)
@@ -311,7 +312,7 @@ QVector<Monitor::Type> Monitor::typesMonitored() const
 QStringList Monitor::mimeTypesMonitored() const
 {
     Q_D(const Monitor);
-    return d->mimetypes | toQList;
+    return d->mimetypes | Actions::toQList;
 }
 
 int Monitor::numMimeTypesMonitored() const
@@ -323,7 +324,7 @@ int Monitor::numMimeTypesMonitored() const
 QList<QByteArray> Monitor::resourcesMonitored() const
 {
     Q_D(const Monitor);
-    return d->resources | toQList;
+    return d->resources | Actions::toQList;
 }
 
 int Monitor::numResourcesMonitored() const

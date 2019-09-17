@@ -30,6 +30,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 bool CollectionCopyHandler::copyCollection(const Collection &source, const Collection &target)
 {
@@ -48,8 +49,8 @@ bool CollectionCopyHandler::copyCollection(const Collection &source, const Colle
         col.setRemoteRevision(QString());
     }
 
-    const auto mimeTypes = source.mimeTypes() | transform([](const auto &mt) { return mt.name(); }) | toQList;
-    const auto attributes = source.attributes() | transform([](const auto &attr) { return std::make_pair(attr.type(), attr.value()); }) | toQMap;
+    const auto mimeTypes = source.mimeTypes() | Views::transform(&MimeType::name) | Actions::toQList;
+    const auto attributes = source.attributes() | Views::transform([](const auto &attr) { return std::make_pair(attr.type(), attr.value()); }) | Actions::toQMap;
 
     if (!storageBackend()->appendCollection(col, mimeTypes, attributes)) {
         return false;

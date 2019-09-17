@@ -57,6 +57,7 @@ QHash<KJob *, QElapsedTimer> jobTimeTracker;
 Q_LOGGING_CATEGORY(DebugETM, "org.kde.pim.akonadi.ETM", QtInfoMsg)
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 static CollectionFetchJob::Type getFetchType(EntityTreeModel::CollectionFetchStrategy strategy)
 {
@@ -1352,7 +1353,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
 
     if (!m_collectionTreeFetched && m_pendingCollectionFetchJobs.isEmpty()) {
         m_collectionTreeFetched = true;
-        Q_EMIT q_ptr->collectionTreeFetched(m_collections | values | toQVector);
+        Q_EMIT q_ptr->collectionTreeFetched(m_collections | Views::values | Actions::toQVector);
     }
 
     qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";

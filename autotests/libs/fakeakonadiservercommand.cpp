@@ -27,6 +27,7 @@
 #include "akranges.h"
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 FakeAkonadiServerCommand::FakeAkonadiServerCommand(FakeAkonadiServerCommand::Type type, FakeServerData *serverData)
     : m_type(type)
@@ -105,12 +106,12 @@ Tag FakeAkonadiServerCommand::getTagByDisplayName(const QString &displayName) co
 void FakeJobResponse::doCommand()
 {
     if (m_type == RespondToCollectionFetch) {
-        Q_EMIT emit_collectionsFetched(m_collections | values | toQVector);
+        Q_EMIT emit_collectionsFetched(m_collections | Views::values | Actions::toQVector);
     } else if (m_type == RespondToItemFetch) {
         setProperty("FetchCollectionId", m_parentCollection.id());
-        Q_EMIT emit_itemsFetched(m_items | values | toQVector);
+        Q_EMIT emit_itemsFetched(m_items | Views::values | Actions::toQVector);
     } else if (m_type == RespondToTagFetch) {
-        Q_EMIT emit_tagsFetched(m_tags | values | toQVector);
+        Q_EMIT emit_tagsFetched(m_tags | Views::values | Actions::toQVector);
     }
 }
 

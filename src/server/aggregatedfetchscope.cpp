@@ -215,8 +215,8 @@ void AggregatedItemFetchScope::apply(const Protocol::ItemFetchScope &oldScope,
 {
     LOCKED_D(AggregatedItemFetchScope);
 
-    const auto newParts = newScope.requestedParts() | toQSet;
-    const auto oldParts = oldScope.requestedParts() | toQSet;
+    const auto newParts = newScope.requestedParts() | AkRanges::Actions::toQSet;
+    const auto oldParts = oldScope.requestedParts() | AkRanges::Actions::toQSet;
     if (newParts != oldParts) {
         d->applySet(oldParts, newParts, d->parts, d->partsCount);
     }
@@ -274,7 +274,7 @@ ItemFetchScope AggregatedItemFetchScope::toFetchScope() const
     }
 
     d->mCachedScope = ItemFetchScope();
-    d->mCachedScope.setRequestedParts(d->parts | toQVector);
+    d->mCachedScope.setRequestedParts(d->parts | AkRanges::Actions::toQVector);
     d->mCachedScope.setAncestorDepth(ancestorDepth());
 
     d->mCachedScope.setFetch(ItemFetchScope::CacheOnly, cacheOnly());

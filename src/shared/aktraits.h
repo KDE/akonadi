@@ -23,7 +23,6 @@
 #include <type_traits>
 #include <utility>
 
-namespace Akonadi {
 namespace AkTraits {
 
 namespace detail {
@@ -150,8 +149,7 @@ constexpr bool isInsertable = detail::isInsertable<T>::value;
 template<typename T>
 constexpr bool isReservable = detail::isReservable<T>::value;
 
-}
-}
+} // namespace AkTraits
 
 #define AK_PP_CAT_(X, Y) X ## Y
 #define AK_PP_CAT(X, Y) AK_PP_CAT_(X, Y)

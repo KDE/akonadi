@@ -29,6 +29,7 @@
 #include <QDBusConnection>
 
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 ResourceManager *ResourceManager::mSelf = nullptr;
 
@@ -62,7 +63,7 @@ void ResourceManager::removeResourceInstance(const QString &name)
     // remove items and collections
     Resource resource = Resource::retrieveByName(name);
     if (resource.isValid()) {
-        resource.collections() | forEach([](Collection col) {
+        resource.collections() | Actions::forEach([](Collection col) {
                 DataStore::self()->cleanupCollection(col);
             });
 
@@ -73,9 +74,7 @@ void ResourceManager::removeResourceInstance(const QString &name)
 
 QStringList ResourceManager::resourceInstances() const
 {
-    return Resource::retrieveAll()
-            | transform(&Resource::name)
-            | toQList;
+    return Resource::retrieveAll() | Views::transform(&Resource::name) | Actions::toQList;
 }
 
 ResourceManager *ResourceManager::self()

@@ -155,7 +155,7 @@ void NotificationCollector::collectionChanged(const Collection &collection,
         CollectionStatistics::self()->invalidateCollection(collection);
     }
     collectionNotification(Protocol::CollectionChangeNotification::Modify, collection, collection.parentId(),
-                           -1, resource, changes | toQSet);
+                           -1, resource, changes | AkRanges::Actions::toQSet);
 }
 
 void NotificationCollector::collectionMoved(const Collection &collection,

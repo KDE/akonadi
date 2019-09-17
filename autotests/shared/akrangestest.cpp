@@ -24,7 +24,7 @@
 
 #include <iostream>
 
-using namespace Akonadi;
+using namespace AkRanges;
 
 namespace {
 
@@ -79,32 +79,32 @@ private Q_SLOTS:
 
     void testTraits()
     {
-        QVERIFY(Akonadi::AkTraits::isAppendable<QVector<int>>);
-        QVERIFY(!Akonadi::AkTraits::isInsertable<QVector<int>>);
-        QVERIFY(Akonadi::AkTraits::isReservable<QVector<int>>);
+        QVERIFY(AkTraits::isAppendable<QVector<int>>);
+        QVERIFY(!AkTraits::isInsertable<QVector<int>>);
+        QVERIFY(AkTraits::isReservable<QVector<int>>);
 
-        QVERIFY(!Akonadi::AkTraits::isAppendable<QSet<int>>);
-        QVERIFY(Akonadi::AkTraits::isInsertable<QSet<int>>);
-        QVERIFY(Akonadi::AkTraits::isReservable<QSet<int>>);
+        QVERIFY(!AkTraits::isAppendable<QSet<int>>);
+        QVERIFY(AkTraits::isInsertable<QSet<int>>);
+        QVERIFY(AkTraits::isReservable<QSet<int>>);
 
-        QVERIFY(!Akonadi::AkTraits::isAppendable<QString>);
-        QVERIFY(!Akonadi::AkTraits::isInsertable<QString>);
-        QVERIFY(Akonadi::AkTraits::isReservable<QString>);
+        QVERIFY(!AkTraits::isAppendable<QString>);
+        QVERIFY(!AkTraits::isInsertable<QString>);
+        QVERIFY(AkTraits::isReservable<QString>);
     }
 
     void testContainerConversion()
     {
         {
             QVector<int> in = { 1, 2, 3, 4, 5 };
-            QCOMPARE(in | Akonadi::toQList, in.toList());
-            QCOMPARE(in | Akonadi::toQList | Akonadi::toQVector, in);
-            QCOMPARE(in | Akonadi::toQSet, in.toList().toSet());
+            QCOMPARE(in | Actions::toQList, in.toList());
+            QCOMPARE(in | Actions::toQList | Actions::toQVector, in);
+            QCOMPARE(in | Actions::toQSet, in.toList().toSet());
         }
         {
             QList<int> in = { 1, 2, 3, 4, 5 };
-            QCOMPARE(in | Akonadi::toQVector, in.toVector());
-            QCOMPARE(in | Akonadi::toQVector | toQList, in);
-            QCOMPARE(in | Akonadi::toQSet, in.toSet());
+            QCOMPARE(in | Actions::toQVector, in.toVector());
+            QCOMPARE(in | Actions::toQVector | Actions::toQList, in);
+            QCOMPARE(in | Actions::toQSet, in.toSet());
         }
     }
 
@@ -112,28 +112,28 @@ private Q_SLOTS:
     {
         QVector<std::pair<int, QString>> in = {{1, QStringLiteral("One")}, {2, QStringLiteral("Two")}, {3, QStringLiteral("Three")}};
         QMap<int, QString> out = {{1, QStringLiteral("One")}, {2, QStringLiteral("Two")}, {3, QStringLiteral("Three")}};
-        QCOMPARE(in | Akonadi::toQMap, out);
+        QCOMPARE(in | Actions::toQMap, out);
     }
 
     void testRangeConversion()
     {
         {
             QList<int> in = { 1, 2, 3, 4, 5 };
-            Akonadi::detail::Range<QList<int>::const_iterator> range(in.cbegin(), in.cend());
-            QCOMPARE(range | Akonadi::toQVector, QVector<int>::fromList(in));
+            AkRanges::detail::Range<QList<int>::const_iterator> range(in.cbegin(), in.cend());
+            QCOMPARE(range | Actions::toQVector, QVector<int>::fromList(in));
         }
 
         {
             QVector<int> in = { 1, 2, 3, 4, 5 };
-            Akonadi::detail::Range<QVector<int>::const_iterator> range(in.cbegin(), in.cend());
-            QCOMPARE(range | toQList, in.toList());
+            AkRanges::detail::Range<QVector<int>::const_iterator> range(in.cbegin(), in.cend());
+            QCOMPARE(range | Actions::toQList, in.toList());
         }
 
         {
             QVector<std::pair<int, QString>> in = {{1, QStringLiteral("One")}, {2, QStringLiteral("Two")}, {3, QStringLiteral("Three")}};
             QMap<int, QString> out = {{1, QStringLiteral("One")}, {2, QStringLiteral("Two")}, {3, QStringLiteral("Three")}};
-            Akonadi::detail::Range<QVector<std::pair<int, QString>>::const_iterator> range(in.cbegin(), in.cend());
-            QCOMPARE(range | Akonadi::toQMap, out);
+            AkRanges::detail::Range<QVector<std::pair<int, QString>>::const_iterator> range(in.cbegin(), in.cend());
+            QCOMPARE(range | Actions::toQMap, out);
         }
     }
 
@@ -141,10 +141,10 @@ private Q_SLOTS:
     {
         QList<int> in = { 1, 2, 3, 4, 5 };
         QList<int> out = { 2, 4, 6, 8, 10 };
-        QCOMPARE(in | transform([](int i) { return i * 2; }) | toQList, out);
-        QCOMPARE(in | transform(transformFreeFunc) | toQList, out);
-        QCOMPARE(in | transform(&TransformHelper::transform) | toQList, out);
-        QCOMPARE(in | transform(TransformHelper()) | toQList, out);
+        QCOMPARE(in | Views::transform([](int i) { return i * 2; }) | Actions::toQList, out);
+        QCOMPARE(in | Views::transform(transformFreeFunc) | Actions::toQList, out);
+        QCOMPARE(in | Views::transform(&TransformHelper::transform) | Actions::toQList, out);
+        QCOMPARE(in | Views::transform(TransformHelper()) | Actions::toQList, out);
     }
 
 private:
@@ -172,12 +172,12 @@ private Q_SLOTS:
     {
         {
             QList<CopyCounter> in = { {} }; // 1st copy (QList::append())
-            QList<CopyCounter> out = in 
-                | transform([](const auto &c) {
+            QList<CopyCounter> out = in
+                | Views::transform([](const auto &c) {
                         CopyCounter r(c);   // 2nd copy (expected)
                         r.transformed = true;
                         return r; })
-                | toQList;                  // 3rd copy (QList::append())
+                | Actions::toQList;         // 3rd copy (QList::append())
             QCOMPARE(out.size(), in.size());
             QCOMPARE(out[0].copyCount, 3);
             QCOMPARE(out[0].transformed, true);
@@ -187,11 +187,11 @@ private Q_SLOTS:
             QVector<CopyCounter> in(1); // construct vector of one element, so no copying
                                         // occurs at initialization
             QVector<CopyCounter> out = in
-                | transform([](const auto &c) {
+                | Views::transform([](const auto &c) {
                         CopyCounter r(c);   // 1st copy
                         r.transformed = true;
                         return r; })
-                | toQVector;
+                | Actions::toQVector;
             QCOMPARE(out.size(), in.size());
             QCOMPARE(out[0].copyCount, 1);
             QCOMPARE(out[0].transformed, true);
@@ -203,13 +203,13 @@ private Q_SLOTS:
         {
             QList<int> in = { 1, 2, 3, 4, 5 };
             QVector<int> out = { 2, 4, 6, 8, 10 };
-            QCOMPARE(in | transform([](int i) { return i * 2; }) | toQVector, out);
+            QCOMPARE(in | Views::transform([](int i) { return i * 2; }) | Actions::toQVector, out);
         }
 
         {
             QVector<int> in = { 1, 2, 3, 4, 5 };
             QList<int> out = { 2, 4, 6, 8, 10 };
-            QCOMPARE(in | transform([](int i) { return i * 2; }) | toQList, out);
+            QCOMPARE(in | Views::transform([](int i) { return i * 2; }) | Actions::toQList, out);
         }
     }
 
@@ -218,7 +218,7 @@ private Q_SLOTS:
         {
             QList<int> in = { 1, 2, 3, 4, 5, 6 };
             QList<int> out = { 3, 4, 5 };
-            QCOMPARE(range(in.begin() + 2, in.begin() + 5) | toQList, out);
+            QCOMPARE(Views::range(in.begin() + 2, in.begin() + 5) | Actions::toQList, out);
         }
     }
 
@@ -227,9 +227,9 @@ private Q_SLOTS:
         {
             QList<int> in = { 1, 2, 3, 4, 5, 6 };
             QList<int> out = { 6, 8, 10 };
-            QCOMPARE(range(in.begin() + 2, in.begin() + 5)
-                        | transform([](int i) { return i  * 2; })
-                        | toQList,
+            QCOMPARE(Views::range(in.begin() + 2, in.begin() + 5)
+                        | Views::transform([](int i) { return i  * 2; })
+                        | Actions::toQList,
                      out);
         }
     }
@@ -239,7 +239,7 @@ private Q_SLOTS:
         {
             QStringList in = { QStringLiteral("foo"), QStringLiteral("foobar"), QStringLiteral("foob") };
             QList<int> out = { 3, 6, 4 };
-            QCOMPARE(in | transform([](const auto &str) { return str.size(); }) | toQList, out);
+            QCOMPARE(in | Views::transform([](const auto &str) { return str.size(); }) | Actions::toQList, out);
         }
     }
 
@@ -248,12 +248,12 @@ private Q_SLOTS:
         {
             QList<int> in = { 1, 2, 3, 4, 5, 6, 7, 8 };
             QList<int> out = { 2, 4, 6, 8 };
-            QCOMPARE(in | filter([](int i) { return i % 2 == 0; })
-                        | toQList,
+            QCOMPARE(in | Views::filter([](int i) { return i % 2 == 0; })
+                        | Actions::toQList,
                      out);
-            QCOMPARE(in | filter(filterFreeFunc) | toQList, out);
-            QCOMPARE(in | filter(&FilterHelper::filter) | toQList, out);
-            QCOMPARE(in | filter(FilterHelper()) | toQList, out);
+            QCOMPARE(in | Views::filter(filterFreeFunc) | Actions::toQList, out);
+            QCOMPARE(in | Views::filter(&FilterHelper::filter) | Actions::toQList, out);
+            QCOMPARE(in | Views::filter(FilterHelper()) | Actions::toQList, out);
         }
     }
 
@@ -262,13 +262,13 @@ private Q_SLOTS:
         {
             QStringList in = { QStringLiteral("foo"), QStringLiteral("foobar"), QStringLiteral("foob") };
             QList<int> out = { 6 };
-            QCOMPARE(in | transform(&QString::size)
-                        | filter([](int i) { return i > 5; })
-                        | toQList,
+            QCOMPARE(in | Views::transform(&QString::size)
+                        | Views::filter([](int i) { return i > 5; })
+                        | Actions::toQList,
                      out);
-            QCOMPARE(in | filter([](const auto &str) { return str.size() > 5; })
-                        | transform(&QString::size)
-                        | toQList,
+            QCOMPARE(in | Views::filter([](const auto &str) { return str.size() > 5; })
+                        | Views::transform(&QString::size)
+                        | Actions::toQList,
                      out);
         }
     }
@@ -284,16 +284,16 @@ private Q_SLOTS:
         };
         {
             QList<int> out = { 0, 2, 4 };
-            QCOMPARE(func() | transform([](const auto &str) { return str.toInt(); })
-                            | filter([](int i) { return i % 2 == 0; })
-                            | toQList,
+            QCOMPARE(func() | Views::transform([](const auto &str) { return str.toInt(); })
+                            | Views::filter([](int i) { return i % 2 == 0; })
+                            | Actions::toQList,
                      out);
         }
         {
             QList<int> out = { 0, 2, 4 };
-            QCOMPARE(func() | filter([](const auto &v) { return v.toInt() % 2 == 0; })
-                            | transform([](const auto &str) { return str.toInt(); })
-                            | toQList,
+            QCOMPARE(func() | Views::filter([](const auto &v) { return v.toInt() % 2 == 0; })
+                            | Views::transform([](const auto &str) { return str.toInt(); })
+                            | Actions::toQList,
                      out);
         }
     }
@@ -305,11 +305,11 @@ private Q_SLOTS:
             for (int i = 0; i < 5; ++i) {
                 rv.push_back(QString::number(i));
             }
-            return rv | transform([](const auto &str) { return str.toInt(); });
+            return rv | Views::transform([](const auto &str) { return str.toInt(); });
         };
         QList<int> out = { 1, 3 };
-        QCOMPARE(func() | filter([](int i) { return i % 2 == 1; })
-                        | toQList,
+        QCOMPARE(func() | Views::filter([](int i) { return i % 2 == 1; })
+                        | Actions::toQList,
                  out);
     }
 
@@ -341,25 +341,25 @@ private Q_SLOTS:
         const QList<int> in = { 1, 2, 3, 4, 5, 6 };
         {
             QList<int> out;
-            in | forEach([&out](int v) { out.push_back(v); });
+            in | Actions::forEach([&out](int v) { out.push_back(v); });
             QCOMPARE(out, in);
         }
         {
             QList<int> out;
-            in | forEach(ForEachCallable(out));
+            in | Actions::forEach(ForEachCallable(out));
             QCOMPARE(out, in);
         }
         {
             ForEachCallable::clear();
-            in | forEach(&ForEachCallable::append);
+            in | Actions::forEach(&ForEachCallable::append);
             QCOMPARE(ForEachCallable::sOut, in);
         }
         {
             QList<int> out;
-            QCOMPARE(in | forEach([&out](int v) { out.push_back(v); })
-                        | filter([](int v){ return v % 2 == 0; })
-                        | transform([](int v) { return v * 2; })
-                        | toQList,
+            QCOMPARE(in | Actions::forEach([&out](int v) { out.push_back(v); })
+                        | Views::filter([](int v){ return v % 2 == 0; })
+                        | Views::transform([](int v) { return v * 2; })
+                        | Actions::toQList,
                      QList<int>({ 4, 8, 12 }));
             QCOMPARE(out, in);
         }
@@ -378,11 +378,11 @@ private:
 
         {
             const QList<int> out = { 1, 2, 3 };
-            QCOMPARE(out, in | keys | toQList);
+            QCOMPARE(out, in | Views::keys | Actions::toQList);
         }
         {
             const QStringList out = { QStringLiteral("1"), QStringLiteral("2"), QStringLiteral("3") };
-            QCOMPARE(out, in | values | toQList);
+            QCOMPARE(out, in | Views::values | Actions::toQList);
         }
     }
 
@@ -396,15 +396,15 @@ private Q_SLOTS:
     void testAll()
     {
         const QList<int> vals = { 2, 4, 6, 8, 10 };
-        QVERIFY(vals | all([](int v) { return v % 2 == 0; }));
-        QVERIFY(!(vals | all([](int v) { return v % 2 == 1; })));
+        QVERIFY(vals | Actions::all([](int v) { return v % 2 == 0; }));
+        QVERIFY(!(vals | Actions::all([](int v) { return v % 2 == 1; })));
     }
 
     void testAny()
     {
         const QList<int> vals = { 1, 3, 5, 7, 9 };
-        QVERIFY(vals | any([](int v) { return v % 2 == 1; }));
-        QVERIFY(!(vals | any([](int v) { return v % 2 == 0; })));
+        QVERIFY(vals | Actions::any([](int v) { return v % 2 == 1; }));
+        QVERIFY(!(vals | Actions::any([](int v) { return v % 2 == 0; })));
     }
 };
 

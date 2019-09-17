@@ -29,6 +29,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 bool CollectionCreateHandler::parseStream()
 {
@@ -52,8 +53,9 @@ bool CollectionCreateHandler::parseStream()
 
         // check if parent can contain a sub-folder
         parentContentTypes = parent.mimeTypes();
-        const bool canContainCollections = parentContentTypes | any([](const auto &mt) { return mt.name() == CollectionMimeType; });
-        const bool canContainVirtualCollections = parentContentTypes | any([](const auto &mt) { return mt.name() == VirtualCollectionMimeType; });
+        const auto hasMimeType = [](const QString &mimeType) { return [mimeType](const MimeType &mt) { return mt.name() == mimeType; }; };
+        const bool canContainCollections = parentContentTypes | Actions::any(hasMimeType(CollectionMimeType));
+        const bool canContainVirtualCollections = parentContentTypes | Actions::any(hasMimeType(VirtualCollectionMimeType));
 
         if (!canContainCollections && !canContainVirtualCollections) {
             return failureResponse(QStringLiteral("Parent collection can not contain sub-collections"));
@@ -101,7 +103,7 @@ bool CollectionCreateHandler::parseStream()
 
     QStringList effectiveMimeTypes = cmd.mimeTypes();
     if (effectiveMimeTypes.isEmpty()) {
-        effectiveMimeTypes = parentContentTypes | transform([](const auto &mt) { return mt.name(); }) | toQList;
+        effectiveMimeTypes = parentContentTypes | Views::transform(&MimeType::name) | Actions::toQList;
     }
 
     if (!db->appendCollection(collection, effectiveMimeTypes, cmd.attributes())) {

@@ -29,6 +29,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 bool TagModifyHandler::parseStream()
 {
@@ -43,7 +44,7 @@ bool TagModifyHandler::parseStream()
 
     // Retrieve all tag's attributes
     const TagAttribute::List attributes = TagAttribute::retrieveFiltered(TagAttribute::tagIdFullColumnName(), cmd.tagId());
-    const auto attributesMap = attributes | transform([](const auto &attr) { return std::make_pair(attr.type(), attr); }) | toQMap;
+    const auto attributesMap = attributes | Views::transform([](const auto &attr) { return std::make_pair(attr.type(), attr); }) | Actions::toQMap;
 
     if (cmd.modifiedParts() & Protocol::ModifyTagCommand::ParentId) {
         if (cmd.parentId() != changedTag.parentId()) {

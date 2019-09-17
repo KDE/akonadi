@@ -53,6 +53,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 #define ENABLE_FETCH_PROFILING 0
 #if ENABLE_FETCH_PROFILING
@@ -513,17 +514,17 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
             }
 
             if (mTagFetchScope.fetchIdOnly()) {
-                tags = tagIds | transform([](const auto tagId) {
-                                        Protocol::FetchTagsResponse resp;
-                                        resp.setId(tagId);
-                                        return resp;
-                                    })
-                              | toQVector;
+                tags = tagIds | Views::transform([](const auto tagId) {
+                                    Protocol::FetchTagsResponse resp;
+                                    resp.setId(tagId);
+                                    return resp;
+                                })
+                              | Actions::toQVector;
             } else {
-                tags = tagIds | transform([this](const auto tagId) {
+                tags = tagIds | Views::transform([this](const auto tagId) {
                                     return HandlerHelper::fetchTagsResponse(Tag::retrieveById(tagId), mTagFetchScope, mConnection);
                                 })
-                              | toQVector;
+                              | Actions::toQVector;
             }
             response.setTags(tags);
         }

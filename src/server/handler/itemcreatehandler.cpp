@@ -40,6 +40,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                                      Collection &parentCol)
@@ -382,13 +383,13 @@ void ItemCreateHandler::recoverFromMultipleMergeCandidates(const PimItem::List &
     // them as it would cause data loss. There's a chance next changeReplay will fix this, so
     // next time the ItemSync hits this multiple merge candidates, all changes will be committed
     // and this check will succeed
-    if (items | any([](const auto &item) { return item.dirty() || item.remoteId().isEmpty(); })) {
+    if (items | Actions::any([](const auto &item) { return item.dirty() || item.remoteId().isEmpty(); })) {
         qCWarning(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery failed: at least one of the candidates has uncommitted changes!";
         return;
     }
 
     // This cannot happen with ItemSync, but in theory could happen during individual GID merge.
-    if (items | any([collection](const auto &item) { return item.collectionId() != collection.id(); })) {
+    if (items | Actions::any([collection](const auto &item) { return item.collectionId() != collection.id(); })) {
         qCWarning(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery failed: all candidates do not belong to the same collection.";
         return;
     }
@@ -406,7 +407,7 @@ void ItemCreateHandler::recoverFromMultipleMergeCandidates(const PimItem::List &
                               Qt::QueuedConnection,
                               Q_ARG(QString, resource), Q_ARG(qint64, collection.id()));
 
-    qCInfo(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery successful: conflicting items" << (items | transform([](const auto &i) { return i.id(); }) | toQVector)
+    qCInfo(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery successful: conflicting items" << (items | Views::transform([](const auto &i) { return i.id(); }) | Actions::toQVector)
                               << "in collection" << collection.name() << "(ID:" << collection.id() << ") were removed and a new sync was scheduled in the resource"
                               << resource;
 }

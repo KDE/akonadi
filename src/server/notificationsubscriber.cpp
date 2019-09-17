@@ -33,6 +33,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 QMimeDatabase NotificationSubscriber::sMimeDatabase;
 
@@ -284,8 +285,8 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
             if (command.startMonitoringTypes().contains(Protocol::ModifySubscriptionCommand::SubscriptionChanges)) {
                 // If yes, then send them list of all existing subscribers
                 mManager->mSubscribers
-                    | filter(IsNotNull)
-                    | forEach([this](const auto &subscriber) {
+                    | Views::filter(IsNotNull)
+                    | Actions::forEach([this](const auto &subscriber) {
                         QMetaObject::invokeMethod(this, "notify", Qt::QueuedConnection,
                                                   Q_ARG(Akonadi::Protocol::ChangeNotificationPtr,
                                                   subscriber->toChangeNotification()));

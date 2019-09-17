@@ -34,6 +34,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 class TestableDbConfigPostgresql : public DbConfigPostgresql
 {
@@ -84,10 +85,10 @@ private Q_SLOTS:
 
         TestableDbConfigPostgresql dbConfig;
         const auto paths = dbConfig.postgresSearchPaths(dir)
-                                | filter([&dir](const auto &path) { return path.startsWith(dir.path()); })
-                                | transform([&dir](const auto &path) {
+                                | Views::filter([&dir](const auto &path) { return path.startsWith(dir.path()); })
+                                | Views::transform([&dir](const auto &path) {
                                         return QString(path).remove(dir.path() + QStringLiteral("/")).remove(QStringLiteral("/bin")); })
-                                | toQList;
+                                | Actions::toQList;
 
         const QStringList expected{QStringLiteral("12.4"), QStringLiteral("12.0"), QStringLiteral("10.2"),
                                    QStringLiteral("10.0"), QStringLiteral("9.5"), QStringLiteral("8.0")};
