@@ -50,8 +50,9 @@
 
 #include <QMessageBox>
 #include <QIcon>
+#include <QElapsedTimer>
 
-QHash<KJob *, QTime> jobTimeTracker;
+QHash<KJob *, QElapsedTimer> jobTimeTracker;
 
 Q_LOGGING_CATEGORY(DebugETM, "org.kde.pim.akonadi.ETM", QtInfoMsg)
 

@@ -23,7 +23,7 @@
 #include <QThread>
 #include <QTimer>
 #include <QLocalSocket>
-#include <QTime>
+#include <QElapsedTimer>
 
 #include "akthread.h"
 #include "entities.h"
@@ -116,7 +116,7 @@ protected:
     CommandContext m_context;
     QTimer *m_idleTimer = nullptr;
 
-    QTime m_time;
+    QElapsedTimer m_time;
     qint64 m_totalTime = 0;
     QHash<QString, qint64> m_totalTimeByHandler;
     QHash<QString, qint64> m_executionsByHandler;

@@ -23,7 +23,7 @@
 
 #include "collection.h"
 
-#include <QTime>
+#include <QElapsedTimer>
 
 class KJob;
 
@@ -37,7 +37,7 @@ private Q_SLOTS:
     void done(KJob *job);
 
 private:
-    QTime mTime;
+    QElapsedTimer mTime;
     int mJobCount;
 
 };

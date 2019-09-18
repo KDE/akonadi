@@ -31,7 +31,7 @@
 
 #include <QSqlRecord>
 #include <QSqlError>
-#include <QTime>
+#include <QElapsedTimer>
 
 using namespace Akonadi::Server;
 
@@ -384,7 +384,7 @@ bool QueryBuilder::exec()
     bool ret;
 
     if (StorageDebugger::instance()->isSQLDebuggingEnabled()) {
-        QTime t;
+        QElapsedTimer t;
         t.start();
         if (isBatch) {
             ret = mQuery.execBatch();

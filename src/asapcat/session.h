@@ -22,7 +22,7 @@
 
 #include <QObject>
 #include <QLocalSocket>
-#include <QTime>
+#include <QElapsedTimer>
 
 class QIODevice;
 class QSocketNotifier;
@@ -54,7 +54,7 @@ private:
     QIODevice *m_session = nullptr;
     QSocketNotifier *m_notifier = nullptr;
 
-    QTime m_connectionTime;
+    QElapsedTimer m_connectionTime;
     qint64 m_receivedBytes = 0;
     qint64 m_sentBytes = 0;
 };

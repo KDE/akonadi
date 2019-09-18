@@ -41,7 +41,7 @@
 
 #include <QDomDocument>
 #include <QFile>
-#include <QTime>
+#include <QElapsedTimer>
 #include <QSqlResult>
 
 using namespace Akonadi;
@@ -240,7 +240,7 @@ bool DbUpdater::complexUpdate_25()
 
     DbType::Type dbType = DbType::type(DataStore::self()->database());
 
-    QTime ttotal;
+    QElapsedTimer ttotal;
     ttotal.start();
 
     // Recover from possibly failed or interrupted update
