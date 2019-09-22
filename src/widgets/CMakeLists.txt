@@ -140,72 +140,43 @@ install(FILES
 
 ######### Build and install QtDesigner plugin #############
 
-if (USE_NEW_DESIGNERPLUGIN_MACRO)
-    include(ECMAddQtDesignerPlugin)
-    ecm_qtdesignerplugin_widget(Akonadi::AgentInstanceWidget
-        INCLUDE_FILE "agentinstancewidget.h"
-        TOOLTIP "Akonadi Agent Instance Settings (Akonadi)"
-        WHATSTHIS "A widget to configure akonadi instance."
-        GROUP "Input (KDE-PIM)"
-        )
-    ecm_qtdesignerplugin_widget(Akonadi::EntityTreeView
-        INCLUDE_FILE "entitytreeview.h"
-        TOOLTIP "A view to show an item/collection tree provided by an EntityTreeModel (Akonadi)"
-        WHATSTHIS "A view to show an item/collection tree provided by an EntityTreeModel."
-        GROUP "Input (KDE-PIM)"
-        )
-    ecm_qtdesignerplugin_widget(Akonadi::TagSelectWidget
-        INCLUDE_FILE "tagselectwidget.h"
-        TOOLTIP "A Widget to select tag (Akonadi)"
-        WHATSTHIS "A Widget to select tag."
-        GROUP "Input (KDE-PIM)"
-        )
-    ecm_qtdesignerplugin_widget(Akonadi::ManageAccountWidget
-        INCLUDE_FILE "manageaccountwidget.h"
-        TOOLTIP "A Widget to Manage Akonadi Account (KDE-PIM)"
-        WHATSTHIS "A Widget to Manage Akonadi Account."
-        GROUP "Input (KDE-PIM)"
-        )
+include(ECMAddQtDesignerPlugin)
+ecm_qtdesignerplugin_widget(Akonadi::AgentInstanceWidget
+    INCLUDE_FILE "agentinstancewidget.h"
+    TOOLTIP "Akonadi Agent Instance Settings (Akonadi)"
+    WHATSTHIS "A widget to configure akonadi instance."
+    GROUP "Input (KDE-PIM)"
+    )
+ecm_qtdesignerplugin_widget(Akonadi::EntityTreeView
+    INCLUDE_FILE "entitytreeview.h"
+    TOOLTIP "A view to show an item/collection tree provided by an EntityTreeModel (Akonadi)"
+    WHATSTHIS "A view to show an item/collection tree provided by an EntityTreeModel."
+    GROUP "Input (KDE-PIM)"
+    )
+ecm_qtdesignerplugin_widget(Akonadi::TagSelectWidget
+    INCLUDE_FILE "tagselectwidget.h"
+    TOOLTIP "A Widget to select tag (Akonadi)"
+    WHATSTHIS "A Widget to select tag."
+    GROUP "Input (KDE-PIM)"
+    )
+ecm_qtdesignerplugin_widget(Akonadi::ManageAccountWidget
+    INCLUDE_FILE "manageaccountwidget.h"
+    TOOLTIP "A Widget to Manage Akonadi Account (KDE-PIM)"
+    WHATSTHIS "A Widget to Manage Akonadi Account."
+    GROUP "Input (KDE-PIM)"
+    )
 
-    ecm_add_qtdesignerplugin(akonadiwidgets
-        NAME AkonadiWidgets
-        OUTPUT_NAME akonadiwidgets
-        WIDGETS
-        Akonadi::AgentInstanceWidget
-        Akonadi::EntityTreeView
-        Akonadi::TagSelectWidget
-        Akonadi::ManageAccountWidget
-        LINK_LIBRARIES
-        KF5::AkonadiCore
-        KF5::AkonadiWidgets
-        INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
-        COMPONENT Devel
-        )
-else()
-
-    if (KF5DesignerPlugin_FOUND)
-        kf5designerplugin_add_plugin(akonadiwidgets akonadi.widgets)
-        target_link_libraries(akonadiwidgets
-            KF5::AkonadiCore
-            KF5::AkonadiWidgets
-            )
-        set_target_properties(akonadiwidgets PROPERTIES
-            OUTPUT_NAME akonadi5widgets
-            )
-
-        if(NOT WIN32)
-            # Since there are no libraries provided by this module,
-            # there is no point including the build tree in RPath,
-            # and then having to edit it at install time.
-            set_target_properties(akonadiwidgets PROPERTIES
-                SKIP_BUILD_RPATH TRUE
-                BUILD_WITH_INSTALL_RPATH TRUE
-                )
-        endif()
-
-        install(TARGETS
-            akonadiwidgets
-            DESTINATION ${KDE_INSTALL_QTPLUGINDIR}/designer
-            )
-    endif()
-endif()
+ecm_add_qtdesignerplugin(akonadiwidgets
+    NAME AkonadiWidgets
+    OUTPUT_NAME akonadiwidgets
+    WIDGETS
+    Akonadi::AgentInstanceWidget
+    Akonadi::EntityTreeView
+    Akonadi::TagSelectWidget
+    Akonadi::ManageAccountWidget
+    LINK_LIBRARIES
+    KF5::AkonadiCore
+    KF5::AkonadiWidgets
+    INSTALL_DESTINATION "${KDE_INSTALL_QTPLUGINDIR}/designer"
+    COMPONENT Devel
+    )
