@@ -27,7 +27,7 @@
 #include "collectionsync_p.h"
 #include "KDBusConnectionPool"
 #include "itemsync.h"
-#include "akonadi_version.h"
+#include "akonadifull-version.h"
 #include "tagsync.h"
 #include "relationsync.h"
 #include "resourcescheduler_p.h"
@@ -591,7 +591,7 @@ QString ResourceBase::parseArguments(int argc, char **argv)
     }
 
     QCoreApplication::setApplicationName(ServerManager::addNamespace(identifier));
-    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADI_VERSION_STRING));
+    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADI_FULL_VERSION));
 
     const QFileInfo fi(QString::fromLocal8Bit(argv[0]));
     // strip off full path and possible .exe suffix

@@ -44,7 +44,11 @@ include(ECMAddTests)
 include(AkonadiMacros)
 
 set(QT_REQUIRED_VERSION "5.11.0")
-set(AKONADI_VERSION ${PIM_VERSION})
+set(KDE_APPLICATIONS_VERSION "19.11.70")
+set(AKONADI_FULL_VERSION "${PIM_VERSION} (${KDE_APPLICATIONS_VERSION})")
+
+configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
+
 
 ecm_setup_version(PROJECT
     VARIABLE_PREFIX AKONADI

@@ -18,7 +18,7 @@
  ***************************************************************************/
 
 #include "akonadi.h"
-#include "akonadi_version.h"
+#include "akonadifull-version.h"
 #include "akonadiserver_debug.h"
 
 #include <shared/akapplication.h>
@@ -47,7 +47,7 @@ int main(int argc, char **argv)
     // Set KAboutData so that DrKonqi can report bugs
     KAboutData aboutData(QStringLiteral("akonadiserver"),
                          QStringLiteral("Akonadi Server"), // we don't have any localization in the server
-                         QStringLiteral(AKONADI_VERSION_STRING),
+                         QStringLiteral(AKONADI_FULL_VERSION),
                          QStringLiteral("Akonadi Server"), // we don't have any localization in the server
                          KAboutLicense::LGPL_V2);
     KAboutData::setApplicationData(aboutData);

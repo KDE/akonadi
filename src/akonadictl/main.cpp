@@ -32,7 +32,8 @@
 #include "controlmanagerinterface.h"
 #include "janitorinterface.h"
 #include "akonadistarter.h"
-#include "akonadi_version.h"
+#include "akonadifull-version.h"
+
 
 #include <private/protocol_p.h>
 #include <private/dbus_p.h>
@@ -234,7 +235,7 @@ int main(int argc, char **argv)
 
     KAboutData aboutData(QStringLiteral("akonadictl"),
                          QStringLiteral("akonadictl"),
-                         QStringLiteral(AKONADI_VERSION_STRING),
+                         QStringLiteral(AKONADI_FULL_VERSION),
                          QStringLiteral("akonadictl"),
                          KAboutLicense::LGPL_V2);
     KAboutData::setApplicationData(aboutData);

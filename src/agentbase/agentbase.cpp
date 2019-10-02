@@ -23,7 +23,8 @@
 #include "agentbase.h"
 #include "agentbase_p.h"
 
-#include "akonadi_version.h"
+
+#include "akonadifull-version.h"
 #include "agentmanager.h"
 #include "changerecorder.h"
 #include "controladaptor.h"
@@ -945,7 +946,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     }
 
     QCoreApplication::setApplicationName(ServerManager::addNamespace(identifier));
-    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADI_VERSION_STRING));
+    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADI_FULL_VERSION));
 
     const QFileInfo fi(QString::fromLocal8Bit(argv[0]));
     // strip off full path and possible .exe suffix

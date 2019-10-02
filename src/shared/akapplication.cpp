@@ -22,7 +22,7 @@
 #include "akremotelog.h"
 
 #include <private/instance_p.h>
-#include <akonadi_version.h>
+#include <akonadifull-version.h>
 
 #include <QDBusConnection>
 #include <QTimer>
@@ -41,7 +41,7 @@ AkApplicationBase::AkApplicationBase(std::unique_ptr<QCoreApplication> app, cons
     sInstance = this;
 
     QCoreApplication::setApplicationName(QStringLiteral("Akonadi"));
-    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADI_VERSION_STRING));
+    QCoreApplication::setApplicationVersion(QStringLiteral(AKONADI_FULL_VERSION));
     mCmdLineParser.addHelpOption();
     mCmdLineParser.addVersionOption();
 }
