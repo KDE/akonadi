@@ -88,7 +88,7 @@ public:
     bool supportsContentType(const QModelIndex &index, const QStringList &contentTypes);
 
 private:
-    // FIXME: This cache is a workaround for extremly slow QIcon::fromTheme()
+    // FIXME: This cache is a workaround for extremely slow QIcon::fromTheme()
     // caused by bottleneck in FrameworkIntegration. See bug #346644 for details.
     mutable QHash<QString, QIcon> mIconCache;
     mutable QString mIconThemeName;

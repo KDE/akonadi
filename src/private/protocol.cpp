@@ -644,7 +644,7 @@ DataStream &operator<<(DataStream &stream, const ScopeContext &context)
 {
     // We don't have a custom generic DataStream streaming operator for QVariant
     // because it's very hard, esp. without access to QVariant private
-    // stuff, so we have have to decompose it manually here.
+    // stuff, so we have to decompose it manually here.
     QVariant::Type vType = context.mColCtx.type();
     stream << vType;
     if (vType == QVariant::LongLong) {

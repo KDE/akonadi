@@ -18,8 +18,8 @@
     02110-1301, USA.
 */
 
-#ifndef CHANGERACORDERJOURNAL_P_H
-#define CHANGERACORDERJOURNAL_P_H
+#ifndef CHANGERECORDERJOURNAL_P_H
+#define CHANGERECORDERJOURNAL_P_H
 
 #include "private/protocol_p.h"
 #include "akonaditests_export.h"

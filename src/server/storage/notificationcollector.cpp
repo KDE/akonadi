@@ -534,7 +534,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
             }
 
             // FetchHelper may trigger ItemRetriever, which needs RemoteID. If we
-            // dont have one (maybe because the Resource has not stored it yet,
+            // don't have one (maybe because the Resource has not stored it yet,
             // we emit a notification without it and leave it up to the Monitor
             // to retrieve the Item on demand - we should have a RID stored in
             // Akonadi by then.

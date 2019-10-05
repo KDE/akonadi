@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef AKONADI_PROTOCOL_DATASTREAM_H
-#define AKONADI_PROTOCOL_DATASTREAM_H
+#ifndef AKONADI_PROTOCOL_DATASTREAM_P_P_H
+#define AKONADI_PROTOCOL_DATASTREAM_P_P_H
 
 #include <type_traits>
 
@@ -362,4 +362,4 @@ inline Akonadi::Protocol::DataStream &operator>>(Akonadi::Protocol::DataStream &
     return stream;
 }
 
-#endif // AKONADI_PROTOCOL_DATASTREAM_H
+#endif // AKONADI_PROTOCOL_DATASTREAM_P_P_H

@@ -32,7 +32,6 @@
 #include "handler/collectiondeletehandler.h"
 #include "handler/collectionmodifyhandler.h"
 #include "handler/collectioncopyhandler.h"
-#include "handler/collectiondeletehandler.h"
 #include "handler/collectionmovehandler.h"
 #include "handler/searchcreatehandler.h"
 #include "handler/searchhandler.h"

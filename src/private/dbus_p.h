@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_DBUS_H
-#define AKONADI_DBUS_H
+#ifndef AKONADI_DBUS_P_H
+#define AKONADI_DBUS_P_H
 
 #include "akonadiprivate_export.h"
 

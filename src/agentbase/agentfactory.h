@@ -58,7 +58,7 @@ public:
 
 public Q_SLOTS:
     /**
-     * Creates a new agent instace with the given identifier.
+     * Creates a new agent instance with the given identifier.
      */
     virtual QObject *createInstance(const QString &identifier) const = 0;
 

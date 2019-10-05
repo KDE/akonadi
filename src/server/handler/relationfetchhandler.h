@@ -17,8 +17,8 @@
  *   51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.         *
  ***************************************************************************/
 
-#ifndef AKONADI_FETCHRELATIONHANDLER_H_
-#define AKONADI_FETCHRELATIONHANDLER_H_
+#ifndef AKONADI_RELATIONFETCHHANDLER_H_
+#define AKONADI_RELATIONFETCHHANDLER_H_
 
 #include "handler.h"
 

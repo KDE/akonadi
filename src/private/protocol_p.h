@@ -19,8 +19,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_PROTOCOL_COMMON_P_H
-#define AKONADI_PROTOCOL_COMMON_P_H
+#ifndef AKONADI_PROTOCOL_P_H
+#define AKONADI_PROTOCOL_P_H
 
 #include "akonadiprivate_export.h"
 

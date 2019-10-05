@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKONADI_EXCEPTION_H
-#define AKONADI_EXCEPTION_H
+#ifndef AKONADI_EXCEPTIONBASE_H
+#define AKONADI_EXCEPTIONBASE_H
 
 #include "akonadicore_export.h"
 #include <QByteArray>

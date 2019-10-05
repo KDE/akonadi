@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#ifndef AKSTANDARDDIRS_H
-#define AKSTANDARDDIRS_H
+#ifndef AKSTANDARDDIRS__P_H
+#define AKSTANDARDDIRS_P_H
 
 #include "akonadiprivate_export.h"
 

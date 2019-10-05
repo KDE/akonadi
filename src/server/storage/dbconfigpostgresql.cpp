@@ -487,7 +487,7 @@ bool DbConfigPostgresql::startInternalServer()
         if (versions.has_value() && (versions->clusterVersion < versions->pgServerVersion)) {
             qCInfo(AKONADISERVER_LOG) << "Cluster PG_VERSION is" << versions->clusterVersion << ", PostgreSQL server is version " << versions->pgServerVersion << ", will attempt to upgrade the cluster";
             if (upgradeCluster(versions->clusterVersion)) {
-                qCInfo(AKONADISERVER_LOG) << "Succesfully upgraded db cluster from Postgres" << versions->clusterVersion << "to" << versions->pgServerVersion;
+                qCInfo(AKONADISERVER_LOG) << "Successfully upgraded db cluster from Postgres" << versions->clusterVersion << "to" << versions->pgServerVersion;
             } else {
                 qCWarning(AKONADISERVER_LOG) << "Postgres db cluster upgrade failed, Akonadi will fail to start. Sorry.";
             }

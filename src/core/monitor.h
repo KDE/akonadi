@@ -733,7 +733,7 @@ Q_SIGNALS:
 
     /**
      * This signal is emitted when Notifications are monitored and the server emits
-     * anny change notification.
+     * any change notification.
      *
      * @since 5.4
      *

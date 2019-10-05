@@ -457,7 +457,7 @@ public:
                         q, SLOT(createLocalCollectionResult(KJob*)));
 
                 // Commit transaction after every 100 collections are created,
-                // otherwise it overlads database journal and things get veeery slow
+                // otherwise it overloads database journal and things get veeery slow
                 if (pendingJobs % 100 == 0) {
                     currentTransaction->commit();
                     createTransaction();

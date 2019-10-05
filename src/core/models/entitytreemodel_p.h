@@ -199,7 +199,7 @@ public:
     void fillModel();
 
     void changeFetchState(const Collection &parent);
-    void agentInstanceRemoved(const Akonadi::AgentInstance &instace);
+    void agentInstanceRemoved(const Akonadi::AgentInstance &instance);
 
     QIcon iconForName(const QString &name) const;
 

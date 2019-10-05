@@ -17,8 +17,8 @@
  * 02110-1301, USA.
  */
 
-#ifndef CONNECTIONTHREAD_P_H
-#define CONNECTIONTHREAD_P_H
+#ifndef CONNECTION_P_H
+#define CONNECTION_P_H
 
 #include <QThread>
 #include <QLocalSocket>
@@ -92,4 +92,4 @@ private:
 
 }
 
-#endif // CONNECTIONTHREAD_P_H
+#endif // CONNECTION_P_H

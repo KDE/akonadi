@@ -335,7 +335,7 @@ protected Q_SLOTS:
     void setItemSyncBatchSize(int batchSize);
 
     /**
-     * Set to true to scheudle an attribute sync before every item sync.
+     * Set to true to schedule an attribute sync before every item sync.
      * The default is false.
      *
      * @since 4.15

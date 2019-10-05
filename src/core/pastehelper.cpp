@@ -81,7 +81,7 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
     , mDestCollection(destination)
     , mAction(action)
 {
-    //FIXME: The below code disables transactions in otder to avoid data loss due to nested
+    //FIXME: The below code disables transactions in order to avoid data loss due to nested
     //transactions (copy and colcopy in the server doesn't see the items retrieved into the cache and copies empty payloads).
     //Remove once this is fixed properly, see the other FIXME comments.
     setProperty("transactionsDisabled", true);

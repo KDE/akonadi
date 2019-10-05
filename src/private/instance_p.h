@@ -17,8 +17,8 @@
  *
  */
 
-#ifndef AKONADI_INSTANCE_H
-#define AKONADI_INSTANCE_H
+#ifndef AKONADI_INSTANCE_P_H
+#define AKONADI_INSTANCE_P_H
 
 #include "akonadiprivate_export.h"
 
@@ -35,4 +35,4 @@ AKONADIPRIVATE_EXPORT QString identifier();
 }
 }
 
-#endif // AKONADI_INSTANCE_H
+#endif // AKONADI_INSTANCE_P_H

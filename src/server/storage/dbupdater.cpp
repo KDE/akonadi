@@ -154,7 +154,7 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
 
     const QDomElement documentElement = document.documentElement();
     if (documentElement.tagName() != QLatin1String("updates")) {
-        qCCritical(AKONADISERVER_LOG) << "Invalid update description file formant";
+        qCCritical(AKONADISERVER_LOG) << "Invalid update description file format";
         return false;
     }
 
