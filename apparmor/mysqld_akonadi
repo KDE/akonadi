@@ -1,5 +1,7 @@
 #include <tunables/global>
 
+@{xdg_data_home}=@{HOME}/.local/share
+
 profile mysqld_akonadi {
   #include <abstractions/base>
   #include <abstractions/nameservice>
@@ -26,6 +28,6 @@ profile mysqld_akonadi {
   /usr/bin/mysqlcheck mrix,
   /usr/sbin/mysqld mrix,
   /usr/share/mysql/** r,
-  owner @{HOME}/.local/share/akonadi/** rwk,
+  owner @{xdg_data_home}/akonadi/** rwk,
   owner @{PROC}/@{pid}/loginuid r,
 }

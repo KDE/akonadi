@@ -1,5 +1,9 @@
 #include <tunables/global>
 
+@{xdg_data_home}=@{HOME}/.local/share
+
+@{xdg_config_home}=@{HOME}/.config
+
 /usr/bin/akonadiserver {
   #include <abstractions/base>
   #include <abstractions/dbus-session-strict>
@@ -23,20 +27,20 @@
   /usr/share/mime/types r,
   @{PROC}/sys/kernel/core_pattern r,
   @{PROC}/sys/kernel/random/boot_id r,
-  owner @{HOME}/.local/share/mime/mime.cache r,
-  owner @{HOME}/.local/share/mime/packages/ r,
-  owner @{HOME}/.local/share/mime/types r,
-  owner @{HOME}/.config/* r,
-  owner @{HOME}/.config/QtProject/qtlogging.ini r,
-  owner @{HOME}/.config/akonadi* rw,
-  owner @{HOME}/.config/akonadi/ rw,
-  owner @{HOME}/.config/akonadi/* rwl,
-  owner @{HOME}/.config/akonadi/akonadiconnectionrc wl,
-  owner @{HOME}/.config/akonadi/akonadiconnectionrc.lock rwk,
-  owner @{HOME}/.config/akonadi/akonadiserverrc.lock rwk,
-  owner @{HOME}/.local/share/akonadi/ rw,
-  owner @{HOME}/.local/share/akonadi/* rwlk,
-  owner @{HOME}/.local/share/akonadi/** rwk,
+  owner @{xdg_config_home}/* r,
+  owner @{xdg_config_home}/akonadi* rw,
+  owner @{xdg_config_home}/QtProject/qtlogging.ini r,
+  owner @{xdg_config_home}/akonadi/ rw,
+  owner @{xdg_config_home}/akonadi/* rwl,
+  owner @{xdg_config_home}/akonadi/akonadiconnectionrc wl,
+  owner @{xdg_config_home}/akonadi/akonadiconnectionrc.lock rwk,
+  owner @{xdg_config_home}/akonadi/akonadiserverrc.lock rwk,
+  owner @{xdg_data_home}/mime/mime.cache r,
+  owner @{xdg_data_home}/mime/packages/ r,
+  owner @{xdg_data_home}/mime/types r,
+  owner @{xdg_data_home}/akonadi/ rw,
+  owner @{xdg_data_home}/akonadi/* rwlk,
+  owner @{xdg_data_home}/akonadi/** rwk,
   owner @{PROC}/@{pid}/loginuid r,
   owner @{PROC}/@{pid}/mounts r,
 }

@@ -1,5 +1,7 @@
 #include <tunables/global>
 
+@{xdg_data_home}=@{HOME}/.local/share
+
 profile postgresql_akonadi {
   #include <abstractions/base>
   #include <abstractions/user-tmp>
@@ -15,6 +17,6 @@ profile postgresql_akonadi {
   /usr/lib/postgresql/*/bin/postgres mrix,
   /usr/share/postgresql/** r,
   owner /dev/shm/PostgreSQL.* rw,
-  owner @{HOME}/.local/share/akonadi/** rwlk,
-  owner @{HOME}/.local/share/akonadi/db_data/** l,
+  owner @{xdg_data_home}/akonadi/** rwlk,
+  owner @{xdg_data_home}/akonadi/db_data/** l,
 }
