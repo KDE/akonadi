@@ -21,7 +21,7 @@
       </widget>
      </item>
      <item>
-      <widget class="KFilterProxySearchLine" name="mFilterAccount"/>
+      <widget class="QLineEdit" name="mFilterAccount"/>
      </item>
      <item>
       <layout class="QHBoxLayout" name="hlay">
@@ -97,11 +97,6 @@
  </widget>
  <layoutdefault spacing="6" margin="0"/>
  <customwidgets>
-  <customwidget>
-   <class>KFilterProxySearchLine</class>
-   <extends>QWidget</extends>
-   <header>kfilterproxysearchline.h</header>
-  </customwidget>
   <customwidget>
    <class>Akonadi::AgentInstanceWidget</class>
    <extends>QWidget</extends>

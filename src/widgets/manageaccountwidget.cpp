@@ -75,7 +75,7 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
 
     d->ui->mAccountList->view()->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    d->ui->mFilterAccount->setProxy(d->ui->mAccountList->agentFilterProxyModel());
+    connect(d->ui->mFilterAccount, &QLineEdit::textChanged, d->ui->mAccountList->agentFilterProxyModel(), &AgentFilterProxyModel::setFilterFixedString);
     d->ui->mFilterAccount->installEventFilter(this);
     slotAccountSelected(d->ui->mAccountList->currentAgentInstance());
 }
