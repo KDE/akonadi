@@ -33,7 +33,7 @@ int main(int argc, char *argv[])
                          QStringLiteral("0.99"),
                          i18n("Test app for EntityTreeModel"),
                          KAboutLicense::GPL,
-                         QStringLiteral("http://pim.kde.org/akonadi/"));
+                         QStringLiteral("https://community.kde.org/KDE_PIM/Akonadi/"));
     aboutData.addAuthor(i18n("Stephen Kelly"), i18n("Author"), QStringLiteral("steveire@gmail.com"));
     KAboutData::setApplicationData(aboutData);
 
