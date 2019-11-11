@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(PIM_VERSION "5.12.80")
+set(PIM_VERSION "5.13.40")
 project(Akonadi VERSION ${PIM_VERSION})
 
 if (MSVC)
@@ -17,7 +17,7 @@ endif()
 
 
 # ECM setup
-set(KF5_MIN_VERSION "5.63.0")
+set(KF5_MIN_VERSION "5.64.0")
 
 find_package(ECM ${KF5_MIN_VERSION} CONFIG REQUIRED)
 
@@ -43,8 +43,8 @@ include(ECMAddTests)
 
 include(AkonadiMacros)
 
-set(QT_REQUIRED_VERSION "5.11.0")
-set(KDE_APPLICATIONS_VERSION "19.11.80")
+set(QT_REQUIRED_VERSION "5.12.0")
+set(KDE_APPLICATIONS_VERSION "20.03.70")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${KDE_APPLICATIONS_VERSION})")
 
 configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
