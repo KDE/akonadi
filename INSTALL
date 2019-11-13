@@ -41,16 +41,16 @@ The following options are available when running CMake:
 
 Required:
 
-* CMake (http://www.cmake.org) >= 2.8.12
-* Qt5 >= 5.2.0 (http://qt.nokia.com/downloads)
-* Shared-mime-info >= 0.20 (http://freedesktop.org/wiki/Software/shared-mime-info)
+* CMake (https://cmake.org/) >= 3.5
+* Qt5 >= 5.11.0 (http://qt.nokia.com/downloads)
+* Shared-mime-info >= 0.20 (https://freedesktop.org/wiki/Software/shared-mime-info/)
 * Xsltproc (http://xmlsoft.org/XSLT/downloads.html)
 
 Optional:
 
-* Mysqld (http://www.mysql.com) - Optional at build time. You can pass -DMYSQLD_EXECUTABLE=/path/to/mysqld when running CMake instead
-* SQlite >= 3.6.23 (http://www.sqlite.org) - Needed if you want to build the Sqlite backend
-* Postgresql (http://www.postgres.org) - Optional at build time. You can pass -DPOSTGRES_PATH=/path/to/pg_ctl when running CMake instead
+* Mysqld (https://www.mysql.com/) - Optional at build time. You can pass -DMYSQLD_EXECUTABLE=/path/to/mysqld when running CMake instead
+* SQlite >= 3.6.23 (https://www.sqlite.org/index.html) - Needed if you want to build the Sqlite backend
+* Postgresql (https://www.postgresql.org/) - Optional at build time. You can pass -DPOSTGRES_PATH=/path/to/pg_ctl when running CMake instead
 
 === Runtime Requirements ===
 
