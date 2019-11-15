@@ -1229,7 +1229,7 @@ public:
         const QSet<QString> mimeTypes = mimeTypesOfSelection(type);
 
         QPointer<CollectionDialog> dlg(new CollectionDialog(const_cast<QAbstractItemModel *>(model)));
-        dlg->setMimeTypeFilter(mimeTypes.toList());
+        dlg->setMimeTypeFilter(mimeTypes.values());
 
         if (type == CopyItemToMenu || type == MoveItemToMenu) {
             dlg->setAccessRightsFilter(Collection::CanCreateItem);
