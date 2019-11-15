@@ -89,7 +89,7 @@ void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(cons
 {
     Q_D(RecursiveCollectionFilterProxyModel);
     d->includedMimeTypes << mimeType;
-    d->checker.setWantedMimeTypes(d->includedMimeTypes.toList());
+    d->checker.setWantedMimeTypes(d->includedMimeTypes.values());
     invalidateFilter();
 }
 
@@ -97,7 +97,7 @@ void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilters(con
 {
     Q_D(RecursiveCollectionFilterProxyModel);
     d->includedMimeTypes.unite(mimeTypes.toSet());
-    d->checker.setWantedMimeTypes(d->includedMimeTypes.toList());
+    d->checker.setWantedMimeTypes(d->includedMimeTypes.values());
     invalidateFilter();
 }
 
@@ -113,14 +113,14 @@ void RecursiveCollectionFilterProxyModel::setContentMimeTypeInclusionFilters(con
 {
     Q_D(RecursiveCollectionFilterProxyModel);
     d->includedMimeTypes = mimeTypes.toSet();
-    d->checker.setWantedMimeTypes(d->includedMimeTypes.toList());
+    d->checker.setWantedMimeTypes(d->includedMimeTypes.values());
     invalidateFilter();
 }
 
 QStringList RecursiveCollectionFilterProxyModel::contentMimeTypeInclusionFilters() const
 {
     Q_D(const RecursiveCollectionFilterProxyModel);
-    return d->includedMimeTypes.toList();
+    return d->includedMimeTypes.values();
 }
 
 int Akonadi::RecursiveCollectionFilterProxyModel::columnCount(const QModelIndex &index) const

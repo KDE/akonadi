@@ -365,7 +365,7 @@ QSet<qint64> KnutResource::parseQuery(const QString &queryString)
 void KnutResource::search(const QString &query, const Collection &collection)
 {
     Q_UNUSED(collection);
-    const QVector<qint64> result = parseQuery(query).toList().toVector();
+    const QVector<qint64> result = parseQuery(query).values().toVector();
     qCDebug(KNUTRESOURCE_LOG) << "KNUT QUERY:" << query;
     qCDebug(KNUTRESOURCE_LOG) << "KNUT RESOURCE:" << result;
     searchFinished(result, Akonadi::AgentSearchInterface::Uid);
