@@ -29,6 +29,7 @@
 
 namespace std {
 
+#if (QT_VERSION < QT_VERSION_CHECK(5, 14, 0))
 template<>
 struct hash<QString> {
     using argument_type = QString;
@@ -39,6 +40,7 @@ struct hash<QString> {
         return qHash(s);
     }
 };
+#endif
 
 }
 
