@@ -139,14 +139,15 @@ private Q_SLOTS:
         ItemMoveJob *store = new ItemMoveJob(item, Collection(INT_MAX), this);
         QVERIFY(!store->exec());
 
+        auto monitor = getTestMonitor();
+        QSignalSpy itemMovedSpy(monitor.get(), &Monitor::itemsMoved);
+
         // move item into folder that doesn't support its mimetype
         store = new ItemMoveJob(item, col, this);
         QEXPECT_FAIL("", "Check not yet implemented by the server.", Continue);
         QVERIFY(!store->exec());
 
-        auto monitor = getTestMonitor();
-        QSignalSpy itemMovedSpy(monitor.get(), &Monitor::itemsMoved);
-        // Wait for the notifciation so that it does not disturb the next test
+        // Wait for the notification so that it does not disturb the next test
         QTRY_COMPARE(itemMovedSpy.count(), 1);
     }
 
