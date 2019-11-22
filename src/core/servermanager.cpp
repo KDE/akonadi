@@ -277,7 +277,7 @@ ServerManager::State ServerManager::state()
 
     const bool controlLockRegistered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(ServerManager::serviceName(ServerManager::ControlLock));
     if (controlLockRegistered || controlRegistered) {
-        qCDebug(AKONADICORE_LOG) << "Akonadi server is already starting up";
+        qCDebug(AKONADICORE_LOG) << "Akonadi server is only partially running. Server:" << serverRegistered << "ControlLock:" << controlLockRegistered << "Control:" << controlRegistered;
         if (previousState == Running) {
             return NotRunning; // we don't know if it's starting or stopping, probably triggered by someone else
         }
