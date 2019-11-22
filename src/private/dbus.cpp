@@ -21,23 +21,25 @@
 #include "instance_p.h"
 
 #include <QString>
+#include <QStringView>
 #include <QStringList>
+#include <QVector>
 
 using namespace Akonadi;
 
-#define AKONADI_DBUS_SERVER_SERVICE           "org.freedesktop.Akonadi"
-#define AKONADI_DBUS_CONTROL_SERVICE          "org.freedesktop.Akonadi.Control"
-#define AKONADI_DBUS_CONTROL_SERVICE_LOCK     "org.freedesktop.Akonadi.Control.lock"
-#define AKONADI_DBUS_AGENTSERVER_SERVICE      "org.freedesktop.Akonadi.AgentServer"
-#define AKONADI_DBUS_STORAGEJANITOR_SERVICE   "org.freedesktop.Akonadi.Janitor"
-#define AKONADI_DBUS_SERVER_SERVICE_UPGRADING "org.freedesktop.Akonadi.upgrading"
+#define AKONADI_DBUS_SERVER_SERVICE           u"org.freedesktop.Akonadi"
+#define AKONADI_DBUS_CONTROL_SERVICE          u"org.freedesktop.Akonadi.Control"
+#define AKONADI_DBUS_CONTROL_SERVICE_LOCK     u"org.freedesktop.Akonadi.Control.lock"
+#define AKONADI_DBUS_AGENTSERVER_SERVICE      u"org.freedesktop.Akonadi.AgentServer"
+#define AKONADI_DBUS_STORAGEJANITOR_SERVICE   u"org.freedesktop.Akonadi.Janitor"
+#define AKONADI_DBUS_SERVER_SERVICE_UPGRADING u"org.freedesktop.Akonadi.upgrading"
 
-static QString makeServiceName(const char *base)
+static QString makeServiceName(QStringView base)
 {
     if (!Instance::hasIdentifier()) {
-        return QLatin1String(base);
+        return base.toString();
     }
-    return QLatin1String(base) % QLatin1String(".") % Instance::identifier();
+    return base + QLatin1Char('.') + Instance::identifier();
 }
 
 QString DBus::serviceName(DBus::ServiceType serviceType)
@@ -62,20 +64,20 @@ QString DBus::serviceName(DBus::ServiceType serviceType)
 
 akOptional<DBus::AgentService> DBus::parseAgentServiceName(const QString &serviceName)
 {
-    if (!serviceName.startsWith(QLatin1String("org.freedesktop.Akonadi."))) {
+    if (!serviceName.startsWith(AKONADI_DBUS_SERVER_SERVICE ".")) {
         return nullopt;
     }
-    const QStringList parts = serviceName.mid(24).split(QLatin1Char('.'));
+
+    const auto parts = serviceName.midRef(QStringView(AKONADI_DBUS_SERVER_SERVICE ".").length()).split(QLatin1Char('.'));
     if ((parts.size() == 2 && !Akonadi::Instance::hasIdentifier())
             || (parts.size() == 3 && Akonadi::Instance::hasIdentifier() && Akonadi::Instance::identifier() == parts.at(2))) {
         // switch on parts.at( 0 )
-        const QString &partFirst = parts.constFirst();
-        if (partFirst == QLatin1String("Agent")) {
-            return AgentService{parts.at(1), DBus::Agent};
-        } else if (partFirst == QLatin1String("Resource")) {
-            return AgentService{parts.at(1), DBus::Resource};
-        } else if (partFirst == QLatin1String("Preprocessor")) {
-            return AgentService{parts.at(1), DBus::Preprocessor};
+        if (parts.at(0) == QLatin1String("Agent")) {
+            return AgentService{parts.at(1).toString(), DBus::Agent};
+        } else if (parts.at(0) == QLatin1String("Resource")) {
+            return AgentService{parts.at(1).toString(), DBus::Resource};
+        } else if (parts.at(0) == QLatin1String("Preprocessor")) {
+            return AgentService{parts.at(1).toString(), DBus::Preprocessor};
         } else {
             return nullopt;
         }
@@ -88,7 +90,7 @@ QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType a
 {
     Q_ASSERT(!agentIdentifier.isEmpty());
     Q_ASSERT(agentType != Unknown);
-    QString serviceName = QStringLiteral("org.freedesktop.Akonadi.");
+    QString serviceName = QStringLiteral(AKONADI_DBUS_SERVER_SERVICE ".");
     switch (agentType) {
     case Agent:
         serviceName += QLatin1String("Agent.");
