@@ -617,7 +617,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
     // This is called by the D-Bus server when a service comes up, goes down or changes ownership for some reason
     // and this is where we "hook up" our different Agent interfaces.
 
-    //qCDebug(AKONADICONTROL_LOG) << "Service " << name << " owner changed from " << oldOwner << " to " << newOwner;
+    qCDebug(AKONADICONTROL_LOG) << "Service" << name << "owner changed from" << oldOwner << "to" << newOwner;
 
     if ((name == Akonadi::DBus::serviceName(Akonadi::DBus::Server) || name == Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)) && !newOwner.isEmpty()) {
         if (QDBusConnection::sessionBus().interface()->isServiceRegistered(Akonadi::DBus::serviceName(Akonadi::DBus::Server))
@@ -648,7 +648,10 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             return;
         }
 
-        if (!restarting) {
+        Q_ASSERT(mAgents.contains(instance->agentType()));
+        const bool isResource = mAgents.value(instance->agentType()).capabilities.contains(AgentType::CapabilityResource);
+
+        if (!restarting && (!isResource || instance->hasResourceInterface())) {
             Q_EMIT agentInstanceAdded(service->serviceName);
         }
 
@@ -664,7 +667,15 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             return;
         }
 
-        mAgentInstances.value(service->serviceName)->obtainResourceInterface();
+        const AgentInstance::Ptr instance = mAgentInstances.value(service->serviceName);
+        const bool restarting = instance->hasResourceInterface();
+        if (!instance->obtainResourceInterface()) {
+            return;
+        }
+
+        if (!restarting && instance->hasAgentInterface()) {
+            Q_EMIT agentInstanceAdded(service->serviceName);
+        }
 
         break;
     }
