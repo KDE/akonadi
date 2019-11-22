@@ -66,7 +66,7 @@ enum AgentType {
 };
 
 struct AgentService {
-    QString serviceName{};
+    QString identifier{};
     DBus::AgentType agentType{DBus::Unknown};
 };
 

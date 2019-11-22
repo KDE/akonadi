@@ -97,7 +97,7 @@ void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const
         return;
     }
     qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager lost connection to resource" << serviceName << ", discarding cached interface";
-    mResourceInterfaces.erase(service->serviceName);
+    mResourceInterfaces.erase(service->identifier);
 }
 
 // called within the retrieval thread

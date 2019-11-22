@@ -638,18 +638,18 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             return; // It went down: we don't care here.
         }
 
-        if (!mAgentInstances.contains(service->serviceName)) {
+        if (!mAgentInstances.contains(service->identifier)) {
             return;
         }
 
-        const AgentInstance::Ptr instance = mAgentInstances.value(service->serviceName);
+        const AgentInstance::Ptr instance = mAgentInstances.value(service->identifier);
         const bool restarting = instance->hasAgentInterface();
         if (!instance->obtainAgentInterface()) {
             return;
         }
 
         if (!restarting) {
-            Q_EMIT agentInstanceAdded(service->serviceName);
+            Q_EMIT agentInstanceAdded(service->identifier);
         }
 
         break;
@@ -660,11 +660,11 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             return; // It went down: we don't care here.
         }
 
-        if (!mAgentInstances.contains(service->serviceName)) {
+        if (!mAgentInstances.contains(service->identifier)) {
             return;
         }
 
-        mAgentInstances.value(service->serviceName)->obtainResourceInterface();
+        mAgentInstances.value(service->identifier)->obtainResourceInterface();
 
         break;
     }
@@ -682,9 +682,9 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
         // The order of interface deletions depends on Qt but we handle both cases.
 
         // Check if we "know" about it.
-        qCDebug(AKONADICONTROL_LOG) << "Preprocessor " << service->serviceName << " is going up or down...";
+        qCDebug(AKONADICONTROL_LOG) << "Preprocessor " << service->identifier << " is going up or down...";
 
-        if (!mAgentInstances.contains(service->serviceName)) {
+        if (!mAgentInstances.contains(service->identifier)) {
             qCDebug(AKONADICONTROL_LOG) << "But it isn't registered as agent... not mine (anymore?)";
             return; // not our agent (?)
         }
@@ -701,25 +701,25 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
             if (newOwner.isEmpty()) {
                 // The preprocessor went down. Unregister it on server side.
 
-                preProcessorManager.unregisterInstance(service->serviceName);
+                preProcessorManager.unregisterInstance(service->identifier);
 
             } else {
 
                 // The preprocessor went up. Register it on server side.
 
-                if (!mAgentInstances.value(service->serviceName)->obtainPreprocessorInterface()) {
+                if (!mAgentInstances.value(service->identifier)->obtainPreprocessorInterface()) {
                     // Hm.. couldn't hook up its preprocessor interface..
                     // Make sure we don't have it in the preprocessor chain
-                    qCWarning(AKONADICONTROL_LOG) << "Couldn't obtain preprocessor interface for instance" << service->serviceName;
+                    qCWarning(AKONADICONTROL_LOG) << "Couldn't obtain preprocessor interface for instance" << service->identifier;
 
-                    preProcessorManager.unregisterInstance(service->serviceName);
+                    preProcessorManager.unregisterInstance(service->identifier);
                     return;
                 }
 
-                qCDebug(AKONADICONTROL_LOG) << "Registering preprocessor instance" << service->serviceName;
+                qCDebug(AKONADICONTROL_LOG) << "Registering preprocessor instance" << service->identifier;
 
                 // Add to the preprocessor chain
-                preProcessorManager.registerInstance(service->serviceName);
+                preProcessorManager.registerInstance(service->identifier);
             }
         }
 

@@ -80,7 +80,7 @@ private Q_SLOTS:
         const auto service = DBus::parseAgentServiceName(serviceName);
         QCOMPARE(service.has_value(), valid);
         if (service.has_value()) {
-            QCOMPARE(service->serviceName, agentId);
+            QCOMPARE(service->identifier, agentId);
             QCOMPARE(service->agentType, agentType);
         }
     }
