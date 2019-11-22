@@ -87,9 +87,7 @@ void SetupTest::setupAgents()
         job->start();
     }
 
-    if (isSetupDone()) {
-        Q_EMIT setupDone();
-    }
+    checkSetupDone();
 }
 
 void SetupTest::agentCreationResult(KJob *job)
@@ -97,37 +95,36 @@ void SetupTest::agentCreationResult(KJob *job)
     qCDebug(AKONADITEST_LOG) << "Agent created";
     --mSetupJobCount;
     if (job->error()) {
-        qCritical() << job->errorString();
+        qCritical() << "Failed to create agent:" << job->errorString();
         setupFailed();
-        return;
-    }
-    const bool needsSync = job->property("sync").toBool();
-    if (needsSync) {
-        ++mSetupJobCount;
-        qCDebug(AKONADITEST_LOG) << "Scheduling Agent sync";
-        Akonadi::ResourceSynchronizationJob *sync = new Akonadi::ResourceSynchronizationJob(
-            qobject_cast<Akonadi::AgentInstanceCreateJob *>(job)->instance(), this);
-        connect(sync, &Akonadi::ResourceSynchronizationJob::result, this, &SetupTest::synchronizationResult);
-        sync->start();
+    } else {
+        const bool needsSync = job->property("sync").toBool();
+        const auto instance = qobject_cast<Akonadi::AgentInstanceCreateJob *>(job)->instance();
+        qCDebug(AKONADITEST_LOG) << "Agent" << instance.identifier() << "created";
+        if (needsSync) {
+            ++mSetupJobCount;
+            qCDebug(AKONADITEST_LOG) << "Scheduling Agent sync of" << instance.identifier();
+            Akonadi::ResourceSynchronizationJob *sync = new Akonadi::ResourceSynchronizationJob(instance, this);
+            connect(sync, &Akonadi::ResourceSynchronizationJob::result, this, &SetupTest::synchronizationResult);
+            sync->start();
+        }
     }
 
-    if (isSetupDone()) {
-        Q_EMIT setupDone();
-    }
+    checkSetupDone();
 }
 
 void SetupTest::synchronizationResult(KJob *job)
 {
-    qCDebug(AKONADITEST_LOG) << "Sync done";
+    auto instance = qobject_cast<Akonadi::ResourceSynchronizationJob*>(job)->resource();
+    qCDebug(AKONADITEST_LOG) << "Sync of" << instance.identifier() << "done";
+
     --mSetupJobCount;
     if (job->error()) {
         qCritical() << job->errorString();
         setupFailed();
     }
 
-    if (isSetupDone()) {
-        Q_EMIT setupDone();
-    }
+    checkSetupDone();
 }
 
 void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
@@ -344,7 +341,7 @@ void SetupTest::shutdown()
     case Akonadi::ServerManager::NotRunning:
     case Akonadi::ServerManager::Broken:
         shutdownHarder();
-        Q_FALLTHROUGH();
+        break;
     case Akonadi::ServerManager::Stopping:
         // safety timeout
         QTimer::singleShot(30 * 1000, this, &SetupTest::shutdownHarder);
@@ -429,16 +426,23 @@ void SetupTest::setupInstanceId()
     setEnvironmentVariable("AKONADI_INSTANCE", instanceId());
 }
 
-bool SetupTest::isSetupDone() const
+void SetupTest::checkSetupDone()
 {
-    qCDebug(AKONADITEST_LOG) << "isSetupDone:" << mSetupJobCount << mExitCode;
-    return mSetupJobCount == 0 && mExitCode == 0;
+    qCDebug(AKONADITEST_LOG) << "checkSetupDone: pendingJobs =" << mSetupJobCount << ", exitCode =" << mExitCode;
+    if (mSetupJobCount == 0) {
+        if (mExitCode != 0) {
+            qCInfo(AKONADITEST_LOG) << "Setup has failed, aborting test.";
+            shutdown();
+        } else {
+            qCInfo(AKONADITEST_LOG) << "Setup successful";
+            Q_EMIT setupDone();
+        }
+    }
 }
 
 void SetupTest::setupFailed()
 {
     mExitCode = 1;
-    shutdown();
 }
 
 void SetupTest::setEnvironmentVariable(const QByteArray &name, const QString &value)
