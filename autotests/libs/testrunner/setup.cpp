@@ -18,6 +18,7 @@
 
 #include "setup.h"
 #include "config.h" //krazy:exclude=includes
+#include "akonaditest_debug.h"
 
 #include <agentinstance.h>
 #include <agentinstancecreatejob.h>
@@ -26,7 +27,6 @@
 
 #include <KConfig>
 #include <kconfiggroup.h>
-#include <QDebug>
 #include <KProcess>
 
 #include <QCoreApplication>
@@ -50,7 +50,7 @@ bool SetupTest::startAkonadiDaemon()
                                       { QStringLiteral("--instance"), instanceId() });
     mAkonadiDaemonProcess->start();
     const bool started = mAkonadiDaemonProcess->waitForStarted(5000);
-    qDebug() << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
+    qCInfo(AKONADITEST_LOG) << "Started akonadi daemon with pid:" << mAkonadiDaemonProcess->pid();
     return started;
 }
 
@@ -63,7 +63,7 @@ void SetupTest::stopAkonadiDaemon()
     mAkonadiDaemonProcess->terminate();
     const bool finished = mAkonadiDaemonProcess->waitForFinished(5000);
     if (!finished) {
-        qDebug() << "Problem finishing process.";
+        qCDebug(AKONADITEST_LOG) << "Problem finishing process.";
     }
     mAkonadiDaemonProcess->close();
     mAkonadiDaemonProcess->deleteLater();
@@ -79,7 +79,7 @@ void SetupTest::setupAgents()
     Config *config = Config::instance();
     const auto agents = config->agents();
     for (const auto agent : agents) {
-        qDebug() << "Creating agent" << agent.first << "...";
+        qCDebug(AKONADITEST_LOG) << "Creating agent" << agent.first << "...";
         ++mSetupJobCount;
         Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(agent.first, this);
         job->setProperty("sync", agent.second);
@@ -94,7 +94,7 @@ void SetupTest::setupAgents()
 
 void SetupTest::agentCreationResult(KJob *job)
 {
-    qDebug() << "Agent created";
+    qCDebug(AKONADITEST_LOG) << "Agent created";
     --mSetupJobCount;
     if (job->error()) {
         qCritical() << job->errorString();
@@ -104,7 +104,7 @@ void SetupTest::agentCreationResult(KJob *job)
     const bool needsSync = job->property("sync").toBool();
     if (needsSync) {
         ++mSetupJobCount;
-        qDebug() << "Scheduling Agent sync";
+        qCDebug(AKONADITEST_LOG) << "Scheduling Agent sync";
         Akonadi::ResourceSynchronizationJob *sync = new Akonadi::ResourceSynchronizationJob(
             qobject_cast<Akonadi::AgentInstanceCreateJob *>(job)->instance(), this);
         connect(sync, &Akonadi::ResourceSynchronizationJob::result, this, &SetupTest::synchronizationResult);
@@ -118,7 +118,7 @@ void SetupTest::agentCreationResult(KJob *job)
 
 void SetupTest::synchronizationResult(KJob *job)
 {
-    qDebug() << "Sync done";
+    qCDebug(AKONADITEST_LOG) << "Sync done";
     --mSetupJobCount;
     if (job->error()) {
         qCritical() << job->errorString();
@@ -141,7 +141,7 @@ void SetupTest::serverStateChanged(Akonadi::ServerManager::State state)
 
 void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
 {
-    qDebug() << "Copying" << src << "to" << dst;
+    qCDebug(AKONADITEST_LOG) << "Copying" << src << "to" << dst;
     const QDir srcDir(src);
     const auto entries = srcDir.entryInfoList(QDir::Dirs | QDir::Files | QDir::NoSymLinks | QDir::NoDotAndDotDot);
     for (const auto &fi : entries) {
@@ -164,12 +164,12 @@ void SetupTest::copyXdgDirectory(const QString &src, const QString &dst)
                 const QString baseName = fi.fileName().left(fi.fileName().size() - 2);
                 const QString dstPath = dst + QLatin1Char('/') + Akonadi::ServerManager::addNamespace(baseName) + QStringLiteral("rc");
                 if (!QFile::copy(fi.absoluteFilePath(), dstPath)) {
-                    qWarning() << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
+                    qCWarning(AKONADITEST_LOG) << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
                 }
             } else {
                 const QString dstPath = dst + QLatin1Char('/') + fi.fileName();
                 if (!QFile::copy(fi.absoluteFilePath(), dstPath)) {
-                    qWarning() << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
+                    qCWarning(AKONADITEST_LOG) << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
                 }
             }
         }
@@ -187,7 +187,7 @@ void SetupTest::copyDirectory(const QString &src, const QString &dst)
             copyDirectory(fi.absoluteFilePath(), dstPath);
         } else {
             if (!QFile::copy(fi.absoluteFilePath(), dstPath)) {
-                qWarning() << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
+                qCWarning(AKONADITEST_LOG) << "Failed to copy" << fi.absoluteFilePath() << "to" << dstPath;
             }
         }
     }
@@ -195,7 +195,7 @@ void SetupTest::copyDirectory(const QString &src, const QString &dst)
 
 void SetupTest::createTempEnvironment()
 {
-    qDebug() << "Creating test environment in" << basePath();
+    qCDebug(AKONADITEST_LOG) << "Creating test environment in" << basePath();
 
     const Config *config = Config::instance();
 #ifdef Q_OS_WIN
@@ -250,7 +250,7 @@ void SetupTest::writeAkonadiserverrc(const QString &path)
     } else if (Config::instance()->dbBackend() == QLatin1String("pgsql")) {
         backend = QStringLiteral("QPSQL");
     } else {
-        qCritical("Invalid backend name %s", qPrintable(backend));
+        qCCritical(AKONADITEST_LOG, "Invalid backend name %s", qPrintable(backend));
         return;
     }
 
@@ -264,7 +264,7 @@ void SetupTest::writeAkonadiserverrc(const QString &path)
     settings.beginGroup(QStringLiteral("Debug"));
     settings.setValue(QStringLiteral("Tracer"), QStringLiteral("null"));
     settings.endGroup();
-    qDebug() << "Written akonadiserverrc to" << settings.fileName();
+    qCDebug(AKONADITEST_LOG) << "Written akonadiserverrc to" << settings.fileName();
 }
 
 void SetupTest::cleanTempEnvironment()
@@ -304,7 +304,7 @@ SetupTest::SetupTest()
     QHashIterator<QString, QString> iter(Config::instance()->envVars());
     while (iter.hasNext()) {
         iter.next();
-        qDebug() << "Setting environment variable" << iter.key() << "=" << iter.value();
+        qCDebug(AKONADITEST_LOG) << "Setting environment variable" << iter.key() << "=" << iter.value();
         setEnvironmentVariable(iter.key().toLocal8Bit(), iter.value());
     }
 
@@ -336,7 +336,7 @@ void SetupTest::shutdown()
     case Akonadi::ServerManager::Running:
     case Akonadi::ServerManager::Starting:
     case Akonadi::ServerManager::Upgrading:
-        qDebug() << "Shutting down Akonadi control...";
+        qCInfo(AKONADITEST_LOG) << "Shutting down Akonadi control...";
         Akonadi::ServerManager::self()->stop();
         // safety timeout
         QTimer::singleShot(30 * 1000, this, &SetupTest::shutdownHarder);
@@ -354,7 +354,7 @@ void SetupTest::shutdown()
 
 void SetupTest::shutdownHarder()
 {
-    qDebug();
+    qCDebug(AKONADITEST_LOG) << "Forcing akonaditest shutdown";
     mShuttingDown = false;
     stopAkonadiDaemon();
     QCoreApplication::instance()->exit(mExitCode);
@@ -362,12 +362,12 @@ void SetupTest::shutdownHarder()
 
 void SetupTest::restartAkonadiServer()
 {
-    qDebug();
+    qCDebug(AKONADITEST_LOG) << "Restarting Akonadi";
     disconnect(mAkonadiDaemonProcess, SIGNAL(finished(int)), this, nullptr);
     Akonadi::ServerManager::self()->stop();
     const bool shutdownResult = mAkonadiDaemonProcess->waitForFinished();
     if (!shutdownResult) {
-        qWarning() << "Akonadi control did not shut down in time, killing it.";
+        qCWarning(AKONADITEST_LOG) << "Akonadi control did not shut down in time, killing it.";
         mAkonadiDaemonProcess->kill();
     }
     // we don't use Control::start() since we want to be able to kill
@@ -408,7 +408,7 @@ QString SetupTest::basePath() const
 void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)
 {
     if (mTrackAkonadiProcess || exitCode != EXIT_SUCCESS) {
-        qWarning() << "Akonadi server process was terminated externally!";
+        qCWarning(AKONADITEST_LOG) << "Akonadi server process was terminated externally!";
         Q_EMIT serverExited(exitCode);
     }
     mAkonadiDaemonProcess = nullptr;
@@ -431,7 +431,7 @@ void SetupTest::setupInstanceId()
 
 bool SetupTest::isSetupDone() const
 {
-    qDebug() << "isSetupDone:" << mSetupJobCount << mExitCode;
+    qCDebug(AKONADITEST_LOG) << "isSetupDone:" << mSetupJobCount << mExitCode;
     return mSetupJobCount == 0 && mExitCode == 0;
 }
 
@@ -447,7 +447,7 @@ void SetupTest::setEnvironmentVariable(const QByteArray &name, const QString &va
     qputenv(name.constData(), value.toLatin1());
 }
 
-QVector< SetupTest::EnvVar > SetupTest::environmentVariables() const
+QVector<SetupTest::EnvVar> SetupTest::environmentVariables() const
 {
     return mEnvVars;
 }

@@ -16,8 +16,8 @@
  */
 
 #include "testrunner.h"
+#include "akonaditest_debug.h"
 
-#include <QDebug>
 #include <KProcess>
 
 
@@ -36,7 +36,7 @@ int TestRunner::exitCode() const
 
 void TestRunner::run()
 {
-    qDebug() << mArguments;
+    qCDebug(AKONADITEST_LOG) << "Starting test" << mArguments;
     mProcess = new KProcess(this);
     mProcess->setProgram(mArguments);
     connect(mProcess, QOverload<int>::of(&KProcess::finished), this, &TestRunner::processFinished);
@@ -45,7 +45,7 @@ void TestRunner::run()
     // environment setup seems to have been done by setuptest globally already
     mProcess->start();
     if (!mProcess->waitForStarted()) {
-        qWarning() << mArguments << "failed to start!";
+        qCWarning(AKONADITEST_LOG) << mArguments << "failed to start!";
         mExitCode = 255;
         Q_EMIT finished();
     }
@@ -63,14 +63,14 @@ void TestRunner::processFinished(int exitCode)
     // is called after a process has finished.
     if (mExitCode == 0) {
         mExitCode = exitCode;
-        qDebug() << exitCode;
+        qCInfo(AKONADITEST_LOG) << "Test finished with exist code" << exitCode;
     }
     Q_EMIT finished();
 }
 
 void TestRunner::processError(QProcess::ProcessError error)
 {
-    qWarning() << mArguments << "exited with an error:" << error;
+    qCWarning(AKONADITEST_LOG) << mArguments << "exited with an error:" << error;
     mExitCode = 255;
     Q_EMIT finished();
 }

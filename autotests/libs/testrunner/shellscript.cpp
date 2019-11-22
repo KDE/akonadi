@@ -16,10 +16,9 @@
  */
 
 #include "shellscript.h"
-
+#include "akonaditest_debug.h"
 #include "config.h" //krazy:exclude=includes
 
-#include <QDebug>
 #include <QCoreApplication>
 #include <QFile>
 #include <QHashIterator>
@@ -81,7 +80,7 @@ void ShellScript::writeShutdownFunction()
 
 void ShellScript::makeShellScript(const QString &fileName)
 {
-    qDebug() << fileName;
+    qCDebug(AKONADITEST_LOG) << "Writing environment shell script to" << fileName;
     QFile file(fileName);   //can user define the file name/location?
 
     if (file.open(QIODevice::WriteOnly)) {

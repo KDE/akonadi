@@ -20,10 +20,10 @@
 #include "setup.h"
 #include "shellscript.h"
 #include "testrunner.h"
+#include "akonaditest_debug.h"
 
 #include <KAboutData>
 
-#include <QDebug>
 #include <KLocalizedString>
 
 #include <signal.h>
@@ -36,7 +36,7 @@ static TestRunner *runner = nullptr;
 
 void sigHandler(int signal)
 {
-    qDebug() << "Received signal" << signal;
+    qCCritical(AKONADITEST_LOG, "Received signal %d", signal);
     static int sigCounter = 0;
     if (sigCounter == 0) {   // try clean shutdown
         if (runner) {
@@ -114,7 +114,7 @@ int main(int argc, char **argv)
 
     if (!setup->startAkonadiDaemon()) {
         delete setup;
-        qCritical("Failed to start Akonadi server!");
+        qCCritical(AKONADITEST_LOG, "Failed to start Akonadi server!");
         return 1;
     }
 

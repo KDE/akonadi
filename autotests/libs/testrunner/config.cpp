@@ -16,8 +16,7 @@
  */
 
 #include "config.h" //krazy:exclude=includes
-
-#include <QDebug>
+#include "akonaditest_debug.h"
 
 #include <QDir>
 #include <QPair>
@@ -51,11 +50,11 @@ void Config::readConfiguration(const QString &configfile)
     QFile file(configfile);
 
     if (!file.open(QIODevice::ReadOnly)) {
-        qFatal("error reading file: %s", qPrintable(configfile));
+        qFatal("Error reading file %s: %s", qPrintable(configfile), qUtf8Printable(file.errorString()));
     }
 
     mBasePath = QFileInfo(configfile).absolutePath() + QLatin1Char('/');
-    qDebug() << "Base path" << mBasePath;
+    qCDebug(AKONADITEST_LOG) << "Base path" << mBasePath;
     QXmlStreamReader reader(&file);
 
     while (!reader.atEnd()) {
@@ -81,7 +80,7 @@ void Config::readConfiguration(const QString &configfile)
                     const auto attrs = reader.attributes();
                     const auto name = attrs.value(QLatin1String("name"));
                     if (name.isEmpty()) {
-                        qWarning() << "Given envvar with no name.";
+                        qCWarning(AKONADITEST_LOG) << "Given envvar with no name.";
                     } else {
                         mEnvVars[name.toString()] = reader.readElementText();
                     }
