@@ -23,6 +23,8 @@
 #include <QObject>
 #include <QProcess>
 
+#include <chrono>
+
 namespace Akonadi
 {
 
@@ -99,7 +101,7 @@ public:
      * Note that it is your responsiblility to ask the process to quit, otherwise this is just
      * pointless waiting.
      */
-    void setShutdownTimeout(int msecs);
+    void setShutdownTimeout(std::chrono::milliseconds timeout);
 
 Q_SIGNALS:
     /**
@@ -134,7 +136,7 @@ private:
     bool mFailedToStart;
     int mCrashCount;
     bool mRestartOnceOnExit;
-    int mShutdownTimeout;
+    std::chrono::milliseconds mShutdownTimeout;
 };
 
 }

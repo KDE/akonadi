@@ -32,6 +32,8 @@
 #include <QSharedPointer>
 #include <QString>
 
+#include <memory>
+
 class AgentManager;
 class AgentType;
 
@@ -49,10 +51,8 @@ class AgentInstance : public QObject
 public:
     typedef QSharedPointer<AgentInstance> Ptr;
 
-    explicit AgentInstance(AgentManager *manager);
-    virtual ~AgentInstance()
-    {
-    }
+    explicit AgentInstance(AgentManager &manager);
+    ~AgentInstance() override;
 
     /** Set/get the unique identifier of this AgentInstance */
     Q_REQUIRED_RESULT QString identifier() const
@@ -103,42 +103,42 @@ public:
 
     Q_REQUIRED_RESULT bool hasResourceInterface() const
     {
-        return mResourceInterface;
+        return mResourceInterface != nullptr;
     }
 
     Q_REQUIRED_RESULT bool hasAgentInterface() const
     {
-        return mAgentControlInterface && mAgentStatusInterface;
+        return mAgentControlInterface != nullptr && mAgentStatusInterface != nullptr;
     }
 
     Q_REQUIRED_RESULT bool hasPreprocessorInterface() const
     {
-        return mPreprocessorInterface;
+        return mPreprocessorInterface != nullptr;
     }
 
     org::freedesktop::Akonadi::Agent::Control *controlInterface() const
     {
-        return mAgentControlInterface;
+        return mAgentControlInterface.get();
     }
 
     org::freedesktop::Akonadi::Agent::Status *statusInterface() const
     {
-        return mAgentStatusInterface;
+        return mAgentStatusInterface.get();
     }
 
     org::freedesktop::Akonadi::Agent::Search *searchInterface() const
     {
-        return mSearchInterface;
+        return mSearchInterface.get();
     }
 
     org::freedesktop::Akonadi::Resource *resourceInterface() const
     {
-        return mResourceInterface;
+        return mResourceInterface.get();
     }
 
     org::freedesktop::Akonadi::Preprocessor *preProcessorInterface() const
     {
-        return mPreprocessorInterface;
+        return mPreprocessorInterface.get();
     }
 
     bool obtainAgentInterface();
@@ -162,7 +162,8 @@ protected Q_SLOTS:
     void errorHandler(const QDBusError &error);
 
 private:
-    template <typename T> T *findInterface(Akonadi::DBus::AgentType agentType, const char *path = nullptr);
+    template <typename T> 
+    std::unique_ptr<T> findInterface(Akonadi::DBus::AgentType agentType, const char *path = nullptr);
 
 protected:
     void setAgentType(const QString &agentType)
@@ -173,17 +174,17 @@ protected:
 private:
     QString mIdentifier;
     QString mType;
-    AgentManager *mManager = nullptr;
-    org::freedesktop::Akonadi::Agent::Control *mAgentControlInterface = nullptr;
-    org::freedesktop::Akonadi::Agent::Status *mAgentStatusInterface = nullptr;
-    org::freedesktop::Akonadi::Agent::Search *mSearchInterface = nullptr;
-    org::freedesktop::Akonadi::Resource *mResourceInterface = nullptr;
-    org::freedesktop::Akonadi::Preprocessor *mPreprocessorInterface = nullptr;
+    AgentManager &mManager;
+    std::unique_ptr<org::freedesktop::Akonadi::Agent::Control> mAgentControlInterface;
+    std::unique_ptr<org::freedesktop::Akonadi::Agent::Status> mAgentStatusInterface;
+    std::unique_ptr<org::freedesktop::Akonadi::Agent::Search> mSearchInterface;
+    std::unique_ptr<org::freedesktop::Akonadi::Resource> mResourceInterface;
+    std::unique_ptr<org::freedesktop::Akonadi::Preprocessor> mPreprocessorInterface;
 
-    int mStatus = 0;
-    QString mStatusMessage;
-    int mPercent = 0;
     QString mResourceName;
+    QString mStatusMessage;
+    int mStatus = 0;
+    int mPercent = 0;
     bool mOnline = false;
     bool mPendingQuit = false;
 

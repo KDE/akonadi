@@ -33,8 +33,9 @@ class AgentProcessInstance : public AgentInstance
     Q_OBJECT
 
 public:
-    explicit AgentProcessInstance(AgentManager *manager);
-    ~AgentProcessInstance() override {}
+    explicit AgentProcessInstance(AgentManager &manager);
+    ~AgentProcessInstance() override = default;
+
     bool start(const AgentType &agentInfo) override;
     void quit() override;
     void cleanup() override;
@@ -45,7 +46,7 @@ private Q_SLOTS:
     void failedToStart();
 
 private:
-    Akonadi::ProcessControl *mController = nullptr;
+    std::unique_ptr<Akonadi::ProcessControl> mController;
 };
 
 }

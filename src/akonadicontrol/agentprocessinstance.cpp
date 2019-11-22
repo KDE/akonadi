@@ -28,7 +28,7 @@
 
 using namespace Akonadi;
 
-AgentProcessInstance::AgentProcessInstance(AgentManager *manager)
+AgentProcessInstance::AgentProcessInstance(AgentManager &manager)
     : AgentInstance(manager)
 {
 }
@@ -53,8 +53,8 @@ bool AgentProcessInstance::start(const AgentType &agentInfo)
         return false;
     }
 
-    mController = new Akonadi::ProcessControl(this);
-    connect(mController, &ProcessControl::unableToStart, this, &AgentProcessInstance::failedToStart);
+    mController = std::make_unique<Akonadi::ProcessControl>();
+    connect(mController.get(), &ProcessControl::unableToStart, this, &AgentProcessInstance::failedToStart);
 
     if (agentInfo.launchMethod == AgentType::Process) {
         const QStringList arguments = { QStringLiteral("--identifier"), identifier()};

@@ -23,11 +23,12 @@
 #include "agenttype.h"
 #include "agentmanager.h"
 
-AgentInstance::AgentInstance(AgentManager *manager)
-    : QObject(manager)
-    , mManager(manager)
+AgentInstance::AgentInstance(AgentManager &manager)
+    : mManager(manager)
 {
 }
+
+AgentInstance::~AgentInstance() = default;
 
 void AgentInstance::quit()
 {
@@ -47,13 +48,8 @@ void AgentInstance::cleanup()
 
 bool AgentInstance::obtainAgentInterface()
 {
-    delete mAgentControlInterface;
-    delete mAgentStatusInterface;
-
-    mAgentControlInterface =
-        findInterface<org::freedesktop::Akonadi::Agent::Control>(Akonadi::DBus::Agent, "/");
-    mAgentStatusInterface =
-        findInterface<org::freedesktop::Akonadi::Agent::Status>(Akonadi::DBus::Agent, "/");
+    mAgentControlInterface = findInterface<org::freedesktop::Akonadi::Agent::Control>(Akonadi::DBus::Agent, "/");
+    mAgentStatusInterface = findInterface<org::freedesktop::Akonadi::Agent::Status>(Akonadi::DBus::Agent, "/");
 
     if (mPendingQuit && mAgentControlInterface && mAgentControlInterface->isValid()) {
         mAgentControlInterface->quit();
@@ -67,12 +63,13 @@ bool AgentInstance::obtainAgentInterface()
     mSearchInterface =
         findInterface<org::freedesktop::Akonadi::Agent::Search>(Akonadi::DBus::Agent, "/Search");
 
-    connect(mAgentStatusInterface, SIGNAL(status(int,QString)), SLOT(statusChanged(int,QString)));
-    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::advancedStatus, this, &AgentInstance::advancedStatusChanged);
-    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::percent, this, &AgentInstance::percentChanged);
-    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::warning, this, &AgentInstance::warning);
-    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::error, this, &AgentInstance::error);
-    connect(mAgentStatusInterface, &OrgFreedesktopAkonadiAgentStatusInterface::onlineChanged, this, &AgentInstance::onlineChanged);
+    connect(mAgentStatusInterface.get(), qOverload<int, const QString &>(&OrgFreedesktopAkonadiAgentStatusInterface::status),
+            this, &AgentInstance::statusChanged);
+    connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::advancedStatus, this, &AgentInstance::advancedStatusChanged);
+    connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::percent, this, &AgentInstance::percentChanged);
+    connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::warning, this, &AgentInstance::warning);
+    connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::error, this, &AgentInstance::error);
+    connect(mAgentStatusInterface.get(), &OrgFreedesktopAkonadiAgentStatusInterface::onlineChanged, this, &AgentInstance::onlineChanged);
 
     refreshAgentStatus();
     return true;
@@ -80,25 +77,21 @@ bool AgentInstance::obtainAgentInterface()
 
 bool AgentInstance::obtainResourceInterface()
 {
-    delete mResourceInterface;
-    mResourceInterface =
-        findInterface<org::freedesktop::Akonadi::Resource>(Akonadi::DBus::Resource, "/");
+    mResourceInterface = findInterface<org::freedesktop::Akonadi::Resource>(Akonadi::DBus::Resource, "/");
 
     if (!mResourceInterface) {
         return false;
     }
 
-    connect(mResourceInterface, &OrgFreedesktopAkonadiResourceInterface::nameChanged, this, &AgentInstance::resourceNameChanged);
+    connect(mResourceInterface.get(), &OrgFreedesktopAkonadiResourceInterface::nameChanged, this, &AgentInstance::resourceNameChanged);
     refreshResourceStatus();
     return true;
 }
 
 bool AgentInstance::obtainPreprocessorInterface()
 {
-    delete mPreprocessorInterface;
-    mPreprocessorInterface =
-        findInterface<org::freedesktop::Akonadi::Preprocessor>(Akonadi::DBus::Preprocessor, "/");
-    return mPreprocessorInterface;
+    mPreprocessorInterface = findInterface<org::freedesktop::Akonadi::Preprocessor>(Akonadi::DBus::Preprocessor, "/");
+    return mPreprocessorInterface != nullptr;
 }
 
 void AgentInstance::statusChanged(int status, const QString &statusMsg)
@@ -108,12 +101,12 @@ void AgentInstance::statusChanged(int status, const QString &statusMsg)
     }
     mStatus = status;
     mStatusMessage = statusMsg;
-    Q_EMIT mManager->agentInstanceStatusChanged(mIdentifier, mStatus, mStatusMessage);
+    Q_EMIT mManager.agentInstanceStatusChanged(mIdentifier, mStatus, mStatusMessage);
 }
 
 void AgentInstance::advancedStatusChanged(const QVariantMap &status)
 {
-    Q_EMIT mManager->agentInstanceAdvancedStatusChanged(mIdentifier, status);
+    Q_EMIT mManager.agentInstanceAdvancedStatusChanged(mIdentifier, status);
 }
 
 void AgentInstance::statusStateChanged(int status)
@@ -132,17 +125,17 @@ void AgentInstance::percentChanged(int percent)
         return;
     }
     mPercent = percent;
-    Q_EMIT mManager->agentInstanceProgressChanged(mIdentifier, mPercent, QString());
+    Q_EMIT mManager.agentInstanceProgressChanged(mIdentifier, mPercent, QString());
 }
 
 void AgentInstance::warning(const QString &msg)
 {
-    Q_EMIT mManager->agentInstanceWarning(mIdentifier, msg);
+    Q_EMIT mManager.agentInstanceWarning(mIdentifier, msg);
 }
 
 void AgentInstance::error(const QString &msg)
 {
-    Q_EMIT mManager->agentInstanceError(mIdentifier, msg);
+    Q_EMIT mManager.agentInstanceError(mIdentifier, msg);
 }
 
 void AgentInstance::onlineChanged(bool state)
@@ -151,7 +144,7 @@ void AgentInstance::onlineChanged(bool state)
         return;
     }
     mOnline = state;
-    Q_EMIT mManager->agentInstanceOnlineChanged(mIdentifier, state);
+    Q_EMIT mManager.agentInstanceOnlineChanged(mIdentifier, state);
 }
 
 void AgentInstance::resourceNameChanged(const QString &name)
@@ -160,7 +153,7 @@ void AgentInstance::resourceNameChanged(const QString &name)
         return;
     }
     mResourceName = name;
-    Q_EMIT mManager->agentInstanceNameChanged(mIdentifier, name);
+    Q_EMIT mManager.agentInstanceNameChanged(mIdentifier, name);
 }
 
 void AgentInstance::refreshAgentStatus()
@@ -204,17 +197,16 @@ void AgentInstance::errorHandler(const QDBusError &error)
 }
 
 template <typename T>
-T *AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *path)
+std::unique_ptr<T> AgentInstance::findInterface(Akonadi::DBus::AgentType agentType, const char *path)
 {
-    T *iface = new T(Akonadi::DBus::agentServiceName(mIdentifier, agentType),
-                     QLatin1String(path), QDBusConnection::sessionBus(), this);
+    auto iface = std::make_unique<T>(Akonadi::DBus::agentServiceName(mIdentifier, agentType),
+                                     QLatin1String(path), QDBusConnection::sessionBus(), this);
 
     if (!iface || !iface->isValid()) {
         qCCritical(AKONADICONTROL_LOG) << Q_FUNC_INFO << "Cannot connect to agent instance with identifier"
                                        << mIdentifier << ", error message:"
                                        << (iface ? iface->lastError().message() : QString());
-        delete iface;
-        return nullptr;
+        iface.release();
     }
     return iface;
 }

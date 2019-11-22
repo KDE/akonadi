@@ -325,8 +325,6 @@ private Q_SLOTS:
     void updatePluginInfos();
     void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
     void agentExeChanged(const QString &fileName);
-    void agentServerFailure();
-    void serverFailure();
 
 private:
     /**
@@ -382,10 +380,10 @@ private:
      */
     QHash<QString, AgentInstance::Ptr> mAgentInstances;
 
-    Akonadi::ProcessControl *mAgentServer = nullptr;
-    Akonadi::ProcessControl *mStorageController = nullptr;
-    bool mAgentServerEnabled;
-    bool mVerbose;
+    std::unique_ptr<Akonadi::ProcessControl> mAgentServer;
+    std::unique_ptr<Akonadi::ProcessControl> mStorageController;
+    bool mAgentServerEnabled = false;
+    bool mVerbose = false;
 
     friend class AgentInstance;
 };

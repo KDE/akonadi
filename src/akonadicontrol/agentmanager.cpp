@@ -45,8 +45,57 @@
 #include <QDBusConnection>
 
 using Akonadi::ProcessControl;
+using namespace std::chrono_literals;
 
 static const bool enableAgentServerDefault = false;
+
+class StorageProcessControl : public Akonadi::ProcessControl
+{
+    Q_OBJECT
+public:
+    StorageProcessControl(const QStringList &args)
+        : Akonadi::ProcessControl()
+    {
+        setShutdownTimeout(15s);
+        connect(this, &Akonadi::ProcessControl::unableToStart, this,
+                []() {
+                    QCoreApplication::instance()->exit(255);
+                });
+        start(QStringLiteral("akonadiserver"), args, RestartOnCrash);
+    }
+
+    ~StorageProcessControl() override
+    {
+        setCrashPolicy(ProcessControl::StopOnCrash);
+        org::freedesktop::Akonadi::Server serverIface(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/Server"),
+                                                      QDBusConnection::sessionBus());
+        serverIface.quit();
+    }
+};
+
+class AgentServerProcessControl : public Akonadi::ProcessControl
+{
+    Q_OBJECT
+public:
+    AgentServerProcessControl(const QStringList &args)
+        : Akonadi::ProcessControl()
+    {
+        connect(this, &Akonadi::ProcessControl::unableToStart, this,
+                []() {
+                    qCCritical(AKONADICONTROL_LOG) << "Failed to start AgentServer!";
+                });
+        start(QStringLiteral("akonadi_agent_server"), args, RestartOnCrash);
+    }
+
+    ~AgentServerProcessControl() override
+    {
+        setCrashPolicy(ProcessControl::StopOnCrash);
+        org::freedesktop::Akonadi::AgentServer agentServerIface(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
+                                                                QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
+        agentServerIface.quit();
+    }
+};
+
 
 AgentManager::AgentManager(bool verbose, QObject *parent)
     : QObject(parent)
@@ -75,15 +124,10 @@ AgentManager::AgentManager(bool verbose, QObject *parent)
         serviceArgs << QStringLiteral("--verbose");
     }
 
-    mStorageController = new Akonadi::ProcessControl;
-    mStorageController->setShutdownTimeout(15 * 1000);   // the server needs more time for shutdown if we are using an internal mysqld
-    connect(mStorageController, &Akonadi::ProcessControl::unableToStart, this, &AgentManager::serverFailure);
-    mStorageController->start(QStringLiteral("akonadiserver"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
+    mStorageController = std::unique_ptr<Akonadi::ProcessControl>(new StorageProcessControl(serviceArgs));
 
     if (mAgentServerEnabled) {
-        mAgentServer = new Akonadi::ProcessControl;
-        connect(mAgentServer, &Akonadi::ProcessControl::unableToStart, this, &AgentManager::agentServerFailure);
-        mAgentServer->start(QStringLiteral("akonadi_agent_server"), serviceArgs, Akonadi::ProcessControl::RestartOnCrash);
+        mAgentServer = std::unique_ptr<Akonadi::ProcessControl>(new AgentServerProcessControl(serviceArgs));
     }
 }
 
@@ -127,28 +171,10 @@ void AgentManager::cleanup()
     for (const AgentInstance::Ptr &instance : qAsConst(mAgentInstances)) {
         instance->quit();
     }
-
     mAgentInstances.clear();
 
-    mStorageController->setCrashPolicy(ProcessControl::StopOnCrash);
-    org::freedesktop::Akonadi::Server *serverIface =
-        new org::freedesktop::Akonadi::Server(Akonadi::DBus::serviceName(Akonadi::DBus::Server), QStringLiteral("/Server"),
-                QDBusConnection::sessionBus(), this);
-    serverIface->quit();
-
-    if (mAgentServer) {
-        mAgentServer->setCrashPolicy(ProcessControl::StopOnCrash);
-        org::freedesktop::Akonadi::AgentServer *agentServerIface =
-            new org::freedesktop::Akonadi::AgentServer(Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer),
-                    QStringLiteral("/AgentServer"), QDBusConnection::sessionBus(), this);
-        agentServerIface->quit();
-    }
-
-    delete mStorageController;
-    mStorageController = nullptr;
-
-    delete mAgentServer;
-    mAgentServer = nullptr;
+    mStorageController.reset();
+    mStorageController.reset();
 }
 
 QStringList AgentManager::agentTypes() const
@@ -218,10 +244,10 @@ AgentInstance::Ptr AgentManager::createAgentInstance(const AgentType &info)
 {
     switch (info.launchMethod) {
     case AgentType::Server:
-        return AgentInstance::Ptr(new Akonadi::AgentThreadInstance(this));
+        return QSharedPointer<Akonadi::AgentThreadInstance>::create(*this);
     case AgentType::Launcher: // Fall through
     case AgentType::Process:
-        return AgentInstance::Ptr(new Akonadi::AgentProcessInstance(this));
+        return QSharedPointer<Akonadi::AgentProcessInstance>::create(*this);
     default:
         Q_ASSERT_X(false, "AgentManger::createAgentInstance", "Unhandled AgentType::LaunchMethod case");
     }
@@ -235,10 +261,10 @@ QString AgentManager::createAgentInstance(const QString &identifier)
         return QString();
     }
 
-    const AgentType agentInfo = mAgents.value(identifier);
-    mAgents[identifier].instanceCounter++;
+    AgentType &agentInfo = mAgents[identifier];
+    agentInfo.instanceCounter++;
 
-    const AgentInstance::Ptr instance = createAgentInstance(agentInfo);
+    const auto instance = createAgentInstance(agentInfo);
     if (agentInfo.capabilities.contains(AgentType::CapabilityUnique)) {
         instance->setIdentifier(identifier);
     } else {
@@ -270,7 +296,7 @@ QString AgentManager::createAgentInstance(const QString &identifier)
 
 void AgentManager::removeAgentInstance(const QString &identifier)
 {
-    const AgentInstance::Ptr instance = mAgentInstances.value(identifier);
+    const auto instance = mAgentInstances.value(identifier);
     if (!instance) {
         qCWarning(AKONADICONTROL_LOG) << Q_FUNC_INFO << "Agent instance with identifier" << identifier << "does not exist";
         return;
@@ -856,14 +882,4 @@ void AgentManager::removeSearch(quint64 resultCollectionId)
     }
 }
 
-void AgentManager::agentServerFailure()
-{
-    qCCritical(AKONADICONTROL_LOG) << "Failed to start AgentServer!";
-    // if ( requiresAgentServer )
-    //   QCoreApplication::instance()->exit( 255 );
-}
-
-void AgentManager::serverFailure()
-{
-    QCoreApplication::instance()->exit(255);
-}
+#include "agentmanager.moc"

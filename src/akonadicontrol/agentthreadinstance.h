@@ -22,6 +22,8 @@
 #include "agentinstance.h"
 #include "agenttype.h"
 
+#include <QDBusServiceWatcher>
+
 namespace Akonadi
 {
 
@@ -29,8 +31,8 @@ class AgentThreadInstance : public AgentInstance
 {
     Q_OBJECT
 public:
-    explicit AgentThreadInstance(AgentManager *manager);
-    ~AgentThreadInstance() override {}
+    explicit AgentThreadInstance(AgentManager &manager);
+    ~AgentThreadInstance() override = default;
 
     bool start(const AgentType &agentInfo) override;
     void quit() override;
@@ -42,6 +44,7 @@ private Q_SLOTS:
 
 private:
     AgentType mAgentType;
+    QDBusServiceWatcher mServiceWatcher;
 };
 
 }

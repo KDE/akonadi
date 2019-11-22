@@ -33,6 +33,7 @@
 #endif
 
 using namespace Akonadi;
+using namespace std::chrono_literals;
 
 static const int s_maxCrashCount = 2;
 
@@ -42,7 +43,7 @@ ProcessControl::ProcessControl(QObject *parent)
     , mFailedToStart(false)
     , mCrashCount(0)
     , mRestartOnceOnExit(false)
-    , mShutdownTimeout(1000)
+    , mShutdownTimeout(1s)
 {
     connect(&mProcess, &QProcess::errorOccurred,
             this, &ProcessControl::slotError);
@@ -84,7 +85,7 @@ void ProcessControl::setCrashPolicy(CrashPolicy policy)
 void ProcessControl::stop()
 {
     if (mProcess.state() != QProcess::NotRunning) {
-        mProcess.waitForFinished(mShutdownTimeout);
+        mProcess.waitForFinished(mShutdownTimeout.count());
         mProcess.terminate();
         mProcess.waitForFinished(10000);
         mProcess.kill();
@@ -276,7 +277,7 @@ bool ProcessControl::isRunning() const
     return mProcess.state() != QProcess::NotRunning;
 }
 
-void ProcessControl::setShutdownTimeout(int msecs)
+void ProcessControl::setShutdownTimeout(std::chrono::milliseconds timeout)
 {
-    mShutdownTimeout = msecs;
+    mShutdownTimeout = timeout;
 }
