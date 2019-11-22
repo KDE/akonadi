@@ -36,7 +36,7 @@ int TestRunner::exitCode() const
 
 void TestRunner::run()
 {
-    qDebug() << mArguments;
+    qDebug() << "Starting test" << mArguments;
     mProcess = new KProcess(this);
     mProcess->setProgram(mArguments);
     connect(mProcess, QOverload<int>::of(&KProcess::finished), this, &TestRunner::processFinished);

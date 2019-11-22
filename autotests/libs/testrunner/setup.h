@@ -78,9 +78,9 @@ private:
     void copyDirectory(const QString &src, const QString &dst);
     void createTempEnvironment();
     void cleanTempEnvironment();
-    bool isSetupDone() const;
     void setupFailed();
     void writeAkonadiserverrc(const QString &path);
+    void checkSetupDone();
 
 private:
     KProcess *mAkonadiDaemonProcess = nullptr;
