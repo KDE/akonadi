@@ -261,8 +261,8 @@ QString AgentManager::createAgentInstance(const QString &identifier)
         return QString();
     }
 
-    AgentType &agentInfo = mAgents[identifier];
-    agentInfo.instanceCounter++;
+    const AgentType agentInfo = mAgents[identifier];
+    mAgents[identifier].instanceCounter++;
 
     const auto instance = createAgentInstance(agentInfo);
     if (agentInfo.capabilities.contains(AgentType::CapabilityUnique)) {
