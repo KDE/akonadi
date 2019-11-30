@@ -22,7 +22,7 @@
 
 #include "akonadicore_export.h"
 
-#include <krecursivefilterproxymodel.h>
+#include <QSortFilterProxyModel>
 
 namespace Akonadi
 {
@@ -53,7 +53,7 @@ namespace Akonadi
  * @author Christian Mollekopf <chrigi_1@fastmail.fm>
  * @since 4.8
  */
-class AKONADICORE_EXPORT TrashFilterProxyModel : public KRecursiveFilterProxyModel
+class AKONADICORE_EXPORT TrashFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
@@ -68,7 +68,7 @@ protected:
     /**
      * Sort filter criterias, according to how expensive the operation is
      */
-    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
     //@cond PRIVATE

@@ -20,11 +20,10 @@
 #ifndef AKONADI_ENTITYRIGHTSFILTERMODEL_H
 #define AKONADI_ENTITYRIGHTSFILTERMODEL_H
 
+#include "akonadicore_export.h"
 #include "entitytreemodel.h"
 
-#include <krecursivefilterproxymodel.h>
-
-#include "akonadicore_export.h"
+#include <QSortFilterProxyModel>
 
 namespace Akonadi
 {
@@ -58,7 +57,7 @@ class EntityRightsFilterModelPrivate;
  * @author Tobias Koenig <tokoe@kde.org>
  * @since 4.6
  */
-class AKONADICORE_EXPORT EntityRightsFilterModel : public KRecursiveFilterProxyModel
+class AKONADICORE_EXPORT EntityRightsFilterModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
@@ -100,7 +99,7 @@ public:
                           Qt::MatchFlags flags = Qt::MatchFlags(Qt::MatchStartsWith | Qt::MatchWrap)) const override;
 
 protected:
-    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const override;
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 
 private:
     //@cond PRIVATE

@@ -289,7 +289,7 @@ public:
  *
  * We use KSelectionProxyModel in order to make a flat list of selected folders from the folder tree.
  *
- * Attempts to use QSortFilterProxyModel / KRecursiveFilterProxyModel make code somewhat simpler,
+ * Attempts to use QSortFilterProxyModel make code somewhat simpler,
  * but don't work since we then get a filtered tree, not a flat list. Stacking a KDescendantsProxyModel
  * on top would likely remove explicitly selected parents when one of their child is selected too.
  */

@@ -21,9 +21,9 @@
 #ifndef AKONADI_RECURSIVECOLLECTIONFILTERPROXYMODEL_H
 #define AKONADI_RECURSIVECOLLECTIONFILTERPROXYMODEL_H
 
-#include <krecursivefilterproxymodel.h>
-
 #include "akonadicore_export.h"
+
+#include <QSortFilterProxyModel>
 
 namespace Akonadi
 {
@@ -36,7 +36,7 @@ class RecursiveCollectionFilterProxyModelPrivate;
  * @author Stephen Kelly <steveire@gmail.com>
  * @since 4.6
  */
-class AKONADICORE_EXPORT RecursiveCollectionFilterProxyModel : public KRecursiveFilterProxyModel
+class AKONADICORE_EXPORT RecursiveCollectionFilterProxyModel : public QSortFilterProxyModel
 {
     Q_OBJECT
 
@@ -99,9 +99,8 @@ public:
     void setIncludeCheckedOnly(bool checked);
 
 protected:
-    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const override;
     int columnCount(const QModelIndex &index) const override;
-
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override;
 protected:
     RecursiveCollectionFilterProxyModelPrivate *const d_ptr;
     Q_DECLARE_PRIVATE(RecursiveCollectionFilterProxyModel)

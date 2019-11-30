@@ -33,10 +33,10 @@ public:
 };
 
 TrashFilterProxyModel::TrashFilterProxyModel(QObject *parent)
-    : KRecursiveFilterProxyModel(parent)
+    : QSortFilterProxyModel(parent)
     , d_ptr(new TrashFilterProxyModelPrivate())
 {
-
+    setRecursiveFilteringEnabled(true);
 }
 
 TrashFilterProxyModel::~TrashFilterProxyModel()
@@ -57,7 +57,7 @@ bool TrashFilterProxyModel::trashIsShown() const
     return d->mTrashIsShown;
 }
 
-bool TrashFilterProxyModel::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
+bool TrashFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     Q_D(const TrashFilterProxyModel);
     const QModelIndex &index = sourceModel()->index(sourceRow, 0, sourceParent);

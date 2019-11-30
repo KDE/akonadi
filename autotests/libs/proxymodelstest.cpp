@@ -19,20 +19,18 @@
 
 #include <QTest>
 
-#include <krecursivefilterproxymodel.h>
+#include <QSortFilterProxyModel>
 #include <QStandardItemModel>
 
-class KRFPTestModel : public KRecursiveFilterProxyModel
+class KRFPTestModel : public QSortFilterProxyModel
 {
 public:
-    KRFPTestModel(QObject *parent) : KRecursiveFilterProxyModel(parent) { }
-
-    bool acceptRow(int sourceRow, const QModelIndex &sourceParent) const override
+    KRFPTestModel(QObject *parent) : QSortFilterProxyModel(parent) { }
+    bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
     {
         const QModelIndex modelIndex = sourceModel()->index(sourceRow, 0, sourceParent);
         return !modelIndex.data().toString().contains(QLatin1String("three"));
     }
-
 };
 
 class ProxyModelsTest : public QObject
@@ -48,7 +46,7 @@ private Q_SLOTS:
 
 private:
     QStandardItemModel m_model;
-    KRecursiveFilterProxyModel *m_krfp = nullptr;
+    QSortFilterProxyModel *m_krfp = nullptr;
     KRFPTestModel *m_krfptest = nullptr;
 };
 
@@ -72,8 +70,9 @@ void ProxyModelsTest::init()
 
     m_model.setData(m_model.index(4, 0, QModelIndex()), QStringLiteral("mystuff"), Qt::UserRole + 42);
 
-    m_krfp = new KRecursiveFilterProxyModel(this);
+    m_krfp = new QSortFilterProxyModel(this);
     m_krfp->setSourceModel(&m_model);
+    m_krfp->setRecursiveFilteringEnabled(true);
     m_krfptest = new KRFPTestModel(this);
     m_krfptest->setSourceModel(m_krfp);
 

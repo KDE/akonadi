@@ -49,10 +49,10 @@ public:
 }
 
 RecursiveCollectionFilterProxyModel::RecursiveCollectionFilterProxyModel(QObject *parent)
-    : KRecursiveFilterProxyModel(parent)
+    : QSortFilterProxyModel(parent)
     , d_ptr(new RecursiveCollectionFilterProxyModelPrivate(this))
 {
-
+    setRecursiveFilteringEnabled(true);
 }
 
 RecursiveCollectionFilterProxyModel::~RecursiveCollectionFilterProxyModel()
@@ -60,7 +60,7 @@ RecursiveCollectionFilterProxyModel::~RecursiveCollectionFilterProxyModel()
     delete d_ptr;
 }
 
-bool RecursiveCollectionFilterProxyModel::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
+bool RecursiveCollectionFilterProxyModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
 {
     Q_D(const RecursiveCollectionFilterProxyModel);
 
@@ -84,6 +84,7 @@ bool RecursiveCollectionFilterProxyModel::acceptRow(int sourceRow, const QModelI
     }
     return collectionWanted;
 }
+
 
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(const QString &mimeType)
 {

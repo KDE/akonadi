@@ -19,9 +19,7 @@
 */
 
 #include "entityrightsfiltermodel.h"
-
 #include "entitytreemodel.h"
-
 
 using namespace Akonadi;
 
@@ -70,14 +68,25 @@ public:
 }
 
 EntityRightsFilterModel::EntityRightsFilterModel(QObject *parent)
-    : KRecursiveFilterProxyModel(parent)
+    : QSortFilterProxyModel(parent)
     , d_ptr(new EntityRightsFilterModelPrivate(this))
 {
+    setRecursiveFilteringEnabled(true);
 }
 
 EntityRightsFilterModel::~EntityRightsFilterModel()
 {
     delete d_ptr;
+}
+
+
+bool EntityRightsFilterModel::filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const
+{
+    Q_D(const EntityRightsFilterModel);
+
+    const QModelIndex modelIndex = sourceModel()->index(sourceRow, 0, sourceParent);
+
+    return d->rightsMatches(modelIndex);
 }
 
 void EntityRightsFilterModel::setAccessRights(Collection::Rights rights)
@@ -93,23 +102,14 @@ Collection::Rights EntityRightsFilterModel::accessRights() const
     return d->mAccessRights;
 }
 
-bool EntityRightsFilterModel::acceptRow(int sourceRow, const QModelIndex &sourceParent) const
-{
-    Q_D(const EntityRightsFilterModel);
-
-    const QModelIndex modelIndex = sourceModel()->index(sourceRow, 0, sourceParent);
-
-    return d->rightsMatches(modelIndex);
-}
-
 Qt::ItemFlags EntityRightsFilterModel::flags(const QModelIndex &index) const
 {
     Q_D(const EntityRightsFilterModel);
 
     if (d->rightsMatches(index)) {
-        return KRecursiveFilterProxyModel::flags(index);
+        return QSortFilterProxyModel::flags(index);
     } else {
-        return KRecursiveFilterProxyModel::flags(index) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
+        return QSortFilterProxyModel::flags(index) & ~(Qt::ItemIsSelectable | Qt::ItemIsEnabled);
     }
 }
 
