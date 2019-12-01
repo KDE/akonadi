@@ -65,7 +65,6 @@ find_package(Qt5Test ${QT_REQUIRED_VERSION} REQUIRED)
 find_package(Qt5Widgets ${QT_REQUIRED_VERSION} REQUIRED)
 find_package(Qt5Xml ${QT_REQUIRED_VERSION} REQUIRED)
 
-find_package(KF5Completion ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5Config ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5ConfigWidgets ${KF5_MIN_VERSION} CONFIG REQUIRED)
 find_package(KF5CoreAddons ${KF5_MIN_VERSION} CONFIG REQUIRED)

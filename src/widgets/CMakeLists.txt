@@ -107,7 +107,6 @@ PRIVATE
     Qt5::Sql
     KF5::AkonadiPrivate
     KF5::WindowSystem
-    KF5::Completion
 )
 
 set_target_properties(KF5AkonadiWidgets PROPERTIES
