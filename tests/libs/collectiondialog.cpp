@@ -24,7 +24,7 @@
 #include <KLocalizedString>
 #include <QApplication>
 #include <QCommandLineParser>
-#include <kaboutdata.h>
+#include <KAboutData>
 
 using namespace Akonadi;
 

@@ -32,7 +32,7 @@
 #include "session.h"
 #include "collectionutils.h"
 
-#include <kdescendantsproxymodel.h>
+#include <KDescendantsProxyModel>
 
 #include <QAbstractItemModel>
 

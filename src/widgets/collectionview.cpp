@@ -28,7 +28,7 @@
 #include "akonadiwidgets_debug.h"
 #include <KLocalizedString>
 #include <QUrl>
-#include <kxmlguifactory.h>
+#include <KXMLGUIFactory>
 #include <kxmlguiwindow.h>
 
 #include <QTimer>

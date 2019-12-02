@@ -23,7 +23,7 @@
 #include <QItemSelectionModel>
 #include <QMimeData>
 
-#include <kconfiggroup.h>
+#include <KConfigGroup>
 #include <KLocalizedString>
 #include <KJob>
 #include <QUrl>

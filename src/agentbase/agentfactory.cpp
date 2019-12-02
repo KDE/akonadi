@@ -25,7 +25,7 @@
 #include "servermanager_p.h"
 
 #include <KLocalizedString>
-#include <kglobal.h>
+#include <KGlobal>
 
 #include <QThread>
 #include <QThreadStorage>

@@ -23,7 +23,7 @@
 #include "akonadicore_export.h"
 #include "agenttype.h"
 
-#include <kjob.h>
+#include <KJob>
 
 namespace Akonadi
 {

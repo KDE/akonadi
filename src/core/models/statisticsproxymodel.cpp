@@ -28,7 +28,7 @@
 #include "collectionstatistics.h"
 #include "entitydisplayattribute.h"
 
-#include <kiconloader.h>
+#include <KIconLoader>
 #include <KLocalizedString>
 #include <KFormat>
 

@@ -25,7 +25,7 @@
 #include "subscriptionmodel_p.h"
 
 #include "akonadiwidgets_debug.h"
-#include <ksharedconfig.h>
+#include <KSharedConfig>
 
 #include <KLocalizedString>
 #include <KConfigGroup>
@@ -35,7 +35,7 @@
 #include <QDialogButtonBox>
 #include <QLineEdit>
 #include <QPushButton>
-#include <krecursivefilterproxymodel.h>
+#include <KRecursiveFilterProxyModel>
 #include <QHeaderView>
 #include <QLabel>
 #include <QTreeView>

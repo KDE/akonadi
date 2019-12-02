@@ -27,7 +27,7 @@
 #include <QMenu>
 
 #include "akonadiwidgets_debug.h"
-#include <kxmlguiclient.h>
+#include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 
 #include "collection.h"

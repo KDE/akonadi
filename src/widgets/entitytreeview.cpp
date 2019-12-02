@@ -34,7 +34,7 @@
 #include "item.h"
 #include "entitytreemodel.h"
 
-#include <kxmlguiclient.h>
+#include <KXMLGUIClient>
 #include <KXMLGUIFactory>
 
 #include "progressspinnerdelegate_p.h"

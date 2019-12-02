@@ -23,7 +23,7 @@
 #include <KLocalizedString>
 #include <QLineEdit>
 #include <KMessageBox>
-#include <kcheckableproxymodel.h>
+#include <KCheckableProxyModel>
 #include <QListView>
 #include "changerecorder.h"
 #include "tagcreatejob.h"

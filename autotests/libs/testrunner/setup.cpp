@@ -26,7 +26,7 @@
 #include <private/standarddirs_p.h>
 
 #include <KConfig>
-#include <kconfiggroup.h>
+#include <KConfigGroup>
 #include <KProcess>
 
 #include <QCoreApplication>

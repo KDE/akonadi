@@ -24,7 +24,7 @@
 
 #include "akonadicore_export.h"
 
-#include <kcompositejob.h>
+#include <KCompositeJob>
 
 class QString;
 

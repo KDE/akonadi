@@ -31,7 +31,7 @@
 #include <itemcreatejob.h>
 #include <resourceselectjob_p.h>
 
-#include <krandom.h>
+#include <KRandom>
 
 #include <QObject>
 #include <QSignalSpy>

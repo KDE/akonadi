@@ -21,7 +21,7 @@
 #define AKONADI_FAVORITECOLLECTIONSMODEL_H
 
 #include "akonadicore_export.h"
-#include "kselectionproxymodel.h"
+#include <KSelectionProxyModel>
 #include "collection.h"
 
 class KConfigGroup;

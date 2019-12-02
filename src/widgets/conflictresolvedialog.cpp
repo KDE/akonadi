@@ -33,7 +33,7 @@
 #include <QWindow>
 #include <QScreen>
 
-#include <kcolorscheme.h>
+#include <KColorScheme>
 #include <KLocalizedString>
 #include <QTextBrowser>
 #include <QDialogButtonBox>

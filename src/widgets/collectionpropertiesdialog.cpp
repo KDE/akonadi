@@ -28,7 +28,7 @@
 #include "akonadiwidgets_debug.h"
 
 
-#include <ksharedconfig.h>
+#include <KSharedConfig>
 #include <KConfigGroup>
 #include <QTabWidget>
 

@@ -23,7 +23,7 @@
 #include "collection.h"
 #include "item.h"
 
-#include "krandom.h"
+#include <KRandom>
 
 #include <QMimeDatabase>
 

@@ -20,7 +20,7 @@
 
 #include "akonadicore_export.h"
 
-#include <kjob.h>
+#include <KJob>
 
 namespace Akonadi
 {

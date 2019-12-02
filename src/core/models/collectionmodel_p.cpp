@@ -32,8 +32,8 @@
 
 #include "akonadicore_debug.h"
 
-#include <kjob.h>
-#include <kiconloader.h>
+#include <KJob>
+#include <KIconLoader>
 
 #include <QCoreApplication>
 #include <QTimer>

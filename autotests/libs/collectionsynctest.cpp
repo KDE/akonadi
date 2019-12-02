@@ -31,7 +31,7 @@
 
 #include "../src/core/collectionsync_p.h"
 
-#include <krandom.h>
+#include <KRandom>
 
 #include <QObject>
 #include <QSignalSpy>

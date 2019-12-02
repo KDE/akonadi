@@ -25,7 +25,7 @@
 
 #include <QLineEdit>
 #include <KLocalizedString>
-#include <kstandardshortcut.h>
+#include <KStandardShortcut>
 
 #include <QEvent>
 #include <QAction>

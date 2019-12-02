@@ -20,7 +20,7 @@
 #ifndef AKONADI_SELECTIONPROXYMODEL_H
 #define AKONADI_SELECTIONPROXYMODEL_H
 
-#include <kselectionproxymodel.h>
+#include <KSelectionProxyModel>
 
 #include "akonadicore_export.h"
 

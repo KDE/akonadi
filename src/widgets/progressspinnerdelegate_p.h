@@ -25,7 +25,7 @@
 #include <QStyledItemDelegate>
 #include <QSet>
 
-#include <kpixmapsequence.h>
+#include <KPixmapSequence>
 
 namespace Akonadi
 {

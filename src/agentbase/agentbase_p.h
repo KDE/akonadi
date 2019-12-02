@@ -24,7 +24,7 @@
 #include "agentbase.h"
 #include "tracerinterface.h"
 
-#include <klocalizedstring.h>
+#include <KLocalizedString>
 
 class QSettings;
 class QTimer;

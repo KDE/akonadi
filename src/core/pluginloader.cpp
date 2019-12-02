@@ -20,7 +20,7 @@
 #include "pluginloader_p.h"
 #include "akonadicore_debug.h"
 #include <private/standarddirs_p.h>
-#include <kconfiggroup.h>
+#include <KConfigGroup>
 #include <KLocalizedString>
 #include <KConfig>
 #include <QDir>

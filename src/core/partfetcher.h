@@ -20,7 +20,7 @@
 #ifndef AKONADI_PARTFETCHER_H
 #define AKONADI_PARTFETCHER_H
 
-#include <kjob.h>
+#include <KJob>
 
 #include "akonadicore_export.h"
 

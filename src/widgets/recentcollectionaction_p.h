@@ -21,7 +21,7 @@
 #include <QStringList>
 #include <QModelIndex>
 #include "collection.h"
-#include <ksharedconfig.h>
+#include <KSharedConfig>
 #include <standardactionmanager.h>
 
 class QMenu;

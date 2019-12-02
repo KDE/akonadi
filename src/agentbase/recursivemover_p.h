@@ -24,7 +24,7 @@
 #include "collection.h"
 #include "agentbase_p.h"
 
-#include <kcompositejob.h>
+#include <KCompositeJob>
 
 namespace Akonadi
 {

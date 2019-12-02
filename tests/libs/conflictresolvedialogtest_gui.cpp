@@ -22,7 +22,7 @@
 #include <QApplication>
 #include <QStandardPaths>
 #include <QCommandLineParser>
-#include <kaboutdata.h>
+#include <KAboutData>
 
 int main(int argc, char **argv)
 {

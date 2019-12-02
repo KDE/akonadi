@@ -37,7 +37,7 @@
 #include "akonadicore_debug.h"
 
 #include <KLocalizedString>
-#include <kcoreconfigskeleton.h>
+#include <KCoreConfigSkeleton>
 
 #include <QDBusConnectionInterface>
 #include <QDBusInterface>

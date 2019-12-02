@@ -22,7 +22,7 @@
 #include <QVBoxLayout>
 #include <KConfig>
 
-#include <kfilterproxysearchline.h>
+#include <KFilterProxySearchLine>
 #include <QLineEdit>
 #include <KSharedConfig>
 #include <KConfigGroup>

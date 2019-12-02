@@ -20,7 +20,7 @@
 
 #include "collectionstatisticsdelegate.h"
 
-#include <kcolorscheme.h>
+#include <KColorScheme>
 #include <KFormat>
 #include "akonadiwidgets_debug.h"
 

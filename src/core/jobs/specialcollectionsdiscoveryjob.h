@@ -23,7 +23,7 @@
 #include "akonadicore_export.h"
 #include "collection.h"
 #include "specialcollections.h"
-#include <kcompositejob.h>
+#include <KCompositeJob>
 
 namespace Akonadi
 {
