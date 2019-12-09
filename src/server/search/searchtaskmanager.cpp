@@ -30,7 +30,9 @@
 #include <QSqlError>
 #include <QTimer>
 #include <QTime>
-
+#if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
+#include <QDeadlineTimer>
+#endif
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -218,8 +220,11 @@ void SearchTaskManager::searchLoop()
 
     Q_FOREVER {
         qCDebug(AKONADISERVER_SEARCH_LOG) << "Search loop is waiting, will wake again in" << timeout << "ms";
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
         mWait.wait(&mLock, timeout);
-
+#else
+        mWait.wait(&mLock, QDeadlineTimer(QDeadlineTimer::Forever));
+#endif
         if (mShouldStop) {
             Q_FOREACH (SearchTask *task, mTasklist) {
                 QMutexLocker locker(&task->sharedLock);

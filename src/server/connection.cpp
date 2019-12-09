@@ -49,8 +49,7 @@ using namespace Akonadi::Server;
 #define IDLE_TIMER_TIMEOUT 180000 // 3 min
 
 static QString connectionIdentifier(Connection *c) {
-    QString id;
-    id.sprintf("%p", static_cast<void *>(c));
+    const QString id = QString::asprintf("%p", static_cast<void *>(c));
     return id;
 }
 
@@ -412,7 +411,7 @@ void Connection::setState(ConnectionState state)
 
 void Connection::setSessionId(const QByteArray &id)
 {
-    m_identifier.sprintf("%s (%p)", id.data(), static_cast<void *>(this));
+    m_identifier = QString::asprintf("%s (%p)", id.data(), static_cast<void *>(this));
     Tracer::self()->beginConnection(m_identifier, QString());
     //m_streamParser->setTracerIdentifier(m_identifier);
 

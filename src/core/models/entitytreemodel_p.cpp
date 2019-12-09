@@ -359,7 +359,7 @@ static QSet<Collection::Id> getChildren(Collection::Id parent, const QHash<Colle
 void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List &collections)
 {
     Q_Q(EntityTreeModel);
-    QTime t;
+    QElapsedTimer t;
     t.start();
 
     QVectorIterator<Akonadi::Collection> it(collections);

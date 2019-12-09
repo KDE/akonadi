@@ -42,7 +42,7 @@ bool SetupTest::startAkonadiDaemon()
 
     if (!mAkonadiDaemonProcess) {
         mAkonadiDaemonProcess = new KProcess(this);
-        connect(mAkonadiDaemonProcess, QOverload<int>::of(&KProcess::finished),
+        connect(mAkonadiDaemonProcess, QOverload<int, QProcess::ExitStatus>::of(&KProcess::finished),
                 this, &SetupTest::slotAkonadiDaemonProcessFinished);
     }
 

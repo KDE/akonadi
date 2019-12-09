@@ -32,6 +32,7 @@
 #include <KLocalizedString>
 
 #include <QTimer>
+#include <QElapsedTimer>
 #include <QDBusInterface>
 #include <QDBusConnectionInterface>
 
@@ -114,9 +115,9 @@ void JobPrivate::publishJob()
     if (!s_jobtracker) {
         // Let's only check for the debugging console every 3 seconds, otherwise every single job
         // makes a dbus call to the dbus daemon, doesn't help performance.
-        static QTime s_lastTime;
-        if (s_lastTime.isNull() || s_lastTime.elapsed() > 3000) {
-            if (s_lastTime.isNull()) {
+        static QElapsedTimer s_lastTime;
+        if (!s_lastTime.isValid() || s_lastTime.elapsed() > 3000) {
+            if (!s_lastTime.isValid()) {
                 s_lastTime.start();
             }
             const QString suffix  = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();

@@ -39,7 +39,7 @@ void TestRunner::run()
     qCDebug(AKONADITEST_LOG) << "Starting test" << mArguments;
     mProcess = new KProcess(this);
     mProcess->setProgram(mArguments);
-    connect(mProcess, QOverload<int>::of(&KProcess::finished), this, &TestRunner::processFinished);
+    connect(mProcess, QOverload<int, QProcess::ExitStatus>::of(&KProcess::finished), this, &TestRunner::processFinished);
     connect(mProcess, &KProcess::errorOccurred,
             this, &TestRunner::processError);
     // environment setup seems to have been done by setuptest globally already
