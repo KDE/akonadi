@@ -23,13 +23,13 @@
 #include "agentinstance.h"
 #include "agentinstancemodel.h"
 
-#include <QIcon>
-#include <KIconLoader>
 
 #include <QApplication>
 #include <QHBoxLayout>
+#include <QIcon>
 #include <QListView>
 #include <QPainter>
+#include <QStyle>
 
 namespace Akonadi
 {
@@ -252,7 +252,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
         statusMessage.append(QStringLiteral(" (%1%)").arg(progress));
     }
 
-    const QPixmap iconPixmap = icon.pixmap(IconSize(KIconLoader::Desktop), IconSize(KIconLoader::Desktop));
+    const QPixmap iconPixmap = icon.pixmap(style->pixelMetric(QStyle::PM_MessageBoxIconSize));
     QRect innerRect = option.rect.adjusted(s_delegatePaddingSize, s_delegatePaddingSize, -s_delegatePaddingSize, -s_delegatePaddingSize);   //add some padding round entire delegate
 
     const QSize decorationSize = iconPixmap.size();
@@ -291,7 +291,7 @@ QSize AgentInstanceWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, 
 {
     Q_UNUSED(index);
 
-    const int iconHeight = KIconLoader::global()->currentSize(KIconLoader::Desktop) + (s_delegatePaddingSize * 2);  //icon height + padding either side
+    const int iconHeight = QApplication::style()->pixelMetric(QStyle::PM_MessageBoxIconSize) + (s_delegatePaddingSize * 2);  //icon height + padding either side
     const int textHeight = option.fontMetrics.height() + qMax(option.fontMetrics.height(), 16) + (s_delegatePaddingSize * 2);   //height of text + icon/text + padding either side
 
     return QSize(1, qMax(iconHeight, textHeight));    //any width,the view will give us the whole thing in list mode
