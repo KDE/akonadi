@@ -146,7 +146,7 @@ void CollectionRequester::Private::init()
 
     collectionDialog = new CollectionDialog(q);
     collectionDialog->setWindowIcon(QIcon::fromTheme(QStringLiteral("akonadi")));
-    collectionDialog->setWindowTitle(i18n("Select a collection"));
+    collectionDialog->setWindowTitle(i18nc("@title:window", "Select a collection"));
     collectionDialog->setSelectionMode(QAbstractItemView::SingleSelection);
     collectionDialog->changeCollectionDialogOptions(CollectionDialog::KeepTreeExpanded);
 }

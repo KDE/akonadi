@@ -71,7 +71,7 @@ enum SelfTestRole {
 SelfTestDialog::SelfTestDialog(QWidget *parent)
     : QDialog(parent)
 {
-    setWindowTitle(i18n("Akonadi Server Self-Test"));
+    setWindowTitle(i18nc("@title:window", "Akonadi Server Self-Test"));
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Close, this);
     QWidget *mainWidget = new QWidget(this);
     QVBoxLayout *mainLayout = new QVBoxLayout(this);
