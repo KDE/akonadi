@@ -35,7 +35,6 @@
 #include <QDialogButtonBox>
 #include <QLineEdit>
 #include <QPushButton>
-#include <KRecursiveFilterProxyModel>
 #include <QHeaderView>
 #include <QLabel>
 #include <QTreeView>
