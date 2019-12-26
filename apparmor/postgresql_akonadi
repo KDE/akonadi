@@ -4,19 +4,35 @@
 
 profile postgresql_akonadi {
   #include <abstractions/base>
+  #include <abstractions/bash>
+  #include <abstractions/consoles>
+  #include <abstractions/nameservice>
   #include <abstractions/user-tmp>
 
   capability setgid,
   capability setuid,
 
   /etc/passwd r,
-  /{usr/,}bin/dash mrix,
+  /{usr/,}bin/{b,d}ash mrix,
   /{usr/,}bin/locale mrix,
-  /usr/lib/postgresql/*/bin/initdb mrix,
-  /usr/lib/postgresql/*/bin/pg_ctl mrix,
-  /usr/lib/postgresql/*/bin/postgres mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/initdb mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_ctl mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/postgres mrix,
   /usr/share/postgresql/** r,
   owner /dev/shm/PostgreSQL.* rw,
   owner @{xdg_data_home}/akonadi/** rwlk,
   owner @{xdg_data_home}/akonadi/db_data/** l,
+  owner /{,var/}run/user/@{uid}/akonadi** rwk,
+
+  # pg_upgrade
+  /{usr/,usr/lib/postgresql/*/}bin/pg_upgrade mrix,
+  /opt/pgsql*/** mr,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_controldata mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_resetwal mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_dumpall mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_dump mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/vacuumdb mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/psql mrix,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_restore mrix,
+  /{usr/,}bin/cp mrix,
 }

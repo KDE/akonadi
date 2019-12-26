@@ -6,8 +6,10 @@
 
 /usr/bin/akonadiserver {
   #include <abstractions/base>
+  #include <abstractions/consoles>
   #include <abstractions/dbus-session-strict>
   #include <abstractions/nameservice>
+  #include <abstractions/openssl>
   #include <abstractions/qt5>
   #include <abstractions/user-tmp>
 
@@ -19,12 +21,15 @@
   /usr/bin/mysql_install_db PUx -> mysqld_akonadi,
   /usr/bin/mysqladmin PUx -> mysqld_akonadi,
   /usr/bin/mysqlcheck PUx -> mysqld_akonadi,
-  /usr/lib/postgresql/*/bin/initdb PUx -> postgresql_akonadi,
-  /usr/lib/postgresql/*/bin/pg_ctl PUx -> postgresql_akonadi,
+  /usr/{,s}bin/mysqld PUx -> mysqld_akonadi,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/initdb PUx -> postgresql_akonadi,
+  /{usr/,usr/lib/postgresql/*/,opt/pgsql*/}bin/pg_ctl PUx -> postgresql_akonadi,
+  /{usr/,usr/lib/postgresql/*/}bin/pg_upgrade PUx -> postgresql_akonadi,
   /usr/sbin/mysqld PUx -> mysqld_akonadi,
   /usr/share/mime/mime.cache r,
   /usr/share/mime/packages/ r,
   /usr/share/mime/types r,
+  /usr/share/qt/translations/* r,
   @{PROC}/sys/kernel/core_pattern r,
   @{PROC}/sys/kernel/random/boot_id r,
   owner @{xdg_config_home}/* r,
@@ -43,4 +48,6 @@
   owner @{xdg_data_home}/akonadi/** rwk,
   owner @{PROC}/@{pid}/loginuid r,
   owner @{PROC}/@{pid}/mounts r,
+  owner /{,var/}run/user/@{uid}/akonadi** rwk,
+  owner /tmp/#[0-9]* m,
 }

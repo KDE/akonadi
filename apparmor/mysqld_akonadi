@@ -4,7 +4,10 @@
 
 profile mysqld_akonadi {
   #include <abstractions/base>
+  #include <abstractions/bash>
+  #include <abstractions/consoles>
   #include <abstractions/nameservice>
+  #include <abstractions/openssl>
   #include <abstractions/user-tmp>
 
   capability setgid,
@@ -15,7 +18,9 @@ profile mysqld_akonadi {
 
   /etc/mysql/ r,
   /etc/mysql/** r,
+  /etc/my.cnf{,.d/**} r,
   @{sys}/devices/system/cpu/ r,
+  /{usr/,}bin/{b,d}ash mrix,
   /{usr/,}bin/cat mrix,
   /{usr/,}bin/chmod mrix,
   /{usr/,}bin/dirname mrix,
@@ -26,8 +31,9 @@ profile mysqld_akonadi {
   /usr/bin/mysql_install_db mrix,
   /usr/bin/mysqladmin mrix,
   /usr/bin/mysqlcheck mrix,
-  /usr/sbin/mysqld mrix,
+  /usr/{,s}bin/mysqld mrix,
   /usr/share/mysql/** r,
   owner @{xdg_data_home}/akonadi/** rwk,
   owner @{PROC}/@{pid}/loginuid r,
+  owner /{,var/}run/user/@{uid}/akonadi** rwk,
 }
