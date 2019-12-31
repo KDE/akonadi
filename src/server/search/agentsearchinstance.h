@@ -23,6 +23,8 @@
 #include <QObject>
 #include <QString>
 
+#include <memory>
+
 class QDBusServiceWatcher;
 class OrgFreedesktopAkonadiAgentSearchInterface;
 
@@ -44,13 +46,10 @@ public:
 
     OrgFreedesktopAkonadiAgentSearchInterface *interface() const;
 
-private Q_SLOTS:
-    void serviceOwnerChanged(const QString &service, const QString &oldName, const QString &newName);
-
 private:
     QString mId;
     OrgFreedesktopAkonadiAgentSearchInterface *mInterface;
-    QDBusServiceWatcher *mServiceWatcher;
+    std::unique_ptr<QDBusServiceWatcher> mServiceWatcher;
 };
 
 } // namespace Server

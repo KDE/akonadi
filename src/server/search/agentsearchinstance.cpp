@@ -30,7 +30,6 @@ using namespace Akonadi::Server;
 AgentSearchInstance::AgentSearchInstance(const QString &id)
     : mId(id)
     , mInterface(nullptr)
-    , mServiceWatcher(nullptr)
 {
 }
 
@@ -54,24 +53,15 @@ bool AgentSearchInstance::init()
         return false;
     }
 
-    mServiceWatcher = new QDBusServiceWatcher(DBus::agentServiceName(mId, DBus::Agent),
-            DBusConnectionPool::threadConnection(),
-            QDBusServiceWatcher::WatchForOwnerChange,
-            this);
-    connect(mServiceWatcher, &QDBusServiceWatcher::serviceOwnerChanged,
-            this, &AgentSearchInstance::serviceOwnerChanged);
+    mServiceWatcher = std::make_unique<QDBusServiceWatcher>(
+            DBus::agentServiceName(mId, DBus::Agent), DBusConnectionPool::threadConnection(),
+            QDBusServiceWatcher::WatchForUnregistration);
+    connect(mServiceWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
+            this, [this]() {
+                SearchTaskManager::instance()->unregisterInstance(mId);
+            });
 
     return true;
-}
-
-void AgentSearchInstance::serviceOwnerChanged(const QString &service, const QString &oldName, const QString &newName)
-{
-    Q_UNUSED(service);
-    Q_UNUSED(oldName);
-
-    if (newName.isEmpty()) {
-        SearchTaskManager::instance()->unregisterInstance(mId);
-    }
 }
 
 void AgentSearchInstance::search(const QByteArray &searchId, const QString &query,

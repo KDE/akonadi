@@ -27,6 +27,10 @@
 
 #include <QHash>
 
+#include <memory>
+
+class QDBusServiceWatcher;
+
 namespace Akonadi
 {
 
@@ -85,7 +89,6 @@ public:
     void synchronizeTags(const AgentInstance &instance);
     void synchronizeRelations(const AgentInstance &instance);
 
-    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
     void createDBusInterface();
 
     AgentType fillAgentType(const QString &identifier) const;
@@ -99,6 +102,8 @@ public:
 
     QHash<QString, AgentType> mTypes;
     QHash<QString, AgentInstance> mInstances;
+
+    std::unique_ptr<QDBusServiceWatcher> mServiceWatcher;
 };
 
 }

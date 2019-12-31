@@ -32,6 +32,7 @@
 #include <unordered_map>
 
 class OrgFreedesktopAkonadiResourceInterface;
+class QDBusServiceWatcher;
 
 namespace Akonadi
 {
@@ -79,7 +80,6 @@ private:
 private Q_SLOTS:
     void init() override;
 
-    void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
     void processRequest();
     void triggerCollectionSync(const QString &resource, qint64 colId);
     void triggerCollectionTreeSync(const QString &resource);
@@ -101,6 +101,7 @@ protected:
 
     // resource dbus interface cache
     std::unordered_map<QString, std::unique_ptr<OrgFreedesktopAkonadiResourceInterface>> mResourceInterfaces;
+    std::unique_ptr<QDBusServiceWatcher> mDBusWatcher;
 };
 
 } // namespace Server

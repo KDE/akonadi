@@ -45,6 +45,7 @@
 #include <QMetaMethod>
 #include <QTime>
 #include <QTimer>
+#include <kdbusconnectionpool.h>
 
 #define LOCK_WAIT_TIMEOUT_SECONDS 30
 
@@ -562,8 +563,6 @@ public:
     Private(GetLockJob *qq);
 
     void doStart(); // slot
-    void serviceOwnerChanged(const QString &name, const QString &oldOwner,
-                             const QString &newOwner);  // slot
     void timeout(); // slot
 
     GetLockJob *const q;
@@ -589,30 +588,21 @@ void GetLockJob::Private::doStart()
         //qCDebug(AKONADICORE_LOG) << "Got lock immediately.";
         q->emitResult();
     } else {
-        QDBusServiceWatcher *watcher = new QDBusServiceWatcher(dbusServiceName(), KDBusConnectionPool::threadConnection(),
-                QDBusServiceWatcher::WatchForOwnerChange, q);
-        //qCDebug(AKONADICORE_LOG) << "Waiting for lock.";
-        connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)), q, SLOT(serviceOwnerChanged(QString,QString,QString)));
+        auto watcher = new QDBusServiceWatcher(dbusServiceName(), KDBusConnectionPool::threadConnection(),
+                QDBusServiceWatcher::WatchForUnregistration, q);
+        connect(watcher, &QDBusServiceWatcher::serviceUnregistered,
+                q, [this]() {
+                    if (KDBusConnectionPool::threadConnection().registerService(dbusServiceName())) {
+                        mSafetyTimer->stop();
+                        q->emitResult();
+                    }
+                });
 
         mSafetyTimer = new QTimer(q);
         mSafetyTimer->setSingleShot(true);
         mSafetyTimer->setInterval(LOCK_WAIT_TIMEOUT_SECONDS * 1000);
         mSafetyTimer->start();
         connect(mSafetyTimer, &QTimer::timeout, q, [this]() { timeout(); });
-    }
-}
-
-void GetLockJob::Private::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
-{
-    Q_UNUSED(name);
-    Q_UNUSED(oldOwner);
-
-    if (newOwner.isEmpty()) {
-        const bool gotIt = KDBusConnectionPool::threadConnection().registerService(dbusServiceName());
-        if (gotIt) {
-            mSafetyTimer->stop();
-            q->emitResult();
-        }
     }
 }
 

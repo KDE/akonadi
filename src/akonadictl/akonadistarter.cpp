@@ -35,18 +35,19 @@
 
 AkonadiStarter::AkonadiStarter(QObject *parent)
     : QObject(parent)
+    , mWatcher(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock), QDBusConnection::sessionBus(),
+               QDBusServiceWatcher::WatchForRegistration)
 {
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(Akonadi::DBus::serviceName(Akonadi::DBus::ControlLock),
-            QDBusConnection::sessionBus(),
-            QDBusServiceWatcher::WatchForOwnerChange, this);
-
-    connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged,
-            this, &AkonadiStarter::serviceOwnerChanged);
+    connect(&mWatcher, &QDBusServiceWatcher::serviceRegistered,
+            this, [this]() {
+                mRegistered = true;
+                QCoreApplication::instance()->quit();
+            });
 }
 
 bool AkonadiStarter::start(bool verbose)
 {
-    qCDebug(AKONADICTL_LOG) << "Starting Akonadi Server...";
+    qCInfo(AKONADICTL_LOG) << "Starting Akonadi Server...";
 
     QStringList serverArgs;
     if (Akonadi::Instance::hasIdentifier()) {
@@ -74,18 +75,7 @@ bool AkonadiStarter::start(bool verbose)
         return false;
     }
 
-    qCDebug(AKONADICTL_LOG) << "   done.";
+    qCInfo(AKONADICTL_LOG) << "   done.";
     return true;
 }
 
-void AkonadiStarter::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
-{
-    Q_UNUSED(name);
-    Q_UNUSED(oldOwner);
-    if (newOwner.isEmpty()) {
-        return;
-    }
-
-    mRegistered = true;
-    QCoreApplication::instance()->quit();
-}

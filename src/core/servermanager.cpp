@@ -44,6 +44,8 @@
 #include <QProcess>
 #include <QTimer>
 #include <QScopedPointer>
+#include <kdbusconnectionpool.h>
+#include <qnamespace.h>
 
 using namespace Akonadi;
 
@@ -69,23 +71,6 @@ public:
         delete instance;
     }
 
-    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
-    {
-        if (name == ServerManager::serviceName(ServerManager::ControlLock) && !oldOwner.isEmpty() && newOwner.isEmpty()) {
-            // Control.Lock has disappeared during startup, which means that akonadi_control
-            // has terminated, most probably because it was not able to start akonadiserver
-            // process. Don't wait 30 seconds for sefetyTimeout, but go into Broken state
-            // immediately.
-            if (mState == ServerManager::Starting) {
-                setState(ServerManager::Broken);
-                return;
-            }
-        }
-
-        serverProtocolVersion = -1;
-        checkStatusChanged();
-    }
-
     void checkStatusChanged()
     {
         setState(instance->state());
@@ -93,7 +78,6 @@ public:
 
     void setState(ServerManager::State state)
     {
-
         if (mState != state) {
             mState = state;
             Q_EMIT instance->stateChanged(state);
@@ -128,6 +112,7 @@ public:
     Firstrun *mFirstRunner = nullptr;
     static Internal::ClientType clientType;
     QString mBrokenReason;
+    std::unique_ptr<QDBusServiceWatcher> serviceWatcher;
 };
 
 int ServerManagerPrivate::serverProtocolVersion = -1;
@@ -145,19 +130,36 @@ ServerManager::ServerManager(ServerManagerPrivate *dd)
 
     qRegisterMetaType<Akonadi::ServerManager::State>();
 
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Server),
-            KDBusConnectionPool::threadConnection(),
-            QDBusServiceWatcher::WatchForOwnerChange, this);
-    watcher->addWatchedService(ServerManager::serviceName(ServerManager::Control));
-    watcher->addWatchedService(ServerManager::serviceName(ServerManager::ControlLock));
-    watcher->addWatchedService(ServerManager::serviceName(ServerManager::UpgradeIndicator));
+    d->serviceWatcher = std::make_unique<QDBusServiceWatcher>(
+            ServerManager::serviceName(ServerManager::Server), KDBusConnectionPool::threadConnection(),
+            QDBusServiceWatcher::WatchForRegistration | QDBusServiceWatcher::WatchForUnregistration);
+    d->serviceWatcher->addWatchedService(ServerManager::serviceName(ServerManager::Control));
+    d->serviceWatcher->addWatchedService(ServerManager::serviceName(ServerManager::ControlLock));
+    d->serviceWatcher->addWatchedService(ServerManager::serviceName(ServerManager::UpgradeIndicator));
 
     // this (and also the two connects below) are queued so that they trigger after AgentManager is done loading
     // the current agent types and instances
     // this ensures the invariant of AgentManager reporting a consistent state if ServerManager::state() == Running
     // that's the case with direct connections as well, but only after you enter the event loop once
-    connect(watcher, SIGNAL(serviceOwnerChanged(QString,QString,QString)),
-            this, SLOT(serviceOwnerChanged(QString,QString,QString)), Qt::QueuedConnection);
+    connect(d->serviceWatcher.get(), &QDBusServiceWatcher::serviceRegistered,
+            this, [this]() {
+                d->serverProtocolVersion = -1;
+                d->checkStatusChanged();
+            }, Qt::QueuedConnection);
+    connect(d->serviceWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
+            this, [this](const QString &name) {
+                if (name == ServerManager::serviceName(ServerManager::ControlLock) && d->mState == ServerManager::Starting) {
+                    // Control.Lock has disappeared during startup, which means that akonadi_control
+                    // has terminated, most probably because it was not able to start akonadiserver
+                    // process. Don't wait 30 seconds for sefetyTimeout, but go into Broken state
+                    // immediately.
+                    d->setState(ServerManager::Broken);
+                    return;
+                }
+
+                d->serverProtocolVersion = -1;
+                d->checkStatusChanged();
+            }, Qt::QueuedConnection);
 
     // AgentManager is dangerous to use for agents themselves
     if (Internal::clientType() != Internal::User) {

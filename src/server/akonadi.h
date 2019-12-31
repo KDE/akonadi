@@ -23,7 +23,10 @@
 #include <QObject>
 #include <QVector>
 
+#include <memory>
+
 class QProcess;
+class QDBusServiceWatcher;
 
 namespace Akonadi
 {
@@ -81,7 +84,6 @@ protected Q_SLOTS:
 
 private Q_SLOTS:
     void doQuit();
-    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
     void connectionDisconnected();
 
 private:
@@ -92,6 +94,8 @@ private:
 
 protected:
     AkonadiServer(QObject *parent = nullptr);
+
+    std::unique_ptr<QDBusServiceWatcher> mControlWatcher;
 
     AkLocalServer *mCmdServer = nullptr;
     AkLocalServer *mNtfServer = nullptr;

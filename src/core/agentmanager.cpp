@@ -30,6 +30,7 @@
 
 #include <QDBusServiceWatcher>
 #include <QWidget>
+#include <kdbusconnectionpool.h>
 
 using namespace Akonadi;
 using namespace AkRanges;
@@ -309,18 +310,6 @@ AgentInstance AgentManagerPrivate::fillAgentInstanceLight(const QString &identif
     return instance;
 }
 
-void AgentManagerPrivate::serviceOwnerChanged(const QString &, const QString &oldOwner, const QString &)
-{
-    if (oldOwner.isEmpty()) {
-        if (mTypes.isEmpty()) { // just to be safe
-            readAgentTypes();
-        }
-        if (mInstances.isEmpty()) {
-            readAgentInstances();
-        }
-    }
-}
-
 void AgentManagerPrivate::createDBusInterface()
 {
     mTypes.clear();
@@ -370,11 +359,18 @@ AgentManager::AgentManager()
 
     d->createDBusInterface();
 
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(ServerManager::serviceName(ServerManager::Control),
-            KDBusConnectionPool::threadConnection(),
-            QDBusServiceWatcher::WatchForOwnerChange, this);
-    connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged,
-            this, [this](const QString &arg1, const QString &arg2 , const QString &arg3) { d->serviceOwnerChanged(arg1, arg2, arg3); });
+    d->mServiceWatcher = std::make_unique<QDBusServiceWatcher>(
+            ServerManager::serviceName(ServerManager::Control), KDBusConnectionPool::threadConnection(),
+            QDBusServiceWatcher::WatchForRegistration);
+    connect(d->mServiceWatcher.get(), &QDBusServiceWatcher::serviceRegistered,
+            this, [this]() {
+                if (d->mTypes.isEmpty()) { // just to be safe
+                    d->readAgentTypes();
+                }
+                if (d->mInstances.isEmpty()) {
+                    d->readAgentInstances();
+                }
+            });
 }
 
 // @endcond
@@ -395,7 +391,8 @@ AgentManager *AgentManager::self()
 
 AgentType::List AgentManager::types() const
 {
-    // Maybe the Control process is up and ready but we haven't been to the event loop yet so serviceOwnerChanged wasn't called yet.
+    // Maybe the Control process is up and ready but we haven't been to the event loop yet so
+    // QDBusServiceWatcher hasn't notified us yet.
     // In that case make sure to do it here, to avoid going into Broken state.
     if (d->mTypes.isEmpty()) {
         d->readAgentTypes();

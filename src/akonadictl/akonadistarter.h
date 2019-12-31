@@ -21,6 +21,7 @@
 #define AKONADISTARTER_H
 
 #include <QObject>
+#include <QDBusServiceWatcher>
 
 class AkonadiStarter : public QObject
 {
@@ -29,10 +30,8 @@ public:
     explicit AkonadiStarter(QObject *parent = nullptr);
     Q_REQUIRED_RESULT bool start(bool verbose);
 
-private Q_SLOTS:
-    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
-
 private:
+    QDBusServiceWatcher mWatcher;
     bool mRegistered = false;
 };
 

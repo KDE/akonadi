@@ -214,12 +214,14 @@ bool AkonadiServer::init()
         connectionSettings.setValue(QStringLiteral("DBUS/Address"), QLatin1String(dbusAddress));
     }
 
-    QDBusServiceWatcher *watcher = new QDBusServiceWatcher(DBus::serviceName(DBus::Control),
-            QDBusConnection::sessionBus(),
-            QDBusServiceWatcher::WatchForOwnerChange, this);
-
-    connect(watcher, &QDBusServiceWatcher::serviceOwnerChanged,
-            this, &AkonadiServer::serviceOwnerChanged);
+    mControlWatcher = std::make_unique<QDBusServiceWatcher>(
+            DBus::serviceName(DBus::Control), QDBusConnection::sessionBus(),
+            QDBusServiceWatcher::WatchForUnregistration);
+    connect(mControlWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
+            this, [this]() {
+                qCCritical(AKONADISERVER_LOG) << "Control process died, committing suicide!";
+                quit();
+            });
 
     // Unhide all the items that are actually hidden.
     // The hidden flag was probably left out after an (abrupt)
@@ -392,16 +394,6 @@ void AkonadiServer::stopDatabaseProcess()
     }
 
     DbConfig::configuredDatabase()->stopInternalServer();
-}
-
-void AkonadiServer::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
-{
-    Q_UNUSED(name);
-    Q_UNUSED(oldOwner);
-    if (newOwner.isEmpty()) {
-        qCCritical(AKONADISERVER_LOG) << "Control process died, committing suicide!";
-        quit();
-    }
 }
 
 CacheCleaner *AkonadiServer::cacheCleaner()
