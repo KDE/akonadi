@@ -1347,7 +1347,7 @@ void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
     m_pendingCollectionFetchJobs.remove(job);
     CollectionFetchJob *cJob = static_cast<CollectionFetchJob *>(job);
     if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << cJob->collections() << endl;
+        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << cJob->collections();
         return;
     }
 
@@ -1369,7 +1369,7 @@ void EntityTreeModelPrivate::itemFetchJobDone(KJob *job)
     m_pendingCollectionRetrieveJobs.remove(collectionId);
 
     if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << collectionId << endl;
+        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << collectionId;
         return;
     }
     if (!m_collections.contains(collectionId)) {

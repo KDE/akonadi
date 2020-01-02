@@ -329,15 +329,15 @@ void Collection::setResource(const QString &resource)
 QDebug operator <<(QDebug d, const Akonadi::Collection &collection)
 {
     return d << "Collection ID:" << collection.id()
-           << "   remote ID:" << collection.remoteId() << endl
-           << "   name:" << collection.name() << endl
-           << "   url:" << collection.url() << endl
-           << "   parent:" << collection.parentCollection().id() << collection.parentCollection().remoteId() << endl
-           << "   resource:" << collection.resource() << endl
-           << "   rights:" << collection.rights() << endl
-           << "   contents mime type:" << collection.contentMimeTypes() << endl
-           << "   isVirtual:" << collection.isVirtual() << endl
-           << "   " << collection.cachePolicy() << endl
+           << "   remote ID:" << collection.remoteId() << '\n'
+           << "   name:" << collection.name() << '\n'
+           << "   url:" << collection.url() << '\n'
+           << "   parent:" << collection.parentCollection().id() << collection.parentCollection().remoteId() << '\n'
+           << "   resource:" << collection.resource() << '\n'
+           << "   rights:" << collection.rights() << '\n'
+           << "   contents mime type:" << collection.contentMimeTypes() << '\n'
+           << "   isVirtual:" << collection.isVirtual() << '\n'
+           << "   " << collection.cachePolicy() << '\n'
            << "   " << collection.statistics();
 }
 

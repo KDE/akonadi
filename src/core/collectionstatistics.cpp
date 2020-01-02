@@ -100,8 +100,8 @@ CollectionStatistics &CollectionStatistics::operator =(const CollectionStatistic
 
 QDebug operator<<(QDebug d, const CollectionStatistics &s)
 {
-    return d << "CollectionStatistics:" << endl
-             << "      count:" << s.count() << endl
-             << "      unread count:" << s.unreadCount() << endl
+    return d << "CollectionStatistics:\n"
+             << "      count:" << s.count() << '\n'
+             << "      unread count:" << s.unreadCount() << '\n'
              << "      size:" << s.size();
 }

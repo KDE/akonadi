@@ -76,7 +76,7 @@ public:
         QObject *object = PluginLoader::self()->createForName(mIdentifier);
         if (!object) {
             qCWarning(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
-                                       << "plugin" << mIdentifier << "is not valid!" << endl;
+                                       << "plugin" << mIdentifier << "is not valid!";
 
             // we try to use the default in that case
             mPlugin = s_defaultItemSerializerPlugin;
@@ -86,7 +86,7 @@ public:
         if (!qobject_cast<ItemSerializerPlugin *>(mPlugin)) {
             qCWarning(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
                                        << "plugin" << mIdentifier
-                                       << "doesn't provide interface ItemSerializerPlugin!" << endl;
+                                       << "doesn't provide interface ItemSerializerPlugin!";
 
             // we try to use the default in that case
             mPlugin = s_defaultItemSerializerPlugin;
@@ -226,12 +226,12 @@ public:
     {
         const PluginLoader *pl = PluginLoader::self();
         if (!pl) {
-            qCWarning(AKONADICORE_LOG) << "Cannot instantiate plugin loader!" << endl;
+            qCWarning(AKONADICORE_LOG) << "Cannot instantiate plugin loader!";
             return;
         }
         const QStringList names = pl->names();
         qCDebug(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
-                                 << "found" << names.size() << "plugins." << endl;
+                                 << "found" << names.size() << "plugins.";
         QMap<QString, MimeTypeEntry> map;
         QRegExp rx(QStringLiteral("(.+)@(.+)"));
         QMimeDatabase mimeDb;
@@ -249,7 +249,7 @@ public:
                 }
             } else {
                 qCDebug(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
-                                         << "name" << name << "doesn't look like mimetype@classtype" << endl;
+                                         << "name" << name << "doesn't look like mimetype@classtype";
             }
         }
         const QString APPLICATION_OCTETSTREAM = QLatin1String(_APPLICATION_OCTETSTREAM);

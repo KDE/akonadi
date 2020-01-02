@@ -610,20 +610,21 @@ QString ResourceScheduler::dumpToString() const
 {
     QString ret;
     QTextStream str(&ret);
-    str << "ResourceScheduler: " << (mOnline ? "Online" : "Offline") << endl;
-    str << " current task: " << mCurrentTask << endl;
+    str << "ResourceScheduler: " << (mOnline ? "Online" : "Offline") << '\n';
+    str << " current task: " << mCurrentTask << '\n';
     for (int i = 0; i < NQueueCount; ++i) {
         const TaskList &queue = mTaskList[i];
         if (queue.isEmpty()) {
-            str << " queue " << i << " is empty" << endl;
+            str << " queue " << i << " is empty" << '\n';
         } else {
-            str << " queue " << i << " " << queue.size() << " tasks:" << endl;
+            str << " queue " << i << " " << queue.size() << " tasks:\n";
             const QList<Task>::const_iterator queueEnd(queue.constEnd());
             for (QList<Task>::const_iterator it = queue.constBegin(); it != queueEnd; ++it) {
-                str << "  " << (*it) << endl;
+                str << "  " << (*it) << '\n';
             }
         }
     }
+    str.flush();
     return ret;
 }
 

@@ -123,7 +123,7 @@ void CollectionModelPrivate::collectionStatisticsChanged(Collection::Id collecti
 void CollectionModelPrivate::listDone(KJob *job)
 {
     if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << endl;
+        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString();
     }
 }
 

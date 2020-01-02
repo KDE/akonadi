@@ -200,7 +200,7 @@ Item ItemSerializer::convert(const Item &item, int mtid)
         int version = 0;
         serialize(item, Item::FullPayload, buffer, version);
         buffer.seek(0);
-        qCDebug(AKONADICORE_LOG) << "    -> serialized payload into" << buffer.size() << "bytes" << endl
+        qCDebug(AKONADICORE_LOG) << "    -> serialized payload into" << buffer.size() << "bytes\n"
                                  << "  -> going to deserialize";
         Item newItem;
         if (plugin->deserialize(newItem, Item::FullPayload, buffer, version)) {

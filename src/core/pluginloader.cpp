@@ -73,7 +73,7 @@ QStringList PluginLoader::names() const
 QObject *PluginLoader::createForName(const QString &name)
 {
     if (!mPluginInfos.contains(name)) {
-        qCWarning(AKONADICORE_LOG) << "plugin name \"" << name << "\" is unknown to the plugin loader." << endl;
+        qCWarning(AKONADICORE_LOG) << "plugin name \"" << name << "\" is unknown to the plugin loader.";
         return nullptr;
     }
 
@@ -153,19 +153,19 @@ void PluginLoader::scan()
 
                 QString name = group2.readEntry("Name");
                 if (name.isEmpty()) {
-                    qCWarning(AKONADICORE_LOG) << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Misc]Name value in \"" << entry << "\" - inserting default name";
                     name = i18n("Unnamed plugin");
                 }
 
                 QString comment = group2.readEntry("Comment");
                 if (comment.isEmpty()) {
-                    qCWarning(AKONADICORE_LOG) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty [Misc]Comment value in \"" << entry << "\" - inserting default name";
                     comment = i18n("No description available");
                 }
 
                 QString cname      = group.readEntry("X-KDE-ClassName");
                 if (cname.isEmpty()) {
-                    qCWarning(AKONADICORE_LOG) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"" << endl;
+                    qCWarning(AKONADICORE_LOG) << "missing or empty X-KDE-ClassName value in \"" << entry << "\"";
                 }
 
                 const QStringList mimeTypes = type.split(QLatin1Char(','), QString::SkipEmptyParts);
@@ -178,7 +178,7 @@ void PluginLoader::scan()
                 }
 
             } else {
-                qCWarning(AKONADICORE_LOG) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)" << endl;
+                qCWarning(AKONADICORE_LOG) << "Desktop file \"" << entry << "\" doesn't seem to describe a plugin " << "(misses Misc and/or Plugin group)";
             }
         }
     }
