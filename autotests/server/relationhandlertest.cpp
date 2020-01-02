@@ -57,14 +57,15 @@ class RelationHandlerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     RelationHandlerTest()
         : QObject()
     {
         qRegisterMetaType<Akonadi::Server::Relation::List>();
 
-        FakeAkonadiServer::instance()->setPopulateDb(false);
-        FakeAkonadiServer::instance()->init();
+        mAkonadi.setPopulateDb(false);
+        mAkonadi.init();
 
         RelationType type;
         type.setName(QStringLiteral("type"));
@@ -73,11 +74,6 @@ public:
         RelationType type2;
         type2.setName(QStringLiteral("type2"));
         type2.insert();
-    }
-
-    ~RelationHandlerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
     }
 
     QScopedPointer<DbInitializer> initializer;
@@ -148,10 +144,10 @@ private Q_SLOTS:
         QFETCH(Relation::List, expectedRelations);
         QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(mAkonadi.notificationSpy());
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
             QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
@@ -242,10 +238,10 @@ private Q_SLOTS:
         QFETCH(Relation::List, expectedRelations);
         QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(mAkonadi.notificationSpy());
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < expectedNotifications.size(); i++) {
             QCOMPARE(*receivedNotifications.at(i), *expectedNotifications.at(i));
@@ -389,8 +385,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
 };

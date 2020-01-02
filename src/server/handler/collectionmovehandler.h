@@ -38,6 +38,7 @@ namespace Server
 class CollectionMoveHandler : public Handler
 {
 public:
+    CollectionMoveHandler(AkonadiServer &akonadi);
     ~CollectionMoveHandler() override = default;
 
     bool parseStream() override;

@@ -35,6 +35,7 @@ namespace Server
 class SearchCreateHandler: public Handler
 {
 public:
+    SearchCreateHandler(AkonadiServer &akonadi);
     ~SearchCreateHandler() override = default;
 
     bool parseStream() override;

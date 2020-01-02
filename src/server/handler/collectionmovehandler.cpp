@@ -30,6 +30,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+CollectionMoveHandler::CollectionMoveHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool CollectionMoveHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::MoveCollectionCommand>(m_command);
@@ -53,7 +57,7 @@ bool CollectionMoveHandler::parseStream()
         return successResponse<Protocol::MoveCollectionResponse>();
     }
 
-    CacheCleanerInhibitor inhibitor;
+    CacheCleanerInhibitor inhibitor(akonadi());
 
     // retrieve all not yet cached items of the source
     ItemRetriever retriever(connection(), connection()->context());

@@ -35,6 +35,7 @@ namespace Server
 class ItemFetchHandler: public Handler
 {
 public:
+    ItemFetchHandler(AkonadiServer &akonadi);
     ~ItemFetchHandler() override = default;
 
     bool parseStream() override;

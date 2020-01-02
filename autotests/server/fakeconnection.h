@@ -26,14 +26,15 @@ namespace Akonadi {
 namespace Server {
 
 class NotificationCollector;
+class FakeAkonadiServer;
 
 class FakeConnection : public Connection
 {
     Q_OBJECT
 
 public:
-    explicit FakeConnection(quintptr socketDescriptor, QObject *parent = nullptr);
-    explicit FakeConnection(QObject *parent = nullptr);
+    explicit FakeConnection(quintptr socketDescriptor, FakeAkonadiServer &akonadi);
+    explicit FakeConnection(AkonadiServer &akonadi);
     ~FakeConnection() override;
 
 public Q_SLOTS:

@@ -30,6 +30,7 @@ namespace Server
 class TagModifyHandler: public Handler
 {
 public:
+    TagModifyHandler(AkonadiServer &akonadi);
     ~TagModifyHandler() override = default;
 
     bool parseStream() override;

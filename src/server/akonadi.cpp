@@ -58,16 +58,45 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-AkonadiServer *AkonadiServer::s_instance = nullptr;
+namespace {
 
-AkonadiServer::AkonadiServer(QObject *parent)
-    : QObject(parent)
+class AkonadiDataStore : public DataStore
+{
+public:
+    AkonadiDataStore(AkonadiServer &server):
+        DataStore(server)
+    {}
+};
+
+class AkonadiDataStoreFactory : public DataStoreFactory
+{
+public:
+    AkonadiDataStoreFactory(AkonadiServer &akonadi)
+        : DataStoreFactory()
+        , m_akonadi(akonadi)
+    {}
+
+    DataStore *createStore() override
+    {
+        return new AkonadiDataStore(m_akonadi);
+    }
+
+private:
+    AkonadiServer &m_akonadi;
+};
+
+}
+
+AkonadiServer::AkonadiServer()
+    : QObject()
 {
     // Register bunch of useful types
     qRegisterMetaType<Protocol::CommandPtr>();
     qRegisterMetaType<Protocol::ChangeNotificationPtr>();
     qRegisterMetaType<Protocol::ChangeNotificationList>();
     qRegisterMetaType<quintptr>("quintptr");
+
+    DataStore::setFactory(std::make_unique<AkonadiDataStoreFactory>(*this));
 }
 
 bool AkonadiServer::init()
@@ -97,8 +126,6 @@ bool AkonadiServer::init()
     }
 
     DbConfig::configuredDatabase()->setup();
-
-    s_instance = this;
 
     const QString connectionSettingsFile = StandardDirs::connectionConfigFile(StandardDirs::WriteOnly);
     QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
@@ -299,7 +326,7 @@ void AkonadiServer::newCmdConnection(quintptr socketDescriptor)
         return;
     }
 
-    auto connection = std::make_unique<Connection>(socketDescriptor);
+    auto connection = std::make_unique<Connection>(socketDescriptor, *this);
     connect(connection.get(), &Connection::disconnected,
             this, &AkonadiServer::connectionDisconnected);
     mConnections.push_back(std::move(connection));
@@ -311,14 +338,6 @@ void AkonadiServer::connectionDisconnected()
                            [this](const auto &ptr) { return ptr.get() == sender(); });
     Q_ASSERT(it != mConnections.end());
     mConnections.erase(it);
-}
-
-AkonadiServer *AkonadiServer::instance()
-{
-    if (!s_instance) {
-        s_instance = new AkonadiServer();
-    }
-    return s_instance;
 }
 
 bool AkonadiServer::startDatabaseProcess()

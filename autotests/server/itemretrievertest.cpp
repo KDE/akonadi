@@ -201,18 +201,14 @@ class ItemRetrieverTest : public QObject
     using ExistingParts = QVector<QPair<QByteArray /* name */, QByteArray /* data */>>;
     using AvailableParts = QVector<QPair<QByteArray /* name */, QByteArray /* data */>>;
 
+    FakeAkonadiServer mAkonadi;
 public:
     ItemRetrieverTest()
         : QObject()
     {
-        FakeAkonadiServer::instance()->setPopulateDb(false);
-        FakeAkonadiServer::instance()->disableItemRetrievalManager();
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~ItemRetrieverTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.setPopulateDb(false);
+        mAkonadi.disableItemRetrievalManager();
+        mAkonadi.init();
     }
 
 private Q_SLOTS:

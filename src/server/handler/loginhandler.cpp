@@ -24,6 +24,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+LoginHandler::LoginHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool LoginHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::LoginCommand>(m_command);

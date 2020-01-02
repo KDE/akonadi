@@ -30,6 +30,7 @@ namespace Server
 class TagDeleteHandler: public Handler
 {
 public:
+    TagDeleteHandler(AkonadiServer &akonadi);
     ~TagDeleteHandler() override = default;
 
     bool parseStream() override;

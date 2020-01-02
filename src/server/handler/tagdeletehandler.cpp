@@ -29,6 +29,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+TagDeleteHandler::TagDeleteHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool TagDeleteHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::DeleteTagCommand>(m_command);

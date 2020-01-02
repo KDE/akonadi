@@ -20,8 +20,10 @@
 #include "collectioncopyhandler.h"
 
 #include "connection.h"
+#include "handler/itemcopyhandler.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
+#include "protocol_p.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
 #include "storage/itemretriever.h"
@@ -31,6 +33,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
+
+CollectionCopyHandler::CollectionCopyHandler(AkonadiServer &akonadi)
+    : ItemCopyHandler(akonadi)
+{}
 
 bool CollectionCopyHandler::copyCollection(const Collection &source, const Collection &target)
 {
@@ -90,7 +96,7 @@ bool CollectionCopyHandler::parseStream()
         return failureResponse(QStringLiteral("No valid target specified"));
     }
 
-    CacheCleanerInhibitor inhibitor;
+    CacheCleanerInhibitor inhibitor(akonadi());
 
     // retrieve all not yet cached items of the source
     ItemRetriever retriever(connection(), connection()->context());

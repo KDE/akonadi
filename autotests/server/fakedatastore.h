@@ -25,15 +25,23 @@
 namespace Akonadi {
 namespace Server {
 
-class FakeDataStoreFactory;
+class FakeAkonadiServer;
+
+class FakeDataStoreFactory : public DataStoreFactory
+{
+public:
+    FakeDataStoreFactory(FakeAkonadiServer &akonadi);
+    DataStore *createStore() override;
+private:
+    FakeAkonadiServer &m_akonadi;
+};
+
 class FakeDataStore : public DataStore
 {
     Q_OBJECT
     friend class FakeDataStoreFactory;
 public:
     ~FakeDataStore() override;
-
-    static void registerFactory();
 
     bool init() override;
 
@@ -123,7 +131,7 @@ public:
     void setPopulateDb(bool populate);
 
 protected:
-    FakeDataStore();
+    FakeDataStore(FakeAkonadiServer &akonadi);
 
     QMap<QString, QVariantList> mChanges;
 

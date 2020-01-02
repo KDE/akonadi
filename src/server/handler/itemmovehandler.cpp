@@ -33,6 +33,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+ItemMoveHandler::ItemMoveHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
 {
     DataStore *store = connection()->storageBackend();
@@ -152,7 +156,7 @@ bool ItemMoveHandler::parseStream()
         }
     }
 
-    CacheCleanerInhibitor inhibitor;
+    CacheCleanerInhibitor inhibitor(akonadi());
 
     // make sure all the items we want to move are in the cache
     ItemRetriever retriever(connection(), context);

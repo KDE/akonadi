@@ -34,6 +34,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+ItemCopyHandler::ItemCopyHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool ItemCopyHandler::copyItem(const PimItem &item, const Collection &target)
 {
     PimItem newItem = item;
@@ -109,7 +113,7 @@ bool ItemCopyHandler::parseStream()
         return failureResponse(QStringLiteral("Copying items into virtual collections is not allowed"));
     }
 
-    CacheCleanerInhibitor inhibitor;
+    CacheCleanerInhibitor inhibitor(akonadi());
 
     ItemRetriever retriever(connection(), connection()->context());
     retriever.setItemSet(cmd.items().uidSet());

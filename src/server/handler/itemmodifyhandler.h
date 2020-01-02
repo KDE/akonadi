@@ -69,6 +69,7 @@ namespace Server
 class ItemModifyHandler: public Handler
 {
 public:
+    ItemModifyHandler(AkonadiServer &akonadi);
     ~ItemModifyHandler() override = default;
 
     bool parseStream() override;

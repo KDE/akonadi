@@ -32,6 +32,7 @@ namespace Akonadi
 namespace Server
 {
 
+class AkonadiServer;
 class Response;
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(HandlerException);
@@ -47,7 +48,12 @@ The handler interfaces describes an entity capable of handling an AkonadiIMAP co
 class Handler
 {
 public:
-    Handler() = default;
+    Handler() = delete;
+    Handler(const Handler &) = delete;
+    Handler(Handler &&) noexcept = delete;
+    Handler &operator=(const Handler &) = delete;
+    Handler &operator=(Handler &&) noexcept = delete;
+
     virtual ~Handler() = default;
 
     /**
@@ -70,25 +76,27 @@ public:
      * @param cmd the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
-    static std::unique_ptr<Handler> findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd);
+    static std::unique_ptr<Handler> findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd, AkonadiServer &akonadi);
 
     /**
      * Find a handler for a command that is allowed when the client is not yet authenticated, like LOGIN.
      * @param cmd the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
-    static std::unique_ptr<Handler> findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd);
+    static std::unique_ptr<Handler> findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd, AkonadiServer &akonadi);
 
     /**
      * Find a handler for a command that is allowed when the client is authenticated, like LIST, FETCH, etc.
      * @param cmd the command string
      * @return an instance to the handler. The handler is deleted after @see handelLine is executed. The caller needs to delete the handler in case an exception is thrown from handelLine.
      */
-    static std::unique_ptr<Handler> findHandlerForCommandAuthenticated(Protocol::Command::Type cmd);
+    static std::unique_ptr<Handler> findHandlerForCommandAuthenticated(Protocol::Command::Type cmd, AkonadiServer &akonadi);
 
     void setConnection(Connection *connection);
     Connection *connection() const;
     DataStore *storageBackend() const;
+
+    AkonadiServer &akonadi() const;
 
     bool failureResponse(const char *response);
     bool failureResponse(const QByteArray &response);
@@ -112,7 +120,11 @@ public:
 
     bool checkScopeConstraints(const Scope &scope, int permittedScopes);
 
+protected:
+    Handler(AkonadiServer &akonadi);
+
 private:
+    AkonadiServer &m_akonadi;
     quint64 m_tag = 0;
     Connection *m_connection = nullptr;
     bool m_sentFailureResponse = false;

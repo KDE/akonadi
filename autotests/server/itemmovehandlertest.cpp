@@ -36,15 +36,11 @@ class ItemMoveHandlerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     ItemMoveHandlerTest()
     {
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~ItemMoveHandlerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.init();
     }
 
     Protocol::FetchItemsResponse fetchResponse(quint64 id, const QString &rid, const QString &rrev, const QString &mt)
@@ -115,10 +111,10 @@ private Q_SLOTS:
         QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
         QFETCH(QVariant, newValue);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = mAkonadi.notificationSpy();
         if (expectedNotifications.isEmpty()) {
             QVERIFY(notificationSpy->isEmpty() || notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>().isEmpty());
             return;

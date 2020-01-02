@@ -36,12 +36,13 @@ class CollectionFetchHandlerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     CollectionFetchHandlerTest()
         : QObject()
     {
-        FakeAkonadiServer::instance()->setPopulateDb(false);
-        FakeAkonadiServer::instance()->init();
+        mAkonadi.setPopulateDb(false);
+        mAkonadi.init();
         {
             MimeType mt(QStringLiteral("mimetype1"));
             mt.insert();
@@ -58,11 +59,6 @@ public:
             MimeType mt(QStringLiteral("mimetype4"));
             mt.insert();
         }
-    }
-
-    ~CollectionFetchHandlerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
     }
 
     Protocol::FetchCollectionsCommandPtr createCommand(const Scope &scope,
@@ -174,8 +170,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
     void testListFiltered_data()
@@ -211,8 +207,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
     void testListFilterByResource()
@@ -240,8 +236,8 @@ private Q_SLOTS:
                   << TestScenario::create(5, TestScenario::ServerCmd, initializer->listResponse(col1))
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchCollectionsResponsePtr::create());
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
         col2.remove();
         res2.remove();
@@ -338,8 +334,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
     void testListAttribute_data()
@@ -386,8 +382,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
     void testListAncestorAttributes_data()
@@ -423,8 +419,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
     void testIncludeAncestors_data()
@@ -477,8 +473,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
 //No point in running the benchmark every time
@@ -569,8 +565,8 @@ private Q_SLOTS:
         // StorageDebugger::instance()->writeToFile(QLatin1String("sqllog.txt"));
 
         QBENCHMARK {
-            FakeAkonadiServer::instance()->setScenarios(scenarios);
-            FakeAkonadiServer::instance()->runTest();
+            mAkonadi.setScenarios(scenarios);
+            mAkonadi.runTest();
         }
     }
 

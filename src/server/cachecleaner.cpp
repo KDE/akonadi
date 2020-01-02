@@ -35,8 +35,8 @@ using namespace Akonadi::Server;
 QMutex CacheCleanerInhibitor::sLock;
 int CacheCleanerInhibitor::sInhibitCount = 0;
 
-CacheCleanerInhibitor::CacheCleanerInhibitor(bool doInhibit)
-    : mInhibited(false)
+CacheCleanerInhibitor::CacheCleanerInhibitor(AkonadiServer &akonadi, bool doInhibit)
+    : mCleaner(akonadi.cacheCleaner())
 {
     if (doInhibit) {
         inhibit();
@@ -59,8 +59,8 @@ void CacheCleanerInhibitor::inhibit()
 
     sLock.lock();
     if (++sInhibitCount == 1) {
-        if (AkonadiServer::instance()->cacheCleaner()) {
-            AkonadiServer::instance()->cacheCleaner()->inhibit(true);
+        if (mCleaner) {
+            mCleaner->inhibit(true);
         }
     }
     sLock.unlock();
@@ -78,8 +78,8 @@ void CacheCleanerInhibitor::uninhibit()
     sLock.lock();
     Q_ASSERT(sInhibitCount > 0);
     if (--sInhibitCount == 0) {
-        if (AkonadiServer::instance()->cacheCleaner()) {
-            AkonadiServer::instance()->cacheCleaner()->inhibit(false);
+        if (mCleaner) {
+            mCleaner->inhibit(false);
         }
     }
     sLock.unlock();

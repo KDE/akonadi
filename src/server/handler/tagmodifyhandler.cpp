@@ -31,6 +31,10 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
+TagModifyHandler::TagModifyHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool TagModifyHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::ModifyTagCommand>(m_command);

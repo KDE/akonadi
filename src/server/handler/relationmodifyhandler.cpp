@@ -27,6 +27,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+RelationModifyHandler::RelationModifyHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 Relation RelationModifyHandler::fetchRelation(qint64 leftId, qint64 rightId, qint64 typeId)
 {
     SelectQueryBuilder<Relation> relationQuery;

@@ -78,19 +78,20 @@ static QThreadStorage<DataStore *> sInstances;
         } \
     }
 
-DataStore *DataStoreFactory::createStore()
-{
-    return new DataStore();
-}
+std::unique_ptr<DataStoreFactory> DataStore::sFactory;
 
-std::unique_ptr<DataStoreFactory> DataStore::sFactory = std::make_unique<DataStoreFactory>();
+void DataStore::setFactory(std::unique_ptr<DataStoreFactory> factory)
+{
+    sFactory = std::move(factory);
+}
 
 
 /***************************************************************************
  *   DataStore                                                           *
  ***************************************************************************/
-DataStore::DataStore()
+DataStore::DataStore(AkonadiServer &akonadi)
     : QObject()
+    , m_akonadi(akonadi)
     , m_dbOpened(false)
     , m_transactionLevel(0)
     , m_keepAliveTimer(nullptr)
@@ -225,7 +226,7 @@ bool DataStore::init()
 NotificationCollector *DataStore::notificationCollector()
 {
     if (!mNotificationCollector) {
-        mNotificationCollector = std::make_unique<NotificationCollector>(this);
+        mNotificationCollector = std::make_unique<NotificationCollector>(m_akonadi, this);
     }
 
     return mNotificationCollector.get();

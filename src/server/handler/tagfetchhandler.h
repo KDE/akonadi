@@ -35,6 +35,7 @@ namespace Server
 class TagFetchHandler: public Handler
 {
 public:
+    TagFetchHandler(AkonadiServer &akonadi);
     ~TagFetchHandler() override = default;
 
     bool parseStream() override;

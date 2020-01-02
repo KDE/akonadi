@@ -31,6 +31,10 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
+CollectionCreateHandler::CollectionCreateHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool CollectionCreateHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::CreateCollectionCommand>(m_command);

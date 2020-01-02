@@ -35,6 +35,7 @@ namespace Server
 class RelationFetchHandler: public Handler
 {
 public:
+    RelationFetchHandler(AkonadiServer &akonadi);
     ~RelationFetchHandler() override = default;
 
     bool parseStream() override;

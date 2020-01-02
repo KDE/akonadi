@@ -43,6 +43,7 @@ namespace Server
 class ItemMoveHandler: public Handler
 {
 public:
+    ItemMoveHandler(AkonadiServer &akonadi);
     ~ItemMoveHandler() override = default;
 
     bool parseStream() override;

@@ -30,6 +30,8 @@ namespace Server
 {
 
 class Collection;
+class CacheCleaner;
+class AkonadiServer;
 
 /**
  * A RAII helper class to temporarily stop the CacheCleaner. This allows long-lasting
@@ -44,7 +46,7 @@ class Collection;
 class CacheCleanerInhibitor
 {
 public:
-    explicit CacheCleanerInhibitor(bool inhibit = true);
+    explicit CacheCleanerInhibitor(AkonadiServer &akonadi, bool inhibit = true);
     ~CacheCleanerInhibitor();
 
     void inhibit();
@@ -54,7 +56,9 @@ private:
     Q_DISABLE_COPY(CacheCleanerInhibitor)
     static QMutex sLock;
     static int sInhibitCount;
-    bool mInhibited;
+
+    CacheCleaner *mCleaner = nullptr;
+    bool mInhibited = false;
 };
 
 /**

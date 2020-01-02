@@ -32,6 +32,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+TagCreateHandler::TagCreateHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool TagCreateHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::CreateTagCommand>(m_command);

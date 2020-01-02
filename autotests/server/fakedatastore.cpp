@@ -18,6 +18,7 @@
 */
 
 #include "fakedatastore.h"
+#include "fakeakonadiserver.h"
 #include "dbpopulator.h"
 #include "storage/dbconfig.h"
 #include "inspectablenotificationcollector.h"
@@ -38,38 +39,23 @@ Q_DECLARE_METATYPE(QVector<Tag>)
 Q_DECLARE_METATYPE(MimeType)
 Q_DECLARE_METATYPE(QList<QByteArray>)
 
-namespace Akonadi {
-namespace Server {
+FakeDataStoreFactory::FakeDataStoreFactory(FakeAkonadiServer &akonadi)
+    : m_akonadi(akonadi)
+{}
 
-class FakeDataStoreFactory : public DataStoreFactory
+DataStore * FakeDataStoreFactory::createStore()
 {
-public:
-    FakeDataStoreFactory() = default;
-    ~FakeDataStoreFactory() override = default;
-    DataStore * createStore() override
-    {
-        return new FakeDataStore();
-    }
-};
-
-}
+    return new FakeDataStore(m_akonadi);
 }
 
-Akonadi::Server::FakeDataStore::FakeDataStore()
-    : DataStore()
+FakeDataStore::FakeDataStore(FakeAkonadiServer &akonadi)
+    : DataStore(akonadi)
     , mPopulateDb(true)
 {
-    mNotificationCollector = std::make_unique<InspectableNotificationCollector>(this);
+    mNotificationCollector = std::make_unique<InspectableNotificationCollector>(m_akonadi, this);
 }
 
-FakeDataStore::~FakeDataStore()
-{
-}
-
-void FakeDataStore::registerFactory()
-{
-    sFactory.reset(new FakeDataStoreFactory);
-}
+FakeDataStore::~FakeDataStore() = default;
 
 bool FakeDataStore::init()
 {
@@ -320,3 +306,4 @@ void FakeDataStore::setPopulateDb(bool populate)
 {
     mPopulateDb = populate;
 }
+

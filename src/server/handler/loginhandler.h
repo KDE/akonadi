@@ -34,6 +34,7 @@ namespace Server
 class LoginHandler: public Handler
 {
 public:
+    LoginHandler(AkonadiServer &akonadi);
     ~LoginHandler() override = default;
 
     bool parseStream() override;

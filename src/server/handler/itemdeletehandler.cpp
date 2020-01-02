@@ -30,6 +30,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+ItemDeleteHandler::ItemDeleteHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool ItemDeleteHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::DeleteItemsCommand>(m_command);

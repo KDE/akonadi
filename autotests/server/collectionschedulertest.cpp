@@ -36,10 +36,11 @@ class CollectionSchedulerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 private Q_SLOTS:
     void initTestCase()
     {
-        FakeAkonadiServer::instance()->init();
+        mAkonadi.init();
     }
 
     void shouldInitializeSyncIntervals()

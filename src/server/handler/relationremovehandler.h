@@ -30,6 +30,7 @@ namespace Server
 class RelationRemoveHandler: public Handler
 {
 public:
+    RelationRemoveHandler(AkonadiServer &akonadi);
     ~RelationRemoveHandler() override = default;
 
     bool parseStream() override;

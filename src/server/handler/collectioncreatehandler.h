@@ -32,6 +32,7 @@ namespace Server
 class CollectionCreateHandler: public Handler
 {
 public:
+    CollectionCreateHandler(AkonadiServer &akonadi);
     ~CollectionCreateHandler() override = default;
 
     bool parseStream() override;

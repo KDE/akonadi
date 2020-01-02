@@ -41,6 +41,7 @@ namespace Server
 class ItemDeleteHandler: public Handler
 {
 public:
+    ItemDeleteHandler(AkonadiServer &akonadi);
     ~ItemDeleteHandler() override = default;
 
     bool parseStream() override;

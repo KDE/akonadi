@@ -45,6 +45,7 @@ class ItemCreateHandlerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     ItemCreateHandlerTest()
     {
@@ -54,12 +55,7 @@ public:
         QSettings settings(serverConfigFile, QSettings::IniFormat);
         settings.setValue(QStringLiteral("General/SizeThreshold"), std::numeric_limits<qint64>::max());
 
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~ItemCreateHandlerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.init();
     }
 
     void updatePimItem(PimItem &pimItem, const QString &remoteId, const qint64 size)
@@ -812,10 +808,10 @@ private Q_SLOTS:
         QFETCH(qint64, uidnext);
         QFETCH(bool, expectFail);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = mAkonadi.notificationSpy();
 
         QCOMPARE(notificationSpy->count(), notifications.count());
         for (int i = 0; i < notifications.count(); ++i) {

@@ -43,6 +43,10 @@ static bool intersect(const QVector<typename T::Id> &l1, const QVector<T> &l2)
     return false;
 }
 
+CollectionFetchHandler::CollectionFetchHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 QStack<Collection> CollectionFetchHandler::ancestorsForCollection(const Collection &col)
 {
     if (mAncestorDepth <= 0) {

@@ -47,6 +47,7 @@ namespace Server
 class ItemCopyHandler: public Handler
 {
 public:
+    ItemCopyHandler(AkonadiServer &akonadi);
     ~ItemCopyHandler() override = default;
 
     bool parseStream() override;

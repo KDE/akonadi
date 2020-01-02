@@ -40,19 +40,15 @@ class FetchHandlerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     FetchHandlerTest()
         : QObject()
     {
         qRegisterMetaType<Akonadi::Server::Tag::List>();
 
-        FakeAkonadiServer::instance()->setPopulateDb(false);
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~FetchHandlerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.setPopulateDb(false);
+        mAkonadi.init();
     }
 
     Protocol::FetchItemsCommandPtr createCommand(const Scope &scope, const Protocol::ScopeContext &ctx = Protocol::ScopeContext())
@@ -88,7 +84,7 @@ private Q_SLOTS:
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
+            scenarios << mAkonadi.loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(item1.id()))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
@@ -97,7 +93,7 @@ private Q_SLOTS:
         }
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
+            scenarios << mAkonadi.loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
@@ -110,8 +106,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
     void testFetchByTag_data()
@@ -137,7 +133,7 @@ private Q_SLOTS:
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
+            scenarios << mAkonadi.loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
@@ -146,8 +142,8 @@ private Q_SLOTS:
         }
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
+            scenarios << mAkonadi.loginScenario()
+                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
@@ -156,8 +152,8 @@ private Q_SLOTS:
         }
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
+            scenarios << mAkonadi.loginScenario()
+                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
@@ -171,8 +167,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
     void testFetchCommandContext_data()
@@ -198,8 +194,8 @@ private Q_SLOTS:
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
-                      << FakeAkonadiServer::selectResourceScenario(QStringLiteral("testresource"))
+            scenarios << mAkonadi.loginScenario()
+                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col2.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create())
                       << TestScenario::create(6, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
@@ -215,8 +211,8 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
     }
 
     void testList_data()
@@ -238,7 +234,7 @@ private Q_SLOTS:
 
         {
             TestScenario::List scenarios;
-            scenarios << FakeAkonadiServer::loginScenario()
+            scenarios << mAkonadi.loginScenario()
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col1.id())));
             while (!items.isEmpty()) {
                 const PimItem &item = items.takeLast();
@@ -254,10 +250,10 @@ private Q_SLOTS:
     {
         QFETCH(TestScenario::List, scenarios);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
+        mAkonadi.setScenarios(scenarios);
         //StorageDebugger::instance()->enableSQLDebugging(true);
         //StorageDebugger::instance()->writeToFile(QStringLiteral("sqllog.txt"));
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.runTest();
     }
 
 };

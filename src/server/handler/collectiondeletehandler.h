@@ -40,6 +40,7 @@ class Collection;
 class CollectionDeleteHandler: public Handler
 {
 public:
+    CollectionDeleteHandler(AkonadiServer &akonadi);
     ~CollectionDeleteHandler() override = default;
 
     bool parseStream() override;

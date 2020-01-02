@@ -22,8 +22,8 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-InspectableNotificationCollector::InspectableNotificationCollector(DataStore *store)
-    : NotificationCollector(store)
+InspectableNotificationCollector::InspectableNotificationCollector(AkonadiServer &akonadi, DataStore *store)
+    : NotificationCollector(akonadi, store)
 {
 }
 

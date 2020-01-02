@@ -46,6 +46,7 @@ class PartStreamerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     PartStreamerTest()
     {
@@ -54,12 +55,7 @@ public:
         QSettings settings(serverConfigFile, QSettings::IniFormat);
         settings.setValue(QStringLiteral("General/SizeThreshold"), 5);
 
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~PartStreamerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.init();
     }
 
     Protocol::ModifyItemsCommandPtr createCommand(const PimItem &item)
@@ -220,8 +216,8 @@ private Q_SLOTS:
             file.close();
         }
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
         PimItem item = PimItem::retrieveById(pimItem.id());
         const QVector<Part> parts = item.parts();

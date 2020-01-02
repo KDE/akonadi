@@ -71,14 +71,15 @@ int main(int argc, char **argv)
         qCCritical(AKONADISERVER_LOG) << "If you started akonadiserver manually, try 'akonadictl start' instead.";
     }
 
+    Akonadi::Server::AkonadiServer akonadi;
     // Make sure we do initialization from eventloop, otherwise
     // org.freedesktop.Akonadi.upgrading service won't be registered to DBus at all
-    QTimer::singleShot(0, Akonadi::Server::AkonadiServer::instance(), &Akonadi::Server::AkonadiServer::init);
+    QTimer::singleShot(0, &akonadi, &Akonadi::Server::AkonadiServer::init);
 
     const int result = app.exec();
 
     qCInfo(AKONADISERVER_LOG) << "Shutting down AkonadiServer...";
-    Akonadi::Server::AkonadiServer::instance()->quit();
+    akonadi.quit();
 
     Q_CLEANUP_RESOURCE(akonadidb);
 

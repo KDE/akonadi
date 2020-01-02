@@ -43,7 +43,6 @@
 #define AKTEST_FAKESERVER_MAIN(TestObject) \
     int main(int argc, char **argv) \
     { \
-        FakeAkonadiServer::instance(); \
         AkCoreApplication app(argc, argv); \
         KCrash::setDrKonqiEnabled(false); \
         app.addCommandLineOptions(QCommandLineOption( \

@@ -25,13 +25,13 @@
 
 using namespace Akonadi::Server;
 
-FakeConnection::FakeConnection(quintptr socketDescriptor, QObject *parent)
-    : Connection(socketDescriptor, parent)
+FakeConnection::FakeConnection(quintptr socketDescriptor, FakeAkonadiServer &akonadi)
+    : Connection(socketDescriptor, akonadi)
 {
 }
 
-FakeConnection::FakeConnection(QObject *parent)
-    : Connection(parent)
+FakeConnection::FakeConnection(AkonadiServer &akonadi)
+    : Connection(akonadi)
 {
 }
 

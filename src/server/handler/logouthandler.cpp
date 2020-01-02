@@ -22,6 +22,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+LogoutHandler::LogoutHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool LogoutHandler::parseStream()
 {
     sendResponse<Protocol::LogoutResponse>();

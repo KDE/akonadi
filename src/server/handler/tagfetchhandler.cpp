@@ -24,6 +24,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+TagFetchHandler::TagFetchHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool TagFetchHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::FetchTagsCommand>(m_command);

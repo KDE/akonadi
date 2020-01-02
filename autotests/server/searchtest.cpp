@@ -34,17 +34,13 @@ class SearchTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     SearchTest()
         : QObject()
     {
-        FakeAkonadiServer::instance()->setPopulateDb(false);
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~SearchTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.setPopulateDb(false);
+        mAkonadi.init();
     }
 
     Collection createCollection(const Resource &res, const QString &name, const Collection &parent, const QStringList &mimetypes)

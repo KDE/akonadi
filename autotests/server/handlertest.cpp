@@ -47,6 +47,8 @@
 #include "handler/loginhandler.h"
 #include "handler/logouthandler.h"
 
+#include "fakeakonadiserver.h"
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
@@ -55,6 +57,15 @@ using namespace Akonadi::Server;
 class HandlerTest : public QObject
 {
     Q_OBJECT
+
+    FakeAkonadiServer mAkonadi;
+public:
+    explicit HandlerTest()
+        : QObject()
+    {
+        mAkonadi.init();
+    }
+
 private:
     void setupTestData()
     {
@@ -118,7 +129,7 @@ private Q_SLOTS:
     {
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
-        const auto handler = Handler::findHandlerForCommandAuthenticated(command);
+        const auto handler = Handler::findHandlerForCommandAuthenticated(command, mAkonadi);
         QVERIFY(handler);
         QCOMPARE(typeName(handler), className);
     }
@@ -136,7 +147,7 @@ private Q_SLOTS:
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
 
-        const auto handler = Handler::findHandlerForCommandAuthenticated(command);
+        const auto handler = Handler::findHandlerForCommandAuthenticated(command, mAkonadi);
         QVERIFY(!handler);
     }
 
@@ -152,7 +163,7 @@ private Q_SLOTS:
         QFETCH(QByteArray, className);
 
 
-        auto handler = Handler::findHandlerForCommandNonAuthenticated(command);
+        auto handler = Handler::findHandlerForCommandNonAuthenticated(command, mAkonadi);
         QVERIFY(handler);
         QCOMPARE(typeName(handler), className);
     }
@@ -168,7 +179,7 @@ private Q_SLOTS:
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
 
-        const auto handler = Handler::findHandlerForCommandAlwaysAllowed(command);
+        const auto handler = Handler::findHandlerForCommandAlwaysAllowed(command, mAkonadi);
         QVERIFY(handler);
         QCOMPARE(typeName(handler), className);
     }
@@ -186,7 +197,7 @@ private Q_SLOTS:
         QFETCH(Protocol::Command::Type, command);
         QFETCH(QByteArray, className);
 
-        const auto handler = Handler::findHandlerForCommandAlwaysAllowed(command);
+        const auto handler = Handler::findHandlerForCommandAlwaysAllowed(command, mAkonadi);
         QVERIFY(!handler);
     }
 };

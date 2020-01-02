@@ -27,6 +27,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+RelationFetchHandler::RelationFetchHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool RelationFetchHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::FetchRelationsCommand>(m_command);

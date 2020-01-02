@@ -32,6 +32,7 @@ class Relation;
 class RelationModifyHandler: public Handler
 {
 public:
+    RelationModifyHandler(AkonadiServer &akonadi);
     ~RelationModifyHandler() override = default;
 
     bool parseStream() override;

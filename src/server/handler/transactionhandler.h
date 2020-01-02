@@ -35,6 +35,7 @@ namespace Server
 class TransactionHandler : public Handler
 {
 public:
+    TransactionHandler(AkonadiServer &akonadi);
     ~TransactionHandler() override = default;
 
     bool parseStream() override;

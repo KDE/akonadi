@@ -35,17 +35,13 @@ class ItemLinkHandlerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     ItemLinkHandlerTest()
     {
         qRegisterMetaType<Akonadi::Protocol::ChangeNotificationList>();
 
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~ItemLinkHandlerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.init();
     }
 
     Protocol::LinkItemsResponsePtr createError(const QString &error)
@@ -150,10 +146,10 @@ private Q_SLOTS:
         QFETCH(Protocol::ItemChangeNotificationPtr, notification);
         QFETCH(bool, expectFail);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = mAkonadi.notificationSpy();
         if (notification->operation() != Protocol::ItemChangeNotification::InvalidOp) {
             QCOMPARE(notificationSpy->count(), 1);
             const Protocol::ChangeNotificationList notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>();
@@ -255,10 +251,10 @@ private Q_SLOTS:
         QFETCH(Protocol::ItemChangeNotificationPtr, notification);
         QFETCH(bool, expectFail);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = mAkonadi.notificationSpy();
         if (notification->operation() != Protocol::ItemChangeNotification::InvalidOp) {
             QCOMPARE(notificationSpy->count(), 1);
             const auto notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>();

@@ -33,6 +33,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+ItemLinkHandler::ItemLinkHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool ItemLinkHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::LinkItemsCommand>(m_command);

@@ -48,8 +48,8 @@ class AkonadiServer : public QObject
     Q_OBJECT
 
 public:
+    explicit AkonadiServer();
     ~AkonadiServer();
-    static AkonadiServer *instance();
 
     /**
      * Can return a nullptr
@@ -93,8 +93,6 @@ private:
     uint userId() const;
 
 protected:
-    AkonadiServer(QObject *parent = nullptr);
-
     std::unique_ptr<QDBusServiceWatcher> mControlWatcher;
 
     std::unique_ptr<AkLocalServer> mCmdServer;
@@ -110,8 +108,6 @@ protected:
 
     std::vector<std::unique_ptr<Connection>> mConnections;
     bool mAlreadyShutdown = false;
-
-    static AkonadiServer *s_instance;
 };
 
 } // namespace Server

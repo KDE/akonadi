@@ -36,6 +36,7 @@ namespace Server
 class CollectionModifyHandler: public Handler
 {
 public:
+    CollectionModifyHandler(AkonadiServer &akonadi);
     ~CollectionModifyHandler() override = default;
 
     bool parseStream() override;

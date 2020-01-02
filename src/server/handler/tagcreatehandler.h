@@ -30,6 +30,7 @@ namespace Server
 class TagCreateHandler: public Handler
 {
 public:
+    TagCreateHandler(AkonadiServer &akonadi);
     ~TagCreateHandler() override = default;
 
     bool parseStream() override;

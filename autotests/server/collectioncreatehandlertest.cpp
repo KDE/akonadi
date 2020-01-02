@@ -36,15 +36,11 @@ class CollectionCreateHandlerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     CollectionCreateHandlerTest()
     {
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~CollectionCreateHandlerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.init();
     }
 
 private Q_SLOTS:
@@ -162,10 +158,10 @@ private Q_SLOTS:
         QFETCH(TestScenario::List, scenarios);
         QFETCH(Protocol::CollectionChangeNotificationPtr, notification);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        auto notificationSpy = FakeAkonadiServer::instance()->notificationSpy();
+        auto notificationSpy = mAkonadi.notificationSpy();
         if (notification->operation() != Protocol::CollectionChangeNotification::InvalidOp) {
             QCOMPARE(notificationSpy->count(), 1);
             const auto notifications = notificationSpy->takeFirst().first().value<Protocol::ChangeNotificationList>();

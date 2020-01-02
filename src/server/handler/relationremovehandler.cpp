@@ -28,6 +28,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+RelationRemoveHandler::RelationRemoveHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool RelationRemoveHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::RemoveRelationsCommand>(m_command);

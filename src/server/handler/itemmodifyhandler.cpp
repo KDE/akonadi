@@ -47,6 +47,10 @@ static bool payloadChanged(const QSet<QByteArray> &changes)
     return changes | AkRanges::Actions::any([](const auto &change) { return change.startsWith(AKONADI_PARAM_PLD); });
 }
 
+ItemModifyHandler::ItemModifyHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool ItemModifyHandler::replaceFlags(const PimItem::List &item, const QSet<QByteArray> &flags, bool &flagsChanged)
 {
     Flag::List flagList = HandlerHelper::resolveFlags(flags);

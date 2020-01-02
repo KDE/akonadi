@@ -37,6 +37,10 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
+CollectionModifyHandler::CollectionModifyHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool CollectionModifyHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::ModifyCollectionCommand>(m_command);
@@ -46,7 +50,7 @@ bool CollectionModifyHandler::parseStream()
         return failureResponse("No such collection");
     }
 
-    CacheCleanerInhibitor inhibitor(false);
+    CacheCleanerInhibitor inhibitor(akonadi(), false);
 
     if (cmd.modifiedParts() & Protocol::ModifyCollectionCommand::ParentID) {
         const Collection newParent = Collection::retrieveById(cmd.parentId());

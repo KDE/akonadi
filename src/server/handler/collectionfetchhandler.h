@@ -63,7 +63,7 @@ namespace Server
 class CollectionFetchHandler: public Handler
 {
 public:
-    CollectionFetchHandler() = default;
+    CollectionFetchHandler(AkonadiServer &akonadi);
     ~CollectionFetchHandler() override = default;
 
     bool parseStream() override;

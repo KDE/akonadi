@@ -32,6 +32,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+CollectionDeleteHandler::CollectionDeleteHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool CollectionDeleteHandler::deleteRecursive(Collection &col)
 {
     Collection::List children = col.children();

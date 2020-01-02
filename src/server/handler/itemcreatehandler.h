@@ -41,6 +41,7 @@ class Transaction;
 class ItemCreateHandler: public Handler
 {
 public:
+    ItemCreateHandler(AkonadiServer &akonadi);
     ~ItemCreateHandler() override = default;
 
     bool parseStream() override;

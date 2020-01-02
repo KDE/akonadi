@@ -40,8 +40,9 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-NotificationCollector::NotificationCollector(DataStore *db)
+NotificationCollector::NotificationCollector(AkonadiServer &akonadi, DataStore *db)
     : mDb(db)
+    , mAkonadi(akonadi)
 {
     QObject::connect(db, &DataStore::transactionCommitted,
                      [this]() {
@@ -136,10 +137,10 @@ void NotificationCollector::itemsUnlinked(const PimItem::List &items, const Coll
 void NotificationCollector::collectionAdded(const Collection &collection,
         const QByteArray &resource)
 {
-    if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
+    if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionAdded(collection.id());
     }
-    AkonadiServer::instance()->intervalChecker()->collectionAdded(collection.id());
+    mAkonadi.intervalChecker()->collectionAdded(collection.id());
     collectionNotification(Protocol::CollectionChangeNotification::Add, collection, collection.parentId(), -1, resource);
 }
 
@@ -147,10 +148,10 @@ void NotificationCollector::collectionChanged(const Collection &collection,
         const QList<QByteArray> &changes,
         const QByteArray &resource)
 {
-    if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
+    if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionChanged(collection.id());
     }
-    AkonadiServer::instance()->intervalChecker()->collectionChanged(collection.id());
+    mAkonadi.intervalChecker()->collectionChanged(collection.id());
     if (changes.contains(AKONADI_PARAM_ENABLED)) {
         CollectionStatistics::self()->invalidateCollection(collection);
     }
@@ -163,20 +164,20 @@ void NotificationCollector::collectionMoved(const Collection &collection,
         const QByteArray &resource,
         const QByteArray &destResource)
 {
-    if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
+    if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionChanged(collection.id());
     }
-    AkonadiServer::instance()->intervalChecker()->collectionChanged(collection.id());
+    mAkonadi.intervalChecker()->collectionChanged(collection.id());
     collectionNotification(Protocol::CollectionChangeNotification::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource);
 }
 
 void NotificationCollector::collectionRemoved(const Collection &collection,
         const QByteArray &resource)
 {
-    if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
+    if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionRemoved(collection.id());
     }
-    AkonadiServer::instance()->intervalChecker()->collectionRemoved(collection.id());
+    mAkonadi.intervalChecker()->collectionRemoved(collection.id());
     CollectionStatistics::self()->invalidateCollection(collection);
     collectionNotification(Protocol::CollectionChangeNotification::Remove, collection, collection.parentId(), -1, resource);
 }
@@ -184,10 +185,10 @@ void NotificationCollector::collectionRemoved(const Collection &collection,
 void NotificationCollector::collectionSubscribed(const Collection &collection,
         const QByteArray &resource)
 {
-    if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
+    if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionAdded(collection.id());
     }
-    if (auto checker = AkonadiServer::instance()->intervalChecker()) {
+    if (auto checker = mAkonadi.intervalChecker()) {
         checker->collectionAdded(collection.id());
     }
     collectionNotification(Protocol::CollectionChangeNotification::Subscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
@@ -196,10 +197,10 @@ void NotificationCollector::collectionSubscribed(const Collection &collection,
 void NotificationCollector::collectionUnsubscribed(const Collection &collection,
         const QByteArray &resource)
 {
-    if (auto cleaner = AkonadiServer::instance()->cacheCleaner()) {
+    if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionRemoved(collection.id());
     }
-    AkonadiServer::instance()->intervalChecker()->collectionRemoved(collection.id());
+    mAkonadi.intervalChecker()->collectionRemoved(collection.id());
     CollectionStatistics::self()->invalidateCollection(collection);
     collectionNotification(Protocol::CollectionChangeNotification::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
 }
@@ -386,7 +387,7 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
     msg->setChangedParts(changes);
 
     auto msgCollection = HandlerHelper::fetchCollectionsResponse(collection);
-    if (auto mgr = AkonadiServer::instance()->notificationManager()) {
+    if (auto mgr = mAkonadi.notificationManager()) {
         auto fetchScope = mgr->collectionFetchScope();
         // Make sure we have all the data
         if (!fetchScope->fetchIdOnly() && msgCollection.name().isEmpty()) {
@@ -461,7 +462,7 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
     Protocol::FetchTagsResponse msgTag;
     msgTag.setId(tag.id());
     msgTag.setRemoteId(remoteId.toUtf8());
-    if (auto mgr = AkonadiServer::instance()->notificationManager()) {
+    if (auto mgr = mAkonadi.notificationManager()) {
         auto fetchScope = mgr->tagFetchScope();
         if (!fetchScope->fetchIdOnly() && msgTag.gid().isEmpty()) {
             msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag.id()), fetchScope->toFetchScope(), mConnection);
@@ -511,7 +512,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
 {
     if (changeMsg->type() == Protocol::Command::ItemChangeNotification) {
         const auto msg = changeMsg.staticCast<Protocol::ItemChangeNotification>();
-        const auto mgr = AkonadiServer::instance()->notificationManager();
+        const auto mgr = mAkonadi.notificationManager();
         if (mgr && msg->operation() != Protocol::ItemChangeNotification::Remove) {
             if (mDb->inTransaction()) {
                 qCWarning(AKONADISERVER_LOG) << "NotificationCollector requested FetchHelper from within a transaction."
@@ -608,7 +609,7 @@ void NotificationCollector::dispatchNotifications()
 
 void NotificationCollector::notify(Protocol::ChangeNotificationList msgs)
 {
-    if (auto mgr = AkonadiServer::instance()->notificationManager()) {
+    if (auto mgr = mAkonadi.notificationManager()) {
         QMetaObject::invokeMethod(mgr, "slotNotify", Qt::QueuedConnection,
                                   Q_ARG(Akonadi::Protocol::ChangeNotificationList, msgs));
     }

@@ -62,23 +62,19 @@ class TagHandlerTest : public QObject
 {
     Q_OBJECT
 
+    FakeAkonadiServer mAkonadi;
 public:
     TagHandlerTest()
         : QObject()
     {
         qRegisterMetaType<Akonadi::Server::Tag::List>();
 
-        FakeAkonadiServer::instance()->setPopulateDb(false);
-        FakeAkonadiServer::instance()->init();
-    }
-
-    ~TagHandlerTest()
-    {
-        FakeAkonadiServer::instance()->quit();
+        mAkonadi.setPopulateDb(false);
+        mAkonadi.init();
     }
 
     Protocol::FetchTagsResponsePtr createResponse(const Tag &tag, const QByteArray &remoteId = QByteArray(),
-                                               const Protocol::Attributes &attrs = Protocol::Attributes())
+                                                  const Protocol::Attributes &attrs = Protocol::Attributes())
     {
         auto resp = Protocol::FetchTagsResponsePtr::create(tag.id());
         resp->setGid(tag.gid().toUtf8());
@@ -193,10 +189,10 @@ private Q_SLOTS:
         QFETCH(QVector<TagTagAttributeListPair>, expectedTags);
         QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(mAkonadi.notificationSpy());
 
         QVariantList ids;
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
@@ -364,10 +360,10 @@ private Q_SLOTS:
         QFETCH(Tag::List, expectedTags);
         QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(mAkonadi.notificationSpy());
 
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < receivedNotifications.size(); i++) {
@@ -450,10 +446,10 @@ private Q_SLOTS:
         QFETCH(Tag::List, expectedTags);
         QFETCH(Protocol::ChangeNotificationList, expectedNotifications);
 
-        FakeAkonadiServer::instance()->setScenarios(scenarios);
-        FakeAkonadiServer::instance()->runTest();
+        mAkonadi.setScenarios(scenarios);
+        mAkonadi.runTest();
 
-        const auto receivedNotifications = extractNotifications(FakeAkonadiServer::instance()->notificationSpy());
+        const auto receivedNotifications = extractNotifications(mAkonadi.notificationSpy());
 
         QCOMPARE(receivedNotifications.size(), expectedNotifications.count());
         for (int i = 0; i < receivedNotifications.size(); i++) {

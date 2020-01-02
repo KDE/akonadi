@@ -53,13 +53,15 @@ static QString connectionIdentifier(Connection *c) {
     return id;
 }
 
-Connection::Connection(QObject *parent)
-    : AkThread(connectionIdentifier(this), QThread::InheritPriority, parent)
+Connection::Connection(AkonadiServer &akonadi)
+    : AkThread(connectionIdentifier(this), QThread::InheritPriority)
+    , m_akonadi(akonadi)
 {
 }
 
-Connection::Connection(quintptr socketDescriptor, QObject *parent)
-    : AkThread(connectionIdentifier(this), QThread::InheritPriority, parent)
+Connection::Connection(quintptr socketDescriptor, AkonadiServer &akonadi)
+    : AkThread(connectionIdentifier(this), QThread::InheritPriority)
+    , m_akonadi(akonadi)
 {
     m_socketDescriptor = socketDescriptor;
     m_identifier = connectionIdentifier(this); // same as objectName()
@@ -368,17 +370,17 @@ void Connection::setContext(const CommandContext &context)
 
 std::unique_ptr<Handler> Connection::findHandlerForCommand(Protocol::Command::Type command)
 {
-    auto handler = Handler::findHandlerForCommandAlwaysAllowed(command);
+    auto handler = Handler::findHandlerForCommandAlwaysAllowed(command, m_akonadi);
     if (handler) {
         return handler;
     }
 
     switch (m_connectionState) {
     case NonAuthenticated:
-        handler =  Handler::findHandlerForCommandNonAuthenticated(command);
+        handler =  Handler::findHandlerForCommandNonAuthenticated(command, m_akonadi);
         break;
     case Authenticated:
-        handler =  Handler::findHandlerForCommandAuthenticated(command);
+        handler =  Handler::findHandlerForCommandAuthenticated(command, m_akonadi);
         break;
     case Selected:
         break;

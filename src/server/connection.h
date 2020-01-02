@@ -45,6 +45,7 @@ class Handler;
 class Response;
 class DataStore;
 class Collection;
+class AkonadiServer;
 
 /**
     An Connection represents one connection of a client to the server.
@@ -53,13 +54,15 @@ class Connection : public AkThread
 {
     Q_OBJECT
 public:
-    explicit Connection(quintptr socketDescriptor, QObject *parent = nullptr);
+    explicit Connection(quintptr socketDescriptor, AkonadiServer &akonadi);
     ~Connection() override;
 
     virtual DataStore *storageBackend();
 
     const CommandContext &context() const;
     void setContext(const CommandContext &context);
+
+    AkonadiServer &akonadi() const { return m_akonadi; }
 
     /**
       Returns @c true if this connection belongs to the owning resource of @p item.
@@ -95,7 +98,7 @@ protected Q_SLOTS:
     void slotSendHello();
 
 protected:
-    Connection(QObject *parent = nullptr); // used for testing
+    Connection(AkonadiServer &akonadi); // used for testing
 
     void init() override;
     void quit() override;
@@ -106,6 +109,7 @@ protected:
 
 protected:
     quintptr m_socketDescriptor = {};
+    AkonadiServer &m_akonadi;
     QLocalSocket *m_socket = nullptr;
     std::unique_ptr<Handler> m_currentHandler;
     ConnectionState m_connectionState = NonAuthenticated;

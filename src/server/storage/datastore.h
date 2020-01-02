@@ -44,7 +44,7 @@ class DataStoreFactory
 {
 public:
     virtual ~DataStoreFactory() = default;
-    virtual DataStore *createStore();
+    virtual DataStore *createStore() = 0;
 };
 
 class NotificationCollector;
@@ -104,6 +104,8 @@ class DataStore : public QObject
     Q_OBJECT
 public:
     const constexpr static bool Silent = true;
+
+    static void setFactory(std::unique_ptr<DataStoreFactory> factory);
 
     /**
       Closes the database connection and destroys the DataStore object.
@@ -306,7 +308,7 @@ protected:
     /**
       Creates a new DataStore object and opens it.
     */
-    DataStore();
+    DataStore(AkonadiServer &akonadi);
 
     void debugLastDbError(const char *actionDescription) const;
     void debugLastQueryError(const QSqlQuery &query, const char *actionDescription) const;
@@ -341,6 +343,7 @@ private Q_SLOTS:
 protected:
     static std::unique_ptr<DataStoreFactory> sFactory;
     std::unique_ptr<NotificationCollector> mNotificationCollector;
+    AkonadiServer &m_akonadi;
 
 private:
     void cleanupAfterRollback();

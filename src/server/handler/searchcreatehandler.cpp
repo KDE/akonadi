@@ -33,6 +33,10 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
+SearchCreateHandler::SearchCreateHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool SearchCreateHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::StoreSearchCommand>(m_command);

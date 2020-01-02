@@ -42,6 +42,10 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
+ItemCreateHandler::ItemCreateHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                                      Collection &parentCol)
 {

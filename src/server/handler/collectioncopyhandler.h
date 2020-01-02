@@ -49,6 +49,7 @@ namespace Server
 class CollectionCopyHandler : public ItemCopyHandler
 {
 public:
+    CollectionCopyHandler(AkonadiServer &akonadi);
     ~CollectionCopyHandler() override = default;
 
     bool parseStream() override;

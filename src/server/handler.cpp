@@ -56,26 +56,26 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-std::unique_ptr<Handler> Handler::findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd)
+std::unique_ptr<Handler> Handler::findHandlerForCommandNonAuthenticated(Protocol::Command::Type cmd, AkonadiServer &akonadi)
 {
     // allowed are LOGIN
     if (cmd == Protocol::Command::Login) {
-        return std::make_unique<LoginHandler>();
+        return std::make_unique<LoginHandler>(akonadi);
     }
 
     return {};
 }
 
-std::unique_ptr<Handler> Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd)
+std::unique_ptr<Handler> Handler::findHandlerForCommandAlwaysAllowed(Protocol::Command::Type cmd, AkonadiServer &akonadi)
 {
     // allowed is LOGOUT
     if (cmd == Protocol::Command::Logout) {
-        return std::make_unique<LogoutHandler>();
+        return std::make_unique<LogoutHandler>(akonadi);
     }
     return nullptr;
 }
 
-std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd)
+std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::Command::Type cmd, AkonadiServer &akonadi)
 {
     switch (cmd) {
     case Protocol::Command::Invalid:
@@ -96,63 +96,63 @@ std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::C
         return {};
 
     case Protocol::Command::Transaction:
-        return std::make_unique<TransactionHandler>();
+        return std::make_unique<TransactionHandler>(akonadi);
 
     case Protocol::Command::CreateItem:
-        return std::make_unique<ItemCreateHandler>();
+        return std::make_unique<ItemCreateHandler>(akonadi);
     case Protocol::Command::CopyItems:
-        return std::make_unique<ItemCopyHandler>();
+        return std::make_unique<ItemCopyHandler>(akonadi);
     case Protocol::Command::DeleteItems:
-        return std::make_unique<ItemDeleteHandler>();
+        return std::make_unique<ItemDeleteHandler>(akonadi);
     case Protocol::Command::FetchItems:
-        return std::make_unique<ItemFetchHandler>();
+        return std::make_unique<ItemFetchHandler>(akonadi);
     case Protocol::Command::LinkItems:
-        return std::make_unique<ItemLinkHandler>();
+        return std::make_unique<ItemLinkHandler>(akonadi);
     case Protocol::Command::ModifyItems:
-        return std::make_unique<ItemModifyHandler>();
+        return std::make_unique<ItemModifyHandler>(akonadi);
     case Protocol::Command::MoveItems:
-        return std::make_unique<ItemMoveHandler>();
+        return std::make_unique<ItemMoveHandler>(akonadi);
 
     case Protocol::Command::CreateCollection:
-        return std::make_unique<CollectionCreateHandler>();
+        return std::make_unique<CollectionCreateHandler>(akonadi);
     case Protocol::Command::CopyCollection:
-        return std::make_unique<CollectionCopyHandler>();
+        return std::make_unique<CollectionCopyHandler>(akonadi);
     case Protocol::Command::DeleteCollection:
-        return std::make_unique<CollectionDeleteHandler>();
+        return std::make_unique<CollectionDeleteHandler>(akonadi);
     case Protocol::Command::FetchCollections:
-        return std::make_unique<CollectionFetchHandler>();
+        return std::make_unique<CollectionFetchHandler>(akonadi);
     case Protocol::Command::FetchCollectionStats:
-        return std::make_unique<CollectionStatsFetchHandler>();
+        return std::make_unique<CollectionStatsFetchHandler>(akonadi);
     case Protocol::Command::ModifyCollection:
-        return std::make_unique<CollectionModifyHandler>();
+        return std::make_unique<CollectionModifyHandler>(akonadi);
     case Protocol::Command::MoveCollection:
-        return std::make_unique<CollectionMoveHandler>();
+        return std::make_unique<CollectionMoveHandler>(akonadi);
 
     case Protocol::Command::Search:
-        return std::make_unique<SearchHandler>();
+        return std::make_unique<SearchHandler>(akonadi);
     case Protocol::Command::SearchResult:
-        return std::make_unique<SearchResultHandler>();
+        return std::make_unique<SearchResultHandler>(akonadi);
     case Protocol::Command::StoreSearch:
-        return std::make_unique<SearchCreateHandler>();
+        return std::make_unique<SearchCreateHandler>(akonadi);
 
     case Protocol::Command::CreateTag:
-        return std::make_unique<TagCreateHandler>();
+        return std::make_unique<TagCreateHandler>(akonadi);
     case Protocol::Command::DeleteTag:
-        return std::make_unique<TagDeleteHandler>();
+        return std::make_unique<TagDeleteHandler>(akonadi);
     case Protocol::Command::FetchTags:
-        return std::make_unique<TagFetchHandler>();
+        return std::make_unique<TagFetchHandler>(akonadi);
     case Protocol::Command::ModifyTag:
-        return std::make_unique<TagModifyHandler>();
+        return std::make_unique<TagModifyHandler>(akonadi);
 
     case Protocol::Command::FetchRelations:
-        return std::make_unique<RelationFetchHandler>();
+        return std::make_unique<RelationFetchHandler>(akonadi);
     case Protocol::Command::ModifyRelation:
-        return std::make_unique<RelationModifyHandler>();
+        return std::make_unique<RelationModifyHandler>(akonadi);
     case Protocol::Command::RemoveRelations:
-        return std::make_unique<RelationRemoveHandler>();
+        return std::make_unique<RelationRemoveHandler>(akonadi);
 
     case Protocol::Command::SelectResource:
-        return std::make_unique<ResourceSelectHandler>();
+        return std::make_unique<ResourceSelectHandler>(akonadi);
 
     case Protocol::Command::StreamPayload:
         Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
@@ -196,6 +196,10 @@ std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::C
     return {};
 }
 
+Handler::Handler(AkonadiServer &akonadi)
+    : m_akonadi(akonadi)
+{}
+
 void Handler::setTag(quint64 tag)
 {
     m_tag = tag;
@@ -229,6 +233,11 @@ Connection *Handler::connection() const
 DataStore *Handler::storageBackend() const
 {
     return m_connection->storageBackend();
+}
+
+AkonadiServer &Handler::akonadi() const
+{
+    return m_akonadi;
 }
 
 bool Handler::failureResponse(const QByteArray &failureMessage)

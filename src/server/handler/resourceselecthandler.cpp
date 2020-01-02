@@ -24,6 +24,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+ResourceSelectHandler::ResourceSelectHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool ResourceSelectHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::SelectResourceCommand>(m_command);

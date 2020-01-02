@@ -59,22 +59,17 @@ class CollectionStatisticsTest : public QObject
 {
     Q_OBJECT
 
-    DbInitializer *dbInitializer = nullptr;
+    std::unique_ptr<DbInitializer> dbInitializer;
+    FakeAkonadiServer mAkonadi;
 public:
     CollectionStatisticsTest()
     {
         qRegisterMetaType<Collection>();
 
-        FakeAkonadiServer::instance()->setPopulateDb(false);
-        FakeAkonadiServer::instance()->init();
+        mAkonadi.setPopulateDb(false);
+        mAkonadi.init();
 
-        dbInitializer =  new DbInitializer;
-    }
-
-    ~CollectionStatisticsTest()
-    {
-        delete dbInitializer;
-        FakeAkonadiServer::instance()->quit();
+        dbInitializer =  std::make_unique<DbInitializer>();
     }
 
 private Q_SLOTS:

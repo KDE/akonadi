@@ -26,6 +26,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+ItemFetchHandler::ItemFetchHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool ItemFetchHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::FetchItemsCommand>(m_command);
@@ -40,7 +44,7 @@ bool ItemFetchHandler::parseStream()
         return failureResponse(QStringLiteral("No FETCH context specified"));
     }
 
-    CacheCleanerInhibitor inhibitor;
+    CacheCleanerInhibitor inhibitor(akonadi());
 
     ItemFetchHelper fetchHelper(connection(), context, cmd.scope(), cmd.itemFetchScope(), cmd.tagFetchScope());
     if (!fetchHelper.fetchItems()) {

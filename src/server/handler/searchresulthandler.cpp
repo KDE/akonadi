@@ -30,6 +30,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+SearchResultHandler::SearchResultHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool SearchResultHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::SearchResultCommand>(m_command);

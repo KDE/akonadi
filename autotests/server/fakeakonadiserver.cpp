@@ -90,17 +90,6 @@ TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
 }
 
 
-
-FakeAkonadiServer *FakeAkonadiServer::instance()
-{
-    if (!AkonadiServer::s_instance) {
-        AkonadiServer::s_instance = new FakeAkonadiServer;
-    }
-
-    Q_ASSERT(qobject_cast<FakeAkonadiServer *>(AkonadiServer::s_instance));
-    return qobject_cast<FakeAkonadiServer *>(AkonadiServer::s_instance);
-}
-
 FakeAkonadiServer::FakeAkonadiServer()
     : AkonadiServer()
 {
@@ -112,10 +101,13 @@ FakeAkonadiServer::FakeAkonadiServer()
 
     mClient = std::make_unique<FakeClient>();
 
-    FakeDataStore::registerFactory();
+    DataStore::setFactory(std::make_unique<FakeDataStoreFactory>(*this));
 }
 
-FakeAkonadiServer::~FakeAkonadiServer() = default;
+FakeAkonadiServer::~FakeAkonadiServer()
+{
+    quit();
+}
 
 QString FakeAkonadiServer::basePath()
 {
@@ -277,7 +269,7 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
 
 void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
-    mConnection = std::make_unique<FakeConnection>(socketDescriptor);
+    mConnection = std::make_unique<FakeConnection>(socketDescriptor, *this);
 
     // Connection is its own thread, so we have to make sure we get collector
     // from DataStore of the Connection's thread, not ours

@@ -34,6 +34,7 @@ namespace Server
 class CollectionStatsFetchHandler: public Handler
 {
 public:
+    CollectionStatsFetchHandler(AkonadiServer &akonadi);
     ~CollectionStatsFetchHandler() override = default;
 
     bool parseStream() override;

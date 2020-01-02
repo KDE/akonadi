@@ -35,6 +35,7 @@ namespace Server
 
 class DataStore;
 class Connection;
+class AkonadiServer;
 
 /**
   Part of the DataStore, collects change notifications and emits
@@ -48,7 +49,7 @@ public:
       Create a new notification collector for the given DataStore @p db.
       @param db The datastore using this notification collector.
     */
-    explicit NotificationCollector(DataStore *db);
+    explicit NotificationCollector(AkonadiServer &akonadi, DataStore *db);
 
     /**
       Destroys this notification collector.
@@ -253,6 +254,7 @@ protected:
 private:
     DataStore *mDb;
     Connection *mConnection = nullptr;
+    AkonadiServer &mAkonadi;
     bool mIgnoreTransactions = false;
 
     Protocol::ChangeNotificationList mNotifications;

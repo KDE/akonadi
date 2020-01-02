@@ -83,15 +83,11 @@ class FakeAkonadiServer : public AkonadiServer
     Q_OBJECT
 
 public:
-    static FakeAkonadiServer *instance();
-
+    explicit FakeAkonadiServer();
     ~FakeAkonadiServer() override;
 
     /* Reimpl */
     bool init() override;
-
-    /* Reimpl */
-    bool quit() override;
 
     static QString basePath();
     static QString socketFile();
@@ -114,7 +110,7 @@ protected:
     void newCmdConnection(quintptr socketDescriptor) override;
 
 private:
-    explicit FakeAkonadiServer();
+    bool quit() override;
     void initFake();
 
     FakeDataStore *mDataStore = nullptr;
@@ -129,8 +125,6 @@ private:
 
     bool mPopulateDb = true;
     bool mDisableItemRetrievalManager = false;
-
-    static FakeAkonadiServer *sInstance;
 };
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(FakeAkonadiServerException);

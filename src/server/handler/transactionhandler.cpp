@@ -24,6 +24,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+TransactionHandler::TransactionHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool TransactionHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::TransactionCommand>(m_command);

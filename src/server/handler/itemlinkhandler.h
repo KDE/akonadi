@@ -38,6 +38,7 @@ namespace Server
 class ItemLinkHandler: public Handler
 {
 public:
+    ItemLinkHandler(AkonadiServer &akonadi);
     ~ItemLinkHandler() override = default;
 
     bool parseStream() override;

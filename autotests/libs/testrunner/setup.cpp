@@ -41,8 +41,8 @@ bool SetupTest::startAkonadiDaemon()
     Q_ASSERT(Akonadi::ServerManager::hasInstanceIdentifier());
 
     if (!mAkonadiDaemonProcess) {
-        mAkonadiDaemonProcess = new KProcess(this);
-        connect(mAkonadiDaemonProcess, QOverload<int, QProcess::ExitStatus>::of(&KProcess::finished),
+        mAkonadiDaemonProcess = std::make_unique<KProcess>();
+        connect(mAkonadiDaemonProcess.get(), QOverload<int, QProcess::ExitStatus>::of(&KProcess::finished),
                 this, &SetupTest::slotAkonadiDaemonProcessFinished);
     }
 
@@ -59,15 +59,13 @@ void SetupTest::stopAkonadiDaemon()
     if (!mAkonadiDaemonProcess) {
         return;
     }
-    disconnect(mAkonadiDaemonProcess, SIGNAL(finished(int)), this, nullptr);
+    disconnect(mAkonadiDaemonProcess.get(), SIGNAL(finished(int)), this, nullptr);
     mAkonadiDaemonProcess->terminate();
     const bool finished = mAkonadiDaemonProcess->waitForFinished(5000);
     if (!finished) {
         qCDebug(AKONADITEST_LOG) << "Problem finishing process.";
     }
-    mAkonadiDaemonProcess->close();
-    mAkonadiDaemonProcess->deleteLater();
-    mAkonadiDaemonProcess = nullptr;
+    mAkonadiDaemonProcess.reset();
 }
 
 void SetupTest::setupAgents()
@@ -360,7 +358,7 @@ void SetupTest::shutdownHarder()
 void SetupTest::restartAkonadiServer()
 {
     qCDebug(AKONADITEST_LOG) << "Restarting Akonadi";
-    disconnect(mAkonadiDaemonProcess, SIGNAL(finished(int)), this, nullptr);
+    disconnect(mAkonadiDaemonProcess.get(), SIGNAL(finished(int)), this, nullptr);
     Akonadi::ServerManager::self()->stop();
     const bool shutdownResult = mAkonadiDaemonProcess->waitForFinished();
     if (!shutdownResult) {
@@ -371,7 +369,7 @@ void SetupTest::restartAkonadiServer()
     // it forcefully, if necessary, and know the pid
     startAkonadiDaemon();
     // from here on, the server exiting is an error again
-    connect(mAkonadiDaemonProcess, SIGNAL(finished(int)),
+    connect(mAkonadiDaemonProcess.get(), SIGNAL(finished(int)),
             this, SLOT(slotAkonadiDaemonProcessFinished(int)));
 }
 
@@ -408,7 +406,7 @@ void SetupTest::slotAkonadiDaemonProcessFinished(int exitCode)
         qCWarning(AKONADITEST_LOG) << "Akonadi server process was terminated externally!";
         Q_EMIT serverExited(exitCode);
     }
-    mAkonadiDaemonProcess = nullptr;
+    mAkonadiDaemonProcess.reset();
 }
 
 void SetupTest::trackAkonadiProcess(bool track)

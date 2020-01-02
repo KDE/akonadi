@@ -29,6 +29,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+CollectionStatsFetchHandler::CollectionStatsFetchHandler(AkonadiServer &akonadi)
+    : Handler(akonadi)
+{}
+
 bool CollectionStatsFetchHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::FetchCollectionStatsCommand>(m_command);

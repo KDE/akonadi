@@ -40,6 +40,7 @@ namespace Server
 class ResourceSelectHandler: public Handler
 {
 public:
+    ResourceSelectHandler(AkonadiServer &akonadi);
     ~ResourceSelectHandler() override = default;
 
     bool parseStream() override;

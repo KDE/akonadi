@@ -25,12 +25,14 @@
 namespace Akonadi {
 namespace Server {
 
+class AkonadiServer;
 class DataStore;
+
 class InspectableNotificationCollector : public QObject, public NotificationCollector
 {
     Q_OBJECT
 public:
-    InspectableNotificationCollector(DataStore *store);
+    InspectableNotificationCollector(AkonadiServer &akonadi, DataStore *store);
     ~InspectableNotificationCollector() override = default;
 
     void notify(Protocol::ChangeNotificationList ntfs) override;

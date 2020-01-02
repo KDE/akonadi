@@ -24,6 +24,8 @@
 #include <QVector>
 #include <QPair>
 
+#include <memory>
+
 class KProcess;
 class KJob;
 
@@ -83,7 +85,7 @@ private:
     void checkSetupDone();
 
 private:
-    KProcess *mAkonadiDaemonProcess = nullptr;
+    std::unique_ptr<KProcess> mAkonadiDaemonProcess;
     bool mShuttingDown;
     bool mAgentsCreated;
     bool mTrackAkonadiProcess;

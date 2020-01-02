@@ -34,6 +34,7 @@ namespace Server
 class LogoutHandler: public Handler
 {
 public:
+    LogoutHandler(AkonadiServer &akonadi);
     ~LogoutHandler() override = default;
 
     bool parseStream() override;
