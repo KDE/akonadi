@@ -31,11 +31,11 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-void TagQueryHelper::remoteIdToQuery(const QStringList &rids, CommandContext *context, QueryBuilder &qb)
+void TagQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandContext &context, QueryBuilder &qb)
 {
     qb.addJoin(QueryBuilder::InnerJoin, TagRemoteIdResourceRelation::tableName(),
                Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
-    qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
+    qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context.resource().id());
 
     if (rids.size() == 1) {
         qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, rids.first());
@@ -44,12 +44,12 @@ void TagQueryHelper::remoteIdToQuery(const QStringList &rids, CommandContext *co
     }
 }
 
-void TagQueryHelper::gidToQuery(const QStringList &gids, CommandContext *context, QueryBuilder &qb)
+void TagQueryHelper::gidToQuery(const QStringList &gids, const CommandContext &context, QueryBuilder &qb)
 {
-    if (context->resource().isValid()) {
+    if (context.resource().isValid()) {
         qb.addJoin(QueryBuilder::InnerJoin, TagRemoteIdResourceRelation::tableName(),
                    Tag::idFullColumnName(), TagRemoteIdResourceRelation::tagIdFullColumnName());
-        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
+        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context.resource().id());
     }
 
     if (gids.size() == 1) {
@@ -59,7 +59,7 @@ void TagQueryHelper::gidToQuery(const QStringList &gids, CommandContext *context
     }
 }
 
-void TagQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb)
+void TagQueryHelper::scopeToQuery(const Scope &scope, const CommandContext &context, QueryBuilder &qb)
 {
     if (scope.scope() == Scope::Uid) {
         QueryHelper::setToQuery(scope.uidSet(), Tag::idFullColumnName(), qb);
@@ -72,7 +72,7 @@ void TagQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, Q
     }
 
     if (scope.scope() == Scope::Rid) {
-        if (!context->resource().isValid()) {
+        if (!context.resource().isValid()) {
             throw HandlerException("Operations based on remote identifiers require a resource or collection context");
         }
 

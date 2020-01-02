@@ -30,7 +30,7 @@ namespace Akonadi
 namespace Server
 {
 
-class Connection;
+class CommandContext;
 class QueryBuilder;
 
 /**
@@ -41,15 +41,15 @@ namespace CollectionQueryHelper
 
 /**
   Add conditions to @p qb for the given remote identifier @p rid.
-  The rid context is taken from @p connection.
+  The rid context is taken from @p context.
 */
-void remoteIdToQuery(const QStringList &rids, Connection *connection, QueryBuilder &qb);
+void remoteIdToQuery(const QStringList &rids, const CommandContext &context, QueryBuilder &qb);
 
 /**
   Add conditions to @p qb for the given collection operation scope @p scope.
-  The rid context is taken from @p connection, if none is specified an exception is thrown.
+  The rid context is taken from @p context, if none is specified an exception is thrown.
 */
-void scopeToQuery(const Scope &scope, Connection *connection, QueryBuilder &qb);
+void scopeToQuery(const Scope &scope, const CommandContext &context, QueryBuilder &qb);
 
 /**
   Checks if a collection could exist in the given parent folder with the given name.
@@ -70,7 +70,7 @@ Collection resolveHierarchicalRID(const QVector<Scope::HRID> &hridChain, Resourc
   Returns an existing collection specified by the given scope. If that does not
   specify exactly one valid collection, an exception is thrown.
 */
-Collection singleCollectionFromScope(const Scope &scope, Connection *connection);
+Collection singleCollectionFromScope(const Scope &scope, const CommandContext &context);
 }
 
 } // namespace Server

@@ -537,8 +537,8 @@ bool CollectionFetchHandler::parseStream()
             }
             if (mResource.isValid()) {
                 qb.addValueCondition(Resource::idFullColumnName(), Query::Equals, mResource.id());
-            } else if (connection()->context()->resource().isValid()) {
-                qb.addValueCondition(Resource::idFullColumnName(), Query::Equals, connection()->context()->resource().id());
+            } else if (connection()->context().resource().isValid()) {
+                qb.addValueCondition(Resource::idFullColumnName(), Query::Equals, connection()->context().resource().id());
             } else {
                 return failureResponse("Cannot retrieve collection based on remote identifier without a resource context");
             }
@@ -551,10 +551,10 @@ bool CollectionFetchHandler::parseStream()
             }
             col = results.first();
         } else if (scope.scope() == Scope::HierarchicalRid) {
-            if (!connection()->context()->resource().isValid()) {
+            if (!connection()->context().resource().isValid()) {
                 return failureResponse("Cannot retrieve collection based on hierarchical remote identifier without a resource context");
             }
-            col = CollectionQueryHelper::resolveHierarchicalRID(scope.hridChain(), connection()->context()->resource().id());
+            col = CollectionQueryHelper::resolveHierarchicalRID(scope.hridChain(), connection()->context().resource().id());
         } else {
             return failureResponse("Unexpected error");
         }

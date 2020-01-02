@@ -38,6 +38,7 @@ namespace Server
 {
 
 class Connection;
+class CommandContext;
 
 /**
   Helper class for retrieving missing items parts from remote resources.
@@ -51,7 +52,7 @@ class ItemRetriever : public QObject
     Q_OBJECT
 
 public:
-    explicit ItemRetriever(Connection *connection = nullptr);
+    explicit ItemRetriever(Connection *connection, const CommandContext &context);
 
     Connection *connection() const;
 
@@ -89,6 +90,7 @@ private:
     Collection mCollection;
     Scope mScope;
     Connection *mConnection = nullptr;
+    const CommandContext &mContext;
     QVector<QByteArray> mParts;
     bool mFullPayload;
     bool mRecursive;

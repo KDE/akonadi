@@ -547,7 +547,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 auto itemFetchScope = fetchScope->toFetchScope();
                 auto tagFetchScope = mgr->tagFetchScope()->toFetchScope();
                 itemFetchScope.setFetch(Protocol::ItemFetchScope::CacheOnly);
-                ItemFetchHelper helper(mConnection, &context, Scope(ids), itemFetchScope, tagFetchScope);
+                ItemFetchHelper helper(mConnection, context, Scope(ids), itemFetchScope, tagFetchScope);
                 // The Item was just changed, which means the atime was
                 // updated, no need to do it again a couple milliseconds later.
                 helper.disableATimeUpdates();

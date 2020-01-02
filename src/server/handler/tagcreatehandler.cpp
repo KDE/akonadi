@@ -36,7 +36,7 @@ bool TagCreateHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::CreateTagCommand>(m_command);
 
-    if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
+    if (!cmd.remoteId().isEmpty() && !connection()->context().resource().isValid()) {
         return failureResponse(QStringLiteral("Only resources can create tags with remote ID"));
     }
 
@@ -93,7 +93,7 @@ bool TagCreateHandler::parseStream()
     }
 
     if (!cmd.remoteId().isEmpty()) {
-        const qint64 resourceId = connection()->context()->resource().id();
+        const qint64 resourceId = connection()->context().resource().id();
 
         CountQueryBuilder qb(TagRemoteIdResourceRelation::tableName());
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, tagId);

@@ -48,21 +48,21 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, QueryBuilder &qb, const
     }
 }
 
-void ItemQueryHelper::itemSetToQuery(const ImapSet &set, CommandContext *context, QueryBuilder &qb)
+void ItemQueryHelper::itemSetToQuery(const ImapSet &set, const CommandContext &context, QueryBuilder &qb)
 {
-    if (context->collectionId() >= 0) {
-        itemSetToQuery(set, qb, context->collection());
+    if (context.collectionId() >= 0) {
+        itemSetToQuery(set, qb, context.collection());
     } else {
         itemSetToQuery(set, qb);
     }
 
-    const auto tagId = context->tagId();
+    const auto tagId = context.tagId();
     if (tagId.has_value()) {
         //When querying for items by tag, only return matches from that resource
-        if (context->resource().isValid()) {
+        if (context.resource().isValid()) {
             qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
                        PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
-            qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id());
+            qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
         }
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
@@ -70,7 +70,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, CommandContext *context
     }
 }
 
-void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, CommandContext *context, QueryBuilder &qb)
+void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandContext &context, QueryBuilder &qb)
 {
     if (rids.size() == 1) {
         qb.addValueCondition(PimItem::remoteIdFullColumnName(), Query::Equals, rids.first());
@@ -78,16 +78,16 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, CommandContext *c
         qb.addValueCondition(PimItem::remoteIdFullColumnName(), Query::In, rids);
     }
 
-    if (context->resource().isValid()) {
+    if (context.resource().isValid()) {
         qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
                    PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
-        qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id());
+        qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
     }
-    if (context->collectionId() > 0) {
-        qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, context->collectionId());
+    if (context.collectionId() > 0) {
+        qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, context.collectionId());
     }
 
-    const auto tagId = context->tagId();
+    const auto tagId = context.tagId();
     if (tagId.has_value()) {
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
@@ -95,7 +95,7 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, CommandContext *c
     }
 }
 
-void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *context, QueryBuilder &qb)
+void ItemQueryHelper::gidToQuery(const QStringList &gids, const CommandContext &context, QueryBuilder &qb)
 {
     if (gids.size() == 1) {
         qb.addValueCondition(PimItem::gidFullColumnName(), Query::Equals, gids.first());
@@ -103,13 +103,13 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
         qb.addValueCondition(PimItem::gidFullColumnName(), Query::In, gids);
     }
 
-    const auto tagId = context->tagId();
+    const auto tagId = context.tagId();
     if (tagId.has_value()) {
         //When querying for items by tag, only return matches from that resource
-        if (context->resource().isValid()) {
+        if (context.resource().isValid()) {
             qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
                        PimItem::collectionIdFullColumnName(), Collection::idFullColumnName());
-            qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context->resource().id());
+            qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
         }
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
@@ -117,10 +117,10 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
     }
 }
 
-void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb)
+void ItemQueryHelper::scopeToQuery(const Scope &scope, const CommandContext &context, QueryBuilder &qb)
 {
     // Handle fetch by collection/tag
-    if (scope.scope() == Scope::Invalid && !context->isEmpty()) {
+    if (scope.scope() == Scope::Invalid && !context.isEmpty()) {
         itemSetToQuery(ImapSet(), context, qb);
         return;
     }
@@ -135,7 +135,7 @@ void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, 
         return;
     }
 
-    if (context->collectionId() <= 0 && !context->resource().isValid()) {
+    if (context.collectionId() <= 0 && !context.resource().isValid()) {
         throw HandlerException("Operations based on remote identifiers require a resource or collection context");
     }
 
@@ -145,11 +145,11 @@ void ItemQueryHelper::scopeToQuery(const Scope &scope, CommandContext *context, 
     } else if (scope.scope() == Scope::HierarchicalRid) {
         QVector<Scope::HRID> hridChain = scope.hridChain();
         const Scope::HRID itemHRID = hridChain.takeFirst();
-        const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(hridChain, context->resource().id());
-        const Collection oldSelection = context->collection();
-        context->setCollection(parentCol);
-        remoteIdToQuery(QStringList() << itemHRID.remoteId, context, qb);
-        context->setCollection(oldSelection);
+        const Collection parentCol = CollectionQueryHelper::resolveHierarchicalRID(hridChain, context.resource().id());
+        const Collection oldSelection = context.collection();
+        CommandContext tmpContext(context);
+        tmpContext.setCollection(parentCol);
+        remoteIdToQuery(QStringList() << itemHRID.remoteId, tmpContext, qb);
         return;
     }
 

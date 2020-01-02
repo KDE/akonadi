@@ -157,12 +157,13 @@ void SearchTaskManager::pushResults(const QByteArray &searchId, const QSet<qint6
 {
     Q_UNUSED(searchId);
 
-    qCDebug(AKONADISERVER_SEARCH_LOG) << ids.count() << "results for search" << searchId << "pushed from" << connection->context()->resource().name();
+    const auto resourceName = connection->context().resource().name();
+    qCDebug(AKONADISERVER_SEARCH_LOG) << ids.count() << "results for search" << searchId << "pushed from" << resourceName;
 
     QMutexLocker locker(&mLock);
-    ResourceTask *task = mRunningTasks.take(connection->context()->resource().name());
+    ResourceTask *task = mRunningTasks.take(resourceName);
     if (!task) {
-        qCDebug(AKONADISERVER_SEARCH_LOG) << "No running task for" << connection->context()->resource().name() << " - maybe it has timed out?";
+        qCDebug(AKONADISERVER_SEARCH_LOG) << "No running task for" << resourceName  << " - maybe it has timed out?";
         return;
     }
 

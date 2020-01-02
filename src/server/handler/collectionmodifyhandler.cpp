@@ -41,7 +41,7 @@ bool CollectionModifyHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::ModifyCollectionCommand>(m_command);
 
-    Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection()->context());
     if (!collection.isValid()) {
         return failureResponse("No such collection");
     }
@@ -53,7 +53,7 @@ bool CollectionModifyHandler::parseStream()
         if (newParent.isValid() && collection.parentId() != newParent.id()
                 && collection.resourceId() != newParent.resourceId()) {
             inhibitor.inhibit();
-            ItemRetriever retriever(connection());
+            ItemRetriever retriever(connection(), connection()->context());
             retriever.setCollection(collection, true);
             retriever.setRetrieveFullPayload(true);
             if (!retriever.exec()) {

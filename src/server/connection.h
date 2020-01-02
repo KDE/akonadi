@@ -58,7 +58,8 @@ public:
 
     virtual DataStore *storageBackend();
 
-    CommandContext *context() const;
+    const CommandContext &context() const;
+    void setContext(const CommandContext &context);
 
     /**
       Returns @c true if this connection belongs to the owning resource of @p item.

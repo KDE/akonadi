@@ -79,7 +79,7 @@ ItemFetchHelper::ItemFetchHelper(Connection *connection, const Scope &scope,
 }
 
 
-ItemFetchHelper::ItemFetchHelper(Connection *connection, CommandContext *context,
+ItemFetchHelper::ItemFetchHelper(Connection *connection, const CommandContext &context,
                                  const Scope &scope,
                                  const Protocol::ItemFetchScope &itemFetchScope,
                                  const Protocol::TagFetchScope &tagFetchScope)
@@ -290,9 +290,9 @@ bool ItemFetchHelper::isScopeLocal(const Scope &scope)
     qb.addJoin(QueryBuilder::LeftJoin, Resource::tableName(),
                Collection::resourceIdFullColumnName(), Resource::idFullColumnName());
     ItemQueryHelper::scopeToQuery(scope, mContext, qb);
-    if (mContext->resource().isValid()) {
+    if (mContext.resource().isValid()) {
         qb.addValueCondition(Resource::nameFullColumnName(), Query::NotEquals,
-                             mContext->resource().name());
+                             mContext.resource().name());
     }
 
     if (!qb.exec()) {
@@ -359,20 +359,20 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
 
         // Prepare for a call to ItemRetriever::exec();
         // From a resource perspective the only parts that can be fetched are payloads.
-        ItemRetriever retriever(mConnection);
+        ItemRetriever retriever(mConnection, mContext);
         retriever.setScope(mScope);
         retriever.setRetrieveParts(mItemFetchScope.requestedPayloads());
         retriever.setRetrieveFullPayload(mItemFetchScope.fullPayload());
         retriever.setChangedSince(mItemFetchScope.changedSince());
         if (!retriever.exec() && !mItemFetchScope.ignoreErrors()) {   // There we go, retrieve the missing parts from the resource.
-            if (mContext->resource().isValid()) {
+            if (mContext.resource().isValid()) {
                 throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1, resource %2) : %3")
-                                       .arg(mContext->collectionId())
-                                       .arg(mContext->resource().id())
+                                       .arg(mContext.collectionId())
+                                       .arg(mContext.resource().id())
                                        .arg(QString::fromLatin1(retriever.lastError())));
             } else {
                 throw HandlerException(QStringLiteral("Unable to fetch item from backend (collection %1) : %2")
-                                       .arg(mContext->collectionId())
+                                       .arg(mContext.collectionId())
                                        .arg(QString::fromLatin1(retriever.lastError())));
             }
         }
@@ -707,11 +707,11 @@ void ItemFetchHelper::updateItemAccessTime()
 
 void ItemFetchHelper::triggerOnDemandFetch()
 {
-    if (mContext->collectionId() <= 0 || mItemFetchScope.cacheOnly()) {
+    if (mContext.collectionId() <= 0 || mItemFetchScope.cacheOnly()) {
         return;
     }
 
-    Collection collection = mContext->collection();
+    Collection collection = mContext.collection();
 
     // HACK: don't trigger on-demand syncing if the resource is the one triggering it
     if (mConnection->sessionId() == collection.resource().name().toLatin1()) {

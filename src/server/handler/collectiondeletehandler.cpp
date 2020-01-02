@@ -49,7 +49,7 @@ bool CollectionDeleteHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::DeleteCollectionCommand>(m_command);
 
-    Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    Collection collection = HandlerHelper::collectionFromScope(cmd.collection(), connection()->context());
     if (!collection.isValid()) {
         return failureResponse(QStringLiteral("No such collection."));
     }

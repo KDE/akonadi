@@ -80,7 +80,7 @@ void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
         item.setAtime(mtime);
         item.setDatetime(mtime);
         // if the resource moved itself, we assume it did so because the change happenned in the backend
-        if (connection()->context()->resource().id() != mDestination.resourceId()) {
+        if (connection()->context().resource().id() != mDestination.resourceId()) {
             item.setDirty(true);
         }
 
@@ -136,7 +136,7 @@ bool ItemMoveHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::MoveItemsCommand>(m_command);
 
-    mDestination = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+    mDestination = HandlerHelper::collectionFromScope(cmd.destination(), connection()->context());
     if (mDestination.isVirtual()) {
         return failureResponse("Moving items into virtual collection is not allowed");
     }
@@ -144,9 +144,10 @@ bool ItemMoveHandler::parseStream()
         return failureResponse("Invalid destination collection");
     }
 
-    connection()->context()->setScopeContext(cmd.itemsContext());
+    CommandContext context = connection()->context();
+    context.setScopeContext(cmd.itemsContext());
     if (cmd.items().scope() == Scope::Rid) {
-        if (!connection()->context()->collection().isValid()) {
+        if (!context.collection().isValid()) {
             return failureResponse("RID move requires valid source collection");
         }
     }
@@ -154,7 +155,7 @@ bool ItemMoveHandler::parseStream()
     CacheCleanerInhibitor inhibitor;
 
     // make sure all the items we want to move are in the cache
-    ItemRetriever retriever(connection());
+    ItemRetriever retriever(connection(), context);
     retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
     QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,

@@ -32,7 +32,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-void CollectionQueryHelper::remoteIdToQuery(const QStringList &rids, Connection *connection, QueryBuilder &qb)
+void CollectionQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandContext &context, QueryBuilder &qb)
 {
     if (rids.size() == 1) {
         qb.addValueCondition(Collection::remoteIdFullColumnName(), Query::Equals, rids.first());
@@ -40,25 +40,25 @@ void CollectionQueryHelper::remoteIdToQuery(const QStringList &rids, Connection 
         qb.addValueCondition(Collection::remoteIdFullColumnName(), Query::In, rids);
     }
 
-    if (connection->context()->resource().isValid()) {
-        qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, connection->context()->resource().id());
+    if (context.resource().isValid()) {
+        qb.addValueCondition(Collection::resourceIdFullColumnName(), Query::Equals, context.resource().id());
     }
 }
 
-void CollectionQueryHelper::scopeToQuery(const Scope &scope, Connection *connection, QueryBuilder &qb)
+void CollectionQueryHelper::scopeToQuery(const Scope &scope, const CommandContext &context, QueryBuilder &qb)
 {
     if (scope.scope() == Scope::Uid) {
         QueryHelper::setToQuery(scope.uidSet(), Collection::idFullColumnName(), qb);
     } else if (scope.scope() == Scope::Rid) {
-        if (connection->context()->collectionId() <= 0 && !connection->context()->resource().isValid()) {
+        if (context.collectionId() <= 0 && !context.resource().isValid()) {
             throw HandlerException("Operations based on remote identifiers require a resource or collection context");
         }
-        CollectionQueryHelper::remoteIdToQuery(scope.ridSet(), connection, qb);
+        CollectionQueryHelper::remoteIdToQuery(scope.ridSet(), context, qb);
     } else if (scope.scope() == Scope::HierarchicalRid) {
-        if (!connection->context()->resource().isValid()) {
+        if (!context.resource().isValid()) {
             throw HandlerException("Operations based on hierarchical remote identifiers require a resource or collection context");
         }
-        const Collection c = CollectionQueryHelper::resolveHierarchicalRID(scope.hridChain(), connection->context()->resource().id());
+        const Collection c = CollectionQueryHelper::resolveHierarchicalRID(scope.hridChain(), context.resource().id());
         qb.addValueCondition(Collection::idFullColumnName(), Query::Equals, c.id());
     } else {
         throw HandlerException("WTF?");
@@ -140,7 +140,7 @@ Collection CollectionQueryHelper::resolveHierarchicalRID(const QVector<Scope::HR
     return result;
 }
 
-Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, Connection *connection)
+Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, const CommandContext &context)
 {
     // root
     if (scope.scope() == Scope::Uid && scope.uidSet().intervals().count() == 1) {
@@ -152,7 +152,7 @@ Collection CollectionQueryHelper::singleCollectionFromScope(const Scope &scope, 
         }
     }
     SelectQueryBuilder<Collection> qb;
-    scopeToQuery(scope, connection, qb);
+    scopeToQuery(scope, context, qb);
     if (!qb.exec()) {
         throw HandlerException("Unable to execute query");
     }

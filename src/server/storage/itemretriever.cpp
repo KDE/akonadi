@@ -41,9 +41,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ItemRetriever::ItemRetriever(Connection *connection)
+ItemRetriever::ItemRetriever(Connection *connection, const CommandContext &context)
     : mScope()
     , mConnection(connection)
+    , mContext(context)
     , mFullPayload(false)
     , mRecursive(false)
     , mCanceled(false)
@@ -81,9 +82,8 @@ void ItemRetriever::setItemSet(const ImapSet &set, const Collection &collection)
 
 void ItemRetriever::setItemSet(const ImapSet &set, bool isUid)
 {
-    Q_ASSERT(mConnection);
-    if (!isUid && mConnection->context()->collectionId() >= 0) {
-        setItemSet(set, mConnection->context()->collection());
+    if (!isUid && mContext.collectionId() >= 0) {
+        setItemSet(set, mContext.collection());
     } else {
         setItemSet(set);
     }
@@ -168,7 +168,7 @@ QSqlQuery ItemRetriever::buildQuery() const
     if (!mItemSet.isEmpty() || mCollection.isValid()) {
         ItemQueryHelper::itemSetToQuery(mItemSet, qb, mCollection);
     } else {
-        ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
+        ItemQueryHelper::scopeToQuery(mScope, mContext, qb);
     }
 
     // prevent a resource to trigger item retrieval from itself
@@ -386,7 +386,7 @@ bool ItemRetriever::exec()
     bool result = true;
     if (mRecursive && mCollection.isValid()) {
         Q_FOREACH (const Collection &col, mCollection.children()) {
-            ItemRetriever retriever(mConnection);
+            ItemRetriever retriever(mConnection, mContext);
             retriever.setCollection(col, mRecursive);
             retriever.setRetrieveParts(mParts);
             retriever.setRetrieveFullPayload(mFullPayload);
@@ -413,7 +413,7 @@ void ItemRetriever::verifyCache()
     qb.addValueCondition(Part::storageFullColumnName(), Query::Equals, Part::External);
     qb.addValueCondition(Part::dataFullColumnName(), Query::IsNot, QVariant());
     if (mScope.scope() != Scope::Invalid) {
-        ItemQueryHelper::scopeToQuery(mScope, mConnection->context(), qb);
+        ItemQueryHelper::scopeToQuery(mScope, mContext, qb);
     } else {
         ItemQueryHelper::itemSetToQuery(mItemSet, qb, mCollection);
     }

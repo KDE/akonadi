@@ -28,8 +28,10 @@ bool ResourceSelectHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::SelectResourceCommand>(m_command);
 
+    CommandContext context = connection()->context();
     if (cmd.resourceId().isEmpty()) {
-        connection()->context()->setResource(Resource());
+        context.setResource({});
+        connection()->setContext(context);
         return successResponse<Protocol::SelectResourceResponse>();
     }
 
@@ -38,7 +40,8 @@ bool ResourceSelectHandler::parseStream()
         return failureResponse(cmd.resourceId() % QStringLiteral(" is not a valid resource identifier"));
     }
 
-    connection()->context()->setResource(res);
+    context.setResource(res);
+    connection()->setContext(context);
 
     return successResponse<Protocol::SelectResourceResponse>();
 }

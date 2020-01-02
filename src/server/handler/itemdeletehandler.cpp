@@ -34,10 +34,13 @@ bool ItemDeleteHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::DeleteItemsCommand>(m_command);
 
-    connection()->context()->setScopeContext(cmd.scopeContext());
+    CommandContext context = connection()->context();
+    if (!context.setScopeContext(cmd.scopeContext())) {
+        return failureResponse(QStringLiteral("Invalid scope context"));
+    }
 
     SelectQueryBuilder<PimItem> qb;
-    ItemQueryHelper::scopeToQuery(cmd.items(), connection()->context(), qb);
+    ItemQueryHelper::scopeToQuery(cmd.items(), context, qb);
 
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store, QStringLiteral("REMOVE"));

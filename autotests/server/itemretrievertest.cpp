@@ -26,6 +26,7 @@
 #include "storage/itemretrievaljob.h"
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
+#include "commandcontext.h"
 
 #include "fakeakonadiserver.h"
 #include "dbinitializer.h"
@@ -157,7 +158,8 @@ public:
     void run() override
     {
         // ItemRetriever should...
-        ItemRetriever retriever;
+        CommandContext context;
+        ItemRetriever retriever(nullptr, context);
         retriever.setItem(m_itemId);
         retriever.setRetrieveParts(m_requestedParts);
         QSignalSpy spy(&retriever, &ItemRetriever::itemsRetrieved);
@@ -216,7 +218,8 @@ public:
 private Q_SLOTS:
     void testFullPayload()
     {
-        ItemRetriever r1(nullptr);
+        CommandContext context;
+        ItemRetriever r1(nullptr, context);
         r1.setRetrieveFullPayload(true);
         QCOMPARE(r1.retrieveParts().size(), 1);
         QCOMPARE(r1.retrieveParts().at(0), { "PLD:RFC822" });

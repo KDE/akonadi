@@ -38,8 +38,6 @@ namespace Server
 class CommandContext
 {
 public:
-    CommandContext() = default;
-
     void setResource(const Resource &resource);
     Resource resource() const;
 
@@ -49,7 +47,7 @@ public:
     qint64 collectionId() const;
     Collection collection() const;
 
-    void setTag(qint64 tagId);
+    void setTag(akOptional<qint64> tagId);
     akOptional<qint64> tagId() const;
     Tag tag() const;
 

@@ -46,7 +46,7 @@ bool CollectionCreateHandler::parseStream()
 
     // Invalid or empty scope means we refer to root collection
     if (cmd.parent().scope() != Scope::Invalid && !cmd.parent().isEmpty()) {
-        parent = HandlerHelper::collectionFromScope(cmd.parent(), connection());
+        parent = HandlerHelper::collectionFromScope(cmd.parent(), connection()->context());
         if (!parent.isValid()) {
             return failureResponse(QStringLiteral("Invalid parent collection"));
         }

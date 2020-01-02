@@ -37,7 +37,7 @@ bool ItemLinkHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::LinkItemsCommand>(m_command);
 
-    const Collection collection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+    const Collection collection = HandlerHelper::collectionFromScope(cmd.destination(), connection()->context());
     if (!collection.isVirtual()) {
         return failureResponse(QStringLiteral("Can't link items to non-virtual collections"));
     }

@@ -44,14 +44,14 @@ namespace TagQueryHelper
   Add conditions to @p qb for the given remote identifier @p rid.
   The rid context is taken from @p context.
 */
-void remoteIdToQuery(const QStringList &rids, CommandContext *context, QueryBuilder &qb);
-void gidToQuery(const QStringList &gids, CommandContext *context, QueryBuilder &qb);
+void remoteIdToQuery(const QStringList &rids, const CommandContext &context, QueryBuilder &qb);
+void gidToQuery(const QStringList &gids, const CommandContext &context, QueryBuilder &qb);
 
 /**
   Add conditions to @p qb for the given item operation scope @p scope.
   The rid context is taken from @p context, if none is specified an exception is thrown.
 */
-void scopeToQuery(const Scope &scope, CommandContext *context, QueryBuilder &qb);
+void scopeToQuery(const Scope &scope, const CommandContext &context, QueryBuilder &qb);
 }
 
 } // namespace Server

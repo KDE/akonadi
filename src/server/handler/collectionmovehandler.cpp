@@ -34,7 +34,7 @@ bool CollectionMoveHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::MoveCollectionCommand>(m_command);
 
-    Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection()->context());
     if (!source.isValid()) {
         return failureResponse(QStringLiteral("Invalid collection to move"));
     }
@@ -43,7 +43,7 @@ bool CollectionMoveHandler::parseStream()
     if (cmd.destination().isEmpty()) {
         target.setId(0);
     } else {
-        target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+        target = HandlerHelper::collectionFromScope(cmd.destination(), connection()->context());
         if (!target.isValid()) {
             return failureResponse(QStringLiteral("Invalid destination collection"));
         }
@@ -56,7 +56,7 @@ bool CollectionMoveHandler::parseStream()
     CacheCleanerInhibitor inhibitor;
 
     // retrieve all not yet cached items of the source
-    ItemRetriever retriever(connection());
+    ItemRetriever retriever(connection(), connection()->context());
     retriever.setCollection(source, true);
     retriever.setRetrieveFullPayload(true);
     if (!retriever.exec()) {

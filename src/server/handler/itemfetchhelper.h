@@ -49,7 +49,7 @@ public:
     ItemFetchHelper(Connection *connection, const Scope &scope,
             const Protocol::ItemFetchScope &itemFetchScope,
             const Protocol::TagFetchScope &tagFagScope);
-    ItemFetchHelper(Connection *connection, CommandContext *context, const Scope &scope,
+    ItemFetchHelper(Connection *connection, const CommandContext &context, const Scope &scope,
             const Protocol::ItemFetchScope &itemFetchScope,
             const Protocol::TagFetchScope &tagFetchScope);
 
@@ -89,7 +89,7 @@ private:
 
 private:
     Connection *mConnection = nullptr;
-    CommandContext *mContext = nullptr;
+    const CommandContext &mContext;
     QHash<Collection::Id, QVector<Protocol::Ancestor>> mAncestorCache;
     Scope mScope;
     Protocol::ItemFetchScope mItemFetchScope;

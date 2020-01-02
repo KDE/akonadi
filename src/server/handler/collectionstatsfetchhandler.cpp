@@ -33,7 +33,7 @@ bool CollectionStatsFetchHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::FetchCollectionStatsCommand>(m_command);
 
-    const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    const Collection col = HandlerHelper::collectionFromScope(cmd.collection(), connection()->context());
     if (!col.isValid()) {
         return failureResponse(QStringLiteral("No status for this folder"));
     }

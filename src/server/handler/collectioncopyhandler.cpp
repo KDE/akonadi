@@ -80,12 +80,12 @@ bool CollectionCopyHandler::parseStream()
 {
     const auto &cmd = Protocol::cmdCast<Protocol::CopyCollectionCommand>(m_command);
 
-    const Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    const Collection source = HandlerHelper::collectionFromScope(cmd.collection(), connection()->context());
     if (!source.isValid()) {
         return failureResponse(QStringLiteral("No valid source specified"));
     }
 
-    const Collection target = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+    const Collection target = HandlerHelper::collectionFromScope(cmd.destination(), connection()->context());
     if (!target.isValid()) {
         return failureResponse(QStringLiteral("No valid target specified"));
     }
@@ -93,7 +93,7 @@ bool CollectionCopyHandler::parseStream()
     CacheCleanerInhibitor inhibitor;
 
     // retrieve all not yet cached items of the source
-    ItemRetriever retriever(connection());
+    ItemRetriever retriever(connection(), connection()->context());
     retriever.setCollection(source, true);
     retriever.setRetrieveFullPayload(true);
     if (!retriever.exec()) {

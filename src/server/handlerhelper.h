@@ -119,11 +119,11 @@ public:
 
     static Tag::List resolveTagsByGID(const QStringList &tagsGIDs);
 
-    static Tag::List resolveTagsByRID(const QStringList &tagsRIDs, CommandContext *context);
+    static Tag::List resolveTagsByRID(const QStringList &tagsRIDs, const CommandContext &context);
 
-    static Collection collectionFromScope(const Scope &scope, Connection *connection);
+    static Collection collectionFromScope(const Scope &scope, const CommandContext &context);
 
-    static Tag::List tagsFromScope(const Scope &scope, Connection *connection);
+    static Tag::List tagsFromScope(const Scope &scope, const CommandContext &context);
 };
 
 } // namespace Server

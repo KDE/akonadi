@@ -101,7 +101,7 @@ bool ItemCopyHandler::parseStream()
         return failureResponse(QStringLiteral("No items specified"));
     }
 
-    mTargetCollection = HandlerHelper::collectionFromScope(cmd.destination(), connection());
+    mTargetCollection = HandlerHelper::collectionFromScope(cmd.destination(), connection()->context());
     if (!mTargetCollection.isValid()) {
         return failureResponse(QStringLiteral("No valid target specified"));
     }
@@ -111,7 +111,7 @@ bool ItemCopyHandler::parseStream()
 
     CacheCleanerInhibitor inhibitor;
 
-    ItemRetriever retriever(connection());
+    ItemRetriever retriever(connection(), connection()->context());
     retriever.setItemSet(cmd.items().uidSet());
     retriever.setRetrieveFullPayload(true);
     QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,

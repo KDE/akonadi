@@ -256,8 +256,8 @@ void Connection::handleIncomingData()
             }
 
             // Tag context and collection context is not persistent.
-            context()->setTag(-1);
-            context()->setCollection(Collection());
+            m_context.setTag(nullopt);
+            m_context.setCollection({});
             if (Tracer::self()->currentTracer() != QLatin1String("null")) {
                 Tracer::self()->connectionInput(m_identifier, tag, cmd);
             }
@@ -356,9 +356,14 @@ void Connection::handleIncomingData()
     }
 }
 
-CommandContext *Connection::context() const
+const CommandContext &Connection::context() const
 {
-    return const_cast<CommandContext *>(&m_context);
+    return m_context;
+}
+
+void Connection::setContext(const CommandContext &context)
+{
+    m_context = context;
 }
 
 std::unique_ptr<Handler> Connection::findHandlerForCommand(Protocol::Command::Type command)
@@ -429,7 +434,7 @@ QByteArray Connection::sessionId() const
 
 bool Connection::isOwnerResource(const PimItem &item) const
 {
-    if (context()->resource().isValid() && item.collection().resourceId() == context()->resource().id()) {
+    if (context().resource().isValid() && item.collection().resourceId() == context().resource().id()) {
         return true;
     }
     // fallback for older resources
@@ -441,7 +446,7 @@ bool Connection::isOwnerResource(const PimItem &item) const
 
 bool Connection::isOwnerResource(const Collection &collection) const
 {
-    if (context()->resource().isValid() && collection.resourceId() == context()->resource().id()) {
+    if (context().resource().isValid() && collection.resourceId() == context().resource().id()) {
         return true;
     }
     if (sessionId() == collection.resource().name().toUtf8()) {

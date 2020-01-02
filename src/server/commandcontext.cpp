@@ -78,9 +78,9 @@ Collection CommandContext::collection() const
     return mCollection;
 }
 
-void CommandContext::setTag(qint64 tagId)
+void CommandContext::setTag(akOptional<qint64> tagId)
 {
-    mTagId = tagId;
+    mTagId = std::move(tagId);
 }
 
 akOptional<qint64> CommandContext::tagId() const

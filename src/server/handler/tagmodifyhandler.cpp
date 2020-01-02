@@ -68,20 +68,20 @@ bool TagModifyHandler::parseStream()
 
     bool tagRemoved = false;
     if (cmd.modifiedParts() & Protocol::ModifyTagCommand::RemoteId) {
-        if (!connection()->context()->resource().isValid()) {
+        if (!connection()->context().resource().isValid()) {
             return failureResponse("Only resources can change tag remote ID");
         }
 
         //Simply using remove() doesn't work since we need two arguments
         QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Delete);
         qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(), Query::Equals, cmd.tagId());
-        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, connection()->context()->resource().id());
+        qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(), Query::Equals, connection()->context().resource().id());
         qb.exec();
 
         if (!cmd.remoteId().isEmpty()) {
             TagRemoteIdResourceRelation remoteIdRelation;
             remoteIdRelation.setRemoteId(QString::fromUtf8(cmd.remoteId()));
-            remoteIdRelation.setResourceId(connection()->context()->resource().id());
+            remoteIdRelation.setResourceId(connection()->context().resource().id());
             remoteIdRelation.setTag(changedTag);
             if (!remoteIdRelation.insert()) {
                 return failureResponse("Failed to insert remotedid resource relation");

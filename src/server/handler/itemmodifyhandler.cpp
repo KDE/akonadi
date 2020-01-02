@@ -96,7 +96,7 @@ bool ItemModifyHandler::deleteFlags(const PimItem::List &items, const QSet<QByte
 
 bool ItemModifyHandler::replaceTags(const PimItem::List &item, const Scope &tags, bool &tagsChanged)
 {
-    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
+    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection()->context());
     if (!connection()->storageBackend()->setItemsTags(item, tagList, &tagsChanged)) {
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::replaceTags: unable to replace tags";
         return false;
@@ -106,7 +106,7 @@ bool ItemModifyHandler::replaceTags(const PimItem::List &item, const Scope &tags
 
 bool ItemModifyHandler::addTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged)
 {
-    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
+    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection()->context());
     if (!connection()->storageBackend()->appendItemsTags(items, tagList, &tagsChanged)) {
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::addTags: Unable to add new item tags";
         return false;
@@ -116,7 +116,7 @@ bool ItemModifyHandler::addTags(const PimItem::List &items, const Scope &tags, b
 
 bool ItemModifyHandler::deleteTags(const PimItem::List &items, const Scope &tags, bool &tagsChanged)
 {
-    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
+    const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection()->context());
     if (!connection()->storageBackend()->removeItemsTags(items, tagList, &tagsChanged)) {
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::deleteTags: Unable to remove item tags";
         return false;

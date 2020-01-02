@@ -220,12 +220,12 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
     response.setGid(tag.gid().toUtf8());
     if (tagFetchScope.fetchRemoteID() && connection) {
         // Fail silently if retrieving tag RID is not allowed in current context
-        if (connection->context()->resource().isValid()) {
+        if (connection->context().resource().isValid()) {
             QueryBuilder qb(TagRemoteIdResourceRelation::tableName());
             qb.addColumn(TagRemoteIdResourceRelation::remoteIdColumn());
             qb.addValueCondition(TagRemoteIdResourceRelation::resourceIdColumn(),
                                  Query::Equals,
-                                 connection->context()->resource().id());
+                                 connection->context().resource().id());
             qb.addValueCondition(TagRemoteIdResourceRelation::tagIdColumn(),
                                  Query::Equals,
                                  tag.id());
@@ -348,14 +348,14 @@ Tag::List HandlerHelper::resolveTagsByGID(const QStringList &tagsGIDs)
     return tagList;
 }
 
-Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, CommandContext *context)
+Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, const CommandContext &context)
 {
     Tag::List tags;
     if (tagsRIDs.isEmpty()) {
         return tags;
     }
 
-    if (!context->resource().isValid()) {
+    if (!context.resource().isValid()) {
         throw HandlerException("Tags can be resolved by their RID only in resource context");
     }
 
@@ -364,7 +364,7 @@ Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, CommandCo
         SelectQueryBuilder<Tag> qb;
         Query::Condition cond;
         cond.addColumnCondition(Tag::idFullColumnName(), Query::Equals, TagRemoteIdResourceRelation::tagIdFullColumnName());
-        cond.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context->resource().id());
+        cond.addValueCondition(TagRemoteIdResourceRelation::resourceIdFullColumnName(), Query::Equals, context.resource().id());
         qb.addJoin(QueryBuilder::LeftJoin, TagRemoteIdResourceRelation::tableName(), cond);
         qb.addValueCondition(TagRemoteIdResourceRelation::remoteIdFullColumnName(), Query::Equals, tagRID);
         if (!qb.exec()) {
@@ -383,7 +383,7 @@ Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, CommandCo
             TagRemoteIdResourceRelation rel;
             rel.setRemoteId(tagRID);
             rel.setTagId(tag.id());
-            rel.setResourceId(context->resource().id());
+            rel.setResourceId(context.resource().id());
             if (!rel.insert()) {
                 throw HandlerException("Unable to create tag");
             }
@@ -399,14 +399,14 @@ Tag::List HandlerHelper::resolveTagsByRID(const QStringList &tagsRIDs, CommandCo
     return tags;
 }
 
-Collection HandlerHelper::collectionFromScope(const Scope &scope, Connection *connection)
+Collection HandlerHelper::collectionFromScope(const Scope &scope, const CommandContext &context)
 {
     if (scope.scope() == Scope::Invalid || scope.scope() == Scope::Gid) {
         throw HandlerException("Invalid collection scope");
     }
 
     SelectQueryBuilder<Collection> qb;
-    CollectionQueryHelper::scopeToQuery(scope, connection, qb);
+    CollectionQueryHelper::scopeToQuery(scope, context, qb);
     if (!qb.exec()) {
         throw HandlerException("Failed to execute SQL query");
     }
@@ -421,7 +421,7 @@ Collection HandlerHelper::collectionFromScope(const Scope &scope, Connection *co
     }
 }
 
-Tag::List HandlerHelper::tagsFromScope(const Scope &scope, Connection *connection)
+Tag::List HandlerHelper::tagsFromScope(const Scope &scope, const CommandContext &context)
 {
     if (scope.scope() == Scope::Invalid || scope.scope() == Scope::HierarchicalRid) {
         throw HandlerException("Invalid tag scope");
@@ -432,7 +432,7 @@ Tag::List HandlerHelper::tagsFromScope(const Scope &scope, Connection *connectio
     } else if (scope.scope() == Scope::Gid) {
         return resolveTagsByGID(scope.gidSet());
     } else if (scope.scope() == Scope::Rid) {
-        return resolveTagsByRID(scope.ridSet(), connection->context());
+        return resolveTagsByRID(scope.ridSet(), context);
     }
 
     Q_ASSERT(false);

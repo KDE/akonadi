@@ -45,7 +45,7 @@ using namespace AkRanges;
 bool ItemCreateHandler::buildPimItem(const Protocol::CreateItemCommand &cmd, PimItem &item,
                                      Collection &parentCol)
 {
-    parentCol = HandlerHelper::collectionFromScope(cmd.collection(), connection());
+    parentCol = HandlerHelper::collectionFromScope(cmd.collection(), connection()->context());
     if (!parentCol.isValid()) {
         return failureResponse(QStringLiteral("Invalid parent collection"));
     }
@@ -102,7 +102,7 @@ bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimIt
 
     const Scope tags = cmd.mergeModes() == Protocol::CreateItemCommand::None ? cmd.tags() : cmd.addedTags();
     if (!tags.isEmpty()) {
-        const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection());
+        const Tag::List tagList = HandlerHelper::tagsFromScope(tags, connection()->context());
         bool tagsChanged = false;
         if (!storageBackend()->appendItemsTags({item}, tagList, &tagsChanged, false, parentCol, true)) {
             return failureResponse(QStringLiteral("Unable to append item tags."));
@@ -233,11 +233,11 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
     if (cmd.tags().isEmpty()) {
         bool tagsAdded = false, tagsRemoved = false;
         if (!cmd.addedTags().isEmpty()) {
-            const auto addedTags = HandlerHelper::tagsFromScope(cmd.addedTags(), connection());
+            const auto addedTags = HandlerHelper::tagsFromScope(cmd.addedTags(), connection()->context());
             storageBackend()->appendItemsTags({currentItem}, addedTags, &tagsAdded, true, col, true);
         }
         if (!cmd.removedTags().isEmpty()) {
-            const Tag::List removedTags = HandlerHelper::tagsFromScope(cmd.removedTags(), connection());
+            const Tag::List removedTags = HandlerHelper::tagsFromScope(cmd.removedTags(), connection()->context());
             storageBackend()->removeItemsTags({currentItem}, removedTags, &tagsRemoved, true);
         }
 
@@ -247,7 +247,7 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
         }
     } else {
         bool tagsChanged = false;
-        const auto tags = HandlerHelper::tagsFromScope(cmd.tags(), connection());
+        const auto tags = HandlerHelper::tagsFromScope(cmd.tags(), connection()->context());
         storageBackend()->setItemsTags({currentItem}, tags, &tagsChanged, true);
         if (tagsChanged) {
             changedParts.insert(AKONADI_PARAM_TAGS);
@@ -288,7 +288,7 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
         currentItem.setRev(qMax(newItem.rev(), currentItem.rev()) + 1);
         currentItem.setAtime(QDateTime::currentDateTimeUtc());
         // Only mark dirty when merged from application
-        currentItem.setDirty(!connection()->context()->resource().isValid());
+        currentItem.setDirty(!connection()->context().resource().isValid());
 
         // Store all changes
         if (!currentItem.update()) {

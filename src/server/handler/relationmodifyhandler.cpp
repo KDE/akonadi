@@ -60,7 +60,7 @@ bool RelationModifyHandler::parseStream()
         return failureResponse("Invalid relation specified");
     }
 
-    if (!cmd.remoteId().isEmpty() && !connection()->context()->resource().isValid()) {
+    if (!cmd.remoteId().isEmpty() && !connection()->context().resource().isValid()) {
         return failureResponse("RemoteID can only be set by Resources");
     }
 
