@@ -25,11 +25,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-CommandContext::CommandContext()
-    : mTagId(-1)
-{
-}
-
 void CommandContext::setResource(const Resource &resource)
 {
     mResource = resource;
@@ -88,21 +83,18 @@ void CommandContext::setTag(qint64 tagId)
     mTagId = tagId;
 }
 
-qint64 CommandContext::tagId() const
+akOptional<qint64> CommandContext::tagId() const
 {
     return mTagId;
 }
 
 Tag CommandContext::tag() const
 {
-    if (mTagId == -1) {
-        return Tag();
-    }
-
-    return Tag::retrieveById(mTagId);
+    return mTagId.has_value() ? Tag::retrieveById(mTagId.value()) : Tag();
 }
 
 bool CommandContext::isEmpty() const
 {
-    return !mCollection.isValid() && mTagId < 0;
+    return !mCollection.isValid() && !mTagId.has_value();
 }
+

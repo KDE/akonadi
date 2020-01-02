@@ -54,7 +54,7 @@ protected Q_SLOTS:
     virtual void quit();
 
 private:
-    StartMode m_startMode;
+    StartMode m_startMode = AutoStart;
 };
 
 }

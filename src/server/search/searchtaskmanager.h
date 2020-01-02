@@ -61,6 +61,7 @@ class SearchTaskManager : public AkThread
     Q_OBJECT
 
 public:
+    explicit SearchTaskManager();
     static SearchTaskManager *instance();
 
     ~SearchTaskManager();
@@ -91,7 +92,6 @@ private:
 
     static SearchTaskManager *sInstance;
 
-    explicit SearchTaskManager();
     bool mShouldStop;
 
     TasksMap::Iterator cancelRunningTask(TasksMap::Iterator &iter);
@@ -107,8 +107,6 @@ private:
 
     QMap<QString /* resource */, ResourceTask *> mRunningTasks;
     QVector<ResourceTask *> mPendingResults;
-
-    friend class AkonadiServer;
 };
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(SearchException);

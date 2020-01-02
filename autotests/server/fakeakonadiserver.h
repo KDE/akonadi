@@ -26,6 +26,7 @@
 #include <QSharedPointer>
 
 #include <type_traits>
+#include <memory>
 
 #include <private/protocol_p.h>
 
@@ -117,18 +118,17 @@ private:
     void initFake();
 
     FakeDataStore *mDataStore = nullptr;
-    FakeSearchManager *mSearchManager = nullptr;
-    FakeConnection *mConnection = nullptr;
-    FakeClient *mClient = nullptr;
-    FakeItemRetrievalManager *mRetrievalManager = nullptr;
+    std::unique_ptr<FakeSearchManager> mSearchManager;
+    std::unique_ptr<FakeConnection> mConnection;
+    std::unique_ptr<FakeClient> mClient;
+    std::unique_ptr<FakeItemRetrievalManager> mRetrievalManager;
 
-    QEventLoop *mServerLoop = nullptr;
 
     InspectableNotificationCollector *mNtfCollector = nullptr;
     QSharedPointer<QSignalSpy> mNotificationSpy;
 
-    bool mPopulateDb;
-    bool mDisableItemRetrievalManager;
+    bool mPopulateDb = true;
+    bool mDisableItemRetrievalManager = false;
 
     static FakeAkonadiServer *sInstance;
 };

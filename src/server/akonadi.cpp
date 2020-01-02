@@ -40,6 +40,7 @@
 #include "search/searchtaskmanager.h"
 #include "aklocalserver.h"
 
+#include <memory>
 #include <private/standarddirs_p.h>
 #include <private/protocol_p.h>
 #include <private/dbus_p.h>
@@ -102,14 +103,15 @@ bool AkonadiServer::init()
     const QString connectionSettingsFile = StandardDirs::connectionConfigFile(StandardDirs::WriteOnly);
     QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
 
-    mCmdServer = new AkLocalServer(this);
-    connect(mCmdServer, QOverload<quintptr>::of(&AkLocalServer::newConnection), this, &AkonadiServer::newCmdConnection);
+    mCmdServer = std::make_unique<AkLocalServer>(this);
+    connect(mCmdServer.get(), QOverload<quintptr>::of(&AkLocalServer::newConnection), this, &AkonadiServer::newCmdConnection);
 
-    mNotificationManager = new NotificationManager();
-    mNtfServer = new AkLocalServer(this);
+    mNotificationManager = std::make_unique<NotificationManager>();
+    mNtfServer = std::make_unique<AkLocalServer>(this);
     // Note: this is a queued connection, as NotificationManager lives in its
     // own thread
-    connect(mNtfServer, QOverload<quintptr>::of(&AkLocalServer::newConnection), mNotificationManager, &NotificationManager::registerConnection);
+    connect(mNtfServer.get(), QOverload<quintptr>::of(&AkLocalServer::newConnection),
+            mNotificationManager.get(), &NotificationManager::registerConnection);
 
     // TODO: share socket setup with client
 #ifdef Q_OS_WIN
@@ -194,17 +196,17 @@ bool AkonadiServer::init()
     }
 
     if (settings.value(QStringLiteral("Cache/EnableCleaner"), true).toBool()) {
-        mCacheCleaner = new CacheCleaner();
+        mCacheCleaner = std::make_unique<CacheCleaner>();
     }
 
-    mIntervalCheck = new IntervalCheck();
-    mStorageJanitor = new StorageJanitor();
-    mItemRetrieval = new ItemRetrievalManager();
-    mAgentSearchManager = new SearchTaskManager();
+    mIntervalCheck = std::make_unique<IntervalCheck>();
+    mStorageJanitor = std::make_unique<StorageJanitor>();
+    mItemRetrieval = std::make_unique<ItemRetrievalManager>();
+    mAgentSearchManager = std::make_unique<SearchTaskManager>();
 
     const QStringList searchManagers = settings.value(QStringLiteral("Search/Manager"),
                                        QStringList() << QStringLiteral("Agent")).toStringList();
-    mSearchManager = new SearchManager(searchManagers);
+    mSearchManager = std::make_unique<SearchManager>(searchManagers);
 
     new ServerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Server"), this);
@@ -241,19 +243,7 @@ bool AkonadiServer::init()
     return true;
 }
 
-AkonadiServer::~AkonadiServer()
-{
-}
-
-template <typename T> static void quitThread(T &thread)
-{
-    if (thread) {
-        thread->quit();
-        thread->wait();
-        delete thread;
-        thread = nullptr;
-    }
-}
+AkonadiServer::~AkonadiServer() = default;
 
 bool AkonadiServer::quit()
 {
@@ -263,17 +253,16 @@ bool AkonadiServer::quit()
     mAlreadyShutdown = true;
 
     qCDebug(AKONADISERVER_LOG) << "terminating connection threads";
-    qDeleteAll(mConnections);
     mConnections.clear();
 
     qCDebug(AKONADISERVER_LOG) << "terminating service threads";
-    delete mCacheCleaner;
-    delete mIntervalCheck;
-    delete mStorageJanitor;
-    delete mItemRetrieval;
-    delete mAgentSearchManager;
-    delete mSearchManager;
-    delete mNotificationManager;
+    mCacheCleaner.reset();
+    mIntervalCheck.reset();
+    mStorageJanitor.reset();
+    mItemRetrieval.reset();
+    mAgentSearchManager.reset();
+    mSearchManager.reset();
+    mNotificationManager.reset();
 
     // Terminate the preprocessor manager before the database but after all connections are gone
     PreprocessorManager::done();
@@ -310,17 +299,18 @@ void AkonadiServer::newCmdConnection(quintptr socketDescriptor)
         return;
     }
 
-    Connection *connection = new Connection(socketDescriptor);
-    connect(connection, &Connection::disconnected,
+    auto connection = std::make_unique<Connection>(socketDescriptor);
+    connect(connection.get(), &Connection::disconnected,
             this, &AkonadiServer::connectionDisconnected);
-    mConnections.append(connection);
+    mConnections.push_back(std::move(connection));
 }
 
 void AkonadiServer::connectionDisconnected()
 {
-    auto conn = qobject_cast<Connection *>(sender());
-    mConnections.removeOne(conn);
-    delete conn;
+    auto it = std::find_if(mConnections.begin(), mConnections.end(),
+                           [this](const auto &ptr) { return ptr.get() == sender(); });
+    Q_ASSERT(it != mConnections.end());
+    mConnections.erase(it);
 }
 
 AkonadiServer *AkonadiServer::instance()
@@ -398,17 +388,17 @@ void AkonadiServer::stopDatabaseProcess()
 
 CacheCleaner *AkonadiServer::cacheCleaner()
 {
-    return mCacheCleaner;
+    return mCacheCleaner.get();
 }
 
 IntervalCheck *AkonadiServer::intervalChecker()
 {
-    return mIntervalCheck;
+    return mIntervalCheck.get();
 }
 
 NotificationManager *AkonadiServer::notificationManager()
 {
-    return mNotificationManager;
+    return mNotificationManager.get();
 }
 
 QString AkonadiServer::serverPath() const

@@ -56,7 +56,8 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, CommandContext *context
         itemSetToQuery(set, qb);
     }
 
-    if (context->tagId() >= 0) {
+    const auto tagId = context->tagId();
+    if (tagId.has_value()) {
         //When querying for items by tag, only return matches from that resource
         if (context->resource().isValid()) {
             qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
@@ -65,7 +66,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, CommandContext *context
         }
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
-        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, tagId.value());
     }
 }
 
@@ -85,10 +86,12 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, CommandContext *c
     if (context->collectionId() > 0) {
         qb.addValueCondition(PimItem::collectionIdFullColumnName(), Query::Equals, context->collectionId());
     }
-    if (context->tagId() > 0) {
+
+    const auto tagId = context->tagId();
+    if (tagId.has_value()) {
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
-        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, tagId.value());
     }
 }
 
@@ -100,7 +103,8 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
         qb.addValueCondition(PimItem::gidFullColumnName(), Query::In, gids);
     }
 
-    if (context->tagId() > 0) {
+    const auto tagId = context->tagId();
+    if (tagId.has_value()) {
         //When querying for items by tag, only return matches from that resource
         if (context->resource().isValid()) {
             qb.addJoin(QueryBuilder::InnerJoin, Collection::tableName(),
@@ -109,7 +113,7 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, CommandContext *contex
         }
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
-        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, context->tagId());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, tagId.value());
     }
 }
 

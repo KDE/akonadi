@@ -46,9 +46,7 @@ AkThread::AkThread(const QString &objectName, QThread::Priority priority, QObjec
 {
 }
 
-AkThread::~AkThread()
-{
-}
+AkThread::~AkThread() = default;
 
 void AkThread::startThread()
 {
@@ -60,8 +58,9 @@ void AkThread::startThread()
 
 void AkThread::quitThread()
 {
-    if (m_startMode == NoThread)
+    if (m_startMode == NoThread) {
         return;
+    }
     qCDebug(AKONADISERVER_LOG) << "Shutting down" << objectName() << "...";
     const bool invoke = QMetaObject::invokeMethod(this, &AkThread::quit, Qt::QueuedConnection);
 

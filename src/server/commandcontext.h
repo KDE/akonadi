@@ -22,6 +22,8 @@
 
 #include "entities.h"
 
+#include <shared/akoptional.h>
+
 namespace Akonadi
 {
 
@@ -36,7 +38,7 @@ namespace Server
 class CommandContext
 {
 public:
-    CommandContext();
+    CommandContext() = default;
 
     void setResource(const Resource &resource);
     Resource resource() const;
@@ -48,7 +50,7 @@ public:
     Collection collection() const;
 
     void setTag(qint64 tagId);
-    qint64 tagId() const;
+    akOptional<qint64> tagId() const;
     Tag tag() const;
 
     bool isEmpty() const;
@@ -56,7 +58,7 @@ public:
 private:
     Resource mResource;
     Collection mCollection;
-    qint64 mTagId;
+    akOptional<qint64> mTagId;
 };
 
 }

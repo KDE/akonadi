@@ -97,18 +97,18 @@ protected:
 
     std::unique_ptr<QDBusServiceWatcher> mControlWatcher;
 
-    AkLocalServer *mCmdServer = nullptr;
-    AkLocalServer *mNtfServer = nullptr;
+    std::unique_ptr<AkLocalServer> mCmdServer;
+    std::unique_ptr<AkLocalServer> mNtfServer;
 
-    NotificationManager *mNotificationManager = nullptr;
-    CacheCleaner *mCacheCleaner = nullptr;
-    IntervalCheck *mIntervalCheck = nullptr;
-    StorageJanitor *mStorageJanitor = nullptr;
-    ItemRetrievalManager *mItemRetrieval = nullptr;
-    SearchTaskManager *mAgentSearchManager = nullptr;
-    QProcess *mDatabaseProcess = nullptr;
-    QVector<Connection *> mConnections;
-    SearchManager *mSearchManager = nullptr;
+    std::unique_ptr<NotificationManager> mNotificationManager;
+    std::unique_ptr<CacheCleaner> mCacheCleaner;
+    std::unique_ptr<IntervalCheck> mIntervalCheck;
+    std::unique_ptr<StorageJanitor> mStorageJanitor;
+    std::unique_ptr<ItemRetrievalManager> mItemRetrieval;
+    std::unique_ptr<SearchTaskManager> mAgentSearchManager;
+    std::unique_ptr<SearchManager> mSearchManager;
+
+    std::vector<std::unique_ptr<Connection>> mConnections;
     bool mAlreadyShutdown = false;
 
     static AkonadiServer *s_instance;

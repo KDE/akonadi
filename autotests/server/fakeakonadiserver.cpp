@@ -103,15 +103,6 @@ FakeAkonadiServer *FakeAkonadiServer::instance()
 
 FakeAkonadiServer::FakeAkonadiServer()
     : AkonadiServer()
-    , mDataStore(nullptr)
-    , mSearchManager(nullptr)
-    , mConnection(nullptr)
-    , mClient(nullptr)
-    , mRetrievalManager(nullptr)
-    , mServerLoop(nullptr)
-    , mNtfCollector(nullptr)
-    , mPopulateDb(true)
-    , mDisableItemRetrievalManager(false)
 {
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
     qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
@@ -119,18 +110,12 @@ FakeAkonadiServer::FakeAkonadiServer()
     qputenv("HOME", qPrintable(basePath()));
     qputenv("KDEHOME", qPrintable(basePath() + QLatin1String("/kdehome")));
 
-    mClient = new FakeClient;
+    mClient = std::make_unique<FakeClient>();
 
     FakeDataStore::registerFactory();
 }
 
-FakeAkonadiServer::~FakeAkonadiServer()
-{
-    delete mClient;
-    delete mConnection;
-    delete mRetrievalManager;
-    delete mNtfCollector;
-}
+FakeAkonadiServer::~FakeAkonadiServer() = default;
 
 QString FakeAkonadiServer::basePath()
 {
@@ -245,13 +230,13 @@ void FakeAkonadiServer::initFake()
 
     PreprocessorManager::init();
     PreprocessorManager::instance()->setEnabled(false);
-    mSearchManager = new FakeSearchManager();
+    mSearchManager = std::make_unique<FakeSearchManager>();
 
     if (!mDisableItemRetrievalManager) {
-        mRetrievalManager = new FakeItemRetrievalManager();
+        mRetrievalManager = std::make_unique<FakeItemRetrievalManager>();
     }
 
-    mIntervalCheck = new FakeIntervalCheck();
+    mIntervalCheck = std::make_unique<FakeIntervalCheck>();
 
     qDebug() << "==== Fake Akonadi Server started ====";
 }
@@ -279,7 +264,7 @@ bool FakeAkonadiServer::quit()
         mDataStore->close();
     }
 
-    delete mIntervalCheck;
+    mIntervalCheck.reset();
 
     qDebug() << "==== Fake Akonadi Server shut down ====";
     return true;
@@ -292,12 +277,12 @@ void FakeAkonadiServer::setScenarios(const TestScenario::List &scenarios)
 
 void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 {
-    mConnection = new FakeConnection(socketDescriptor);
+    mConnection = std::make_unique<FakeConnection>(socketDescriptor);
 
     // Connection is its own thread, so we have to make sure we get collector
     // from DataStore of the Connection's thread, not ours
     NotificationCollector *collector = nullptr;
-    QMetaObject::invokeMethod(mConnection, "notificationCollector", Qt::BlockingQueuedConnection,
+    QMetaObject::invokeMethod(mConnection.get(), "notificationCollector", Qt::BlockingQueuedConnection,
                               Q_RETURN_ARG(Akonadi::Server::NotificationCollector*, collector));
     mNtfCollector = dynamic_cast<InspectableNotificationCollector*>(collector);
     Q_ASSERT(mNtfCollector);
@@ -307,23 +292,20 @@ void FakeAkonadiServer::newCmdConnection(quintptr socketDescriptor)
 
 void FakeAkonadiServer::runTest()
 {
-    mCmdServer = new AkLocalServer(this);
-    connect(mCmdServer, static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
+    mCmdServer = std::make_unique<AkLocalServer>();
+    connect(mCmdServer.get(), static_cast<void(AkLocalServer::*)(quintptr)>(&AkLocalServer::newConnection),
             this, &FakeAkonadiServer::newCmdConnection);
     QVERIFY(mCmdServer->listen(socketFile()));
 
-    mServerLoop = new QEventLoop(this);
-    connect(mClient, &QThread::finished, mServerLoop, &QEventLoop::quit);
+    QEventLoop serverLoop;
+    connect(mClient.get(), &QThread::finished, &serverLoop, &QEventLoop::quit);
 
     // Start the client: the client will connect to the server and will
     // start playing the scenario
     mClient->start();
 
     // Wait until the client disconnects, i.e. until the scenario is completed.
-    mServerLoop->exec();
-
-    mServerLoop->deleteLater();
-    mServerLoop = nullptr;
+    serverLoop.exec();
 
     mCmdServer->close();
 
