@@ -42,7 +42,7 @@ bool SetupTest::startAkonadiDaemon()
 
     if (!mAkonadiDaemonProcess) {
         mAkonadiDaemonProcess = std::make_unique<KProcess>();
-        connect(mAkonadiDaemonProcess.get(), QOverload<int, QProcess::ExitStatus>::of(&KProcess::finished),
+        connect(mAkonadiDaemonProcess.get(), qOverload<int, QProcess::ExitStatus>(&KProcess::finished),
                 this, &SetupTest::slotAkonadiDaemonProcessFinished);
     }
 
@@ -59,7 +59,7 @@ void SetupTest::stopAkonadiDaemon()
     if (!mAkonadiDaemonProcess) {
         return;
     }
-    disconnect(mAkonadiDaemonProcess.get(), SIGNAL(finished(int)), this, nullptr);
+    disconnect(mAkonadiDaemonProcess.get(), qOverload<int, QProcess::ExitStatus>(&KProcess::finished), this, nullptr);
     mAkonadiDaemonProcess->terminate();
     const bool finished = mAkonadiDaemonProcess->waitForFinished(5000);
     if (!finished) {
@@ -358,7 +358,7 @@ void SetupTest::shutdownHarder()
 void SetupTest::restartAkonadiServer()
 {
     qCDebug(AKONADITEST_LOG) << "Restarting Akonadi";
-    disconnect(mAkonadiDaemonProcess.get(), SIGNAL(finished(int)), this, nullptr);
+    disconnect(mAkonadiDaemonProcess.get(), qOverload<int, QProcess::ExitStatus>(&KProcess::finished), this, nullptr);
     Akonadi::ServerManager::self()->stop();
     const bool shutdownResult = mAkonadiDaemonProcess->waitForFinished();
     if (!shutdownResult) {
@@ -369,8 +369,8 @@ void SetupTest::restartAkonadiServer()
     // it forcefully, if necessary, and know the pid
     startAkonadiDaemon();
     // from here on, the server exiting is an error again
-    connect(mAkonadiDaemonProcess.get(), SIGNAL(finished(int)),
-            this, SLOT(slotAkonadiDaemonProcessFinished(int)));
+    connect(mAkonadiDaemonProcess.get(), qOverload<int, QProcess::ExitStatus>(&KProcess::finished),
+            this, &SetupTest::slotAkonadiDaemonProcessFinished);
 }
 
 QString SetupTest::basePath() const
