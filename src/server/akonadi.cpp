@@ -220,10 +220,7 @@ bool AkonadiServer::init()
         mPreprocessorManager->setEnabled(false);
     }
 
-    if (settings.value(QStringLiteral("Cache/EnableCleaner"), true).toBool()) {
-        mCacheCleaner = std::make_unique<CacheCleaner>();
-    }
-
+    mCacheCleaner = std::make_unique<CacheCleaner>();
     mIntervalCheck = std::make_unique<IntervalCheck>(*this);
     mStorageJanitor = std::make_unique<StorageJanitor>(*this);
     mItemRetrieval = std::make_unique<ItemRetrievalManager>();
@@ -407,9 +404,9 @@ CacheCleaner *AkonadiServer::cacheCleaner()
     return mCacheCleaner.get();
 }
 
-IntervalCheck *AkonadiServer::intervalChecker()
+IntervalCheck &AkonadiServer::intervalChecker()
 {
-    return mIntervalCheck.get();
+    return *mIntervalCheck.get();
 }
 
 ResourceManager &AkonadiServer::resourceManager()

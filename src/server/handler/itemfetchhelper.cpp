@@ -726,7 +726,7 @@ void ItemFetchHelper::triggerOnDemandFetch()
         return;
     }
 
-    mConnection->akonadi().intervalChecker()->requestCollectionSync(collection);
+    mConnection->akonadi().intervalChecker().requestCollectionSync(collection);
 }
 
 QVector<Protocol::Ancestor> ItemFetchHelper::ancestorsForItem(Collection::Id parentColId)

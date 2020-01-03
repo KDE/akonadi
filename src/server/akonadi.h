@@ -64,7 +64,7 @@ public:
     /**
      * Returns the IntervalCheck instance. Never nullptr.
      */
-    IntervalCheck *intervalChecker();
+    IntervalCheck &intervalChecker();
 
     ResourceManager &resourceManager();
 

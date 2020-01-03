@@ -140,7 +140,7 @@ void NotificationCollector::collectionAdded(const Collection &collection,
     if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionAdded(collection.id());
     }
-    mAkonadi.intervalChecker()->collectionAdded(collection.id());
+    mAkonadi.intervalChecker().collectionAdded(collection.id());
     collectionNotification(Protocol::CollectionChangeNotification::Add, collection, collection.parentId(), -1, resource);
 }
 
@@ -151,7 +151,7 @@ void NotificationCollector::collectionChanged(const Collection &collection,
     if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionChanged(collection.id());
     }
-    mAkonadi.intervalChecker()->collectionChanged(collection.id());
+    mAkonadi.intervalChecker().collectionChanged(collection.id());
     if (changes.contains(AKONADI_PARAM_ENABLED)) {
         mAkonadi.collectionStatistics().invalidateCollection(collection);
     }
@@ -167,7 +167,7 @@ void NotificationCollector::collectionMoved(const Collection &collection,
     if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionChanged(collection.id());
     }
-    mAkonadi.intervalChecker()->collectionChanged(collection.id());
+    mAkonadi.intervalChecker().collectionChanged(collection.id());
     collectionNotification(Protocol::CollectionChangeNotification::Move, collection, source.id(), collection.parentId(), resource, QSet<QByteArray>(), destResource);
 }
 
@@ -177,7 +177,7 @@ void NotificationCollector::collectionRemoved(const Collection &collection,
     if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionRemoved(collection.id());
     }
-    mAkonadi.intervalChecker()->collectionRemoved(collection.id());
+    mAkonadi.intervalChecker().collectionRemoved(collection.id());
     mAkonadi.collectionStatistics().invalidateCollection(collection);
     collectionNotification(Protocol::CollectionChangeNotification::Remove, collection, collection.parentId(), -1, resource);
 }
@@ -188,9 +188,7 @@ void NotificationCollector::collectionSubscribed(const Collection &collection,
     if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionAdded(collection.id());
     }
-    if (auto checker = mAkonadi.intervalChecker()) {
-        checker->collectionAdded(collection.id());
-    }
+    mAkonadi.intervalChecker().collectionAdded(collection.id());
     collectionNotification(Protocol::CollectionChangeNotification::Subscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
 }
 
@@ -200,7 +198,7 @@ void NotificationCollector::collectionUnsubscribed(const Collection &collection,
     if (auto cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionRemoved(collection.id());
     }
-    mAkonadi.intervalChecker()->collectionRemoved(collection.id());
+    mAkonadi.intervalChecker().collectionRemoved(collection.id());
     mAkonadi.collectionStatistics().invalidateCollection(collection);
     collectionNotification(Protocol::CollectionChangeNotification::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
 }
