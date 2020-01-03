@@ -27,11 +27,13 @@
 namespace Akonadi {
 namespace Server {
 
+class FakeAkonadiServer;
+
 class FakeIntervalCheck : public IntervalCheck
 {
     Q_OBJECT
 public:
-    FakeIntervalCheck(QObject *parent = nullptr);
+    FakeIntervalCheck(FakeAkonadiServer &akonadi);
     void waitForInit();
 
 protected:

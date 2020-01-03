@@ -68,7 +68,8 @@ public:
      */
     virtual void requestItemDelivery(ItemRetrievalRequest *request);
 
-    static ItemRetrievalManager *instance();
+    void triggerCollectionSync(const QString &resource, qint64 colId);
+    void triggerCollectionTreeSync(const QString &resource);
 
 Q_SIGNALS:
     void requestFinished(ItemRetrievalRequest *request);
@@ -81,13 +82,9 @@ private Q_SLOTS:
     void init() override;
 
     void processRequest();
-    void triggerCollectionSync(const QString &resource, qint64 colId);
-    void triggerCollectionTreeSync(const QString &resource);
     void retrievalJobFinished(ItemRetrievalRequest *request, const QString &errorMsg);
 
 protected:
-    static ItemRetrievalManager *sInstance;
-
     std::unique_ptr<AbstractItemRetrievalJobFactory> mJobFactory;
 
     /// Protects mPendingRequests and every Request object posted to it

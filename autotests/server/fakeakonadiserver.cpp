@@ -227,10 +227,10 @@ void FakeAkonadiServer::initFake()
     mCollectionStats = std::make_unique<CollectionStatistics>();
 
     if (!mDisableItemRetrievalManager) {
-        mRetrievalManager = std::make_unique<FakeItemRetrievalManager>();
+        mItemRetrieval = std::make_unique<FakeItemRetrievalManager>();
     }
 
-    mIntervalCheck = std::make_unique<FakeIntervalCheck>();
+    mIntervalCheck = std::make_unique<FakeIntervalCheck>(*this);
 
     qDebug() << "==== Fake Akonadi Server started ====";
 }
@@ -253,7 +253,10 @@ bool FakeAkonadiServer::quit()
 
     mPreprocessorManager.reset();
     mCollectionStats.reset();
-    (void)SearchManager::instance();
+    mSearchManager.reset();
+    mCollectionStats.reset();
+    mItemRetrieval.reset();
+    mIntervalCheck.reset();
 
     if (mDataStore) {
         mDataStore->close();

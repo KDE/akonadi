@@ -19,6 +19,7 @@
 */
 
 #include "intervalcheck.h"
+#include "akonadi.h"
 #include "storage/datastore.h"
 #include "storage/itemretrievalmanager.h"
 #include "storage/entity.h"
@@ -28,8 +29,9 @@ using namespace Akonadi::Server;
 static const int MINIMUM_AUTOSYNC_INTERVAL = 5; // minutes
 static const int MINIMUM_COLTREESYNC_INTERVAL = 5; // minutes
 
-IntervalCheck::IntervalCheck(QObject *parent)
-    : CollectionScheduler(QStringLiteral("IntervalCheck"), QThread::IdlePriority, parent)
+IntervalCheck::IntervalCheck(AkonadiServer &akonadi)
+    : CollectionScheduler(QStringLiteral("IntervalCheck"), QThread::IdlePriority)
+    , mAkonadi(akonadi)
 {
 }
 
@@ -73,9 +75,7 @@ void IntervalCheck::collectionExpired(const Collection &collection)
         const QDateTime lastExpectedCheck = now.addSecs(interval * -60);
         if (!mLastCollectionTreeSyncs.contains(resourceName) || mLastCollectionTreeSyncs.value(resourceName) < lastExpectedCheck) {
             mLastCollectionTreeSyncs.insert(resourceName, now);
-            QMetaObject::invokeMethod(ItemRetrievalManager::instance(), "triggerCollectionTreeSync",
-                                      Qt::QueuedConnection,
-                                      Q_ARG(QString, resourceName));
+            mAkonadi.itemRetrievalManager().triggerCollectionTreeSync(resourceName);
         }
     }
 
@@ -87,8 +87,5 @@ void IntervalCheck::collectionExpired(const Collection &collection)
         return;
     }
     mLastChecks.insert(collection.id(), now);
-    QMetaObject::invokeMethod(ItemRetrievalManager::instance(), "triggerCollectionSync",
-                              Qt::QueuedConnection,
-                              Q_ARG(QString, collection.resource().name()),
-                              Q_ARG(qint64, collection.id()));
+    mAkonadi.itemRetrievalManager().triggerCollectionSync(collection.resource().name(), collection.id());
 }

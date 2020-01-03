@@ -19,6 +19,7 @@
 
 #include "collectionmovehandler.h"
 
+#include "akonadi.h"
 #include "handlerhelper.h"
 #include "connection.h"
 #include "cachecleaner.h"
@@ -60,7 +61,7 @@ bool CollectionMoveHandler::parseStream()
     CacheCleanerInhibitor inhibitor(akonadi());
 
     // retrieve all not yet cached items of the source
-    ItemRetriever retriever(connection(), connection()->context());
+    ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), connection()->context());
     retriever.setCollection(source, true);
     retriever.setRetrieveFullPayload(true);
     if (!retriever.exec()) {

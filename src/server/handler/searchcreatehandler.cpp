@@ -20,6 +20,7 @@
 #include "searchcreatehandler.h"
 
 
+#include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "storage/datastore.h"
@@ -83,7 +84,7 @@ bool SearchCreateHandler::parseStream()
         return failureResponse("Unable to commit transaction");
     }
 
-    SearchManager::instance()->updateSearch(col);
+    akonadi().searchManager().updateSearch(col);
 
     sendResponse(HandlerHelper::fetchCollectionsResponse(akonadi(), col));
     return successResponse<Protocol::StoreSearchResponse>();

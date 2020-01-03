@@ -18,11 +18,12 @@
 */
 
 #include "fakeintervalcheck.h"
+#include "fakeakonadiserver.h"
 
 using namespace Akonadi::Server;
 
-FakeIntervalCheck::FakeIntervalCheck(QObject *parent)
-    : IntervalCheck(parent)
+FakeIntervalCheck::FakeIntervalCheck(FakeAkonadiServer &akonadi)
+    : IntervalCheck(akonadi)
 {
 }
 

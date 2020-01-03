@@ -19,6 +19,7 @@
 
 #include "itemcopyhandler.h"
 
+#include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
@@ -115,7 +116,7 @@ bool ItemCopyHandler::parseStream()
 
     CacheCleanerInhibitor inhibitor(akonadi());
 
-    ItemRetriever retriever(connection(), connection()->context());
+    ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), connection()->context());
     retriever.setItemSet(cmd.items().uidSet());
     retriever.setRetrieveFullPayload(true);
     QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,

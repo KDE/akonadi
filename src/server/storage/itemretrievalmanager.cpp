@@ -37,8 +37,6 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ItemRetrievalManager *ItemRetrievalManager::sInstance = nullptr;
-
 class ItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
 {
     AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) override {
@@ -56,16 +54,11 @@ ItemRetrievalManager::ItemRetrievalManager(std::unique_ptr<AbstractItemRetrieval
     , mJobFactory(std::move(factory))
 {
     qDBusRegisterMetaType<QByteArrayList>();
-
-    Q_ASSERT(sInstance == nullptr);
-    sInstance = this;
 }
 
 ItemRetrievalManager::~ItemRetrievalManager()
 {
     quitThread();
-
-    sInstance = nullptr;
 }
 
 void ItemRetrievalManager::init()
@@ -87,12 +80,6 @@ void ItemRetrievalManager::init()
     connect(this, &ItemRetrievalManager::requestAdded,
             this, &ItemRetrievalManager::processRequest,
             Qt::QueuedConnection);
-}
-
-ItemRetrievalManager *ItemRetrievalManager::instance()
-{
-    Q_ASSERT(sInstance);
-    return sInstance;
 }
 
 // called within the retrieval thread
@@ -202,16 +189,21 @@ void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, c
     Q_EMIT requestAdded(); // trigger processRequest() again, in case there is more in the queues
 }
 
+// Can be called from any thread
 void ItemRetrievalManager::triggerCollectionSync(const QString &resource, qint64 colId)
 {
-    if (auto *interface = resourceInterface(resource)) {
-        interface->synchronizeCollection(colId);
-    }
+    QTimer::singleShot(0, this, [this, resource, colId]() {
+        if (auto *interface = resourceInterface(resource)) {
+            interface->synchronizeCollection(colId);
+        }
+    });
 }
 
 void ItemRetrievalManager::triggerCollectionTreeSync(const QString &resource)
 {
-    if (auto *interface = resourceInterface(resource)) {
-        interface->synchronizeCollectionTree();
-    }
+    QTimer::singleShot(0, this, [this, resource]() {
+        if (auto *interface = resourceInterface(resource)) {
+            interface->synchronizeCollectionTree();
+        }
+    });
 }

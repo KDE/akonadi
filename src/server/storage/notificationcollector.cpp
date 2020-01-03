@@ -63,7 +63,7 @@ void NotificationCollector::itemAdded(const PimItem &item,
                                       const Collection &collection,
                                       const QByteArray &resource)
 {
-    SearchManager::instance()->scheduleSearchUpdate();
+    mAkonadi.searchManager().scheduleSearchUpdate();
     mAkonadi.collectionStatistics().itemAdded(collection, item.size(), seen);
     itemNotification(Protocol::ItemChangeNotification::Add, item, collection, Collection(), resource);
 }
@@ -73,7 +73,7 @@ void NotificationCollector::itemChanged(const PimItem &item,
                                         const Collection &collection,
                                         const QByteArray &resource)
 {
-    SearchManager::instance()->scheduleSearchUpdate();
+    mAkonadi.searchManager().scheduleSearchUpdate();
     itemNotification(Protocol::ItemChangeNotification::Modify, item, collection, Collection(), resource, changedParts);
 }
 
@@ -113,7 +113,7 @@ void NotificationCollector::itemsMoved(const PimItem::List &items,
                                        const Collection &collectionDest,
                                        const QByteArray &sourceResource)
 {
-    SearchManager::instance()->scheduleSearchUpdate();
+    mAkonadi.searchManager().scheduleSearchUpdate();
     itemNotification(Protocol::ItemChangeNotification::Move, items, collectionSrc, collectionDest, sourceResource);
 }
 
@@ -548,7 +548,7 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
                 auto itemFetchScope = fetchScope->toFetchScope();
                 auto tagFetchScope = mgr->tagFetchScope()->toFetchScope();
                 itemFetchScope.setFetch(Protocol::ItemFetchScope::CacheOnly);
-                ItemFetchHelper helper(mConnection, context, Scope(ids), itemFetchScope, tagFetchScope);
+                ItemFetchHelper helper(mConnection, context, Scope(ids), itemFetchScope, tagFetchScope, mAkonadi);
                 // The Item was just changed, which means the atime was
                 // updated, no need to do it again a couple milliseconds later.
                 helper.disableATimeUpdates();

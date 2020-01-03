@@ -31,14 +31,14 @@ namespace Server
 {
 
 class Connection;
-class SearchTaskManager;
+class AkonadiServer;
 
 class SearchRequest : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SearchRequest(const QByteArray &connectionId, SearchTaskManager &searchTaskManager);
+    explicit SearchRequest(const QByteArray &connectionId, AkonadiServer &akonadi);
     ~SearchRequest();
 
     void setQuery(const QString &query);
@@ -77,7 +77,7 @@ private:
     bool mRemoteSearch = false;
     bool mStoreResults = false;
     QSet<qint64> mResults;
-    SearchTaskManager &mSearchTaskManager;
+    AkonadiServer &mAkonadi;
 
 };
 

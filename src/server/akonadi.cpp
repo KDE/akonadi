@@ -224,7 +224,7 @@ bool AkonadiServer::init()
         mCacheCleaner = std::make_unique<CacheCleaner>();
     }
 
-    mIntervalCheck = std::make_unique<IntervalCheck>();
+    mIntervalCheck = std::make_unique<IntervalCheck>(*this);
     mStorageJanitor = std::make_unique<StorageJanitor>(*this);
     mItemRetrieval = std::make_unique<ItemRetrievalManager>();
     mAgentSearchManager = std::make_unique<SearchTaskManager>();
@@ -440,6 +440,11 @@ SearchTaskManager &AkonadiServer::agentSearchManager()
 SearchManager &AkonadiServer::searchManager()
 {
     return *mSearchManager.get();
+}
+
+ItemRetrievalManager &AkonadiServer::itemRetrievalManager()
+{
+    return *mItemRetrieval.get();
 }
 
 QString AkonadiServer::serverPath() const

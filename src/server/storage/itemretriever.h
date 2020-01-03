@@ -39,6 +39,7 @@ namespace Server
 
 class Connection;
 class CommandContext;
+class ItemRetrievalManager;
 
 /**
   Helper class for retrieving missing items parts from remote resources.
@@ -52,7 +53,7 @@ class ItemRetriever : public QObject
     Q_OBJECT
 
 public:
-    explicit ItemRetriever(Connection *connection, const CommandContext &context);
+    explicit ItemRetriever(ItemRetrievalManager &manager, Connection *connection, const CommandContext &context);
 
     Connection *connection() const;
 
@@ -89,6 +90,7 @@ private:
     Akonadi::ImapSet mItemSet;
     Collection mCollection;
     Scope mScope;
+    ItemRetrievalManager &mItemRetrievalManager;
     Connection *mConnection = nullptr;
     const CommandContext &mContext;
     QVector<QByteArray> mParts;

@@ -114,10 +114,8 @@ private:
     void initFake();
 
     FakeDataStore *mDataStore = nullptr;
-    std::unique_ptr<FakeSearchManager> mSearchManager;
     std::unique_ptr<FakeConnection> mConnection;
     std::unique_ptr<FakeClient> mClient;
-    std::unique_ptr<FakeItemRetrievalManager> mRetrievalManager;
 
 
     InspectableNotificationCollector *mNtfCollector = nullptr;

@@ -795,7 +795,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         }
 
         inform(QStringLiteral("Checking Collection %1 search index...").arg(colId));
-        SearchRequest req("StorageJanitor", m_akonadi.agentSearchManager());
+        SearchRequest req("StorageJanitor", m_akonadi);
         req.setStoreResults(true);
         req.setCollections({ colId });
         req.setRemoteSearch(false);

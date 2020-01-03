@@ -335,7 +335,7 @@ bool ItemCreateHandler::sendResponse(const PimItem &item, Protocol::CreateItemCo
     Scope scope;
     scope.setUidSet(set);
 
-    ItemFetchHelper fetchHelper(connection(), scope, fetchScope, Protocol::TagFetchScope{});
+    ItemFetchHelper fetchHelper(connection(), scope, fetchScope, Protocol::TagFetchScope{}, akonadi());
     if (!fetchHelper.fetchItems()) {
         return failureResponse("Failed to retrieve item");
     }
@@ -405,16 +405,12 @@ void ItemCreateHandler::recoverFromMultipleMergeCandidates(const PimItem::List &
         return;
     }
 
-
     // Schedule a new sync of the collection, one that will succeed
-    const auto resource = collection.resource().name();
-    QMetaObject::invokeMethod(ItemRetrievalManager::instance(), "triggerCollectionSync",
-                              Qt::QueuedConnection,
-                              Q_ARG(QString, resource), Q_ARG(qint64, collection.id()));
+    akonadi().itemRetrievalManager().triggerCollectionSync(collection.resource().name(), collection.id());
 
     qCInfo(AKONADISERVER_LOG) << "Automatic multiple merge candidates recovery successful: conflicting items" << (items | Views::transform([](const auto &i) { return i.id(); }) | Actions::toQVector)
                               << "in collection" << collection.name() << "(ID:" << collection.id() << ") were removed and a new sync was scheduled in the resource"
-                              << resource;
+                              << collection.resource().name();
 }
 
 bool ItemCreateHandler::parseStream()

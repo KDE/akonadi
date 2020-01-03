@@ -71,7 +71,7 @@ bool SearchHandler::parseStream()
     mItemFetchScope = cmd.itemFetchScope();
     mTagFetchScope = cmd.tagFetchScope();
 
-    SearchRequest request(connection()->sessionId(), akonadi().agentSearchManager());
+    SearchRequest request(connection()->sessionId(), akonadi());
     request.setCollections(collections);
     request.setMimeTypes(cmd.mimeTypes());
     request.setQuery(cmd.query());
@@ -104,6 +104,6 @@ void SearchHandler::processResults(const QSet<qint64> &results)
     Scope scope;
     scope.setUidSet(imapSet);
 
-    ItemFetchHelper fetchHelper(connection(), scope, mItemFetchScope, mTagFetchScope);
+    ItemFetchHelper fetchHelper(connection(), scope, mItemFetchScope, mTagFetchScope, akonadi());
     fetchHelper.fetchItems();
 }

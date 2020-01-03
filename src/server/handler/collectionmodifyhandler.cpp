@@ -57,7 +57,7 @@ bool CollectionModifyHandler::parseStream()
         if (newParent.isValid() && collection.parentId() != newParent.id()
                 && collection.resourceId() != newParent.resourceId()) {
             inhibitor.inhibit();
-            ItemRetriever retriever(connection(), connection()->context());
+            ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), connection()->context());
             retriever.setCollection(collection, true);
             retriever.setRetrieveFullPayload(true);
             if (!retriever.exec()) {
@@ -288,7 +288,7 @@ bool CollectionModifyHandler::parseStream()
         // Only request Search update AFTER committing the transaction to avoid
         // transaction deadlock with SQLite
         if (changes.contains(AKONADI_PARAM_PERSISTENTSEARCH)) {
-            SearchManager::instance()->updateSearch(collection);
+            akonadi().searchManager().updateSearch(collection);
         }
     }
 

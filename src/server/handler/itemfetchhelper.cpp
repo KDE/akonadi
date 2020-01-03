@@ -73,8 +73,9 @@ using namespace AkRanges;
 
 ItemFetchHelper::ItemFetchHelper(Connection *connection, const Scope &scope,
                                  const Protocol::ItemFetchScope &itemFetchScope,
-                                 const Protocol::TagFetchScope &tagFetchScope)
-    : ItemFetchHelper(connection, connection->context(), scope, itemFetchScope, tagFetchScope)
+                                 const Protocol::TagFetchScope &tagFetchScope,
+                                 AkonadiServer &akonadi)
+    : ItemFetchHelper(connection, connection->context(), scope, itemFetchScope, tagFetchScope, akonadi)
 {
 }
 
@@ -82,12 +83,14 @@ ItemFetchHelper::ItemFetchHelper(Connection *connection, const Scope &scope,
 ItemFetchHelper::ItemFetchHelper(Connection *connection, const CommandContext &context,
                                  const Scope &scope,
                                  const Protocol::ItemFetchScope &itemFetchScope,
-                                 const Protocol::TagFetchScope &tagFetchScope)
+                                 const Protocol::TagFetchScope &tagFetchScope,
+                                 AkonadiServer &akonadi)
     : mConnection(connection)
     , mContext(context)
     , mScope(scope)
     , mItemFetchScope(itemFetchScope)
     , mTagFetchScope(tagFetchScope)
+    , mAkonadi(akonadi)
 {
     std::fill(mItemQueryColumnMap, mItemQueryColumnMap + ItemQueryColumnCount, -1);
 }
@@ -359,7 +362,7 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
 
         // Prepare for a call to ItemRetriever::exec();
         // From a resource perspective the only parts that can be fetched are payloads.
-        ItemRetriever retriever(mConnection, mContext);
+        ItemRetriever retriever(mAkonadi.itemRetrievalManager(), mConnection, mContext);
         retriever.setScope(mScope);
         retriever.setRetrieveParts(mItemFetchScope.requestedPayloads());
         retriever.setRetrieveFullPayload(mItemFetchScope.fullPayload());

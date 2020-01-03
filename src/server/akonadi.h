@@ -76,6 +76,8 @@ public:
 
     SearchManager &searchManager();
 
+    ItemRetrievalManager &itemRetrievalManager();
+
     /**
      * Instance-aware server .config directory
      */

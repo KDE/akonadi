@@ -20,6 +20,7 @@
 #include "searchrequest.h"
 
 
+#include "akonadi.h"
 #include "searchtaskmanager.h"
 #include "abstractsearchplugin.h"
 #include "searchmanager.h"
@@ -28,9 +29,9 @@
 
 using namespace Akonadi::Server;
 
-SearchRequest::SearchRequest(const QByteArray &connectionId, SearchTaskManager &searchTaskManager)
+SearchRequest::SearchRequest(const QByteArray &connectionId, AkonadiServer &akonadi)
     : mConnectionId(connectionId)
-    , mSearchTaskManager(searchTaskManager)
+    , mAkonadi(akonadi)
 {
 }
 
@@ -103,7 +104,7 @@ void SearchRequest::emitResults(const QSet<qint64> &results)
 
 void SearchRequest::searchPlugins()
 {
-    const QVector<AbstractSearchPlugin *> plugins = SearchManager::instance()->searchPlugins();
+    const QVector<AbstractSearchPlugin *> plugins = mAkonadi.searchManager().searchPlugins();
     for (AbstractSearchPlugin *plugin : plugins) {
         const QSet<qint64> result = plugin->search(mQuery, mCollections, mMimeTypes);
         emitResults(result);
@@ -131,7 +132,7 @@ void SearchRequest::exec()
     task.collections = mCollections;
     task.complete = false;
 
-    mSearchTaskManager.addTask(&task);
+    mAkonadi.agentSearchManager().addTask(&task);
 
     task.sharedLock.lock();
     Q_FOREVER {

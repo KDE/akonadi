@@ -20,6 +20,7 @@
 
 #include "itemretriever.h"
 
+#include "akonadi.h"
 #include "connection.h"
 #include "storage/datastore.h"
 #include "storage/itemqueryhelper.h"
@@ -41,8 +42,9 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-ItemRetriever::ItemRetriever(Connection *connection, const CommandContext &context)
+ItemRetriever::ItemRetriever(ItemRetrievalManager &manager, Connection *connection, const CommandContext &context)
     : mScope()
+    , mItemRetrievalManager(manager)
     , mConnection(connection)
     , mContext(context)
     , mFullPayload(false)
@@ -327,7 +329,7 @@ bool ItemRetriever::exec()
     }
 
     QEventLoop eventLoop;
-    connect(ItemRetrievalManager::instance(), &ItemRetrievalManager::requestFinished,
+    connect(&mItemRetrievalManager, &ItemRetrievalManager::requestFinished,
             this, [&](ItemRetrievalRequest *finishedRequest) {
         const auto it = std::find_if(requests.begin(), requests.end(), [finishedRequest](const auto &ptr) {
             return ptr.get() == finishedRequest;
@@ -368,7 +370,7 @@ bool ItemRetriever::exec()
             // Request is deleted inside ItemRetrievalManager, so we need to take
             // a copy here
             //const auto ids = request->ids;
-            ItemRetrievalManager::instance()->requestItemDelivery(request);
+            mItemRetrievalManager.requestItemDelivery(request);
         } catch (const ItemRetrieverException &e) {
             qCCritical(AKONADISERVER_LOG) << e.type() << ": " << e.what();
             mLastError = e.what();
@@ -386,7 +388,7 @@ bool ItemRetriever::exec()
     bool result = true;
     if (mRecursive && mCollection.isValid()) {
         Q_FOREACH (const Collection &col, mCollection.children()) {
-            ItemRetriever retriever(mConnection, mContext);
+            ItemRetriever retriever(mItemRetrievalManager, mConnection, mContext);
             retriever.setCollection(col, mRecursive);
             retriever.setRetrieveParts(mParts);
             retriever.setRetrieveFullPayload(mFullPayload);

@@ -30,6 +30,8 @@ namespace Akonadi
 namespace Server
 {
 
+class AkonadiServer;
+
 /**
   Interval checking thread.
 */
@@ -38,7 +40,7 @@ class IntervalCheck : public CollectionScheduler
     Q_OBJECT
 
 public:
-    explicit IntervalCheck(QObject *parent = nullptr);
+    explicit IntervalCheck(AkonadiServer &akonadi);
     ~IntervalCheck() override;
 
     /**
@@ -60,6 +62,7 @@ protected Q_SLOTS:
 private:
     QHash<int, QDateTime> mLastChecks;
     QHash<QString, QDateTime> mLastCollectionTreeSyncs;
+    AkonadiServer &mAkonadi;
 };
 
 } // namespace Server

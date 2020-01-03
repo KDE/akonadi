@@ -46,7 +46,7 @@ private Q_SLOTS:
     void shouldInitializeSyncIntervals()
     {
         // WHEN
-        FakeIntervalCheck sched;
+        FakeIntervalCheck sched(mAkonadi);
         sched.waitForInit();
         const TimePoint now(std::chrono::steady_clock::now());
         // THEN
@@ -66,7 +66,7 @@ private Q_SLOTS:
     void shouldObeyMinimumInterval()
     {
         // GIVEN
-        FakeIntervalCheck sched;
+        FakeIntervalCheck sched(mAkonadi);
         // WHEN
         sched.setMinimumInterval(10);
         sched.waitForInit();
@@ -82,7 +82,7 @@ private Q_SLOTS:
     void shouldRemoveAndAddCollectionFromSchedule()
     {
         // GIVEN
-        FakeIntervalCheck sched;
+        FakeIntervalCheck sched(mAkonadi);
         sched.waitForInit();
         const auto timeForRoot = sched.nextScheduledTime(1);
         const auto timeForColB = sched.nextScheduledTime(3);
@@ -112,7 +112,7 @@ private Q_SLOTS:
     void shouldHonourIntervalChange()
     {
         // GIVEN
-        FakeIntervalCheck sched;
+        FakeIntervalCheck sched(mAkonadi);
         sched.waitForInit();
         const auto timeForColB = sched.nextScheduledTime(3);
         Collection colA = Collection::retrieveByName(QStringLiteral("Collection A"));

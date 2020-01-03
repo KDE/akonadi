@@ -19,10 +19,12 @@
 
 #include "itemmovehandler.h"
 
+#include "akonadi.h"
 #include "connection.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
 #include "storage/datastore.h"
+#include "storage/itemretrievalmanager.h"
 #include "storage/itemretriever.h"
 #include "storage/itemqueryhelper.h"
 #include "storage/selectquerybuilder.h"
@@ -159,7 +161,7 @@ bool ItemMoveHandler::parseStream()
     CacheCleanerInhibitor inhibitor(akonadi());
 
     // make sure all the items we want to move are in the cache
-    ItemRetriever retriever(connection(), context);
+    ItemRetriever retriever(akonadi().itemRetrievalManager(), connection(), context);
     retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
     QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,

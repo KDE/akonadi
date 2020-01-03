@@ -48,8 +48,6 @@ Q_DECLARE_METATYPE(Akonadi::Server::NotificationCollector *)
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-SearchManager *SearchManager::sInstance = nullptr;
-
 Q_DECLARE_METATYPE(Collection)
 
 SearchManager::SearchManager(const QStringList &searchEngines, AkonadiServer &akonadi)
@@ -59,9 +57,6 @@ SearchManager::SearchManager(const QStringList &searchEngines, AkonadiServer &ak
       mSearchUpdateTimer(nullptr)
 {
     qRegisterMetaType<Collection>();
-
-    Q_ASSERT(sInstance == nullptr);
-    sInstance = this;
 
     // We load search plugins (as in QLibrary::load()) in the main thread so that
     // static initialization happens in the QApplication thread
@@ -129,14 +124,6 @@ void SearchManager::quit()
 SearchManager::~SearchManager()
 {
     quitThread();
-
-    sInstance = nullptr;
-}
-
-SearchManager *SearchManager::instance()
-{
-    Q_ASSERT(sInstance);
-    return sInstance;
 }
 
 void SearchManager::registerInstance(const QString &id)
@@ -311,7 +298,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     }
 
     // Query all plugins for search results
-    SearchRequest request("searchUpdate-" + QByteArray::number(QDateTime::currentDateTimeUtc().toTime_t()), mAkonadi.agentSearchManager());
+    SearchRequest request("searchUpdate-" + QByteArray::number(QDateTime::currentDateTimeUtc().toTime_t()), mAkonadi);
     request.setCollections(queryCollections);
     request.setMimeTypes(queryMimeTypes);
     request.setQuery(collection.queryString());

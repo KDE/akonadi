@@ -151,15 +151,15 @@ using RequestedParts = QVector<QByteArray /* FQ name */>;
 class ClientThread : public QThread
 {
 public:
-    ClientThread(Entity::Id itemId, const RequestedParts &requestedParts)
-        : m_itemId(itemId), m_requestedParts(requestedParts)
+    ClientThread(Entity::Id itemId, const RequestedParts &requestedParts, ItemRetrievalManager &manager)
+        : m_itemId(itemId), m_requestedParts(requestedParts), m_manager(manager)
     {}
 
     void run() override
     {
         // ItemRetriever should...
         CommandContext context;
-        ItemRetriever retriever(nullptr, context);
+        ItemRetriever retriever(m_manager, nullptr, context);
         retriever.setItem(m_itemId);
         retriever.setRetrieveParts(m_requestedParts);
         QSignalSpy spy(&retriever, &ItemRetriever::itemsRetrieved);
@@ -188,6 +188,7 @@ public:
 private:
     const Entity::Id m_itemId;
     const RequestedParts m_requestedParts;
+    ItemRetrievalManager &m_manager;
 
     mutable QMutex m_mutex; // protects results below
     Results m_results;
@@ -215,7 +216,7 @@ private Q_SLOTS:
     void testFullPayload()
     {
         CommandContext context;
-        ItemRetriever r1(nullptr, context);
+        ItemRetriever r1(mAkonadi.itemRetrievalManager(), nullptr, context);
         r1.setRetrieveFullPayload(true);
         QCOMPARE(r1.retrieveParts().size(), 1);
         QCOMPARE(r1.retrieveParts().at(0), { "PLD:RFC822" });
@@ -313,7 +314,7 @@ private Q_SLOTS:
             }
 
             if (step == 0) {
-                ClientThread thread(item.id(), requestedParts);
+                ClientThread thread(item.id(), requestedParts, mgr);
                 thread.run();
 
                 const ClientThread::Results results = thread.results();
@@ -332,7 +333,7 @@ private Q_SLOTS:
             } else {
                 QVector<ClientThread *> threads;
                 for (int i = 0; i < 20; ++i) {
-                    threads.append(new ClientThread(item.id(), requestedParts));
+                    threads.append(new ClientThread(item.id(), requestedParts, mgr));
                 }
                 for (int i = 0; i < threads.size(); ++i) {
                     threads.at(i)->start();

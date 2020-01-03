@@ -25,15 +25,10 @@ using namespace Akonadi::Server;
 FakeItemRetrievalManager::FakeItemRetrievalManager()
     : ItemRetrievalManager()
 {
-    sInstance = this;
-
     qRegisterMetaType<ItemRetrievalRequest*>("ItemRetrievalRequest*");
 }
 
-FakeItemRetrievalManager::~FakeItemRetrievalManager()
-{
-    sInstance = nullptr;
-}
+FakeItemRetrievalManager::~FakeItemRetrievalManager() = default;
 
 void FakeItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *request)
 {

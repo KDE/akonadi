@@ -46,7 +46,7 @@ bool ItemFetchHandler::parseStream()
 
     CacheCleanerInhibitor inhibitor(akonadi());
 
-    ItemFetchHelper fetchHelper(connection(), context, cmd.scope(), cmd.itemFetchScope(), cmd.tagFetchScope());
+    ItemFetchHelper fetchHelper(connection(), context, cmd.scope(), cmd.itemFetchScope(), cmd.tagFetchScope(), akonadi());
     if (!fetchHelper.fetchItems()) {
         return failureResponse(QStringLiteral("Failed to fetch items"));
     }

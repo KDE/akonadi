@@ -42,16 +42,19 @@ namespace Server
 
 class AggregatedItemFetchScope;
 class Connection;
+class AkonadiServer;
 
 class ItemFetchHelper
 {
 public:
     ItemFetchHelper(Connection *connection, const Scope &scope,
             const Protocol::ItemFetchScope &itemFetchScope,
-            const Protocol::TagFetchScope &tagFagScope);
+            const Protocol::TagFetchScope &tagFagScope,
+            AkonadiServer &akonadi);
     ItemFetchHelper(Connection *connection, const CommandContext &context, const Scope &scope,
             const Protocol::ItemFetchScope &itemFetchScope,
-            const Protocol::TagFetchScope &tagFetchScope);
+            const Protocol::TagFetchScope &tagFetchScope,
+            AkonadiServer &akonadi);
 
     bool fetchItems(std::function<void(Protocol::FetchItemsResponse &&)> &&callback = {});
 
@@ -96,6 +99,7 @@ private:
     Protocol::TagFetchScope mTagFetchScope;
     int mItemQueryColumnMap[ItemQueryColumnCount];
     bool mUpdateATimeEnabled = true;
+    AkonadiServer &mAkonadi;
 
     friend class ::ItemFetchHelperTest;
 };

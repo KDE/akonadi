@@ -58,11 +58,6 @@ public:
     ~SearchManager() override;
 
     /**
-     * Returns a global instance of the search manager.
-     */
-    static SearchManager *instance();
-
-    /**
      * Updates the search query asynchronously. Returns immediately
      */
     virtual void updateSearchAsync(const Collection &collection);
@@ -111,8 +106,6 @@ private:
     void loadSearchPlugins();
     // Called from manager thread
     void initSearchPlugins();
-
-    static SearchManager *sInstance;
 
     AkonadiServer &mAkonadi;
     QStringList mEngineNames;
