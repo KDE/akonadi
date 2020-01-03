@@ -27,17 +27,8 @@
 #include <QFile>
 #include <QVector>
 
-#ifdef QT5_BUILD
-#include <QAtomicInteger>
-#else
-#include <QAtomicInt>
-#endif
-
-#ifdef Q_ATOMC_INT64_IS_SUPPORTED
-#include <QAtomicInteger>
-#else
-#include <QAtomicInt>
-#endif
+#include <atomic>
+#include <memory>
 
 class QSqlQuery;
 class QDBusArgument;
@@ -65,7 +56,7 @@ class StorageDebugger : public QObject
 public:
     static StorageDebugger *instance();
 
-    ~StorageDebugger();
+    ~StorageDebugger() override;
 
     void addConnection(qint64 id, const QString &name);
     void removeConnection(qint64 id);
@@ -81,9 +72,9 @@ public:
 
     void queryExecuted(qint64 connectionId, const QSqlQuery &query, int duration);
 
-    void incSequence()
+    inline void incSequence()
     {
-        mSequence.ref();
+        ++mSequence;
     }
 
     void writeToFile(const QString &file);
@@ -111,14 +102,10 @@ private:
     static StorageDebugger *mSelf;
     static QMutex mMutex;
 
-    QFile *mFile = nullptr;
+    std::unique_ptr<QFile> mFile;
 
-    bool mEnabled;
-#ifdef Q_ATOMC_INT64_IS_SUPPORTED
-    QAtomicInteger<qint64> mSequence;
-#else
-    QAtomicInt mSequence;
-#endif
+    std::atomic_bool mEnabled = {false};
+    std::atomic_int64_t mSequence = {0};
     QVector<DbConnection> mConnections;
 
 };

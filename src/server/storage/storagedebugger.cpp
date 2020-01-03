@@ -83,9 +83,6 @@ StorageDebugger *StorageDebugger::instance()
 }
 
 StorageDebugger::StorageDebugger()
-    : mFile(nullptr)
-    , mEnabled(false)
-    , mSequence(0)
 {
     qDBusRegisterMetaType<QList< QList<QVariant> > >();
     qDBusRegisterMetaType<DbConnection>();
@@ -95,13 +92,7 @@ StorageDebugger::StorageDebugger()
             this, QDBusConnection::ExportAdaptors);
 }
 
-StorageDebugger::~StorageDebugger()
-{
-    if (mFile) {
-        mFile->close();
-        delete mFile;
-    }
-}
+StorageDebugger::~StorageDebugger() = default;
 
 void StorageDebugger::enableSQLDebugging(bool enable)
 {
@@ -110,8 +101,7 @@ void StorageDebugger::enableSQLDebugging(bool enable)
 
 void StorageDebugger::writeToFile(const QString &file)
 {
-    delete mFile;
-    mFile = new QFile(file);
+    mFile.reset(new QFile(file));
     mFile->open(QIODevice::WriteOnly);
 }
 
@@ -197,22 +187,20 @@ QVector<DbConnection> StorageDebugger::connections() const
 
 void StorageDebugger::queryExecuted(qint64 connectionId, const QSqlQuery &query, int duration)
 {
-    QMutexLocker locker(&mMutex);
-    const qint64 seq = mSequence.fetchAndAddOrdered(1);
     if (!mEnabled) {
         return;
     }
-    locker.unlock();
 
+    const qint64 seq = ++mSequence;
     if (query.lastError().isValid()) {
         Q_EMIT queryExecuted(seq, connectionId, QDateTime::currentMSecsSinceEpoch(),
                              duration, query.executedQuery(), query.boundValues(), 0,
-                             QList< QList<QVariant> >(), query.lastError().text());
+                             QList<QList<QVariant>>(), query.lastError().text());
         return;
     }
 
     QSqlQuery q(query);
-    QList< QVariantList > result;
+    QList<QVariantList> result;
 
     if (q.first()) {
         const QSqlRecord record = q.record();
@@ -237,20 +225,14 @@ void StorageDebugger::queryExecuted(qint64 connectionId, const QSqlQuery &query,
         } while (q.next() && ++cnt < 1000);
     }
 
-    int querySize;
-    if (query.isSelect()) {
-        querySize = query.size();
-    } else {
-        querySize = query.numRowsAffected();
-    }
-
+    const int querySize = query.isSelect() ? query.size() : query.numRowsAffected();
     Q_EMIT queryExecuted(seq, connectionId, QDateTime::currentMSecsSinceEpoch(),
                          duration, query.executedQuery(), query.boundValues(),
                          querySize, result, QString());
 
     if (mFile && mFile->isOpen()) {
-        QTextStream out(mFile);
-        out << query.executedQuery() << " " << duration << "ms " << "\n";
+        QTextStream out(mFile.get());
+        out << query.executedQuery() << " " << duration << "ms\n";
     }
 
     // Reset the query
