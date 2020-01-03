@@ -40,8 +40,9 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-PreprocessorInstance::PreprocessorInstance(const QString &id)
+PreprocessorInstance::PreprocessorInstance(const QString &id, PreprocessorManager &manager)
     : QObject()
+    , mManager(manager)
     , mId(id)
 {
     Q_ASSERT(!id.isEmpty());
@@ -111,8 +112,7 @@ void PreprocessorInstance::processHeadItem()
 
     while (!actualItem.isValid()) {
         // hum... item is gone ?
-        // FIXME: Signal to the manager that the item is no longer valid!
-        PreprocessorManager::instance()->preProcessorFinishedHandlingItem(this, itemId);
+        mManager.preProcessorFinishedHandlingItem(this, itemId);
 
         mItemQueue.pop_front();
         if (mItemQueue.empty()) {
@@ -231,7 +231,7 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
 
     mItemQueue.pop_front();
 
-    PreprocessorManager::instance()->preProcessorFinishedHandlingItem(this, itemId);
+    mManager.preProcessorFinishedHandlingItem(this, itemId);
 
     if (mItemQueue.empty()) {
         // Nothing more to do

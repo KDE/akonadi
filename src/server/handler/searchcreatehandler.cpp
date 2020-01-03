@@ -85,6 +85,6 @@ bool SearchCreateHandler::parseStream()
 
     SearchManager::instance()->updateSearch(col);
 
-    sendResponse(HandlerHelper::fetchCollectionsResponse(col));
+    sendResponse(HandlerHelper::fetchCollectionsResponse(akonadi(), col));
     return successResponse<Protocol::StoreSearchResponse>();
 }

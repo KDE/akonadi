@@ -30,22 +30,6 @@
 
 using namespace Akonadi::Server;
 
-CollectionStatistics *CollectionStatistics::sInstance = nullptr;
-
-CollectionStatistics *CollectionStatistics::self()
-{
-    if (sInstance == nullptr) {
-        sInstance = new CollectionStatistics();
-    }
-    return sInstance;
-}
-
-void CollectionStatistics::destroy()
-{
-    delete sInstance;
-    sInstance = nullptr;
-}
-
 CollectionStatistics::CollectionStatistics(bool prefetch)
 {
     if (prefetch) {

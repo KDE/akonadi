@@ -53,10 +53,8 @@ public:
         qint64 read;
     };
 
-    static CollectionStatistics *self();
-    static void destroy();
-
-    virtual ~CollectionStatistics() {}
+    explicit CollectionStatistics(bool prefetch = true);
+    virtual ~CollectionStatistics() = default; 
 
     const Statistics statistics(const Collection &col);
 
@@ -68,15 +66,12 @@ public:
     void expireCache();
 
 protected:
-    explicit CollectionStatistics(bool prefetch = true);
     QueryBuilder prepareGenericQuery();
 
     virtual Statistics calculateCollectionStatistics(const Collection &col);
 
     QMutex mCacheLock;
     QHash<qint64, Statistics> mCache;
-
-    static CollectionStatistics *sInstance;
 };
 
 } // namespace Server

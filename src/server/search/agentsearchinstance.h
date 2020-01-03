@@ -33,11 +33,12 @@ namespace Akonadi
 namespace Server
 {
 
+class SearchTaskManager;
 class AgentSearchInstance : public QObject
 {
     Q_OBJECT
 public:
-    explicit AgentSearchInstance(const QString &id);
+    explicit AgentSearchInstance(const QString &id, SearchTaskManager &manager);
     ~AgentSearchInstance() override;
 
     bool init();
@@ -50,6 +51,7 @@ private:
     QString mId;
     OrgFreedesktopAkonadiAgentSearchInterface *mInterface;
     std::unique_ptr<QDBusServiceWatcher> mServiceWatcher;
+    SearchTaskManager &mManager;
 };
 
 } // namespace Server

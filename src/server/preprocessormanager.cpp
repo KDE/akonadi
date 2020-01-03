@@ -55,14 +55,11 @@ const int gDeadlineItemProcessingTimeInSecs = 240;
 using namespace Akonadi::Server;
 
 // The one and only PreprocessorManager object
-PreprocessorManager *PreprocessorManager::mSelf = nullptr;
-
 PreprocessorManager::PreprocessorManager()
     : QObject()
     , mEnabled(true)
     , mMutex(new QMutex())
 {
-    mSelf = this; // just to have it set early
     // Hook in our D-Bus interface "shell".
     new PreprocessorManagerAdaptor(this);
 
@@ -90,21 +87,6 @@ PreprocessorManager::~PreprocessorManager()
     qDeleteAll(mTransactionWaitQueueHash);   // this should also disconnect all the signals from the data store objects...
 
     delete mMutex;
-}
-
-bool PreprocessorManager::init()
-{
-    if (mSelf) {
-        return false;
-    }
-    mSelf = new PreprocessorManager();
-    return true;
-}
-
-void PreprocessorManager::done()
-{
-    delete mSelf;
-    mSelf = nullptr;
 }
 
 bool PreprocessorManager::isActive()
@@ -143,7 +125,7 @@ void PreprocessorManager::registerInstance(const QString &id)
     // TODO: Maybe we need some kind of ordering here ?
     //       In that case we'll need to fiddle with the items that are currently enqueued for processing...
 
-    instance = new PreprocessorInstance(id);
+    instance = new PreprocessorInstance(id, *this);
     if (!instance->init()) {
         Tracer::self()->warning(
             QStringLiteral("PreprocessorManager"),

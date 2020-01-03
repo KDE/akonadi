@@ -25,6 +25,8 @@
 
 #include <memory>
 
+#include <shared/akoptional.h>
+
 class QProcess;
 class QDBusServiceWatcher;
 
@@ -42,6 +44,9 @@ class CacheCleaner;
 class IntervalCheck;
 class AkLocalServer;
 class NotificationManager;
+class ResourceManager;
+class CollectionStatistics;
+class PreprocessorManager;
 
 class AkonadiServer : public QObject
 {
@@ -60,6 +65,16 @@ public:
      * Returns the IntervalCheck instance. Never nullptr.
      */
     IntervalCheck *intervalChecker();
+
+    ResourceManager &resourceManager();
+
+    CollectionStatistics &collectionStatistics();
+
+    PreprocessorManager &preprocessorManager();
+
+    SearchTaskManager &agentSearchManager();
+
+    SearchManager &searchManager();
 
     /**
      * Instance-aware server .config directory
@@ -98,6 +113,9 @@ protected:
     std::unique_ptr<AkLocalServer> mCmdServer;
     std::unique_ptr<AkLocalServer> mNtfServer;
 
+    std::unique_ptr<ResourceManager> mResourceManager;
+    std::unique_ptr<CollectionStatistics> mCollectionStats;
+    std::unique_ptr<PreprocessorManager> mPreprocessorManager;
     std::unique_ptr<NotificationManager> mNotificationManager;
     std::unique_ptr<CacheCleaner> mCacheCleaner;
     std::unique_ptr<IntervalCheck> mIntervalCheck;

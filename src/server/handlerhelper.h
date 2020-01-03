@@ -49,6 +49,7 @@ namespace Server
 
 class CommandContext;
 class Connection;
+class AkonadiServer;
 
 /**
   Helper functions for command handlers.
@@ -77,14 +78,15 @@ public:
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col);
+    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(AkonadiServer &akonadi, const Collection &col);
 
     /**
       Returns the protocol representation of the given collection.
       Make sure DataStore::activeCachePolicy() has been called before to include
       the effective cache policy
     */
-    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(const Collection &col,
+    static Protocol::FetchCollectionsResponse fetchCollectionsResponse(AkonadiServer &akonadi,
+            const Collection &col,
             const CollectionAttribute::List &attributeList,
             bool includeStatistics = false,
             int ancestorDepth = 0,

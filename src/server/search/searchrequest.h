@@ -31,13 +31,14 @@ namespace Server
 {
 
 class Connection;
+class SearchTaskManager;
 
 class SearchRequest : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SearchRequest(const QByteArray &connectionId);
+    explicit SearchRequest(const QByteArray &connectionId, SearchTaskManager &searchTaskManager);
     ~SearchRequest();
 
     void setQuery(const QString &query);
@@ -73,9 +74,10 @@ private:
     QString mQuery;
     QVector<qint64> mCollections;
     QStringList mMimeTypes;
-    bool mRemoteSearch;
-    bool mStoreResults;
+    bool mRemoteSearch = false;
+    bool mStoreResults = false;
     QSet<qint64> mResults;
+    SearchTaskManager &mSearchTaskManager;
 
 };
 

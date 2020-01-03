@@ -20,7 +20,9 @@
 #include "collectionstatsfetchhandler.h"
 
 #include "connection.h"
+#include "global.h"
 #include "handlerhelper.h"
+#include "akonadi.h"
 #include "storage/datastore.h"
 #include "storage/collectionstatistics.h"
 
@@ -42,7 +44,7 @@ bool CollectionStatsFetchHandler::parseStream()
         return failureResponse(QStringLiteral("No status for this folder"));
     }
 
-    const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
+    const auto stats = akonadi().collectionStatistics().statistics(col);
     if (stats.count == -1) {
         return failureResponse(QStringLiteral("Failed to query statistics."));
     }

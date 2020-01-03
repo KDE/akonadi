@@ -25,6 +25,7 @@
 #include "fakeitemretrievalmanager.h"
 #include "inspectablenotificationcollector.h"
 #include "fakeintervalcheck.h"
+#include "storage/collectionstatistics.h"
 
 #include <QSettings>
 #include <QCoreApplication>
@@ -220,9 +221,10 @@ void FakeAkonadiServer::initFake()
         throw FakeAkonadiServerException("Failed to initialize datastore");
     }
 
-    PreprocessorManager::init();
-    PreprocessorManager::instance()->setEnabled(false);
-    mSearchManager = std::make_unique<FakeSearchManager>();
+    mPreprocessorManager = std::make_unique<PreprocessorManager>();
+    mPreprocessorManager->setEnabled(false);
+    mSearchManager = std::make_unique<FakeSearchManager>(*this);
+    mCollectionStats = std::make_unique<CollectionStatistics>();
 
     if (!mDisableItemRetrievalManager) {
         mRetrievalManager = std::make_unique<FakeItemRetrievalManager>();
@@ -249,7 +251,8 @@ bool FakeAkonadiServer::quit()
         qDebug() << "Skipping clean up of" << basePath();
     }
 
-    PreprocessorManager::done();
+    mPreprocessorManager.reset();
+    mCollectionStats.reset();
     (void)SearchManager::instance();
 
     if (mDataStore) {

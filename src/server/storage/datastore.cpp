@@ -1515,6 +1515,6 @@ void DataStore::cleanupAfterRollback()
     Resource::invalidateCompleteCache();
     Collection::invalidateCompleteCache();
     PartType::invalidateCompleteCache();
-    CollectionStatistics::self()->expireCache();
+    m_akonadi.collectionStatistics().expireCache();
     QueryCache::clear();
 }

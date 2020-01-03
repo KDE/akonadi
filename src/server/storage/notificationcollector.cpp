@@ -64,7 +64,7 @@ void NotificationCollector::itemAdded(const PimItem &item,
                                       const QByteArray &resource)
 {
     SearchManager::instance()->scheduleSearchUpdate();
-    CollectionStatistics::self()->itemAdded(collection, item.size(), seen);
+    mAkonadi.collectionStatistics().itemAdded(collection, item.size(), seen);
     itemNotification(Protocol::ItemChangeNotification::Add, item, collection, Collection(), resource);
 }
 
@@ -86,7 +86,7 @@ void NotificationCollector::itemsFlagsChanged(const PimItem::List &items,
     int seenCount = (addedFlags.contains(AKONADI_FLAG_SEEN) || addedFlags.contains(AKONADI_FLAG_IGNORED) ? items.count() : 0);
     seenCount -= (removedFlags.contains(AKONADI_FLAG_SEEN) || removedFlags.contains(AKONADI_FLAG_IGNORED) ? items.count() : 0);
 
-    CollectionStatistics::self()->itemsSeenChanged(collection, seenCount);
+    mAkonadi.collectionStatistics().itemsSeenChanged(collection, seenCount);
     itemNotification(Protocol::ItemChangeNotification::ModifyFlags, items, collection, Collection(), resource, QSet<QByteArray>(), addedFlags, removedFlags);
 }
 
@@ -153,7 +153,7 @@ void NotificationCollector::collectionChanged(const Collection &collection,
     }
     mAkonadi.intervalChecker()->collectionChanged(collection.id());
     if (changes.contains(AKONADI_PARAM_ENABLED)) {
-        CollectionStatistics::self()->invalidateCollection(collection);
+        mAkonadi.collectionStatistics().invalidateCollection(collection);
     }
     collectionNotification(Protocol::CollectionChangeNotification::Modify, collection, collection.parentId(),
                            -1, resource, changes | AkRanges::Actions::toQSet);
@@ -178,7 +178,7 @@ void NotificationCollector::collectionRemoved(const Collection &collection,
         cleaner->collectionRemoved(collection.id());
     }
     mAkonadi.intervalChecker()->collectionRemoved(collection.id());
-    CollectionStatistics::self()->invalidateCollection(collection);
+    mAkonadi.collectionStatistics().invalidateCollection(collection);
     collectionNotification(Protocol::CollectionChangeNotification::Remove, collection, collection.parentId(), -1, resource);
 }
 
@@ -201,7 +201,7 @@ void NotificationCollector::collectionUnsubscribed(const Collection &collection,
         cleaner->collectionRemoved(collection.id());
     }
     mAkonadi.intervalChecker()->collectionRemoved(collection.id());
-    CollectionStatistics::self()->invalidateCollection(collection);
+    mAkonadi.collectionStatistics().invalidateCollection(collection);
     collectionNotification(Protocol::CollectionChangeNotification::Unsubscribe, collection, collection.parentId(), -1, resource, QSet<QByteArray>());
 }
 
@@ -335,7 +335,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
         copy->setParentCollection(iter.key());
         copy->setResource(resource);
 
-        CollectionStatistics::self()->invalidateCollection(Collection::retrieveById(iter.key()));
+        mAkonadi.collectionStatistics().invalidateCollection(Collection::retrieveById(iter.key()));
         dispatchNotification(copy);
     }
 
@@ -363,7 +363,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     // (see itemAdded() and itemsFlagsChanged())
     if (msg->operation() != Protocol::ItemChangeNotification::Add
             && msg->operation() != Protocol::ItemChangeNotification::ModifyFlags) {
-        CollectionStatistics::self()->invalidateCollection(col);
+        mAkonadi.collectionStatistics().invalidateCollection(col);
     }
     dispatchNotification(msg);
 }
@@ -386,7 +386,7 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
     msg->setDestinationResource(destResource);
     msg->setChangedParts(changes);
 
-    auto msgCollection = HandlerHelper::fetchCollectionsResponse(collection);
+    auto msgCollection = HandlerHelper::fetchCollectionsResponse(mAkonadi, collection);
     if (auto mgr = mAkonadi.notificationManager()) {
         auto fetchScope = mgr->collectionFetchScope();
         // Make sure we have all the data
@@ -398,13 +398,13 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
             for (const auto &mt : mts) {
                 mimeTypes.push_back(mt.name());
             }
-            msgCollection = HandlerHelper::fetchCollectionsResponse(col, {}, false, 0, {}, {}, mimeTypes);
+            msgCollection = HandlerHelper::fetchCollectionsResponse(mAkonadi, col, {}, false, 0, {}, {}, mimeTypes);
         }
         // Get up-to-date statistics
         if (fetchScope->fetchStatistics()) {
             Collection col;
             col.setId(msgCollection.id());
-            const auto stats = CollectionStatistics::self()->statistics(col);
+            const auto stats = mAkonadi.collectionStatistics().statistics(col);
             msgCollection.setStatistics(Protocol::FetchCollectionStatsResponse(stats.count, stats.count - stats.read, stats.size));
         }
         // Get attributes

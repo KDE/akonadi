@@ -19,9 +19,11 @@
 
 #include "searchhandler.h"
 
+#include "akonadi.h"
 #include "connection.h"
 #include "itemfetchhelper.h"
 #include "handlerhelper.h"
+#include "search/agentsearchengine.h"
 #include "searchhelper.h"
 #include "search/searchrequest.h"
 #include "search/searchmanager.h"
@@ -69,7 +71,7 @@ bool SearchHandler::parseStream()
     mItemFetchScope = cmd.itemFetchScope();
     mTagFetchScope = cmd.tagFetchScope();
 
-    SearchRequest request(connection()->sessionId());
+    SearchRequest request(connection()->sessionId(), akonadi().agentSearchManager());
     request.setCollections(collections);
     request.setMimeTypes(cmd.mimeTypes());
     request.setQuery(cmd.query());

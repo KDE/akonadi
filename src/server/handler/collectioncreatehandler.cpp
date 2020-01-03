@@ -121,7 +121,7 @@ bool CollectionCreateHandler::parseStream()
     db->activeCachePolicy(collection);
 
     sendResponse<Protocol::FetchCollectionsResponse>(
-        HandlerHelper::fetchCollectionsResponse(collection));
+        HandlerHelper::fetchCollectionsResponse(akonadi(), collection));
 
     return successResponse<Protocol::CreateCollectionResponse>();
 }

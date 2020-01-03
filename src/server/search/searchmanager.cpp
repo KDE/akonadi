@@ -22,6 +22,7 @@
 #include "abstractsearchplugin.h"
 #include "akonadiserver_search_debug.h"
 
+#include "akonadi.h"
 #include "agentsearchengine.h"
 #include "notificationmanager.h"
 #include "dbusconnectionpool.h"
@@ -51,8 +52,9 @@ SearchManager *SearchManager::sInstance = nullptr;
 
 Q_DECLARE_METATYPE(Collection)
 
-SearchManager::SearchManager(const QStringList &searchEngines, QObject *parent)
-    : AkThread(QStringLiteral("SearchManager"), AkThread::ManualStart, QThread::InheritPriority, parent)
+SearchManager::SearchManager(const QStringList &searchEngines, AkonadiServer &akonadi)
+    : AkThread(QStringLiteral("SearchManager"), AkThread::ManualStart, QThread::InheritPriority)
+    , mAkonadi(akonadi)
     , mEngineNames(searchEngines),
       mSearchUpdateTimer(nullptr)
 {
@@ -139,12 +141,12 @@ SearchManager *SearchManager::instance()
 
 void SearchManager::registerInstance(const QString &id)
 {
-    SearchTaskManager::instance()->registerInstance(id);
+    mAkonadi.agentSearchManager().registerInstance(id);
 }
 
 void SearchManager::unregisterInstance(const QString &id)
 {
-    SearchTaskManager::instance()->unregisterInstance(id);
+    mAkonadi.agentSearchManager().unregisterInstance(id);
 }
 
 QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
@@ -309,7 +311,7 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     }
 
     // Query all plugins for search results
-    SearchRequest request("searchUpdate-" + QByteArray::number(QDateTime::currentDateTimeUtc().toTime_t()));
+    SearchRequest request("searchUpdate-" + QByteArray::number(QDateTime::currentDateTimeUtc().toTime_t()), mAkonadi.agentSearchManager());
     request.setCollections(queryCollections);
     request.setMimeTypes(queryMimeTypes);
     request.setQuery(collection.queryString());

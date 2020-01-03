@@ -18,13 +18,14 @@
  */
 
 #include "fakesearchmanager.h"
+#include "fakeakonadiserver.h"
 
 #include "entities.h"
 
 using namespace Akonadi::Server;
 
-FakeSearchManager::FakeSearchManager(QObject *parent)
-    : SearchManager(QStringList(), parent)
+FakeSearchManager::FakeSearchManager(FakeAkonadiServer &akonadi)
+    : SearchManager(QStringList(), akonadi)
 {
 }
 

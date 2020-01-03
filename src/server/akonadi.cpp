@@ -210,16 +210,14 @@ bool AkonadiServer::init()
 
     Tracer::self();
     new DebugInterface(this);
-    ResourceManager::self();
 
-    CollectionStatistics::self();
-
-    // Initialize the preprocessor manager
-    PreprocessorManager::init();
+    mResourceManager = std::make_unique<ResourceManager>();
+    mCollectionStats = std::make_unique<CollectionStatistics>();
+    mPreprocessorManager = std::make_unique<PreprocessorManager>();
 
     // Forcibly disable it if configuration says so
     if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
-        PreprocessorManager::instance()->setEnabled(false);
+        mPreprocessorManager->setEnabled(false);
     }
 
     if (settings.value(QStringLiteral("Cache/EnableCleaner"), true).toBool()) {
@@ -227,13 +225,13 @@ bool AkonadiServer::init()
     }
 
     mIntervalCheck = std::make_unique<IntervalCheck>();
-    mStorageJanitor = std::make_unique<StorageJanitor>();
+    mStorageJanitor = std::make_unique<StorageJanitor>(*this);
     mItemRetrieval = std::make_unique<ItemRetrievalManager>();
     mAgentSearchManager = std::make_unique<SearchTaskManager>();
 
     const QStringList searchManagers = settings.value(QStringLiteral("Search/Manager"),
                                        QStringList() << QStringLiteral("Agent")).toStringList();
-    mSearchManager = std::make_unique<SearchManager>(searchManagers);
+    mSearchManager = std::make_unique<SearchManager>(searchManagers, *this);
 
     new ServerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Server"), this);
@@ -283,6 +281,7 @@ bool AkonadiServer::quit()
     mConnections.clear();
 
     qCDebug(AKONADISERVER_LOG) << "terminating service threads";
+    mResourceManager.reset();
     mCacheCleaner.reset();
     mIntervalCheck.reset();
     mStorageJanitor.reset();
@@ -290,10 +289,8 @@ bool AkonadiServer::quit()
     mAgentSearchManager.reset();
     mSearchManager.reset();
     mNotificationManager.reset();
-
-    // Terminate the preprocessor manager before the database but after all connections are gone
-    PreprocessorManager::done();
-    CollectionStatistics::destroy();
+    mCollectionStats.reset();
+    mPreprocessorManager.reset();
 
     if (DbConfig::isConfigured()) {
         if (DataStore::hasDataStore()) {
@@ -415,9 +412,34 @@ IntervalCheck *AkonadiServer::intervalChecker()
     return mIntervalCheck.get();
 }
 
+ResourceManager &AkonadiServer::resourceManager()
+{
+    return *mResourceManager.get();
+}
+
 NotificationManager *AkonadiServer::notificationManager()
 {
     return mNotificationManager.get();
+}
+
+CollectionStatistics &AkonadiServer::collectionStatistics()
+{
+    return *mCollectionStats.get();
+}
+
+PreprocessorManager &AkonadiServer::preprocessorManager()
+{
+    return *mPreprocessorManager.get();
+}
+
+SearchTaskManager &AkonadiServer::agentSearchManager()
+{
+    return *mAgentSearchManager.get();
+}
+
+SearchManager &AkonadiServer::searchManager()
+{
+    return *mSearchManager.get();
 }
 
 QString AkonadiServer::serverPath() const

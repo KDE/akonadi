@@ -36,18 +36,12 @@ class ResourceManager : public QObject
     Q_OBJECT
 
 public:
-    static ResourceManager *self();
-
-private:
-    explicit ResourceManager(QObject *parent = nullptr);
+    explicit ResourceManager();
 
 public Q_SLOTS:
     void addResourceInstance(const QString &name, const QStringList &capabilities);
     void removeResourceInstance(const QString &name);
     QStringList resourceInstances() const;
-
-private:
-    static ResourceManager *mSelf;
 };
 
 } // namespace Server

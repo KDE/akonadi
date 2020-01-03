@@ -113,7 +113,7 @@ void CollectionFetchHandler::listCollection(const Collection &root,
     Collection dummy = root;
     storageBackend()->activeCachePolicy(dummy);
 
-    sendResponse(HandlerHelper::fetchCollectionsResponse(dummy, attributes, mIncludeStatistics,
+    sendResponse(HandlerHelper::fetchCollectionsResponse(akonadi(), dummy, attributes, mIncludeStatistics,
                  mAncestorDepth, ancestors,
                  ancestorAttributes,
                  mimeTypes));

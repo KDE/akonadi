@@ -62,9 +62,7 @@ class SearchTaskManager : public AkThread
 
 public:
     explicit SearchTaskManager();
-    static SearchTaskManager *instance();
-
-    ~SearchTaskManager();
+    ~SearchTaskManager() override;
 
     void registerInstance(const QString &id);
     void unregisterInstance(const QString &id);
@@ -89,8 +87,6 @@ private:
     };
 
     typedef QMap<QString /* resource */, ResourceTask *>  TasksMap;
-
-    static SearchTaskManager *sInstance;
 
     bool mShouldStop;
 

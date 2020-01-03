@@ -20,6 +20,7 @@
 #include "itemcreatehandler.h"
 
 #include "itemfetchhelper.h"
+#include "akonadi.h"
 #include "connection.h"
 #include "preprocessormanager.h"
 #include "handlerhelper.h"
@@ -141,7 +142,7 @@ bool ItemCreateHandler::insertItem(const Protocol::CreateItemCommand &cmd, PimIt
     }
 
     // Preprocessing
-    if (PreprocessorManager::instance()->isActive()) {
+    if (akonadi().preprocessorManager().isActive()) {
         Part hiddenAttribute;
         hiddenAttribute.setPimItemId(item.id());
         hiddenAttribute.setPartType(PartTypeHelper::fromFqName(QStringLiteral(AKONADI_ATTRIBUTE_HIDDEN)));
@@ -346,9 +347,9 @@ bool ItemCreateHandler::notify(const PimItem &item, bool seen, const Collection 
 {
     storageBackend()->notificationCollector()->itemAdded(item, seen, collection);
 
-    if (PreprocessorManager::instance()->isActive()) {
+    if (akonadi().preprocessorManager().isActive()) {
         // enqueue the item for preprocessing
-        PreprocessorManager::instance()->beginHandleItem(item, storageBackend());
+        akonadi().preprocessorManager().beginHandleItem(item, storageBackend());
     }
     return true;
 }

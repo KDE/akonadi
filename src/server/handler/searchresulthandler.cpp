@@ -20,6 +20,7 @@
 #include "searchresulthandler.h"
 
 #include "connection.h"
+#include "akonadi.h"
 #include "storage/querybuilder.h"
 #include "storage/itemqueryhelper.h"
 #include "search/searchtaskmanager.h"
@@ -67,13 +68,13 @@ bool SearchResultHandler::parseStream()
             }
         }
     }
-    SearchTaskManager::instance()->pushResults(cmd.searchId(), ids, connection());
+    akonadi().agentSearchManager().pushResults(cmd.searchId(), ids, connection());
 
     return successResponse<Protocol::SearchResultResponse>();
 }
 
 bool SearchResultHandler::fail(const QByteArray &searchId, const QString &error)
 {
-    SearchTaskManager::instance()->pushResults(searchId, QSet<qint64>(), connection());
+    akonadi().agentSearchManager().pushResults(searchId, QSet<qint64>(), connection());
     return failureResponse(error);
 }

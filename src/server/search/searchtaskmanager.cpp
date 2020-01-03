@@ -36,14 +36,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-SearchTaskManager *SearchTaskManager::sInstance = nullptr;
-
 SearchTaskManager::SearchTaskManager()
     : AkThread(QStringLiteral("SearchTaskManager"))
     , mShouldStop(false)
 {
-    sInstance = this;
-
     QTimer::singleShot(0, this, &SearchTaskManager::searchLoop);
 }
 
@@ -61,12 +57,6 @@ SearchTaskManager::~SearchTaskManager()
     mInstancesLock.unlock();
 }
 
-SearchTaskManager *SearchTaskManager::instance()
-{
-    Q_ASSERT(sInstance);
-    return sInstance;
-}
-
 void SearchTaskManager::registerInstance(const QString &id)
 {
     QMutexLocker locker(&mInstancesLock);
@@ -78,7 +68,7 @@ void SearchTaskManager::registerInstance(const QString &id)
         return; // already registered
     }
 
-    instance = new AgentSearchInstance(id);
+    instance = new AgentSearchInstance(id, *this);
     if (!instance->init()) {
         qCDebug(AKONADISERVER_SEARCH_LOG) << "Failed to initialize Search agent";
         delete instance;

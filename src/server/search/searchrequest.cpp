@@ -28,10 +28,9 @@
 
 using namespace Akonadi::Server;
 
-SearchRequest::SearchRequest(const QByteArray &connectionId)
+SearchRequest::SearchRequest(const QByteArray &connectionId, SearchTaskManager &searchTaskManager)
     : mConnectionId(connectionId)
-    , mRemoteSearch(true)
-    , mStoreResults(false)
+    , mSearchTaskManager(searchTaskManager)
 {
 }
 
@@ -132,7 +131,7 @@ void SearchRequest::exec()
     task.collections = mCollections;
     task.complete = false;
 
-    SearchTaskManager::instance()->addTask(&task);
+    mSearchTaskManager.addTask(&task);
 
     task.sharedLock.lock();
     Q_FOREVER {

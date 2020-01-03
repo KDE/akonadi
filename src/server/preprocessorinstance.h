@@ -37,6 +37,7 @@ namespace Akonadi
 namespace Server
 {
 
+class PreprocessorManager;
 class AgentInstance;
 
 /**
@@ -59,7 +60,7 @@ protected:
     /**
      * Create an instance of a PreprocessorInstance descriptor.
      */
-    PreprocessorInstance(const QString &id);
+    PreprocessorInstance(const QString &id, PreprocessorManager &manager);
 
 public: // This is public only for qDeleteAll() called from PreprocessorManager
     // ...for some reason couldn't convince gcc to have it as friend...
@@ -70,6 +71,7 @@ public: // This is public only for qDeleteAll() called from PreprocessorManager
     ~PreprocessorInstance();
 
 private:
+    PreprocessorManager &mManager;
 
     /**
      * The internal queue if item identifiers.

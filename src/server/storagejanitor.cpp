@@ -18,7 +18,7 @@
 */
 
 #include "storagejanitor.h"
-
+#include "akonadi.h"
 #include "storage/queryhelper.h"
 #include "storage/transaction.h"
 #include "storage/datastore.h"
@@ -53,9 +53,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-StorageJanitor::StorageJanitor(QObject *parent)
-    : AkThread(QStringLiteral("StorageJanitor"), QThread::IdlePriority, parent)
+StorageJanitor::StorageJanitor(AkonadiServer &akonadi)
+    : AkThread(QStringLiteral("StorageJanitor"), QThread::IdlePriority)
     , m_lostFoundCollectionId(-1)
+    , m_akonadi(akonadi)
 {
 }
 
@@ -134,7 +135,7 @@ void StorageJanitor::check() // implementation of `akonadictl fsck`
     findOrphanSearchIndexEntries();
 
     inform("Flushing collection statistics memory cache...");
-    CollectionStatistics::self()->expireCache();
+    m_akonadi.collectionStatistics().expireCache();
 
     inform("Making sure virtual search resource and collections exist");
     ensureSearchCollection();
@@ -247,7 +248,7 @@ void StorageJanitor::findOrphanedResources()
         inform(QStringLiteral("Found %1 orphan resources: %2").arg(orphanResourcesSize). arg(resourceNames.join(QLatin1Char(','))));
         for (const QString &resourceName : qAsConst(resourceNames)) {
             inform(QStringLiteral("Removing resource %1").arg(resourceName));
-            ResourceManager::self()->removeResourceInstance(resourceName);
+            m_akonadi.resourceManager().removeResourceInstance(resourceName);
         }
     }
 }
@@ -794,7 +795,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
         }
 
         inform(QStringLiteral("Checking Collection %1 search index...").arg(colId));
-        SearchRequest req("StorageJanitor");
+        SearchRequest req("StorageJanitor", m_akonadi.agentSearchManager());
         req.setStoreResults(true);
         req.setCollections({ colId });
         req.setRemoteSearch(false);

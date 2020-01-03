@@ -28,6 +28,7 @@
 #include "handler.h"
 #include "connection.h"
 #include "utils.h"
+#include "akonadi.h"
 
 #include <private/imapset_p.h>
 #include <private/scope_p.h>
@@ -94,7 +95,8 @@ Protocol::CachePolicy HandlerHelper::cachePolicyResponse(const Collection &col)
     return cachePolicy;
 }
 
-Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col)
+Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(
+        AkonadiServer &akonadi, const Collection &col)
 {
     QStringList mimeTypes;
     mimeTypes.reserve(col.mimeTypes().size());
@@ -102,11 +104,13 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
         mimeTypes << mt.name();
     }
 
-    return fetchCollectionsResponse(col, col.attributes(), false, 0, QStack<Collection>(),
+    return fetchCollectionsResponse(akonadi, col, col.attributes(), false, 0, QStack<Collection>(),
                                     QStack<CollectionAttribute::List>(), mimeTypes);
 }
 
-Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const Collection &col,
+Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(
+        AkonadiServer &akonadi,
+        const Collection &col,
         const CollectionAttribute::List &attrs,
         bool includeStatistics,
         int ancestorDepth,
@@ -125,7 +129,7 @@ Protocol::FetchCollectionsResponse HandlerHelper::fetchCollectionsResponse(const
     response.setIsVirtual(col.isVirtual());
 
     if (includeStatistics) {
-        const CollectionStatistics::Statistics stats = CollectionStatistics::self()->statistics(col);
+        const auto stats = akonadi.collectionStatistics().statistics(col);
         if (stats.count > -1) {
             Protocol::FetchCollectionStatsResponse statsResponse;
             statsResponse.setCount(stats.count);

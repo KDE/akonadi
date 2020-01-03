@@ -31,10 +31,8 @@
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
-ResourceManager *ResourceManager::mSelf = nullptr;
-
-ResourceManager::ResourceManager(QObject *parent)
-    : QObject(parent)
+ResourceManager::ResourceManager()
+    : QObject()
 {
     new ResourceManagerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/ResourceManager"), this);
@@ -77,10 +75,3 @@ QStringList ResourceManager::resourceInstances() const
     return Resource::retrieveAll() | Views::transform(&Resource::name) | Actions::toQList;
 }
 
-ResourceManager *ResourceManager::self()
-{
-    if (!mSelf) {
-        mSelf = new ResourceManager();
-    }
-    return mSelf;
-}

@@ -30,6 +30,7 @@ namespace Server
 {
 
 class Collection;
+class AkonadiServer;
 
 /**
  * Various database checking/maintenance features.
@@ -40,7 +41,7 @@ class StorageJanitor : public AkThread
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.Janitor")
 
 public:
-    explicit StorageJanitor(QObject *parent = nullptr);
+    explicit StorageJanitor(AkonadiServer &mAkonadi);
     ~StorageJanitor() override;
 
 public Q_SLOTS:
@@ -146,6 +147,7 @@ private:
 
 private:
     qint64 m_lostFoundCollectionId;
+    AkonadiServer &m_akonadi;
 };
 
 } // namespace Server

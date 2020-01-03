@@ -27,9 +27,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-AgentSearchInstance::AgentSearchInstance(const QString &id)
+AgentSearchInstance::AgentSearchInstance(const QString &id, SearchTaskManager &manager)
     : mId(id)
     , mInterface(nullptr)
+    , mManager(manager)
 {
 }
 
@@ -58,7 +59,7 @@ bool AgentSearchInstance::init()
             QDBusServiceWatcher::WatchForUnregistration);
     connect(mServiceWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
             this, [this]() {
-                SearchTaskManager::instance()->unregisterInstance(mId);
+                mManager.unregisterInstance(mId);
             });
 
     return true;

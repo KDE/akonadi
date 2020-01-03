@@ -76,25 +76,6 @@ class PreprocessorManager : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.PreprocessorManager")
 
 protected:
-
-    /**
-     * Creates an instance of PreprocessorManager
-     */
-    PreprocessorManager();
-
-    /**
-     * Destroys the instance of PreprocessorManager
-     * and frees all the relevant resources
-     */
-    ~PreprocessorManager();
-
-protected:
-
-    /**
-     * The one and only instance pointer for the class PreprocessorManager
-     */
-    static PreprocessorManager *mSelf;
-
     /**
      * The hashtable of transaction wait queues. There is one wait
      * queue for each DataStore that is currently in a transaction.
@@ -129,38 +110,16 @@ protected:
     QTimer *mHeartbeatTimer = nullptr;
 
 public:
+    /**
+     * Creates an instance of PreprocessorManager
+     */
+    explicit PreprocessorManager();
 
     /**
-     * Returns the one and only instance pointer for the class PreprocessorManager
-     * The returned pointer is valid only after a successful call to init().
-     *
-     * \sa init()
-     * \sa done()
+     * Destroys the instance of PreprocessorManager
+     * and frees all the relevant resources
      */
-    static PreprocessorManager *instance()
-    {
-        return mSelf;
-    }
-
-    /**
-     * Initializes this class singleton by creating its one and only instance.
-     * This is actually called in the AkonadiServer constructor.
-     *
-     * The instance is later available via the static instance() method.
-     * You must call done() when you've finished using this class services.
-     * Returns true upon successful initialisation and false when the initialization fails.
-     *
-     * \sa done()
-     */
-    static bool init();
-
-    /**
-     * Deinitializes this class singleton (if it was initialized at all).
-     * This is actually called in the AkonadiServer::quit() method.
-     *
-     * \sa init()
-     */
-    static void done();
+    ~PreprocessorManager();
 
     /**
      * Returns true if preprocessing is active in this Akonadi server.
