@@ -27,6 +27,8 @@ namespace Akonadi
 namespace Server
 {
 
+class AkonadiServer;
+
 /**
   Listens to agent instance added/removed signals and creates/removes
   the corresponding data in the database.
@@ -36,12 +38,15 @@ class ResourceManager : public QObject
     Q_OBJECT
 
 public:
-    explicit ResourceManager();
+    explicit ResourceManager(AkonadiServer &akonadi);
 
 public Q_SLOTS:
     void addResourceInstance(const QString &name, const QStringList &capabilities);
     void removeResourceInstance(const QString &name);
     QStringList resourceInstances() const;
+
+private:
+    AkonadiServer &mAkonadi;
 };
 
 } // namespace Server

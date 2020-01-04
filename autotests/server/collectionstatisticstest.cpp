@@ -59,8 +59,8 @@ class CollectionStatisticsTest : public QObject
 {
     Q_OBJECT
 
-    std::unique_ptr<DbInitializer> dbInitializer;
     FakeAkonadiServer mAkonadi;
+    std::unique_ptr<DbInitializer> dbInitializer;
 public:
     CollectionStatisticsTest()
     {

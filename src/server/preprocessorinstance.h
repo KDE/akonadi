@@ -39,6 +39,7 @@ namespace Server
 
 class PreprocessorManager;
 class AgentInstance;
+class Tracer;
 
 /**
  * A single preprocessor (agent) instance.
@@ -60,7 +61,7 @@ protected:
     /**
      * Create an instance of a PreprocessorInstance descriptor.
      */
-    PreprocessorInstance(const QString &id, PreprocessorManager &manager);
+    PreprocessorInstance(const QString &id, PreprocessorManager &manager, Tracer &tracer);
 
 public: // This is public only for qDeleteAll() called from PreprocessorManager
     // ...for some reason couldn't convince gcc to have it as friend...
@@ -72,6 +73,7 @@ public: // This is public only for qDeleteAll() called from PreprocessorManager
 
 private:
     PreprocessorManager &mManager;
+    Tracer &mTracer;
 
     /**
      * The internal queue if item identifiers.

@@ -27,6 +27,8 @@ namespace Akonadi
 namespace Server
 {
 
+class AkonadiServer;
+
 /**
  * Interface to configure and query debugging options.
  */
@@ -36,12 +38,14 @@ class DebugInterface : public QObject
     Q_CLASSINFO("D-Bus Interface", "org.freedesktop.Akonadi.DebugInterface")
 
 public:
-    explicit DebugInterface(QObject *parent = nullptr);
+    explicit DebugInterface(AkonadiServer &akonadi);
 
 public Q_SLOTS:
     Q_SCRIPTABLE QString tracer() const;
     Q_SCRIPTABLE void setTracer(const QString &tracer);
 
+private:
+    AkonadiServer &m_akonadi;
 };
 
 } // namespace Server

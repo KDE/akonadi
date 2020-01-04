@@ -33,9 +33,7 @@ namespace Server
 class NullTracer : public TracerInterface
 {
 public:
-    ~NullTracer() override
-    {
-    }
+    ~NullTracer() override = default;
 
     void beginConnection(const QString &identifier, const QString &msg) override {
         Q_UNUSED(identifier);

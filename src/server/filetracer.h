@@ -21,7 +21,8 @@
 #define AKONADI_FILETRACER_H
 
 #include "tracerinterface.h"
-class QFile;
+
+#include <QFile>
 
 namespace Akonadi
 {
@@ -49,7 +50,7 @@ public:
 private:
     void output(const QString &id, const QString &msg);
 
-    QFile *m_file = nullptr;
+    QFile m_file;
 };
 
 } // namespace Server

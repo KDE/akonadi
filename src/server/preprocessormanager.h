@@ -28,11 +28,11 @@
 #include <QObject>
 #include <QList>
 #include <QHash>
+#include <QMutex>
 
 #include <deque>
 
 class QTimer;
-class QMutex;
 
 #include "preprocessorinstance.h"
 
@@ -43,6 +43,7 @@ namespace Server
 
 class PimItem;
 class DataStore;
+class AkonadiServer;
 
 /**
  * \class PreprocessorManager
@@ -96,24 +97,26 @@ protected:
      * This is true by default and can be set via setEnabled().
      * Mainly used to disable preprocessing via configuration file.
      */
-    bool mEnabled;
+    bool mEnabled = false;
 
     /**
      * The mutex used to protect the internals of this class  (mainly
      * the mPreprocessorChain member).
      */
-    QMutex *mMutex = nullptr;
+    QMutex mMutex;
 
     /**
      * The heartbeat timer. Used mainly to expire preprocessor jobs.
      */
     QTimer *mHeartbeatTimer = nullptr;
 
+
+    AkonadiServer &mAkonadi;
 public:
     /**
      * Creates an instance of PreprocessorManager
      */
-    explicit PreprocessorManager();
+    explicit PreprocessorManager(AkonadiServer &akonadi);
 
     /**
      * Destroys the instance of PreprocessorManager

@@ -1328,7 +1328,7 @@ void DataStore::debugLastDbError(const char *actionDescription) const
     qCCritical(AKONADISERVER_LOG) << "  Last driver error:" << m_database.lastError().driverText();
     qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
 
-    Tracer::self()->error("DataStore (Database Error)",
+    m_akonadi.tracer().error("DataStore (Database Error)",
                           QStringLiteral("%1\nDriver said: %2\nDatabase said:%3")
                           .arg(QString::fromLatin1(actionDescription),
                                m_database.lastError().driverText(),
@@ -1342,7 +1342,7 @@ void DataStore::debugLastQueryError(const QSqlQuery &query, const char *actionDe
     qCCritical(AKONADISERVER_LOG) << "  Last driver error:" << m_database.lastError().driverText();
     qCCritical(AKONADISERVER_LOG) << "  Last database error:" << m_database.lastError().databaseText();
 
-    Tracer::self()->error("DataStore (Database Query Error)",
+    m_akonadi.tracer().error("DataStore (Database Query Error)",
                           QStringLiteral("%1: %2")
                           .arg(QString::fromLatin1(actionDescription),
                                query.lastError().text()));

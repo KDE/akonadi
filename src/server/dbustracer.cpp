@@ -30,9 +30,7 @@ DBusTracer::DBusTracer()
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/tracing/notifications"), this, QDBusConnection::ExportAdaptors);
 }
 
-DBusTracer::~DBusTracer()
-{
-}
+DBusTracer::~DBusTracer() = default;
 
 void DBusTracer::beginConnection(const QString &identifier, const QString &msg)
 {

@@ -25,6 +25,7 @@
 #include <QLocalSocket>
 #include <QElapsedTimer>
 
+#include "akonadi.h"
 #include "akthread.h"
 #include "entities.h"
 #include "global.h"
@@ -45,7 +46,6 @@ class Handler;
 class Response;
 class DataStore;
 class Collection;
-class AkonadiServer;
 
 /**
     An Connection represents one connection of a client to the server.
@@ -153,8 +153,8 @@ template<typename T>
 inline typename std::enable_if<std::is_base_of<Protocol::Command, T>::value>::type
 Connection::sendResponse(qint64 tag, T &&response)
 {
-    if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-        Tracer::self()->connectionOutput(m_identifier, tag, response);
+    if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
+        m_akonadi.tracer().connectionOutput(m_identifier, tag, response);
     }
     Protocol::DataStream stream(m_socket);
     stream << tag;

@@ -28,6 +28,8 @@
 #include "tracerinterface.h"
 #include <private/protocol_p.h>
 
+#include <memory>
+
 class QSettings;
 
 namespace Akonadi
@@ -53,10 +55,7 @@ class Tracer : public QObject, public TracerInterface
     Q_OBJECT
 
 public:
-    /**
-     * Returns the global tracer instance.
-     */
-    static Tracer *self();
+    explicit Tracer();
 
     /**
      * Destroys the global tracer instance.
@@ -163,13 +162,9 @@ public Q_SLOTS:
     void activateTracer(const QString &type);
 
 private:
-    Tracer();
-
-    static Tracer *mSelf;
-
-    TracerInterface *mTracerBackend;
     mutable QMutex mMutex;
-    QScopedPointer<QSettings> mSettings;
+    std::unique_ptr<TracerInterface> mTracerBackend;
+    std::unique_ptr<QSettings> mSettings;
 };
 
 } // namespace Server

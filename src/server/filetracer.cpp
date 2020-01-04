@@ -24,15 +24,12 @@
 using namespace Akonadi::Server;
 
 FileTracer::FileTracer(const QString &fileName)
+    : m_file(fileName)
 {
-    m_file = new QFile(fileName);
-    m_file->open(QIODevice::WriteOnly | QIODevice::Unbuffered);
+    m_file.open(QIODevice::WriteOnly | QIODevice::Unbuffered);
 }
 
-FileTracer::~FileTracer()
-{
-    delete m_file;
-}
+FileTracer::~FileTracer() = default;
 
 void FileTracer::beginConnection(const QString &identifier, const QString &msg)
 {
@@ -72,5 +69,5 @@ void FileTracer::error(const QString &componentName, const QString &msg)
 void FileTracer::output(const QString &id, const QString &msg)
 {
     QString output = QStringLiteral("%1: %2: %3\r\n").arg(QTime::currentTime().toString(QStringLiteral("HH:mm:ss.zzz")), id, msg.left(msg.indexOf(QLatin1Char('\n'))));
-    m_file->write(output.toUtf8());
+    m_file.write(output.toUtf8());
 }

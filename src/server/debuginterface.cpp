@@ -20,13 +20,15 @@
 #include "debuginterface.h"
 #include "debuginterfaceadaptor.h"
 #include "tracer.h"
+#include "akonadi.h"
 
 #include <QDBusConnection>
 
 using namespace Akonadi::Server;
 
-DebugInterface::DebugInterface(QObject *parent)
-    : QObject(parent)
+DebugInterface::DebugInterface(AkonadiServer &akonadi)
+    : QObject()
+    , m_akonadi(akonadi)
 {
     new DebugInterfaceAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/debug"),
@@ -35,10 +37,10 @@ DebugInterface::DebugInterface(QObject *parent)
 
 QString DebugInterface::tracer() const
 {
-    return Tracer::self()->currentTracer();
+    return m_akonadi.tracer().currentTracer();
 }
 
 void DebugInterface::setTracer(const QString &tracer)
 {
-    Tracer::self()->activateTracer(tracer);
+    m_akonadi.tracer().activateTracer(tracer);
 }

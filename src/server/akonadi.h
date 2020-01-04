@@ -47,6 +47,8 @@ class NotificationManager;
 class ResourceManager;
 class CollectionStatistics;
 class PreprocessorManager;
+class Tracer;
+class DebugInterface;
 
 class AkonadiServer : public QObject
 {
@@ -77,6 +79,8 @@ public:
     SearchManager &searchManager();
 
     ItemRetrievalManager &itemRetrievalManager();
+
+    Tracer &tracer();
 
     /**
      * Instance-aware server .config directory
@@ -116,6 +120,7 @@ protected:
     std::unique_ptr<AkLocalServer> mNtfServer;
 
     std::unique_ptr<ResourceManager> mResourceManager;
+    std::unique_ptr<DebugInterface> mDebugInterface;
     std::unique_ptr<CollectionStatistics> mCollectionStats;
     std::unique_ptr<PreprocessorManager> mPreprocessorManager;
     std::unique_ptr<NotificationManager> mNotificationManager;
@@ -125,6 +130,7 @@ protected:
     std::unique_ptr<ItemRetrievalManager> mItemRetrieval;
     std::unique_ptr<SearchTaskManager> mAgentSearchManager;
     std::unique_ptr<SearchManager> mSearchManager;
+    std::unique_ptr<Tracer> mTracer;
 
     std::vector<std::unique_ptr<Connection>> mConnections;
     bool mAlreadyShutdown = false;

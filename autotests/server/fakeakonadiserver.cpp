@@ -221,7 +221,8 @@ void FakeAkonadiServer::initFake()
         throw FakeAkonadiServerException("Failed to initialize datastore");
     }
 
-    mPreprocessorManager = std::make_unique<PreprocessorManager>();
+    mTracer = std::make_unique<Tracer>();
+    mPreprocessorManager = std::make_unique<PreprocessorManager>(*this);
     mPreprocessorManager->setEnabled(false);
     mSearchManager = std::make_unique<FakeSearchManager>(*this);
     mCollectionStats = std::make_unique<CollectionStatistics>();
@@ -251,10 +252,12 @@ bool FakeAkonadiServer::quit()
         qDebug() << "Skipping clean up of" << basePath();
     }
 
+    mConnection.reset();
+    mClient.reset();
+
     mPreprocessorManager.reset();
     mCollectionStats.reset();
     mSearchManager.reset();
-    mCollectionStats.reset();
     mItemRetrieval.reset();
     mIntervalCheck.reset();
 
@@ -263,6 +266,9 @@ bool FakeAkonadiServer::quit()
     }
 
     mIntervalCheck.reset();
+
+    // Tracer should go last
+    mTracer.reset();
 
     qDebug() << "==== Fake Akonadi Server shut down ====";
     return true;

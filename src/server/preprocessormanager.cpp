@@ -25,6 +25,7 @@
 #include "preprocessormanager.h"
 #include "akonadiserver_debug.h"
 
+#include "akonadi.h"
 #include "entities.h" // Akonadi::Server::PimItem
 #include "storage/datastore.h"
 #include "tracer.h"
@@ -55,10 +56,10 @@ const int gDeadlineItemProcessingTimeInSecs = 240;
 using namespace Akonadi::Server;
 
 // The one and only PreprocessorManager object
-PreprocessorManager::PreprocessorManager()
+PreprocessorManager::PreprocessorManager(AkonadiServer &akonadi)
     : QObject()
     , mEnabled(true)
-    , mMutex(new QMutex())
+    , mAkonadi(akonadi)
 {
     // Hook in our D-Bus interface "shell".
     new PreprocessorManagerAdaptor(this);
@@ -85,13 +86,11 @@ PreprocessorManager::~PreprocessorManager()
 
     qDeleteAll(mPreprocessorChain);
     qDeleteAll(mTransactionWaitQueueHash);   // this should also disconnect all the signals from the data store objects...
-
-    delete mMutex;
 }
 
 bool PreprocessorManager::isActive()
 {
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     if (!mEnabled) {
         return false;
@@ -112,7 +111,7 @@ PreprocessorInstance *PreprocessorManager::lockedFindInstance(const QString &id)
 
 void PreprocessorManager::registerInstance(const QString &id)
 {
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::registerInstance(" << id << ")";
 
@@ -125,9 +124,9 @@ void PreprocessorManager::registerInstance(const QString &id)
     // TODO: Maybe we need some kind of ordering here ?
     //       In that case we'll need to fiddle with the items that are currently enqueued for processing...
 
-    instance = new PreprocessorInstance(id, *this);
+    instance = new PreprocessorInstance(id, *this, mAkonadi.tracer());
     if (!instance->init()) {
-        Tracer::self()->warning(
+        mAkonadi.tracer().warning(
             QStringLiteral("PreprocessorManager"),
             QStringLiteral("Could not initialize preprocessor instance '%1'")
             .arg(id));
@@ -142,7 +141,7 @@ void PreprocessorManager::registerInstance(const QString &id)
 
 void PreprocessorManager::unregisterInstance(const QString &id)
 {
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::unregisterInstance(" << id << ")";
 
@@ -190,7 +189,7 @@ void PreprocessorManager::beginHandleItem(const PimItem &item, const DataStore *
     Q_ASSERT(item.isValid());
 
     // This is the entry point of the pre-processing chain.
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     if (!mEnabled) {
         // Preprocessing is disabled: immediately end handling the item.
@@ -283,7 +282,7 @@ void PreprocessorManager::lockedKillWaitQueue(const DataStore *dataStore, bool d
 
 void PreprocessorManager::dataStoreDestroyed()
 {
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreDestroyed(): killing the wait queue";
 
@@ -298,7 +297,7 @@ void PreprocessorManager::dataStoreDestroyed()
 
 void PreprocessorManager::dataStoreTransactionCommitted()
 {
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): pushing items in wait queue to the preprocessing chain";
 
@@ -330,7 +329,7 @@ void PreprocessorManager::dataStoreTransactionCommitted()
 
 void PreprocessorManager::dataStoreTransactionRolledBack()
 {
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionRolledBack(): killing the wait queue";
 
@@ -345,7 +344,7 @@ void PreprocessorManager::dataStoreTransactionRolledBack()
 
 void PreprocessorManager::preProcessorFinishedHandlingItem(PreprocessorInstance *preProcessor, qint64 itemId)
 {
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     int idx = mPreprocessorChain.indexOf(preProcessor);
     Q_ASSERT(idx >= 0);   // must be there!
@@ -386,7 +385,7 @@ void PreprocessorManager::lockedEndHandleItem(qint64 itemId)
 #endif
 
     if (!DataStore::self()->unhidePimItem(item)) {
-        Tracer::self()->warning(
+        mAkonadi.tracer().warning(
             QStringLiteral("PreprocessorManager"),
             QStringLiteral("Failed to unhide the PIM item '%1': data is not lost but a server restart is required in order to unhide it")
             .arg(itemId));
@@ -395,7 +394,7 @@ void PreprocessorManager::lockedEndHandleItem(qint64 itemId)
 
 void PreprocessorManager::heartbeat()
 {
-    QMutexLocker locker(mMutex);
+    QMutexLocker locker(&mMutex);
 
     // Loop through the processor instances and check their current processing time.
 
@@ -424,7 +423,7 @@ void PreprocessorManager::heartbeat()
         if (elapsedTime < gMaximumItemProcessingTimeInSecs) {
             // Kindly ask the preprocessor to abort the job.
 
-            Tracer::self()->warning(
+            mAkonadi.tracer().warning(
                 QStringLiteral("PreprocessorManager"),
                 QStringLiteral("Preprocessor '%1' seems to be stuck... trying to abort its job.")
                 .arg(instance->id()));
@@ -438,7 +437,7 @@ void PreprocessorManager::heartbeat()
         if (elapsedTime < gDeadlineItemProcessingTimeInSecs) {
             // Attempt to restart the preprocessor via AgentManager interface
 
-            Tracer::self()->warning(
+            mAkonadi.tracer().warning(
                 QStringLiteral("PreprocessorManager"),
                 QStringLiteral("Preprocessor '%1' is stuck... trying to restart it")
                 .arg(instance->id()));
@@ -449,7 +448,7 @@ void PreprocessorManager::heartbeat()
             // If we're here then invokeRestart() failed.
         }
 
-        Tracer::self()->warning(
+        mAkonadi.tracer().warning(
             QStringLiteral("PreprocessorManager"),
             QStringLiteral("Preprocessor '%1' is broken... ignoring it from now on")
             .arg(instance->id()));

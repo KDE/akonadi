@@ -35,11 +35,8 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-Tracer *Tracer::mSelf = nullptr;
-
 Tracer::Tracer()
-    : mTracerBackend(nullptr)
-    , mSettings(new QSettings(Akonadi::StandardDirs::serverConfigFile(), QSettings::IniFormat))
+    : mSettings(std::make_unique<QSettings>(Akonadi::StandardDirs::serverConfigFile(), QSettings::IniFormat))
 {
     activateTracer(currentTracer());
 
@@ -48,20 +45,7 @@ Tracer::Tracer()
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/tracing"), this, QDBusConnection::ExportAdaptors);
 }
 
-Tracer::~Tracer()
-{
-    delete mTracerBackend;
-    mTracerBackend = nullptr;
-}
-
-Tracer *Tracer::self()
-{
-    if (!mSelf) {
-        mSelf = new Tracer();
-    }
-
-    return mSelf;
-}
+Tracer::~Tracer() = default;
 
 void Tracer::beginConnection(const QString &identifier, const QString &msg)
 {
@@ -165,19 +149,17 @@ QString Tracer::currentTracer() const
 void Tracer::activateTracer(const QString &type)
 {
     QMutexLocker locker(&mMutex);
-    delete mTracerBackend;
-    mTracerBackend = nullptr;
 
     mSettings->setValue(QStringLiteral("Debug/Tracer"), type);
     mSettings->sync();
 
     if (type == QLatin1String("file")) {
         const QString file = mSettings->value(QStringLiteral("Debug/File"), QStringLiteral("/dev/null")).toString();
-        mTracerBackend = new FileTracer(file);
+        mTracerBackend = std::make_unique<FileTracer>(file);
     } else if (type == QLatin1String("null")) {
-        mTracerBackend = new NullTracer();
+        mTracerBackend = std::make_unique<NullTracer>();
     } else {
-        mTracerBackend = new DBusTracer();
+        mTracerBackend = std::make_unique<DBusTracer>();
     }
     Q_ASSERT(mTracerBackend);
 }

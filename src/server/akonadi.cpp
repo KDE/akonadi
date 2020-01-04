@@ -208,12 +208,11 @@ bool AkonadiServer::init()
         return false;
     }
 
-    Tracer::self();
-    new DebugInterface(this);
-
-    mResourceManager = std::make_unique<ResourceManager>();
+    mTracer = std::make_unique<Tracer>();
+    mDebugInterface = std::make_unique<DebugInterface>(*this);
+    mResourceManager = std::make_unique<ResourceManager>(*this);
     mCollectionStats = std::make_unique<CollectionStatistics>();
-    mPreprocessorManager = std::make_unique<PreprocessorManager>();
+    mPreprocessorManager = std::make_unique<PreprocessorManager>(*this);
 
     // Forcibly disable it if configuration says so
     if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
@@ -278,6 +277,7 @@ bool AkonadiServer::quit()
     mConnections.clear();
 
     qCDebug(AKONADISERVER_LOG) << "terminating service threads";
+    mDebugInterface.reset();
     mResourceManager.reset();
     mCacheCleaner.reset();
     mIntervalCheck.reset();
@@ -288,6 +288,7 @@ bool AkonadiServer::quit()
     mNotificationManager.reset();
     mCollectionStats.reset();
     mPreprocessorManager.reset();
+    mTracer.reset();
 
     if (DbConfig::isConfigured()) {
         if (DataStore::hasDataStore()) {
@@ -442,6 +443,11 @@ SearchManager &AkonadiServer::searchManager()
 ItemRetrievalManager &AkonadiServer::itemRetrievalManager()
 {
     return *mItemRetrieval.get();
+}
+
+Tracer &AkonadiServer::tracer()
+{
+    return *mTracer.get();
 }
 
 QString AkonadiServer::serverPath() const

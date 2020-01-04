@@ -117,7 +117,7 @@ void Connection::quit()
         return;
     }
 
-    Tracer::self()->endConnection(m_identifier, QString());
+    m_akonadi.tracer().endConnection(m_identifier, QString());
 
     delete m_socket;
     m_socket = nullptr;
@@ -260,8 +260,8 @@ void Connection::handleIncomingData()
             // Tag context and collection context is not persistent.
             m_context.setTag(nullopt);
             m_context.setCollection({});
-            if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-                Tracer::self()->connectionInput(m_identifier, tag, cmd);
+            if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
+                m_akonadi.tracer().connectionInput(m_identifier, tag, cmd);
             }
 
             m_currentHandler = findHandlerForCommand(cmd->type());
@@ -419,7 +419,7 @@ void Connection::setState(ConnectionState state)
 void Connection::setSessionId(const QByteArray &id)
 {
     m_identifier = QString::asprintf("%s (%p)", id.data(), static_cast<void *>(this));
-    Tracer::self()->beginConnection(m_identifier, QString());
+    m_akonadi.tracer().beginConnection(m_identifier, QString());
     //m_streamParser->setTracerIdentifier(m_identifier);
 
     m_sessionId = id;
@@ -488,8 +488,8 @@ void Connection::reportTime() const
 
 void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
 {
-    if (Tracer::self()->currentTracer() != QLatin1String("null")) {
-        Tracer::self()->connectionOutput(m_identifier, tag, response);
+    if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
+        m_akonadi.tracer().connectionOutput(m_identifier, tag, response);
     }
     Protocol::DataStream stream(m_socket);
     stream << tag;

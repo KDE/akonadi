@@ -40,9 +40,10 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-PreprocessorInstance::PreprocessorInstance(const QString &id, PreprocessorManager &manager)
+PreprocessorInstance::PreprocessorInstance(const QString &id, PreprocessorManager &manager, Tracer &tracer)
     : QObject()
     , mManager(manager)
+    , mTracer(tracer)
     , mId(id)
 {
     Q_ASSERT(!id.isEmpty());
@@ -64,7 +65,7 @@ bool PreprocessorInstance::init()
         this);
 
     if (!mInterface || !mInterface->isValid()) {
-        Tracer::self()->warning(
+        mTracer.warning(
             QStringLiteral("PreprocessorInstance"),
             QStringLiteral("Could not connect to pre-processor instance '%1': %2")
             .arg(mId,
@@ -160,7 +161,7 @@ bool PreprocessorInstance::abortProcessing()
         this);
 
     if (!iface.isValid()) {
-        Tracer::self()->warning(
+        mTracer.warning(
             QStringLiteral("PreprocessorInstance"),
             QStringLiteral("Could not connect to pre-processor instance '%1': %2")
             .arg(mId, iface.lastError().message()));
@@ -186,7 +187,7 @@ bool PreprocessorInstance::invokeRestart()
         this);
 
     if (!iface.isValid()) {
-        Tracer::self()->warning(
+        mTracer.warning(
             QStringLiteral("PreprocessorInstance"),
             QStringLiteral("Could not connect to the AgentManager in order to restart pre-processor instance '%1': %2")
             .arg(mId, iface.lastError().message()));
@@ -204,7 +205,7 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
 
     // We shouldn't be called if there are no items in the queue
     if (mItemQueue.empty()) {
-        Tracer::self()->warning(
+        mTracer.warning(
             QStringLiteral("PreprocessorInstance"),
             QStringLiteral("Pre-processor instance '%1' emitted itemProcessed(%2) but we actually have no item in the queue")
             .arg(mId)
@@ -219,7 +220,7 @@ void PreprocessorInstance::itemProcessed(qlonglong id)
     qlonglong itemId = mItemQueue.front();
 
     if (itemId != id) {
-        Tracer::self()->warning(
+        mTracer.warning(
             QStringLiteral("PreprocessorInstance"),
             QStringLiteral("Pre-processor instance '%1' emitted itemProcessed(%2) but the head item in the queue has id %3")
             .arg(mId)

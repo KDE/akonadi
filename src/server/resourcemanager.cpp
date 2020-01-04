@@ -18,6 +18,7 @@
 */
 
 #include "resourcemanager.h"
+#include "akonadi.h"
 #include "tracer.h"
 #include "storage/datastore.h"
 #include "storage/transaction.h"
@@ -31,8 +32,9 @@
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
-ResourceManager::ResourceManager()
+ResourceManager::ResourceManager(AkonadiServer &akonadi)
     : QObject()
+    , mAkonadi(akonadi)
 {
     new ResourceManagerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/ResourceManager"), this);
@@ -43,7 +45,7 @@ void ResourceManager::addResourceInstance(const QString &name, const QStringList
     Transaction transaction(DataStore::self(), QStringLiteral("ADD RESOURCE INSTANCE"));
     Resource resource = Resource::retrieveByName(name);
     if (resource.isValid()) {
-        Tracer::self()->error("ResourceManager", QStringLiteral("Resource '%1' already exists.").arg(name));
+        mAkonadi.tracer().error("ResourceManager", QStringLiteral("Resource '%1' already exists.").arg(name));
         return; // resource already exists
     }
 
@@ -51,7 +53,7 @@ void ResourceManager::addResourceInstance(const QString &name, const QStringList
     resource.setName(name);
     resource.setIsVirtual(capabilities.contains(QLatin1String(AKONADI_AGENT_CAPABILITY_VIRTUAL)));
     if (!resource.insert()) {
-        Tracer::self()->error("ResourceManager", QStringLiteral("Could not create resource '%1'.").arg(name));
+        mAkonadi.tracer().error("ResourceManager", QStringLiteral("Could not create resource '%1'.").arg(name));
     }
     transaction.commit();
 }
