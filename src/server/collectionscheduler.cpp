@@ -235,13 +235,13 @@ void CollectionScheduler::startScheduler()
 // Called in secondary thread
 void CollectionScheduler::scheduleCollection(Collection collection, bool shouldStartScheduler)
 {
+    DataStore::self()->activeCachePolicy(collection);
+
     QMutexLocker locker(&mScheduleLock);
     auto i = find(collection.id());
     if (i != mSchedule.end()) {
         mSchedule.erase(i);
     }
-
-    DataStore::self()->activeCachePolicy(collection);
 
     if (!shouldScheduleCollection(collection)) {
         return;
