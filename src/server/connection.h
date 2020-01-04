@@ -110,16 +110,18 @@ protected:
 protected:
     quintptr m_socketDescriptor = {};
     AkonadiServer &m_akonadi;
-    QLocalSocket *m_socket = nullptr;
+    std::unique_ptr<QLocalSocket> m_socket;
     std::unique_ptr<Handler> m_currentHandler;
+    std::unique_ptr<QTimer> m_idleTimer;
+
     ConnectionState m_connectionState = NonAuthenticated;
+
     mutable DataStore *m_backend = nullptr;
     QList<QByteArray> m_statusMessageQueue;
     QString m_identifier;
     QByteArray m_sessionId;
     bool m_verifyCacheOnRetrieval = false;
     CommandContext m_context;
-    QTimer *m_idleTimer = nullptr;
 
     QElapsedTimer m_time;
     qint64 m_totalTime = 0;
@@ -156,7 +158,7 @@ Connection::sendResponse(qint64 tag, T &&response)
     if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
         m_akonadi.tracer().connectionOutput(m_identifier, tag, response);
     }
-    Protocol::DataStream stream(m_socket);
+    Protocol::DataStream stream(m_socket.get());
     stream << tag;
     stream << std::move(response);
     if (!m_socket->waitForBytesWritten()) {

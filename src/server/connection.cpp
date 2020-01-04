@@ -74,30 +74,26 @@ void Connection::init()
 {
     AkThread::init();
 
-    QLocalSocket *socket = new QLocalSocket();
-
+    auto socket = std::make_unique<QLocalSocket>();
     if (!socket->setSocketDescriptor(m_socketDescriptor)) {
         qCWarning(AKONADISERVER_LOG) << "Connection(" << m_identifier
                                      << ")::run: failed to set socket descriptor: "
                                      << socket->error() << "(" << socket->errorString() << ")";
-        delete socket;
         return;
     }
 
-    m_socket = socket;
-    connect(socket, &QLocalSocket::disconnected,
-            this, &Connection::slotSocketDisconnected);
+    m_socket = std::move(socket);
+    connect(m_socket.get(), &QLocalSocket::disconnected, this, &Connection::slotSocketDisconnected);
 
-    m_idleTimer = new QTimer(this);
-    connect(m_idleTimer, &QTimer::timeout,
-            this, &Connection::slotConnectionIdle);
+    m_idleTimer = std::make_unique<QTimer>();
+    connect(m_idleTimer.get(), &QTimer::timeout, this, &Connection::slotConnectionIdle);
 
     storageBackend()->notificationCollector()->setConnection(this);
 
-    if (socket->state() == QLocalSocket::ConnectedState) {
+    if (m_socket->state() == QLocalSocket::ConnectedState) {
         QTimer::singleShot(0, this, &Connection::handleIncomingData);
     } else {
-        connect(socket, &QLocalSocket::connected, this, &Connection::handleIncomingData,
+        connect(m_socket.get(), &QLocalSocket::connected, this, &Connection::handleIncomingData,
                 Qt::QueuedConnection);
     }
 
@@ -119,13 +115,8 @@ void Connection::quit()
 
     m_akonadi.tracer().endConnection(m_identifier, QString());
 
-    delete m_socket;
-    m_socket = nullptr;
-
-    if (m_idleTimer) {
-        m_idleTimer->stop();
-    }
-    delete m_idleTimer;
+    m_socket.reset();
+    m_idleTimer.reset();
 
     AkThread::quit();
 }
@@ -211,8 +202,8 @@ void Connection::handleIncomingData()
         // and similar while waiting for some data to arrive
         if (m_socket->bytesAvailable() < int(sizeof(qint64))) {
             QEventLoop loop;
-            connect(m_socket, &QLocalSocket::readyRead, &loop, &QEventLoop::quit);
-            connect(m_socket, &QLocalSocket::stateChanged, &loop, &QEventLoop::quit);
+            connect(m_socket.get(), &QLocalSocket::readyRead, &loop, &QEventLoop::quit);
+            connect(m_socket.get(), &QLocalSocket::stateChanged, &loop, &QEventLoop::quit);
             connect(this, &Connection::connectionClosing, &loop, &QEventLoop::quit);
             loop.exec();
         }
@@ -231,14 +222,14 @@ void Connection::handleIncomingData()
 
         QString currentCommand;
         while (m_socket->bytesAvailable() >= int(sizeof(qint64))) {
-            Protocol::DataStream stream(m_socket);
+            Protocol::DataStream stream(m_socket.get());
             qint64 tag = -1;
             stream >> tag;
             // TODO: Check tag is incremental sequence
 
             Protocol::CommandPtr cmd;
             try {
-                cmd = Protocol::deserialize(m_socket);
+                cmd = Protocol::deserialize(m_socket.get());
             } catch (const Akonadi::ProtocolException &e) {
                 qCWarning(AKONADISERVER_LOG) << "ProtocolException while deserializing incoming data on connection"
                                              << m_identifier << ":" <<  e.what();
@@ -491,9 +482,9 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
     if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
         m_akonadi.tracer().connectionOutput(m_identifier, tag, response);
     }
-    Protocol::DataStream stream(m_socket);
+    Protocol::DataStream stream(m_socket.get());
     stream << tag;
-    Protocol::serialize(m_socket, response);
+    Protocol::serialize(m_socket.get(), response);
     if (!m_socket->waitForBytesWritten()) {
         if (m_socket->state() == QLocalSocket::ConnectedState) {
             throw ProtocolException("Server write timeout");
@@ -508,13 +499,13 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
 Protocol::CommandPtr Connection::readCommand()
 {
     while (m_socket->bytesAvailable() < (int) sizeof(qint64)) {
-        Protocol::DataStream::waitForData(m_socket, 10000); // 10 seconds, just in case client is busy
+        Protocol::DataStream::waitForData(m_socket.get(), 10000); // 10 seconds, just in case client is busy
     }
 
-    Protocol::DataStream stream(m_socket);
+    Protocol::DataStream stream(m_socket.get());
     qint64 tag;
     stream >> tag;
 
     // TODO: compare tag with m_currentHandler->tag() ?
-    return Protocol::deserialize(m_socket);
+    return Protocol::deserialize(m_socket.get());
 }

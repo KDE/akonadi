@@ -35,9 +35,7 @@ FakeConnection::FakeConnection(AkonadiServer &akonadi)
 {
 }
 
-FakeConnection::~FakeConnection()
-{
-}
+FakeConnection::~FakeConnection() = default;
 
 NotificationCollector *FakeConnection::notificationCollector()
 {
