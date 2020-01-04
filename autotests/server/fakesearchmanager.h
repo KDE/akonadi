@@ -25,7 +25,7 @@
 namespace Akonadi {
 namespace Server {
 
-class FakeAkonadiServer;
+class SearchTaskManager;
 
 /**
  * Subclass of SearchManager that does nothing.
@@ -35,7 +35,7 @@ class FakeSearchManager : public SearchManager
     Q_OBJECT
 
 public:
-    explicit FakeSearchManager(FakeAkonadiServer &akonadi);
+    explicit FakeSearchManager(SearchTaskManager &searchTaskManager);
     ~FakeSearchManager() override;
 
     void registerInstance(const QString &id) override;

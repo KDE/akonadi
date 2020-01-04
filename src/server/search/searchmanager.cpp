@@ -50,9 +50,9 @@ using namespace Akonadi::Server;
 
 Q_DECLARE_METATYPE(Collection)
 
-SearchManager::SearchManager(const QStringList &searchEngines, AkonadiServer &akonadi)
+SearchManager::SearchManager(const QStringList &searchEngines, SearchTaskManager &agentSearchManager)
     : AkThread(QStringLiteral("SearchManager"), AkThread::ManualStart, QThread::InheritPriority)
-    , mAkonadi(akonadi)
+    , mAgentSearchManager(agentSearchManager)
     , mEngineNames(searchEngines),
       mSearchUpdateTimer(nullptr)
 {
@@ -128,12 +128,12 @@ SearchManager::~SearchManager()
 
 void SearchManager::registerInstance(const QString &id)
 {
-    mAkonadi.agentSearchManager().registerInstance(id);
+    mAgentSearchManager.registerInstance(id);
 }
 
 void SearchManager::unregisterInstance(const QString &id)
 {
-    mAkonadi.agentSearchManager().unregisterInstance(id);
+    mAgentSearchManager.unregisterInstance(id);
 }
 
 QVector<AbstractSearchPlugin *> SearchManager::searchPlugins() const
@@ -298,7 +298,8 @@ void SearchManager::updateSearchImpl(const Collection &collection)
     }
 
     // Query all plugins for search results
-    SearchRequest request("searchUpdate-" + QByteArray::number(QDateTime::currentDateTimeUtc().toTime_t()), mAkonadi);
+    const auto id = "searchUpdate-" + QByteArray::number(QDateTime::currentDateTimeUtc().toTime_t());
+    SearchRequest request(id, *this, mAgentSearchManager);
     request.setCollections(queryCollections);
     request.setMimeTypes(queryMimeTypes);
     request.setQuery(collection.queryString());

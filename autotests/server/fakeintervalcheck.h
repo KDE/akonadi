@@ -27,13 +27,13 @@
 namespace Akonadi {
 namespace Server {
 
-class FakeAkonadiServer;
+class ItemRetrievalManager;
 
 class FakeIntervalCheck : public IntervalCheck
 {
     Q_OBJECT
 public:
-    FakeIntervalCheck(FakeAkonadiServer &akonadi);
+    FakeIntervalCheck(ItemRetrievalManager &retrievalManager);
     void waitForInit();
 
 protected:

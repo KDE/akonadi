@@ -18,12 +18,11 @@
 */
 
 #include "fakeintervalcheck.h"
-#include "fakeakonadiserver.h"
 
 using namespace Akonadi::Server;
 
-FakeIntervalCheck::FakeIntervalCheck(FakeAkonadiServer &akonadi)
-    : IntervalCheck(akonadi)
+FakeIntervalCheck::FakeIntervalCheck(ItemRetrievalManager &retrievalManager)
+    : IntervalCheck(retrievalManager)
 {
 }
 

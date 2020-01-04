@@ -40,7 +40,7 @@ namespace Server
 
 class AbstractSearchEngine;
 class Collection;
-class AkonadiServer;
+class SearchTaskManager;
 
 /**
  * SearchManager creates and deletes persistent searches for all currently
@@ -53,7 +53,7 @@ class SearchManager : public AkThread
 
 public:
     /** Create a new search manager with the given @p searchEngines. */
-    explicit SearchManager(const QStringList &searchEngines, AkonadiServer &akonadi);
+    explicit SearchManager(const QStringList &searchEngines, SearchTaskManager &agentSearchManager);
 
     ~SearchManager() override;
 
@@ -107,7 +107,7 @@ private:
     // Called from manager thread
     void initSearchPlugins();
 
-    AkonadiServer &mAkonadi;
+    SearchTaskManager &mAgentSearchManager;
     QStringList mEngineNames;
     QVector<QPluginLoader *> mPluginLoaders;
     QVector<AbstractSearchEngine *> mEngines;

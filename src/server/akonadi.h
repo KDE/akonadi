@@ -29,6 +29,7 @@
 
 class QProcess;
 class QDBusServiceWatcher;
+class QSettings;
 
 namespace Akonadi
 {
@@ -111,6 +112,8 @@ private:
     bool startDatabaseProcess();
     bool createDatabase();
     void stopDatabaseProcess();
+    bool createServers(QSettings &connectionSettings);
+    bool setupDatabase();
     uint userId() const;
 
 protected:

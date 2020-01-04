@@ -108,134 +108,49 @@ bool AkonadiServer::init()
     // Restrict permission to 600, as the file might contain database password in plaintext
     QFile::setPermissions(serverConfigFile, QFile::ReadOwner | QFile::WriteOwner);
 
-    if (!DbConfig::configuredDatabase()) {
-        quit();
-        return false;
-    }
-
-    if (DbConfig::configuredDatabase()->useInternalServer()) {
-        if (!startDatabaseProcess()) {
-            quit();
-            return false;
-        }
-    } else {
-        if (!createDatabase()) {
-            quit();
-            return false;
-        }
-    }
-
-    DbConfig::configuredDatabase()->setup();
-
     const QString connectionSettingsFile = StandardDirs::connectionConfigFile(StandardDirs::WriteOnly);
     QSettings connectionSettings(connectionSettingsFile, QSettings::IniFormat);
-
-    mCmdServer = std::make_unique<AkLocalServer>(this);
-    connect(mCmdServer.get(), QOverload<quintptr>::of(&AkLocalServer::newConnection), this, &AkonadiServer::newCmdConnection);
-
-    mNotificationManager = std::make_unique<NotificationManager>();
-    mNtfServer = std::make_unique<AkLocalServer>(this);
-    // Note: this is a queued connection, as NotificationManager lives in its
-    // own thread
-    connect(mNtfServer.get(), QOverload<quintptr>::of(&AkLocalServer::newConnection),
-            mNotificationManager.get(), &NotificationManager::registerConnection);
-
-    // TODO: share socket setup with client
-#ifdef Q_OS_WIN
-    // use the installation prefix as uid
-    QString suffix;
-    if (Instance::hasIdentifier()) {
-        suffix = QStringLiteral("%1-").arg(Instance::identifier());
-    }
-    suffix += QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
-    const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % suffix;
-    const QString cmdPipe = settings.value(QStringLiteral("Connection/NamedPipe"), defaultCmdPipe).toString();
-    if (!mCmdServer->listen(cmdPipe)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << cmdPipe << ":" << mCmdServer->errorString();
-        quit();
-        return false;
-    }
-
-    const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % suffix;
-    const QString ntfPipe = settings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultNtfPipe).toString();
-    if (!mNtfServer->listen(ntfPipe)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << ntfPipe << ":" << mNtfServer->errorString();
-        quit();
-        return false;
-    }
-
-    connectionSettings.setValue(QStringLiteral("Data/Method"), QStringLiteral("NamedPipe"));
-    connectionSettings.setValue(QStringLiteral("Data/NamedPipe"), cmdPipe);
-    connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("NamedPipe"));
-    connectionSettings.setValue(QStringLiteral("Notifications/NamedPipe"), ntfPipe);
-#else
-    const QString cmdSocketName = QStringLiteral("akonadiserver-cmd.socket");
-    const QString ntfSocketName = QStringLiteral("akonadiserver-ntf.socket");
-    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"),
-                                                              qMax(cmdSocketName.length(), ntfSocketName.length()));
-    const QString cmdSocketFile = socketDir % QLatin1Char('/') % cmdSocketName;
-    QFile::remove(cmdSocketFile);
-    if (!mCmdServer->listen(cmdSocketFile)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << cmdSocketFile << ":" << mCmdServer->errorString();
-        quit();
-        return false;
-    }
-
-    const QString ntfSocketFile = socketDir % QLatin1Char('/') % ntfSocketName;
-    QFile::remove(ntfSocketFile);
-    if (!mNtfServer->listen(ntfSocketFile)) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << ntfSocketFile << ":" << mNtfServer->errorString();
-        quit();
-        return false;
-    }
-
-    connectionSettings.setValue(QStringLiteral("Data/Method"), QStringLiteral("UnixPath"));
-    connectionSettings.setValue(QStringLiteral("Data/UnixPath"), cmdSocketFile);
-    connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("UnixPath"));
-    connectionSettings.setValue(QStringLiteral("Notifications/UnixPath"), ntfSocketFile);
-#endif
-
-    // initialize the database
-    DataStore *db = DataStore::self();
-    if (!db->database().isOpen()) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to open database" << db->database().lastError().text();
-        quit();
-        return false;
-    }
-    if (!db->init()) {
-        qCCritical(AKONADISERVER_LOG) << "Unable to initialize database.";
-        quit();
-        return false;
-    }
-
-    mTracer = std::make_unique<Tracer>();
-    mDebugInterface = std::make_unique<DebugInterface>(*this);
-    mResourceManager = std::make_unique<ResourceManager>(*this);
-    mCollectionStats = std::make_unique<CollectionStatistics>();
-    mPreprocessorManager = std::make_unique<PreprocessorManager>(*this);
-
-    // Forcibly disable it if configuration says so
-    if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
-        mPreprocessorManager->setEnabled(false);
-    }
-
-    mCacheCleaner = std::make_unique<CacheCleaner>();
-    mIntervalCheck = std::make_unique<IntervalCheck>(*this);
-    mStorageJanitor = std::make_unique<StorageJanitor>(*this);
-    mItemRetrieval = std::make_unique<ItemRetrievalManager>();
-    mAgentSearchManager = std::make_unique<SearchTaskManager>();
-
-    const QStringList searchManagers = settings.value(QStringLiteral("Search/Manager"),
-                                       QStringList() << QStringLiteral("Agent")).toStringList();
-    mSearchManager = std::make_unique<SearchManager>(searchManagers, *this);
-
-    new ServerAdaptor(this);
-    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Server"), this);
 
     const QByteArray dbusAddress = qgetenv("DBUS_SESSION_BUS_ADDRESS");
     if (!dbusAddress.isEmpty()) {
         connectionSettings.setValue(QStringLiteral("DBUS/Address"), QLatin1String(dbusAddress));
     }
+
+
+    // Setup database
+    if (!setupDatabase()) {
+        quit();
+        return false;
+    }
+
+    // Create local servers and start listening
+    if (!createServers(connectionSettings)) {
+        quit();
+        return false;
+    }
+
+    const auto searchManagers = settings.value(QStringLiteral("Search/Manager"),
+                                               QStringList{QStringLiteral("Agent")}).toStringList();
+
+    mTracer = std::make_unique<Tracer>();
+    mCollectionStats = std::make_unique<CollectionStatistics>();
+    mCacheCleaner = std::make_unique<CacheCleaner>();
+    mItemRetrieval = std::make_unique<ItemRetrievalManager>();
+    mAgentSearchManager = std::make_unique<SearchTaskManager>();
+
+    mDebugInterface = std::make_unique<DebugInterface>(*mTracer.get());
+    mResourceManager = std::make_unique<ResourceManager>(*mTracer.get());
+    mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer.get());
+    mIntervalCheck = std::make_unique<IntervalCheck>(*mItemRetrieval.get());
+    mSearchManager = std::make_unique<SearchManager>(searchManagers, *mAgentSearchManager.get());
+    mStorageJanitor = std::make_unique<StorageJanitor>(*this);
+
+    if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
+        mPreprocessorManager->setEnabled(false);
+    }
+
+    new ServerAdaptor(this);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Server"), this);
 
     mControlWatcher = std::make_unique<QDBusServiceWatcher>(
             DBus::serviceName(DBus::Control), QDBusConnection::sessionBus(),
@@ -251,7 +166,7 @@ bool AkonadiServer::init()
     // server quit. We don't attempt to resume preprocessing
     // for the items as we don't actually know at which stage the
     // operation was interrupted...
-    db->unhideAllPimItems();
+    DataStore::self()->unhideAllPimItems();
 
     // We are ready, now register org.freedesktop.Akonadi service to DBus and
     // the fun can begin
@@ -277,17 +192,18 @@ bool AkonadiServer::quit()
     mConnections.clear();
 
     qCDebug(AKONADISERVER_LOG) << "terminating service threads";
-    mDebugInterface.reset();
-    mResourceManager.reset();
-    mCacheCleaner.reset();
-    mIntervalCheck.reset();
+    // Keep this order in sync (reversed) with the order of initialization
     mStorageJanitor.reset();
-    mItemRetrieval.reset();
-    mAgentSearchManager.reset();
     mSearchManager.reset();
-    mNotificationManager.reset();
-    mCollectionStats.reset();
+    mIntervalCheck.reset();
     mPreprocessorManager.reset();
+    mResourceManager.reset();
+    mDebugInterface.reset();
+
+    mAgentSearchManager.reset();
+    mItemRetrieval.reset();
+    mCacheCleaner.reset();
+    mCollectionStats.reset();
     mTracer.reset();
 
     if (DbConfig::isConfigured()) {
@@ -333,6 +249,38 @@ void AkonadiServer::connectionDisconnected()
                            [this](const auto &ptr) { return ptr.get() == sender(); });
     Q_ASSERT(it != mConnections.end());
     mConnections.erase(it);
+}
+
+bool AkonadiServer::setupDatabase()
+{
+    if (!DbConfig::configuredDatabase()) {
+        return false;
+    }
+
+    if (DbConfig::configuredDatabase()->useInternalServer()) {
+        if (!startDatabaseProcess()) {
+            return false;
+        }
+    } else {
+        if (!createDatabase()) {
+            return false;
+        }
+    }
+
+    DbConfig::configuredDatabase()->setup();
+
+    // initialize the database
+    DataStore *db = DataStore::self();
+    if (!db->database().isOpen()) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to open database" << db->database().lastError().text();
+        return false;
+    }
+    if (!db->init()) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to initialize database.";
+        return false;
+    }
+
+    return true;
 }
 
 bool AkonadiServer::startDatabaseProcess()
@@ -398,6 +346,72 @@ void AkonadiServer::stopDatabaseProcess()
     }
 
     DbConfig::configuredDatabase()->stopInternalServer();
+}
+
+bool AkonadiServer::createServers(QSettings &connectionSettings)
+{
+    mCmdServer = std::make_unique<AkLocalServer>(this);
+    connect(mCmdServer.get(), QOverload<quintptr>::of(&AkLocalServer::newConnection), this, &AkonadiServer::newCmdConnection);
+
+    mNotificationManager = std::make_unique<NotificationManager>();
+    mNtfServer = std::make_unique<AkLocalServer>(this);
+    // Note: this is a queued connection, as NotificationManager lives in its
+    // own thread
+    connect(mNtfServer.get(), QOverload<quintptr>::of(&AkLocalServer::newConnection),
+            mNotificationManager.get(), &NotificationManager::registerConnection);
+
+    // TODO: share socket setup with client
+#ifdef Q_OS_WIN
+    // use the installation prefix as uid
+    QString suffix;
+    if (Instance::hasIdentifier()) {
+        suffix = QStringLiteral("%1-").arg(Instance::identifier());
+    }
+    suffix += QString::fromUtf8(QUrl::toPercentEncoding(qApp->applicationDirPath()));
+    const QString defaultCmdPipe = QStringLiteral("Akonadi-Cmd-") % suffix;
+    const QString cmdPipe = settings.value(QStringLiteral("Connection/NamedPipe"), defaultCmdPipe).toString();
+    if (!mCmdServer->listen(cmdPipe)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << cmdPipe << ":" << mCmdServer->errorString();
+        return false;
+    }
+
+    const QString defaultNtfPipe = QStringLiteral("Akonadi-Ntf-") % suffix;
+    const QString ntfPipe = settings.value(QStringLiteral("Connection/NtfNamedPipe"), defaultNtfPipe).toString();
+    if (!mNtfServer->listen(ntfPipe)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Named Pipe" << ntfPipe << ":" << mNtfServer->errorString();
+        return false;
+    }
+
+    connectionSettings.setValue(QStringLiteral("Data/Method"), QStringLiteral("NamedPipe"));
+    connectionSettings.setValue(QStringLiteral("Data/NamedPipe"), cmdPipe);
+    connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("NamedPipe"));
+    connectionSettings.setValue(QStringLiteral("Notifications/NamedPipe"), ntfPipe);
+#else
+    const QString cmdSocketName = QStringLiteral("akonadiserver-cmd.socket");
+    const QString ntfSocketName = QStringLiteral("akonadiserver-ntf.socket");
+    const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"),
+                                                              qMax(cmdSocketName.length(), ntfSocketName.length()));
+    const QString cmdSocketFile = socketDir % QLatin1Char('/') % cmdSocketName;
+    QFile::remove(cmdSocketFile);
+    if (!mCmdServer->listen(cmdSocketFile)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << cmdSocketFile << ":" << mCmdServer->errorString();
+        return false;
+    }
+
+    const QString ntfSocketFile = socketDir % QLatin1Char('/') % ntfSocketName;
+    QFile::remove(ntfSocketFile);
+    if (!mNtfServer->listen(ntfSocketFile)) {
+        qCCritical(AKONADISERVER_LOG) << "Unable to listen on Unix socket" << ntfSocketFile << ":" << mNtfServer->errorString();
+        return false;
+    }
+
+    connectionSettings.setValue(QStringLiteral("Data/Method"), QStringLiteral("UnixPath"));
+    connectionSettings.setValue(QStringLiteral("Data/UnixPath"), cmdSocketFile);
+    connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("UnixPath"));
+    connectionSettings.setValue(QStringLiteral("Notifications/UnixPath"), ntfSocketFile);
+#endif
+
+    return true;
 }
 
 CacheCleaner *AkonadiServer::cacheCleaner()

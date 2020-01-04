@@ -26,6 +26,11 @@
 #include "inspectablenotificationcollector.h"
 #include "fakeintervalcheck.h"
 #include "storage/collectionstatistics.h"
+#include "cachecleaner.h"
+#include "storagejanitor.h"
+#include "resourcemanager.h"
+#include "debuginterface.h"
+#include "search/searchtaskmanager.h"
 
 #include <QSettings>
 #include <QCoreApplication>
@@ -222,16 +227,20 @@ void FakeAkonadiServer::initFake()
     }
 
     mTracer = std::make_unique<Tracer>();
-    mPreprocessorManager = std::make_unique<PreprocessorManager>(*this);
-    mPreprocessorManager->setEnabled(false);
-    mSearchManager = std::make_unique<FakeSearchManager>(*this);
     mCollectionStats = std::make_unique<CollectionStatistics>();
-
+    mCacheCleaner = std::make_unique<CacheCleaner>();
     if (!mDisableItemRetrievalManager) {
         mItemRetrieval = std::make_unique<FakeItemRetrievalManager>();
     }
+    mAgentSearchManager = std::make_unique<SearchTaskManager>();
 
-    mIntervalCheck = std::make_unique<FakeIntervalCheck>(*this);
+    mDebugInterface = std::make_unique<DebugInterface>(*mTracer.get());
+    mResourceManager = std::make_unique<ResourceManager>(*mTracer.get());
+    mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer.get());
+    mPreprocessorManager->setEnabled(false);
+    mIntervalCheck = std::make_unique<FakeIntervalCheck>(*mItemRetrieval.get());
+    mSearchManager = std::make_unique<FakeSearchManager>(*mAgentSearchManager.get());
+    mStorageJanitor = std::make_unique<StorageJanitor>(*this);
 
     qDebug() << "==== Fake Akonadi Server started ====";
 }
@@ -255,20 +264,22 @@ bool FakeAkonadiServer::quit()
     mConnection.reset();
     mClient.reset();
 
-    mPreprocessorManager.reset();
-    mCollectionStats.reset();
+    mStorageJanitor.reset();
     mSearchManager.reset();
-    mItemRetrieval.reset();
     mIntervalCheck.reset();
+    mPreprocessorManager.reset();
+    mResourceManager.reset();
+    mDebugInterface.reset();
+
+    mAgentSearchManager.reset();
+    mItemRetrieval.reset();
+    mCacheCleaner.reset();
+    mCollectionStats.reset();
+    mTracer.reset();
 
     if (mDataStore) {
         mDataStore->close();
     }
-
-    mIntervalCheck.reset();
-
-    // Tracer should go last
-    mTracer.reset();
 
     qDebug() << "==== Fake Akonadi Server shut down ====";
     return true;

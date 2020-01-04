@@ -56,10 +56,10 @@ const int gDeadlineItemProcessingTimeInSecs = 240;
 using namespace Akonadi::Server;
 
 // The one and only PreprocessorManager object
-PreprocessorManager::PreprocessorManager(AkonadiServer &akonadi)
+PreprocessorManager::PreprocessorManager(Tracer &tracer)
     : QObject()
     , mEnabled(true)
-    , mAkonadi(akonadi)
+    , mTracer(tracer)
 {
     // Hook in our D-Bus interface "shell".
     new PreprocessorManagerAdaptor(this);
@@ -124,9 +124,9 @@ void PreprocessorManager::registerInstance(const QString &id)
     // TODO: Maybe we need some kind of ordering here ?
     //       In that case we'll need to fiddle with the items that are currently enqueued for processing...
 
-    instance = new PreprocessorInstance(id, *this, mAkonadi.tracer());
+    instance = new PreprocessorInstance(id, *this, mTracer);
     if (!instance->init()) {
-        mAkonadi.tracer().warning(
+        mTracer.warning(
             QStringLiteral("PreprocessorManager"),
             QStringLiteral("Could not initialize preprocessor instance '%1'")
             .arg(id));
@@ -385,7 +385,7 @@ void PreprocessorManager::lockedEndHandleItem(qint64 itemId)
 #endif
 
     if (!DataStore::self()->unhidePimItem(item)) {
-        mAkonadi.tracer().warning(
+        mTracer.warning(
             QStringLiteral("PreprocessorManager"),
             QStringLiteral("Failed to unhide the PIM item '%1': data is not lost but a server restart is required in order to unhide it")
             .arg(itemId));
@@ -423,7 +423,7 @@ void PreprocessorManager::heartbeat()
         if (elapsedTime < gMaximumItemProcessingTimeInSecs) {
             // Kindly ask the preprocessor to abort the job.
 
-            mAkonadi.tracer().warning(
+            mTracer.warning(
                 QStringLiteral("PreprocessorManager"),
                 QStringLiteral("Preprocessor '%1' seems to be stuck... trying to abort its job.")
                 .arg(instance->id()));
@@ -437,7 +437,7 @@ void PreprocessorManager::heartbeat()
         if (elapsedTime < gDeadlineItemProcessingTimeInSecs) {
             // Attempt to restart the preprocessor via AgentManager interface
 
-            mAkonadi.tracer().warning(
+            mTracer.warning(
                 QStringLiteral("PreprocessorManager"),
                 QStringLiteral("Preprocessor '%1' is stuck... trying to restart it")
                 .arg(instance->id()));
@@ -448,7 +448,7 @@ void PreprocessorManager::heartbeat()
             // If we're here then invokeRestart() failed.
         }
 
-        mAkonadi.tracer().warning(
+        mTracer.warning(
             QStringLiteral("PreprocessorManager"),
             QStringLiteral("Preprocessor '%1' is broken... ignoring it from now on")
             .arg(instance->id()));

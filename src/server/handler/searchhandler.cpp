@@ -71,7 +71,7 @@ bool SearchHandler::parseStream()
     mItemFetchScope = cmd.itemFetchScope();
     mTagFetchScope = cmd.tagFetchScope();
 
-    SearchRequest request(connection()->sessionId(), akonadi());
+    SearchRequest request(connection()->sessionId(), akonadi().searchManager(), akonadi().agentSearchManager());
     request.setCollections(collections);
     request.setMimeTypes(cmd.mimeTypes());
     request.setQuery(cmd.query());

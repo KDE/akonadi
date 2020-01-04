@@ -43,7 +43,7 @@ namespace Server
 
 class PimItem;
 class DataStore;
-class AkonadiServer;
+class Tracer;
 
 /**
  * \class PreprocessorManager
@@ -111,12 +111,12 @@ protected:
     QTimer *mHeartbeatTimer = nullptr;
 
 
-    AkonadiServer &mAkonadi;
+    Tracer &mTracer;
 public:
     /**
      * Creates an instance of PreprocessorManager
      */
-    explicit PreprocessorManager(AkonadiServer &akonadi);
+    explicit PreprocessorManager(Tracer &tracer);
 
     /**
      * Destroys the instance of PreprocessorManager
