@@ -124,7 +124,7 @@ bool AkonadiServer::init()
     }
 
     // Create local servers and start listening
-    if (!createServers(connectionSettings)) {
+    if (!createServers(settings, connectionSettings)) {
         quit();
         return false;
     }
@@ -348,7 +348,7 @@ void AkonadiServer::stopDatabaseProcess()
     DbConfig::configuredDatabase()->stopInternalServer();
 }
 
-bool AkonadiServer::createServers(QSettings &connectionSettings)
+bool AkonadiServer::createServers(QSettings &settings, QSettings &connectionSettings)
 {
     mCmdServer = std::make_unique<AkLocalServer>(this);
     connect(mCmdServer.get(), QOverload<quintptr>::of(&AkLocalServer::newConnection), this, &AkonadiServer::newCmdConnection);
@@ -387,6 +387,8 @@ bool AkonadiServer::createServers(QSettings &connectionSettings)
     connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("NamedPipe"));
     connectionSettings.setValue(QStringLiteral("Notifications/NamedPipe"), ntfPipe);
 #else
+    Q_UNUSED(settings);
+
     const QString cmdSocketName = QStringLiteral("akonadiserver-cmd.socket");
     const QString ntfSocketName = QStringLiteral("akonadiserver-ntf.socket");
     const QString socketDir = Utils::preferredSocketDirectory(StandardDirs::saveDir("data"),

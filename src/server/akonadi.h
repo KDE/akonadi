@@ -112,7 +112,7 @@ private:
     bool startDatabaseProcess();
     bool createDatabase();
     void stopDatabaseProcess();
-    bool createServers(QSettings &connectionSettings);
+    bool createServers(QSettings &settings, QSettings &connectionSettings);
     bool setupDatabase();
     uint userId() const;
 
