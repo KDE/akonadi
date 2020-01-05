@@ -25,14 +25,13 @@
 
 #include "resourceinterface.h"
 
-#include <memory>
 #include <private/dbus_p.h>
 
 #include <QReadWriteLock>
 #include <QScopedPointer>
 #include <QWaitCondition>
 #include <QDBusConnection>
-#include <QDBusServiceWatcher>
+#include <QDBusConnectionInterface>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
@@ -66,20 +65,26 @@ void ItemRetrievalManager::init()
     AkThread::init();
 
     QDBusConnection conn = DBusConnectionPool::threadConnection();
-    mDBusWatcher = std::make_unique<QDBusServiceWatcher>(
-            QStringLiteral("org.freedesktop.Akonadi.Resource*"), conn,
-            QDBusServiceWatcher::WatchForUnregistration);
-    connect(mDBusWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
-            this, [this](const QString &serviceName) {
-                const auto service = DBus::parseAgentServiceName(serviceName);
-                if (service.has_value() && service->agentType == DBus::Resource) {
-                    qCInfo(AKONADISERVER_LOG) << "ItemRetrievalManager has lost connection to resource" << serviceName << ", discarding cached interface.";
-                    mResourceInterfaces.erase(service->identifier);
-                }
-            });
+    connect(conn.interface(), &QDBusConnectionInterface::serviceOwnerChanged,
+            this, &ItemRetrievalManager::serviceOwnerChanged);
     connect(this, &ItemRetrievalManager::requestAdded,
             this, &ItemRetrievalManager::processRequest,
             Qt::QueuedConnection);
+}
+
+// called within the retrieval thread
+void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
+{
+    Q_UNUSED(newOwner);
+    if (oldOwner.isEmpty()) {
+        return;
+    }
+    const auto service = DBus::parseAgentServiceName(serviceName);
+    if (!service.has_value() || service->agentType != DBus::Resource) {
+        return;
+    }
+    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager lost connection to resource" << serviceName << ", discarding cached interface";
+    mResourceInterfaces.erase(service->identifier);
 }
 
 // called within the retrieval thread

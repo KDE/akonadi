@@ -23,11 +23,9 @@
 
 #include <QHash>
 #include <QStringList>
-#include <QDBusServiceWatcher>
 
 #include "agenttype.h"
 #include "agentinstance.h"
-#include <private/dbus_p.h>
 
 class QDir;
 
@@ -325,6 +323,7 @@ Q_SIGNALS:
 
 private Q_SLOTS:
     void updatePluginInfos();
+    void serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner);
     void agentExeChanged(const QString &fileName);
 
 private:
@@ -357,7 +356,6 @@ private:
     void readPluginInfos(const QDir &directory);
 
     AgentInstance::Ptr createAgentInstance(const AgentType &type);
-    bool checkServerIsOperational(const QString &serviceName) const;
     bool checkAgentInterfaces(const QString &identifier, const QString &method) const;
     bool checkInstance(const QString &identifier) const;
     bool checkResourceInterface(const QString &identifier, const QString &method) const;
@@ -366,10 +364,6 @@ private:
     void continueStartup();
     void registerAgentAtServer(const QString &agentIdentifier, const AgentType &type);
 
-    void registerAgentService(const Akonadi::DBus::AgentService &service);
-    void registerResourceService(const Akonadi::DBus::AgentService &service);
-    void registerPreprocessorService(const Akonadi::DBus::AgentService &service);
-    void unregisterPreprocessorService(const Akonadi::DBus::AgentService &service);
 private:
     /**
      * The map which stores the .desktop file
@@ -388,7 +382,6 @@ private:
 
     std::unique_ptr<Akonadi::ProcessControl> mAgentServer;
     std::unique_ptr<Akonadi::ProcessControl> mStorageController;
-    QDBusServiceWatcher mWatcher;
     bool mAgentServerEnabled = false;
     bool mVerbose = false;
 
