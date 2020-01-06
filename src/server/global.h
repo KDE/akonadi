@@ -30,7 +30,6 @@ namespace Server
 enum ConnectionState {
     NonAuthenticated, ///< Not yet authenticated
     Authenticated, ///< The client is authenticated
-    Selected,
     LoggingOut
 };
 

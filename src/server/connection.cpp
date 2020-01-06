@@ -373,8 +373,6 @@ std::unique_ptr<Handler> Connection::findHandlerForCommand(Protocol::Command::Ty
     case Authenticated:
         handler =  Handler::findHandlerForCommandAuthenticated(command, m_akonadi);
         break;
-    case Selected:
-        break;
     case LoggingOut:
         break;
     }
@@ -398,8 +396,6 @@ void Connection::setState(ConnectionState state)
         assert(0);   // can't happen, it's only the initial state, we can't go back to it
         break;
     case Authenticated:
-        break;
-    case Selected:
         break;
     case LoggingOut:
         m_socket->disconnectFromServer();
