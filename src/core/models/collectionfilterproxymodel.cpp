@@ -91,7 +91,7 @@ bool CollectionFilterProxyModel::Private::collectionAccepted(const QModelIndex &
     }
 
     // If this collection has a child which contains valid mimetypes, it is accepted
-    QModelIndex childIndex = index.child(0, 0);
+    QModelIndex childIndex = mParent->sourceModel()->index(0, 0, index);
     while (childIndex.isValid()) {
         if (collectionAccepted(childIndex, false /* don't check visibility of the parent, as we are checking the child now */)) {
 

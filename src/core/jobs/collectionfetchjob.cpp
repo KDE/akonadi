@@ -345,7 +345,7 @@ static Collection::List filterDescendants(const Collection::List &list)
     for (const Collection &collection : list) {
         int i = 0;
         for (const QList<Collection::Id> &ancestors : qAsConst(ids)) {
-            if (qBinaryFind(ancestors, collection.id()) != ancestors.end()) {
+            if (std::binary_search(ancestors.cbegin(), ancestors.cend(), collection.id())) {
                 excludeList.insert(list.at(i).id());
             }
             ++i;
