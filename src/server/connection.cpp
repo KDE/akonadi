@@ -78,7 +78,12 @@ void Connection::init()
     if (!socket->setSocketDescriptor(m_socketDescriptor)) {
         qCWarning(AKONADISERVER_LOG) << "Connection(" << m_identifier
                                      << ")::run: failed to set socket descriptor: "
-                                     << socket->error() << "(" << socket->errorString() << ")";
+                                #if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
+                                     << socket->error()
+                                #else
+                                     << socket->socketError()
+                                #endif
+                                     << "(" << socket->errorString() << ")";
         return;
     }
 
