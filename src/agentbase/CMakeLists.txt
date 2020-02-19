@@ -63,7 +63,6 @@ PUBLIC
 PRIVATE
     KF5::AkonadiPrivate
     KF5::AkonadiWidgets
-    KF5::DBusAddons
     KF5::I18n
     Qt5::Network
     akonadi_shared

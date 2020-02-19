@@ -8,7 +8,6 @@ target_link_libraries(akonadiselftest
 PRIVATE
     KF5::AkonadiWidgets
     KF5::AkonadiPrivate
-    KF5::DBusAddons
     KF5::I18n
     Qt5::Sql
     Qt5::Widgets

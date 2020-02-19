@@ -19,7 +19,7 @@
 
 #include "specialcollectionshelperjobs_p.h"
 
-#include "KDBusConnectionPool"
+#include <QDBusConnection>
 #include "specialcollectionattribute.h"
 #include "specialcollections.h"
 #include "servermanager.h"
@@ -45,7 +45,6 @@
 #include <QMetaMethod>
 #include <QTime>
 #include <QTimer>
-#include <kdbusconnectionpool.h>
 
 #define LOCK_WAIT_TIMEOUT_SECONDS 30
 
@@ -580,7 +579,7 @@ void GetLockJob::Private::doStart()
     // Just doing registerService() and checking its return value is not sufficient,
     // since we may *already* own the name, and then registerService() returns true.
 
-    QDBusConnection bus = KDBusConnectionPool::threadConnection();
+    QDBusConnection bus = QDBusConnection::sessionBus();
     const bool alreadyLocked = bus.interface()->isServiceRegistered(dbusServiceName());
     const bool gotIt = bus.registerService(dbusServiceName());
 
@@ -588,11 +587,11 @@ void GetLockJob::Private::doStart()
         //qCDebug(AKONADICORE_LOG) << "Got lock immediately.";
         q->emitResult();
     } else {
-        auto watcher = new QDBusServiceWatcher(dbusServiceName(), KDBusConnectionPool::threadConnection(),
+        auto watcher = new QDBusServiceWatcher(dbusServiceName(), QDBusConnection::sessionBus(),
                 QDBusServiceWatcher::WatchForUnregistration, q);
         connect(watcher, &QDBusServiceWatcher::serviceUnregistered,
                 q, [this]() {
-                    if (KDBusConnectionPool::threadConnection().registerService(dbusServiceName())) {
+                    if (QDBusConnection::sessionBus().registerService(dbusServiceName())) {
                         mSafetyTimer->stop();
                         q->emitResult();
                     }
@@ -650,7 +649,7 @@ void Akonadi::setCollectionAttributes(Akonadi::Collection &collection, const QBy
 
 bool Akonadi::releaseLock()
 {
-    return KDBusConnectionPool::threadConnection().unregisterService(dbusServiceName());
+    return QDBusConnection::sessionBus().unregisterService(dbusServiceName());
 }
 
 #include "moc_specialcollectionshelperjobs_p.cpp"

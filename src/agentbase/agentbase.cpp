@@ -28,7 +28,6 @@
 #include "agentmanager.h"
 #include "changerecorder.h"
 #include "controladaptor.h"
-#include "KDBusConnectionPool"
 #include "itemfetchjob.h"
 #include "monitor_p.h"
 #include "servermanager_p.h"
@@ -379,12 +378,12 @@ void AgentBasePrivate::init()
 
     mTracer = new org::freedesktop::Akonadi::Tracer(ServerManager::serviceName(ServerManager::Server),
             QStringLiteral("/tracing"),
-            KDBusConnectionPool::threadConnection(), q);
+            QDBusConnection::sessionBus(), q);
 
     new Akonadi__ControlAdaptor(q);
     new Akonadi__StatusAdaptor(q);
-    if (!KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/"), q, QDBusConnection::ExportAdaptors)) {
-        Q_EMIT q->error(i18n("Unable to register object at dbus: %1", KDBusConnectionPool::threadConnection().lastError().message()));
+    if (!QDBusConnection::sessionBus().registerObject(QStringLiteral("/"), q, QDBusConnection::ExportAdaptors)) {
+        Q_EMIT q->error(i18n("Unable to register object at dbus: %1", QDBusConnection::sessionBus().lastError().message()));
     }
 
     mSettings = new QSettings(ServerManager::agentConfigFilePath(mId), QSettings::IniFormat);
@@ -461,13 +460,13 @@ void AgentBasePrivate::delayedInit()
     Q_Q(AgentBase);
 
     const QString serviceId = ServerManager::agentServiceName(ServerManager::Agent, mId);
-    if (!KDBusConnectionPool::threadConnection().registerService(serviceId)) {
+    if (!QDBusConnection::sessionBus().registerService(serviceId)) {
         qCCritical(AKONADIAGENTBASE_LOG) << "Unable to register service" << serviceId << "at dbus:"
-                                         << KDBusConnectionPool::threadConnection().lastError().message();
+                                         << QDBusConnection::sessionBus().lastError().message();
     }
     q->setOnlineInternal(mDesiredOnlineState);
 
-    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Debug"), this, QDBusConnection::ExportScriptableSlots);
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Debug"), this, QDBusConnection::ExportScriptableSlots);
 }
 
 void AgentBasePrivate::setProgramName()
@@ -1112,7 +1111,7 @@ void AgentBase::configure(qlonglong windowId)
 
 WId AgentBase::winIdForDialogs() const
 {
-    const bool registered = KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.freedesktop.akonaditray"));
+    const bool registered = QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.freedesktop.akonaditray"));
     if (!registered) {
         return 0;
     }

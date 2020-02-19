@@ -16,7 +16,7 @@
  */
 
 #include "collectionattributessynchronizationjob.h"
-#include "KDBusConnectionPool"
+#include <QDBusConnection>
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
 #include "akonadicore_debug.h"
@@ -98,7 +98,7 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
     interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
                                    QStringLiteral("/"),
                                    QStringLiteral("org.freedesktop.Akonadi.Resource"),
-                                   KDBusConnectionPool::threadConnection(), this);
+                                   QDBusConnection::sessionBus(), this);
     connect(interface, SIGNAL(attributesSynchronized(qlonglong)), q, SLOT(slotSynchronized(qlonglong)));
 
     if (interface->isValid()) {

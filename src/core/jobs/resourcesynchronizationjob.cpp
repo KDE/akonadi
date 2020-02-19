@@ -16,7 +16,7 @@
  */
 
 #include "resourcesynchronizationjob.h"
-#include "KDBusConnectionPool"
+#include <QDBusConnection>
 #include "kjobprivatebase_p.h"
 #include "servermanager.h"
 #include "agentinstance.h"
@@ -106,7 +106,7 @@ void ResourceSynchronizationJobPrivate::doStart()
     interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
                                    QStringLiteral("/"),
                                    QStringLiteral("org.freedesktop.Akonadi.Resource"),
-                                   KDBusConnectionPool::threadConnection(), this);
+                                   QDBusConnection::sessionBus(), this);
     if (collectionTreeOnly) {
         connect(interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()));
     } else {

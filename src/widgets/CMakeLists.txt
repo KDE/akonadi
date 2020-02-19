@@ -103,7 +103,6 @@ PRIVATE
     KF5::IconThemes
     KF5::XmlGui
     KF5::ItemViews
-    KF5::DBusAddons
     Qt5::Sql
     KF5::AkonadiPrivate
     KF5::WindowSystem

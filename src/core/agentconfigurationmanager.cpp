@@ -26,7 +26,7 @@
 #include <QPluginLoader>
 #include <QDir>
 
-#include <KDBusConnectionPool>
+#include <QDBusConnection>
 
 namespace Akonadi {
 class Q_DECL_HIDDEN AgentConfigurationManager::Private {
@@ -66,7 +66,7 @@ AgentConfigurationManager::~AgentConfigurationManager()
 bool AgentConfigurationManager::registerInstanceConfiguration(const QString &instance)
 {
     const auto serviceName = d->serviceName(instance);
-    QDBusConnection conn = KDBusConnectionPool::threadConnection();
+    QDBusConnection conn = QDBusConnection::sessionBus();
     if (conn.interface()->isServiceRegistered(serviceName)) {
         qCDebug(AKONADICORE_LOG) << "Service " << serviceName << " is already registered";
         return false;
@@ -78,13 +78,13 @@ bool AgentConfigurationManager::registerInstanceConfiguration(const QString &ins
 void AgentConfigurationManager::unregisterInstanceConfiguration(const QString &instance)
 {
     const auto serviceName = d->serviceName(instance);
-    KDBusConnectionPool::threadConnection().unregisterService(serviceName);
+    QDBusConnection::sessionBus().unregisterService(serviceName);
 }
 
 bool AgentConfigurationManager::isInstanceRegistered(const QString &instance) const
 {
     const auto serviceName = d->serviceName(instance);
-    return KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(serviceName);
+    return QDBusConnection::sessionBus().interface()->isServiceRegistered(serviceName);
 }
 
 QString AgentConfigurationManager::findConfigPlugin(const QString &type) const

@@ -305,7 +305,6 @@ PRIVATE
     Qt5::Network
     Qt5::Widgets
     KF5::AkonadiPrivate
-    KF5::DBusAddons
     KF5::I18n
     KF5::IconThemes
     KF5::ConfigCore

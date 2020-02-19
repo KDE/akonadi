@@ -29,7 +29,7 @@
 #include <agentfactory.h>
 #include <changerecorder.h>
 #include <collection.h>
-#include <KDBusConnectionPool>
+#include <QDBusConnection>
 #include <item.h>
 #include <itemfetchscope.h>
 #include <tagcreatejob.h>
@@ -54,7 +54,7 @@ KnutResource::KnutResource(const QString &id)
     changeRecorder()->fetchCollection(true);
 
     new SettingsAdaptor(mSettings);
-    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Settings"),
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Settings"),
             mSettings, QDBusConnection::ExportAdaptors);
     connect(this, &KnutResource::reloadConfiguration, this, &KnutResource::load);
     connect(mWatcher, &QFileSystemWatcher::fileChanged, this, &KnutResource::load);

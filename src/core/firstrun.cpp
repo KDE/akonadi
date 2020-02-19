@@ -18,7 +18,7 @@
 */
 
 #include "firstrun_p.h"
-#include "KDBusConnectionPool"
+#include <QDBusConnection>
 #include "servermanager.h"
 
 #include "agentinstance.h"
@@ -55,7 +55,7 @@ Firstrun::Firstrun(QObject *parent)
         deleteLater();
         return;
     }
-    if (KDBusConnectionPool::threadConnection().registerService(QLatin1String(FIRSTRUN_DBUSLOCK))) {
+    if (QDBusConnection::sessionBus().registerService(QLatin1String(FIRSTRUN_DBUSLOCK))) {
         findPendingDefaults();
         qCDebug(AKONADICORE_LOG) << "D-Bus lock acquired, pending defaults:" << mPendingDefaults;
         setupNext();
@@ -68,7 +68,7 @@ Firstrun::Firstrun(QObject *parent)
 Firstrun::~Firstrun()
 {
     if (qApp) {
-        KDBusConnectionPool::threadConnection().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
+        QDBusConnection::sessionBus().unregisterService(QLatin1String(FIRSTRUN_DBUSLOCK));
     }
     delete mConfig;
     qCDebug(AKONADICORE_LOG) << "done";
@@ -154,7 +154,7 @@ void Firstrun::instanceCreated(KJob *job)
 
     const auto service = ServerManager::agentServiceName(ServerManager::Agent, instance.identifier());
     QDBusInterface *iface = new QDBusInterface(service, QStringLiteral("/Settings"), QString(),
-            KDBusConnectionPool::threadConnection(), this);
+            QDBusConnection::sessionBus(), this);
     if (!iface->isValid()) {
         qCCritical(AKONADICORE_LOG) << "Unable to obtain the KConfigXT D-Bus interface of " << instance.identifier();
         setupNext();

@@ -77,7 +77,7 @@ class Item;
  * most notably AgentBase::config(). Additionally,
  * one cannot use QDBusConnection::sessionBus() with dbus < 1.4, because of a
  * multithreading bug in libdbus. Instead one should use
- * KDBusConnectionPool::threadConnection() which works around this problem.
+ * QDBusConnection::sessionBus() which works around this problem.
  *
  * @author Till Adam <adam@kde.org>, Volker Krause <vkrause@kde.org>
  */

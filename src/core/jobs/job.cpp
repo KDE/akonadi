@@ -22,7 +22,7 @@
 #include "job.h"
 #include "job_p.h"
 #include "akonadicore_debug.h"
-#include "KDBusConnectionPool"
+#include <QDBusConnection>
 #include <QTime>
 #include "private/protocol_p.h"
 #include "private/instance_p.h"
@@ -121,11 +121,11 @@ void JobPrivate::publishJob()
                 s_lastTime.start();
             }
             const QString suffix  = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
-            if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
+            if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
                 s_jobtracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole") + suffix,
                                                   QStringLiteral("/jobtracker"),
                                                   QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
-                                                  KDBusConnectionPool::threadConnection(), nullptr);
+                                                  QDBusConnection::sessionBus(), nullptr);
                 mSession->d->publishOtherJobs(q);
             } else {
                 s_lastTime.restart();

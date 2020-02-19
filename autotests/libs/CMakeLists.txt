@@ -28,7 +28,7 @@ macro(add_akonadi_test _source)
   get_filename_component(_name ${_source} NAME_WE)
   ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1;QT_NO_CPU_FEATURE=sse4.2")
-  target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiPrivate KF5::DBusAddons KF5::I18n)
+  target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiPrivate KF5::I18n)
 endmacro()
 
 # convenience macro to add akonadi qtestlib unit-tests
@@ -41,7 +41,7 @@ macro(add_akonadi_test_widgets _source)
   get_filename_component(_name ${_source} NAME_WE)
   ecm_add_test(TEST_NAME ${_name} ${_test})
   set_tests_properties(${_name} PROPERTIES ENVIRONMENT "QT_HASH_SEED=1;QT_NO_CPU_FEATURE=sse4.2")
-  target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiWidgets KF5::AkonadiPrivate KF5::DBusAddons)
+  target_link_libraries(${_name} akonaditestfake Qt5::Test KF5::AkonadiWidgets KF5::AkonadiPrivate)
 endmacro()
 
 
@@ -72,7 +72,6 @@ target_link_libraries(akonaditestfake
         Qt5::Test
         Qt5::Widgets
         Qt5::Network
-        KF5::DBusAddons
         KF5::AkonadiPrivate
         akonadi_shared
 )
@@ -82,7 +81,7 @@ add_executable(akonadi-firstrun
     firstrunner.cpp
     ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp
 )
-target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::DBusAddons KF5::ConfigCore Qt5::Widgets)
+target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::ConfigCore Qt5::Widgets)
 
 # qtestlib unit tests
 add_akonadi_test(imapparsertest.cpp)

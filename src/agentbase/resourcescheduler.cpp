@@ -19,7 +19,7 @@
 
 #include "resourcescheduler_p.h"
 
-#include "KDBusConnectionPool"
+#include <QDBusConnection>
 #include "recursivemover_p.h"
 
 #include "akonadiagentbase_debug.h"
@@ -528,11 +528,11 @@ void ResourceScheduler::signalTaskToTracker(const Task &task, const QByteArray &
     // if there's a job tracer running, tell it about the new job
     if (!s_resourcetracker) {
         const QString suffix = Akonadi::Instance::identifier().isEmpty() ? QString() : QLatin1Char('-') + Akonadi::Instance::identifier();
-        if (KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
+        if (QDBusConnection::sessionBus().interface()->isServiceRegistered(QStringLiteral("org.kde.akonadiconsole") + suffix)) {
             s_resourcetracker = new QDBusInterface(QLatin1String("org.kde.akonadiconsole") + suffix,
                                                    QStringLiteral("/resourcesJobtracker"),
                                                    QStringLiteral("org.freedesktop.Akonadi.JobTracker"),
-                                                   KDBusConnectionPool::threadConnection(), nullptr);
+                                                   QDBusConnection::sessionBus(), nullptr);
         }
     }
 
@@ -576,7 +576,7 @@ void ResourceScheduler::Task::sendDBusReplies(const QString &errorMsg)
         } else {
             qCCritical(AKONADIAGENTBASE_LOG) << "Got unexpected member:" << methodName;
         }
-        KDBusConnectionPool::threadConnection().send(reply);
+        QDBusConnection::sessionBus().send(reply);
     }
 }
 

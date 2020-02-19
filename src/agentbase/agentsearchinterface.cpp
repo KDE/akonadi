@@ -21,7 +21,7 @@
 #include "akonadiagentbase_debug.h"
 #include "agentsearchinterface_p.h"
 #include "collection.h"
-#include "KDBusConnectionPool"
+#include <QDBusConnection>
 #include "searchresultjob_p.h"
 #include "searchadaptor.h"
 #include "collectionfetchjob.h"
@@ -36,7 +36,7 @@ AgentSearchInterfacePrivate::AgentSearchInterfacePrivate(AgentSearchInterface *q
     : q(qq)
 {
     new Akonadi__SearchAdaptor(this);
-    KDBusConnectionPool::threadConnection().registerObject(QStringLiteral("/Search"),
+    QDBusConnection::sessionBus().registerObject(QStringLiteral("/Search"),
             this, QDBusConnection::ExportAdaptors);
 
     QTimer::singleShot(0, this, &AgentSearchInterfacePrivate::delayedInit);

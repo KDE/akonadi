@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-#include "KDBusConnectionPool"
-
 #include <qtest_akonadi.h>
 #include <servermanager.h>
 
@@ -43,7 +41,7 @@ private Q_SLOTS:
 
     void testDBus()
     {
-        QVERIFY(KDBusConnectionPool::threadConnection().isConnected());
+        QVERIFY(QDBusConnection::sessionBus().isConnected());
     }
 
     void testAkonadiServer()
@@ -53,11 +51,11 @@ private Q_SLOTS:
 
     void testResources()
     {
-        QVERIFY(KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+        QVERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(
                     ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_0"))));
-        QVERIFY(KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+        QVERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(
                     ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_1"))));
-        QVERIFY(KDBusConnectionPool::threadConnection().interface()->isServiceRegistered(
+        QVERIFY(QDBusConnection::sessionBus().interface()->isServiceRegistered(
                     ServerManager::agentServiceName(ServerManager::Resource, QStringLiteral("akonadi_knut_resource_2"))));
     }
 };
