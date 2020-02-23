@@ -23,7 +23,7 @@ function(add_akonadi_isolated_test)
         ecm_mark_as_test(${_name})
         target_link_libraries(${_name}
                               Qt5::Test Qt5::Gui Qt5::Widgets Qt5::Network KF5::KIOCore
-                              KF5::AkonadiCore KF5::AkonadiPrivate KF5::DBusAddons
+                              KF5::AkonadiCore KF5::AkonadiPrivate Qt5::DBus
                               ${CONFIG_LINK_LIBRARIES}
         )
 

@@ -20,7 +20,6 @@ find_dependency(Qt5Xml "@QT_REQUIRED_VERSION@")
 
 if(BUILD_TESTING)
     # Link targets required by KF5AkonadiMacros.cmake
-    find_dependency(KF5DBusAddons "@KF5_MIN_VERSION@")
     find_dependency(KF5KIO "@KF5_MIN_VERSION@")
     find_dependency(Qt5Test "@QT_REQUIRED_VERSION@")
 endif()
