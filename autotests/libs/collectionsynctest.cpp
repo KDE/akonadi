@@ -136,7 +136,7 @@ private:
                 baseCols << col;
             }
         }
-        for (const Collection &col : baseCols) {
+        for (const Collection &col : qAsConst(baseCols)) {
             CollectionDeleteJob *del = new CollectionDeleteJob(col);
             AKVERIFYEXEC(del);
         }
