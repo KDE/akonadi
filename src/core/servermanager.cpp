@@ -222,7 +222,7 @@ bool ServerManager::stop()
 void ServerManager::showSelfTestDialog(QWidget *parent)
 {
     Q_UNUSED(parent);
-    QProcess::startDetached(QStringLiteral("akonadiselftest"));
+    QProcess::startDetached(QStringLiteral("akonadiselftest"), QStringList());
 }
 
 bool ServerManager::isRunning()

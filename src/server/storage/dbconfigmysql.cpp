@@ -540,7 +540,7 @@ void DbConfigMysql::stopInternalServer()
 
     // first, try the nicest approach
     if (!mCleanServerShutdownCommand.isEmpty()) {
-        QProcess::execute(mCleanServerShutdownCommand);
+        QProcess::execute(mCleanServerShutdownCommand, QStringList());
         if (mDatabaseProcess->waitForFinished(3000)) {
             return;
         }

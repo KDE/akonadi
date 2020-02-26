@@ -179,7 +179,11 @@ void FakeClient::run()
     mSocket = new QLocalSocket();
     mSocket->connectToServer(FakeAkonadiServer::socketFile());
     connect(mSocket, &QLocalSocket::disconnected, this, &FakeClient::connectionLost);
+#if (QT_VERSION < QT_VERSION_CHECK(5, 15, 0))
     connect(mSocket, QOverload<QLocalSocket::LocalSocketError>::of(&QLocalSocket::error),
+#else
+    connect(mSocket, &QLocalSocket::errorOccurred,
+#endif
             this, [this]() {
                 qWarning() << "Client socket error: " << mSocket->errorString();
                 connectionLost();
