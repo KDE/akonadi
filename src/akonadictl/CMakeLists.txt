@@ -7,7 +7,16 @@ set(akonadictl_SRCS
     main.cpp
 )
 
-ecm_qt_declare_logging_category(akonadictl_SRCS HEADER akonadictl_debug.h IDENTIFIER AKONADICTL_LOG CATEGORY_NAME org.kde.pim.akonadictl)
+if (ECM_VERSION VERSION_LESS "5.68.0")
+    ecm_qt_declare_logging_category(akonadictl_SRCS HEADER akonadictl_debug.h IDENTIFIER AKONADICTL_LOG CATEGORY_NAME org.kde.pim.akonadictl)
+else()
+    ecm_qt_declare_logging_category(akonadictl_SRCS HEADER akonadictl_debug.h IDENTIFIER AKONADICTL_LOG CATEGORY_NAME org.kde.pim.akonadictl
+        DESCRIPTION "akonadi (Akonadi Control)"
+        OLD_CATEGORY_NAMES log_akonadictl
+        EXPORT AKONADI
+    )
+endif()
+
 
 qt5_add_dbus_interfaces(akonadictl_SRCS
     ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml

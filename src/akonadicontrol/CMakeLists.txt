@@ -17,7 +17,15 @@ if (WITH_ACCOUNTS)
     list(APPEND control_SRCS accountsintegration.cpp)
 endif()
 
-ecm_qt_declare_logging_category(control_SRCS HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol)
+if (ECM_VERSION VERSION_LESS "5.68.0")
+    ecm_qt_declare_logging_category(control_SRCS HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol)
+else()
+    ecm_qt_declare_logging_category(control_SRCS HEADER akonadicontrol_debug.h IDENTIFIER AKONADICONTROL_LOG CATEGORY_NAME org.kde.pim.akonadicontrol
+        DESCRIPTION "akonadi (Akonadi Control)"
+        EXPORT AKONADI
+    )
+endif()
+
 
 qt5_add_dbus_adaptor(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml agentmanager.h AgentManager)
 qt5_add_dbus_adaptor(control_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.ControlManager.xml controlmanager.h ControlManager)
