@@ -25,7 +25,7 @@
 #include "collectionstatistics.h"
 #include "attributestorage_p.h"
 
-#include "qstringlist.h"
+#include <QStringList>
 
 #include <QSharedData>
 

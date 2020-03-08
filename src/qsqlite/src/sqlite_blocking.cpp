@@ -25,8 +25,8 @@
 #include <QMutex>
 #include <QWaitCondition>
 #include "qdebug.h"
-#include "qstringbuilder.h"
-#include "qthread.h"
+#include <QStringBuilder>
+#include <QThread>
 
 QString debugString()
 {
