@@ -20,7 +20,6 @@
 #include "agentsearchinstance.h"
 #include "agentsearchinterface.h"
 #include "searchtaskmanager.h"
-#include "dbusconnectionpool.h"
 
 #include <private/dbus_p.h>
 
@@ -46,7 +45,7 @@ bool AgentSearchInstance::init()
     mInterface = new OrgFreedesktopAkonadiAgentSearchInterface(
         DBus::agentServiceName(mId, DBus::Agent),
         QStringLiteral("/Search"),
-        DBusConnectionPool::threadConnection());
+        QDBusConnection::sessionBus());
 
     if (!mInterface || !mInterface->isValid()) {
         delete mInterface;
@@ -55,7 +54,7 @@ bool AgentSearchInstance::init()
     }
 
     mServiceWatcher = std::make_unique<QDBusServiceWatcher>(
-            DBus::agentServiceName(mId, DBus::Agent), DBusConnectionPool::threadConnection(),
+            DBus::agentServiceName(mId, DBus::Agent), QDBusConnection::sessionBus(),
             QDBusServiceWatcher::WatchForUnregistration);
     connect(mServiceWatcher.get(), &QDBusServiceWatcher::serviceUnregistered,
             this, [this]() {

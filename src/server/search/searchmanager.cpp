@@ -25,7 +25,6 @@
 #include "akonadi.h"
 #include "agentsearchengine.h"
 #include "notificationmanager.h"
-#include "dbusconnectionpool.h"
 #include "searchrequest.h"
 #include "searchtaskmanager.h"
 #include "storage/datastore.h"
@@ -98,7 +97,7 @@ void SearchManager::init()
 
 void SearchManager::quit()
 {
-    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    QDBusConnection conn = QDBusConnection::sessionBus();
     conn.unregisterObject(QStringLiteral("/SearchManager"), QDBusConnection::UnregisterTree);
     conn.disconnectFromBus(conn.name());
 

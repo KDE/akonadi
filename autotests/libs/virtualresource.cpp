@@ -25,7 +25,7 @@
 #include <akonadi/servermanager.h>
 #include <akonadi/session_p.h>
 #include <QDBusInterface>
-#include <dbusconnectionpool.h>
+#include <QDbusConnection>
 #include <QStringList>
 
 #define EXEC(job) \
@@ -44,7 +44,7 @@ VirtualResource::VirtualResource(const QString &name, QObject *parent)
     // QDBusInterface *interface = new QDBusInterface(ServerManager::serviceName(ServerManager::Control),
     //                                QString::fromLatin1("/"),
     //                                QString::fromLatin1("org.freedesktop.Akonadi.AgentManager"),
-    //                                DBusConnectionPool::threadConnection(), this);
+    //                                QDBusConnection::sessionBus(), this);
     // if (interface->isValid()) {
     //     const QDBusMessage reply = interface->call(QString::fromUtf8("createAgentInstance"), name, QStringList());
     //     if (reply.type() == QDBusMessage::ErrorMessage) {

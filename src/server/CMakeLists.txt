@@ -46,7 +46,6 @@ set(libakonadiserver_SRCS
     commandcontext.cpp
     connection.cpp
     collectionscheduler.cpp
-    dbusconnectionpool.cpp
     handler.cpp
     handlerhelper.cpp
     intervalcheck.cpp

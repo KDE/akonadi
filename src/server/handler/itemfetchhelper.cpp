@@ -36,7 +36,6 @@
 #include "utils.h"
 #include "intervalcheck.h"
 #include "agentmanagerinterface.h"
-#include "dbusconnectionpool.h"
 #include "tagfetchhelper.h"
 #include "relationfetchhandler.h"
 #include "akonadiserver_debug.h"
@@ -318,7 +317,7 @@ bool ItemFetchHelper::isScopeLocal(const Scope &scope)
 
     org::freedesktop::Akonadi::AgentManager manager(DBus::serviceName(DBus::Control),
             QStringLiteral("/AgentManager"),
-            DBusConnectionPool::threadConnection());
+            QDBusConnection::sessionBus());
     const QString typeIdentifier = manager.agentInstanceType(resourceName);
     const QVariantMap properties = manager.agentCustomProperties(typeIdentifier);
     return properties.value(QStringLiteral("HasLocalStorage"), false).toBool();

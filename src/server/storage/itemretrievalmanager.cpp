@@ -20,7 +20,6 @@
 #include "itemretrievalmanager.h"
 #include "itemretrievalrequest.h"
 #include "itemretrievaljob.h"
-#include "dbusconnectionpool.h"
 #include "akonadiserver_debug.h"
 
 #include "resourceinterface.h"
@@ -64,7 +63,7 @@ void ItemRetrievalManager::init()
 {
     AkThread::init();
 
-    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    QDBusConnection conn = QDBusConnection::sessionBus();
     connect(conn.interface(), &QDBusConnectionInterface::serviceOwnerChanged,
             this, &ItemRetrievalManager::serviceOwnerChanged);
     connect(this, &ItemRetrievalManager::requestAdded,
@@ -100,7 +99,7 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
     }
 
     auto iface = std::make_unique<org::freedesktop::Akonadi::Resource>(
-            DBus::agentServiceName(id, DBus::Resource), QStringLiteral("/"), DBusConnectionPool::threadConnection());
+            DBus::agentServiceName(id, DBus::Resource), QStringLiteral("/"), QDBusConnection::sessionBus());
     if (!iface->isValid()) {
         qCCritical(AKONADISERVER_LOG, "Cannot connect to agent instance with identifier '%s', error message: '%s'",
                    qUtf8Printable(id), qUtf8Printable(iface ? iface->lastError().message() : QString()));

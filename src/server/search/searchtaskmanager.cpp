@@ -21,7 +21,6 @@
 #include "agentsearchinstance.h"
 #include "connection.h"
 #include "storage/selectquerybuilder.h"
-#include "dbusconnectionpool.h"
 #include "entities.h"
 #include "akonadiserver_search_debug.h"
 
@@ -30,6 +29,7 @@
 #include <QSqlError>
 #include <QTimer>
 #include <QTime>
+#include <QDBusConnection>
 #if QT_VERSION >= QT_VERSION_CHECK(5, 15, 0)
 #include <QDeadlineTimer>
 #endif
@@ -120,7 +120,7 @@ void SearchTaskManager::addTask(SearchTask *task)
     mInstancesLock.lock();
 
     org::freedesktop::Akonadi::AgentManager agentManager(DBus::serviceName(DBus::Control), QStringLiteral("/AgentManager"),
-            DBusConnectionPool::threadConnection());
+            QDBusConnection::sessionBus());
     do {
         const QString resourceId = query.value(1).toString();
         if (!mInstances.contains(resourceId)) {

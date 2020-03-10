@@ -30,7 +30,6 @@
 #include "search/searchmanager.h"
 #include "resourcemanager.h"
 #include "entities.h"
-#include "dbusconnectionpool.h"
 #include "agentmanagerinterface.h"
 #include "akonadiserver_debug.h"
 
@@ -69,7 +68,7 @@ void StorageJanitor::init()
 {
     AkThread::init();
 
-    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    QDBusConnection conn = QDBusConnection::sessionBus();
     conn.registerService(DBus::serviceName(DBus::StorageJanitor));
     conn.registerObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), this,
                         QDBusConnection::ExportScriptableSlots | QDBusConnection::ExportScriptableSignals);
@@ -77,7 +76,7 @@ void StorageJanitor::init()
 
 void StorageJanitor::quit()
 {
-    QDBusConnection conn = DBusConnectionPool::threadConnection();
+    QDBusConnection conn = QDBusConnection::sessionBus();
     conn.unregisterObject(QStringLiteral(AKONADI_DBUS_STORAGEJANITOR_PATH), QDBusConnection::UnregisterTree);
     conn.unregisterService(DBus::serviceName(DBus::StorageJanitor));
     conn.disconnectFromBus(conn.name());
@@ -779,7 +778,7 @@ void StorageJanitor::findOrphanSearchIndexEntries()
     QDBusInterface iface(DBus::agentServiceName(QStringLiteral("akonadi_indexing_agent"), DBus::Agent),
                          QStringLiteral("/"),
                          QStringLiteral("org.freedesktop.Akonadi.Indexer"),
-                         DBusConnectionPool::threadConnection());
+                         QDBusConnection::sessionBus());
     if (!iface.isValid()) {
         inform("Akonadi Indexing Agent is not running, skipping test");
         return;
