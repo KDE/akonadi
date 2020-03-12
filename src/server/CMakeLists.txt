@@ -138,24 +138,16 @@ set(libakonadiserver_SRCS
 set(akonadiserver_SRCS
     main.cpp
 )
-if (ECM_VERSION VERSION_LESS "5.68.0")
-    ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME org.kde.pim.akonadiserver)
-else()
-    ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME org.kde.pim.akonadiserver
+ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_debug.h IDENTIFIER AKONADISERVER_LOG CATEGORY_NAME org.kde.pim.akonadiserver
         DESCRIPTION "akonadi (Akonadi Server)"
         OLD_CATEGORY_NAMES log_akonadiserver
         EXPORT AKONADI
     )
-endif()
 
-if (ECM_VERSION VERSION_LESS "5.68.0")
-    ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_search_debug.h IDENTIFIER AKONADISERVER_SEARCH_LOG CATEGORY_NAME org.kde.pim.akonadiserver.search)
-else()
-    ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_search_debug.h IDENTIFIER AKONADISERVER_SEARCH_LOG CATEGORY_NAME org.kde.pim.akonadiserver.search
+ecm_qt_declare_logging_category(akonadiserver_SRCS HEADER akonadiserver_search_debug.h IDENTIFIER AKONADISERVER_SEARCH_LOG CATEGORY_NAME org.kde.pim.akonadiserver.search
         DESCRIPTION "akonadi (Akonadi Server Search Functionality)"
         EXPORT AKONADI
     )
-endif()
 
 qt5_generate_dbus_interface(debuginterface.h org.freedesktop.Akonadi.DebugInterface.xml)
 

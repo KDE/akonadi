@@ -349,15 +349,11 @@ install(EXPORT
     FILE KF5AkonadiTargets.cmake
     NAMESPACE KF5::)
 
-if (ECM_VERSION VERSION_LESS "5.68.0")
-    install(FILES akonadi.categories akonadi.renamecategories  DESTINATION  ${KDE_INSTALL_LOGGINGCATEGORIESDIR})
-else ()
-    ecm_qt_install_logging_categories(
+ecm_qt_install_logging_categories(
         EXPORT AKONADI
         FILE akonadi.categories
         DESTINATION ${KDE_INSTALL_LOGGINGCATEGORIESDIR}
         )
-endif()
 
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadi_version.h

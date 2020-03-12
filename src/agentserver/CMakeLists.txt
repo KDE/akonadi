@@ -6,15 +6,11 @@ set(akonadi_agent_server_srcs
     main.cpp
 )
 
-if (ECM_VERSION VERSION_LESS "5.68.0")
-    ecm_qt_declare_logging_category(akonadi_agent_server_srcs HEADER akonadiagentserver_debug.h IDENTIFIER AKONADIAGENTSERVER_LOG CATEGORY_NAME org.kde.pim.akonadiagentserver)
-else()
-    ecm_qt_declare_logging_category(akonadi_agent_server_srcs HEADER akonadiagentserver_debug.h IDENTIFIER AKONADIAGENTSERVER_LOG CATEGORY_NAME org.kde.pim.akonadiagentserver
+ecm_qt_declare_logging_category(akonadi_agent_server_srcs HEADER akonadiagentserver_debug.h IDENTIFIER AKONADIAGENTSERVER_LOG CATEGORY_NAME org.kde.pim.akonadiagentserver
         DESCRIPTION "akonadi (Akonadi Agent Server)"
         OLD_CATEGORY_NAMES log_akonadiagentserver
         EXPORT AKONADI
     )
-endif()
 
 
 add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})

@@ -38,15 +38,11 @@ set(akonadiwidgets_SRCS
     tagselectwidget.cpp
 )
 
-if (ECM_VERSION VERSION_LESS "5.68.0")
-    ecm_qt_declare_logging_category(akonadiwidgets_SRCS HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets)
-else()
-    ecm_qt_declare_logging_category(akonadiwidgets_SRCS HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
+ecm_qt_declare_logging_category(akonadiwidgets_SRCS HEADER akonadiwidgets_debug.h IDENTIFIER AKONADIWIDGETS_LOG CATEGORY_NAME org.kde.pim.akonadiwidgets
         DESCRIPTION "akonadi (Akonadi Widget Library)"
         OLD_CATEGORY_NAMES akonadiwidgets_log
         EXPORT AKONADI
     )
-endif()
 
 
 set(akonadiwidgets_UI

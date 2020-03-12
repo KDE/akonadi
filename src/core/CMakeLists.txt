@@ -282,15 +282,11 @@ set(akonadicore_SRCS
     ${akonadicore_dbus_SRCS}
 )
 
-if (ECM_VERSION VERSION_LESS "5.68.0")
-    ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDENTIFIER AKONADICORE_LOG CATEGORY_NAME org.kde.pim.akonadicore)
-else()
-    ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDENTIFIER AKONADICORE_LOG CATEGORY_NAME org.kde.pim.akonadicore
+ecm_qt_declare_logging_category(akonadicore_SRCS HEADER akonadicore_debug.h IDENTIFIER AKONADICORE_LOG CATEGORY_NAME org.kde.pim.akonadicore
         DESCRIPTION "akonadi (Akonadi Core Library)"
         OLD_CATEGORY_NAMES log_akonadicore
         EXPORT AKONADI
     )
-endif()
 
 
 add_library(KF5AkonadiCore ${akonadicore_SRCS})

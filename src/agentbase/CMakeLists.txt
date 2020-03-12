@@ -11,15 +11,11 @@ set(akonadiagentbase_SRCS
     transportresourcebase.cpp
 )
 
-if (ECM_VERSION VERSION_LESS "5.68.0")
-    ecm_qt_declare_logging_category(akonadiagentbase_SRCS HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase)
-else()
-    ecm_qt_declare_logging_category(akonadiagentbase_SRCS HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
+ecm_qt_declare_logging_category(akonadiagentbase_SRCS HEADER akonadiagentbase_debug.h IDENTIFIER AKONADIAGENTBASE_LOG CATEGORY_NAME org.kde.pim.akonadiagentbase
         DESCRIPTION "akonadi (Akonadi AgentBase Library)"
         OLD_CATEGORY_NAMES akonadiagentbase_log
         EXPORT AKONADI
     )
-endif()
 
 ecm_generate_headers(AkonadiAgentBase_HEADERS
     HEADER_NAMES
