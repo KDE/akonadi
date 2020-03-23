@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2016 Daniel Vrátil <dvratil@kde.org>
+    Copyright (c) 2020  Daniel Vrátil <dvratil@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,23 +17,13 @@
     02110-1301, USA.
 */
 
-#include "fakeitemretrievalmanager.h"
-#include "storage/itemretrievalrequest.h"
+#include "itemretrievalrequest.h"
 
 using namespace Akonadi::Server;
 
-Q_DECLARE_METATYPE(ItemRetrievalResult)
+ItemRetrievalRequest::Id ItemRetrievalRequest::lastId{0};
 
-FakeItemRetrievalManager::FakeItemRetrievalManager()
-    : ItemRetrievalManager()
-{
-    qRegisterMetaType<ItemRetrievalResult>();
-}
-
-void FakeItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest request)
-{
-    QMetaObject::invokeMethod(this, [this, r = std::move(request)] {
-            Q_EMIT requestFinished({std::move(r)});
-    }, Qt::QueuedConnection);
-}
+ItemRetrievalRequest::ItemRetrievalRequest()
+    : id(lastId.next())
+{}
 

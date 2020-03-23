@@ -35,10 +35,12 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+Q_DECLARE_METATYPE(Akonadi::Server::ItemRetrievalResult)
+
 class ItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
 {
-    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) override {
-        return new ItemRetrievalJob(request, parent);
+    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) override {
+        return new ItemRetrievalJob(std::move(request), parent);
     }
 };
 
@@ -51,6 +53,7 @@ ItemRetrievalManager::ItemRetrievalManager(std::unique_ptr<AbstractItemRetrieval
     : AkThread(QStringLiteral("ItemRetrievalManager"), QThread::HighPriority, parent)
     , mJobFactory(std::move(factory))
 {
+    qRegisterMetaType<ItemRetrievalResult>("Akonadi::Server::ItemRetrievalResult");
     qDBusRegisterMetaType<QByteArrayList>();
 }
 
@@ -112,13 +115,13 @@ org::freedesktop::Akonadi::Resource *ItemRetrievalManager::resourceInterface(con
 }
 
 // called from any thread
-void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
+void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest req)
 {
     QWriteLocker locker(&mLock);
-    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager posting retrieval request for items" << req->ids
-                               << "to" <<req->resourceId << ". There are" << mPendingRequests.size() << "request queues and"
-                               << mPendingRequests[req->resourceId].size() << "items mine";
-    mPendingRequests[req->resourceId].append(req);
+    qCDebug(AKONADISERVER_LOG) << "ItemRetrievalManager posting retrieval request for items" << req.ids
+                               << "to" <<req.resourceId << ". There are" << mPendingRequests.size() << "request queues and"
+                               << mPendingRequests[req.resourceId].size() << "items mine";
+    mPendingRequests[req.resourceId].emplace_back(std::move(req));
     locker.unlock();
 
     Q_EMIT requestAdded();
@@ -127,69 +130,74 @@ void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest *req)
 // called within the retrieval thread
 void ItemRetrievalManager::processRequest()
 {
-    QVector<QPair<AbstractItemRetrievalJob *, QString> > newJobs;
+    QVector<AbstractItemRetrievalJob *> newJobs;
     QWriteLocker locker(&mLock);
     // look for idle resources
     for (auto it = mPendingRequests.begin(); it != mPendingRequests.end();) {
-        if (it.value().isEmpty()) {
+        if (it->second.empty()) {
             it = mPendingRequests.erase(it);
             continue;
         }
-        if (!mCurrentJobs.contains(it.key()) || mCurrentJobs.value(it.key()) == nullptr) {
+
+        if (!mCurrentJobs.contains(it->first) || mCurrentJobs.value(it->first) == nullptr) {
             // TODO: check if there is another one for the same uid with more parts requested
-            ItemRetrievalRequest *req = it.value().takeFirst();
-            Q_ASSERT(req->resourceId == it.key());
-            AbstractItemRetrievalJob *job = mJobFactory->retrievalJob(req, this);
+            auto req = std::move(it->second.front());
+            it->second.pop_front();
+            Q_ASSERT(req.resourceId == it->first);
+            auto job = mJobFactory->retrievalJob(std::move(req), this);
             connect(job, &AbstractItemRetrievalJob::requestCompleted, this, &ItemRetrievalManager::retrievalJobFinished);
-            mCurrentJobs.insert(req->resourceId, job);
+            mCurrentJobs.insert(job->request().resourceId, job);
             // delay job execution until after we unlocked the mutex, since the job can emit the finished signal immediately in some cases
-            newJobs.append(qMakePair(job, req->resourceId));
-            qCDebug(AKONADISERVER_LOG) << "ItemRetrievalJob" << job << "started for request" << req;
+            newJobs.append(job);
+            qCDebug(AKONADISERVER_LOG) << "ItemRetrievalJob" << job << "started for request" << job->request().id;
         }
         ++it;
     }
 
-    bool nothingGoingOn = mPendingRequests.isEmpty() && mCurrentJobs.isEmpty() && newJobs.isEmpty();
-    locker.unlock();
-
-    if (nothingGoingOn) {   // someone asked as to process requests although everything is done already, he might still be waiting
+    // someone asked as to process requests although everything is done already, he might still be waiting
+    if (mPendingRequests.empty() && mCurrentJobs.isEmpty() && newJobs.isEmpty()) {
         return;
     }
 
-    for (auto it = newJobs.constBegin(), end = newJobs.constEnd(); it != end; ++it) {
-        if (ItemRetrievalJob *j = qobject_cast<ItemRetrievalJob *>((*it).first)) {
-            j->setInterface(resourceInterface((*it).second));
+    locker.unlock();
+
+    for (auto *job : newJobs) {
+        if (ItemRetrievalJob *j = qobject_cast<ItemRetrievalJob *>(job)) {
+            j->setInterface(resourceInterface(j->request().resourceId));
         }
-        (*it).first->start();
+        job->start();
     }
 }
 
-void ItemRetrievalManager::retrievalJobFinished(ItemRetrievalRequest *request, const QString &errorMsg)
+void ItemRetrievalManager::retrievalJobFinished(AbstractItemRetrievalJob *job)
 {
-    if (errorMsg.isEmpty()) {
-        qCInfo(AKONADISERVER_LOG) << "ItemRetrievalJob for request" << request << "finished";
+    const auto &request = job->request();
+    const auto &result = job->result();
+
+    if (result.errorMsg.has_value()) {
+        qCWarning(AKONADISERVER_LOG) << "ItemRetrievalJob for request" << request.id << "finished with error:" << *result.errorMsg;
     } else {
-        qCWarning(AKONADISERVER_LOG) << "ItemRetrievalJob for request" << request << "finished with error:" << errorMsg;
+        qCInfo(AKONADISERVER_LOG) << "ItemRetrievalJob for request" << request.id << "finished";
     }
+
     QWriteLocker locker(&mLock);
-    request->errorMsg = errorMsg;
-    request->processed = true;
-    Q_ASSERT(mCurrentJobs.contains(request->resourceId));
-    mCurrentJobs.remove(request->resourceId);
-    // TODO check if (*it)->parts is a subset of currentRequest->parts
-    for (QList<ItemRetrievalRequest *>::Iterator it = mPendingRequests[request->resourceId].begin(); it != mPendingRequests[request->resourceId].end();) {
-        if ((*it)->ids == request->ids) {
-            qCDebug(AKONADISERVER_LOG) << "someone else requested item" << request->ids << "as well, marking as processed";
-            (*it)->errorMsg = errorMsg;
-            (*it)->processed = true;
-            Q_EMIT requestFinished(*it);
-            it = mPendingRequests[request->resourceId].erase(it);
+    Q_ASSERT(mCurrentJobs.contains(request.resourceId));
+    mCurrentJobs.remove(request.resourceId);
+    auto &requests = mPendingRequests[request.resourceId];
+    for (auto it = requests.begin(); it != requests.end();) {
+        if (it->ids == request.ids) {
+            qCDebug(AKONADISERVER_LOG) << "Someone else requested items " << request.ids << "as well, marking as processed.";
+            ItemRetrievalResult otherResult{std::move(*it)};
+            otherResult.errorMsg = result.errorMsg;
+            Q_EMIT requestFinished(otherResult);
+            it = requests.erase(it);
         } else {
             ++it;
         }
     }
     locker.unlock();
-    Q_EMIT requestFinished(request);
+
+    Q_EMIT requestFinished(result);
     Q_EMIT requestAdded(); // trigger processRequest() again, in case there is more in the queues
 }
 

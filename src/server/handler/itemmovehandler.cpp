@@ -39,7 +39,7 @@ ItemMoveHandler::ItemMoveHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
 {}
 
-void ItemMoveHandler::itemsRetrieved(const QList<qint64> &ids)
+void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
 {
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store, QStringLiteral("MOVE"));
@@ -165,7 +165,7 @@ bool ItemMoveHandler::parseStream()
     retriever.setScope(cmd.items());
     retriever.setRetrieveFullPayload(true);
     QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,
-                     [this](const QList<qint64> &ids) {
+                     [this](const QVector<qint64> &ids) {
                         itemsRetrieved(ids);
                      });
     if (!retriever.exec()) {

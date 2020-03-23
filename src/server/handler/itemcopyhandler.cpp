@@ -67,7 +67,7 @@ bool ItemCopyHandler::copyItem(const PimItem &item, const Collection &target)
     return true;
 }
 
-void ItemCopyHandler::processItems(const QList<qint64> &ids)
+void ItemCopyHandler::processItems(const QVector<qint64> &ids)
 {
     SelectQueryBuilder<PimItem> qb;
     ItemQueryHelper::itemSetToQuery(ImapSet(ids), qb);
@@ -120,7 +120,7 @@ bool ItemCopyHandler::parseStream()
     retriever.setItemSet(cmd.items().uidSet());
     retriever.setRetrieveFullPayload(true);
     QObject::connect(&retriever, &ItemRetriever::itemsRetrieved,
-                     [this](const QList<qint64> &ids) {
+                     [this](const QVector<qint64> &ids) {
                         processItems(ids);
                      });
     if (!retriever.exec()) {

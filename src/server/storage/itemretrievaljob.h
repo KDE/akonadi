@@ -22,6 +22,8 @@
 
 #include <QObject>
 
+#include "itemretrievalrequest.h"
+
 class QDBusPendingCallWatcher;
 class OrgFreedesktopAkonadiResourceInterface;
 
@@ -36,17 +38,20 @@ class AbstractItemRetrievalJob : public QObject
 {
     Q_OBJECT
 public:
-    AbstractItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent);
-    ~AbstractItemRetrievalJob() override;
+    AbstractItemRetrievalJob(ItemRetrievalRequest req, QObject *parent);
+    ~AbstractItemRetrievalJob() override = default;
 
     virtual void start() = 0;
     virtual void kill() = 0;
 
+    const ItemRetrievalRequest &request() const { return m_result.request; }
+    const ItemRetrievalResult &result() const { return m_result; }
+
 Q_SIGNALS:
-    void requestCompleted(ItemRetrievalRequest *request, const QString &errorMsg);
+    void requestCompleted(AbstractItemRetrievalJob *job);
 
 protected:
-    ItemRetrievalRequest *m_request = nullptr;
+    ItemRetrievalResult m_result;
 };
 
 /// Async D-Bus retrieval, no modification of the request (thus no need for locking)
@@ -54,12 +59,9 @@ class ItemRetrievalJob : public AbstractItemRetrievalJob
 {
     Q_OBJECT
 public:
-    ItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent)
-        : AbstractItemRetrievalJob(req, parent)
-        , m_active(false)
-        , m_interface(nullptr)
-    {
-    }
+    ItemRetrievalJob(ItemRetrievalRequest req, QObject *parent)
+        : AbstractItemRetrievalJob(std::move(req), parent)
+    {}
 
     void setInterface(OrgFreedesktopAkonadiResourceInterface *interface)
     {
@@ -74,7 +76,7 @@ private Q_SLOTS:
     void callFinished(QDBusPendingCallWatcher *watcher);
 
 private:
-    bool m_active;
+    bool m_active = false;
     OrgFreedesktopAkonadiResourceInterface *m_interface = nullptr;
 
 };

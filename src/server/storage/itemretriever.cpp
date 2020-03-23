@@ -42,6 +42,8 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
+Q_DECLARE_METATYPE(ItemRetrievalResult)
+
 ItemRetriever::ItemRetriever(ItemRetrievalManager &manager, Connection *connection, const CommandContext &context)
     : mScope()
     , mItemRetrievalManager(manager)
@@ -51,6 +53,7 @@ ItemRetriever::ItemRetriever(ItemRetrievalManager &manager, Connection *connecti
     , mRecursive(false)
     , mCanceled(false)
 {
+    qRegisterMetaType<ItemRetrievalResult>("Akonadi::Server::ItemRetrievalResult");
     if (mConnection) {
         connect(mConnection, &Connection::disconnected,
                 this, [this]() {
@@ -200,14 +203,11 @@ QSqlQuery ItemRetriever::buildQuery() const
 
 namespace
 {
-static bool hasAllParts(ItemRetrievalRequest *req, const QSet<QByteArray> &availableParts)
+static bool hasAllParts(const ItemRetrievalRequest &req, const QSet<QByteArray> &availableParts)
 {
-    for (const auto &part : qAsConst(req->parts)) {
-        if (!availableParts.contains(part)) {
-            return false;
-        }
-    }
-    return true;
+    return std::all_of(req.parts.begin(), req.parts.end(), [&availableParts](const auto &part) {
+        return availableParts.contains(part);
+    });
 }
 }
 
@@ -228,13 +228,13 @@ bool ItemRetriever::exec()
     }
 
     QHash<qint64, QString> resourceIdNameCache;
-    std::vector<std::unique_ptr<ItemRetrievalRequest>> requests;
-    QHash<qint64 /* collection */, ItemRetrievalRequest *> colRequests;
-    QHash<qint64 /* item */, ItemRetrievalRequest *> itemRequests;
+    std::list<ItemRetrievalRequest> requests;
+    QHash<qint64 /* collection */, decltype(requests)::iterator> colRequests;
+    QHash<qint64 /* item */, decltype(requests)::iterator> itemRequests;
     QVector<qint64> readyItems;
     qint64 prevPimItemId = -1;
     QSet<QByteArray> availableParts;
-    ItemRetrievalRequest *lastRequest = nullptr;
+    decltype(requests)::iterator lastRequest = requests.end();
     while (query.isValid()) {
         const qint64 pimItemId = query.value(PimItemIdColumn).toLongLong();
         const qint64 collectionId = query.value(CollectionIdColumn).toLongLong();
@@ -254,8 +254,8 @@ bool ItemRetriever::exec()
                 continue;
             }
         } else {
-            if (lastRequest) {
-                if (hasAllParts(lastRequest, availableParts)) {
+            if (lastRequest != requests.end()) {
+                if (hasAllParts(*lastRequest, availableParts)) {
                     // We went through all parts of a single item, if we have all
                     // parts available in the DB and they are not expired, then
                     // exclude this item from the retrieval
@@ -269,11 +269,13 @@ bool ItemRetriever::exec()
         }
 
         if (itemIter != itemRequests.constEnd()) {
-            lastRequest = *itemIter;
+            lastRequest = itemIter.value();
         } else {
-            lastRequest = colRequests.value(collectionId);
-            if (!lastRequest || lastRequest->ids.size() > 100) {
-                lastRequest = new ItemRetrievalRequest();
+            const auto colIt = colRequests.find(collectionId);
+            lastRequest = (colIt == colRequests.end()) ? requests.end() : colIt.value();
+            if (lastRequest == requests.end() || lastRequest->ids.size() > 100) {
+                requests.emplace_front(ItemRetrievalRequest{});
+                lastRequest = requests.begin();
                 lastRequest->ids.push_back(pimItemId);
                 auto resIter = resourceIdNameCache.find(resourceId);
                 if (resIter == resourceIdNameCache.end()) {
@@ -283,12 +285,13 @@ bool ItemRetriever::exec()
                 lastRequest->parts = parts;
                 colRequests.insert(collectionId, lastRequest);
                 itemRequests.insert(pimItemId, lastRequest);
-                requests.emplace_back(lastRequest);
             } else {
                 lastRequest->ids.push_back(pimItemId);
                 itemRequests.insert(pimItemId, lastRequest);
+                colRequests.insert(collectionId, lastRequest);
             }
         }
+        Q_ASSERT(lastRequest != requests.end());
 
         if (query.value(PartTypeNameColumn).isNull()) {
             // LEFT JOIN did not find anything, retrieve all parts
@@ -302,7 +305,7 @@ bool ItemRetriever::exec()
         if (datasize <= 0) {
             // request update for this part
             if (mFullPayload && !lastRequest->parts.contains(partName)) {
-                lastRequest->parts << partName;
+                lastRequest->parts.push_back(partName);
             }
         } else {
             // add the part to list of available parts, we will compare it with
@@ -315,37 +318,32 @@ bool ItemRetriever::exec()
 
     // Post-check in case we only queried one item thus did not reach the check
     // at the beginning of the while() loop above
-    if (lastRequest && hasAllParts(lastRequest, availableParts)) {
+    if (lastRequest != requests.end() && hasAllParts(*lastRequest, availableParts)) {
         lastRequest->ids.removeOne(prevPimItemId);
         readyItems.push_back(prevPimItemId);
         // No need to update the hashtable at this point
     }
 
     //qCDebug(AKONADISERVER_LOG) << "Closing queries and sending out requests.";
-    query.finish();
 
     if (!readyItems.isEmpty()) {
-        Q_EMIT itemsRetrieved(readyItems | AkRanges::Actions::toQList);
+        Q_EMIT itemsRetrieved(readyItems);
     }
 
     QEventLoop eventLoop;
+    QVector<ItemRetrievalRequest::Id> pendingRequests;
     connect(&mItemRetrievalManager, &ItemRetrievalManager::requestFinished,
-            this, [&](ItemRetrievalRequest *finishedRequest) {
-        const auto it = std::find_if(requests.begin(), requests.end(), [finishedRequest](const auto &ptr) {
-            return ptr.get() == finishedRequest;
-        });
-        if (it != requests.end()) {
+            this, [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) {
+        if (pendingRequests.contains(result.request.id)) {
             if (mCanceled) {
-                requests.erase(it); // deletes finishedRequest
                 eventLoop.exit(1);
-            } else if (!finishedRequest->errorMsg.isEmpty()) {
-                mLastError = finishedRequest->errorMsg.toUtf8();
-                requests.erase(it); // deletes finishedRequest
+            } else if (result.errorMsg.has_value()) {
+                mLastError = result.errorMsg->toUtf8();
                 eventLoop.exit(1);
             } else {
-                Q_EMIT itemsRetrieved(finishedRequest->ids);
-                requests.erase(it); // deletes finishedRequest
-                if (requests.empty()) {
+                Q_EMIT itemsRetrieved(result.request.ids);
+                pendingRequests.removeOne(result.request.id);
+                if (pendingRequests.empty()) {
                     eventLoop.quit();
                 }
             }
@@ -357,28 +355,27 @@ bool ItemRetriever::exec()
                 &eventLoop, [&eventLoop]() { eventLoop.exit(1); });
     }
 
-    auto it = requests.begin();
-    while (it != requests.end()) {
-        auto request = (*it).get();
-        if ((!mFullPayload && request->parts.isEmpty()) || request->ids.isEmpty()) {
-            it = requests.erase(it);
+    for (auto &&request : requests) {
+        if ((!mFullPayload && request.parts.isEmpty()) || request.ids.isEmpty()) {
             continue;
         }
+
         // TODO: how should we handle retrieval errors here? so far they have been ignored,
         // which makes sense in some cases, do we need a command parameter for this?
         try {
             // Request is deleted inside ItemRetrievalManager, so we need to take
             // a copy here
             //const auto ids = request->ids;
-            mItemRetrievalManager.requestItemDelivery(request);
+            pendingRequests.push_back(request.id);
+            mItemRetrievalManager.requestItemDelivery(std::move(request));
         } catch (const ItemRetrieverException &e) {
             qCCritical(AKONADISERVER_LOG) << e.type() << ": " << e.what();
             mLastError = e.what();
             return false;
         }
-        ++it;
     }
-    if (!requests.empty()) {
+
+    if (!pendingRequests.empty()) {
         if (eventLoop.exec()) {
             return false;
         }

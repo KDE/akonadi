@@ -21,6 +21,7 @@
 #define AKONADI_ITEMRETRIEVALMANAGER_H
 
 #include "itemretriever.h"
+#include "itemretrievalrequest.h"
 #include "akthread.h"
 #include <shared/akstd.h>
 
@@ -40,16 +41,14 @@ namespace Server
 
 class Collection;
 class ItemRetrievalJob;
-class ItemRetrievalRequest;
 class AbstractItemRetrievalJob;
 
 class AbstractItemRetrievalJobFactory
 {
 public:
-    explicit AbstractItemRetrievalJobFactory() {}
-    virtual ~AbstractItemRetrievalJobFactory() {}
+    virtual ~AbstractItemRetrievalJobFactory() = default;
 
-    virtual AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) = 0;
+    virtual AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) = 0;
 };
 
 /** Manages and processes item retrieval requests. */
@@ -65,13 +64,13 @@ public:
      * Added for convenience. ItemRetrievalManager takes ownership over the
      * pointer and deletes it when the request is processed.
      */
-    virtual void requestItemDelivery(ItemRetrievalRequest *request);
+    virtual void requestItemDelivery(ItemRetrievalRequest request);
 
     void triggerCollectionSync(const QString &resource, qint64 colId);
     void triggerCollectionTreeSync(const QString &resource);
 
 Q_SIGNALS:
-    void requestFinished(ItemRetrievalRequest *request);
+    void requestFinished(const Akonadi::Server::ItemRetrievalResult &result);
     void requestAdded();
 
 private:
@@ -82,7 +81,7 @@ private Q_SLOTS:
 
     void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
     void processRequest();
-    void retrievalJobFinished(ItemRetrievalRequest *request, const QString &errorMsg);
+    void retrievalJobFinished(AbstractItemRetrievalJob *job);
 
 protected:
     std::unique_ptr<AbstractItemRetrievalJobFactory> mJobFactory;
@@ -91,8 +90,9 @@ protected:
     QReadWriteLock mLock;
     /// Used to let requesting threads wait until the request has been processed
     QWaitCondition mWaitCondition;
+
     /// Pending requests queues, one per resource
-    QHash<QString, QList<ItemRetrievalRequest *> > mPendingRequests;
+    std::unordered_map<QString, std::list<ItemRetrievalRequest>> mPendingRequests;
     /// Currently running jobs, one per resource
     QHash<QString, AbstractItemRetrievalJob *> mCurrentJobs;
 

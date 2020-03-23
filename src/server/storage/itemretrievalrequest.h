@@ -22,33 +22,64 @@
 
 #include <QByteArray>
 #include <QString>
-#include <QList>
+#include <QVector>
+#include <QDebug>
+
+#include <shared/akoptional.h>
 
 namespace Akonadi
 {
 namespace Server
 {
 
+class ItemRetrievalRequest;
+
 /// Details of a single item retrieval request
 class ItemRetrievalRequest
 {
 public:
-    ItemRetrievalRequest()
-        : processed(false)
-    {
-    }
+    struct Id {
+        explicit Id(uint32_t value): mValue(value) {};
+        bool operator==(const Id &other) const { return mValue == other.mValue; }
+    private:
+        uint32_t mValue;
+        Id next() { return Id{++mValue}; }
 
-    QList<qint64> ids;
+        friend class ItemRetrievalRequest;
+        friend QDebug operator<<(QDebug, Id);
+    };
+
+    explicit ItemRetrievalRequest();
+
+    Id id;
+    QVector<qint64> ids;
     QString resourceId;
     QByteArrayList parts; // list instead of vector to simplify client-side handling
-    QString errorMsg;
-    bool processed;
 
 private:
-    Q_DISABLE_COPY(ItemRetrievalRequest)
+    static Id lastId;
 };
+
+
+class ItemRetrievalResult
+{
+public:
+    explicit ItemRetrievalResult() = default; // don't use, sadly Qt metatype system requires type to be default-constructible
+    ItemRetrievalResult(ItemRetrievalRequest request)
+        : request(std::move(request))
+    {}
+
+    ItemRetrievalRequest request;
+
+    akOptional<QString> errorMsg{};
+};
+
+inline QDebug operator<<(QDebug dbg, ItemRetrievalRequest::Id id)
+{
+    dbg.nospace() << id.mValue;
+    return dbg.space();
+}
 
 } // namespace Server
 } // namespace Akonadi
-
 #endif

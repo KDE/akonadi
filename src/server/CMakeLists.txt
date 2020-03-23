@@ -107,6 +107,7 @@ set(libakonadiserver_SRCS
     storage/itemretriever.cpp
     storage/itemretrievalmanager.cpp
     storage/itemretrievaljob.cpp
+    storage/itemretrievalrequest.cpp
     storage/notificationcollector.cpp
     storage/parthelper.cpp
     storage/parttypehelper.cpp

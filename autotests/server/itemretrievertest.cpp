@@ -47,9 +47,9 @@ class FakeItemRetrievalJob : public AbstractItemRetrievalJob
 {
     Q_OBJECT
 public:
-    FakeItemRetrievalJob(ItemRetrievalRequest *req, DbInitializer &dbInitializer,
+    FakeItemRetrievalJob(ItemRetrievalRequest req, DbInitializer &dbInitializer,
                          const QVector<JobResult> &results, QObject *parent)
-        : AbstractItemRetrievalJob(req, parent)
+        : AbstractItemRetrievalJob(std::move(req), parent)
         , mDbInitializer(dbInitializer)
         , mResults(results)
     {
@@ -78,25 +78,25 @@ public:
                     part.update();
                 }
             } else {
-                mError = res.error;
+                m_result.errorMsg = res.error;
                 break;
             }
         }
 
         QTimer::singleShot(0, this, [this]() {
-            Q_EMIT requestCompleted(m_request, mError);
+            Q_EMIT requestCompleted(this);
         });
     }
 
     void kill() override
     {
-        // TODO?
+        // TODO
+        Q_ASSERT(false);
     }
 
 private:
     DbInitializer &mDbInitializer;
     QVector<JobResult> mResults;
-    QString mError;
 };
 
 class FakeItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
@@ -118,13 +118,13 @@ public:
         mJobResults.insert(itemId, JobResult{ itemId, QByteArray(), QByteArray(), error });
     }
 
-    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest *request, QObject *parent) override
+    AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) override
     {
         QVector<JobResult> results;
-        Q_FOREACH (auto id, request->ids) {
+        Q_FOREACH (auto id, request.ids) {
             auto it = mJobResults.constFind(id);
             while (it != mJobResults.constEnd() && it.key() == id) {
-                if (request->parts.contains(it->partname)) {
+                if (request.parts.contains(it->partname)) {
                     results << *it;
                 }
                 ++it;
@@ -132,7 +132,7 @@ public:
         }
 
         ++mJobsCount;
-        return new FakeItemRetrievalJob(request, mDbInitializer, results, parent);
+        return new FakeItemRetrievalJob(std::move(request), mDbInitializer, results, parent);
     }
 
     int jobsCount() const
@@ -170,7 +170,7 @@ public:
         m_results.success = success;
         m_results.signalsCount = spy.count();
         if (m_results.signalsCount > 0) {
-            m_results.emittedItems = spy.at(0).at(0).value<QList<qint64>>();
+            m_results.emittedItems = spy.at(0).at(0).value<QVector<qint64>>();
         }
     }
 
@@ -178,7 +178,7 @@ public:
     {
         bool success;
         int signalsCount;
-        QList<qint64> emittedItems;
+        QVector<qint64> emittedItems;
     };
     Results results() const {
         QMutexLocker lock(&m_mutex);
@@ -324,7 +324,7 @@ private Q_SLOTS:
                 QCOMPARE(results.signalsCount, expectedSignals);
                 // ... with that one item
                 if (expectedSignals > 0) {
-                    QCOMPARE(results.emittedItems, QList<qint64>{ item.id() });
+                    QCOMPARE(results.emittedItems, QVector<qint64>{ item.id() });
                 }
 
                 // Check that the factory had exactly one retrieval job
@@ -346,7 +346,7 @@ private Q_SLOTS:
                     QVERIFY(results.success);
                     QCOMPARE(results.signalsCount, expectedSignals);
                     if (expectedSignals > 0) {
-                        QCOMPARE(results.emittedItems, QList<qint64>{ item.id() });
+                        QCOMPARE(results.emittedItems, QVector<qint64>{ item.id() });
                     }
                 }
                 qDeleteAll(threads);

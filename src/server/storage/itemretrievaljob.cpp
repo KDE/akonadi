@@ -21,20 +21,16 @@
 #include "itemretrievalrequest.h"
 #include "resourceinterface.h"
 #include "akonadiserver_debug.h"
+#include <shared/akranges.h>
 
 #include <QDBusPendingCallWatcher>
 
 using namespace Akonadi::Server;
 
-AbstractItemRetrievalJob::AbstractItemRetrievalJob(ItemRetrievalRequest *req, QObject *parent)
+AbstractItemRetrievalJob::AbstractItemRetrievalJob(ItemRetrievalRequest req, QObject *parent)
     : QObject(parent)
-    , m_request(req)
-{
-}
-
-AbstractItemRetrievalJob::~AbstractItemRetrievalJob()
-{
-}
+    , m_result(std::move(req))
+{}
 
 ItemRetrievalJob::~ItemRetrievalJob()
 {
@@ -43,18 +39,18 @@ ItemRetrievalJob::~ItemRetrievalJob()
 
 void ItemRetrievalJob::start()
 {
-    Q_ASSERT(m_request);
-    qCDebug(AKONADISERVER_LOG) << "processing retrieval request for item" << m_request->ids << " parts:" << m_request->parts << " of resource:" << m_request->resourceId;
+    qCDebug(AKONADISERVER_LOG) << "processing retrieval request for item" << request().ids << " parts:" << request().parts << " of resource:" << request().resourceId;
 
     // call the resource
     if (m_interface) {
         m_active = true;
-        auto reply = m_interface->requestItemDelivery(m_request->ids, m_request->parts);
+        auto reply = m_interface->requestItemDelivery(request().ids | AkRanges::Actions::toQList, request().parts);
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
         connect(watcher, &QDBusPendingCallWatcher::finished,
                 this, &ItemRetrievalJob::callFinished);
     } else {
-        Q_EMIT requestCompleted(m_request, QStringLiteral("Unable to contact resource"));
+        m_result.errorMsg = QStringLiteral("Unable to contact resource");
+        Q_EMIT requestCompleted(this);
         deleteLater();
     }
 }
@@ -62,7 +58,8 @@ void ItemRetrievalJob::start()
 void ItemRetrievalJob::kill()
 {
     m_active = false;
-    Q_EMIT requestCompleted(m_request, QStringLiteral("Request cancelled"));
+    m_result.errorMsg = QStringLiteral("Request cancelled");
+    Q_EMIT requestCompleted(this);
 }
 
 void ItemRetrievalJob::callFinished(QDBusPendingCallWatcher *watcher)
@@ -71,12 +68,10 @@ void ItemRetrievalJob::callFinished(QDBusPendingCallWatcher *watcher)
     QDBusPendingReply<QString> reply = *watcher;
     if (m_active) {
         m_active = false;
-        const QString errorMsg = reply.isError() ? reply.error().message() : reply;
-        if (!errorMsg.isEmpty()) {
-            Q_EMIT requestCompleted(m_request, QStringLiteral("Unable to retrieve item from resource: %1").arg(errorMsg));
-        } else {
-            Q_EMIT requestCompleted(m_request, QString());
+        if (reply.isError()) {
+            m_result.errorMsg = QStringLiteral("Unable to retrieve item from resource: %1").arg(reply.error().message());
         }
+        Q_EMIT requestCompleted(this);
     }
     deleteLater();
 }

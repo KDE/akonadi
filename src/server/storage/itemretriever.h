@@ -76,7 +76,7 @@ public:
     QByteArray lastError() const;
 
 Q_SIGNALS:
-    void itemsRetrieved(const QList<qint64> &ids);
+    void itemsRetrieved(const QVector<qint64> &ids);
 
 private:
     QSqlQuery buildQuery() const;
