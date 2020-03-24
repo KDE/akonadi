@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<protocol version="62">
+<protocol version="63">
 
   <class name="Ancestor">
     <enum name="Depth">
@@ -243,7 +243,7 @@
       <arg name="gid" />
       <arg name="type" />
       <arg name="remoteId" default="QByteArray()" />
-      <arg name="parentId" default="0" />
+      <arg name="parentId" default="-1" />
       <arg name="attributes" default="Attributes()" />
     </ctor>
 
