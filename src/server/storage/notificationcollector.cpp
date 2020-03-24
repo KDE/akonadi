@@ -460,6 +460,7 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
     Protocol::FetchTagsResponse msgTag;
     msgTag.setId(tag.id());
     msgTag.setRemoteId(remoteId.toUtf8());
+    msgTag.setParentId(tag.parentId());
     if (auto mgr = mAkonadi.notificationManager()) {
         auto fetchScope = mgr->tagFetchScope();
         if (!fetchScope->fetchIdOnly() && msgTag.gid().isEmpty()) {

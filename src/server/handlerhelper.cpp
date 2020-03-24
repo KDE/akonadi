@@ -220,7 +220,14 @@ Protocol::FetchTagsResponse HandlerHelper::fetchTagsResponse(const Tag &tag,
     }
 
     response.setType(tag.tagType().name().toUtf8());
-    response.setParentId(tag.parentId());
+    // FIXME FIXME FIXME Terrible hack to workaround limitations of the generated entities code:
+    // The invalid parent is represented in code by -1 but in the DB it is stored as NULL, which
+    // gets converted to 0 by our entities code.
+    if (tag.parentId() == 0) {
+        response.setParentId(-1);
+    } else {
+        response.setParentId(tag.parentId());
+    }
     response.setGid(tag.gid().toUtf8());
     if (tagFetchScope.fetchRemoteID() && connection) {
         // Fail silently if retrieving tag RID is not allowed in current context
