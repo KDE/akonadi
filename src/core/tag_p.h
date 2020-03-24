@@ -30,11 +30,7 @@ namespace Akonadi
 class TagPrivate : public QSharedData
 {
 public:
-    TagPrivate()
-        : id(-1)
-    {
-    }
-
+    explicit TagPrivate() = default;
     TagPrivate(const TagPrivate &other)
         : QSharedData(other)
     {
@@ -48,9 +44,7 @@ public:
         mAttributeStorage = other.mAttributeStorage;
     }
 
-    ~TagPrivate()
-    {
-    }
+    ~TagPrivate() = default;
 
     void resetChangeLog()
     {
@@ -59,7 +53,7 @@ public:
 
     // 4 bytes padding here (after QSharedData)
 
-    Tag::Id id;
+    Tag::Id id = -1;
     QByteArray gid;
     QByteArray remoteId;
     QScopedPointer<Tag> parent;

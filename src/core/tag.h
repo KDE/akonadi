@@ -262,7 +262,7 @@ inline bool Tag::hasAttribute() const
 
 } // namespace Akonadi
 
-AKONADICORE_EXPORT QDebug &operator<<(QDebug &debug, const Akonadi::Tag &tag);
+AKONADICORE_EXPORT QDebug operator<<(QDebug debug, const Akonadi::Tag &tag);
 
 Q_DECLARE_METATYPE(Akonadi::Tag)
 Q_DECLARE_METATYPE(Akonadi::Tag::List)

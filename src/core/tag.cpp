@@ -234,7 +234,7 @@ bool Tag::isImmutable() const
     return (d_ptr->type.isEmpty() || d_ptr->type == PLAIN);
 }
 
-QDebug &operator<<(QDebug &debug, const Tag &tag)
+QDebug operator<<(QDebug debug, const Tag &tag)
 {
     QDebugStateSaver saver(debug);
     debug.nospace() << "Akonadi::Tag(ID " << tag.id() << ", GID " << tag.gid() << ", parent tag ID " << tag.parent().id() << ")";
