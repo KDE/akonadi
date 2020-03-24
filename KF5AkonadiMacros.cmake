@@ -72,7 +72,11 @@ function(add_akonadi_isolated_test)
                           set(PATHSEP ":")
                         endif()
                         set(_plugin_path $ENV{QT_PLUGIN_PATH})
-                        set_property(TEST ${_testname} PROPERTY ENVIRONMENT QT_PLUGIN_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${PATHSEP}${_plugin_path})
+                        set(_test_env
+                            QT_PLUGIN_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${PATHSEP}$ENV{QT_PLUGIN_PATH}
+                            LD_LIBRARY_PATH=${CMAKE_LIBRARY_OUTPUT_DIRECTORY}${PATHSEP}$ENV{LD_LIBRARY_PATH}
+                        )
+                        set_tests_properties(${_test_name} PROPERTIES ENVIRONMENT "${_test_env}")
                       endif()
                 endif()
             endif()
