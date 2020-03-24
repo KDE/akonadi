@@ -127,12 +127,9 @@ void ItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest req)
     Q_EMIT requestAdded();
 }
 
-// called within the retrieval thread
-void ItemRetrievalManager::processRequest()
+QVector<AbstractItemRetrievalJob *> ItemRetrievalManager::scheduleJobsForIdleResourcesLocked()
 {
     QVector<AbstractItemRetrievalJob *> newJobs;
-    QWriteLocker locker(&mLock);
-    // look for idle resources
     for (auto it = mPendingRequests.begin(); it != mPendingRequests.end();) {
         if (it->second.empty()) {
             it = mPendingRequests.erase(it);
@@ -154,19 +151,39 @@ void ItemRetrievalManager::processRequest()
         ++it;
     }
 
+    return newJobs;
+}
+
+// called within the retrieval thread
+void ItemRetrievalManager::processRequest()
+{
+    QWriteLocker locker(&mLock);
+    // look for idle resources
+    auto newJobs = scheduleJobsForIdleResourcesLocked();
     // someone asked as to process requests although everything is done already, he might still be waiting
     if (mPendingRequests.empty() && mCurrentJobs.isEmpty() && newJobs.isEmpty()) {
         return;
     }
-
     locker.unlock();
 
+    // Start the jobs
     for (auto *job : newJobs) {
         if (ItemRetrievalJob *j = qobject_cast<ItemRetrievalJob *>(job)) {
             j->setInterface(resourceInterface(j->request().resourceId));
         }
         job->start();
     }
+}
+
+namespace {
+
+bool isSubsetOf(const QByteArrayList &superset, const QByteArrayList &subset)
+{
+    // For very small lists like these, this is faster than copy, sort and std::include
+    return std::all_of(subset.cbegin(), subset.cend(),
+                       [&superset](const auto &val) { return superset.contains(val); });
+}
+
 }
 
 void ItemRetrievalManager::retrievalJobFinished(AbstractItemRetrievalJob *job)
@@ -183,9 +200,11 @@ void ItemRetrievalManager::retrievalJobFinished(AbstractItemRetrievalJob *job)
     QWriteLocker locker(&mLock);
     Q_ASSERT(mCurrentJobs.contains(request.resourceId));
     mCurrentJobs.remove(request.resourceId);
+    // Check if there are any pending requests that are satisfied by this retrieval job
     auto &requests = mPendingRequests[request.resourceId];
     for (auto it = requests.begin(); it != requests.end();) {
-        if (it->ids == request.ids) {
+        // TODO: also complete requests that are subset of the completed one
+        if (it->ids == request.ids && isSubsetOf(request.parts, it->parts)) {
             qCDebug(AKONADISERVER_LOG) << "Someone else requested items " << request.ids << "as well, marking as processed.";
             ItemRetrievalResult otherResult{std::move(*it)};
             otherResult.errorMsg = result.errorMsg;

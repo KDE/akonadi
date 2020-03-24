@@ -41,6 +41,7 @@
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 Q_DECLARE_METATYPE(ItemRetrievalResult)
 
@@ -211,22 +212,64 @@ static bool hasAllParts(const ItemRetrievalRequest &req, const QSet<QByteArray> 
 }
 }
 
-bool ItemRetriever::exec()
+bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> requests)
 {
-    if (mParts.isEmpty() && !mFullPayload) {
-        return true;
+    QEventLoop eventLoop;
+    QVector<ItemRetrievalRequest::Id> pendingRequests;
+    connect(&mItemRetrievalManager, &ItemRetrievalManager::requestFinished,
+            this, [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) {
+        if (pendingRequests.contains(result.request.id)) {
+            if (mCanceled) {
+                eventLoop.exit(1);
+            } else if (result.errorMsg.has_value()) {
+                mLastError = result.errorMsg->toUtf8();
+                eventLoop.exit(1);
+            } else {
+                Q_EMIT itemsRetrieved(result.request.ids);
+                pendingRequests.removeOne(result.request.id);
+                if (pendingRequests.empty()) {
+                    eventLoop.quit();
+                }
+            }
+        }
+    }, Qt::UniqueConnection);
+
+    if (mConnection) {
+        connect(mConnection, &Connection::connectionClosing,
+                &eventLoop, [&eventLoop]() { eventLoop.exit(1); });
     }
 
-    verifyCache();
+    for (auto &&request : requests) {
+        if ((!mFullPayload && request.parts.isEmpty()) || request.ids.isEmpty()) {
+            continue;
+        }
 
-    QSqlQuery query = buildQuery();
-    QByteArrayList parts;
-    for (const QByteArray &part : qAsConst(mParts)) {
-        if (part.startsWith(AKONADI_PARAM_PLD)) {
-            parts << part.mid(4);
+        // TODO: how should we handle retrieval errors here? so far they have been ignored,
+        // which makes sense in some cases, do we need a command parameter for this?
+        try {
+            // Request is deleted inside ItemRetrievalManager, so we need to take
+            // a copy here
+            //const auto ids = request->ids;
+            pendingRequests.push_back(request.id);
+            mItemRetrievalManager.requestItemDelivery(std::move(request));
+        } catch (const ItemRetrieverException &e) {
+            qCCritical(AKONADISERVER_LOG) << e.type() << ": " << e.what();
+            mLastError = e.what();
+            return false;
         }
     }
 
+    if (!pendingRequests.empty()) {
+        if (eventLoop.exec()) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+akOptional<ItemRetriever::PreparedRequests> ItemRetriever::prepareRequests(QSqlQuery &query, const QByteArrayList &parts)
+{
     QHash<qint64, QString> resourceIdNameCache;
     std::list<ItemRetrievalRequest> requests;
     QHash<qint64 /* collection */, decltype(requests)::iterator> colRequests;
@@ -242,7 +285,7 @@ bool ItemRetriever::exec()
         const auto itemIter = itemRequests.constFind(pimItemId);
 
         if (Q_UNLIKELY(mCanceled)) {
-            return false;
+            return nullopt;
         }
 
         if (pimItemId == prevPimItemId) {
@@ -324,61 +367,33 @@ bool ItemRetriever::exec()
         // No need to update the hashtable at this point
     }
 
-    //qCDebug(AKONADISERVER_LOG) << "Closing queries and sending out requests.";
+    return PreparedRequests{std::move(requests), std::move(readyItems)};
+}
 
-    if (!readyItems.isEmpty()) {
-        Q_EMIT itemsRetrieved(readyItems);
+bool ItemRetriever::exec()
+{
+    if (mParts.isEmpty() && !mFullPayload) {
+        return true;
     }
 
-    QEventLoop eventLoop;
-    QVector<ItemRetrievalRequest::Id> pendingRequests;
-    connect(&mItemRetrievalManager, &ItemRetrievalManager::requestFinished,
-            this, [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) {
-        if (pendingRequests.contains(result.request.id)) {
-            if (mCanceled) {
-                eventLoop.exit(1);
-            } else if (result.errorMsg.has_value()) {
-                mLastError = result.errorMsg->toUtf8();
-                eventLoop.exit(1);
-            } else {
-                Q_EMIT itemsRetrieved(result.request.ids);
-                pendingRequests.removeOne(result.request.id);
-                if (pendingRequests.empty()) {
-                    eventLoop.quit();
-                }
-            }
-        }
-    }, Qt::UniqueConnection);
+    verifyCache();
 
-    if (mConnection) {
-        connect(mConnection, &Connection::connectionClosing,
-                &eventLoop, [&eventLoop]() { eventLoop.exit(1); });
+    QSqlQuery query = buildQuery();
+    const auto parts = mParts | Views::filter([](const auto &part) { return part.startsWith(AKONADI_PARAM_PLD); })
+                              | Views::transform([](const auto &part) { return part.mid(4); })
+                              | Actions::toQList;
+
+    const auto requests = prepareRequests(query, parts);
+    if (!requests.has_value()) {
+        return false;
     }
 
-    for (auto &&request : requests) {
-        if ((!mFullPayload && request.parts.isEmpty()) || request.ids.isEmpty()) {
-            continue;
-        }
-
-        // TODO: how should we handle retrieval errors here? so far they have been ignored,
-        // which makes sense in some cases, do we need a command parameter for this?
-        try {
-            // Request is deleted inside ItemRetrievalManager, so we need to take
-            // a copy here
-            //const auto ids = request->ids;
-            pendingRequests.push_back(request.id);
-            mItemRetrievalManager.requestItemDelivery(std::move(request));
-        } catch (const ItemRetrieverException &e) {
-            qCCritical(AKONADISERVER_LOG) << e.type() << ": " << e.what();
-            mLastError = e.what();
-            return false;
-        }
+    if (!requests->readyItems.isEmpty()) {
+        Q_EMIT itemsRetrieved(requests->readyItems);
     }
 
-    if (!pendingRequests.empty()) {
-        if (eventLoop.exec()) {
-            return false;
-        }
+    if (!runItemRetrievalRequests(std::move(requests->requests))) {
+        return false;
     }
 
     // retrieve items in child collections if requested

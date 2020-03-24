@@ -29,6 +29,8 @@
 #include <private/scope_p.h>
 #include <private/imapset_p.h>
 
+#include <shared/akoptional.h>
+
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(ItemRetrieverException);
 
@@ -40,6 +42,7 @@ namespace Server
 class Connection;
 class CommandContext;
 class ItemRetrievalManager;
+class ItemRetrievalRequest;
 
 /**
   Helper class for retrieving missing items parts from remote resources.
@@ -86,6 +89,14 @@ private:
      * This costs extra, but allows us to automatically recover from something changing the external file storage.
      */
     void verifyCache();
+
+    /// Execute the retrieval
+    bool runItemRetrievalRequests(std::list<ItemRetrievalRequest> requests);
+    struct PreparedRequests {
+        std::list<ItemRetrievalRequest> requests;
+        QVector<qint64> readyItems;
+    };
+    akOptional<PreparedRequests> prepareRequests(QSqlQuery &query, const QByteArrayList &parts);
 
     Akonadi::ImapSet mItemSet;
     Collection mCollection;
