@@ -82,6 +82,11 @@ AKONADIPRIVATE_EXPORT akOptional<AgentService> parseAgentServiceName(const QStri
  */
 AKONADIPRIVATE_EXPORT QString agentServiceName(const QString &agentIdentifier, DBus::AgentType agentType);
 
+/**
+ * Returns the Akonadi instance name encoded in the service name.
+ */
+AKONADIPRIVATE_EXPORT akOptional<QString> parseInstanceIdentifier(const QString &serviceName);
+
 }
 
 }

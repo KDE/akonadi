@@ -643,6 +643,18 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
     // This is called by the D-Bus server when a service comes up, goes down or changes ownership for some reason
     // and this is where we "hook up" our different Agent interfaces.
 
+    // Ignore DBus address name (e.g. :1.310)
+    if (name.startsWith(QLatin1Char(':'))) {
+        return;
+    }
+
+    // Ignore services belonging to another Akonadi instance
+    const auto parsedInstance = Akonadi::DBus::parseInstanceIdentifier(name);
+    const auto currentInstance = Akonadi::Instance::hasIdentifier() ? Akonadi::akOptional<QString>(Akonadi::Instance::identifier()) : Akonadi::nullopt;
+    if (parsedInstance != currentInstance) {
+        return;
+    }
+
     qCDebug(AKONADICONTROL_LOG) << "Service" << name << "owner changed from" << oldOwner << "to" << newOwner;
 
     if ((name == Akonadi::DBus::serviceName(Akonadi::DBus::Server) || name == Akonadi::DBus::serviceName(Akonadi::DBus::AgentServer)) && !newOwner.isEmpty()) {

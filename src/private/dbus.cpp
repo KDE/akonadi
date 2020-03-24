@@ -110,3 +110,39 @@ QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType a
     }
     return serviceName;
 }
+
+akOptional<QString> DBus::parseInstanceIdentifier(const QString &serviceName)
+{
+    constexpr std::array<QStringView, 4> services = {QStringView{AKONADI_DBUS_STORAGEJANITOR_SERVICE},
+                                                     QStringView{AKONADI_DBUS_AGENTSERVER_SERVICE},
+                                                     QStringView{AKONADI_DBUS_CONTROL_SERVICE_LOCK},
+                                                     QStringView{AKONADI_DBUS_CONTROL_SERVICE}};
+    for (const auto &service : services) {
+        if (serviceName.startsWith(service)) {
+            if (serviceName != service) {
+                return serviceName.mid(service.length() + 1); // +1 for the separator "."
+            }
+            return nullopt;
+        }
+    }
+
+    if (serviceName.startsWith(QStringView{AKONADI_DBUS_SERVER_SERVICE})) {
+        const auto split = serviceName.splitRef(QLatin1Char('.'));
+        if (split.size() <= 3) {
+            return nullopt;
+        }
+
+        // [0]org.[1]freedesktop.[2]Akonadi.[3]type.[4]identifier.[5]instance
+        if (split[3] == QStringView{u"Agent"} || split[3] == QStringView{u"Resource"} || split[3] == QStringView{u"Preprocessor"}) {
+            if (split.size() == 6) {
+                return split[5].toString();
+            } else {
+                return nullopt;
+            }
+        } else {
+            return split[3].toString();
+        }
+    }
+
+    return nullopt;
+}

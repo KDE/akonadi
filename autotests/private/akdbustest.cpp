@@ -93,6 +93,43 @@ private Q_SLOTS:
         akTestSetInstanceIdentifier(QStringLiteral("foo"));
         QCOMPARE(DBus::agentServiceName(QLatin1String("akonadi_maildir_resource_0"), DBus::Agent), QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo"));
     }
+
+    void testParseInstanceIdentifier_data()
+    {
+        QTest::addColumn<QString>("serviceName");
+        QTest::addColumn<bool>("hasInstance");
+
+        QTest::newRow("server") << QStringLiteral("org.freedesktop.Akonadi") << false;
+        QTest::newRow("server instance") << QStringLiteral("org.freedesktop.Akonadi.instance") << true;
+        QTest::newRow("control") << QStringLiteral("org.freedesktop.Akonadi.Control") << false;
+        QTest::newRow("control instance") << QStringLiteral("org.freedesktop.Akonadi.Control.instance") << true;
+        QTest::newRow("control lock") << QStringLiteral("org.freedesktop.Akonadi.Control.lock") << false;
+        QTest::newRow("control lock instance") << QStringLiteral("org.freedesktop.Akonadi.Control.lock.instance") << true;
+        QTest::newRow("janitor") << QStringLiteral("org.freedesktop.Akonadi.Janitor") << false;
+        QTest::newRow("janitor instance") << QStringLiteral("org.freedesktop.Akonadi.Janitor.instance") << true;
+        QTest::newRow("agentserver") << QStringLiteral("org.freedesktop.Akonadi.AgentServer") << false;
+        QTest::newRow("agentserver instance") << QStringLiteral("org.freedesktop.Akonadi.AgentServer.instance") << true;
+        QTest::newRow("upgrading") << QStringLiteral("org.freedesktop.Akonadi.upgrading") << false;
+        QTest::newRow("upgrading instance") << QStringLiteral("org.freedesktop.Akonadi.upgrading.instance") << true;
+        QTest::newRow("agent") << QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_agent_identifier") << false;
+        QTest::newRow("agent instance") << QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_agent_identifier.instance") << true;
+        QTest::newRow("resource") << QStringLiteral("org.freedesktop.Akonadi.Resource.akonadi_resource_identifier") << false;
+        QTest::newRow("resource instance") << QStringLiteral("org.freedesktop.Akonadi.Resource.akonadi_resource_identifier.instance") << true;
+        QTest::newRow("preprocessor") << QStringLiteral("org.freedesktop.Akonadi.Preprocessor.akonadi_preprocessor_identifier") << false;
+        QTest::newRow("preprocessor instance") << QStringLiteral("org.freedesktop.Akonadi.Preprocessor.akonadi_preprocessor_identifier.instance") << true;
+    }
+
+    void testParseInstanceIdentifier()
+    {
+        QFETCH(QString, serviceName);
+        QFETCH(bool, hasInstance);
+
+        const auto identifier = DBus::parseInstanceIdentifier(serviceName);
+        QCOMPARE(identifier.has_value(), hasInstance);
+        if (hasInstance) {
+            QCOMPARE(identifier.value(), QStringLiteral("instance"));
+        }
+    }
 };
 
 AKTEST_MAIN(DBusTest)
