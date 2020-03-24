@@ -20,27 +20,33 @@
 */
 
 #include "tagmanagementdialog.h"
+#include "ui_tagmanagementdialog.h"
+
 #include "tagmodel.h"
 #include "monitor.h"
-#include "tageditwidget.h"
+#include "controlgui.h"
+
 #include <KLocalizedString>
 #include <KSharedConfig>
 #include <KConfigGroup>
-
-#include <QDialogButtonBox>
-#include <QPushButton>
-#include <QVBoxLayout>
 
 using namespace Akonadi;
 
 struct Q_DECL_HIDDEN TagManagementDialog::Private {
     Private(QDialog *parent)
         : d(parent)
+    {}
+
+    ~Private()
     {
+        writeConfig();
     }
+
     void writeConfig();
     void readConfig();
-    QDialog *d = nullptr;
+
+    Ui::TagManagementDialog ui;
+    QDialog * const d = nullptr;
     QDialogButtonBox *buttonBox = nullptr;
 };
 
@@ -63,34 +69,23 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
     : QDialog(parent)
     , d(new Private(this))
 {
-    setWindowTitle(i18nc("@title:window", "Manage Tags"));
-    QVBoxLayout *vbox = new QVBoxLayout(this);
-
     Monitor *monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagManagementDialogMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 
-    Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
-    vbox->addWidget(new Akonadi::TagEditWidget(model, this, false));
-
-    d->buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
-    connect(d->buttonBox, &QDialogButtonBox::accepted, this, &TagManagementDialog::accept);
-    connect(d->buttonBox, &QDialogButtonBox::rejected, this, &TagManagementDialog::reject);
-
-    QPushButton *okButton = d->buttonBox->button(QDialogButtonBox::Ok);
-    okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    vbox->addWidget(d->buttonBox);
+    d->ui.setupUi(this);
+    d->ui.tagEditWidget->setModel(new TagModel(monitor, this));
+    d->ui.tagEditWidget->setSelectionEnabled(false);
 
     d->readConfig();
+
+    ControlGui::widgetNeedsAkonadi(this);
 }
 
-TagManagementDialog::~TagManagementDialog()
-{
-    d->writeConfig();
-}
+TagManagementDialog::~TagManagementDialog() = default;
 
 QDialogButtonBox *TagManagementDialog::buttons() const
 {
     return d->buttonBox;
 }
+

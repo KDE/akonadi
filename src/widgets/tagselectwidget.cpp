@@ -22,49 +22,40 @@
 #include "tagmodel.h"
 #include "tageditwidget.h"
 
+#include "shared/akranges.h"
+
 #include <QHBoxLayout>
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 class Q_DECL_HIDDEN TagSelectWidget::Private
 {
 public:
-    Private(TagSelectWidget *parent)
-        : mParent(parent)
-    {
-        init();
-    }
-    void init();
-    TagSelectWidget *mParent = nullptr;
-    Akonadi::TagEditWidget *mTagEditWidget = nullptr;
+    QScopedPointer<TagEditWidget> mTagEditWidget;
 };
 
-void TagSelectWidget::Private::init()
-{
-    QHBoxLayout *mainLayout = new QHBoxLayout(mParent);
-
-    Monitor *monitor = new Monitor(mParent);
-    monitor->setObjectName(QStringLiteral("TagSelectWidgetMonitor"));
-    monitor->setTypeMonitored(Monitor::Tags);
-
-    Akonadi::TagModel *model = new Akonadi::TagModel(monitor, mParent);
-    mTagEditWidget = new Akonadi::TagEditWidget(model, mParent, true);
-    mTagEditWidget->setObjectName(QStringLiteral("tageditwidget"));
-
-    mainLayout->addWidget(mTagEditWidget);
-
-}
 
 TagSelectWidget::TagSelectWidget(QWidget *parent)
     : QWidget(parent),
-      d(new Private(this))
+      d(new Private())
 {
+    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+
+    auto monitor = new Monitor(this);
+    monitor->setObjectName(QStringLiteral("TagSelectWidgetMonitor"));
+    monitor->setTypeMonitored(Monitor::Tags);
+
+    auto model = new TagModel(monitor, this);
+    d->mTagEditWidget.reset(new TagEditWidget());
+    d->mTagEditWidget->setModel(model);
+    d->mTagEditWidget->setSelectionEnabled(true);
+    d->mTagEditWidget->setObjectName(QStringLiteral("tageditwidget"));
+
+    mainLayout->addWidget(d->mTagEditWidget.get());
 }
 
-TagSelectWidget::~TagSelectWidget()
-{
-    delete d;
-}
+TagSelectWidget::~TagSelectWidget() = default;
 
 void TagSelectWidget::setSelection(const Tag::List &tags)
 {
@@ -78,23 +69,11 @@ Tag::List TagSelectWidget::selection() const
 
 QStringList TagSelectWidget::tagToStringList() const
 {
-    QStringList list;
-    const Akonadi::Tag::List tags = selection();
-    list.reserve(tags.count());
-    for (const Akonadi::Tag &tag : tags) {
-        list.append(tag.url().url());
-    }
-    return list;
+    return selection() | Views::transform([](const auto &tag) { return tag.url().url(); }) | Actions::toQList;
 }
 
 void TagSelectWidget::setSelectionFromStringList(const QStringList &lst)
 {
-    Akonadi::Tag::List tags;
-
-    tags.reserve(lst.count());
-    for (const QString &category : lst) {
-        tags.append(Akonadi::Tag::fromUrl(QUrl(category)));
-    }
-    setSelection(tags);
+    setSelection(lst | Views::transform([](const auto &cat) { return Tag::fromUrl(QUrl{cat}); }) | Actions::toQVector);
 }
 

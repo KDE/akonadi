@@ -51,7 +51,7 @@ public:
         EndRole = 65535
     };
 
-    explicit TagModel(Monitor *recorder, QObject *parent);
+    explicit TagModel(Monitor *recorder, QObject *parent = nullptr);
     ~TagModel() override;
 
     Q_REQUIRED_RESULT int columnCount(const QModelIndex &parent = QModelIndex()) const override;
@@ -74,7 +74,7 @@ protected:
     Q_DECLARE_PRIVATE(TagModel)
     TagModelPrivate *d_ptr;
 
-    TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent = nullptr);
+    TagModel(Monitor *recorder, TagModelPrivate *dd, QObject *parent);
 
 Q_SIGNALS:
     void populated();

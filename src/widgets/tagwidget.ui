@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>TagWidget</class>
+ <widget class="QWidget" name="TagWidget">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>46</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <layout class="QHBoxLayout" name="horizontalLayout">
+   <item>
+    <widget class="Akonadi::TagView" name="tagView">
+     <property name="placeholderText">
+      <string>Click to add tags</string>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QToolButton" name="editButton">
+     <property name="text">
+      <string>...</string>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>Akonadi::TagView</class>
+   <extends>QLineEdit</extends>
+   <header>tagwidget.h</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>

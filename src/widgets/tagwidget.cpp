@@ -33,40 +33,48 @@
 #include <QToolButton>
 #include <QMenu>
 #include <QContextMenuEvent>
+#include <QLocale>
+
 using namespace Akonadi;
+
+namespace Akonadi
+{
+
+class Q_DECL_HIDDEN TagView : public QLineEdit
+{
+    Q_OBJECT
+public:
+    explicit TagView(QWidget *parent)
+        : QLineEdit(parent)
+    {}
+
+    void contextMenuEvent(QContextMenuEvent *event) override
+    {
+        if (text().isEmpty()) {
+            return;
+        }
+
+        QMenu menu;
+        menu.addAction(i18n("Clear"), this, &TagView::clearTags);
+        menu.exec(event->globalPos());
+    }
+
+Q_SIGNALS:
+    void clearTags();
+};
+
+}
+
+// include after defining TagView
+#include "ui_tagwidget.h"
 
 class Q_DECL_HIDDEN TagWidget::Private
 {
 public:
-    Private()
-    {
-
-    }
-
+    Ui::TagWidget ui;
     Akonadi::Tag::List mTags;
-    TagView *mTagView = nullptr;
     Akonadi::TagModel *mModel = nullptr;
-    QToolButton *mEditButton = nullptr;
 };
-
-TagView::TagView(QWidget *parent)
-    : QLineEdit(parent)
-{
-    setPlaceholderText(i18n("Click to add tags"));
-    setReadOnly(true);
-}
-
-void TagView::contextMenuEvent(QContextMenuEvent *event)
-{
-    if (text().isEmpty()) {
-        return;
-    }
-
-    QMenu menu;
-    menu.addAction(i18n("Clear"), this, &TagView::clearTags);
-
-    menu.exec(event->globalPos());
-}
 
 TagWidget::TagWidget(QWidget *parent)
     : QWidget(parent)
@@ -78,31 +86,20 @@ TagWidget::TagWidget(QWidget *parent)
     d->mModel = new Akonadi::TagModel(monitor, this);
     connect(monitor, &Monitor::tagAdded, this, &TagWidget::updateView);
 
-    QHBoxLayout *layout = new QHBoxLayout(this);
-    layout->setContentsMargins(0, 0, 0, 0);
-    d->mTagView = new TagView(this);
-    connect(d->mTagView, &TagView::clearTags, this, &TagWidget::clearTags);
-    layout->addWidget(d->mTagView);
+    d->ui.setupUi(this);
+    connect(d->ui.tagView, &TagView::clearTags, this, &TagWidget::clearTags);
 
-    d->mEditButton = new QToolButton(this);
-    d->mEditButton->setText(i18n("..."));
-    layout->addWidget(d->mEditButton, Qt::AlignRight);
-
-    layout->setStretch(0, 10);
-
-    connect(d->mEditButton, &QToolButton::clicked, this, &TagWidget::editTags);
+    connect(d->ui.editButton, &QToolButton::clicked, this, &TagWidget::editTags);
     connect(d->mModel, &Akonadi::TagModel::populated, this, &TagWidget::updateView);
 }
 
-TagWidget::~TagWidget()
-{
-}
+TagWidget::~TagWidget() = default;
 
 void TagWidget::clearTags()
 {
     if (!d->mTags.isEmpty()) {
         d->mTags.clear();
-        d->mTagView->clear();
+        d->ui.tagView->clear();
         Q_EMIT selectionChanged(d->mTags);
     }
 }
@@ -112,6 +109,7 @@ void TagWidget::setSelection(const Akonadi::Tag::List &tags)
     if (d->mTags != tags) {
         d->mTags = tags;
         updateView();
+        Q_EMIT selectionChanged(d->mTags);
     }
 }
 
@@ -122,13 +120,13 @@ Akonadi::Tag::List TagWidget::selection() const
 
 void TagWidget::setReadOnly(bool readOnly)
 {
-    d->mEditButton->setEnabled(!readOnly);
+    d->ui.editButton->setEnabled(!readOnly);
     //d->mTagView is always readOnly => not change it.
 }
 
 void TagWidget::editTags()
 {
-    QScopedPointer<Akonadi::TagSelectionDialog> dlg(new TagSelectionDialog(this));
+    QScopedPointer<Akonadi::TagSelectionDialog> dlg(new TagSelectionDialog(d->mModel, this));
     dlg->setSelection(d->mTags);
     if (dlg->exec() == QDialog::Accepted) {
         d->mTags = dlg->selection();
@@ -145,8 +143,11 @@ void TagWidget::updateView()
         const QModelIndex index = d->mModel->index(i, 0);
         const Akonadi::Tag tag = d->mModel->data(index, Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
         if (d->mTags.contains(tag)) {
-            tagsNames << tag.name();
+            tagsNames.push_back(tag.name());
         }
     }
-    d->mTagView->setText(tagsNames.join(QLatin1String(", ")));
+    d->ui.tagView->setText(QLocale::system().createSeparatedList(tagsNames));
 }
+
+#include "tagwidget.moc"
+

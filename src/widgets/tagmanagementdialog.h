@@ -46,7 +46,7 @@ public:
 
 private:
     struct Private;
-    QSharedPointer<Private> d;
+    QScopedPointer<Private> d;
 };
 
 }

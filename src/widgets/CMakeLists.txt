@@ -53,6 +53,10 @@ set(akonadiwidgets_UI
     erroroverlay.ui
     manageaccountwidget.ui
     selftestdialog.ui
+    tageditwidget.ui
+    tagmanagementdialog.ui
+    tagselectiondialog.ui
+    tagwidget.ui
 )
 
 ecm_generate_headers(AkonadiWidgets_HEADERS

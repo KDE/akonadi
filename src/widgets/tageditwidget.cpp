@@ -19,12 +19,7 @@
     02110-1301, USA.
 */
 #include "tageditwidget.h"
-
-#include <KLocalizedString>
-#include <QLineEdit>
-#include <KMessageBox>
-#include <KCheckableProxyModel>
-#include <QListView>
+#include "ui_tageditwidget.h"
 #include "changerecorder.h"
 #include "tagcreatejob.h"
 #include "tagdeletejob.h"
@@ -32,13 +27,12 @@
 #include "tagattribute.h"
 #include "tagmodel.h"
 
+#include <KLocalizedString>
+#include <KMessageBox>
+#include <KCheckableProxyModel>
+
 #include <QEvent>
-#include <QHBoxLayout>
-#include <QLabel>
 #include <QPushButton>
-#include <QTimer>
-#include <QVBoxLayout>
-#include <QWidget>
 
 using namespace Akonadi;
 
@@ -46,46 +40,54 @@ class Q_DECL_HIDDEN TagEditWidget::Private : public QObject
 {
     Q_OBJECT
 public:
-    Private(Akonadi::TagModel *model, QWidget *parent);
+    Private(QWidget *parent);
 
 public Q_SLOTS:
     void slotTextEdited(const QString &text);
     void slotItemEntered(const QModelIndex &index);
-    void showDeleteButton();
     void deleteTag();
     void slotCreateTag();
     void slotCreateTagFinished(KJob *job);
     void onRowsInserted(const QModelIndex &parent, int start, int end);
+    void onModelPopulated();
 
 public:
+    void initCheckableProxy(Akonadi::TagModel *model)
+    {
+        Q_ASSERT(m_checkableProxy);
+
+        QItemSelectionModel *selectionModel = new QItemSelectionModel(model, m_checkableProxy.get());
+        m_checkableProxy->setSourceModel(model);
+        m_checkableProxy->setSelectionModel(selectionModel);
+    }
+
     void select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag);
     enum ItemType {
         UrlTag = Qt::UserRole + 1
     };
 
-    QWidget *d;
+    QWidget * const d;
+    Ui::TagEditWidget ui;
+
     Akonadi::Tag::List m_tags;
     Akonadi::TagModel *m_model = nullptr;
-    QListView *m_tagsView = nullptr;
-    KCheckableProxyModel *m_checkableProxy = nullptr;
+    QScopedPointer<KCheckableProxyModel> m_checkableProxy;
     QModelIndex m_deleteCandidate;
-    QPushButton *m_newTagButton = nullptr;
-    QLineEdit *m_newTagEdit = nullptr;
 
     QPushButton *m_deleteButton = nullptr;
-    QTimer *m_deleteButtonTimer = nullptr;
 };
 
-TagEditWidget::Private::Private(Akonadi::TagModel *model, QWidget *parent)
+TagEditWidget::Private::Private(QWidget *parent)
     : QObject()
     , d(parent)
-    , m_model(model)
-{
-
-}
+{}
 
 void TagEditWidget::Private::select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag)
 {
+    if (!m_model) {
+        return;
+    }
+
     QItemSelection selection;
     for (int i = start; i <= end; i++) {
         const QModelIndex index = m_model->index(i, 0, parent);
@@ -94,7 +96,14 @@ void TagEditWidget::Private::select(const QModelIndex &parent, int start, int en
             selection.select(index, index);
         }
     }
-    m_checkableProxy->selectionModel()->select(selection, selectionFlag);
+    if (m_checkableProxy) {
+        m_checkableProxy->selectionModel()->select(selection, selectionFlag);
+    }
+}
+
+void TagEditWidget::Private::onModelPopulated()
+{
+    select(QModelIndex(), 0, m_model->rowCount() - 1, QItemSelectionModel::ClearAndSelect);
 }
 
 void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start, int end)
@@ -104,24 +113,24 @@ void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start
 
 void TagEditWidget::Private::slotCreateTag()
 {
-    if (m_newTagButton->isEnabled()) {
-        Akonadi::TagCreateJob *createJob = new Akonadi::TagCreateJob(Akonadi::Tag(m_newTagEdit->text()), this);
-        connect(createJob, &Akonadi::TagCreateJob::finished, this, &TagEditWidget::Private::slotCreateTagFinished);
+    if (ui.newTagButton->isEnabled()) {
+        auto createJob = new TagCreateJob(Akonadi::Tag(ui.newTagEdit->text()), this);
+        connect(createJob, &TagCreateJob::finished, this, &TagEditWidget::Private::slotCreateTagFinished);
 
-        m_newTagEdit->clear();
-        m_newTagEdit->setEnabled(false);
-        m_newTagButton->setEnabled(false);
+        ui.newTagEdit->clear();
+        ui.newTagEdit->setEnabled(false);
+        ui.newTagButton->setEnabled(false);
     }
 }
 
 void TagEditWidget::Private::slotCreateTagFinished(KJob *job)
 {
     if (job->error()) {
-        QMessageBox::critical(d, i18n("Failed to create a new tag"),
+        KMessageBox::error(d, i18n("Failed to create a new tag"),
                               i18n("An error occurred while creating a new tag"));
     }
 
-    m_newTagEdit->setEnabled(true);
+    ui.newTagEdit->setEnabled(true);
 }
 
 void TagEditWidget::Private::slotTextEdited(const QString &text)
@@ -131,28 +140,27 @@ void TagEditWidget::Private::slotTextEdited(const QString &text)
     // between a tag "Test" and "Test ".
     const QString tagText = text.simplified();
     if (tagText.isEmpty()) {
-        m_newTagButton->setEnabled(false);
+        ui.newTagButton->setEnabled(false);
         return;
     }
 
     // Check whether the new tag already exists
-    const int count = m_model->rowCount();
     bool exists = false;
-    for (int i = 0; i < count; ++i) {
+    for (int i = 0, count = m_model->rowCount(); i < count; ++i) {
         const QModelIndex index = m_model->index(i, 0, QModelIndex());
         if (index.data(Qt::DisplayRole).toString() == tagText) {
             exists = true;
             break;
         }
     }
-    m_newTagButton->setEnabled(!exists);
+    ui.newTagButton->setEnabled(!exists);
 }
 
 void TagEditWidget::Private::slotItemEntered(const QModelIndex &index)
 {
     // align the delete-button to stay on the right border
     // of the item
-    const QRect rect = m_tagsView->visualRect(index);
+    const QRect rect = ui.tagsView->visualRect(index);
     const int size = rect.height();
     const int x = rect.right() - size;
     const int y = rect.top();
@@ -160,94 +168,103 @@ void TagEditWidget::Private::slotItemEntered(const QModelIndex &index)
     m_deleteButton->resize(size, size);
 
     m_deleteCandidate = index;
-    m_deleteButtonTimer->start();
-}
-
-void TagEditWidget::Private::showDeleteButton()
-{
     m_deleteButton->show();
 }
 
 void TagEditWidget::Private::deleteTag()
 {
     Q_ASSERT(m_deleteCandidate.isValid());
-    const Akonadi::Tag tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
+    const auto tag = m_deleteCandidate.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
     const QString text = xi18nc("@info",
                                 "Do you really want to remove the tag <resource>%1</resource>?",
                                 tag.name());
     const QString caption = i18nc("@title", "Delete tag");
     if (KMessageBox::questionYesNo(d, text, caption, KStandardGuiItem::del(), KStandardGuiItem::cancel()) == KMessageBox::Yes) {
-        new Akonadi::TagDeleteJob(tag, this);
+        new TagDeleteJob(tag, this);
     }
 }
 
-TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool enableSelection)
+TagEditWidget::TagEditWidget(QWidget *parent)
     : QWidget(parent)
-    , d(new Private(model, this))
+    , d(new Private(this))
 {
-    QVBoxLayout *topLayout = new QVBoxLayout(this);
-    topLayout->setContentsMargins(0, 0, 0, 0);
+    d->ui.setupUi(this);
 
-    QItemSelectionModel *selectionModel = new QItemSelectionModel(d->m_model, this);
-    d->m_checkableProxy = new KCheckableProxyModel(this);
-    d->m_checkableProxy->setSourceModel(d->m_model);
-    d->m_checkableProxy->setSelectionModel(selectionModel);
-    connect(d->m_model, &QAbstractItemModel::rowsInserted, d.data(), &Private::onRowsInserted);
 
-    d->m_tagsView = new QListView(this);
-    d->m_tagsView->setMouseTracking(true);
-    d->m_tagsView->setSelectionMode(QAbstractItemView::NoSelection);
-    d->m_tagsView->installEventFilter(this);
-    if (enableSelection) {
-        d->m_tagsView->setModel(d->m_checkableProxy);
-    } else {
-        d->m_tagsView->setModel(d->m_model);
-    }
-    connect(d->m_tagsView, &QAbstractItemView::entered,
-            d.data(), &Private::slotItemEntered);
+    d->ui.tagsView->installEventFilter(this);
+    connect(d->ui.tagsView, &QAbstractItemView::entered, d.get(), &Private::slotItemEntered);
 
-    d->m_newTagEdit = new QLineEdit(this);
-    d->m_newTagEdit->setClearButtonEnabled(true);
-    connect(d->m_newTagEdit, &QLineEdit::textEdited,
-            d.data(), &Private::slotTextEdited);
-    connect(d->m_newTagEdit, &QLineEdit::returnPressed,
-            d.data(), &Private::slotCreateTag);
+    connect(d->ui.newTagEdit, &QLineEdit::textEdited, d.get(), &Private::slotTextEdited);
+    connect(d->ui.newTagEdit, &QLineEdit::returnPressed, d.get(), &Private::slotCreateTag);
+    connect(d->ui.newTagButton, &QAbstractButton::clicked, d.get(), &Private::slotCreateTag);
 
-    d->m_newTagButton = new QPushButton(i18nc("@label", "Create new tag"));
-    d->m_newTagButton->setEnabled(false);
-    connect(d->m_newTagButton, &QAbstractButton::clicked,
-            d.data(), &Private::slotCreateTag);
-
-    QHBoxLayout *newTagLayout = new QHBoxLayout();
-    newTagLayout->addWidget(d->m_newTagEdit, 1);
-    newTagLayout->addWidget(d->m_newTagButton);
-
-    if (enableSelection) {
-        QLabel *label = new QLabel(i18nc("@label:textbox",
-                                         "Configure which tags should "
-                                         "be applied."), this);
-        topLayout->addWidget(label);
-    }
-    topLayout->addWidget(d->m_tagsView);
-    topLayout->addLayout(newTagLayout);
 
     // create the delete button, which is shown when
     // hovering the items
-    d->m_deleteButton = new QPushButton(d->m_tagsView->viewport());
+    d->m_deleteButton = new QPushButton(d->ui.tagsView->viewport());
+    d->m_deleteButton->setObjectName(QStringLiteral("tagDeleteButton"));
     d->m_deleteButton->setIcon(QIcon::fromTheme(QStringLiteral("edit-delete")));
     d->m_deleteButton->setToolTip(i18nc("@info", "Delete tag"));
     d->m_deleteButton->hide();
     connect(d->m_deleteButton, &QAbstractButton::clicked, d.data(), &Private::deleteTag);
-
-    d->m_deleteButtonTimer = new QTimer(this);
-    d->m_deleteButtonTimer->setSingleShot(true);
-    d->m_deleteButtonTimer->setInterval(500);
-    connect(d->m_deleteButtonTimer, &QTimer::timeout, d.data(), &Private::showDeleteButton);
 }
 
-TagEditWidget::~TagEditWidget()
+TagEditWidget::TagEditWidget(Akonadi::TagModel *model, QWidget *parent, bool enableSelection)
+    : TagEditWidget(parent)
 {
+    setModel(model);
+    setSelectionEnabled(enableSelection);
+}
 
+TagEditWidget::~TagEditWidget() = default;
+
+void TagEditWidget::setSelectionEnabled(bool enabled)
+{
+    if (enabled == (d->m_checkableProxy != nullptr)) {
+        return;
+    }
+
+    if (enabled) {
+        d->m_checkableProxy.reset(new KCheckableProxyModel(this));
+        if (d->m_model) {
+            d->initCheckableProxy(d->m_model);
+        }
+        d->ui.tagsView->setModel(d->m_checkableProxy.get());
+    } else {
+        d->m_checkableProxy.reset();
+        d->ui.tagsView->setModel(d->m_model);
+    }
+    d->ui.selectLabel->setVisible(enabled);
+}
+
+void TagEditWidget::setModel(TagModel *model)
+{
+    if (d->m_model) {
+        disconnect(d->m_model, &QAbstractItemModel::rowsInserted, d.get(), &Private::onRowsInserted);
+        disconnect(d->m_model, &TagModel::populated, d.get(), &Private::onModelPopulated);
+    }
+
+    d->m_model = model;
+    if (d->m_model) {
+        connect(d->m_model, &QAbstractItemModel::rowsInserted, d.get(), &Private::onRowsInserted);
+        if (d->m_checkableProxy) {
+            d->initCheckableProxy(d->m_model);
+            d->ui.tagsView->setModel(d->m_checkableProxy.get());
+        } else {
+            d->ui.tagsView->setModel(d->m_model);
+        }
+        connect(d->m_model, &TagModel::populated, d.get(), &Private::onModelPopulated);
+    }
+}
+
+TagModel *TagEditWidget::model() const
+{
+    return d->m_model;
+}
+
+bool TagEditWidget::selectionEnabled() const
+{
+    return d->m_checkableProxy != nullptr;
 }
 
 void TagEditWidget::setSelection(const Akonadi::Tag::List &tags)
@@ -258,12 +275,16 @@ void TagEditWidget::setSelection(const Akonadi::Tag::List &tags)
 
 Akonadi::Tag::List TagEditWidget::selection() const
 {
+    if (!d->m_checkableProxy) {
+        return {};
+    }
+
     Akonadi::Tag::List list;
     for (int i = 0; i < d->m_checkableProxy->rowCount(); ++i) {
         if (d->m_checkableProxy->selectionModel()->isRowSelected(i, QModelIndex())) {
-            const QModelIndex index = d->m_checkableProxy->index(i, 0, QModelIndex());
-            const Akonadi::Tag tag = index.data(Akonadi::TagModel::TagRole).value<Akonadi::Tag>();
-            list << tag;
+            const auto index = d->m_checkableProxy->index(i, 0, QModelIndex());
+            const auto tag = index.data(TagModel::TagRole).value<Tag>();
+            list.push_back(tag);
         }
     }
     return list;
@@ -271,11 +292,11 @@ Akonadi::Tag::List TagEditWidget::selection() const
 
 bool TagEditWidget::eventFilter(QObject *watched, QEvent *event)
 {
-    if ((watched == d->m_tagsView) && (event->type() == QEvent::Leave)) {
-        d->m_deleteButtonTimer->stop();
+    if ((watched == d->ui.tagsView) && (event->type() == QEvent::Leave)) {
         d->m_deleteButton->hide();
     }
     return QWidget::eventFilter(watched, event);
 }
 
 #include "tageditwidget.moc"
+

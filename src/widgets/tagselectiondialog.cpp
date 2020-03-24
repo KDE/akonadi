@@ -20,15 +20,13 @@
 */
 
 #include "tagselectiondialog.h"
+#include "ui_tagselectiondialog.h"
 #include "tagmodel.h"
 #include "monitor.h"
+#include "controlgui.h"
+
 #include <KConfigGroup>
-#include "tageditwidget.h"
-#include <KLocalizedString>
 #include <KSharedConfig>
-#include <QVBoxLayout>
-#include <QDialogButtonBox>
-#include <QPushButton>
 
 using namespace Akonadi;
 
@@ -37,13 +35,18 @@ class Q_DECL_HIDDEN TagSelectionDialog::Private
 public:
     Private(QDialog *parent)
         : d(parent)
+    {}
+
+    ~Private()
     {
+        writeConfig();
     }
+
     void writeConfig();
     void readConfig();
-    QDialog *d = nullptr;
-    Akonadi::TagEditWidget *mTagWidget = nullptr;
-    QDialogButtonBox *mButtonBox = nullptr;
+
+    QDialog * const d = nullptr;
+    Ui::TagSelectionDialog ui;
 };
 
 void TagSelectionDialog::Private::writeConfig()
@@ -65,46 +68,48 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
     : QDialog(parent)
     , d(new Private(this))
 {
-    setWindowTitle(i18nc("@title:window", "Manage Tags"));
-    QVBoxLayout *vbox = new QVBoxLayout(this);
+    d->ui.setupUi(this);
 
     Monitor *monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagSelectionDialogMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 
-    Akonadi::TagModel *model = new Akonadi::TagModel(monitor, this);
-    d->mTagWidget = new Akonadi::TagEditWidget(model, this, true);
-
-    vbox->addWidget(d->mTagWidget);
-
-    d->mButtonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
-    QPushButton *okButton = d->mButtonBox->button(QDialogButtonBox::Ok);
-    okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(d->mButtonBox, &QDialogButtonBox::accepted, this, &TagSelectionDialog::accept);
-    connect(d->mButtonBox, &QDialogButtonBox::rejected, this, &TagSelectionDialog::reject);
-
-    vbox->addWidget(d->mButtonBox);
+    d->ui.tagWidget->setModel(new TagModel(monitor, this));
+    d->ui.tagWidget->setSelectionEnabled(true);
 
     d->readConfig();
+
+    ControlGui::widgetNeedsAkonadi(this);
 }
 
-TagSelectionDialog::~TagSelectionDialog()
+TagSelectionDialog::TagSelectionDialog(TagModel *model, QWidget *parent)
+    : QDialog(parent)
+    , d(new Private(this))
 {
-    d->writeConfig();
+    d->ui.setupUi(this);
+
+    d->ui.tagWidget->setModel(model);
+    d->ui.tagWidget->setSelectionEnabled(true);
+
+    d->readConfig();
+
+    ControlGui::widgetNeedsAkonadi(this);
 }
+
+TagSelectionDialog::~TagSelectionDialog() = default;
 
 QDialogButtonBox *TagSelectionDialog::buttons() const
 {
-    return d->mButtonBox;
+    return d->ui.buttonBox;
 }
 
 Tag::List TagSelectionDialog::selection() const
 {
-    return d->mTagWidget->selection();
+    return d->ui.tagWidget->selection();
 }
 
 void TagSelectionDialog::setSelection(const Tag::List &tags)
 {
-    d->mTagWidget->setSelection(tags);
+    d->ui.tagWidget->setSelection(tags);
 }
+

@@ -32,6 +32,8 @@ class QDialogButtonBox;
 namespace Akonadi
 {
 
+class TagModel;
+
 /**
  * A widget that shows a tag selection and provides means to edit that selection.
  *
@@ -43,6 +45,7 @@ class AKONADIWIDGETS_EXPORT TagSelectionDialog : public QDialog
     Q_OBJECT
 public:
     explicit TagSelectionDialog(QWidget *parent = nullptr);
+    TagSelectionDialog(TagModel *model, QWidget *parent = nullptr);
     ~TagSelectionDialog() override;
 
     void setSelection(const Akonadi::Tag::List &tags);
@@ -55,7 +58,7 @@ Q_SIGNALS:
 
 private:
     class Private;
-    QSharedPointer<Private> d;
+    QScopedPointer<Private> d;
 };
 
 }

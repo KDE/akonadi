@@ -26,22 +26,11 @@
 #include "akonadiwidgets_export.h"
 
 #include <QLineEdit>
+
 #include "tag.h"
 
 namespace Akonadi
 {
-class TagView : public QLineEdit
-{
-    Q_OBJECT
-public:
-    explicit TagView(QWidget *parent = nullptr);
-
-Q_SIGNALS:
-    void clearTags();
-
-protected:
-    void contextMenuEvent(QContextMenuEvent *event) override;
-};
 
 /**
  * A widget that shows a tag selection and provides means to edit that selection.
@@ -70,7 +59,7 @@ private Q_SLOTS:
 
 private:
     class Private;
-    QSharedPointer<Private> d;
+    QScopedPointer<Private> d;
 };
 
 }

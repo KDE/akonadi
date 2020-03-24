@@ -54,7 +54,7 @@ public:
 private:
     //@cond PRIVATE
     class Private;
-    Private *const d;
+    QScopedPointer<Private> const d;
 };
 }
 
