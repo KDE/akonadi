@@ -157,12 +157,6 @@ add_akonadi_isolated_test(SOURCE collectionmodifytest.cpp)
 # FIXME: This is very unstable on Jenkins
 #add_akonadi_isolated_test(servermanagertest.cpp)
 
-add_akonadi_isolated_test(
-    SOURCE tagselectwidgettest.cpp
-    LINK_LIBRARIES KF5::AkonadiWidgets
-)
-
-
 # Having a benchmark is cool if you have any reference to compare against, but this
 # benchmark takes over 40 seconds and does not have any real value to us atm. Major
 # performance regressions would be spotted by devs anyway, so disabling for now.
