@@ -299,7 +299,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                     mHeader << ", ";
                 }
             }
-            mHeader << ");";
+            mHeader << ");\n";
         }
     }
 
