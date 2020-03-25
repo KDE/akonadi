@@ -17,69 +17,33 @@
     02110-1301, USA.
 */
 
-#include "renamefavoritedialog.h"
-#include <QLabel>
-#include <QLineEdit>
+#include "renamefavoritedialog_p.h"
+
 #include <KLocalizedString>
-#include <QVBoxLayout>
-#include <QDialogButtonBox>
+
 #include <QPushButton>
 
-RenameFavoriteDialog::RenameFavoriteDialog(const QString &caption, const QString &text, const QString &value, const QString &defaultName, QWidget *parent)
+using namespace Akonadi;
+
+RenameFavoriteDialog::RenameFavoriteDialog(const QString &value, const QString &defaultName, QWidget *parent)
     : QDialog(parent)
     , m_defaultName(defaultName)
 {
-    setWindowTitle(caption);
-    setModal(true);
+    ui.setupUi(this);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    connect(ui.lineEdit, &QLineEdit::textChanged,
+            this, [this](const QString &text) {
+                ui.buttonBox->button(QDialogButtonBox::Ok)->setEnabled(!text.trimmed().isEmpty());
+            });
+    connect(ui.buttonBox, &QDialogButtonBox::accepted, this, &RenameFavoriteDialog::accept);
+    connect(ui.buttonBox, &QDialogButtonBox::rejected, this, &RenameFavoriteDialog::reject);
+    connect(ui.buttonBox->button(QDialogButtonBox::RestoreDefaults), &QPushButton::clicked,
+            this, [this]() { ui.lineEdit->setText(m_defaultName); });
 
-    m_label = new QLabel(text, this);
-    m_label->setWordWrap(true);
-    mainLayout->addWidget(m_label);
-
-    m_lineEdit = new QLineEdit(value, this);
-    m_lineEdit->setClearButtonEnabled(true);
-    mainLayout->addWidget(m_lineEdit);
-
-    m_lineEdit->setFocus();
-    m_label->setBuddy(m_lineEdit);
-
-    mainLayout->addStretch();
-
-    connect(m_lineEdit, &QLineEdit::textChanged, this, &RenameFavoriteDialog::slotEditTextChanged);
-
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
-    mOkButton = buttonBox->button(QDialogButtonBox::Ok);
-    QPushButton *defaultButtonName = new QPushButton(i18n("Default Name"), this);
-    buttonBox->addButton(defaultButtonName, QDialogButtonBox::ActionRole);
-    connect(defaultButtonName, &QPushButton::clicked, this, &RenameFavoriteDialog::slotDefaultName);
-
-    mOkButton->setDefault(true);
-    mOkButton->setShortcut(Qt::CTRL | Qt::Key_Return);
-    connect(buttonBox, &QDialogButtonBox::accepted, this, &RenameFavoriteDialog::accept);
-    connect(buttonBox, &QDialogButtonBox::rejected, this, &RenameFavoriteDialog::reject);
-    mainLayout->addWidget(buttonBox);
-
-    slotEditTextChanged(value);
-    setMinimumWidth(350);
-}
-
-RenameFavoriteDialog::~RenameFavoriteDialog()
-{
-}
-
-void RenameFavoriteDialog::slotDefaultName()
-{
-    m_lineEdit->setText(m_defaultName);
-}
-
-void RenameFavoriteDialog::slotEditTextChanged(const QString &text)
-{
-    mOkButton->setEnabled(!text.trimmed().isEmpty());
+    ui.lineEdit->setText(value);
 }
 
 QString RenameFavoriteDialog::newName() const
 {
-    return m_lineEdit->text();
+    return ui.lineEdit->text();
 }

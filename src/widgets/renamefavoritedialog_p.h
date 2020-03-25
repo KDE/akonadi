@@ -21,31 +21,25 @@
 #define RENAMEFAVORITEDIALOG_H
 
 #include <QDialog>
-#include "collection.h"
 
-class QLabel;
-class QLineEdit;
-class QPushButton;
+#include "ui_renamefavoritedialog.h"
+
+namespace Akonadi
+{
 
 class RenameFavoriteDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit RenameFavoriteDialog(const QString &caption, const QString &text, const QString &value, const QString &defaultName, QWidget *parent);
-    ~RenameFavoriteDialog();
+    explicit RenameFavoriteDialog(const QString &value, const QString &defaultName, QWidget *parent);
 
     Q_REQUIRED_RESULT QString newName() const;
 
-protected:
-
-protected Q_SLOTS:
-    void slotEditTextChanged(const QString &text);
-    void slotDefaultName();
 private:
     QString m_defaultName;
-    QLabel *m_label = nullptr;
-    QLineEdit *m_lineEdit = nullptr;
-    QPushButton *mOkButton = nullptr;
+    Ui::RenameFavoriteDialog ui;
 };
+
+}
 
 #endif /* RENAMEFAVORITEDIALOG_H */

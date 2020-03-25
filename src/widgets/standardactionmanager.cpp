@@ -38,7 +38,7 @@
 #include "specialcollectionattribute.h"
 #include "collectionpropertiesdialog.h"
 #include "subscriptiondialog.h"
-#include "renamefavoritedialog.h"
+#include "renamefavoritedialog_p.h"
 #include "trashjob.h"
 #include "trashrestorejob.h"
 #include "entitydeletedattribute.h"
@@ -1041,7 +1041,10 @@ public:
         const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
-        QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogTitle), contextText(StandardActionManager::RenameFavoriteCollection, StandardActionManager::DialogText), favoritesModel->favoriteLabel(collection), collection.displayName(), parentWidget));
+        QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(
+                    favoritesModel->favoriteLabel(collection),
+                    collection.displayName(),
+                    parentWidget));
         if (dlg->exec() == QDialog::Accepted) {
             favoritesModel->setFavoriteLabel(collection, dlg->newName());
         }

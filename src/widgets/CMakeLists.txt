@@ -52,6 +52,7 @@ set(akonadiwidgets_UI
     controlprogressindicator.ui
     erroroverlay.ui
     manageaccountwidget.ui
+    renamefavoritedialog.ui
     selftestdialog.ui
     subscriptiondialog.ui
     tageditwidget.ui
