@@ -25,6 +25,8 @@
 #include <QStringList>
 #include <QVector>
 
+#include <array>
+
 using namespace Akonadi;
 
 #define AKONADI_DBUS_SERVER_SERVICE           u"org.freedesktop.Akonadi"
