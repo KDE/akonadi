@@ -74,16 +74,6 @@ static CollectionFetchJob::Type getFetchType(EntityTreeModel::CollectionFetchStr
 
 EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     : q_ptr(parent)
-    , m_monitor(nullptr)
-    , m_rootNode(nullptr)
-    , m_collectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive)
-    , m_itemPopulation(EntityTreeModel::ImmediatePopulation)
-    , m_listFilter(CollectionFetchScope::NoFilter)
-    , m_includeStatistics(false)
-    , m_showRootCollection(false)
-    , m_collectionTreeFetched(false)
-    , m_session(nullptr)
-    , m_showSystemEntities(false)
 {
     // using collection as a parameter of a queued call in runItemFetchJob()
     qRegisterMetaType<Collection>();

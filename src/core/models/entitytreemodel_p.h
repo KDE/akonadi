@@ -220,18 +220,19 @@ public:
 
     Monitor *m_monitor = nullptr;
     Collection m_rootCollection;
-    Node *m_rootNode = nullptr;
+    Node *m_rootNode;
     bool m_needDeleteRootNode = false;
     QString m_rootCollectionDisplayName;
     QStringList m_mimeTypeFilter;
     MimeTypeChecker m_mimeChecker;
-    EntityTreeModel::CollectionFetchStrategy m_collectionFetchStrategy;
-    EntityTreeModel::ItemPopulationStrategy m_itemPopulation;
-    CollectionFetchScope::ListFilter m_listFilter;
-    bool m_includeStatistics;
-    bool m_showRootCollection;
-    bool m_collectionTreeFetched;
-
+    EntityTreeModel::CollectionFetchStrategy m_collectionFetchStrategy = EntityTreeModel::FetchCollectionsRecursive;
+    EntityTreeModel::ItemPopulationStrategy m_itemPopulation = EntityTreeModel::ImmediatePopulation;
+    CollectionFetchScope::ListFilter m_listFilter = CollectionFetchScope::NoFilter;
+    bool m_includeStatistics = false;
+    bool m_showRootCollection = false;
+    bool m_collectionTreeFetched = false;
+    bool m_showSystemEntities = false;
+    Session *m_session = nullptr;
     /**
      * Called after the root collection was fetched by fillModel
      *
@@ -279,7 +280,6 @@ public:
         return "FetchCollectionId";
     }
 
-    Session *m_session = nullptr;
 
     Q_DECLARE_PUBLIC(EntityTreeModel)
 
@@ -295,7 +295,6 @@ public:
     template<typename T>
     bool isHiddenImpl(const T &entity, Node::Type type) const;
 
-    bool m_showSystemEntities;
 
     void ref(Collection::Id id);
     void deref(Collection::Id id);
