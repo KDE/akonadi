@@ -1132,11 +1132,9 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChange
     case Protocol::CollectionChangeNotification::Remove:
         return emitToListeners(&Monitor::collectionRemoved, collection);
     case Protocol::CollectionChangeNotification::Subscribe:
-        // ### why??
-        return !monitorAll && emitToListeners(&Monitor::collectionSubscribed, collection, parent);
+        return emitToListeners(&Monitor::collectionSubscribed, collection, parent);
     case Protocol::CollectionChangeNotification::Unsubscribe:
-        // ### why??
-        return !monitorAll && emitToListeners(&Monitor::collectionUnsubscribed, collection);
+        return emitToListeners(&Monitor::collectionUnsubscribed, collection);
     default:
         qCDebug(AKONADICORE_LOG) << "Unknown operation type" << msg.operation() << "in collection change notification";
         return false;
