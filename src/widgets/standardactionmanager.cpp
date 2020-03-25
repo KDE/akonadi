@@ -1043,7 +1043,7 @@ public:
 
         QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(
                     favoritesModel->favoriteLabel(collection),
-                    collection.displayName(),
+                    favoritesModel->defaultFavoriteLabel(collection),
                     parentWidget));
         if (dlg->exec() == QDialog::Accepted) {
             favoritesModel->setFavoriteLabel(collection, dlg->newName());

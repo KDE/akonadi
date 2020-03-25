@@ -55,22 +55,7 @@ public:
             return labelMap[collectionId];
         }
 
-        const QModelIndex collectionIdx = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
-
-        QString accountName;
-
-        const QString nameOfCollection = collectionIdx.data().toString();
-
-        QModelIndex idx = collectionIdx.parent();
-        while (idx != QModelIndex()) {
-            accountName = idx.data(EntityTreeModel::OriginalCollectionNameRole).toString();
-            idx = idx.parent();
-        }
-        if (accountName.isEmpty()) {
-            return nameOfCollection;
-        } else {
-            return nameOfCollection + QStringLiteral(" (") + accountName + QLatin1Char(')');
-        }
+        return q->defaultFavoriteLabel(Collection{collectionId});
     }
 
     void insertIfAvailable(Collection::Id col)
@@ -401,6 +386,28 @@ QString Akonadi::FavoriteCollectionsModel::favoriteLabel(const Akonadi::Collecti
         return QString();
     }
     return d->labelForCollection(collection.id());
+}
+
+QString Akonadi::FavoriteCollectionsModel::defaultFavoriteLabel(const Akonadi::Collection &collection)
+{
+    if (!collection.isValid()) {
+        return QString();
+    }
+
+    const auto colIdx = EntityTreeModel::modelIndexForCollection(sourceModel(), Collection(collection.id()));
+    const QString nameOfCollection = colIdx.data().toString();
+
+    QModelIndex idx = colIdx.parent();
+    QString accountName;
+    while (idx != QModelIndex()) {
+        accountName = idx.data(EntityTreeModel::OriginalCollectionNameRole).toString();
+        idx = idx.parent();
+    }
+    if (accountName.isEmpty()) {
+        return nameOfCollection;
+    } else {
+        return nameOfCollection + QStringLiteral(" (") + accountName + QLatin1Char(')');
+    }
 }
 
 QVariant FavoriteCollectionsModel::headerData(int section, Qt::Orientation orientation, int role) const

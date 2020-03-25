@@ -116,6 +116,7 @@ public:
      * Return associate label for collection
      */
     Q_REQUIRED_RESULT QString favoriteLabel(const Akonadi::Collection &col);
+    Q_REQUIRED_RESULT QString defaultFavoriteLabel(const Akonadi::Collection &col);
 
     Q_REQUIRED_RESULT QVariant data(const QModelIndex &index, int role = Qt::DisplayRole) const override;
     Q_REQUIRED_RESULT bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole) override;
