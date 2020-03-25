@@ -56,13 +56,13 @@
     do {\
         if (!QTest::qCompare(actual, expected, #actual, #expected, __FILE__, __LINE__))\
             return false;\
-    } while (0)
+    } while (false)
 
 #define AKVERIFY(statement) \
     do {\
         if (!QTest::qVerify((statement), #statement, "", __FILE__, __LINE__))\
             return false;\
-    } while (0)
+    } while (false)
 
 inline void akTestSetInstanceIdentifier(const QString &instanceId)
 {

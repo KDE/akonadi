@@ -9,6 +9,7 @@ target_include_directories(akonadi_shared INTERFACE $<BUILD_INTERFACE:${CMAKE_CU
 target_include_directories(akonadi_shared INTERFACE $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>)
 
 target_link_libraries(akonadi_shared
+PUBLIC
     Qt5::Core
     KF5AkonadiPrivate
     KF5::Crash
