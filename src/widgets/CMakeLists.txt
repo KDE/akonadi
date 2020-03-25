@@ -53,6 +53,7 @@ set(akonadiwidgets_UI
     erroroverlay.ui
     manageaccountwidget.ui
     selftestdialog.ui
+    subscriptiondialog.ui
     tageditwidget.ui
     tagmanagementdialog.ui
     tagselectiondialog.ui

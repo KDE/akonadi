@@ -4,3 +4,4 @@ endmacro()
 
 add_akonadi_isolated_widget_test(tageditwidgettest.cpp)
 add_akonadi_isolated_widget_test(tagwidgettest.cpp)
+add_akonadi_isolated_widget_test(subscriptiondialogtest.cpp)
