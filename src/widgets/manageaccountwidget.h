@@ -22,20 +22,16 @@
 
 #include <QWidget>
 #include "akonadiwidgets_export.h"
-namespace Ui
-{
-class ManageAccountWidget;
-}
-namespace Akonadi
-{
-class AgentInstance;
-}
+
 class QAbstractItemDelegate;
 class QAbstractItemView;
 class QPushButton;
+
 namespace Akonadi
 {
+class AgentInstance;
 class ManageAccountWidgetPrivate;
+
 class AKONADIWIDGETS_EXPORT ManageAccountWidget : public QWidget
 {
     Q_OBJECT
@@ -77,8 +73,9 @@ private Q_SLOTS:
     void slotRemoveSelectedAccount();
     void slotRestartSelectedAccount();
     void slotModifySelectedAccount();
+
 private:
-    ManageAccountWidgetPrivate *const d;
+    QScopedPointer<ManageAccountWidgetPrivate> const d;
 };
 }
 
