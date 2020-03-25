@@ -215,23 +215,24 @@ static bool hasAllParts(const ItemRetrievalRequest &req, const QSet<QByteArray> 
 bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> requests)
 {
     QEventLoop eventLoop;
-    QVector<ItemRetrievalRequest::Id> pendingRequests;
+    std::vector<ItemRetrievalRequest::Id> pendingRequests;
     connect(&mItemRetrievalManager, &ItemRetrievalManager::requestFinished,
             this, [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) {
-        if (pendingRequests.contains(result.request.id)) {
-            if (mCanceled) {
-                eventLoop.exit(1);
-            } else if (result.errorMsg.has_value()) {
-                mLastError = result.errorMsg->toUtf8();
-                eventLoop.exit(1);
-            } else {
-                Q_EMIT itemsRetrieved(result.request.ids);
-                pendingRequests.removeOne(result.request.id);
-                if (pendingRequests.empty()) {
-                    eventLoop.quit();
-                }
-            }
-        }
+                    const auto requestId = std::find(pendingRequests.begin(), pendingRequests.end(), result.request.id);
+                    if (requestId != pendingRequests.end()) {
+                        if (mCanceled) {
+                            eventLoop.exit(1);
+                        } else if (result.errorMsg.has_value()) {
+                            mLastError = result.errorMsg->toUtf8();
+                            eventLoop.exit(1);
+                        } else {
+                            Q_EMIT itemsRetrieved(result.request.ids);
+                            pendingRequests.erase(requestId);
+                            if (pendingRequests.empty()) {
+                                eventLoop.quit();
+                            }
+                        }
+                    }
     }, Qt::UniqueConnection);
 
     if (mConnection) {
