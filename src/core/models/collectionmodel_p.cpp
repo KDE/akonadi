@@ -33,7 +33,6 @@
 #include "akonadicore_debug.h"
 
 #include <KJob>
-#include <KIconLoader>
 
 #include <QCoreApplication>
 #include <QTimer>
@@ -303,9 +302,6 @@ void CollectionModelPrivate::init()
     monitor->setObjectName(QStringLiteral("CollectionModelMonitor"));
     monitor->setCollectionMonitored(Collection::root());
     monitor->fetchCollection(true);
-
-    // ### Hack to get the kmail resource folder icons
-    KIconLoader::global()->addAppDir(QStringLiteral("kmail"));
 
     // monitor collection changes
     q->connect(monitor, SIGNAL(collectionChanged(Akonadi::Collection)),
