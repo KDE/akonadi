@@ -29,6 +29,7 @@
 #include <QSettings>
 
 #include <qtest_akonadi.h>
+#include <qtestsupport_core.h>
 
 using namespace Akonadi;
 
@@ -74,18 +75,15 @@ private Q_SLOTS:
         QFETCH(QStringList, actions);
         QString lastAction;
 
-        ChangeRecorder *rec = createChangeRecorder();
-        AkonadiTest::akWaitForSignal(rec, SIGNAL(monitorReady()), 1000);
+        auto rec = createChangeRecorder();
         QVERIFY(rec->isEmpty());
         for (const QString &action : qAsConst(actions)) {
             qDebug() << action;
             if (action == QLatin1String("rn")) {
-                replayNextAndExpectNothing(rec);
+                replayNextAndExpectNothing(rec.get());
             } else if (action == QLatin1String("reload")) {
                 // Check saving and loading from disk
-                delete rec;
                 rec = createChangeRecorder();
-                AkonadiTest::akWaitForSignal(rec, SIGNAL(monitorReady()), 1000);
             } else if (action.at(0) == QLatin1Char('c')) {
                 // c1 = "trigger change on item 1"
                 const int id = action.midRef(1).toInt();
@@ -93,7 +91,7 @@ private Q_SLOTS:
                 triggerChange(id);
                 if (action != lastAction) {
                     // enter event loop and wait for change notifications from the server
-                    QVERIFY(AkonadiTest::akWaitForSignal(rec, SIGNAL(changesAdded()), 1000));
+                    QVERIFY(AkonadiTest::akWaitForSignal(rec.get(), &ChangeRecorder::changesAdded, 1000));
                 }
             } else if (action.at(0) == QLatin1Char('d')) {
                 // d1 = "delete item 1"
@@ -105,14 +103,13 @@ private Q_SLOTS:
                 // r1 = "replayNext and expect to get itemChanged(1)"
                 const int id = action.midRef(1).toInt();
                 Q_ASSERT(id);
-                replayNextAndProcess(rec, id);
+                replayNextAndProcess(rec.get(), id);
             } else {
                 QVERIFY2(false, qPrintable(QStringLiteral("Unsupported: ") + action));
             }
             lastAction = action;
         }
         QVERIFY(rec->isEmpty());
-        delete rec;
     }
 
 private:
@@ -143,7 +140,7 @@ private:
 
         rec->replayNext();
         if (itemChangedSpy.isEmpty()) {
-            QVERIFY(AkonadiTest::akWaitForSignal(rec, SIGNAL(itemChanged(Akonadi::Item,QSet<QByteArray>)), 1000));
+            QVERIFY(AkonadiTest::akWaitForSignal(rec, &Monitor::itemChanged, 1000));
         }
         QCOMPARE(itemChangedSpy.count(), 1);
         QCOMPARE(itemChangedSpy.at(0).at(0).value<Akonadi::Item>().id(), expectedUid);
@@ -166,9 +163,9 @@ private:
         QCOMPARE(nothingSpy.count(), 1);
     }
 
-    ChangeRecorder *createChangeRecorder() const
+    std::unique_ptr<ChangeRecorder> createChangeRecorder() const
     {
-        ChangeRecorder *rec = new ChangeRecorder();
+        auto rec = std::make_unique<ChangeRecorder>();
         rec->setConfig(settings);
         rec->setAllMonitored();
         rec->itemFetchScope().fetchFullPayload();
@@ -176,8 +173,14 @@ private:
         rec->itemFetchScope().setCacheOnly(true);
 
         // Ensure we listen to a signal, otherwise MonitorPrivate::isLazilyIgnored will ignore notifications
-        QSignalSpy *spy = new QSignalSpy(rec, &Monitor::itemChanged);
-        spy->setParent(rec);
+        QSignalSpy *spy = new QSignalSpy(rec.get(), &Monitor::itemChanged);
+        spy->setParent(rec.get());
+
+        QSignalSpy readySpy(rec.get(), &Monitor::monitorReady);
+        if (!readySpy.wait()) {
+            QTest::qFail("Failed to wait for Monitor", __FILE__, __LINE__);
+            return nullptr;
+        }
 
         return rec;
     }

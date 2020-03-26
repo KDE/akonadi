@@ -83,8 +83,7 @@ private Q_SLOTS:
         Monitor dummyMonitor;
         MonitorPrivate m(0, &dummyMonitor);
         m.monitorAll = true;
-        QSignalSpy spy(&dummyMonitor, SIGNAL(itemAdded(Akonadi::Item,Akonadi::Collection)));
-        QVERIFY(spy.isValid());
+        QSignalSpy spy(&dummyMonitor, &Monitor::itemAdded);
 
         Protocol::ChangeNotification msg;
         msg.addEntity(1);

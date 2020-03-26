@@ -70,16 +70,15 @@ private Q_SLOTS:
             QVERIFY(item.hasPayload<QByteArray>());
         }
 
-        Monitor *monitor = new Monitor(this);
-        monitor->setCollectionMonitored(col);
-        monitor->itemFetchScope().fetchFullPayload();
-        QSignalSpy monitorSpy(monitor, &Monitor::monitorReady);
-        QVERIFY(monitorSpy.wait());
+        Monitor monitor;
+        monitor.setCollectionMonitored(col);
+        monitor.itemFetchScope().fetchFullPayload();
+        AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady);
 
         qRegisterMetaType<Akonadi::Collection>();
         qRegisterMetaType<Akonadi::Item>();
-        QSignalSpy lspy(monitor, &Monitor::itemLinked);
-        QSignalSpy uspy(monitor, &Monitor::itemUnlinked);
+        QSignalSpy lspy(&monitor, &Monitor::itemLinked);
+        QSignalSpy uspy(&monitor, &Monitor::itemUnlinked);
         QVERIFY(lspy.isValid());
         QVERIFY(uspy.isValid());
 

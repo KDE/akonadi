@@ -119,6 +119,7 @@ void RelationTest::testMonitor()
 {
     Akonadi::Monitor monitor;
     monitor.setTypeMonitored(Akonadi::Monitor::Relations);
+    QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
     const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Item item1;
@@ -140,7 +141,6 @@ void RelationTest::testMonitor()
 
     {
         QSignalSpy addedSpy(&monitor, &Monitor::relationAdded);
-        QVERIFY(addedSpy.isValid());
 
         RelationCreateJob *createjob = new RelationCreateJob(rel, this);
         AKVERIFYEXEC(createjob);

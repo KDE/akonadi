@@ -170,6 +170,7 @@ void LazyPopulationTest::testItemAdded()
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(Collection::root());
+    QVERIFY(AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady));
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
@@ -255,6 +256,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(Collection::root());
+    QVERIFY(AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady));
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
@@ -316,9 +318,11 @@ void LazyPopulationTest::testPurgeEmptyCollection()
     //Monitor without referencing so we get all signals
     Monitor *monitor = new Monitor(this);
     monitor->setCollectionMonitored(Collection::root());
+    QVERIFY(AkonadiTest::akWaitForSignal(monitor, &Monitor::monitorReady));
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(Collection::root());
+    QVERIFY(AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady));
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 

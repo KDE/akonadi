@@ -18,15 +18,10 @@
 #include "pop3resourceattributetest.h"
 #include "pop3resourceattribute.h"
 #include <QTest>
+
 Pop3ResourceAttributeTest::Pop3ResourceAttributeTest(QObject *parent)
     : QObject(parent)
 {
-
-}
-
-Pop3ResourceAttributeTest::~Pop3ResourceAttributeTest()
-{
-
 }
 
 void Pop3ResourceAttributeTest::shouldHaveDefaultValue()

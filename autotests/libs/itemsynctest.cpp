@@ -29,6 +29,8 @@
 #include <itemfetchscope.h>
 #include <itemsync.h>
 #include <itemcreatejob.h>
+#include <memory>
+#include <qtestcase.h>
 #include <resourceselectjob_p.h>
 
 #include <KRandom>
@@ -88,6 +90,18 @@ private:
         item.setFlag(QByteArray("\\READ") + QByteArray::number(counter));
         counter++;
         return item;
+    }
+
+    std::unique_ptr<Monitor> createCollectionMonitor(const Collection &col)
+    {
+        auto monitor = std::make_unique<Monitor>();
+        monitor->setCollectionMonitored(col);
+        if (!AkonadiTest::akWaitForSignal(monitor.get(), &Monitor::monitorReady)) {
+            QTest::qFail("Failed to wait for monitor", __FILE__, __LINE__);
+            return nullptr;
+        }
+
+        return monitor;
     }
 
 private Q_SLOTS:
@@ -156,14 +170,10 @@ private Q_SLOTS:
         Item::List origItems = fetchItems(col);
         QCOMPARE(origItems.size(), 15);
 
-        Akonadi::Monitor monitor;
-        monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
-        QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
-        QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
-        QVERIFY(changedSpy.isValid());
+        auto monitor = createCollectionMonitor(col);
+        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
+        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
+        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         ItemSync *syncer = new ItemSync(col);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
@@ -224,14 +234,10 @@ private Q_SLOTS:
         Item::List origItems = fetchItems(col);
         QCOMPARE(origItems.size(), 15);
 
-        Akonadi::Monitor monitor;
-        monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
-        QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
-        QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
-        QVERIFY(changedSpy.isValid());
+        auto monitor = createCollectionMonitor(col);
+        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
+        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
+        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         {
             ItemSync *syncer = new ItemSync(col);
@@ -297,14 +303,10 @@ private Q_SLOTS:
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
-        Akonadi::Monitor monitor;
-        monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
-        QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
-        QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
-        QVERIFY(changedSpy.isValid());
+        auto monitor = createCollectionMonitor(col);
+        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
+        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
+        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         ItemSync *syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
@@ -351,14 +353,10 @@ private Q_SLOTS:
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
-        Akonadi::Monitor monitor;
-        monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
-        QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
-        QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
-        QVERIFY(changedSpy.isValid());
+        auto monitor = createCollectionMonitor(col);
+        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
+        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
+        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         ItemSync *syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
@@ -384,14 +382,10 @@ private Q_SLOTS:
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
-        Akonadi::Monitor monitor;
-        monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
-        QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
-        QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
-        QVERIFY(changedSpy.isValid());
+        auto monitor = createCollectionMonitor(col);
+        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
+        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
+        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         ItemSync *syncer = new ItemSync(col);
         QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
@@ -606,14 +600,10 @@ private Q_SLOTS:
         Item dupe = duplicateItem(origItems.at(0), col);
         origItems = fetchItems(col);
 
-        Akonadi::Monitor monitor;
-        monitor.setCollectionMonitored(col);
-        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
-        QVERIFY(deletedSpy.isValid());
-        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
-        QVERIFY(addedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
-        QVERIFY(changedSpy.isValid());
+        auto monitor = createCollectionMonitor(col);
+        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
+        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
+        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         ItemSync *syncer = new ItemSync(col);
         syncer->setTransactionMode(ItemSync::SingleTransaction);
@@ -641,10 +631,8 @@ private Q_SLOTS:
         const Collection col = Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
         QVERIFY(col.isValid());
 
-        Akonadi::Monitor monitor;
-        monitor.setCollectionMonitored(col);
-        QSignalSpy addedSpy(&monitor, &Monitor::itemAdded);
-        QVERIFY(addedSpy.isValid());
+        auto monitor = createCollectionMonitor(col);
+        QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
 
         const int itemCount = 1000;
         createItems(col, itemCount);
@@ -654,10 +642,8 @@ private Q_SLOTS:
         const Item::List origItems = fetchItems(col);
         QCOMPARE(origItems.size(), itemCount);
 
-        QSignalSpy deletedSpy(&monitor, &Monitor::itemRemoved);
-        QVERIFY(deletedSpy.isValid());
-        QSignalSpy changedSpy(&monitor, &Monitor::itemChanged);
-        QVERIFY(changedSpy.isValid());
+        QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
+        QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         QBENCHMARK {
             ItemSync *syncer = new ItemSync(col);

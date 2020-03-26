@@ -101,6 +101,7 @@ InspectableETM *FavoriteProxyTest::createETM()
 {
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(Collection::root());
+    AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
     return model;

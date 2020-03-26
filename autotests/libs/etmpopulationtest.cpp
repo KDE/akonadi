@@ -177,6 +177,7 @@ void EtmPopulationTest::testMonitoringCollectionsPreset()
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(col1, true);
     changeRecorder->setCollectionMonitored(col2, true);
+    AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
@@ -197,6 +198,7 @@ void EtmPopulationTest::testMonitoringCollectionsPreset()
 void EtmPopulationTest::testMonitoringCollections()
 {
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
@@ -222,6 +224,7 @@ void EtmPopulationTest::testFullPopulation()
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     // changeRecorder->setCollectionMonitored(Akonadi::Collection::root());
     changeRecorder->setAllMonitored(true);
+    AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
@@ -244,6 +247,7 @@ void EtmPopulationTest::testAddMonitoringCollections()
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(col1, true);
     changeRecorder->setCollectionMonitored(col2, true);
+    AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
@@ -272,6 +276,7 @@ void EtmPopulationTest::testRemoveMonitoringCollections()
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(col1, true);
     changeRecorder->setCollectionMonitored(col2, true);
+    AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
@@ -301,6 +306,7 @@ void EtmPopulationTest::testDisplayFilter()
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
+    AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
     model->setListFilter(Akonadi::CollectionFetchScope::Display);
@@ -327,6 +333,7 @@ void EtmPopulationTest::testLoadingOfHiddenCollection()
 
     ChangeRecorder *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setMimeTypeMonitored(QStringLiteral("application/test"), true);
+    AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     InspectableETM *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);

@@ -85,8 +85,7 @@ private Q_SLOTS:
         monitor.itemFetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
         monitor.itemFetchScope().setFetchRemoteIdentification(true);
         QSignalSpy moveSpy(&monitor, &Monitor::itemsMoved);
-        QSignalSpy readySpy(&monitor, &Monitor::monitorReady);
-        readySpy.wait();
+        AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady);
 
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);   // for rid based moves

@@ -25,7 +25,7 @@ class Pop3ResourceAttributeTest : public QObject
     Q_OBJECT
 public:
     explicit Pop3ResourceAttributeTest(QObject *parent = nullptr);
-    ~Pop3ResourceAttributeTest();
+
 private Q_SLOTS:
     void shouldHaveDefaultValue();
     void shouldAssignValue();

@@ -89,7 +89,19 @@ void setAllResourcesOffline()
     }
 }
 
-bool akWaitForSignal(QObject *sender, const char *member, int timeout = 1000)
+template<typename Object, typename Func>
+bool akWaitForSignal(Object sender, Func member, int timeout = 1000)
+{
+    QSignalSpy spy(sender, member);
+    bool ok = false;
+    [&]() {
+        QTRY_VERIFY_WITH_TIMEOUT(spy.count() > 0, timeout);
+        ok = true;
+    }();
+    return ok;
+}
+
+bool akWaitForSignal(const QObject *sender, const char *member, int timeout = 1000)
 {
     QSignalSpy spy(sender, member);
     bool ok = false;

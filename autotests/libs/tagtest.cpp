@@ -505,6 +505,8 @@ void TagTest::testTagItem()
     Akonadi::Monitor monitor;
     monitor.itemFetchScope().setFetchTags(true);
     monitor.setAllMonitored(true);
+    QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
+
     const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
@@ -524,7 +526,6 @@ void TagTest::testTagItem()
     item1.setTag(tag);
 
     QSignalSpy tagsSpy(&monitor, &Monitor::itemsTagsChanged);
-    QVERIFY(tagsSpy.isValid());
 
     ItemModifyJob *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
@@ -544,9 +545,6 @@ void TagTest::testTagItem()
 
 void TagTest::testCreateItem()
 {
-    // Akonadi::Monitor monitor;
-    // monitor.itemFetchScope().setFetchTags(true);
-    // monitor.setAllMonitored(true);
     const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
@@ -554,9 +552,6 @@ void TagTest::testCreateItem()
         AKVERIFYEXEC(createjob);
         tag = createjob->tag();
     }
-
-    // QSignalSpy tagsSpy(&monitor, SIGNAL(itemsTagsChanged(Akonadi::Item::List,QSet<Akonadi::Tag>,QSet<Akonadi::Tag>)));
-    // QVERIFY(tagsSpy.isValid());
 
     Item item1;
     {
@@ -566,12 +561,6 @@ void TagTest::testCreateItem()
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
-
-    // QTRY_VERIFY(tagsSpy.count() >= 1);
-    // QTest::qWait(10);
-    // kDebug() << tagsSpy.count();
-    // QTRY_COMPARE(tagsSpy.last().first().value<Akonadi::Item::List>().first().id(), item1.id());
-    // QTRY_COMPARE(tagsSpy.last().at(1).value< QSet<Tag> >().size(), 1); //1 added tag
 
     ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
@@ -742,7 +731,7 @@ void TagTest::testMonitor()
     Akonadi::Monitor monitor;
     monitor.setTypeMonitored(Akonadi::Monitor::Tags);
     monitor.tagFetchScope().fetchAttribute<Akonadi::TagAttribute>();
-    QTest::qWait(10); // give Monitor time to upload settings
+    QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
     Akonadi::Tag createdTag;
     {
@@ -824,6 +813,7 @@ void TagTest::testTagAttributeConfusionBug()
 
     Akonadi::Monitor monitor;
     monitor.setTypeMonitored(Akonadi::Monitor::Tags);
+    QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
     const QList<Tag::Id> firstTagIdList{ firstTag.id() };
 

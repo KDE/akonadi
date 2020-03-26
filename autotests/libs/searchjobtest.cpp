@@ -27,7 +27,6 @@
 #include <collectionmodifyjob.h>
 #include <searchcreatejob.h>
 #include <itemfetchjob.h>
-#include <monitor.h>
 #include <searchquery.h>
 #include <persistentsearchattribute.h>
 
