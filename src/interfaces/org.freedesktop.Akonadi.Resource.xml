@@ -10,8 +10,7 @@
     </signal>
     <signal name="collectionTreeSynchronized"/>
     <method name="requestItemDelivery">
-      <arg type="s" direction="out"/>
-      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QList&lt;qlonglong&gt;"/>
+      <annotation name="org.qtproject.QtDBus.QtTypeName.In0" value="QVector&lt;qlonglong&gt;"/>
       <arg name="uids" type="ax" direction="in"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In1" value="QByteArrayList"/>
       <arg name="parts" type="aay" direction="in"/>

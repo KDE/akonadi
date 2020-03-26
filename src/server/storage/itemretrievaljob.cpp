@@ -21,7 +21,6 @@
 #include "itemretrievalrequest.h"
 #include "resourceinterface.h"
 #include "akonadiserver_debug.h"
-#include <shared/akranges.h>
 
 #include <QDBusPendingCallWatcher>
 
@@ -44,7 +43,7 @@ void ItemRetrievalJob::start()
     // call the resource
     if (m_interface) {
         m_active = true;
-        auto reply = m_interface->requestItemDelivery(request().ids | AkRanges::Actions::toQList, request().parts);
+        auto reply = m_interface->requestItemDelivery(request().ids, request().parts);
         QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(reply, this);
         connect(watcher, &QDBusPendingCallWatcher::finished,
                 this, &ItemRetrievalJob::callFinished);
@@ -65,7 +64,7 @@ void ItemRetrievalJob::kill()
 void ItemRetrievalJob::callFinished(QDBusPendingCallWatcher *watcher)
 {
     watcher->deleteLater();
-    QDBusPendingReply<QString> reply = *watcher;
+    QDBusPendingReply<void> reply = *watcher;
     if (m_active) {
         m_active = false;
         if (reply.isError()) {

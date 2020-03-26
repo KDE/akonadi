@@ -53,6 +53,9 @@
 #include "favoritecollectionattribute.h"
 
 #include "akonadiagentbase_debug.h"
+
+#include <shared/akranges.h>
+
 #include <KLocalizedString>
 #include <KAboutData>
 
@@ -61,6 +64,7 @@
 #include <QApplication>
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 class Akonadi::ResourceBasePrivate : public AgentBasePrivate
 {
@@ -777,25 +781,20 @@ void ResourceBase::changeCommitted(const Tag &tag)
     connect(job, SIGNAL(result(KJob*)), SLOT(changeCommittedResult(KJob*)));
 }
 
-QString ResourceBase::requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts)
+void ResourceBase::requestItemDelivery(const QVector<qint64> &uids, const QByteArrayList &parts)
 {
     Q_D(ResourceBase);
     if (!isOnline()) {
         const QString errorMsg = i18nc("@info", "Cannot fetch item in offline mode.");
+        sendErrorReply(QDBusError::Failed, errorMsg);
         Q_EMIT error(errorMsg);
-        return errorMsg;
+        return;
     }
 
     setDelayedReply(true);
 
-    Item::List items;
-    items.reserve(uids.size());
-    for (auto uid : uids) {
-        items.push_back(Item(uid));
-    }
+    const auto items = uids | Views::transform([](const auto uid) { return Item{uid}; }) | Actions::toQVector;
     d->scheduler->scheduleItemsFetch(items, QSet<QByteArray>::fromList(parts), message());
-
-    return QString();
 }
 
 void ResourceBase::collectionsRetrieved(const Collection::List &collections)

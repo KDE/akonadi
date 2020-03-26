@@ -567,14 +567,16 @@ void ResourceScheduler::collectionRemoved(const Akonadi::Collection &collection)
 void ResourceScheduler::Task::sendDBusReplies(const QString &errorMsg)
 {
     for (const QDBusMessage &msg : qAsConst(dbusMsgs)) {
-        QDBusMessage reply(msg.createReply());
-        const QString methodName = msg.member();
-        if (methodName == QLatin1String("requestItemDelivery")) {
-            reply << errorMsg;
-        } else if (methodName.isEmpty()) {
+        qCDebug(AKONADIAGENTBASE_LOG) << "Sending dbus reply for method" << methodName << "with error" << errorMsg;
+        QDBusMessage reply;
+        if (!errorMsg.isEmpty()) {
+            reply = msg.createErrorReply(QDBusError::Failed, errorMsg);
+        } else if (msg.member() == QLatin1String("requestItemDelivery")) {
+            reply = msg.createReply();
+        } else if (msg.member().isEmpty()) {
             continue; // unittest calls scheduleItemFetch with empty QDBusMessage
         } else {
-            qCCritical(AKONADIAGENTBASE_LOG) << "Got unexpected member:" << methodName;
+            qCCritical(AKONADIAGENTBASE_LOG) << "ResourceScheduler: got unexpected method name :" << msg.member();
         }
         QDBusConnection::sessionBus().send(reply);
     }

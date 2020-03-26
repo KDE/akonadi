@@ -39,15 +39,9 @@ class CacheTest : public QObject
 private:
     void enableAgent(const QString &id, bool enable)
     {
-        AgentInstance instance;
-        foreach (AgentInstance agent, Akonadi::AgentManager::self()->instances()) {   //krazy:exclude=foreach
-            if (agent.identifier() == id) {
-                instance = agent;
-                break;
-            }
-        }
-
+        auto instance = AgentManager::self()->instance(id);
         QVERIFY(instance.isValid());
+
         instance.setIsOnline(enable);
         QTRY_COMPARE(Akonadi::AgentManager::self()->instance(id).isOnline(), enable);
     }

@@ -847,7 +847,7 @@ private:
     // dbus resource interface
     friend class ::Akonadi__ResourceAdaptor;
 
-    QString requestItemDelivery(const QList<qint64> &uids, const QByteArrayList &parts);
+    void requestItemDelivery(const QVector<qint64> &uids, const QByteArrayList &parts);
 
 private:
     Q_DECLARE_PRIVATE(ResourceBase)
