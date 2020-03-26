@@ -310,9 +310,8 @@ void TagTest::testDeleteRIDIsolation()
         QVERIFY(createJob->tag().isValid());
     }
 
-    Akonadi::Monitor monitor;
-    monitor.setTypeMonitored(Akonadi::Monitor::Tags);
-    QSignalSpy signalSpy(&monitor, &Monitor::tagRemoved);
+    auto monitor = getTestMonitor();
+    QSignalSpy signalSpy(monitor.get(), &Monitor::tagRemoved);
 
     TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
