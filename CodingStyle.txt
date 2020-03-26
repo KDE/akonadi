@@ -1,8 +1,0 @@
-The all directory "akonadi" is tested for all rules of the coding style.
-But of the qsqlite subdirectory which contains a .no_coding_style file.
-
-The rules and all the scripts are free for download and comments at:
-  https://community.kde.org/Policies/Kdepim_Coding_Style
-
-Feel free to communicate any comments or/and bugs:
-  guy dot maurel at kde dot org
