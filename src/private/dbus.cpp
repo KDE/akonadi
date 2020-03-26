@@ -115,7 +115,8 @@ QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType a
 
 akOptional<QString> DBus::parseInstanceIdentifier(const QString &serviceName)
 {
-    constexpr std::array<QStringView, 4> services = {QStringView{AKONADI_DBUS_STORAGEJANITOR_SERVICE},
+    constexpr std::array<QStringView, 5> services = {QStringView{AKONADI_DBUS_STORAGEJANITOR_SERVICE},
+                                                     QStringView{AKONADI_DBUS_SERVER_SERVICE_UPGRADING},
                                                      QStringView{AKONADI_DBUS_AGENTSERVER_SERVICE},
                                                      QStringView{AKONADI_DBUS_CONTROL_SERVICE_LOCK},
                                                      QStringView{AKONADI_DBUS_CONTROL_SERVICE}};
