@@ -73,6 +73,8 @@ private Q_SLOTS:
         Monitor *monitor = new Monitor(this);
         monitor->setCollectionMonitored(col);
         monitor->itemFetchScope().fetchFullPayload();
+        QSignalSpy monitorSpy(monitor, &Monitor::monitorReady);
+        QVERIFY(monitorSpy.wait());
 
         qRegisterMetaType<Akonadi::Collection>();
         qRegisterMetaType<Akonadi::Item>();
