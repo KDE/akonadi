@@ -18,18 +18,16 @@
 */
 
 #include "testattribute.h"
+#include "changerecorder.h"
+#include "itemfetchscope.h"
+#include "itemmodifyjob.h"
+#include "itemdeletejob.h"
+#include "agentmanager.h"
 
-#include <changerecorder.h>
-#include <itemfetchscope.h>
-#include <itemmodifyjob.h>
-#include <itemdeletejob.h>
-#include <agentmanager.h>
+#include "qtest_akonadi.h"
 
 #include <QObject>
 #include <QSettings>
-
-#include <qtest_akonadi.h>
-#include <qtestsupport_core.h>
 
 using namespace Akonadi;
 

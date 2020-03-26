@@ -20,21 +20,20 @@
 #include <QObject>
 
 #include "test_utils.h"
-
-#include <control.h>
-#include <relationcreatejob.h>
-#include <relationfetchjob.h>
-#include <relationdeletejob.h>
-#include <tagmodifyjob.h>
-#include <resourceselectjob_p.h>
-#include <qtest_akonadi.h>
-#include <item.h>
-#include <itemcreatejob.h>
-#include <itemmodifyjob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <monitor.h>
-#include <attributefactory.h>
+#include "control.h"
+#include "relationcreatejob.h"
+#include "relationfetchjob.h"
+#include "relationdeletejob.h"
+#include "tagmodifyjob.h"
+#include "resourceselectjob_p.h"
+#include "qtest_akonadi.h"
+#include "item.h"
+#include "itemcreatejob.h"
+#include "itemmodifyjob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "monitor.h"
+#include "attributefactory.h"
 
 using namespace Akonadi;
 

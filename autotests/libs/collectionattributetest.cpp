@@ -20,17 +20,17 @@
 #include "collectionattributetest.h"
 #include "collectionpathresolver.h"
 
-#include <collection.h>
-#include <attributefactory.h>
-#include <collectioncreatejob.h>
-#include <collectiondeletejob.h>
-#include <collectionfetchjob.h>
-#include <collectionmodifyjob.h>
-#include <collectionrightsattribute_p.h>
-#include <control.h>
-#include <collectionidentificationattribute.h>
+#include "collection.h"
+#include "attributefactory.h"
+#include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
+#include "collectionfetchjob.h"
+#include "collectionmodifyjob.h"
+#include "collectionrightsattribute_p.h"
+#include "control.h"
+#include "collectionidentificationattribute.h"
 
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

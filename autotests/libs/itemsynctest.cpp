@@ -19,27 +19,26 @@
 
 #include "test_utils.h"
 
-#include <agentmanager.h>
-#include <agentinstance.h>
-#include <control.h>
-#include <collection.h>
-#include <item.h>
-#include <itemdeletejob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <itemsync.h>
-#include <itemcreatejob.h>
-#include <memory>
-#include <qtestcase.h>
-#include <resourceselectjob_p.h>
+#include "agentmanager.h"
+#include "agentinstance.h"
+#include "control.h"
+#include "collection.h"
+#include "item.h"
+#include "itemdeletejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemsync.h"
+#include "itemcreatejob.h"
+#include "qtest_akonadi.h"
+#include "monitor.h"
+#include "resourceselectjob_p.h"
 
 #include <KRandom>
 
 #include <QObject>
 #include <QSignalSpy>
 
-#include <qtest_akonadi.h>
-#include <monitor.h>
+#include <memory>
 
 using namespace Akonadi;
 

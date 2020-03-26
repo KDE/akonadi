@@ -21,18 +21,18 @@
 
 #include "control.h"
 #include "testattribute.h"
-#include <agentmanager.h>
-#include <agentinstance.h>
-#include <collectionfetchjob.h>
-#include <itemcreatejob.h>
-#include <itemdeletejob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <itemmodifyjob.h>
-#include <qtest_akonadi.h>
+#include "agentmanager.h"
+#include "agentinstance.h"
+#include "collectionfetchjob.h"
+#include "itemcreatejob.h"
+#include "itemdeletejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemmodifyjob.h"
+#include "qtest_akonadi.h"
 #include "test_utils.h"
-#include <itemserializer_p.h>
-#include <itemserializerplugin.h>
+#include "itemserializer_p.h"
+#include "itemserializerplugin.h"
 
 using namespace Akonadi;
 

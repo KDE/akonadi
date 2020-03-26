@@ -17,20 +17,20 @@
     02110-1301, USA.
 */
 
-#include <collection.h>
-#include <control.h>
-#include <linkjob.h>
-#include <itemfetchjob.h>
-#include <unlinkjob.h>
-#include <monitor.h>
-#include <collectionfetchjob.h>
-#include <itemfetchscope.h>
-#include <searchcreatejob.h>
-#include <searchquery.h>
+#include "collection.h"
+#include "control.h"
+#include "linkjob.h"
+#include "itemfetchjob.h"
+#include "unlinkjob.h"
+#include "monitor.h"
+#include "collectionfetchjob.h"
+#include "itemfetchscope.h"
+#include "searchcreatejob.h"
+#include "searchquery.h"
+#include "qtest_akonadi.h"
 
 #include <QObject>
 
-#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 

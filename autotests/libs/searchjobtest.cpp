@@ -21,15 +21,14 @@
 #include "searchjobtest.h"
 #include "qtest_akonadi.h"
 
-#include <collection.h>
-#include <collectiondeletejob.h>
-#include <collectionfetchjob.h>
-#include <collectionmodifyjob.h>
-#include <searchcreatejob.h>
-#include <itemfetchjob.h>
-#include <searchquery.h>
-#include <persistentsearchattribute.h>
-
+#include "collection.h"
+#include "collectiondeletejob.h"
+#include "collectionfetchjob.h"
+#include "collectionmodifyjob.h"
+#include "searchcreatejob.h"
+#include "itemfetchjob.h"
+#include "searchquery.h"
+#include "persistentsearchattribute.h"
 #include "collectionutils.h"
 
 QTEST_AKONADIMAIN(SearchJobTest)

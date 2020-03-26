@@ -19,10 +19,9 @@
 
 #include "collectionpathresolvertest.h"
 #include "collectionpathresolver.h"
+#include "control.h"
 
-#include <control.h>
-
-#include <qtest_akonadi.h>
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

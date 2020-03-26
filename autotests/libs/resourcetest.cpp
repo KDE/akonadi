@@ -18,12 +18,11 @@
 */
 
 #include <QObject>
-
-#include <qtest_akonadi.h>
-
-#include <agentmanager.h>
-#include <agentinstancecreatejob.h>
 #include <QStringList>
+
+#include "qtest_akonadi.h"
+#include "agentmanager.h"
+#include "agentinstancecreatejob.h"
 
 using namespace Akonadi;
 

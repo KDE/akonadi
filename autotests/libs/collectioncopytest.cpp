@@ -17,18 +17,17 @@
     02110-1301, USA.
 */
 
-#include <agentinstance.h>
-#include <agentmanager.h>
-#include <control.h>
-#include <collectioncopyjob.h>
-#include <collectionfetchjob.h>
-#include <item.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
+#include "agentinstance.h"
+#include "agentmanager.h"
+#include "control.h"
+#include "collectioncopyjob.h"
+#include "collectionfetchjob.h"
+#include "item.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "test_utils.h"
 
 #include <QObject>
-
-#include "test_utils.h"
 
 using namespace Akonadi;
 

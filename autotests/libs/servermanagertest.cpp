@@ -17,14 +17,12 @@
     02110-1301, USA.
 */
 
-#include <control.h>
-#include <servermanager.h>
+#include "control.h"
+#include "servermanager.h"
+#include "qtest_akonadi.h"
+#include "test_utils.h"
 
 #include <QObject>
-
-#include <qtest_akonadi.h>
-
-#include "test_utils.h"
 
 using namespace Akonadi;
 

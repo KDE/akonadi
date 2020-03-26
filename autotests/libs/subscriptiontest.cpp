@@ -18,16 +18,15 @@
 */
 
 #include "test_utils.h"
-
-#include <control.h>
-#include <collection.h>
-#include <collectionfetchjob.h>
-#include <collectionfetchscope.h>
-#include <subscriptionjob_p.h>
+#include "control.h"
+#include "collection.h"
+#include "collectionfetchjob.h"
+#include "collectionfetchscope.h"
+#include "subscriptionjob_p.h"
+#include "qtest_akonadi.h"
 
 #include <QObject>
 
-#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 

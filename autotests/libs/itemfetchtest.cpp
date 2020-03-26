@@ -20,17 +20,16 @@
 #include "itemfetchtest.h"
 #include "collectionpathresolver.h"
 #include "testattribute.h"
-
-#include <attributefactory.h>
-#include <itemcreatejob.h>
-#include <itemdeletejob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <resourceselectjob_p.h>
-
-using namespace Akonadi;
+#include "attributefactory.h"
+#include "itemcreatejob.h"
+#include "itemdeletejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "resourceselectjob_p.h"
 
 #include <qtest_akonadi.h>
+
+using namespace Akonadi;
 
 QTEST_AKONADIMAIN(ItemFetchTest)
 

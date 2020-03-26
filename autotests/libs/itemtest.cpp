@@ -19,11 +19,10 @@
 
 #include "itemtest.h"
 #include "testattribute.h"
-
+#include "collection.h"
 #include "item.h"
 
 #include <QTest>
-#include <collection.h>
 
 #include <memory>
 

@@ -23,14 +23,14 @@
 #include "testattribute.h"
 #include "test_utils.h"
 
-#include <agentinstance.h>
-#include <agentmanager.h>
-#include <attributefactory.h>
-#include <collectionfetchjob.h>
-#include <itemcreatejob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <itemdeletejob.h>
+#include "agentinstance.h"
+#include "agentmanager.h"
+#include "attributefactory.h"
+#include "collectionfetchjob.h"
+#include "itemcreatejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemdeletejob.h"
 
 #include <QDebug>
 

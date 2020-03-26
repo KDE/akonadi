@@ -19,23 +19,24 @@
 
 #include "test_utils.h"
 
-#include <agentmanager.h>
-#include <agentinstance.h>
-#include <control.h>
-#include <tagfetchjob.h>
-#include <tagdeletejob.h>
-#include <tagcreatejob.h>
-#include <tag.h>
-#include <tagsync.h>
-#include <tagfetchscope.h>
-#include <resourceselectjob_p.h>
-#include <itemcreatejob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
+#include "agentmanager.h"
+#include "agentinstance.h"
+#include "control.h"
+#include "tagfetchjob.h"
+#include "tagdeletejob.h"
+#include "tagcreatejob.h"
+#include "tag.h"
+#include "tagsync.h"
+#include "tagfetchscope.h"
+#include "resourceselectjob_p.h"
+#include "itemcreatejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+
+#include "qtest_akonadi.h"
 
 #include <QObject>
 
-#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 

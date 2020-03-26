@@ -17,8 +17,8 @@
     02110-1301, USA.
 */
 
-#include <qtest_akonadi.h>
-#include <servermanager.h>
+#include "qtest_akonadi.h"
+#include "servermanager.h"
 
 #include <QObject>
 #include <QDBusConnection>

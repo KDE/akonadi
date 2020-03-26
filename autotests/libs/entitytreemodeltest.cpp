@@ -23,12 +23,10 @@
 #include "fakesession.h"
 #include "fakemonitor.h"
 #include "modelspy.h"
-
 #include "imapparser_p.h"
-
 #include "entitytreemodel.h"
-#include <entitydisplayattribute.h>
-#include <entitytreemodel_p.h>
+#include "entitydisplayattribute.h"
+#include "entitytreemodel_p.h"
 
 static const char serverContent1[] =
         // The format of these lines are first a type, either 'C' or 'I' for Item and collection.

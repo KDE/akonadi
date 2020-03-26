@@ -17,22 +17,22 @@
     02110-1301, USA.
 */
 
-#include <QObject>
 
 #include "test_utils.h"
+#include "entitytreemodel.h"
+#include "control.h"
+#include "entitytreemodel_p.h"
+#include "monitor_p.h"
+#include "changerecorder_p.h"
+#include "qtest_akonadi.h"
+#include "collectioncreatejob.h"
+#include "itemcreatejob.h"
+#include "favoritecollectionsmodel.h"
 
 #include <KConfigGroup>
 #include <KSharedConfig>
 
-#include <entitytreemodel.h>
-#include <control.h>
-#include <entitytreemodel_p.h>
-#include <monitor_p.h>
-#include <changerecorder_p.h>
-#include <qtest_akonadi.h>
-#include <collectioncreatejob.h>
-#include <itemcreatejob.h>
-#include <favoritecollectionsmodel.h>
+#include <QObject>
 #include <QSortFilterProxyModel>
 
 using namespace Akonadi;

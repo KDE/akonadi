@@ -28,11 +28,10 @@
 #include "collectionfetchscope.h"
 #include "monitor.h"
 #include "session.h"
+#include "qtest_akonadi.h"
+#include "resourceselectjob_p.h"
 
 #include <QObject>
-
-#include <qtest_akonadi.h>
-#include <resourceselectjob_p.h>
 
 using namespace Akonadi;
 

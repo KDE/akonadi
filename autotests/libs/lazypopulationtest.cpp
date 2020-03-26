@@ -21,14 +21,14 @@
 
 #include "test_utils.h"
 
-#include <entitytreemodel.h>
-#include <control.h>
-#include <entitytreemodel_p.h>
-#include <monitor_p.h>
-#include <changerecorder_p.h>
-#include <qtest_akonadi.h>
-#include <collectioncreatejob.h>
-#include <itemcreatejob.h>
+#include "entitytreemodel.h"
+#include "control.h"
+#include "entitytreemodel_p.h"
+#include "monitor_p.h"
+#include "changerecorder_p.h"
+#include "qtest_akonadi.h"
+#include "collectioncreatejob.h"
+#include "itemcreatejob.h"
 
 using namespace Akonadi;
 

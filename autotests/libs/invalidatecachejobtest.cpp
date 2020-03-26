@@ -19,10 +19,10 @@
 
 #include "invalidatecachejob_p.h"
 
-#include <collectionpathresolver.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <qtest_akonadi.h>
+#include "collectionpathresolver.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "qtest_akonadi.h"
 #include "test_utils.h"
 #include "control.h"
 

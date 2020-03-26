@@ -21,13 +21,13 @@
 #include "collectionpathresolver.h"
 #include "testattribute.h"
 
-#include <attributefactory.h>
-#include <collection.h>
-#include <itemcreatejob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <resourceselectjob_p.h>
-#include <qtest_akonadi.h>
+#include "attributefactory.h"
+#include "collection.h"
+#include "itemcreatejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "resourceselectjob_p.h"
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

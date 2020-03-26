@@ -19,30 +19,29 @@
 
 #include "monitortest.h"
 #include "test_utils.h"
-
-#include <agentmanager.h>
-#include <agentinstance.h>
-#include <monitor.h>
-#include <collectioncreatejob.h>
-#include <collectiondeletejob.h>
-#include <collectionfetchjob.h>
-#include <collectionmodifyjob.h>
-#include <collectionmovejob.h>
-#include <collectionstatistics.h>
-#include <control.h>
-#include <itemcreatejob.h>
-#include <itemdeletejob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <itemmodifyjob.h>
-#include <itemmovejob.h>
-#include <searchcreatejob.h>
-#include <searchquery.h>
-#include <subscriptionjob_p.h>
+#include "agentmanager.h"
+#include "agentinstance.h"
+#include "monitor.h"
+#include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
+#include "collectionfetchjob.h"
+#include "collectionmodifyjob.h"
+#include "collectionmovejob.h"
+#include "collectionstatistics.h"
+#include "control.h"
+#include "itemcreatejob.h"
+#include "itemdeletejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemmodifyjob.h"
+#include "itemmovejob.h"
+#include "searchcreatejob.h"
+#include "searchquery.h"
+#include "subscriptionjob_p.h"
+#include "qtest_akonadi.h"
 
 #include <QVariant>
 #include <QSignalSpy>
-#include <qtest_akonadi.h>
 
 using namespace Akonadi;
 

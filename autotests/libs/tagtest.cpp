@@ -20,23 +20,22 @@
 #include <QObject>
 
 #include "test_utils.h"
-
-#include <control.h>
-#include <tagcreatejob.h>
-#include <tagfetchjob.h>
-#include <tagdeletejob.h>
-#include <tagattribute.h>
-#include <tagfetchscope.h>
-#include <tagmodifyjob.h>
-#include <resourceselectjob_p.h>
-#include <qtest_akonadi.h>
-#include <item.h>
-#include <itemcreatejob.h>
-#include <itemmodifyjob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <monitor.h>
-#include <attributefactory.h>
+#include "control.h"
+#include "tagcreatejob.h"
+#include "tagfetchjob.h"
+#include "tagdeletejob.h"
+#include "tagattribute.h"
+#include "tagfetchscope.h"
+#include "tagmodifyjob.h"
+#include "resourceselectjob_p.h"
+#include "qtest_akonadi.h"
+#include "item.h"
+#include "itemcreatejob.h"
+#include "itemmodifyjob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "monitor.h"
+#include "attributefactory.h"
 
 using namespace Akonadi;
 

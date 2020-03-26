@@ -17,17 +17,17 @@
     02110-1301, USA.
 */
 
-#include <qtest_akonadi.h>
-#include <collection.h>
-#include <collectionpathresolver.h>
-#include <control.h>
-#include <itemdeletejob.h>
-#include <itemfetchjob.h>
-#include <transactionjobs.h>
-#include <tagcreatejob.h>
-#include <itemmodifyjob.h>
-#include <resourceselectjob_p.h>
-#include <monitor.h>
+#include "qtest_akonadi.h"
+#include "collection.h"
+#include "collectionpathresolver.h"
+#include "control.h"
+#include "itemdeletejob.h"
+#include "itemfetchjob.h"
+#include "transactionjobs.h"
+#include "tagcreatejob.h"
+#include "itemmodifyjob.h"
+#include "resourceselectjob_p.h"
+#include "monitor.h"
 #include "test_utils.h"
 
 #include <QObject>

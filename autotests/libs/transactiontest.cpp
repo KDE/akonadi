@@ -19,14 +19,14 @@
 
 #include "transactiontest.h"
 
-#include <itemcreatejob.h>
-#include <itemfetchjob.h>
-#include <collectioncreatejob.h>
-#include <collectiondeletejob.h>
-#include <collectionfetchjob.h>
-#include <control.h>
-#include <session.h>
-#include <transactionjobs.h>
+#include "itemcreatejob.h"
+#include "itemfetchjob.h"
+#include "collectioncreatejob.h"
+#include "collectiondeletejob.h"
+#include "collectionfetchjob.h"
+#include "control.h"
+#include "session.h"
+#include "transactionjobs.h"
 
 #include <qtest_akonadi.h>
 

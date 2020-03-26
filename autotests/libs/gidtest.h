@@ -34,9 +34,9 @@ private Q_SLOTS:
     void testFetchScope();
 };
 
-#include <../src/core/gidextractorinterface.h>
-#include <itemserializer_p.h>
-#include <itemserializerplugin.h>
+#include "gidextractorinterface.h"
+#include "itemserializer_p.h"
+#include "itemserializerplugin.h"
 
 class TestSerializer : public QObject,
     public Akonadi::ItemSerializerPlugin,

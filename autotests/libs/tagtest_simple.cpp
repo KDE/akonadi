@@ -18,12 +18,12 @@
 */
 
 #include <QObject>
-#include <qtest_akonadi.h>
-#include "testattribute.h"
 
-#include <attributefactory.h>
-#include <tag.h>
-#include <tagattribute.h>
+#include "qtest_akonadi.h"
+#include "testattribute.h"
+#include "attributefactory.h"
+#include "tag.h"
+#include "tagattribute.h"
 
 using namespace Akonadi;
 

@@ -17,15 +17,14 @@
     02110-1301, USA.
 */
 
-#include <agentinstance.h>
-#include <agentmanager.h>
-#include <item.h>
-#include <itemcreatejob.h>
-#include <itemdeletejob.h>
-#include <itemfetchjob.h>
-#include <itemfetchscope.h>
-#include <itemmodifyjob.h>
-
+#include "agentinstance.h"
+#include "agentmanager.h"
+#include "item.h"
+#include "itemcreatejob.h"
+#include "itemdeletejob.h"
+#include "itemfetchjob.h"
+#include "itemfetchscope.h"
+#include "itemmodifyjob.h"
 #include "qtest_akonadi.h"
 #include "test_utils.h"
 

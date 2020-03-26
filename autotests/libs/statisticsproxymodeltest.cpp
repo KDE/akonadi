@@ -17,14 +17,14 @@
     02110-1301, USA.
 */
 
-#include <collectionstatistics.h>
-#include <collection.h>
-#include <entitytreemodel.h>
-#include <QTest>
-
-#include <statisticsproxymodel.h>
-#include <QStandardItemModel>
+#include "collectionstatistics.h"
+#include "collection.h"
+#include "entitytreemodel.h"
+#include "statisticsproxymodel.h"
 #include "test_model_helpers.h"
+
+#include <QStandardItemModel>
+#include <QTest>
 
 using namespace TestModelHelpers;
 
