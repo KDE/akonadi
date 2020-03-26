@@ -220,7 +220,7 @@ public:
 
     Monitor *m_monitor = nullptr;
     Collection m_rootCollection;
-    Node *m_rootNode;
+    Node *m_rootNode = nullptr;
     bool m_needDeleteRootNode = false;
     QString m_rootCollectionDisplayName;
     QStringList m_mimeTypeFilter;
