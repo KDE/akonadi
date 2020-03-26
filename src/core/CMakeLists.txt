@@ -1,3 +1,4 @@
+configure_file(akonaditests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonaditests_export.h")
 
 set(akonadicore_base_SRCS
     agentconfigurationbase.cpp

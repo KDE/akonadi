@@ -1,3 +1,5 @@
+configure_file(akonadiwidgetstests_export.h.in "${CMAKE_CURRENT_BINARY_DIR}/akonadiwidgetstests_export.h")
+
 set(akonadiwidgets_SRCS
     actionstatemanager.cpp
     agentactionmanager.cpp
