@@ -595,7 +595,7 @@ void NotificationCollector::dispatchNotification(const Protocol::ChangeNotificat
     }
 }
 
-void NotificationCollector::dispatchNotifications()
+bool NotificationCollector::dispatchNotifications()
 {
     if (!mNotifications.isEmpty()) {
         for (auto &ntf : mNotifications) {
@@ -603,7 +603,10 @@ void NotificationCollector::dispatchNotifications()
         }
         notify(std::move(mNotifications));
         clear();
+        return true;
     }
+
+    return false;
 }
 
 void NotificationCollector::notify(Protocol::ChangeNotificationList msgs)

@@ -39,6 +39,7 @@
 #include <QBuffer>
 #include <QStandardPaths>
 
+#include <ctime>
 #include <private/protocol_p.h>
 #include <private/scope_p.h>
 #include <private/standarddirs_p.h>
@@ -313,7 +314,17 @@ void FakeAkonadiServer::runTest()
     QVERIFY(mCmdServer->listen(socketFile()));
 
     QEventLoop serverLoop;
-    connect(mClient.get(), &QThread::finished, &serverLoop, &QEventLoop::quit);
+    connect(mClient.get(), &QThread::finished,
+            this, [this, &serverLoop]() {
+                disconnect(mClient.get(), &QThread::finished, this, nullptr);
+                // Flush any pending notifications and wait for them
+                // before shutting down the event loop
+                if (mNtfCollector->dispatchNotifications()) {
+                    mNotificationSpy->wait();
+                }
+
+                serverLoop.quit();
+            });
 
     // Start the client: the client will connect to the server and will
     // start playing the scenario
@@ -323,9 +334,6 @@ void FakeAkonadiServer::runTest()
     serverLoop.exec();
 
     mCmdServer->close();
-
-    // Flush any pending notifications
-    mNtfCollector->dispatchNotifications();
 }
 
 QSharedPointer<QSignalSpy> FakeAkonadiServer::notificationSpy() const

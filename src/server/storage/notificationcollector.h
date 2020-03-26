@@ -209,8 +209,11 @@ public:
 
     /**
       Trigger sending of collected notifications.
+
+      @returns Returns true when any notifications were dispatched, false if there
+               were no pending notifications.
     */
-    void dispatchNotifications();
+    bool dispatchNotifications();
 
 private:
     void itemNotification(Protocol::ItemChangeNotification::Operation op,
