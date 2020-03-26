@@ -255,7 +255,7 @@ void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
     q->connect(job, SIGNAL(result(KJob*)),
                q, SLOT(collectionFetchJobDone(KJob*)));
 
-    qCDebug(DebugETM) << "collection:" << job->collections(); jobTimeTracker[job].start();
+    jobTimeTracker[job].start();
 }
 
 void EntityTreeModelPrivate::fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type)
@@ -613,7 +613,7 @@ void EntityTreeModelPrivate::monitoredResourcesChanged(const QByteArray &resourc
     endResetModel();
 }
 
-void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collection, bool insertBaseCollection)
+bool EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collection, bool insertBaseCollection)
 {
     Q_Q(EntityTreeModel);
 
@@ -629,29 +629,53 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
         ancestors.prepend(parentCollection);
 
         parentCollection = parentCollection.parentCollection();
+        // If we got here through Collection added notification, the parent chain may be incomplete
+        // and if the model is still populating or the collection belongs to a yet-unknown subtree
+        // this will break here
+        if (!parentCollection.isValid()) {
+            break;
+        }
     }
-    Q_ASSERT(parentCollection.isValid());
     // if m_rootCollection is Collection::root(), we always have common ancestor and do the retrieval
     // if we traversed up to Collection::root() but are looking at a subtree only (m_rootCollection != Collection::root())
     // we have no common ancestor, and we don't have to retrieve anything
     if (parentCollection == Collection::root() && m_rootCollection != Collection::root()) {
-        return;
+        return true;
     }
 
     if (ancestors.isEmpty() && !insertBaseCollection) {
         //Nothing to do, avoid emitting insert signals
-        return;
+        return true;
     }
 
-    if (!ancestors.isEmpty()) {
+    CollectionFetchJob *job = nullptr;
+    // We were unable to reach the top of the tree due to an incomplete ancestor chain, we will have
+    // to retrieve it from the server.
+    if (!parentCollection.isValid()) {
+        if (insertBaseCollection) {
+            job = new CollectionFetchJob(collection, CollectionFetchJob::Recursive, m_session);
+        } else {
+            job = new CollectionFetchJob(collection.parentCollection(), CollectionFetchJob::Recursive, m_session);
+        }
+    } else if (!ancestors.isEmpty()) {
         // Fetch the real ancestors
-        CollectionFetchJob *job = new CollectionFetchJob(ancestors, CollectionFetchJob::Base, m_session);
+        job = new CollectionFetchJob(ancestors, CollectionFetchJob::Base, m_session);
+    }
+
+    if (job) {
         job->fetchScope().setListFilter(m_listFilter);
         job->fetchScope().setIncludeStatistics(m_includeStatistics);
         q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
                    q, SLOT(ancestorsFetched(Akonadi::Collection::List)));
         q->connect(job, SIGNAL(result(KJob*)),
                    q, SLOT(collectionFetchJobDone(KJob*)));
+    }
+
+    if (!parentCollection.isValid()) {
+        // We can't proceed to insert the fake collections to complete the tree because
+        // we do not have the complete ancestor chain. However, once the fetch job is
+        // finished the tree will be populated accordingly.
+        return false;
     }
 
 //  Q_ASSERT( parentCollection != m_rootCollection );
@@ -690,6 +714,8 @@ void EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     }
 
     q->endInsertRows();
+
+    return true;
 }
 
 void EntityTreeModelPrivate::ancestorsFetched(const Akonadi::Collection::List &collectionList)
@@ -830,7 +856,9 @@ void EntityTreeModelPrivate::monitoredCollectionAdded(const Akonadi::Collection 
         // The collection we're interested in is contained in a collection we're not interested in.
         // We download the ancestors of the collection we're interested in to complete the tree.
         if (collection != Collection::root()) {
-            retrieveAncestors(collection);
+            if (!retrieveAncestors(collection)) {
+                return;
+            }
         }
         if (m_itemPopulation == EntityTreeModel::ImmediatePopulation) {
             fetchItems(collection);

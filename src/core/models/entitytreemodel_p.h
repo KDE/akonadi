@@ -185,8 +185,11 @@ public:
 
     /**
      * Fetch parent collections and insert this @p collection and its parents into the node tree
+     *
+     * Returns whether the ancestor chain was complete and the parent collections were inserted into
+     * the tree.
      */
-    void retrieveAncestors(const Akonadi::Collection &collection, bool insertBaseCollection = true);
+    bool retrieveAncestors(const Akonadi::Collection &collection, bool insertBaseCollection = true);
     void ancestorsFetched(const Akonadi::Collection::List &collectionList);
     void insertCollection(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
 
