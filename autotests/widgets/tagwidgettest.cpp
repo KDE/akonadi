@@ -100,7 +100,8 @@ class TagWidgetTest: public QObject
             std::transform(selection.begin(), selection.end(), std::back_inserter(names), std::bind(&Tag::name, std::placeholders::_1));
 
             AKCOMPARE(widget->selection(), selection);
-            AKVERIFY(selectionSpy.wait());
+            AKCOMPARE(selectionSpy.size(), 1);
+
             AKCOMPARE(selectionSpy.at(0).at(0).value<Tag::List>(), selection);
             AKCOMPARE(tagView->text(), names.join(QStringLiteral(", ")));
             return true;
@@ -196,7 +197,7 @@ private Q_SLOTS:
         QSignalSpy selectionSpy(test.widget.get(), &TagWidget::selectionChanged);
         test.widget->clearTags();
         QVERIFY(test.widget->selection().isEmpty());
-        QVERIFY(selectionSpy.wait());
+        QCOMPARE(selectionSpy.size(), 1);
         QVERIFY(selectionSpy.at(0).at(0).value<Tag::List>().empty());
         QVERIFY(test.tagView->text().isEmpty());
     }

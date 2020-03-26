@@ -209,7 +209,7 @@ private Q_SLOTS:
         QVERIFY(!test.newTagButton->isEnabled());
         QVERIFY(!test.newTagEdit->isEnabled());
 
-        QVERIFY(monitorSpy.wait());
+        QTRY_COMPARE(monitorSpy.size(), 1);
         test.createdTags.push_back(monitorSpy.at(0).at(0).value<Akonadi::Tag>());
         QCOMPARE(test.model->rowCount(), 2);
         QCOMPARE(test.model->data(test.model->index(1, 0), Qt::DisplayRole).toString(), tagName);
@@ -230,7 +230,7 @@ private Q_SLOTS:
         QVERIFY(!test.newTagButton->isEnabled());
         QVERIFY(!test.newTagEdit->isEnabled());
 
-        QVERIFY(monitorSpy.wait());
+        QTRY_COMPARE(monitorSpy.size(), 1);
         test.createdTags.push_back(monitorSpy.at(0).at(0).value<Akonadi::Tag>());
         QCOMPARE(test.model->rowCount(), 2);
         QCOMPARE(test.model->data(test.model->index(1, 0), Qt::DisplayRole).toString(), tagName);
@@ -336,7 +336,7 @@ private Q_SLOTS:
             QVERIFY(test.deleteTag(tag, true));
 
             // Wait for confirmation
-            QVERIFY(monitorSpy.wait());
+            QTRY_COMPARE(monitorSpy.size(), 1);
             QCOMPARE(monitorSpy.at(0).at(0).value<Tag>(), tag);
 
             test.createdTags.pop_back(); // remove the tag from the list
