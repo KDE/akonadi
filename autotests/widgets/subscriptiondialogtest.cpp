@@ -49,7 +49,7 @@ class SubscriptionDialogTest: public QObject
     Q_OBJECT
 
     struct TestSetup {
-        static constexpr int defaultCollectionCount = 7;
+        enum { defaultCollectionCount = 7 };
 
 
         TestSetup()
