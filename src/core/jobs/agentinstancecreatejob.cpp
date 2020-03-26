@@ -87,29 +87,19 @@ public:
             return;
         }
 
-        q->connect(agentControlIface, SIGNAL(configurationDialogAccepted()),
-                   q, SLOT(configurationDialogAccepted()));
-        q->connect(agentControlIface, SIGNAL(configurationDialogRejected()),
-                   q, SLOT(configurationDialogRejected()));
+        q->connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogAccepted,
+                   q, [agentControlIface, this]() {
+                        agentControlIface->deleteLater();
+                        q->emitResult();
+                   });
+        q->connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogRejected,
+                   q, [agentControlIface, this]() {
+                        agentControlIface->deleteLater();
+                        AgentManager::self()->removeInstance(agentInstance);
+                        q->emitResult();
+                   });
 
         agentInstance.configure(parentWidget);
-    }
-
-    void configurationDialogAccepted()
-    {
-        // The user clicked 'Ok' in the initial configuration dialog, so we assume
-        // he wants to keep the resource and the job is done.
-        q->emitResult();
-    }
-
-    void configurationDialogRejected()
-    {
-        // The user clicked 'Cancel' in the initial configuration dialog, so we assume
-        // he wants to abort the 'create new resource' job and the new resource will be
-        // removed again.
-        AgentManager::self()->removeInstance(agentInstance);
-
-        q->emitResult();
     }
 
     void timeout()
@@ -120,14 +110,9 @@ public:
         q->emitResult();
     }
 
-    void emitResult()
-    {
-        q->emitResult();
-    }
-
     void doStart() override;
 
-    AgentInstanceCreateJob *q;
+    AgentInstanceCreateJob * const q;
     AgentType agentType;
     QString agentTypeId;
     AgentInstance agentInstance;
@@ -183,7 +168,7 @@ void AgentInstanceCreateJobPrivate::doStart()
     if (!agentType.isValid()) {
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Unable to obtain agent type '%1'.", agentTypeId));
-        QTimer::singleShot(0, q, [this]() { emitResult(); });
+        QTimer::singleShot(0, q, &AgentInstanceCreateJob::emitResult);
         return;
     }
 
@@ -191,7 +176,7 @@ void AgentInstanceCreateJobPrivate::doStart()
     if (!agentInstance.isValid()) {
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Unable to create agent instance."));
-        QTimer::singleShot(0, q, [this]() { emitResult(); });
+        QTimer::singleShot(0, q, &AgentInstanceCreateJob::emitResult);
     } else {
         int timeout = safetyTimeout;
 #ifdef Q_OS_UNIX
