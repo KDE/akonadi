@@ -60,9 +60,11 @@ class Collection;
  *
  * @endcode
  *
+ * @deprecated Use EntityTreeView or EntityListView on top of EntityTreeModel instead.
+ *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADIWIDGETS_EXPORT CollectionView : public QTreeView
+class AKONADIWIDGETS_DEPRECATED_EXPORT CollectionView : public QTreeView
 {
     Q_OBJECT
 

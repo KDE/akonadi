@@ -56,9 +56,11 @@ class Item;
  *
  * @endcode
  *
+ * @deprecated Use EntityTreeView or EntityListView on top of EntityTreeModel instead.
+ *
  * @author Tobias Koenig <tokoe@kde.org>
  */
-class AKONADIWIDGETS_EXPORT ItemView : public QTreeView
+class AKONADIWIDGETS_DEPRECATED_EXPORT ItemView : public QTreeView
 {
     Q_OBJECT
 
