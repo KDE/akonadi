@@ -20,23 +20,23 @@
 #include "collectionview.h"
 
 #include "collection.h"
-#include "collectionmodel.h"
 #include "controlgui.h"
-
-#include <QAction>
-#include <QMimeData>
+#include "entitytreemodel.h"
 #include "akonadiwidgets_debug.h"
+
 #include <KLocalizedString>
-#include <QUrl>
 #include <KXMLGUIFactory>
 #include <kxmlguiwindow.h>
 
+#include <QAction>
+#include <QMimeData>
 #include <QTimer>
 #include <QUrlQuery>
 #include <QApplication>
 #include <QDragMoveEvent>
 #include <QHeaderView>
 #include <QMenu>
+#include <QUrl>
 
 using namespace Akonadi;
 
@@ -89,7 +89,7 @@ bool CollectionView::Private::hasParent(const QModelIndex &idx, Collection::Id p
 {
     QModelIndex idx2 = idx;
     while (idx2.isValid()) {
-        if (mParent->model()->data(idx2, CollectionModel::CollectionIdRole).toLongLong() == parentId) {
+        if (mParent->model()->data(idx2, EntityTreeModel::CollectionIdRole).toLongLong() == parentId) {
             return true;
         }
 
@@ -110,7 +110,7 @@ void CollectionView::Private::itemClicked(const QModelIndex &index)
         return;
     }
 
-    const Collection collection = index.model()->data(index, CollectionModel::CollectionRole).value<Collection>();
+    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (!collection.isValid()) {
         return;
     }
@@ -124,7 +124,7 @@ void CollectionView::Private::itemCurrentChanged(const QModelIndex &index)
         return;
     }
 
-    const Collection collection = index.model()->data(index, CollectionModel::CollectionRole).value<Collection>();
+    const Collection collection = index.model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (!collection.isValid()) {
         return;
     }
@@ -173,7 +173,7 @@ void CollectionView::dragMoveEvent(QDragMoveEvent *event)
     }
 
     // Check if the collection under the cursor accepts this data type
-    const QStringList supportedContentTypes = model()->data(index, CollectionModel::CollectionRole).value<Collection>().contentMimeTypes();
+    const QStringList supportedContentTypes = model()->data(index, EntityTreeModel::CollectionRole).value<Collection>().contentMimeTypes();
     const QMimeData *mimeData = event->mimeData();
     if (!mimeData) {
         return;

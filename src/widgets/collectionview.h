@@ -33,7 +33,7 @@ namespace Akonadi
 class Collection;
 
 /**
- * @short A view to show a collection tree provided by a CollectionModel.
+ * @short A view to show a collection tree provided by a EntityTreeModel.
  *
  * When a KXmlGuiWindow is passed to the constructor, the XMLGUI
  * defined context menu @c akonadi_collectionview_contextmenu is
@@ -45,16 +45,17 @@ class Collection;
  *
  * class MyWindow : public KXmlGuiWindow
  * {
- *   public:
- *    MyWindow()
- *      : KXmlGuiWindow()
- *    {
- *      Akonadi::CollectionView *view = new Akonadi::CollectionView( this, this );
- *      setCentralWidget( view );
+ * public:
+ *     MyWindow()
+ *       : KXmlGuiWindow()
+ *     {
+ *         Akonadi::CollectionView *view = new Akonadi::CollectionView(this, this);
+ *         setCentralWidget(view);
  *
- *      Akonadi::CollectionModel *model = new Akonadi::CollectionModel( this );
- *      view->setModel( model );
- *    }
+ *         Akonadi::Monitor *monitor = new Akonadi::Monitor(this);
+ *         Akonadi::EntityTreeModel *model = new Akonadi::EntityTreeModel(monitor, this);
+ *         view->setModel(model);
+ *     }
  * }
  *
  * @endcode

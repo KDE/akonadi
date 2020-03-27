@@ -141,8 +141,6 @@ set(akonadicore_models_SRCS
     models/agentinstancemodel.cpp
     models/agenttypemodel.cpp
     models/collectionfilterproxymodel.cpp
-    models/collectionmodel.cpp
-    models/collectionmodel_p.cpp
     models/entitymimetypefiltermodel.cpp
     models/entityorderproxymodel.cpp
     models/entityrightsfiltermodel.cpp
