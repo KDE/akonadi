@@ -63,7 +63,7 @@ class SubscriptionDialogTest: public QObject
 
             model = widget->findChild<SubscriptionModel*>();
             QVERIFY(model);
-            QSignalSpy modelLoadedSpy(model, &SubscriptionModel::loaded);
+            QSignalSpy modelLoadedSpy(model, &SubscriptionModel::modelLoaded);
 
             buttonBox = widget->findChild<QDialogButtonBox*>();
             QVERIFY(buttonBox);
@@ -166,7 +166,7 @@ class SubscriptionDialogTest: public QObject
             while (!idxQueue.empty()) {
                 const auto idx = idxQueue.front();
                 idxQueue.pop_front();
-                if (model->data(idx, CollectionModel::CollectionIdRole).value<qint64>() == col.id()) {
+                if (model->data(idx, EntityTreeModel::CollectionIdRole).value<qint64>() == col.id()) {
                     return idx;
                 }
                 for (int i = 0; i < model->rowCount(idx); ++i) {

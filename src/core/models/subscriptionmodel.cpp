@@ -18,18 +18,65 @@
 */
 
 #include "subscriptionmodel_p.h"
-#include "collectionfetchjob.h"
 #include "collectionutils.h"
 #include "specialcollectionattribute.h"
-
 #include "entityhiddenattribute.h"
+#include "entitytreemodel.h"
 
 #include "akonadicore_debug.h"
-
+#include <qnamespace.h>
+#include <shared/akranges.h>
 
 #include <QFont>
+#include <QSortFilterProxyModel>
 
 using namespace Akonadi;
+using namespace AkRanges;
+
+namespace
+{
+
+class FilterProxyModel : public QSortFilterProxyModel
+{
+    Q_OBJECT
+
+public:
+    FilterProxyModel()
+        : QSortFilterProxyModel()
+    {
+        setDynamicSortFilter(true);
+    }
+
+    void setShowHidden(bool showHidden)
+    {
+        if (mShowHidden != showHidden) {
+            mShowHidden = showHidden;
+            invalidateFilter();
+        }
+    }
+
+    bool showHidden() const
+    {
+        return mShowHidden;
+    }
+
+protected:
+    bool filterAcceptsRow(int source_row, const QModelIndex &source_parent) const override
+    {
+        const auto source_index = sourceModel()->index(source_row, 0, source_parent);
+        const auto col = source_index.data(EntityTreeModel::CollectionRole).value<Collection>();
+        if (mShowHidden) {
+            return true;
+        }
+
+        return !col.hasAttribute<EntityHiddenAttribute>();
+    }
+
+private:
+    bool mShowHidden = false;
+};
+
+}
 
 /**
  * @internal
@@ -37,44 +84,26 @@ using namespace Akonadi;
 class SubscriptionModel::Private
 {
 public:
-    Private(SubscriptionModel *parent) : q(parent) {}
-    SubscriptionModel *q;
-    QHash<Collection::Id, bool> subscriptions;
-    QSet<Collection::Id> changes;
-    bool showHiddenCollection = false;
+    Private(Monitor *monitor)
+        : etm(monitor)
+    {
+        etm.setShowSystemEntities(true); // show hidden collections
+        etm.setItemPopulationStrategy(EntityTreeModel::NoItemPopulation);
+        etm.setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
+
+        proxy.setSourceModel(&etm);
+    }
 
     Collection::List changedSubscriptions(bool subscribed)
     {
-        Collection::List list;
-        for (Collection::Id id : qAsConst(changes)) {
-            if (subscriptions.value(id) == subscribed) {
-                list << Collection(id);
-            }
-        }
-        return list;
+        return Views::range(subscriptions.constKeyValueBegin(), subscriptions.constKeyValueEnd())
+                    | Views::filter([subscribed](const auto &val) { return val.second == subscribed; })
+                    | Views::transform([](const auto &val) { return Collection{val.first}; })
+                    | Actions::toQVector;
     }
 
-    void listResult(KJob *job)
+    bool isSubscribable(const Collection &col)
     {
-        if (job->error()) {
-            // TODO
-            qCWarning(AKONADICORE_LOG) << job->errorString();
-            return;
-        }
-        q->beginResetModel();
-        const Collection::List cols = static_cast<CollectionFetchJob *>(job)->collections();
-        for (const Collection &col : cols) {
-            if (!CollectionUtils::isStructural(col)) {
-                subscriptions[ col.id() ] = true;
-            }
-        }
-        q->endResetModel();
-        Q_EMIT q->loaded();
-    }
-
-    bool isSubscribable(Collection::Id id)
-    {
-        Collection col = q->collectionForId(id);
         if (CollectionUtils::isStructural(col) || col.isVirtual() || CollectionUtils::isUnifiedMailbox(col)) {
             return false;
         }
@@ -86,73 +115,66 @@ public:
         }
         return true;
     }
+
+public:
+    EntityTreeModel etm;
+    FilterProxyModel proxy;
+    QHash<Collection::Id, bool> subscriptions;
 };
 
-SubscriptionModel::SubscriptionModel(QObject *parent) :
-    CollectionModel(parent),
-    d(new Private(this))
+SubscriptionModel::SubscriptionModel(Monitor *monitor, QObject *parent) :
+    QIdentityProxyModel(parent),
+    d(new Private(monitor))
 {
-    includeUnsubscribed();
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::Recursive, this);
-    connect(job,&CollectionFetchJob::result, this, [this](KJob *job) { d->listResult(job); });
+    QIdentityProxyModel::setSourceModel(&d->proxy);
+
+    connect(&d->etm, &EntityTreeModel::collectionTreeFetched, this, &SubscriptionModel::modelLoaded);
 }
 
-SubscriptionModel::~SubscriptionModel()
+SubscriptionModel::~SubscriptionModel() = default;
+
+void SubscriptionModel::setSourceModel(QAbstractItemModel *)
 {
-    delete d;
+    // no-op
 }
 
 QVariant SubscriptionModel::data(const QModelIndex &index, int role) const
 {
     switch (role) {
     case Qt::CheckStateRole: {
-        const Collection::Id col = index.data(CollectionIdRole).toLongLong();
+        const auto col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         if (!d->isSubscribable(col)) {
             return QVariant();
         }
-        if (d->subscriptions.value(col)) {
-            return Qt::Checked;
+        // Check if we have "override" for the subscription state stored
+        const auto it = d->subscriptions.constFind(col.id());
+        if (it != d->subscriptions.cend()) {
+            return (*it) ? Qt::Checked : Qt::Unchecked;
+        } else {
+            // Fallback to the current state of the collection
+            return col.enabled() ? Qt::Checked : Qt::Unchecked;
         }
-        return Qt::Unchecked;
     }
     case SubscriptionChangedRole: {
-        const Collection::Id col = index.data(CollectionIdRole).toLongLong();
-        if (d->changes.contains(col)) {
-            return true;
-        }
-        return false;
+        const auto col = index.data(EntityTreeModel::CollectionIdRole).toLongLong();
+        return d->subscriptions.contains(col);
     }
     case Qt::FontRole: {
-        const Collection::Id col = index.data(CollectionIdRole).toLongLong();
-
-        QFont font = CollectionModel::data(index, role).value<QFont>();
-        font.setBold(d->changes.contains(col));
-
+        const auto col = index.data(EntityTreeModel::CollectionIdRole).toLongLong();
+        QFont font = QIdentityProxyModel::data(index, role).value<QFont>();
+        font.setBold(d->subscriptions.contains(col));
         return font;
     }
     }
 
-    if (role == CollectionIdRole) {
-        return CollectionModel::data(index, CollectionIdRole);
-    } else {
-        const Collection::Id collectionId = index.data(CollectionIdRole).toLongLong();
-        const Collection collection = collectionForId(collectionId);
-        if (collection.hasAttribute<EntityHiddenAttribute>()) {
-            if (d->showHiddenCollection) {
-                return CollectionModel::data(index, role);
-            } else {
-                return QVariant();
-            }
-        } else {
-            return CollectionModel::data(index, role);
-        }
-    }
+    return QIdentityProxyModel::data(index, role);
 }
 
 Qt::ItemFlags SubscriptionModel::flags(const QModelIndex &index) const
 {
-    Qt::ItemFlags flags = CollectionModel::flags(index);
-    if (d->isSubscribable(index.data(CollectionIdRole).toLongLong())) {
+    Qt::ItemFlags flags = QIdentityProxyModel::flags(index);
+    const auto col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+    if (d->isSubscribable(col)) {
         return flags | Qt::ItemIsUserCheckable;
     }
     return flags;
@@ -161,23 +183,19 @@ Qt::ItemFlags SubscriptionModel::flags(const QModelIndex &index) const
 bool SubscriptionModel::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     if (role == Qt::CheckStateRole) {
-        const Collection::Id col = index.data(CollectionIdRole).toLongLong();
+        const auto col = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         if (!d->isSubscribable(col)) {
             return true; //No change
         }
-        if (d->subscriptions.contains(col) && d->subscriptions.value(col) == (value == Qt::Checked)) {
-            return true;    // no change
-        }
-        d->subscriptions[ col ] = value == Qt::Checked;
-        if (d->changes.contains(col)) {
-            d->changes.remove(col);
+        if (col.enabled() == (value == Qt::Checked)) { // No change compared to the underlying model
+            d->subscriptions.remove(col.id());
         } else {
-            d->changes.insert(col);
+            d->subscriptions[col.id()] = (value == Qt::Checked);
         }
         Q_EMIT dataChanged(index, index);
         return true;
     }
-    return CollectionModel::setData(index, value, role);
+    return QIdentityProxyModel::setData(index, value, role);
 }
 
 Akonadi::Collection::List SubscriptionModel::subscribed() const
@@ -190,9 +208,15 @@ Akonadi::Collection::List SubscriptionModel::unsubscribed() const
     return d->changedSubscriptions(false);
 }
 
-void SubscriptionModel::showHiddenCollection(bool showHidden)
+void SubscriptionModel::setShowHiddenCollections(bool showHidden)
 {
-    d->showHiddenCollection = showHidden;
+    d->proxy.setShowHidden(showHidden);
 }
 
-#include "moc_subscriptionmodel_p.cpp"
+bool SubscriptionModel::showHiddenCollections() const
+{
+    return d->proxy.showHidden();
+}
+
+#include "subscriptionmodel.moc"
+
