@@ -27,7 +27,6 @@
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectiondialog.h"
-#include "collectionmodel.h"
 #include "collectionutils.h"
 #include "entitytreemodel.h"
 #include "favoritecollectionsmodel.h"
@@ -616,7 +615,7 @@ public:
 
         const QModelIndex index = collectionSelectionModel->selection().indexes().at(0);
         Q_ASSERT(index.isValid());
-        const Collection parentCollection = index.data(CollectionModel::CollectionRole).value<Collection>();
+        const Collection parentCollection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(parentCollection.isValid());
 
         if (!canCreateCollection(parentCollection)) {
@@ -683,7 +682,7 @@ public:
 
         for (const QModelIndex &index : indexes) {
             Q_ASSERT(index.isValid());
-            const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
+            const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
 
             collections << collection;
@@ -904,7 +903,7 @@ public:
         const QModelIndex index = list.first();
         Q_ASSERT(index.isValid());
 
-        const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
+        const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
         CollectionPropertiesDialog *dlg = new CollectionPropertiesDialog(collection, mCollectionPropertiesPageNames, parentWidget);
@@ -999,7 +998,7 @@ public:
 
         for (const QModelIndex &index : list) {
             Q_ASSERT(index.isValid());
-            const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
+            const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
 
             favoritesModel->addCollection(collection);
@@ -1019,7 +1018,7 @@ public:
 
         for (const QModelIndex &index : list) {
             Q_ASSERT(index.isValid());
-            const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
+            const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
 
             favoritesModel->removeCollection(collection);
@@ -1038,7 +1037,7 @@ public:
         }
         const QModelIndex index = list.first();
         Q_ASSERT(index.isValid());
-        const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
+        const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         Q_ASSERT(collection.isValid());
 
         QPointer<RenameFavoriteDialog> dlg(new RenameFavoriteDialog(
@@ -1114,7 +1113,7 @@ public:
         const QModelIndexList lstIndexes = collectionSelectionModel->selection().indexes();
         for (const QModelIndex &index : lstIndexes) {
             Q_ASSERT(index.isValid());
-            const Collection collection = index.data(CollectionModel::CollectionRole).value<Collection>();
+            const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             Q_ASSERT(collection.isValid());
 
             if (collection.isValid()) {
@@ -1418,7 +1417,7 @@ public:
 
         for (int row = 0; row < rowCount; ++row) {
             const QModelIndex index = model->index(row, 0, parentIndex);
-            const Collection collection = model->data(index, CollectionModel::CollectionRole).value<Collection>();
+            const Collection collection = model->data(index, EntityTreeModel::CollectionRole).value<Collection>();
 
             if (collection.isVirtual()) {
                 continue;

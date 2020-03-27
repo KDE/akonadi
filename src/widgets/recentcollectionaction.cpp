@@ -19,7 +19,6 @@
 #include "recentcollectionaction_p.h"
 #include "metatypes.h"
 #include "entitytreemodel.h"
-#include "collectionmodel.h"
 #include <KConfig>
 #include <KConfigGroup>
 #include <KLocalizedString>
@@ -71,7 +70,7 @@ void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager
     const int numberOfRecentCollection(mListRecentCollection.count());
     for (int i = 0; i < numberOfRecentCollection; ++i) {
         const QModelIndex index = Akonadi::EntityTreeModel::modelIndexForCollection(mModel, Akonadi::Collection(mListRecentCollection.at(i).toLongLong()));
-        const Akonadi::Collection collection = mModel->data(index, Akonadi::CollectionModel::CollectionRole).value<Akonadi::Collection>();
+        const auto collection = mModel->data(index, Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
         if (index.isValid()) {
             const bool collectionIsSelected = selectedCollectionsList.contains(collection);
             if (type == Akonadi::StandardActionManager::MoveCollectionToMenu && collectionIsSelected) {
