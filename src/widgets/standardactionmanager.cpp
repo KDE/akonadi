@@ -31,7 +31,6 @@
 #include "entitytreemodel.h"
 #include "favoritecollectionsmodel.h"
 #include "itemdeletejob.h"
-#include "itemmodel.h"
 #include "metatypes.h"
 #include "pastehelper_p.h"
 #include "specialcollectionattribute.h"
@@ -751,7 +750,7 @@ public:
 
         for (const QModelIndex &index : indexes) {
             Q_ASSERT(index.isValid());
-            const Item item = index.data(ItemModel::ItemRole).value<Item>();
+            const Item item = index.data(EntityTreeModel::ItemRole).value<Item>();
             Q_ASSERT(item.isValid());
 
             items << item;
@@ -952,7 +951,7 @@ public:
         items.reserve(indexes.count());
         for (const QModelIndex &index : indexes) {
             bool ok;
-            const qlonglong id = index.data(ItemModel::IdRole).toLongLong(&ok);
+            const qlonglong id = index.data(EntityTreeModel::ItemIdRole).toLongLong(&ok);
             Q_ASSERT(ok);
             items << Item(id);
         }

@@ -147,7 +147,6 @@ set(akonadicore_models_SRCS
     models/entitytreemodel.cpp
     models/entitytreemodel_p.cpp
     models/favoritecollectionsmodel.cpp
-    models/itemmodel.cpp
     models/recursivecollectionfilterproxymodel.cpp
     models/selectionproxymodel.cpp
     models/statisticsproxymodel.cpp
@@ -168,7 +167,6 @@ ecm_generate_headers(AkonadiCore_models_HEADERS
     EntityRightsFilterModel
     EntityTreeModel
     FavoriteCollectionsModel
-    ItemModel
     RecursiveCollectionFilterProxyModel
     SelectionProxyModel
     StatisticsProxyModel

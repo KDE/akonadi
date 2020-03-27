@@ -20,7 +20,7 @@
 #include "itemview.h"
 
 #include "controlgui.h"
-#include "itemmodel.h"
+#include "entitytreemodel.h"
 
 #include <KXMLGUIFactory>
 #include <KXMLGUIClient>
@@ -75,19 +75,7 @@ Item ItemView::Private::itemForIndex(const QModelIndex &index)
         return Item();
     }
 
-    const Item::Id currentItem = index.sibling(index.row(), ItemModel::Id).data(ItemModel::IdRole).toLongLong();
-    if (currentItem <= 0) {
-        return Item();
-    }
-
-    const QString remoteId = index.sibling(index.row(), ItemModel::RemoteId).data(ItemModel::IdRole).toString();
-    const QString mimeType = index.sibling(index.row(), ItemModel::MimeType).data(ItemModel::MimeTypeRole).toString();
-
-    Item item(currentItem);
-    item.setRemoteId(remoteId);
-    item.setMimeType(mimeType);
-
-    return item;
+    return mParent->model()->data(index, EntityTreeModel::ItemRole).value<Item>();
 }
 
 void ItemView::Private::itemActivated(const QModelIndex &index)
