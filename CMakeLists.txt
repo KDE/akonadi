@@ -44,7 +44,7 @@ include(ECMAddTests)
 include(AkonadiMacros)
 
 set(QT_REQUIRED_VERSION "5.12.0")
-set(RELEASE_SERVICE_VERSION "20.03.80")
+set(RELEASE_SERVICE_VERSION "20.07.40")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
