@@ -216,7 +216,7 @@ void PasteHelperJob::runCollectionsActions()
     }
 }
 
-bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collection)
+bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action)
 {
     if (!mimeData || !collection.isValid()) {
         return false;
@@ -230,7 +230,11 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
         for (const QUrl &url : urls) {
             const QUrlQuery query(url);
             if (query.hasQueryItem(QStringLiteral("item"))) {
-                neededRights |= Collection::CanCreateItem;
+                if (action == Qt::LinkAction) {
+                    neededRights |= Collection::CanLinkItem;
+                } else {
+                    neededRights |= Collection::CanCreateItem;
+                }
             } else if (query.hasQueryItem(QStringLiteral("collection"))) {
                 neededRights |= Collection::CanCreateCollection;
             }
@@ -267,9 +271,9 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
     return false;
 }
 
-KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection, bool copy, Session *session)
+KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action, Session *session)
 {
-    if (!canPaste(mimeData, collection)) {
+    if (!canPaste(mimeData, collection, action)) {
         return nullptr;
     }
 
@@ -300,7 +304,7 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
     }
 
     // data contains an url list
-    return pasteUriList(mimeData, collection, copy ? Qt::CopyAction : Qt::MoveAction, session);
+    return pasteUriList(mimeData, collection, action, session);
 }
 
 KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &destination, Qt::DropAction action, Session *session)
@@ -309,7 +313,7 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
         return nullptr;
     }
 
-    if (!canPaste(mimeData, destination)) {
+    if (!canPaste(mimeData, destination, action)) {
         return nullptr;
     }
 

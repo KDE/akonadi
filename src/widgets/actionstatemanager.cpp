@@ -226,7 +226,7 @@ void ActionStateManager::updateState(const Collection::List &collections, const 
                  collectionsAreFolders);  // it must be a valid folder collection
 #ifndef QT_NO_CLIPBOARD
     enableAction(StandardActionManager::Paste, singleCollectionSelected &&  // we can paste only into a single collection
-                 PasteHelper::canPaste(QApplication::clipboard()->mimeData(), collection));    // there must be data on the clipboard
+                 PasteHelper::canPaste(QApplication::clipboard()->mimeData(), collection, Qt::CopyAction));    // there must be data on the clipboard
 #else
     enableAction(StandardActionManager::Paste, false);   // no support for clipboard -> no paste
 #endif
