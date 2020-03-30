@@ -53,7 +53,7 @@ private Q_SLOTS:
         QFETCH(QString, name);
         QFETCH(bool, shouldThrow);
 
-        QPair<QString, QString> p;
+        std::pair<QString, QString> p;
         bool didThrow = false;
         try {
             p = PartTypeHelper::parseFqName(fqName);

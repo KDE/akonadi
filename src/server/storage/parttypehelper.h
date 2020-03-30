@@ -91,7 +91,7 @@ Query::Condition conditionFromFqNames(const T<QByteArray> &fqNames)
  * @throws PartTypeException if @p fqName does not match the NS:NAME schema
  * @internal
  */
-QPair<QString, QString> parseFqName(const QString &fqName);
+std::pair<QString, QString> parseFqName(const QString &fqName);
 
 /**
  * Returns full part name

@@ -277,26 +277,26 @@ void SearchTaskManager::searchLoop()
                 continue;
             }
 
-            QVector<QPair<QString, qint64> >::iterator it = task->queries.begin();
-            for (; it != task->queries.end();) {
+            for (auto it = task->queries.begin(); it != task->queries.end();) {
                 if (!mRunningTasks.contains(it->first)) {
-                    qCDebug(AKONADISERVER_SEARCH_LOG) << "\t Sending query for collection" << it->second << "to resource" << it->first;
+                    const auto &[resource, colId] = *it;
+                    qCDebug(AKONADISERVER_SEARCH_LOG) << "\t Sending query for collection" << colId << "to resource" << resource;
                     ResourceTask *rTask = new ResourceTask;
-                    rTask->resourceId = it->first;
-                    rTask->collectionId = it->second;
+                    rTask->resourceId = resource;
+                    rTask->collectionId = colId;
                     rTask->parentTask = task;
                     rTask->timestamp = QDateTime::currentMSecsSinceEpoch();
-                    mRunningTasks.insert(it->first, rTask);
+                    mRunningTasks.insert(resource, rTask);
 
                     mInstancesLock.lock();
-                    AgentSearchInstance *instance = mInstances.value(it->first);
+                    AgentSearchInstance *instance = mInstances.value(resource);
                     if (!instance) {
                         mInstancesLock.unlock();
                         // Resource disappeared in the meanwhile
                         continue;
                     }
 
-                    instance->search(task->id, task->query, it->second);
+                    instance->search(task->id, task->query, colId);
                     mInstancesLock.unlock();
 
                     task->sharedLock.lock();

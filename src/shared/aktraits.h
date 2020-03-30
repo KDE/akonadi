@@ -27,10 +27,6 @@ namespace AkTraits {
 
 namespace detail {
 
-    /// Helpers from C++17
-    template<typename ...>
-    using void_t = void;
-
     template<typename ...>
     struct conjunction : std::true_type {};
     template<typename T>
@@ -39,13 +35,13 @@ namespace detail {
     struct conjunction<T, Ts...> : std::conditional_t<bool(T::value), conjunction<Ts...>, T> {};
 
     #define DECLARE_HAS_MEBER_TYPE(type_name) \
-        template<typename T, typename U = void_t<>> \
+        template<typename T, typename U = std::void_t<>> \
         struct hasMember_##type_name { \
             static constexpr bool value = false; \
         }; \
         \
         template<typename T> \
-        struct hasMember_##type_name<T, void_t<typename T:: type_name>> : std::true_type {};
+        struct hasMember_##type_name<T, std::void_t<typename T:: type_name>> : std::true_type {};
 
     DECLARE_HAS_MEBER_TYPE(value_type)
 

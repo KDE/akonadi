@@ -547,11 +547,11 @@ bool DbUpdater::complexUpdate_36()
             continue;
         }
 
-        const auto result = recreateTableWithForeignKeys(table);
-        if (!result.first) {
+        const auto &[ok, query] = recreateTableWithForeignKeys(table);
+        if (!ok) {
             qCCritical(AKONADISERVER_LOG, "SQL error when updating table %s", qUtf8Printable(table.name));
-            qCCritical(AKONADISERVER_LOG, "Query: %s", qUtf8Printable(result.second.executedQuery()));
-            qCCritical(AKONADISERVER_LOG, "Error: %s", qUtf8Printable(result.second.lastError().text()));
+            qCCritical(AKONADISERVER_LOG, "Query: %s", qUtf8Printable(query.executedQuery()));
+            qCCritical(AKONADISERVER_LOG, "Error: %s", qUtf8Printable(query.lastError().text()));
             return false;
         }
     }
@@ -559,11 +559,11 @@ bool DbUpdater::complexUpdate_36()
     const auto relations = schema.relations();
     for (const auto &relation : relations) {
         const RelationTableDescription table(relation);
-        const auto result = recreateTableWithForeignKeys(table);
-        if (!result.first) {
+        const auto &[ok, query] = recreateTableWithForeignKeys(table);
+        if (!ok) {
             qCCritical(AKONADISERVER_LOG, "SQL error when updating relation table %s", qUtf8Printable(table.name));
-            qCCritical(AKONADISERVER_LOG, "Query: %s", qUtf8Printable(result.second.executedQuery()));
-            qCCritical(AKONADISERVER_LOG, "Error: %s", qUtf8Printable(result.second.lastError().text()));
+            qCCritical(AKONADISERVER_LOG, "Query: %s", qUtf8Printable(query.executedQuery()));
+            qCCritical(AKONADISERVER_LOG, "Error: %s", qUtf8Printable(query.lastError().text()));
             return false;
         }
     }

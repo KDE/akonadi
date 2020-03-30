@@ -24,21 +24,22 @@
 
 #include <QStringList>
 
+#include <tuple>
+
 using namespace Akonadi::Server;
 
-QPair< QString, QString > PartTypeHelper::parseFqName(const QString &fqName)
+std::pair<QString, QString> PartTypeHelper::parseFqName(const QString &fqName)
 {
     const QStringList name = fqName.split(QLatin1Char(':'), QString::SkipEmptyParts);
     if (name.size() != 2) {
         throw PartTypeException("Invalid part type name.");
     }
-    return qMakePair(name.first(), name.last());
+    return {name.first(), name.last()};
 }
 
 PartType PartTypeHelper::fromFqName(const QString &fqName)
 {
-    const QPair<QString, QString> p = parseFqName(fqName);
-    return fromFqName(p.first, p.second);
+    return std::apply(qOverload<const QString &, const QString &>(PartTypeHelper::fromFqName), parseFqName(fqName));
 }
 
 PartType PartTypeHelper::fromFqName(const QByteArray &fqName)
@@ -57,11 +58,11 @@ PartType PartTypeHelper::fromFqName(const QString &ns, const QString &name)
 
 Query::Condition PartTypeHelper::conditionFromFqName(const QString &fqName)
 {
-    const QPair<QString, QString> p = parseFqName(fqName);
+    const auto [ns, name] = parseFqName(fqName);
     Query::Condition c;
     c.setSubQueryMode(Query::And);
-    c.addValueCondition(PartType::nsFullColumnName(), Query::Equals, p.first);
-    c.addValueCondition(PartType::nameFullColumnName(), Query::Equals, p.second);
+    c.addValueCondition(PartType::nsFullColumnName(), Query::Equals, ns);
+    c.addValueCondition(PartType::nameFullColumnName(), Query::Equals, name);
     return c;
 }
 

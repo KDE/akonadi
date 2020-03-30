@@ -184,11 +184,11 @@ void QueryBuilder::sqliteAdaptUpdateJoin(Query::Condition &condition)
         return;
     }
 
-    const QPair<JoinType, Query::Condition> joinCondition = mJoins.value(table);
+    const auto &[type, joinCondition] = mJoins.value(table);
 
     QueryBuilder qb(table, Select);
     qb.addColumn(condition.mColumn);
-    qb.addCondition(joinCondition.second);
+    qb.addCondition(joinCondition);
 
     // Convert the subquery to string
     condition.mColumn.reserve(1024);
@@ -218,8 +218,8 @@ void QueryBuilder::buildQuery(QString *statement)
         *statement += QLatin1String(" FROM ");
         *statement += mTable;
         for (const QString &joinedTable : qAsConst(mJoinedTables)) {
-            const QPair<JoinType, Query::Condition> &join = mJoins.value(joinedTable);
-            switch (join.first) {
+            const auto &[joinType, joinCond] = mJoins.value(joinedTable);
+            switch (joinType) {
             case LeftJoin:
                 *statement += QLatin1String(" LEFT JOIN ");
                 break;
@@ -229,7 +229,7 @@ void QueryBuilder::buildQuery(QString *statement)
             }
             *statement += joinedTable;
             *statement += QLatin1String(" ON ");
-            buildWhereCondition(statement, join.second);
+            buildWhereCondition(statement, joinCond);
         }
         break;
     case Insert: {
@@ -259,9 +259,9 @@ void QueryBuilder::buildQuery(QString *statement)
         // put the ON condition into the WHERE part of the UPDATE query
         if (mDatabaseType != DbType::Sqlite) {
             for (const QString &table : qAsConst(mJoinedTables)) {
-                const QPair< JoinType, Query::Condition > &join = mJoins.value(table);
-                Q_ASSERT(join.first == InnerJoin);
-                whereCondition.addCondition(join.second);
+                const auto &[joinType, joinCond] = mJoins.value(table);
+                Q_ASSERT(joinType == InnerJoin);
+                whereCondition.addCondition(joinCond);
             }
         } else {
             // Note: this will modify the whereCondition
@@ -280,10 +280,10 @@ void QueryBuilder::buildQuery(QString *statement)
         *statement += QLatin1String(" SET ");
         Q_ASSERT_X(mColumnValues.count() >= 1, "QueryBuilder::exec()", "At least one column needs to be changed");
         for (int i = 0, c = mColumnValues.size(); i < c; ++i) {
-            const QPair<QString, QVariant> &p = mColumnValues.at(i);
-            *statement += p.first;
+            const auto &[column, value] = mColumnValues.at(i);
+            *statement += column;
             *statement += QLatin1String(" = ");
-            bindValue(statement, p.second);
+            bindValue(statement, value);
             if (i + 1 < c) {
                 *statement += QLatin1String(", ");
             }
@@ -324,9 +324,9 @@ void QueryBuilder::buildQuery(QString *statement)
         Q_ASSERT_X(mType == Select, "QueryBuilder::exec()", "Order statements are only valid for SELECT queries");
         *statement += QLatin1String(" ORDER BY ");
         for (int i = 0, c = mSortColumns.size(); i < c; ++i) {
-            const QPair<QString, Query::SortOrder> &order = mSortColumns.at(i);
-            *statement += order.first;
-            *statement += sortOrderToString(order.second);
+            const auto &[column, order] = mSortColumns.at(i);
+            *statement += column;
+            *statement += sortOrderToString(order);
             if (i + 1 < c) {
                 *statement += QLatin1String(", ");
             }

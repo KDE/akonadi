@@ -76,11 +76,11 @@ void SetupTest::setupAgents()
     mAgentsCreated = true;
     Config *config = Config::instance();
     const auto agents = config->agents();
-    for (const auto agent : agents) {
-        qCDebug(AKONADITEST_LOG) << "Creating agent" << agent.first << "...";
+    for (const auto &[instance, sync]: agents) {
+        qCDebug(AKONADITEST_LOG) << "Creating agent" << instance << "...";
         ++mSetupJobCount;
-        Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(agent.first, this);
-        job->setProperty("sync", agent.second);
+        Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(instance, this);
+        job->setProperty("sync", sync);
         connect(job, &Akonadi::AgentInstanceCreateJob::result, this, &SetupTest::agentCreationResult);
         job->start();
     }
