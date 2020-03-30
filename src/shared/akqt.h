@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2018 Daniel Vrátil <dvratil@kde.org>
+    Copyright (C) 2019  Daniel Vrátil <dvratil@kde.org>
 
     This library is free software; you can redistribute it and/or modify it
     under the terms of the GNU Library General Public License as published by
@@ -17,27 +17,37 @@
     02110-1301, USA.
 */
 
-#ifndef AKOPTIONAL_H
-#define AKOPTIONAL_H
+#ifndef AKQT_H_
+#define AKQT_H_
 
-#include "config-akonadi.h"
+#include <utility>
 
-#ifdef WITH_3RDPARTY_OPTIONAL
-    // Unlike std::experimental::optional<> from GCC, this one provides
-    // full interface described in N3793
-    #include "optional.hpp" // from 3rdparty/Optional
-    namespace Akonadi {
-        template<typename T>
-        using akOptional = std::experimental::optional<T>;
-        constexpr auto nullopt = std::experimental::nullopt;
-    }
-#else
-    #include <optional>
-    namespace Akonadi {
-        template<typename T>
-        using akOptional = std::optional<T>;
-        constexpr auto nullopt = std::nullopt;
-    }
+#include <QStringView>
+#include <QString>
+
+/// Helper integration between Akonadi and Qt
+
+namespace Akonadi
+{
+
+template<typename DPtr, typename Slot>
+auto akPrivSlot(DPtr &&dptr, Slot &&slot)
+{
+    return [&dptr, &slot](auto && ...args) {
+        (dptr->*slot)(std::forward<decltype(args)>(args) ...);
+    };
+}
+
+} // namespace
+
+inline QString operator ""_qs(const char16_t *str, std::size_t len)
+{
+    return QString(reinterpret_cast<const QChar*>(str), len);
+}
+
+constexpr QStringView operator ""_qsv(const char16_t *str, std::size_t len)
+{
+    return QStringView(str, len);
+}
+
 #endif
-
-#endif // AKOPTIONAL_H

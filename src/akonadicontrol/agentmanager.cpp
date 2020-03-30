@@ -650,7 +650,7 @@ void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOw
 
     // Ignore services belonging to another Akonadi instance
     const auto parsedInstance = Akonadi::DBus::parseInstanceIdentifier(name);
-    const auto currentInstance = Akonadi::Instance::hasIdentifier() ? Akonadi::akOptional<QString>(Akonadi::Instance::identifier()) : Akonadi::nullopt;
+    const auto currentInstance = Akonadi::Instance::hasIdentifier() ? std::optional<QString>(Akonadi::Instance::identifier()) : std::nullopt;
     if (parsedInstance != currentInstance) {
         return;
     }

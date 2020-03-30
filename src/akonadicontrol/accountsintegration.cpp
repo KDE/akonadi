@@ -55,7 +55,7 @@ AccountsIntegration::AccountsIntegration(AgentManager &agentManager)
     }
 }
 
-akOptional<QString> AccountsIntegration::agentForAccount(const QString &agentType, Accounts::AccountId accountId) const
+std::optional<QString> AccountsIntegration::agentForAccount(const QString &agentType, Accounts::AccountId accountId) const
 {
     const auto instances = mAgentManager.agentInstances();
     for (const auto &identifier : instances) {
@@ -71,7 +71,7 @@ akOptional<QString> AccountsIntegration::agentForAccount(const QString &agentTyp
             }
         }
     }
-    return nullopt;
+    return std::nullopt;
 }
 
 void AccountsIntegration::configureAgentInstance(const QString &identifier, Accounts::AccountId accountId, int attempt)

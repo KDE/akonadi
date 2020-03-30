@@ -250,7 +250,7 @@ void Connection::handleIncomingData()
             }
 
             // Tag context and collection context is not persistent.
-            m_context.setTag(nullopt);
+            m_context.setTag(std::nullopt);
             m_context.setCollection({});
             if (m_akonadi.tracer().currentTracer() != QLatin1String("null")) {
                 m_akonadi.tracer().connectionInput(m_identifier, tag, cmd);

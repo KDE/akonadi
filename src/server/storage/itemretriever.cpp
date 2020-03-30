@@ -269,7 +269,7 @@ bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> req
     return true;
 }
 
-akOptional<ItemRetriever::PreparedRequests> ItemRetriever::prepareRequests(QSqlQuery &query, const QByteArrayList &parts)
+std::optional<ItemRetriever::PreparedRequests> ItemRetriever::prepareRequests(QSqlQuery &query, const QByteArrayList &parts)
 {
     QHash<qint64, QString> resourceIdNameCache;
     std::list<ItemRetrievalRequest> requests;
@@ -286,7 +286,7 @@ akOptional<ItemRetriever::PreparedRequests> ItemRetriever::prepareRequests(QSqlQ
         const auto itemIter = itemRequests.constFind(pimItemId);
 
         if (Q_UNLIKELY(mCanceled)) {
-            return nullopt;
+            return std::nullopt;
         }
 
         if (pimItemId == prevPimItemId) {

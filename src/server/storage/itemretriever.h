@@ -29,8 +29,7 @@
 #include <private/scope_p.h>
 #include <private/imapset_p.h>
 
-#include <shared/akoptional.h>
-
+#include <optional>
 
 AKONADI_EXCEPTION_MAKE_INSTANCE(ItemRetrieverException);
 
@@ -96,7 +95,7 @@ private:
         std::list<ItemRetrievalRequest> requests;
         QVector<qint64> readyItems;
     };
-    akOptional<PreparedRequests> prepareRequests(QSqlQuery &query, const QByteArrayList &parts);
+    std::optional<PreparedRequests> prepareRequests(QSqlQuery &query, const QByteArrayList &parts);
 
     Akonadi::ImapSet mItemSet;
     Collection mCollection;

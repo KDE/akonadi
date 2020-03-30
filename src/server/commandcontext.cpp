@@ -78,12 +78,12 @@ Collection CommandContext::collection() const
     return mCollection;
 }
 
-void CommandContext::setTag(akOptional<qint64> tagId)
+void CommandContext::setTag(std::optional<qint64> tagId)
 {
     mTagId = std::move(tagId);
 }
 
-akOptional<qint64> CommandContext::tagId() const
+std::optional<qint64> CommandContext::tagId() const
 {
     return mTagId;
 }

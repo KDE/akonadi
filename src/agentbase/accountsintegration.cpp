@@ -54,7 +54,7 @@ bool AccountsIntegration::isEnabled() const
 #endif
 }
 
-akOptional<quint32> AccountsIntegration::accountId() const
+std::optional<quint32> AccountsIntegration::accountId() const
 {
     return mAccountId;
 }
@@ -67,23 +67,23 @@ quint32 AccountsIntegration::getAccountId() const
 void AccountsIntegration::setAccountId(quint32 accountId)
 {
     if (accountId <= 0) {
-        mAccountId = nullopt;
+        mAccountId = std::nullopt;
     } else {
         mAccountId = accountId;
     }
     Q_EMIT accountChanged();
 }
 
-akOptional<QString> AccountsIntegration::accountName() const
+std::optional<QString> AccountsIntegration::accountName() const
 {
 #ifdef WITH_ACCOUNTS
     if (!mAccountId.has_value()) {
-        return nullopt;
+        return std::nullopt;
     }
 
     const auto account = KAccounts::accountsManager()->account(mAccountId.value());
     if (!account) {
-        return nullopt;
+        return std::nullopt;
     }
 
     return account->displayName();

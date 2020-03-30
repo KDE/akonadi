@@ -25,7 +25,7 @@
 
 #include <Accounts/Manager>
 
-#include <shared/akoptional.h>
+#include <optional>
 
 namespace Accounts
 {
@@ -48,7 +48,7 @@ private Q_SLOTS:
 
 private:
     void configureAgentInstance(const QString &identifier, Accounts::AccountId accountId, int attempt = 0);
-    Akonadi::akOptional<QString> agentForAccount(const QString &agentType, Accounts::AccountId accountId) const;
+    std::optional<QString> agentForAccount(const QString &agentType, Accounts::AccountId accountId) const;
     void createAgent(const QString &agentType, Accounts::AccountId accountId);
     void removeAgentInstance(const QString &identifier);
     void loadSupportedServices();

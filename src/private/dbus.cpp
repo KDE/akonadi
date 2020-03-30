@@ -64,10 +64,10 @@ QString DBus::serviceName(DBus::ServiceType serviceType)
     return QString();
 }
 
-akOptional<DBus::AgentService> DBus::parseAgentServiceName(const QString &serviceName)
+std::optional<DBus::AgentService> DBus::parseAgentServiceName(const QString &serviceName)
 {
     if (!serviceName.startsWith(AKONADI_DBUS_SERVER_SERVICE ".")) {
-        return nullopt;
+        return std::nullopt;
     }
 
     const auto parts = serviceName.midRef(QStringView(AKONADI_DBUS_SERVER_SERVICE ".").length()).split(QLatin1Char('.'));
@@ -81,11 +81,11 @@ akOptional<DBus::AgentService> DBus::parseAgentServiceName(const QString &servic
         } else if (parts.at(0) == QLatin1String("Preprocessor")) {
             return AgentService{parts.at(1).toString(), DBus::Preprocessor};
         } else {
-            return nullopt;
+            return std::nullopt;
         }
     }
 
-    return nullopt;
+    return std::nullopt;
 }
 
 QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType agentType)
@@ -113,7 +113,7 @@ QString DBus::agentServiceName(const QString &agentIdentifier, DBus::AgentType a
     return serviceName;
 }
 
-akOptional<QString> DBus::parseInstanceIdentifier(const QString &serviceName)
+std::optional<QString> DBus::parseInstanceIdentifier(const QString &serviceName)
 {
     constexpr std::array<QStringView, 5> services = {QStringView{AKONADI_DBUS_STORAGEJANITOR_SERVICE},
                                                      QStringView{AKONADI_DBUS_SERVER_SERVICE_UPGRADING},
@@ -125,14 +125,14 @@ akOptional<QString> DBus::parseInstanceIdentifier(const QString &serviceName)
             if (serviceName != service) {
                 return serviceName.mid(service.length() + 1); // +1 for the separator "."
             }
-            return nullopt;
+            return std::nullopt;
         }
     }
 
     if (serviceName.startsWith(QStringView{AKONADI_DBUS_SERVER_SERVICE})) {
         const auto split = serviceName.splitRef(QLatin1Char('.'));
         if (split.size() <= 3) {
-            return nullopt;
+            return std::nullopt;
         }
 
         // [0]org.[1]freedesktop.[2]Akonadi.[3]type.[4]identifier.[5]instance
@@ -140,12 +140,12 @@ akOptional<QString> DBus::parseInstanceIdentifier(const QString &serviceName)
             if (split.size() == 6) {
                 return split[5].toString();
             } else {
-                return nullopt;
+                return std::nullopt;
             }
         } else {
             return split[3].toString();
         }
     }
 
-    return nullopt;
+    return std::nullopt;
 }

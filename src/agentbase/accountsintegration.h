@@ -22,9 +22,9 @@
 
 #include <QObject>
 #include "akonadiagentbase_export.h"
-#include <akoptional.h>
 
 #include <functional>
+#include <optional>
 
 class Akonadi__AccountsAdaptor;
 namespace Akonadi
@@ -48,19 +48,19 @@ public:
     using ErrorCallback = std::function<void(const QString &)>;
     void requestAuthData(const QString &serviceType, AuthDataCallback &&cb, ErrorCallback &&err);
 
-    akOptional<QString> accountName() const;
+    std::optional<QString> accountName() const;
 public Q_SLOTS:
-    akOptional<quint32> accountId() const;
+    std::optional<quint32> accountId() const;
     void setAccountId(quint32 accountId);
 
 Q_SIGNALS:
     void accountChanged();
 
 private:
-    // For DBus adaptor which doesn't understand akOptional
+    // For DBus adaptor which doesn't understand std::optional
     quint32 getAccountId() const;
 
-    akOptional<quint32> mAccountId;
+    std::optional<quint32> mAccountId;
 };
 
 

@@ -22,7 +22,7 @@
 
 #include "dbconfig.h"
 
-#include <shared/akoptional.h>
+#include <optional>
 
 namespace Akonadi
 {
@@ -82,7 +82,7 @@ private:
         int clusterVersion = 0;
         int pgServerVersion = 0;
     };
-    akOptional<Versions> checkPgVersion() const;
+    std::optional<Versions> checkPgVersion() const;
     bool upgradeCluster(int clusterVersion);
     bool runInitDb(const QString &dbDataPath);
 

@@ -49,7 +49,7 @@ ecm_qt_declare_logging_category(akonadiprivate_SRCS HEADER akonadiprivate_debug.
 
 macro(update_include_directories _target)
     target_include_directories(${_target} PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/private;${Akonadi_BINARY_DIR}/src/private;${Akonadi_BINARY_DIR}/src>")
-    target_include_directories(${_target} PRIVATE "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/3rdparty/Optional;${Akonadi_SOURCE_DIR}/src/shared>")
+    target_include_directories(${_target} PRIVATE "${Akonadi_SOURCE_DIR}/src/shared>")
     target_include_directories(${_target} PUBLIC "$<BUILD_INTERFACE:${Qt5Core_INCLUDE_DIRS};${Qt5DBus_INCLUDE_DIRS}>")
 endmacro()
 

@@ -50,12 +50,12 @@ public:
         m_cleanupTimer.setSingleShot(true);
     }
 
-    akOptional<QSqlQuery> query(const QString &queryStatement)
+    std::optional<QSqlQuery> query(const QString &queryStatement)
     {
         m_cleanupTimer.start(CleanupTimeout);
         auto it = m_keys.find(queryStatement);
         if (it == m_keys.end()) {
-            return nullopt;
+            return std::nullopt;
         }
 
         auto node = **it;
@@ -105,7 +105,7 @@ static Cache *perThreadCache()
 
 }
 
-akOptional<QSqlQuery> QueryCache::query(const QString &queryStatement)
+std::optional<QSqlQuery> QueryCache::query(const QString &queryStatement)
 {
     return perThreadCache()->query(queryStatement);
 }

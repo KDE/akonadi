@@ -22,7 +22,6 @@
 #include "akonadiserver_debug.h"
 
 #include <private/standarddirs_p.h>
-#include <shared/akoptional.h>
 #include <shared/akranges.h>
 
 #include <QDir>
@@ -39,6 +38,7 @@
 #include <unistd.h>
 #endif
 #include <chrono>
+#include <optional>
 
 using namespace std::chrono_literals;
 
@@ -85,7 +85,7 @@ private:
         int major;
         int minor;
     };
-    akOptional<Version> parseVersion(const QString &name) const
+    std::optional<Version> parseVersion(const QString &name) const
     {
         const auto dotIdx = name.indexOf(QLatin1Char('.'));
         if (dotIdx == -1) {
@@ -245,19 +245,19 @@ bool DbConfigPostgresql::useInternalServer() const
     return mInternalServer;
 }
 
-akOptional<DbConfigPostgresql::Versions> DbConfigPostgresql::checkPgVersion() const
+std::optional<DbConfigPostgresql::Versions> DbConfigPostgresql::checkPgVersion() const
 {
     // Contains major version of Postgres that creted the cluster
     QFile pgVersionFile(QStringLiteral("%1/PG_VERSION").arg(mPgData));
     if (!pgVersionFile.open(QIODevice::ReadOnly)) {
-        return nullopt;
+        return std::nullopt;
     }
     const auto clusterVersion = pgVersionFile.readAll().toInt();
 
     QProcess pgctl;
     pgctl.start(mServerPath, { QStringLiteral("--version") }, QIODevice::ReadOnly);
     if (!pgctl.waitForFinished()) {
-        return nullopt;
+        return std::nullopt;
     }
     // Looks like "pg_ctl (PostgreSQL) 11.2"
     const auto output = QString::fromUtf8(pgctl.readAll());
@@ -266,7 +266,7 @@ akOptional<DbConfigPostgresql::Versions> DbConfigPostgresql::checkPgVersion() co
     QRegularExpression re(QStringLiteral("\\(PostgreSQL\\) ([0-9]+).[0-9]+"));
     const auto match = re.match(output);
     if (!match.hasMatch()) {
-        return nullopt;
+        return std::nullopt;
     }
     const auto serverVersion = match.captured(1).toInt();
 
@@ -299,7 +299,7 @@ bool DbConfigPostgresql::runInitDb(const QString &newDbPath)
 
 namespace {
 
-akOptional<QString> findBinPathForVersion(int version)
+std::optional<QString> findBinPathForVersion(int version)
 {
     // First we need to find where the previous PostgreSQL version binaries are available
     const auto oldBinSearchPaths = {
@@ -316,7 +316,7 @@ akOptional<QString> findBinPathForVersion(int version)
         }
     }
 
-    return nullopt;
+    return std::nullopt;
 }
 
 bool checkAndRemoveTmpCluster(const QDir &baseDir, const QString &clusterName)

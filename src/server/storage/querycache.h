@@ -20,7 +20,7 @@
 #ifndef AKONADI_QUERYCACHE_H
 #define AKONADI_QUERYCACHE_H
 
-#include <shared/akoptional.h>
+#include <optional>
 
 class QString;
 class QSqlQuery;
@@ -38,7 +38,7 @@ namespace QueryCache
 {
 
 /// Returns the cached (and prepared) query for @p queryStatement
-akOptional<QSqlQuery> query(const QString &queryStatement);
+std::optional<QSqlQuery> query(const QString &queryStatement);
 
 /// Insert @p query into the cache for @p queryStatement.
 void insert(const QString &queryStatement, const QSqlQuery &query);

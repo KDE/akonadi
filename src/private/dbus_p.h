@@ -24,7 +24,7 @@
 
 #include <QString>
 
-#include "akoptional.h"
+#include <optional>
 
 /**
  * Helper methods for obtaining D-Bus identifiers.
@@ -75,7 +75,7 @@ struct AgentService {
  * @param serviceName The service name to parse.
  * @return The identifier of the agent, empty string if that's not an agent (or an agent of a different Akonadi instance)
  */
-AKONADIPRIVATE_EXPORT akOptional<AgentService> parseAgentServiceName(const QString &serviceName);
+AKONADIPRIVATE_EXPORT std::optional<AgentService> parseAgentServiceName(const QString &serviceName);
 
 /**
  * Returns the D-Bus service name of the agent @p agentIdentifier for type @p agentType.
@@ -85,7 +85,7 @@ AKONADIPRIVATE_EXPORT QString agentServiceName(const QString &agentIdentifier, D
 /**
  * Returns the Akonadi instance name encoded in the service name.
  */
-AKONADIPRIVATE_EXPORT akOptional<QString> parseInstanceIdentifier(const QString &serviceName);
+AKONADIPRIVATE_EXPORT std::optional<QString> parseInstanceIdentifier(const QString &serviceName);
 
 }
 

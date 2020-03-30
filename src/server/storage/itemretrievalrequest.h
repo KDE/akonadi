@@ -25,7 +25,7 @@
 #include <QVector>
 #include <QDebug>
 
-#include <shared/akoptional.h>
+#include <optional>
 
 namespace Akonadi
 {
@@ -71,7 +71,7 @@ public:
 
     ItemRetrievalRequest request;
 
-    akOptional<QString> errorMsg{};
+    std::optional<QString> errorMsg{};
 };
 
 inline QDebug operator<<(QDebug dbg, ItemRetrievalRequest::Id id)

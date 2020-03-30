@@ -25,8 +25,6 @@
 
 #include <memory>
 
-#include <shared/akoptional.h>
-
 class QProcess;
 class QDBusServiceWatcher;
 class QSettings;

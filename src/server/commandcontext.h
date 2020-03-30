@@ -22,7 +22,7 @@
 
 #include "entities.h"
 
-#include <shared/akoptional.h>
+#include <optional>
 
 namespace Akonadi
 {
@@ -47,8 +47,8 @@ public:
     qint64 collectionId() const;
     Collection collection() const;
 
-    void setTag(akOptional<qint64> tagId);
-    akOptional<qint64> tagId() const;
+    void setTag(std::optional<qint64> tagId);
+    std::optional<qint64> tagId() const;
     Tag tag() const;
 
     bool isEmpty() const;
@@ -56,7 +56,7 @@ public:
 private:
     Resource mResource;
     Collection mCollection;
-    akOptional<qint64> mTagId;
+    std::optional<qint64> mTagId;
 };
 
 }
