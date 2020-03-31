@@ -199,7 +199,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
             if (const QString displayName = collection.displayName(); !displayName.isEmpty()) {
                 return displayName;
             } else {
-                return i18n("Loading...");
+                return i18nc("@info:status", "Loading...");
             }
         }
         break;
@@ -494,7 +494,7 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                         const QStringList collectionNames = d->childCollectionNames(destCollection);
 
                         if (collectionNames.contains(collectionName)) {
-                            QMessageBox::critical(nullptr, i18n("Error"),
+                            QMessageBox::critical(nullptr, i18nc("@window:title", "Error"),
                                                   i18n("The target collection '%1' contains already\na collection with name '%2'.",
                                                        destCollection.name(), collection.name()));
                             return false;

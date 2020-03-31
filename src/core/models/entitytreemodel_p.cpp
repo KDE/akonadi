@@ -1357,20 +1357,17 @@ void EntityTreeModelPrivate::pasteJobDone(KJob *job)
     if (job->error()) {
         QString errorMsg;
         if (qobject_cast<ItemCopyJob *>(job)) {
-            errorMsg = i18n("Could not copy item:");
+            errorMsg = i18nc("@info", "Could not copy item: <message>%1</message>", job->errorString());
         } else if (qobject_cast<CollectionCopyJob *>(job)) {
-            errorMsg = i18n("Could not copy collection:");
+            errorMsg = i18nc("@info", "Could not copy collection: <message>%1</message>", job->errorString());
         } else if (qobject_cast<ItemMoveJob *>(job)) {
-            errorMsg = i18n("Could not move item:");
+            errorMsg = i18nc("@info", "Could not move item: <message>%1</message>", job->errorString());
         } else if (qobject_cast<CollectionMoveJob *>(job)) {
-            errorMsg = i18n("Could not move collection:");
+            errorMsg = i18nc("@info", "Could not move collection: <message>%1</message>", job->errorString());
         } else if (qobject_cast<LinkJob *>(job)) {
-            errorMsg = i18n("Could not link entity:");
+            errorMsg = i18nc("@info", "Could not link entity: <message>%1</message>", job->errorString());
         }
-
-        errorMsg += QLatin1Char(' ') + job->errorString();
-
-        QMessageBox::critical(nullptr, i18n("Error"), errorMsg);
+        QMessageBox::critical(nullptr, i18nc("@title:window", "Error"), errorMsg);
     }
 }
 
