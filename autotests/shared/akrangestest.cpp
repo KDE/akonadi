@@ -406,6 +406,13 @@ private Q_SLOTS:
         QVERIFY(vals | Actions::any([](int v) { return v % 2 == 1; }));
         QVERIFY(!(vals | Actions::any([](int v) { return v % 2 == 0; })));
     }
+
+    void testNone()
+    {
+        const QList<int> vals = { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        QVERIFY(vals | Views::filter([](int i) { return i % 2 == 0; }) | Actions::none([](int i) { return i % 2 == 1; }));
+        QVERIFY(!(vals | Views::filter([](int i) { return i % 2 == 0; }) | Actions::none([](int i) { return i % 2 == 0; })));
+    }
 };
 
 QList<int> AkRangesTest::ForEachCallable::sOut;

@@ -35,11 +35,14 @@
 #include "private/protocol_p.h"
 #include "private/externalpartstorage_p.h"
 
+#include <shared/akranges.h>
+
 #include <QFile>
 #include <QVarLengthArray>
 
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 CachePolicy ProtocolHelper::parseCachePolicy(const Protocol::CachePolicy &policy)
 {
@@ -102,7 +105,8 @@ template<typename T>
 inline static Protocol::Attributes attributesToProtocolImpl(const T &entity, bool ns)
 {
     Protocol::Attributes attributes;
-    Q_FOREACH (const Attribute *attr, entity.attributes()) {
+    const auto attrs = entity.attributes();
+    for (const auto *attr : attrs) {
         attributes.insert(ProtocolHelper::encodePartIdentifier(ns ? ProtocolHelper::PartAttribute : ProtocolHelper::PartGlobal, attr->type()),
                           attr->serialized());
     }
@@ -240,12 +244,7 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
     if (!data.searchQuery().isEmpty()) {
         auto attr = collection.attribute<PersistentSearchAttribute>(Collection::AddIfMissing);
         attr->setQueryString(data.searchQuery());
-
-        QVector<Collection> cols;
-        cols.reserve(data.searchCollections().size());
-        foreach (auto id, data.searchCollections()) {
-            cols.push_back(Collection(id));
-        }
+        const auto cols = data.searchCollections() | Views::transform([](const auto id) { return Collection{id}; }) | Actions::toQVector;
         attr->setQueryCollections(cols);
     }
 
@@ -349,12 +348,8 @@ Protocol::ItemFetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetc
     Protocol::ItemFetchScope fs;
     QVector<QByteArray> parts;
     parts.reserve(fetchScope.payloadParts().size() + fetchScope.attributes().size());
-    Q_FOREACH (const QByteArray &part, fetchScope.payloadParts()) {
-        parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartPayload, part);
-    }
-    Q_FOREACH (const QByteArray &part, fetchScope.attributes()) {
-        parts << ProtocolHelper::encodePartIdentifier(ProtocolHelper::PartAttribute, part);
-    }
+    parts += fetchScope.payloadParts() | Views::transform(std::bind(encodePartIdentifier, PartPayload, std::placeholders::_1)) | Actions::toQVector;
+    parts += fetchScope.attributes() | Views::transform(std::bind(encodePartIdentifier, PartAttribute, std::placeholders::_1)) | Actions::toQVector;
     fs.setRequestedParts(parts);
 
     // The default scope
@@ -402,7 +397,8 @@ Protocol::ItemFetchScope ProtocolHelper::itemFetchScopeToProtocol(const ItemFetc
 ItemFetchScope ProtocolHelper::parseItemFetchScope(const Protocol::ItemFetchScope &fetchScope)
 {
     ItemFetchScope ifs;
-    Q_FOREACH (const auto &part, fetchScope.requestedParts()) {
+    const auto parts = fetchScope.requestedParts();
+    for (const auto &part : fetchScope.requestedParts()) {
         if (part.startsWith("PLD:")) {
             ifs.fetchPayloadPart(part.mid(4), true);
         } else if (part.startsWith("ATR:")) {

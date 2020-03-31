@@ -51,6 +51,7 @@
 #include <QMessageBox>
 #include <QIcon>
 #include <QElapsedTimer>
+#include <unordered_map>
 
 QHash<KJob *, QElapsedTimer> jobTimeTracker;
 
@@ -198,7 +199,8 @@ void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &
             }
             return;
         }
-        foreach (Node *node, m_childEntities[Collection::root().id()]) {
+        const auto &children = m_childEntities[Collection::root().id()];
+        for (const Node *node : children) {
             Q_ASSERT(node->type == Node::Collection);
 
             const Collection collection = m_collections[node->id];
@@ -394,11 +396,11 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
     }
 
     //Build a list of subtrees to insert, with the root of the subtree on the left, and the complete subtree including root on the right
-    QHash<Collection::Id, QSet<Collection::Id> > subTreesToInsert;
+    std::unordered_map<Collection::Id, QSet<Collection::Id> > subTreesToInsert;
     {
         //Build a child-parent map that allows us to build the subtrees afterwards
         QHash<Collection::Id, Collection::Id> childParentMap;
-        Q_FOREACH (const Collection &col, collectionsToInsert) {
+        for (const auto &col : collectionsToInsert) {
             childParentMap.insert(col.id(), col.parentCollection().id());
 
             //Complete the subtree up to the last known parent
@@ -425,23 +427,19 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
         }
 
         //Find children of each subtree
-        Q_FOREACH (Collection::Id p, parents) {
+        for (const auto parentId : parents) {
             QSet<Collection::Id> children;
             //We add the parent itself as well so it can be inserted below as part of the same loop
-            children << p;
-            children += getChildren(p, childParentMap);
-            subTreesToInsert[p] = children;
+            children << parentId;
+            children += getChildren(parentId, childParentMap);
+            subTreesToInsert.insert_or_assign(parentId, std::move(children));
         }
     }
 
     const int row = 0;
 
-    QHashIterator<Collection::Id, QSet<Collection::Id> > collectionIt(subTreesToInsert);
-    while (collectionIt.hasNext()) {
-        collectionIt.next();
-
-        const Collection::Id topCollectionId = collectionIt.key();
-        qCDebug(DebugETM) << "Subtree: " << topCollectionId << collectionIt.value();
+    for (const auto &[topCollectionId, subtree] : subTreesToInsert) {
+        qCDebug(DebugETM) << "Subtree: " << topCollectionId << subtree;
 
         Q_ASSERT(!m_collections.contains(topCollectionId));
         Collection topCollection = collectionsToInsert.value(topCollectionId);
@@ -452,9 +450,9 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
         const QModelIndex parentIndex = indexForCollection(topCollection.parentCollection());
 
         q->beginInsertRows(parentIndex, row, row);
-        Q_ASSERT(!collectionIt.value().isEmpty());
+        Q_ASSERT(!subtree.empty());
 
-        foreach (Collection::Id collectionId, collectionIt.value()) {
+        for (const auto collectionId : subtree) {
             const Collection collection = collectionsToInsert.take(collectionId);
             Q_ASSERT(collection.isValid());
 
@@ -466,7 +464,7 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
         q->endInsertRows();
 
         if (m_itemPopulation == EntityTreeModel::ImmediatePopulation) {
-            foreach (const Collection::Id &collectionId, collectionIt.value()) {
+            for (const auto collectionId : subtree) {
                 const auto col = m_collections.value(collectionId);
                 if (!m_mimeChecker.hasWantedMimeTypes() || m_mimeChecker.isWantedCollection(col)) {
                     fetchItems(col);
@@ -512,8 +510,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
         m_collectionsWithoutItems.remove(collectionId);
     }
 
-    foreach (const Item &item, items) {
-
+    for (const auto &item : items) {
         if (isHidden(item)) {
             continue;
         }
@@ -733,7 +730,8 @@ void EntityTreeModelPrivate::insertCollection(const Akonadi::Collection &collect
 
 bool EntityTreeModelPrivate::hasChildCollection(const Collection &collection) const
 {
-    foreach (Node *node, m_childEntities[collection.id()]) {
+    const auto &children = m_childEntities[collection.id()];
+    for (const Node *node : children) {
         if (node->type == Node::Collection) {
             const Collection subcol = m_collections[node->id];
             if (shouldBePartOfModel(subcol)) {
@@ -935,15 +933,10 @@ void EntityTreeModelPrivate::removeChildEntities(Collection::Id collectionId)
 
 QStringList EntityTreeModelPrivate::childCollectionNames(const Collection &collection) const
 {
-    QStringList names;
-
-    foreach (Node *node, m_childEntities[collection.id()]) {
-        if (node->type == Node::Collection) {
-            names << m_collections.value(node->id).name();
-        }
-    }
-
-    return names;
+    return m_childEntities[collection.id()]
+            | Views::filter([](const Node *node) { return node->type == Node::Collection; })
+            | Views::transform([this](const Node *node) { return m_collections.value(node->id).name(); })
+            | Actions::toQList;
 }
 
 void EntityTreeModelPrivate::monitoredCollectionMoved(const Akonadi::Collection &collection,
@@ -1798,7 +1791,7 @@ void EntityTreeModelPrivate::beginResetModel()
 void EntityTreeModelPrivate::endResetModel()
 {
     Q_Q(EntityTreeModel);
-    foreach (Akonadi::Job *job, m_session->findChildren<Akonadi::Job *>()) {
+    for (Akonadi::Job *job : m_session->findChildren<Akonadi::Job *>()) {
         job->disconnect(q);
     }
     m_collections.clear();
@@ -1809,7 +1802,7 @@ void EntityTreeModelPrivate::endResetModel()
     m_pendingCollectionRetrieveJobs.clear();
     m_collectionTreeFetched = false;
 
-    foreach (const QList<Node *> &list, m_childEntities) {
+    for (const QList<Node *> &list : m_childEntities) {
         qDeleteAll(list);
     }
     m_childEntities.clear();
@@ -1860,11 +1853,7 @@ void EntityTreeModelPrivate::fillModel()
         m_collectionTreeFetched = true;
         Q_EMIT q_ptr->collectionTreeFetched(collections);     // there are no collections to fetch
 
-        Item::List items;
-        items.reserve(m_monitor->itemsMonitoredEx().size());
-        Q_FOREACH (Item::Id id, m_monitor->itemsMonitoredEx()) {
-            items.append(Item(id));
-        }
+        const auto items = m_monitor->itemsMonitoredEx() | Views::transform([](const auto id) { return Item{id}; }) | Actions::toQVector;
         ItemFetchJob *itemFetch = new ItemFetchJob(items, m_session);
         itemFetch->setFetchScope(m_monitor->itemFetchScope());
         itemFetch->fetchScope().setIgnoreRetrievalErrors(true);

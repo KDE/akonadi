@@ -72,7 +72,7 @@ class ItemFetchScope;
  *   Akonadi::ItemFetchJob *fetchJob = qobject_cast<Akonadi::ItemFetchJob*>(job);
  *
  *   const Akonadi::Item::List items = fetchJob->items();
- *   foreach (const Akonadi::Item &item, items) {
+ *   for (const Akonadi::Item &item : items) {
  *     qDebug() << "Item ID:" << item.id();
  *   }
  * }

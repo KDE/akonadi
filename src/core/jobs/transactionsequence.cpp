@@ -143,7 +143,8 @@ void TransactionSequence::slotResult(KJob *job)
         removeSubjob(job);
 
         // cancel all subjobs in case someone else is listening (such as ItemSync)
-        foreach (KJob *job, subjobs()) {
+        const auto subjobs = this->subjobs();
+        for (KJob *job : subjobs) {
             job->kill(KJob::EmitResult);
         }
         clearSubjobs();

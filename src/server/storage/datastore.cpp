@@ -698,7 +698,7 @@ bool DataStore::removeTags(const Tag::List &tags, bool silent)
         notificationCollector()->itemsTagsChanged(items, QSet<qint64>(), removedTags);
     }
 
-    Q_FOREACH (const Tag &tag, tags) {
+    for (const Tag &tag : tags) {
         // Emit special tagRemoved notification for each resource that owns the tag
         QueryBuilder qb(TagRemoteIdResourceRelation::tableName(), QueryBuilder::Select);
         qb.addColumn(TagRemoteIdResourceRelation::remoteIdFullColumnName());
@@ -1174,7 +1174,7 @@ bool DataStore::appendPimItem(QVector<Part> &parts,
     }
 
     bool seen = false;
-    Q_FOREACH (const Flag &flag, flags) {
+    for (const Flag &flag : flags) {
         seen |= (flag.name() == QLatin1String(AKONADI_FLAG_SEEN)
                  || flag.name() == QLatin1String(AKONADI_FLAG_IGNORED));
         if (!pimItem.addFlag(flag)) {

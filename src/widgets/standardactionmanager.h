@@ -113,7 +113,7 @@ class FavoriteCollectionsModel;
  * void MyClass::myCopyImplementation()
  * {
  *   const Collection::List collections = manager->selectedCollections();
- *   foreach ( const Collection &collection, collections ) {
+ *   for ( const Collection &collection : collections ) {
  *     // copy the collection manually...
  *   }
  * }

@@ -64,7 +64,7 @@ class CollectionStatistics;
  *   CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob*>( job );
  *
  *   const Collection::List collections = fetchJob->collections();
- *   foreach ( const Collection &collection, collections ) {
+ *   for ( const Collection &collection : collections ) {
  *     qDebug() << "Name:" << collection.name();
  *   }
  * }

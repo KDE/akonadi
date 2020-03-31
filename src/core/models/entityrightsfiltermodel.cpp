@@ -121,10 +121,11 @@ QModelIndexList EntityRightsFilterModel::match(const QModelIndex &start, int rol
 
     QModelIndexList list;
     QModelIndex proxyIndex;
-    foreach (const QModelIndex &idx, sourceModel()->match(mapToSource(start), role, value, hits, flags)) {
+    const auto matches = sourceModel()->match(mapToSource(start), role, value, hits, flags);
+    for (const auto &idx : matches) {
         proxyIndex = mapFromSource(idx);
         if (proxyIndex.isValid()) {
-            list << proxyIndex;
+            list.push_back(proxyIndex);
         }
     }
 

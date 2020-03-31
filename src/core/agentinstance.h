@@ -45,7 +45,7 @@ class AgentType;
  * @code
  *
  * Akonadi::AgentInstance::List instances = Akonadi::AgentManager::self()->instances();
- * foreach ( const Akonadi::AgentInstance &instance, instances ) {
+ * for( const Akonadi::AgentInstance &instance : instances ) {
  *   qDebug() << "Name:" << instance.name() << "(" << instance.identifier() << ")";
  * }
  *

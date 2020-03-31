@@ -48,7 +48,7 @@ class TransactionSequencePrivate;
  *
  * const Akonadi::Item::List items = ...
  *
- * foreach ( const Akonadi::Item &item, items ) {
+ * for( const Akonadi::Item &item : items ) {
  *   new Akonadi::ItemDeleteJob( item, transaction );
  * }
  *

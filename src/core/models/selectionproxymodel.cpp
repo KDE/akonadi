@@ -33,15 +33,17 @@ public:
         : q_ptr(selectionProxyModel)
     {
         Q_Q(SelectionProxyModel);
-        foreach (const QModelIndex &rootIndex, q->sourceRootIndexes()) {
+        const auto indexes = q->sourceRootIndexes();
+        for (const auto &rootIndex : indexes) {
             rootIndexAdded(rootIndex);
         }
     }
     ~SelectionProxyModelPrivate()
     {
         Q_Q(SelectionProxyModel);
-        foreach (const QModelIndex &idx, q->sourceRootIndexes()) {
-            rootIndexAboutToBeRemoved(idx);
+        const auto indexes = q->sourceRootIndexes();
+        for (const auto &rootIndex : indexes) {
+            rootIndexAboutToBeRemoved(rootIndex);
         }
     }
 

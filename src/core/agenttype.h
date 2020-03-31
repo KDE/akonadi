@@ -46,7 +46,7 @@ namespace Akonadi
  * @code
  *
  * Akonadi::AgentType::List types = Akonadi::AgentManager::self()->types();
- * foreach ( const Akonadi::AgentType &type, types ) {
+ * for ( const Akonadi::AgentType &type : types ) {
  *   qDebug() << "Name:" << type.name() << "(" << type.identifier() << ")";
  * }
  *

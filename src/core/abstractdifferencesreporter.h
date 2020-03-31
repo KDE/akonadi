@@ -70,7 +70,7 @@ namespace Akonadi
  * const QStringList leftEmails = contact1.emails();
  * const QStringList rightEmails = contact2.emails();
  *
- * foreach ( const QString &leftEmail, leftEmails ) {
+ * for ( const QString &leftEmail : leftEmails ) {
  *   if ( rightEmails.contains( leftEmail ) )
  *     reporter->addProperty( AbstractDifferencesReporter::NormalMode, i18n( "Email" ),
  *                            leftEmail, leftEmail );
@@ -79,7 +79,7 @@ namespace Akonadi
  *                            leftEmail, QString() );
  * }
  *
- * foreach ( const QString &rightEmail, rightEmails ) {
+ * for( const QString &rightEmail : rightEmails ) {
  *   if ( !leftEmails.contains( rightEmail ) )
  *     reporter->addProperty( AbstractDifferencesReporter::AdditionalRightMode, i18n( "Email" ),
  *                            QString(), rightEmail );

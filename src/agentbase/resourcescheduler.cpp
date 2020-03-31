@@ -646,9 +646,8 @@ void Akonadi::ResourceScheduler::cancelQueues()
     for (int i = 0; i < NQueueCount; ++i) {
         TaskList &queue = mTaskList[i];
         if (s_resourcetracker) {
-            foreach (const Task &t, queue) {
-                QList<QVariant> argumentList;
-                argumentList << QString::number(t.serial) << QString();
+            for (const Task &t : queue) {
+                QList<QVariant> argumentList{QString::number(t.serial), QString()};
                 s_resourcetracker->asyncCallWithArgumentList(QStringLiteral("jobEnded"), argumentList);
             }
         }

@@ -158,7 +158,8 @@ static QModelIndexList safeSelectedRows(QItemSelectionModel *selectionModel)
     }
 
     // try harder for selected rows that don't span the full row for some reason (e.g. due to buggy column adding proxy models etc)
-    foreach (const QItemSelectionRange &range, selectionModel->selection()) {
+    const auto selection = selectionModel->selection();
+    for (const auto &range : selection) {
         if (!range.isValid() || range.isEmpty()) {
             continue;
         }
@@ -450,7 +451,8 @@ public:
         markCutAction(mimeData, cut);
         QApplication::clipboard()->setMimeData(mimeData);
 
-        foreach (const QModelIndex &index, safeSelectedRows(selectionModel)) {
+        const auto rows = safeSelectedRows(selectionModel);
+        for (const auto &index : rows) {
             model->setData(index, true, EntityTreeModel::PendingCutRole);
         }
 #endif
@@ -1052,7 +1054,8 @@ public:
     void slotSynchronizeFavoriteCollections()
     {
         Q_ASSERT(favoritesModel);
-        foreach (const Collection &collection, favoritesModel->collections()) {
+        const auto collections = favoritesModel->collections();
+        for (const auto &collection : collections) {
             // there might be virtual collections in favorites which cannot be checked
             // so let's be safe here, agentmanager asserts otherwise
             if (!collection.resource().isEmpty()) {

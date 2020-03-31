@@ -65,7 +65,7 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
     QMap<Entity::Id /* collection */, PimItem> toMove;
     QMap<Entity::Id /* collection */, Collection> sources;
     ImapSet toMoveIds;
-    Q_FOREACH (/*sic!*/ PimItem item, items) {  //krazy:exclude=foreach
+    for (PimItem item : items) {  //krazy:exclude=foreach
         if (!item.isValid()) {
             failureResponse("Invalid item in result set!?");
             return;

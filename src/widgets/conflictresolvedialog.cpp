@@ -24,6 +24,8 @@
 #include "differencesalgorithminterface.h"
 #include "typepluginloader_p.h"
 
+#include <shared/akranges.h>
+
 #include <QVBoxLayout>
 #include <QLabel>
 #include <QPushButton>
@@ -40,6 +42,7 @@
 #include <KWindowConfig>
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 static inline QString textToHTML(const QString &text)
 {
@@ -144,35 +147,20 @@ static void compareItems(AbstractDifferencesReporter *reporter, const Akonadi::I
     }
 
     if (localItem.flags() != otherItem.flags()) {
-        QStringList localFlags;
-        localFlags.reserve(localItem.flags().count());
-        foreach (const QByteArray &localFlag, localItem.flags()) {
-            localFlags.append(QString::fromUtf8(localFlag));
-        }
-
-        QStringList otherFlags;
-        otherFlags.reserve(otherItem.flags().count());
-        foreach (const QByteArray &otherFlag, otherItem.flags()) {
-            otherFlags.append(QString::fromUtf8(otherFlag));
-        }
-
+        const auto toQString = [](const QByteArray &s) { return QString::fromUtf8(s); };
+        const auto localFlags = localItem.flags() | Views::transform(toQString) | Actions::toQList;
+        const auto otherFlags = otherItem.flags() | Views::transform(toQString) | Actions::toQList;
         reporter->addProperty(AbstractDifferencesReporter::ConflictMode, i18n("Flags"),
                               localFlags.join(QLatin1String(", ")),
                               otherFlags.join(QLatin1String(", ")));
     }
 
-    QHash<QByteArray, QByteArray> localAttributes;
-    foreach (Akonadi::Attribute *attribute, localItem.attributes()) {
-        localAttributes.insert(attribute->type(), attribute->serialized());
-    }
-
-    QHash<QByteArray, QByteArray> otherAttributes;
-    foreach (Akonadi::Attribute *attribute, otherItem.attributes()) {
-        otherAttributes.insert(attribute->type(), attribute->serialized());
-    }
+    const auto toPair = [](Attribute *attr) { return std::pair{attr->type(), attr->serialized()}; };
+    const auto localAttributes = localItem.attributes() | Views::transform(toPair) | Actions::toQHash;
+    const auto otherAttributes = otherItem.attributes() | Views::transform(toPair) | Actions::toQHash;
 
     if (localAttributes != otherAttributes) {
-        foreach (const QByteArray &localKey, localAttributes) {
+        for (const QByteArray &localKey : localAttributes) {
             if (!otherAttributes.contains(localKey)) {
                 reporter->addProperty(AbstractDifferencesReporter::AdditionalLeftMode, i18n("Attribute: %1", QString::fromUtf8(localKey)),
                                       QString::fromUtf8(localAttributes.value(localKey)),
@@ -188,7 +176,7 @@ static void compareItems(AbstractDifferencesReporter *reporter, const Akonadi::I
             }
         }
 
-        foreach (const QByteArray &otherKey, otherAttributes) {
+        for (const QByteArray &otherKey : otherAttributes) {
             if (!localAttributes.contains(otherKey)) {
                 reporter->addProperty(AbstractDifferencesReporter::AdditionalRightMode, i18n("Attribute: %1", QString::fromUtf8(otherKey)),
                                       QString(),

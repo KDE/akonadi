@@ -56,7 +56,7 @@ class SearchQuery;
  * {
  *   Akonadi::ItemSearchJob *searchJob = qobject_cast<Akonadi::ItemSearchJob*>( job );
  *   const Akonadi::Item::List items = searchJob->items();
- *   foreach ( const Akonadi::Item &item, items ) {
+ *   for ( const Akonadi::Item &item : items ) {
  *     // extract the payload and do further stuff
  *   }
  * }

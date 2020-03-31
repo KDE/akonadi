@@ -45,7 +45,7 @@ class Collection;
  *   Akonadi::AgentManager *manager = Akonadi::AgentManager::self();
  *
  *   Akonadi::AgentType::List types = manager->types();
- *   foreach ( const Akonadi::AgentType& type, types ) {
+ *   for ( const Akonadi::AgentType& type : types ) {
  *     qDebug() << "Type:" << type.name() << type.description();
  *   }
  *

@@ -272,7 +272,8 @@ void JobPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, 
 void JobPrivate::updateItemRevision(Akonadi::Item::Id itemId, int oldRevision, int newRevision)
 {
     Q_Q(Job);
-    foreach (KJob *j, q->subjobs()) {
+    const auto subjobs = q->subjobs();
+    for (KJob *j : subjobs) {
         Akonadi::Job *job = qobject_cast<Akonadi::Job *>(j);
         if (job) {
             job->d_ptr->updateItemRevision(itemId, oldRevision, newRevision);

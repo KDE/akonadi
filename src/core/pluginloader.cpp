@@ -80,7 +80,8 @@ QObject *PluginLoader::createForName(const QString &name)
     PluginMetaData &info = mPluginInfos[name];
 
     //First try to load it staticly
-    foreach (QObject *plugin, QPluginLoader::staticInstances()) {
+    const auto instances = QPluginLoader::staticInstances();
+    for (auto *plugin : instances) {
         if (QLatin1String(plugin->metaObject()->className()) == info.className) {
             info.loaded = true;
             return plugin;

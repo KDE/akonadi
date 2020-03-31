@@ -356,6 +356,12 @@ struct AnyTag_
     UnaryPredicate mFn;
 };
 
+template<typename UnaryPredicate>
+struct NoneTag_
+{
+    UnaryPredicate mFn;
+};
+
 } // namespace detail
 } // namespace AkRanges
 
@@ -404,7 +410,7 @@ auto operator|(const RangeLike &range, AkRanges::detail::FilterTag_<UnaryPredica
                         OutIt(std::cend(range), std::cend(range), p.mFn, range));
 }
 
-// Generic operator| fo foreach()
+// Generic operator| for foreach()
 template<typename RangeLike, typename UnaryOperation>
 auto operator|(const RangeLike &range, AkRanges::detail::ForEachTag_<UnaryOperation> op)
 {
@@ -427,6 +433,13 @@ template<typename RangeLike, typename PredicateFn>
 auto operator|(const RangeLike &range, AkRanges::detail::AnyTag_<PredicateFn> p)
 {
     return std::any_of(std::cbegin(range), std::cend(range), p.mFn);
+}
+
+// Generic operator| for none
+template<typename RangeLike, typename UnaryPredicate>
+auto operator|(const RangeLike &range, AkRanges::detail::NoneTag_<UnaryPredicate> p)
+{
+    return std::none_of(std::cbegin(range), std::cend(range), p.mFn);
 }
 
 // Generic operator| for keys
@@ -460,6 +473,8 @@ static constexpr auto toQSet = detail::ToTag_<QSet>{};
 static constexpr auto toQList = detail::ToTag_<QList>{};
 /// Non-lazily convert given range or container of pairs to QMap
 static constexpr auto toQMap = detail::ToAssocTag_<QMap>{};
+/// Non-lazily convert given range or container of pairs to QHash
+static constexpr auto toQHash = detail::ToAssocTag_<QHash>{};
 
 /// Non-lazily call UnaryOperation for each element of the container or range
 template<typename UnaryOperation>
@@ -480,6 +495,13 @@ template<typename UnaryPredicate>
 detail::AnyTag_<UnaryPredicate> any(UnaryPredicate &&pred)
 {
     return detail::AnyTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
+}
+
+/// Non-lazily check that none of the elements in the range satisfies the given predicate
+template<typename UnaryPredicate>
+detail::NoneTag_<UnaryPredicate> none(UnaryPredicate &&pred)
+{
+    return detail::NoneTag_<UnaryPredicate>{std::forward<UnaryPredicate>(pred)};
 }
 
 } // namespace Action
@@ -513,6 +535,7 @@ detail::Range<It> range(Iterator1 begin, Iterator2 end)
 {
     return detail::Range<It>(std::move(begin), std::move(end));
 }
+
 
 } // namespace View
 
