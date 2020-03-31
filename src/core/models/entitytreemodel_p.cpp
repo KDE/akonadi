@@ -157,6 +157,16 @@ void EntityTreeModelPrivate::init(Monitor *monitor)
     fillModel();
 }
 
+void EntityTreeModelPrivate::prependNode(Node *node)
+{
+    m_childEntities[node->parent].prepend(node);
+}
+
+void EntityTreeModelPrivate::appendNode(Node *node)
+{
+    m_childEntities[node->parent].append(node);
+}
+
 void EntityTreeModelPrivate::serverStarted()
 {
     // Don't emit about to be reset. Too late for that
@@ -323,12 +333,7 @@ void EntityTreeModelPrivate::collectionListFetched(const Akonadi::Collection::Li
         }
 
         m_collections.insert(collection.id(), collection);
-
-        Node *node = new Node;
-        node->id = collection.id();
-        node->parent = -1;
-        node->type = Node::Collection;
-        m_childEntities[-1].prepend(node);
+        prependNode(new Node{Node::Collection, collection.id(), -1});
 
         fetchItems(collection);
     }
@@ -455,12 +460,8 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
 
             m_collections.insert(collectionId, collection);
 
-            Node *node = new Node;
-            node->id = collectionId;
             Q_ASSERT(collection.parentCollection().isValid());
-            node->parent = collection.parentCollection().id();
-            node->type = Node::Collection;
-            m_childEntities[node->parent].prepend(node);
+            prependNode(new Node{Node::Collection, collectionId, collection.parentCollection().id()});
         }
         q->endInsertRows();
 
@@ -556,17 +557,11 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
 
         const QModelIndex parentIndex = indexForCollection(m_collections.value(colId));
         q->beginInsertRows(parentIndex, startRow, startRow + itemsToInsert.size() - 1);
-
-        foreach (const Item &item, itemsToInsert) {
+        for (const Item &item : itemsToInsert) {
             const Item::Id itemId = item.id();
             m_items.ref(itemId, item);
 
-            Node *node = new Node;
-            node->id = itemId;
-            node->parent = collectionId;
-            node->type = Node::Item;
-
-            m_childEntities[colId].append(node);
+            m_childEntities[colId].append(new Node{Node::Item, itemId, collectionId});
         }
         q->endInsertRows();
     }
@@ -696,21 +691,13 @@ bool EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
         Q_ASSERT(ancestor.parentCollection().isValid());
         m_collections.insert(ancestor.id(), ancestor);
 
-        Node *node = new Node;
-        node->id = ancestor.id();
-        node->parent = ancestor.parentCollection().id();
-        node->type = Node::Collection;
-        m_childEntities[node->parent].prepend(node);
+        prependNode(new Node{Node::Collection, ancestor.id(), ancestor.parentCollection().id()});
     }
 
     if (insertBaseCollection) {
         m_collections.insert(collection.id(), collection);
-        Node *node = new Node;
-        node->id = collection.id();
         // Can't just use parentCollection because that doesn't necessarily refer to collection.
-        node->parent = collection.parentCollection().id();
-        node->type = Node::Collection;
-        m_childEntities[node->parent].prepend(node);
+        prependNode(new Node{Node::Collection, collection.id(), collection.parentCollection().id()});
     }
 
     q->endInsertRows();
@@ -740,12 +727,7 @@ void EntityTreeModelPrivate::insertCollection(const Akonadi::Collection &collect
     const QModelIndex parentIndex = indexForCollection(parent);
     q->beginInsertRows(parentIndex, row, row);
     m_collections.insert(collection.id(), collection);
-
-    Node *node = new Node;
-    node->id = collection.id();
-    node->parent = parent.id();
-    node->type = Node::Collection;
-    m_childEntities[parent.id()].prepend(node);
+    prependNode(new Node{Node::Collection, collection.id(), parent.id()});
     q->endInsertRows();
 }
 
@@ -1121,10 +1103,7 @@ void EntityTreeModelPrivate::monitoredItemAdded(const Akonadi::Item &item, const
     }
     q->beginInsertRows(parentIndex, row, row);
     m_items.ref(item.id(), item);
-    Node *node = new Node;
-    node->id = item.id();
-    node->parent = collection.id();
-    node->type = Node::Item;
+    Node *node = new Node{Node::Item, item.id(), collection.id()};
     if (m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) {
         m_childEntities[collection.id()].append(node);
     } else {
@@ -1319,11 +1298,7 @@ void EntityTreeModelPrivate::monitoredItemLinked(const Akonadi::Item &item, cons
 
     q->beginInsertRows(parentIndex, row, row);
     m_items.ref(itemId, item);
-    Node *node = new Node;
-    node->id = itemId;
-    node->parent = collectionId;
-    node->type = Node::Item;
-    collectionEntities.append(node);
+    collectionEntities.append(new Node{Node::Item, itemId, collectionId});
     q->endInsertRows();
 }
 
@@ -1472,25 +1447,18 @@ void EntityTreeModelPrivate::startFirstListJob()
 
     // Even if the root collection is the invalid collection, we still need to start
     // the first list job with Collection::root.
+    auto node = new Node{Node::Collection, m_rootCollection.id(), -1};
     if (m_showRootCollection) {
         // Notify the outside that we're putting collection::root into the model.
         q->beginInsertRows(QModelIndex(), 0, 0);
         m_collections.insert(m_rootCollection.id(), m_rootCollection);
         delete m_rootNode;
-        m_rootNode = new Node;
-        m_rootNode->id = m_rootCollection.id();
-        m_rootNode->parent = -1;
-        m_rootNode->type = Node::Collection;
-        m_childEntities[-1].append(m_rootNode);
+        appendNode(node);
         q->endInsertRows();
     } else {
         // Otherwise store it silently because it's not part of the usable model.
         delete m_rootNode;
-        m_rootNode = new Node;
-        m_needDeleteRootNode = true;
-        m_rootNode->id = m_rootCollection.id();
-        m_rootNode->parent = -1;
-        m_rootNode->type = Node::Collection;
+        m_rootNode = node;
         m_collections.insert(m_rootCollection.id(), m_rootCollection);
     }
 
@@ -1563,13 +1531,8 @@ void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collectio
             q->beginInsertRows(parentIndex, row, row);
 
             m_collections.insert(collection.id(), collection);
-            Node *node = new Node;
-            node->id = collection.id();
             Q_ASSERT(collection.parentCollection() == Collection::root());
-            node->parent = collection.parentCollection().id();
-            node->type = Node::Collection;
-            m_childEntities[collection.parentCollection().id()].prepend(node);
-
+            prependNode(new Node{Node::Collection, collection.id(), collection.parentCollection().id()});
             q->endInsertRows();
 
             if (m_itemPopulation == EntityTreeModel::ImmediatePopulation) {
@@ -1874,16 +1837,10 @@ void EntityTreeModelPrivate::monitoredItemsRetrieved(KJob *job)
     Item::List list = fetchJob->items();
 
     q->beginResetModel();
-    foreach (const Item &item, list) {
-        Node *node = new Node;
-        node->id = item.id();
-        node->parent = m_rootCollection.id();
-        node->type = Node::Item;
-
-        m_childEntities[-1].append(node);
+    for (const Item &item : list) {
+        m_childEntities[-1].append(new Node{Node::Item, item.id(), m_rootCollection.id()});
         m_items.ref(item.id(), item);
     }
-
     q->endResetModel();
 }
 
@@ -1971,15 +1928,9 @@ bool EntityTreeModelPrivate::canFetchMore(const QModelIndex &parent) const
             return false;
         }
 
-        foreach (Node *node, m_childEntities.value(colId)) {
-            if (Node::Item == node->type) {
-                // Only try to fetch more from a collection if we don't already have items in it.
-                // Otherwise we'd spend all the time listing items in collections.
-                return false;
-            }
-        }
-
-        return true;
+        // Only try to fetch more from a collection if we don't already have items in it.
+        // Otherwise we'd spend all the time listing items in collections.
+        return m_childEntities.value(colId) | Actions::none(Node::isItem);
     }
 }
 

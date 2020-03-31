@@ -42,17 +42,29 @@ class AgentInstance;
 }
 
 struct Node {
-    typedef qint64 Id;
-
-    Id id;
-    Akonadi::Collection::Id parent;
-
-    enum Type {
+    using Id = qint64;
+    enum Type : char {
         Item,
         Collection
     };
 
-    int type;
+    explicit Node(Type type, Id id, Akonadi::Collection::Id parentId)
+        : id(id), parent(parentId), type(type)
+    {}
+
+    static bool isItem(Node *node)
+    {
+        return node->type == Node::Item;
+    }
+
+    static bool isCollection(Node *node)
+    {
+        return node->type == Node::Collection;
+    }
+
+    Id id;
+    Akonadi::Collection::Id parent;
+    Type type;
 };
 
 template<typename Key, typename Value>
@@ -144,6 +156,9 @@ public:
     };
 
     void init(Monitor *monitor);
+
+    void prependNode(Node *node);
+    void appendNode(Node *node);
 
     void fetchCollections(const Collection &collection, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
     void fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
