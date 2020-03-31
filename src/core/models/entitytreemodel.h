@@ -688,15 +688,12 @@ private:
     Q_PRIVATE_SLOT(d_func(), void startFirstListJob())
     Q_PRIVATE_SLOT(d_func(), void serverStarted())
 
-    Q_PRIVATE_SLOT(d_func(), void itemFetchJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void collectionFetchJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void rootFetchJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void pasteJobDone(KJob *job))
     Q_PRIVATE_SLOT(d_func(), void updateJobDone(KJob *job))
 
-    Q_PRIVATE_SLOT(d_func(), void itemsFetched(Akonadi::Item::List))
     Q_PRIVATE_SLOT(d_func(), void collectionsFetched(Akonadi::Collection::List))
-    Q_PRIVATE_SLOT(d_func(), void collectionListFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void topLevelCollectionsFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void ancestorsFetched(Akonadi::Collection::List))
 

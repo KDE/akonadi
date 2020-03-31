@@ -69,11 +69,7 @@ EntityTreeModel::~EntityTreeModel()
     Q_D(EntityTreeModel);
 
     for (const QList<Node *> &list : qAsConst(d->m_childEntities)) {
-        QList<Node *>::const_iterator it = list.constBegin();
-        const QList<Node *>::const_iterator end = list.constEnd();
-        for (; it != end; ++it) {
-            delete *it;
-        }
+        qDeleteAll(list);
     }
 
     delete d_ptr;
@@ -145,8 +141,7 @@ QHash<int, QByteArray> EntityTreeModel::roleNames() const
 int EntityTreeModel::columnCount(const QModelIndex &parent) const
 {
 // TODO: Statistics?
-    if (parent.isValid() &&
-            parent.column() != 0) {
+    if (parent.isValid() && parent.column() != 0) {
         return 0;
     }
 
@@ -161,20 +156,15 @@ QVariant EntityTreeModel::entityData(const Item &item, int column, int role) con
         switch (role) {
         case Qt::DisplayRole:
         case Qt::EditRole:
-            if (item.hasAttribute<EntityDisplayAttribute>() &&
-                    !item.attribute<EntityDisplayAttribute>()->displayName().isEmpty()) {
-                return item.attribute<EntityDisplayAttribute>()->displayName();
-            } else {
-                if (!item.remoteId().isEmpty()) {
-                    return item.remoteId();
-                }
-                return QString(QLatin1Char('<') + QString::number(item.id()) + QLatin1Char('>'));
+            if (const auto *attr = item.attribute<EntityDisplayAttribute>(); attr && !attr->displayName().isEmpty()) {
+                return attr->displayName();
+            } else if (!item.remoteId().isEmpty()) {
+                return item.remoteId();
             }
-            break;
+            return QString(QLatin1Char('<') + QString::number(item.id()) + QLatin1Char('>'));
         case Qt::DecorationRole:
-            if (item.hasAttribute<EntityDisplayAttribute>() &&
-                    !item.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
-                return d->iconForName(item.attribute<EntityDisplayAttribute>()->iconName());
+            if (const auto *attr = item.attribute<EntityDisplayAttribute>(); attr && !attr->iconName().isEmpty()) {
+                return d->iconForName(attr->iconName());
             }
             break;
         default:
@@ -197,9 +187,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
         // Only display the root collection. It may not be edited.
         if (role == Qt::DisplayRole) {
             return d->m_rootCollectionDisplayName;
-        }
-
-        if (role == Qt::EditRole) {
+        } else if (role == Qt::EditRole) {
             return QVariant();
         }
     }
@@ -208,8 +196,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
     case Qt::DisplayRole:
     case Qt::EditRole:
         if (column == 0) {
-            const QString displayName = collection.displayName();
-            if (!displayName.isEmpty()) {
+            if (const QString displayName = collection.displayName(); !displayName.isEmpty()) {
                 return displayName;
             } else {
                 return i18n("Loading...");
@@ -217,9 +204,8 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
         }
         break;
     case Qt::DecorationRole:
-        if (collection.hasAttribute<EntityDisplayAttribute>() &&
-                !collection.attribute<EntityDisplayAttribute>()->iconName().isEmpty()) {
-            return d->iconForName(collection.attribute<EntityDisplayAttribute>()->iconName());
+        if (const auto attr = collection.attribute<EntityDisplayAttribute>(); attr && !attr->iconName().isEmpty()) {
+            return d->iconForName(attr->iconName());
         }
         return d->iconForName(CollectionUtils::defaultIconName(collection));
     default:
@@ -263,9 +249,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
     }
 
     if (Node::Collection == node->type) {
-
         const Collection collection = d->m_collections.value(node->id);
-
         if (!collection.isValid()) {
             return QVariant();
         }
@@ -273,53 +257,35 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
         switch (role) {
         case MimeTypeRole:
             return collection.mimeType();
-            break;
         case RemoteIdRole:
             return collection.remoteId();
-            break;
         case CollectionIdRole:
             return collection.id();
-            break;
         case ItemIdRole:
             // QVariant().toInt() is 0, not -1, so we have to handle the ItemIdRole
             // and CollectionIdRole (below) specially
             return -1;
-            break;
         case CollectionRole:
             return QVariant::fromValue(collection);
-            break;
         case EntityUrlRole:
             return collection.url().url();
-            break;
-        case UnreadCountRole: {
-            CollectionStatistics statistics = collection.statistics();
-            return statistics.unreadCount();
-        }
-        case FetchStateRole: {
+        case UnreadCountRole:
+            return collection.statistics().unreadCount();
+        case FetchStateRole:
             return d->m_pendingCollectionRetrieveJobs.contains(collection.id()) ? FetchingState : IdleState;
-        }
-        case IsPopulatedRole: {
+        case IsPopulatedRole:
             return d->m_populatedCols.contains(collection.id());
-        }
-        case OriginalCollectionNameRole: {
+        case OriginalCollectionNameRole:
             return entityData(collection, index.column(), Qt::DisplayRole);
-        }
         case PendingCutRole:
             return d->m_pendingCutCollections.contains(node->id);
-        case Qt::BackgroundRole: {
-            if (collection.hasAttribute<EntityDisplayAttribute>()) {
-                const EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>();
-                QColor color = eda->backgroundColor();
-                if (color.isValid()) {
-                    return color;
-                }
+        case Qt::BackgroundRole:
+            if (const auto attr = collection.attribute<EntityDisplayAttribute>(); attr && attr->backgroundColor().isValid()) {
+                return attr->backgroundColor();
             }
-            // fall through.
-        Q_FALLTHROUGH();
-        }
+            Q_FALLTHROUGH();
         default:
             return entityData(collection, index.column(), role);
-            break;
         }
 
     } else if (Node::Item == node->type) {
@@ -333,44 +299,29 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
             return QVariant::fromValue(item.parentCollection());
         case MimeTypeRole:
             return item.mimeType();
-            break;
         case RemoteIdRole:
             return item.remoteId();
-            break;
         case ItemRole:
             return QVariant::fromValue(item);
-            break;
         case ItemIdRole:
             return item.id();
-            break;
         case CollectionIdRole:
             return -1;
-            break;
         case LoadedPartsRole:
             return QVariant::fromValue(item.loadedPayloadParts());
-            break;
         case AvailablePartsRole:
             return QVariant::fromValue(item.availablePayloadParts());
-            break;
         case EntityUrlRole:
             return item.url(Akonadi::Item::UrlWithMimeType).url();
-            break;
         case PendingCutRole:
             return d->m_pendingCutItems.contains(node->id);
-        case Qt::BackgroundRole: {
-            if (item.hasAttribute<EntityDisplayAttribute>()) {
-                const EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>();
-                const QColor color = eda->backgroundColor();
-                if (color.isValid()) {
-                    return color;
-                }
+        case Qt::BackgroundRole:
+            if (const auto attr = item.attribute<EntityDisplayAttribute>(); attr && attr->backgroundColor().isValid()) {
+                return attr->backgroundColor();
             }
-            // fall through.
-        Q_FALLTHROUGH();
-        }
+            Q_FALLTHROUGH();
         default:
             return entityData(item, index.column(), role);
-            break;
         }
     }
 
@@ -432,7 +383,6 @@ Qt::ItemFlags EntityTreeModel::flags(const QModelIndex &index) const
             parentCollection = d->m_rootCollection;
         } else {
             const Node *parentNode = reinterpret_cast<Node *>(index.parent().internalPointer());
-
             parentCollection = d->m_collections.value(parentNode->id);
         }
         if (parentCollection.isValid()) {
@@ -595,25 +545,21 @@ QModelIndex EntityTreeModel::index(int row, int column, const QModelIndex &paren
     }
 
     //TODO: don't use column count here? Use some d-> func.
-    if (column >= columnCount() ||
-            column < 0) {
+    if (column >= columnCount() || column < 0) {
         return QModelIndex();
     }
 
     QList<Node *> childEntities;
 
     const Node *parentNode = reinterpret_cast<Node *>(parent.internalPointer());
-
     if (!parentNode || !parent.isValid()) {
         if (d->m_showRootCollection) {
             childEntities << d->m_childEntities.value(-1);
         } else {
             childEntities = d->m_childEntities.value(d->m_rootCollection.id());
         }
-    } else {
-        if (parentNode->id >= 0) {
-            childEntities = d->m_childEntities.value(parentNode->id);
-        }
+    } else if (parentNode->id >= 0) {
+        childEntities = d->m_childEntities.value(parentNode->id);
     }
 
     const int size = childEntities.size();
@@ -622,7 +568,6 @@ QModelIndex EntityTreeModel::index(int row, int column, const QModelIndex &paren
     }
 
     Node *node = childEntities.at(row);
-
     return createIndex(row, column, reinterpret_cast<void *>(node));
 }
 
@@ -721,9 +666,7 @@ QVariant EntityTreeModel::entityHeaderData(int section, Qt::Orientation orientat
     // Not needed in this model.
     Q_UNUSED(headerGroup);
 
-    if (section == 0 &&
-            orientation == Qt::Horizontal &&
-            role == Qt::DisplayRole) {
+    if (section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (d->m_rootCollection == Collection::root()) {
             return i18nc("@title:column Name of a thing", "Name");
         }
@@ -787,9 +730,7 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
         if (index.isValid() && value.toBool()) {
             if (Node::Collection == node->type) {
                 d->m_pendingCutCollections.append(node->id);
-            }
-
-            if (Node::Item == node->type) {
+            } else if (Node::Item == node->type) {
                 d->m_pendingCutItems.append(node->id);
             }
         } else {
@@ -814,49 +755,37 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
         return true;
     }
 
-    if (index.column() == 0 &&
-            (role & (Qt::EditRole | ItemRole | CollectionRole))) {
+    if (index.column() == 0 && (role & (Qt::EditRole | ItemRole | CollectionRole))) {
         if (Node::Collection == node->type) {
-
             Collection collection = d->m_collections.value(node->id);
-
             if (!collection.isValid() || !value.isValid()) {
                 return false;
             }
 
             if (Qt::EditRole == role) {
                 collection.setName(value.toString());
-
                 if (collection.hasAttribute<EntityDisplayAttribute>()) {
                     EntityDisplayAttribute *displayAttribute = collection.attribute<EntityDisplayAttribute>();
                     displayAttribute->setDisplayName(value.toString());
                 }
-            }
-
-            if (Qt::BackgroundRole == role) {
+            } else if (Qt::BackgroundRole == role) {
                 QColor color = value.value<QColor>();
-
                 if (!color.isValid()) {
                     return false;
                 }
 
                 EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
                 eda->setBackgroundColor(color);
-            }
-
-            if (CollectionRole == role) {
+            } else if (CollectionRole == role) {
                 collection = value.value<Collection>();
             }
 
             CollectionModifyJob *job = new CollectionModifyJob(collection, d->m_session);
-            connect(job, SIGNAL(result(KJob*)),
-                    SLOT(updateJobDone(KJob*)));
+            connect(job, SIGNAL(result(KJob*)), SLOT(updateJobDone(KJob*)));
 
             return false;
         } else if (Node::Item == node->type) {
-
             Item item = d->m_items.value(node->id);
-
             if (!item.isValid() || !value.isValid()) {
                 return false;
             }
@@ -866,27 +795,21 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
                     EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>(Item::AddIfMissing);
                     displayAttribute->setDisplayName(value.toString());
                 }
-            }
-
-            if (Qt::BackgroundRole == role) {
+            } else if (Qt::BackgroundRole == role) {
                 QColor color = value.value<QColor>();
-
                 if (!color.isValid()) {
                     return false;
                 }
 
                 EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>(Item::AddIfMissing);
                 eda->setBackgroundColor(color);
-            }
-
-            if (ItemRole == role) {
+            } else if (ItemRole == role) {
                 item = value.value<Item>();
                 Q_ASSERT(item.id() == node->id);
             }
 
             ItemModifyJob *itemModifyJob = new ItemModifyJob(item, d->m_session);
-            connect(itemModifyJob, SIGNAL(result(KJob*)),
-                    SLOT(updateJobDone(KJob*)));
+            connect(itemModifyJob, SIGNAL(result(KJob*)), SLOT(updateJobDone(KJob*)));
 
             return false;
         }
@@ -947,7 +870,6 @@ bool EntityTreeModel::hasChildren(const QModelIndex &parent) const
 bool EntityTreeModel::isCollectionTreeFetched() const
 {
     Q_D(const EntityTreeModel);
-
     return d->m_collectionTreeFetched;
 }
 
@@ -976,40 +898,28 @@ QModelIndexList EntityTreeModel::match(const QModelIndex &start, int role, const
             id = value.toLongLong();
         }
 
-        QModelIndexList list;
-
         const Collection collection = d->m_collections.value(id);
-
         if (!collection.isValid()) {
-            return list;
+            return {};
         }
 
         const QModelIndex collectionIndex = d->indexForCollection(collection);
         Q_ASSERT(collectionIndex.isValid());
-        list << collectionIndex;
-
-        return list;
-    }
-
-    if (role == ItemIdRole || role == ItemRole) {
+        return {collectionIndex};
+    } else if (role == ItemIdRole || role == ItemRole) {
         Item::Id id;
         if (role == ItemRole) {
-            const Item item = value.value<Item>();
-            id = item.id();
+            id = value.value<Item>().id();
         } else {
             id = value.toLongLong();
         }
-        QModelIndexList list;
 
         const Item item = d->m_items.value(id);
         if (!item.isValid()) {
-            return list;
+            return {};
         }
-
         return d->indexesForItem(item);
-    }
-
-    if (role == EntityUrlRole) {
+    } else if (role == EntityUrlRole) {
         const QUrl url(value.toString());
         const Item item = Item::fromUrl(url);
 
@@ -1018,12 +928,10 @@ QModelIndexList EntityTreeModel::match(const QModelIndex &start, int role, const
         }
 
         const Collection collection = Collection::fromUrl(url);
-        QModelIndexList list;
-        if (collection.isValid()) {
-            list << d->indexForCollection(collection);
+        if (!collection.isValid()) {
+            return {};
         }
-
-        return list;
+        return {d->indexForCollection(collection)};
     }
 
     return QAbstractItemModel::match(start, role, value, hits, flags);
@@ -1158,38 +1066,40 @@ static QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> proxie
 
 static QModelIndex proxiedIndex(const QModelIndex &idx, const QList<const QAbstractProxyModel *> &proxyChain)
 {
-    QListIterator<const QAbstractProxyModel *> it(proxyChain);
     QModelIndex _idx = idx;
-    while (it.hasNext()) {
-        _idx = it.next()->mapFromSource(_idx);
+    for (const auto *proxy : proxyChain) {
+        _idx = proxy->mapFromSource(_idx);
     }
     return _idx;
 }
 
 QModelIndex EntityTreeModel::modelIndexForCollection(const QAbstractItemModel *model, const Collection &collection)
 {
-    QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> pair = proxiesAndModel(model);
+    const auto &[proxy, etm] = proxiesAndModel(model);
+    if (!etm) {
+        qCWarning(AKONADICORE_LOG) << "Model" << model << "is not derived from ETM or a proxy model on top of ETM.";
+        return {};
+    }
 
-    Q_ASSERT(pair.second);
-    QModelIndex idx = pair.second->d_ptr->indexForCollection(collection);
-    return proxiedIndex(idx, pair.first);
+    QModelIndex idx = etm->d_ptr->indexForCollection(collection);
+    return proxiedIndex(idx, proxy);
 }
 
 QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *model, const Item &item)
 {
-    QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> pair = proxiesAndModel(model);
+    const auto &[proxy, etm] = proxiesAndModel(model);
 
-    if (!pair.second) {
-        qCWarning(AKONADICORE_LOG) << "Couldn't find an EntityTreeModel";
+    if (!etm) {
+        qCWarning(AKONADICORE_LOG) << "Model" << model << "is not derived from ETM or a proxy model on top of ETM.";
         return QModelIndexList();
     }
 
-    const QModelIndexList list = pair.second->d_ptr->indexesForItem(item);
+    const QModelIndexList list = etm->d_ptr->indexesForItem(item);
     QModelIndexList proxyList;
     for (const QModelIndex &idx : list) {
-        const QModelIndex pIdx = proxiedIndex(idx, pair.first);
+        const QModelIndex pIdx = proxiedIndex(idx, proxy);
         if (pIdx.isValid()) {
-            proxyList << pIdx;
+            proxyList.push_back(pIdx);
         }
     }
     return proxyList;

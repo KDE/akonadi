@@ -165,8 +165,6 @@ public:
     void fetchCollections(Akonadi::CollectionFetchJob *job);
     void fetchItems(const Collection &collection);
     void collectionsFetched(const Akonadi::Collection::List &collections);
-    void collectionListFetched(const Akonadi::Collection::List &collections);
-    void itemsFetched(const Akonadi::Item::List &items);
     void itemsFetched(const Collection::Id collectionId, const Akonadi::Item::List &items);
 
     void monitoredCollectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent);
@@ -268,7 +266,7 @@ public:
     void monitoredItemsRetrieved(KJob *job);
     void rootFetchJobDone(KJob *job);
     void collectionFetchJobDone(KJob *job);
-    void itemFetchJobDone(KJob *job);
+    void itemFetchJobDone(Collection::Id collectionId, KJob *job);
     void updateJobDone(KJob *job);
     void pasteJobDone(KJob *job);
 
@@ -288,16 +286,6 @@ public:
 
         return -1;
     }
-
-    /**
-     * The id of the collection which starts an item fetch job. This is part of a hack with QObject::sender
-     * in itemsReceivedFromJob to correctly insert items into the model.
-     */
-    static QByteArray FetchCollectionId()
-    {
-        return "FetchCollectionId";
-    }
-
 
     Q_DECLARE_PUBLIC(EntityTreeModel)
 
