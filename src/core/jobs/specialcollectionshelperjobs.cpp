@@ -368,7 +368,7 @@ void DefaultResourceJobPrivate::resourceCreateResult(KJob *job)
             }
         }
 
-        conf.call(QStringLiteral("writeConfig"));
+        conf.call(QStringLiteral("save"));
 
         agent.reconfigure();
     }
