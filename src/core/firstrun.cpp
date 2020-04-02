@@ -189,7 +189,7 @@ void Firstrun::instanceCreated(KJob *job)
         }
     }
 
-    iface->call(QStringLiteral("writeConfig"));
+    iface->call(QStringLiteral("save"));
 
     instance.reconfigure();
     instance.synchronize();
