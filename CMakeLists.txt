@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.5)
 
-set(PIM_VERSION "5.13.90")
+set(PIM_VERSION "5.14.0")
 project(Akonadi VERSION ${PIM_VERSION})
 
 if (MSVC)
@@ -44,7 +44,7 @@ include(ECMAddTests)
 include(AkonadiMacros)
 
 set(QT_REQUIRED_VERSION "5.12.0")
-set(RELEASE_SERVICE_VERSION "20.03.90")
+set(RELEASE_SERVICE_VERSION "20.04.0")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
 configure_file(akonadifull-version.h.cmake ${CMAKE_CURRENT_BINARY_DIR}/akonadifull-version.h @ONLY)
