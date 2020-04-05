@@ -41,7 +41,7 @@
 #include <QLabel>
 #include <QTreeView>
 #include <QCheckBox>
-#include <kmessagebox.h>
+#include <KMessageBox>
 #include <qnamespace.h>
 
 using namespace Akonadi;
