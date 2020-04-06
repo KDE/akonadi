@@ -40,6 +40,7 @@ include(CheckSymbolExists)
 include(KDEPackageAppTemplates)
 include(ECMMarkNonGuiExecutable)
 include(ECMAddTests)
+include(ECMSetupQtPluginMacroNames)
 
 include(AkonadiMacros)
 
@@ -118,6 +119,13 @@ if(BUILD_TESTING)
     set(AKONADIWIDGET_TESTS_EXPORT AKONADIWIDGETS_EXPORT)
     add_definitions(-DBUILD_TESTING)
 endif()
+
+ecm_setup_qtplugin_macro_names(
+    JSON_ARG2
+        "AKONADI_AGENTCONFIG_FACTORY"
+    CONFIG_CODE_VARIABLE
+        PACKAGE_SETUP_AUTOMOC_VARIABLES
+)
 
 # Make sure the KF5Akonadi_DATA_DIR is absolute before passing it to KF5AkonadiConfig.cmake.in
 # otherwise build fails either on OSX CI, or for normal users
