@@ -268,7 +268,7 @@ void SelfTestDialog::testMySQLServerLog()
     }
 
     const QString logFileName = StandardDirs::saveDir("data", QStringLiteral("db_data"))
-                                + QDir::separator() + QLatin1String("mysql.err");
+                                + QLatin1String("/mysql.err");
     const QFileInfo logFileInfo(logFileName);
     if (!logFileInfo.exists() || logFileInfo.size() == 0) {
         report(Success, ki18n("No current MySQL error log found."),
@@ -490,7 +490,7 @@ void SelfTestDialog::testResources()
 
 void SelfTestDialog::testServerLog()
 {
-    QString serverLog = StandardDirs::saveDir("data") + QDir::separator() + QLatin1String("akonadiserver.error");
+    QString serverLog = StandardDirs::saveDir("data") + QLatin1String("/akonadiserver.error");
     QFileInfo info(serverLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No current Akonadi server error log found."),
@@ -515,7 +515,7 @@ void SelfTestDialog::testServerLog()
 
 void SelfTestDialog::testControlLog()
 {
-    QString controlLog = StandardDirs::saveDir("data") + QDir::separator() + QLatin1String("akonadi_control.error");
+    QString controlLog = StandardDirs::saveDir("data") + QLatin1String("/akonadi_control.error");
     QFileInfo info(controlLog);
     if (!info.exists() || info.size() <= 0) {
         report(Success, ki18n("No current Akonadi control error log found."),
