@@ -126,7 +126,7 @@ bool Relation::isValid() const
     return (d->left.isValid() || !d->left.remoteId().isEmpty()) && (d->right.isValid() || !d->right.remoteId().isEmpty()) && !d->type.isEmpty();
 }
 
-uint qHash(const Relation &relation)
+uint Akonadi::qHash(const Relation &relation)
 {
     return (3 * qHash(relation.left()) + qHash(relation.right()) + qHash(relation.type()) + qHash(relation.remoteId()));
 }
