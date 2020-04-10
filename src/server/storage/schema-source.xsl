@@ -115,9 +115,13 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
       t.data.reserve(<xsl:value-of select="count(data)"/>);
       <xsl:for-each select="data">
       {
+#if QT_VERSION &lt; QT_VERSION_CHECK(5, 15, 0)
         const QStringList columns = QStringLiteral("<xsl:value-of select="@columns"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
         const QStringList values = QStringLiteral("<xsl:value-of select="@values"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
-
+#else
+        const QStringList columns = QStringLiteral("<xsl:value-of select="@columns"/>").split( QLatin1Char( ',' ), Qt::SkipEmptyParts );
+        const QStringList values = QStringLiteral("<xsl:value-of select="@values"/>").split( QLatin1Char( ',' ), Qt::SkipEmptyParts );
+#endif
         Q_ASSERT( columns.count() == values.count() );
 
         DataDescription d;
