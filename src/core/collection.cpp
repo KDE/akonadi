@@ -203,9 +203,9 @@ const Attribute *Collection::attribute(const QByteArray &type) const
 Collection &Collection::parentCollection()
 {
     if (!d_ptr->mParent) {
-        d_ptr->mParent = new Collection();
+        d_ptr->mParent.reset(new Collection());
     }
-    return *(d_ptr->mParent);
+    return *d_ptr->mParent.get();
 }
 
 Collection Collection::parentCollection() const
@@ -213,14 +213,13 @@ Collection Collection::parentCollection() const
     if (!d_ptr->mParent) {
         return *(s_defaultParentCollection);
     } else {
-        return *(d_ptr->mParent);
+        return *d_ptr->mParent.get();
     }
 }
 
 void Collection::setParentCollection(const Collection &parent)
 {
-    delete d_ptr->mParent;
-    d_ptr->mParent = new Collection(parent);
+    d_ptr->mParent.reset(new Collection(parent));
 }
 
 QString Collection::name() const

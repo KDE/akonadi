@@ -49,20 +49,18 @@ public:
         , cachePolicyChanged(false)
         , isVirtual(false)
         , mId(id)
-        , mParent(nullptr)
     {
     }
 
     CollectionPrivate(const CollectionPrivate &other)
         : QSharedData(other)
-        , mParent(nullptr)
     {
         mId = other.mId;
         mRemoteId = other.mRemoteId;
         mRemoteRevision = other.mRemoteRevision;
         mAttributeStorage = other.mAttributeStorage;
         if (other.mParent) {
-            mParent = new Collection(*(other.mParent));
+            mParent.reset(new Collection(*(other.mParent)));
         }
         name = other.name;
         resource = other.resource;
@@ -79,11 +77,6 @@ public:
         indexPreference = other.indexPreference;
         listPreferenceChanged = other.listPreferenceChanged;
         keepLocalChanges = other.keepLocalChanges;
-    }
-
-    ~CollectionPrivate()
-    {
-        delete mParent;
     }
 
     void resetChangeLog()
@@ -117,7 +110,7 @@ public:
     Collection::Id mId;
     QString mRemoteId;
     QString mRemoteRevision;
-    mutable Collection *mParent;
+    mutable QScopedPointer<Collection> mParent;
     AttributeStorage mAttributeStorage;
     QString name;
     QString resource;
