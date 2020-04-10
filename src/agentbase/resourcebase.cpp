@@ -54,6 +54,7 @@
 
 #include "akonadiagentbase_debug.h"
 
+#include <iterator>
 #include <shared/akranges.h>
 
 #include <KLocalizedString>
@@ -254,12 +255,7 @@ protected Q_SLOTS:
             return;
         }
 
-        Item::List validItems;
-        for (const Akonadi::Item &item : items) {
-            if (!item.remoteId().isEmpty()) {
-                validItems << item;
-            }
-        }
+        const Item::List validItems = filterValidItems(items);
         if (validItems.isEmpty()) {
             changeProcessed();
             return;
@@ -275,12 +271,7 @@ protected Q_SLOTS:
             return;
         }
 
-        Item::List validItems;
-        for (const Akonadi::Item &item : items) {
-            if (!item.remoteId().isEmpty()) {
-                validItems << item;
-            }
-        }
+        const Item::List validItems = filterValidItems(items);
         if (validItems.isEmpty()) {
             changeProcessed();
             return;
@@ -306,12 +297,7 @@ protected Q_SLOTS:
             return;
         }
 
-        Item::List validItems;
-        for (const Akonadi::Item &item : items) {
-            if (!item.remoteId().isEmpty()) {
-                validItems << item;
-            }
-        }
+        const Item::List validItems = filterValidItems(items);
         if (validItems.isEmpty()) {
             changeProcessed();
             return;
@@ -331,12 +317,7 @@ protected Q_SLOTS:
 
     void itemsRemoved(const Item::List &items) override
     {
-        Item::List validItems;
-        for (const Akonadi::Item &item : items) {
-            if (!item.remoteId().isEmpty()) {
-                validItems << item;
-            }
-        }
+        const Item::List validItems = filterValidItems(items);
         if (validItems.isEmpty()) {
             changeProcessed();
             return;
@@ -440,6 +421,15 @@ protected Q_SLOTS:
         }
 
         AgentBasePrivate::tagRemoved(tag);
+    }
+
+private:
+    static Item::List filterValidItems(Item::List items)
+    {
+        items.erase(std::remove_if(items.begin(), items.end(),
+                                  [](const auto &item) { return item.remoteId().isEmpty(); }),
+                     items.end());
+        return items;
     }
 
 public:
