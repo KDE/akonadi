@@ -262,7 +262,7 @@ const Attribute *Item::attribute(const QByteArray &type) const
 Collection &Item::parentCollection()
 {
     if (!d_ptr->mParent) {
-        d_ptr->mParent = new Collection();
+        d_ptr->mParent.reset(new Collection());
     }
     return *(d_ptr->mParent);
 }
@@ -278,8 +278,7 @@ Collection Item::parentCollection() const
 
 void Item::setParentCollection(const Collection &parent)
 {
-    delete d_ptr->mParent;
-    d_ptr->mParent = new Collection(parent);
+    d_ptr->mParent.reset(new Collection(parent));
 }
 
 Item::Flags Item::flags() const

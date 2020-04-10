@@ -286,7 +286,6 @@ public:
         : QSharedData()
         , mRevision(-1)
         , mId(id)
-        , mParent(nullptr)
         , mLegacyPayload()
         , mPayloads()
         , mCollectionId(-1)
@@ -302,14 +301,13 @@ public:
 
     ItemPrivate(const ItemPrivate &other)
         : QSharedData(other)
-        , mParent(nullptr)
     {
         mId = other.mId;
         mRemoteId = other.mRemoteId;
         mRemoteRevision = other.mRemoteRevision;
         mPayloadPath = other.mPayloadPath;
         if (other.mParent) {
-            mParent = new Collection(*(other.mParent));
+            mParent.reset(new Collection(*(other.mParent)));
         }
         mFlags = other.mFlags;
         mRevision = other.mRevision;
@@ -340,8 +338,6 @@ public:
 
     ~ItemPrivate()
     {
-        delete mParent;
-
         ItemChangeLog::instance()->removeItem(this);
     }
 
@@ -436,7 +432,7 @@ public:
     QString mRemoteId;
     QString mRemoteRevision;
     mutable QString mPayloadPath;
-    mutable Collection *mParent;
+    mutable QScopedPointer<Collection> mParent;
     mutable _detail::clone_ptr<Internal::PayloadBase> mLegacyPayload;
     mutable PayloadContainer mPayloads;
     Item::Flags mFlags;
