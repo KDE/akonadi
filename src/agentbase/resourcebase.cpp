@@ -107,8 +107,7 @@ public:
 
     void delayedInit() override {
         const QString serviceId = ServerManager::agentServiceName(ServerManager::Resource, mId);
-        if (!QDBusConnection::sessionBus().registerService(serviceId))
-        {
+        if (!QDBusConnection::sessionBus().registerService(serviceId)) {
             QString reason = QDBusConnection::sessionBus().lastError().message();
             if (reason.isEmpty()) {
                 reason = QStringLiteral("this service is probably running already.");
@@ -118,23 +117,20 @@ public:
             if (QThread::currentThread() == QCoreApplication::instance()->thread()) {
                 QCoreApplication::instance()->exit(1);
             }
-
         } else {
             AgentBasePrivate::delayedInit();
         }
     }
 
     void changeProcessed() override {
-        if (m_recursiveMover)
-        {
+        if (m_recursiveMover) {
             m_recursiveMover->changeProcessed();
             QTimer::singleShot(0, m_recursiveMover.data(), &RecursiveMover::replayNext);
             return;
         }
 
         mChangeRecorder->changeProcessed();
-        if (!mChangeRecorder->isEmpty())
-        {
+        if (!mChangeRecorder->isEmpty()) {
             scheduler->scheduleChangeReplay();
         }
         scheduler->taskDone();
@@ -232,18 +228,18 @@ protected Q_SLOTS:
     // TODO: we could possibly add recovery code for no-RID notifications by re-enquing those to the change recorder
     // as the corresponding Add notifications, although that contains a risk of endless fail/retry loops
 
-    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection) override {
-        if (collection.remoteId().isEmpty())
-        {
+    void itemAdded(const Akonadi::Item &item, const Akonadi::Collection &collection) override
+    {
+        if (collection.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
         AgentBasePrivate::itemAdded(item, collection);
     }
 
-    void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers) override {
-        if (item.remoteId().isEmpty())
-        {
+    void itemChanged(const Akonadi::Item &item, const QSet<QByteArray> &partIdentifiers) override
+    {
+        if (item.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
@@ -251,22 +247,20 @@ protected Q_SLOTS:
     }
 
     void itemsFlagsChanged(const Item::List &items, const QSet<QByteArray> &addedFlags,
-                           const QSet<QByteArray> &removedFlags) override {
-        if (addedFlags.isEmpty() && removedFlags.isEmpty())
-        {
+                           const QSet<QByteArray> &removedFlags) override
+    {
+        if (addedFlags.isEmpty() && removedFlags.isEmpty()) {
             changeProcessed();
             return;
         }
 
         Item::List validItems;
-        for (const Akonadi::Item &item : items)
-        {
+        for (const Akonadi::Item &item : items) {
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
             }
         }
-        if (validItems.isEmpty())
-        {
+        if (validItems.isEmpty()) {
             changeProcessed();
             return;
         }
@@ -274,22 +268,20 @@ protected Q_SLOTS:
         AgentBasePrivate::itemsFlagsChanged(validItems, addedFlags, removedFlags);
     }
 
-    void itemsTagsChanged(const Item::List &items, const QSet<Tag> &addedTags, const QSet<Tag> &removedTags) override {
-        if (addedTags.isEmpty() && removedTags.isEmpty())
-        {
+    void itemsTagsChanged(const Item::List &items, const QSet<Tag> &addedTags, const QSet<Tag> &removedTags) override
+    {
+        if (addedTags.isEmpty() && removedTags.isEmpty()) {
             changeProcessed();
             return;
         }
 
         Item::List validItems;
-        for (const Akonadi::Item &item : items)
-        {
+        for (const Akonadi::Item &item : items) {
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
             }
         }
-        if (validItems.isEmpty())
-        {
+        if (validItems.isEmpty()) {
             changeProcessed();
             return;
         }
@@ -298,31 +290,29 @@ protected Q_SLOTS:
     }
 
     // TODO move the move translation code from AgentBasePrivate here, it's wrong for agents
-    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &destination) override {
-        if (item.remoteId().isEmpty() || destination.remoteId().isEmpty() || destination == source)
-        {
+    void itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &destination) override
+    {
+        if (item.remoteId().isEmpty() || destination.remoteId().isEmpty() || destination == source) {
             changeProcessed();
             return;
         }
         AgentBasePrivate::itemMoved(item, source, destination);
     }
 
-    void itemsMoved(const Item::List &items, const Collection &source, const Collection &destination) override {
-        if (destination.remoteId().isEmpty() || destination == source)
-        {
+    void itemsMoved(const Item::List &items, const Collection &source, const Collection &destination) override
+    {
+        if (destination.remoteId().isEmpty() || destination == source) {
             changeProcessed();
             return;
         }
 
         Item::List validItems;
-        for (const Akonadi::Item &item : items)
-        {
+        for (const Akonadi::Item &item : items) {
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
             }
         }
-        if (validItems.isEmpty())
-        {
+        if (validItems.isEmpty()) {
             changeProcessed();
             return;
         }
@@ -330,25 +320,24 @@ protected Q_SLOTS:
         AgentBasePrivate::itemsMoved(validItems, source, destination);
     }
 
-    void itemRemoved(const Akonadi::Item &item) override {
-        if (item.remoteId().isEmpty())
-        {
+    void itemRemoved(const Akonadi::Item &item) override
+    {
+        if (item.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
         AgentBasePrivate::itemRemoved(item);
     }
 
-    void itemsRemoved(const Item::List &items) override {
+    void itemsRemoved(const Item::List &items) override
+    {
         Item::List validItems;
-        for (const Akonadi::Item &item : items)
-        {
+        for (const Akonadi::Item &item : items) {
             if (!item.remoteId().isEmpty()) {
                 validItems << item;
             }
         }
-        if (validItems.isEmpty())
-        {
+        if (validItems.isEmpty()) {
             changeProcessed();
             return;
         }
@@ -356,44 +345,43 @@ protected Q_SLOTS:
         AgentBasePrivate::itemsRemoved(validItems);
     }
 
-    void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent) override {
-        if (parent.remoteId().isEmpty())
-        {
+    void collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent) override
+    {
+        if (parent.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
         AgentBasePrivate::collectionAdded(collection, parent);
     }
 
-    void collectionChanged(const Akonadi::Collection &collection) override {
-        if (collection.remoteId().isEmpty())
-        {
+    void collectionChanged(const Akonadi::Collection &collection) override
+    {
+        if (collection.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
         AgentBasePrivate::collectionChanged(collection);
     }
 
-    void collectionChanged(const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers) override {
-        if (collection.remoteId().isEmpty())
-        {
+    void collectionChanged(const Akonadi::Collection &collection, const QSet<QByteArray> &partIdentifiers) override
+    {
+        if (collection.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
         AgentBasePrivate::collectionChanged(collection, partIdentifiers);
     }
 
-    void collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination) override {
+    void collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &destination) override
+    {
         // unknown destination or source == destination means we can't do/don't have to do anything
-        if (destination.remoteId().isEmpty() || source == destination)
-        {
+        if (destination.remoteId().isEmpty() || source == destination) {
             changeProcessed();
             return;
         }
 
         // inter-resource moves, requires we know which resources the source and destination are in though
-        if (!source.resource().isEmpty() && !destination.resource().isEmpty() && source.resource() != destination.resource())
-        {
+        if (!source.resource().isEmpty() && !destination.resource().isEmpty() && source.resource() != destination.resource()) {
             if (source.resource() == q_ptr->identifier()) {   // moved away from us
                 AgentBasePrivate::collectionRemoved(collection);
             } else if (destination.resource() == q_ptr->identifier()) {   // moved to us
@@ -406,8 +394,7 @@ protected Q_SLOTS:
         }
 
         // intra-resource move, requires the moved collection to have a valid id though
-        if (collection.remoteId().isEmpty())
-        {
+        if (collection.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
@@ -416,18 +403,18 @@ protected Q_SLOTS:
         AgentBasePrivate::collectionMoved(collection, source, destination);
     }
 
-    void collectionRemoved(const Akonadi::Collection &collection) override {
-        if (collection.remoteId().isEmpty())
-        {
+    void collectionRemoved(const Akonadi::Collection &collection) override
+    {
+        if (collection.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
         AgentBasePrivate::collectionRemoved(collection);
     }
 
-    void tagAdded(const Akonadi::Tag &tag) override {
-        if (!tag.isValid())
-        {
+    void tagAdded(const Akonadi::Tag &tag) override
+    {
+        if (!tag.isValid()) {
             changeProcessed();
             return;
         }
@@ -435,9 +422,9 @@ protected Q_SLOTS:
         AgentBasePrivate::tagAdded(tag);
     }
 
-    void tagChanged(const Akonadi::Tag &tag) override {
-        if (tag.remoteId().isEmpty())
-        {
+    void tagChanged(const Akonadi::Tag &tag) override
+    {
+        if (tag.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
@@ -445,9 +432,9 @@ protected Q_SLOTS:
         AgentBasePrivate::tagChanged(tag);
     }
 
-    void tagRemoved(const Akonadi::Tag &tag) override {
-        if (tag.remoteId().isEmpty())
-        {
+    void tagRemoved(const Akonadi::Tag &tag) override
+    {
+        if (tag.remoteId().isEmpty()) {
             changeProcessed();
             return;
         }
@@ -549,9 +536,7 @@ ResourceBase::ResourceBase(const QString &id)
     connect(d->mChangeRecorder->session(), SIGNAL(reconnected()), SLOT(slotSessionReconnected()));
 }
 
-ResourceBase::~ResourceBase()
-{
-}
+ResourceBase::~ResourceBase() = default;
 
 void ResourceBase::synchronize()
 {
