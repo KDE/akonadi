@@ -91,7 +91,7 @@ Item Relation::right() const
     return d->right;
 }
 
-void Relation::setType(const QByteArray &type) const
+void Relation::setType(const QByteArray &type)
 {
     d->type = type;
 }
@@ -101,7 +101,7 @@ QByteArray Relation::type() const
     return d->type;
 }
 
-void Relation::setRemoteId(const QByteArray &remoteId) const
+void Relation::setRemoteId(const QByteArray &remoteId)
 {
     d->remoteId = remoteId;
 }

@@ -102,7 +102,7 @@ public:
     /**
      * Sets the type of the relation.
      */
-    void setType(const QByteArray &type) const;
+    void setType(const QByteArray &type);
 
     /**
      * Returns the type of the relation.
@@ -112,7 +112,7 @@ public:
     /**
      * Sets the remote id of the relation.
      */
-    void setRemoteId(const QByteArray &type) const;
+    void setRemoteId(const QByteArray &type);
 
     /**
      * Returns the remote id of the relation.
