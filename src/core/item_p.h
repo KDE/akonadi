@@ -40,24 +40,22 @@ namespace _detail
 template <typename T>
 class clone_ptr
 {
-    T *t;
+    std::unique_ptr<T> t;
 public:
-    clone_ptr()
-        : t(nullptr)
-    {
-    }
+    explicit clone_ptr() = default;
     explicit clone_ptr(T *t)
         : t(t)
-    {
-    }
+    {}
+
     clone_ptr(const clone_ptr &other)
         : t(other.t ? other.t->clone() : nullptr)
     {
     }
-    ~clone_ptr()
-    {
-        delete t;
-    }
+
+    clone_ptr(clone_ptr &&) noexcept = default;
+
+    ~clone_ptr() = default;
+
     clone_ptr &operator=(const clone_ptr &other)
     {
         if (this != &other) {
@@ -66,52 +64,49 @@ public:
         }
         return *this;
     }
+
+    clone_ptr &operator=(clone_ptr &&) noexcept = default;
+
     void swap(clone_ptr &other)
     {
         using std::swap;
         swap(t, other.t);
     }
+
     T *operator->() const
     {
         return get();
     }
+
     T &operator*() const
     {
         assert(get() != nullptr);
         return *get();
     }
+
     T *get() const
     {
-        return t;
-    }
-    T *release()
-    {
-        T *const r = t;
-        t = nullptr;
-        return r;
-    }
-    void reset(T *other = nullptr)
-    {
-        delete t;
-        t = other;
+        return t.get();
     }
 
-private:
-    struct _save_bool {
-        void f()
-        {
-        }
-    };
-    typedef void (_save_bool::*save_bool)();
-public:
-    operator save_bool() const
+    T *release()
     {
-        return get() ? &_save_bool::f : nullptr;
+        return t.release();
+    }
+
+    void reset(T *other = nullptr)
+    {
+        t.reset(other);
+    }
+
+    explicit operator bool() const noexcept
+    {
+        return get() != nullptr;
     }
 };
 
 template <typename T>
-inline void swap(clone_ptr<T> &lhs, clone_ptr<T> &rhs)
+inline void swap(clone_ptr<T> &lhs, clone_ptr<T> &rhs) noexcept
 {
     lhs.swap(rhs);
 }
@@ -145,7 +140,7 @@ namespace std
 {
 template <>
 inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload &lhs,
-        Akonadi::_detail::TypedPayload &rhs)
+    Akonadi::_detail::TypedPayload &rhs) noexcept
 {
     lhs.payload.swap(rhs.payload);
     swap(lhs.sharedPointerId, rhs.sharedPointerId);

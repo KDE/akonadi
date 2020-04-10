@@ -29,6 +29,7 @@
 
 #include <QStringList>
 #include <QReadWriteLock>
+#include <QScopedValueRollback>
 
 #include <algorithm>
 #include <map>
@@ -548,28 +549,6 @@ Internal::PayloadBase *Item::payloadBaseV2(int spid, int mtid) const
     return d_ptr->payloadBaseImpl(spid, mtid);
 }
 
-namespace
-{
-class ConversionGuard
-{
-    const bool old;
-    bool &b;
-public:
-    explicit ConversionGuard(bool &b)
-        : old(b)
-        , b(b)
-    {
-        b = true;
-    }
-    ~ConversionGuard()
-    {
-        b = old;
-    }
-private:
-    Q_DISABLE_COPY(ConversionGuard)
-};
-}
-
 bool Item::ensureMetaTypeId(int mtid) const
 {
     // 0. Nothing there - nothing to convert from, either
@@ -590,7 +569,7 @@ bool Item::ensureMetaTypeId(int mtid) const
 
     // 2. Try to create one by conversion from a different representation:
     try {
-        const ConversionGuard guard(d_ptr->mConversionInProgress);
+        const QScopedValueRollback guard(d_ptr->mConversionInProgress, true);
         Item converted = ItemSerializer::convert(*this, mtid);
         return d_ptr->movePayloadFrom(converted.d_ptr, mtid);
     } catch (const std::exception &e) {
