@@ -21,7 +21,6 @@
 #define AKONADI_ITEM_P_H
 
 #include <QDateTime>
-#include <QVarLengthArray>
 
 #include "itempayloadinternals_p.h"
 #include "itemchangelog_p.h"
@@ -117,111 +116,6 @@ inline void swap(clone_ptr<T> &lhs, clone_ptr<T> &rhs)
     lhs.swap(rhs);
 }
 
-template <typename T, size_t N>
-class VarLengthArray
-{
-    QVarLengthArray<T, N> impl; // ###should be replaced by self-written container that doesn't waste so much space
-public:
-    typedef T value_type;
-    typedef T *iterator;
-    typedef const T *const_iterator;
-    typedef T *pointer;
-    typedef const T *const_pointer;
-    typedef T &reference;
-    typedef const T &const_reference;
-
-    explicit VarLengthArray(int size = 0)
-        : impl(size)
-    {
-    }
-    // compiler-generated dtor, copy ctor, copy assignment are ok
-    // swap() makes little sense
-
-    void push_back(const T &t)
-    {
-        impl.append(t);
-    }
-    int capacity() const
-    {
-        return impl.capacity();
-    }
-    void clear()
-    {
-        impl.clear();
-    }
-    size_t size() const
-    {
-        return impl.count();
-    }
-    bool empty() const
-    {
-        return impl.isEmpty();
-    }
-    void pop_back()
-    {
-        return impl.removeLast();
-    }
-    void reserve(size_t n)
-    {
-        impl.reserve(n);
-    }
-    void resize(size_t n)
-    {
-        impl.resize(n);
-    }
-
-    iterator begin()
-    {
-        return impl.data();
-    }
-    iterator end()
-    {
-        return impl.data() + impl.size();
-    }
-    const_iterator begin() const
-    {
-        return impl.data();
-    }
-    const_iterator end() const
-    {
-        return impl.data() + impl.size();
-    }
-    const_iterator cbegin() const
-    {
-        return begin();
-    }
-    const_iterator cend() const
-    {
-        return end();
-    }
-
-    reference front()
-    {
-        return *impl.data();
-    }
-    reference back()
-    {
-        return *(impl.data() + impl.size());
-    }
-    const_reference front() const
-    {
-        return *impl.data();
-    }
-    const_reference back() const
-    {
-        return *(impl.data() + impl.size());
-    }
-
-    reference operator[](size_t n)
-    {
-        return impl[n];
-    }
-    const_reference operator[](size_t n) const
-    {
-        return impl[n];
-    }
-};
-
 struct TypedPayload {
     clone_ptr<Internal::PayloadBase> payload;
     int sharedPointerId;
@@ -261,7 +155,6 @@ inline void swap<Akonadi::_detail::TypedPayload>(Akonadi::_detail::TypedPayload 
 
 namespace Akonadi
 {
-//typedef _detail::VarLengthArray<_detail::TypedPayload,2> PayloadContainer;
 typedef std::vector<_detail::TypedPayload> PayloadContainer;
 }
 
