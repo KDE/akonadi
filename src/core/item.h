@@ -165,6 +165,11 @@ public:
     Item(const Item &other);
 
     /**
+     * Move constructor.
+     */
+    Item(Item &&);
+
+    /**
      * Destroys the item.
      */
     ~Item();

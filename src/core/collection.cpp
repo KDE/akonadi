@@ -100,9 +100,9 @@ Collection::Collection(const Collection &other)
     assignCollectionPrivate(d_ptr, other.d_ptr);
 }
 
-Collection::~Collection()
-{
-}
+Collection::Collection(Collection &&) = default;
+
+Collection::~Collection() = default;
 
 void Collection::setId(Collection::Id identifier)
 {

@@ -25,7 +25,7 @@ using namespace Akonadi;
 
 const char *Akonadi::Relation::GENERIC = "GENERIC";
 
-struct Q_DECL_HIDDEN Relation::Private {
+struct Q_DECL_HIDDEN Relation::Private : public QSharedData {
     Item left;
     Item right;
     QByteArray type;
@@ -35,7 +35,6 @@ struct Q_DECL_HIDDEN Relation::Private {
 Relation::Relation()
     : d(new Private)
 {
-
 }
 
 Relation::Relation(const QByteArray &type, const Item &left, const Item &right)
@@ -46,24 +45,15 @@ Relation::Relation(const QByteArray &type, const Item &left, const Item &right)
     d->type = type;
 }
 
-Relation::Relation(const Relation &other)
-    : d(new Private)
-{
-    operator=(other);
-}
+Relation::Relation(const Relation &other) = default;
 
-Relation::~Relation()
-{
-}
+Relation::Relation(Relation &&) noexcept = default;
 
-Relation &Relation::operator=(const Relation &other)
-{
-    d->left = other.d->left;
-    d->right = other.d->right;
-    d->type = other.d->type;
-    d->remoteId = other.d->remoteId;
-    return *this;
-}
+Relation::~Relation() = default;
+
+Relation &Relation::operator=(const Relation &) = default;
+
+Relation &Relation::operator=(Relation &&) noexcept = default;
 
 bool Relation::operator==(const Relation &other) const
 {

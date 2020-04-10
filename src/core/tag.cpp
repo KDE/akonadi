@@ -38,7 +38,6 @@ uint Akonadi::qHash(const Tag &tag)
 Tag::Tag()
     : d_ptr(new TagPrivate)
 {
-
 }
 
 Tag::Tag(Tag::Id id)
@@ -54,23 +53,12 @@ Tag::Tag(const QString &name)
     d_ptr->type = PLAIN;
 }
 
-Tag::Tag(const Tag &other)
-    : d_ptr(other.d_ptr)
-{
-}
+Tag::Tag(const Tag &) = default;
+Tag::Tag(Tag &&) noexcept = default;
+Tag::~Tag() = default;
 
-Tag::~Tag()
-{
-}
-
-Tag &Tag::operator=(const Tag &other)
-{
-    if (this != &other) {
-        d_ptr = other.d_ptr;
-    }
-
-    return *this;
-}
+Tag &Tag::operator=(const Tag &) = default;
+Tag &Tag::operator=(Tag &&) noexcept = default;
 
 bool Tag::operator==(const Tag &other) const
 {

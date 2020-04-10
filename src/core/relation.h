@@ -29,7 +29,7 @@ class Relation;
 AKONADICORE_EXPORT unsigned int qHash(const Akonadi::Relation &);
 }
 
-#include <QSharedPointer>
+#include <QSharedDataPointer>
 #include <QByteArray>
 #include <QDebug>
 
@@ -69,10 +69,13 @@ public:
      */
     explicit Relation(const QByteArray &type, const Item &left, const Item &right);
 
-    Relation(const Relation &other);
+    Relation(const Relation &);
+    Relation(Relation &&) noexcept;
     ~Relation();
 
     Relation &operator=(const Relation &);
+    Relation &operator=(Relation &&) noexcept;
+
     bool operator==(const Relation &) const;
     bool operator!=(const Relation &) const;
 
@@ -120,7 +123,7 @@ public:
 
 private:
     struct Private;
-    QSharedPointer<Private> d;
+    QSharedDataPointer<Private> d;
 };
 
 }

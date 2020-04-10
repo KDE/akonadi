@@ -127,6 +127,11 @@ public:
     Collection(const Collection &other);
 
     /**
+     * Move constructor.
+     */
+    Collection(Collection &&other);
+
+    /**
      * Creates a collection from the given @p url.
      */
     static Collection fromUrl(const QUrl &url);

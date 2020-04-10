@@ -158,14 +158,11 @@ Item::Item(const QString &mimeType)
     d_ptr->mMimeType = mimeType;
 }
 
-Item::Item(const Item &other)
-    : d_ptr(other.d_ptr)
-{
-}
+Item::Item(const Item &other) = default;
 
-Item::~Item()
-{
-}
+Item::Item(Item &&other) = default;
+
+Item::~Item() = default;
 
 void Item::setId(Item::Id identifier)
 {

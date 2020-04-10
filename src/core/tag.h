@@ -69,11 +69,14 @@ public:
      */
     explicit Tag(const QString &name);
 
-    Tag(const Tag &other);
+    Tag(const Tag &);
+
+    Tag(Tag &&) noexcept;
 
     ~Tag();
 
     Tag &operator=(const Tag &);
+    Tag &operator=(Tag &&) noexcept;
     //Avoid slicing
     bool operator==(const Tag &) const;
     bool operator!=(const Tag &) const;
