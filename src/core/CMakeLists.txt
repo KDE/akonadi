@@ -53,14 +53,12 @@ set(akonadicore_base_SRCS
     mimetypechecker.cpp
     monitor.cpp
     monitor_p.cpp
-    newmailnotifierattribute.cpp
     notificationsource_p.cpp
     notificationsubscriber.cpp
     partfetcher.cpp
     pastehelper.cpp
     persistentsearchattribute.cpp
     pluginloader.cpp
-    pop3resourceattribute.cpp
     protocolhelper.cpp
     remotelog.cpp
     relation.cpp
@@ -115,12 +113,10 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     ItemSerializerPlugin
     ItemSync
     MimeTypeChecker
-    NewMailNotifierAttribute
     NotificationSubscriber
     Monitor
     PartFetcher
     PersistentSearchAttribute
-    Pop3ResourceAttribute
     Relation
     SearchQuery
     ServerManager
