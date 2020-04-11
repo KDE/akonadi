@@ -690,16 +690,6 @@ public:
      */
     void apply(const Item &other);
 
-    /**
-     * Registers \a T as a legacy type for mime type \a mimeType.
-     *
-     * This is required information for Item to return the correct
-     * type from payload() when clients have not been recompiled to
-     * use the new code.
-     * @param mimeType the mimeType to register
-     * @since 4.6
-     */
-    template <typename T> static void addToLegacyMapping(const QString &mimeType);
     void setCachedPayloadParts(const QSet<QByteArray> &cachedParts);
 
 private:
@@ -710,16 +700,11 @@ private:
     friend class ItemModifyJobPrivate;
     friend class ItemSync;
     friend class ProtocolHelper;
-    Internal::PayloadBase *payloadBase() const;
-    void setPayloadBase(Internal::PayloadBase *p);
     Internal::PayloadBase *payloadBaseV2(int sharedPointerId, int metaTypeId) const;
-    //std::auto_ptr<PayloadBase> takePayloadBase( int sharedPointerId, int metaTypeId );
     void setPayloadBaseV2(int sharedPointerId, int metaTypeId,
                           std::unique_ptr<Internal::PayloadBase> &p);
     void addPayloadBaseVariant(int sharedPointerId, int metaTypeId,
                                std::unique_ptr<Internal::PayloadBase> &p) const;
-    static void addToLegacyMappingImpl(const QString &mimeType, int sharedPointerId, int metaTypeId,
-                                       std::unique_ptr<Internal::PayloadBase> &p);
 
     /**
      * Try to ensure that we have a variant of the payload for metatype id @a mtid.
@@ -1075,15 +1060,6 @@ template <typename T>
 void Item::setPayload(std::unique_ptr<T> p)
 {
     p.Nope_even_std_unique_ptr_is_not_allowed;
-}
-
-template <typename T>
-void Item::addToLegacyMapping(const QString &mimeType)
-{
-    typedef Internal::PayloadTrait<T> PayloadType;
-    static_assert(!PayloadType::isPolymorphic, "Payload type must not be polymorphic");
-    std::unique_ptr<Internal::PayloadBase> p(new Internal::Payload<T>);
-    addToLegacyMappingImpl(mimeType, PayloadType::sharedPointerId, PayloadType::elementMetaTypeId(), p);
 }
 
 } // namespace Akonadi

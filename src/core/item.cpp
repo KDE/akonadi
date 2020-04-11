@@ -44,102 +44,6 @@ uint Akonadi::qHash(const Akonadi::Item &item)
     return ::qHash(item.id());
 }
 
-namespace
-{
-
-struct ByTypeId {
-    typedef bool result_type;
-    bool operator()(const std::shared_ptr<Internal::PayloadBase> &lhs,
-                    const std::shared_ptr<Internal::PayloadBase> &rhs) const
-    {
-        return strcmp(lhs->typeName(), rhs->typeName()) < 0;
-    }
-};
-
-} // anon namespace
-
-typedef QHash<QString, std::map<std::shared_ptr<Internal::PayloadBase>, std::pair<int, int>, ByTypeId>> LegacyMap;
-Q_GLOBAL_STATIC(LegacyMap, typeInfoToMetaTypeIdMap)
-Q_GLOBAL_STATIC_WITH_ARGS(QReadWriteLock, legacyMapLock, (QReadWriteLock::Recursive))
-
-void Item::addToLegacyMappingImpl(const QString &mimeType, int spid, int mtid,
-                                  std::unique_ptr<Internal::PayloadBase> &p)
-{
-    if (!p.get()) {
-        return;
-    }
-    const std::shared_ptr<Internal::PayloadBase> sp(p.release());
-    const QWriteLocker locker(legacyMapLock());
-    std::pair<int, int> &item = (*typeInfoToMetaTypeIdMap())[mimeType][sp];
-    item.first = spid;
-    item.second = mtid;
-}
-
-namespace
-{
-class MyReadLocker
-{
-public:
-    explicit MyReadLocker(QReadWriteLock *rwl)
-        : rwl(rwl)
-        , locked(false)
-    {
-        if (rwl) {
-            rwl->lockForRead();
-        }
-        locked = true;
-    }
-
-    ~MyReadLocker()
-    {
-        if (rwl && locked) {
-            rwl->unlock();
-        }
-    }
-
-    template <typename T>
-    std::shared_ptr<T> makeUnlockingPointer(T *t)
-    {
-        if (t) {
-            // the bind() doesn't throw, so if shared_ptr
-            // construction line below, or anything else after it,
-            // throws, we're unlocked. Mark us as such:
-            locked = false;
-            const std::shared_ptr<T> result(t, [&](const void *) {
-                rwl->unlock();
-            });
-            // from now on, the shared_ptr is responsible for unlocking
-            return result;
-        } else {
-            return std::shared_ptr<T>();
-        }
-    }
-private:
-    Q_DISABLE_COPY(MyReadLocker)
-    QReadWriteLock *const rwl;
-    bool locked;
-};
-}
-
-static std::shared_ptr<const std::pair<int, int>> lookupLegacyMapping(const QString &mimeType,
-        Internal::PayloadBase *p)
-{
-    MyReadLocker locker(legacyMapLock());
-    const LegacyMap::const_iterator hit = typeInfoToMetaTypeIdMap()->constFind(mimeType);
-    if (hit == typeInfoToMetaTypeIdMap()->constEnd()) {
-        return std::shared_ptr<const std::pair<int, int>>();
-    }
-    const std::shared_ptr<Internal::PayloadBase> sp(p, [ = ](Internal::PayloadBase *) {
-        /*noop*/
-    });
-    const LegacyMap::mapped_type::const_iterator it = hit->find(sp);
-    if (it == hit->end()) {
-        return std::shared_ptr<const std::pair<int, int>>();
-    }
-
-    return locker.makeUnlockingPointer(&it->second);
-}
-
 // Change to something != RFC822 as soon as the server supports it
 const char Item::FullPayload[] = "RFC822";
 
@@ -514,36 +418,6 @@ Item Item::fromUrl(const QUrl &url)
     return Item(itemId);
 }
 
-namespace
-{
-class Dummy
-{
-};
-}
-
-Q_GLOBAL_STATIC(Internal::Payload<Dummy>, dummyPayload)
-
-Internal::PayloadBase *Item::payloadBase() const
-{
-    d_ptr->tryEnsureLegacyPayload();
-    if (d_ptr->mLegacyPayload) {
-        return d_ptr->mLegacyPayload.get();
-    } else {
-        return dummyPayload();
-    }
-}
-
-void ItemPrivate::tryEnsureLegacyPayload() const
-{
-    if (!mLegacyPayload) {
-        for (PayloadContainer::const_iterator it = mPayloads.begin(), end = mPayloads.end(); it != end; ++it) {
-            if (lookupLegacyMapping(mMimeType, it->payload.get())) {
-                mLegacyPayload = it->payload; // clones
-            }
-        }
-    }
-}
-
 Internal::PayloadBase *Item::payloadBaseV2(int spid, int mtid) const
 {
     return d_ptr->payloadBaseImpl(spid, mtid);
@@ -573,10 +447,10 @@ bool Item::ensureMetaTypeId(int mtid) const
         Item converted = ItemSerializer::convert(*this, mtid);
         return d_ptr->movePayloadFrom(converted.d_ptr, mtid);
     } catch (const std::exception &e) {
-        qCDebug(AKONADICORE_LOG) << "conversion threw:" << e.what();
+        qCWarning(AKONADICORE_LOG) << "Item payload conversion threw:" << e.what();
         return false;
     } catch (...) {
-        qCDebug(AKONADICORE_LOG) << "conversion threw something not derived from std::exception: fix the program!";
+        qCCritical(AKONADICORE_LOG, "conversion threw something not derived from std::exception: fix the program!");
         return false;
     }
 }
@@ -597,17 +471,6 @@ static QString format_types(const PayloadContainer &c)
     return result.join(QLatin1String(", "));
 }
 
-#if 0
-QString Item::payloadExceptionText(int spid, int mtid) const
-{
-    if (d_ptr->mPayloads.empty()) {
-        return QStringLiteral("No payload set");
-    } else {
-        return QStringLiteral("Wrong payload type (requested: %1; present: %2")
-               .arg(format_type(spid, mtid), format_types(d_ptr->mPayloads));
-    }
-}
-#else
 void Item::throwPayloadException(int spid, int mtid) const
 {
     if (d_ptr->mPayloads.empty()) {
@@ -618,27 +481,6 @@ void Item::throwPayloadException(int spid, int mtid) const
                                  << "; present: " << format_types(d_ptr->mPayloads) << "), item mime type is" << mimeType();
         throw PayloadException(QStringLiteral("Wrong payload type (requested: %1; present: %2)")
                                .arg(format_type(spid, mtid), format_types(d_ptr->mPayloads)));
-    }
-}
-#endif
-
-void Item::setPayloadBase(Internal::PayloadBase *p)
-{
-    d_ptr->setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase>(p));
-}
-
-void ItemPrivate::setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase> p)
-{
-    if (const std::shared_ptr<const std::pair<int, int>> pair = lookupLegacyMapping(mMimeType, p.get())) {
-        std::unique_ptr<Internal::PayloadBase> clone;
-        if (p.get()) {
-            clone.reset(p->clone());
-        }
-        setPayloadBaseImpl(pair->first, pair->second, p, false);
-        mLegacyPayload.reset(clone.release());
-    } else {
-        mPayloads.clear();
-        mLegacyPayload.reset(p.release());
     }
 }
 
@@ -672,7 +514,7 @@ QVector<int> Item::availablePayloadMetaTypeIds() const
     QVector<int> result;
     result.reserve(d_ptr->mPayloads.size());
     // Stable Insertion Sort - N is typically _very_ low (1 or 2).
-    for (PayloadContainer::const_iterator it = d_ptr->mPayloads.begin(), end = d_ptr->mPayloads.end(); it != end; ++it) {
+    for (auto it = d_ptr->mPayloads.begin(), end = d_ptr->mPayloads.end(); it != end; ++it) {
         result.insert(std::upper_bound(result.begin(), result.end(), it->metaTypeId), it->metaTypeId);
     }
     return result;

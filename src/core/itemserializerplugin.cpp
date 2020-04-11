@@ -26,9 +26,7 @@
 
 using namespace Akonadi;
 
-ItemSerializerPlugin::~ItemSerializerPlugin()
-{
-}
+ItemSerializerPlugin::~ItemSerializerPlugin() = default;
 
 QSet<QByteArray> ItemSerializerPlugin::parts(const Item &item) const
 {

@@ -174,7 +174,6 @@ public:
         : QSharedData()
         , mRevision(-1)
         , mId(id)
-        , mLegacyPayload()
         , mPayloads()
         , mCollectionId(-1)
         , mSize(0)
@@ -204,7 +203,6 @@ public:
         mSize = other.mSize;
         mModificationTime = other.mModificationTime;
         mMimeType = other.mMimeType;
-        mLegacyPayload = other.mLegacyPayload;
         mPayloads = other.mPayloads;
         mFlagsOverwritten = other.mFlagsOverwritten;
         mSizeChanged = other.mSizeChanged;
@@ -239,9 +237,7 @@ public:
 
     bool hasMetaTypeId(int mtid) const
     {
-        return std::find_if(mPayloads.cbegin(), mPayloads.cend(),
-                            _detail::BySharedPointerAndMetaTypeID(-1, mtid))
-               != mPayloads.cend();
+        return std::any_of(mPayloads.cbegin(), mPayloads.cend(), _detail::BySharedPointerAndMetaTypeID(-1, mtid));
     }
 
     Internal::PayloadBase *payloadBaseImpl(int spid, int mtid) const
@@ -260,9 +256,7 @@ public:
         const size_t numMatching = std::count_if(oPayloads.begin(), oPayloads.end(), matcher);
         mPayloads.resize(oldSize + numMatching);
         using namespace std; // for swap()
-        for (PayloadContainer::iterator
-                dst = mPayloads.begin() + oldSize,
-                src = oPayloads.begin(), end = oPayloads.end(); src != end; ++src) {
+        for (auto dst = mPayloads.begin() + oldSize, src = oPayloads.begin(), end = oPayloads.end(); src != end; ++src) {
             if (matcher(*src)) {
                 swap(*dst, *src);
                 ++dst;
@@ -271,29 +265,8 @@ public:
         return numMatching > 0;
     }
 
-#if 0
-    std::auto_ptr<PayloadBase> takePayloadBaseImpl(int spid, int mtid)
-    {
-        PayloadContainer::iterator it
-            = std::find_if(mPayloads.begin(), mPayloads.end(),
-                           _detail::BySharedPointerAndMetaTypeID(spid, mtid));
-        if (it == mPayloads.end()) {
-            return std::auto_ptr<PayloadBase>();
-        }
-        std::rotate(it, it + 1, mPayloads.end());
-        std::auto_ptr<PayloadBase> result(it->payload.release());
-        mPayloads.pop_back();
-        return result;
-    }
-#endif
-
     void setPayloadBaseImpl(int spid, int mtid, std::unique_ptr<Internal::PayloadBase> &p, bool add) const   /*sic!*/
     {
-
-        if (!add) {
-            mLegacyPayload.reset();
-        }
-
         if (!p.get()) {
             if (!add) {
                 mPayloads.clear();
@@ -311,8 +284,6 @@ public:
         tp.metaTypeId = mtid;
     }
 
-    void setLegacyPayloadBaseImpl(std::unique_ptr<Internal::PayloadBase> p);
-    void tryEnsureLegacyPayload() const;
 
     // Utilise the 4-bytes padding from QSharedData
     int mRevision;
@@ -321,7 +292,6 @@ public:
     QString mRemoteRevision;
     mutable QString mPayloadPath;
     mutable QScopedPointer<Collection> mParent;
-    mutable _detail::clone_ptr<Internal::PayloadBase> mLegacyPayload;
     mutable PayloadContainer mPayloads;
     Item::Flags mFlags;
     Tag::List mTags;

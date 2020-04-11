@@ -41,10 +41,7 @@ Q_DECLARE_METATYPE(std::string)
 namespace Akonadi
 {
 
-DefaultItemSerializerPlugin::DefaultItemSerializerPlugin()
-{
-    Item::addToLegacyMapping<QByteArray>(QStringLiteral("application/octet-stream"));
-}
+DefaultItemSerializerPlugin::DefaultItemSerializerPlugin() = default;
 
 bool DefaultItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int)
 {
@@ -187,7 +184,7 @@ QSet<QByteArray> ItemSerializer::allowedForeignParts(const Item &item)
 
 Item ItemSerializer::convert(const Item &item, int mtid)
 {
-//   qCDebug(AKONADICORE_LOG) << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
+    qCDebug(AKONADICORE_LOG) << "asked to convert a" << item.mimeType() << "item to format" << ( mtid ? QMetaType::typeName( mtid ) : "<legacy>" );
     if (!item.hasPayload()) {
         qCDebug(AKONADICORE_LOG) << "  -> but item has no payload!";
         return Item();
