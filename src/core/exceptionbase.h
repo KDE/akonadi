@@ -21,8 +21,11 @@
 #define AKONADI_EXCEPTIONBASE_H
 
 #include "akonadicore_export.h"
+
 #include <QByteArray>
+
 #include <exception>
+#include <memory>
 
 class QString;
 
@@ -43,61 +46,57 @@ public:
     /**
       Creates a new exception with the error message @p what.
     */
-    explicit Exception(const char *what) throw();
+    explicit Exception(const char *what);
 
     /**
       Creates a new exception with the error message @p what.
     */
-    explicit Exception(const QByteArray &what) throw();
+    explicit Exception(const QByteArray &what);
 
     /**
       Creates a new exception with the error message @p what.
     */
-    explicit Exception(const QString &what) throw();
+    explicit Exception(const QString &what);
 
     /**
       Copy constructor.
     */
-    Exception(const Exception &other) throw();
+    Exception(const Exception &other);
+
+    Exception(Exception &&other) = default;
 
     /**
       Destructor.
     */
-    ~Exception() throw() override;
+    ~Exception()  override;
 
     /**
       Returns the error message associated with this exception.
     */
-    const char *what() const throw() override;
+    const char *what() const noexcept override;
 
     /**
       Returns the type of this exception.
     */
-    virtual QByteArray type() const throw(); // ### Akonadi 2: return const char *
+    virtual QByteArray type() const; // ### Akonadi 2: return const char *
 
 private:
     class Private;
-    Private *d;
+    std::unique_ptr<Private> d;
 };
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
 
-#define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE( classname ) \
+#define AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(classname) \
     class AKONADICORE_EXPORT classname : public Akonadi::Exception \
     { \
     public: \
-        classname ( const char *what ) throw() : Akonadi::Exception( what ) \
-        { \
-        } \
-        classname ( const QByteArray &what ) throw() : Akonadi::Exception( what ) \
-        { \
-        } \
-        classname ( const QString &what ) throw() : Akonadi::Exception( what ) \
-        { \
-        } \
-        ~classname() throw(); \
-        QByteArray type() const throw() override; \
+        explicit classname(const char *what): Akonadi::Exception(what) {} \
+        explicit classname(const QByteArray &what): Akonadi::Exception(what) {} \
+        explicit classname(const QString &what): Akonadi::Exception(what) {} \
+        ~classname() override; \
+        QByteArray type() const override; \
     }
 
 AKONADI_EXCEPTION_MAKE_TRIVIAL_INSTANCE(PayloadException);
