@@ -67,6 +67,7 @@ public:
             // TODO
             qCWarning(AKONADIWIDGETS_LOG) << job->errorString();
         }
+        Q_EMIT q->settingsSaved();
     }
 
     void setCurrentPage(const QString &name)
