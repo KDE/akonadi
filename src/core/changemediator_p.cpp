@@ -20,21 +20,15 @@
 
 #include "changemediator_p.h"
 
-#include <QApplication>
+#include <QCoreApplication>
 
-#include "changenotificationdependenciesfactory_p.h"
-#include "notificationsourceinterface.h"
-#include "job_p.h"
-#include "itemmovejob.h"
 #include "collection.h"
 #include "item.h"
 
-
-//static const char mediatorSessionId[] = "MediatorSession"; TODO: remove?
-
 using namespace Akonadi;
 
-Q_GLOBAL_STATIC(ChangeMediator, s_globalChangeMediator)
+class GlobalChangeMediator : public ChangeMediator {};
+Q_GLOBAL_STATIC(GlobalChangeMediator, s_globalChangeMediator)
 
 ChangeMediator *ChangeMediator::instance()
 {
@@ -48,68 +42,57 @@ ChangeMediator *ChangeMediator::instance()
 ChangeMediator::ChangeMediator(QObject *parent)
     : QObject(parent)
 {
-    if (qApp) {
-        this->moveToThread(qApp->thread());
+    if (auto app = QCoreApplication::instance(); app != nullptr) {
+        this->moveToThread(app->thread());
     }
 }
 
 /* static */
 void ChangeMediator::registerMonitor(QObject *monitor)
 {
-    QMetaObject::invokeMethod(instance(), "do_registerMonitor", Q_ARG(QObject *, monitor));
+    QMetaObject::invokeMethod(instance(), [monitor]() {
+        instance()->m_monitors.push_back(monitor);
+    });
 }
 
 /* static */
 void ChangeMediator::unregisterMonitor(QObject *monitor)
 {
-    QMetaObject::invokeMethod(instance(), "do_unregisterMonitor", Q_ARG(QObject *, monitor));
+    QMetaObject::invokeMethod(instance(), [monitor]() {
+        instance()->m_monitors.removeAll(monitor);
+    });
 }
 
 /* static */
 void ChangeMediator::invalidateCollection(const Akonadi::Collection &collection)
 {
-    QMetaObject::invokeMethod(instance(), "do_invalidateCollection", Q_ARG(Akonadi::Collection, collection));
+    QMetaObject::invokeMethod(instance(), [colId = collection.id()]() {
+        for (auto monitor : instance()->m_monitors) {
+            const bool ok = QMetaObject::invokeMethod(monitor, "invalidateCollectionCache", Q_ARG(qint64, colId));
+            Q_ASSERT(ok); Q_UNUSED(ok);
+        }
+    });
 }
 
 /* static */
 void ChangeMediator::invalidateItem(const Akonadi::Item &item)
 {
-    QMetaObject::invokeMethod(instance(), "do_invalidateItem", Q_ARG(Akonadi::Item, item));
+    QMetaObject::invokeMethod(instance(), [itemId = item.id()]() {
+        for (auto monitor : instance()->m_monitors) {
+            const bool ok = QMetaObject::invokeMethod(monitor, "invalidateItemCache", Q_ARG(qint64, itemId));
+            Q_ASSERT(ok); Q_UNUSED(ok);
+        }
+    });
 }
 
 /* static */
 void ChangeMediator::invalidateTag(const Tag &tag)
 {
-    QMetaObject::invokeMethod(instance(), "do_invalidateTag", Q_ARG(Akonadi::Tag, tag));
+    QMetaObject::invokeMethod(instance(), [tagId = tag.id()]() {
+        for (auto monitor : instance()->m_monitors) {
+            const bool ok = QMetaObject::invokeMethod(monitor, "invalidateTagCache", Q_ARG(qint64, tagId));
+            Q_ASSERT(ok); Q_UNUSED(ok);
+        }
+    });
 }
 
-void ChangeMediator::do_registerMonitor(QObject *monitor)
-{
-    m_monitors.append(monitor);
-}
-
-void ChangeMediator::do_unregisterMonitor(QObject *monitor)
-{
-    m_monitors.removeAll(monitor);
-}
-
-void ChangeMediator::do_invalidateCollection(const Akonadi::Collection &collection)
-{
-    for (QObject *monitor : qAsConst(m_monitors)) {
-        QMetaObject::invokeMethod(monitor, "invalidateCollectionCache", Qt::AutoConnection, Q_ARG(qint64, collection.id()));
-    }
-}
-
-void ChangeMediator::do_invalidateItem(const Akonadi::Item &item)
-{
-    for (QObject *monitor : qAsConst(m_monitors)) {
-        QMetaObject::invokeMethod(monitor, "invalidateItemCache", Qt::AutoConnection, Q_ARG(qint64, item.id()));
-    }
-}
-
-void ChangeMediator::do_invalidateTag(const Tag &tag)
-{
-    for (QObject *monitor : qAsConst(m_monitors)) {
-        QMetaObject::invokeMethod(monitor, "invalidateTagCache", Qt::AutoConnection, Q_ARG(qint64, tag.id()));
-    }
-}

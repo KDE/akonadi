@@ -36,9 +36,7 @@ class CommandBuffer;
 class AKONADI_TESTS_EXPORT ChangeNotificationDependenciesFactory
 {
 public:
-    virtual ~ChangeNotificationDependenciesFactory()
-    {
-    }
+    virtual ~ChangeNotificationDependenciesFactory() = default;
 
     virtual Connection *createNotificationConnection(Session *parent, CommandBuffer *commandBuffer);
     virtual void destroyNotificationConnection(Session *parent, Connection *connection);

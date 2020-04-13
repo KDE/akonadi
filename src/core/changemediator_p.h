@@ -24,8 +24,6 @@
 #include <QList>
 #include <QObject>
 
-#include "item.h"
-
 namespace Akonadi
 {
 
@@ -34,13 +32,12 @@ class JobPrivate;
 
 class Collection;
 class Item;
+class Tag;
 
 class ChangeMediator : public QObject
 {
     Q_OBJECT
 public:
-    explicit ChangeMediator(QObject *parent = nullptr);
-
     static ChangeMediator *instance();
 
     static void registerMonitor(QObject *monitor);
@@ -50,15 +47,9 @@ public:
     static void invalidateItem(const Akonadi::Item &item);
     static void invalidateTag(const Akonadi::Tag &tag);
 
-private Q_SLOTS:
-    void do_registerMonitor(QObject *monitor);
-    void do_unregisterMonitor(QObject *monitor);
+protected:
+    explicit ChangeMediator(QObject *parent = nullptr);
 
-    void do_invalidateCollection(const Akonadi::Collection &collection);
-    void do_invalidateItem(const Akonadi::Item &item);
-    void do_invalidateTag(const Akonadi::Tag &tag);
-
-private:
     QList<QObject *> m_monitors;
 };
 
