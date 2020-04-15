@@ -288,6 +288,8 @@ include_directories(
 )
 
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050e00)
+add_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
+add_definitions(-DQT_NO_EMIT)
 
 add_subdirectory(src)
 add_subdirectory(icons)
