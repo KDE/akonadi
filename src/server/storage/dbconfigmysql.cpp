@@ -320,7 +320,10 @@ bool DbConfigMysql::startInternalServer()
             const QList<QByteArray> stats = stat.split(' ');
             if (stats.count() > 1) {
                 // Make sure the PID actually belongs to mysql process
-                if (stats[1] == "(mysqld)") {
+
+                // Linux trims executable name in /proc filesystem to 15 characters
+                const QString expectedProcName = QFileInfo(mMysqldPath).fileName().left(15);
+                if (QString::fromLatin1(stats[1]) == QString::fromLatin1("(%1)").arg(expectedProcName)) {
                     // Yup, our mysqld is actually running, so pretend we started the server
                     // and try to connect to it
                     qCWarning(AKONADISERVER_LOG) << "mysqld for Akonadi is already running, trying to connect to it.";
