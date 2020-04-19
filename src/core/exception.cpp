@@ -70,6 +70,7 @@ Exception::Exception(const Akonadi::Exception &other)
     }
 }
 
+Exception::Exception(Exception &&other) = default;
 Exception::~Exception() = default;
 
 QByteArray Exception::type() const

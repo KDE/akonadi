@@ -63,7 +63,7 @@ public:
     */
     Exception(const Exception &other);
 
-    Exception(Exception &&other) = default;
+    Exception(Exception &&other);
 
     /**
       Destructor.
