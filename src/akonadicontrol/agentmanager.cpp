@@ -24,6 +24,7 @@
 #include "agentmanagerinternaladaptor.h"
 #include "agentprocessinstance.h"
 #include "agentserverinterface.h"
+#include "agentbrokeninstance.h"
 #include "agentthreadinstance.h"
 #include "preprocessor_manager.h"
 #include "processcontrol.h"
@@ -593,12 +594,23 @@ void AgentManager::load()
         file.beginGroup(entries[i]);
 
         const QString agentType = file.value(QStringLiteral("AgentType")).toString();
-        if (!mAgents.contains(agentType)) {
-            qCWarning(AKONADICONTROL_LOG) << "Reference to unknown agent type" << agentType << "in agentsrc";
+        const auto typeIter = mAgents.constFind(agentType);
+        if (typeIter == mAgents.cend() || typeIter->exec.isEmpty()) {
+            qCWarning(AKONADICONTROL_LOG) << "Reference to unknown agent type" << agentType << "in agentsrc, creating a fake entry.";
+            if (typeIter == mAgents.cend()) {
+                AgentType type;
+                type.identifier = type.name = agentType;
+                mAgents.insert(type.identifier, type);
+            }
+
+            auto brokenInstance = AgentInstance::Ptr{new Akonadi::AgentBrokenInstance{agentType, *this}};
+            brokenInstance->setIdentifier(instanceIdentifier);
+            mAgentInstances.insert(instanceIdentifier, brokenInstance);
             file.endGroup();
             continue;
         }
-        const AgentType type = mAgents.value(agentType);
+
+        const AgentType &type = *typeIter;
 
         // recover if the db has been deleted in the meantime or got otherwise corrupted
         if (!knownResources.contains(instanceIdentifier) && type.capabilities.contains(AgentType::CapabilityResource)) {

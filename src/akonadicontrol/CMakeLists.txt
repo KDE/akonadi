@@ -5,6 +5,7 @@ include_directories(BEFORE ${CMAKE_CURRENT_BINARY_DIR})
 set(control_SRCS
     agenttype.cpp
     agentinstance.cpp
+    agentbrokeninstance.cpp
     agentprocessinstance.cpp
     agentthreadinstance.cpp
     agentmanager.cpp
