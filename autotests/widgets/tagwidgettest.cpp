@@ -65,6 +65,7 @@ class TagWidgetTest: public QObject
 
             tagView = widget->findChild<QLineEdit*>(QStringLiteral("tagView"));
             QVERIFY(tagView);
+            QVERIFY(tagView->isReadOnly()); // always read-only
             editButton = widget->findChild<QToolButton*>(QStringLiteral("editButton"));
             QVERIFY(editButton);
 
