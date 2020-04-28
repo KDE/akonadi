@@ -180,6 +180,7 @@ void Connection::doReconnect()
         Q_EMIT socketDisconnected();
     });
     connect(mSocket.data(), &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
+    // note: we temporarily disconnect from readyRead-signal inside handleIncomingData()
     connect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);
 
     // actually do connect
@@ -253,6 +254,10 @@ void Connection::handleIncomingData()
         qint64 tag;
         stream >> tag;
 
+        // temporarily disconnect from readyRead-signal to avoid re-entering this function when we 
+        // call waitForData() deep inside Protocol::deserialize
+        disconnect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);
+
         Protocol::CommandPtr cmd;
         try {
             cmd = Protocol::deserialize(mSocket.data());
@@ -260,6 +265,10 @@ void Connection::handleIncomingData()
             qCWarning(AKONADICORE_LOG) << "Protocol exception:" << e.what();
             // cmd's type will be Invalid by default, so fall-through
         }
+
+        // reconnect to the signal again
+        connect(mSocket.data(), &QLocalSocket::readyRead, this, &Connection::handleIncomingData);
+
         if (!cmd || (cmd->type() == Protocol::Command::Invalid)) {
             qCWarning(AKONADICORE_LOG) << "Invalid command, the world is going to end!";
             mSocket->close();
