@@ -22,7 +22,7 @@
 
 #include <QThread>
 #include <QMutex>
-#include <QDataStream>
+#include "datastream_p_p.h"
 
 #include "fakeakonadiserver.h"
 
@@ -57,7 +57,7 @@ private:
 
     TestScenario::List mScenarios;
     QLocalSocket *mSocket = nullptr;
-    QDataStream mStream;
+    Protocol::DataStream mStream;
 };
 }
 }

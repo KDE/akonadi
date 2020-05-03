@@ -24,6 +24,7 @@
 #include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
 
+#include <QBuffer>
 #include <QTest>
 #include <QMutexLocker>
 #include <QLocalSocket>
@@ -97,7 +98,9 @@ void FakeClient::readServerPart()
                 Protocol::deserialize(mStream.device());
             }
         } else {
-            QDataStream expectedStream(scenario.data);
+            QBuffer buffer(&scenario.data);
+            buffer.open(QIODevice::ReadOnly);
+            Protocol::DataStream expectedStream(&buffer);
             qint64 expectedTag, actualTag;
 
             expectedStream >> expectedTag;

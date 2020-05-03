@@ -269,7 +269,7 @@ private:
     friend AKONADIPRIVATE_EXPORT CommandPtr deserialize(QIODevice *device);
 };
 
-AKONADIPRIVATE_EXPORT void serialize(QIODevice *device, const CommandPtr &command);
+AKONADIPRIVATE_EXPORT void serialize(DataStream &stream, const CommandPtr &command);
 AKONADIPRIVATE_EXPORT CommandPtr deserialize(QIODevice *device);
 AKONADIPRIVATE_EXPORT QString debugString(const Command &command);
 AKONADIPRIVATE_EXPORT inline QString debugString(const CommandPtr &command)

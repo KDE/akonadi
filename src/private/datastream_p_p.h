@@ -50,6 +50,8 @@ public:
     int waitTimeout() const;
     void setWaitTimeout(int timeout);
 
+    void flush();
+
     template<typename T>
     inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
     &operator<<(T val);
@@ -88,6 +90,7 @@ private:
     }
 
     QIODevice *mDev;
+    QByteArray mWriteBuffer;
     int mWaitTimeout;
 };
 
@@ -96,9 +99,7 @@ inline typename std::enable_if<std::is_integral<T>::value, DataStream>::type
 &DataStream::operator<<(T val)
 {
     checkDevice();
-    if (mDev->write((char *)&val, sizeof(T)) != sizeof(T)) {
-        throw Akonadi::ProtocolException("Failed to write data to stream");
-    }
+    writeRawData((char *)&val, sizeof(T));
     return *this;
 }
 

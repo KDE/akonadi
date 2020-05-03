@@ -66,8 +66,10 @@ private:
     {
         QBuffer buf;
         buf.open(QIODevice::ReadWrite);
+        Akonadi::Protocol::DataStream stream(&buf);
 
-        Akonadi::Protocol::serialize(&buf, in);
+        Akonadi::Protocol::serialize(stream, in);
+        stream.flush();
         buf.seek(0);
         return Akonadi::Protocol::deserialize(&buf).staticCast<T>();
 
@@ -82,6 +84,7 @@ private:
 
         Akonadi::Protocol::DataStream stream(&buf);
         stream << in;
+        stream.flush();
         buf.seek(0);
         T out;
         stream >> out;

@@ -161,6 +161,7 @@ Connection::sendResponse(qint64 tag, T &&response)
     Protocol::DataStream stream(m_socket.get());
     stream << tag;
     stream << std::move(response);
+    stream.flush();
     if (!m_socket->waitForBytesWritten()) {
         if (m_socket->state() == QLocalSocket::ConnectedState) {
             throw ProtocolException("Server write timeout");

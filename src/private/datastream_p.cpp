@@ -42,6 +42,20 @@ DataStream::DataStream(QIODevice *device)
 
 DataStream::~DataStream()
 {
+    // No flush() here. Throwing an exception in a destructor would go badly. The caller MUST call flush after writing.
+}
+
+void DataStream::flush()
+{
+    if (!mWriteBuffer.isEmpty()) {
+        const int len = mWriteBuffer.size();
+        int ret = mDev->write(mWriteBuffer);
+        if (ret != len) {
+            // TODO: Try to write data again unless ret is -1?
+            throw ProtocolException("Failed to write all data");
+        }
+        mWriteBuffer.clear();
+    }
 }
 
 void DataStream::waitForData(QIODevice *device, int timeoutMs)
@@ -114,11 +128,7 @@ void DataStream::writeRawData(const char *data, int len)
 {
     checkDevice();
 
-    int ret = mDev->write(data, len);
-    if (ret != len) {
-        // TODO: Try to write data again unless ret is -1?
-        throw ProtocolException("Failed to write all data");
-    }
+    mWriteBuffer += QByteArray::fromRawData(data, len);
 }
 
 void DataStream::writeBytes(const char *bytes, int len)

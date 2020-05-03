@@ -126,9 +126,8 @@ bool CppGenerator::generateDocument(DocumentNode  const *node)
 
 void CppGenerator::writeImplSerializer(DocumentNode  const *node)
 {
-    mImpl << "void serialize(QIODevice *device, const CommandPtr &cmd)\n"
+    mImpl << "void serialize(DataStream &stream, const CommandPtr &cmd)\n"
              "{\n"
-             "    DataStream stream(device);\n"
              "    switch (static_cast<int>(cmd->type() | (cmd->isResponse() ? Command::_ResponseBit : 0))) {\n"
              "    case Command::Invalid:\n"
              "        stream << cmdCast<Command>(cmd);\n"

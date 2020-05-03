@@ -316,7 +316,8 @@ void Connection::doSendCommand(qint64 tag, const Protocol::CommandPtr &cmd)
         Protocol::DataStream stream(mSocket.data());
         try {
             stream << tag;
-            Protocol::serialize(mSocket.data(), cmd);
+            Protocol::serialize(stream, cmd);
+            stream.flush();
         } catch (const Akonadi::ProtocolException &e) {
             qCWarning(AKONADICORE_LOG) << "Protocol Exception:" << QString::fromUtf8(e.what());
             mSocket->close();

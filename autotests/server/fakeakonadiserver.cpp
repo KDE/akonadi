@@ -66,14 +66,15 @@ TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
     QBuffer buffer(&sc.data);
     buffer.open(QIODevice::ReadWrite);
     {
-        QDataStream stream(&buffer);
+        Protocol::DataStream stream(&buffer);
         stream << tag;
-        Protocol::serialize(&buffer, response);
+        Protocol::serialize(stream, response);
+        stream.flush();
     }
 
     {
         buffer.seek(0);
-        QDataStream os(&buffer);
+        Protocol::DataStream os(&buffer);
         qint64 cmpTag;
         os >> cmpTag;
         Q_ASSERT(cmpTag == tag);
