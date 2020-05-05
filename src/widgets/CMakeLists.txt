@@ -35,6 +35,7 @@ set(akonadiwidgets_SRCS
     subscriptiondialog.cpp
     tageditwidget.cpp
     tagmanagementdialog.cpp
+    tagselectioncombobox.cpp
     tagselectiondialog.cpp
     tagwidget.cpp
     tagselectwidget.cpp
@@ -88,6 +89,7 @@ ecm_generate_headers(AkonadiWidgets_HEADERS
     StandardActionManager
     SubscriptionDialog
     TagManagementDialog
+    TagSelectionComboBox
     TagSelectionDialog
     TagEditWidget
     TagWidget
