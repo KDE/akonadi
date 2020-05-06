@@ -450,10 +450,11 @@ public:
         model->setData(QModelIndex(), false, EntityTreeModel::PendingCutRole);
         markCutAction(mimeData, cut);
         QApplication::clipboard()->setMimeData(mimeData);
-
-        const auto rows = safeSelectedRows(selectionModel);
-        for (const auto &index : rows) {
-            model->setData(index, true, EntityTreeModel::PendingCutRole);
+        if (cut) {
+            const auto rows = safeSelectedRows(selectionModel);
+            for (const auto &index : rows) {
+                model->setData(index, true, EntityTreeModel::PendingCutRole);
+            }
         }
 #endif
     }
