@@ -74,7 +74,6 @@ public:
          qInstallMessageHandler(mOldHandler);
 
          mEnabled = false;
-         delete mAkonadiConsoleInterface;
      }
 
      static RemoteLogger *self()
@@ -85,17 +84,16 @@ public:
 private Q_SLOTS:
     void serviceRegistered(const QString &service)
     {
-        delete mAkonadiConsoleInterface;
-        mAkonadiConsoleInterface = new QDBusInterface(service,
+        mAkonadiConsoleInterface = std::make_unique<QDBusInterface>(service,
                                                       QStringLiteral(AKONADICONSOLE_LOGGER_PATH),
                                                       QStringLiteral(AKONADICONSOLE_LOGGER_INTERFACE),
                                                       QDBusConnection::sessionBus(), this);
         if (!mAkonadiConsoleInterface->isValid()) {
-            delete mAkonadiConsoleInterface;
+            mAkonadiConsoleInterface.reset();
             return;
         }
 
-        connect(mAkonadiConsoleInterface, SIGNAL(enabledChanged(bool)),
+        connect(mAkonadiConsoleInterface.get(), SIGNAL(enabledChanged(bool)),
                 this, SLOT(onAkonadiConsoleLoggingEnabled(bool)));
 
         QTimer::singleShot(0, this, [this]() {
@@ -115,8 +113,7 @@ private Q_SLOTS:
     void serviceUnregistered(const QString &)
     {
         onAkonadiConsoleLoggingEnabled(false);
-        delete mAkonadiConsoleInterface;
-        mAkonadiConsoleInterface = nullptr;
+        mAkonadiConsoleInterface.reset();
     }
 
     void onAkonadiConsoleLoggingEnabled(bool enabled)
@@ -192,7 +189,7 @@ private:
     QDBusServiceWatcher mWatcher;
     QLoggingCategory::CategoryFilter mOldFilter = nullptr;
     QtMessageHandler mOldHandler = nullptr;
-    QDBusInterface *mAkonadiConsoleInterface = nullptr;
+    std::unique_ptr<QDBusInterface> mAkonadiConsoleInterface;
     bool mEnabled = false;
 
     static RemoteLogger *sInstance;
