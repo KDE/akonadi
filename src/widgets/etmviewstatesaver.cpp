@@ -114,3 +114,13 @@ void ETMViewStateSaver::selectItems(const QList< Item::Id > &list)
     }
     restoreSelection(itemStrings);
 }
+
+void ETMViewStateSaver::setCurrentItem(const Akonadi::Item &item)
+{
+    restoreCurrentItem(QStringLiteral("i%1").arg(item.id()));
+}
+
+void ETMViewStateSaver::setCurrentCollection(const Akonadi::Collection &col)
+{
+    restoreCurrentItem(QStringLiteral("c%1").arg(col.id()));
+}

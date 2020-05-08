@@ -43,6 +43,9 @@ public:
     void selectItems(const Akonadi::Item::List &list);
     void selectItems(const QList<Akonadi::Item::Id> &list);
 
+    void setCurrentItem(const Akonadi::Item &item);
+    void setCurrentCollection(const Akonadi::Collection &collection);
+
 protected:
     /* reimp */
     QModelIndex indexFromConfigString(const QAbstractItemModel *model, const QString &key) const override;
