@@ -287,7 +287,7 @@ include_directories(
     src
 )
 
-#add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050e00)
+#add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050f00)
 add_definitions(-DQT_NO_SIGNALS_SLOTS_KEYWORDS)
 add_definitions(-DQT_NO_EMIT)
 
