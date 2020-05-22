@@ -16,6 +16,8 @@
   signal send set=kill peer=mysqld_akonadi,
   signal send set=term peer=mysqld_akonadi,
 
+  ptrace read peer=mysqld_akonadi,
+
   dbus (send)
       bus=session
       interface=org.freedesktop.DBus,
