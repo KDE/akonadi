@@ -18,7 +18,6 @@
 */
 
 
-#include "test_utils.h"
 #include "entitytreemodel.h"
 #include "control.h"
 #include "entitytreemodel_p.h"
@@ -112,7 +111,7 @@ InspectableETM *FavoriteProxyTest::createETM()
  */
 void FavoriteProxyTest::testItemAdded()
 {
-    Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
 
     InspectableETM *model = createETM();
 

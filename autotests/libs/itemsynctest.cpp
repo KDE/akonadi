@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-#include "test_utils.h"
-
 #include "agentmanager.h"
 #include "agentinstance.h"
 #include "control.h"
@@ -115,7 +113,7 @@ private Q_SLOTS:
 
     void testFullSync()
     {
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
@@ -164,7 +162,7 @@ private Q_SLOTS:
         QFETCH(ItemSync::TransactionMode, transactionMode);
         QFETCH(bool, goToEventLoopAfterAddingItems);
 
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
         QCOMPARE(origItems.size(), 15);
@@ -228,7 +226,7 @@ private Q_SLOTS:
             AKVERIFYEXEC(select);
         }
 
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
         QCOMPARE(origItems.size(), 15);
@@ -298,7 +296,7 @@ private Q_SLOTS:
 
     void testIncrementalStreamingSync()
     {
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
@@ -348,7 +346,7 @@ private Q_SLOTS:
 
     void testEmptyIncrementalSync()
     {
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
@@ -377,7 +375,7 @@ private Q_SLOTS:
 
     void testIncrementalStreamingSyncBatchProcessing()
     {
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
@@ -438,7 +436,7 @@ private Q_SLOTS:
 
     void testGidMerge()
     {
-        Collection col(collectionIdFromPath(QStringLiteral("res3")));
+        Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
         {
             Item item(QStringLiteral("application/octet-stream"));
             item.setRemoteId(QStringLiteral("rid1"));
@@ -486,7 +484,7 @@ private Q_SLOTS:
      */
     void testFailingJob()
     {
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
@@ -539,7 +537,7 @@ private Q_SLOTS:
      */
     void testFailingDueToDuplicateItem()
     {
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
 
@@ -592,7 +590,7 @@ private Q_SLOTS:
 
     void testFullSyncFailingDueToDuplicateItem()
     {
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
         //Create a duplicate that will trigger an error during the first batch
@@ -627,7 +625,7 @@ private Q_SLOTS:
     void testFullSyncManyItems()
     {
         // Given a collection with 1000 items
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/foo2")));
         QVERIFY(col.isValid());
 
         auto monitor = createCollectionMonitor(col);
@@ -670,7 +668,7 @@ private Q_SLOTS:
     void testUserCancel()
     {
         // Given a collection with 100 items
-        const Collection col = Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/foo2")));
         QVERIFY(col.isValid());
 
         const Item::List itemsToDelete = fetchItems(col);

@@ -28,7 +28,6 @@
 #include "itemmodifyjob.h"
 #include "resourceselectjob_p.h"
 #include "monitor.h"
-#include "test_utils.h"
 
 #include <QObject>
 
@@ -58,7 +57,7 @@ private Q_SLOTS:
 
     void testDelete()
     {
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         ItemFetchJob *fjob = new ItemFetchJob(Item(1), this);
@@ -80,7 +79,7 @@ private Q_SLOTS:
 
     void testDeleteFromUnselectedCollection()
     {
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         const QString path = QLatin1String("res1") +
@@ -114,14 +113,14 @@ private Q_SLOTS:
 
     void testRidDelete()
     {
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         {
             ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
             AKVERIFYEXEC(select);
         }
-        const Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
 
         Item i;
@@ -153,7 +152,7 @@ private Q_SLOTS:
 
     void testTagDelete()
     {
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         // Create tag
@@ -164,7 +163,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(tjob);
         tag = tjob->tag();
 
-        const Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
 
         Item i;
@@ -197,10 +196,10 @@ private Q_SLOTS:
 
     void testCollectionDelete()
     {
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
-        const Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         ItemFetchJob *fjob = new ItemFetchJob(col, this);
         AKVERIFYEXEC(fjob);
         auto items = fjob->items();

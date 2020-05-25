@@ -20,11 +20,9 @@
  */
 
 #include "qtest_akonadi.h"
-#include <qnamespace.h>
-#include <qtestmouse.h>
+
 #include <shared/aktest.h>
 #include <shared/akscopeguard.h>
-#include "../libs/test_utils.h"
 
 #include "subscriptiondialog.h"
 #include "subscriptionmodel_p.h"
@@ -205,7 +203,7 @@ private Q_SLOTS:
 
     void testSubscribedOnlyCheckbox()
     {
-        const auto col = Collection{collectionIdFromPath(QStringLiteral("res1/foo/bla"))};
+        const auto col = Collection{AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bla"))};
         const AkScopeGuard guard([col]() {
             TestSetup::subscribeCollection(col);
         });
@@ -226,7 +224,7 @@ private Q_SLOTS:
 
     void testSubscribeButton()
     {
-        const auto col = Collection{collectionIdFromPath(QStringLiteral("res1/foo/bla"))};
+        const auto col = Collection{AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bla"))};
         const AkScopeGuard guard([col]() {
             TestSetup::subscribeCollection(col);
         });
@@ -240,7 +238,7 @@ private Q_SLOTS:
         QTest::mouseClick(test.subscribeButton, Qt::LeftButton);
         QVERIFY(test.isCollectionChecked(col));
 
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy monitorSpy(monitor.get(), &Monitor::collectionSubscribed);
         test.acceptDialog();
         QVERIFY(monitorSpy.wait());
@@ -248,7 +246,7 @@ private Q_SLOTS:
 
     void testUnsubscribeButton()
     {
-        const auto col = Collection{collectionIdFromPath(QStringLiteral("res1/foo/bla"))};
+        const auto col = Collection{AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bla"))};
 
         TestSetup test;
         QVERIFY(test.valid);
@@ -257,7 +255,7 @@ private Q_SLOTS:
         QTest::mouseClick(test.unsubscribeButton, Qt::LeftButton);
         QVERIFY(!test.isCollectionChecked(col));
 
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy monitorSpy(monitor.get(), &Monitor::collectionUnsubscribed);
         test.acceptDialog();
         QVERIFY(monitorSpy.wait());

@@ -17,7 +17,7 @@
     02110-1301, USA.
 */
 
-#include "test_utils.h"
+#include "qtest_akonadi.h"
 
 #include "collection.h"
 #include "item.h"

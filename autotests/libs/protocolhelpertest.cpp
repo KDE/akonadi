@@ -17,9 +17,9 @@
     02110-1301, USA.
 */
 
-#include "test_utils.h"
 #include "protocolhelper.cpp"
 #include "attributestorage.cpp"
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 

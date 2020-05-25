@@ -19,8 +19,6 @@
 
 #include <QObject>
 
-#include "test_utils.h"
-
 #include "entitytreemodel.h"
 #include "control.h"
 #include "entitytreemodel_p.h"
@@ -93,7 +91,7 @@ void LazyPopulationTest::initTestCase()
     AkonadiTest::checkTestIsIsolated();
     AkonadiTest::setAllResourcesOffline();
 
-    res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
 
     //Set up a bunch of collections that we can select to purge a collection from the buffer
 

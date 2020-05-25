@@ -19,7 +19,6 @@
 
 #include <QObject>
 
-#include "test_utils.h"
 #include "control.h"
 #include "tagcreatejob.h"
 #include "tagfetchjob.h"
@@ -309,7 +308,7 @@ void TagTest::testDeleteRIDIsolation()
         QVERIFY(createJob->tag().isValid());
     }
 
-    auto monitor = getTestMonitor();
+    auto monitor = AkonadiTest::getTestMonitor();
     QSignalSpy signalSpy(monitor.get(), &Monitor::tagRemoved);
 
     TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
@@ -506,7 +505,7 @@ void TagTest::testTagItem()
     monitor.setAllMonitored(true);
     QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -544,7 +543,7 @@ void TagTest::testTagItem()
 
 void TagTest::testCreateItem()
 {
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -572,7 +571,7 @@ void TagTest::testCreateItem()
 
 void TagTest::testFetchTagIdWithItem()
 {
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -604,7 +603,7 @@ void TagTest::testFetchTagIdWithItem()
 
 void TagTest::testFetchFullTagWithItem()
 {
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);
@@ -640,7 +639,7 @@ void TagTest::testFetchFullTagWithItem()
 
 void TagTest::testModifyItemWithTagByGID()
 {
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     {
         Tag tag;
         tag.setGid("gid2");
@@ -679,7 +678,7 @@ void TagTest::testModifyItemWithTagByRID()
         AKVERIFYEXEC(select);
     }
 
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     Tag tag3;
     {
         tag3.setGid("gid3");
@@ -846,7 +845,7 @@ void TagTest::testTagAttributeConfusionBug()
 
 void TagTest::testFetchItemsByTag()
 {
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     Tag tag;
     {
         TagCreateJob *createjob = new TagCreateJob(Tag(QStringLiteral("gid1")), this);

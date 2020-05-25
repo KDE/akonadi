@@ -27,7 +27,6 @@
 #include "itemfetchscope.h"
 #include "itemcreatejob.h"
 
-#include "test_utils.h"
 #include "qtest_akonadi.h"
 
 #include <QObject>
@@ -53,7 +52,7 @@ private Q_SLOTS:
 
     void testCopy()
     {
-        const Collection target(collectionIdFromPath(QStringLiteral("res3")));
+        const Collection target(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
         QVERIFY(target.isValid());
 
         ItemCopyJob *copy = new ItemCopyJob(Item(1), target);
@@ -104,7 +103,7 @@ private Q_SLOTS:
         file.write("123456789");
         file.close();
 
-        const Collection source(collectionIdFromPath(QStringLiteral("res2")));
+        const Collection source(AkonadiTest::collectionIdFromPath(QStringLiteral("res2")));
 
         Item item(QStringLiteral("application/octet-stream"));
         item.setPayloadPath(file.fileName());
@@ -113,7 +112,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(create);
         item = create->item();
 
-        const Collection target(collectionIdFromPath(QStringLiteral("res2/space folder")));
+        const Collection target(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
         auto copy = new ItemCopyJob(item, target, this);
         AKVERIFYEXEC(copy);
 

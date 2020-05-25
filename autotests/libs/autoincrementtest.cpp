@@ -28,7 +28,6 @@
 #include "itemdeletejob.h"
 
 #include <qtest_akonadi.h>
-#include "test_utils.h"
 
 using namespace Akonadi;
 
@@ -40,10 +39,10 @@ void AutoIncrementTest::initTestCase()
     Control::start();
     AkonadiTest::setAllResourcesOffline();
 
-    itemTargetCollection = Collection(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    itemTargetCollection = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(itemTargetCollection.isValid());
 
-    collectionTargetCollection = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    collectionTargetCollection = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     QVERIFY(collectionTargetCollection.isValid());
 }
 
@@ -87,7 +86,7 @@ void AutoIncrementTest::testItemAutoIncrement()
 
     // Restart the server, then test item creation again. The new id of the item
     // should be higher than all ids before.
-    restartAkonadiServer();
+    AkonadiTest::restartAkonadiServer();
     ItemCreateJob *job = createItemCreateJob();
     AKVERIFYEXEC(job);
     Item newItem = job->item();
@@ -119,7 +118,7 @@ void AutoIncrementTest::testCollectionAutoIncrement()
 
     // Restart the server, then test collection creation again. The new id of the collection
     // should be higher than all ids before.
-    restartAkonadiServer();
+    AkonadiTest::restartAkonadiServer();
 
     CollectionCreateJob *job = createCollectionCreateJob(0);
     AKVERIFYEXEC(job);

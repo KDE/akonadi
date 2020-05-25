@@ -18,10 +18,10 @@
 */
 
 #include "itemappendtest.h"
+#include "qtest_akonadi.h"
 
 #include "control.h"
 #include "testattribute.h"
-#include "test_utils.h"
 
 #include "agentinstance.h"
 #include "agentmanager.h"
@@ -60,7 +60,7 @@ void ItemAppendTest::testItemAppend_data()
 
 void ItemAppendTest::testItemAppend()
 {
-    const Collection testFolder1(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    const Collection testFolder1(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(testFolder1.isValid());
 
     QFETCH(QString, remoteId);
@@ -116,7 +116,7 @@ void ItemAppendTest::testContent_data()
 
 void ItemAppendTest::testContent()
 {
-    const Collection testFolder1(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    const Collection testFolder1(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(testFolder1.isValid());
 
     QFETCH(QByteArray, data);
@@ -148,7 +148,7 @@ void ItemAppendTest::testContent()
 
 void ItemAppendTest::testNewMimetype()
 {
-    const Collection col(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(col.isValid());
 
     Item item;
@@ -167,7 +167,7 @@ void ItemAppendTest::testNewMimetype()
 
 void ItemAppendTest::testIllegalAppend()
 {
-    const Collection testFolder1(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    const Collection testFolder1(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(testFolder1.isValid());
 
     Item item;
@@ -178,7 +178,7 @@ void ItemAppendTest::testIllegalAppend()
     QVERIFY(!job->exec());
 
     // adding item into a collection which can't handle items of this type
-    const Collection col(collectionIdFromPath(QStringLiteral("res1/foo/bla")));
+    const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bla")));
     QVERIFY(col.isValid());
     job = new ItemCreateJob(item, col, this);
     QEXPECT_FAIL("", "Test not yet implemented in the server.", Continue);
@@ -187,7 +187,7 @@ void ItemAppendTest::testIllegalAppend()
 
 void ItemAppendTest::testMultipartAppend()
 {
-    const Collection testFolder1(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    const Collection testFolder1(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(testFolder1.isValid());
 
     Item item;
@@ -253,7 +253,7 @@ void ItemAppendTest::testItemSize()
     QFETCH(Akonadi::Item, item);
     QFETCH(qint64, size);
 
-    const Collection col(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(col.isValid());
 
     ItemCreateJob *create = new ItemCreateJob(item, col, this);
@@ -328,7 +328,7 @@ void ItemAppendTest::testItemMerge()
     QFETCH(Akonadi::Item, mergedItem);
     QFETCH(bool, silent);
 
-    const Collection col(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(col.isValid());
 
     ItemCreateJob *create = new ItemCreateJob(item1, col, this);
@@ -364,7 +364,7 @@ void ItemAppendTest::testItemMerge()
 
 void ItemAppendTest::testForeignPayload()
 {
-    const Collection col(collectionIdFromPath(QStringLiteral("res2/space folder")));
+    const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(col.isValid());
 
     const QString filePath = QString::fromUtf8(qgetenv("TMPDIR")) + QStringLiteral("/foreignPayloadFile.mbox");

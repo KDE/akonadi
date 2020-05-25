@@ -22,7 +22,6 @@
 #include <sys/types.h>
 
 #include <qtest_akonadi.h>
-#include "test_utils.h"
 #include "testattribute.h"
 
 #include "agentmanager.h"
@@ -440,7 +439,7 @@ void CollectionJobTest::testModify_data()
     QTest::addColumn<qint64>("uid");
     QTest::addColumn<QString>("rid");
 
-    QTest::newRow("uid") << collectionIdFromPath(QStringLiteral("res1/foo")) << QString();
+    QTest::newRow("uid") << AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")) << QString();
     QTest::newRow("rid") << -1ll << QStringLiteral("10");
 }
 

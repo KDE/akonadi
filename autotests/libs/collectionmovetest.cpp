@@ -17,8 +17,7 @@
     02110-1301, USA.
 */
 
-#include "test_utils.h"
-
+#include "qtest_akonadi.h"
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionmovejob.h"
@@ -43,9 +42,9 @@ private Q_SLOTS:
         QTest::addColumn<Collection>("source");
         QTest::addColumn<Collection>("destination");
 
-        const Collection res1(collectionIdFromPath(QStringLiteral("res1")));
-        const Collection res1foo(collectionIdFromPath(QStringLiteral("res1/foo")));
-        const Collection res1bla(collectionIdFromPath(QStringLiteral("res1/foo/bar/bla")));
+        const Collection res1(AkonadiTest::collectionIdFromPath(QStringLiteral("res1")));
+        const Collection res1foo(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection res1bla(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar/bla")));
 
         QTest::newRow("non-existing-target") << res1 << Collection(INT_MAX);
         QTest::newRow("root") << Collection::root() << res1;
@@ -71,11 +70,11 @@ private Q_SLOTS:
         QTest::addColumn<Collection>("destination");
         QTest::addColumn<bool>("crossResource");
 
-        QTest::newRow("inter-resource") << Collection(collectionIdFromPath(QStringLiteral("res1")))
-                                        << Collection(collectionIdFromPath(QStringLiteral("res2")))
+        QTest::newRow("inter-resource") << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1")))
+                                        << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2")))
                                         << true;
-        QTest::newRow("intra-resource") << Collection(collectionIdFromPath(QStringLiteral("res1/foo/bla")))
-                                        << Collection(collectionIdFromPath(QStringLiteral("res1/foo/bar/bla")))
+        QTest::newRow("intra-resource") << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bla")))
+                                        << Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar/bla")))
                                         << false;
     }
 

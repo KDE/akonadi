@@ -30,7 +30,6 @@
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "qtest_akonadi.h"
-#include "test_utils.h"
 #include "itemserializer_p.h"
 #include "itemserializerplugin.h"
 
@@ -133,9 +132,8 @@ void GidTest::testSetAndFetch()
 
 void GidTest::testCreate()
 {
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1/foo/bar"), this);
-    AKVERIFYEXEC(resolver);
-    int colId = resolver->collection();
+    const int colId = AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar"));
+    QVERIFY(colId > -1);
 
     Item item;
     item.setMimeType(QStringLiteral("application/octet-stream"));
@@ -175,10 +173,8 @@ void GidTest::testSetWithIgnorePayload()
 
 void GidTest::testFetchScope()
 {
-
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1/foo/bar"), this);
-    AKVERIFYEXEC(resolver);
-    int colId = resolver->collection();
+    const int colId = AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar"));
+    QVERIFY(colId > -1);
 
     Item item;
     item.setMimeType(QStringLiteral("application/octet-stream"));

@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-#include "test_utils.h"
-
 #include "collection.h"
 #include "control.h"
 #include "itemfetchjob.h"
@@ -52,12 +50,12 @@ private Q_SLOTS:
         QTest::addColumn<Collection>("destination");
         QTest::addColumn<Collection>("source");
 
-        Collection destination(collectionIdFromPath(QStringLiteral("res1/foo/bar")));
+        Collection destination(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar")));
         QVERIFY(destination.isValid());
 
         QTest::newRow("intra-res single uid") << (Item::List() << Item(5)) << destination << Collection();
 
-        destination = Collection(collectionIdFromPath(QStringLiteral("res3")));
+        destination = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
         QVERIFY(destination.isValid());
 
         QTest::newRow("inter-res single uid") << (Item::List() << Item(1)) << destination << Collection();
@@ -125,7 +123,7 @@ private Q_SLOTS:
 
     void testIllegalMove()
     {
-        Collection col(collectionIdFromPath(QStringLiteral("res2")));
+        Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res2")));
         QVERIFY(col.isValid());
 
         ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1));
@@ -137,7 +135,7 @@ private Q_SLOTS:
         ItemMoveJob *store = new ItemMoveJob(item, Collection(INT_MAX), this);
         QVERIFY(!store->exec());
 
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy itemMovedSpy(monitor.get(), &Monitor::itemsMoved);
 
         // move item into folder that doesn't support its mimetype
@@ -151,11 +149,11 @@ private Q_SLOTS:
 
     void testMoveNotifications()
     {
-        auto monitor = getTestMonitor();
+        auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy itemMovedSpy(monitor.get(), &Monitor::itemsMoved);
         QSignalSpy itemAddedSpy(monitor.get(), &Monitor::itemAdded);
 
-        Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
+        Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         Item item(QStringLiteral("application/octet-stream"));
         item.setFlags({ "\\SEEN", "$ENCRYPTED" });
         item.setPayload(QByteArray("This is a test payload"));
@@ -170,7 +168,7 @@ private Q_SLOTS:
         QCOMPARE(ntfItem.id(), item.id());
         QCOMPARE(ntfItem.flags(), item.flags());
 
-        Collection dest(collectionIdFromPath(QStringLiteral("res1/foo/bar")));
+        Collection dest(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar")));
         auto move = new ItemMoveJob(item, dest, this);
         AKVERIFYEXEC(move);
 

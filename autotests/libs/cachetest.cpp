@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-#include "test_utils.h"
-
 #include "collection.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
@@ -28,6 +26,7 @@
 #include "agentmanager.h"
 #include "agentinstance.h"
 #include "itemcopyjob.h"
+#include "qtest_akonadi.h"
 
 #include <QHash>
 
@@ -53,7 +52,7 @@ private Q_SLOTS:
     }
     void testRetrievalErrorBurst() // caused rare server crashs with old item retrieval code
     {
-        Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
+        Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(col.isValid());
 
         enableAgent(QStringLiteral("akonadi_knut_resource_0"), false);
@@ -134,7 +133,7 @@ private Q_SLOTS:
 
         enableAgent(QStringLiteral("akonadi_knut_resource_0"), resourceEnabled);
 
-        Collection dest(collectionIdFromPath(QStringLiteral("res3")));
+        Collection dest(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
         QVERIFY(dest.isValid());
 
         ItemCopyJob *copy = new ItemCopyJob(item, dest, this);

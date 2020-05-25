@@ -20,9 +20,6 @@
  */
 
 #include "qtest_akonadi.h"
-#include <iterator>
-#include <qnamespace.h>
-#include <qtestmouse.h>
 #include <shared/aktest.h>
 
 #include "tagwidget.h"

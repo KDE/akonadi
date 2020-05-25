@@ -19,12 +19,12 @@
  *
  */
 
-#include "test_utils.h"
 #include "collectioncreatejob.h"
 #include "collectionfetchjob.h"
 #include "collectionmodifyjob.h"
 #include "collectiondeletejob.h"
 #include "entitydisplayattribute.h"
+#include "qtest_akonadi.h"
 
 using namespace Akonadi;
 
@@ -43,7 +43,7 @@ private Q_SLOTS:
         Collection col;
         col.setName(QLatin1String("test_collection"));
         col.setContentMimeTypes({ Collection::mimeType() });
-        col.setParentCollection(Collection(collectionIdFromPath(QLatin1String("res1"))));
+        col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QLatin1String("res1"))));
         col.setRights(Collection::AllRights);
 
         CollectionCreateJob *cj = new CollectionCreateJob(col, this);

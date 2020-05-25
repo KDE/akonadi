@@ -34,7 +34,6 @@
 #include "itemmodifyjob_p.h"
 #include "resourceselectjob_p.h"
 #include "qtest_akonadi.h"
-#include "test_utils.h"
 
 using namespace Akonadi;
 
@@ -51,11 +50,11 @@ void ItemStoreTest::initTestCase()
     AttributeFactory::registerAttribute<TestAttribute>();
 
     // get the collections we run the tests on
-    res1_foo = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+    res1_foo = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
     QVERIFY(res1_foo.isValid());
-    res2 = Collection(collectionIdFromPath(QStringLiteral("res2")));
+    res2 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2")));
     QVERIFY(res2.isValid());
-    res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
     QVERIFY(res3.isValid());
 
     AkonadiTest::setAllResourcesOffline();

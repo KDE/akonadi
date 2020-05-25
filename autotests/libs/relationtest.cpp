@@ -19,7 +19,6 @@
 
 #include <QObject>
 
-#include "test_utils.h"
 #include "control.h"
 #include "relationcreatejob.h"
 #include "relationfetchjob.h"
@@ -60,7 +59,7 @@ void RelationTest::initTestCase()
 
 void RelationTest::testCreateFetch()
 {
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3{AkonadiTest::collectionIdFromPath(QStringLiteral("res3"))};
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
@@ -120,7 +119,7 @@ void RelationTest::testMonitor()
     monitor.setTypeMonitored(Akonadi::Monitor::Relations);
     QVERIFY(AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady));
 
-    const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3{AkonadiTest::collectionIdFromPath(QStringLiteral("res3"))};
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));

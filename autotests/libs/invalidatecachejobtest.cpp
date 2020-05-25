@@ -23,7 +23,6 @@
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "qtest_akonadi.h"
-#include "test_utils.h"
 #include "control.h"
 
 using namespace Akonadi;
@@ -47,7 +46,7 @@ void InvalidateCacheJobTest::initTestCase()
 void InvalidateCacheJobTest::shouldClearPayload()
 {
     // Find collection by name
-    Collection col(collectionIdFromPath(QStringLiteral("res1/foo")));
+    Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
     const int colId = col.id();
     QVERIFY(colId > 0);
 

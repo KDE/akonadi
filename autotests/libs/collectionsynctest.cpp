@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-#include "test_utils.h"
-
 #include "agentmanager.h"
 #include "agentinstance.h"
 #include "control.h"

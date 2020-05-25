@@ -18,7 +18,6 @@
 */
 
 #include "monitortest.h"
-#include "test_utils.h"
 #include "agentmanager.h"
 #include "agentinstance.h"
 #include "monitor.h"
@@ -57,7 +56,7 @@ void MonitorTest::initTestCase()
     AkonadiTest::checkTestIsIsolated();
     Control::start();
 
-    res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
 
     AkonadiTest::setAllResourcesOffline();
 }
@@ -278,7 +277,7 @@ void MonitorTest::testMonitor()
     imvspy.clear();
 
     // Unsubscribe and re-subscribed a collection that existed before the monitor was created.
-    Collection subCollection = Collection(collectionIdFromPath(QStringLiteral("res2/foo2")));
+    Collection subCollection = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/foo2")));
     subCollection.setName(QStringLiteral("foo2"));
     QVERIFY(subCollection.isValid());
 
@@ -351,7 +350,7 @@ void MonitorTest::testMonitor()
     QVERIFY(irmspy.isEmpty());
 
     // move a collection
-    Collection dest = Collection(collectionIdFromPath(QStringLiteral("res1/foo")));
+    Collection dest = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
     CollectionMoveJob *cmove = new CollectionMoveJob(monitorCol, dest, this);
     AKVERIFYEXEC(cmove);
 

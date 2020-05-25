@@ -17,8 +17,6 @@
     02110-1301, USA.
 */
 
-#include "test_utils.h"
-
 #include "agentmanager.h"
 #include "agentinstance.h"
 #include "control.h"
@@ -106,7 +104,7 @@ private Q_SLOTS:
 
     void newTagWithItems()
     {
-        const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+        const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
         AKVERIFYEXEC(select);
 
@@ -177,7 +175,7 @@ private Q_SLOTS:
 
     void existingTagWithItems()
     {
-        const Collection res3 = Collection(collectionIdFromPath(QStringLiteral("res3")));
+        const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
 
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
         AKVERIFYEXEC(select);

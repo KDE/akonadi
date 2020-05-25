@@ -26,7 +26,6 @@
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "qtest_akonadi.h"
-#include "test_utils.h"
 
 #include <QDebug>
 
@@ -85,7 +84,7 @@ private Q_SLOTS:
         QFETCH(int, count);
         QFETCH(int, size);
 
-        const Collection parent(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection parent(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(parent.isValid());
 
         Item item(QStringLiteral("application/octet-stream"));

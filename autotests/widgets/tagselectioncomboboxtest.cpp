@@ -20,10 +20,6 @@
  */
 
 #include "qtest_akonadi.h"
-#include <qnamespace.h>
-#include <qtestkeyboard.h>
-#include <qtestmouse.h>
-#include <qtestsupport_core.h>
 #include <shared/aktest.h>
 
 #include "tagselectioncombobox.h"

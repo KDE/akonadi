@@ -19,8 +19,6 @@
 
 #include <QObject>
 
-#include "test_utils.h"
-
 #include "entitytreemodel.h"
 #include "control.h"
 #include "entitytreemodel_p.h"
@@ -157,7 +155,7 @@ void EtmPopulationTest::initTestCase()
     AkonadiTest::checkTestIsIsolated();
     AkonadiTest::setAllResourcesOffline();
 
-    res = Collection(collectionIdFromPath(QStringLiteral("res3")));
+    res = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
 
     mainCollectionName = QStringLiteral("main");
     monitorCol = createCollection(mainCollectionName, res);

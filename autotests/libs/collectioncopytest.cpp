@@ -25,7 +25,7 @@
 #include "item.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "test_utils.h"
+#include "qtest_akonadi.h"
 
 #include <QObject>
 
@@ -50,8 +50,8 @@ private Q_SLOTS:
 
     void testCopy()
     {
-        const Collection target(collectionIdFromPath(QStringLiteral("res3")));
-        Collection source(collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection target(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
+        Collection source(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
         QVERIFY(target.isValid());
         QVERIFY(source.isValid());
 

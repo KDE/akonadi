@@ -20,12 +20,20 @@
 #ifndef QTEST_AKONADI_H
 #define QTEST_AKONADI_H
 
-#include <agentinstance.h>
-#include <agentmanager.h>
+#include "agentinstance.h"
+#include "agentmanager.h"
+#include "servermanager.h"
+#include "collectionpathresolver.h"
+#include "monitor.h"
+#include "collectionfetchscope.h"
+#include "itemfetchscope.h"
 
 #include <QTest>
 #include <QSignalSpy>
 #include <QTimer>
+#include <QDBusConnection>
+#include <QDBusInterface>
+#include <QDBusReply>
 
 /**
 * \short Akonadi Replacement for QTEST_MAIN from QTestLib
@@ -111,6 +119,89 @@ bool akWaitForSignal(const QObject *sender, const char *member, int timeout = 10
     }();
     return ok;
 }
+
+qint64 collectionIdFromPath(const QString &path)
+{
+    Akonadi::CollectionPathResolver *resolver = new Akonadi::CollectionPathResolver(path);
+    bool success = resolver->exec();
+    if (!success) {
+        qDebug() << "path resolution for " << path << " failed: " << resolver->errorText();
+        return -1;
+    }
+    qint64 id = resolver->collection();
+    return id;
+}
+
+QString testrunnerServiceName()
+{
+    const QString pid = QString::fromLocal8Bit(qgetenv("AKONADI_TESTRUNNER_PID"));
+    Q_ASSERT(!pid.isEmpty());
+    return QStringLiteral("org.kde.Akonadi.Testrunner-") + pid;
+}
+
+bool restartAkonadiServer()
+{
+    QDBusInterface testrunnerIface(testrunnerServiceName(),
+                                   QStringLiteral("/"),
+                                   QStringLiteral("org.kde.Akonadi.Testrunner"),
+                                   QDBusConnection::sessionBus());
+    if (!testrunnerIface.isValid()) {
+        qWarning() << "Unable to get a dbus interface to the testrunner!";
+    }
+
+    QDBusReply<void> reply = testrunnerIface.call(QStringLiteral("restartAkonadiServer"));
+    if (!reply.isValid()) {
+        qWarning() << reply.error();
+        return false;
+    } else if (Akonadi::ServerManager::isRunning()) {
+        return true;
+    } else {
+        bool ok = false;
+        [&]() {
+            QSignalSpy spy(Akonadi::ServerManager::self(), &Akonadi::ServerManager::started);
+            QTRY_VERIFY_WITH_TIMEOUT(spy.count() > 0, 10000);
+            ok = true;
+        }();
+        return ok;
+    }
+}
+
+bool trackAkonadiProcess(bool track)
+{
+    QDBusInterface testrunnerIface(testrunnerServiceName(),
+                                   QStringLiteral("/"),
+                                   QStringLiteral("org.kde.Akonadi.Testrunner"),
+                                   QDBusConnection::sessionBus());
+    if (!testrunnerIface.isValid()) {
+        qWarning() << "Unable to get a dbus interface to the testrunner!";
+    }
+
+    QDBusReply<void> reply = testrunnerIface.call(QStringLiteral("trackAkonadiProcess"), track);
+    if (!reply.isValid()) {
+        qWarning() << reply.error();
+        return false;
+    } else {
+        return true;
+    }
+}
+
+std::unique_ptr<Akonadi::Monitor> getTestMonitor()
+{
+    auto m = new Akonadi::Monitor();
+    m->fetchCollection(true);
+    m->setCollectionMonitored(Akonadi::Collection::root(), true);
+    m->setAllMonitored(true);
+    auto &itemFS = m->itemFetchScope();
+    itemFS.setAncestorRetrieval(Akonadi::ItemFetchScope::All);
+    auto &colFS = m->collectionFetchScope();
+    colFS.setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
+
+    QSignalSpy readySpy(m, &Akonadi::Monitor::monitorReady);
+    readySpy.wait();
+
+    return std::unique_ptr<Akonadi::Monitor>(m);
+}
+
 
 } // namespace
 

@@ -24,7 +24,6 @@
 #include "transactionjobs.h"
 
 #include "qtest_akonadi.h"
-#include "test_utils.h"
 
 using namespace Akonadi;
 
@@ -58,7 +57,7 @@ private Q_SLOTS:
         QFETCH(int, count);
         QFETCH(bool, useTransaction);
 
-        const Collection parent(collectionIdFromPath(QLatin1String("res3")));
+        const Collection parent(AkonadiTest::collectionIdFromPath(QLatin1String("res3")));
         QVERIFY(parent.isValid());
 
         static int index = 0;
