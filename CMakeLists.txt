@@ -35,7 +35,7 @@ include(ECMSetupQtPluginMacroNames)
 
 include(AkonadiMacros)
 
-set(QT_REQUIRED_VERSION "5.12.0")
+set(QT_REQUIRED_VERSION "5.13.0")
 set(RELEASE_SERVICE_VERSION "20.07.40")
 set(AKONADI_FULL_VERSION "${PIM_VERSION} (${RELEASE_SERVICE_VERSION})")
 
