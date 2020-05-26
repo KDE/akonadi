@@ -178,7 +178,7 @@ private:
     };
 
     template<typename ... Ts>
-    using FuncHelper = decltype(Akonadi::invoke(std::declval<Ts>() ...))(Ts ...);
+    using FuncHelper = decltype(std::invoke(std::declval<Ts>() ...))(Ts ...);
     using IteratorValueType = typename ResultOf<FuncHelper<TransformFn, typename IteratorTrait<Iterator>::value_type>>::type;
 public:
     using value_type = IteratorValueType;
@@ -193,7 +193,7 @@ public:
 
     auto operator*() const
     {
-        return Akonadi::invoke(mFn, *this->mIter);
+        return std::invoke(mFn, *this->mIter);
     }
 
 private:
@@ -208,7 +208,7 @@ public:
         : IteratorBase<FilterIterator, RangeLike>(iter, range)
         , mPredicate(predicate), mEnd(end)
     {
-        while (this->mIter != mEnd && !Akonadi::invoke(mPredicate, *this->mIter)) {
+        while (this->mIter != mEnd && !std::invoke(mPredicate, *this->mIter)) {
             ++this->mIter;
         }
     }
@@ -218,7 +218,7 @@ public:
         if (this->mIter != mEnd) {
             do {
                 ++this->mIter;
-            } while (this->mIter != mEnd && !Akonadi::invoke(mPredicate, *this->mIter));
+            } while (this->mIter != mEnd && !std::invoke(mPredicate, *this->mIter));
         }
         return *this;
     }
@@ -416,7 +416,7 @@ auto operator|(const RangeLike &range, AkRanges::detail::ForEachTag_<UnaryOperat
 {
     std::for_each(std::cbegin(range), std::cend(range),
                   [op = std::move(op)](const auto &val) mutable {
-                      Akonadi::invoke(op.mFn, val);
+                      std::invoke(op.mFn, val);
                   });
     return range;
 }
