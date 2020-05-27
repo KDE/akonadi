@@ -317,7 +317,7 @@ void SelfTestDialog::testMySQLServerConfig()
     }
 
     QStandardItem *item = nullptr;
-    const QString globalConfig = StandardDirs::locateResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
+    const QString globalConfig = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-global.conf"));
     const QFileInfo globalConfigInfo(globalConfig);
     if (!globalConfig.isEmpty() && globalConfigInfo.exists() && globalConfigInfo.isReadable()) {
         item = report(Success, ki18n("MySQL server default configuration found."),
@@ -330,7 +330,7 @@ void SelfTestDialog::testMySQLServerConfig()
                      "Check your Akonadi installation is complete and you have all required access rights."));
     }
 
-    const QString localConfig  = StandardDirs::locateResourceFile("config", QStringLiteral("akonadi/mysql-local.conf"));
+    const QString localConfig  = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-local.conf"));
     const QFileInfo localConfigInfo(localConfig);
     if (localConfig.isEmpty() || !localConfigInfo.exists()) {
         report(Skip, ki18n("MySQL server custom configuration not available."),
