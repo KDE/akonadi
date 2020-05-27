@@ -373,7 +373,7 @@ bool DbConfigMysql::startInternalServer()
         }
 
         // first run, some MySQL versions need a mysql_install_db run for that
-        const QString confFile = StandardDirs::locateResourceFile("config", QStringLiteral("akonadi/mysql-global.conf"));
+        const QString confFile = StandardDirs::locateResourceFile("config", QStringLiteral("mysql-global.conf"));
         if (QDir(dataDir).entryList(QDir::NoDotAndDotDot | QDir::AllEntries).isEmpty()) {
             if (isMariaDB) {
                 initializeMariaDBDatabase(confFile, dataDir);
