@@ -31,3 +31,5 @@ if (NOT MSVC)
     # causes some weird linking issues.
     add_unit_test(protocoltest.cpp)
 endif()
+add_unit_test(imapparsertest.cpp)
+add_unit_test(imapsettest.cpp)

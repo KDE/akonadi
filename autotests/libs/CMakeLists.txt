@@ -34,9 +34,6 @@ add_executable(akonadi-firstrun
 )
 target_link_libraries( akonadi-firstrun  Qt5::Test Qt5::Core KF5::AkonadiCore KF5::AkonadiPrivate KF5::ConfigCore Qt5::Widgets)
 
-# qtestlib unit tests
-add_akonadi_test(imapparsertest.cpp)
-# It need KIMAP add_akonadi_test(imapsettest.cpp)
 add_akonadi_test(itemhydratest.cpp)
 add_akonadi_test(itemtest.cpp)
 add_akonadi_test(itemserializertest.cpp)
