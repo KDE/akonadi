@@ -131,11 +131,21 @@ void EntityTreeModel::clearAndReset()
 
 QHash<int, QByteArray> EntityTreeModel::roleNames() const
 {
-    QHash<int, QByteArray> names = QAbstractItemModel::roleNames();
-    names.insert(EntityTreeModel::UnreadCountRole, "unreadCount");
-    names.insert(EntityTreeModel::FetchStateRole, "fetchState");
-    names.insert(EntityTreeModel::ItemIdRole, "itemId");
-    return names;
+    return {
+        { Qt::DecorationRole, "decoration" },
+        { Qt::DisplayRole, "display" },
+
+        { EntityTreeModel::ItemIdRole, "itemId" },
+        { EntityTreeModel::CollectionIdRole, "collectionId" },
+
+        { EntityTreeModel::UnreadCountRole, "unreadCount" },
+        // TODO: expose when states for reporting of fetching payload parts of items is changed
+        // { EntityTreeModel::FetchStateRole, "fetchState" },
+        { EntityTreeModel::EntityUrlRole, "url" },
+        { EntityTreeModel::RemoteIdRole, "remoteId" },
+        { EntityTreeModel::IsPopulatedRole, "isPopulated" },
+        { EntityTreeModel::CollectionRole, "collection" }
+    };
 }
 
 int EntityTreeModel::columnCount(const QModelIndex &parent) const
