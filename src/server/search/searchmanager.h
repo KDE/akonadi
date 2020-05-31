@@ -96,7 +96,7 @@ private Q_SLOTS:
      *
      * This method has to be called using QMetaObject::invokeMethod.
      */
-    void updateSearchImpl(const Collection &collection);
+    void updateSearchImpl(const Akonadi::Server::Collection &collection);
 
 private:
     void init() override;

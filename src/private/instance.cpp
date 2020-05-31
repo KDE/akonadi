@@ -20,47 +20,49 @@
 #include "instance_p.h"
 
 #include <QString>
+#include <QGlobalStatic>
 
 using namespace Akonadi;
 
 namespace
 {
-static QString sIdentifier;
+
+Q_GLOBAL_STATIC(QString, sIdentifier);
 
 static void loadIdentifier()
 {
-    sIdentifier = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
-    if (sIdentifier.isNull()) {
+    *sIdentifier = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
+    if (sIdentifier->isNull()) {
         // QString is null by default, which means it wasn't initialized
         // yet. Set it to empty when it is initialized
-        sIdentifier = QStringLiteral("");
+        *sIdentifier = QStringLiteral(""); // clazy:exclude=empty-qstringliteral
     }
 }
 }
 
 bool Instance::hasIdentifier()
 {
-    if (::sIdentifier.isNull()) {
+    if (::sIdentifier->isNull()) {
         ::loadIdentifier();
     }
-    return !sIdentifier.isEmpty();
+    return !sIdentifier->isEmpty();
 }
 
 void Instance::setIdentifier(const QString &identifier)
 {
     if (identifier.isNull()) {
         qunsetenv("AKONADI_INSTANCE");
-        ::sIdentifier = QStringLiteral("");
+        *::sIdentifier = QStringLiteral(""); // clazy:exclude=empty-qstringliteral
     } else {
-        ::sIdentifier = identifier;
+        *::sIdentifier = identifier;
         qputenv("AKONADI_INSTANCE", identifier.toUtf8());
     }
 }
 
 QString Instance::identifier()
 {
-    if (::sIdentifier.isNull()) {
+    if (::sIdentifier->isNull()) {
         ::loadIdentifier();
     }
-    return ::sIdentifier;
+    return *::sIdentifier;
 }

@@ -48,7 +48,7 @@ public:
     const ItemRetrievalResult &result() const { return m_result; }
 
 Q_SIGNALS:
-    void requestCompleted(AbstractItemRetrievalJob *job);
+    void requestCompleted(Akonadi::Server::AbstractItemRetrievalJob *job);
 
 protected:
     ItemRetrievalResult m_result;

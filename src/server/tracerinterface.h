@@ -45,9 +45,7 @@ public:
         Json
     };
 
-    virtual ~TracerInterface()
-    {
-    }
+    virtual ~TracerInterface() = default;
 
     /**
      * This method is called whenever a new data (imap) connection to the akonadi server
@@ -107,6 +105,9 @@ public:
     virtual void error(const QString &componentName, const QString &msg) = 0;
 
     virtual ConnectionFormat connectionFormat() const {return DebugString;}
+
+private:
+    Q_DISABLE_COPY_MOVE(TracerInterface);
 };
 
 } // namespace Server

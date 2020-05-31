@@ -56,7 +56,6 @@ protected:
     bool hasChanged(const Collection &collection, const Collection &changed) override;
     bool shouldScheduleCollection(const Collection &collection) override;
 
-protected Q_SLOTS:
     void collectionExpired(const Collection &collection) override;
 
 private:

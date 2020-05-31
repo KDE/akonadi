@@ -92,7 +92,7 @@ protected:
 private Q_SLOTS:
     void schedulerTimeout();
     void startScheduler();
-    void scheduleCollection(/*sic!*/ Collection collection, bool shouldStartScheduler = true);
+    void scheduleCollection(/*sic!*/ Akonadi::Server::Collection collection, bool shouldStartScheduler = true);
 
 private:
     using ScheduleMap = QMultiMap<TimePoint /*timestamp*/, Collection>;

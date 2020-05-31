@@ -49,6 +49,9 @@ public:
     virtual ~AbstractItemRetrievalJobFactory() = default;
 
     virtual AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) = 0;
+
+private:
+    Q_DISABLE_COPY_MOVE(AbstractItemRetrievalJobFactory)
 };
 
 /** Manages and processes item retrieval requests. */
@@ -82,7 +85,7 @@ private Q_SLOTS:
 
     void serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner);
     void processRequest();
-    void retrievalJobFinished(AbstractItemRetrievalJob *job);
+    void retrievalJobFinished(Akonadi::Server::AbstractItemRetrievalJob *job);
 
 protected:
     std::unique_ptr<AbstractItemRetrievalJobFactory> mJobFactory;

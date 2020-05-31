@@ -79,6 +79,11 @@ public:
         connectionOutput(identifier, msg);
     }
 
+    /**
+     * Returns the currently activated tracer type.
+     */
+    QString currentTracer() const;
+
 public Q_SLOTS:
     /**
      * This method is called whenever a new data (imap) connection to the akonadi server
@@ -150,11 +155,6 @@ public Q_SLOTS:
      * Convenience method for QT_NO_CAST_FROM_ASCII usage.
      */
     void error(const char *componentName, const QString &msg);
-
-    /**
-     * Returns the currently activated tracer type.
-     */
-    QString currentTracer() const;
 
     /**
      * Activates the given tracer type.

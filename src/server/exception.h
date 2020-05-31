@@ -50,15 +50,10 @@ public:
     {
     }
 
-    Exception(const Exception &other) throw()
-        : std::exception(other)
-        , mWhat(other.what())
-    {
-    }
+    Exception(const Exception &) = delete;
+    Exception &operator=(const Exception &) = delete;
 
-    virtual ~Exception() throw()
-    {
-    }
+    virtual ~Exception() throw() = default;
 
     const char *what() const throw() override {
         return mWhat.constData();

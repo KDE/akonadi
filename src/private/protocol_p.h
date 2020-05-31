@@ -34,6 +34,7 @@
 #include "tristate_p.h"
 #include "scope_p.h"
 
+//clazy:excludeall=function-args-by-value
 
 /**
   @file protocol_p.h Shared constants used in the communication protocol between

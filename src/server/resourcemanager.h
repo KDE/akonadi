@@ -40,10 +40,11 @@ class ResourceManager : public QObject
 public:
     explicit ResourceManager(Tracer &tracer);
 
+    QStringList resourceInstances() const;
+
 public Q_SLOTS:
     void addResourceInstance(const QString &name, const QStringList &capabilities);
     void removeResourceInstance(const QString &name);
-    QStringList resourceInstances() const;
 
 private:
     Tracer &mTracer;

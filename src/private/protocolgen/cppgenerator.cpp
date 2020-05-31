@@ -60,6 +60,8 @@ void CppGenerator::writeHeaderHeader(DocumentNode const *node)
     mHeader << "// This is an auto-generated file.\n"
                "// Any changes to this file will be overwritten\n"
                "\n"
+               "// clazy:excludeall=function-args-by-value\n"
+               "\n"
                "namespace Akonadi {\n"
                "namespace Protocol {\n"
                "\n"
@@ -87,6 +89,8 @@ void CppGenerator::writeImplHeader(DocumentNode const *node)
 {
     mImpl << "// This is an auto-generated file.\n"
              "// Any changes to this file will be overwritten\n"
+             "\n"
+             "// clazy:excludeall=function-args-by-value\n"
              "\n"
              "namespace Akonadi {\n"
              "namespace Protocol {\n"

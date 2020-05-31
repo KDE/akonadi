@@ -62,6 +62,7 @@ namespace {
 
 class AkonadiDataStore : public DataStore
 {
+    Q_OBJECT
 public:
     AkonadiDataStore(AkonadiServer &server):
         DataStore(server)
@@ -470,3 +471,5 @@ QString AkonadiServer::serverPath() const
 {
     return StandardDirs::saveDir("config");
 }
+
+#include "akonadi.moc"

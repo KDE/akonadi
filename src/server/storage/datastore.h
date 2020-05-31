@@ -43,8 +43,13 @@ class DataStore;
 class DataStoreFactory
 {
 public:
+    explicit DataStoreFactory() = default;
+
     virtual ~DataStoreFactory() = default;
     virtual DataStore *createStore() = 0;
+
+private:
+    Q_DISABLE_COPY_MOVE(DataStoreFactory)
 };
 
 class NotificationCollector;

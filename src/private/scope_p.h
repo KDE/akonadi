@@ -64,6 +64,8 @@ public:
         HRID &operator=(const HRID &other);
         HRID &operator=(HRID &&other);
 
+        ~HRID() = default;
+
         bool isEmpty() const;
         bool operator==(const HRID &other) const;
 

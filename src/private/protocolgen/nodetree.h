@@ -36,7 +36,12 @@ public:
     };
 
     Node(NodeType type, Node *parent);
+    Node(const Node &) = delete;
+    Node(Node &&) = delete;
     virtual ~Node();
+
+    Node &operator=(const Node &) = delete;
+    Node &operator=(Node &&) = delete;
 
     NodeType type() const;
     Node *parent() const;

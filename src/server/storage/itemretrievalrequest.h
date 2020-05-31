@@ -40,7 +40,7 @@ class ItemRetrievalRequest
 public:
     struct Id {
         explicit Id(uint32_t value): mValue(value) {};
-        bool operator==(const Id &other) const { return mValue == other.mValue; }
+        bool operator==(Id other) const { return mValue == other.mValue; }
     private:
         uint32_t mValue;
         Id next() { return Id{++mValue}; }

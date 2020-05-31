@@ -32,6 +32,8 @@
 
 #include <cassert>
 
+// clazy:excludeall=function-args-by-value
+
 #undef AKONADI_DECLARE_PRIVATE
 #define AKONADI_DECLARE_PRIVATE(Class) \
 inline Class##Private* Class::d_func() {\

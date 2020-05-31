@@ -93,7 +93,7 @@ private Q_SLOTS:
             return;
         }
 
-        connect(mAkonadiConsoleInterface.get(), SIGNAL(enabledChanged(bool)),
+        connect(mAkonadiConsoleInterface.get(), SIGNAL(enabledChanged(bool)),  // clazy:exclude=old-style-connect
                 this, SLOT(onAkonadiConsoleLoggingEnabled(bool)));
 
         QTimer::singleShot(0, this, [this]() {
