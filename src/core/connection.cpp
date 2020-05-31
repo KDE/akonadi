@@ -212,7 +212,7 @@ void Connection::doForceReconnect()
     Q_ASSERT(QThread::currentThread() == thread());
 
     if (mSocket) {
-        mSocket->disconnect(this, SIGNAL(socketDisconnected()));
+        disconnect(mSocket.get(), &QLocalSocket::disconnected, this, &Connection::socketDisconnected);
         mSocket->disconnectFromServer();
         mSocket.reset();
     }

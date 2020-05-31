@@ -58,19 +58,6 @@ Exception::Exception(const QString &what)
     }
 }
 
-Exception::Exception(const Akonadi::Exception &other)
-    : std::exception(other)
-{
-    if (!other.d) {
-        return;
-    }
-    try {
-        d = std::make_unique<Private>(*other.d);
-    } catch (...) {
-    }
-}
-
-Exception::Exception(Exception &&other) = default;
 Exception::~Exception() = default;
 
 QByteArray Exception::type() const

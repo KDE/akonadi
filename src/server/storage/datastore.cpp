@@ -63,8 +63,8 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-static QMutex sTransactionMutex;
 bool DataStore::s_hasForeignKeyConstraints = false;
+QMutex DataStore::sTransactionMutex = {};
 
 static QThreadStorage<DataStore *> sInstances;
 

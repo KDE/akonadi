@@ -108,9 +108,6 @@ private:
     //@cond PRIVATE
     ResourceSynchronizationJobPrivate *const d;
     friend class ResourceSynchronizationJobPrivate;
-
-    Q_PRIVATE_SLOT(d, void slotSynchronized())
-    Q_PRIVATE_SLOT(d, void slotTimeout())
     //@endcond
 };
 

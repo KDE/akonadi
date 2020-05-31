@@ -54,8 +54,7 @@ public:
         for (const Collection &collection : qAsConst(collections)) {
             ItemFetchJob *itemFetchJob = new ItemFetchJob(collection, mParent);
             itemFetchJob->setFetchScope(mFetchScope);
-            mParent->connect(itemFetchJob, SIGNAL(result(KJob*)),
-                             mParent, SLOT(itemFetchResult(KJob*)));
+            mParent->connect(itemFetchJob, &KJob::result, mParent, [this](KJob *job) { itemFetchResult(job) ;});
 
             mFetchCount++;
         }

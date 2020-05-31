@@ -58,7 +58,7 @@ bool DbUpdater::run()
     Q_ASSERT(QThread::currentThread() == QCoreApplication::instance()->thread());
 
     // TODO error handling
-    SchemaVersion currentVersion = SchemaVersion::retrieveAll().first();
+    auto currentVersion = SchemaVersion::retrieveAll().at(0);
 
     UpdateSet::Map updates;
 

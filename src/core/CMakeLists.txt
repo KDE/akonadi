@@ -267,6 +267,8 @@ qt5_add_dbus_interface(akonadicore_dbus_SRCS ${akonadicore_dbus_xml} notificatio
 qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.AgentManager.xml)
 qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Tracer.xml)
 qt5_add_dbus_interfaces(akonadicore_dbus_SRCS ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Agent.Control.xml)
+qt5_add_dbus_interfaces(akonadicore_dbus_SRCS
+    ${Akonadi_SOURCE_DIR}/src/interfaces/org.freedesktop.Akonadi.Resource.xml)
 
 set(akonadicore_SRCS
     ${akonadicore_base_SRCS}

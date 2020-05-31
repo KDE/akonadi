@@ -48,6 +48,12 @@ public:
      * If you want to clear the gid from the database return QString("").
      */
     virtual QString extractGid(const Item &item) const = 0;
+
+protected:
+    explicit GidExtractorInterface() = default;
+
+private:
+    Q_DISABLE_COPY_MOVE(GidExtractorInterface)
 };
 
 }

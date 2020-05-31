@@ -133,15 +133,7 @@ private:
     friend class ::FakeNotificationConnection;
     friend class ChangeNotificationDependenciesFactory;
 
-    Q_PRIVATE_SLOT(d, void reconnect())
-    Q_PRIVATE_SLOT(d, void socketError(const QString &error))
-    Q_PRIVATE_SLOT(d, void socketDisconnected())
     Q_PRIVATE_SLOT(d, bool handleCommands())
-    Q_PRIVATE_SLOT(d, void doStartNext())
-    Q_PRIVATE_SLOT(d, void jobDone(KJob *))
-    Q_PRIVATE_SLOT(d, void jobWriteFinished(Akonadi::Job *))
-    Q_PRIVATE_SLOT(d, void jobDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d, void serverStateChanged(Akonadi::ServerManager::State))
     //@endcond PRIVATE
 };
 

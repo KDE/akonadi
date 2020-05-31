@@ -88,10 +88,10 @@ private Q_SLOTS:
     void testAgentServiceName()
     {
         akTestSetInstanceIdentifier(QString());
-        QCOMPARE(DBus::agentServiceName(QLatin1String("akonadi_maildir_resource_0"), DBus::Agent), QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0"));
+        QCOMPARE(DBus::agentServiceName(QStringLiteral("akonadi_maildir_resource_0"), DBus::Agent), QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0"));
 
         akTestSetInstanceIdentifier(QStringLiteral("foo"));
-        QCOMPARE(DBus::agentServiceName(QLatin1String("akonadi_maildir_resource_0"), DBus::Agent), QLatin1String("org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo"));
+        QCOMPARE(DBus::agentServiceName(QStringLiteral("akonadi_maildir_resource_0"), DBus::Agent), QStringLiteral("org.freedesktop.Akonadi.Agent.akonadi_maildir_resource_0.foo"));
     }
 
     void testParseInstanceIdentifier_data()

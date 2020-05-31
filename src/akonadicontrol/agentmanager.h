@@ -63,7 +63,6 @@ public:
      */
     void cleanup();
 
-public Q_SLOTS:
     /**
      * Returns the list of identifiers of all available
      * agent types.

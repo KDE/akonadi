@@ -116,10 +116,6 @@ private:
     //@cond PRIVATE
     friend class Akonadi::AgentInstanceCreateJobPrivate;
     AgentInstanceCreateJobPrivate *const d;
-
-    Q_PRIVATE_SLOT(d, void agentInstanceAdded(const Akonadi::AgentInstance &))
-    Q_PRIVATE_SLOT(d, void doConfigure())
-    Q_PRIVATE_SLOT(d, void timeout())
     //@endcond
 };
 

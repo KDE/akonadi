@@ -65,7 +65,7 @@ NotificationSubscriber::NotificationSubscriber(NotificationManager *manager, qui
             this, &NotificationSubscriber::socketDisconnected);
     mSocket->setSocketDescriptor(socketDescriptor);
 
-    const SchemaVersion schema = SchemaVersion::retrieveAll().first();
+    const SchemaVersion schema = SchemaVersion::retrieveAll().at(0);
 
     auto hello = Protocol::HelloResponsePtr::create();
     hello->setServerName(QStringLiteral("Akonadi"));

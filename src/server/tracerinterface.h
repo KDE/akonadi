@@ -20,6 +20,8 @@
 #ifndef AKONADI_TRACERINTERFACE_H
 #define AKONADI_TRACERINTERFACE_H
 
+#include <QtGlobal>
+
 class QByteArray;
 class QString;
 
@@ -105,6 +107,9 @@ public:
     virtual void error(const QString &componentName, const QString &msg) = 0;
 
     virtual ConnectionFormat connectionFormat() const {return DebugString;}
+
+protected:
+    explicit TracerInterface() = default;
 
 private:
     Q_DISABLE_COPY_MOVE(TracerInterface);

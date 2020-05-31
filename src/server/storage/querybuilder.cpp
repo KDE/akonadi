@@ -89,7 +89,7 @@ static QLatin1String sortOrderToString(Query::SortOrder order)
     return QLatin1String("");
 }
 
-static void appendJoined(QString *statement, const QStringList &strings, const QLatin1String &glue = QLatin1String(", "))
+static void appendJoined(QString *statement, const QStringList &strings, QLatin1String glue = QLatin1String(", "))
 {
     for (int i = 0, c = strings.size(); i < c; ++i) {
         *statement += strings.at(i);

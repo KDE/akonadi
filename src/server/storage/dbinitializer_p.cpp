@@ -110,16 +110,15 @@ QString DbInitializerMySql::buildColumnStatement(const ColumnDescription &column
 QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const
 {
     QMap<QString, QString> data = dataDescription.data;
-    QMutableMapIterator<QString, QString> it(data);
-    while (it.hasNext()) {
-        it.next();
+    QStringList keys, values;
+    for (auto it = data.begin(), end = data.end(); it != end; ++it) {
         it.value().replace(QLatin1String("\\"), QLatin1String("\\\\"));
+        keys.push_back(it.key());
+        values.push_back(it.value());
     }
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
-           .arg(tableDescription.name,
-                QStringList(data.keys()).join(QLatin1Char(',')),
-                QStringList(data.values()).join(QLatin1Char(',')));
+           .arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(QLatin1Char(',')));
 }
 
 QStringList DbInitializerMySql::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
@@ -216,17 +215,16 @@ QString DbInitializerSqlite::buildColumnStatement(const ColumnDescription &colum
 QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const
 {
     QMap<QString, QString> data = dataDescription.data;
-    QMutableMapIterator<QString, QString> it(data);
-    while (it.hasNext()) {
-        it.next();
+    QStringList keys, values;
+    for (auto it = data.begin(), end = data.end(); it != end; ++it) {
         it.value().replace(QLatin1String("true"), QLatin1String("1"));
         it.value().replace(QLatin1String("false"), QLatin1String("0"));
+        keys.push_back(it.key());
+        values.push_back(it.value());
     }
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
-           .arg(tableDescription.name,
-                QStringList(data.keys()).join(QLatin1Char(',')),
-                QStringList(data.values()).join(QLatin1Char(',')));
+           .arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(QLatin1Char(',')));
 }
 
 QString DbInitializerSqlite::sqlValue(const ColumnDescription &col, const QString &value) const
@@ -348,12 +346,14 @@ QString DbInitializerPostgreSql::buildColumnStatement(const ColumnDescription &c
 
 QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const
 {
-    QMap<QString, QString> data = dataDescription.data;
+    QStringList keys, values;
+    for (auto it = dataDescription.data.cbegin(), end = dataDescription.data.cend(); it != end; ++it) {
+        keys.push_back(it.key());
+        values.push_back(it.value());
+    }
 
     return QStringLiteral("INSERT INTO %1 (%2) VALUES (%3)")
-           .arg(tableDescription.name,
-                QStringList(data.keys()).join(QLatin1Char(',')),
-                QStringList(data.values()).join(QLatin1Char(',')));
+           .arg(tableDescription.name, keys.join(QLatin1Char(',')), values.join(QLatin1Char(',')));
 }
 
 QStringList DbInitializerPostgreSql::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const

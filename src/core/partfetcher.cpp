@@ -155,9 +155,7 @@ void PartFetcher::start()
     scope.fetchPayloadPart(d->m_partName);
     ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob(item, session);
     itemFetchJob->setFetchScope(scope);
-
-    connect(itemFetchJob, SIGNAL(result(KJob*)),
-            this, SLOT(fetchJobDone(KJob*)));
+    connect(itemFetchJob, &KJob::result, this, [d](KJob *job) { d->fetchJobDone(job); });
 }
 
 QModelIndex PartFetcher::index() const

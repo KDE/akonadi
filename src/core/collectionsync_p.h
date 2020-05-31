@@ -130,13 +130,6 @@ protected:
 private:
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void localCollectionsReceived(const Akonadi::Collection::List &localCols))
-    Q_PRIVATE_SLOT(d, void localCollectionFetchResult(KJob *job))
-    Q_PRIVATE_SLOT(d, void updateLocalCollectionResult(KJob *job))
-    Q_PRIVATE_SLOT(d, void createLocalCollectionResult(KJob *job))
-    Q_PRIVATE_SLOT(d, void deleteLocalCollectionsResult(KJob *job))
-    Q_PRIVATE_SLOT(d, void transactionSequenceResult(KJob *job))
 };
 
 }

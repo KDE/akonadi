@@ -198,7 +198,7 @@ void Monitor::ignoreSession(Session *session)
 
     if (!d->sessions.contains(session->sessionId())) {
         d->sessions << session->sessionId();
-        connect(session, SIGNAL(destroyed(QObject*)), this, SLOT(slotSessionDestroyed(QObject*)));
+        connect(session, &Session::destroyed, this, [d](QObject *o) { d->slotSessionDestroyed(o); });
         d->pendingModification.startIgnoringSession(session->sessionId());
         d->scheduleSubscriptionUpdate();
     }

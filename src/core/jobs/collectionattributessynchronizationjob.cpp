@@ -35,10 +35,15 @@ namespace Akonadi
 
 class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
 {
+    Q_OBJECT
+
 public:
     CollectionAttributesSynchronizationJobPrivate(CollectionAttributesSynchronizationJob *parent)
         : q(parent)
     {
+        connect(&safetyTimer, &QTimer::timeout, this, &CollectionAttributesSynchronizationJobPrivate::slotTimeout);
+        safetyTimer.setInterval(std::chrono::seconds{5});
+        safetyTimer.setSingleShot(false);
     }
 
     void doStart() override;
@@ -47,10 +52,11 @@ public:
     AgentInstance instance;
     Collection collection;
     QDBusInterface *interface = nullptr;
-    QTimer *safetyTimer = nullptr;
+    QTimer safetyTimer;
     int timeoutCount = 0;
     static const int timeoutCountLimit;
 
+private Q_SLOTS:
     void slotSynchronized(qlonglong);
     void slotTimeout();
 };
@@ -63,10 +69,6 @@ CollectionAttributesSynchronizationJob::CollectionAttributesSynchronizationJob(c
 {
     d->instance = AgentManager::self()->instance(collection.resource());
     d->collection = collection;
-    d->safetyTimer = new QTimer(this);
-    connect(d->safetyTimer, &QTimer::timeout, this, [this] { d->slotTimeout(); });
-    d->safetyTimer->setInterval(5 * 1000);
-    d->safetyTimer->setSingleShot(false);
 }
 
 CollectionAttributesSynchronizationJob::~CollectionAttributesSynchronizationJob()
@@ -99,7 +101,7 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
                                    QStringLiteral("/"),
                                    QStringLiteral("org.freedesktop.Akonadi.Resource"),
                                    QDBusConnection::sessionBus(), this);
-    connect(interface, SIGNAL(attributesSynchronized(qlonglong)), q, SLOT(slotSynchronized(qlonglong)));
+    connect(interface, SIGNAL(attributesSynchronized(qlonglong)), this, SLOT(slotSynchronized(qlonglong))); // clazy:exclude=old-style-connect
 
     if (interface->isValid()) {
         const QDBusMessage reply = interface->call(QStringLiteral("synchronizeCollectionAttributes"), collection.id());
@@ -108,7 +110,7 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
             q->emitResult();
             return;
         }
-        safetyTimer->start();
+        safetyTimer.start();
     } else {
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Unable to obtain D-Bus interface for resource '%1'", instance.identifier()));
@@ -120,8 +122,8 @@ void CollectionAttributesSynchronizationJobPrivate::doStart()
 void CollectionAttributesSynchronizationJobPrivate::slotSynchronized(qlonglong id)
 {
     if (id == collection.id()) {
-        q->disconnect(interface, SIGNAL(attributesSynchronized(qlonglong)), q, SLOT(slotSynchronized(qlonglong)));
-        safetyTimer->stop();
+        disconnect(interface, SIGNAL(attributesSynchronized(qlonglong)), this, SLOT(slotSynchronized(qlonglong))); // clazy:exclude=old-style-connect
+        safetyTimer.stop();
         q->emitResult();
     }
 }
@@ -132,7 +134,7 @@ void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
     timeoutCount++;
 
     if (timeoutCount > timeoutCountLimit) {
-        safetyTimer->stop();
+        safetyTimer.stop();
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Collection attributes synchronization timed out."));
         q->emitResult();
@@ -148,4 +150,4 @@ void CollectionAttributesSynchronizationJobPrivate::slotTimeout()
 
 }
 
-#include "moc_collectionattributessynchronizationjob.cpp"
+#include "collectionattributessynchronizationjob.moc"

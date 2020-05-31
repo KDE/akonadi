@@ -114,7 +114,6 @@ private:
     Q_DECLARE_PRIVATE(Akonadi::PartFetcher)
     PartFetcherPrivate *const d_ptr;
 
-    Q_PRIVATE_SLOT(d_func(), void fetchJobDone(KJob *job))
     //@endcond
 };
 

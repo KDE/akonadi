@@ -41,11 +41,15 @@ class DbUpdater;
 class TestInterface
 {
 public:
-    virtual ~TestInterface()
-    {
-    }
+    virtual ~TestInterface() = default;
 
     virtual void execStatement(const QString &statement) = 0;
+
+protected:
+    explicit TestInterface() = default;
+
+private:
+    Q_DISABLE_COPY_MOVE(TestInterface)
 };
 
 /**
@@ -147,6 +151,7 @@ protected:
 
 private:
     friend class ::DbInitializerTest;
+    Q_DISABLE_COPY_MOVE(DbInitializer)
 
     /**
      * Sets the debug @p interface that shall be used on unit test run.

@@ -36,7 +36,6 @@ class TagModelPrivate
 {
 public:
     explicit TagModelPrivate(TagModel *parent);
-    virtual ~TagModelPrivate();
 
     void init(Monitor *recorder);
     void fillModel();

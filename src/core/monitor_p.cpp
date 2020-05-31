@@ -84,15 +84,14 @@ void MonitorPrivate::init()
     // 20 tags looks like a reasonable amount to keep around
     tagCache = dependenciesFactory->createTagListCache(20, session);
 
-    QObject::connect(collectionCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()));
-    QObject::connect(itemCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()));
-    QObject::connect(tagCache, SIGNAL(dataAvailable()), q_ptr, SLOT(dataAvailable()));
-    QObject::connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-                     q_ptr, SLOT(serverStateChanged(Akonadi::ServerManager::State)));
+    QObject::connect(collectionCache, &CollectionCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
+    QObject::connect(itemCache, &ItemCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
+    QObject::connect(tagCache, &TagCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
+    QObject::connect(ServerManager::self(), &ServerManager::stateChanged, q_ptr, [this](auto state) { serverStateChanged(state); });
 
     statisticsCompressionTimer.setSingleShot(true);
     statisticsCompressionTimer.setInterval(500);
-    QObject::connect(&statisticsCompressionTimer, SIGNAL(timeout()), q_ptr, SLOT(slotFlushRecentlyChangedCollections()));
+    QObject::connect(&statisticsCompressionTimer, &QTimer::timeout, q_ptr, [this]() { slotFlushRecentlyChangedCollections(); });
 }
 
 bool MonitorPrivate::connectToNotificationManager()
@@ -173,8 +172,7 @@ void MonitorPrivate::scheduleSubscriptionUpdate()
     pendingModificationTimer->setSingleShot(true);
     pendingModificationTimer->setInterval(0);
     pendingModificationTimer->start();
-    q_ptr->connect(pendingModificationTimer, SIGNAL(timeout()),
-                   q_ptr, SLOT(slotUpdateSubscription()));
+    q_ptr->connect(pendingModificationTimer, &QTimer::timeout, q_ptr, [this]() { slotUpdateSubscription(); });
 }
 
 void MonitorPrivate::slotUpdateSubscription()
@@ -1038,9 +1036,6 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
         }
     }
 
-    const QSet<QByteArray> addedFlags = msg.addedFlags();
-    const QSet<QByteArray> removedFlags = msg.removedFlags();
-
     Relation::List addedRelations, removedRelations;
     if (msg.operation() == Protocol::ItemChangeNotification::ModifyRelations) {
         addedRelations = extractRelations(msg.addedRelations());
@@ -1354,7 +1349,7 @@ Protocol::ModifySubscriptionCommand::ChangeType MonitorPrivate::monitorTypeToPro
     }
 }
 
-void MonitorPrivate::updateListeners(const QMetaMethod &signal, ListenerAction action)
+void MonitorPrivate::updateListeners(QMetaMethod signal, ListenerAction action)
 {
     #define UPDATE_LISTENERS(sig) \
     if (signal == QMetaMethod::fromSignal(sig)) { \

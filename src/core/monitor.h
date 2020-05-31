@@ -820,13 +820,7 @@ private:
     Q_DECLARE_PRIVATE(Monitor)
 
     //@cond PRIVATE
-    Q_PRIVATE_SLOT(d_ptr, void slotSessionDestroyed(QObject *))
-    Q_PRIVATE_SLOT(d_ptr, void slotStatisticsChangedFinished(KJob *))
-    Q_PRIVATE_SLOT(d_ptr, void slotFlushRecentlyChangedCollections())
-    Q_PRIVATE_SLOT(d_ptr, void slotUpdateSubscription())
     Q_PRIVATE_SLOT(d_ptr, void handleCommands())
-    Q_PRIVATE_SLOT(d_ptr, void dataAvailable())
-    Q_PRIVATE_SLOT(d_ptr, void serverStateChanged(Akonadi::ServerManager::State))
     Q_PRIVATE_SLOT(d_ptr, void invalidateCollectionCache(qint64))
     Q_PRIVATE_SLOT(d_ptr, void invalidateItemCache(qint64))
     Q_PRIVATE_SLOT(d_ptr, void invalidateTagCache(qint64))

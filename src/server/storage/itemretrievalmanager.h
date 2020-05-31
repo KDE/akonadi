@@ -50,6 +50,9 @@ public:
 
     virtual AbstractItemRetrievalJob *retrievalJob(ItemRetrievalRequest request, QObject *parent) = 0;
 
+protected:
+    explicit AbstractItemRetrievalJobFactory() = default;
+
 private:
     Q_DISABLE_COPY_MOVE(AbstractItemRetrievalJobFactory)
 };

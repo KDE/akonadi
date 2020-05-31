@@ -25,6 +25,7 @@
 #include <QVector>
 #include <QThreadStorage>
 #include <QSqlDatabase>
+#include <QMutex>
 
 class QSqlQuery;
 class QTimer;
@@ -43,11 +44,11 @@ class DataStore;
 class DataStoreFactory
 {
 public:
-    explicit DataStoreFactory() = default;
-
     virtual ~DataStoreFactory() = default;
     virtual DataStore *createStore() = 0;
 
+protected:
+    explicit DataStoreFactory() = default;
 private:
     Q_DISABLE_COPY_MOVE(DataStoreFactory)
 };
@@ -351,6 +352,8 @@ protected:
     AkonadiServer &m_akonadi;
 
 private:
+    Q_DISABLE_COPY_MOVE(DataStore)
+
     void cleanupAfterRollback();
     QString m_connectionName;
     QSqlDatabase m_database;
@@ -365,6 +368,7 @@ private:
     QByteArray mSessionId;
     QTimer *m_keepAliveTimer = nullptr;
     static bool s_hasForeignKeyConstraints;
+    static QMutex sTransactionMutex;
 
     friend class DataStoreFactory;
 

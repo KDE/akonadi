@@ -119,7 +119,7 @@ public:
     /**
      *  Selects the index in the internal selection model to make the collection visible in the model
      */
-    void select(const Collection::Id &collectionId)
+    void select(Collection::Id collectionId)
     {
         const QModelIndex index = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
         if (index.isValid()) {
@@ -127,7 +127,7 @@ public:
         }
     }
 
-    void deselect(const Collection::Id &collectionId)
+    void deselect(Collection::Id collectionId)
     {
         const QModelIndex idx = EntityTreeModel::modelIndexForCollection(q->sourceModel(), Collection(collectionId));
         if (idx.isValid()) {
@@ -135,7 +135,7 @@ public:
         }
     }
 
-    void reference(const Collection::Id &collectionId)
+    void reference(Collection::Id collectionId)
     {
         if (referencedCollections.contains(collectionId)) {
             qCWarning(AKONADICORE_LOG) << "already referenced " << collectionId;
@@ -152,7 +152,7 @@ public:
         }
     }
 
-    void dereference(const Collection::Id &collectionId)
+    void dereference(Collection::Id collectionId)
     {
         if (!referencedCollections.contains(collectionId)) {
             qCWarning(AKONADICORE_LOG) << "not referenced " << collectionId;
@@ -175,7 +175,7 @@ public:
     /**
      * Adds a collection to the favorite collections
      */
-    void add(const Collection::Id &collectionId)
+    void add(Collection::Id collectionId)
     {
         if (collectionIds.contains(collectionId)) {
             qCDebug(AKONADICORE_LOG) << "already in model " << collectionId;
@@ -194,7 +194,7 @@ public:
         }
     }
 
-    void remove(const Collection::Id &collectionId)
+    void remove(Collection::Id collectionId)
     {
         collectionIds.removeAll(collectionId);
         labelMap.remove(collectionId);

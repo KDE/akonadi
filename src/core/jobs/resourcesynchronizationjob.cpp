@@ -22,6 +22,7 @@
 #include "agentinstance.h"
 #include "agentmanager.h"
 #include "akonadicore_debug.h"
+#include "resourceinterface.h"
 
 #include <KLocalizedString>
 
@@ -33,18 +34,23 @@ namespace Akonadi
 
 class ResourceSynchronizationJobPrivate : public KJobPrivateBase
 {
+    Q_OBJECT
+
 public:
     ResourceSynchronizationJobPrivate(ResourceSynchronizationJob *parent)
         : q(parent)
     {
+        connect(&safetyTimer, &QTimer::timeout, this, &ResourceSynchronizationJobPrivate::slotTimeout);
+        safetyTimer.setInterval(std::chrono::seconds{30});
+        safetyTimer.setSingleShot(true);
     }
 
     void doStart() override;
 
     ResourceSynchronizationJob *q;
     AgentInstance instance;
-    QDBusInterface *interface = nullptr;
-    QTimer *safetyTimer = nullptr;
+    std::unique_ptr<org::freedesktop::Akonadi::Resource> interface;
+    QTimer safetyTimer;
     int timeoutCount = 60;
     bool collectionTreeOnly = false;
     int timeoutCountLimit = 0;
@@ -58,10 +64,6 @@ ResourceSynchronizationJob::ResourceSynchronizationJob(const AgentInstance &inst
     , d(new ResourceSynchronizationJobPrivate(this))
 {
     d->instance = instance;
-    d->safetyTimer = new QTimer(this);
-    connect(d->safetyTimer, &QTimer::timeout, this, [this]() { d->slotTimeout(); });
-    d->safetyTimer->setInterval(30 * 1000);
-    d->safetyTimer->setSingleShot(false);
 }
 
 ResourceSynchronizationJob::~ResourceSynchronizationJob()
@@ -103,14 +105,15 @@ void ResourceSynchronizationJobPrivate::doStart()
         return;
     }
 
-    interface = new QDBusInterface(ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
-                                   QStringLiteral("/"),
-                                   QStringLiteral("org.freedesktop.Akonadi.Resource"),
-                                   QDBusConnection::sessionBus(), this);
+    using ResourceIface = org::freedesktop::Akonadi::Resource;
+    interface = std::make_unique<ResourceIface>(
+            ServerManager::agentServiceName(ServerManager::Resource, instance.identifier()),
+            QStringLiteral("/"),
+            QDBusConnection::sessionBus());
     if (collectionTreeOnly) {
-        connect(interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()));
+        connect(interface.get(), &ResourceIface::collectionTreeSynchronized, this, &ResourceSynchronizationJobPrivate::slotSynchronized);
     } else {
-        connect(interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()));
+        connect(interface.get(), &ResourceIface::synchronized, this, &ResourceSynchronizationJobPrivate::slotSynchronized);
     }
 
     if (interface->isValid()) {
@@ -120,7 +123,7 @@ void ResourceSynchronizationJobPrivate::doStart()
             instance.synchronize();
         }
 
-        safetyTimer->start();
+        safetyTimer.start();
     } else {
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Unable to obtain D-Bus interface for resource '%1'", instance.identifier()));
@@ -131,12 +134,13 @@ void ResourceSynchronizationJobPrivate::doStart()
 
 void ResourceSynchronizationJobPrivate::slotSynchronized()
 {
+    using ResourceIface = org::freedesktop::Akonadi::Resource;
     if (collectionTreeOnly) {
-        q->disconnect(interface, SIGNAL(collectionTreeSynchronized()), q, SLOT(slotSynchronized()));
+        disconnect(interface.get(), &ResourceIface::collectionTreeSynchronized, this, &ResourceSynchronizationJobPrivate::slotSynchronized);
     } else {
-        q->disconnect(interface, SIGNAL(synchronized()), q, SLOT(slotSynchronized()));
+        disconnect(interface.get(), &ResourceIface::synchronized, this, &ResourceSynchronizationJobPrivate::slotSynchronized);
     }
-    safetyTimer->stop();
+    safetyTimer.stop();
     q->emitResult();
 }
 
@@ -146,7 +150,7 @@ void ResourceSynchronizationJobPrivate::slotTimeout()
     timeoutCount++;
 
     if (timeoutCount > timeoutCountLimit) {
-        safetyTimer->stop();
+        safetyTimer.stop();
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Resource synchronization timed out."));
         q->emitResult();
@@ -171,4 +175,4 @@ AgentInstance ResourceSynchronizationJob::resource() const
 
 }
 
-#include "moc_resourcesynchronizationjob.cpp"
+#include "resourcesynchronizationjob.moc"

@@ -186,7 +186,7 @@ Attribute::List Collection::attributes() const
 
 void Akonadi::Collection::clearAttributes()
 {
-    return d_ptr->mAttributeStorage.clearAttributes();
+    d_ptr->mAttributeStorage.clearAttributes();
 }
 
 Attribute *Collection::attribute(const QByteArray &type)

@@ -76,9 +76,6 @@ private:
     //@cond PRIVATE
     CollectionAttributesSynchronizationJobPrivate *const d;
     friend class CollectionAttributesSynchronizationJobPrivate;
-
-    Q_PRIVATE_SLOT(d, void slotSynchronized(qlonglong))
-    Q_PRIVATE_SLOT(d, void slotTimeout())
     //@endcond
 };
 

@@ -47,6 +47,7 @@ namespace Akonadi
  */
 class AgentInstanceCreateJobPrivate : public KJobPrivateBase
 {
+    Q_OBJECT
 public:
     AgentInstanceCreateJobPrivate(AgentInstanceCreateJob *parent)
         : q(parent)
@@ -55,9 +56,8 @@ public:
         , doConfig(false)
         , tooLate(false)
     {
-        QObject::connect(AgentManager::self(), SIGNAL(instanceAdded(Akonadi::AgentInstance)),
-                         q, SLOT(agentInstanceAdded(Akonadi::AgentInstance)));
-        QObject::connect(safetyTimer, &QTimer::timeout, q, [this]() {timeout(); });
+        connect(AgentManager::self(), &AgentManager::instanceAdded, this, &AgentInstanceCreateJobPrivate::agentInstanceAdded);
+        connect(safetyTimer, &QTimer::timeout, this, &AgentInstanceCreateJobPrivate::timeout);
     }
 
     void agentInstanceAdded(const AgentInstance &instance)
@@ -66,7 +66,7 @@ public:
             safetyTimer->stop();
             if (doConfig) {
                 // return from dbus call first before doing the next one
-                QTimer::singleShot(0, q, [this]() { doConfigure(); });
+                QTimer::singleShot(0, this, &AgentInstanceCreateJobPrivate::doConfigure);
             } else {
                 q->emitResult();
             }
@@ -87,17 +87,17 @@ public:
             return;
         }
 
-        q->connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogAccepted,
-                   q, [agentControlIface, this]() {
-                        agentControlIface->deleteLater();
-                        q->emitResult();
-                   });
-        q->connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogRejected,
-                   q, [agentControlIface, this]() {
-                        agentControlIface->deleteLater();
-                        AgentManager::self()->removeInstance(agentInstance);
-                        q->emitResult();
-                   });
+        connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogAccepted,
+                this, [agentControlIface, this]() {
+                    agentControlIface->deleteLater();
+                    q->emitResult();
+                });
+        connect(agentControlIface, &org::freedesktop::Akonadi::Agent::Control::configurationDialogRejected,
+                this, [agentControlIface, this]() {
+                    agentControlIface->deleteLater();
+                    AgentManager::self()->removeInstance(agentInstance);
+                    q->emitResult();
+                });
 
         agentInstance.configure(parentWidget);
     }
@@ -203,4 +203,4 @@ void AgentInstanceCreateJobPrivate::doStart()
     }
 }
 
-#include "moc_agentinstancecreatejob.cpp"
+#include "agentinstancecreatejob.moc"

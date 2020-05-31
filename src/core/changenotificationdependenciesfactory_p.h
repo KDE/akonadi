@@ -36,6 +36,7 @@ class CommandBuffer;
 class AKONADI_TESTS_EXPORT ChangeNotificationDependenciesFactory
 {
 public:
+    explicit ChangeNotificationDependenciesFactory() = default;
     virtual ~ChangeNotificationDependenciesFactory() = default;
 
     virtual Connection *createNotificationConnection(Session *parent, CommandBuffer *commandBuffer);
@@ -49,6 +50,8 @@ public:
     virtual Akonadi::TagListCache *createTagListCache(int maxCapacity, Session *session);
 
 protected:
+    Q_DISABLE_COPY_MOVE(ChangeNotificationDependenciesFactory)
+
     void addConnection(Session *session, Connection *connection);
 };
 

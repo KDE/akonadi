@@ -70,7 +70,7 @@ public:
 namespace
 {
 
-Braveheart Wallace;
+Braveheart Wallace; // clazy:exclude=non-pod-global-static
 
 }
 

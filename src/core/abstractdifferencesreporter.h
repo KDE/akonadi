@@ -106,9 +106,7 @@ public:
     /**
      * Destroys the abstract differences reporter.
      */
-    virtual ~AbstractDifferencesReporter()
-    {
-    }
+    virtual ~AbstractDifferencesReporter() = default;
 
     /**
      * Sets the @p title of the property name column.
@@ -137,6 +135,12 @@ public:
      * @param rightValue The user visible property value of the right object.
      */
     virtual void addProperty(Mode mode, const QString &name, const QString &leftValue, const QString &rightValue) = 0;
+
+protected:
+    explicit AbstractDifferencesReporter() = default;
+
+private:
+    Q_DISABLE_COPY_MOVE(AbstractDifferencesReporter);
 };
 
 }

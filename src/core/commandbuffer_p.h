@@ -75,6 +75,8 @@ public:
     }
 
 private:
+    Q_DISABLE_COPY_MOVE(CommandBuffer)
+
     QObject *mParent = nullptr;
     QByteArray mNotifySlot;
 
@@ -115,6 +117,8 @@ public:
     }
 
 private:
+    Q_DISABLE_COPY_MOVE(CommandBufferLocker)
+
     CommandBuffer *mBuffer = nullptr;
     bool mLocked = false;
 };
@@ -138,6 +142,8 @@ public:
         mBuffer->mNotify = true;
     }
 private:
+    Q_DISABLE_COPY_MOVE(CommandBufferNotifyBlocker)
+
     CommandBuffer *mBuffer;
 };
 

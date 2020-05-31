@@ -34,11 +34,7 @@ namespace Internal
 
 class StaticControl : public Control
 {
-public:
-    StaticControl()
-        : Control()
-    {
-    }
+    Q_OBJECT
 };
 
 }
@@ -54,10 +50,6 @@ public:
     Private(Control *parent)
         : mParent(parent)
         , mEventLoop(nullptr)
-    {
-    }
-
-    ~Private()
     {
     }
 
@@ -172,4 +164,4 @@ bool Control::restart()
 
 }
 
-#include "moc_control.cpp"
+#include "control.moc"

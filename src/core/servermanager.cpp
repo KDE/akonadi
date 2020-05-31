@@ -163,8 +163,9 @@ ServerManager::ServerManager(ServerManagerPrivate *dd)
     if (Internal::clientType() != Internal::User) {
         return;
     }
-    connect(AgentManager::self(), SIGNAL(typeAdded(Akonadi::AgentType)), SLOT(checkStatusChanged()), Qt::QueuedConnection);
-    connect(AgentManager::self(), SIGNAL(typeRemoved(Akonadi::AgentType)), SLOT(checkStatusChanged()), Qt::QueuedConnection);
+
+    connect(AgentManager::self(), &AgentManager::typeAdded, this, [this]() { d->checkStatusChanged(); }, Qt::QueuedConnection);
+    connect(AgentManager::self(), &AgentManager::typeRemoved, this, [this]() { d->checkStatusChanged(); }, Qt::QueuedConnection);
 }
 
 ServerManager *Akonadi::ServerManager::self()

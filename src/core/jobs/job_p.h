@@ -42,9 +42,7 @@ public:
     {
     }
 
-    virtual ~JobPrivate()
-    {
-    }
+    virtual ~JobPrivate() = default;
 
     void init(QObject *parent);
 
@@ -126,6 +124,9 @@ public:
     bool mReadingFinished = false;
     bool mStarted = false;
     bool mFinishPending = false;
+
+private:
+    Q_DISABLE_COPY_MOVE(JobPrivate)
 };
 
 }

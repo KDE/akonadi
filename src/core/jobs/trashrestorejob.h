@@ -82,12 +82,6 @@ private:
     //@cond PRIVATE
     class TrashRestoreJobPrivate;
     Q_DECLARE_PRIVATE(TrashRestoreJob)
-    Q_PRIVATE_SLOT(d_func(), void selectResult(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void targetCollectionFetched(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void removeAttribute(const Akonadi::Collection::List &))
-    Q_PRIVATE_SLOT(d_func(), void removeAttribute(const Akonadi::Item::List &))
-    Q_PRIVATE_SLOT(d_func(), void collectionsReceived(const Akonadi::Collection::List &))
-    Q_PRIVATE_SLOT(d_func(), void itemsReceived(const Akonadi::Item::List &))
     //@endcond
 };
 

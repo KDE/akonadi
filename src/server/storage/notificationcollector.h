@@ -252,7 +252,7 @@ private:
     void completeNotification(const Protocol::ChangeNotificationPtr &msg);
 
 protected:
-    virtual void notify(Protocol::ChangeNotificationList ntfs);
+    virtual void notify(Protocol::ChangeNotificationList &&ntfs);
 
 private:
     Q_DISABLE_COPY_MOVE(NotificationCollector);

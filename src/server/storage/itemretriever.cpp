@@ -95,7 +95,7 @@ void ItemRetriever::setItemSet(const ImapSet &set, bool isUid)
     }
 }
 
-void ItemRetriever::setItem(const Entity::Id &id)
+void ItemRetriever::setItem(Entity::Id id)
 {
     ImapSet set;
     set.add(ImapInterval(id, id));
@@ -212,12 +212,12 @@ static bool hasAllParts(const ItemRetrievalRequest &req, const QSet<QByteArray> 
 }
 }
 
-bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> requests)
+bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> requests) // clazy:exclude=function-args-by-ref
 {
     QEventLoop eventLoop;
     std::vector<ItemRetrievalRequest::Id> pendingRequests;
     connect(&mItemRetrievalManager, &ItemRetrievalManager::requestFinished,
-            this, [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) {
+            this, [this, &eventLoop, &pendingRequests](const ItemRetrievalResult &result) { // clazy:exclude=lambda-in-connect
                     const auto requestId = std::find(pendingRequests.begin(), pendingRequests.end(), result.request.id);
                     if (requestId != pendingRequests.end()) {
                         if (mCanceled) {
@@ -233,7 +233,7 @@ bool ItemRetriever::runItemRetrievalRequests(std::list<ItemRetrievalRequest> req
                             }
                         }
                     }
-    }, Qt::UniqueConnection);
+    });
 
     if (mConnection) {
         connect(mConnection, &Connection::connectionClosing,

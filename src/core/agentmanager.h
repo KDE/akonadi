@@ -27,6 +27,8 @@
 
 #include <QObject>
 
+#include <memory>
+
 namespace Akonadi
 {
 
@@ -199,20 +201,9 @@ Q_SIGNALS:
 
 private:
     //@cond PRIVATE
-    AgentManager();
+    explicit AgentManager();
 
-    AgentManagerPrivate *const d;
-
-    Q_PRIVATE_SLOT(d, void agentTypeAdded(const QString &))
-    Q_PRIVATE_SLOT(d, void agentTypeRemoved(const QString &))
-    Q_PRIVATE_SLOT(d, void agentInstanceAdded(const QString &))
-    Q_PRIVATE_SLOT(d, void agentInstanceRemoved(const QString &))
-    Q_PRIVATE_SLOT(d, void agentInstanceStatusChanged(const QString &, int, const QString &))
-    Q_PRIVATE_SLOT(d, void agentInstanceProgressChanged(const QString &, uint, const QString &))
-    Q_PRIVATE_SLOT(d, void agentInstanceNameChanged(const QString &, const QString &))
-    Q_PRIVATE_SLOT(d, void agentInstanceWarning(const QString &, const QString &))
-    Q_PRIVATE_SLOT(d, void agentInstanceError(const QString &, const QString &))
-    Q_PRIVATE_SLOT(d, void agentInstanceOnlineChanged(const QString &, bool))
+    std::unique_ptr<AgentManagerPrivate> const d;
     //@endcond
 };
 

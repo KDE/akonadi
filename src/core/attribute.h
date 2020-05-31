@@ -136,7 +136,7 @@ namespace Akonadi
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADICORE_EXPORT Attribute
+class AKONADICORE_EXPORT Attribute // clazy:exclude=copyable-polymorphic
 {
 public:
     /**
@@ -172,6 +172,10 @@ public:
      * @param data The encoded attribute data.
      */
     virtual void deserialize(const QByteArray &data) = 0;
+
+protected:
+    explicit Attribute() = default;
+    Q_DISABLE_COPY_MOVE(Attribute)
 };
 
 }

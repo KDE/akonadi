@@ -116,6 +116,8 @@ protected:
     QSqlDatabase m_database;
 
 private:
+    Q_DISABLE_COPY_MOVE(DbIntrospector)
+
     friend class ::DbIntrospectorTest;
     QHash<QString, QStringList> m_columnCache; // avoids extra db roundtrips
 };

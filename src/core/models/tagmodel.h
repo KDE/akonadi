@@ -84,13 +84,6 @@ private:
     bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
     bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
-
-    Q_PRIVATE_SLOT(d_func(), void fillModel())
-    Q_PRIVATE_SLOT(d_func(), void tagsFetched(const Akonadi::Tag::List &tags))
-    Q_PRIVATE_SLOT(d_func(), void tagsFetchDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void monitoredTagAdded(const Akonadi::Tag &tag))
-    Q_PRIVATE_SLOT(d_func(), void monitoredTagRemoved(const Akonadi::Tag &tag))
-    Q_PRIVATE_SLOT(d_func(), void monitoredTagChanged(const Akonadi::Tag &tag))
 };
 }
 

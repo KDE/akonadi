@@ -72,7 +72,10 @@ class RefCountedHash
 {
     mutable Value *defaultValue = nullptr;
 public:
-    inline ~RefCountedHash()
+    explicit RefCountedHash() = default;
+    Q_DISABLE_COPY_MOVE(RefCountedHash)
+
+    ~RefCountedHash()
     {
         delete defaultValue;
     }
@@ -336,7 +339,7 @@ public:
 
       @returns an iterator pointing to the next Collection after @p it, or at @p end
     */
-    QList<Node *>::iterator removeItems(QList<Node *>::iterator it, QList<Node *>::iterator end,
+    QList<Node *>::iterator removeItems(QList<Node *>::iterator it, const QList<Node *>::iterator &end,
                                         int *pos, const Collection &col);
 
     /**
@@ -346,7 +349,7 @@ public:
 
       @returns an iterator pointing to the next Item after @p it, or at @p end
     */
-    QList<Node *>::iterator skipCollections(QList<Node *>::iterator it, QList<Node *>::iterator end, int *pos);
+    QList<Node *>::iterator skipCollections(QList<Node *>::iterator it, const QList<Node *>::iterator &end, int *pos);
 
     /**
       Emits the data changed signal for the entire row as in the subclass, instead of just for the first column.

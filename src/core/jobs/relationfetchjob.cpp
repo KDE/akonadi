@@ -33,15 +33,9 @@ public:
         : JobPrivate(parent)
         , mEmitTimer(nullptr)
     {
-    }
-
-    void init()
-    {
-        Q_Q(RelationFetchJob);
-        mEmitTimer = new QTimer(q);
-        mEmitTimer->setSingleShot(true);
-        mEmitTimer->setInterval(100);
-        q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
+        mEmitTimer.setSingleShot(true);
+        mEmitTimer.setInterval(std::chrono::milliseconds{100});
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
     }
 
     void aboutToFinish() override {
@@ -51,7 +45,7 @@ public:
     void timeout()
     {
         Q_Q(RelationFetchJob);
-        mEmitTimer->stop(); // in case we are called by result()
+        mEmitTimer.stop(); // in case we are called by result()
         if (!mPendingRelations.isEmpty()) {
             if (!q->error()) {
                 Q_EMIT q->relationsReceived(mPendingRelations);
@@ -64,7 +58,7 @@ public:
 
     Relation::List mResultRelations;
     Relation::List mPendingRelations; // relation pending for emitting itemsReceived()
-    QTimer *mEmitTimer = nullptr;
+    QTimer mEmitTimer;
     QVector<QByteArray> mTypes;
     QString mResource;
     Relation mRequestedRelation;
@@ -74,7 +68,6 @@ RelationFetchJob::RelationFetchJob(const Relation &relation, QObject *parent)
     : Job(new RelationFetchJobPrivate(this), parent)
 {
     Q_D(RelationFetchJob);
-    d->init();
     d->mRequestedRelation = relation;
 }
 
@@ -82,7 +75,6 @@ RelationFetchJob::RelationFetchJob(const QVector<QByteArray> &types, QObject *pa
     : Job(new RelationFetchJobPrivate(this), parent)
 {
     Q_D(RelationFetchJob);
-    d->init();
     d->mTypes = types;
 }
 
@@ -114,8 +106,8 @@ bool RelationFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &
 
     d->mResultRelations.append(rel);
     d->mPendingRelations.append(rel);
-    if (!d->mEmitTimer->isActive()) {
-        d->mEmitTimer->start();
+    if (!d->mEmitTimer.isActive()) {
+        d->mEmitTimer.start();
     }
     return false;
 }

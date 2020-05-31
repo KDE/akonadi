@@ -220,6 +220,12 @@ public:
      * @since 5.7
      */
     virtual QSet<QByteArray> allowedForeignParts(const Item &item) const;
+
+protected:
+    explicit ItemSerializerPlugin() = default;
+
+private:
+    Q_DISABLE_COPY_MOVE(ItemSerializerPlugin)
 };
 
 }

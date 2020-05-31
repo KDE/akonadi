@@ -44,15 +44,9 @@ public:
         : JobPrivate(parent)
         , mType(CollectionFetchJob::Base)
     {
-
-    }
-
-    void init()
-    {
-        mEmitTimer = new QTimer(q_ptr);
-        mEmitTimer->setSingleShot(true);
-        mEmitTimer->setInterval(100);
-        q_ptr->connect(mEmitTimer, SIGNAL(timeout()), q_ptr, SLOT(timeout()));
+        mEmitTimer.setSingleShot(true);
+        mEmitTimer.setInterval(std::chrono::milliseconds{100});
+        q_ptr->connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
     }
 
     Q_DECLARE_PUBLIC(CollectionFetchJob)
@@ -63,7 +57,7 @@ public:
     Collection::List mCollections;
     CollectionFetchScope mScope;
     Collection::List mPendingCollections;
-    QTimer *mEmitTimer = nullptr;
+    QTimer mEmitTimer;
     bool mBasePrefetch = false;
     Collection::List mPrefetchList;
 
@@ -75,7 +69,7 @@ public:
     {
         Q_Q(CollectionFetchJob);
 
-        mEmitTimer->stop(); // in case we are called by result()
+        mEmitTimer.stop(); // in case we are called by result()
         if (!mPendingCollections.isEmpty()) {
             if (!q->error() || mScope.ignoreRetrievalErrors()) {
                 Q_EMIT q->collectionsReceived(mPendingCollections);
@@ -87,8 +81,8 @@ public:
     void subJobCollectionReceived(const Akonadi::Collection::List &collections)
     {
         mPendingCollections += collections;
-        if (!mEmitTimer->isActive()) {
-            mEmitTimer->start();
+        if (!mEmitTimer.isActive()) {
+            mEmitTimer.start();
         }
     }
 
@@ -130,7 +124,6 @@ CollectionFetchJob::CollectionFetchJob(const Collection &collection, Type type, 
     : Job(new CollectionFetchJobPrivate(this), parent)
 {
     Q_D(CollectionFetchJob);
-    d->init();
 
     d->mBase = collection;
     d->mType = type;
@@ -140,7 +133,6 @@ CollectionFetchJob::CollectionFetchJob(const Collection::List &cols, QObject *pa
     : Job(new CollectionFetchJobPrivate(this), parent)
 {
     Q_D(CollectionFetchJob);
-    d->init();
 
     Q_ASSERT(!cols.isEmpty());
     if (cols.size() == 1) {
@@ -155,7 +147,6 @@ CollectionFetchJob::CollectionFetchJob(const Collection::List &cols, Type type, 
     : Job(new CollectionFetchJobPrivate(this), parent)
 {
     Q_D(CollectionFetchJob);
-    d->init();
 
     Q_ASSERT(!cols.isEmpty());
     if (cols.size() == 1) {
@@ -170,7 +161,6 @@ CollectionFetchJob::CollectionFetchJob(const QList<Collection::Id> &cols, Type t
     : Job(new CollectionFetchJobPrivate(this), parent)
 {
     Q_D(CollectionFetchJob);
-    d->init();
 
     Q_ASSERT(!cols.isEmpty());
     if (cols.size() == 1) {
@@ -219,7 +209,7 @@ void CollectionFetchJob::doStart()
         } else {
             for (const Collection &col : qAsConst(d->mBaseList)) {
                 CollectionFetchJob *subJob = new CollectionFetchJob(col, d->mType, this);
-                connect(subJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(subJobCollectionReceived(Akonadi::Collection::List)));
+                connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) { d->subJobCollectionReceived(cols); });
                 subJob->setFetchScope(fetchScope());
             }
         }
@@ -314,8 +304,8 @@ bool CollectionFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr
     collection.d_ptr->resetChangeLog();
     d->mCollections.append(collection);
     d->mPendingCollections.append(collection);
-    if (!d->mEmitTimer->isActive()) {
-        d->mEmitTimer->start();
+    if (!d->mEmitTimer.isActive()) {
+        d->mEmitTimer.start();
     }
 
     return false;
@@ -392,7 +382,7 @@ void CollectionFetchJob::slotResult(KJob *job)
         if (!job->error()) {
             for (const Collection &col : roots) {
                 CollectionFetchJob *subJob = new CollectionFetchJob(col, d->mType, this);
-                connect(subJob, SIGNAL(collectionsReceived(Akonadi::Collection::List)), SLOT(subJobCollectionReceived(Akonadi::Collection::List)));
+                connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) { d->subJobCollectionReceived(cols); });
                 subJob->setFetchScope(fetchScope());
             }
         }

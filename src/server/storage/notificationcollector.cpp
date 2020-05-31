@@ -609,7 +609,7 @@ bool NotificationCollector::dispatchNotifications()
     return false;
 }
 
-void NotificationCollector::notify(Protocol::ChangeNotificationList msgs)
+void NotificationCollector::notify(Protocol::ChangeNotificationList &&msgs)
 {
     if (auto mgr = mAkonadi.notificationManager()) {
         QMetaObject::invokeMethod(mgr, "slotNotify", Qt::QueuedConnection,

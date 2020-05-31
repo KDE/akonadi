@@ -114,13 +114,13 @@ public:
     {
         if (map.isEmpty()) {
             return SearchTerm();
-        } else if (map.contains(QLatin1String("key"))) {
+        } else if (map.contains(QStringLiteral("key"))) {
             SearchTerm term(map[QStringLiteral("key")].toString(),
                             map[QStringLiteral("value")],
                             static_cast<SearchTerm::Condition>(map[QStringLiteral("cond")].toInt()));
             term.setIsNegated(map[QStringLiteral("negated")].toBool());
             return term;
-        } else if (map.contains(QLatin1String("rel"))) {
+        } else if (map.contains(QStringLiteral("rel"))) {
             SearchTerm term(static_cast<SearchTerm::Relation>(map[QStringLiteral("rel")].toInt()));
             term.setIsNegated(map[QStringLiteral("negated")].toBool());
             const QList<QVariant> list = map[QStringLiteral("subTerms")].toList();

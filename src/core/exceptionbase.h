@@ -40,7 +40,7 @@ namespace Akonadi
 /**
   Base class for exceptions used by the Akonadi library.
 */
-class AKONADICORE_EXPORT Exception : public std::exception //krazy:exclude=dpointer
+class AKONADICORE_EXPORT Exception : public std::exception
 {
 public:
     /**
@@ -59,13 +59,6 @@ public:
     explicit Exception(const QString &what);
 
     /**
-      Copy constructor.
-    */
-    Exception(const Exception &other);
-
-    Exception(Exception &&other);
-
-    /**
       Destructor.
     */
     ~Exception()  override;
@@ -81,6 +74,8 @@ public:
     virtual QByteArray type() const; // ### Akonadi 2: return const char *
 
 private:
+    Q_DISABLE_COPY_MOVE(Exception)
+
     class Private;
     std::unique_ptr<Private> d;
 };

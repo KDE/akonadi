@@ -453,8 +453,7 @@ public:
             if (parentCollection == akonadiRootCollection || parentCollection.id() > 0) {
                 ++pendingJobs;
                 CollectionCreateJob *create = new CollectionCreateJob(col, currentTransaction);
-                connect(create, SIGNAL(result(KJob*)),
-                        q, SLOT(createLocalCollectionResult(KJob*)));
+                QObject::connect(create, &KJob::result, q, [this](KJob *job) { createLocalCollectionResult(job); });
 
                 // Commit transaction after every 100 collections are created,
                 // otherwise it overloads database journal and things get veeery slow
@@ -585,14 +584,14 @@ public:
             c.setParentCollection(local.parentCollection());
             ++pendingJobs;
             CollectionModifyJob *mod = new CollectionModifyJob(c, currentTransaction);
-            connect(mod, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)));
+            QObject::connect(mod, &KJob::result, q, [this](KJob *job) { updateLocalCollectionResult(job); });
 
             // detecting moves is only possible with global RIDs
             if (!hierarchicalRIDs) {
                 if (remote.parentCollection().isValid() && remote.parentCollection().id() != local.parentCollection().id()) {
                     ++pendingJobs;
                     CollectionMoveJob *move = new CollectionMoveJob(upd, remote.parentCollection(), currentTransaction);
-                    connect(move, SIGNAL(result(KJob*)), q, SLOT(updateLocalCollectionResult(KJob*)));
+                    QObject::connect(move, &KJob::result, q, [this](KJob *job) { updateLocalCollectionResult(job); });
                 }
             }
         }
@@ -630,7 +629,7 @@ public:
             ++pendingJobs;
             Q_ASSERT(currentTransaction);
             CollectionDeleteJob *job = new CollectionDeleteJob(col, currentTransaction);
-            connect(job, SIGNAL(result(KJob*)), q, SLOT(deleteLocalCollectionsResult(KJob*)));
+            connect(job, &KJob::result, q, [this](KJob *job) { deleteLocalCollectionsResult(job); });
 
             // It can happen that the groupware servers report us deleted collections
             // twice, in this case this collection delete job will fail on the second try.
@@ -694,8 +693,7 @@ public:
     {
         currentTransaction = new TransactionSequence(q);
         currentTransaction->setAutomaticCommittingEnabled(false);
-        q->connect(currentTransaction, SIGNAL(finished(KJob*)),
-                   q, SLOT(transactionSequenceResult(KJob*)));
+        q->connect(currentTransaction, &TransactionSequence::finished, q, [this](KJob *job) { transactionSequenceResult(job); });
     }
 
     /** After the transaction has finished report we're done as well. */
@@ -728,10 +726,8 @@ public:
             job->fetchScope().setResource(resourceId);
             job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
             job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
-            q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                       q, SLOT(localCollectionsReceived(Akonadi::Collection::List)));
-            q->connect(job, SIGNAL(result(KJob*)),
-                       q, SLOT(localCollectionFetchResult(KJob*)));
+            q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) { localCollectionsReceived(cols); });
+            q->connect(job, &KJob::result, q, [this](KJob *job) { localCollectionFetchResult(job); });
             return;
         }
 

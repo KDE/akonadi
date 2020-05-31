@@ -156,9 +156,7 @@ public:
     {
     }
 
-    ~NotifyRunnable()
-    {
-    }
+    ~NotifyRunnable() = default;
 
     void run() override {
         for (const auto &ntf : qAsConst(mNotifications))
@@ -172,6 +170,8 @@ public:
     }
 
 private:
+    Q_DISABLE_COPY_MOVE(NotifyRunnable);
+
     QPointer<NotificationSubscriber> mSubscriber;
     Protocol::ChangeNotificationList mNotifications;
 };

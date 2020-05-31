@@ -53,6 +53,8 @@
 #include <QElapsedTimer>
 #include <unordered_map>
 
+// clazy:excludeall=old-style-connect
+
 QHash<KJob *, QElapsedTimer> jobTimeTracker;
 
 Q_LOGGING_CATEGORY(DebugETM, "org.kde.pim.akonadi.ETM", QtInfoMsg)
@@ -538,7 +540,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
 
         const QModelIndex parentIndex = indexForCollection(m_collections.value(colId));
         q->beginInsertRows(parentIndex, startRow, startRow + itemsToInsert.size() - 1);
-        for (const Item &item : itemsToInsert) {
+        for (const Item &item : qAsConst(itemsToInsert)) {
             const Item::Id itemId = item.id();
             m_items.ref(itemId, item);
 
@@ -664,7 +666,7 @@ bool EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
     // about the top-level one. The rest will be found automatically by the view.
     q->beginInsertRows(parent, row, row);
 
-    for (const auto &ancestor : ancestors) {
+    for (const auto &ancestor : qAsConst(ancestors)) {
         Q_ASSERT(ancestor.parentCollection().isValid());
         m_collections.insert(ancestor.id(), ancestor);
 
@@ -829,7 +831,8 @@ void EntityTreeModelPrivate::monitoredCollectionAdded(const Akonadi::Collection 
     //If the resource is explicitly monitored all other checks are skipped. topLevelCollectionsFetched still checks the hidden attribute.
     if (m_monitor->resourcesMonitored().contains(collection.resource().toUtf8()) &&
             collection.parentCollection() == Collection::root()) {
-        return topLevelCollectionsFetched(Collection::List() << collection);
+        topLevelCollectionsFetched({collection});
+        return;
     }
 
     if (!shouldBePartOfModel(collection)) {
@@ -1561,7 +1564,7 @@ void EntityTreeModelPrivate::deref(Collection::Id id)
     }
 }
 
-QList<Node *>::iterator EntityTreeModelPrivate::skipCollections(QList<Node *>::iterator it, QList<Node *>::iterator end, int *pos)
+QList<Node *>::iterator EntityTreeModelPrivate::skipCollections(QList<Node *>::iterator it, const QList<Node *>::iterator &end, int *pos)
 {
     for (; it != end; ++it) {
         if ((*it)->type == Node::Item) {
@@ -1574,7 +1577,7 @@ QList<Node *>::iterator EntityTreeModelPrivate::skipCollections(QList<Node *>::i
     return it;
 }
 
-QList<Node *>::iterator EntityTreeModelPrivate::removeItems(QList<Node *>::iterator it, QList<Node *>::iterator end, int *pos, const Collection &collection)
+QList<Node *>::iterator EntityTreeModelPrivate::removeItems(QList<Node *>::iterator it, const QList<Node *>::iterator &end, int *pos, const Collection &collection)
 {
     Q_Q(EntityTreeModel);
 
@@ -1749,7 +1752,8 @@ void EntityTreeModelPrivate::beginResetModel()
 void EntityTreeModelPrivate::endResetModel()
 {
     Q_Q(EntityTreeModel);
-    for (Akonadi::Job *job : m_session->findChildren<Akonadi::Job *>()) {
+    auto subjobs = m_session->findChildren<Akonadi::Job *>();
+    for (auto *job : subjobs) {
         job->disconnect(q);
     }
     m_collections.clear();
@@ -1760,7 +1764,7 @@ void EntityTreeModelPrivate::endResetModel()
     m_pendingCollectionRetrieveJobs.clear();
     m_collectionTreeFetched = false;
 
-    for (const QList<Node *> &list : m_childEntities) {
+    for (const QList<Node *> &list : qAsConst(m_childEntities)) {
         qDeleteAll(list);
     }
     m_childEntities.clear();

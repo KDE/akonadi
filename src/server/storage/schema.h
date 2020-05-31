@@ -33,15 +33,19 @@ namespace Server
 class Schema
 {
 public:
-    inline virtual ~Schema()
-    {
-    }
+    inline virtual ~Schema() = default;
 
     /** List of tables in the schema. */
     virtual QVector<TableDescription> tables() = 0;
 
     /** List of relations (N:M helper tables) in the schema. */
     virtual QVector<RelationDescription> relations() = 0;
+
+protected:
+    explicit Schema() = default;
+
+private:
+    Q_DISABLE_COPY_MOVE(Schema)
 };
 
 } // namespace Server

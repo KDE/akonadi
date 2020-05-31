@@ -40,23 +40,21 @@ public:
         : JobPrivate(parent)
         , mQuery(query)
     {
+        mEmitTimer.setSingleShot(true);
+        mEmitTimer.setInterval(std::chrono::milliseconds{100});
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
     }
 
-    void init()
+    void aboutToFinish() override
     {
-        Q_Q(ItemSearchJob);
-        mEmitTimer = new QTimer(q);
-        mEmitTimer->setSingleShot(true);
-        mEmitTimer->setInterval(100);
-        q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
-        q->connect(q, SIGNAL(result(KJob*)), q, SLOT(timeout()));
+        timeout();
     }
 
     void timeout()
     {
         Q_Q(Akonadi::ItemSearchJob);
 
-        mEmitTimer->stop(); // in case we are called by result()
+        mEmitTimer.stop(); // in case we are called by result()
         if (!mPendingItems.isEmpty()) {
             if (!q->error()) {
                 Q_EMIT q->itemsReceived(mPendingItems);
@@ -94,7 +92,7 @@ public:
     Item::List mItems;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
 
-    QTimer *mEmitTimer = nullptr;
+    QTimer mEmitTimer;
 };
 
 QThreadStorage<Session *> instances;
@@ -124,23 +122,13 @@ static QObject *sessionForJob(QObject *parent)
 
 ItemSearchJob::ItemSearchJob(QObject *parent)
     : Job(new ItemSearchJobPrivate(this, SearchQuery()), sessionForJob(parent))
-{
-    Q_D(ItemSearchJob);
-
-    d->init();
-}
+{}
 
 ItemSearchJob::ItemSearchJob(const SearchQuery &query, QObject *parent)
     : Job(new ItemSearchJobPrivate(this, query), sessionForJob(parent))
-{
-    Q_D(ItemSearchJob);
+{}
 
-    d->init();
-}
-
-ItemSearchJob::~ItemSearchJob()
-{
-}
+ItemSearchJob::~ItemSearchJob() = default;
 
 void ItemSearchJob::setQuery(const SearchQuery &query)
 {
@@ -260,8 +248,8 @@ bool ItemSearchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
         }
         d->mItems.append(item);
         d->mPendingItems.append(item);
-        if (!d->mEmitTimer->isActive()) {
-            d->mEmitTimer->start();
+        if (!d->mEmitTimer.isActive()) {
+            d->mEmitTimer.start();
         }
 
         return false;

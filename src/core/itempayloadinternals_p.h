@@ -428,11 +428,14 @@ struct PayloadTrait<std::shared_ptr<T>> {
  * Non-template base class for the payload container.
  */
 struct PayloadBase {
-    virtual ~PayloadBase()
-    {
-    }
+    virtual ~PayloadBase() = default;
     virtual PayloadBase *clone() const = 0;
     virtual const char *typeName() const = 0;
+
+protected:
+    PayloadBase() = default;
+private:
+    Q_DISABLE_COPY_MOVE(PayloadBase)
 };
 
 /**
@@ -441,13 +444,9 @@ struct PayloadBase {
  */
 template <typename T>
 struct Payload : public PayloadBase {
-    Payload()
-    {
-    }
     Payload(const T &p)
         : payload(p)
-    {
-    }
+    {}
 
     PayloadBase *clone() const override
     {

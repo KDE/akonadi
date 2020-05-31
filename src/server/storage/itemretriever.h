@@ -65,7 +65,7 @@ public:
     void setChangedSince(const QDateTime &changedSince);
     void setItemSet(const ImapSet &set, const Collection &collection = Collection());
     void setItemSet(const ImapSet &set, bool isUid);
-    void setItem(const Entity::Id &id);
+    void setItem(Entity::Id id);
     /** Retrieve all items in the given collection. */
     void setCollection(const Collection &collection, bool recursive = true);
 

@@ -63,7 +63,7 @@
         QGuiApplication::setQuitOnLastWindowClosed(false); \
         qRegisterMetaType<QList<QUrl>>(); \
         int result = 0; \
-        QTimer::singleShot(0, [argc, argv, &result]() { \
+        QTimer::singleShot(0, &app, [argc, argv, &result]() { \
             TestObject tc; \
             result = QTest::qExec(&tc, argc, argv); \
             qApp->quit(); \

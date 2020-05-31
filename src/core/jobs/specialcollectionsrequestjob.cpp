@@ -86,24 +86,16 @@ bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
 {
     // check if all requested folders are known already
     if (mRequestingDefaultFolders) {
-        QHash<QByteArray, bool>::const_iterator it = mDefaultFolders.constBegin();
-        const QHash<QByteArray, bool>::const_iterator end = mDefaultFolders.constEnd();
-        while (it != end) {
+        for (auto it = mDefaultFolders.cbegin(), end = mDefaultFolders.cend(); it != end; ++it) {
             if (it.value() && !mSpecialCollections->hasDefaultCollection(it.key())) {
                 return false;
             }
-            ++it;
         }
     }
 
-    QHashIterator<QString, QHash<QByteArray, bool> > resourceIt(mFoldersForResource);
-    while (resourceIt.hasNext()) {
-        resourceIt.next();
-
+    for (auto resourceIt = mFoldersForResource.cbegin(), end = mFoldersForResource.cend(); resourceIt != end; ++resourceIt) {
         const QHash<QByteArray, bool> &requested = resourceIt.value();
-        QHash<QByteArray, bool>::const_iterator it = requested.cbegin();
-        const QHash<QByteArray, bool>::const_iterator itEnd = requested.cend();
-        for (;it != itEnd; ++it) {
+        for (auto it = requested.cbegin(), end = requested.cend(); it != end; ++it) {
             if (it.value() && !mSpecialCollections->hasCollection(it.key(), AgentManager::self()->instance(resourceIt.key()))) {
                 return false;
             }
@@ -131,7 +123,7 @@ void SpecialCollectionsRequestJobPrivate::lockResult(KJob *job)
         resjob->setTypes(mKnownTypes);
         resjob->setNameForTypeMap(mNameForTypeMap);
         resjob->setIconForTypeMap(mIconForTypeMap);
-        QObject::connect(resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)));
+        QObject::connect(resjob, &KJob::result, q, [this](KJob *job) { resourceScanResult(job); });
     } else {
         // If no default folders are requested, go straight to the next step.
         nextResource();
@@ -169,7 +161,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         mSpecialCollections->d->endBatchRegister();
 
         // Release the lock once the transaction has been committed.
-        QObject::connect(q, SIGNAL(result(KJob*)), q, SLOT(releaseLock()));
+        QObject::connect(q, &KJob::result, q, [this]() { releaseLock(); });
 
         // We are done!
         q->commit();
@@ -179,7 +171,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         qCDebug(AKONADICORE_LOG) << "A resource is done," << mFoldersForResource.count()
                                  << "more to do. Now doing resource" << resourceId;
         ResourceScanJob *resjob = new ResourceScanJob(resourceId, mSpecialCollections->d->mSettings, q);
-        QObject::connect(resjob, SIGNAL(result(KJob*)), q, SLOT(resourceScanResult(KJob*)));
+        QObject::connect(resjob, &KJob::result, q, [this](KJob *job) { resourceScanResult(job); });
     }
 }
 
@@ -247,7 +239,7 @@ void SpecialCollectionsRequestJobPrivate::createRequestedFolders(ResourceScanJob
 
             CollectionCreateJob *createJob = new CollectionCreateJob(collection, q);
             createJob->setProperty("type", it.key());
-            QObject::connect(createJob, SIGNAL(result(KJob*)), q, SLOT(collectionCreateResult(KJob*)));
+            QObject::connect(createJob, &KJob::result, q, [this](KJob *job) { collectionCreateResult(job); });
 
             mPendingCreateJobs++;
         }

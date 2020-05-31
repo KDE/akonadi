@@ -73,7 +73,8 @@ void ChangeRecorder::replayNext()
             // In the case of a move where both source and destination are
             // ignored, we ignore the message and process the next one.
             d->dequeueNotification();
-            return replayNext();
+            replayNext();
+            return;
         }
     } else {
         // This is necessary when none of the notifications were accepted / processed

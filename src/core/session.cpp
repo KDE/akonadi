@@ -65,10 +65,8 @@ void SessionPrivate::reconnect()
         sessionThread()->addConnection(connection);
         mParent->connect(connection, &Connection::reconnected, mParent, &Session::reconnected,
                          Qt::QueuedConnection);
-        mParent->connect(connection, SIGNAL(socketDisconnected()), mParent, SLOT(socketDisconnected()),
-                         Qt::QueuedConnection);
-        mParent->connect(connection, SIGNAL(socketError(QString)), mParent, SLOT(socketError(QString)),
-                         Qt::QueuedConnection);
+        mParent->connect(connection, &Connection::socketDisconnected, mParent, [this]() { socketDisconnected(); }, Qt::QueuedConnection);
+        mParent->connect(connection, &Connection::socketError, mParent, [this](const QString &error) { socketError(error); }, Qt::QueuedConnection);
     }
 
     connection->reconnect();
@@ -123,7 +121,7 @@ bool SessionPrivate::handleCommands()
             if (login.isError()) {
                 qCWarning(AKONADICORE_LOG) << "Unable to login to Akonadi server:" << login.errorMessage();
                 connection->closeConnection();
-                QTimer::singleShot(1000, mParent, SLOT(reconnect()));
+                QTimer::singleShot(1000, mParent, [this]() { reconnect(); });
                 return false;
             }
 
@@ -240,16 +238,16 @@ void SessionPrivate::jobDestroyed(QObject *job)
 void SessionPrivate::addJob(Job *job)
 {
     queue.append(job);
-    QObject::connect(job, SIGNAL(finished(KJob*)), mParent, SLOT(jobDone(KJob*)));
-    QObject::connect(job, SIGNAL(writeFinished(Akonadi::Job*)), mParent, SLOT(jobWriteFinished(Akonadi::Job*)));
-    QObject::connect(job, SIGNAL(destroyed(QObject*)), mParent, SLOT(jobDestroyed(QObject*)));
+    QObject::connect(job, &KJob::result, mParent, [this](KJob *job) { jobDone(job); });
+    QObject::connect(job, &Job::writeFinished, mParent, [this](Job *job) { jobWriteFinished(job); });
+    QObject::connect(job, &QObject::destroyed, mParent, [this](QObject *o) { jobDestroyed(o); });
     startNext();
 }
 
 void SessionPrivate::publishOtherJobs(Job *thanThisJob)
 {
     int count = 0;
-    for (const auto& job : queue) {
+    for (const auto& job : qAsConst(queue)) {
         if (job != thanThisJob) {
             job->d_ptr->publishJob();
             ++count;
@@ -343,9 +341,8 @@ void SessionPrivate::init(const QByteArray &id)
     if (ServerManager::state() == ServerManager::NotRunning) {
         ServerManager::start();
     }
-    mParent->connect(ServerManager::self(), SIGNAL(stateChanged(Akonadi::ServerManager::State)),
-                     SLOT(serverStateChanged(Akonadi::ServerManager::State)));
-
+    QObject::connect(ServerManager::self(), &ServerManager::stateChanged,
+                     mParent, [this](ServerManager::State state) { serverStateChanged(state); });
     reconnect();
 }
 

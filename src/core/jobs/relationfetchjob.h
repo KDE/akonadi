@@ -69,10 +69,6 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(RelationFetchJob)
-
-    //@cond PRIVATE
-    Q_PRIVATE_SLOT(d_func(), void timeout())
-    //@endcond
 };
 
 }

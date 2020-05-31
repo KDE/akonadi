@@ -37,11 +37,11 @@
   <xsl:for-each select="index">
     {
       IndexDescription idx;
-      idx.name = QLatin1String("<xsl:value-of select="@name"/>");
+      idx.name = QStringLiteral("<xsl:value-of select="@name"/>");
 #if QT_VERSION &lt; QT_VERSION_CHECK(5, 15, 0)
-      idx.columns = QString::fromLatin1("<xsl:value-of select="@columns"/>").split( QLatin1Char( ',' ), QString::SkipEmptyParts );
+      idx.columns = QStringLiteral("<xsl:value-of select="@columns"/>").split(QLatin1Char( ',' ), QString::SkipEmptyParts);
 #else
-      idx.columns = QString::fromLatin1("<xsl:value-of select="@columns"/>").split( QLatin1Char( ',' ), Qt::SkipEmptyParts );
+      idx.columns = QStringLiteral("<xsl:value-of select="@columns"/>").split(QLatin1Char( ',' ), Qt::SkipEmptyParts);
 #endif
       <xsl:if test="@unique">
       idx.isUnique = <xsl:value-of select="@unique"/>;

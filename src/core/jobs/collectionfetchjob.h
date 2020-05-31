@@ -188,11 +188,6 @@ protected Q_SLOTS:
 
 private:
     Q_DECLARE_PRIVATE(CollectionFetchJob)
-
-    //@cond PRIVATE
-    Q_PRIVATE_SLOT(d_func(), void timeout())
-    Q_PRIVATE_SLOT(d_func(), void subJobCollectionReceived(const Akonadi::Collection::List &))
-    //@endcond
 };
 
 }

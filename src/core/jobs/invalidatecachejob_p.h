@@ -47,8 +47,6 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(InvalidateCacheJob)
-    Q_PRIVATE_SLOT(d_func(), void collectionFetchResult(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void itemStoreResult(KJob *job))
 };
 
 }

@@ -98,7 +98,7 @@ private Q_SLOTS:
             QVector<int> in = { 1, 2, 3, 4, 5 };
             QCOMPARE(in | Actions::toQList, in.toList());
             QCOMPARE(in | Actions::toQList | Actions::toQVector, in);
-            QCOMPARE(in | Actions::toQSet, in.toList().toSet());
+            QCOMPARE(in | Actions::toQSet, in.toList().toSet()); // clazy:exclude=container-anti-pattern
         }
         {
             QList<int> in = { 1, 2, 3, 4, 5 };
@@ -161,6 +161,7 @@ private:
             return *this;
         }
         CopyCounter &operator=(CopyCounter &&other) = default;
+        ~CopyCounter() = default;
 
         int copyCount = 0;
         bool transformed = false;

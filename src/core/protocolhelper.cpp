@@ -398,7 +398,7 @@ ItemFetchScope ProtocolHelper::parseItemFetchScope(const Protocol::ItemFetchScop
 {
     ItemFetchScope ifs;
     const auto parts = fetchScope.requestedParts();
-    for (const auto &part : fetchScope.requestedParts()) {
+    for (const auto &part : parts) {
         if (part.startsWith("PLD:")) {
             ifs.fetchPayloadPart(part.mid(4), true);
         } else if (part.startsWith("ATR:")) {

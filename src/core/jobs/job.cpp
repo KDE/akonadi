@@ -366,7 +366,7 @@ bool Job::addSubjob(KJob *job)
 {
     bool rv = KCompositeJob::addSubjob(job);
     if (rv) {
-        connect(job, SIGNAL(aboutToStart(Akonadi::Job*)), SLOT(slotSubJobAboutToStart(Akonadi::Job*)));
+        connect(qobject_cast<Job*>(job), &Job::aboutToStart, this, [this](Job *job) { d_ptr->slotSubJobAboutToStart(job); });
         QTimer::singleShot(0, this, [this]() { d_ptr->startNext(); });
     }
     return rv;

@@ -202,16 +202,16 @@ void StatisticsProxyModel::Private::_k_sourceDataChanged(const QModelIndex &topL
 void StatisticsProxyModel::setSourceModel(QAbstractItemModel *model)
 {
     if (sourceModel()) {
-        disconnect(sourceModel(), SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-                   this, SLOT(_k_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+        disconnect(sourceModel(), &QAbstractItemModel::dataChanged, this, nullptr);
     }
     KExtraColumnsProxyModel::setSourceModel(model);
     if (model) {
         // Disconnect the default handling of dataChanged in QIdentityProxyModel, so we can extend it to the whole row
-        disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
+        disconnect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)), // clazy:exclude=old-style-connect
                    this, SLOT(_q_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
-        connect(model, SIGNAL(dataChanged(QModelIndex,QModelIndex,QVector<int>)),
-                this, SLOT(_k_sourceDataChanged(QModelIndex,QModelIndex,QVector<int>)));
+        connect(model, &QAbstractItemModel::dataChanged, this, [this](const auto &tl, const auto &br, const auto &roles) {
+                d->_k_sourceDataChanged(tl, br, roles);
+            });
     }
 }
 

@@ -61,7 +61,7 @@ QString Utils::preferredSocketDirectory(const QString &defaultDirectory, int fnL
     const QString socketDir = serverSettings.value(QLatin1String("Connection/SocketDirectory"), defaultDirectory).toString();
 #else
     QString socketDir = defaultDirectory;
-    if (!serverSettings.contains(QLatin1String("Connection/SocketDirectory"))) {
+    if (!serverSettings.contains(QStringLiteral("Connection/SocketDirectory"))) {
         // if no socket directory is defined, use the symlinked from /tmp
         socketDir = akonadiSocketDirectory();
 
@@ -108,7 +108,7 @@ QString akonadiSocketDirectory()
         return QString();
     }
 
-    const QString identifier = Instance::hasIdentifier() ? Instance::identifier() : QLatin1String("default");
+    const QString identifier = Instance::hasIdentifier() ? Instance::identifier() : QStringLiteral("default");
     const QString link = StandardDirs::saveDir("data") + QStringLiteral("/socket-%1-%2").arg(hostname, identifier);
 
     if (checkSocketDirectory(link)) {

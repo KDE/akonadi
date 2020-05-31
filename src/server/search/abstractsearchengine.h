@@ -21,7 +21,7 @@
 #ifndef AKONADI_ABSTRACTSEARCHENGINE_H
 #define AKONADI_ABSTRACTSEARCHENGINE_H
 
-#include <qglobal.h>
+#include <QtGlobal>
 
 namespace Akonadi
 {
@@ -37,9 +37,7 @@ class Collection;
 class AbstractSearchEngine
 {
 public:
-    virtual ~AbstractSearchEngine()
-    {
-    }
+    virtual ~AbstractSearchEngine() = default;
 
     /**
      * Adds the given @p collection to the search.
@@ -50,6 +48,12 @@ public:
      * Removes the collection with the given @p id from the search.
      */
     virtual void removeSearch(qint64 id) = 0;
+
+protected:
+    explicit AbstractSearchEngine() = default;
+
+private:
+    Q_DISABLE_COPY_MOVE(AbstractSearchEngine)
 };
 
 } // namespace Server

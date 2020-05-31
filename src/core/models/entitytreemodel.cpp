@@ -45,6 +45,8 @@
 
 #include "pastehelper_p.h"
 
+// clazy:excludeall=old-style-connect
+
 Q_DECLARE_METATYPE(QSet<QByteArray>)
 
 using namespace Akonadi;

@@ -41,20 +41,14 @@ public:
         : JobPrivate(parent)
     {
         mCollection = Collection::root();
+        mEmitTimer.setSingleShot(true);
+        mEmitTimer.setInterval(std::chrono::milliseconds{100});
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
     }
 
     ~ItemFetchJobPrivate() override
     {
         delete mValuePool;
-    }
-
-    void init()
-    {
-        Q_Q(ItemFetchJob);
-        mEmitTimer = new QTimer(q);
-        mEmitTimer->setSingleShot(true);
-        mEmitTimer->setInterval(100);
-        q->connect(mEmitTimer, SIGNAL(timeout()), q, SLOT(timeout()));
     }
 
     void aboutToFinish() override {
@@ -65,7 +59,7 @@ public:
     {
         Q_Q(ItemFetchJob);
 
-        mEmitTimer->stop(); // in case we are called by result()
+        mEmitTimer.stop(); // in case we are called by result()
         if (!mPendingItems.isEmpty()) {
             if (!q->error()) {
                 Q_EMIT q->itemsReceived(mPendingItems);
@@ -115,7 +109,7 @@ public:
     Item::List mResultItems;
     ItemFetchScope mFetchScope;
     Item::List mPendingItems; // items pending for emitting itemsReceived()
-    QTimer *mEmitTimer = nullptr;
+    QTimer mEmitTimer;
     ProtocolHelperValuePool *mValuePool = nullptr;
     ItemFetchJob::DeliveryOptions mDeliveryOptions = ItemFetchJob::Default;
     int mCount = 0;
@@ -126,7 +120,6 @@ ItemFetchJob::ItemFetchJob(const Collection &collection, QObject *parent)
 {
     Q_D(ItemFetchJob);
 
-    d->init();
     d->mCollection = collection;
     d->mValuePool = new ProtocolHelperValuePool; // only worth it for lots of results
 }
@@ -136,7 +129,6 @@ ItemFetchJob::ItemFetchJob(const Item &item, QObject *parent)
 {
     Q_D(ItemFetchJob);
 
-    d->init();
     d->mRequestedItems.append(item);
 }
 
@@ -145,7 +137,6 @@ ItemFetchJob::ItemFetchJob(const Item::List &items, QObject *parent)
 {
     Q_D(ItemFetchJob);
 
-    d->init();
     d->mRequestedItems = items;
 }
 
@@ -154,7 +145,6 @@ ItemFetchJob::ItemFetchJob(const QList<Item::Id> &items, QObject *parent)
 {
     Q_D(ItemFetchJob);
 
-    d->init();
     d->mRequestedItems.reserve(items.size());
     for (auto id : items) {
         d->mRequestedItems.append(Item(id));
@@ -166,7 +156,6 @@ ItemFetchJob::ItemFetchJob(const QVector<Item::Id> &items, QObject *parent)
 {
     Q_D(ItemFetchJob);
 
-    d->init();
     d->mRequestedItems.reserve(items.size());
     for (auto id : items) {
         d->mRequestedItems.append(Item(id));
@@ -178,7 +167,6 @@ ItemFetchJob::ItemFetchJob(const Tag &tag, QObject *parent)
 {
     Q_D(ItemFetchJob);
 
-    d->init();
     d->mCurrentTag = tag;
     d->mValuePool = new ProtocolHelperValuePool;
 }
@@ -232,8 +220,8 @@ bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
 
     if (d->mDeliveryOptions & EmitItemsInBatches) {
         d->mPendingItems.append(item);
-        if (!d->mEmitTimer->isActive()) {
-            d->mEmitTimer->start();
+        if (!d->mEmitTimer.isActive()) {
+            d->mEmitTimer.start();
         }
     } else if (d->mDeliveryOptions & EmitItemsIndividually) {
         Q_EMIT itemsReceived(Item::List() << item);

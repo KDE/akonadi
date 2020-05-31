@@ -39,15 +39,15 @@ class AgentManager;
 /**
  * @internal
  */
-class AgentManagerPrivate
+class AgentManagerPrivate : public QObject
 {
     friend class AgentManager;
 
+    Q_OBJECT
 public:
     explicit AgentManagerPrivate(AgentManager *parent)
         : mParent(parent)
-    {
-    }
+    {}
 
     /*
      * Used by AgentInstanceCreateJob
@@ -98,7 +98,7 @@ public:
     static AgentManager *mSelf;
 
     AgentManager *mParent = nullptr;
-    org::freedesktop::Akonadi::AgentManager *mManager = nullptr;
+    std::unique_ptr<org::freedesktop::Akonadi::AgentManager> mManager;
 
     QHash<QString, AgentType> mTypes;
     QHash<QString, AgentInstance> mInstances;

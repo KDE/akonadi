@@ -101,8 +101,6 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void _k_sourceDataChanged(QModelIndex, QModelIndex, QVector<int>))
     //@endcond
 };
 

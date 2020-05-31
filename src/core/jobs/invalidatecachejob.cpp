@@ -97,7 +97,7 @@ void InvalidateCacheJobPrivate::itemFetchResult(KJob *job)
         item.clearPayload();
         modJob = new ItemModifyJob(item, q);
     }
-    QObject::connect(modJob, SIGNAL(result(KJob*)), q, SLOT(itemStoreResult(KJob*)));
+    QObject::connect(modJob, &KJob::result, q, [this](KJob *job) { itemStoreResult(job); });
 }
 
 void InvalidateCacheJobPrivate::itemStoreResult(KJob *job)
@@ -121,7 +121,7 @@ void InvalidateCacheJob::doStart()
     Q_D(InvalidateCacheJob);
     // resolve RID-only collections
     CollectionFetchJob *job = new CollectionFetchJob(d->collection, Akonadi::CollectionFetchJob::Base, this);
-    connect(job, SIGNAL(result(KJob*)), SLOT(collectionFetchResult(KJob*)));
+    connect(job, &KJob::result, this, [d](KJob *job) { d->collectionFetchResult(job); });
 }
 
 #include "moc_invalidatecachejob_p.cpp"

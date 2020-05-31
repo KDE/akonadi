@@ -135,7 +135,7 @@ void CollectionAttributeTest::testAttributes()
     CollectionFetchJob *list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(list);
     QCOMPARE(list->collections().count(), 1);
-    col = list->collections().first();
+    col = list->collections().at(0);
 
     QVERIFY(col.isValid());
     attr = col.attribute<TestAttribute>();
@@ -166,7 +166,7 @@ void CollectionAttributeTest::testAttributes()
     list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(list);
     QCOMPARE(list->collections().count(), 1);
-    col = list->collections().first();
+    col = list->collections().at(0);
 
     QVERIFY(col.isValid());
     attr = col.attribute<TestAttribute>();
@@ -181,7 +181,7 @@ void CollectionAttributeTest::testAttributes()
     list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(list);
     QCOMPARE(list->collections().count(), 1);
-    col = list->collections().first();
+    col = list->collections().at(0);
 
     QVERIFY(col.isValid());
     attr = col.attribute<TestAttribute>();

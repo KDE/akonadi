@@ -323,7 +323,7 @@ bool DbConfigMysql::startInternalServer()
 
                 // Linux trims executable name in /proc filesystem to 15 characters
                 const QString expectedProcName = QFileInfo(mMysqldPath).fileName().left(15);
-                if (QString::fromLatin1(stats[1]) == QString::fromLatin1("(%1)").arg(expectedProcName)) {
+                if (QString::fromLatin1(stats[1]) == QStringLiteral("(%1)").arg(expectedProcName)) {
                     // Yup, our mysqld is actually running, so pretend we started the server
                     // and try to connect to it
                     qCWarning(AKONADISERVER_LOG) << "mysqld for Akonadi is already running, trying to connect to it.";

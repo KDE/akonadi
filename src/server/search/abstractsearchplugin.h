@@ -45,9 +45,7 @@ public:
     /**
      * Destructor.
      */
-    virtual ~AbstractSearchPlugin()
-    {
-    };
+    virtual ~AbstractSearchPlugin() = default;
 
     /**
      * Reimplement this method to provide the actual search capability.
@@ -60,6 +58,11 @@ public:
      */
     virtual QSet<qint64> search(const QString &query, const QVector<qint64> &collections, const QStringList &mimeTypes) = 0;
 
+protected:
+    explicit AbstractSearchPlugin() = default;
+
+private:
+    Q_DISABLE_COPY_MOVE(AbstractSearchPlugin)
 };
 
 }

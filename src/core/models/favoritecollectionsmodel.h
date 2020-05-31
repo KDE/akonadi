@@ -129,23 +129,23 @@ public Q_SLOTS:
     /**
      * Sets the @p collections as favorite collections.
      */
-    void setCollections(const Collection::List &collections);
+    void setCollections(const Akonadi::Collection::List &collections);
 
     /**
      * Adds a @p collection to the list of favorite collections.
      */
-    void addCollection(const Collection &collection);
+    void addCollection(const Akonadi::Collection &collection);
 
     /**
      * Removes a @p collection from the list of favorite collections.
      */
-    void removeCollection(const Collection &collection);
+    void removeCollection(const Akonadi::Collection &collection);
 
     /**
      * Sets a custom @p label that will be used when showing the
      * favorite @p collection.
      */
-    void setFavoriteLabel(const Collection &collection, const QString &label);
+    void setFavoriteLabel(const Akonadi::Collection &collection, const QString &label);
 
 private Q_SLOTS:
     void pasteJobDone(KJob *job);

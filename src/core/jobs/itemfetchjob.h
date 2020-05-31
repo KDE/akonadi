@@ -258,10 +258,6 @@ protected:
 
 private:
     Q_DECLARE_PRIVATE(ItemFetchJob)
-
-    //@cond PRIVATE
-    Q_PRIVATE_SLOT(d_func(), void timeout())
-    //@endcond
 };
 
 }

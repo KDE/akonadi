@@ -59,7 +59,7 @@ struct SignalId {
     static constexpr int Size = sizeof(&Monitor::itemAdded) / sizeof(Unit);
     Unit data[sizeof(&Monitor::itemAdded) / sizeof(Unit)] = { 0 };
 
-    inline bool operator==(const SignalId &other) const {
+    inline bool operator==(SignalId other) const {
         for (int i = Size - 1; i >= 0; --i) {
             if (data[i] != other.data[i]) {
                 return false;
@@ -69,7 +69,7 @@ struct SignalId {
     }
 };
 
-inline uint qHash(const SignalId &sig)
+inline uint qHash(SignalId sig)
 {
     // The 4 LSBs of the address should be enough to give us a good hash
     return sig.data[SignalId::Size - 1];
@@ -226,7 +226,7 @@ public:
     void scheduleSubscriptionUpdate();
     void slotUpdateSubscription();
 
-    void updateListeners(const QMetaMethod &signal, ListenerAction action);
+    void updateListeners(QMetaMethod signal, ListenerAction action);
 
     template<typename Signal>
     void updateListener(Signal signal, ListenerAction action)
@@ -371,7 +371,7 @@ private:
     void fetchStatistics(Collection::Id colId)
     {
         CollectionStatisticsJob *job = new CollectionStatisticsJob(Collection(colId), session);
-        QObject::connect(job, SIGNAL(result(KJob*)), q_ptr, SLOT(slotStatisticsChangedFinished(KJob*)));
+        QObject::connect(job, &KJob::result, q_ptr, [this](KJob *job) { slotStatisticsChangedFinished(job); });
     }
 
     void notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource);

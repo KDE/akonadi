@@ -313,32 +313,22 @@ void AgentManagerPrivate::createDBusInterface()
 {
     mTypes.clear();
     mInstances.clear();
-    delete mManager;
 
-    mManager = new org::freedesktop::Akonadi::AgentManager(ServerManager::serviceName(ServerManager::Control),
+    using AgentManagerIface = org::freedesktop::Akonadi::AgentManager;
+    mManager = std::make_unique<AgentManagerIface>(ServerManager::serviceName(ServerManager::Control),
             QStringLiteral("/AgentManager"),
             QDBusConnection::sessionBus(), mParent);
 
-    QObject::connect(mManager, SIGNAL(agentTypeAdded(QString)),
-                     mParent, SLOT(agentTypeAdded(QString)));
-    QObject::connect(mManager, SIGNAL(agentTypeRemoved(QString)),
-                     mParent, SLOT(agentTypeRemoved(QString)));
-    QObject::connect(mManager, SIGNAL(agentInstanceAdded(QString)),
-                     mParent, SLOT(agentInstanceAdded(QString)));
-    QObject::connect(mManager, SIGNAL(agentInstanceRemoved(QString)),
-                     mParent, SLOT(agentInstanceRemoved(QString)));
-    QObject::connect(mManager, SIGNAL(agentInstanceStatusChanged(QString,int,QString)),
-                     mParent, SLOT(agentInstanceStatusChanged(QString,int,QString)));
-    QObject::connect(mManager, SIGNAL(agentInstanceProgressChanged(QString,uint,QString)),
-                     mParent, SLOT(agentInstanceProgressChanged(QString,uint,QString)));
-    QObject::connect(mManager, SIGNAL(agentInstanceNameChanged(QString,QString)),
-                     mParent, SLOT(agentInstanceNameChanged(QString,QString)));
-    QObject::connect(mManager, SIGNAL(agentInstanceWarning(QString,QString)),
-                     mParent, SLOT(agentInstanceWarning(QString,QString)));
-    QObject::connect(mManager, SIGNAL(agentInstanceError(QString,QString)),
-                     mParent, SLOT(agentInstanceError(QString,QString)));
-    QObject::connect(mManager, SIGNAL(agentInstanceOnlineChanged(QString,bool)),
-                     mParent, SLOT(agentInstanceOnlineChanged(QString,bool)));
+    connect(mManager.get(), &AgentManagerIface::agentTypeAdded, this, &AgentManagerPrivate::agentTypeAdded);
+    connect(mManager.get(), &AgentManagerIface::agentTypeRemoved, this, &AgentManagerPrivate::agentTypeRemoved);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceAdded, this, &AgentManagerPrivate::agentInstanceAdded);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceRemoved, this, &AgentManagerPrivate::agentInstanceRemoved);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceStatusChanged, this, &AgentManagerPrivate::agentInstanceStatusChanged);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceProgressChanged, this, &AgentManagerPrivate::agentInstanceProgressChanged);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceNameChanged, this, &AgentManagerPrivate::agentInstanceNameChanged);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceWarning, this, &AgentManagerPrivate::agentInstanceWarning);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceError, this, &AgentManagerPrivate::agentInstanceError);
+    connect(mManager.get(), &AgentManagerIface::agentInstanceOnlineChanged, this, &AgentManagerPrivate::agentInstanceOnlineChanged);
 
     if (mManager->isValid()) {
         readAgentTypes();
@@ -374,10 +364,7 @@ AgentManager::AgentManager()
 
 // @endcond
 
-AgentManager::~AgentManager()
-{
-    delete d;
-}
+AgentManager::~AgentManager() = default;
 
 AgentManager *AgentManager::self()
 {
