@@ -193,7 +193,7 @@
               <xsl:text>QString()</xsl:text>
             </xsl:when>
             <xsl:otherwise>
-              <xsl:text>QLatin1String("</xsl:text><xsl:value-of select="$columnValue" /><xsl:text>")</xsl:text>
+              <xsl:text>QStringLiteral("</xsl:text><xsl:value-of select="$columnValue" /><xsl:text>")</xsl:text>
             </xsl:otherwise>
           </xsl:choose>
         </xsl:when>
@@ -201,7 +201,7 @@
           <xsl:text>"</xsl:text><xsl:value-of select="$columnValue" /><xsl:text>"</xsl:text>
         </xsl:when>
         <xsl:when test="@type = 'QDateTime'">
-          <xsl:text>QDateTime::fromString(QLatin1String("</xsl:text><xsl:value-of select="$columnValue" /><xsl:text>"), Qt::ISODate)</xsl:text>
+          <xsl:text>QDateTime::fromString(QStringLiteral("</xsl:text><xsl:value-of select="$columnValue" /><xsl:text>"), Qt::ISODate)</xsl:text>
         </xsl:when>
       </xsl:choose>
       <xsl:text>);

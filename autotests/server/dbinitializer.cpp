@@ -23,8 +23,11 @@
 #include <storage/datastore.h>
 #include <storage/parttypehelper.h>
 
+#include "shared/akranges.h"
+
 using namespace Akonadi;
 using namespace Akonadi::Server;
+using namespace AkRanges;
 
 DbInitializer::~DbInitializer()
 {
@@ -125,11 +128,7 @@ Akonadi::Protocol::FetchCollectionsResponsePtr DbInitializer::listResponse(const
     resp->setParentId(col.parentId());
     resp->setName(col.name());
     if (mimetypes) {
-        QStringList mts;
-        for (const Akonadi::Server::MimeType &mt : col.mimeTypes()) {
-            mts << mt.name();
-        }
-        resp->setMimeTypes(mts);
+        resp->setMimeTypes(col.mimeTypes() | Views::transform(&MimeType::name) | Actions::toQList);
     }
     resp->setRemoteId(col.remoteId());
     resp->setRemoteRevision(col.remoteRevision());

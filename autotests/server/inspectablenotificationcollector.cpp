@@ -27,8 +27,8 @@ InspectableNotificationCollector::InspectableNotificationCollector(AkonadiServer
 {
 }
 
-void InspectableNotificationCollector::notify(Protocol::ChangeNotificationList ntfs)
+void InspectableNotificationCollector::notify(Protocol::ChangeNotificationList &&ntfs)
 {
     Q_EMIT notifySignal(ntfs);
-    NotificationCollector::notify(ntfs);
+    NotificationCollector::notify(std::move(ntfs));
 }

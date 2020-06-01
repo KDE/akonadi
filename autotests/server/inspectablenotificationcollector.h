@@ -35,7 +35,7 @@ public:
     InspectableNotificationCollector(AkonadiServer &akonadi, DataStore *store);
     ~InspectableNotificationCollector() override = default;
 
-    void notify(Protocol::ChangeNotificationList ntfs) override;
+    void notify(Protocol::ChangeNotificationList &&ntfs) override;
 
 Q_SIGNALS:
     void notifySignal(const Akonadi::Protocol::ChangeNotificationList &msgs);

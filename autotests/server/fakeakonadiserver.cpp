@@ -135,7 +135,7 @@ QString FakeAkonadiServer::instanceName()
 
 TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
 {
-    SchemaVersion schema = SchemaVersion::retrieveAll().first();
+    SchemaVersion schema = SchemaVersion::retrieveAll().at(0);
 
     auto hello = Protocol::HelloResponsePtr::create();
     hello->setServerName(QStringLiteral("Akonadi"));
@@ -316,7 +316,7 @@ void FakeAkonadiServer::runTest()
 
     QEventLoop serverLoop;
     connect(mClient.get(), &QThread::finished,
-            this, [this, &serverLoop]() {
+            this, [this, &serverLoop]() { // clazy:exclude=lambda-in-connect
                 disconnect(mClient.get(), &QThread::finished, this, nullptr);
                 // Flush any pending notifications and wait for them
                 // before shutting down the event loop
