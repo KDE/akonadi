@@ -54,6 +54,7 @@
 
 #include "akonadiagentbase_debug.h"
 
+#include <cstdlib>
 #include <iterator>
 #include <shared/akranges.h>
 
@@ -198,8 +199,8 @@ public:
             }
             mItemSyncer->setDisableAutomaticDeliveryDone(mDisableAutomaticItemDeliveryDone);
             mItemSyncer->setProperty("collection", QVariant::fromValue(q->currentCollection()));
-            connect(mItemSyncer, SIGNAL(percent(KJob*,ulong)), q, SLOT(slotPercent(KJob*,ulong)));
-            connect(mItemSyncer, SIGNAL(result(KJob*)), q, SLOT(slotItemSyncDone(KJob*)));
+            connect(mItemSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), this, &ResourceBasePrivate::slotPercent);
+            connect(mItemSyncer, &KJob::result, this, &ResourceBasePrivate::slotItemSyncDone);
             connect(mItemSyncer, &ItemSync::readyForNextBatch, q, &ResourceBase::retrieveNextItemSyncBatch);
         }
         Q_ASSERT(mItemSyncer);
@@ -247,7 +248,7 @@ protected Q_SLOTS:
         AgentBasePrivate::itemChanged(item, partIdentifiers);
     }
 
-    void itemsFlagsChanged(const Item::List &items, const QSet<QByteArray> &addedFlags,
+    void itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags,
                            const QSet<QByteArray> &removedFlags) override
     {
         if (addedFlags.isEmpty() && removedFlags.isEmpty()) {
@@ -264,7 +265,7 @@ protected Q_SLOTS:
         AgentBasePrivate::itemsFlagsChanged(validItems, addedFlags, removedFlags);
     }
 
-    void itemsTagsChanged(const Item::List &items, const QSet<Tag> &addedTags, const QSet<Tag> &removedTags) override
+    void itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags) override
     {
         if (addedTags.isEmpty() && removedTags.isEmpty()) {
             changeProcessed();
@@ -290,7 +291,7 @@ protected Q_SLOTS:
         AgentBasePrivate::itemMoved(item, source, destination);
     }
 
-    void itemsMoved(const Item::List &items, const Collection &source, const Collection &destination) override
+    void itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &source, const Akonadi::Collection &destination) override
     {
         if (destination.remoteId().isEmpty() || destination == source) {
             changeProcessed();
@@ -315,7 +316,7 @@ protected Q_SLOTS:
         AgentBasePrivate::itemRemoved(item);
     }
 
-    void itemsRemoved(const Item::List &items) override
+    void itemsRemoved(const Akonadi::Item::List &items) override
     {
         const Item::List validItems = filterValidItems(items);
         if (validItems.isEmpty()) {
@@ -476,45 +477,28 @@ ResourceBase::ResourceBase(const QString &id)
     d->mChangeRecorder->setResourceMonitored(d->mId.toLatin1());
     d->mChangeRecorder->fetchCollection(true);
 
-    connect(d->scheduler, &ResourceScheduler::executeFullSync,
-            this, &ResourceBase::retrieveCollections);
-    connect(d->scheduler, &ResourceScheduler::executeCollectionTreeSync,
-            this, &ResourceBase::retrieveCollections);
-    connect(d->scheduler, SIGNAL(executeCollectionSync(Akonadi::Collection)),
-            SLOT(slotSynchronizeCollection(Akonadi::Collection)));
-    connect(d->scheduler, SIGNAL(executeCollectionAttributesSync(Akonadi::Collection)),
-            SLOT(slotSynchronizeCollectionAttributes(Akonadi::Collection)));
-    connect(d->scheduler, SIGNAL(executeTagSync()),
-            SLOT(slotSynchronizeTags()));
-    connect(d->scheduler, SIGNAL(executeRelationSync()),
-            SLOT(slotSynchronizeRelations()));
-    connect(d->scheduler, SIGNAL(executeItemFetch(Akonadi::Item,QSet<QByteArray>)),
-            SLOT(slotPrepareItemRetrieval(Akonadi::Item)));
-    connect(d->scheduler, SIGNAL(executeItemsFetch(QVector<Akonadi::Item>,QSet<QByteArray>)),
-            SLOT(slotPrepareItemsRetrieval(QVector<Akonadi::Item>)));
-    connect(d->scheduler, SIGNAL(executeResourceCollectionDeletion()),
-            SLOT(slotDeleteResourceCollection()));
-    connect(d->scheduler, SIGNAL(executeCacheInvalidation(Akonadi::Collection)),
-            SLOT(slotInvalidateCache(Akonadi::Collection)));
-    connect(d->scheduler, SIGNAL(status(int,QString)),
-            SIGNAL(status(int,QString)));
-    connect(d->scheduler, &ResourceScheduler::executeChangeReplay,
-            d->mChangeRecorder, &ChangeRecorder::replayNext);
-    connect(d->scheduler, SIGNAL(executeRecursiveMoveReplay(RecursiveMover*)),
-            SLOT(slotRecursiveMoveReplay(RecursiveMover*)));
+    connect(d->scheduler, &ResourceScheduler::executeFullSync, this, &ResourceBase::retrieveCollections);
+    connect(d->scheduler, &ResourceScheduler::executeCollectionTreeSync, this, &ResourceBase::retrieveCollections);
+    connect(d->scheduler, &ResourceScheduler::executeCollectionSync, d, &ResourceBasePrivate::slotSynchronizeCollection);
+    connect(d->scheduler, &ResourceScheduler::executeCollectionAttributesSync, d, &ResourceBasePrivate::slotSynchronizeCollectionAttributes);
+    connect(d->scheduler, &ResourceScheduler::executeTagSync, d, &ResourceBasePrivate::slotSynchronizeTags);
+    connect(d->scheduler, &ResourceScheduler::executeRelationSync, d, &ResourceBasePrivate::slotSynchronizeRelations);
+    connect(d->scheduler, &ResourceScheduler::executeItemFetch, d, &ResourceBasePrivate::slotPrepareItemRetrieval);
+    connect(d->scheduler, &ResourceScheduler::executeItemsFetch, d, &ResourceBasePrivate::slotPrepareItemsRetrieval);
+    connect(d->scheduler, &ResourceScheduler::executeResourceCollectionDeletion, d, &ResourceBasePrivate::slotDeleteResourceCollection);
+    connect(d->scheduler, &ResourceScheduler::executeCacheInvalidation, d, &ResourceBasePrivate::slotInvalidateCache);
+    connect(d->scheduler, &ResourceScheduler::status, this, qOverload<int, const QString &>(&ResourceBase::status));
+    connect(d->scheduler, &ResourceScheduler::executeChangeReplay, d->mChangeRecorder, &ChangeRecorder::replayNext);
+    connect(d->scheduler, &ResourceScheduler::executeRecursiveMoveReplay, d, &ResourceBasePrivate::slotRecursiveMoveReplay);
     connect(d->scheduler, &ResourceScheduler::fullSyncComplete, this, &ResourceBase::synchronized);
     connect(d->scheduler, &ResourceScheduler::collectionTreeSyncComplete, this, &ResourceBase::collectionTreeSynchronized);
     connect(d->mChangeRecorder, &ChangeRecorder::nothingToReplay, d->scheduler, &ResourceScheduler::taskDone);
-    connect(d->mChangeRecorder, &Monitor::collectionRemoved,
-            d->scheduler, &ResourceScheduler::collectionRemoved);
-    connect(this, SIGNAL(abortRequested()), this, SLOT(slotAbortRequested()));
+    connect(d->mChangeRecorder, &Monitor::collectionRemoved, d->scheduler, &ResourceScheduler::collectionRemoved);
+    connect(this, &ResourceBase::abortRequested, d, &ResourceBasePrivate::slotAbortRequested);
     connect(this, &ResourceBase::synchronized, d->scheduler, &ResourceScheduler::taskDone);
     connect(this, &ResourceBase::collectionTreeSynchronized, d->scheduler, &ResourceScheduler::taskDone);
-    connect(this, &AgentBase::agentNameChanged,
-            this, &ResourceBase::nameChanged);
-
-    connect(&d->mProgressEmissionCompressor, SIGNAL(timeout()),
-            this, SLOT(slotDelayedEmitProgress()));
+    connect(this, &AgentBase::agentNameChanged, this, &ResourceBase::nameChanged);
+    connect(&d->mProgressEmissionCompressor, &QTimer::timeout, d, &ResourceBasePrivate::slotDelayedEmitProgress);
 
     d->scheduler->setOnline(d->mOnline);
     if (!d->mChangeRecorder->isEmpty()) {
@@ -523,7 +507,7 @@ ResourceBase::ResourceBase(const QString &id)
 
     new ResourceSelectJob(identifier());
 
-    connect(d->mChangeRecorder->session(), SIGNAL(reconnected()), SLOT(slotSessionReconnected()));
+    connect(d->mChangeRecorder->session(), &Session::reconnected, d, &ResourceBasePrivate::slotSessionReconnected);
 }
 
 ResourceBase::~ResourceBase() = default;
@@ -619,7 +603,7 @@ void ResourceBase::itemRetrieved(const Item &item)
     job->d_func()->setSilent(true);
     // FIXME: remove once the item with which we call retrieveItem() has a revision number
     job->disableRevisionCheck();
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotDeliveryDone(KJob*)));
+    connect(job, &KJob::result, d, &ResourceBasePrivate::slotDeliveryDone);
 }
 
 void ResourceBasePrivate::slotDeliveryDone(KJob *job)
@@ -643,7 +627,7 @@ void ResourceBase::collectionAttributesRetrieved(const Collection &collection)
     }
 
     CollectionModifyJob *job = new CollectionModifyJob(collection);
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotCollectionAttributesSyncDone(KJob*)));
+    connect(job, &KJob::result, d, &ResourceBasePrivate::slotCollectionAttributesSyncDone);
 }
 
 void ResourceBasePrivate::slotCollectionAttributesSyncDone(KJob *job)
@@ -663,7 +647,7 @@ void ResourceBasePrivate::slotDeleteResourceCollection()
 
     CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel);
     job->fetchScope().setResource(q->identifier());
-    connect(job, SIGNAL(result(KJob*)), q, SLOT(slotDeleteResourceCollectionDone(KJob*)));
+    connect(job, &KJob::result, this, &ResourceBasePrivate::slotDeleteResourceCollectionDone);
 }
 
 void ResourceBasePrivate::slotDeleteResourceCollectionDone(KJob *job)
@@ -677,7 +661,7 @@ void ResourceBasePrivate::slotDeleteResourceCollectionDone(KJob *job)
 
         if (!fetchJob->collections().isEmpty()) {
             CollectionDeleteJob *job = new CollectionDeleteJob(fetchJob->collections().at(0));
-            connect(job, SIGNAL(result(KJob*)), q, SLOT(slotCollectionDeletionDone(KJob*)));
+            connect(job, &KJob::result, this, &ResourceBasePrivate::slotCollectionDeletionDone);
         } else {
             // there is no resource collection, so just ignore the request
             scheduler->taskDone();
@@ -698,8 +682,7 @@ void ResourceBasePrivate::slotCollectionDeletionDone(KJob *job)
 void ResourceBasePrivate::slotInvalidateCache(const Akonadi::Collection &collection)
 {
     Q_Q(ResourceBase);
-    InvalidateCacheJob *job = new InvalidateCacheJob(collection, q);
-    connect(job, &KJob::result, scheduler, &ResourceScheduler::taskDone);
+    new InvalidateCacheJob(collection, q);
 }
 
 void ResourceBase::changeCommitted(const Item &item)
@@ -709,9 +692,9 @@ void ResourceBase::changeCommitted(const Item &item)
 
 void ResourceBase::changesCommitted(const Item::List &items)
 {
+    Q_D(ResourceBase);
     TransactionSequence *transaction = new TransactionSequence(this);
-    connect(transaction, SIGNAL(finished(KJob*)),
-            this, SLOT(changeCommittedResult(KJob*)));
+    connect(transaction, &KJob::finished, d, &ResourceBasePrivate::changeCommittedResult);
 
     // Modify the items one-by-one, because STORE does not support mass RID change
     for (const Item &item : items) {
@@ -724,8 +707,9 @@ void ResourceBase::changesCommitted(const Item::List &items)
 
 void ResourceBase::changeCommitted(const Collection &collection)
 {
+    Q_D(ResourceBase);
     CollectionModifyJob *job = new CollectionModifyJob(collection);
-    connect(job, SIGNAL(result(KJob*)), SLOT(changeCommittedResult(KJob*)));
+    connect(job, &KJob::result, d, &ResourceBasePrivate::changeCommittedResult);
 }
 
 void ResourceBasePrivate::changeCommittedResult(KJob *job)
@@ -752,8 +736,9 @@ void ResourceBasePrivate::changeCommittedResult(KJob *job)
 
 void ResourceBase::changeCommitted(const Tag &tag)
 {
+    Q_D(ResourceBase);
     TagModifyJob *job = new TagModifyJob(tag);
-    connect(job, SIGNAL(result(KJob*)), SLOT(changeCommittedResult(KJob*)));
+    connect(job, &KJob::result, d, &ResourceBasePrivate::changeCommittedResult);
 }
 
 void ResourceBase::requestItemDelivery(const QVector<qint64> &uids, const QByteArrayList &parts)
@@ -783,8 +768,8 @@ void ResourceBase::collectionsRetrieved(const Collection::List &collections)
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
         d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
-        connect(d->mCollectionSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
-        connect(d->mCollectionSyncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)));
+        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setRemoteCollections(collections);
 }
@@ -801,8 +786,8 @@ void ResourceBase::collectionsRetrievedIncremental(const Collection::List &chang
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
         d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
-        connect(d->mCollectionSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
-        connect(d->mCollectionSyncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)));
+        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setRemoteCollections(changedCollections, removedCollections);
 }
@@ -817,8 +802,8 @@ void ResourceBase::setCollectionStreamingEnabled(bool enable)
     if (!d->mCollectionSyncer) {
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
-        connect(d->mCollectionSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
-        connect(d->mCollectionSyncer, SIGNAL(result(KJob*)), SLOT(slotCollectionSyncDone(KJob*)));
+        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setStreamingEnabled(enable);
 }
@@ -862,7 +847,7 @@ void ResourceBasePrivate::slotCollectionSyncDone(KJob *job)
             list->fetchScope().fetchAttribute<FavoriteCollectionAttribute>();
             list->fetchScope().setResource(mId);
             list->fetchScope().setListFilter(CollectionFetchScope::Sync);
-            q->connect(list, SIGNAL(result(KJob*)), q, SLOT(slotLocalListDone(KJob*)));
+            connect(list, &KJob::result, this, &ResourceBasePrivate::slotLocalListDone);
             return;
         } else if (scheduler->currentTask().type == ResourceScheduler::SyncCollectionTree) {
             scheduler->scheduleCollectionTreeSyncCompletion();
@@ -950,7 +935,7 @@ void ResourceBasePrivate::slotSynchronizeCollection(const Collection &col)
                                           << currentCollection.id() << currentCollection.displayName();
             Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
             fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
-            connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(slotItemRetrievalCollectionFetchDone(KJob*)));
+            connect(fetchJob, &KJob::result, this, &ResourceBasePrivate::slotItemRetrievalCollectionFetchDone);
             mCurrentCollectionFetchJob = fetchJob;
             return;
         }
@@ -1000,7 +985,7 @@ void ResourceBasePrivate::slotSynchronizeCollectionAttributes(const Collection &
     Q_Q(ResourceBase);
     Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(col, CollectionFetchJob::Base, this);
     fetchJob->setFetchScope(q->changeRecorder()->collectionFetchScope());
-    connect(fetchJob, SIGNAL(result(KJob*)), q, SLOT(slotAttributeRetrievalCollectionFetchDone(KJob*)));
+    connect(fetchJob, &KJob::result, this, &ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone);
     Q_ASSERT(!mCurrentCollectionFetchJob);
     mCurrentCollectionFetchJob = fetchJob;
 }
@@ -1015,6 +1000,7 @@ void ResourceBasePrivate::slotAttributeRetrievalCollectionFetchDone(KJob *job)
         return;
     }
     Akonadi::CollectionFetchJob *fetchJob = static_cast<Akonadi::CollectionFetchJob *>(job);
+    // FIXME: Why not call q-> directly?
     QMetaObject::invokeMethod(q, "retrieveCollectionAttributes", Q_ARG(Akonadi::Collection, fetchJob->collections().at(0)));
 }
 
@@ -1046,7 +1032,7 @@ void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
         fetch->fetchScope().fetchAttribute(attribute);
     }
 
-    q->connect(fetch, SIGNAL(result(KJob*)), SLOT(slotPrepareItemRetrievalResult(KJob*)));
+    connect(fetch, &KJob::result, this, &ResourceBasePrivate::slotPrepareItemRetrievalResult);
 }
 
 void ResourceBasePrivate::slotPrepareItemRetrievalResult(KJob *job)
@@ -1089,7 +1075,7 @@ void ResourceBasePrivate::slotPrepareItemsRetrieval(const QVector<Item> &items)
         fetch->fetchScope().fetchAttribute(attribute);
     }
 
-    q->connect(fetch, SIGNAL(result(KJob*)), SLOT(slotPrepareItemsRetrievalResult(KJob*)));
+    connect(fetch, &KJob::result, this, &ResourceBasePrivate::slotPrepareItemsRetrievalResult);
 }
 
 void ResourceBasePrivate::slotPrepareItemsRetrievalResult(KJob *job)
@@ -1118,11 +1104,10 @@ void ResourceBasePrivate::slotPrepareItemsRetrievalResult(KJob *job)
 
 void ResourceBasePrivate::slotRecursiveMoveReplay(RecursiveMover *mover)
 {
-    Q_Q(ResourceBase);
     Q_ASSERT(mover);
     Q_ASSERT(!m_recursiveMover);
     m_recursiveMover = mover;
-    connect(mover, SIGNAL(result(KJob*)), q, SLOT(slotRecursiveMoveReplayResult(KJob*)));
+    connect(mover, &KJob::result, this, &ResourceBasePrivate::slotRecursiveMoveReplayResult);
     mover->start();
 }
 
@@ -1274,11 +1259,12 @@ void ResourceBase::synchronizeCollection(qint64 collectionId)
 
 void ResourceBase::synchronizeCollection(qint64 collectionId, bool recursive)
 {
+    Q_D(ResourceBase);
     CollectionFetchJob *job = new CollectionFetchJob(Collection(collectionId), recursive ? CollectionFetchJob::Recursive : CollectionFetchJob::Base);
     job->setFetchScope(changeRecorder()->collectionFetchScope());
     job->fetchScope().setResource(identifier());
     job->fetchScope().setListFilter(CollectionFetchScope::Sync);
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotCollectionListDone(KJob*)));
+    connect(job, &KJob::result, d, &ResourceBasePrivate::slotCollectionListDone);
 }
 
 void ResourceBasePrivate::slotCollectionListDone(KJob *job)
@@ -1307,10 +1293,11 @@ void ResourceBase::synchronizeCollectionAttributes(const Akonadi::Collection &co
 
 void ResourceBase::synchronizeCollectionAttributes(qint64 collectionId)
 {
+    Q_D(ResourceBase);
     CollectionFetchJob *job = new CollectionFetchJob(Collection(collectionId), CollectionFetchJob::Base);
     job->setFetchScope(changeRecorder()->collectionFetchScope());
     job->fetchScope().setResource(identifier());
-    connect(job, SIGNAL(result(KJob*)), SLOT(slotCollectionListForAttributesDone(KJob*)));
+    connect(job, &KJob::result, d, &ResourceBasePrivate::slotCollectionListForAttributesDone);
 }
 
 void ResourceBasePrivate::slotCollectionListForAttributesDone(KJob *job)
@@ -1358,8 +1345,7 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
     Q_D(ResourceBase);
     if (d->scheduler->currentTask().type == ResourceScheduler::FetchItems) {
         auto trx = new TransactionSequence(this);
-        connect(trx, SIGNAL(result(KJob*)),
-                this, SLOT(slotItemSyncDone(KJob*)));
+        connect(trx, &KJob::result, d, &ResourceBasePrivate::slotItemSyncDone);
         for (const Item &item : items) {
             Q_ASSERT(item.parentCollection().isValid());
             if (item.isValid()) {
@@ -1553,7 +1539,7 @@ QString ResourceBase::dumpSchedulerToString() const
 void ResourceBase::dumpMemoryInfo() const
 {
     Q_D(const ResourceBase);
-    return d->dumpMemoryInfo();
+    d->dumpMemoryInfo();
 }
 
 QString ResourceBase::dumpMemoryInfoToString() const
@@ -1572,8 +1558,8 @@ void ResourceBase::tagsRetrieved(const Tag::List &tags, const QHash<QString, Ite
                "Calling tagsRetrieved() although no tag retrieval is in progress");
     if (!d->mTagSyncer) {
         d->mTagSyncer = new TagSync(this);
-        connect(d->mTagSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
-        connect(d->mTagSyncer, SIGNAL(result(KJob*)), SLOT(slotTagSyncDone(KJob*)));
+        connect(d->mTagSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mTagSyncer, &KJob::result, d, &ResourceBasePrivate::slotTagSyncDone);
     }
     d->mTagSyncer->setFullTagList(tags);
     d->mTagSyncer->setTagMembers(tagMembers);
@@ -1603,8 +1589,8 @@ void ResourceBase::relationsRetrieved(const Relation::List &relations)
                "Calling relationsRetrieved() although no relation retrieval is in progress");
     if (!d->mRelationSyncer) {
         d->mRelationSyncer = new RelationSync(this);
-        connect(d->mRelationSyncer, SIGNAL(percent(KJob*,ulong)), SLOT(slotPercent(KJob*,ulong)));
-        connect(d->mRelationSyncer, SIGNAL(result(KJob*)), SLOT(slotRelationSyncDone(KJob*)));
+        connect(d->mRelationSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mRelationSyncer, &KJob::result, d, &ResourceBasePrivate::slotRelationSyncDone);
     }
     d->mRelationSyncer->setRemoteRelations(relations);
 }
