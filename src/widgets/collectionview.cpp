@@ -80,7 +80,7 @@ void CollectionView::Private::init()
     dragExpandTimer.setSingleShot(true);
     mParent->connect(&dragExpandTimer, &QTimer::timeout, mParent, [this]() { dragExpand(); });
 
-    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
+    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const QModelIndex &mi) { itemClicked(mi); });
 
     ControlGui::widgetNeedsAkonadi(mParent);
 }
@@ -157,8 +157,8 @@ void CollectionView::setModel(QAbstractItemModel *model)
     QTreeView::setModel(model);
     header()->setStretchLastSection(true);
 
-    connect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(itemCurrentChanged(QModelIndex)));
+    connect(selectionModel(), &QItemSelectionModel::currentChanged,
+            this, [this](const QModelIndex &mi) { d->itemCurrentChanged(mi); });
 }
 
 void CollectionView::dragMoveEvent(QDragMoveEvent *event)

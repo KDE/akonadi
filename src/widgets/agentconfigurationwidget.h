@@ -43,7 +43,7 @@ public:
     void load();
     void save();
     QSize restoreDialogSize() const;
-    void saveDialogSize(const QSize &size);
+    void saveDialogSize(QSize size);
     QDialogButtonBox::StandardButtons standardButtons() const;
 
 Q_SIGNALS:

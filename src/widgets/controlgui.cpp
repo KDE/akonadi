@@ -42,6 +42,7 @@ namespace Internal
 
 class ControlProgressIndicator : public QFrame
 {
+    Q_OBJECT
 public:
     ControlProgressIndicator(QWidget *parent = nullptr)
         : QFrame(parent)
@@ -65,11 +66,7 @@ public:
 
 class StaticControlGui : public ControlGui
 {
-public:
-    StaticControlGui()
-        : ControlGui()
-    {
-    }
+    Q_OBJECT
 };
 
 }
@@ -268,9 +265,9 @@ void ControlGui::widgetNeedsAkonadi(QWidget *widget)
     s_instance->d->mPendingOverlays.append(widget);
     // delay the overlay creation since we rely on widget being reparented
     // correctly already
-    QTimer::singleShot(0, s_instance, SLOT(createErrorOverlays()));
+    QTimer::singleShot(0, s_instance, []() { s_instance->d->createErrorOverlays(); });
 }
 
 }
 
-#include "moc_controlgui.cpp"
+#include "controlgui.moc"

@@ -141,11 +141,6 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void itemActivated(const QModelIndex &))
-    Q_PRIVATE_SLOT(d, void itemCurrentChanged(const QModelIndex &))
-    Q_PRIVATE_SLOT(d, void itemClicked(const QModelIndex &))
-    Q_PRIVATE_SLOT(d, void itemDoubleClicked(const QModelIndex &))
     //@endcond
 };
 

@@ -133,9 +133,6 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void currentAgentInstanceChanged(const QModelIndex &, const QModelIndex &))
-    Q_PRIVATE_SLOT(d, void currentAgentInstanceClicked(const QModelIndex &currentIndex))
     //@endcond
 };
 

@@ -60,15 +60,6 @@ static inline bool canContainItems(const Collection &collection)
     return true;
 }
 
-ActionStateManager::ActionStateManager()
-    : mReceiver(nullptr)
-{
-}
-
-ActionStateManager::~ActionStateManager()
-{
-}
-
 void ActionStateManager::setReceiver(QObject *object)
 {
     mReceiver = object;

@@ -38,6 +38,7 @@ namespace Internal
  */
 class AgentTypeWidgetDelegate : public QAbstractItemDelegate
 {
+    Q_OBJECT
 public:
     explicit AgentTypeWidgetDelegate(QObject *parent = nullptr);
 
@@ -45,7 +46,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
-    void drawFocus(QPainter *, const QStyleOptionViewItem &, const QRect &) const;
+    void drawFocus(QPainter *, const QStyleOptionViewItem &, QRect) const;
 };
 
 }
@@ -258,7 +259,7 @@ QSize AgentTypeWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, cons
     return QSize(width, height);
 }
 
-void AgentTypeWidgetDelegate::drawFocus(QPainter *painter, const QStyleOptionViewItem &option, const QRect &rect) const
+void AgentTypeWidgetDelegate::drawFocus(QPainter *painter, const QStyleOptionViewItem &option, QRect rect) const
 {
     if (option.state & QStyle::State_HasFocus) {
         QStyleOptionFocusRect o;
@@ -275,4 +276,4 @@ void AgentTypeWidgetDelegate::drawFocus(QPainter *painter, const QStyleOptionVie
 
 }
 
-#include "moc_agenttypewidget.cpp"
+#include "agenttypewidget.moc"

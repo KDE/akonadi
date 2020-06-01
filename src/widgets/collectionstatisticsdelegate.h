@@ -94,7 +94,6 @@ public:
      */
     void updatePalette();
 
-public Q_SLOTS:
     /**
      * Sets whether the unread count is drawn next to the folder name.
      *

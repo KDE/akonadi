@@ -103,9 +103,7 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             if (auto dlg = qobject_cast<AgentConfigurationDialog*>(parent)) {
                 const_cast<AgentInstance&>(instance).configure(topLevelWidget()->parentWidget());
                 // If we are inside the AgentConfigurationDialog, hide the dialog
-                QTimer::singleShot(0, [dlg]() {
-                    dlg->reject();
-                });
+                QTimer::singleShot(0, this, [dlg]() { dlg->reject(); });
             } else {
                 const_cast<AgentInstance&>(instance).configure();
                 // Otherwise show a message that this is opened externally
@@ -154,7 +152,7 @@ QSize AgentConfigurationWidget::restoreDialogSize() const
     return {};
 }
 
-void AgentConfigurationWidget::saveDialogSize(const QSize &size)
+void AgentConfigurationWidget::saveDialogSize(QSize size)
 {
     if (d->plugin) {
         d->plugin->saveDialogSize(size);
@@ -172,8 +170,8 @@ QDialogButtonBox::StandardButtons AgentConfigurationWidget::standardButtons() co
 void AgentConfigurationWidget::childEvent(QChildEvent *event)
 {
     if (event->added()) {
-        if (auto widget = qobject_cast<QWidget*>(event->child())) {
-            layout()->addWidget(widget);
+        if (event->child()->isWidgetType()) {
+            layout()->addWidget(static_cast<QWidget*>(event->child()));
         }
     }
 

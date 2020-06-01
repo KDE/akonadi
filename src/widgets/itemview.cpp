@@ -62,9 +62,9 @@ void ItemView::Private::init()
     mParent->header()->setSectionsClickable(true);
     mParent->header()->setStretchLastSection(true);
 
-    mParent->connect(mParent, SIGNAL(activated(QModelIndex)), mParent, SLOT(itemActivated(QModelIndex)));
-    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
-    mParent->connect(mParent, QOverload<const QModelIndex &>::of(&QAbstractItemView::doubleClicked), mParent, [this](const QModelIndex &index) { itemDoubleClicked(index); });
+    mParent->connect(mParent, &QAbstractItemView::activated, mParent, [this](const auto &index) { itemActivated(index); });
+    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) { itemClicked(index); });
+    mParent->connect(mParent, &QAbstractItemView::doubleClicked, [this](const auto &index) { itemDoubleClicked(index); });
 
     ControlGui::widgetNeedsAkonadi(mParent);
 }
@@ -144,10 +144,14 @@ ItemView::~ItemView()
 
 void ItemView::setModel(QAbstractItemModel *model)
 {
+    if (selectionModel()) {
+        disconnect(selectionModel(), &QItemSelectionModel::currentChanged, this, nullptr);
+    }
+
     QTreeView::setModel(model);
 
-    connect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(itemCurrentChanged(QModelIndex)));
+    connect(selectionModel(), &QItemSelectionModel::currentChanged,
+            this, [this](const auto &index) { d->itemCurrentChanged(index); });
 }
 
 void ItemView::contextMenuEvent(QContextMenuEvent *event)

@@ -180,6 +180,12 @@ public:
      * @param parent The parent widget.
      */
     virtual CollectionPropertiesPage *createWidget(QWidget *parent = nullptr) const = 0;
+
+protected:
+    explicit CollectionPropertiesPageFactory() = default;
+
+private:
+    Q_DISABLE_COPY_MOVE(CollectionPropertiesPageFactory)
 };
 
 /**

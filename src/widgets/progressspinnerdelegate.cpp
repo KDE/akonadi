@@ -60,7 +60,8 @@ void DelegateAnimator::pop(const QModelIndex &index)
 void DelegateAnimator::timerEvent(QTimerEvent *event)
 {
     if (!(event->timerId() == m_timerId && m_view)) {
-        return QObject::timerEvent(event);
+        QObject::timerEvent(event);
+        return;
     }
 
     QRegion region;

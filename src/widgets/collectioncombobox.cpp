@@ -81,16 +81,11 @@ public:
         mParent->model()->sort(mParent->modelColumn());
 
         mSelectionHandler = new AsyncSelectionHandler(mRightsFilterModel, mParent);
-        mParent->connect(mSelectionHandler, SIGNAL(collectionAvailable(QModelIndex)),
-                         mParent, SLOT(activated(QModelIndex)));
-
-        mParent->connect(mParent, SIGNAL(activated(int)),
-                         mParent, SLOT(activated(int)));
+        mParent->connect(mSelectionHandler, &AsyncSelectionHandler::collectionAvailable,
+                         mParent, [this](const auto &mi) { activated(mi); });
     }
 
-    ~Private()
-    {
-    }
+    ~Private() = default;
 
     void activated(int index);
     void activated(const QModelIndex &index);

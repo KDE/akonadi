@@ -39,12 +39,9 @@ public:
     /*
      * Creates a new action state manager.
      */
-    ActionStateManager();
+    explicit ActionStateManager() = default;
 
-    /**
-     * Destroys the action state manager.
-     */
-    virtual ~ActionStateManager();
+    virtual ~ActionStateManager() = default;
 
     /**
      * Updates the states according to the selected collections and items.
@@ -79,6 +76,8 @@ protected:
     virtual void updateAlternatingAction(int action);
 
 private:
+    Q_DISABLE_COPY_MOVE(ActionStateManager)
+
     QObject *mReceiver = nullptr;
 };
 

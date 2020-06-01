@@ -96,8 +96,8 @@ void EntityTreeView::Private::init()
     mParent->setDragEnabled(true);
 #endif
 
-    mParent->connect(mParent, SIGNAL(clicked(QModelIndex)), mParent, SLOT(itemClicked(QModelIndex)));
-    mParent->connect(mParent, SIGNAL(doubleClicked(QModelIndex)), mParent, SLOT(itemDoubleClicked(QModelIndex)));
+    mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) { itemClicked(index); });
+    mParent->connect(mParent, &QAbstractItemView::doubleClicked, mParent, [this](const auto &index) { itemDoubleClicked(index); });
 
     ControlGui::widgetNeedsAkonadi(mParent);
 }
@@ -205,21 +205,17 @@ EntityTreeView::~EntityTreeView()
 void EntityTreeView::setModel(QAbstractItemModel *model)
 {
     if (selectionModel()) {
-        disconnect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-                   this, SLOT(itemCurrentChanged(QModelIndex)));
-
-        disconnect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                   this, SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+        disconnect(selectionModel(), &QItemSelectionModel::currentChanged, this, nullptr);
+        disconnect(selectionModel(), &QItemSelectionModel::selectionChanged, this, nullptr);
     }
 
     QTreeView::setModel(model);
     header()->setStretchLastSection(true);
 
-    connect(selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            SLOT(itemCurrentChanged(QModelIndex)));
-
-    connect(selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(slotSelectionChanged(QItemSelection,QItemSelection)));
+    connect(selectionModel(), &QItemSelectionModel::currentChanged,
+            this, [this](const auto &index) { d->itemCurrentChanged(index); });
+    connect(selectionModel(), &QItemSelectionModel::selectionChanged,
+            this, [this](const auto &oldSel, const auto &newSel) { d->slotSelectionChanged(oldSel, newSel); });
 }
 
 void EntityTreeView::timerEvent(QTimerEvent *event)

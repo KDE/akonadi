@@ -116,11 +116,10 @@ public:
         mParent->connect(filterCollectionLineEdit, &QLineEdit::textChanged,
                          mParent, [this](const QString &str) { slotFilterFixedString(str); });
 
-        mParent->connect(mView->selectionModel(), SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-                         mParent, SLOT(slotSelectionChanged()));
-
-        mParent->connect(mView, SIGNAL(doubleClicked(QModelIndex)),
-                         mParent, SLOT(slotDoubleClicked()));
+        mParent->connect(mView->selectionModel(), &QItemSelectionModel::selectionChanged,
+                         mParent, [this]() { slotSelectionChanged(); });
+        mParent->connect(mView, qOverload<const QModelIndex &>(&QAbstractItemView::doubleClicked),
+                         mParent, [this]() { slotDoubleClicked(); });
 
         mSelectionHandler = new AsyncSelectionHandler(mFilterCollection, mParent);
         mParent->connect(mSelectionHandler, &AsyncSelectionHandler::collectionAvailable,
@@ -233,7 +232,7 @@ void CollectionDialog::Private::changeCollectionDialogOptions(CollectionDialogOp
         mNewSubfolderButton->setIcon(QIcon::fromTheme(QStringLiteral("folder-new")));
         mNewSubfolderButton->setToolTip(i18n("Create a new subfolder under the currently selected folder"));
         mNewSubfolderButton->setEnabled(false);
-        connect(mNewSubfolderButton, SIGNAL(clicked(bool)), mParent, SLOT(slotAddChildCollection()));
+        connect(mNewSubfolderButton, &QPushButton::clicked, mParent, [this]() { slotAddChildCollection(); });
     }
     mKeepTreeExpanded = (options & KeepTreeExpanded);
     if (mKeepTreeExpanded) {

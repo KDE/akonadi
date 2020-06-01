@@ -368,11 +368,6 @@ private:
     Private *const d;
 
     Q_PRIVATE_SLOT(d, void updateActions())
-#ifndef QT_NO_CLIPBOARD
-    Q_PRIVATE_SLOT(d, void clipboardChanged(QClipboard::Mode))
-#endif
-    Q_PRIVATE_SLOT(d, void collectionSelectionChanged())
-    Q_PRIVATE_SLOT(d, void favoriteSelectionChanged())
 
     Q_PRIVATE_SLOT(d, void slotCreateCollection())
     Q_PRIVATE_SLOT(d, void slotCopyCollections())
@@ -420,8 +415,6 @@ private:
     Q_PRIVATE_SLOT(d, void updatePluralLabel(int, int))
     Q_PRIVATE_SLOT(d, void updateAlternatingAction(int))
     Q_PRIVATE_SLOT(d, bool isFavoriteCollection(const Akonadi::Collection &))
-
-    Q_PRIVATE_SLOT(d, void aboutToShowMenu())
     //@endcond
 };
 

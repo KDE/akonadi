@@ -174,7 +174,7 @@ public:
 
             if (agentType.isValid()) {
                 AgentInstanceCreateJob *job = new AgentInstanceCreateJob(agentType, q);
-                q->connect(job, SIGNAL(result(KJob*)), SLOT(slotAgentInstanceCreationResult(KJob*)));
+                q->connect(job, &KJob::result, q, [this](KJob *job) { slotAgentInstanceCreationResult(job); });
                 job->configure(mParentWidget);
                 job->start();
             }
@@ -274,8 +274,8 @@ AgentActionManager::~AgentActionManager()
 void AgentActionManager::setSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->mSelectionModel = selectionModel;
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(updateActions()));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged,
+            this, [this]() { d->updateActions(); });
 }
 
 void AgentActionManager::setMimeTypeFilter(const QStringList &mimeTypes)
@@ -319,7 +319,8 @@ QAction *AgentActionManager::createAction(Type type)
 void AgentActionManager::createAllActions()
 {
     for (int type = 0; type < LastType; ++type) {
-        createAction(static_cast<Type>(type));
+        auto action = createAction(static_cast<Type>(type));
+        Q_UNUSED(action);
     }
 }
 

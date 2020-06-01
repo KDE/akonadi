@@ -52,9 +52,7 @@ static inline QString textToHTML(const QString &text)
 class HtmlDifferencesReporter : public AbstractDifferencesReporter
 {
 public:
-    HtmlDifferencesReporter()
-    {
-    }
+    HtmlDifferencesReporter() = default;
 
     QString toHtml() const
     {

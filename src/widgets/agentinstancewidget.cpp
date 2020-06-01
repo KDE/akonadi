@@ -67,6 +67,7 @@ static const int s_delegatePaddingSize = 7;
 
 class AgentInstanceWidgetDelegate : public QAbstractItemDelegate
 {
+    Q_OBJECT
 public:
     explicit AgentInstanceWidgetDelegate(QObject *parent = nullptr);
 
@@ -164,12 +165,11 @@ AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
     d->mView->selectionModel()->setCurrentIndex(d->mView->model()->index(0, 0), QItemSelectionModel::Select);
     d->mView->scrollTo(d->mView->model()->index(0, 0));
 
-    connect(d->mView->selectionModel(), SIGNAL(currentChanged(QModelIndex,QModelIndex)),
-            this, SLOT(currentAgentInstanceChanged(QModelIndex,QModelIndex)));
+    connect(d->mView->selectionModel(), &QItemSelectionModel::currentChanged,
+            this, [this](const auto &tl, const auto &br) { d->currentAgentInstanceChanged(tl, br); });
     connect(d->mView, &QListView::doubleClicked,
             this, [this](const QModelIndex &currentIndex) { d->currentAgentInstanceDoubleClicked(currentIndex); });
-    connect(d->mView, SIGNAL(clicked(QModelIndex)),
-            this, SLOT(currentAgentInstanceClicked(QModelIndex)));
+    connect(d->mView, &QListView::clicked, this, [this](const auto &mi) { d->currentAgentInstanceClicked(mi); });
 }
 
 AgentInstanceWidget::~AgentInstanceWidget()
@@ -302,4 +302,4 @@ QSize AgentInstanceWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, 
 
 }
 
-#include "moc_agentinstancewidget.cpp"
+#include "agentinstancewidget.moc"

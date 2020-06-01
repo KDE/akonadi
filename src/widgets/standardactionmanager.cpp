@@ -316,8 +316,8 @@ public:
             menu = new QMenu();
 
             menu->setProperty("actionType", static_cast<int>(type));
-            q->connect(menu, SIGNAL(aboutToShow()), SLOT(aboutToShowMenu()));
-            q->connect(menu, SIGNAL(triggered(QAction*)), standardActionData[type].slot);
+            q->connect(menu, &QMenu::aboutToShow, q, [this]() { aboutToShowMenu(); });
+            q->connect(menu, SIGNAL(triggered(QAction*)), standardActionData[type].slot); // clazy:exclude=old-style-connect
             actionMenu->setMenu(menu);
         }
     }
@@ -661,7 +661,7 @@ public:
         }
 
         CollectionCreateJob *job = new CollectionCreateJob(collection);
-        q->connect(job, SIGNAL(result(KJob*)), q, SLOT(collectionCreationResult(KJob*)));
+        q->connect(job, &KJob::result, q, [this](KJob *job) { collectionCreationResult(job); });
     }
 
     void slotCopyCollections()
@@ -1157,7 +1157,7 @@ public:
 
             if (agentType.isValid()) {
                 AgentInstanceCreateJob *job = new AgentInstanceCreateJob(agentType, q);
-                q->connect(job, SIGNAL(result(KJob*)), SLOT(resourceCreationResult(KJob*)));
+                q->connect(job, &KJob::result, q, [this](KJob *job) { resourceCreationResult(job); });
                 job->configure(parentWidget);
                 job->start();
             }
@@ -1606,7 +1606,7 @@ StandardActionManager::StandardActionManager(KActionCollection *actionCollection
     d->actionCollection = actionCollection;
     d->mActionStateManager.setReceiver(this);
 #ifndef QT_NO_CLIPBOARD
-    connect(QApplication::clipboard(), SIGNAL(changed(QClipboard::Mode)), SLOT(clipboardChanged(QClipboard::Mode)));
+    connect(QApplication::clipboard(), &QClipboard::changed, this, [this](auto mode) { d->clipboardChanged(mode); });
 #endif
 }
 
@@ -1618,8 +1618,7 @@ StandardActionManager::~StandardActionManager()
 void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->collectionSelectionModel = selectionModel;
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(collectionSelectionChanged()));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() { d->collectionSelectionChanged(); });
 
     d->checkModelsConsistency();
 }
@@ -1627,8 +1626,7 @@ void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel *sel
 void StandardActionManager::setItemSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->itemSelectionModel = selectionModel;
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(updateActions()));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() { d->updateActions(); });
 }
 
 void StandardActionManager::setFavoriteCollectionsModel(FavoriteCollectionsModel *favoritesModel)
@@ -1640,8 +1638,7 @@ void StandardActionManager::setFavoriteCollectionsModel(FavoriteCollectionsModel
 void StandardActionManager::setFavoriteSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->favoriteSelectionModel = selectionModel;
-    connect(selectionModel, SIGNAL(selectionChanged(QItemSelection,QItemSelection)),
-            SLOT(favoriteSelectionChanged()));
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() { d->favoriteSelectionChanged(); });
     d->checkModelsConsistency();
 }
 
@@ -1697,15 +1694,15 @@ QAction *StandardActionManager::createAction(Type type)
         switch (standardActionData[type].actionType) {
         case NormalAction:
         case ActionWithAlternative:
-            connect(action, SIGNAL(triggered()), standardActionData[type].slot);
+            connect(action, SIGNAL(triggered()), standardActionData[type].slot); // clazy:exclude=old-style-connect
             break;
         case MenuAction: {
             KActionMenu *actionMenu = qobject_cast<KActionMenu *>(action);
-            connect(actionMenu->menu(), SIGNAL(triggered(QAction*)), standardActionData[type].slot);
+            connect(actionMenu->menu(), SIGNAL(triggered(QAction*)), standardActionData[type].slot); // clazy:exclude=old-style-connect
             break;
         }
         case ToggleAction: {
-            connect(action, SIGNAL(triggered(bool)), standardActionData[type].slot);
+            connect(action, SIGNAL(triggered(bool)), standardActionData[type].slot); // clazy:exclude=old-style-connect
             break;
         }
         case ActionAlternative:
@@ -1715,9 +1712,9 @@ QAction *StandardActionManager::createAction(Type type)
 
     if (type == ToggleWorkOffline) {
         // inititalize the action state with information from config file
-        disconnect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot);
+        disconnect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
         action->setChecked(workOffline());
-        connect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot);
+        connect(action, SIGNAL(triggered(bool)), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
 
         //TODO: find a way to check for updates to the config file
     }
@@ -1763,9 +1760,9 @@ void StandardActionManager::interceptAction(Type type, bool intercept)
     }
 
     if (intercept) {
-        disconnect(action, SIGNAL(triggered()), this, standardActionData[type].slot);
+        disconnect(action, SIGNAL(triggered()), this, standardActionData[type].slot); // clazy:exclude=old-style-connect
     } else {
-        connect(action, SIGNAL(triggered()), standardActionData[type].slot);
+        connect(action, SIGNAL(triggered()), standardActionData[type].slot); // clazy:exclude=old-style-connect
     }
 }
 

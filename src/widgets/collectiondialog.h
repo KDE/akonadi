@@ -210,10 +210,6 @@ private:
     //@cond PRIVATE
     class Private;
     Private *const d;
-
-    Q_PRIVATE_SLOT(d, void slotSelectionChanged())
-    Q_PRIVATE_SLOT(d, void slotAddChildCollection())
-    Q_PRIVATE_SLOT(d, void slotDoubleClicked())
     //@endcond
 };
 
