@@ -46,7 +46,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 
 private:
-    void drawFocus(QPainter *, const QStyleOptionViewItem &, QRect) const;
+    void drawFocus(QPainter * /*painter*/, const QStyleOptionViewItem & /*option*/, QRect /*rect*/) const;
 };
 
 }
@@ -59,7 +59,7 @@ using Akonadi::Internal::AgentTypeWidgetDelegate;
 class Q_DECL_HIDDEN AgentTypeWidget::Private
 {
 public:
-    Private(AgentTypeWidget *parent)
+    explicit Private(AgentTypeWidget *parent)
         : mParent(parent),
           mView(nullptr),
           mModel(nullptr),
@@ -67,7 +67,7 @@ public:
     {
     }
 
-    void currentAgentTypeChanged(const QModelIndex &, const QModelIndex &);
+    void currentAgentTypeChanged(const QModelIndex & /*currentIndex*/, const QModelIndex & /*previousIndex*/);
 
     void typeActivated(const QModelIndex &index)
     {

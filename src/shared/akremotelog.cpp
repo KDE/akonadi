@@ -97,7 +97,7 @@ private Q_SLOTS:
                 this, SLOT(onAkonadiConsoleLoggingEnabled(bool)));
 
         QTimer::singleShot(0, this, [this]() {
-            auto watcher = new QDBusPendingCallWatcher(mAkonadiConsoleInterface->asyncCall(QStringLiteral("enabled")));
+            auto *watcher = new QDBusPendingCallWatcher(mAkonadiConsoleInterface->asyncCall(QStringLiteral("enabled")));
             connect(watcher, &QDBusPendingCallWatcher::finished,
                     this, [this](QDBusPendingCallWatcher *watcher) {
                         watcher->deleteLater();
@@ -110,7 +110,7 @@ private Q_SLOTS:
         });
     }
 
-    void serviceUnregistered(const QString &)
+    void serviceUnregistered(const QString & /*unused*/)
     {
         onAkonadiConsoleLoggingEnabled(false);
         mAkonadiConsoleInterface.reset();
@@ -149,7 +149,7 @@ private:
 
     static void categoryFilter(QLoggingCategory *cat)
     {
-        const auto that = self();
+        auto *const that = self();
         if (!that) {
             return;
         }
@@ -166,7 +166,7 @@ private:
 
     static void dbusLogger(QtMsgType type, const QMessageLogContext &ctx, const QString &msg)
     {
-        const auto that = self();
+        auto *const that = self();
         if (!that) {
             return;
         }

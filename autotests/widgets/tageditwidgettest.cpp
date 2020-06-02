@@ -84,7 +84,7 @@ class TagEditWidgetTest: public QObject
         ~TestSetup()
         {
             if (!createdTags.empty()) {
-                auto deleteJob = new TagDeleteJob(createdTags);
+                auto *deleteJob = new TagDeleteJob(createdTags);
                 AKVERIFYEXEC(deleteJob);
             }
         }
@@ -94,7 +94,7 @@ class TagEditWidgetTest: public QObject
             const auto doCreateTags = [this, count]() {
                 QSignalSpy monitorSpy(monitor.get(), &Monitor::tagAdded);
                 for (int i = 0; i < count; ++i) {
-                    auto job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
+                    auto *job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
                     AKVERIFYEXEC(job);
                     createdTags.push_back(job->tag());
                 }
@@ -106,7 +106,7 @@ class TagEditWidgetTest: public QObject
 
         bool checkSelectionIsEmpty() const
         {
-            const auto model = tagsView->model();
+            auto *const model = tagsView->model();
             for (int i = 0; i < model->rowCount(); ++i) {
                 if (model->data(model->index(i, 0), Qt::CheckStateRole).value<Qt::CheckState>() != Qt::Unchecked) {
                     return false;
@@ -157,12 +157,12 @@ class TagEditWidgetTest: public QObject
             for (const auto *window : windows) {
                 // We are using KMessageBox, which is not a QMessageBox but rather a custom QDialog
                 if (window->objectName() == QLatin1String("questionYesNo")) {
-                    const auto msgbox = qobject_cast<const QDialog*>(window);
+                    const auto *const msgbox = qobject_cast<const QDialog*>(window);
                     AKVERIFY(msgbox);
 
-                    const auto buttonBox = msgbox->findChild<const QDialogButtonBox*>();
+                    const auto *const buttonBox = msgbox->findChild<const QDialogButtonBox*>();
                     AKVERIFY(buttonBox);
-                    const auto button = buttonBox->button(confirmDeletion ? QDialogButtonBox::Yes : QDialogButtonBox::No);
+                    auto *const button = buttonBox->button(confirmDeletion ? QDialogButtonBox::Yes : QDialogButtonBox::No);
                     AKVERIFY(button);
                     QTest::mouseClick(button, Qt::LeftButton);
                     return true;
@@ -268,7 +268,7 @@ private Q_SLOTS:
         QVERIFY(test.checkSelectionIsEmpty());
 
         // Set selection
-        auto model = test.tagsView->model();
+        auto *model = test.tagsView->model();
         Tag::List selectTags;
         for (int i = 0; i < model->rowCount(); i += 2) {
             selectTags.push_back(model->data(model->index(i, 0), TagModel::TagRole).value<Tag>());
@@ -298,7 +298,7 @@ private Q_SLOTS:
 
         // Check several tags
         Tag::List selectedTags;
-        auto model = test.tagsView->model();
+        auto *model = test.tagsView->model();
         for (int i = 0; i < model->rowCount(); i += 2) {
             const auto index = model->index(i, 0);
             selectedTags.push_back(model->data(index, TagModel::TagRole).value<Tag>());

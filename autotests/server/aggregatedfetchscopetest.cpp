@@ -39,7 +39,8 @@ private Q_SLOTS:
 
         // first subscriber, A
         scope.addSubscriber();
-        Protocol::TagFetchScope oldTagScope, tagScopeA;
+        Protocol::TagFetchScope oldTagScope;
+        Protocol::TagFetchScope tagScopeA;
         QSet<QByteArray> attrs = {"FOO"};
         tagScopeA.setAttributes(attrs);
         tagScopeA.setFetchIdOnly(true);
@@ -78,7 +79,8 @@ private Q_SLOTS:
 
         // first subscriber, A
         scope.addSubscriber();
-        Protocol::CollectionFetchScope oldCollectionScope, collectionScopeA;
+        Protocol::CollectionFetchScope oldCollectionScope;
+        Protocol::CollectionFetchScope collectionScopeA;
         QSet<QByteArray> attrs = {"FOO"};
         collectionScopeA.setAttributes(attrs);
         collectionScopeA.setFetchIdOnly(true);
@@ -113,7 +115,8 @@ private Q_SLOTS:
 
         // first subscriber, A
         scope.addSubscriber();
-        Protocol::ItemFetchScope oldItemScope, itemScopeA;
+        Protocol::ItemFetchScope oldItemScope;
+        Protocol::ItemFetchScope itemScopeA;
         QVector<QByteArray> parts = {"FOO"};
         QSet<QByteArray> partsSet = {"FOO"};
         itemScopeA.setRequestedParts(parts);

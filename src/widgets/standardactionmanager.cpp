@@ -127,11 +127,7 @@ static_assert(numStandardActionData == StandardActionManager::LastType,
 
 static bool canCreateCollection(const Akonadi::Collection &collection)
 {
-    if (!(collection.rights() & Akonadi::Collection::CanCreateCollection)) {
-        return false;
-    }
-
-    return true;
+    return !!(collection.rights() & Akonadi::Collection::CanCreateCollection);
 }
 
 static void setWorkOffline(bool offline)
@@ -182,7 +178,7 @@ static QModelIndexList safeSelectedRows(QItemSelectionModel *selectionModel)
 class Q_DECL_HIDDEN StandardActionManager::Private
 {
 public:
-    Private(StandardActionManager *parent)
+    explicit Private(StandardActionManager *parent)
         : q(parent)
         , actionCollection(nullptr)
         , parentWidget(nullptr)
@@ -428,7 +424,7 @@ public:
         }
     }
 
-    bool isFavoriteCollection(const Akonadi::Collection &collection) // private slot, called by ActionStateManager
+    bool isFavoriteCollection(const Akonadi::Collection &collection) const // private slot, called by ActionStateManager
     {
         if (!favoritesModel) {
             return false;
@@ -550,7 +546,7 @@ public:
     class InsideSelectionSlotBlocker
     {
     public:
-        InsideSelectionSlotBlocker(Private *p)
+        explicit InsideSelectionSlotBlocker(Private *p)
             : _p(p)
         {
             Q_ASSERT(!p->insideSelectionSlot);
@@ -895,7 +891,7 @@ public:
         }
     }
 
-    void slotCollectionProperties()
+    void slotCollectionProperties() const
     {
         const QModelIndexList list = safeSelectedRows(collectionSelectionModel);
         if (list.isEmpty()) {
@@ -982,7 +978,7 @@ public:
         q->connect(job, &ItemDeleteJob::result, q, [this](KJob*job) {itemDeletionResult(job);});
     }
 
-    void slotLocalSubscription()
+    void slotLocalSubscription() const
     {
         SubscriptionDialog *dlg = new SubscriptionDialog(mMimeTypeFilter, parentWidget);
         dlg->showHiddenCollection(true);
@@ -1165,7 +1161,7 @@ public:
         delete dlg;
     }
 
-    void slotDeleteResource()
+    void slotDeleteResource() const
     {
         const AgentInstance::List instances = selectedAgentInstances();
         if (instances.isEmpty()) {
@@ -1185,31 +1181,23 @@ public:
         }
     }
 
-    void slotSynchronizeResource()
+    void slotSynchronizeResource() const
     {
-        const AgentInstance::List instances = selectedAgentInstances();
-        if (instances.isEmpty()) {
-            return;
-        }
-
-        for (AgentInstance instance : instances) {
+        AgentInstance::List instances = selectedAgentInstances();
+        for (AgentInstance &instance : instances) {
             instance.synchronize();
         }
     }
 
-    void slotSynchronizeCollectionTree()
+    void slotSynchronizeCollectionTree() const
     {
-        const AgentInstance::List instances = selectedAgentInstances();
-        if (instances.isEmpty()) {
-            return;
-        }
-
-        for (AgentInstance instance : instances) {
+        AgentInstance::List instances = selectedAgentInstances();
+        for (AgentInstance &instance : instances) {
             instance.synchronizeCollectionTree();
         }
     }
 
-    void slotResourceProperties()
+    void slotResourceProperties() const
     {
         AgentInstance instance = selectedAgentInstance();
         if (!instance.isValid()) {
@@ -1223,8 +1211,8 @@ public:
     {
         setWorkOffline(offline);
 
-        const AgentInstance::List instances = AgentManager::self()->instances();
-        for (AgentInstance instance : instances) {
+        AgentInstance::List instances = AgentManager::self()->instances();
+        for (AgentInstance &instance : instances) {
             instance.setIsOnline(!offline);
         }
     }
@@ -1277,7 +1265,7 @@ public:
         model->dropMimeData(mimeData, dropAction, -1, -1, index);
     }
 
-    void addRecentCollection(Akonadi::Collection::Id id)
+    void addRecentCollection(Akonadi::Collection::Id id) const
     {
         QMapIterator<StandardActionManager::Type, QPointer<RecentCollectionAction> > item(mRecentCollectionsMenu);
         while (item.hasNext()) {
@@ -1288,7 +1276,7 @@ public:
         }
     }
 
-    void collectionCreationResult(KJob *job)
+    void collectionCreationResult(KJob *job) const
     {
         if (job->error()) {
             KMessageBox::error(parentWidget,
@@ -1297,7 +1285,7 @@ public:
         }
     }
 
-    void collectionDeletionResult(KJob *job)
+    void collectionDeletionResult(KJob *job) const
     {
         if (job->error()) {
             KMessageBox::error(parentWidget,
@@ -1306,7 +1294,7 @@ public:
         }
     }
 
-    void moveCollectionToTrashResult(KJob *job)
+    void moveCollectionToTrashResult(KJob *job) const
     {
         if (job->error()) {
             KMessageBox::error(parentWidget,
@@ -1315,7 +1303,7 @@ public:
         }
     }
 
-    void moveItemToTrashResult(KJob *job)
+    void moveItemToTrashResult(KJob *job) const
     {
         if (job->error()) {
             KMessageBox::error(parentWidget,
@@ -1324,7 +1312,7 @@ public:
         }
     }
 
-    void itemDeletionResult(KJob *job)
+    void itemDeletionResult(KJob *job) const
     {
         if (job->error()) {
             KMessageBox::error(parentWidget,
@@ -1333,7 +1321,7 @@ public:
         }
     }
 
-    void resourceCreationResult(KJob *job)
+    void resourceCreationResult(KJob *job) const
     {
         if (job->error()) {
             KMessageBox::error(parentWidget,
@@ -1342,7 +1330,7 @@ public:
         }
     }
 
-    void pasteResult(KJob *job)
+    void pasteResult(KJob *job) const
     {
         if (job->error()) {
             KMessageBox::error(parentWidget,
@@ -1468,7 +1456,7 @@ public:
         }
     }
 
-    void checkModelsConsistency()
+    void checkModelsConsistency() const
     {
         if (favoritesModel == nullptr || favoriteSelectionModel == nullptr) {
             // No need to check when the favorite collections feature is not used

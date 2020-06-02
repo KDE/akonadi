@@ -42,7 +42,6 @@ class FilterProxyModel : public QSortFilterProxyModel
 
 public:
     FilterProxyModel()
-        : QSortFilterProxyModel()
     {
         setDynamicSortFilter(true);
     }
@@ -84,7 +83,7 @@ private:
 class SubscriptionModel::Private
 {
 public:
-    Private(Monitor *monitor)
+    explicit Private(Monitor *monitor)
         : etm(monitor)
     {
         etm.setShowSystemEntities(true); // show hidden collections
@@ -94,7 +93,7 @@ public:
         proxy.setSourceModel(&etm);
     }
 
-    Collection::List changedSubscriptions(bool subscribed)
+    Collection::List changedSubscriptions(bool subscribed) const
     {
         return Views::range(subscriptions.constKeyValueBegin(), subscriptions.constKeyValueEnd())
                     | Views::filter([subscribed](const auto &val) { return val.second == subscribed; })
@@ -133,7 +132,7 @@ SubscriptionModel::SubscriptionModel(Monitor *monitor, QObject *parent) :
 
 SubscriptionModel::~SubscriptionModel() = default;
 
-void SubscriptionModel::setSourceModel(QAbstractItemModel *)
+void SubscriptionModel::setSourceModel(QAbstractItemModel * /*sourceModel*/)
 {
     // no-op
 }

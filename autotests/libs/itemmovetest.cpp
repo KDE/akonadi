@@ -159,7 +159,7 @@ private Q_SLOTS:
         item.setPayload(QByteArray("This is a test payload"));
         item.setSize(34);
         item.setParentCollection(col);
-        auto create = new ItemCreateJob(item, col, this);
+        auto *create = new ItemCreateJob(item, col, this);
         AKVERIFYEXEC(create);
         item = create->item();
 
@@ -169,7 +169,7 @@ private Q_SLOTS:
         QCOMPARE(ntfItem.flags(), item.flags());
 
         Collection dest(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo/bar")));
-        auto move = new ItemMoveJob(item, dest, this);
+        auto *move = new ItemMoveJob(item, dest, this);
         AKVERIFYEXEC(move);
 
         QTRY_COMPARE(itemMovedSpy.size(), 1);

@@ -48,7 +48,7 @@ public:
     /**
      * Creates a new collection rights attribute.
      */
-    CollectionRightsAttribute();
+    explicit CollectionRightsAttribute();
 
     /**
      * Destroys the collection rights attribute.

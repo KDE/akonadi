@@ -37,7 +37,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN CollectionRequester::Private
 {
 public:
-    Private(CollectionRequester *parent)
+    explicit Private(CollectionRequester *parent)
         : q(parent)
     {
     }

@@ -46,7 +46,7 @@
 
 static AgentManager *sAgentManager = nullptr;
 
-void crashHandler(int)
+void crashHandler(int /*unused*/)
 {
     if (sAgentManager) {
         sAgentManager->cleanup();

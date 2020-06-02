@@ -36,7 +36,7 @@ namespace Akonadi
 class EntityMimeTypeFilterModelPrivate
 {
 public:
-    EntityMimeTypeFilterModelPrivate(EntityMimeTypeFilterModel *parent)
+    explicit EntityMimeTypeFilterModelPrivate(EntityMimeTypeFilterModel *parent)
         : q_ptr(parent)
         , m_headerGroup(EntityTreeModel::EntityTreeHeaders)
     {

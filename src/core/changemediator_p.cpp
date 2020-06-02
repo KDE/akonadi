@@ -46,7 +46,7 @@ ChangeMediator *ChangeMediator::instance()
 ChangeMediator::ChangeMediator(QObject *parent)
     : QObject(parent)
 {
-    if (auto app = QCoreApplication::instance(); app != nullptr) {
+    if (auto *app = QCoreApplication::instance(); app != nullptr) {
         this->moveToThread(app->thread());
     }
 }
@@ -82,7 +82,7 @@ void ChangeMediator::invalidateCollection(const Akonadi::Collection &collection)
 void ChangeMediator::invalidateItem(const Akonadi::Item &item)
 {
     QMetaObject::invokeMethod(instance(), [itemId = item.id()]() {
-        for (auto monitor : qAsConst(instance()->m_monitors)) {
+        for (auto *monitor : qAsConst(instance()->m_monitors)) {
             const bool ok = QMetaObject::invokeMethod(monitor, "invalidateItemCache", Q_ARG(qint64, itemId));
             Q_ASSERT(ok); Q_UNUSED(ok);
         }
@@ -93,7 +93,7 @@ void ChangeMediator::invalidateItem(const Akonadi::Item &item)
 void ChangeMediator::invalidateTag(const Tag &tag)
 {
     QMetaObject::invokeMethod(instance(), [tagId = tag.id()]() {
-        for (auto monitor : qAsConst(instance()->m_monitors)) {
+        for (auto *monitor : qAsConst(instance()->m_monitors)) {
             const bool ok = QMetaObject::invokeMethod(monitor, "invalidateTagCache", Q_ARG(qint64, tagId));
             Q_ASSERT(ok); Q_UNUSED(ok);
         }

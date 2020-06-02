@@ -61,7 +61,6 @@ class HandlerTest : public QObject
     FakeAkonadiServer mAkonadi;
 public:
     explicit HandlerTest()
-        : QObject()
     {
         mAkonadi.init();
     }
@@ -113,7 +112,7 @@ private:
     template<typename T>
     QByteArray typeName(const T &t)
     {
-        const auto &v = *t.get();
+        const auto &v = *t;
         return typeid(v).name();
     }
 

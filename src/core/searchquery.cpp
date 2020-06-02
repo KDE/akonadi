@@ -29,24 +29,6 @@ using namespace Akonadi;
 class SearchTerm::Private : public QSharedData
 {
 public:
-    Private()
-        : QSharedData()
-        , condition(SearchTerm::CondEqual)
-        , relation(SearchTerm::RelAnd)
-    {
-    }
-
-    Private(const Private &other)
-        : QSharedData(other)
-        , key(other.key)
-        , value(other.value)
-        , condition(other.condition)
-        , relation(other.relation)
-        , terms(other.terms)
-        , isNegated(other.isNegated)
-    {
-    }
-
     bool operator==(const Private &other) const
     {
         return relation == other.relation
@@ -59,8 +41,8 @@ public:
 
     QString key;
     QVariant value;
-    Condition condition;
-    Relation relation;
+    Condition condition = SearchTerm::CondEqual;
+    Relation relation = SearchTerm::RelAnd;
     QList<SearchTerm> terms;
     bool isNegated = false;
 };
@@ -68,19 +50,6 @@ public:
 class SearchQuery::Private : public QSharedData
 {
 public:
-    Private()
-        : QSharedData()
-        , limit(-1)
-    {
-    }
-
-    Private(const Private &other)
-        : QSharedData(other)
-        , rootTerm(other.rootTerm)
-        , limit(other.limit)
-    {
-    }
-
     bool operator==(const Private &other) const
     {
         return rootTerm == other.rootTerm && limit == other.limit;
@@ -135,7 +104,7 @@ public:
     }
 
     SearchTerm rootTerm;
-    int limit;
+    int limit = -1;
 };
 
 SearchTerm::SearchTerm(SearchTerm::Relation relation)
@@ -158,9 +127,7 @@ SearchTerm::SearchTerm(const SearchTerm &other)
 {
 }
 
-SearchTerm::~SearchTerm()
-{
-}
+SearchTerm::~SearchTerm()= default;
 
 SearchTerm &SearchTerm::operator=(const SearchTerm &other)
 {

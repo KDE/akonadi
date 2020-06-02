@@ -39,7 +39,7 @@ using namespace Akonadi;
 template <typename T, void FreeFunc(T)> class XmlPtr
 {
 public:
-    XmlPtr(const T &t) : p(t) {}
+    explicit XmlPtr(const T &t) : p(t) {}
 
     ~XmlPtr()
     {
@@ -51,7 +51,7 @@ public:
         return p;
     }
 
-    operator bool() const
+    explicit operator bool() const
     {
         return p != nullptr;
     }

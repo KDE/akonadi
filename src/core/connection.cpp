@@ -174,7 +174,7 @@ void Connection::doReconnect()
 #else
     connect(mSocket.data(), &QLocalSocket::errorOccurred, this,
 #endif
-            [this](QLocalSocket::LocalSocketError) {
+            [this](QLocalSocket::LocalSocketError /*unused*/) {
         qCWarning(AKONADICORE_LOG) << mSocket->errorString() << mSocket->serverName();
         Q_EMIT socketError(mSocket->errorString());
         Q_EMIT socketDisconnected();

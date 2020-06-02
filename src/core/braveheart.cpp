@@ -42,7 +42,7 @@ private:
             // One Scottish warrior is enough....
             return;
         }
-        auto freedom = new QTimer(qApp);
+        auto *freedom = new QTimer(qApp);
         QObject::connect(freedom, &QTimer::timeout,
         freedom, []() {
             // They may take our lives, but they will never

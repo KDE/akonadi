@@ -41,7 +41,7 @@ using namespace Akonadi;
 class Akonadi::ItemCreateJobPrivate : public JobPrivate
 {
 public:
-    ItemCreateJobPrivate(ItemCreateJob *parent)
+    explicit ItemCreateJobPrivate(ItemCreateJob *parent)
         : JobPrivate(parent)
     {
     }

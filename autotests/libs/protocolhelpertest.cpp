@@ -297,7 +297,7 @@ private Q_SLOTS:
         tag.setGid("TAG13GID");
         tag.setRemoteId("TAG13RID");
         tag.setType("PLAIN");
-        auto attr = AttributeFactory::createAttribute("TAGAttribute");
+        auto *attr = AttributeFactory::createAttribute("TAGAttribute");
         attr->deserialize("MyAttribute");
         tag.addAttribute(attr);
         QTest::newRow("valid with invalid parent") << response << tag;

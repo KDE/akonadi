@@ -193,7 +193,8 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
 
     const Collection col = Collection::retrieveById(parentCol.id());
     if (cmd.flags().isEmpty() && !cmd.flagsOverwritten()) {
-        bool flagsAdded = false, flagsRemoved = false;
+        bool flagsAdded = false;
+        bool flagsRemoved = false;
         if (!cmd.addedFlags().isEmpty()) {
             const auto addedFlags = HandlerHelper::resolveFlags(cmd.addedFlags());
             storageBackend()->appendItemsFlags({currentItem}, addedFlags, &flagsAdded, true, col, true);
@@ -236,7 +237,8 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
     }
 
     if (cmd.tags().isEmpty()) {
-        bool tagsAdded = false, tagsRemoved = false;
+        bool tagsAdded = false;
+        bool tagsRemoved = false;
         if (!cmd.addedTags().isEmpty()) {
             const auto addedTags = HandlerHelper::tagsFromScope(cmd.addedTags(), connection()->context());
             storageBackend()->appendItemsTags({currentItem}, addedTags, &tagsAdded, true, col, true);

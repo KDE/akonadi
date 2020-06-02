@@ -41,10 +41,10 @@ namespace Akonadi
 class AKONADICORE_EXPORT CollectionColorAttribute : public Akonadi::Attribute
 {
 public:
-    CollectionColorAttribute();
+    explicit CollectionColorAttribute() = default;
     explicit CollectionColorAttribute(const QColor &color);
 
-    ~CollectionColorAttribute() override;
+    ~CollectionColorAttribute() override = default;
 
     void setColor(const QColor &color);
     QColor color() const;

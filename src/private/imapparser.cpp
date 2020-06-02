@@ -413,7 +413,9 @@ QByteArray ImapParser::quote(const QByteArray &data)
 int ImapParser::parseSequenceSet(const QByteArray &data, ImapSet &result, int start)
 {
     int begin = stripLeadingSpaces(data, start);
-    qint64 value = -1, lower = -1, upper = -1;
+    qint64 value = -1;
+    qint64 lower = -1;
+    qint64 upper = -1;
     for (int i = begin; i < data.length(); ++i) {
         if (data[i] == '*') {
             value = 0;

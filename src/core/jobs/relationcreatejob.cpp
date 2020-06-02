@@ -30,7 +30,7 @@ using namespace Akonadi;
 class Akonadi::RelationCreateJobPrivate : public JobPrivate
 {
 public:
-    RelationCreateJobPrivate(RelationCreateJob *parent)
+    explicit RelationCreateJobPrivate(RelationCreateJob *parent)
         : JobPrivate(parent)
     {
     }

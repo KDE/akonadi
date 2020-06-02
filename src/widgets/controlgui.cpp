@@ -44,7 +44,7 @@ class ControlProgressIndicator : public QFrame
 {
     Q_OBJECT
 public:
-    ControlProgressIndicator(QWidget *parent = nullptr)
+    explicit ControlProgressIndicator(QWidget *parent = nullptr)
         : QFrame(parent)
     {
         setWindowModality(Qt::ApplicationModal);
@@ -79,7 +79,7 @@ Q_GLOBAL_STATIC(Internal::StaticControlGui, s_instance)
 class Q_DECL_HIDDEN ControlGui::Private
 {
 public:
-    Private(ControlGui *parent)
+    explicit Private(ControlGui *parent)
         : mParent(parent)
         , mEventLoop(nullptr)
         , mProgressIndicator(nullptr)

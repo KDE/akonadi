@@ -34,7 +34,6 @@ class TestableNotificationSubscriber : public NotificationSubscriber
 {
 public:
     TestableNotificationSubscriber()
-        : NotificationSubscriber()
     {
         mSubscriber = "TestSubscriber";
     }

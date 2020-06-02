@@ -313,19 +313,19 @@ public:
      *
      * purely for testing
      */
-    bool isMonitored(Collection::Id id);
+    bool isMonitored(Collection::Id id) const;
 
     /**
      * @returns true if the collection is buffered
      *
      * purely for testing
      */
-    bool isBuffered(Collection::Id id);
+    bool isBuffered(Collection::Id id) const;
 
     /**
       @returns true if the Collection with the id of @p id should be purged.
     */
-    bool shouldPurge(Collection::Id id);
+    bool shouldPurge(Collection::Id id) const;
 
     /**
       Purges the items in the Collection @p id

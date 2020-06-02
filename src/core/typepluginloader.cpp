@@ -127,10 +127,7 @@ class MimeTypeEntry
 public:
     explicit MimeTypeEntry(const QString &mimeType)
         : m_mimeType(mimeType)
-        , m_plugins()
-        , m_pluginsByMetaTypeId()
-    {
-    }
+    {}
 
     QString type() const
     {

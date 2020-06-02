@@ -242,7 +242,7 @@ Collection ProtocolHelper::parseCollection(const Protocol::FetchCollectionsRespo
     collection.setLocalListPreference(Collection::ListSync, parsePreference(data.syncPref()));
 
     if (!data.searchQuery().isEmpty()) {
-        auto attr = collection.attribute<PersistentSearchAttribute>(Collection::AddIfMissing);
+        auto *attr = collection.attribute<PersistentSearchAttribute>(Collection::AddIfMissing);
         attr->setQueryString(data.searchQuery());
         const auto cols = data.searchCollections() | Views::transform([](const auto id) { return Collection{id}; }) | Actions::toQVector;
         attr->setQueryCollections(cols);

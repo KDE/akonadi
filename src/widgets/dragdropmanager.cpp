@@ -142,7 +142,9 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     Qt::DropAction defaultAction;
     // TODO check if the source supports moving
 
-    bool moveAllowed, copyAllowed, linkAllowed;
+    bool moveAllowed;
+    bool copyAllowed;
+    bool linkAllowed;
     moveAllowed = copyAllowed = linkAllowed = false;
 
     if ((targetCollection.rights() & (Collection::CanCreateCollection | Collection::CanCreateItem)) &&

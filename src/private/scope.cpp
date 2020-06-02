@@ -33,25 +33,11 @@ namespace Akonadi
 class ScopePrivate : public QSharedData
 {
 public:
-    ScopePrivate()
-        : QSharedData()
-        , scope(Scope::Invalid)
-    {}
-
-    ScopePrivate(const ScopePrivate &other)
-        : QSharedData(other)
-        , uidSet(other.uidSet)
-        , ridSet(other.ridSet)
-        , hridChain(other.hridChain)
-        , gidSet(other.gidSet)
-        , scope(other.scope)
-    {}
-
     ImapSet uidSet;
     QStringList ridSet;
     QVector<Scope::HRID> hridChain;
     QStringList gidSet;
-    Scope::SelectionScope scope;
+    Scope::SelectionScope scope = Scope::Invalid;
 };
 
 Scope::HRID::HRID()
@@ -206,6 +192,7 @@ bool Scope::operator==(const Scope &other) const
         return true;
     }
 
+    Q_ASSERT(false);
     return false;
 }
 
@@ -367,7 +354,6 @@ Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::Sc
         return stream;
     }
 
-    Q_ASSERT(false);
     return stream;
 }
 
@@ -406,7 +392,6 @@ Protocol::DataStream &operator>>(Protocol::DataStream &stream, Akonadi::Scope &s
         return stream;
     }
 
-    Q_ASSERT(false);
     return stream;
 }
 

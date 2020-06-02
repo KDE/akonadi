@@ -95,7 +95,7 @@ void GidTest::testSetAndFetch_data()
     }
 }
 
-static void fetchAndSetGid(Item item)
+static void fetchAndSetGid(const Item& item)
 {
     ItemFetchJob *prefetchjob = new ItemFetchJob(item);
     prefetchjob->fetchScope().fetchFullPayload();

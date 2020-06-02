@@ -35,19 +35,19 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN AgentTypeDialog::Private
 {
 public:
-    Private(AgentTypeDialog *qq)
+    explicit Private(AgentTypeDialog *qq)
         : q(qq)
     {
 
     }
-    void readConfig();
-    void writeConfig();
+    void readConfig(); 
+    void writeConfig() const;
     AgentTypeWidget *Widget = nullptr;
     AgentType agentType;
     AgentTypeDialog *q = nullptr;
 };
 
-void AgentTypeDialog::Private::writeConfig()
+void AgentTypeDialog::Private::writeConfig() const
 {
     KConfigGroup group(KSharedConfig::openConfig(), "AgentTypeDialog");
     group.writeEntry("Size", q->size());

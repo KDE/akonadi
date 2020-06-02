@@ -29,7 +29,7 @@ using namespace Akonadi;
 class Akonadi::TransactionSequencePrivate : public JobPrivate
 {
 public:
-    TransactionSequencePrivate(TransactionSequence *parent)
+    explicit TransactionSequencePrivate(TransactionSequence *parent)
         : JobPrivate(parent)
         , mState(Idle)
     {

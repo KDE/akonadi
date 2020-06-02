@@ -109,7 +109,7 @@ void StorageDebugger::addConnection(qint64 id, const QString &name)
 {
     QMutexLocker locker(&mMutex);
     const qint64 timestamp = QDateTime::currentMSecsSinceEpoch();
-    mConnections.push_back({ id, name, timestamp, QString(), 0ll });
+    mConnections.push_back({ id, name, timestamp, QString(), 0LL });
     if (mEnabled) {
         Q_EMIT connectionOpened(id, timestamp, name);
     }

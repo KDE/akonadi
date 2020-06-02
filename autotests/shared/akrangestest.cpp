@@ -318,7 +318,7 @@ private:
     struct ForEachCallable
     {
     public:
-        ForEachCallable(QList<int> &out)
+        explicit ForEachCallable(QList<int> &out)
             : mOut(out) {}
 
         void operator()(int i) {

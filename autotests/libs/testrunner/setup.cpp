@@ -262,7 +262,7 @@ void SetupTest::writeAkonadiserverrc(const QString &path)
     qCDebug(AKONADITEST_LOG) << "Written akonadiserverrc to" << settings.fileName();
 }
 
-void SetupTest::cleanTempEnvironment()
+void SetupTest::cleanTempEnvironment() const
 {
 #ifdef Q_OS_WIN
     QDir(basePath() + QStringLiteral("akonadi/config/instance/") + instanceId()).removeRecursively();

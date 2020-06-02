@@ -64,7 +64,7 @@ class AkonadiDataStore : public DataStore
 {
     Q_OBJECT
 public:
-    AkonadiDataStore(AkonadiServer &server):
+    explicit AkonadiDataStore(AkonadiServer &server):
         DataStore(server)
     {}
 };
@@ -72,9 +72,8 @@ public:
 class AkonadiDataStoreFactory : public DataStoreFactory
 {
 public:
-    AkonadiDataStoreFactory(AkonadiServer &akonadi)
-        : DataStoreFactory()
-        , m_akonadi(akonadi)
+    explicit AkonadiDataStoreFactory(AkonadiServer &akonadi)
+        : m_akonadi(akonadi)
     {}
 
     DataStore *createStore() override
@@ -89,7 +88,6 @@ private:
 }
 
 AkonadiServer::AkonadiServer()
-    : QObject()
 {
     // Register bunch of useful types
     qRegisterMetaType<Protocol::CommandPtr>();
@@ -139,11 +137,11 @@ bool AkonadiServer::init()
     mItemRetrieval = std::make_unique<ItemRetrievalManager>();
     mAgentSearchManager = std::make_unique<SearchTaskManager>();
 
-    mDebugInterface = std::make_unique<DebugInterface>(*mTracer.get());
-    mResourceManager = std::make_unique<ResourceManager>(*mTracer.get());
-    mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer.get());
-    mIntervalCheck = std::make_unique<IntervalCheck>(*mItemRetrieval.get());
-    mSearchManager = std::make_unique<SearchManager>(searchManagers, *mAgentSearchManager.get());
+    mDebugInterface = std::make_unique<DebugInterface>(*mTracer);
+    mResourceManager = std::make_unique<ResourceManager>(*mTracer);
+    mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer);
+    mIntervalCheck = std::make_unique<IntervalCheck>(*mItemRetrieval);
+    mSearchManager = std::make_unique<SearchManager>(searchManagers, *mAgentSearchManager);
     mStorageJanitor = std::make_unique<StorageJanitor>(*this);
 
     if (settings.value(QStringLiteral("General/DisablePreprocessing"), false).toBool()) {
@@ -424,12 +422,12 @@ CacheCleaner *AkonadiServer::cacheCleaner()
 
 IntervalCheck &AkonadiServer::intervalChecker()
 {
-    return *mIntervalCheck.get();
+    return *mIntervalCheck;
 }
 
 ResourceManager &AkonadiServer::resourceManager()
 {
-    return *mResourceManager.get();
+    return *mResourceManager;
 }
 
 NotificationManager *AkonadiServer::notificationManager()
@@ -439,32 +437,32 @@ NotificationManager *AkonadiServer::notificationManager()
 
 CollectionStatistics &AkonadiServer::collectionStatistics()
 {
-    return *mCollectionStats.get();
+    return *mCollectionStats;
 }
 
 PreprocessorManager &AkonadiServer::preprocessorManager()
 {
-    return *mPreprocessorManager.get();
+    return *mPreprocessorManager;
 }
 
 SearchTaskManager &AkonadiServer::agentSearchManager()
 {
-    return *mAgentSearchManager.get();
+    return *mAgentSearchManager;
 }
 
 SearchManager &AkonadiServer::searchManager()
 {
-    return *mSearchManager.get();
+    return *mSearchManager;
 }
 
 ItemRetrievalManager &AkonadiServer::itemRetrievalManager()
 {
-    return *mItemRetrieval.get();
+    return *mItemRetrieval;
 }
 
 Tracer &AkonadiServer::tracer()
 {
-    return *mTracer.get();
+    return *mTracer;
 }
 
 QString AkonadiServer::serverPath() const

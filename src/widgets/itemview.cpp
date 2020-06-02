@@ -36,7 +36,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN ItemView::Private
 {
 public:
-    Private(ItemView *parent)
+    explicit Private(ItemView *parent)
         : mParent(parent)
     {
     }

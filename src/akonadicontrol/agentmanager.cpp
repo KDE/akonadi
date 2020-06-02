@@ -54,8 +54,7 @@ class StorageProcessControl : public Akonadi::ProcessControl
 {
     Q_OBJECT
 public:
-    StorageProcessControl(const QStringList &args)
-        : Akonadi::ProcessControl()
+    explicit StorageProcessControl(const QStringList &args)
     {
         setShutdownTimeout(15s);
         connect(this, &Akonadi::ProcessControl::unableToStart, this,
@@ -78,8 +77,7 @@ class AgentServerProcessControl : public Akonadi::ProcessControl
 {
     Q_OBJECT
 public:
-    AgentServerProcessControl(const QStringList &args)
-        : Akonadi::ProcessControl()
+    explicit AgentServerProcessControl(const QStringList &args)
     {
         connect(this, &Akonadi::ProcessControl::unableToStart, this,
                 []() {

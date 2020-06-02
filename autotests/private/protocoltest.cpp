@@ -277,30 +277,30 @@ void ProtocolTest::testScopeContext_data()
     QTest::addColumn<qint64>("tagId");
     QTest::addColumn<QString>("tagRid");
 
-    QTest::newRow("collection - id") << 42ll << QString()
-                                     << 0ll << QString();
-    QTest::newRow("collection - rid") << 0ll << QStringLiteral("rid")
-                                      << 0ll << QString();
-    QTest::newRow("collection - both") << 42ll << QStringLiteral("rid")
-                                       << 0ll << QString();
+    QTest::newRow("collection - id") << 42LL << QString()
+                                     << 0LL << QString();
+    QTest::newRow("collection - rid") << 0LL << QStringLiteral("rid")
+                                      << 0LL << QString();
+    QTest::newRow("collection - both") << 42LL << QStringLiteral("rid")
+                                       << 0LL << QString();
 
-    QTest::newRow("tag - id") << 0ll << QString()
-                              << 42ll << QString();
-    QTest::newRow("tag - rid") << 0ll << QString()
-                               << 0ll << QStringLiteral("rid");
-    QTest::newRow("tag - both") << 0ll << QString()
-                                << 42ll << QStringLiteral("rid");
+    QTest::newRow("tag - id") << 0LL << QString()
+                              << 42LL << QString();
+    QTest::newRow("tag - rid") << 0LL << QString()
+                               << 0LL << QStringLiteral("rid");
+    QTest::newRow("tag - both") << 0LL << QString()
+                                << 42LL << QStringLiteral("rid");
 
-    QTest::newRow("both - id") << 42ll << QString()
-                               << 10ll << QString();
-    QTest::newRow("both - rid") << 0ll << QStringLiteral("colRid")
-                                << 0ll << QStringLiteral("tagRid");
-    QTest::newRow("col - id, tag - rid") << 42ll << QString()
-                                         << 0ll << QStringLiteral("tagRid");
-    QTest::newRow("col - rid, tag - id") << 0ll << QStringLiteral("colRid")
-                                         << 42ll << QString();
-    QTest::newRow("both - both") << 42ll << QStringLiteral("colRid")
-                                 << 10ll << QStringLiteral("tagRid");
+    QTest::newRow("both - id") << 42LL << QString()
+                               << 10LL << QString();
+    QTest::newRow("both - rid") << 0LL << QStringLiteral("colRid")
+                                << 0LL << QStringLiteral("tagRid");
+    QTest::newRow("col - id, tag - rid") << 42LL << QString()
+                                         << 0LL << QStringLiteral("tagRid");
+    QTest::newRow("col - rid, tag - id") << 0LL << QStringLiteral("colRid")
+                                         << 42LL << QString();
+    QTest::newRow("both - both") << 42LL << QStringLiteral("colRid")
+                                 << 10LL << QStringLiteral("tagRid");
 }
 
 void ProtocolTest::testScopeContext()

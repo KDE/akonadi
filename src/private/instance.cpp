@@ -29,7 +29,7 @@ namespace
 
 Q_GLOBAL_STATIC(QString, sIdentifier);
 
-static void loadIdentifier()
+void loadIdentifier()
 {
     *sIdentifier = QString::fromUtf8(qgetenv("AKONADI_INSTANCE"));
     if (sIdentifier->isNull()) {

@@ -34,7 +34,7 @@ class RecursiveCollectionFilterProxyModelPrivate
     Q_DECLARE_PUBLIC(RecursiveCollectionFilterProxyModel)
     RecursiveCollectionFilterProxyModel *q_ptr;
 public:
-    RecursiveCollectionFilterProxyModelPrivate(RecursiveCollectionFilterProxyModel *model)
+    explicit RecursiveCollectionFilterProxyModelPrivate(RecursiveCollectionFilterProxyModel *model)
         : q_ptr(model)
     {
 

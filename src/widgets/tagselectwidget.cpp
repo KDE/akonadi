@@ -42,11 +42,11 @@ TagSelectWidget::TagSelectWidget(QWidget *parent)
 {
     QHBoxLayout *mainLayout = new QHBoxLayout(this);
 
-    auto monitor = new Monitor(this);
+    auto *monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagSelectWidgetMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 
-    auto model = new TagModel(monitor, this);
+    auto *model = new TagModel(monitor, this);
     d->mTagEditWidget.reset(new TagEditWidget());
     d->mTagEditWidget->setModel(model);
     d->mTagEditWidget->setSelectionEnabled(true);

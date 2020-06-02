@@ -35,7 +35,7 @@ using namespace Akonadi;
 class Akonadi::CollectionPathResolverPrivate : public JobPrivate
 {
 public:
-    CollectionPathResolverPrivate(CollectionPathResolver *parent)
+    explicit CollectionPathResolverPrivate(CollectionPathResolver *parent)
         : JobPrivate(parent)
         , mColId(-1)
         , mPathToId(false)

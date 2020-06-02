@@ -33,7 +33,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN TagSelectionDialog::Private
 {
 public:
-    Private(QDialog *parent)
+    explicit Private(QDialog *parent)
         : d(parent)
     {}
 
@@ -42,20 +42,20 @@ public:
         writeConfig();
     }
 
-    void writeConfig();
-    void readConfig();
+    void writeConfig() const;
+    void readConfig() const;
 
     QDialog * const d = nullptr;
     Ui::TagSelectionDialog ui;
 };
 
-void TagSelectionDialog::Private::writeConfig()
+void TagSelectionDialog::Private::writeConfig() const
 {
     KConfigGroup group(KSharedConfig::openConfig(), "TagSelectionDialog");
     group.writeEntry("Size", d->size());
 }
 
-void TagSelectionDialog::Private::readConfig()
+void TagSelectionDialog::Private::readConfig() const
 {
     KConfigGroup group(KSharedConfig::openConfig(), "TagSelectionDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));

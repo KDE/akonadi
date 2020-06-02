@@ -30,19 +30,6 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN CollectionStatistics::Private : public QSharedData
 {
 public:
-    Private()
-        : QSharedData()
-    {
-    }
-
-    Private(const Private &other)
-        : QSharedData(other)
-    {
-        count = other.count;
-        unreadCount = other.unreadCount;
-        size = other.size;
-    }
-
     qint64 count = -1;
     qint64 unreadCount = -1;
     qint64 size = -1;
@@ -58,9 +45,7 @@ CollectionStatistics::CollectionStatistics(const CollectionStatistics &other)
 {
 }
 
-CollectionStatistics::~CollectionStatistics()
-{
-}
+CollectionStatistics::~CollectionStatistics() = default;
 
 qint64 CollectionStatistics::count() const
 {

@@ -241,11 +241,11 @@ void ItemAppendTest::testItemSize_data()
     Item i(QStringLiteral("application/octet-stream"));
     i.setPayload(QByteArray("ABCD"));
 
-    QTest::newRow("auto size") << i << 4ll;
+    QTest::newRow("auto size") << i << 4LL;
     i.setSize(3);
-    QTest::newRow("too small") << i << 4ll;
+    QTest::newRow("too small") << i << 4LL;
     i.setSize(10);
-    QTest::newRow("too large") << i << 10ll;
+    QTest::newRow("too large") << i << 10LL;
 }
 
 void ItemAppendTest::testItemSize()

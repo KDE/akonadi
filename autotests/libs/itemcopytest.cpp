@@ -78,7 +78,7 @@ private Q_SLOTS:
         QCOMPARE(item.attributes().count(), 1);
         QVERIFY(item.remoteId().isEmpty());
         QEXPECT_FAIL("", "statistics are not properly updated after copy", Abort);
-        QCOMPARE(target.statistics().count(), 1ll);
+        QCOMPARE(target.statistics().count(), 1LL);
     }
 
     void testIlleagalCopy()
@@ -108,15 +108,15 @@ private Q_SLOTS:
         Item item(QStringLiteral("application/octet-stream"));
         item.setPayloadPath(file.fileName());
 
-        auto create = new ItemCreateJob(item, source, this);
+        auto *create = new ItemCreateJob(item, source, this);
         AKVERIFYEXEC(create);
         item = create->item();
 
         const Collection target(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
-        auto copy = new ItemCopyJob(item, target, this);
+        auto *copy = new ItemCopyJob(item, target, this);
         AKVERIFYEXEC(copy);
 
-        auto fetch = new ItemFetchJob(target, this);
+        auto *fetch = new ItemFetchJob(target, this);
         fetch->fetchScope().fetchFullPayload(true);
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->items().size(), 1);

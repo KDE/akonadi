@@ -756,10 +756,7 @@ bool EntityTreeModelPrivate::shouldBePartOfModel(const Collection &collection) c
     //We're explicitly monitoring collections, but didn't match the filter
     if (!m_mimeChecker.hasWantedMimeTypes() && !m_monitor->collectionsMonitored().isEmpty()) {
         //The collection should be included if one of the parents is monitored
-        if (isAncestorMonitored(collection)) {
-            return true;
-        }
-        return false;
+        return isAncestorMonitored(collection);
     }
 
     // Some collection trees contain multiple mimetypes. Even though server side filtering ensures we
@@ -1114,7 +1111,7 @@ void EntityTreeModelPrivate::monitoredItemRemoved(const Akonadi::Item &item, con
     }
 }
 
-void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &)
+void EntityTreeModelPrivate::monitoredItemChanged(const Akonadi::Item &item, const QSet<QByteArray> & /*unused*/)
 {
     if (isHidden(item)) {
         return;
@@ -1406,7 +1403,7 @@ void EntityTreeModelPrivate::startFirstListJob()
 
     // Even if the root collection is the invalid collection, we still need to start
     // the first list job with Collection::root.
-    auto node = new Node{Node::Collection, m_rootCollection.id(), -1};
+    auto *node = new Node{Node::Collection, m_rootCollection.id(), -1};
     if (m_showRootCollection) {
         // Notify the outside that we're putting collection::root into the model.
         q->beginInsertRows(QModelIndex(), 0, 0);
@@ -1523,7 +1520,7 @@ void EntityTreeModelPrivate::ref(Collection::Id id)
     m_monitor->d_ptr->ref(id);
 }
 
-bool EntityTreeModelPrivate::shouldPurge(Collection::Id id)
+bool EntityTreeModelPrivate::shouldPurge(Collection::Id id) const
 {
     // reference counted collections should never be purged
     // they first have to be deref'ed until they reach 0.
@@ -1536,12 +1533,12 @@ bool EntityTreeModelPrivate::shouldPurge(Collection::Id id)
     return true;
 }
 
-bool EntityTreeModelPrivate::isMonitored(Collection::Id id)
+bool EntityTreeModelPrivate::isMonitored(Collection::Id id) const
 {
     return m_monitor->d_ptr->isMonitored(id);
 }
 
-bool EntityTreeModelPrivate::isBuffered(Collection::Id id)
+bool EntityTreeModelPrivate::isBuffered(Collection::Id id) const
 {
     return m_monitor->d_ptr->m_buffer.isBuffered(id);
 }

@@ -28,20 +28,6 @@ namespace Akonadi
 class AKONADICORE_NO_EXPORT ChangeNotification::Private : public QSharedData
 {
 public:
-    Private()
-        : QSharedData()
-    {
-    }
-
-    Private(const Private &other)
-        : QSharedData(other)
-        , timestamp(other.timestamp)
-        , listeners(other.listeners)
-        , notification(other.notification)
-        , type(other.type)
-    {
-    }
-
     QDateTime timestamp;
     QVector<QByteArray> listeners;
     Protocol::ChangeNotificationPtr notification;

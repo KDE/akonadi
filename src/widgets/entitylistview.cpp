@@ -44,7 +44,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN EntityListView::Private
 {
 public:
-    Private(EntityListView *parent)
+    explicit Private(EntityListView *parent)
         : mParent(parent)
 #ifndef QT_NO_DRAGANDDROP
         , mDragDropManager(new DragDropManager(mParent))
@@ -53,9 +53,9 @@ public:
     }
 
     void init();
-    void itemClicked(const QModelIndex &index);
-    void itemDoubleClicked(const QModelIndex &index);
-    void itemCurrentChanged(const QModelIndex &index);
+    void itemClicked(const QModelIndex &index) const;
+    void itemDoubleClicked(const QModelIndex &index) const;
+    void itemCurrentChanged(const QModelIndex &index) const;
 
     EntityListView *mParent = nullptr;
     DragDropManager *mDragDropManager = nullptr;
@@ -81,7 +81,7 @@ void EntityListView::Private::init()
     ControlGui::widgetNeedsAkonadi(mParent);
 }
 
-void EntityListView::Private::itemClicked(const QModelIndex &index)
+void EntityListView::Private::itemClicked(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -98,7 +98,7 @@ void EntityListView::Private::itemClicked(const QModelIndex &index)
     }
 }
 
-void EntityListView::Private::itemDoubleClicked(const QModelIndex &index)
+void EntityListView::Private::itemDoubleClicked(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -115,7 +115,7 @@ void EntityListView::Private::itemDoubleClicked(const QModelIndex &index)
     }
 }
 
-void EntityListView::Private::itemCurrentChanged(const QModelIndex &index)
+void EntityListView::Private::itemCurrentChanged(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;

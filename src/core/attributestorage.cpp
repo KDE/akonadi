@@ -105,8 +105,9 @@ const Attribute *AttributeStorage::attribute(const QByteArray &type) const
 Attribute *AttributeStorage::attribute(const QByteArray &type)
 {
     Attribute *attr = mAttributes.value(type);
-    if (attr)
+    if (attr) {
         markAttributeModified(type);
+    }
     return attr;
 }
 

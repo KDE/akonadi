@@ -29,7 +29,7 @@ namespace Akonadi
 class SelectionProxyModelPrivate
 {
 public:
-    SelectionProxyModelPrivate(SelectionProxyModel *selectionProxyModel)
+    explicit SelectionProxyModelPrivate(SelectionProxyModel *selectionProxyModel)
         : q_ptr(selectionProxyModel)
     {
         Q_Q(SelectionProxyModel);

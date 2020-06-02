@@ -141,7 +141,7 @@ QVector<AbstractItemRetrievalJob *> ItemRetrievalManager::scheduleJobsForIdleRes
             auto req = std::move(it->second.front());
             it->second.pop_front();
             Q_ASSERT(req.resourceId == it->first);
-            auto job = mJobFactory->retrievalJob(std::move(req), this);
+            auto *job = mJobFactory->retrievalJob(std::move(req), this);
             connect(job, &AbstractItemRetrievalJob::requestCompleted, this, &ItemRetrievalManager::retrievalJobFinished);
             mCurrentJobs.insert(job->request().resourceId, job);
             // delay job execution until after we unlocked the mutex, since the job can emit the finished signal immediately in some cases

@@ -229,7 +229,7 @@ void TagSync::onTagItemsFetchDone(KJob *job)
     }
 }
 
-void TagSync::onJobDone(KJob *)
+void TagSync::onJobDone(KJob * /*unused*/)
 {
     checkDone();
 }

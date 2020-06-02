@@ -97,9 +97,9 @@ uint qHash(const RemoteId &rid)
 inline bool operator<(const RemoteId &r1, const RemoteId &r2)
 {
     if (r1.ridChain.length() == r2.ridChain.length()) {
-        QStringList::ConstIterator it1 = r1.ridChain.constBegin(),
-                                   end1 = r1.ridChain.constEnd(),
-                                   it2 = r2.ridChain.constBegin();
+        auto it1 = r1.ridChain.constBegin();
+        auto end1 = r1.ridChain.constEnd();
+        auto it2 = r2.ridChain.constBegin();
         while (it1 != end1) {
             if ((*it1) == (*it2)) {
                 ++it1;
@@ -126,7 +126,7 @@ QDebug operator<<(QDebug s, const RemoteId &rid)
 class CollectionSync::Private
 {
 public:
-    Private(CollectionSync *parent)
+    explicit Private(CollectionSync *parent)
         : q(parent)
         , pendingJobs(0)
         , progress(0)
@@ -216,17 +216,13 @@ public:
         Collection::List localChildren = localCollections.value(parentRid);
 
         // Iterate over the list of local children of localParent
-        Collection::List::Iterator localIter, localEnd,
-                   removedIter, removedEnd,
-                   remoteIter, remoteEnd;
-
-        for (localIter = localChildren.begin(), localEnd = localChildren.end(); localIter != localEnd;) {
+        for (auto localIter = localChildren.begin(), localEnd = localChildren.end(); localIter != localEnd;) {
             const Collection localCollection = *localIter;
             bool matched = false;
             uidRidMap.insert(localIter->id(), localIter->remoteId());
 
             // Try to map removed remote collections (from incremental sync) to local collections
-            for (removedIter = removedChildren.begin(), removedEnd = removedChildren.end(); removedIter != removedEnd;) {
+            for (auto removedIter = removedChildren.begin(), removedEnd = removedChildren.end(); removedIter != removedEnd;) {
                 Collection removedCollection = *removedIter;
 
                 if (matchLocalAndRemoteCollection(localCollection, removedCollection)) {
@@ -254,7 +250,7 @@ public:
             }
 
             // Try to find a matching collection in the list of remote children
-            for (remoteIter = remoteChildren.begin(), remoteEnd = remoteChildren.end(); !matched && remoteIter != remoteEnd;) {
+            for (auto remoteIter = remoteChildren.begin(), remoteEnd = remoteChildren.end(); !matched && remoteIter != remoteEnd;) {
                 Collection remoteCollection = *remoteIter;
 
                 // Yay, we found a match!
@@ -445,8 +441,7 @@ public:
             return;
         }
 
-        Collection::List::Iterator iter, end;
-        for (iter = remoteCollectionsToCreate.begin(), end = remoteCollectionsToCreate.end(); iter != end;) {
+        for (auto iter = remoteCollectionsToCreate.begin(), end = remoteCollectionsToCreate.end(); iter != end;) {
             const Collection col = *iter;
             const Collection parentCollection = col.parentCollection();
             // The parent already exists locally
@@ -487,8 +482,7 @@ public:
 
         // See if there are any pending collections that this collection is parent of and
         // update them if so
-        Collection::List::Iterator iter, end;
-        for (iter = remoteCollectionsToCreate.begin(), end = remoteCollectionsToCreate.end(); iter != end; ++iter) {
+        for (auto iter = remoteCollectionsToCreate.begin(), end = remoteCollectionsToCreate.end(); iter != end; ++iter) {
             const Collection parentCollection = iter->parentCollection();
             if (parentCollection != akonadiRootCollection && parentCollection.id() <= 0) {
                 const RemoteId remoteRID = remoteIdForCollection(*iter);
@@ -639,7 +633,7 @@ public:
         }
     }
 
-    void deleteLocalCollectionsResult(KJob *)
+    void deleteLocalCollectionsResult(KJob * /*unused*/)
     {
         --pendingJobs;
         q->setProcessedAmount(KJob::Bytes, ++progress);
@@ -678,7 +672,7 @@ public:
                 // while there is still a Transaction job running
                 KJob *subjob = q->subjobs().at(0);
                 connect(subjob, &KJob::result,
-                q, [this](KJob *) {
+                q, [this](KJob * /*unused*/) {
                     emitResult();
                 },
                 Qt::QueuedConnection);

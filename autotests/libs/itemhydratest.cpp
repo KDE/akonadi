@@ -361,7 +361,9 @@ void ItemHydra::testSharedPointerConversions()
     QVERIFY(!a.hasPayload<GerdPtr>());
     QVERIFY(a.payload<RudiPtr>().get());
     QVERIFY(a.payload<VolkerPtr>().get());
-    bool thrown = false, thrownCorrectly = true;
+    bool thrown = false;
+
+    bool thrownCorrectly = true;
     try {
         QVERIFY(!a.payload<GerdPtr>());
     } catch (const Akonadi::PayloadException &e) {

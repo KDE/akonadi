@@ -31,8 +31,7 @@
 using namespace Akonadi;
 
 TransportResourceBasePrivate::TransportResourceBasePrivate(TransportResourceBase *qq)
-    : QObject()
-    , q(qq)
+    : q(qq)
 {
     new Akonadi__TransportAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Transport"),

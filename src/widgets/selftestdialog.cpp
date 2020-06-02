@@ -181,10 +181,7 @@ bool SelfTestDialog::useStandaloneMysqlServer() const
         return false;
     }
     const bool startServer = serverSetting(driver, "StartServer", true).toBool();
-    if (!startServer) {
-        return false;
-    }
-    return true;
+    return startServer;
 }
 
 bool SelfTestDialog::runProcess(const QString &app, const QStringList &args, QString &result) const

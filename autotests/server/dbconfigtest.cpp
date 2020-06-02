@@ -69,7 +69,7 @@ private Q_SLOTS:
         QCOMPARE(cfg->driverName(), driverName);
         QCOMPARE(cfg->databaseName(), QL1S("akonadi"));
         QCOMPARE(cfg->useInternalServer(), true);
-        QCOMPARE(cfg->sizeThreshold(), 4096ll);
+        QCOMPARE(cfg->sizeThreshold(), 4096LL);
     }
 
     void testPostgresVersionedLookup()

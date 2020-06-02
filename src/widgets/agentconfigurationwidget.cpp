@@ -53,7 +53,7 @@ void AgentConfigurationWidget::Private::setupErrorWidget(QWidget *parent, const 
 {
     QVBoxLayout *layout = new QVBoxLayout(parent);
     layout->addStretch(2);
-    auto label = new QLabel(text, parent);
+    auto *label = new QLabel(text, parent);
     label->setAlignment(Qt::AlignCenter);
     layout->addWidget(label);
     layout->addStretch(2);
@@ -100,7 +100,7 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             connect(d->plugin.data(), &AgentConfigurationBase::enableOkButton, this, &AgentConfigurationWidget::enableOkButton);
         } else {
             // Hide this dialog and fallback to calling the out-of-process configuration
-            if (auto dlg = qobject_cast<AgentConfigurationDialog*>(parent)) {
+            if (auto *dlg = qobject_cast<AgentConfigurationDialog*>(parent)) {
                 const_cast<AgentInstance&>(instance).configure(topLevelWidget()->parentWidget());
                 // If we are inside the AgentConfigurationDialog, hide the dialog
                 QTimer::singleShot(0, this, [dlg]() { dlg->reject(); });

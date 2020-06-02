@@ -101,7 +101,8 @@ void FakeClient::readServerPart()
             QBuffer buffer(&scenario.data);
             buffer.open(QIODevice::ReadOnly);
             Protocol::DataStream expectedStream(&buffer);
-            qint64 expectedTag, actualTag;
+            qint64 expectedTag;
+            qint64 actualTag;
 
             expectedStream >> expectedTag;
             const auto expectedCommand = Protocol::deserialize(expectedStream.device());

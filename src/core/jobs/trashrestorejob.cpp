@@ -48,7 +48,7 @@ using namespace Akonadi;
 class TrashRestoreJob::TrashRestoreJobPrivate : public JobPrivate
 {
 public:
-    TrashRestoreJobPrivate(TrashRestoreJob *parent)
+    explicit TrashRestoreJobPrivate(TrashRestoreJob *parent)
         : JobPrivate(parent)
     {
     }

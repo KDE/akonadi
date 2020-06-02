@@ -25,7 +25,7 @@
 
 namespace {
 
-static const auto initRemoteLogger = []() {
+const auto initRemoteLogger = []() {
     qAddPreRoutine([]() {
         // Initialize remote logging from event loop, this way applications like
         // Akonadi Console or TestRunner have a chance to change AKONADI_INSTANCE

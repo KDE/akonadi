@@ -90,8 +90,7 @@ void DataStore::setFactory(std::unique_ptr<DataStoreFactory> factory)
  *   DataStore                                                           *
  ***************************************************************************/
 DataStore::DataStore(AkonadiServer &akonadi)
-    : QObject()
-    , m_akonadi(akonadi)
+    : m_akonadi(akonadi)
     , m_dbOpened(false)
     , m_transactionLevel(0)
     , m_keepAliveTimer(nullptr)
@@ -305,7 +304,8 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
     }
 
     if (!silent && (!addedFlags.isEmpty() || !removedFlags.isEmpty())) {
-        QSet<QByteArray> addedFlagsBa, removedFlagsBa;
+        QSet<QByteArray> addedFlagsBa;
+        QSet<QByteArray> removedFlagsBa;
         for (const auto &addedFlag : qAsConst(addedFlags)) {
             addedFlagsBa.insert(addedFlag.toLatin1());
         }

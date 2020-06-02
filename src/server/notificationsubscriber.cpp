@@ -41,8 +41,7 @@ QMimeDatabase NotificationSubscriber::sMimeDatabase;
 //#define TRACE_NTF(x) qCDebug(AKONADISERVER_LOG) << mSubscriber << x
 
 NotificationSubscriber::NotificationSubscriber(NotificationManager *manager)
-    : QObject()
-    , mManager(manager)
+    : mManager(manager)
     , mSocket(nullptr)
     , mAllMonitored(false)
     , mExclusive(false)
@@ -159,15 +158,15 @@ void NotificationSubscriber::disconnectSubscriber()
     }
 
     // Unregister ourselves from the aggregated collection fetch scope
-    auto cfs = mManager->collectionFetchScope();
+    auto *cfs = mManager->collectionFetchScope();
     cfs->apply(mCollectionFetchScope, Protocol::CollectionFetchScope());
     cfs->removeSubscriber();
 
-    auto tfs = mManager->tagFetchScope();
+    auto *tfs = mManager->tagFetchScope();
     tfs->apply(mTagFetchScope, Protocol::TagFetchScope());
     tfs->removeSubscriber();
 
-    auto ifs = mManager->itemFetchScope();
+    auto *ifs = mManager->itemFetchScope();
     ifs->apply(mItemFetchScope, Protocol::ItemFetchScope());
     ifs->removeSubscriber();
 
@@ -275,8 +274,9 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         const auto newScope = command.tagFetchScope();
         mManager->tagFetchScope()->apply(mTagFetchScope, newScope);
         mTagFetchScope = newScope;
-        if (!newScope.fetchIdOnly())
+        if (!newScope.fetchIdOnly()) {
             Q_ASSERT(!mManager->tagFetchScope()->fetchIdOnly());
+        }
     }
 
     if (mManager) {
@@ -576,11 +576,7 @@ bool NotificationSubscriber::acceptsRelationNotification(const Protocol::Relatio
         return true;
     }
 
-    if (!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::RelationChanges)) {
-        return false;
-    }
-
-    return true;
+    return !(!mMonitoredTypes.isEmpty() && !mMonitoredTypes.contains(Protocol::ModifySubscriptionCommand::RelationChanges));
 }
 
 bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::SubscriptionChangeNotification &msg) const

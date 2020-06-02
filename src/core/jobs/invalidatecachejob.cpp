@@ -33,7 +33,7 @@ namespace Akonadi
 class InvalidateCacheJobPrivate : JobPrivate
 {
 public:
-    InvalidateCacheJobPrivate(InvalidateCacheJob *qq)
+    explicit InvalidateCacheJobPrivate(InvalidateCacheJob *qq)
         : JobPrivate(qq)
     {
     }

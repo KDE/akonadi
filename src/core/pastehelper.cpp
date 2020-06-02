@@ -261,11 +261,7 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
             }
         }
 
-        if (!supportsMimeTypes) {
-            return false;
-        }
-
-        return true;
+        return supportsMimeTypes;
     }
 
     return false;

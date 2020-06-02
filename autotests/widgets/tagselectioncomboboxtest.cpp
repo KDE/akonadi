@@ -43,7 +43,7 @@ class TagSelectionComboBoxTest: public QObject
     Q_OBJECT
 
     struct TestSetup {
-        TestSetup(bool checkable)
+        explicit TestSetup(bool checkable)
         {
             widget = std::make_unique<TagSelectionComboBox>();
             widget->setCheckable(checkable);
@@ -64,7 +64,7 @@ class TagSelectionComboBoxTest: public QObject
         ~TestSetup()
         {
             if (!createdTags.empty()) {
-                auto deleteJob = new TagDeleteJob(createdTags);
+                auto *deleteJob = new TagDeleteJob(createdTags);
                 AKVERIFYEXEC(deleteJob);
             }
         }
@@ -74,7 +74,7 @@ class TagSelectionComboBoxTest: public QObject
             const auto doCreateTags = [this, count]() {
                 QSignalSpy monitorSpy(monitor, &Monitor::tagAdded);
                 for (int i = 0; i < count; ++i) {
-                    auto job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
+                    auto *job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
                     AKVERIFYEXEC(job);
                     createdTags.push_back(job->tag());
                 }
@@ -84,7 +84,7 @@ class TagSelectionComboBoxTest: public QObject
             return createdTags.size() == count;
         }
 
-        bool testSelectionMatches(QSignalSpy &selectionSpy, const Tag::List &selection)
+        bool testSelectionMatches(QSignalSpy &selectionSpy, const Tag::List &selection) const
         {
             QStringList names;
             std::transform(selection.begin(), selection.end(), std::back_inserter(names), std::bind(&Tag::name, std::placeholders::_1));
@@ -111,9 +111,9 @@ class TagSelectionComboBoxTest: public QObject
             return false;
         }
 
-        bool toggleDropdown()
+        bool toggleDropdown() const
         {
-            auto view = widget->view()->parentWidget();
+            auto *view = widget->view()->parentWidget();
             const bool visible = view->isVisible();
             QTest::mouseClick(widget->lineEdit(), Qt::LeftButton);
             QTest::qWait(10);
@@ -122,7 +122,7 @@ class TagSelectionComboBoxTest: public QObject
             return true;
         }
 
-        QModelIndex indexForTag(const Tag &tag)
+        QModelIndex indexForTag(const Tag &tag) const
         {
             for (int i = 0; i < widget->model()->rowCount(); ++i) {
                 const auto index = widget->model()->index(i, 0);

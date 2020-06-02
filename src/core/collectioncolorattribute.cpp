@@ -25,18 +25,8 @@
 
 using namespace Akonadi;
 
-CollectionColorAttribute::CollectionColorAttribute()
-    : Attribute()
-{
-}
-
 CollectionColorAttribute::CollectionColorAttribute(const QColor &color)
-    : Attribute()
-    , mColor(color)
-{
-}
-
-CollectionColorAttribute::~CollectionColorAttribute()
+    :  mColor(color)
 {
 }
 

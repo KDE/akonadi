@@ -99,7 +99,6 @@ TestScenario TestScenario::create(qint64 tag, TestScenario::Action action,
 
 
 FakeAkonadiServer::FakeAkonadiServer()
-    : AkonadiServer()
 {
     qputenv("AKONADI_INSTANCE", qPrintable(instanceName()));
     qputenv("XDG_DATA_HOME", qPrintable(QString(basePath() + QLatin1String("/local"))));
@@ -236,12 +235,12 @@ void FakeAkonadiServer::initFake()
     }
     mAgentSearchManager = std::make_unique<SearchTaskManager>();
 
-    mDebugInterface = std::make_unique<DebugInterface>(*mTracer.get());
-    mResourceManager = std::make_unique<ResourceManager>(*mTracer.get());
-    mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer.get());
+    mDebugInterface = std::make_unique<DebugInterface>(*mTracer);
+    mResourceManager = std::make_unique<ResourceManager>(*mTracer);
+    mPreprocessorManager = std::make_unique<PreprocessorManager>(*mTracer);
     mPreprocessorManager->setEnabled(false);
-    mIntervalCheck = std::make_unique<FakeIntervalCheck>(*mItemRetrieval.get());
-    mSearchManager = std::make_unique<FakeSearchManager>(*mAgentSearchManager.get());
+    mIntervalCheck = std::make_unique<FakeIntervalCheck>(*mItemRetrieval);
+    mSearchManager = std::make_unique<FakeSearchManager>(*mAgentSearchManager);
     mStorageJanitor = std::make_unique<StorageJanitor>(*this);
 
     qDebug() << "==== Fake Akonadi Server started ====";

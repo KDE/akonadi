@@ -137,7 +137,7 @@ void NotificationCollector::itemsUnlinked(const PimItem::List &items, const Coll
 void NotificationCollector::collectionAdded(const Collection &collection,
         const QByteArray &resource)
 {
-    if (auto cleaner = mAkonadi.cacheCleaner()) {
+    if (auto *cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionAdded(collection.id());
     }
     mAkonadi.intervalChecker().collectionAdded(collection.id());
@@ -148,7 +148,7 @@ void NotificationCollector::collectionChanged(const Collection &collection,
         const QList<QByteArray> &changes,
         const QByteArray &resource)
 {
-    if (auto cleaner = mAkonadi.cacheCleaner()) {
+    if (auto *cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionChanged(collection.id());
     }
     mAkonadi.intervalChecker().collectionChanged(collection.id());
@@ -164,7 +164,7 @@ void NotificationCollector::collectionMoved(const Collection &collection,
         const QByteArray &resource,
         const QByteArray &destResource)
 {
-    if (auto cleaner = mAkonadi.cacheCleaner()) {
+    if (auto *cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionChanged(collection.id());
     }
     mAkonadi.intervalChecker().collectionChanged(collection.id());
@@ -174,7 +174,7 @@ void NotificationCollector::collectionMoved(const Collection &collection,
 void NotificationCollector::collectionRemoved(const Collection &collection,
         const QByteArray &resource)
 {
-    if (auto cleaner = mAkonadi.cacheCleaner()) {
+    if (auto *cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionRemoved(collection.id());
     }
     mAkonadi.intervalChecker().collectionRemoved(collection.id());
@@ -185,7 +185,7 @@ void NotificationCollector::collectionRemoved(const Collection &collection,
 void NotificationCollector::collectionSubscribed(const Collection &collection,
         const QByteArray &resource)
 {
-    if (auto cleaner = mAkonadi.cacheCleaner()) {
+    if (auto *cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionAdded(collection.id());
     }
     mAkonadi.intervalChecker().collectionAdded(collection.id());
@@ -195,7 +195,7 @@ void NotificationCollector::collectionSubscribed(const Collection &collection,
 void NotificationCollector::collectionUnsubscribed(const Collection &collection,
         const QByteArray &resource)
 {
-    if (auto cleaner = mAkonadi.cacheCleaner()) {
+    if (auto *cleaner = mAkonadi.cacheCleaner()) {
         cleaner->collectionRemoved(collection.id());
     }
     mAkonadi.intervalChecker().collectionRemoved(collection.id());
@@ -321,8 +321,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     for (const auto &ntfItem : ntfItems) {
         virtItems.insert(ntfItem.id(), std::move(ntfItem));
     }
-    auto iter = vCollections.constBegin(), endIter = vCollections.constEnd();
-    for (; iter != endIter; ++iter) {
+    for (auto iter = vCollections.cbegin(), end = vCollections.constEnd(); iter != end; ++iter) {
         auto copy = Protocol::ItemChangeNotificationPtr::create(*msg);
         QVector<Protocol::FetchItemsResponse> items;
         items.reserve(iter->size());
@@ -385,8 +384,8 @@ void NotificationCollector::collectionNotification(Protocol::CollectionChangeNot
     msg->setChangedParts(changes);
 
     auto msgCollection = HandlerHelper::fetchCollectionsResponse(mAkonadi, collection);
-    if (auto mgr = mAkonadi.notificationManager()) {
-        auto fetchScope = mgr->collectionFetchScope();
+    if (auto *mgr = mAkonadi.notificationManager()) {
+        auto *fetchScope = mgr->collectionFetchScope();
         // Make sure we have all the data
         if (!fetchScope->fetchIdOnly() && msgCollection.name().isEmpty()) {
             const auto col = Collection::retrieveById(msgCollection.id());
@@ -461,8 +460,8 @@ void NotificationCollector::tagNotification(Protocol::TagChangeNotification::Ope
     msgTag.setId(tag.id());
     msgTag.setRemoteId(remoteId.toUtf8());
     msgTag.setParentId(tag.parentId());
-    if (auto mgr = mAkonadi.notificationManager()) {
-        auto fetchScope = mgr->tagFetchScope();
+    if (auto *mgr = mAkonadi.notificationManager()) {
+        auto *fetchScope = mgr->tagFetchScope();
         if (!fetchScope->fetchIdOnly() && msgTag.gid().isEmpty()) {
             msgTag = HandlerHelper::fetchTagsResponse(Tag::retrieveById(msgTag.id()), fetchScope->toFetchScope(), mConnection);
         }
@@ -511,14 +510,14 @@ void NotificationCollector::completeNotification(const Protocol::ChangeNotificat
 {
     if (changeMsg->type() == Protocol::Command::ItemChangeNotification) {
         const auto msg = changeMsg.staticCast<Protocol::ItemChangeNotification>();
-        const auto mgr = mAkonadi.notificationManager();
+        auto *const mgr = mAkonadi.notificationManager();
         if (mgr && msg->operation() != Protocol::ItemChangeNotification::Remove) {
             if (mDb->inTransaction()) {
                 qCWarning(AKONADISERVER_LOG) << "NotificationCollector requested FetchHelper from within a transaction."
                                              << "Aborting since this would deadlock!";
                 return;
             }
-            auto fetchScope = mgr->itemFetchScope();
+            auto *fetchScope = mgr->itemFetchScope();
             // NOTE: Checking and retrieving missing elements for each Item manually
             // here would require a complex code (and I'm too lazy), so instead we simply
             // feed the Items to FetchHelper and retrieve them all with the setup from
@@ -611,7 +610,7 @@ bool NotificationCollector::dispatchNotifications()
 
 void NotificationCollector::notify(Protocol::ChangeNotificationList &&msgs)
 {
-    if (auto mgr = mAkonadi.notificationManager()) {
+    if (auto *mgr = mAkonadi.notificationManager()) {
         QMetaObject::invokeMethod(mgr, "slotNotify", Qt::QueuedConnection,
                                   Q_ARG(Akonadi::Protocol::ChangeNotificationList, msgs));
     }

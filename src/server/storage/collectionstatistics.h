@@ -56,7 +56,7 @@ public:
     explicit CollectionStatistics(bool prefetch = true);
     virtual ~CollectionStatistics() = default; 
 
-    const Statistics statistics(const Collection &col);
+    Statistics statistics(const Collection &col);
 
     void itemAdded(const Collection &col, qint64 size, bool seen);
     void itemsSeenChanged(const Collection &col, qint64 seenCount);

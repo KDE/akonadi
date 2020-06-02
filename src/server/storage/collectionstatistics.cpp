@@ -135,7 +135,7 @@ void CollectionStatistics::expireCache()
     mCache.clear();
 }
 
-const CollectionStatistics::Statistics CollectionStatistics::statistics(const Collection &col)
+CollectionStatistics::Statistics CollectionStatistics::statistics(const Collection &col)
 {
     QMutexLocker lock(&mCacheLock);
     auto it = mCache.find(col.id());

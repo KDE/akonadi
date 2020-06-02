@@ -21,11 +21,6 @@
 
 using namespace Akonadi;
 
-FavoriteCollectionAttribute::FavoriteCollectionAttribute()
-    : Attribute()
-{
-}
-
 Attribute *FavoriteCollectionAttribute::clone() const
 {
     return new FavoriteCollectionAttribute();
@@ -36,7 +31,7 @@ QByteArray FavoriteCollectionAttribute::type() const
     return QByteArrayLiteral("favorite");
 }
 
-void FavoriteCollectionAttribute::deserialize(const QByteArray &)
+void FavoriteCollectionAttribute::deserialize(const QByteArray & /*data*/)
 {
     // unused
 }

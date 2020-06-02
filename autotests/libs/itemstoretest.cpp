@@ -423,13 +423,13 @@ void ItemStoreTest::itemModifyJobShouldOnlySendModifiedAttributes()
 class ParallelJobsRunner
 {
 public:
-    ParallelJobsRunner(int count)
+    explicit ParallelJobsRunner(int count)
         : numSessions(count)
     {
         sessions.reserve(numSessions);
         modifyJobs.reserve(numSessions);
         for (int i = 0 ; i < numSessions; ++i) {
-            auto session = new Session(QByteArray::number(i));
+            auto *session = new Session(QByteArray::number(i));
             sessions.push_back(session);
         }
     }
@@ -457,8 +457,10 @@ public:
             if (!doneJobs.contains(mjob)) {
                 QSignalSpy spy(mjob, &ItemModifyJob::result);
                 QVERIFY(spy.wait());
-                if (mjob->error())
+                if (mjob->error()) {
                     qWarning() << mjob->errorString();
+
+}
                 QCOMPARE(mjob->error(), KJob::NoError);
             }
         }

@@ -30,38 +30,13 @@ namespace Akonadi
 class ImapInterval::Private : public QSharedData
 {
 public:
-    Private()
-        : QSharedData()
-        , begin(0)
-        , end(0)
-    {
-    }
-
-    Private(const Private &other)
-        : QSharedData(other)
-    {
-        begin = other.begin;
-        end = other.end;
-    }
-
-    Id begin;
-    Id end;
+    Id begin = 0;
+    Id end = 0;
 };
 
 class ImapSet::Private : public QSharedData
 {
 public:
-    Private()
-        : QSharedData()
-    {
-    }
-
-    Private(const Private &other)
-        : QSharedData(other)
-    {
-        intervals = other.intervals;
-    }
-
     template<typename T>
     void add(const T &values)
     {
@@ -106,9 +81,7 @@ ImapInterval::ImapInterval(Id begin, Id end)
     d->end = end;
 }
 
-ImapInterval::~ImapInterval()
-{
-}
+ImapInterval::~ImapInterval() = default;
 
 ImapInterval &ImapInterval::operator=(const ImapInterval &other)
 {

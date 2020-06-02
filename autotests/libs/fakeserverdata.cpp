@@ -53,7 +53,7 @@ FakeServerData::FakeServerData(TagModel *model, FakeSession *session, FakeMonito
       m_nextTagId(1)
 {
     connect(session, &FakeSession::jobAdded,
-            [this](Akonadi::Job *) {
+            [this](Akonadi::Job * /*unused*/) {
                 QTimer::singleShot(0, [this]() {
                     jobAdded();
                 });

@@ -60,11 +60,7 @@ bool ItemCopyHandler::copyItem(const PimItem &item, const Collection &target)
     }
 
     DataStore *store = connection()->storageBackend();
-    if (!store->appendPimItem(parts, item.flags(), item.mimeType(), target, QDateTime::currentDateTimeUtc(), QString(), QString(), item.gid(), newItem)) {
-        return false;
-    }
-
-    return true;
+    return store->appendPimItem(parts, item.flags(), item.mimeType(), target, QDateTime::currentDateTimeUtc(), QString(), QString(), item.gid(), newItem);
 }
 
 void ItemCopyHandler::processItems(const QVector<qint64> &ids)

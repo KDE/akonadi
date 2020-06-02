@@ -29,7 +29,7 @@ using namespace Akonadi;
 class Akonadi::RelationFetchJobPrivate : public JobPrivate
 {
 public:
-    RelationFetchJobPrivate(RelationFetchJob *parent)
+    explicit RelationFetchJobPrivate(RelationFetchJob *parent)
         : JobPrivate(parent)
         , mEmitTimer(nullptr)
     {

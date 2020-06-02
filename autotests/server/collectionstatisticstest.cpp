@@ -31,7 +31,7 @@ Q_DECLARE_METATYPE(Akonadi::Server::Collection)
 class IntrospectableCollectionStatistics : public CollectionStatistics
 {
 public:
-    IntrospectableCollectionStatistics(bool prefetch)
+    explicit IntrospectableCollectionStatistics(bool prefetch)
         : CollectionStatistics(prefetch)
         , mCalculationsCount(0)
     {}
@@ -90,9 +90,9 @@ private Q_SLOTS:
         QTest::addColumn<qint64>("read");
         QTest::addColumn<qint64>("size");
 
-        QTest::newRow("col1") << col1 << 0 << 2ll << 0ll << 0ll;
-        QTest::newRow("col2") << col2 << 0 << 0ll << 0ll << 0ll;
-        QTest::newRow("col3") << col3 << 0 << 1ll << 0ll << 0ll;
+        QTest::newRow("col1") << col1 << 0 << 2LL << 0LL << 0LL;
+        QTest::newRow("col2") << col2 << 0 << 0LL << 0LL << 0LL;
+        QTest::newRow("col3") << col3 << 0 << 1LL << 0LL << 0LL;
     }
 
     void testPrefetch()

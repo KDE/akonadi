@@ -34,7 +34,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN AgentInstanceModel::Private
 {
 public:
-    Private(AgentInstanceModel *parent)
+    explicit Private(AgentInstanceModel *parent)
         : mParent(parent)
     {
     }
@@ -42,9 +42,9 @@ public:
     AgentInstanceModel *mParent = nullptr;
     AgentInstance::List mInstances;
 
-    void instanceAdded(const AgentInstance &);
-    void instanceRemoved(const AgentInstance &);
-    void instanceChanged(const AgentInstance &);
+    void instanceAdded(const AgentInstance & /*instance*/);
+    void instanceRemoved(const AgentInstance & /*instance*/);
+    void instanceChanged(const AgentInstance & /*instance*/);
 };
 
 void AgentInstanceModel::Private::instanceAdded(const AgentInstance &instance)
@@ -196,7 +196,7 @@ QVariant AgentInstanceModel::headerData(int section, Qt::Orientation orientation
     }
 }
 
-QModelIndex AgentInstanceModel::index(int row, int column, const QModelIndex &) const
+QModelIndex AgentInstanceModel::index(int row, int column, const QModelIndex & /*parent*/) const
 {
     if (row < 0 || row >= d->mInstances.count()) {
         return QModelIndex();
@@ -209,7 +209,7 @@ QModelIndex AgentInstanceModel::index(int row, int column, const QModelIndex &) 
     return createIndex(row, column);
 }
 
-QModelIndex AgentInstanceModel::parent(const QModelIndex &) const
+QModelIndex AgentInstanceModel::parent(const QModelIndex & /*child*/) const
 {
     return QModelIndex();
 }

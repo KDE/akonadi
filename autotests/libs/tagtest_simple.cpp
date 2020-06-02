@@ -43,13 +43,13 @@ void TagTestSimple::testCustomAttributes()
     Tag t2;
     {
         Tag t1;
-        auto attr = new TestAttribute;
+        auto *attr = new TestAttribute;
         attr->deserialize("hello");
         t1.addAttribute(attr);
         t2 = t1;
     }
     QVERIFY(t2.hasAttribute("EXTRA"));
-    auto attr = t2.attribute<TestAttribute>();
+    auto *attr = t2.attribute<TestAttribute>();
     QCOMPARE(attr->serialized(), QByteArray("hello"));
 }
 
@@ -58,13 +58,13 @@ void TagTestSimple::testTagAttribute()
     Tag t2;
     {
         Tag t1;
-        auto attr = AttributeFactory::createAttribute("TAG");
+        auto *attr = AttributeFactory::createAttribute("TAG");
         t1.addAttribute(attr);
         t1.setName(QStringLiteral("hello"));
         t2 = t1;
     }
     QVERIFY(t2.hasAttribute<TagAttribute>());
-    auto attr = t2.attribute<TagAttribute>();
+    auto *attr = t2.attribute<TagAttribute>();
     QVERIFY(attr);
     QCOMPARE(t2.name(), attr->displayName());
 }

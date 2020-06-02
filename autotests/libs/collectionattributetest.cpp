@@ -39,11 +39,9 @@ QTEST_AKONADIMAIN(CollectionAttributeTest)
 class TestAttribute : public Attribute
 {
 public:
-    TestAttribute()
-        : Attribute()
-    {
-    }
-    TestAttribute(const QByteArray &data)
+    TestAttribute() = default;
+
+    explicit TestAttribute(const QByteArray &data)
         : mData(data)
     {
     }
@@ -106,7 +104,7 @@ void CollectionAttributeTest::testAttributes()
     QFETCH(QByteArray, attr2);
 
     struct Cleanup {
-        Cleanup(const Collection &col) : m_col(col) {}
+        explicit Cleanup(const Collection &col) : m_col(col) {}
         ~Cleanup() {
             // cleanup
             CollectionDeleteJob *del = new CollectionDeleteJob(m_col);

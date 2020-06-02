@@ -36,7 +36,7 @@ namespace Akonadi
 class EntityOrderProxyModelPrivate
 {
 public:
-    EntityOrderProxyModelPrivate(EntityOrderProxyModel *qq)
+    explicit EntityOrderProxyModelPrivate(EntityOrderProxyModel *qq)
         : q_ptr(qq)
     {
     }

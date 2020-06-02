@@ -737,7 +737,8 @@ void StorageJanitor::migrateToLevelledCacheHierarchy()
         const qint64 id = query.value(0).toLongLong();
         const QByteArray data = query.value(1).toByteArray();
         const QString fileName = QString::fromUtf8(data);
-        bool oldExists = false, newExists = false;
+        bool oldExists = false;
+        bool newExists = false;
         // Resolve the current path
         const QString currentPath = ExternalPartStorage::resolveAbsolutePath(fileName, &oldExists);
         // Resolve the new path with legacy fallback disabled, so that it always

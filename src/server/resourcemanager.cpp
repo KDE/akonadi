@@ -32,8 +32,7 @@ using namespace Akonadi::Server;
 using namespace AkRanges;
 
 ResourceManager::ResourceManager(Tracer &tracer)
-    : QObject()
-    , mTracer(tracer)
+    : mTracer(tracer)
 {
     new ResourceManagerAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/ResourceManager"), this);

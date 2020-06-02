@@ -71,7 +71,7 @@ static_assert(numAgentActionData == AgentActionManager::LastType,
 class Q_DECL_HIDDEN AgentActionManager::Private
 {
 public:
-    Private(AgentActionManager *parent)
+    explicit Private(AgentActionManager *parent)
         : q(parent)
         , mActionCollection(nullptr)
         , mParentWidget(nullptr)
@@ -214,7 +214,7 @@ public:
         instances.first().configure(mParentWidget);
     }
 
-    void slotAgentInstanceCreationResult(KJob *job)
+    void slotAgentInstanceCreationResult(KJob *job) 
     {
         if (job->error()) {
             KMessageBox::error(
@@ -319,7 +319,7 @@ QAction *AgentActionManager::createAction(Type type)
 void AgentActionManager::createAllActions()
 {
     for (int type = 0; type < LastType; ++type) {
-        auto action = createAction(static_cast<Type>(type));
+        auto *action = createAction(static_cast<Type>(type));
         Q_UNUSED(action);
     }
 }

@@ -29,7 +29,7 @@ AgentBrokenInstance::AgentBrokenInstance(const QString &type, AgentManager &mana
     onlineChanged(false);
 }
 
-bool AgentBrokenInstance::start(const AgentType &)
+bool AgentBrokenInstance::start(const AgentType & /*agentInfo*/)
 {
     return false;
 }
@@ -49,7 +49,7 @@ void AgentBrokenInstance::restartWhenIdle()
     // no-op
 }
 
-void AgentBrokenInstance::configure(qlonglong)
+void AgentBrokenInstance::configure(qlonglong /*windowId*/)
 {
     // no-op
 }

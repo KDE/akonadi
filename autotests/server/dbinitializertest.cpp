@@ -48,7 +48,7 @@ public:
 class DbFakeIntrospector : public DbIntrospector
 {
 public:
-    DbFakeIntrospector(const QSqlDatabase &database)
+    explicit DbFakeIntrospector(const QSqlDatabase &database)
         : DbIntrospector(database)
         , m_hasTable(false)
         , m_hasIndex(false)

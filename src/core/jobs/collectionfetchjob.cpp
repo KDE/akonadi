@@ -40,7 +40,7 @@ using namespace Akonadi;
 class Akonadi::CollectionFetchJobPrivate : public JobPrivate
 {
 public:
-    CollectionFetchJobPrivate(CollectionFetchJob *parent)
+    explicit CollectionFetchJobPrivate(CollectionFetchJob *parent)
         : JobPrivate(parent)
     {
         mEmitTimer.setSingleShot(true);
@@ -111,12 +111,9 @@ public:
                 q->setErrorText(job->errorText());
             }
 
-            if (error == Job::ConnectionFailed ||
-                    error == Job::ProtocolVersionMismatch ||
-                    error == Job::UserCanceled) {
-                return true;
-            }
-            return false;
+            return error == Job::ConnectionFailed
+                    || error == Job::ProtocolVersionMismatch
+                    || error == Job::UserCanceled;
         } else {
             return job->error();
         }

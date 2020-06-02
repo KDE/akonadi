@@ -27,7 +27,7 @@ using namespace Akonadi;
 class Akonadi::TransactionJobPrivate : public JobPrivate
 {
 public:
-    TransactionJobPrivate(Job *parent)
+    explicit TransactionJobPrivate(Job *parent)
         : JobPrivate(parent)
     {}
 };

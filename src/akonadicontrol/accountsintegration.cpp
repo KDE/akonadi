@@ -35,13 +35,12 @@ using namespace std::chrono_literals;
 
 namespace {
 
-static const auto akonadiAgentType = QStringLiteral("akonadi/agentType");
+const auto akonadiAgentType = QStringLiteral("akonadi/agentType");
 
 }
 
 AccountsIntegration::AccountsIntegration(AgentManager &agentManager)
-    : QObject()
-    , mAgentManager(agentManager)
+    : mAgentManager(agentManager)
 {
     connect(&mAccountsManager, &Accounts::Manager::accountCreated,
             this, &AccountsIntegration::onAccountAdded);
@@ -109,7 +108,7 @@ void AccountsIntegration::removeAgentInstance(const QString &identifier)
 void AccountsIntegration::onAccountAdded(Accounts::AccountId accId)
 {
     qCDebug(AKONADICONTROL_LOG) << "Online account ID" << accId << "added.";
-    auto account = mAccountsManager.account(accId);
+    auto *account = mAccountsManager.account(accId);
     if (!account || !account->isEnabled()) {
         return;
     }
@@ -157,7 +156,7 @@ void AccountsIntegration::onAccountServiceEnabled(const QString &serviceType, bo
         return;
     }
 
-    auto account = qobject_cast<Accounts::Account*>(sender());
+    auto *account = qobject_cast<Accounts::Account*>(sender());
     qCDebug(AKONADICONTROL_LOG) << "Online account ID" << account->id() << "service" << serviceType << "has been" << (enabled ? "enabled" : "disabled");
 
     const auto service = mAccountsManager.service(serviceType);

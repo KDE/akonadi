@@ -33,7 +33,7 @@ public:
         : config(config)
         , parentWidget(parentWidget)
     {
-        Q_ASSERT(args.size() >= 1);
+        Q_ASSERT(!args.empty());
         if (args.empty()) {
             qCCritical(AKONADICORE_LOG, "AgentConfigurationBase instantiated with invalid arguments");
             return;
@@ -104,7 +104,7 @@ QSize AgentConfigurationBase::restoreDialogSize() const
     return {};
 }
 
-void AgentConfigurationBase::saveDialogSize(const QSize&) // clazy:exclude=function-args-by-value
+void AgentConfigurationBase::saveDialogSize(const QSize& /*unused*/) // clazy:exclude=function-args-by-value
 {}
 
 QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() const

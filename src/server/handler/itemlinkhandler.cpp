@@ -82,7 +82,8 @@ bool ItemLinkHandler::parseStream()
     DataStore *store = connection()->storageBackend();
     Transaction transaction(store, createLinks ? QStringLiteral("LINK") : QStringLiteral("UNLINK"));
 
-    PimItem::List toLink, toUnlink;
+    PimItem::List toLink;
+    PimItem::List toUnlink;
     for (const PimItem &item : items) {
         const bool alreadyLinked = collection.relatesToPimItem(item);
         bool result = true;

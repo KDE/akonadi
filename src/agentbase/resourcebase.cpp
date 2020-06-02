@@ -74,7 +74,7 @@ class Akonadi::ResourceBasePrivate : public AgentBasePrivate
     Q_CLASSINFO("D-Bus Interface", "org.kde.dfaure")
 
 public:
-    ResourceBasePrivate(ResourceBase *parent)
+    explicit ResourceBasePrivate(ResourceBase *parent)
         : AgentBasePrivate(parent)
         , scheduler(nullptr)
         , mItemSyncer(nullptr)
@@ -145,7 +145,7 @@ public:
     void slotLocalListDone(KJob *job);
     void slotSynchronizeCollection(const Collection &col);
     void slotItemRetrievalCollectionFetchDone(KJob *job);
-    void slotCollectionListDone(KJob *job);
+    void slotCollectionListDone(KJob *job); 
     void slotSynchronizeCollectionAttributes(const Collection &col);
     void slotCollectionListForAttributesDone(KJob *job);
     void slotCollectionAttributesSyncDone(KJob *job);
@@ -1019,7 +1019,7 @@ void ResourceBasePrivate::slotSynchronizeRelations()
 void ResourceBasePrivate::slotPrepareItemRetrieval(const Item &item)
 {
     Q_Q(ResourceBase);
-    auto fetch = new ItemFetchJob(item, this);
+    auto *fetch = new ItemFetchJob(item, this);
     // we always need at least parent so we can use ItemCreateJob to merge
     fetch->fetchScope().setAncestorRetrieval(qMax(ItemFetchScope::Parent,
             q->changeRecorder()->itemFetchScope().ancestorRetrieval()));
@@ -1344,14 +1344,14 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
 {
     Q_D(ResourceBase);
     if (d->scheduler->currentTask().type == ResourceScheduler::FetchItems) {
-        auto trx = new TransactionSequence(this);
+        auto *trx = new TransactionSequence(this);
         connect(trx, &KJob::result, d, &ResourceBasePrivate::slotItemSyncDone);
         for (const Item &item : items) {
             Q_ASSERT(item.parentCollection().isValid());
             if (item.isValid()) {
                 new ItemModifyJob(item, trx);
             } else if (!item.remoteId().isEmpty()) {
-                auto job = new ItemCreateJob(item, item.parentCollection(), trx);
+                auto *job = new ItemCreateJob(item, item.parentCollection(), trx);
                 job->setMerge(ItemCreateJob::RID);
             } else {
                 // This should not happen, but just to be sure...

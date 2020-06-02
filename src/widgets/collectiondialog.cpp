@@ -156,7 +156,7 @@ public:
         }
     }
 
-    void writeConfig()
+    void writeConfig() const
     {
         KConfig config(QStringLiteral("akonadi_contactrc"));
         KConfigGroup group(&config, QStringLiteral("CollectionDialog"));

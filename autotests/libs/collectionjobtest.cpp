@@ -173,12 +173,12 @@ class ResultSignalTester : public QObject
 public:
     QStringList receivedSignals;
 public Q_SLOTS:
-    void onCollectionsReceived(const Akonadi::Collection::List &)
+    void onCollectionsReceived(const Akonadi::Collection::List & /*unused*/)
     {
         receivedSignals << QStringLiteral("collectionsReceived");
     }
 
-    void onCollectionRetrievalDone(KJob *)
+    void onCollectionRetrievalDone(KJob * /*unused*/)
     {
         receivedSignals << QStringLiteral("result");
     }
@@ -420,8 +420,8 @@ void CollectionJobTest::testStatistics()
     AKVERIFYEXEC(statistics);
 
     CollectionStatistics s = statistics->statistics();
-    QCOMPARE(s.count(), 0ll);
-    QCOMPARE(s.unreadCount(), 0ll);
+    QCOMPARE(s.count(), 0LL);
+    QCOMPARE(s.unreadCount(), 0LL);
 
     // folder with attributes and content
     CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
@@ -430,8 +430,8 @@ void CollectionJobTest::testStatistics()
     AKVERIFYEXEC(statistics);
 
     s = statistics->statistics();
-    QCOMPARE(s.count(), 15ll);
-    QCOMPARE(s.unreadCount(), 14ll);
+    QCOMPARE(s.count(), 15LL);
+    QCOMPARE(s.unreadCount(), 14LL);
 }
 
 void CollectionJobTest::testModify_data()
@@ -440,7 +440,7 @@ void CollectionJobTest::testModify_data()
     QTest::addColumn<QString>("rid");
 
     QTest::newRow("uid") << AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")) << QString();
-    QTest::newRow("rid") << -1ll << QStringLiteral("10");
+    QTest::newRow("rid") << -1LL << QStringLiteral("10");
 }
 
 #define RESET_COLLECTION_ID \
@@ -594,8 +594,8 @@ void CollectionJobTest::testUtf8CollectionName()
     CollectionStatisticsJob *statistics = new CollectionStatisticsJob(col, this);
     AKVERIFYEXEC(statistics);
     CollectionStatistics s = statistics->statistics();
-    QCOMPARE(s.count(), 0ll);
-    QCOMPARE(s.unreadCount(), 0ll);
+    QCOMPARE(s.count(), 0LL);
+    QCOMPARE(s.unreadCount(), 0LL);
 
     // delete collection
     CollectionDeleteJob *del = new CollectionDeleteJob(col, this);

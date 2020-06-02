@@ -110,8 +110,7 @@ public:
 };
 
 CollectionRightsAttribute::CollectionRightsAttribute()
-    : Attribute()
-    , d(new Private)
+    :  d(new Private)
 {
 }
 

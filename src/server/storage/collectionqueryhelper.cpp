@@ -80,10 +80,7 @@ bool CollectionQueryHelper::hasAllowedName(const Collection &collection, const Q
     }
     const QVector<Collection> result = qb.result();
     if (!result.isEmpty()) {
-        if (result.first().id() == collection.id()) {
-            return true;
-        }
-        return false;
+        return result.first().id() == collection.id();
     }
     return true;
 }

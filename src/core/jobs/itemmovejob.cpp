@@ -32,7 +32,7 @@ using namespace Akonadi;
 class Akonadi::ItemMoveJobPrivate : public Akonadi::JobPrivate
 {
 public:
-    ItemMoveJobPrivate(ItemMoveJob *parent)
+    explicit ItemMoveJobPrivate(ItemMoveJob *parent)
         : JobPrivate(parent)
     {
     }

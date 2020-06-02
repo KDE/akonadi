@@ -37,7 +37,7 @@ class ResourceSynchronizationJobPrivate : public KJobPrivateBase
     Q_OBJECT
 
 public:
-    ResourceSynchronizationJobPrivate(ResourceSynchronizationJob *parent)
+    explicit ResourceSynchronizationJobPrivate(ResourceSynchronizationJob *parent)
         : q(parent)
     {
         connect(&safetyTimer, &QTimer::timeout, this, &ResourceSynchronizationJobPrivate::slotTimeout);

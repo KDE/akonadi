@@ -33,7 +33,7 @@ class MonitorNotificationTest : public QObject
 {
     Q_OBJECT
 public:
-    MonitorNotificationTest(QObject *parent = nullptr)
+    explicit MonitorNotificationTest(QObject *parent = nullptr)
         : QObject(parent)
     {
         m_sessionName = "MonitorNotificationTest fake session";

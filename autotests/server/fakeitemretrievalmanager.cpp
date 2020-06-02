@@ -25,7 +25,6 @@ using namespace Akonadi::Server;
 Q_DECLARE_METATYPE(ItemRetrievalResult)
 
 FakeItemRetrievalManager::FakeItemRetrievalManager()
-    : ItemRetrievalManager()
 {
     qRegisterMetaType<ItemRetrievalResult>();
 }

@@ -26,7 +26,7 @@ using namespace Akonadi;
 class Akonadi::TagDeleteJobPrivate : public JobPrivate
 {
 public:
-    TagDeleteJobPrivate(TagDeleteJob *parent)
+    explicit TagDeleteJobPrivate(TagDeleteJob *parent)
         : JobPrivate(parent)
     {
     }

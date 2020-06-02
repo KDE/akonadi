@@ -100,7 +100,7 @@ public:
     AsyncSelectionHandler *mSelectionHandler = nullptr;
 };
 
-void CollectionComboBox::Private::activated(int index)
+void CollectionComboBox::Private::activated(int index) 
 {
     const QModelIndex modelIndex = mParent->model()->index(index, 0);
     if (modelIndex.isValid()) {

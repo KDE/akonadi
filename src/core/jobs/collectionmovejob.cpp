@@ -31,7 +31,7 @@ using namespace Akonadi;
 class Akonadi::CollectionMoveJobPrivate : public JobPrivate
 {
 public:
-    CollectionMoveJobPrivate(CollectionMoveJob *parent)
+    explicit CollectionMoveJobPrivate(CollectionMoveJob *parent)
         : JobPrivate(parent)
     {
     }

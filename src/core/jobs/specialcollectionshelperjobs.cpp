@@ -559,7 +559,7 @@ void DefaultResourceJob::slotResult(KJob *job)
 class Q_DECL_HIDDEN Akonadi::GetLockJob::Private
 {
 public:
-    Private(GetLockJob *qq);
+    explicit Private(GetLockJob *qq);
 
     void doStart(); // slot
     void timeout(); // slot
@@ -587,7 +587,7 @@ void GetLockJob::Private::doStart()
         //qCDebug(AKONADICORE_LOG) << "Got lock immediately.";
         q->emitResult();
     } else {
-        auto watcher = new QDBusServiceWatcher(dbusServiceName(), QDBusConnection::sessionBus(),
+        auto *watcher = new QDBusServiceWatcher(dbusServiceName(), QDBusConnection::sessionBus(),
                 QDBusServiceWatcher::WatchForUnregistration, q);
         connect(watcher, &QDBusServiceWatcher::serviceUnregistered,
                 q, [this]() {

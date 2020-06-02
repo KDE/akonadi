@@ -85,7 +85,7 @@ using Akonadi::Internal::AgentInstanceWidgetDelegate;
 class Q_DECL_HIDDEN AgentInstanceWidget::Private
 {
 public:
-    Private(AgentInstanceWidget *parent)
+    explicit Private(AgentInstanceWidget *parent)
         : mParent(parent)
         , mView(nullptr)
         , mModel(nullptr)

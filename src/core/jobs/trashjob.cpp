@@ -47,7 +47,7 @@ using namespace Akonadi;
 class TrashJob::TrashJobPrivate : public JobPrivate
 {
 public:
-    TrashJobPrivate(TrashJob *parent)
+    explicit TrashJobPrivate(TrashJob *parent)
         : JobPrivate(parent)
         , mKeepTrashInCollection(false)
         , mSetRestoreCollection(false)
@@ -58,20 +58,20 @@ public:
     void selectResult(KJob *job);
 //3.
     //Helper functions to recursively set the attribute on deleted collections
-    void setAttribute(const Akonadi::Collection::List &);
-    void setAttribute(const Akonadi::Item::List &);
+    void setAttribute(const Akonadi::Collection::List & /*list*/);
+    void setAttribute(const Akonadi::Item::List & /*list*/);
     //Set attributes after ensuring that move job was successful
     void setAttribute(KJob *job);
 
 //2.
     //called after parent of the trashed item was fetched (needed to see in which resource the item is in)
-    void parentCollectionReceived(const Akonadi::Collection::List &);
+    void parentCollectionReceived(const Akonadi::Collection::List & /*collections*/);
 
 //1.
     //called after initial fetch of trashed items
-    void itemsReceived(const Akonadi::Item::List &);
+    void itemsReceived(const Akonadi::Item::List & /*items*/);
     //called after initial fetch of trashed collection
-    void collectionsReceived(const Akonadi::Collection::List &);
+    void collectionsReceived(const Akonadi::Collection::List & /*collections*/);
 
     Q_DECLARE_PUBLIC(TrashJob)
 

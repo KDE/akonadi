@@ -28,7 +28,7 @@ using namespace Akonadi;
 class Akonadi::SubscriptionJobPrivate : public JobPrivate
 {
 public:
-    SubscriptionJobPrivate(SubscriptionJob *parent)
+    explicit SubscriptionJobPrivate(SubscriptionJob *parent)
         : JobPrivate(parent)
     {
     }

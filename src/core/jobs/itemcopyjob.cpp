@@ -29,7 +29,7 @@ using namespace Akonadi;
 class Akonadi::ItemCopyJobPrivate : public JobPrivate
 {
 public:
-    ItemCopyJobPrivate(ItemCopyJob *parent)
+    explicit ItemCopyJobPrivate(ItemCopyJob *parent)
         : JobPrivate(parent)
     {
     }

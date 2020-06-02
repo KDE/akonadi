@@ -30,7 +30,7 @@ using namespace Akonadi;
 class Akonadi::TagFetchJobPrivate : public JobPrivate
 {
 public:
-    TagFetchJobPrivate(TagFetchJob *parent)
+    explicit TagFetchJobPrivate(TagFetchJob *parent)
         : JobPrivate(parent)
     {
     }

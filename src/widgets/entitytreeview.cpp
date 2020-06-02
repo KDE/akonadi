@@ -47,7 +47,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN EntityTreeView::Private
 {
 public:
-    Private(EntityTreeView *parent)
+    explicit Private(EntityTreeView *parent)
         : mParent(parent)
 #ifndef QT_NO_DRAGANDDROP
         , mDragDropManager(new DragDropManager(mParent))
@@ -57,11 +57,11 @@ public:
     }
 
     void init();
-    void itemClicked(const QModelIndex &index);
-    void itemDoubleClicked(const QModelIndex &index);
-    void itemCurrentChanged(const QModelIndex &index);
+    void itemClicked(const QModelIndex &index) const;
+    void itemDoubleClicked(const QModelIndex &index) const;
+    void itemCurrentChanged(const QModelIndex &index) const;
 
-    void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected);
+    void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected) const;
 
     EntityTreeView *mParent = nullptr;
     QBasicTimer mDragExpandTimer;
@@ -102,7 +102,7 @@ void EntityTreeView::Private::init()
     ControlGui::widgetNeedsAkonadi(mParent);
 }
 
-void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected)
+void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected) const
 {
     Q_UNUSED(deselected)
     const int column = 0;
@@ -128,7 +128,7 @@ void EntityTreeView::Private::slotSelectionChanged(const QItemSelection &selecte
     }
 }
 
-void EntityTreeView::Private::itemClicked(const QModelIndex &index)
+void EntityTreeView::Private::itemClicked(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -146,7 +146,7 @@ void EntityTreeView::Private::itemClicked(const QModelIndex &index)
     }
 }
 
-void EntityTreeView::Private::itemDoubleClicked(const QModelIndex &index)
+void EntityTreeView::Private::itemDoubleClicked(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;
@@ -163,7 +163,7 @@ void EntityTreeView::Private::itemDoubleClicked(const QModelIndex &index)
     }
 }
 
-void EntityTreeView::Private::itemCurrentChanged(const QModelIndex &index)
+void EntityTreeView::Private::itemCurrentChanged(const QModelIndex &index) const
 {
     if (!index.isValid()) {
         return;

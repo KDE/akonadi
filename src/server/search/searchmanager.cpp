@@ -175,7 +175,7 @@ void SearchManager::loadSearchPlugins()
                 }
 
                 // When there's no override, only load plugins enabled by default
-            } else if (metadata.value(QStringLiteral("X-Akonadi-LoadByDefault"), true).toBool() == false) {
+            } else if (!metadata.value(QStringLiteral("X-Akonadi-LoadByDefault"), true).toBool()) {
                 continue;
             }
 

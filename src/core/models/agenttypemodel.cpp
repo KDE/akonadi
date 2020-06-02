@@ -31,7 +31,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN AgentTypeModel::Private
 {
 public:
-    Private(AgentTypeModel *parent)
+    explicit Private(AgentTypeModel *parent)
         : mParent(parent)
     {
         mTypes = AgentManager::self()->types();
@@ -71,12 +71,12 @@ AgentTypeModel::~AgentTypeModel()
     delete d;
 }
 
-int AgentTypeModel::columnCount(const QModelIndex &) const
+int AgentTypeModel::columnCount(const QModelIndex & /*parent*/) const
 {
     return 1;
 }
 
-int AgentTypeModel::rowCount(const QModelIndex &) const
+int AgentTypeModel::rowCount(const QModelIndex & /*parent*/) const
 {
     return d->mTypes.count();
 }
@@ -117,7 +117,7 @@ QVariant AgentTypeModel::data(const QModelIndex &index, int role) const
     return QVariant();
 }
 
-QModelIndex AgentTypeModel::index(int row, int column, const QModelIndex &) const
+QModelIndex AgentTypeModel::index(int row, int column, const QModelIndex & /*parent*/) const
 {
     if (row < 0 || row >= d->mTypes.count()) {
         return QModelIndex();
@@ -130,7 +130,7 @@ QModelIndex AgentTypeModel::index(int row, int column, const QModelIndex &) cons
     return createIndex(row, column);
 }
 
-QModelIndex AgentTypeModel::parent(const QModelIndex &) const
+QModelIndex AgentTypeModel::parent(const QModelIndex & /*child*/) const
 {
     return QModelIndex();
 }

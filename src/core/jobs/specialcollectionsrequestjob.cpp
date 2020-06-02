@@ -43,7 +43,7 @@ class Akonadi::SpecialCollectionsRequestJobPrivate
 public:
     SpecialCollectionsRequestJobPrivate(SpecialCollections *collections, SpecialCollectionsRequestJob *qq);
 
-    bool isEverythingReady();
+    bool isEverythingReady() const;
     void lockResult(KJob *job);   // slot
     void releaseLock(); // slot
     void nextResource();
@@ -82,7 +82,7 @@ SpecialCollectionsRequestJobPrivate::SpecialCollectionsRequestJobPrivate(Special
 {
 }
 
-bool SpecialCollectionsRequestJobPrivate::isEverythingReady()
+bool SpecialCollectionsRequestJobPrivate::isEverythingReady() const
 {
     // check if all requested folders are known already
     if (mRequestingDefaultFolders) {

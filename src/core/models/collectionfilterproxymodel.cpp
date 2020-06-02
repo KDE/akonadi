@@ -33,7 +33,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN CollectionFilterProxyModel::Private
 {
 public:
-    Private(CollectionFilterProxyModel *parent)
+    explicit Private(CollectionFilterProxyModel *parent)
         : mParent(parent)
     {
         mimeChecker.addWantedMimeType(QStringLiteral("text/uri-list"));

@@ -118,7 +118,7 @@ class SubscriptionDialogTest: public QObject
         static bool modifySubscription(const Collection::List &subscribe,
                                        const Collection::List &unsubscribe)
         {
-            auto job = new SubscriptionJob();
+            auto *job = new SubscriptionJob();
             job->subscribe(subscribe);
             job->unsubscribe(unsubscribe);
             bool ok = false;
@@ -128,7 +128,7 @@ class SubscriptionDialogTest: public QObject
             return true;
         }
 
-        bool selectCollection(const Collection &col)
+        bool selectCollection(const Collection &col) const
         {
             AKVERIFY(col.isValid());
             const QModelIndex colIdx = indexForCollection(col);
@@ -150,15 +150,15 @@ class SubscriptionDialogTest: public QObject
             return collectionView->model()->data(colIdx, Qt::CheckStateRole).value<Qt::CheckState>() == Qt::Checked;
         }
 
-        void acceptDialog()
+        void acceptDialog() const
         {
-            auto button = buttonBox->button(QDialogButtonBox::Ok);
+            auto *button = buttonBox->button(QDialogButtonBox::Ok);
             QTest::mouseClick(button, Qt::LeftButton);
         }
 
         QModelIndex indexForCollection(const Collection &col) const
         {
-            auto model = collectionView->model();
+            auto *model = collectionView->model();
             std::deque<QModelIndex> idxQueue;
             idxQueue.push_back(QModelIndex{});
             while (!idxQueue.empty()) {

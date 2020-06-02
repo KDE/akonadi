@@ -51,7 +51,7 @@ private:
         QVERIFY(cache.isCached(1));
         QVERIFY(cache.isRequested(1));
         const T e1 = cache.retrieve(1);
-        QCOMPARE(e1.id(), 1ll);
+        QCOMPARE(e1.id(), 1LL);
         QVERIFY(e1.parentCollection().isValid());
         QVERIFY(!e1.parentCollection().remoteId().isEmpty() || e1.parentCollection() == Collection::root());
 
@@ -72,7 +72,7 @@ private:
 
         const T e2 = cache.retrieve(2);
         const T e3a = cache.retrieve(3);
-        QCOMPARE(e3a.id(), 3ll);
+        QCOMPARE(e3a.id(), 3LL);
         QVERIFY(!e2.isValid());
 
         cache.invalidate(3);
@@ -144,7 +144,7 @@ private Q_SLOTS:
         QVERIFY(cache.isCached(1));
         QVERIFY(cache.isRequested(1));
         const Item item = cache.retrieve(1);
-        QCOMPARE(item.id(), 1ll);
+        QCOMPARE(item.id(), 1LL);
         QVERIFY(item.hasPayload<QByteArray>());
     }
 

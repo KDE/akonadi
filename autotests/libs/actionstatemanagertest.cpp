@@ -37,7 +37,7 @@ class ActionStateManagerTest;
 class UnitActionStateManager : public ActionStateManager
 {
 public:
-    UnitActionStateManager(ActionStateManagerTest *receiver);
+    explicit UnitActionStateManager(ActionStateManagerTest *receiver);
 
 protected:
     bool hasResourceCapability(const Collection &collection, const QString &capability) const override;
@@ -568,8 +568,10 @@ private Q_SLOTS:
 
         UnitActionStateManager manager(this);
         Collection::List favoriteCollections;
-        if (collections.contains(folderCollectionThree))
+        if (collections.contains(folderCollectionThree)) {
             favoriteCollections << folderCollectionThree;
+        }
+
         manager.updateState(collections, favoriteCollections, Item::List());
 
         QCOMPARE(stateMap.count(), mStateMap.count());
@@ -580,8 +582,9 @@ private Q_SLOTS:
             //qDebug() << it.key();
             QVERIFY(mStateMap.contains(it.key()));
             const bool expected = mStateMap.value(it.key());
-            if (it.value() != expected)
+            if (it.value() != expected) {
                 qWarning() << "Wrong state for" << it.key();
+            }
             QCOMPARE(it.value(), expected);
         }
     }

@@ -25,7 +25,7 @@
 class KRFPTestModel : public QSortFilterProxyModel
 {
 public:
-    KRFPTestModel(QObject *parent) : QSortFilterProxyModel(parent) { }
+    explicit KRFPTestModel(QObject *parent) : QSortFilterProxyModel(parent) { }
     bool filterAcceptsRow(int sourceRow, const QModelIndex &sourceParent) const override
     {
         const QModelIndex modelIndex = sourceModel()->index(sourceRow, 0, sourceParent);

@@ -136,7 +136,7 @@ QString ChangeRecorderPrivate::dumpNotificationListToString() const
     return result;
 }
 
-void ChangeRecorderPrivate::writeStartOffset()
+void ChangeRecorderPrivate::writeStartOffset() const
 {
     if (!settings) {
         return;

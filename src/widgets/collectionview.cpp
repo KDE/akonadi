@@ -46,7 +46,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN CollectionView::Private
 {
 public:
-    Private(CollectionView *parent)
+    explicit Private(CollectionView *parent)
         : mParent(parent)
     {
     }
@@ -55,7 +55,7 @@ public:
     void dragExpand();
     void itemClicked(const QModelIndex &index);
     void itemCurrentChanged(const QModelIndex &index);
-    bool hasParent(const QModelIndex &idx, Collection::Id parentId);
+    bool hasParent(const QModelIndex &idx, Collection::Id parentId) const;
 
     CollectionView *mParent = nullptr;
     QModelIndex dragOverIndex;
@@ -85,7 +85,7 @@ void CollectionView::Private::init()
     ControlGui::widgetNeedsAkonadi(mParent);
 }
 
-bool CollectionView::Private::hasParent(const QModelIndex &idx, Collection::Id parentId)
+bool CollectionView::Private::hasParent(const QModelIndex &idx, Collection::Id parentId) const
 {
     QModelIndex idx2 = idx;
     while (idx2.isValid()) {

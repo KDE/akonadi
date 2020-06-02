@@ -40,7 +40,7 @@ namespace Akonadi
 class XmlWriteJobPrivate
 {
 public:
-    XmlWriteJobPrivate(XmlWriteJob *parent) : q(parent) {}
+    explicit XmlWriteJobPrivate(XmlWriteJob *parent) : q(parent) {}
 
     XmlWriteJob *const q;
     Collection::List roots;

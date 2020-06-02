@@ -38,7 +38,7 @@ class CollectionAttributesSynchronizationJobPrivate : public KJobPrivateBase
     Q_OBJECT
 
 public:
-    CollectionAttributesSynchronizationJobPrivate(CollectionAttributesSynchronizationJob *parent)
+    explicit CollectionAttributesSynchronizationJobPrivate(CollectionAttributesSynchronizationJob *parent)
         : q(parent)
     {
         connect(&safetyTimer, &QTimer::timeout, this, &CollectionAttributesSynchronizationJobPrivate::slotTimeout);
@@ -57,7 +57,7 @@ public:
     static const int timeoutCountLimit;
 
 private Q_SLOTS:
-    void slotSynchronized(qlonglong);
+    void slotSynchronized(qlonglong /*id*/);
     void slotTimeout();
 };
 

@@ -98,18 +98,18 @@ private Q_SLOTS:
 private:
     QPair<FakeServerData *, Akonadi::EntityTreeModel *> populateModel(const QString &serverContent, const QString &mimeType = QString())
     {
-        const auto fakeMonitor = new FakeMonitor(this);
+        auto *const fakeMonitor = new FakeMonitor(this);
 
         fakeMonitor->setSession(m_fakeSession);
         fakeMonitor->setCollectionMonitored(Collection::root());
         if (!mimeType.isEmpty()) {
             fakeMonitor->setMimeTypeMonitored(mimeType);
         }
-        const auto model = new EntityTreeModel(fakeMonitor, this);
+        auto *const model = new EntityTreeModel(fakeMonitor, this);
 
         m_modelSpy = new ModelSpy{model, this};
 
-        const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
+        auto *const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
         serverData->setCommands(FakeJobResponse::interpret(serverData, serverContent));
 
         // Give the model a chance to populate
@@ -150,13 +150,13 @@ void EntityTreeModelTest::cleanupTestCase()
 
 void EntityTreeModelTest::testInitialFetch()
 {
-    const auto fakeMonitor = new FakeMonitor(this);
+    auto *const fakeMonitor = new FakeMonitor(this);
 
     fakeMonitor->setSession(m_fakeSession);
     fakeMonitor->setCollectionMonitored(Collection::root());
-    const auto model = new EntityTreeModel(fakeMonitor, this);
+    auto *const model = new EntityTreeModel(fakeMonitor, this);
 
-    const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
+    auto *const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
     serverData->setCommands(FakeJobResponse::interpret(serverData, QString::fromLatin1(serverContent1)));
 
     m_modelSpy = new ModelSpy(model, this);
@@ -240,15 +240,15 @@ void EntityTreeModelTest::testCollectionMove()
     QFETCH(QString, targetCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto movedIndex = firstMatchedIndex(*model, movedCollection);
     Q_ASSERT(movedIndex.isValid());
     const auto sourceCollection = movedIndex.parent().data().toString();
     const auto  sourceRow = movedIndex.row();
 
-    const auto moveCommand = new FakeCollectionMovedCommand(movedCollection, sourceCollection, targetCollection, serverData);
+    auto *const moveCommand = new FakeCollectionMovedCommand(movedCollection, sourceCollection, targetCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({moveCommand});
@@ -288,9 +288,9 @@ void EntityTreeModelTest::testCollectionAdded()
     QFETCH(QString, parentCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
+    auto *const serverData = testDrivers.first;
 
-    const auto addCommand = new FakeCollectionAddedCommand(addedCollection, parentCollection, serverData);
+    auto *const addCommand = new FakeCollectionAddedCommand(addedCollection, parentCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({addCommand});
@@ -332,14 +332,14 @@ void EntityTreeModelTest::testCollectionRemoved()
     QFETCH(QString, removedCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto removedIndex = firstMatchedIndex(*model, removedCollection);
     const auto parentCollection = removedIndex.parent().data().toString();
     const auto sourceRow = removedIndex.row();
 
-    const auto removeCommand = new FakeCollectionRemovedCommand(removedCollection, parentCollection, serverData);
+    auto *const removeCommand = new FakeCollectionRemovedCommand(removedCollection, parentCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({removeCommand});
@@ -382,15 +382,15 @@ void EntityTreeModelTest::testCollectionChanged()
     QFETCH(QString, monitoredMimeType); // ##### TODO: this is unused. Is this test correct?
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, collectionName);
     const auto parentCollection = changedIndex.parent().data().toString();
     qDebug() << parentCollection;
     const auto changedRow = changedIndex.row();
 
-    const auto changeCommand = new FakeCollectionChangedCommand(collectionName, parentCollection, serverData);
+    auto *const changeCommand = new FakeCollectionChangedCommand(collectionName, parentCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});
@@ -429,8 +429,8 @@ void EntityTreeModelTest::testItemMove()
     QFETCH(QString, targetCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto movedIndex = firstMatchedIndex(*model, movedItem);
     const auto sourceCollection = movedIndex.parent().data().toString();
@@ -439,7 +439,7 @@ void EntityTreeModelTest::testItemMove()
     const auto targetIndex = firstMatchedIndex(*model, targetCollection);
     const auto targetRow = model->rowCount(targetIndex);
 
-    const auto moveCommand = new FakeItemMovedCommand(movedItem, sourceCollection, targetCollection, serverData);
+    auto *const moveCommand = new FakeItemMovedCommand(movedItem, sourceCollection, targetCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({moveCommand});
@@ -485,13 +485,13 @@ void EntityTreeModelTest::testItemAdded()
     QFETCH(QString, parentCollection);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto parentIndex = firstMatchedIndex(*model, parentCollection);
     const auto targetRow = model->rowCount(parentIndex);
 
-    const auto addedCommand = new FakeItemAddedCommand(addedItem, parentCollection, serverData);
+    auto *const addedCommand = new FakeItemAddedCommand(addedItem, parentCollection, serverData);
 
     m_modelSpy->startSpying();
 
@@ -538,14 +538,14 @@ void EntityTreeModelTest::testItemRemoved()
     QFETCH(QString, removedItem);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto removedIndex = firstMatchedIndex(*model, removedItem);
     const auto sourceCollection = removedIndex.parent().data().toString();
     const auto sourceRow = removedIndex.row();
 
-    const auto removeCommand = new FakeItemRemovedCommand(removedItem, sourceCollection, serverData);
+    auto *const removeCommand = new FakeItemRemovedCommand(removedItem, sourceCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({removeCommand});
@@ -592,14 +592,14 @@ void EntityTreeModelTest::testItemChanged()
     QFETCH(QString, changedItem);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, changedItem);
     const auto parentCollection = changedIndex.parent().data().toString();
     const auto sourceRow = changedIndex.row();
 
-    const auto changeCommand = new FakeItemChangedCommand(changedItem, parentCollection, serverData);
+    auto *const changeCommand = new FakeItemChangedCommand(changedItem, parentCollection, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});
@@ -628,15 +628,15 @@ void EntityTreeModelTest::testRemoveCollectionOnChanged()
     const auto monitoredMimeType = QStringLiteral("text/directory");
 
     const auto testDrivers = populateModel(serverContent, monitoredMimeType);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, collectionName);
     auto changedCol = changedIndex.data(Akonadi::EntityTreeModel::CollectionRole).value<Akonadi::Collection>();
     changedCol.setContentMimeTypes({QStringLiteral("foobar")});
     const auto parentCollection = changedIndex.parent().data().toString();
 
-    const auto changeCommand = new FakeCollectionChangedCommand(changedCol, serverData);
+    auto *const changeCommand = new FakeCollectionChangedCommand(changedCol, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({changeCommand});

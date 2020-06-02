@@ -29,7 +29,7 @@ using namespace Akonadi;
 class Akonadi::CollectionCreateJobPrivate : public JobPrivate
 {
 public:
-    CollectionCreateJobPrivate(CollectionCreateJob *parent)
+    explicit CollectionCreateJobPrivate(CollectionCreateJob *parent)
         : JobPrivate(parent)
     {
     }
@@ -105,7 +105,7 @@ bool CollectionCreateJob::doHandleResponse(qint64 tag, const Protocol::CommandPt
     }
 
     if (response->type() == Protocol::Command::FetchCollections) {
-        auto &resp = Protocol::cmdCast<Protocol::FetchCollectionsResponse>(response);
+        const auto &resp = Protocol::cmdCast<Protocol::FetchCollectionsResponse>(response);
         Collection col = ProtocolHelper::parseCollection(resp);
         if (!col.isValid()) {
             setError(Unknown);

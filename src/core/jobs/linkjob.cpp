@@ -28,7 +28,7 @@ using namespace Akonadi;
 class Akonadi::LinkJobPrivate : public LinkJobImpl<LinkJob>
 {
 public:
-    LinkJobPrivate(LinkJob *parent)
+    explicit LinkJobPrivate(LinkJob *parent)
         : LinkJobImpl<LinkJob>(parent)
     {
     }

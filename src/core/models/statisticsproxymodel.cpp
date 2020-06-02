@@ -44,7 +44,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN StatisticsProxyModel::Private
 {
 public:
-    Private(StatisticsProxyModel *parent)
+    explicit Private(StatisticsProxyModel *parent)
         : q(parent), mToolTipEnabled(false), mExtraColumnsEnabled(false)
     {
     }
@@ -72,7 +72,7 @@ public:
         return q->sourceModel()->columnCount();
     }
 
-    QString toolTipForCollection(const QModelIndex &index, const Collection &collection)
+    QString toolTipForCollection(const QModelIndex &index, const Collection &collection) const
     {
         const QString bckColor = QApplication::palette().color(QPalette::ToolTipBase).name();
         const QString txtColor = QApplication::palette().color(QPalette::ToolTipText).name();

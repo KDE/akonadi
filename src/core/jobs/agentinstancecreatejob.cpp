@@ -49,7 +49,7 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
 {
     Q_OBJECT
 public:
-    AgentInstanceCreateJobPrivate(AgentInstanceCreateJob *parent)
+    explicit AgentInstanceCreateJobPrivate(AgentInstanceCreateJob *parent)
         : q(parent)
         , parentWidget(nullptr)
         , safetyTimer(new QTimer(parent))
@@ -60,7 +60,7 @@ public:
         connect(safetyTimer, &QTimer::timeout, this, &AgentInstanceCreateJobPrivate::timeout);
     }
 
-    void agentInstanceAdded(const AgentInstance &instance)
+    void agentInstanceAdded(const AgentInstance &instance) const
     {
         if (agentInstance == instance && !tooLate) {
             safetyTimer->stop();

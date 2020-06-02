@@ -119,7 +119,7 @@ void ItemFetchTest::testResourceRetrieval()
     AKVERIFYEXEC(job);
     QCOMPARE(job->items().count(), 1);
     item = job->items().first();
-    QCOMPARE(item.id(), 1ll);
+    QCOMPARE(item.id(), 1LL);
     QVERIFY(!item.remoteId().isEmpty());
     QVERIFY(!item.hasPayload());   // not yet in cache
     QCOMPARE(item.attributes().count(), 1);
@@ -131,7 +131,7 @@ void ItemFetchTest::testResourceRetrieval()
     AKVERIFYEXEC(job);
     QCOMPARE(job->items().count(), 1);
     item = job->items().first();
-    QCOMPARE(item.id(), 1ll);
+    QCOMPARE(item.id(), 1LL);
     QVERIFY(!item.remoteId().isEmpty());
     QVERIFY(item.hasPayload());
     QCOMPARE(item.attributes().count(), 1);

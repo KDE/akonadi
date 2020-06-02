@@ -216,7 +216,7 @@ QVariant EntityTreeModel::entityData(const Collection &collection, int column, i
         }
         break;
     case Qt::DecorationRole:
-        if (const auto attr = collection.attribute<EntityDisplayAttribute>(); attr && !attr->iconName().isEmpty()) {
+        if (const auto *const attr = collection.attribute<EntityDisplayAttribute>(); attr && !attr->iconName().isEmpty()) {
             return d->iconForName(attr->iconName());
         }
         return d->iconForName(CollectionUtils::defaultIconName(collection));
@@ -292,7 +292,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
         case PendingCutRole:
             return d->m_pendingCutCollections.contains(node->id);
         case Qt::BackgroundRole:
-            if (const auto attr = collection.attribute<EntityDisplayAttribute>(); attr && attr->backgroundColor().isValid()) {
+            if (const auto *const attr = collection.attribute<EntityDisplayAttribute>(); attr && attr->backgroundColor().isValid()) {
                 return attr->backgroundColor();
             }
             Q_FALLTHROUGH();
@@ -328,7 +328,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
         case PendingCutRole:
             return d->m_pendingCutItems.contains(node->id);
         case Qt::BackgroundRole:
-            if (const auto attr = item.attribute<EntityDisplayAttribute>(); attr && attr->backgroundColor().isValid()) {
+            if (const auto *const attr = item.attribute<EntityDisplayAttribute>(); attr && attr->backgroundColor().isValid()) {
                 return attr->backgroundColor();
             }
             Q_FALLTHROUGH();
@@ -949,22 +949,22 @@ QModelIndexList EntityTreeModel::match(const QModelIndex &start, int role, const
     return QAbstractItemModel::match(start, role, value, hits, flags);
 }
 
-bool EntityTreeModel::insertRows(int, int, const QModelIndex &)
+bool EntityTreeModel::insertRows(int /*row*/, int /*count*/, const QModelIndex & /*parent*/)
 {
     return false;
 }
 
-bool EntityTreeModel::insertColumns(int, int, const QModelIndex &)
+bool EntityTreeModel::insertColumns(int /*column*/, int /*count*/, const QModelIndex & /*parent*/)
 {
     return false;
 }
 
-bool EntityTreeModel::removeRows(int, int, const QModelIndex &)
+bool EntityTreeModel::removeRows(int /*row*/, int /*count*/, const QModelIndex & /*parent*/)
 {
     return false;
 }
 
-bool EntityTreeModel::removeColumns(int, int, const QModelIndex &)
+bool EntityTreeModel::removeColumns(int /*column*/, int /*count*/, const QModelIndex & /*parent*/)
 {
     return false;
 }
@@ -1127,7 +1127,7 @@ Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model,
         proxy = qobject_cast<const QAbstractProxyModel*>(_model);
     }
 
-    auto etm = qobject_cast<const EntityTreeModel*>(_model);
+    const auto *etm = qobject_cast<const EntityTreeModel*>(_model);
     if (etm) {
         return etm->d_ptr->m_collections.value(collectionId);
     } else {

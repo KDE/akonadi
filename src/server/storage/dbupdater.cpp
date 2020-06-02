@@ -145,7 +145,8 @@ bool DbUpdater::parseUpdateSets(int currentVersion, UpdateSet::Map &updates) con
     QDomDocument document;
 
     QString errorMsg;
-    int line, column;
+    int line;
+    int column;
     if (!document.setContent(&file, &errorMsg, &line, &column)) {
         qCCritical(AKONADISERVER_LOG) << "Unable to parse update description file" << m_filename << ":"
                                       << errorMsg << "at line" << line << "column" << column;

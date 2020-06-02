@@ -28,7 +28,7 @@ using namespace Akonadi;
 class Akonadi::ResourceSelectJobPrivate : public JobPrivate
 {
 public:
-    ResourceSelectJobPrivate(ResourceSelectJob *parent)
+    explicit ResourceSelectJobPrivate(ResourceSelectJob *parent)
         : JobPrivate(parent)
     {
     }

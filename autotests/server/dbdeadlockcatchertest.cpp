@@ -36,8 +36,9 @@ private:
     void myFunc(int maxRecursion)
     {
         ++m_myFuncCalled;
-        if (m_myFuncCalled <= maxRecursion)
+        if (m_myFuncCalled <= maxRecursion) {
             throw DbDeadlockException(QSqlQuery());
+        }
     }
 
 private Q_SLOTS:

@@ -101,7 +101,7 @@ bool AgentFilterProxyModel::Private::filterAcceptRegExp(const QModelIndex &index
     return true;
 }
 
-bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex &) const
+bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*source_parent*/) const
 {
     const QModelIndex index = sourceModel()->index(row, 0);
 

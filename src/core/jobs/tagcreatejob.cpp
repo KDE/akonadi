@@ -29,7 +29,7 @@ using namespace Akonadi;
 class Akonadi::TagCreateJobPrivate : public JobPrivate
 {
 public:
-    TagCreateJobPrivate(TagCreateJob *parent)
+    explicit TagCreateJobPrivate(TagCreateJob *parent)
         : JobPrivate(parent)
     {
     }

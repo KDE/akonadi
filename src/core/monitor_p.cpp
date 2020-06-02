@@ -432,7 +432,8 @@ bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &
             const auto changedParts = itemNtf.itemParts();
             const auto requestedParts = mItemFetchScope.payloadParts();
             const auto requestedAttrs = mItemFetchScope.attributes();
-            QSet<QByteArray> missingParts, missingAttributes;
+            QSet<QByteArray> missingParts;
+            QSet<QByteArray> missingAttributes;
             for (const QByteArray &part : changedParts)  {
                 const auto partName = part.mid(4);
                 if (part.startsWith("PLD:") &&    //krazy:exclude=strings since QByteArray
@@ -1036,13 +1037,15 @@ bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotificatio
         }
     }
 
-    Relation::List addedRelations, removedRelations;
+    Relation::List addedRelations;
+    Relation::List removedRelations;
     if (msg.operation() == Protocol::ItemChangeNotification::ModifyRelations) {
         addedRelations = extractRelations(msg.addedRelations());
         removedRelations = extractRelations(msg.removedRelations());
     }
 
-    Tag::List addedTags, removedTags;
+    Tag::List addedTags;
+    Tag::List removedTags;
     if (msg.operation() == Protocol::ItemChangeNotification::ModifyTags) {
         addedTags = tagCache->retrieve(msg.addedTags() | Actions::toQList);
         removedTags = tagCache->retrieve(msg.removedTags() | Actions::toQList);

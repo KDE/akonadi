@@ -79,7 +79,7 @@ private:
     void copyXdgDirectory(const QString &src, const QString &dst);
     void copyDirectory(const QString &src, const QString &dst);
     void createTempEnvironment();
-    void cleanTempEnvironment();
+    void cleanTempEnvironment() const;
     void setupFailed();
     void writeAkonadiserverrc(const QString &path);
     void checkSetupDone();

@@ -26,8 +26,7 @@
 using namespace Akonadi::Server;
 
 DebugInterface::DebugInterface(Tracer &tracer)
-    : QObject()
-    , m_tracer(tracer)
+    : m_tracer(tracer)
 {
     new DebugInterfaceAdaptor(this);
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/debug"),

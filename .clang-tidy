@@ -1,0 +1,31 @@
+# clang-analyzer-cplusplus.NewDeleteLeaks triggers false-positives in QObject::connect()
+# readability-redundant-access-specifiers triggered by Q_SLOTS
+# readability-inconsistent-declaration-parameter-name trigered by generated Qt code
+# performance-no-automatic-move is triggered by constness of qstring_literal_tmp in QStringLiteral macro
+
+Checks: -*
+        clang-analyzer-*,
+        -clang-analyzer-osx,
+        -clang-analyzer-cplusplus.NewDeleteLeaks,
+        google-explicit-constructor,
+        google-global-names-in-headers,
+        hicpp-signed-bitwise,
+        misc-*,
+        -misc-definitions-in-headers,
+        -*-non-private-member-variables-in-classes,
+        performance-*,
+        -performance-no-automatic-move,
+        readability-*,
+        -readability-avoid-const-params-in-decls,
+        -readability-convert-member-functions-to-static,
+        -readability-else-after-return,
+        -readability-redundant-access-specifiers,
+        -readability-implicit-bool-conversion,
+        -readability-static-accessed-through-instance,
+        -readability-inconsistent-declaration-parameter-name
+AnalyzeTemporaryDtors: true
+CheckOptions:
+    - key:  bugprone-assert-side-effects.AssertMacros
+      value: 'Q_ASSERT'
+    - key:  CheckFunctionCalls
+      value: true

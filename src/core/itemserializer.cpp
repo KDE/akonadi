@@ -43,7 +43,7 @@ namespace Akonadi
 
 DefaultItemSerializerPlugin::DefaultItemSerializerPlugin() = default;
 
-bool DefaultItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int)
+bool DefaultItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int /*version*/)
 {
     if (label != Item::FullPayload) {
         return false;
@@ -61,7 +61,7 @@ void DefaultItemSerializerPlugin::serialize(const Item &item, const QByteArray &
     data.write(item.payload<QByteArray>());
 }
 
-bool StdStringItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int)
+bool StdStringItemSerializerPlugin::deserialize(Item &item, const QByteArray &label, QIODevice &data, int /*version*/)
 {
     if (label != Item::FullPayload) {
         return false;

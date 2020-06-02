@@ -29,7 +29,7 @@ namespace Akonadi
 class SearchResultJobPrivate : public Akonadi::JobPrivate
 {
 public:
-    SearchResultJobPrivate(SearchResultJob *parent);
+    explicit SearchResultJobPrivate(SearchResultJob *parent);
 
     QVector<QByteArray> rid;
     QByteArray searchId;

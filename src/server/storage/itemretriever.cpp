@@ -46,8 +46,7 @@ using namespace AkRanges;
 Q_DECLARE_METATYPE(ItemRetrievalResult)
 
 ItemRetriever::ItemRetriever(ItemRetrievalManager &manager, Connection *connection, const CommandContext &context)
-    : mScope()
-    , mItemRetrievalManager(manager)
+    : mItemRetrievalManager(manager)
     , mConnection(connection)
     , mContext(context)
     , mFullPayload(false)
@@ -204,7 +203,7 @@ QSqlQuery ItemRetriever::buildQuery() const
 
 namespace
 {
-static bool hasAllParts(const ItemRetrievalRequest &req, const QSet<QByteArray> &availableParts)
+bool hasAllParts(const ItemRetrievalRequest &req, const QSet<QByteArray> &availableParts)
 {
     return std::all_of(req.parts.begin(), req.parts.end(), [&availableParts](const auto &part) {
         return availableParts.contains(part);

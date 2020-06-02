@@ -72,7 +72,7 @@ class TagWidgetTest: public QObject
         ~TestSetup()
         {
             if (!createdTags.empty()) {
-                auto deleteJob = new TagDeleteJob(createdTags);
+                auto *deleteJob = new TagDeleteJob(createdTags);
                 AKVERIFYEXEC(deleteJob);
             }
         }
@@ -82,7 +82,7 @@ class TagWidgetTest: public QObject
             const auto doCreateTags = [this, count]() {
                 QSignalSpy monitorSpy(monitor, &Monitor::tagAdded);
                 for (int i = 0; i < count; ++i) {
-                    auto job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
+                    auto *job = new TagCreateJob(Tag(QStringLiteral("TestTag-%1").arg(i)));
                     AKVERIFYEXEC(job);
                     createdTags.push_back(job->tag());
                 }
@@ -92,7 +92,7 @@ class TagWidgetTest: public QObject
             return createdTags.size() == count;
         }
 
-        bool testSelectionMatches(QSignalSpy &selectionSpy, const Tag::List &selection)
+        bool testSelectionMatches(QSignalSpy &selectionSpy, const Tag::List &selection) const
         {
             QStringList names;
             std::transform(selection.begin(), selection.end(), std::back_inserter(names), std::bind(&Tag::name, std::placeholders::_1));

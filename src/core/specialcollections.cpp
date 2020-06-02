@@ -134,7 +134,7 @@ void SpecialCollectionsPrivate::collectionFetchJobFinished(KJob *job)
 
     const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
 
-    Q_ASSERT(fetchJob->collections().size() > 0);
+    Q_ASSERT(!fetchJob->collections().empty());
     const Akonadi::Collection collection = fetchJob->collections().at(0);
     const Akonadi::CollectionStatistics statistics = fetchJob->property("statistics").value<Akonadi::CollectionStatistics>();
 

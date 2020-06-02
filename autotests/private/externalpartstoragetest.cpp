@@ -133,9 +133,9 @@ void ExternalPartStorageTest::testNameForPartId_data()
     QTest::addColumn<qint64>("id");
     QTest::addColumn<QByteArray>("expectedName");
 
-    QTest::newRow("0") << 0ll << QByteArray("0_r0");
-    QTest::newRow("12") << 12ll << QByteArray("12_r0");
-    QTest::newRow("9876543") << 9876543ll << QByteArray("9876543_r0");
+    QTest::newRow("0") << 0LL << QByteArray("0_r0");
+    QTest::newRow("12") << 12LL << QByteArray("12_r0");
+    QTest::newRow("9876543") << 9876543LL << QByteArray("9876543_r0");
 }
 
 

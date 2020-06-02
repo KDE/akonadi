@@ -57,7 +57,7 @@ public:
 private:
     void dequeueNotification();
     void notificationsLoaded();
-    void writeStartOffset();
+    void writeStartOffset() const;
 
     int m_lastKnownNotificationsCount; // just for invariant checking
     int m_startOffset; // number of saved notifications to skip

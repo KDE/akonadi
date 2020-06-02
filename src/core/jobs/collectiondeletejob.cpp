@@ -30,7 +30,7 @@ using namespace Akonadi;
 class Akonadi::CollectionDeleteJobPrivate : public JobPrivate
 {
 public:
-    CollectionDeleteJobPrivate(CollectionDeleteJob *parent)
+    explicit CollectionDeleteJobPrivate(CollectionDeleteJob *parent)
         : JobPrivate(parent)
     {
     }

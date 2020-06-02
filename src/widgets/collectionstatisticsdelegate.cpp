@@ -55,7 +55,7 @@ public:
     QColor mSelectedUnreadColor;
     QColor mDeselectedUnreadColor;
 
-    CollectionStatisticsDelegatePrivate(QAbstractItemView *treeView)
+    explicit CollectionStatisticsDelegatePrivate(QAbstractItemView *treeView)
         : parent(treeView)
     {
         updateColor();
@@ -178,7 +178,7 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
 class PainterStateSaver
 {
 public:
-    PainterStateSaver(QPainter *painter)
+    explicit PainterStateSaver(QPainter *painter)
     {
         mPainter = painter;
         mPainter->save();

@@ -99,7 +99,7 @@ void CollectionMaintenancePage::init(const Collection &col)
     d->monitor->setCollectionMonitored(col, true);
     d->monitor->fetchCollectionStatistics(true);
     connect(d->monitor, &Monitor::collectionStatisticsChanged,
-            this, [this](Collection::Id, const CollectionStatistics &stats) {
+            this, [this](Collection::Id /*unused*/, const CollectionStatistics &stats) {
                 d->updateLabel(stats.count(), stats.unreadCount(), stats.size());
             });
 
@@ -139,7 +139,7 @@ void CollectionMaintenancePage::load(const Collection &col)
                                               QStringLiteral("org.freedesktop.Akonadi.Indexer"));
             if (indexingAgentIface.isValid()) {
                 auto reply = indexingAgentIface.asyncCall(QStringLiteral("indexedItems"), (qlonglong) col.id());
-                auto w = new QDBusPendingCallWatcher(reply, this);
+                auto *w = new QDBusPendingCallWatcher(reply, this);
                 connect(w, &QDBusPendingCallWatcher::finished,
                         this, [this](QDBusPendingCallWatcher *w) {
                             QDBusPendingReply<qlonglong> reply = *w;

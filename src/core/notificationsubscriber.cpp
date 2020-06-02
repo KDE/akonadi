@@ -27,30 +27,6 @@ namespace Akonadi
 class AKONADICORE_NO_EXPORT NotificationSubscriber::Private : public QSharedData
 {
 public:
-    explicit Private()
-        : QSharedData()
-        , isAllMonitored(false)
-        , isExclusive(false)
-    {}
-
-    Private(const Private &other)
-        : QSharedData(other)
-        , subscriber(other.subscriber)
-        , sessionId(other.sessionId)
-        , collections(other.collections)
-        , items(other.items)
-        , tags(other.tags)
-        , types(other.types)
-        , mimeTypes(other.mimeTypes)
-        , resources(other.resources)
-        , ignoredSessions(other.ignoredSessions)
-        , itemFetchScope(other.itemFetchScope)
-        , collectionFetchScope(other.collectionFetchScope)
-        , tagFetchScope(other.tagFetchScope)
-        , isAllMonitored(other.isAllMonitored)
-        , isExclusive(other.isExclusive)
-    {}
-
     QByteArray subscriber;
     QByteArray sessionId;
     QSet<qint64> collections;
@@ -63,8 +39,8 @@ public:
     ItemFetchScope itemFetchScope;
     CollectionFetchScope collectionFetchScope;
     TagFetchScope tagFetchScope;
-    bool isAllMonitored;
-    bool isExclusive;
+    bool isAllMonitored = false;
+    bool isExclusive = false;
 };
 
 }

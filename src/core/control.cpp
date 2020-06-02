@@ -47,7 +47,7 @@ Q_GLOBAL_STATIC(Internal::StaticControl, s_instance)
 class Q_DECL_HIDDEN Control::Private
 {
 public:
-    Private(Control *parent)
+    explicit Private(Control *parent)
         : mParent(parent)
         , mEventLoop(nullptr)
     {

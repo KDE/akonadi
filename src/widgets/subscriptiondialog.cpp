@@ -52,7 +52,7 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN SubscriptionDialog::Private
 {
 public:
-    Private(SubscriptionDialog *parent)
+    explicit Private(SubscriptionDialog *parent)
         : q(parent)
         , model(&monitor, parent)
     {
@@ -87,7 +87,7 @@ public:
         q->connect(ui.unsubscribeButton, &QPushButton::clicked,
                    q, [this]() { toggleSubscribed(Qt::Unchecked); });
 
-        auto okButton = ui.buttonBox->button(QDialogButtonBox::Ok);
+        auto *okButton = ui.buttonBox->button(QDialogButtonBox::Ok);
         okButton->setEnabled(false);
         connect(okButton, &QPushButton::clicked, q, [this] () { done(); });
     }
@@ -108,13 +108,13 @@ public:
         });
     }
 
-    void writeConfig()
+    void writeConfig() const
     {
         KConfigGroup group(KSharedConfig::openConfig(), "SubscriptionDialog");
         group.writeEntry("Size", q->size());
     }
 
-    void readConfig()
+    void readConfig() const
     {
         KConfigGroup group(KSharedConfig::openConfig(), "SubscriptionDialog");
         const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));

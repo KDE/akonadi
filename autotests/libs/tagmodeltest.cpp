@@ -62,17 +62,17 @@ private Q_SLOTS:
 private:
     QPair<FakeServerData *, Akonadi::TagModel *> populateModel(const QString &serverContent)
     {
-        const auto fakeMonitor = new FakeMonitor(this);
+        auto *const fakeMonitor = new FakeMonitor(this);
 
         fakeMonitor->setSession(m_fakeSession);
         fakeMonitor->setCollectionMonitored(Collection::root());
         fakeMonitor->setTypeMonitored(Akonadi::Monitor::Tags);
 
-        const auto model = new TagModel(fakeMonitor, this);
+        auto *const model = new TagModel(fakeMonitor, this);
 
         m_modelSpy = new ModelSpy{model, this};
 
-        const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
+        auto *const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
         serverData->setCommands(FakeJobResponse::interpret(serverData, serverContent));
 
         // Give the model a chance to populate
@@ -112,13 +112,13 @@ void TagModelTest::cleanupTestCase()
 
 void TagModelTest::testInitialFetch()
 {
-    const auto fakeMonitor = new FakeMonitor(this);
+    auto *const fakeMonitor = new FakeMonitor(this);
 
     fakeMonitor->setSession(m_fakeSession);
     fakeMonitor->setCollectionMonitored(Collection::root());
-    const auto model = new TagModel(fakeMonitor, this);
+    auto *const model = new TagModel(fakeMonitor, this);
 
-    const auto serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
+    auto *const serverData = new FakeServerData(model, m_fakeSession, fakeMonitor, this);
     const auto initialFetchResponse =  FakeJobResponse::interpret(serverData, serverContent1);
     serverData->setCommands(initialFetchResponse);
 
@@ -171,13 +171,13 @@ void TagModelTest::testTagAdded()
     QFETCH(QString, parentTag);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto parentIndex = firstMatchedIndex(*model, parentTag);
     const auto newRow = model->rowCount(parentIndex);
 
-    const auto addCommand = new FakeTagAddedCommand(addedTag, parentTag, serverData);
+    auto *const addCommand = new FakeTagAddedCommand(addedTag, parentTag, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({addCommand});
@@ -214,14 +214,14 @@ void TagModelTest::testTagChanged()
     QFETCH(QString, tagName);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, tagName);
     const auto parentTag = changedIndex.parent().data().toString();
     const auto changedRow = changedIndex.row();
 
-    const auto changeCommand = new FakeTagChangedCommand(tagName, parentTag, serverData);
+    auto *const changeCommand = new FakeTagChangedCommand(tagName, parentTag, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands(QList<FakeAkonadiServerCommand *>() << changeCommand);
@@ -257,14 +257,14 @@ void TagModelTest::testTagRemoved()
     QFETCH(QString, removedTag);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto removedIndex = firstMatchedIndex(*model, removedTag);
     const auto parentTag = removedIndex.parent().data().toString();
     const auto sourceRow = removedIndex.row();
 
-    const auto removeCommand = new FakeTagRemovedCommand(removedTag, parentTag, serverData);
+    auto *const removeCommand = new FakeTagRemovedCommand(removedTag, parentTag, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({removeCommand});
@@ -307,8 +307,8 @@ void TagModelTest::testTagMoved()
     QFETCH(QString, newParent);
 
     const auto testDrivers = populateModel(serverContent);
-    const auto serverData = testDrivers.first;
-    const auto model = testDrivers.second;
+    auto *const serverData = testDrivers.first;
+    auto *const model = testDrivers.second;
 
     const auto changedIndex = firstMatchedIndex(*model, changedTag);
     const auto parentTag = changedIndex.parent().data().toString();
@@ -317,7 +317,7 @@ void TagModelTest::testTagMoved()
     QModelIndex newParentIndex = firstMatchedIndex(*model, newParent);
     const auto destRow = model->rowCount(newParentIndex);
 
-    const auto moveCommand = new FakeTagMovedCommand(changedTag, parentTag, newParent, serverData);
+    auto *const moveCommand = new FakeTagMovedCommand(changedTag, parentTag, newParent, serverData);
 
     m_modelSpy->startSpying();
     serverData->setCommands({moveCommand});

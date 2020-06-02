@@ -32,7 +32,7 @@ namespace Akonadi
 class EntityRightsFilterModelPrivate
 {
 public:
-    EntityRightsFilterModelPrivate(EntityRightsFilterModel *parent)
+    explicit EntityRightsFilterModelPrivate(EntityRightsFilterModel *parent)
         : q_ptr(parent)
         , mAccessRights(Collection::AllRights)
     {

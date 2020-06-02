@@ -69,7 +69,7 @@ void CppGenerator::writeHeaderHeader(DocumentNode const *node)
                "\n";
 
     // Forward declarations
-    for (auto child : qAsConst(node->children())) {
+    for (const auto *child : qAsConst(node->children())) {
         if (child->type() == Node::Class) {
             mHeader << "class " << static_cast<const ClassNode*>(child)->className() << ";\n";
         }
@@ -102,7 +102,7 @@ void CppGenerator::writeImplHeader(DocumentNode const *node)
              "\n";
 }
 
-void CppGenerator::writeImplFooter(DocumentNode const *)
+void CppGenerator::writeImplFooter(DocumentNode const * /*unused*/)
 {
     mImpl << "} // namespace Protocol\n"
              "} // namespace Akonadi\n";
@@ -116,7 +116,7 @@ bool CppGenerator::generateDocument(DocumentNode  const *node)
 
     writeImplSerializer(node);
 
-    for (auto classNode : node->children()) {
+    for (const auto *classNode : node->children()) {
         if (!generateClass(static_cast<ClassNode const *>(classNode))) {
             return false;
         }
@@ -139,8 +139,8 @@ void CppGenerator::writeImplSerializer(DocumentNode  const *node)
              "    case Command::Invalid | Command::_ResponseBit:\n"
              "        stream << cmdCast<Response>(cmd);\n"
              "        break;\n";
-    for (auto child : qAsConst(node->children())) {
-        auto classNode = static_cast<ClassNode const *>(child);
+    for (const auto *child : qAsConst(node->children())) {
+        const auto *classNode = static_cast<ClassNode const *>(child);
         if (classNode->classType() == ClassNode::Response) {
             mImpl << "    case Command::" << classNode->name() << " | Command::_ResponseBit:\n"
                      "        stream << cmdCast<" << classNode->className() << ">(cmd);\n"
@@ -179,8 +179,8 @@ void CppGenerator::writeImplSerializer(DocumentNode  const *node)
              "    case Command::Invalid | Command::_ResponseBit:\n"
              "        stream >> cmdCast<Response>(cmd);\n"
              "        return cmd;\n";
-    for (auto child : qAsConst(node->children())) {
-        auto classNode = static_cast<ClassNode const *>(child);
+    for (const auto *child : qAsConst(node->children())) {
+        const auto *classNode = static_cast<ClassNode const *>(child);
         if (classNode->classType() == ClassNode::Response) {
             mImpl << "    case Command::" << classNode->name() << " | Command::_ResponseBit:\n"
                      "        stream >> cmdCast<" << classNode->className() << ">(cmd);\n"
@@ -211,8 +211,8 @@ void CppGenerator::writeImplSerializer(DocumentNode  const *node)
              "    case Command::Invalid | Command::_ResponseBit:\n"
              "        QDebug(&out).noquote() << static_cast<const Response &>(cmd);\n"
              "        return out;\n";
-    for (auto child : qAsConst(node->children())) {
-        auto classNode = static_cast<ClassNode const *>(child);
+    for (const auto *child : qAsConst(node->children())) {
+        const auto *classNode = static_cast<ClassNode const *>(child);
         if (classNode->classType() == ClassNode::Response) {
             mImpl << "    case Command::" << classNode->name() << " | Command::_ResponseBit:\n"
                      "        QDebug(&out).noquote() << static_cast<const " << classNode->className() << " &>(cmd);\n"
@@ -237,9 +237,9 @@ void CppGenerator::writeImplSerializer(DocumentNode  const *node)
 void CppGenerator::writeHeaderEnum(EnumNode const *node)
 {
     mHeader << "    enum " << node->name() << " {\n";
-    for (auto enumChild : node->children()) {
+    for (const auto *enumChild : node->children()) {
         Q_ASSERT(enumChild->type() == Node::EnumValue);
-        const auto valueNode = static_cast<EnumValueNode const *>(enumChild);
+        const auto *const valueNode = static_cast<EnumValueNode const *>(enumChild);
         mHeader << "        " << valueNode->name();
         if (!valueNode->value().isEmpty()) {
             mHeader << " = " << valueNode->value();
@@ -275,17 +275,17 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                "public:\n";
 
     // Enums
-    for (auto child : node->children()) {
+    for (const auto *child : node->children()) {
         if (child->type() == Node::Enum) {
-            const auto enumNode = static_cast<EnumNode const *>(child);
+            const auto *const enumNode = static_cast<EnumNode const *>(child);
             writeHeaderEnum(enumNode);
         }
     }
 
     // Ctors, dtor
-    for (auto child : qAsConst(node->children())) {
+    for (const auto *child : qAsConst(node->children())) {
         if (child->type() == Node::Ctor) {
-            const auto ctor = static_cast<const CtorNode*>(child);
+            const auto *const ctor = static_cast<const CtorNode*>(child);
             const auto args = ctor->arguments();
             mHeader << "    explicit " << node->className() << "(";
             for (int i = 0; i < args.count(); ++i) {
@@ -316,9 +316,9 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                "    inline bool operator!=(const " << node->className() << " &other) const { return !operator==(other); }\n";
 
     // Properties
-    for (auto child : node->children()) {
+    for (const auto *child : node->children()) {
         if (child->type() == Node::Property) {
-            const auto prop = static_cast<PropertyNode const *>(child);
+            const auto *const prop = static_cast<PropertyNode const *>(child);
             if (prop->asReference()) {
                 mHeader << "    inline const " << prop->type() << " &" << prop->name() << "() const { return " << prop->mVariableName() << "; }\n"
                            "    inline " << prop->type() << " &" << prop->name() << "() { return " << prop->mVariableName() << "; }\n";
@@ -326,7 +326,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
                 mHeader << "    inline " << prop->type() << " " << prop->name() << "() const { return " << prop->mVariableName() << "; }\n";
             }
             if (!prop->readOnly()) {
-                if (auto setter = prop->setter()) {
+                if (auto *setter = prop->setter()) {
                     mHeader << "    void " << setter->name << "(const " << setter->type
                             << " &" << prop->name() << ");\n";
                 } else if (!prop->dependencies().isEmpty()) {
@@ -361,7 +361,7 @@ void CppGenerator::writeHeaderClass(ClassNode const *node)
     // End of class
     mHeader << "protected:\n";
     const auto properties = node->properties();
-    for (auto prop : properties) {
+    for (const auto *prop : properties) {
         mHeader << "    " << prop->type() << " " << prop->mVariableName();
         const auto defaultValue = prop->defaultValue();
         const bool isDefaultValue = !defaultValue.isEmpty();
@@ -425,9 +425,9 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     const auto properties = node->properties();
 
     // Ctors
-    for (auto child : children) {
+    for (const auto *child : children) {
         if (child->type() == Node::Ctor) {
-            const auto ctor = static_cast<CtorNode const *>(child);
+            const auto *const ctor = static_cast<CtorNode const *>(child);
             const auto args = ctor->arguments();
             mImpl << node->className() << "::" << node->className() << "(";
             for (int i = 0; i < args.count(); ++i) {
@@ -449,7 +449,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
             } else {
                 startChar = ':';
             }
-            for (auto prop : properties) {
+            for (const auto *prop : properties) {
                 auto arg = std::find_if(args.cbegin(), args.cend(),
                                         [prop](const CtorNode::Argument &arg) {
                                             return arg.name == prop->name();
@@ -473,7 +473,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     if (!parentClass.isEmpty()) {
         mImpl << "        && " << parentClass << "::operator==(other)\n";
     }
-    for (auto prop : properties) {
+    for (const auto *prop : properties) {
         if (prop->isPointer()) {
             mImpl << "        && *" << prop->mVariableName() << " == *other." << prop->mVariableName() << "\n";
         } else if (TypeHelper::isContainer(prop->type())) {
@@ -487,12 +487,12 @@ void CppGenerator::writeImplClass(ClassNode const *node)
              "\n";
 
     // non-trivial setters
-    for (auto prop : properties) {
+    for (const auto *prop : properties) {
         if (prop->readOnly()) {
             continue;
         }
 
-        if (const auto setter = prop->setter()) {
+        if (auto *const setter = prop->setter()) {
             mImpl << "void " << node->className() << "::" << setter->name
                     << "(const " << setter->type << " &val)\n"
                         "{\n";
@@ -535,7 +535,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     if (!parentClass.isEmpty()) {
              mImpl << "    stream << static_cast<const " << parentClass << " &>(obj);\n";
     }
-    for (auto prop : qAsConst(serializeProperties)) {
+    for (const auto *prop : qAsConst(serializeProperties)) {
         writeImplSerializer(prop, "<<");
     }
     mImpl << "    return stream;\n"
@@ -548,7 +548,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     if (!parentClass.isEmpty()) {
         mImpl << "    stream >> static_cast<" << parentClass << " &>(obj);\n";
     }
-    for (auto prop : qAsConst(serializeProperties)) {
+    for (const auto *prop : qAsConst(serializeProperties)) {
         writeImplSerializer(prop, ">>");
     }
     mImpl << "    return stream;\n"
@@ -564,7 +564,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
         mImpl << "    dbg.noquote()\n";
     }
 
-    for (auto prop : qAsConst(serializeProperties)) {
+    for (const auto *prop : qAsConst(serializeProperties)) {
         if (prop->isPointer()) {
             mImpl << "        << \"" << prop->name() << ":\" << *obj." << prop->mVariableName() << " << \"\\n\"\n";
         } else if (TypeHelper::isContainer(prop->type())) {
@@ -596,7 +596,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     } else if (serializeProperties.isEmpty()) {
         mImpl << "    Q_UNUSED(json);\n";
     }
-    for (auto prop : qAsConst(serializeProperties)) {
+    for (const auto *prop : qAsConst(serializeProperties)) {
         if (prop->isPointer()) {
             mImpl << "    {\n"
                      "        QJsonObject jsonObject;\n"
@@ -707,9 +707,9 @@ void CppGenerator::writeImplPropertyDependencies(const PropertyNode* node)
         if (key != it.key()) {
             key = it.key();
             const auto children = node->parent()->children();
-            for (auto child : children) {
+            for (const auto *child : children) {
                 if (child->type() == Node::Property && child != node) {
-                    auto prop = static_cast<const PropertyNode*>(child);
+                    const auto *prop = static_cast<const PropertyNode*>(child);
                     if (prop->name() == key) {
                         enumType = prop->type();
                         break;

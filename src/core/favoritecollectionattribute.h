@@ -28,7 +28,7 @@ namespace Akonadi {
 class AKONADICORE_EXPORT FavoriteCollectionAttribute : public Attribute
 {
 public:
-    explicit FavoriteCollectionAttribute();
+    explicit FavoriteCollectionAttribute() = default;
 
     Attribute *clone() const override;
     QByteArray type() const override;

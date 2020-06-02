@@ -42,8 +42,8 @@ public:
         delete mUi;
     }
 
-    void slotIntervalValueChanged(int);
-    void slotCacheValueChanged(int);
+    void slotIntervalValueChanged(int /*interval*/);
+    void slotCacheValueChanged(int /*interval*/);
     void slotRetrievalOptionsGroupBoxDisabled(bool disable);
 
     Ui::CachePolicyPage *mUi = nullptr;

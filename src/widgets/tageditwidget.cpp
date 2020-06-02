@@ -40,7 +40,7 @@ class Q_DECL_HIDDEN TagEditWidget::Private : public QObject
 {
     Q_OBJECT
 public:
-    Private(QWidget *parent);
+    explicit Private(QWidget *parent);
 
 public Q_SLOTS:
     void slotTextEdited(const QString &text);
@@ -61,7 +61,7 @@ public:
         m_checkableProxy->setSelectionModel(selectionModel);
     }
 
-    void select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag);
+    void select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag) const;
     enum ItemType {
         UrlTag = Qt::UserRole + 1
     };
@@ -78,11 +78,10 @@ public:
 };
 
 TagEditWidget::Private::Private(QWidget *parent)
-    : QObject()
-    , d(parent)
+    : d(parent)
 {}
 
-void TagEditWidget::Private::select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag)
+void TagEditWidget::Private::select(const QModelIndex &parent, int start, int end, QItemSelectionModel::SelectionFlag selectionFlag) const
 {
     if (!m_model) {
         return;
@@ -114,7 +113,7 @@ void TagEditWidget::Private::onRowsInserted(const QModelIndex &parent, int start
 void TagEditWidget::Private::slotCreateTag()
 {
     if (ui.newTagButton->isEnabled()) {
-        auto createJob = new TagCreateJob(Akonadi::Tag(ui.newTagEdit->text()), this);
+        auto *createJob = new TagCreateJob(Akonadi::Tag(ui.newTagEdit->text()), this);
         connect(createJob, &TagCreateJob::finished, this, &TagEditWidget::Private::slotCreateTagFinished);
 
         ui.newTagEdit->clear();

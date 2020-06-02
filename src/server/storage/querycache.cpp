@@ -36,8 +36,8 @@ using namespace Akonadi::Server;
 namespace {
 
 // After these seconds without activity the cache is cleaned
-static constexpr auto CleanupTimeout = 60s;
-static constexpr int MaxCacheSize = 50;
+constexpr auto CleanupTimeout = 60s;
+constexpr int MaxCacheSize = 50;
 
 /// LRU cache with limited size and auto-cleanup after given
 /// period of time
@@ -92,9 +92,9 @@ public: // public, this is just a helper class
     QTimer m_cleanupTimer;
 };
 
-static QThreadStorage<Cache *> g_queryCache;
+QThreadStorage<Cache *> g_queryCache;
 
-static Cache *perThreadCache()
+Cache *perThreadCache()
 {
     if (!g_queryCache.hasLocalData()) {
         g_queryCache.setLocalData(new Cache());

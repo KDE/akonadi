@@ -29,9 +29,9 @@
 using namespace Akonadi;
 
 namespace {
-static const quint64 s_currentVersion = Q_UINT64_C(0x000800000000);
-static const quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
-static const quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
+constexpr quint64 s_currentVersion = Q_UINT64_C(0x000800000000);
+constexpr quint64 s_versionMask    = Q_UINT64_C(0xFFFF00000000);
+constexpr quint64 s_sizeMask       = Q_UINT64_C(0x0000FFFFFFFF);
 }
 
 
@@ -230,12 +230,21 @@ QSet<Protocol::ItemChangeNotification::Relation> ChangeRecorderJournalReader::ex
 
 Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadItemNotification(QDataStream &stream, quint64 version)
 {
-    QByteArray resource, destinationResource;
-    int operation, entityCnt;
-    qint64 uid, parentCollection, parentDestCollection;
-    QString remoteId, mimeType, remoteRevision;
-    QSet<QByteArray> itemParts, addedFlags, removedFlags;
-    QSet<qint64> addedTags, removedTags;
+    QByteArray resource;
+    QByteArray destinationResource;
+    int operation;
+    int entityCnt;
+    qint64 uid;
+    qint64 parentCollection;
+    qint64 parentDestCollection;
+    QString remoteId;
+    QString mimeType;
+    QString remoteRevision;
+    QSet<QByteArray> itemParts;
+    QSet<QByteArray> addedFlags;
+    QSet<QByteArray> removedFlags;
+    QSet<qint64> addedTags;
+    QSet<qint64> removedTags;
     QVector<Protocol::FetchItemsResponse> items;
 
     auto msg = Protocol::ItemChangeNotificationPtr::create();
@@ -514,11 +523,18 @@ void ChangeRecorderJournalWriter::saveItemNotification(QDataStream &stream, cons
 
 Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadCollectionNotification(QDataStream &stream, quint64 version)
 {
-    QByteArray resource, destinationResource;
-    int operation, entityCnt;
-    quint64 uid, parentCollection, parentDestCollection;
-    QString remoteId, remoteRevision, dummyString;
-    QSet<QByteArray> changedParts, dummyBa;
+    QByteArray resource;
+    QByteArray destinationResource;
+    int operation;
+    int entityCnt;
+    quint64 uid;
+    quint64 parentCollection;
+    quint64 parentDestCollection;
+    QString remoteId;
+    QString remoteRevision;
+    QString dummyString;
+    QSet<QByteArray> changedParts;
+    QSet<QByteArray> dummyBa;
     QSet<qint64> dummyIv;
 
     auto msg = Protocol::CollectionChangeNotificationPtr::create();
@@ -732,10 +748,14 @@ void Akonadi::ChangeRecorderJournalWriter::saveCollectionNotification(QDataStrea
 
 Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadTagNotification(QDataStream &stream, quint64 version)
 {
-    QByteArray resource, dummyBa;
-    int operation, entityCnt;
-    quint64 uid, dummyI;
-    QString remoteId, dummyString;
+    QByteArray resource;
+    QByteArray dummyBa;
+    int operation;
+    int entityCnt;
+    quint64 uid;
+    quint64 dummyI;
+    QString remoteId;
+    QString dummyString;
     QSet<QByteArray> dummyBaV;
     QSet<qint64> dummyIv;
 
@@ -835,10 +855,12 @@ void Akonadi::ChangeRecorderJournalWriter::saveTagNotification(QDataStream &stre
 Protocol::ChangeNotificationPtr ChangeRecorderJournalReader::loadRelationNotification(QDataStream &stream, quint64 version)
 {
     QByteArray dummyBa;
-    int operation, entityCnt;
+    int operation;
+    int entityCnt;
     quint64 dummyI;
     QString dummyString;
-    QSet<QByteArray> itemParts, dummyBaV;
+    QSet<QByteArray> itemParts;
+    QSet<QByteArray> dummyBaV;
     QSet<qint64> dummyIv;
 
     auto msg = Protocol::RelationChangeNotificationPtr::create();

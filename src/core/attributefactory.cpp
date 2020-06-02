@@ -79,8 +79,7 @@ class StaticAttributeFactory : public AttributeFactory
 {
 public:
     StaticAttributeFactory()
-        : AttributeFactory()
-        , initialized(false)
+        : initialized(false)
     {
     }
     void init()

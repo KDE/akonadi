@@ -44,7 +44,7 @@ using namespace Akonadi;
 class Akonadi::ItemSyncPrivate : public JobPrivate
 {
 public:
-    ItemSyncPrivate(ItemSync *parent)
+    explicit ItemSyncPrivate(ItemSync *parent)
         : JobPrivate(parent)
         , mTransactionMode(ItemSync::SingleTransaction)
         , mCurrentTransaction(nullptr)

@@ -108,9 +108,9 @@ bool XmlParser::parseCommand(DocumentNode *documentNode)
         return false;
     }
 
-    auto classNode = new ClassNode(attrs.value(QLatin1String("name")).toString(),
-                                   ClassNode::elementNameToType(mReader.name()),
-                                   documentNode);
+    auto *classNode = new ClassNode(attrs.value(QLatin1String("name")).toString(),
+                                    ClassNode::elementNameToType(mReader.name()),
+                                    documentNode);
     new CtorNode({}, classNode);
 
     while (!mReader.atEnd() &&
@@ -174,9 +174,9 @@ bool XmlParser::parseEnum(ClassNode *classNode)
         return false;
     }
 
-    auto enumNode = new EnumNode(attrs.value(QLatin1String("name")).toString(),
-                                 EnumNode::elementNameToType(mReader.name()),
-                                 classNode);
+    auto *enumNode = new EnumNode(attrs.value(QLatin1String("name")).toString(),
+                                  EnumNode::elementNameToType(mReader.name()),
+                                  classNode);
 
     while (!mReader.atEnd() &&
             !(mReader.isEndElement() && (enumNode->enumType() == EnumNode::elementNameToType(mReader.name())))) {
@@ -206,8 +206,7 @@ bool XmlParser::parseEnumValue(EnumNode *enumNode)
         return false;
     }
 
-    auto valueNode = new EnumValueNode(attrs.value(QLatin1String("name")).toString(),
-                                       enumNode);
+    auto *valueNode = new EnumValueNode(attrs.value(QLatin1String("name")).toString(), enumNode);
     if (attrs.hasAttribute(QLatin1String("value"))) {
         valueNode->setValue(attrs.value(QLatin1String("value")).toString());
     }
@@ -233,14 +232,14 @@ bool XmlParser::parseParam(ClassNode *classNode)
     const auto name = attrs.value(QLatin1String("name")).toString();
     const auto type = attrs.value(QLatin1String("type")).toString();
 
-    for (auto child : classNode->children()) {
+    for (const auto *child : classNode->children()) {
         if (child->type() == Node::Ctor) {
-            auto ctor = const_cast<CtorNode *>(static_cast<const CtorNode *>(child));
+            auto *ctor = const_cast<CtorNode *>(static_cast<const CtorNode *>(child));
             ctor->setArgumentType(name, type);
         }
     }
 
-    auto paramNode = new PropertyNode(name, type, classNode);
+    auto *paramNode = new PropertyNode(name, type, classNode);
 
     if (attrs.hasAttribute(QLatin1String("default"))) {
         paramNode->setDefaultValue(attrs.value(QLatin1String("default")).toString());
@@ -285,7 +284,7 @@ bool XmlParser::parseParam(ClassNode *classNode)
 bool XmlParser::parseSetter(PropertyNode *parent)
 {
     const auto attrs = mReader.attributes();
-    auto setter = new PropertyNode::Setter;
+    auto *setter = new PropertyNode::Setter;
     setter->name = attrs.value(QLatin1String("name")).toString();
     setter->type = attrs.value(QLatin1String("type")).toString();
 

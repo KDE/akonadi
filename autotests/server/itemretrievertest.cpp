@@ -102,7 +102,7 @@ private:
 class FakeItemRetrievalJobFactory : public AbstractItemRetrievalJobFactory
 {
 public:
-    FakeItemRetrievalJobFactory(DbInitializer &initializer)
+    explicit FakeItemRetrievalJobFactory(DbInitializer &initializer)
         : mJobsCount(0)
         , mDbInitializer(initializer)
     {
@@ -205,7 +205,6 @@ class ItemRetrieverTest : public QObject
     FakeAkonadiServer mAkonadi;
 public:
     ItemRetrieverTest()
-        : QObject()
     {
         mAkonadi.setPopulateDb(false);
         mAkonadi.disableItemRetrievalManager();

@@ -110,7 +110,8 @@ QString DbInitializerMySql::buildColumnStatement(const ColumnDescription &column
 QString DbInitializerMySql::buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const
 {
     QMap<QString, QString> data = dataDescription.data;
-    QStringList keys, values;
+    QStringList keys;
+    QStringList values;
     for (auto it = data.begin(), end = data.end(); it != end; ++it) {
         it.value().replace(QLatin1String("\\"), QLatin1String("\\\\"));
         keys.push_back(it.key());
@@ -215,7 +216,8 @@ QString DbInitializerSqlite::buildColumnStatement(const ColumnDescription &colum
 QString DbInitializerSqlite::buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const
 {
     QMap<QString, QString> data = dataDescription.data;
-    QStringList keys, values;
+    QStringList keys;
+    QStringList values;
     for (auto it = data.begin(), end = data.end(); it != end; ++it) {
         it.value().replace(QLatin1String("true"), QLatin1String("1"));
         it.value().replace(QLatin1String("false"), QLatin1String("0"));
@@ -241,12 +243,12 @@ QString DbInitializerSqlite::sqlValue(const ColumnDescription &col, const QStrin
     return Akonadi::Server::DbInitializer::sqlValue(col, value);
 }
 
-QStringList DbInitializerSqlite::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &) const
+QStringList DbInitializerSqlite::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription & /*column*/) const
 {
     return buildUpdateForeignKeyConstraintsStatements(table);
 }
 
-QStringList DbInitializerSqlite::buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey &, const TableDescription &table) const
+QStringList DbInitializerSqlite::buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey & /*fk*/, const TableDescription &table) const
 {
     return buildUpdateForeignKeyConstraintsStatements(table);
 }
@@ -346,7 +348,8 @@ QString DbInitializerPostgreSql::buildColumnStatement(const ColumnDescription &c
 
 QString DbInitializerPostgreSql::buildInsertValuesStatement(const TableDescription &tableDescription, const DataDescription &dataDescription) const
 {
-    QStringList keys, values;
+    QStringList keys;
+    QStringList values;
     for (auto it = dataDescription.data.cbegin(), end = dataDescription.data.cend(); it != end; ++it) {
         keys.push_back(it.key());
         values.push_back(it.value());

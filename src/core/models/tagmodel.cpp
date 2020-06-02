@@ -157,22 +157,22 @@ Qt::ItemFlags TagModel::flags(const QModelIndex &index) const
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
 }
 
-bool TagModel::insertColumns(int, int, const QModelIndex &)
+bool TagModel::insertColumns(int /*column*/, int /*count*/, const QModelIndex & /*parent*/)
 {
     return false;
 }
 
-bool TagModel::insertRows(int, int, const QModelIndex &)
+bool TagModel::insertRows(int /*row*/, int /*count*/, const QModelIndex & /*parent*/)
 {
     return false;
 }
 
-bool TagModel::removeColumns(int, int, const QModelIndex &)
+bool TagModel::removeColumns(int /*column*/, int /*count*/, const QModelIndex & /*parent*/)
 {
     return false;
 }
 
-bool TagModel::removeRows(int, int, const QModelIndex &)
+bool TagModel::removeRows(int /*row*/, int /*count*/, const QModelIndex & /*parent*/)
 {
     return false;
 }

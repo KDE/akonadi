@@ -205,7 +205,7 @@ Collection &Collection::parentCollection()
     if (!d_ptr->mParent) {
         d_ptr->mParent.reset(new Collection());
     }
-    return *d_ptr->mParent.get();
+    return *d_ptr->mParent;
 }
 
 Collection Collection::parentCollection() const
@@ -213,7 +213,7 @@ Collection Collection::parentCollection() const
     if (!d_ptr->mParent) {
         return *(s_defaultParentCollection);
     } else {
-        return *d_ptr->mParent.get();
+        return *d_ptr->mParent;
     }
 }
 
@@ -241,7 +241,7 @@ void Collection::setName(const QString &name)
 
 Collection::Rights Collection::rights() const
 {
-    if (const auto attr = attribute<CollectionRightsAttribute>()) {
+    if (const auto *const attr = attribute<CollectionRightsAttribute>()) {
         return attr->rights();
     } else {
         return AllRights;

@@ -57,8 +57,7 @@ using namespace Akonadi::Server;
 
 // The one and only PreprocessorManager object
 PreprocessorManager::PreprocessorManager(Tracer &tracer)
-    : QObject()
-    , mEnabled(true)
+    : mEnabled(true)
     , mTracer(tracer)
 {
     // Hook in our D-Bus interface "shell".

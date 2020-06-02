@@ -603,7 +603,7 @@ ResourceScheduler::TaskList &ResourceScheduler::queueForTaskType(TaskType type)
     return mTaskList[qt];
 }
 
-void ResourceScheduler::dump()
+void ResourceScheduler::dump() const
 {
     qCDebug(AKONADIAGENTBASE_LOG) << dumpToString();
 }

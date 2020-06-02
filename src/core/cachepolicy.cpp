@@ -28,21 +28,6 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN CachePolicy::Private : public QSharedData
 {
 public:
-    Private()
-        : QSharedData()
-    {
-    }
-
-    Private(const Private &other)
-        : QSharedData(other)
-    {
-        inherit = other.inherit;
-        localParts = other.localParts;
-        timeout = other.timeout;
-        interval = other.interval;
-        syncOnDemand = other.syncOnDemand;
-    }
-
     QStringList localParts;
     int timeout = -1;
     int interval = -1;

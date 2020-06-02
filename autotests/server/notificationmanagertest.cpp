@@ -33,7 +33,7 @@ using namespace Akonadi::Server;
 class TestableNotificationSubscriber : public NotificationSubscriber
 {
 public:
-    TestableNotificationSubscriber(NotificationManager *manager)
+    explicit TestableNotificationSubscriber(NotificationManager *manager)
         : NotificationSubscriber(manager)
     {
         mSubscriber = "TestSubscriber";

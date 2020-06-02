@@ -50,10 +50,10 @@ public:
     {
         return true;
     }
-    qint64 readData(char *, qint64) override {
+    qint64 readData(char * /*data*/, qint64 /*maxlen*/) override {
         return 0;
     }
-    qint64 readLineData(char *, qint64) override {
+    qint64 readLineData(char * /*data*/, qint64 /*maxlen*/) override {
         return 0;
     }
 

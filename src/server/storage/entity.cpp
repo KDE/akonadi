@@ -111,10 +111,7 @@ bool Entity::relatesToImpl(const QString &tableName, const QString &leftColumn, 
         return false;
     }
 
-    if (builder.result() > 0) {
-        return true;
-    }
-    return false;
+    return builder.result() > 0;
 }
 
 bool Entity::addToRelationImpl(const QString &tableName, const QString &leftColumn, const QString &rightColumn, qint64 leftId, qint64 rightId)

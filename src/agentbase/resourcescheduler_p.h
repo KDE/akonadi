@@ -206,7 +206,7 @@ public:
     /**
        Print debug output showing the state of the scheduler.
     */
-    void dump();
+    void dump() const;
     /**
        Print debug output showing the state of the scheduler.
     */

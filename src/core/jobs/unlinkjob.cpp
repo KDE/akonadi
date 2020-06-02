@@ -28,7 +28,7 @@ using namespace Akonadi;
 class Akonadi::UnlinkJobPrivate : public LinkJobImpl<UnlinkJob>
 {
 public:
-    UnlinkJobPrivate(UnlinkJob *parent)
+    explicit UnlinkJobPrivate(UnlinkJob *parent)
         : LinkJobImpl<UnlinkJob>(parent)
     {
     }

@@ -110,12 +110,12 @@ public:
         }
     }
 
-    void toggleItem(const QModelIndex &tagModelIndex)
+    void toggleItem(const QModelIndex &tagModelIndex) const
     {
         selectionModel->select(tagModelIndex, QItemSelectionModel::Toggle);
     }
 
-    void setItemChecked(const QModelIndex &tagModelIndex, Qt::CheckState state)
+    void setItemChecked(const QModelIndex &tagModelIndex, Qt::CheckState state) const
     {
         selectionModel->select(
             tagModelIndex,
@@ -196,7 +196,7 @@ TagSelectionComboBox::TagSelectionComboBox(QWidget *parent)
     : QComboBox(parent)
     , d(new Private(this))
 {
-    auto monitor  = new Monitor(this);
+    auto *monitor  = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagSelectionComboBoxMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 

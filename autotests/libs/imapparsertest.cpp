@@ -243,19 +243,19 @@ void ImapParserTest::testParseNumber()
     pos = ImapParser::parseNumber(input, result, &ok, 0);
     QCOMPARE(ok, true);
     QCOMPARE(pos, 2);
-    QCOMPARE(result, 1ll);
+    QCOMPARE(result, 1LL);
 
     // multiple digits
     pos = ImapParser::parseNumber(input, result, &ok, 3);
     QCOMPARE(ok, true);
     QCOMPARE(pos, 5);
-    QCOMPARE(result, 23ll);
+    QCOMPARE(result, 23LL);
 
     // number at input end
     pos = ImapParser::parseNumber(input, result, &ok, 6);
     QCOMPARE(ok, true);
     QCOMPARE(pos, 7);
-    QCOMPARE(result, 4ll);
+    QCOMPARE(result, 4LL);
 
     // out of bounds access
     pos = ImapParser::parseNumber(input, result, &ok, input.length());

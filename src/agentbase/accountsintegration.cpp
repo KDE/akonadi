@@ -37,7 +37,6 @@ using namespace Akonadi;
 using namespace std::chrono_literals;
 
 AccountsIntegration::AccountsIntegration()
-    : QObject()
 {
 #ifdef WITH_ACCOUNTS
     QDBusConnection::sessionBus().registerObject(QStringLiteral("/Accounts"), this);
@@ -81,7 +80,7 @@ std::optional<QString> AccountsIntegration::accountName() const
         return std::nullopt;
     }
 
-    const auto account = KAccounts::accountsManager()->account(mAccountId.value());
+    auto *const account = KAccounts::accountsManager()->account(mAccountId.value());
     if (!account) {
         return std::nullopt;
     }
@@ -102,7 +101,7 @@ void AccountsIntegration::requestAuthData(const QString &serviceType, AuthDataCa
         return;
     }
 
-    auto job = new GetCredentialsJob(mAccountId.value(), this);
+    auto *job = new GetCredentialsJob(mAccountId.value(), this);
     job->setServiceType(serviceType);
     connect(job, &GetCredentialsJob::result,
             this, [job, callback = std::move(callback), error = std::move(errCallback)]() {

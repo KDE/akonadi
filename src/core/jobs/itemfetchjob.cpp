@@ -37,7 +37,7 @@ using namespace Akonadi;
 class Akonadi::ItemFetchJobPrivate : public JobPrivate
 {
 public:
-    ItemFetchJobPrivate(ItemFetchJob *parent)
+    explicit ItemFetchJobPrivate(ItemFetchJob *parent)
         : JobPrivate(parent)
     {
         mCollection = Collection::root();

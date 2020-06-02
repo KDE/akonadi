@@ -41,17 +41,14 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 
 PreprocessorInstance::PreprocessorInstance(const QString &id, PreprocessorManager &manager, Tracer &tracer)
-    : QObject()
-    , mManager(manager)
+    : mManager(manager)
     , mTracer(tracer)
     , mId(id)
 {
     Q_ASSERT(!id.isEmpty());
 }
 
-PreprocessorInstance::~PreprocessorInstance()
-{
-}
+PreprocessorInstance::~PreprocessorInstance() = default;
 
 bool PreprocessorInstance::init()
 {
