@@ -69,9 +69,9 @@ class StaticControlGui : public ControlGui
     Q_OBJECT
 };
 
-}
+} // namespace Internal
 
-Q_GLOBAL_STATIC(Internal::StaticControlGui, s_instance)
+Q_GLOBAL_STATIC(Internal::StaticControlGui, s_instance) // NOLINT(readability-redundant-member-init)
 
 /**
  * @internal
@@ -268,6 +268,6 @@ void ControlGui::widgetNeedsAkonadi(QWidget *widget)
     QTimer::singleShot(0, s_instance, []() { s_instance->d->createErrorOverlays(); });
 }
 
-}
+} // namespace Akonadi
 
 #include "controlgui.moc"

@@ -174,7 +174,7 @@ bool ItemModifyHandler::parseStream()
             }
 
             // check and update revisions
-            if (pimItem.rev() != (int) cmd.oldRevision()) {
+            if (pimItem.rev() != cmd.oldRevision()) {
                 const QString error = QStringLiteral("[LLCONFLICT] Resource %1 tries to modify item %2 (%3) (in collection %4) with revision %5; the item was modified elsewhere and has revision %6, aborting STORE.");
                 return failureResponse(error.arg(pimItem.collection().resource().name())
                                             .arg(pimItem.id())

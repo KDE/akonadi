@@ -27,7 +27,7 @@ using namespace Akonadi;
 namespace
 {
 
-Q_GLOBAL_STATIC(QString, sIdentifier);
+Q_GLOBAL_STATIC(QString, sIdentifier); // NOLINT(readability-redundant-member-init)
 
 void loadIdentifier()
 {
@@ -38,7 +38,7 @@ void loadIdentifier()
         *sIdentifier = QStringLiteral(""); // clazy:exclude=empty-qstringliteral
     }
 }
-}
+} // namespace
 
 bool Instance::hasIdentifier()
 {

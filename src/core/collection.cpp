@@ -37,7 +37,7 @@
 
 using namespace Akonadi;
 
-Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection)
+Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection) // NOLINT(readability-redundant-member-init)
 
 uint Akonadi::qHash(const Akonadi::Collection &collection)
 {
@@ -64,7 +64,7 @@ static void assignCollectionPrivate(QSharedDataPointer<CollectionPrivate> &one,
     // With a single-line assignment here, the parent collection would be deleted
     // before it is assigned, and therefore the resulting object would point to
     // uninitalized memory.
-    QSharedDataPointer<CollectionPrivate> temp = other;
+    const QSharedDataPointer<CollectionPrivate> temp = other;
     one = temp;
 }
 
@@ -81,7 +81,7 @@ public:
     }
 };
 
-Q_GLOBAL_STATIC(CollectionRoot, s_root)
+Q_GLOBAL_STATIC(CollectionRoot, s_root) // NOLINT(readability-redundant-member-init)
 
 Collection::Collection()
     : d_ptr(new CollectionPrivate)
@@ -100,7 +100,7 @@ Collection::Collection(const Collection &other)
     assignCollectionPrivate(d_ptr, other.d_ptr);
 }
 
-Collection::Collection(Collection &&) = default;
+Collection::Collection(Collection &&) noexcept = default;
 
 Collection::~Collection() = default;
 

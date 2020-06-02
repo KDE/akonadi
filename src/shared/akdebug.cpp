@@ -189,7 +189,7 @@ public:
     QByteArray loggingCategory;
 };
 
-Q_GLOBAL_STATIC(DebugPrivate, sInstance)
+Q_GLOBAL_STATIC(DebugPrivate, sInstance) // NOLINT(readability-redundant-member-init)
 
 void akMessageHandler(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {

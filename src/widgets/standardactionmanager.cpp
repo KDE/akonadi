@@ -71,7 +71,7 @@ enum ActionType {
     ToggleAction
 };
 
-static const struct {
+static const struct { // NOLINT(clang-analyzer-optin.performance.Padding) FIXME
     const char *name;
     const char *label;
     const char *iconLabel;

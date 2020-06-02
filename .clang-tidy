@@ -2,14 +2,22 @@
 # readability-redundant-access-specifiers triggered by Q_SLOTS
 # readability-inconsistent-declaration-parameter-name trigered by generated Qt code
 # performance-no-automatic-move is triggered by constness of qstring_literal_tmp in QStringLiteral macro
+#
+# TODO make those pass:
+# readability-function-size - for now some tests and the generated code contains extremely long
+#                             functions, which should be split into smaller functions
 
-Checks: -*
+Checks: -*,
+        bugprone-*,
         clang-analyzer-*,
         -clang-analyzer-osx,
         -clang-analyzer-cplusplus.NewDeleteLeaks,
-        google-explicit-constructor,
-        google-global-names-in-headers,
-        hicpp-signed-bitwise,
+        google-*,
+        -google-build-using-namespace,
+        -google-readability-todo,
+        -google-runtime-references,
+        -google-readability-function-size,
+        -google-default-arguments,
         misc-*,
         -misc-definitions-in-headers,
         -*-non-private-member-variables-in-classes,
@@ -22,10 +30,31 @@ Checks: -*
         -readability-redundant-access-specifiers,
         -readability-implicit-bool-conversion,
         -readability-static-accessed-through-instance,
-        -readability-inconsistent-declaration-parameter-name
+        -readability-inconsistent-declaration-parameter-name,
+        -readability-magic-numbers,
+        -readability-make-member-function-const,
+        -readability-function-size
 AnalyzeTemporaryDtors: true
 CheckOptions:
     - key:  bugprone-assert-side-effects.AssertMacros
       value: 'Q_ASSERT'
     - key:  CheckFunctionCalls
       value: true
+    - key:  StringCompareLikeFuctions
+      value: QString::compare;QString::localeAwareCompare
+    - key: WarnOnSizeOfIntegerExpression
+      value: 1
+    - key: bugprone-dangling-handle.HandleClasses
+      value: std::string_view;QStringView
+    - key: IgnoreClassesWithAllMemberVariablesBeingPublic
+      value: true
+    - key: VectorLikeClasses
+      value: std::vector;QVector
+WarningsAsErrors: bugprone-*,
+                  clang-*,
+                  google-*,
+                  misc-*,
+                  performance-*,
+                  readability-*,
+                  -readability-magic-numbers,
+                  -readability-make-member-function-const

@@ -204,4 +204,4 @@ CollectionFetchScope &CollectionFetchScope::ancestorFetchScope()
     return *d->ancestorFetchScope;
 }
 
-}
+} // namespace Akonadi

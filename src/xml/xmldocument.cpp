@@ -46,7 +46,7 @@ public:
         FreeFunc(p);
     }
 
-    operator T() const
+    operator T() const // NOLINT(google-explicit-constructor)
     {
         return p;
     }
@@ -105,7 +105,7 @@ public:
     bool valid;
 };
 
-}
+} // namespace Akonadi
 
 XmlDocument::XmlDocument() :
     d(new XmlDocumentPrivate)

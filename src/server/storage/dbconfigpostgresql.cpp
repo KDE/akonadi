@@ -104,7 +104,7 @@ private:
     }
 };
 
-}
+} // namespace
 
 QStringList DbConfigPostgresql::postgresSearchPaths(const QString &versionedPath) const
 {
@@ -372,7 +372,7 @@ bool swapClusters(QDir &baseDir, const QString &oldDbDataCluster, const QString 
     return true;
 }
 
-}
+} // namespace
 
 bool DbConfigPostgresql::upgradeCluster(int clusterVersion)
 {

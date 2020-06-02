@@ -31,9 +31,9 @@
 using namespace Akonadi;
 
 // ensure the role numbers are equivalent for both source models
-static_assert((int)AgentTypeModel::CapabilitiesRole == (int)AgentInstanceModel::CapabilitiesRole,
+static_assert(static_cast<int>(AgentTypeModel::CapabilitiesRole) == static_cast<int>(AgentInstanceModel::CapabilitiesRole),
               "AgentTypeModel::CapabilitiesRole does not match AgentInstanceModel::CapabilitiesRole");
-static_assert((int)AgentTypeModel::MimeTypesRole == (int)AgentInstanceModel::MimeTypesRole,
+static_assert(static_cast<int>(AgentTypeModel::MimeTypesRole) == static_cast<int>(AgentInstanceModel::MimeTypesRole),
               "AgentTypeModel::MimeTypesRole does not match AgentInstanceModel::MimeTypesRole");
 
 /**
@@ -90,13 +90,8 @@ bool AgentFilterProxyModel::Private::filterAcceptRegExp(const QModelIndex &index
 {
     // First see if the name matches a set regexp filter.
     if (!filterRegExpStr.isEmpty()) {
-        if (index.data(AgentTypeModel::IdentifierRole).toString().contains(filterRegExpStr)) {
-            return true;
-        } else if (index.data().toString().contains(filterRegExpStr)) {
-            return true;
-        } else {
-            return false;
-        }
+        return index.data(AgentTypeModel::IdentifierRole).toString().contains(filterRegExpStr)
+                || index.data().toString().contains(filterRegExpStr);
     }
     return true;
 }

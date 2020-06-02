@@ -22,6 +22,7 @@
 #include "storage/selectquerybuilder.h"
 #include "akonadiserver_debug.h"
 
+#include <chrono>
 #include <private/tristate_p.h>
 
 #include <QDateTime>
@@ -48,7 +49,7 @@ public:
     {
     }
 
-    void start(int interval)
+    void start(std::chrono::milliseconds interval)
     {
         mStarted = QDateTime::currentDateTimeUtc();
         mPaused = QDateTime();
@@ -58,7 +59,7 @@ public:
 
     void start()
     {
-        start(interval());
+        start(std::chrono::milliseconds{interval()});
     }
 
     void stop()
@@ -84,8 +85,8 @@ public:
             return;
         }
 
-        const int remainder = interval() - (mStarted.secsTo(mPaused) * 1000);
-        start(qMax(0, remainder));
+        const auto remainder = std::chrono::milliseconds{interval()} - std::chrono::seconds{mStarted.secsTo(mPaused)};
+        start(qMax(std::chrono::milliseconds{0}, remainder));
         mPaused = QDateTime();
         // Update mStarted so that pause() can be called repeatedly
         mStarted = QDateTime::currentDateTimeUtc();
@@ -175,7 +176,7 @@ void CollectionScheduler::collectionChanged(qint64 collectionId)
     QMutexLocker locker(&mScheduleLock);
     const auto it = constFind(collectionId);
     if (it != mSchedule.cend()) {
-        const Collection oldCollection = it.value();
+        const Collection &oldCollection = it.value();
         Collection changed = Collection::retrieveById(collectionId);
         DataStore::self()->activeCachePolicy(changed);
         if (hasChanged(oldCollection, changed)) {
@@ -228,8 +229,8 @@ void CollectionScheduler::startScheduler()
     // Get next collection to expire and start the timer
     const auto next = mSchedule.constBegin().key();
     // TimePoint uses a signed representation internally (int64_t), so we get negative result when next is in the past
-    const auto delayUntilNext = next - std::chrono::steady_clock::now();
-    mScheduler->start(qMax<qint64>(0, std::chrono::duration_cast<std::chrono::milliseconds>(delayUntilNext).count()));
+    const auto delayUntilNext = std::chrono::duration_cast<std::chrono::milliseconds>(next - std::chrono::steady_clock::now());
+    mScheduler->start(qMax(std::chrono::milliseconds{0}, delayUntilNext));
 }
 
 // Called in secondary thread

@@ -52,7 +52,7 @@
 using namespace Akonadi;
 using namespace Akonadi::Server;
 
-#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << command << QByteArray(typeid(Akonadi::Server::class).name());
+#define MAKE_CMD_ROW( command, class ) QTest::newRow(#command) << (command) << QByteArray(typeid(Akonadi::Server::class).name());
 
 class HandlerTest : public QObject
 {

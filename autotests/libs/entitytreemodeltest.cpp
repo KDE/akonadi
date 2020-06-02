@@ -124,7 +124,7 @@ private:
 
 };
 
-QModelIndex firstMatchedIndex(const QAbstractItemModel &model, const QString pattern)
+QModelIndex firstMatchedIndex(const QAbstractItemModel &model, const QString &pattern)
 {
     if (pattern.isEmpty()) {
         return {};

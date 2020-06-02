@@ -85,7 +85,7 @@ private:
     AkonadiServer &m_akonadi;
 };
 
-}
+} // namespace
 
 AkonadiServer::AkonadiServer()
 {

@@ -30,13 +30,11 @@ using namespace Akonadi::Protocol;
 
 DataStream::DataStream()
     : mDev(nullptr)
-    , mWaitTimeout(30000)
 {
 }
 
 DataStream::DataStream(QIODevice *device)
     : mDev(device)
-    , mWaitTimeout(30000)
 {
 }
 
@@ -106,11 +104,11 @@ void DataStream::setDevice(QIODevice *device)
     mDev = device;
 }
 
-int DataStream::waitTimeout() const
+std::chrono::milliseconds DataStream::waitTimeout() const
 {
     return mWaitTimeout;
 }
-void DataStream::setWaitTimeout(int timeout)
+void DataStream::setWaitTimeout(std::chrono::milliseconds timeout)
 {
     mWaitTimeout = timeout;
 }
@@ -120,7 +118,7 @@ void DataStream::waitForData(quint32 size)
     checkDevice();
 
     while (mDev->bytesAvailable() < size) {
-        waitForData(mDev, mWaitTimeout);
+        waitForData(mDev, mWaitTimeout.count());
     }
 }
 

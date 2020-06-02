@@ -135,7 +135,7 @@ QModelIndex TagModel::index(int row, int column, const QModelIndex &parent) cons
         return QModelIndex();
     }
 
-    return createIndex(row, column, (int) parentId);
+    return createIndex(row, column, static_cast<int>(parentId));
 }
 
 QModelIndex TagModel::parent(const QModelIndex &child) const

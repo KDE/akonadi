@@ -1,0 +1,26 @@
+---
+BasedOnStyle: LLVM
+
+Language: Cpp
+IndentWidget: 4
+ColumnLimit: 120
+
+AlignTrailingcomments: false
+AllowAllConstructorInitializersOnNextLine: false
+AllowShortBlocksOnASingleLine: Empty
+AlwaysBreakTemplateDeclarations: Yes
+BraceWrapping:
+  AfterFunction: true
+  AfterNamespace: true
+  AfterStruct: true
+  AfterUnion: true
+  SplitEmptyFunction: false
+  SplitEmptyNamespace: false
+  SplitEmptyRecord: false
+BreakBeforeBraces: Mozilla
+BreakBeforeInheritanceComma: true
+BreakConstructorInitializers: BeforeComma
+BreakInheritanceList: BeforeComma
+BreakStringLiterals: true
+IndentWrappedFunctionNames: true
+...

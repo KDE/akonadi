@@ -20,6 +20,7 @@
 #ifndef AKONADI_PROTOCOL_DATASTREAM_P_P_H
 #define AKONADI_PROTOCOL_DATASTREAM_P_P_H
 
+#include <chrono>
 #include <type_traits>
 
 #include "akonadiprivate_export.h"
@@ -47,8 +48,8 @@ public:
     QIODevice *device() const;
     void setDevice(QIODevice *device);
 
-    int waitTimeout() const;
-    void setWaitTimeout(int timeout);
+    std::chrono::milliseconds waitTimeout() const;
+    void setWaitTimeout(std::chrono::milliseconds timeout);
 
     void flush();
 
@@ -91,7 +92,7 @@ private:
 
     QIODevice *mDev;
     QByteArray mWriteBuffer;
-    int mWaitTimeout;
+    std::chrono::milliseconds mWaitTimeout = std::chrono::seconds{30};
 };
 
 template<typename T>

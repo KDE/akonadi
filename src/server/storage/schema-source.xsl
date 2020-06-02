@@ -125,9 +125,9 @@ QVector&lt;TableDescription&gt; <xsl:value-of select="$className"/>::tables()
         Q_ASSERT( columns.count() == values.count() );
 
         DataDescription d;
-        for ( int i = 0; i &lt; columns.size(); ++i )
+        for ( int i = 0; i &lt; columns.size(); ++i ) {
           d.data.insert( columns.at( i ), values.at( i ) );
-
+        }
         t.data.push_back(d);
       }
       </xsl:for-each>

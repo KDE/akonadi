@@ -39,7 +39,7 @@ class StaticControl : public Control
 
 }
 
-Q_GLOBAL_STATIC(Internal::StaticControl, s_instance)
+Q_GLOBAL_STATIC(Internal::StaticControl, s_instance) // NOLINT(readability-redundant-member-init)
 
 /**
  * @internal
@@ -162,6 +162,6 @@ bool Control::restart()
     return start();
 }
 
-}
+} // namespace Akonadi
 
 #include "control.moc"

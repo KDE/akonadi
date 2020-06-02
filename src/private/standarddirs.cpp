@@ -53,7 +53,7 @@ QString buildFullRelPath(const char *resource, const QString &relPath)
     return fullRelPath;
 }
 
-}
+} // namespace
 
 QString StandardDirs::configFile(const QString &configFile, FileAccessMode openMode)
 {

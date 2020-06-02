@@ -69,7 +69,7 @@ QVector<DbConnection>::Iterator findConnection(QVector<DbConnection> &vec, qint6
                          });
 }
 
-}
+} // namespace
 
 StorageDebugger *StorageDebugger::instance()
 {

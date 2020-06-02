@@ -103,7 +103,7 @@ Cache *perThreadCache()
     return g_queryCache.localData();
 }
 
-}
+} // namespace
 
 std::optional<QSqlQuery> QueryCache::query(const QString &queryStatement)
 {

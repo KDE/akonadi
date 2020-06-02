@@ -206,7 +206,7 @@ std::unique_ptr<T> AgentInstance::findInterface(Akonadi::DBus::AgentType agentTy
         qCCritical(AKONADICONTROL_LOG) << Q_FUNC_INFO << "Cannot connect to agent instance with identifier"
                                        << mIdentifier << ", error message:"
                                        << (iface ? iface->lastError().message() : QString());
-        iface.release();
+        return {};
     }
     return iface;
 }

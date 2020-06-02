@@ -104,9 +104,9 @@ public:
     bool initialized;
 };
 
-Q_GLOBAL_STATIC(StaticAttributeFactory, s_attributeInstance)
+Q_GLOBAL_STATIC(StaticAttributeFactory, s_attributeInstance) // NOLINT(readability-redundant-member-init)
 
-}
+} // namespace Internal
 
 using Akonadi::Internal::s_attributeInstance;
 
@@ -157,4 +157,4 @@ Attribute *AttributeFactory::createAttribute(const QByteArray &type)
     return new Internal::DefaultAttribute(type);
 }
 
-}
+} // namespace Akonadi

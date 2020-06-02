@@ -86,7 +86,7 @@ private:
     QByteArray m_sessionName;
 };
 
-QModelIndex firstMatchedIndex(const QAbstractItemModel &model, const QString pattern)
+QModelIndex firstMatchedIndex(const QAbstractItemModel &model, const QString &pattern)
 {
     if (pattern.isEmpty()) {
         return {};

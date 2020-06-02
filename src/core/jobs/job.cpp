@@ -272,7 +272,7 @@ void JobPrivate::itemRevisionChanged(Akonadi::Item::Id itemId, int oldRevision, 
 void JobPrivate::updateItemRevision(Akonadi::Item::Id itemId, int oldRevision, int newRevision)
 {
     Q_Q(Job);
-    const auto subjobs = q->subjobs();
+    const auto &subjobs = q->subjobs();
     for (KJob *j : subjobs) {
         Akonadi::Job *job = qobject_cast<Akonadi::Job *>(j);
         if (job) {
@@ -311,13 +311,13 @@ Job::Job(JobPrivate *dd, QObject *parent)
 
 Job::~Job()
 {
-    delete d_ptr;
-
     // if there is a job tracer listening, tell it the job is done now
     if (s_jobtracker) {
         const QList<QVariant> argumentList = {QString::number(reinterpret_cast<quintptr>(this), 16), errorString()};
         s_jobtracker->callWithArgumentList(QDBus::NoBlock, QStringLiteral("jobEnded"), argumentList);
     }
+
+    delete d_ptr;
 }
 
 void Job::start()

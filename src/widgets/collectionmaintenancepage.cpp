@@ -138,11 +138,11 @@ void CollectionMaintenancePage::load(const Collection &col)
                                               QStringLiteral("/"),
                                               QStringLiteral("org.freedesktop.Akonadi.Indexer"));
             if (indexingAgentIface.isValid()) {
-                auto reply = indexingAgentIface.asyncCall(QStringLiteral("indexedItems"), (qlonglong) col.id());
+                auto reply = indexingAgentIface.asyncCall(QStringLiteral("indexedItems"), static_cast<qint64>(col.id()));
                 auto *w = new QDBusPendingCallWatcher(reply, this);
                 connect(w, &QDBusPendingCallWatcher::finished,
                         this, [this](QDBusPendingCallWatcher *w) {
-                            QDBusPendingReply<qlonglong> reply = *w;
+                            QDBusPendingReply<qint64> reply = *w;
                             if (reply.isError()) {
                                 d->ui.indexedCountLbl->setText(i18n("Error while retrieving indexed items count"));
                                 qCWarning(AKONADIWIDGETS_LOG) << "Failed to retrieve indexed items count:" << reply.error().message();

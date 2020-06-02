@@ -63,7 +63,7 @@ Q_SIGNALS:
     void clearTags();
 };
 
-}
+} // namespace Akonadi
 
 // include after defining TagView
 #include "ui_tagwidget.h"

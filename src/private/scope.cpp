@@ -54,7 +54,7 @@ Scope::HRID::HRID(const HRID &other)
     , remoteId(other.remoteId)
 {}
 
-Scope::HRID::HRID(HRID &&other)
+Scope::HRID::HRID(HRID &&other) noexcept
     : id(other.id)
 {
     remoteId.swap(other.remoteId);
@@ -71,7 +71,7 @@ Scope::HRID &Scope::HRID::operator=(const HRID &other)
     return *this;
 }
 
-Scope::HRID &Scope::HRID::operator=(HRID &&other)
+Scope::HRID &Scope::HRID::operator=(HRID &&other) noexcept
 {
     if (*this == other) {
         return *this;
@@ -152,7 +152,7 @@ Scope::Scope(const Scope &other)
 {
 }
 
-Scope::Scope(Scope &&other)
+Scope::Scope(Scope &&other) noexcept
 {
     d.swap(other.d);
 }
@@ -167,7 +167,7 @@ Scope &Scope::operator=(const Scope &other)
     return *this;
 }
 
-Scope &Scope::operator=(Scope &&other)
+Scope &Scope::operator=(Scope &&other) noexcept
 {
     d.swap(other.d);
     return *this;
@@ -336,7 +336,7 @@ void Scope::toJson(QJsonObject &json) const
 
 Protocol::DataStream &operator<<(Protocol::DataStream &stream, const Akonadi::Scope &scope)
 {
-    stream << (quint8) scope.d->scope;
+    stream << static_cast<quint8>(scope.d->scope);
     switch (scope.d->scope) {
     case Scope::Invalid:
         return stream;

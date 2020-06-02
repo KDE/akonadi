@@ -90,7 +90,7 @@ public:
     }
 };
 
-}
+} // namespace Akonadi
 
 CollectionStatisticsDelegate::CollectionStatisticsDelegate(QAbstractItemView *parent)
     : QStyledItemDelegate(parent)
@@ -246,9 +246,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     qint64 totalSize = 0;
     bool needRecursiveCounts = false;
     bool needTotalSize = false;
-    if (d->drawUnreadAfterFolder && index.column() == 0) {
-        needRecursiveCounts = true;
-    } else if ((index.column() == 1 || index.column() == 2)) {
+    if ((d->drawUnreadAfterFolder && index.column() == 0) || (index.column() == 1 || index.column() == 2)) {
         needRecursiveCounts = true;
     } else if (index.column() == 3 && !expanded) {
         needTotalSize = true;

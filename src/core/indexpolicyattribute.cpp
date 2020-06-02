@@ -80,7 +80,7 @@ void IndexPolicyAttribute::deserialize(const QByteArray &data)
     QList<QByteArray> l;
     ImapParser::parseParenthesizedList(data, l);
     for (int i = 0; i < l.size() - 1; i += 2) {
-        const QByteArray key = l.at(i);
+        const QByteArray &key = l.at(i);
         if (key == "ENABLE") {
             d->enable = l.at(i + 1) == "true";
         }

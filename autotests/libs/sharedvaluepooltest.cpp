@@ -45,7 +45,7 @@ private Q_SLOTS:
         Internal::SharedValuePool<QByteArray, QVector> pool;
 
         for (int i = 0; i < size; ++i) {
-            QByteArray b(10, (char)i);
+            QByteArray b(10, static_cast<char>(i));
             data.push_back(b);
             QCOMPARE(pool.sharedValue(b), b);
             QCOMPARE(pool.sharedValue(b), b);

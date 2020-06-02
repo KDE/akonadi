@@ -249,11 +249,8 @@ bool MonitorPrivate::isLazilyIgnored(const Protocol::ChangeNotificationPtr &msg,
         }
 
         if (op == Protocol::ItemChangeNotification::Move) {
-            if (!isMonitored(parentCollectionId) && !isMonitored(itemNtf.parentDestCollection())) {
-                return true;
-            }
             // We can't ignore the move. It must be transformed later into a removal or insertion.
-            return false;
+            return !isMonitored(parentCollectionId) && !isMonitored(itemNtf.parentDestCollection());
         }
         return true;
     }
@@ -274,10 +271,10 @@ void MonitorPrivate::checkBatchSupport(const Protocol::ChangeNotificationPtr &ms
 
     switch (itemNtf.operation()) {
     case Protocol::ItemChangeNotification::Add:
+    case Protocol::ItemChangeNotification::Modify:
         needsSplit = isBatch;
         batchSupported = false;
         return;
-    case Protocol::ItemChangeNotification::Modify:
         needsSplit = isBatch;
         batchSupported = false;
         return;
@@ -341,7 +338,7 @@ Protocol::ChangeNotificationList MonitorPrivate::splitMessage(const Protocol::It
     baseMsg.setAddedTags(msg.addedTags());
     baseMsg.setRemovedTags(msg.removedTags());
 
-    const auto items = msg.items();
+    const auto &items = msg.items();
     list.reserve(items.count());
     for (const auto &item : items) {
         auto copy = Protocol::ItemChangeNotificationPtr::create(baseMsg);
@@ -365,7 +362,7 @@ bool MonitorPrivate::fetchItems() const
 bool MonitorPrivate::ensureDataAvailable(const Protocol::ChangeNotificationPtr &msg)
 {
     if (msg->type() == Protocol::Command::TagChangeNotification) {
-        const auto tagMsg = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
+        const auto &tagMsg = Protocol::cmdCast<Protocol::TagChangeNotification>(msg);
         if (tagMsg.metadata().contains("FETCH_TAG")) {
             if (!tagCache->ensureCached({ tagMsg.tag().id() }, mTagFetchScope)) {
                 return false;
@@ -545,7 +542,7 @@ bool MonitorPrivate::emitNotification(const Protocol::ChangeNotificationPtr &msg
         if (fetched && fetchItems()) {
             items = itemCache->retrieve(Protocol::ChangeNotification::itemsToUids(itemNtf.items()));
         } else {
-            const auto ntfItems = itemNtf.items();
+            const auto &ntfItems = itemNtf.items();
             items.reserve(ntfItems.size());
             for (const auto &ntfItem : ntfItems) {
                 items.push_back(ProtocolHelper::parseItemFetchResult(ntfItem, &mItemFetchScope));
@@ -1020,9 +1017,8 @@ static Relation::List extractRelations(const QSet<Protocol::ItemChangeNotificati
     return relations;
 }
 
-bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotification &msg_, const Item::List &items, const Collection &collection, const Collection &collectionDest)
+bool MonitorPrivate::emitItemsNotification(const Protocol::ItemChangeNotification &msg, const Item::List &items, const Collection &collection, const Collection &collectionDest)
 {
-    Protocol::ItemChangeNotification msg = msg_;
     Collection col = collection;
     Collection colDest = collectionDest;
     if (!col.isValid()) {

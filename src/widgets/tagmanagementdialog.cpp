@@ -34,26 +34,21 @@ using namespace Akonadi;
 
 struct Q_DECL_HIDDEN TagManagementDialog::Private {
     explicit Private(QDialog *parent)
-        : d(parent)
+        : q(parent)
     {}
-
-    ~Private()
-    {
-        writeConfig();
-    }
 
     void writeConfig() const;
     void readConfig() const;
 
     Ui::TagManagementDialog ui;
-    QDialog * const d = nullptr;
+    QDialog * const q = nullptr;
     QDialogButtonBox *buttonBox = nullptr;
 };
 
 void TagManagementDialog::Private::writeConfig() const
 {
     KConfigGroup group(KSharedConfig::openConfig(), "TagManagementDialog");
-    group.writeEntry("Size", d->size());
+    group.writeEntry("Size", q->size());
 }
 
 void TagManagementDialog::Private::readConfig() const
@@ -82,7 +77,10 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
     ControlGui::widgetNeedsAkonadi(this);
 }
 
-TagManagementDialog::~TagManagementDialog() = default;
+TagManagementDialog::~TagManagementDialog()
+{
+    d->writeConfig();
+}
 
 QDialogButtonBox *TagManagementDialog::buttons() const
 {

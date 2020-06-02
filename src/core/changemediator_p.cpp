@@ -32,7 +32,7 @@ class GlobalChangeMediator : public ChangeMediator
     Q_OBJECT
 };
 
-Q_GLOBAL_STATIC(GlobalChangeMediator, s_globalChangeMediator)
+Q_GLOBAL_STATIC(GlobalChangeMediator, s_globalChangeMediator) // NOLINT(readability-redundant-member-init)
 
 ChangeMediator *ChangeMediator::instance()
 {

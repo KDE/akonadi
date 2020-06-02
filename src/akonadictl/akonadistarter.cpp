@@ -64,7 +64,7 @@ bool AkonadiStarter::start(bool verbose)
     }
 
     // safety timeout
-    QTimer::singleShot(5000, QCoreApplication::instance(), &QCoreApplication::quit);
+    QTimer::singleShot(std::chrono::seconds{5}, QCoreApplication::instance(), &QCoreApplication::quit);
     // wait for the server to register with D-Bus
     QCoreApplication::instance()->exec();
 

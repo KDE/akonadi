@@ -34,7 +34,7 @@ public:
     ChangeNotification::Type type;
 };
 
-}
+} // namespace Akonadi
 
 ChangeNotification::ChangeNotification()
     : d(new Private)

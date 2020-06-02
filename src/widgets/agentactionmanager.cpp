@@ -122,7 +122,7 @@ public:
         }
 
         if (instances.count() == 1) {
-            const AgentInstance instance = instances.first();
+            const AgentInstance &instance = instances.first();
             if (instance.type().capabilities().contains(QLatin1String("NoConfig"))) {
                 configureActionEnabled = false;
             }

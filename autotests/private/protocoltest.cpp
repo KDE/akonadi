@@ -226,7 +226,7 @@ void ProtocolTest::testFetchScope()
     QFETCH(QVector<QByteArray>, expectedPayloads);
 
     ItemFetchScope in;
-    for (int i = ItemFetchScope::CacheOnly; i <= ItemFetchScope::VirtReferences; i = i << 1) {
+    for (unsigned i = ItemFetchScope::CacheOnly; i <= ItemFetchScope::VirtReferences; i = i << 1) {
         QVERIFY(!in.fetch(static_cast<ItemFetchScope::FetchFlag>(i)));
     }
     QVERIFY(in.fetch(ItemFetchScope::None));

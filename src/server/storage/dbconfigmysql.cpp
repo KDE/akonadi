@@ -39,7 +39,7 @@ using namespace Akonadi::Server;
 #define MYSQL_MIN_MAJOR 5
 #define MYSQL_MIN_MINOR 1
 
-#define MYSQL_VERSION_CHECK(major, minor, patch) ((major << 16) | (minor << 8) | patch)
+#define MYSQL_VERSION_CHECK(major, minor, patch) (((major) << 16) | ((minor) << 8) | (patch))
 
 static const QString s_mysqlSocketFileName = QStringLiteral("mysql.socket");
 

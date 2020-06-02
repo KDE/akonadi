@@ -325,7 +325,7 @@ inline bool EntityTreeModelPrivate::isHiddenImpl(const T &entity, Node::Type typ
     return false;
 }
 
-}
+} // namespace Akonadi
 
 bool EntityTreeModelPrivate::isHidden(const Akonadi::Collection &collection) const
 {
@@ -1524,13 +1524,8 @@ bool EntityTreeModelPrivate::shouldPurge(Collection::Id id) const
 {
     // reference counted collections should never be purged
     // they first have to be deref'ed until they reach 0.
-    // if the collection is buffered, keep it.
-    if (m_monitor->d_ptr->isMonitored(id)) {
-        return false;
-    }
-
-    // otherwise we can safely purge this item
-    return true;
+    // if the collection is buffered, keep it, otherwise we can safely purge this item
+    return !m_monitor->d_ptr->isMonitored(id);
 }
 
 bool EntityTreeModelPrivate::isMonitored(Collection::Id id) const

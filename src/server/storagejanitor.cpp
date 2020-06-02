@@ -574,7 +574,7 @@ void StorageJanitor::findRIDDuplicates()
 
             SelectQueryBuilder<Part> parts;
             parts.addValueCondition(Part::pimItemIdFullColumnName(), Query::In, QVariant::fromValue(itemsIds));
-            parts.addValueCondition(Part::storageFullColumnName(), Query::Equals, (int) Part::External);
+            parts.addValueCondition(Part::storageFullColumnName(), Query::Equals, static_cast<int>(Part::External));
             if (parts.exec()) {
                 const auto partsList = parts.result();
                 for (const auto &part : partsList) {

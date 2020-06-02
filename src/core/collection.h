@@ -129,7 +129,7 @@ public:
     /**
      * Move constructor.
      */
-    Collection(Collection &&other);
+    Collection(Collection &&other) noexcept;
 
     /**
      * Creates a collection from the given @p url.

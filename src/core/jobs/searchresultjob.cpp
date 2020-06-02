@@ -51,7 +51,7 @@ SearchResultJobPrivate::SearchResultJobPrivate(SearchResultJob *parent)
 {
 }
 
-}
+} // namespace Akonadi
 
 using namespace Akonadi;
 

@@ -83,7 +83,7 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentTypeDialog::reject);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return); // NOLINT(bugprone-suspicious-enum-usage)
     layout->addWidget(buttonBox);
     d->readConfig();
 

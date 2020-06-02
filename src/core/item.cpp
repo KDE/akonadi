@@ -37,7 +37,7 @@
 
 using namespace Akonadi;
 
-Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection)
+Q_GLOBAL_STATIC(Akonadi::Collection, s_defaultParentCollection) // NOLINT(readability-redundant-member-init)
 
 uint Akonadi::qHash(const Akonadi::Item &item)
 {
@@ -65,7 +65,7 @@ Item::Item(const QString &mimeType)
 
 Item::Item(const Item &other) = default;
 
-Item::Item(Item &&other) = default;
+Item::Item(Item &&other) noexcept = default;
 
 Item::~Item() = default;
 

@@ -86,4 +86,4 @@ bool dummySpecialCollectionAttribute()
 
 const bool registeredSpecialCollectionAttribute = dummySpecialCollectionAttribute();
 
-}
+} // namespace

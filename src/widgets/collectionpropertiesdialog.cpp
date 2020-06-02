@@ -90,7 +90,7 @@ public:
 
 typedef QList<CollectionPropertiesPageFactory *> CollectionPropertiesPageFactoryList;
 
-Q_GLOBAL_STATIC(CollectionPropertiesPageFactoryList, s_pages)
+Q_GLOBAL_STATIC(CollectionPropertiesPageFactoryList, s_pages) // NOLINT(readability-redundant-member-init)
 
 static bool s_defaultPage = true;
 
@@ -129,7 +129,7 @@ void CollectionPropertiesDialog::Private::init()
     QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, q);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);
     okButton->setDefault(true);
-    okButton->setShortcut(Qt::CTRL | Qt::Key_Return);
+    okButton->setShortcut(Qt::CTRL | Qt::Key_Return); // NOLINT(bugprone-suspicious-enum-usage)
     q->connect(buttonBox, &QDialogButtonBox::accepted, q, &QDialog::accept);
     q->connect(buttonBox, &QDialogButtonBox::rejected, q, &QDialog::reject);
     mainLayout->addWidget(buttonBox);

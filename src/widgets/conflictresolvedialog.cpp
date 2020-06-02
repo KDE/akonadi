@@ -233,7 +233,8 @@ ConflictResolveDialog::ConflictResolveDialog(QWidget *parent)
     // default size is tiny, and there's usually lots of text, so make it much bigger
     create(); // ensure a window is created
     const QSize availableSize = windowHandle()->screen()->availableSize();
-    windowHandle()->resize(availableSize.width() * 0.7, availableSize.height() * 0.5);
+    windowHandle()->resize(static_cast<int>(availableSize.width() * 0.7),
+                           static_cast<int>(availableSize.height() * 0.5));
     KWindowConfig::restoreWindowSize(windowHandle(), KSharedConfig::openConfig()->group("ConflictResolveDialog"));
     resize(windowHandle()->size()); // workaround for QTBUG-40584
 }

@@ -40,7 +40,7 @@ public:
         return service;
     }
 };
-}
+} // namespace
 
 using namespace Akonadi;
 

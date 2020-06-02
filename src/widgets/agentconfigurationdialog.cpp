@@ -58,7 +58,7 @@ void AgentConfigurationDialog::Private::restoreDialogSize()
     }
 }
 
-}
+} // namespace Akonadi
 
 using namespace Akonadi;
 

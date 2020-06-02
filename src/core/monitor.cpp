@@ -75,7 +75,7 @@ void Monitor::setCollectionMonitored(const Collection &collection, bool monitore
         }
     }
 
-    Q_EMIT collectionMonitored(collection, monitored);
+    Q_EMIT collectionMonitored(collection, monitored); // NOLINT(readability-misleading-indentation): false positive
 }
 
 void Monitor::setItemMonitored(const Item &item, bool monitored)
@@ -92,7 +92,7 @@ void Monitor::setItemMonitored(const Item &item, bool monitored)
         }
     }
 
-    Q_EMIT itemMonitored(item,  monitored);
+    Q_EMIT itemMonitored(item,  monitored); // NOLINT(readability-misleading-indentation): false positive
 }
 
 void Monitor::setResourceMonitored(const QByteArray &resource, bool monitored)
@@ -109,7 +109,7 @@ void Monitor::setResourceMonitored(const QByteArray &resource, bool monitored)
         }
     }
 
-    Q_EMIT resourceMonitored(resource, monitored);
+    Q_EMIT resourceMonitored(resource, monitored); // NOLINT(readability-misleading-indentation): false positive
 }
 
 void Monitor::setMimeTypeMonitored(const QString &mimetype, bool monitored)
@@ -126,7 +126,7 @@ void Monitor::setMimeTypeMonitored(const QString &mimetype, bool monitored)
         }
     }
 
-    Q_EMIT mimeTypeMonitored(mimetype, monitored);
+    Q_EMIT mimeTypeMonitored(mimetype, monitored); // NOLINT(readability-misleading-indentation): false positive
 }
 
 void Monitor::setTagMonitored(const Akonadi::Tag &tag, bool monitored)
@@ -143,7 +143,7 @@ void Monitor::setTagMonitored(const Akonadi::Tag &tag, bool monitored)
         }
     }
 
-    Q_EMIT tagMonitored(tag, monitored);
+    Q_EMIT tagMonitored(tag, monitored); // NOLINT(readability-misleading-indentation): false positive
 }
 
 void Monitor::setTypeMonitored(Monitor::Type type, bool monitored)
@@ -160,7 +160,8 @@ void Monitor::setTypeMonitored(Monitor::Type type, bool monitored)
         }
     }
 
-    Q_EMIT typeMonitored(type, monitored);
+    Q_EMIT typeMonitored(type, monitored); // NOLINT(readability-misleading-indentation): false positive
+
 }
 
 void Akonadi::Monitor::setAllMonitored(bool monitored)

@@ -20,6 +20,7 @@
 #include "processcontrol.h"
 #include "akonadicontrol_debug.h"
 
+#include <chrono>
 #include <shared/akapplication.h>
 
 #include <private/instance_p.h>
@@ -87,7 +88,7 @@ void ProcessControl::stop()
     if (mProcess.state() != QProcess::NotRunning) {
         mProcess.waitForFinished(mShutdownTimeout.count());
         mProcess.terminate();
-        mProcess.waitForFinished(10000);
+        mProcess.waitForFinished(std::chrono::milliseconds{10000}.count());
         mProcess.kill();
     }
 }
@@ -142,7 +143,7 @@ void ProcessControl::slotFinished(int exitCode, QProcess::ExitStatus exitStatus)
                     return;
                 }
                 ++mCrashCount;
-                QTimer::singleShot(60000, this, &ProcessControl::resetCrashCount);
+                QTimer::singleShot(std::chrono::seconds{60}, this, &ProcessControl::resetCrashCount);
                 if (!mFailedToStart) {   // don't try to start an unstartable application
                     start();
                     Q_EMIT restarted();

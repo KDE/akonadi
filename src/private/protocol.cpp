@@ -44,7 +44,7 @@ inline const Class##Private* Class::d_func() const {\
 }
 
 #define COMPARE(prop) \
-    (prop == ((decltype(this)) other)->prop)
+    ((prop) == ((decltype(this)) other)->prop)
 
 namespace Akonadi {
 namespace Protocol {
@@ -478,7 +478,7 @@ private:
     }
 };
 
-Q_GLOBAL_STATIC(FactoryPrivate, sFactoryPrivate)
+Q_GLOBAL_STATIC(FactoryPrivate, sFactoryPrivate) // NOLINT(readability-redundant-member-init)
 
 CommandPtr Factory::command(Command::Type type)
 {
@@ -910,8 +910,8 @@ inline bool containerComparator(const Container<QSharedPointer<T>> &c1,
     return true;
 }
 
-}
-}
+} // namespace Protocol
+} // namespace Akonadi
 
 /******************************************************************************/
 

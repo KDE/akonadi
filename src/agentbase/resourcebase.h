@@ -866,7 +866,7 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotCollectionListForAttributesDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotCollectionAttributesSyncDone(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotItemSyncDone(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void slotPercent(KJob *, unsigned long))
+    Q_PRIVATE_SLOT(d_func(), void slotPercent(KJob *, quint64))
     Q_PRIVATE_SLOT(d_func(), void slotDelayedEmitProgress())
     Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrieval(const Akonadi::Item &items))
     Q_PRIVATE_SLOT(d_func(), void slotPrepareItemRetrievalResult(KJob *))

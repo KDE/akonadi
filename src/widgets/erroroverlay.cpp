@@ -40,7 +40,7 @@ public:
     QVector<QPair<QPointer<QWidget>, QPointer<QWidget> > > baseWidgets;
 };
 
-Q_GLOBAL_STATIC(ErrorOverlayStatic, sInstanceOverlay)
+Q_GLOBAL_STATIC(ErrorOverlayStatic, sInstanceOverlay) // NOLINT(readability-redundant-member-init)
 
 // return true if o1 is a parent of o2
 static bool isParentOf(QWidget *o1, QWidget *o2)

@@ -43,7 +43,7 @@ public:
     bool isExclusive = false;
 };
 
-}
+} // namespace Akonadi
 
 using namespace Akonadi;
 

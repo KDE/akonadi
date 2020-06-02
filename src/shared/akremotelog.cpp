@@ -197,7 +197,7 @@ private:
 
 RemoteLogger *RemoteLogger::sInstance = nullptr;
 
-}
+} // namespace
 
 void akInitRemoteLog()
 {

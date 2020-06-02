@@ -25,7 +25,7 @@
 #include <iostream>
 
 
-#define qPrintableRef(x) reinterpret_cast<const char *>(x.unicode())
+#define qPrintableRef(x) reinterpret_cast<const char *>((x).unicode())
 
 XmlParser::XmlParser()
 {

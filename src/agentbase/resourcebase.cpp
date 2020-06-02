@@ -155,7 +155,7 @@ public:
 
     void slotItemSyncDone(KJob *job);
 
-    void slotPercent(KJob *job, unsigned long percent);
+    void slotPercent(KJob *job, quint64 percent);
     void slotDelayedEmitProgress();
     void slotDeleteResourceCollection();
     void slotDeleteResourceCollectionDone(KJob *job);
@@ -768,7 +768,7 @@ void ResourceBase::collectionsRetrieved(const Collection::List &collections)
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
         d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
-        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mCollectionSyncer, qOverload<KJob *, quint64>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setRemoteCollections(collections);
@@ -786,7 +786,7 @@ void ResourceBase::collectionsRetrievedIncremental(const Collection::List &chang
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
         d->mCollectionSyncer->setKeepLocalChanges(d->mKeepLocalCollectionChanges);
-        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mCollectionSyncer, qOverload<KJob *, quint64>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setRemoteCollections(changedCollections, removedCollections);
@@ -802,7 +802,7 @@ void ResourceBase::setCollectionStreamingEnabled(bool enable)
     if (!d->mCollectionSyncer) {
         d->mCollectionSyncer = new CollectionSync(identifier());
         d->mCollectionSyncer->setHierarchicalRemoteIds(d->mHierarchicalRid);
-        connect(d->mCollectionSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mCollectionSyncer, qOverload<KJob *, quint64>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
         connect(d->mCollectionSyncer, &KJob::result, d, &ResourceBasePrivate::slotCollectionSyncDone);
     }
     d->mCollectionSyncer->setStreamingEnabled(enable);
@@ -898,7 +898,7 @@ bool sortCollectionsForSync(const Collection &l, const Collection &r)
     return l.id() < r.id();
 }
 
-}
+} // namespace
 
 void ResourceBasePrivate::slotLocalListDone(KJob *job)
 {
@@ -1305,7 +1305,7 @@ void ResourceBasePrivate::slotCollectionListForAttributesDone(KJob *job)
     if (!job->error()) {
         const Collection::List list = static_cast<CollectionFetchJob *>(job)->collections();
         if (!list.isEmpty()) {
-            const Collection col = list.first();
+            const Collection &col = list.first();
             scheduler->scheduleAttributesSync(col);
         }
     }
@@ -1353,7 +1353,7 @@ void ResourceBase::itemsRetrieved(const Item::List &items)
             } else if (!item.remoteId().isEmpty()) {
                 auto *job = new ItemCreateJob(item, item.parentCollection(), trx);
                 job->setMerge(ItemCreateJob::RID);
-            } else {
+            } else { // NOLINT(bugprone-branch-clone)
                 // This should not happen, but just to be sure...
                 new ItemModifyJob(item, trx);
             }
@@ -1404,9 +1404,9 @@ void ResourceBasePrivate::slotDelayedEmitProgress()
     mUnemittedAdvancedStatus.clear();
 }
 
-void ResourceBasePrivate::slotPercent(KJob *job, unsigned long percent)
+void ResourceBasePrivate::slotPercent(KJob *job, quint64 percent)
 {
-    mUnemittedProgress = percent;
+    mUnemittedProgress = static_cast<int>(percent);
 
     const Collection collection = job->property("collection").value<Collection>();
     if (collection.isValid()) {
@@ -1418,7 +1418,7 @@ void ResourceBasePrivate::slotPercent(KJob *job, unsigned long percent)
         mUnemittedAdvancedStatus[collection.id()] = statusMap;
     }
     // deliver completion right away, intermediate progress at 1s intervals
-    if (percent == 100) {
+    if (percent == 100U) {
         mProgressEmissionCompressor.stop();
         slotDelayedEmitProgress();
     } else if (!mProgressEmissionCompressor.isActive()) {
@@ -1558,7 +1558,7 @@ void ResourceBase::tagsRetrieved(const Tag::List &tags, const QHash<QString, Ite
                "Calling tagsRetrieved() although no tag retrieval is in progress");
     if (!d->mTagSyncer) {
         d->mTagSyncer = new TagSync(this);
-        connect(d->mTagSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mTagSyncer, qOverload<KJob *, quint64>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
         connect(d->mTagSyncer, &KJob::result, d, &ResourceBasePrivate::slotTagSyncDone);
     }
     d->mTagSyncer->setFullTagList(tags);
@@ -1589,7 +1589,7 @@ void ResourceBase::relationsRetrieved(const Relation::List &relations)
                "Calling relationsRetrieved() although no relation retrieval is in progress");
     if (!d->mRelationSyncer) {
         d->mRelationSyncer = new RelationSync(this);
-        connect(d->mRelationSyncer, qOverload<KJob *, unsigned long>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
+        connect(d->mRelationSyncer, qOverload<KJob *, quint64>(&KJob::percent), d, &ResourceBasePrivate::slotPercent);
         connect(d->mRelationSyncer, &KJob::result, d, &ResourceBasePrivate::slotRelationSyncDone);
     }
     d->mRelationSyncer->setRemoteRelations(relations);

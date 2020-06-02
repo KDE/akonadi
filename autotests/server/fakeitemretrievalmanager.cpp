@@ -32,7 +32,7 @@ FakeItemRetrievalManager::FakeItemRetrievalManager()
 void FakeItemRetrievalManager::requestItemDelivery(ItemRetrievalRequest request)
 {
     QMetaObject::invokeMethod(this, [this, r = std::move(request)] {
-            Q_EMIT requestFinished({std::move(r)});
+            Q_EMIT requestFinished({r});
     }, Qt::QueuedConnection);
 }
 

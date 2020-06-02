@@ -35,4 +35,4 @@ const auto initRemoteLogger = []() {
     return true;
 }();
 
-}
+} // namespace

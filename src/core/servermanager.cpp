@@ -117,7 +117,7 @@ int ServerManagerPrivate::serverProtocolVersion = -1;
 uint ServerManagerPrivate::generation = 0;
 Internal::ClientType ServerManagerPrivate::clientType = Internal::User;
 
-Q_GLOBAL_STATIC(ServerManagerPrivate, sInstance)
+Q_GLOBAL_STATIC(ServerManagerPrivate, sInstance) // NOLINT(readability-redundant-member-init)
 
 ServerManager::ServerManager(ServerManagerPrivate *dd)
     : d(dd)

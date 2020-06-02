@@ -92,7 +92,6 @@ void AutoIncrementTest::testItemAutoIncrement()
     Item newItem = job->item();
 
     QVERIFY(newItem.id() > lastId);
-    lastId = newItem.id();
 }
 
 void AutoIncrementTest::testCollectionAutoIncrement()
@@ -125,5 +124,4 @@ void AutoIncrementTest::testCollectionAutoIncrement()
     Collection newCollection = job->collection();
 
     QVERIFY(newCollection.id() > lastId);
-    lastId = newCollection.id();
 }

@@ -208,7 +208,7 @@ bool ItemFetchJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
         return Job::doHandleResponse(tag, response);
     }
 
-    const auto resp = Protocol::cmdCast<Protocol::FetchItemsResponse>(response);
+    const auto &resp = Protocol::cmdCast<Protocol::FetchItemsResponse>(response);
     // Invalid ID marks the last part of the response
     if (resp.id() < 0) {
         return true;

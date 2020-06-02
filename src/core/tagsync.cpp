@@ -170,14 +170,10 @@ void TagSync::onCreateTagDone(KJob *job)
 
 static bool containsByGidOrRid(const Item::List &items, const Item &key)
 {
-    for (const Item &item : items) {
-        if ((!item.gid().isEmpty() && !key.gid().isEmpty()) && (item.gid() == key.gid())) {
-            return true;
-        } else if (item.remoteId() == key.remoteId()) {
-            return true;
-        }
-    }
-    return false;
+    return std::any_of(items.cbegin(), items.cend(), [key](const Item &item) {
+            return ((!item.gid().isEmpty() && !key.gid.isEmpty()) && (item.gid() == key.gid()))
+                || (item.remoteId() == key.remoteId());
+    });
 }
 
 void TagSync::onTagItemsFetchDone(KJob *job)

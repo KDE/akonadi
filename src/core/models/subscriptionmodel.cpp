@@ -75,7 +75,7 @@ private:
     bool mShowHidden = false;
 };
 
-}
+} // namespace
 
 /**
  * @internal

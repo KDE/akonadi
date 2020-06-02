@@ -53,7 +53,7 @@ class PartFetcherPrivate
     PartFetcher *q_ptr;
 };
 
-}
+} // namespace Akonadi
 
 void PartFetcherPrivate::fetchJobDone(KJob *job)
 {

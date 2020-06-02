@@ -167,7 +167,7 @@ public:
     /**
      * Move constructor.
      */
-    Item(Item &&);
+    Item(Item &&) noexcept;
 
     /**
      * Destroys the item.

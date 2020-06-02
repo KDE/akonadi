@@ -319,7 +319,7 @@ void NotificationCollector::itemNotification(Protocol::ItemChangeNotification::O
     /* Notify all virtual collections the items are linked to. */
     QHash<qint64, Protocol::FetchItemsResponse> virtItems;
     for (const auto &ntfItem : ntfItems) {
-        virtItems.insert(ntfItem.id(), std::move(ntfItem));
+        virtItems.insert(ntfItem.id(), ntfItem);
     }
     for (auto iter = vCollections.cbegin(), end = vCollections.constEnd(); iter != end; ++iter) {
         auto copy = Protocol::ItemChangeNotificationPtr::create(*msg);

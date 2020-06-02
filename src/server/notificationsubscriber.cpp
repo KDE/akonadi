@@ -85,7 +85,7 @@ NotificationSubscriber::~NotificationSubscriber()
 
 void NotificationSubscriber::handleIncomingData()
 {
-    while (mSocket->bytesAvailable() > (int) sizeof(qint64)) {
+    while (mSocket->bytesAvailable() > static_cast<int>(sizeof(qint64))) {
         Protocol::DataStream stream(mSocket);
 
         // Ignored atm
@@ -203,13 +203,13 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
             Protocol::ModifySubscriptionCommand::type | Protocol::ModifySubscriptionCommand::Remove))
 
 #define APPEND(set, newItems) \
-    Q_FOREACH (const auto &entity, newItems) { \
-        set.insert(entity); \
+    Q_FOREACH (const auto &entity, (newItems)) { \
+        (set).insert(entity); \
     }
 
 #define REMOVE(set, items) \
-    Q_FOREACH (const auto &entity, items) { \
-        set.remove(entity); \
+    Q_FOREACH (const auto &entity, (items)) { \
+        (set).remove(entity); \
     }
 
     if (START_MONITORING(Types)) {
@@ -346,12 +346,9 @@ bool NotificationSubscriber::isCollectionMonitored(Entity::Id id) const
 
     if (id < 0) {
         return false;
-    } else if (mMonitoredCollections.contains(id)) {
-        return true;
-    } else if (mMonitoredCollections.contains(0)) {
-        return true;
     }
-    return false;
+
+    return mMonitoredCollections.contains(id) || mMonitoredCollections.contains(0);
 }
 
 bool NotificationSubscriber::isMimeTypeMonitored(const QString &mimeType) const
@@ -469,13 +466,9 @@ bool NotificationSubscriber::acceptsCollectionNotification(const Protocol::Colle
             && (msg.operation() != Protocol::CollectionChangeNotification::Unsubscribe)
             && !msg.changedParts().contains("ENABLED")) {
         // Exclusive subscriber always gets it
-        if (mExclusive) {
-            return true;
-        }
-
         // If the subscriber is not exclusive (i.e. if we got here), then the subscriber does
         // not care about this one, so drop it
-        return false;
+        return mExclusive;
     }
 
     if (mAllMonitored) {

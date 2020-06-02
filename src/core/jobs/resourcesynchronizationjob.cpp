@@ -173,6 +173,6 @@ AgentInstance ResourceSynchronizationJob::resource() const
     return d->instance;
 }
 
-}
+} // namespace Akonadi
 
 #include "resourcesynchronizationjob.moc"

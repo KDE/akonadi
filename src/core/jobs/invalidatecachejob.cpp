@@ -52,7 +52,7 @@ QString InvalidateCacheJobPrivate::jobDebuggingString() const
     return QStringLiteral("Invalidate Cache from collection id: %1").arg(collection.id());
 }
 
-}
+} // namespace
 
 void InvalidateCacheJobPrivate::collectionFetchResult(KJob *job)
 {

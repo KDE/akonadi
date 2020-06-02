@@ -285,7 +285,7 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
         }
     }
 
-    const qint64 size = std::accumulate(partsSizes.begin(), partsSizes.end(), 0);
+    const qint64 size = std::accumulate(partsSizes.begin(), partsSizes.end(), 0LL);
     if (size > currentItem.size()) {
         currentItem.setSize(size);
         needsUpdate = true;

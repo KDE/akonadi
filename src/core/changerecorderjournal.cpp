@@ -133,7 +133,7 @@ void ChangeRecorderJournalWriter::saveTo(const QQueue<Protocol::ChangeNotificati
     //qCDebug(AKONADICORE_LOG) << "Saving" << pendingNotifications.count() << "notifications (full save)";
 
     for (int i = 0; i < notifications.count(); ++i) {
-        const Protocol::ChangeNotificationPtr msg = notifications.at(i);
+        const Protocol::ChangeNotificationPtr &msg = notifications.at(i);
 
         // We deliberately don't use Factory::serialize(), because the internal
         // serialization format could change at any point

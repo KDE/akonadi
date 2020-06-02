@@ -59,10 +59,10 @@ public:
         HRID();
         explicit HRID(qint64 id, const QString &remoteId = QString());
         HRID(const HRID &other);
-        HRID(HRID &&other);
+        HRID(HRID &&other) noexcept;
 
         HRID &operator=(const HRID &other);
-        HRID &operator=(HRID &&other);
+        HRID &operator=(HRID &&other) noexcept;
 
         ~HRID() = default;
 
@@ -86,11 +86,11 @@ public:
     Scope(const QVector<HRID> &hridChain);  //krazy:exclude=explicit
 
     Scope(const Scope &other);
-    Scope(Scope &&other);
+    Scope(Scope &&other) noexcept;
     ~Scope();
 
     Scope &operator=(const Scope &other);
-    Scope &operator=(Scope &&other);
+    Scope &operator=(Scope &&other) noexcept;
 
     bool operator==(const Scope &other) const;
     bool operator!=(const Scope &other) const;

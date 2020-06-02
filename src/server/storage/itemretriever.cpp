@@ -383,7 +383,7 @@ bool ItemRetriever::exec()
                               | Views::transform([](const auto &part) { return part.mid(4); })
                               | Actions::toQList;
 
-    const auto requests = prepareRequests(query, parts);
+    auto requests = prepareRequests(query, parts);
     if (!requests.has_value()) {
         return false;
     }

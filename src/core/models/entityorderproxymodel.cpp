@@ -50,7 +50,7 @@ public:
 
 };
 
-}
+} // namespace Akonadi
 
 using namespace Akonadi;
 
@@ -215,7 +215,7 @@ bool EntityOrderProxyModel::dropMimeData(const QMimeData *data, Qt::DropAction a
     }
     const int numberOfDroppedElement(droppedList.size());
     for (int i = 0; i < numberOfDroppedElement; ++i) {
-        const QString droppedItem = droppedList.at(i);
+        const QString &droppedItem = droppedList.at(i);
         const int existingIndex = existingList.indexOf(droppedItem);
         existingList.removeAt(existingIndex);
         existingList.insert(row + i - (existingIndex > row ? 0 : 1), droppedList.at(i));

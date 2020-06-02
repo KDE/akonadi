@@ -65,7 +65,7 @@ public:
     Collection::Rights mAccessRights;
 };
 
-}
+} // namespace Akonadi
 
 EntityRightsFilterModel::EntityRightsFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)

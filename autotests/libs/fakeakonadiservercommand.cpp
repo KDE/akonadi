@@ -57,8 +57,9 @@ bool FakeAkonadiServerCommand::isCollectionSignal(const QByteArray &signal) cons
 
 void FakeAkonadiServerCommand::connectForwardingSignals()
 {
-    for (int methodIndex = 0; methodIndex < metaObject()->methodCount(); ++methodIndex) {
-        const QMetaMethod mm = metaObject()->method(methodIndex);
+    const auto *mo = FakeAkonadiServerCommand::metaObject();
+    for (int methodIndex = 0; methodIndex < mo->methodCount(); ++methodIndex) {
+        const QMetaMethod mm = mo->method(methodIndex);
         QByteArray signature = mm.methodSignature();
         if (mm.methodType() == QMetaMethod::Signal) {
             if ((qobject_cast<TagModel*>(m_model) && isTagSignal(signature)) ||
@@ -66,7 +67,7 @@ void FakeAkonadiServerCommand::connectForwardingSignals()
             {
                 const int modelSlotIndex = m_model->metaObject()->indexOfSlot(signature.remove(0, 5).constData());
                 Q_ASSERT(modelSlotIndex >= 0);
-                metaObject()->connect(this, methodIndex, m_model, modelSlotIndex);
+                mo->connect(this, methodIndex, m_model, modelSlotIndex);
             }
         }
     }

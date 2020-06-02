@@ -122,7 +122,7 @@ public:
     bool tooLate;
 };
 
-}
+} // namespace Akonadi
 
 AgentInstanceCreateJob::AgentInstanceCreateJob(const AgentType &agentType, QObject *parent)
     : KJob(parent)

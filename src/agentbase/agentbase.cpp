@@ -1116,7 +1116,7 @@ WId AgentBase::winIdForDialogs() const
         return 0;
     }
 
-    const WId winid = (WId)reply.arguments().at(0).toLongLong();
+    const WId winid = static_cast<WId>(reply.arguments().at(0).toLongLong());
 
     return winid;
 }

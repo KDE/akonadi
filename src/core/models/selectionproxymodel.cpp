@@ -71,7 +71,7 @@ public:
     SelectionProxyModel *q_ptr;
 };
 
-}
+} // namespace Akonadi
 
 SelectionProxyModel::SelectionProxyModel(QItemSelectionModel *selectionModel, QObject *parent)
     : KSelectionProxyModel(selectionModel, parent)

@@ -30,7 +30,7 @@
 
 class FakeServerData;
 
-class AKONADITESTFAKE_EXPORT FakeAkonadiServerCommand : public QObject
+class AKONADITESTFAKE_EXPORT FakeAkonadiServerCommand: public QObject
 {
     Q_OBJECT
 public:
@@ -43,9 +43,7 @@ public:
 
     FakeAkonadiServerCommand(Type type, FakeServerData *serverData);
 
-    virtual ~FakeAkonadiServerCommand()
-    {
-    }
+    virtual ~FakeAkonadiServerCommand() = default;
 
     Type respondTo() const
     {
@@ -112,9 +110,6 @@ public:
         : FakeAkonadiServerCommand(Notification, serverData)
     {
     }
-    virtual ~FakeMonitorCommand()
-    {
-    }
 };
 
 class AKONADITESTFAKE_EXPORT FakeCollectionMovedCommand : public FakeMonitorCommand
@@ -126,10 +121,6 @@ public:
         , m_collectionName(collection)
         , m_sourceName(source)
         , m_targetName(target)
-    {
-    }
-
-    ~FakeCollectionMovedCommand() override
     {
     }
 
@@ -152,10 +143,6 @@ public:
     {
     }
 
-    ~FakeCollectionAddedCommand() override
-    {
-    }
-
     void doCommand() override;
 
 private:
@@ -171,10 +158,6 @@ public:
         : FakeMonitorCommand(serverData)
         , m_collectionName(collection)
         , m_parentName(source)
-    {
-    }
-
-    ~FakeCollectionRemovedCommand() override
     {
     }
 
@@ -202,10 +185,6 @@ public:
     {
     }
 
-    ~FakeCollectionChangedCommand() override
-    {
-    }
-
     void doCommand() override;
 
 private:
@@ -223,10 +202,6 @@ public:
         , m_itemName(item)
         , m_sourceName(source)
         , m_targetName(target)
-    {
-    }
-
-    ~FakeItemMovedCommand() override
     {
     }
 
@@ -249,10 +224,6 @@ public:
     {
     }
 
-    ~FakeItemAddedCommand() override
-    {
-    }
-
     void doCommand() override;
 
 private:
@@ -268,10 +239,6 @@ public:
         : FakeMonitorCommand(serverData)
         , m_itemName(item)
         , m_parentName(parent)
-    {
-    }
-
-    ~FakeItemRemovedCommand() override
     {
     }
 
@@ -294,10 +261,6 @@ public:
     {
     }
 
-    ~FakeItemChangedCommand() override
-    {
-    }
-
     void doCommand() override;
 
 private:
@@ -316,10 +279,6 @@ public:
     {
     }
 
-    ~FakeTagAddedCommand() override
-    {
-    }
-
     void doCommand() override;
 
 private:
@@ -335,10 +294,6 @@ public:
         : FakeMonitorCommand(serverData)
         , m_tagName(tag)
         , m_parentName(parent)
-    {
-    }
-
-    ~FakeTagChangedCommand() override
     {
     }
 
@@ -361,10 +316,6 @@ public:
     {
     }
 
-    ~FakeTagMovedCommand() override
-    {
-    }
-
     void doCommand() override;
 
 private:
@@ -381,10 +332,6 @@ public:
         : FakeMonitorCommand(serverData)
         , m_tagName(tag)
         , m_parentName(parent)
-    {
-    }
-
-    ~FakeTagRemovedCommand() override
     {
     }
 
@@ -417,10 +364,6 @@ public:
         : FakeAkonadiServerCommand(respondTo, serverData)
     {
         m_parentTag = parentTag;
-    }
-
-    ~FakeJobResponse() override
-    {
     }
 
     void appendCollection(const Akonadi::Collection &collection)

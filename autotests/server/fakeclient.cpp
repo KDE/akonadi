@@ -107,7 +107,7 @@ void FakeClient::readServerPart()
             expectedStream >> expectedTag;
             const auto expectedCommand = Protocol::deserialize(expectedStream.device());
             try {
-                while ((size_t)mSocket->bytesAvailable() < sizeof(qint64)) {
+                while (static_cast<size_t>(mSocket->bytesAvailable()) < sizeof(qint64)) {
                     Protocol::DataStream::waitForData(mSocket, 5000);
                 }
             } catch (const ProtocolException &e) {

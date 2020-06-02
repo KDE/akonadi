@@ -103,10 +103,7 @@ bool DbIntrospector::isTableEmpty(const QString &tableName)
     }
 
     QSqlQuery query = queryBuilder.query();
-    if (query.size() == 0  || !query.first()) {   // table is empty
-        return true;
-    }
-    return false;
+    return (query.size() == 0 || !query.first());
 }
 
 QVector<DbIntrospector::ForeignKey> DbIntrospector::foreignKeyConstraints(const QString &tableName)

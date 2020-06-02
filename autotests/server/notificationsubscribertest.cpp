@@ -128,7 +128,7 @@ private Q_SLOTS:
         QTest::addColumn<bool>("accepted");
 
 #define EmptyList(T) (QVector<T>())
-#define List(T,x) (QVector<T>() << x)
+#define List(T,x) (QVector<T>() << (x))
 
         auto itemMsg = Protocol::ItemChangeNotificationPtr::create();
         itemMsg->setOperation(Protocol::ItemChangeNotification::Add);

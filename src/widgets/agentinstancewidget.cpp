@@ -50,7 +50,7 @@ struct Icons {
     QPixmap readyPixmap, syncPixmap, errorPixmap, offlinePixmap;
 };
 
-Q_GLOBAL_STATIC(Icons, s_icons)
+Q_GLOBAL_STATIC(Icons, s_icons) // NOLINT(readability-redundant-member-init)
 
 // called as a Qt post routine, to prevent pixmap leaking
 void iconsEarlyCleanup()
@@ -75,7 +75,7 @@ public:
     QSize sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const override;
 };
 
-}
+} // namespace Internal
 
 using Akonadi::Internal::AgentInstanceWidgetDelegate;
 
@@ -300,6 +300,6 @@ QSize AgentInstanceWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, 
     return QSize(1, qMax(iconHeight, textHeight));    //any width,the view will give us the whole thing in list mode
 }
 
-}
+} // namespace Akonadi
 
 #include "agentinstancewidget.moc"

@@ -53,7 +53,7 @@ public:
     EntityTreeModel::HeaderGroup m_headerGroup;
 };
 
-}
+} // namespace Akonadi
 
 EntityMimeTypeFilterModel::EntityMimeTypeFilterModel(QObject *parent)
     : QSortFilterProxyModel(parent)

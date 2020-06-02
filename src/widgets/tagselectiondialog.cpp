@@ -34,25 +34,20 @@ class Q_DECL_HIDDEN TagSelectionDialog::Private
 {
 public:
     explicit Private(QDialog *parent)
-        : d(parent)
+        : q(parent)
     {}
-
-    ~Private()
-    {
-        writeConfig();
-    }
 
     void writeConfig() const;
     void readConfig() const;
 
-    QDialog * const d = nullptr;
+    QDialog * const q = nullptr;
     Ui::TagSelectionDialog ui;
 };
 
 void TagSelectionDialog::Private::writeConfig() const
 {
     KConfigGroup group(KSharedConfig::openConfig(), "TagSelectionDialog");
-    group.writeEntry("Size", d->size());
+    group.writeEntry("Size", q->size());
 }
 
 void TagSelectionDialog::Private::readConfig() const
@@ -60,7 +55,7 @@ void TagSelectionDialog::Private::readConfig() const
     KConfigGroup group(KSharedConfig::openConfig(), "TagSelectionDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
-        d->resize(sizeDialog);
+        q->resize(sizeDialog);
     }
 }
 
@@ -96,7 +91,10 @@ TagSelectionDialog::TagSelectionDialog(TagModel *model, QWidget *parent)
     ControlGui::widgetNeedsAkonadi(this);
 }
 
-TagSelectionDialog::~TagSelectionDialog() = default;
+TagSelectionDialog::~TagSelectionDialog()
+{
+    d->writeConfig();
+}
 
 QDialogButtonBox *TagSelectionDialog::buttons() const
 {

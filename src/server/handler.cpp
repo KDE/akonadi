@@ -87,7 +87,6 @@ std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::C
                    "Hello command is not allowed in this context");
         return {};
     case Protocol::Command::Login:
-        return {};
     case Protocol::Command::Logout:
         return {};
     case Protocol::Command::_ResponseBit:

@@ -55,7 +55,7 @@ public:
     void processItems();
 };
 
-}
+} // namespace Akonadi
 
 void XmlWriteJobPrivate::collectionFetchResult(KJob *job)
 {

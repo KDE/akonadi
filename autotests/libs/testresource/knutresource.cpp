@@ -224,9 +224,8 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
         return;
     }
 
-    Collection c(collection);
     QDomElement newElem;
-    newElem = XmlWriter::collectionToElement(c, mDocument.document());
+    newElem = XmlWriter::collectionToElement(collection, mDocument.document());
     // move all items/collections over to the new node
     const QDomNodeList children = oldElem.childNodes();
     const int numberOfChildren = children.count();
@@ -243,7 +242,7 @@ void KnutResource::collectionChanged(const Akonadi::Collection &collection)
     }
     oldElem.parentNode().replaceChild(newElem, oldElem);
     save();
-    changeCommitted(c);
+    changeCommitted(collection);
 }
 
 void KnutResource::collectionRemoved(const Akonadi::Collection &collection)
@@ -291,11 +290,10 @@ void KnutResource::itemChanged(const Akonadi::Item &item, const QSet<QByteArray>
         return;
     }
 
-    Item i(item);
-    const QDomElement newElem = XmlWriter::itemToElement(i, mDocument.document());
+    const QDomElement newElem = XmlWriter::itemToElement(item, mDocument.document());
     oldElem.parentNode().replaceChild(newElem, oldElem);
     save();
-    changeCommitted(i);
+    changeCommitted(item);
 }
 
 void KnutResource::itemRemoved(const Akonadi::Item &item)

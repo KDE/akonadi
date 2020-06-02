@@ -421,7 +421,7 @@ void CppGenerator::writeImplSerializer(PropertyNode const *node,
 void CppGenerator::writeImplClass(ClassNode const *node)
 {
     const QString parentClass = node->parentClassName();
-    const auto children = node->children();
+    const auto &children = node->children();
     const auto properties = node->properties();
 
     // Ctors
@@ -612,9 +612,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                 mImpl << "            QJsonObject jsonObject;\n"
                          "            type->toJson(jsonObject); /* " << containerType << " */\n"
                          "            jsonArray.append(jsonObject);\n";
-            } else if (TypeHelper::isNumericType(containerType)) {
-                mImpl << "            jsonArray.append(type); /* "<<  containerType << " */\n";
-            } else if (TypeHelper::isBoolType(containerType)) {
+            } else if (TypeHelper::isNumericType(containerType) || TypeHelper::isBoolType(containerType)) {
                 mImpl << "            jsonArray.append(type); /* "<<  containerType << " */\n";
             } else if (containerType == QLatin1String("QByteArray")) {
                 mImpl << "            jsonArray.append(QString::fromUtf8(type)); /* "<<  containerType << "*/\n";
@@ -636,9 +634,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
                   << "    }\n";
         } else if (prop->type() == QLatin1String("uint")) {
             mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = static_cast<int>(" <<  prop->mVariableName() << ");/* "<<  prop->type() << " */\n";
-        } else if (TypeHelper::isNumericType(prop->type())) {
-            mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " <<  prop->mVariableName() << ";/* "<<  prop->type() << " */\n";
-        } else if (TypeHelper::isBoolType(prop->type())) {
+        } else if (TypeHelper::isNumericType(prop->type()) || TypeHelper::isBoolType(prop->type())) {
             mImpl << "    json[QStringLiteral(\"" << prop->name() << "\")] = " <<  prop->mVariableName() << ";/* "<<  prop->type() << " */\n";
         } else if (TypeHelper::isBuiltInType(prop->type())) {
             if (prop->type() == QLatin1String("QStringList")) {

@@ -122,9 +122,9 @@ void CollectionFetchHandler::listCollection(const Collection &root,
 static Query::Condition filterCondition(const QString &column)
 {
     Query::Condition orCondition(Query::Or);
-    orCondition.addValueCondition(column, Query::Equals, (int)Collection::True);
+    orCondition.addValueCondition(column, Query::Equals, static_cast<int>(Collection::True));
     Query::Condition andCondition(Query::And);
-    andCondition.addValueCondition(column, Query::Equals, (int)Collection::Undefined);
+    andCondition.addValueCondition(column, Query::Equals, static_cast<int>(Collection::Undefined));
     andCondition.addValueCondition(Collection::enabledFullColumnName(), Query::Equals, true);
     orCondition.addCondition(andCondition);
     return orCondition;

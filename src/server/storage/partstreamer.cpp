@@ -244,7 +244,7 @@ void PartStreamer::streamForeignPayload(Part &part, const Protocol::PartMetaData
     }
 
     const auto cmd = mConnection->readCommand();
-    const auto response = Protocol::cmdCast<Protocol::StreamPayloadResponse>(cmd);
+    const auto &response = Protocol::cmdCast<Protocol::StreamPayloadResponse>(cmd);
     if (!response.isValid() || response.isError()) {
         throw PartStreamerException("Client failed to store payload into file.");
     }

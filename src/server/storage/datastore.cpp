@@ -1353,7 +1353,7 @@ QString DataStore::dateTimeFromQDateTime(const QDateTime &dateTime)
 {
     QDateTime utcDateTime = dateTime;
     if (utcDateTime.timeSpec() != Qt::UTC) {
-        utcDateTime.toUTC();
+        utcDateTime = utcDateTime.toUTC();
     }
     return utcDateTime.toString(QStringLiteral("yyyy-MM-dd hh:mm:ss"));
 }

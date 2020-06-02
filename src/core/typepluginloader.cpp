@@ -50,7 +50,7 @@ static const char _APPLICATION_OCTETSTREAM[] = "application/octet-stream";
 namespace Akonadi
 {
 
-Q_GLOBAL_STATIC(DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin)
+Q_GLOBAL_STATIC(DefaultItemSerializerPlugin, s_defaultItemSerializerPlugin) // NOLINT(readability-redundant-member-init)
 
 class PluginEntry
 {
@@ -412,7 +412,7 @@ private:
     QObject *mOverridePlugin;
 };
 
-Q_GLOBAL_STATIC(PluginRegistry, s_pluginRegistry)
+Q_GLOBAL_STATIC(PluginRegistry, s_pluginRegistry) // NOLINT(readability-redundant-member-init)
 
 QObject *TypePluginLoader::objectForMimeTypeAndClass(const QString &mimetype, const QVector<int> &metaTypeIds, Options opt)
 {
@@ -441,4 +441,4 @@ void TypePluginLoader::overridePluginLookup(QObject *p)
     s_pluginRegistry->overrideDefaultPlugin(p);
 }
 
-}
+} // namespace Akonadi

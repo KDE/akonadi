@@ -49,7 +49,7 @@ private:
     void drawFocus(QPainter * /*painter*/, const QStyleOptionViewItem & /*option*/, QRect /*rect*/) const;
 };
 
-}
+} // namespace Internal
 
 using Akonadi::Internal::AgentTypeWidgetDelegate;
 
@@ -274,6 +274,6 @@ void AgentTypeWidgetDelegate::drawFocus(QPainter *painter, const QStyleOptionVie
     }
 }
 
-}
+} // namespace Akonadi
 
 #include "agenttypewidget.moc"

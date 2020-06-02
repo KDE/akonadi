@@ -24,7 +24,7 @@
 #include <QFileInfo>
 #include <QXmlStreamReader>
 
-Q_GLOBAL_STATIC(Config, globalConfig)
+Q_GLOBAL_STATIC(Config, globalConfig) // NOLINT(readability-redundant-member-init)
 
 Config::Config()
 {

@@ -80,11 +80,8 @@ bool TagModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &resp
     Q_D(TagModifyJob);
 
     if (response->isResponse()) {
-        if (response->type() == Protocol::Command::FetchTags) {
-            // Tag was modified, we ignore the response for now
-            return false;
-        } else if (response->type() == Protocol::Command::DeleteTag) {
-            // The tag was deleted/merged
+        if (response->type() == Protocol::Command::FetchTags ||  response->type() == Protocol::Command::DeleteTag) {
+            // Tag was modified, deleted or merged, we ignore the response for now
             return false;
         } else if (response->type() == Protocol::Command::ModifyTag) {
             // Done.

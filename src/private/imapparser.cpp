@@ -56,7 +56,7 @@ public:
             }
 
             continuation = true;
-            dataBuffer.reserve(dataBuffer.size() + literalSize + 1);
+            dataBuffer.reserve(dataBuffer.size() + static_cast<int>(literalSize) + 1);
             return true;
         }
         return false;
@@ -130,7 +130,7 @@ int parseParenthesizedListHelper(const QByteArray &data, T &result, int start)
     return data.length();
 }
 
-}
+} // namespace
 
 int ImapParser::parseParenthesizedList(const QByteArray &data, QVarLengthArray<QByteArray, 16> &result, int start)
 {
@@ -433,7 +433,7 @@ int ImapParser::parseSequenceSet(const QByteArray &data, ImapSet &result, int st
             }
             result.add(ImapInterval(lower, upper));
             lower = -1;
-            upper = -1;
+            upper = -1; // NOLINT(clang-analyzer-deadcode.DeadStores) // false positive?
             value = -1;
             if (data[i] != ',') {
                 return i;
@@ -631,10 +631,10 @@ bool ImapParser::parseNextLine(const QByteArray &readBuffer)
         // check the remaining (non-literal) part for parentheses
         if (d->literalSize < 0) {
             // the following looks strange but works since literalSize can be negative here
-            d->parenthesesCount += ImapParser::parenthesesBalance(readBuffer, readBuffer.length() + d->literalSize);
+            d->parenthesesCount += ImapParser::parenthesesBalance(readBuffer, readBuffer.length() + static_cast<int>(d->literalSize));
 
             // check if another literal read was started
-            if (d->checkLiteralStart(readBuffer, readBuffer.length() + d->literalSize)) {
+            if (d->checkLiteralStart(readBuffer, readBuffer.length() + static_cast<int>(d->literalSize))) {
                 return false;
             }
         }

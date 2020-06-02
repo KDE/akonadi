@@ -46,7 +46,7 @@ public:
     bool checkOnlyChecked = false;
 };
 
-}
+} // namespace Akonadi
 
 RecursiveCollectionFilterProxyModel::RecursiveCollectionFilterProxyModel(QObject *parent)
     : QSortFilterProxyModel(parent)

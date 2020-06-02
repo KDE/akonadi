@@ -382,7 +382,7 @@ QByteArray Session::sessionId() const
     return d->sessionId;
 }
 
-Q_GLOBAL_STATIC(QThreadStorage<QPointer<Session>>, instances)
+Q_GLOBAL_STATIC(QThreadStorage<QPointer<Session>>, instances) // NOLINT(readability-redundant-member-init)
 
 void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
 {

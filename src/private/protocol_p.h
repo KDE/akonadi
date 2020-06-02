@@ -142,7 +142,7 @@ public:
         ModifySubscription,
 
         // _MaxValue = 127
-        _ResponseBit = 0x80 // reserved
+        _ResponseBit = 0x80U // reserved
     };
 
     explicit Command() = default;

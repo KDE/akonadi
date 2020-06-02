@@ -68,7 +68,7 @@ size_t typeSize(const QString &typeName)
     return *it;
 }
 
-}
+} // namespace
 
 void CppHelper::sortMembers(QVector<PropertyNode const *> &props)
 {

@@ -80,7 +80,7 @@ Collection CommandContext::collection() const
 
 void CommandContext::setTag(std::optional<qint64> tagId)
 {
-    mTagId = std::move(tagId);
+    mTagId = tagId;
 }
 
 std::optional<qint64> CommandContext::tagId() const

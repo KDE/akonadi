@@ -43,7 +43,7 @@ Session::Session(const QString &input, QObject *parent)
     } else {
         // ### does that work on Windows?
         const int flags = fcntl(0, F_GETFL);
-        fcntl(0, F_SETFL, flags | O_NONBLOCK);
+        fcntl(0, F_SETFL, flags | O_NONBLOCK); // NOLINT(hicpp-signed-bitwise)
 
         if (!file->open(stdin, QFile::ReadOnly | QFile::Unbuffered)) {
             qFatal("Failed to open stdin!");
