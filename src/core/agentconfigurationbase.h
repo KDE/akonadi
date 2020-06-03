@@ -135,7 +135,7 @@ public:
     /**
      * Reimplement to save dialog size.
      */
-    virtual void saveDialogSize(QSize size);
+    virtual void saveDialogSize(const QSize& size);
 
     virtual QDialogButtonBox::StandardButtons standardButtons() const;
 

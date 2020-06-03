@@ -104,7 +104,7 @@ QSize AgentConfigurationBase::restoreDialogSize() const
     return {};
 }
 
-void AgentConfigurationBase::saveDialogSize(QSize)
+void AgentConfigurationBase::saveDialogSize(const QSize&)
 {}
 
 QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() const
