@@ -58,6 +58,8 @@ public:
     */
     explicit Exception(const QString &what);
 
+    Exception(Exception &&) noexcept;
+
     /**
       Destructor.
     */
@@ -74,8 +76,6 @@ public:
     virtual QByteArray type() const; // ### Akonadi 2: return const char *
 
 private:
-    Q_DISABLE_COPY_MOVE(Exception)
-
     class Private;
     std::unique_ptr<Private> d;
 };
@@ -90,6 +90,7 @@ private:
         explicit classname(const char *what): Akonadi::Exception(what) {} \
         explicit classname(const QByteArray &what): Akonadi::Exception(what) {} \
         explicit classname(const QString &what): Akonadi::Exception(what) {} \
+        classname(classname &&) = default; \
         ~classname() override; \
         QByteArray type() const override; \
     }

@@ -58,6 +58,8 @@ Exception::Exception(const QString &what)
     }
 }
 
+Exception::Exception(Exception &&) noexcept = default;
+
 Exception::~Exception() = default;
 
 QByteArray Exception::type() const
