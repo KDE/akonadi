@@ -37,19 +37,19 @@ Checks: -*,
 AnalyzeTemporaryDtors: true
 CheckOptions:
     - key:  bugprone-assert-side-effects.AssertMacros
-      value: 'Q_ASSERT'
+      value: 'Q_ASSERT;QVERIFY;QCOMPARE;AKVERIFY'
     - key:  CheckFunctionCalls
       value: true
     - key:  StringCompareLikeFuctions
-      value: QString::compare;QString::localeAwareCompare
+      value: 'QString::compare;QString::localeAwareCompare'
     - key: WarnOnSizeOfIntegerExpression
       value: 1
     - key: bugprone-dangling-handle.HandleClasses
-      value: std::string_view;QStringView
+      value: 'std::string_view;QStringView'
     - key: IgnoreClassesWithAllMemberVariablesBeingPublic
       value: true
     - key: VectorLikeClasses
-      value: std::vector;QVector
+      value: 'std::vector;QVector'
 WarningsAsErrors: bugprone-*,
                   clang-*,
                   google-*,
@@ -58,3 +58,4 @@ WarningsAsErrors: bugprone-*,
                   readability-*,
                   -readability-magic-numbers,
                   -readability-make-member-function-const
+
