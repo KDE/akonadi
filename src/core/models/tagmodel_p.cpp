@@ -80,7 +80,7 @@ QModelIndex TagModelPrivate::indexForTag(const qint64 tagId) const
     const Tag::Id parentId = tag.parent().id();
     const int row = mChildTags.value(parentId).indexOf(tag);
     if (row != -1) {
-        return q->createIndex(row, 0, (int) parentId);
+        return q->createIndex(row, 0, static_cast<int>(parentId));
     }
 
     return QModelIndex();

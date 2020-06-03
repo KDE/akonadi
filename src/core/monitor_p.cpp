@@ -283,12 +283,8 @@ void MonitorPrivate::checkBatchSupport(const Protocol::ChangeNotificationPtr &ms
         needsSplit = isBatch && !batchSupported && hasListeners(&Monitor::itemChanged);
         return;
     case Protocol::ItemChangeNotification::ModifyTags:
-        // Tags were added after batch notifications, so they are always supported
-        batchSupported = true;
-        needsSplit = false;
-        return;
     case Protocol::ItemChangeNotification::ModifyRelations:
-        // Relations were added after batch notifications, so they are always supported
+        // Tags and relations were added after batch notifications, so they are always supported
         batchSupported = true;
         needsSplit = false;
         return;

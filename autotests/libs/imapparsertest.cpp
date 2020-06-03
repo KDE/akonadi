@@ -224,7 +224,7 @@ void ImapParserTest::testParseParenthesizedList()
 
     // newline literal (based on itemappendtest bug)
     input = "(foo {6}\n\n\nbar\n bla)";
-    consumed = ImapParser::parseParenthesizedList(input, result);
+    ImapParser::parseParenthesizedList(input, result);
 }
 
 void ImapParserTest::testParseNumber()

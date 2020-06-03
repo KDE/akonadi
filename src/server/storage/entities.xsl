@@ -220,7 +220,7 @@ set<xsl:value-of select="$methodName"/>(<xsl:call-template name="argument"/>)
     <!-- this indirection is required to prevent off-by-one access now that we skip the key column -->
     int valueIndex = 0;
     <xsl:for-each select="column">
-    const <xsl:call-template name="data-type"/> &value<xsl:value-of select="position()"/> =
+    const <xsl:call-template name="data-type"/> &amp;value<xsl:value-of select="position()"/> =
     <xsl:choose>
       <xsl:when test="@name=$key">
         <xsl:value-of select="$key"/>;

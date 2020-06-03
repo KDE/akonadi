@@ -40,7 +40,7 @@ public:
     void writeConfig() const;
     void readConfig() const;
 
-    QDialog * const q = nullptr;
+    QDialog * const q;
     Ui::TagSelectionDialog ui;
 };
 

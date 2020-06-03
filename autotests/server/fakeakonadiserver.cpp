@@ -113,7 +113,7 @@ FakeAkonadiServer::FakeAkonadiServer()
 
 FakeAkonadiServer::~FakeAkonadiServer()
 {
-    quit();
+    FakeAkonadiServer::quit();
 }
 
 QString FakeAkonadiServer::basePath()

@@ -30,7 +30,7 @@
 class <xsl:value-of select="$className"/>::Private : public QSharedData
 {
 public:
-    Private() : QSharedData()
+    Private() : QSharedData() // NOLINT(readability-redundant-member-init)
     <!-- BEGIN Variable Initializers - order as Variable Declarations below -->
     <xsl:for-each select="column[@type = 'qint64' and @name != 'id']">
       , <xsl:value-of select="@name"/>(<xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>)
@@ -156,9 +156,7 @@ void <xsl:value-of select="$className"/>::Private::addToCache(const <xsl:value-o
   <xsl:for-each select="column[@name != 'id']">
     <xsl:call-template name="argument"/><xsl:if test="position() != last()">, </xsl:if>
   </xsl:for-each>
-) :
-    Entity(),
-    d(new Private)
+) : d(new Private)
 {
 <xsl:for-each select="column[@name != 'id']">
     d-&gt;<xsl:value-of select="@name"/> = <xsl:value-of select="@name"/>;
@@ -618,7 +616,7 @@ bool <xsl:value-of select="$className"/>::insert(qint64* insertId)
 
 bool <xsl:value-of select="$className"/>::hasPendingChanges() const
 {
-      return false
+    return false // NOLINT(readability-redundant-member-init)
       <xsl:for-each select="column[@name != 'id']">
         || d-&gt;<xsl:value-of select="@name"/>_changed
       </xsl:for-each>;

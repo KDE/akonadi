@@ -64,7 +64,7 @@ static void assignCollectionPrivate(QSharedDataPointer<CollectionPrivate> &one,
     // With a single-line assignment here, the parent collection would be deleted
     // before it is assigned, and therefore the resulting object would point to
     // uninitalized memory.
-    const QSharedDataPointer<CollectionPrivate> temp = other;
+    const QSharedDataPointer<CollectionPrivate> temp = other; // NOLINT(performance-unnecessary-copy-initialization): see above
     one = temp;
 }
 

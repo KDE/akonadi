@@ -46,7 +46,7 @@ public:
     QScopedPointer<KAboutData> aboutData;
     QWidget *parentWidget = nullptr;
 };
-} // namespace
+} // namespace Akonadi
 
 using namespace Akonadi;
 

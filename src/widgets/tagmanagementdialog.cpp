@@ -41,7 +41,7 @@ struct Q_DECL_HIDDEN TagManagementDialog::Private {
     void readConfig() const;
 
     Ui::TagManagementDialog ui;
-    QDialog * const q = nullptr;
+    QDialog * const q;
     QDialogButtonBox *buttonBox = nullptr;
 };
 
@@ -56,7 +56,7 @@ void TagManagementDialog::Private::readConfig() const
     KConfigGroup group(KSharedConfig::openConfig(), "TagManagementDialog");
     const QSize sizeDialog = group.readEntry("Size", QSize(500, 400));
     if (sizeDialog.isValid()) {
-        d->resize(sizeDialog);
+        q->resize(sizeDialog);
     }
 }
 

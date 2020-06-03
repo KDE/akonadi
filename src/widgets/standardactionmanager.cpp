@@ -27,6 +27,7 @@
 #include "collectioncreatejob.h"
 #include "collectiondeletejob.h"
 #include "collectiondialog.h"
+#include "collectionpropertiespage.h"
 #include "collectionutils.h"
 #include "entitytreemodel.h"
 #include "favoritecollectionsmodel.h"
@@ -1708,6 +1709,7 @@ QAction *StandardActionManager::createAction(Type type)
     }
 
     Q_ASSERT(standardActionData[type].name);
+    Q_ASSERT(d->actionCollection);
     d->actionCollection->addAction(QString::fromLatin1(standardActionData[type].name), action);
     d->actions[type] = action;
     if ((standardActionData[type].actionType == ActionWithAlternative) && (standardActionData[type + 1].actionType == ActionAlternative)) {
@@ -1720,7 +1722,7 @@ QAction *StandardActionManager::createAction(Type type)
 void StandardActionManager::createAllActions()
 {
     for (uint i = 0; i < LastType; ++i) {
-        createAction((Type)i);
+        createAction(static_cast<Type>(i));
     }
 }
 

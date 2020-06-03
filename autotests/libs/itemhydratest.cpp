@@ -292,7 +292,7 @@ void ItemHydra::testPolymorphicPayloadWithTypedef()
 
 void ItemHydra::testNullPointerPayload()
 {
-    RudiPtr p((Rudi *)nullptr);
+    RudiPtr p(static_cast<Rudi *>(nullptr));
     Item i;
     i.setPayload(p);
     QVERIFY(i.hasPayload());

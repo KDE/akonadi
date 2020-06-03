@@ -108,7 +108,7 @@ void ItemAppendTest::testContent_data()
     QTest::newRow("utf8") << utf8string.toUtf8();
     QTest::newRow("newlines") << QByteArray("\nsome\n\nbreaked\ncontent\n\n");
     QByteArray b;
-    QTest::newRow("big") << b.fill('a', 1u << 20);
+    QTest::newRow("big") << b.fill('a', 1U << 20);
     QTest::newRow("bignull") << b.fill('\0', 1U << 20);
     QTest::newRow("bigcr") << b.fill('\r', 1U << 20);
     QTest::newRow("biglf") << b.fill('\n', 1U << 20);
