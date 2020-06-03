@@ -175,7 +175,7 @@ public:
 
 protected:
     explicit Attribute() = default;
-    Q_DISABLE_COPY_MOVE(Attribute)
+    Attribute(const Attribute &) = default;
 };
 
 }
