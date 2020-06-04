@@ -57,16 +57,16 @@
 #include <signal.h>
 #include <stdlib.h>
 #include <QStandardPaths>
-#include <sys/cdefs.h>
 #if defined __GLIBC__
 # include <malloc.h> // for dumping memory information
 #endif
 
 #ifdef Q_OS_WIN
 #include <Windows.h>
-#include <chrono>
-#include <thread>
 #endif
+
+#include <thread>
+#include <chrono>
 
 using namespace Akonadi;
 
