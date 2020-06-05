@@ -43,7 +43,6 @@ public:
         mCollection = Collection::root();
         mEmitTimer.setSingleShot(true);
         mEmitTimer.setInterval(std::chrono::milliseconds{100});
-        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
     }
 
     ~ItemFetchJobPrivate() override
@@ -51,6 +50,10 @@ public:
         delete mValuePool;
     }
 
+    void init()
+    {
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
+    }
     void aboutToFinish() override {
         timeout();
     }
@@ -119,6 +122,7 @@ ItemFetchJob::ItemFetchJob(const Collection &collection, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {
     Q_D(ItemFetchJob);
+    d->init();
 
     d->mCollection = collection;
     d->mValuePool = new ProtocolHelperValuePool; // only worth it for lots of results
@@ -128,6 +132,7 @@ ItemFetchJob::ItemFetchJob(const Item &item, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {
     Q_D(ItemFetchJob);
+    d->init();
 
     d->mRequestedItems.append(item);
 }
@@ -136,6 +141,7 @@ ItemFetchJob::ItemFetchJob(const Item::List &items, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {
     Q_D(ItemFetchJob);
+    d->init();
 
     d->mRequestedItems = items;
 }
@@ -144,6 +150,7 @@ ItemFetchJob::ItemFetchJob(const QList<Item::Id> &items, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {
     Q_D(ItemFetchJob);
+    d->init();
 
     d->mRequestedItems.reserve(items.size());
     for (auto id : items) {
@@ -155,6 +162,7 @@ ItemFetchJob::ItemFetchJob(const QVector<Item::Id> &items, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {
     Q_D(ItemFetchJob);
+    d->init();
 
     d->mRequestedItems.reserve(items.size());
     for (auto id : items) {
@@ -166,14 +174,13 @@ ItemFetchJob::ItemFetchJob(const Tag &tag, QObject *parent)
     : Job(new ItemFetchJobPrivate(this), parent)
 {
     Q_D(ItemFetchJob);
+    d->init();
 
     d->mCurrentTag = tag;
     d->mValuePool = new ProtocolHelperValuePool;
 }
 
-ItemFetchJob::~ItemFetchJob()
-{
-}
+ItemFetchJob::~ItemFetchJob() = default;
 
 void ItemFetchJob::doStart()
 {

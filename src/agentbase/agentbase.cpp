@@ -432,7 +432,7 @@ void AgentBasePrivate::init()
                                          QStringLiteral("org.kde.Solid.PowerManagement.Actions.SuspendSession"),
                                          QDBusConnection::sessionBus(), this);
     if (mPowerInterface->isValid()) {
-        connect(mPowerInterface, SIGNAL(resumingFromSuspend()), SLOT(slotResumedFromSuspend())); // clazy:exclude=old-style-connect
+        connect(mPowerInterface, SIGNAL(resumingFromSuspend()), this, SLOT(slotResumedFromSuspend())); // clazy:exclude=old-style-connect
     } else {
         delete mPowerInterface;
         mPowerInterface = nullptr;

@@ -42,6 +42,10 @@ public:
     {
         mEmitTimer.setSingleShot(true);
         mEmitTimer.setInterval(std::chrono::milliseconds{100});
+    }
+
+    void init()
+    {
         QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
     }
 
@@ -122,11 +126,17 @@ static QObject *sessionForJob(QObject *parent)
 
 ItemSearchJob::ItemSearchJob(QObject *parent)
     : Job(new ItemSearchJobPrivate(this, SearchQuery()), sessionForJob(parent))
-{}
+{
+    Q_D(ItemSearchJob);
+    d->init();
+}
 
 ItemSearchJob::ItemSearchJob(const SearchQuery &query, QObject *parent)
     : Job(new ItemSearchJobPrivate(this, query), sessionForJob(parent))
-{}
+{
+    Q_D(ItemSearchJob);
+    d->init();
+}
 
 ItemSearchJob::~ItemSearchJob() = default;
 

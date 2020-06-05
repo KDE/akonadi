@@ -42,16 +42,19 @@ class Akonadi::CollectionFetchJobPrivate : public JobPrivate
 public:
     CollectionFetchJobPrivate(CollectionFetchJob *parent)
         : JobPrivate(parent)
-        , mType(CollectionFetchJob::Base)
     {
         mEmitTimer.setSingleShot(true);
         mEmitTimer.setInterval(std::chrono::milliseconds{100});
-        q_ptr->connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
+    }
+
+    void init()
+    {
+        QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
     }
 
     Q_DECLARE_PUBLIC(CollectionFetchJob)
 
-    CollectionFetchJob::Type mType;
+    CollectionFetchJob::Type mType = CollectionFetchJob::Base;
     Collection mBase;
     Collection::List mBaseList;
     Collection::List mCollections;
@@ -124,6 +127,7 @@ CollectionFetchJob::CollectionFetchJob(const Collection &collection, Type type, 
     : Job(new CollectionFetchJobPrivate(this), parent)
 {
     Q_D(CollectionFetchJob);
+    d->init();
 
     d->mBase = collection;
     d->mType = type;
@@ -133,6 +137,7 @@ CollectionFetchJob::CollectionFetchJob(const Collection::List &cols, QObject *pa
     : Job(new CollectionFetchJobPrivate(this), parent)
 {
     Q_D(CollectionFetchJob);
+    d->init();
 
     Q_ASSERT(!cols.isEmpty());
     if (cols.size() == 1) {
@@ -147,6 +152,7 @@ CollectionFetchJob::CollectionFetchJob(const Collection::List &cols, Type type, 
     : Job(new CollectionFetchJobPrivate(this), parent)
 {
     Q_D(CollectionFetchJob);
+    d->init();
 
     Q_ASSERT(!cols.isEmpty());
     if (cols.size() == 1) {
@@ -161,6 +167,7 @@ CollectionFetchJob::CollectionFetchJob(const QList<Collection::Id> &cols, Type t
     : Job(new CollectionFetchJobPrivate(this), parent)
 {
     Q_D(CollectionFetchJob);
+    d->init();
 
     Q_ASSERT(!cols.isEmpty());
     if (cols.size() == 1) {
@@ -173,9 +180,7 @@ CollectionFetchJob::CollectionFetchJob(const QList<Collection::Id> &cols, Type t
     d->mType = type;
 }
 
-CollectionFetchJob::~CollectionFetchJob()
-{
-}
+CollectionFetchJob::~CollectionFetchJob() = default;
 
 Akonadi::Collection::List CollectionFetchJob::collections() const
 {

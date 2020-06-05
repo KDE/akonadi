@@ -35,6 +35,10 @@ public:
     {
         mEmitTimer.setSingleShot(true);
         mEmitTimer.setInterval(std::chrono::milliseconds{100});
+    }
+
+    void init()
+    {
         QObject::connect(&mEmitTimer, &QTimer::timeout, q_ptr, [this]() { timeout(); });
     }
 
@@ -68,6 +72,7 @@ RelationFetchJob::RelationFetchJob(const Relation &relation, QObject *parent)
     : Job(new RelationFetchJobPrivate(this), parent)
 {
     Q_D(RelationFetchJob);
+    d->init();
     d->mRequestedRelation = relation;
 }
 
@@ -75,6 +80,7 @@ RelationFetchJob::RelationFetchJob(const QVector<QByteArray> &types, QObject *pa
     : Job(new RelationFetchJobPrivate(this), parent)
 {
     Q_D(RelationFetchJob);
+    d->init();
     d->mTypes = types;
 }
 

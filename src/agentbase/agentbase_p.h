@@ -47,6 +47,7 @@ public:
     void init();
     virtual void delayedInit();
 
+public Q_SLOTS:
     void slotStatus(int status, const QString &message);
     void slotPercent(int progress);
     void slotWarning(const QString &message);
@@ -82,6 +83,7 @@ public:
 
     void setProgramName();
 
+public:
     AgentBase *q_ptr;
     Q_DECLARE_PUBLIC(AgentBase)
 
