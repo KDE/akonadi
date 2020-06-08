@@ -602,13 +602,14 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
             const QByteArray data = Utils::variantToByteArray(partQuery.value(PartQueryDataColumn));
             if (mItemFetchScope.checkCachedPayloadPartsOnly()) {
                 if (!data.isEmpty()) {
-                    cachedParts << ptIter.value();
+                    cachedParts.push_back(ptIter.value());
                 }
-                partQuery.next();
-            } else {
-                if (mItemFetchScope.ignoreErrors() && data.isEmpty()) {
+            } else if (mItemFetchScope.fullPayload() || mItemFetchScope.allAttributes() || mItemFetchScope.requestedParts().contains(ptIter.value())) {
+                // FIXME: Should this fail the entire retrieval, if IgnoreErrors is not set?
+                if (ptIter->startsWith("PLD") && mItemFetchScope.ignoreErrors() && data.isEmpty()) {
                     //We wanted the payload, couldn't get it, and are ignoring errors. Skip the item.
-                    //This is not an error though, it's fine to have empty payload parts (to denote existing but not cached parts)
+                    //This is not an error though, it's fine to have empty payload parts (to denote existing but not cached parts).
+                    //Empty attributes are never an error, since they never expire.
                     qCDebug(AKONADISERVER_LOG) << "item" << id << "has an empty payload part in parttable for part" << metaPart.name();
                     skipItem = true;
                     break;
@@ -621,13 +622,9 @@ bool ItemFetchHelper::fetchItems(std::function<void(Protocol::FetchItemsResponse
                     partData.setData(data);
                 }
                 partData.setMetaData(metaPart);
-
-                if (mItemFetchScope.requestedParts().contains(ptIter.value()) || mItemFetchScope.fullPayload() || mItemFetchScope.allAttributes()) {
-                    parts.append(partData);
-                }
-
-                partQuery.next();
+                parts.append(partData);
             }
+            partQuery.next();
         }
         response.setParts(parts);
 

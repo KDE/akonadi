@@ -18,7 +18,6 @@
 */
 
 #include "itemfetchtest.h"
-#include "collectionpathresolver.h"
 #include "testattribute.h"
 
 #include <attributefactory.h>
@@ -43,18 +42,16 @@ void ItemFetchTest::initTestCase()
 
 void ItemFetchTest::testFetch()
 {
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1"), this);
-    AKVERIFYEXEC(resolver);
-    int colId = resolver->collection();
+    const int colId = AkonadiTest::collectionIdFromPath(QStringLiteral("res1"));
+    QVERIFY(colId > -1);
 
     // listing of an empty folder
     ItemFetchJob *job = new ItemFetchJob(Collection(colId), this);
     AKVERIFYEXEC(job);
     QVERIFY(job->items().isEmpty());
 
-    resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
-    AKVERIFYEXEC(resolver);
-    int colId2 = resolver->collection();
+    const int colId2 = AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo"));
+    QVERIFY(colId > -1);
 
     // listing of a non-empty folder
     job = new ItemFetchJob(Collection(colId2), this);
@@ -186,9 +183,8 @@ void ItemFetchTest::testMultipartFetch()
     QFETCH(bool, fetchSinglePayload);
     QFETCH(bool, fetchSingleAttr);
 
-    CollectionPathResolver *resolver = new CollectionPathResolver(QStringLiteral("res1/foo"), this);
-    AKVERIFYEXEC(resolver);
-    int colId = resolver->collection();
+    int colId = AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo"));
+    QVERIFY(colId >= 0);
 
     Item item;
     item.setMimeType(QStringLiteral("application/octet-stream"));
@@ -275,6 +271,49 @@ void ItemFetchTest::testAncestorRetrieval()
     QCOMPARE(c2.remoteId(), QLatin1String("6"));
     const Collection c3 = c2.parentCollection();
     QCOMPARE(c3, Collection::root());
-
 }
+
+void ItemFetchTest::testRetrievalOfAttributeWithEmptyBody()
+{
+    const auto colId = AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo"));
+    QVERIFY(colId > -1);
+
+    auto testFetch = new ItemFetchJob(Collection(colId), this);
+    AKVERIFYEXEC(testFetch);
+    const auto initialCount = testFetch->items().count();
+
+    Item item;
+    item.setMimeType(QStringLiteral("application/octet-stream"));
+    item.setPayload<QByteArray>("body data");
+    auto attr = AttributeFactory::createAttribute("EMPTY");
+    item.addAttribute(attr);
+    auto *create = new ItemCreateJob(item, Collection(colId), this);
+    AKVERIFYEXEC(create);
+    item = create->item();
+
+    // Direct fetch
+    auto *job = new ItemFetchJob(Item(item.id()), this);
+    job->fetchScope().fetchAllAttributes();
+    job->fetchScope().fetchFullPayload();
+    job->fetchScope().setFetchRemoteIdentification(true);
+    job->fetchScope().setIgnoreRetrievalErrors(true);
+    AKVERIFYEXEC(job);
+
+    QCOMPARE(job->items().count(), 1);
+    const auto &fetched = job->items().at(0);
+    QCOMPARE(fetched.id(), item.id());
+    QVERIFY(fetched.hasAttribute("EMPTY"));
+    QVERIFY(fetched.attribute("EMPTY")->serialized().isEmpty());
+
+    // Folder fetch
+    job = new ItemFetchJob(Collection(colId), this);
+    job->fetchScope().fetchAllAttributes();
+    job->fetchScope().fetchFullPayload();
+    job->fetchScope().setFetchRemoteIdentification(true);
+    job->fetchScope().setIgnoreRetrievalErrors(true);
+    AKVERIFYEXEC(job);
+
+    QCOMPARE(job->items().count(), initialCount + 1);
+}
+
 
