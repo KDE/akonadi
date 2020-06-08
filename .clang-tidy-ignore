@@ -1,2 +1,3 @@
 resourcebasesettings.cpp
 designerplugin.cpp
+autotests/
