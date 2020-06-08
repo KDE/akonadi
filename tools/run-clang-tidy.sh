@@ -18,7 +18,7 @@
 
 set -xe
 
-BUILDDIR=$1
+BUILDDIR=$1; shift 1
 
 function sanitize_compile_commands
 {
@@ -45,4 +45,4 @@ function sanitize_compile_commands
 sanitize_compile_commands
 
 cd ${BUILDDIR}
-run-clang-tidy -j$(nproc) -q
+run-clang-tidy -j$(nproc) -q $@
