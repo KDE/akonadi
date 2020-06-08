@@ -104,7 +104,7 @@ QSize AgentConfigurationBase::restoreDialogSize() const
     return {};
 }
 
-void AgentConfigurationBase::saveDialogSize(const QSize&)
+void AgentConfigurationBase::saveDialogSize(const QSize&) // clazy:exclude=function-args-by-value
 {}
 
 QDialogButtonBox::StandardButtons AgentConfigurationBase::standardButtons() const
