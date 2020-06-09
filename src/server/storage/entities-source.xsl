@@ -32,31 +32,8 @@ class <xsl:value-of select="$className"/>::Private : public QSharedData
 public:
     Private() : QSharedData() // NOLINT(readability-redundant-member-init)
     <!-- BEGIN Variable Initializers - order as Variable Declarations below -->
-    <xsl:for-each select="column[@type = 'qint64' and @name != 'id']">
-      , <xsl:value-of select="@name"/>(<xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>)
-    </xsl:for-each>
-    <xsl:if test="column[@type = 'QDateTime']">
-    </xsl:if>
-    <xsl:for-each select="column[@type = 'QString']">
-      , <xsl:value-of select="@name"/>()
-    </xsl:for-each>
-    <xsl:for-each select="column[@type = 'QByteArray']">
-      , <xsl:value-of select="@name"/>()
-    </xsl:for-each>
-    <xsl:if test="column[@type = 'QDateTime']">
-    // on non-wince, QDateTime is one int
-    <xsl:for-each select="column[@type = 'QDateTime']">
-      , <xsl:value-of select="@name"/>()
-    </xsl:for-each>
-    </xsl:if>
-    <xsl:for-each select="column[@type = 'int']">
-      , <xsl:value-of select="@name"/>(<xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>)
-    </xsl:for-each>
     <xsl:for-each select="column[@type = 'bool']">
       , <xsl:value-of select="@name"/>(<xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>false</xsl:otherwise></xsl:choose>)
-    </xsl:for-each>
-    <xsl:for-each select="column[@type = 'enum']">
-      , <xsl:value-of select="@name"/>(<xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>)
     </xsl:for-each>
     <xsl:for-each select="column[@name != 'id']">
       , <xsl:value-of select="@name"/>_changed(false)
@@ -66,7 +43,7 @@ public:
 
     <!-- BEGIN Variable Declarations - order by decreasing sizeof() -->
     <xsl:for-each select="column[@type = 'qint64' and @name != 'id']">
-    qint64 <xsl:value-of select="@name"/>;
+    qint64 <xsl:value-of select="@name"/> = <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>;
     </xsl:for-each>
     <xsl:if test="column[@type = 'QDateTime']">
     </xsl:if>
@@ -83,7 +60,7 @@ public:
     </xsl:for-each>
     </xsl:if>
     <xsl:for-each select="column[@type = 'int']">
-    int <xsl:value-of select="@name"/>;
+    int <xsl:value-of select="@name"/> = <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>;
     </xsl:for-each>
     <xsl:for-each select="column[@type = 'bool']">
     bool <xsl:value-of select="@name"/> : 1;
@@ -92,7 +69,7 @@ public:
     Tristate <xsl:value-of select="@name"/>;
     </xsl:for-each>
     <xsl:for-each select="column[@type = 'enum']">
-    <xsl:value-of select="@enumType"/><xsl:text> </xsl:text><xsl:value-of select="@name"/>;
+    <xsl:value-of select="@enumType"/><xsl:text> </xsl:text><xsl:value-of select="@name"/> = <xsl:choose><xsl:when test="@default"><xsl:value-of select="@default"/></xsl:when><xsl:otherwise>0</xsl:otherwise></xsl:choose>;
     </xsl:for-each>
     <xsl:for-each select="column[@name != 'id']">
     bool <xsl:value-of select="@name"/>_changed : 1;
@@ -147,8 +124,8 @@ void <xsl:value-of select="$className"/>::Private::addToCache(const <xsl:value-o
 
 
 // constructor
-<xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>() : Entity(),
-    d(new Private)
+<xsl:value-of select="$className"/>::<xsl:value-of select="$className"/>()
+    : d(new Private)
 {
 }
 
@@ -616,7 +593,7 @@ bool <xsl:value-of select="$className"/>::insert(qint64* insertId)
 
 bool <xsl:value-of select="$className"/>::hasPendingChanges() const
 {
-    return false // NOLINT(readability-redundant-member-init)
+    return false // NOLINT(readability-simplify-boolean-expr)
       <xsl:for-each select="column[@name != 'id']">
         || d-&gt;<xsl:value-of select="@name"/>_changed
       </xsl:for-each>;
