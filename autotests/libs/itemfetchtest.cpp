@@ -19,6 +19,7 @@
 
 #include "itemfetchtest.h"
 #include "testattribute.h"
+#include "test_utils.h"
 
 #include <attributefactory.h>
 #include <itemcreatejob.h>
@@ -42,7 +43,7 @@ void ItemFetchTest::initTestCase()
 
 void ItemFetchTest::testFetch()
 {
-    const int colId = AkonadiTest::collectionIdFromPath(QStringLiteral("res1"));
+    const int colId = collectionIdFromPath(QStringLiteral("res1"));
     QVERIFY(colId > -1);
 
     // listing of an empty folder
@@ -50,7 +51,7 @@ void ItemFetchTest::testFetch()
     AKVERIFYEXEC(job);
     QVERIFY(job->items().isEmpty());
 
-    const int colId2 = AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo"));
+    const int colId2 = collectionIdFromPath(QStringLiteral("res1/foo"));
     QVERIFY(colId > -1);
 
     // listing of a non-empty folder
@@ -183,7 +184,7 @@ void ItemFetchTest::testMultipartFetch()
     QFETCH(bool, fetchSinglePayload);
     QFETCH(bool, fetchSingleAttr);
 
-    int colId = AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo"));
+    int colId = collectionIdFromPath(QStringLiteral("res1/foo"));
     QVERIFY(colId >= 0);
 
     Item item;
@@ -275,7 +276,7 @@ void ItemFetchTest::testAncestorRetrieval()
 
 void ItemFetchTest::testRetrievalOfAttributeWithEmptyBody()
 {
-    const auto colId = AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo"));
+    const auto colId = collectionIdFromPath(QStringLiteral("res1/foo"));
     QVERIFY(colId > -1);
 
     auto testFetch = new ItemFetchJob(Collection(colId), this);
