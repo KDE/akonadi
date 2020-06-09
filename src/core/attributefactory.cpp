@@ -51,6 +51,9 @@ public:
     {
     }
 
+    DefaultAttribute(const DefaultAttribute &) = delete;
+    DefaultAttribute &operator=(const DefaultAttribute &) = delete;
+
     QByteArray type() const override
     {
         return mType;

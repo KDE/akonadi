@@ -26,6 +26,7 @@
 #include "storage/itemretrievaljob.h"
 #include "storage/itemretrievalmanager.h"
 #include "storage/itemretrievalrequest.h"
+#include "storage/datastore.h"
 #include "commandcontext.h"
 
 #include "fakeakonadiserver.h"
@@ -172,6 +173,8 @@ public:
         if (m_results.signalsCount > 0) {
             m_results.emittedItems = spy.at(0).at(0).value<QVector<qint64>>();
         }
+
+        DataStore::self()->close();
     }
 
     struct Results

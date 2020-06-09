@@ -108,9 +108,7 @@ DataStore::DataStore(AkonadiServer &akonadi)
 
 DataStore::~DataStore()
 {
-    if (m_dbOpened) {
-        close();
-    }
+    Q_ASSERT_X(!m_dbOpened, "DataStore", "Attempting to destroy DataStore with opened DB connection. Call close() first!");
 }
 
 void DataStore::open()
