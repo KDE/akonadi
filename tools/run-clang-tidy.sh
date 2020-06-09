@@ -16,6 +16,11 @@
 # Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
+if [ $# -lt 1 ]; then
+    >&2 echo "Usage: $0 BUILD_DIR"
+    exit 1
+fi
+
 set -xe
 
 BUILDDIR=$1; shift 1
@@ -34,12 +39,16 @@ function sanitize_compile_commands
         return 0
     fi
 
-    filter_files=$(cat ${filter_file} | tr '\n' '|' | head -c -1)
+    filter_files=$(cat ${filter_file} | grep -vE "^#\.*|^$" | tr '\n' '|' | head -c -1)
 
     local cc_bak_file=${cc_file}.bak
     mv ${cc_file} ${cc_bak_file}
 
-    cat ${cc_bak_file} | jq -r "map(select(.file|test(\"${filter_files}\")|not))" > ${cc_file}
+    cat ${cc_bak_file} \
+        | jq -r "map(select(.file|test(\"${filter_files}\")|not))" \
+        > ${cc_file}
+
+    task_count=$(cat ${cc_file} | jq "length")
 }
 
 sanitize_compile_commands
