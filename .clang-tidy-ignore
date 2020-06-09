@@ -1,3 +1,13 @@
+# Ignore generated files that we can't do anything about (no major issues there, though)
 resourcebasesettings.cpp
 designerplugin.cpp
+
+# Ignore generated Q_LOGGING_CATEGORY files, the checks take forever for some reason
+# and are generated anyway.
+[a-z_]+_debug.cpp
+mocs_[a-z_]+.cpp
+
+# Ignore autotests and tests, it halves the run time
 autotests/
+tests/
+
