@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 # Copyright (c) 2020 Daniel Vrátil <dvratil@kde.org>
 #
 # This library is free software; you can redistribute it and/or modify it
@@ -15,34 +15,45 @@
 # along with this library; see the file COPYING.LIB.  If not, write to the
 # Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
-#
-# Inspired by https://pspdfkit.com/blog/2018/using-clang-tidy-and-integrating-it-in-jenkins/
 
 if [ $# -lt 2 ]; then
-    >&2 echo "Usage: $0 SRC_DIR BUILD_DIR [TARGET_BRANCH]"
+    >&2 echo "Usage: $0 SOURCE_DIR BUILD_DIR"
     exit 1
 fi
 
 set -xe
 
-if [ ! -d .git ]; then
-    >&2 echo "run-clang-tidy.sh must be ran in a git clone of the Akonadi repository!"
-    exit 1
-fi
+source_dir=$1; shift
+build_dir=$1; shift 1
 
-dir=$(dirname $(readlink -f "$0"))
-src_dir=$1; shift
-build_dir=$1; shift
-if [ $# -ge 1 ]; then
-    merge_branch=$1; shift
-else
-    merge_branch="master"
-fi
-base_commit=$(git merge-base refs/remotes/origin/${merge_branch} HEAD)
-changed_files=$(git diff-tree --name-only --diff-filter=d -r ${base_commit} HEAD \
-                    | grep -E "\.cpp|\.h" \
-                    | grep -Ev "^autotests/|^tests/")
+function sanitize_compile_commands
+{
+    local cc_file=${build_dir}/compile_commands.json
+    local filter_file="${source_dir}/.clang-tidy-ignore"
 
-parallel run-clang-tidy -q -p ${build_dir} {} ::: ${changed_files} | tee "${build_dir}/clang-tidy.log"
+    if [ ! -f "${cc_file}" ]; then
+        >&2 echo "Couldn't find compile_commands.json"
+        exit 1
+    fi
 
-cat "${build_dir}/clang-tidy.log" | ${dir}/clang-tidy-to-junit.py ${src_dir} > "${build_dir}/clang-tidy-report.xml"
+    if [ ! -f "${filter_file}" ]; then
+        return 0
+    fi
+
+    filter_files=$(cat ${filter_file} | grep -vE "^#\.*|^$" | tr '\n' '|' | head -c -1)
+
+    local cc_bak_file=${cc_file}.bak
+    mv ${cc_file} ${cc_bak_file}
+
+    cat ${cc_bak_file} \
+        | jq -r "map(select(.file|test(\"${filter_files}\")|not))" \
+        > ${cc_file}
+
+    task_count=$(cat ${cc_file} | jq "length")
+}
+
+sanitize_compile_commands
+
+run-clang-tidy -p ${build_dir} -j$(nproc) -q $@ | tee ${build_dir}/clang-tidy.log
+cat ${build_dir}/clang-tidy.log | ${source_dir}/tools/clang-tidy-to-junit ${source_dir} > ${build_dir}/clang-tidy-report.xml
+
