@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright (c) 2020 Daniel Vrátil <dvratil@kde.org>
 #
 # This library is free software; you can redistribute it and/or modify it
@@ -16,42 +16,31 @@
 # Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
 
-if [ $# -lt 1 ]; then
-    >&2 echo "Usage: $0 BUILD_DIR"
+if [ $# -lt 2 ]; then
+    >&2 echo "Usage: $0 SRC_DIR BUILD_DIR [TARGET_BRANCH]"
     exit 1
 fi
 
 set -xe
 
-BUILDDIR=$1; shift 1
+if [ ! -d .git ]; then
+    >&2 echo "run-clang-tidy.sh must be ran in a git clone of the Akonadi repository!"
+    exit 1
+fi
 
-function sanitize_compile_commands
-{
-    local cc_file=${BUILDDIR}/compile_commands.json
-    local filter_file=".clang-tidy-ignore"
+dir=$(dirname $(readlink -f "$0"))
+src_dir=$1; shift
+build_dir=$1; shift
+if [ $# -ge 1 ]; then
+    merge_branch=$1; shift
+else
+    merge_branch="master"
+fi
+base_commit=$(git merge-base refs/remotes/origin/${merge_branch} HEAD)
+changed_files=$(git diff-tree --name-only --diff-filter=d -r ${base_commit} HEAD \
+                    | grep -E "\.cpp|\.h" \
+                    | grep -Ev "^autotests/|^tests/")
 
-    if [ ! -f "${cc_file}" ]; then
-        >&2 echo "Couldn't find compile_commands.json"
-        exit 1
-    fi
+parallel run-clang-tidy -q -p ${build_dir} {} ::: ${changed_files} | tee "${build_dir}/clang-tidy.log"
 
-    if [ ! -f "${filter_file}" ]; then
-        return 0
-    fi
-
-    filter_files=$(cat ${filter_file} | grep -vE "^#\.*|^$" | tr '\n' '|' | head -c -1)
-
-    local cc_bak_file=${cc_file}.bak
-    mv ${cc_file} ${cc_bak_file}
-
-    cat ${cc_bak_file} \
-        | jq -r "map(select(.file|test(\"${filter_files}\")|not))" \
-        > ${cc_file}
-
-    task_count=$(cat ${cc_file} | jq "length")
-}
-
-sanitize_compile_commands
-
-cd ${BUILDDIR}
-run-clang-tidy -j$(nproc) -q $@
+cat "${build_dir}/clang-tidy.log" | ${dir}/clang-tidy-to-junit.py ${src_dir} > "${build_dir}/clang-tidy-report.xml"

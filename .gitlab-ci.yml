@@ -9,7 +9,7 @@ build_clazy_clang_tidy:
   only:
     - merge_requests
   before_script:
-    - zypper install -y clazy jq
+    - zypper install -y clazy gnu_parallel
     - git clone --depth=1 https://invent.kde.org/sysadmin/ci-tooling.git $CI_TOOLING
     - git clone --depth=1 https://invent.kde.org/sysadmin/repo-metadata.git $CI_TOOLING/repo-metadata
     - git clone --depth=1 https://invent.kde.org/sysadmin/kde-build-metadata.git $CI_TOOLING/kde-build-metadata
@@ -24,7 +24,12 @@ build_clazy_clang_tidy:
     - python3 -u $CI_TOOLING/helpers/prepare-dependencies.py --product $PRODUCT --project $PROJECT --branchGroup $BRANCH_GROUP --environment production --platform $PLATFORM --installTo $INSTALL_PREFIX
     - python3 -u $CI_TOOLING/helpers/configure-build.py --product $PRODUCT --project $PROJECT --branchGroup $BRANCH_GROUP --platform $PLATFORM --installTo $INSTALL_PREFIX
     - python3 -u $CI_TOOLING/helpers/compile-build.py --product $PRODUCT --project $PROJECT --branchGroup $BRANCH_GROUP --platform $PLATFORM --usingInstall $INSTALL_PREFIX
-    - time ./tools/run-clang-tidy.sh $(pwd)/build
+    - time ./tools/run-clang-tidy.sh $(pwd) $(pwd)/build $CI_MERGE_REQUEST_TARGET_BRANCH_NAME
   variables:
     PLATFORM: SUSEQt5.14
     BRANCH_GROUP: kf5-qt5
+  artifacts:
+    paths:
+      - build/clang-tidy-report.xml
+    reports:
+      junit: build/clang-tidy-report.xml
