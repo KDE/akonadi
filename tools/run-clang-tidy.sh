@@ -15,6 +15,8 @@
 # along with this library; see the file COPYING.LIB.  If not, write to the
 # Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA
 # 02110-1301, USA.
+#
+# Inspired by https://pspdfkit.com/blog/2018/using-clang-tidy-and-integrating-it-in-jenkins/
 
 if [ $# -lt 2 ]; then
     >&2 echo "Usage: $0 SRC_DIR BUILD_DIR [TARGET_BRANCH]"
