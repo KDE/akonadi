@@ -105,7 +105,7 @@ set(KAccounts_MINIMUM_VERSION "19.08.0")
 find_package(KAccounts ${KAccounts_MINIMUM_VERSION})
 set_package_properties(KAccounts PROPERTIES
     DESCRIPTION "KDE library for Accounts framework integration"
-    URL "https://cgit.kde.org/kaccounts-integration.git"
+    URL "https://invent.kde.org/network/kaccounts-integration"
     TYPE OPTIONAL
 )
 if (${AccountsQt5_FOUND} AND ${KAccounts_FOUND})
