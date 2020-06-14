@@ -55,6 +55,8 @@ add_akonadi_test(jobtest.cpp)
 add_akonadi_test(tagtest_simple.cpp)
 add_akonadi_test(cachepolicytest.cpp)
 
+add_akonadi_test(tasktest.cpp)
+
 # PORT FROM QJSON add_akonadi_test(searchquerytest.cpp)
 
 # qtestlib tests that need non-exported stuff from 

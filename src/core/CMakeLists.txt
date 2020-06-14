@@ -28,6 +28,7 @@ set(akonadicore_base_SRCS
     conflicthandler.cpp
     control.cpp
     entitycache.cpp
+    error.cpp
     exception.cpp
     firstrun.cpp
     gidextractor.cpp
@@ -58,6 +59,7 @@ set(akonadicore_base_SRCS
     tag.cpp
     tagfetchscope.cpp
     tagsync.cpp
+    task.cpp
     trashsettings.cpp
     typepluginloader.cpp
 )
@@ -80,6 +82,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     CollectionUtils
     Control
     DifferencesAlgorithmInterface
+    Error
     ExceptionBase
     GidExtractorInterface
     Item
@@ -99,6 +102,7 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     Supertrait
     Tag
     TagFetchScope
+    Task
     TrashSettings
     CollectionPathResolver
     REQUIRED_HEADERS AkonadiCore_base_HEADERS

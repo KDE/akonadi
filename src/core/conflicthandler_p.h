@@ -87,9 +87,6 @@ Q_SIGNALS:
     void error(const QString &message);
 
 private Q_SLOTS:
-    void slotOtherItemFetched(KJob *);
-    void slotUseLocalItemFinished(KJob *);
-    void slotUseBothItemsFinished(KJob *);
     void resolve();
 
 private:

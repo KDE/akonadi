@@ -6,11 +6,8 @@
 */
 
 #include "conflicthandler_p.h"
-
-#include "itemcreatejob.h"
-#include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "itemmodifyjob.h"
+#include "interface.h"
 #include "session.h"
 #include <KLocalizedString>
 
@@ -32,30 +29,25 @@ void ConflictHandler::setConflictingItems(const Akonadi::Item &changedItem, cons
 void ConflictHandler::start()
 {
     if (mConflictType == LocalLocalConflict || mConflictType == LocalRemoteConflict) {
-        auto *job = new ItemFetchJob(mConflictingItem, mSession);
-        job->fetchScope().fetchFullPayload();
-        job->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
-        connect(job, &ItemFetchJob::result, this, &ConflictHandler::slotOtherItemFetched);
+        ItemFetchOptions options;
+        options.itemFetchScope().fetchFullPayload();
+        options.itemFetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
+        Akonadi::fetchItem(mConflictingItem, options, mSession)
+            .onError([this](const Error &error) {
+                Q_EMIT this->error(error.message);
+            })
+            .otherwise([this](const Item &item) {
+                if (!item.isValid()) {
+                    Q_EMIT error(i18n("Did not find other item for conflict handling."));
+                    return;
+                }
+
+                mConflictingItem = item;
+                QMetaObject::invokeMethod(this, &ConflictHandler::resolve, Qt::QueuedConnection);
+            });
     } else {
         resolve();
     }
-}
-
-void ConflictHandler::slotOtherItemFetched(KJob *job)
-{
-    if (job->error()) {
-        Q_EMIT error(job->errorText());   //TODO: extend error message
-        return;
-    }
-
-    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
-    if (fetchJob->items().isEmpty()) {
-        Q_EMIT error(i18n("Did not find other item for conflict handling"));
-        return;
-    }
-
-    mConflictingItem = fetchJob->items().at(0);
-    QMetaObject::invokeMethod(this, &ConflictHandler::resolve, Qt::QueuedConnection);
 }
 
 void ConflictHandler::resolve()
@@ -89,18 +81,13 @@ void ConflictHandler::useLocalItem()
 
     Item newItem(mChangedItem);
     newItem.setRevision(mConflictingItem.revision());
-
-    auto *job = new ItemModifyJob(newItem, mSession);
-    connect(job, &ItemModifyJob::result, this, &ConflictHandler::slotUseLocalItemFinished);
-}
-
-void ConflictHandler::slotUseLocalItemFinished(KJob *job)
-{
-    if (job->error()) {
-        Q_EMIT error(job->errorText());   //TODO: extend error message
-    } else {
-        Q_EMIT conflictResolved();
-    }
+    Akonadi::updateItem(newItem, ItemModifyFlag::Default, mSession)
+        .onError([this](const Error &error) {
+            Q_EMIT this->error(error.message);
+        })
+        .otherwise([this](const Item &/*item*/) {
+            Q_EMIT conflictResolved();
+        });
 }
 
 void ConflictHandler::useOtherItem()
@@ -113,17 +100,13 @@ void ConflictHandler::useBothItems()
 {
     // We have to create a new item for the local item under the collection that has
     // been retrieved when we fetched the other item.
-    auto *job = new ItemCreateJob(mChangedItem, mConflictingItem.parentCollection(), mSession);
-    connect(job, &ItemCreateJob::result, this, &ConflictHandler::slotUseBothItemsFinished);
-}
-
-void ConflictHandler::slotUseBothItemsFinished(KJob *job)
-{
-    if (job->error()) {
-        Q_EMIT error(job->errorText());   //TODO: extend error message
-    } else {
-        Q_EMIT conflictResolved();
-    }
+    Akonadi::createItem(mChangedItem, mConflictingItem.parentCollection(), ItemCreateFlag::Default, mSession)
+        .onError([this](const Error &error) {
+            Q_EMIT this->error(error.message);
+        })
+        .otherwise([this](const Item &/*item*/) {
+            Q_EMIT conflictResolved();
+        });
 }
 
 #include "moc_conflicthandler_p.cpp"
