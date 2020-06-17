@@ -140,7 +140,7 @@ protected:
     explicit AbstractDifferencesReporter() = default;
 
 private:
-    Q_DISABLE_COPY_MOVE(AbstractDifferencesReporter);
+    Q_DISABLE_COPY_MOVE(AbstractDifferencesReporter)
 };
 
 }

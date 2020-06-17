@@ -123,7 +123,7 @@ protected:
      */
     int execute(const QString &cmd, const QStringList &args) const;
 private:
-    Q_DISABLE_COPY(DbConfig);
+    Q_DISABLE_COPY(DbConfig)
 
     qint64 mSizeThreshold;
 };

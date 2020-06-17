@@ -170,7 +170,7 @@ public:
     }
 
 private:
-    Q_DISABLE_COPY_MOVE(NotifyRunnable);
+    Q_DISABLE_COPY_MOVE(NotifyRunnable)
 
     QPointer<NotificationSubscriber> mSubscriber;
     Protocol::ChangeNotificationList mNotifications;

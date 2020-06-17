@@ -255,7 +255,7 @@ protected:
     virtual void notify(Protocol::ChangeNotificationList &&ntfs);
 
 private:
-    Q_DISABLE_COPY_MOVE(NotificationCollector);
+    Q_DISABLE_COPY_MOVE(NotificationCollector)
 
     DataStore *mDb;
     Connection *mConnection = nullptr;

@@ -112,7 +112,7 @@ protected:
     explicit TracerInterface() = default;
 
 private:
-    Q_DISABLE_COPY_MOVE(TracerInterface);
+    Q_DISABLE_COPY_MOVE(TracerInterface)
 };
 
 } // namespace Server
