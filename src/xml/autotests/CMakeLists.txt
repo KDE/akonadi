@@ -1,5 +1,4 @@
 
-set(QT_REQUIRED_VERSION "5.11.0")
 find_package(Qt5 ${QT_REQUIRED_VERSION} CONFIG REQUIRED COMPONENTS Test)
 include(ECMMarkAsTest)
 
