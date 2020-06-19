@@ -27,7 +27,7 @@ using namespace Akonadi;
 namespace
 {
 
-Q_GLOBAL_STATIC(QString, sIdentifier); // NOLINT(readability-redundant-member-init)
+Q_GLOBAL_STATIC(QString, sIdentifier) // NOLINT(readability-redundant-member-init)
 
 void loadIdentifier()
 {
