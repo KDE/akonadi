@@ -49,7 +49,12 @@ Collection HandlerHelper::collectionFromIdOrName(const QByteArray &id)
     // id is a path
     QString path = QString::fromUtf8(id);   // ### should be UTF-7 for real IMAP compatibility
 
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
     const QStringList pathParts = path.split(QLatin1Char('/'), QString::SkipEmptyParts);
+#else
+    const QStringList pathParts = path.split(QLatin1Char('/'), Qt::SkipEmptyParts);
+#endif
+
     Collection col;
     for (const QString &part : pathParts) {
         SelectQueryBuilder<Collection> qb;

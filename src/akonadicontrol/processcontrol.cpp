@@ -190,7 +190,13 @@ void ProcessControl::start()
 
         const QString valgrindOptions = akGetEnv("AKONADI_VALGRIND_OPTIONS");
         if (!valgrindOptions.isEmpty()) {
-            mArguments = valgrindOptions.split(QLatin1Char(' '), QString::SkipEmptyParts) << mArguments;
+            mArguments = valgrindOptions.split(QLatin1Char(' '),
+                                   #if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
+                                               QString::SkipEmptyParts
+                                   #else
+                                               Qt::SkipEmptyParts
+                                   #endif
+                                               ) << mArguments;
         }
 
         qCDebug(AKONADICONTROL_LOG);

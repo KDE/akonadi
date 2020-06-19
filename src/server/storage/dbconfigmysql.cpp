@@ -465,7 +465,11 @@ bool DbConfigMysql::startInternalServer()
                 }
 
                 const QString version = query.value(0).toString();
+#if QT_VERSION < QT_VERSION_CHECK(5, 15, 0)
                 const QStringList versions = version.split(QLatin1Char('.'), QString::SkipEmptyParts);
+#else
+                const QStringList versions = version.split(QLatin1Char('.'), Qt::SkipEmptyParts);
+#endif
                 if (versions.count() < 3) {
                     qCCritical(AKONADISERVER_LOG) << "Invalid database server version: " << version;
                     return false;
