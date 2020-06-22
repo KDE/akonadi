@@ -30,17 +30,14 @@
 
 #include <private/protocol_p.h>
 
-class QEventLoop;
 
 namespace Akonadi {
 namespace Server {
 
 class InspectableNotificationCollector;
-class FakeSearchManager;
 class FakeDataStore;
 class FakeConnection;
 class FakeClient;
-class FakeItemRetrievalManager;
 
 class TestScenario {
 public:

@@ -27,7 +27,6 @@
 #include <QObject>
 
 class KCoreConfigSkeleton;
-class KJob;
 
 namespace Akonadi
 {

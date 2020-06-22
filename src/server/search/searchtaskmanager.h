@@ -36,7 +36,6 @@ namespace Akonadi
 namespace Server
 {
 
-class AkonadiServer;
 class Connection;
 class AgentSearchInstance;
 

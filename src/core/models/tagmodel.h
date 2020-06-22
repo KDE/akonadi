@@ -25,7 +25,6 @@
 #include "akonadicore_export.h"
 #include "tag.h"
 
-class KJob;
 
 namespace Akonadi
 {

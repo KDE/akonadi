@@ -23,7 +23,6 @@
 #include <QObject>
 
 class QTcpSocket;
-class QIODevice;
 class QLocalSocket;
 
 class BridgeConnection : public QObject

@@ -35,7 +35,6 @@ namespace Akonadi
 namespace Server
 {
 
-class NotificationCollector;
 class NotificationSubscriber;
 class AggregatedCollectionFetchScope;
 class AggregatedItemFetchScope;

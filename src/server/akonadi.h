@@ -25,7 +25,6 @@
 
 #include <memory>
 
-class QProcess;
 class QDBusServiceWatcher;
 class QSettings;
 

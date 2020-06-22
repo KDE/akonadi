@@ -25,7 +25,6 @@
 namespace Akonadi
 {
 
-class ProcessControl;
 
 class AgentBrokenInstance : public AgentInstance
 {

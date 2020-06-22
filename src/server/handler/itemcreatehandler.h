@@ -28,7 +28,6 @@ namespace Akonadi
 namespace Server
 {
 
-class Transaction;
 
 /**
   @ingroup akonadi_server_handler

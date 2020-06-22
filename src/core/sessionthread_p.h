@@ -25,11 +25,9 @@
 
 #include "connection_p.h"
 
-class QEventLoop;
 
 namespace Akonadi
 {
-class CommandBuffer;
 class SessionThread : public QObject
 {
     Q_OBJECT

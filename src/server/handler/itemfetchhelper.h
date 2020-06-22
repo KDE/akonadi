@@ -40,7 +40,6 @@ namespace Akonadi
 namespace Server
 {
 
-class AggregatedItemFetchScope;
 class Connection;
 class AkonadiServer;
 
