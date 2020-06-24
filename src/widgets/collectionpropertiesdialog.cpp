@@ -88,7 +88,13 @@ public:
     QTabWidget *mTabWidget = nullptr;
 };
 
-typedef QList<CollectionPropertiesPageFactory *> CollectionPropertiesPageFactoryList;
+class CollectionPropertiesPageFactoryList : public QList<CollectionPropertiesPageFactory *>
+{
+public:
+    ~CollectionPropertiesPageFactoryList() {
+        qDeleteAll(*this);
+    }
+};
 
 Q_GLOBAL_STATIC(CollectionPropertiesPageFactoryList, s_pages) // NOLINT(readability-redundant-member-init)
 
