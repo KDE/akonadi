@@ -1242,6 +1242,7 @@ public:
 
             QAbstractItemModel *model = const_cast<QAbstractItemModel *>(index.model());
             model->dropMimeData(mimeData, dropAction, -1, -1, index);
+            delete mimeData;
         }
         delete dlg;
     }
@@ -1264,6 +1265,7 @@ public:
         const Collection collection = index.data(EntityTreeModel::CollectionRole).value<Collection>();
         addRecentCollection(collection.id());
         model->dropMimeData(mimeData, dropAction, -1, -1, index);
+        delete mimeData;
     }
 
     void addRecentCollection(Akonadi::Collection::Id id) const
