@@ -33,7 +33,6 @@ RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::T
     : QObject(menu)
     , mMenu(menu)
     , mModel(model)
-    , mRecentAction(nullptr)
 {
     mAkonadiConfig = KSharedConfig::openConfig(QStringLiteral("akonadikderc"));
     KConfigGroup group(mAkonadiConfig, QStringLiteral("Recent Collections"));
@@ -46,6 +45,7 @@ RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::T
 
 RecentCollectionAction::~RecentCollectionAction()
 {
+    delete mRecentAction->menu();
 }
 
 bool RecentCollectionAction::clear()
