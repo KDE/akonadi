@@ -45,7 +45,7 @@ RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::T
 
 RecentCollectionAction::~RecentCollectionAction()
 {
-    delete mRecentAction->menu();
+    //delete mRecentAction->menu();
 }
 
 bool RecentCollectionAction::clear()
