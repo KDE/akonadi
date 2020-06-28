@@ -25,7 +25,7 @@
 
 #include "dbustracer.h"
 #include "filetracer.h"
-#include "nulltracer.h"
+#include "akonadiserver_debug.h"
 
 #include <private/standarddirs_p.h>
 
@@ -49,71 +49,78 @@ Tracer::~Tracer() = default;
 
 void Tracer::beginConnection(const QString &identifier, const QString &msg)
 {
-    mMutex.lock();
-    mTracerBackend->beginConnection(identifier, msg);
-    mMutex.unlock();
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        mTracerBackend->beginConnection(identifier, msg);
+    }
 }
 
 void Tracer::endConnection(const QString &identifier, const QString &msg)
 {
-    mMutex.lock();
-    mTracerBackend->endConnection(identifier, msg);
-    mMutex.unlock();
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        mTracerBackend->endConnection(identifier, msg);
+    }
 }
 
 void Tracer::connectionInput(const QString &identifier, const QByteArray &msg)
 {
-    mMutex.lock();
-    mTracerBackend->connectionInput(identifier, msg);
-    mMutex.unlock();
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        mTracerBackend->connectionInput(identifier, msg);
+    }
 }
 
 void Akonadi::Server::Tracer::connectionInput(const QString& identifier, qint64 tag, const Protocol::CommandPtr &cmd)
 {
-    QByteArray msg;
-    if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
-        QJsonObject json;
-        json[QStringLiteral("tag")] = tag;
-        Akonadi::Protocol::toJson(cmd.data(), json);
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
+            QJsonObject json;
+            json[QStringLiteral("tag")] = tag;
+            Akonadi::Protocol::toJson(cmd.data(), json);
 
-        QJsonDocument doc(json);
+            QJsonDocument doc(json);
 
-        msg = doc.toJson(QJsonDocument::Indented);
-    } else {
-        msg = QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8();
+            mTracerBackend->connectionInput(identifier, doc.toJson(QJsonDocument::Indented));
+        } else {
+            mTracerBackend->connectionInput(identifier, QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8());
+        }
     }
-    connectionInput(identifier, msg);
 }
 
 void Tracer::connectionOutput(const QString &identifier, const QByteArray &msg)
 {
-    mMutex.lock();
-    mTracerBackend->connectionOutput(identifier, msg);
-    mMutex.unlock();
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        mTracerBackend->connectionOutput(identifier, msg);
+    }
 }
 
 void Tracer::connectionOutput(const QString &identifier, qint64 tag, const Protocol::CommandPtr &cmd)
 {
-    QByteArray msg;
-    if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
-        QJsonObject json;
-        json[QStringLiteral("tag")] = tag;
-        Protocol::toJson(cmd.data(), json);
-        QJsonDocument doc(json);
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        if (mTracerBackend->connectionFormat() == TracerInterface::Json) {
+            QJsonObject json;
+            json[QStringLiteral("tag")] = tag;
+            Protocol::toJson(cmd.data(), json);
+            QJsonDocument doc(json);
 
-        msg = doc.toJson(QJsonDocument::Indented);
-    } else {
-        msg = QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8();
+            mTracerBackend->connectionOutput(identifier, doc.toJson(QJsonDocument::Indented));
+        } else {
+            mTracerBackend->connectionOutput(identifier, QByteArray::number(tag) + ' ' + Protocol::debugString(cmd).toUtf8());
+        }
     }
-    connectionOutput(identifier, msg);
 }
 
 
 void Tracer::signal(const QString &signalName, const QString &msg)
 {
-    mMutex.lock();
-    mTracerBackend->signal(signalName, msg);
-    mMutex.unlock();
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        mTracerBackend->signal(signalName, msg);
+    }
 }
 
 void Tracer::signal(const char *signalName, const QString &msg)
@@ -123,16 +130,18 @@ void Tracer::signal(const char *signalName, const QString &msg)
 
 void Tracer::warning(const QString &componentName, const QString &msg)
 {
-    mMutex.lock();
-    mTracerBackend->warning(componentName, msg);
-    mMutex.unlock();
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        mTracerBackend->warning(componentName, msg);
+    }
 }
 
 void Tracer::error(const QString &componentName, const QString &msg)
 {
-    mMutex.lock();
-    mTracerBackend->error(componentName, msg);
-    mMutex.unlock();
+    QMutexLocker locker(&mMutex);
+    if (mTracerBackend) {
+        mTracerBackend->error(componentName, msg);
+    }
 }
 
 void Tracer::error(const char *componentName, const QString &msg)
@@ -150,16 +159,19 @@ void Tracer::activateTracer(const QString &type)
 {
     QMutexLocker locker(&mMutex);
 
-    mSettings->setValue(QStringLiteral("Debug/Tracer"), type);
-    mSettings->sync();
-
     if (type == QLatin1String("file")) {
         const QString file = mSettings->value(QStringLiteral("Debug/File"), QStringLiteral("/dev/null")).toString();
         mTracerBackend = std::make_unique<FileTracer>(file);
-    } else if (type == QLatin1String("null")) {
-        mTracerBackend = std::make_unique<NullTracer>();
-    } else {
+    } else if (type == QLatin1String("dbus")) {
         mTracerBackend = std::make_unique<DBusTracer>();
+    } else if (type == QLatin1String("null")) {
+        mTracerBackend.reset();
+    } else {
+        qCCritical(AKONADISERVER_LOG) << "Unknown tracer type" << type;
+        mTracerBackend.reset();
+        return;
     }
-    Q_ASSERT(mTracerBackend);
+
+    mSettings->setValue(QStringLiteral("Debug/Tracer"), type);
+    mSettings->sync();
 }
