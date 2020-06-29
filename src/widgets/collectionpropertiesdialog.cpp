@@ -91,6 +91,9 @@ public:
 class CollectionPropertiesPageFactoryList : public QList<CollectionPropertiesPageFactory *>
 {
 public:
+    explicit CollectionPropertiesPageFactoryList() = default;
+    CollectionPropertiesPageFactoryList(const CollectionPropertiesPageFactoryList &) = delete;
+    CollectionPropertiesPageFactoryList &operator=(const CollectionPropertiesPageFactoryList &) = delete;
     ~CollectionPropertiesPageFactoryList() {
         qDeleteAll(*this);
     }
