@@ -45,12 +45,15 @@ RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::T
 
 RecentCollectionAction::~RecentCollectionAction()
 {
-    //delete mRecentAction->menu();
+    if (needToDeleteMenu) {
+        delete mRecentAction->menu();
+    }
 }
 
 bool RecentCollectionAction::clear()
 {
     delete mRecentAction->menu();
+    needToDeleteMenu = false;
     if (mListRecentCollection.isEmpty()) {
         mRecentAction->setEnabled(false);
         return true;
@@ -66,6 +69,7 @@ void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager
 
     QMenu *popup = new QMenu;
     mRecentAction->setMenu(popup);
+    needToDeleteMenu = true;
 
     const int numberOfRecentCollection(mListRecentCollection.count());
     for (int i = 0; i < numberOfRecentCollection; ++i) {

@@ -68,6 +68,7 @@ private:
     const QAbstractItemModel *mModel = nullptr;
     QAction *mRecentAction = nullptr;
     KSharedConfig::Ptr mAkonadiConfig;
+    bool needToDeleteMenu = false;
 };
 }
 
