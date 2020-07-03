@@ -1402,6 +1402,7 @@ void EntityTreeModelPrivate::startFirstListJob()
         // Otherwise store it silently because it's not part of the usable model.
         delete m_rootNode;
         m_rootNode = node;
+        m_needDeleteRootNode = true;
         m_collections.insert(m_rootCollection.id(), m_rootCollection);
     }
 
