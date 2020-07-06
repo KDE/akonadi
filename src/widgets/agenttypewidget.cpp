@@ -47,10 +47,7 @@ class Q_DECL_HIDDEN AgentTypeWidget::Private
 {
 public:
     explicit Private(AgentTypeWidget *parent)
-        : mParent(parent),
-          mView(nullptr),
-          mModel(nullptr),
-          proxyModel(nullptr)
+        : mParent(parent)
     {
     }
 
@@ -63,7 +60,7 @@ public:
         }
     }
 
-    AgentTypeWidget *mParent = nullptr;
+    AgentTypeWidget * const mParent;
     QListView *mView = nullptr;
     AgentTypeModel *mModel = nullptr;
     AgentFilterProxyModel *proxyModel = nullptr;

@@ -42,7 +42,7 @@ public:
     void _k_collectionReceived(KJob *job);
     void _k_collectionsNamesReceived(KJob *job);
 
-    CollectionRequester *q = nullptr;
+    CollectionRequester * const q;
     Collection collection;
     QLineEdit *edit = nullptr;
     QPushButton *button = nullptr;

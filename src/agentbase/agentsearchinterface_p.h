@@ -35,7 +35,7 @@ private Q_SLOTS:
     void collectionReceived(KJob *job);
 
 private:
-    AgentSearchInterface *q = nullptr;
+    AgentSearchInterface * const q;
 };
 
 }

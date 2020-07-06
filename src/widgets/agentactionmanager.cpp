@@ -231,7 +231,7 @@ public:
         return mContextTexts[type].value(context);
     }
 
-    AgentActionManager *q = nullptr;
+    AgentActionManager * const q;
     KActionCollection *mActionCollection = nullptr;
     QWidget *mParentWidget = nullptr;
     QItemSelectionModel *mSelectionModel = nullptr;

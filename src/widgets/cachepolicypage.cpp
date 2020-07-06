@@ -33,7 +33,7 @@ public:
     void slotCacheValueChanged(int /*interval*/);
     void slotRetrievalOptionsGroupBoxDisabled(bool disable);
 
-    Ui::CachePolicyPage *mUi = nullptr;
+    Ui::CachePolicyPage * const mUi;
 };
 
 void CachePolicyPage::Private::slotIntervalValueChanged(int interval)

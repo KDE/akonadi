@@ -32,7 +32,7 @@ class Q_DECL_HIDDEN StatisticsProxyModel::Private
 {
 public:
     explicit Private(StatisticsProxyModel *parent)
-        : q(parent), mToolTipEnabled(false), mExtraColumnsEnabled(false)
+        : q(parent)
     {
     }
 
@@ -168,10 +168,10 @@ public:
 
     void _k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles);
 
-    StatisticsProxyModel *q = nullptr;
+    StatisticsProxyModel * const q;
 
-    bool mToolTipEnabled;
-    bool mExtraColumnsEnabled;
+    bool mToolTipEnabled = false;
+    bool mExtraColumnsEnabled = false;
 };
 
 void StatisticsProxyModel::Private::_k_sourceDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight, const QVector<int> &roles)

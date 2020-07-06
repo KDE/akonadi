@@ -33,7 +33,7 @@ public:
     void writeConfig() const;
     AgentTypeWidget *Widget = nullptr;
     AgentType agentType;
-    AgentTypeDialog *q = nullptr;
+    AgentTypeDialog * const q;
 };
 
 void AgentTypeDialog::Private::writeConfig() const
