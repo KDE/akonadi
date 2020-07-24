@@ -123,7 +123,7 @@ QStringList DbConfigPostgresql::postgresSearchPaths(const QString &versionedPath
     return paths;
 }
 
-bool DbConfigPostgresql::init(QSettings &settings)
+bool DbConfigPostgresql::init(QSettings &settings, bool storeSettings)
 {
     // determine default settings depending on the driver
     QString defaultHostName;
@@ -186,19 +186,21 @@ bool DbConfigPostgresql::init(QSettings &settings)
     }
     settings.endGroup();
 
-    // store back the default values
-    settings.beginGroup(driverName());
-    settings.setValue(QStringLiteral("Name"), mDatabaseName);
-    settings.setValue(QStringLiteral("Host"), mHostName);
-    if (mHostPort) {
-        settings.setValue(QStringLiteral("Port"), mHostPort);
+    if (storeSettings) {
+        // store back the default values
+        settings.beginGroup(driverName());
+        settings.setValue(QStringLiteral("Name"), mDatabaseName);
+        settings.setValue(QStringLiteral("Host"), mHostName);
+        if (mHostPort) {
+            settings.setValue(QStringLiteral("Port"), mHostPort);
+        }
+        settings.setValue(QStringLiteral("Options"), mConnectionOptions);
+        settings.setValue(QStringLiteral("ServerPath"), mServerPath);
+        settings.setValue(QStringLiteral("InitDbPath"), mInitDbPath);
+        settings.setValue(QStringLiteral("StartServer"), mInternalServer);
+        settings.endGroup();
+        settings.sync();
     }
-    settings.setValue(QStringLiteral("Options"), mConnectionOptions);
-    settings.setValue(QStringLiteral("ServerPath"), mServerPath);
-    settings.setValue(QStringLiteral("InitDbPath"), mInitDbPath);
-    settings.setValue(QStringLiteral("StartServer"), mInternalServer);
-    settings.endGroup();
-    settings.sync();
 
     return true;
 }

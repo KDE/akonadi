@@ -65,7 +65,7 @@ static QString findExecutable(const QString &bin)
     return path;
 }
 
-bool DbConfigMysql::init(QSettings &settings)
+bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
 {
     // determine default settings depending on the driver
     QString defaultHostName;
@@ -134,17 +134,19 @@ bool DbConfigMysql::init(QSettings &settings)
 
     qCDebug(AKONADISERVER_LOG) << "Using mysqld:" << mMysqldPath;
 
-    // store back the default values
-    settings.beginGroup(driverName());
-    settings.setValue(QStringLiteral("Name"), mDatabaseName);
-    settings.setValue(QStringLiteral("Host"), mHostName);
-    settings.setValue(QStringLiteral("Options"), mConnectionOptions);
-    if (!mMysqldPath.isEmpty()) {
-        settings.setValue(QStringLiteral("ServerPath"), mMysqldPath);
+    if (storeSettings) {
+        // store back the default values
+        settings.beginGroup(driverName());
+        settings.setValue(QStringLiteral("Name"), mDatabaseName);
+        settings.setValue(QStringLiteral("Host"), mHostName);
+        settings.setValue(QStringLiteral("Options"), mConnectionOptions);
+        if (!mMysqldPath.isEmpty()) {
+            settings.setValue(QStringLiteral("ServerPath"), mMysqldPath);
+        }
+        settings.setValue(QStringLiteral("StartServer"), mInternalServer);
+        settings.endGroup();
+        settings.sync();
     }
-    settings.setValue(QStringLiteral("StartServer"), mInternalServer);
-    settings.endGroup();
-    settings.sync();
 
     // apply temporary changes to the settings
     if (mInternalServer) {
@@ -152,6 +154,20 @@ bool DbConfigMysql::init(QSettings &settings)
         mUserName.clear();
         mPassword.clear();
     }
+
+    return true;
+}
+
+bool DbConfigMysql::areRequirementsAvailable(QSettings &settings)
+{
+    if (!QSqlDatabase::drivers().contains(driverName()))
+        return false;
+
+    if (!init(settings, false))
+        return false;
+
+    if (mInternalServer && (mMysqldPath.isEmpty() || !QFile::exists(mMysqldPath)))
+        return false;
 
     return true;
 }

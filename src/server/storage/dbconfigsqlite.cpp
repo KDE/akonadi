@@ -72,7 +72,7 @@ QString DbConfigSqlite::databaseName() const
     return mDatabaseName;
 }
 
-bool DbConfigSqlite::init(QSettings &settings)
+bool DbConfigSqlite::init(QSettings &settings, bool storeSettings)
 {
     // determine default settings depending on the driver
     const QString defaultDbName = sqliteDataFile();
@@ -89,11 +89,24 @@ bool DbConfigSqlite::init(QSettings &settings)
     mConnectionOptions = settings.value(QStringLiteral("Options")).toString();
     settings.endGroup();
 
-    // store back the default values
-    settings.beginGroup(driverName());
-    settings.setValue(QStringLiteral("Name"), mDatabaseName);
-    settings.endGroup();
-    settings.sync();
+    if (storeSettings) {
+        // store back the default values
+        settings.beginGroup(driverName());
+        settings.setValue(QStringLiteral("Name"), mDatabaseName);
+        settings.endGroup();
+        settings.sync();
+    }
+
+    return true;
+}
+
+bool DbConfigSqlite::areRequirementsAvailable(QSettings &settings)
+{
+    if (!QSqlDatabase::drivers().contains(driverName()))
+        return false;
+
+    if (!init(settings, false))
+        return false;
 
     return true;
 }

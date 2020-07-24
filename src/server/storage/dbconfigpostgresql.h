@@ -36,9 +36,9 @@ public:
      * and before the initial database connection is set up.
      *
      * At this point the default settings should be determined, merged
-     * with the given @p settings and written back.
+     * with the given @p settings and written back if @p storeSettings is true.
      */
-    bool init(QSettings &settings) override;
+    bool init(QSettings &settings, bool storeSettings=true) override;
 
     /**
      * This method applies the configured settings to the QtSql @p database

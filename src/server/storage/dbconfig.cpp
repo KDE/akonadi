@@ -59,6 +59,16 @@ DbConfig *DbConfig::configuredDatabase()
         QString driverName = settings.value(QStringLiteral("General/Driver")).toString();
         if (driverName.isEmpty()) {
             driverName = QStringLiteral(AKONADI_DATABASE_BACKEND);
+
+            // If we fallback to use QMYSQL by default, let's check that it's really available.
+            if (driverName == QLatin1String("QMYSQL")) {
+                DbConfigMysql dbConfigMysql;
+                if (!dbConfigMysql.areRequirementsAvailable(settings)
+                    && DbConfigSqlite(DbConfigSqlite::Custom).areRequirementsAvailable(settings)) {
+                    qCWarning(AKONADISERVER_LOG) << "QMYSQL requirements not available. Falling back to using QSQLITE3.";
+                    driverName = QStringLiteral("QSQLITE3");
+                }
+            }
             // when using the default, write it explicitly, in case the default changes later
             settings.setValue(QStringLiteral("General/Driver"), driverName);
             settings.sync();
