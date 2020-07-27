@@ -152,6 +152,13 @@ void AgentInstanceCreateJobPrivate::doStart()
         agentType = AgentManager::self()->type(agentTypeId);
     }
 
+    if (!agentTypeId.isEmpty()) {
+        q->setError(KJob::UserDefinedError);
+        q->setErrorText(i18n("Agent Type undefined."));
+        QTimer::singleShot(0, q, &AgentInstanceCreateJob::emitResult);
+        return;
+    }
+
     if (!agentType.isValid()) {
         q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("Unable to obtain agent type '%1'.", agentTypeId));
