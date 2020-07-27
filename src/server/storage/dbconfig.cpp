@@ -49,6 +49,28 @@ bool DbConfig::isConfigured()
     return s_DbConfigInstance;
 }
 
+QString DbConfig::defaultAvailableDatabaseBackend(QSettings &settings)
+{
+    QString driverName = QStringLiteral(AKONADI_DATABASE_BACKEND);
+
+    DbConfig *dbConfigFallbackTest = 0L;
+    if (driverName == QLatin1String("QMYSQL")) {
+        dbConfigFallbackTest = new DbConfigMysql;
+    } else if (driverName == QLatin1String("QPSQL")) {
+        dbConfigFallbackTest = new DbConfigPostgresql;
+    }
+
+    if (dbConfigFallbackTest && !dbConfigFallbackTest->isAvailable(settings)
+        && DbConfigSqlite(DbConfigSqlite::Custom).isAvailable(settings)) {
+        qCWarning(AKONADISERVER_LOG) << driverName << " requirements not available. Falling back to using QSQLITE3.";
+        driverName = QStringLiteral("QSQLITE3");
+    }
+    delete dbConfigFallbackTest;
+
+    return driverName;
+}
+
+
 DbConfig *DbConfig::configuredDatabase()
 {
     if (!s_DbConfigInstance) {
@@ -58,17 +80,8 @@ DbConfig *DbConfig::configuredDatabase()
         // determine driver to use
         QString driverName = settings.value(QStringLiteral("General/Driver")).toString();
         if (driverName.isEmpty()) {
-            driverName = QStringLiteral(AKONADI_DATABASE_BACKEND);
+            driverName = defaultAvailableDatabaseBackend(settings);
 
-            // If we fallback to use QMYSQL by default, let's check that it's really available.
-            if (driverName == QLatin1String("QMYSQL")) {
-                DbConfigMysql dbConfigMysql;
-                if (!dbConfigMysql.areRequirementsAvailable(settings)
-                    && DbConfigSqlite(DbConfigSqlite::Custom).areRequirementsAvailable(settings)) {
-                    qCWarning(AKONADISERVER_LOG) << "QMYSQL requirements not available. Falling back to using QSQLITE3.";
-                    driverName = QStringLiteral("QSQLITE3");
-                }
-            }
             // when using the default, write it explicitly, in case the default changes later
             settings.setValue(QStringLiteral("General/Driver"), driverName);
             settings.sync();

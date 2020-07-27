@@ -56,6 +56,12 @@ public:
     virtual bool init(QSettings &settings, bool storeSettings=true) = 0;
 
     /**
+     * This method checks if the requirements for this database connection are met
+     * in the system (i.e. QMYSQL driver is available, mysqld binary is found, etc.).
+     */
+    virtual bool isAvailable(QSettings &settings) = 0;
+
+    /**
      * This method applies the configured settings to the QtSql @p database
      * instance.
      */
@@ -104,6 +110,13 @@ protected:
      * with internal databases (in process or using our own server instance).
      */
     static QString defaultDatabaseName();
+
+    /*
+     * Returns the Database backend we should use by default. Usually it should be the same value
+     * configured as AKONADI_DATABASE_BACKEND at build time, but this method checks if that
+     * backend is really available and if it's not, it falls back to returning "QSQLITE3".
+     */
+    static QString defaultAvailableDatabaseBackend(QSettings &settings);
 
     /**
      * Calls QProcess::execute() and also prints the command and arguments via qCDebug()

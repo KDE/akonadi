@@ -41,6 +41,13 @@ public:
     bool init(QSettings &settings, bool storeSettings=true) override;
 
     /**
+     * This method checks if the requirements for this database connection are
+     * met in the system (QPOSTGRESQL driver is available, postgresql binary is
+     * found, etc.).
+     */
+    bool isAvailable(QSettings &settings) override;
+
+    /**
      * This method applies the configured settings to the QtSql @p database
      * instance.
      */

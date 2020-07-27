@@ -48,7 +48,7 @@ public:
      * This method checks if the requirements for this database connection are met
      * in the system (QSQLITE/QSQLITE3 driver is available, object can be initialized, etc.).
      */
-    bool areRequirementsAvailable(QSettings &settings);
+    bool isAvailable(QSettings &settings) override;
 
     /**
      * This method applies the configured settings to the QtSql @p database

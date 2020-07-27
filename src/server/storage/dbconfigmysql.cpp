@@ -158,7 +158,7 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
     return true;
 }
 
-bool DbConfigMysql::areRequirementsAvailable(QSettings &settings)
+bool DbConfigMysql::isAvailable(QSettings &settings)
 {
     if (!QSqlDatabase::drivers().contains(driverName()))
         return false;
