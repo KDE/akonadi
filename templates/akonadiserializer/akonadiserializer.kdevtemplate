@@ -35,6 +35,7 @@ Comment=Akonadi Serializer Template. A template for an Akonadi data serializer p
 Comment[ar]=قالب سَلسَلة «أكونادي». قالب لملحقة سَلسَلة بيانات «أكونادي»
 Comment[ca]=Plantilla de serialitzador de l'Akonadi. Una plantilla per a un connector de serialització de dades de l'Akonadi
 Comment[ca@valencia]=Plantilla de serialitzador de l'Akonadi. Una plantilla per a un connector de serialització de dades de l'Akonadi
+Comment[da]=Skabelon til Akonadi-serializer. En skabelon til et Akonadi data-serializer-plugin
 Comment[de]=Vorlage für Akonadi-Serialisierer. Eine Vorlage für einen Datenserialisierer für das Akonadi-PIM-Framework
 Comment[en_GB]=Akonadi Serialiser Template. A template for an Akonadi data serialiser plugin
 Comment[es]=Plantilla serializadora de Akonadi. Una plantilla para un complemento serializador de Akonadi
