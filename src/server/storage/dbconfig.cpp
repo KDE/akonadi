@@ -53,7 +53,7 @@ QString DbConfig::defaultAvailableDatabaseBackend(QSettings &settings)
 {
     QString driverName = QStringLiteral(AKONADI_DATABASE_BACKEND);
 
-    DbConfig *dbConfigFallbackTest = 0L;
+    DbConfig *dbConfigFallbackTest = nullptr;
     if (driverName == QLatin1String("QMYSQL")) {
         dbConfigFallbackTest = new DbConfigMysql;
     } else if (driverName == QLatin1String("QPSQL")) {
