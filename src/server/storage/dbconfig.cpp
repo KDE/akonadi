@@ -53,11 +53,11 @@ QString DbConfig::defaultAvailableDatabaseBackend(QSettings &settings)
 {
     QString driverName = QStringLiteral(AKONADI_DATABASE_BACKEND);
 
-    DbConfig *dbConfigFallbackTest = nullptr;
+    std::unique_ptr<DbConfig> dbConfigFallbackTest;
     if (driverName == QLatin1String("QMYSQL")) {
-        dbConfigFallbackTest = new DbConfigMysql;
+        dbConfigFallbackTest.reset(new DbConfigMysql);
     } else if (driverName == QLatin1String("QPSQL")) {
-        dbConfigFallbackTest = new DbConfigPostgresql;
+        dbConfigFallbackTest.reset(new DbConfigPostgresql);
     }
 
     if (dbConfigFallbackTest && !dbConfigFallbackTest->isAvailable(settings)
@@ -65,7 +65,6 @@ QString DbConfig::defaultAvailableDatabaseBackend(QSettings &settings)
         qCWarning(AKONADISERVER_LOG) << driverName << " requirements not available. Falling back to using QSQLITE3.";
         driverName = QStringLiteral("QSQLITE3");
     }
-    delete dbConfigFallbackTest;
 
     return driverName;
 }
