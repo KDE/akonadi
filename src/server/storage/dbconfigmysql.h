@@ -40,7 +40,7 @@ public:
      * At this point the default settings should be determined, merged
      * with the given @p settings and written back if @p storeSettings is true.
      */
-    bool init(QSettings &settings, bool storeSettings=true) override;
+    bool init(QSettings &settings, bool storeSettings = true) override;
 
     /**
      * This method checks if the requirements for this database connection are met

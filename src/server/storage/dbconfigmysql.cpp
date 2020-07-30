@@ -160,14 +160,17 @@ bool DbConfigMysql::init(QSettings &settings, bool storeSettings)
 
 bool DbConfigMysql::isAvailable(QSettings &settings)
 {
-    if (!QSqlDatabase::drivers().contains(driverName()))
+    if (!QSqlDatabase::drivers().contains(driverName())) {
         return false;
+    }
 
-    if (!init(settings, false))
+    if (!init(settings, false)) {
         return false;
+    }
 
-    if (mInternalServer && (mMysqldPath.isEmpty() || !QFile::exists(mMysqldPath)))
+    if (mInternalServer && (mMysqldPath.isEmpty() || !QFile::exists(mMysqldPath))) {
         return false;
+    }
 
     return true;
 }

@@ -53,7 +53,7 @@ public:
      * At this point the default settings should be determined, merged
      * with the given @p settings and written back if @p storeSettings is true.
      */
-    virtual bool init(QSettings &settings, bool storeSettings=true) = 0;
+    virtual bool init(QSettings &settings, bool storeSettings = true) = 0;
 
     /**
      * This method checks if the requirements for this database connection are met
