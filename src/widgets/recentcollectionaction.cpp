@@ -33,9 +33,9 @@ RecentCollectionAction::RecentCollectionAction(Akonadi::StandardActionManager::T
 
 RecentCollectionAction::~RecentCollectionAction()
 {
-    if (needToDeleteMenu) {
-        delete mRecentAction->menu();
-    }
+//    if (needToDeleteMenu) {
+//        delete mRecentAction->menu();
+//    }
 }
 
 bool RecentCollectionAction::clear()
