@@ -20,6 +20,7 @@
 #include <QStringList>
 #include <QMimeDatabase>
 #include <QMimeType>
+#include <QRegularExpression>
 
 #include <boost/graph/adjacency_list.hpp>
 #include <boost/graph/topological_sort.hpp>
@@ -217,14 +218,15 @@ public:
         qCDebug(AKONADICORE_LOG) << "ItemSerializerPluginLoader: "
                                  << "found" << names.size() << "plugins.";
         QMap<QString, MimeTypeEntry> map;
-        QRegExp rx(QStringLiteral("(.+)@(.+)"));
+        QRegularExpression rx(QRegularExpression::anchoredPattern(QStringLiteral("(.+)@(.+)")));
         QMimeDatabase mimeDb;
         for (const QString &name : names) {
-            if (rx.exactMatch(name)) {
-                const QMimeType mime = mimeDb.mimeTypeForName(rx.cap(1));
+            QRegularExpressionMatch match = rx.match(name);
+            if (match.hasMatch()) {
+                const QMimeType mime = mimeDb.mimeTypeForName(match.captured(1));
                 if (mime.isValid()) {
                     const QString mimeType = mime.name();
-                    const QByteArray classType = rx.cap(2).toLatin1();
+                    const QByteArray classType = match.captured(2).toLatin1();
                     QMap<QString, MimeTypeEntry>::iterator it = map.find(mimeType);
                     if (it == map.end()) {
                         it = map.insert(mimeType, MimeTypeEntry(mimeType));

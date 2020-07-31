@@ -32,7 +32,7 @@ public:
     QStringList mimeTypes;
     QStringList capabilities;
     QStringList excludeCapabilities;
-    bool filterAcceptRegExp(const QModelIndex &index, const QRegExp &filterRegExpStr);
+    bool filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr);
 };
 
 AgentFilterProxyModel::AgentFilterProxyModel(QObject *parent)
@@ -73,10 +73,10 @@ void AgentFilterProxyModel::clearFilters()
     invalidateFilter();
 }
 
-bool AgentFilterProxyModel::Private::filterAcceptRegExp(const QModelIndex &index, const QRegExp &filterRegExpStr)
+bool AgentFilterProxyModel::Private::filterAcceptRegExp(const QModelIndex &index, const QRegularExpression &filterRegExpStr)
 {
     // First see if the name matches a set regexp filter.
-    if (!filterRegExpStr.isEmpty()) {
+    if (!filterRegExpStr.pattern().isEmpty()) {
         return index.data(AgentTypeModel::IdentifierRole).toString().contains(filterRegExpStr)
                 || index.data().toString().contains(filterRegExpStr);
     }
@@ -145,5 +145,5 @@ bool AgentFilterProxyModel::filterAcceptsRow(int row, const QModelIndex & /*sour
         }
     }
 
-    return d->filterAcceptRegExp(index, filterRegExp());
+    return d->filterAcceptRegExp(index, filterRegularExpression());
 }

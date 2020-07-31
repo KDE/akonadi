@@ -10,7 +10,7 @@
 
 #include <QDebug>
 #include <QMetaObject>
-#include <QRegExp>
+#include <QRegularExpression>
 #include <QSettings>
 #include <QLocalSocket>
 #include <QTcpSocket>
@@ -75,9 +75,10 @@ void DBusBridgeConnection::connectLocal()
     // TODO: support for !Linux
 #ifdef Q_OS_UNIX
     const QByteArray sessionBusAddress = qgetenv("DBUS_SESSION_BUS_ADDRESS");
-    QRegExp rx(QStringLiteral("=(.*)[,$]"));
-    if (rx.indexIn(QString::fromLatin1(sessionBusAddress)) >= 0) {
-        const QString dbusPath = rx.cap(1);
+    const QRegularExpression rx(QStringLiteral("=(.*)[,$]"));
+    QRegularExpressionMatch match = rx.match(QString::fromLatin1(sessionBusAddress));
+    if (match.hasMatch()) {
+        const QString dbusPath = match.captured(1);
         qDebug() << dbusPath;
         if (sessionBusAddress.contains("abstract")) {
             const int fd = socket(PF_UNIX, SOCK_STREAM, 0);

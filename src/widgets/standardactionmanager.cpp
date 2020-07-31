@@ -45,6 +45,7 @@
 #include <QItemSelectionModel>
 #include <QPointer>
 #include <QInputDialog>
+#include <QRegularExpression>
 
 using namespace Akonadi;
 
@@ -1536,7 +1537,7 @@ public:
         }
 
         const QString str = text.subs(count).toString();
-        const int argCount = str.count(QRegExp(QStringLiteral("%[0-9]")));
+        const int argCount = str.count(QRegularExpression(QStringLiteral("%[0-9]")));
         if (argCount > 0) {
             return text.subs(count).subs(value).toString();
         } else {
