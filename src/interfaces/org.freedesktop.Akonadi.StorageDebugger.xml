@@ -53,7 +53,7 @@
       <arg type="s" name="query" direction="out" />
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out5" value="const QMap&lt;QString,QVariant&gt; &amp;"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In5" value="const QMap&lt;QString,QVariant&gt; &amp;"/>
-      <arg type="{sv}" name="values" direction="out" />
+      <arg type="a{sv}" name="values" direction="out" />
       <arg type="i" name="resultsCount" direction="out"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.Out7" value="const QList&lt;QList&lt;QVariant&gt; &gt; &amp;"/>
       <annotation name="org.qtproject.QtDBus.QtTypeName.In7" value="const QList&lt;QList&lt;QVariant&gt; &gt; &amp;"/>
