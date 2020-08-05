@@ -26,6 +26,7 @@
 #include <QTimer>
 #include <QThread>
 #include <QPointer>
+#include <QRandomGenerator>
 
 #include <QHostAddress>
 #include <QApplication>
@@ -316,7 +317,7 @@ void SessionPrivate::init(const QByteArray &id)
         sessionId = id;
     } else {
         sessionId = QCoreApplication::instance()->applicationName().toUtf8()
-                    + '-' + QByteArray::number(qrand());
+                    + '-' + QByteArray::number(QRandomGenerator::global()->generate());
     }
 
     qCDebug(AKONADICORE_LOG) << "Initializing session with ID" << id;

@@ -48,7 +48,11 @@ bool MimeTypeChecker::hasWantedMimeTypes() const
 
 void MimeTypeChecker::setWantedMimeTypes(const QStringList &mimeTypes)
 {
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
     d->mWantedMimeTypes = QSet<QString>::fromList(mimeTypes);
+#else
+    d->mWantedMimeTypes = QSet<QString>(mimeTypes.begin(), mimeTypes.end());
+#endif
 }
 
 void MimeTypeChecker::addWantedMimeType(const QString &mimeType)

@@ -67,8 +67,14 @@ void MimeTypeCheckerTest::initTestCase()
     QCOMPARE(mCalendarChecker.wantedMimeTypes(), QStringList() << textCalendar);
 
     QCOMPARE(mSubTypeChecker.wantedMimeTypes().count(), 2);
-    const QSet<QString> calendarSubTypes = QSet<QString>::fromList(mCalendarSubTypes);
-    const QSet<QString> wantedSubTypes = QSet<QString>::fromList(mSubTypeChecker.wantedMimeTypes());
+#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
+    const auto calendarSubTypes = QSet<QString>::fromList(mCalendarSubTypes);
+    const auto wantedSubTypes = QSet<QString>::fromList(mSubTypeChecker.wantedMimeTypes());
+#else
+    const auto calendarSubTypes = QSet<QString>(mCalendarSubTypes.begin(), mCalendarSubTypes.end());
+    const auto wantedMimeTypes = mSubTypeChecker.wantedMimeTypes();
+    const auto wantedSubTypes = QSet<QString>(wantedMimeTypes.begin(), wantedMimeTypes.end());
+#endif
     QCOMPARE(wantedSubTypes, calendarSubTypes);
 
     QCOMPARE(mAliasChecker.wantedMimeTypes().count(), 1);

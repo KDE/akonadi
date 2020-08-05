@@ -49,7 +49,7 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
 
     const QDateTime mtime = QDateTime::currentDateTimeUtc();
     // Split the list by source collection
-    QMap<Entity::Id /* collection */, PimItem> toMove;
+    QMultiMap<Entity::Id /* collection */, PimItem> toMove;
     QMap<Entity::Id /* collection */, Collection> sources;
     ImapSet toMoveIds;
     for (PimItem item : items) {  //krazy:exclude=foreach
@@ -82,7 +82,7 @@ void ItemMoveHandler::itemsRetrieved(const QVector<qint64> &ids)
             return;
         }
 
-        toMove.insertMulti(source.id(), item);
+        toMove.insert(source.id(), item);
         toMoveIds.add(QVector<qint64>{ item.id() });
     }
 
