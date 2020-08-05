@@ -11,8 +11,6 @@
 #include "agentinstancemodel.h"
 #include "agentmanager.h"
 #include "agenttypedialog.h"
-#include "metatypes.h"
-
 
 #include <QAction>
 #include <QIcon>

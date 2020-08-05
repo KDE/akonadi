@@ -19,7 +19,6 @@
 #include "entitytreemodel.h"
 #include "favoritecollectionsmodel.h"
 #include "itemdeletejob.h"
-#include "metatypes.h"
 #include "pastehelper_p.h"
 #include "specialcollectionattribute.h"
 #include "collectionpropertiesdialog.h"

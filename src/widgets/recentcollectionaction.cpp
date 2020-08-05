@@ -5,7 +5,6 @@
  */
 
 #include "recentcollectionaction_p.h"
-#include "metatypes.h"
 #include "entitytreemodel.h"
 #include <KConfig>
 #include <KConfigGroup>
