@@ -207,18 +207,22 @@ bool DbConfigPostgresql::init(QSettings &settings, bool storeSettings)
 
 bool DbConfigPostgresql::isAvailable(QSettings &settings)
 {
-    if (!QSqlDatabase::drivers().contains(driverName()))
+    if (!QSqlDatabase::drivers().contains(driverName())) {
         return false;
+    }
 
-    if (!init(settings, false))
+    if (!init(settings, false)) {
         return false;
+    }
 
     if (mInternalServer) {
-        if (mInitDbPath.isEmpty() || !QFile::exists(mInitDbPath))
+        if (mInitDbPath.isEmpty() || !QFile::exists(mInitDbPath)) {
             return false;
+        }
 
-        if (mServerPath.isEmpty() || !QFile::exists(mServerPath))
+        if (mServerPath.isEmpty() || !QFile::exists(mServerPath)) {
             return false;
+        }
     }
 
     return true;

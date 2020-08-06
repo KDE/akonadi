@@ -102,11 +102,13 @@ bool DbConfigSqlite::init(QSettings &settings, bool storeSettings)
 
 bool DbConfigSqlite::isAvailable(QSettings &settings)
 {
-    if (!QSqlDatabase::drivers().contains(driverName()))
+    if (!QSqlDatabase::drivers().contains(driverName())) {
         return false;
+    }
 
-    if (!init(settings, false))
+    if (!init(settings, false)) {
         return false;
+    }
 
     return true;
 }
