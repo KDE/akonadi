@@ -22,8 +22,6 @@ using namespace Akonadi;
 using namespace Akonadi::Server;
 using namespace AkRanges;
 
-QMimeDatabase NotificationSubscriber::sMimeDatabase;
-
 #define TRACE_NTF(x)
 //#define TRACE_NTF(x) qCDebug(AKONADISERVER_LOG) << mSubscriber << x
 
@@ -176,6 +174,18 @@ void NotificationSubscriber::registerSubscriber(const Protocol::CreateSubscripti
     mManager->slotNotify({ changeNtf });
 }
 
+static QStringList canonicalMimeTypes(const QStringList &mimes)
+{
+    static QMimeDatabase sMimeDatabase;
+    QStringList ret;
+    ret.reserve(mimes.count());
+    auto canonicalMime = [](const QString &mime) {
+       return sMimeDatabase.mimeTypeForName(mime).name();
+    };
+    std::transform(mimes.begin(), mimes.end(), std::back_inserter(ret), canonicalMime);
+    return ret;
+}
+
 void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscriptionCommand &command)
 {
     QMutexLocker locker(&mLock);
@@ -230,10 +240,10 @@ void NotificationSubscriber::modifySubscription(const Protocol::ModifySubscripti
         REMOVE(mMonitoredResources, command.stopMonitoringResources())
     }
     if (START_MONITORING(MimeTypes)) {
-        APPEND(mMonitoredMimeTypes, command.startMonitoringMimeTypes())
+        APPEND(mMonitoredMimeTypes, canonicalMimeTypes(command.startMonitoringMimeTypes()))
     }
     if (STOP_MONITORING(MimeTypes)) {
-        REMOVE(mMonitoredMimeTypes, command.stopMonitoringMimeTypes())
+        REMOVE(mMonitoredMimeTypes, canonicalMimeTypes(command.stopMonitoringMimeTypes()))
     }
     if (START_MONITORING(Sessions)) {
         APPEND(mIgnoredSessions, command.startIgnoringSessions())
@@ -341,17 +351,7 @@ bool NotificationSubscriber::isCollectionMonitored(Entity::Id id) const
 bool NotificationSubscriber::isMimeTypeMonitored(const QString &mimeType) const
 {
     // Assumes mLock being locked by caller
-
-    const QMimeType mt = sMimeDatabase.mimeTypeForName(mimeType);
-    if (mMonitoredMimeTypes.contains(mimeType)) {
-        return true;
-    }
-
-    const QStringList lst = mt.aliases();
-    return std::any_of(lst.cbegin(), lst.cend(),
-                [this](const auto &mt) {
-                    return mMonitoredMimeTypes.contains(mt);
-                });
+    return mMonitoredMimeTypes.contains(mimeType);
 }
 
 bool NotificationSubscriber::isMoveDestinationResourceMonitored(const Protocol::ItemChangeNotification &msg) const

@@ -101,8 +101,6 @@ protected:
     bool mAllMonitored;
     bool mExclusive;
     bool mNotificationDebugging;
-
-    static QMimeDatabase sMimeDatabase;
 };
 
 } // namespace Server
