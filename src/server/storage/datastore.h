@@ -131,7 +131,8 @@ public:
     static bool hasDataStore();
 
     /* --- ItemFlags ----------------------------------------------------- */
-    virtual bool setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
+    virtual bool setItemsFlags(const PimItem::List &items, const QVector<Flag> *currentFlags,
+                               const QVector<Flag> &newFlags,
                                bool *flagsChanged = nullptr, const Collection &col = Collection(), bool silent = false);
     virtual bool appendItemsFlags(const PimItem::List &items, const QVector<Flag> &flags, bool *flagsChanged = nullptr,
                                   bool checkIfExists = true, const Collection &col = Collection(), bool silent = false);

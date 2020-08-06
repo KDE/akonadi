@@ -62,6 +62,7 @@ bool FakeDataStore::init()
 }
 
 bool FakeDataStore::setItemsFlags(const PimItem::List &items,
+                                  const QVector<Flag> *currentFlags,
                                   const QVector<Flag> &flags,
                                   bool *flagsChanged,
                                   const Collection &col,
@@ -72,7 +73,7 @@ bool FakeDataStore::setItemsFlags(const PimItem::List &items,
                     << QVariant::fromValue(flags)
                     << QVariant::fromValue(col)
                     << silent);
-    return DataStore::setItemsFlags(items, flags, flagsChanged, col, silent);
+    return DataStore::setItemsFlags(items, currentFlags, flags, flagsChanged, col, silent);
 }
 
 bool FakeDataStore::appendItemsFlags(const PimItem::List &items,

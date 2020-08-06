@@ -231,7 +231,9 @@ bool DataStore::hasDataStore()
 
 /* --- ItemFlags ----------------------------------------------------- */
 
-bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &flags,
+bool DataStore::setItemsFlags(const PimItem::List &items,
+                              const QVector<Flag> *currentFlags,
+                              const QVector<Flag> &newFlags,
                               bool *flagsChanged, const Collection &col_, bool silent)
 {
     QSet<QString> removedFlags;
@@ -244,9 +246,9 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
     setBoolPtr(flagsChanged, false);
 
     for (const PimItem &item : items) {
-        const Flag::List itemFlags = item.flags();
+        const Flag::List itemFlags = currentFlags ? *currentFlags : item.flags(); // optimization
         for (const Flag &flag : itemFlags) {
-            if (!flags.contains(flag)) {
+            if (!newFlags.contains(flag)) {
                 removedFlags << flag.name();
                 Query::Condition cond;
                 cond.addValueCondition(PimItemFlagRelation::leftFullColumnName(), Query::Equals, item.id());
@@ -255,7 +257,7 @@ bool DataStore::setItemsFlags(const PimItem::List &items, const QVector<Flag> &f
             }
         }
 
-        for (const Flag &flag : flags) {
+        for (const Flag &flag : newFlags) {
             if (!itemFlags.contains(flag)) {
                 addedFlags << flag.name();
                 insIds << item.id();

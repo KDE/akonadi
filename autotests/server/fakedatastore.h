@@ -38,6 +38,7 @@ public:
     }
 
     bool setItemsFlags(const PimItem::List &items,
+                               const QVector<Flag> *currentFlags,
                                const QVector<Flag> &flags,
                                bool *flagsChanged = nullptr,
                                const Collection &col = Collection(),

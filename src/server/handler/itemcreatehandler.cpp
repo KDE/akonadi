@@ -209,14 +209,15 @@ bool ItemCreateHandler::mergeItem(const Protocol::CreateItemCommand &cmd,
         // through from Resource during ItemSync, like $ATTACHMENT, because the
         // resource is not aware of them (they are usually assigned by client
         // upon inspecting the payload)
-        Q_FOREACH (const Flag &currentFlag, currentItem.flags()) {
+        const Flag::List currentFlags = currentItem.flags();
+        for (const Flag &currentFlag : currentFlags) {
             const QByteArray currentFlagName = currentFlag.name().toLatin1();
             if (localFlagsToPreserve.contains(currentFlagName)) {
                 flagNames.insert(currentFlagName);
             }
         }
         const auto flags = HandlerHelper::resolveFlags(flagNames);
-        storageBackend()->setItemsFlags({currentItem}, flags, &flagsChanged, col, true);
+        storageBackend()->setItemsFlags({currentItem}, &currentFlags, flags, &flagsChanged, col, true);
         if (flagsChanged) {
             changedParts.insert(AKONADI_PARAM_FLAGS);
             needsUpdate = true;

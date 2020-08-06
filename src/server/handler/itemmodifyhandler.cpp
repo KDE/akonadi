@@ -38,12 +38,13 @@ ItemModifyHandler::ItemModifyHandler(AkonadiServer &akonadi)
     : Handler(akonadi)
 {}
 
-bool ItemModifyHandler::replaceFlags(const PimItem::List &item, const QSet<QByteArray> &flags, bool &flagsChanged)
+bool ItemModifyHandler::replaceFlags(const PimItem::List &items, const QSet<QByteArray> &flags, bool &flagsChanged)
 {
     Flag::List flagList = HandlerHelper::resolveFlags(flags);
     DataStore *store = connection()->storageBackend();
 
-    if (!store->setItemsFlags(item, flagList, &flagsChanged)) {
+    // TODO: why doesn't this have the "Make sure we don't overwrite some local-only flags" code that itemcreatehandler has?
+    if (!store->setItemsFlags(items, nullptr, flagList, &flagsChanged)) {
         qCWarning(AKONADISERVER_LOG) << "ItemModifyHandler::replaceFlags: Unable to replace flags";
         return false;
     }
