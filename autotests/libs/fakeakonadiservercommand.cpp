@@ -48,13 +48,16 @@ void FakeAkonadiServerCommand::connectForwardingSignals()
     const auto *mo = FakeAkonadiServerCommand::metaObject();
     for (int methodIndex = 0; methodIndex < mo->methodCount(); ++methodIndex) {
         const QMetaMethod mm = mo->method(methodIndex);
-        QByteArray signature = mm.methodSignature();
+        const QByteArray signature = mm.methodSignature();
         if (mm.methodType() == QMetaMethod::Signal) {
             if ((qobject_cast<TagModel*>(m_model) && isTagSignal(signature)) ||
                 (qobject_cast<EntityTreeModel*>(m_model) && (isCollectionSignal(signature) || isItemSignal(signature))))
             {
-                const int modelSlotIndex = m_model->metaObject()->indexOfSlot(signature.remove(0, 5).constData());
-                Q_ASSERT(modelSlotIndex >= 0);
+                const int modelSlotIndex = m_model->metaObject()->indexOfSlot(signature.mid(5).constData());
+                if (modelSlotIndex < 0) {
+                    qWarning() << "Slot not found in" << m_model->metaObject()->className() << ":" << signature.mid(5).constData();
+                    Q_ASSERT(modelSlotIndex >= 0);
+                }
                 mo->connect(this, methodIndex, m_model, modelSlotIndex);
             }
         }

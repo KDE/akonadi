@@ -70,6 +70,11 @@ private:
     bool insertColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
     bool removeColumns(int column, int count, const QModelIndex &index = QModelIndex()) override;
     bool removeRows(int row, int count, const QModelIndex &index = QModelIndex()) override;
+    // Used by FakeAkonadiServerCommand::connectForwardingSignals (tagmodeltest)
+    Q_PRIVATE_SLOT(d_func(), void tagsFetched(const Akonadi::Tag::List &tags))
+    Q_PRIVATE_SLOT(d_func(), void monitoredTagAdded(const Akonadi::Tag &tag))
+    Q_PRIVATE_SLOT(d_func(), void monitoredTagRemoved(const Akonadi::Tag &tag))
+    Q_PRIVATE_SLOT(d_func(), void monitoredTagChanged(const Akonadi::Tag &tag))
 };
 }
 
