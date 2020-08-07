@@ -10,6 +10,8 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 
@@ -42,7 +44,7 @@ public:
     /**
      * Creates a new collection quota attribute.
      */
-    CollectionQuotaAttribute();
+    explicit CollectionQuotaAttribute();
 
     /**
      * Creates a new collection quota attribute with initial values.
@@ -89,10 +91,10 @@ public:
 private:
     //@cond PRIVATE
     class Private;
-    Private *const d;
+    const std::unique_ptr<Private> d;
     //@endcond
 };
 
-}
+} // namespace Akonadi
 
 #endif

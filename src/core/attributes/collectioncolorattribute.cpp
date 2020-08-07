@@ -5,7 +5,6 @@
  */
 
 #include "collectioncolorattribute.h"
-#include "attributefactory.h"
 
 #include <QByteArray>
 #include <QString>

@@ -97,14 +97,11 @@ public:
 };
 
 CollectionRightsAttribute::CollectionRightsAttribute()
-    :  d(new Private)
+    :  d(std::make_unique<Private>())
 {
 }
 
-CollectionRightsAttribute::~CollectionRightsAttribute()
-{
-    delete d;
-}
+CollectionRightsAttribute::~CollectionRightsAttribute() = default;
 
 void CollectionRightsAttribute::setRights(Collection::Rights rights)
 {

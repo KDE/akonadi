@@ -8,6 +8,4 @@
 
 using namespace Akonadi;
 
-Attribute::~Attribute()
-{
-}
+Attribute::~Attribute() = default;

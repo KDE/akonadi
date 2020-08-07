@@ -12,10 +12,6 @@
 
 using namespace Akonadi;
 
-EntityAnnotationsAttribute::EntityAnnotationsAttribute()
-{
-}
-
 EntityAnnotationsAttribute::EntityAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations)
     : mAnnotations(annotations)
 {

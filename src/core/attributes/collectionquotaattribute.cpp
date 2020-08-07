@@ -13,30 +13,23 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN CollectionQuotaAttribute::Private
 {
 public:
-    Private(qint64 currentValue, qint64 maxValue)
-        : mCurrentValue(currentValue)
-        , mMaximumValue(maxValue)
-    {
-    }
-
-    qint64 mCurrentValue;
-    qint64 mMaximumValue;
+    qint64 mCurrentValue = -1;
+    qint64 mMaximumValue = -1;
 };
 
 CollectionQuotaAttribute::CollectionQuotaAttribute()
-    : d(new Private(-1, -1))
+    : d(std::make_unique<Private>())
 {
 }
 
 CollectionQuotaAttribute::CollectionQuotaAttribute(qint64 currentValue, qint64 maxValue)
-    : d(new Private(currentValue, maxValue))
+    : d(std::make_unique<Private>())
 {
+    d->mCurrentValue = currentValue;
+    d->mMaximumValue = maxValue;
 }
 
-CollectionQuotaAttribute::~CollectionQuotaAttribute()
-{
-    delete d;
-}
+CollectionQuotaAttribute::~CollectionQuotaAttribute() = default;
 
 void CollectionQuotaAttribute::setCurrentValue(qint64 value)
 {
@@ -60,8 +53,7 @@ qint64 CollectionQuotaAttribute::maximumValue() const
 
 QByteArray CollectionQuotaAttribute::type() const
 {
-    static const QByteArray sType("collectionquota");
-    return sType;
+    return QByteArrayLiteral("collectionquota");
 }
 
 Akonadi::Attribute *CollectionQuotaAttribute::clone() const

@@ -10,6 +10,8 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 
@@ -47,7 +49,8 @@ public:
      */
     template <typename T> inline static void registerAttribute()
     {
-        AttributeFactory::self()->registerAttribute(new T);
+        static_assert(std::is_default_constructible<T>::value, "An Attribute must be default-constructible.");
+        AttributeFactory::self()->registerAttribute(std::make_unique<T>());
     }
 
     /**
@@ -60,18 +63,18 @@ public:
 
 protected:
     //@cond PRIVATE
-    AttributeFactory();
+    explicit AttributeFactory();
 
 private:
     Q_DISABLE_COPY(AttributeFactory)
     static AttributeFactory *self();
-    void registerAttribute(Attribute *attribute);
+    void registerAttribute(std::unique_ptr<Attribute> attribute);
 
     class Private;
-    Private *const d;
+    const std::unique_ptr<Private> d;
     //@endcond
 };
 
-}
+} // namespace Akonadi
 
 #endif

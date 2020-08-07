@@ -45,6 +45,6 @@ private:
     QColor mColor;
 };
 
-}
+} // namespace Akonadi
 
 #endif

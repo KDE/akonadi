@@ -12,19 +12,15 @@
 
 using namespace Akonadi;
 
-EntityHiddenAttribute::EntityHiddenAttribute()
-    : d(nullptr)
-{
-}
+class Q_DECL_HIDDEN EntityHiddenAttribute::Private {};
 
-EntityHiddenAttribute::~EntityHiddenAttribute()
-{
-}
+EntityHiddenAttribute::EntityHiddenAttribute() = default;
+
+EntityHiddenAttribute::~EntityHiddenAttribute() = default;
 
 QByteArray Akonadi::EntityHiddenAttribute::type() const
 {
-    static const QByteArray sType("HIDDEN");
-    return sType;
+    return QByteArrayLiteral("HIDDEN");
 }
 
 EntityHiddenAttribute *EntityHiddenAttribute::clone() const

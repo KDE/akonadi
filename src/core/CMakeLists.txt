@@ -8,7 +8,6 @@ set(akonadicore_base_SRCS
     agentmanager.cpp
     agenttype.cpp
     asyncselectionhandler.cpp
-    attribute.cpp
     attributefactory.cpp
     attributestorage.cpp
     braveheart.cpp
@@ -21,28 +20,16 @@ set(akonadicore_base_SRCS
     changerecorderjournal.cpp
     connection.cpp
     collection.cpp
-    collectioncolorattribute.cpp
     collectionfetchscope.cpp
     collectionpathresolver.cpp
-    collectionquotaattribute.cpp
-    collectionquotaattribute.cpp
-    collectionrightsattribute.cpp
     collectionstatistics.cpp
     collectionsync.cpp
     conflicthandler.cpp
-    collectionidentificationattribute.cpp
     control.cpp
-    entityannotationsattribute.cpp
     entitycache.cpp
-    entitydeletedattribute.cpp
-    entitydeletedattribute.cpp
-    entitydisplayattribute.cpp
-    entityhiddenattribute.cpp
     exception.cpp
-    favoritecollectionattribute.cpp
     firstrun.cpp
     gidextractor.cpp
-    indexpolicyattribute.cpp
     item.cpp
     itemchangelog.cpp
     itemfetchscope.cpp
@@ -57,7 +44,6 @@ set(akonadicore_base_SRCS
     notificationsubscriber.cpp
     partfetcher.cpp
     pastehelper.cpp
-    persistentsearchattribute.cpp
     pluginloader.cpp
     protocolhelper.cpp
     remotelog.cpp
@@ -67,10 +53,8 @@ set(akonadicore_base_SRCS
     servermanager.cpp
     session.cpp
     sessionthread.cpp
-    specialcollectionattribute.cpp
     specialcollections.cpp
     tag.cpp
-    tagattribute.cpp
     tagfetchscope.cpp
     tagsync.cpp
     trashsettings.cpp
@@ -85,28 +69,18 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     AgentInstance
     AgentManager
     AgentType
-    Attribute
     AttributeFactory
     CachePolicy
     ChangeNotification
     ChangeRecorder
     Collection
-    CollectionColorAttribute
     CollectionFetchScope
-    CollectionQuotaAttribute
     CollectionStatistics
     CollectionUtils
-    CollectionIdentificationAttribute
     Control
     DifferencesAlgorithmInterface
-    EntityAnnotationsAttribute
-    EntityDeletedAttribute
-    EntityDisplayAttribute
-    EntityHiddenAttribute
     ExceptionBase
-    FavoriteCollectionAttribute
     GidExtractorInterface
-    IndexPolicyAttribute
     Item
     ItemFetchScope
     ItemMonitor
@@ -116,20 +90,54 @@ ecm_generate_headers(AkonadiCore_base_HEADERS
     NotificationSubscriber
     Monitor
     PartFetcher
-    PersistentSearchAttribute
     Relation
     SearchQuery
     ServerManager
     Session
     SpecialCollections
-    SpecialCollectionAttribute
     Supertrait
     Tag
-    TagAttribute
     TagFetchScope
     TrashSettings
     CollectionPathResolver
     REQUIRED_HEADERS AkonadiCore_base_HEADERS
+)
+
+set(akonadicore_attributes_SRCS
+    attributes/attribute.cpp
+    attributes/collectioncolorattribute.cpp
+    attributes/collectionquotaattribute.cpp
+    attributes/collectionidentificationattribute.cpp
+    attributes/collectionrightsattribute.cpp
+    attributes/entityannotationsattribute.cpp
+    attributes/entitydeletedattribute.cpp
+    attributes/entitydeletedattribute.cpp
+    attributes/entitydisplayattribute.cpp
+    attributes/entityhiddenattribute.cpp
+    attributes/favoritecollectionattribute.cpp
+    attributes/indexpolicyattribute.cpp
+    attributes/persistentsearchattribute.cpp
+    attributes/specialcollectionattribute.cpp
+    attributes/tagattribute.cpp
+)
+
+ecm_generate_headers(AkonadiCore_attributes_HEADERS
+    HEADER_NAMES
+    Attribute
+    CollectionColorAttribute
+    CollectionIdentificationAttribute
+    CollectionQuotaAttribute
+    EntityAnnotationsAttribute
+    EntityDeletedAttribute
+    EntityDisplayAttribute
+    EntityHiddenAttribute
+    FavoriteCollectionAttribute
+    IndexPolicyAttribute
+    PersistentSearchAttribute
+    SpecialCollectionAttribute
+    TagAttribute
+    REQUIRED_HEADERS AkonadiCore_attributes_HEADERS
+    RELATIVE attributes
 )
 
 set(akonadicore_models_SRCS
@@ -272,6 +280,7 @@ qt5_add_dbus_interfaces(akonadicore_dbus_SRCS
 
 set(akonadicore_SRCS
     ${akonadicore_base_SRCS}
+    ${akonadicore_attributes_SRCS}
     ${akonadicore_jobs_SRCS}
     ${akonadicore_models_SRCS}
     ${akonadicore_dbus_SRCS}
@@ -291,7 +300,7 @@ generate_export_header(KF5AkonadiCore BASE_NAME akonadicore)
 add_library(KF5::AkonadiCore ALIAS KF5AkonadiCore)
 target_include_directories(KF5AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiCore;${Boost_INCLUDE_DIR}>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
-target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models>")
+target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
 target_include_directories(KF5AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Boost_INCLUDE_DIR}>")
 
 kde_target_enable_exceptions(KF5AkonadiCore PUBLIC)
@@ -331,6 +340,7 @@ install(TARGETS
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/akonadicore_export.h
     ${AkonadiCore_base_HEADERS}
+    ${AkonadiCore_attributes_HEADERS}
     ${AkonadiCore_models_HEADERS}
     ${AkonadiCore_jobs_HEADERS}
     ${AkonadiCore_HEADERS}

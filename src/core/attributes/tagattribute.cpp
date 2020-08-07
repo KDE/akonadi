@@ -13,10 +13,6 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN TagAttribute::Private
 {
 public:
-    Private()
-    {
-    }
-
     QString name;
     QString icon;
     QColor backgroundColor;
@@ -28,14 +24,11 @@ public:
 };
 
 TagAttribute::TagAttribute()
-    : d(new Private)
+    : d(std::make_unique<Private>())
 {
 }
 
-TagAttribute::~TagAttribute()
-{
-    delete d;
-}
+TagAttribute::~TagAttribute() = default;
 
 QString TagAttribute::displayName() const
 {

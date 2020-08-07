@@ -19,15 +19,12 @@ public:
 };
 
 SpecialCollectionAttribute::SpecialCollectionAttribute(const QByteArray &type)
-    : d(new Private)
+    : d(std::make_unique<Private>())
 {
     d->mType = type;
 }
 
-SpecialCollectionAttribute::~SpecialCollectionAttribute()
-{
-    delete d;
-}
+SpecialCollectionAttribute::~SpecialCollectionAttribute() = default;
 
 SpecialCollectionAttribute *SpecialCollectionAttribute::clone() const
 {

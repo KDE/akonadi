@@ -16,9 +16,6 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN CollectionIdentificationAttribute::Private
 {
 public:
-    Private()
-    {
-    }
     QByteArray mFolderNamespace;
     QByteArray mIdentifier;
     QByteArray mName;
@@ -28,7 +25,7 @@ public:
 
 CollectionIdentificationAttribute::CollectionIdentificationAttribute(const QByteArray &identifier, const QByteArray &folderNamespace,
         const QByteArray &name, const QByteArray &organizationUnit, const QByteArray &mail)
-    : d(new Private)
+    : d(std::make_unique<Private>())
 {
     d->mIdentifier = identifier;
     d->mFolderNamespace = folderNamespace;
@@ -37,10 +34,7 @@ CollectionIdentificationAttribute::CollectionIdentificationAttribute(const QByte
     d->mMail = mail;
 }
 
-CollectionIdentificationAttribute::~CollectionIdentificationAttribute()
-{
-    delete d;
-}
+CollectionIdentificationAttribute::~CollectionIdentificationAttribute() = default;
 
 void CollectionIdentificationAttribute::setIdentifier(const QByteArray &identifier)
 {

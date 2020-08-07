@@ -13,6 +13,8 @@
 
 #include <QColor>
 
+#include <memory>
+
 namespace Akonadi
 {
 
@@ -24,7 +26,7 @@ namespace Akonadi
 class AKONADICORE_EXPORT TagAttribute : public Attribute
 {
 public:
-    TagAttribute();
+    explicit TagAttribute();
 
     ~TagAttribute();
 
@@ -85,10 +87,10 @@ private:
     TagAttribute &operator=(const TagAttribute &other);
     //@cond PRIVATE
     class Private;
-    Private *const d;
+    const std::unique_ptr<Private> d;
     //@endcond
 };
 
-}
+} // namespace Akonadi
 
 #endif

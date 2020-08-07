@@ -18,26 +18,20 @@ using namespace Akonadi;
 class EntityDeletedAttribute::EntityDeletedAttributePrivate
 {
 public:
-    EntityDeletedAttributePrivate() {}
-
     Collection restoreCollection;
     QString restoreResource;
 };
 
 EntityDeletedAttribute::EntityDeletedAttribute()
-    : d_ptr(new EntityDeletedAttributePrivate())
+    : d(std::make_unique<EntityDeletedAttributePrivate>())
 {
 
 }
 
-EntityDeletedAttribute::~EntityDeletedAttribute()
-{
-    delete d_ptr;
-}
+EntityDeletedAttribute::~EntityDeletedAttribute() = default;
 
 void EntityDeletedAttribute::setRestoreCollection(const Akonadi::Collection &collection)
 {
-    Q_D(EntityDeletedAttribute);
     if (!collection.isValid()) {
         qCWarning(AKONADICORE_LOG) << "invalid collection" << collection;
     }
@@ -51,35 +45,29 @@ void EntityDeletedAttribute::setRestoreCollection(const Akonadi::Collection &col
 
 Collection EntityDeletedAttribute::restoreCollection() const
 {
-    Q_D(const EntityDeletedAttribute);
     return d->restoreCollection;
 }
 
 QString EntityDeletedAttribute::restoreResource() const
 {
-    Q_D(const EntityDeletedAttribute);
     return d->restoreResource;
 }
 
 QByteArray Akonadi::EntityDeletedAttribute::type() const
 {
-    static const QByteArray sType("DELETED");
-    return sType;
+    return QByteArrayLiteral("DELETED");
 }
 
 EntityDeletedAttribute *EntityDeletedAttribute::clone() const
 {
-    const Q_D(EntityDeletedAttribute);
     EntityDeletedAttribute *attr = new EntityDeletedAttribute();
-    attr->d_ptr->restoreCollection = d->restoreCollection;
-    attr->d_ptr->restoreResource = d->restoreResource;
+    attr->d->restoreCollection = d->restoreCollection;
+    attr->d->restoreResource = d->restoreResource;
     return attr;
 }
 
 QByteArray EntityDeletedAttribute::serialized() const
 {
-    const Q_D(EntityDeletedAttribute);
-
     QList<QByteArray> l;
     l << ImapParser::quote(d->restoreResource.toUtf8());
     QList<QByteArray> components;
@@ -91,8 +79,6 @@ QByteArray EntityDeletedAttribute::serialized() const
 
 void EntityDeletedAttribute::deserialize(const QByteArray &data)
 {
-    Q_D(EntityDeletedAttribute);
-
     QList<QByteArray> l;
     ImapParser::parseParenthesizedList(data, l);
     if (l.size() != 2) {

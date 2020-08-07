@@ -7,8 +7,10 @@
 #ifndef COLLECTIONIDENTIFICATIONATTRIBUTE_H
 #define COLLECTIONIDENTIFICATIONATTRIBUTE_H
 
-#include <attribute.h>
+#include "attribute.h"
 #include <QByteArray>
+
+#include <memory>
 
 namespace Akonadi
 {
@@ -60,10 +62,10 @@ public:
 private:
     //@cond PRIVATE
     class Private;
-    Private *const d;
+    const std::unique_ptr<Private> d;
     //@endcond
 };
 
-}
+} // namespace Akonadi
 
 #endif

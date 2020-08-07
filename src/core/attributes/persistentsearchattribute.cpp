@@ -18,27 +18,18 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN PersistentSearchAttribute::Private
 {
 public:
-    Private()
-        : remote(false)
-        , recursive(false)
-    {
-    }
-
     QString queryString;
     QVector<qint64> queryCollections;
-    bool remote;
-    bool recursive;
+    bool remote = false;
+    bool recursive = false;
 };
 
 PersistentSearchAttribute::PersistentSearchAttribute()
-    : d(new Private)
+    : d(std::make_unique<Private>())
 {
 }
 
-PersistentSearchAttribute::~PersistentSearchAttribute()
-{
-    delete d;
-}
+PersistentSearchAttribute::~PersistentSearchAttribute() = default;
 
 QString PersistentSearchAttribute::queryString() const
 {

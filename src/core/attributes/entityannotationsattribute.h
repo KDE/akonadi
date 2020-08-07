@@ -32,8 +32,8 @@ namespace Akonadi
 class AKONADICORE_EXPORT EntityAnnotationsAttribute : public Akonadi::Attribute
 {
 public:
-    EntityAnnotationsAttribute();
-    EntityAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations);
+    explicit EntityAnnotationsAttribute() = default;
+    explicit EntityAnnotationsAttribute(const QMap<QByteArray, QByteArray> &annotations);
 
     void setAnnotations(const QMap<QByteArray, QByteArray> &annotations);
     QMap<QByteArray, QByteArray> annotations() const;
@@ -51,6 +51,6 @@ private:
     QMap<QByteArray, QByteArray> mAnnotations;
 };
 
-}
+} // namespace Akonadi
 
 #endif

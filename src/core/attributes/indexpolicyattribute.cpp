@@ -14,21 +14,15 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN IndexPolicyAttribute::Private
 {
 public:
-    Private()
-    {
-    }
     bool enable = true;
 };
 
 IndexPolicyAttribute::IndexPolicyAttribute()
-    : d(new Private)
+    : d(std::make_unique<Private>())
 {
 }
 
-IndexPolicyAttribute::~IndexPolicyAttribute()
-{
-    delete d;
-}
+IndexPolicyAttribute::~IndexPolicyAttribute() = default;
 
 bool IndexPolicyAttribute::indexingEnabled() const
 {

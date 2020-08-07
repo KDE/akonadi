@@ -37,7 +37,7 @@ public:
     /**
      * Creates a new entity deleted attribute.
      */
-    EntityDeletedAttribute();
+    explicit EntityDeletedAttribute();
 
     /**
      * Destroys the entity deleted attribute.
@@ -82,11 +82,10 @@ public:
 private:
     //@cond PRIVATE
     class EntityDeletedAttributePrivate;
-    EntityDeletedAttributePrivate *const d_ptr;
-    Q_DECLARE_PRIVATE(EntityDeletedAttribute)
+    const std::unique_ptr<EntityDeletedAttributePrivate> d;
     //@endcond
 };
 
-}
+} // namespace Akonadi
 
 #endif

@@ -13,6 +13,8 @@
 #include <QColor>
 #include <QIcon>
 
+#include <memory>
+
 namespace Akonadi
 {
 
@@ -30,7 +32,7 @@ public:
     /**
      * Creates a new entity display attribute.
      */
-    EntityDisplayAttribute();
+    explicit EntityDisplayAttribute();
 
     /**
      * Destroys the entity display attribute.
@@ -104,10 +106,10 @@ public:
 private:
     //@cond PRIVATE
     class Private;
-    Private *const d;
+    const std::unique_ptr<Private> d;
     //@endcond
 };
 
-}
+} // namespace Akonadi
 
 #endif

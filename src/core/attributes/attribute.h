@@ -165,6 +165,6 @@ protected:
     Attribute(const Attribute &) = default;
 };
 
-}
+} // namespace Akonadi
 
 #endif

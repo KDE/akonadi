@@ -35,8 +35,7 @@ public:
     explicit DefaultAttribute(const QByteArray &type, const QByteArray &value = QByteArray())
         : mType(type)
         , mValue(value)
-    {
-    }
+    {}
 
     DefaultAttribute(const DefaultAttribute &) = delete;
     DefaultAttribute &operator=(const DefaultAttribute &) = delete;
@@ -45,6 +44,7 @@ public:
     {
         return mType;
     }
+
     Attribute *clone() const override
     {
         return new DefaultAttribute(mType, mValue);
@@ -54,7 +54,9 @@ public:
     {
         return mValue;
     }
-    void deserialize(const QByteArray &data) override {
+
+    void deserialize(const QByteArray &data) override
+    {
         mValue = data;
     }
 
@@ -68,30 +70,25 @@ private:
 class StaticAttributeFactory : public AttributeFactory
 {
 public:
-    StaticAttributeFactory()
-        : initialized(false)
-    {
-    }
     void init()
     {
-        if (initialized) {
-            return;
-        }
-        initialized = true;
+        if (!initialized) {
+            initialized = true;
 
-        // Register built-in attributes
-        AttributeFactory::registerAttribute<CollectionQuotaAttribute>();
-        AttributeFactory::registerAttribute<CollectionRightsAttribute>();
-        AttributeFactory::registerAttribute<EntityDisplayAttribute>();
-        AttributeFactory::registerAttribute<EntityHiddenAttribute>();
-        AttributeFactory::registerAttribute<IndexPolicyAttribute>();
-        AttributeFactory::registerAttribute<PersistentSearchAttribute>();
-        AttributeFactory::registerAttribute<EntityDeletedAttribute>();
-        AttributeFactory::registerAttribute<EntityAnnotationsAttribute>();
-        AttributeFactory::registerAttribute<TagAttribute>();
-        AttributeFactory::registerAttribute<FavoriteCollectionAttribute>();
+            // Register built-in attributes
+            AttributeFactory::registerAttribute<CollectionQuotaAttribute>();
+            AttributeFactory::registerAttribute<CollectionRightsAttribute>();
+            AttributeFactory::registerAttribute<EntityDisplayAttribute>();
+            AttributeFactory::registerAttribute<EntityHiddenAttribute>();
+            AttributeFactory::registerAttribute<IndexPolicyAttribute>();
+            AttributeFactory::registerAttribute<PersistentSearchAttribute>();
+            AttributeFactory::registerAttribute<EntityDeletedAttribute>();
+            AttributeFactory::registerAttribute<EntityAnnotationsAttribute>();
+            AttributeFactory::registerAttribute<TagAttribute>();
+            AttributeFactory::registerAttribute<FavoriteCollectionAttribute>();
+        }
     }
-    bool initialized;
+    bool initialized = false;
 };
 
 Q_GLOBAL_STATIC(StaticAttributeFactory, s_attributeInstance) // NOLINT(readability-redundant-member-init)
@@ -106,7 +103,7 @@ using Akonadi::Internal::s_attributeInstance;
 class Q_DECL_HIDDEN AttributeFactory::Private
 {
 public:
-    QHash<QByteArray, Attribute *> attributes;
+    std::unordered_map<QByteArray, std::unique_ptr<Attribute>> attributes;
 };
 
 AttributeFactory *AttributeFactory::self()
@@ -116,35 +113,31 @@ AttributeFactory *AttributeFactory::self()
 }
 
 AttributeFactory::AttributeFactory()
-    : d(new Private)
+    : d(std::make_unique<Private>())
 {
 }
 
-AttributeFactory::~AttributeFactory()
-{
-    qDeleteAll(d->attributes);
-    delete d;
-}
+AttributeFactory::~AttributeFactory() = default;
 
-void AttributeFactory::registerAttribute(Attribute *attr)
+void AttributeFactory::registerAttribute(std::unique_ptr<Attribute> attr)
 {
     Q_ASSERT(attr);
     Q_ASSERT(!attr->type().contains(' ') && !attr->type().contains('\'') && !attr->type().contains('"'));
-    QHash<QByteArray, Attribute *>::Iterator it = d->attributes.find(attr->type());
+    auto it = d->attributes.find(attr->type());
     if (it != d->attributes.end()) {
-        delete *it;
         d->attributes.erase(it);
     }
-    d->attributes.insert(attr->type(), attr);
+    d->attributes.emplace(attr->type(), std::move(attr));
 }
 
 Attribute *AttributeFactory::createAttribute(const QByteArray &type)
 {
-    Attribute *attr = self()->d->attributes.value(type);
-    if (attr) {
-        return attr->clone();
+    auto attr = self()->d->attributes.find(type);
+    if (attr == self()->d->attributes.cend()) {
+        return new Internal::DefaultAttribute(type);
     }
-    return new Internal::DefaultAttribute(type);
+
+    return attr->second->clone();
 }
 
 } // namespace Akonadi

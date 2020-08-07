@@ -10,6 +10,8 @@
 #include "akonadicore_export.h"
 #include "attribute.h"
 
+#include <memory>
+
 namespace Akonadi
 {
 
@@ -55,10 +57,10 @@ public:
 private:
     //@cond PRIVATE
     class Private;
-    Private *const d;
+    const std::unique_ptr<Private> d;
     //@endcond
 };
 
-}
+} // namespace Akonadi
 
 #endif

@@ -15,9 +15,6 @@ using namespace Akonadi;
 class Q_DECL_HIDDEN EntityDisplayAttribute::Private
 {
 public:
-    Private()
-    {
-    }
     QString name;
     QString icon;
     QString activeIcon;
@@ -25,14 +22,11 @@ public:
 };
 
 EntityDisplayAttribute::EntityDisplayAttribute()
-    : d(new Private)
+    : d(std::make_unique<Private>())
 {
 }
 
-EntityDisplayAttribute::~EntityDisplayAttribute()
-{
-    delete d;
-}
+EntityDisplayAttribute::~EntityDisplayAttribute() = default;
 
 QString EntityDisplayAttribute::displayName() const
 {
