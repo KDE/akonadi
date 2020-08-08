@@ -32,16 +32,15 @@ namespace Akonadi
  *
  * ...
  * // hide a collection by setting the hidden attribute
- * Collection collection = collectionFetchJob->collections().at(0);
- * collection.attribute<EntityHiddenAttribute>( Collection::AddIfMissing );
- * new CollectionModifyJob( collection, this ); // save back to storage
+ * collection.attribute<EntityHiddenAttribute>(Collection::AddIfMissing);
+ * Akonadi::updateCollection(collection); // save back to storage
  *
  * // check if the collection is hidden
- * if ( collection.hasAttribute<EntityHiddenAttribute>() )
- *   qDebug() << "collection is hidden";
- * else
- *   qDebug() << "collection is visible";
- *
+ * if (collection.hasAttribute<EntityHiddenAttribute>()) {
+ *     qDebug() << "collection is hidden";
+ * } else {
+ *     qDebug() << "collection is visible";
+ * }
  * @endcode
  *
  * @author Szymon Stefanek <s.stefanek@gmail.com>

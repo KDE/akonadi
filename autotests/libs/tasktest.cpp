@@ -166,6 +166,79 @@ private Q_SLOTS:
         loop.exec();
         QVERIFY(allDone);
     }
+
+    void testForEach()
+    {
+        QVector<int> items = {1, 2, 3, 4, 5};
+
+        auto task = taskForEach(items, [](int item) {
+            Task<int> t;
+            QTimer::singleShot(std::chrono::milliseconds{10}, [t, item]() mutable {
+                t.setResult(item);
+            });
+            return t;
+        });
+        QVERIFY(!task.isFinished());
+        task.wait();
+        QVERIFY(task.isFinished());
+    }
+
+    void testForEachError()
+    {
+        QVector<int> items = {1, 2, 3, 4, 5};
+
+        auto task = taskForEach(items, [](int item) {
+            Task<int> t;
+            QTimer::singleShot(std::chrono::milliseconds{10}, [t, item]() mutable {
+                if (item == 3) {
+                    t.setError(1, QStringLiteral("Oppsie"));
+                } else {
+                    t.setResult(item);
+                }
+            });
+            return t;
+        });
+        QVERIFY(!task.isFinished());
+        task.wait();
+        QVERIFY(task.hasError());
+        QCOMPARE(task.error().code(), 1);
+    }
+
+    void testCollectionTasks()
+    {
+        QVector<int> items{1, 2, 3, 4, 5};
+
+        auto task = collectTasks(items, [](int item) {
+            Task<int> t;
+            QTimer::singleShot(std::chrono::milliseconds{10}, [t, item]() mutable {
+                t.setResult(item);
+            });
+            return t;
+        });
+        QVERIFY(!task.isFinished());
+        task.wait();
+        QVERIFY(task.isFinished());
+        QVERIFY(!task.hasError());
+        QCOMPARE(task.result(), items);
+    }
+
+    void testCollectionTasksWithCollection()
+    {
+        QVector<int> items{1, 2, 3, 4, 5};
+
+        auto task = collectTasks(items, [](int item) {
+            Task<QVector<int>> t;
+            QTimer::singleShot(std::chrono::milliseconds{10}, [t, item]() mutable {
+                t.setResult({item, item, item});
+            });
+            return t;
+        });
+        QVERIFY(!task.isFinished());
+        task.wait();
+        QVERIFY(task.isFinished());
+        QVERIFY(!task.hasError());
+        QCOMPARE(task.result(), (QVector<int>{1, 1, 1, 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5}));
+    }
 };
 
 QTEST_GUILESS_MAIN(TaskTest)

@@ -10,15 +10,13 @@ class Item;
 
 #include "tagsync.h"
 #include "akonadicore_debug.h"
-#include "jobs/itemfetchjob.h"
+#include "interface.h"
 #include "itemfetchscope.h"
-#include "jobs/itemmodifyjob.h"
-#include "jobs/tagfetchjob.h"
-#include "jobs/tagcreatejob.h"
-#include "jobs/tagmodifyjob.h"
 #include "tagfetchscope.h"
+#include "akranges.h"
 
 using namespace Akonadi;
+using namespace AkRanges;
 
 bool operator==(const Item &left, const Item &right)
 {
@@ -35,7 +33,7 @@ bool operator==(const Item &left, const Item &right)
 }
 
 TagSync::TagSync(QObject *parent)
-    : Job(parent),
+    : KJob(parent),
       mDeliveryDone(false),
       mTagMembersDeliveryDone(false),
       mLocalTagsFetched(false)
@@ -43,10 +41,7 @@ TagSync::TagSync(QObject *parent)
 
 }
 
-TagSync::~TagSync()
-{
-
-}
+TagSync::~TagSync() = default;
 
 void TagSync::setFullTagList(const Akonadi::Tag::List &tags)
 {
@@ -62,22 +57,21 @@ void TagSync::setTagMembers(const QHash<QString, Akonadi::Item::List> &ridMember
     diffTags();
 }
 
-void TagSync::doStart()
+void TagSync::start()
 {
-    // qCDebug(AKONADICORE_LOG);
+    qCDebug(AKONADICORE_LOG) << "START";
     //This should include all tags, including the ones that don't have a remote id
-    auto *fetch = new Akonadi::TagFetchJob(this);
-    fetch->fetchScope().setFetchRemoteId(true);
-    connect(fetch, &KJob::result, this, &TagSync::onLocalTagFetchDone);
-}
-
-void TagSync::onLocalTagFetchDone(KJob *job)
-{
-    // qCDebug(AKONADICORE_LOG);
-    auto *fetch = static_cast<TagFetchJob *>(job);
-    mLocalTags = fetch->tags();
-    mLocalTagsFetched = true;
-    diffTags();
+    TagFetchOptions options;
+    options.fetchScope().setFetchRemoteId(true);
+    Akonadi::fetchAllTags(options).then(
+        [this](const Tag::List &tags) {
+            mLocalTags = tags;
+            mLocalTagsFetched = true;
+            diffTags();
+        },
+        [](const Akonadi::Error &error) {
+            qCWarning(AKONADICORE_LOG) << "Error during TagSync:" << error;
+        });
 }
 
 void TagSync::diffTags()
@@ -101,58 +95,89 @@ void TagSync::diffTags()
         if (tagByRid.contains(remoteTag.remoteId())) {
             //Tag still exists, check members
             Tag tag = tagByRid.value(remoteTag.remoteId());
-            auto *itemFetch = new ItemFetchJob(tag, this);
-            itemFetch->setProperty("tag", QVariant::fromValue(tag));
-            itemFetch->setProperty("merge", false);
-            itemFetch->fetchScope().setFetchGid(true);
-            connect(itemFetch, &KJob::result, this, &TagSync::onTagItemsFetchDone);
-            connect(itemFetch, &KJob::result, this, &TagSync::onJobDone);
+            ItemFetchOptions options;
+            options.itemFetchScope().setFetchGid(true);
+            Akonadi::fetchItemsForTag(tag, options).then(
+                [this, tag](const Item::List &items) {
+                    onTagItemsFetchDone(tag, items, false);
+                    --mTasks;
+                    checkDone();
+                },
+                [this](const Akonadi::Error &error) {
+                    qCWarning(AKONADICORE_LOG) << "ItemFetch failed: " << error;
+                    --mTasks;
+                    checkDone();
+                });
             tagById.remove(tagByRid.value(remoteTag.remoteId()).id());
+            ++mTasks;
         } else if (tagByGid.contains(remoteTag.gid())) {
             //Tag exists but has no rid
             //Merge members and set rid
             Tag tag = tagByGid.value(remoteTag.gid());
             tag.setRemoteId(remoteTag.remoteId());
-            auto *itemFetch = new ItemFetchJob(tag, this);
-            itemFetch->setProperty("tag", QVariant::fromValue(tag));
-            itemFetch->setProperty("merge", true);
-            itemFetch->fetchScope().setFetchGid(true);
-            connect(itemFetch, &KJob::result, this, &TagSync::onTagItemsFetchDone);
-            connect(itemFetch, &KJob::result, this, &TagSync::onJobDone);
+            ItemFetchOptions options;
+            options.itemFetchScope().setFetchGid(true);
+            Akonadi::fetchItemsForTag(tag, options).then(
+                [this, tag](const Item::List &items) {
+                    onTagItemsFetchDone(tag, items, true);
+                    --mTasks;
+                    checkDone();
+                },
+                [this](const Akonadi::Error &error) {
+                    qCWarning(AKONADICORE_LOG) << "ItemFetch failed:" << error;
+                    --mTasks;
+                    checkDone();
+                });
             tagById.remove(tagByGid.value(remoteTag.gid()).id());
+            ++mTasks;
         } else {
             //New tag, create
-            auto *createJob = new TagCreateJob(remoteTag, this);
-            createJob->setMergeIfExisting(true);
-            connect(createJob, &KJob::result, this, &TagSync::onCreateTagDone);
-            connect(createJob, &KJob::result, this, &TagSync::onJobDone);
+            Akonadi::createTag(remoteTag).then(
+                [this](const Tag &tag) {
+                    const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
+                    for (Item item : remoteMembers) {
+                        item.setTag(tag);
+                        Akonadi::updateItem(item).then(
+                            [this](const Item &/*item*/) {
+                                --mTasks;
+                                checkDone();
+                            },
+                            [this](const Akonadi::Error &/*error*/) {
+                                --mTasks;
+                                checkDone();
+                            });
+                        qCDebug(AKONADICORE_LOG) << "setting tag " << item.remoteId();
+                        ++mTasks;
+                    }
+                    --mTasks;
+                    checkDone();
+                },
+                [this](const Akonadi::Error &error) {
+                    qCWarning(AKONADICORE_LOG) << "TagFetch failed: " << error;
+                    --mTasks;
+                    checkDone();
+                });
+            ++mTasks;
         }
     }
     Q_FOREACH (const Tag &tag, tagById) {
         //Removed remotely, unset rid
         Tag copy(tag);
         copy.setRemoteId(QByteArray(""));
-        auto *modJob = new TagModifyJob(copy, this);
-        connect(modJob, &KJob::result, this, &TagSync::onJobDone);
+        Akonadi::updateTag(copy).then(
+            [this](const Tag & /*tag*/) {
+                --mTasks;
+                checkDone();
+            },
+            [this](const Akonadi::Error &error) {
+                qCWarning(AKONADICORE_LOG) << "Error during TagSync:" << error;
+                --mTasks;
+                checkDone();
+            });
+        ++mTasks;
     }
+
     checkDone();
-}
-
-void TagSync::onCreateTagDone(KJob *job)
-{
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "ItemFetch failed: " << job->errorString();
-        return;
-    }
-
-    Akonadi::Tag tag = static_cast<Akonadi::TagCreateJob *>(job)->tag();
-    const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
-    for (Item item : remoteMembers) {
-        item.setTag(tag);
-        auto *modJob = new ItemModifyJob(item, this);
-        connect(modJob, &KJob::result, this, &TagSync::onJobDone);
-        qCDebug(AKONADICORE_LOG) << "setting tag " << item.remoteId();
-    }
 }
 
 static bool containsByGidOrRid(const Item::List &items, const Item &key)
@@ -163,74 +188,60 @@ static bool containsByGidOrRid(const Item::List &items, const Item &key)
     });
 }
 
-void TagSync::onTagItemsFetchDone(KJob *job)
+void TagSync::onTagItemsFetchDone(const Tag &tag, const Item::List &items, bool merge)
 {
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "ItemFetch failed: " << job->errorString();
-        return;
-    }
-
-    const Akonadi::Item::List items = static_cast<Akonadi::ItemFetchJob *>(job)->items();
-    const Akonadi::Tag tag = job->property("tag").value<Akonadi::Tag>();
-    const bool merge = job->property("merge").toBool();
     const Item::List remoteMembers = mRidMemberMap.value(QString::fromLatin1(tag.remoteId()));
 
     //add = remote - local
-    Item::List toAdd;
-    for (const Item &remote : remoteMembers) {
-        if (!containsByGidOrRid(items, remote)) {
-            toAdd << remote;
-        }
-    }
+    const auto toAdd = remoteMembers
+        | Views::filter([items](const Item &remote) { return !containsByGidOrRid(items, remote); })
+        | Actions::toQVector;
 
     //remove = local - remote
-    Item::List toRemove;
-    for (const Item &local : items) {
-        //Skip items that have no remote id yet
-        //Trying to them will only result in a conflict
-        if (local.remoteId().isEmpty()) {
-            continue;
-        }
-        if (!containsByGidOrRid(remoteMembers, local)) {
-            toRemove << local;
-        }
-    }
+    //Skip items that have no remote id yet
+    //Trying to them will only result in a conflict
+    const auto toRemove = items
+        | Views::filter([](const Item &item) { return !item.remoteId().isEmpty(); })
+        | Views::filter([remoteMembers](const Item &item) { return !containsByGidOrRid(remoteMembers, item); })
+        | Actions::toQVector;
 
     if (!merge) {
         for (Item item : qAsConst(toRemove)) {
             item.clearTag(tag);
-            auto *modJob = new ItemModifyJob(item, this);
-            connect(modJob, &KJob::result, this, &TagSync::onJobDone);
+            Akonadi::updateItem(item).then(
+                [this](const Item &/*item*/) {
+                    --mTasks;
+                    checkDone();
+                },
+                [this](const Akonadi::Error &error) {
+                    qCWarning(AKONADICORE_LOG) << "Error during TagSync:" << error;
+                    --mTasks;
+                    checkDone();
+                });
+            ++mTasks;
             qCDebug(AKONADICORE_LOG) << "removing tag " << item.remoteId();
         }
     }
     for (Item item : qAsConst(toAdd)) {
         item.setTag(tag);
-        auto *modJob = new ItemModifyJob(item, this);
-        connect(modJob, &KJob::result, this, &TagSync::onJobDone);
+        Akonadi::updateItem(item).then(
+            [this](const Item & /*item*/) {
+                --mTasks;
+                checkDone();
+            },
+            [this](const Akonadi::Error &error) {
+                qCWarning(AKONADICORE_LOG) << "Error during TagSync:" << error;
+                --mTasks;
+                checkDone();
+            });
+        ++mTasks;
         qCDebug(AKONADICORE_LOG) << "setting tag " << item.remoteId();
-    }
-}
-
-void TagSync::onJobDone(KJob * /*unused*/)
-{
-    checkDone();
-}
-
-void TagSync::slotResult(KJob *job)
-{
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Error during TagSync: " << job->errorString() << job->metaObject()->className();
-        // pretend there were no errors
-        Akonadi::Job::removeSubjob(job);
-    } else {
-        Akonadi::Job::slotResult(job);
     }
 }
 
 void TagSync::checkDone()
 {
-    if (hasSubjobs()) {
+    if (mTasks > 0) {
         return;
     }
     qCDebug(AKONADICORE_LOG) << "done";

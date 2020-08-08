@@ -629,18 +629,6 @@ void MonitorPrivate::slotSessionDestroyed(QObject *object)
     }
 }
 
-void MonitorPrivate::slotStatisticsChangedFinished(KJob *job)
-{
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Error on fetching collection statistics: " << job->errorText();
-    } else {
-        auto *statisticsJob = static_cast<CollectionStatisticsJob *>(job);
-        Q_ASSERT(statisticsJob->collection().isValid());
-        Q_EMIT q_ptr->collectionStatisticsChanged(statisticsJob->collection().id(),
-                                                statisticsJob->statistics());
-    }
-}
-
 void MonitorPrivate::slotFlushRecentlyChangedCollections()
 {
     for (Collection::Id collection : qAsConst(recentlyChangedCollections)) {

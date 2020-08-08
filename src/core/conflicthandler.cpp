@@ -33,18 +33,18 @@ void ConflictHandler::start()
         options.itemFetchScope().fetchFullPayload();
         options.itemFetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
         Akonadi::fetchItem(mConflictingItem, options, mSession)
-            .onError([this](const Error &error) {
-                Q_EMIT this->error(error.message);
-            })
-            .otherwise([this](const Item &item) {
-                if (!item.isValid()) {
-                    Q_EMIT error(i18n("Did not find other item for conflict handling."));
-                    return;
-                }
+            .then([this](const Item &item) {
+                      if (!item.isValid()) {
+                          Q_EMIT error(i18n("Did not find other item for conflict handling."));
+                          return;
+                      }
 
-                mConflictingItem = item;
-                QMetaObject::invokeMethod(this, &ConflictHandler::resolve, Qt::QueuedConnection);
-            });
+                      mConflictingItem = item;
+                      QMetaObject::invokeMethod(this, &ConflictHandler::resolve, Qt::QueuedConnection);
+                  },
+                  [this](const Error &error) {
+                      Q_EMIT this->error(error.message());
+                  });
     } else {
         resolve();
     }
@@ -82,12 +82,12 @@ void ConflictHandler::useLocalItem()
     Item newItem(mChangedItem);
     newItem.setRevision(mConflictingItem.revision());
     Akonadi::updateItem(newItem, ItemModifyFlag::Default, mSession)
-        .onError([this](const Error &error) {
-            Q_EMIT this->error(error.message);
-        })
-        .otherwise([this](const Item &/*item*/) {
-            Q_EMIT conflictResolved();
-        });
+        .then([this](const Item &/*item*/) {
+                  Q_EMIT conflictResolved();
+              },
+              [this](const Error &error) {
+                  Q_EMIT this->error(error.message());
+              });
 }
 
 void ConflictHandler::useOtherItem()
@@ -101,12 +101,10 @@ void ConflictHandler::useBothItems()
     // We have to create a new item for the local item under the collection that has
     // been retrieved when we fetched the other item.
     Akonadi::createItem(mChangedItem, mConflictingItem.parentCollection(), ItemCreateFlag::Default, mSession)
-        .onError([this](const Error &error) {
-            Q_EMIT this->error(error.message);
-        })
-        .otherwise([this](const Item &/*item*/) {
-            Q_EMIT conflictResolved();
-        });
+        .then([this](const Item & /*item*/) {
+                  Q_EMIT conflictResolved();
+              },
+              [this](const Error &error) {
+                  Q_EMIT this->error(error.message());
+              });
 }
-
-#include "moc_conflicthandler_p.cpp"

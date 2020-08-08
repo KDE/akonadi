@@ -122,3 +122,5 @@ add_akonadi_isolated_test(SOURCE tagtest.cpp ADDITIONAL_SOURCES ${CMAKE_BINARY_D
 add_akonadi_isolated_test(SOURCE tagsynctest.cpp)
 add_akonadi_isolated_test(SOURCE relationtest.cpp)
 add_akonadi_isolated_test(SOURCE etmpopulationtest.cpp)
+add_akonadi_isolated_test(SOURCE storagetest.cpp)
+add_akonadi_isolated_test(SOURCE pastehelpertest.cpp)

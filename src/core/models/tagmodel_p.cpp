@@ -9,7 +9,7 @@
 
 #include "monitor.h"
 #include "session.h"
-#include "tagfetchjob.h"
+#include "interface.h"
 
 #include "akonadicore_debug.h"
 
@@ -41,12 +41,14 @@ void TagModelPrivate::init(Monitor *monitor)
 
 void TagModelPrivate::fillModel()
 {
-    Q_Q(TagModel);
-
-    auto *fetchJob = new TagFetchJob(mSession);
-    fetchJob->setFetchScope(mMonitor->tagFetchScope());
-    q->connect(fetchJob, &TagFetchJob::tagsReceived, q, [this](const auto &tags) { tagsFetched(tags); });
-    q->connect(fetchJob, &KJob::result, q, [this](KJob *job) { tagsFetchDone(job); });
+    Akonadi::fetchAllTags(mMonitor->tagFetchScope()).then(
+        [this](const Tag::List &tags) {
+            tagsFetched(tags);
+            tagsFetchDone();
+        },
+        [](const Error &error) {
+            qCWarning(AKONADICORE_LOG) << "Error when populating TagModel:" << error.message();
+        });
 }
 
 QModelIndex TagModelPrivate::indexForTag(const qint64 tagId) const
@@ -201,14 +203,9 @@ void TagModelPrivate::tagsFetched(const Tag::List &tags)
     }
 }
 
-void TagModelPrivate::tagsFetchDone(KJob *job)
+void TagModelPrivate::tagsFetchDone()
 {
     Q_Q(TagModel);
-
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << job->errorString();
-        return;
-    }
 
     if (!mPendingTags.isEmpty()) {
         qCWarning(AKONADICORE_LOG) << "Fetched all tags from server, but there are still" << mPendingTags.count() << "orphan tags:";

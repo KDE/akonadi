@@ -9,6 +9,8 @@
 #include "protocolhelper_p.h"
 #include "tagfetchscope.h"
 #include "attributefactory.h"
+#include "akonadicore_debug.h"
+
 #include <QTimer>
 
 using namespace Akonadi;
@@ -23,6 +25,7 @@ public:
 
     void init()
     {
+        qCDebug(AKONADICORE_LOG) << "INIT";
         Q_Q(TagFetchJob);
         mEmitTimer = new QTimer(q);
         mEmitTimer->setSingleShot(true);
@@ -88,6 +91,11 @@ TagFetchJob::TagFetchJob(const QList<Tag::Id> &ids, QObject *parent)
     }
 }
 
+TagFetchJob::~TagFetchJob()
+{
+    qCDebug(AKONADICORE_LOG) << this << "DONE";
+}
+
 void TagFetchJob::setFetchScope(const TagFetchScope &fetchScope)
 {
     Q_D(TagFetchJob);
@@ -103,6 +111,7 @@ TagFetchScope &TagFetchJob::fetchScope()
 void TagFetchJob::doStart()
 {
     Q_D(TagFetchJob);
+    qCDebug(AKONADICORE_LOG) << this << "start";
 
     Protocol::FetchTagsCommandPtr cmd;
     if (d->mRequestedTags.isEmpty()) {

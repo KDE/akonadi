@@ -9,7 +9,6 @@
 
 #include <QObject>
 
-#include "itemfetchjob.h"
 #include "monitor.h"
 
 namespace Akonadi
@@ -58,22 +57,8 @@ private Q_SLOTS:
         mItem = Item();
         mParent->itemRemoved();
     }
-public Q_SLOTS:
-    void initialFetchDone(KJob *job)
-    {
-        if (job->error()) {
-            return;
-        }
-
-        auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
-
-        if (!fetchJob->items().isEmpty()) {
-            mItem = fetchJob->items().at(0);
-            mParent->itemChanged(mItem);
-        }
-    }
 };
 
-}
+} // namespace Akonadi
 
 #endif

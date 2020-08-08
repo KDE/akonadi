@@ -71,6 +71,8 @@ public:
      */
     explicit TagFetchJob(const QList<Tag::Id> &ids, QObject *parent = nullptr);
 
+    ~TagFetchJob() override;
+
     /**
      * Sets the tag fetch scope.
      *

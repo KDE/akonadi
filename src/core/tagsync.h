@@ -8,14 +8,15 @@
 
 #include "akonadicore_export.h"
 
-#include "jobs/job.h"
 #include "tag.h"
 #include "item.h"
+
+#include <KJob>
 
 namespace Akonadi
 {
 
-class AKONADICORE_EXPORT TagSync : public Akonadi::Job
+class AKONADICORE_EXPORT TagSync : public KJob
 {
     Q_OBJECT
 public:
@@ -26,16 +27,10 @@ public:
     void setTagMembers(const QHash<QString, Akonadi::Item::List> &ridMemberMap);
 
 protected:
-    void doStart() override;
-
-private Q_SLOTS:
-    void onLocalTagFetchDone(KJob *job);
-    void onCreateTagDone(KJob *job);
-    void onTagItemsFetchDone(KJob *job);
-    void onJobDone(KJob *job);
-    void slotResult(KJob *job) override;
+    void start() override;
 
 private:
+    void onTagItemsFetchDone(const Tag &tag, const Item::List &items, bool merge);
     void diffTags();
     void checkDone();
 
@@ -46,8 +41,9 @@ private:
     bool mTagMembersDeliveryDone;
     bool mLocalTagsFetched;
     QHash<QString, Akonadi::Item::List> mRidMemberMap;
+    int mTasks = 0;
 };
 
-}
+} // namespace Akonadi
 
 #endif

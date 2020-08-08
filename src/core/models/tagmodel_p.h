@@ -27,7 +27,7 @@ public:
     void init(Monitor *recorder);
     void fillModel();
 
-    void tagsFetchDone(KJob *job);
+    void tagsFetchDone();
     void tagsFetched(const Akonadi::Tag::List &tags);
     void monitoredTagAdded(const Akonadi::Tag &tag);
     void monitoredTagChanged(const Akonadi::Tag &tag);

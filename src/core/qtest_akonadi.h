@@ -201,4 +201,8 @@ std::unique_ptr<Akonadi::Monitor> getTestMonitor()
 #define AKVERIFYEXEC( job ) \
     QVERIFY2( job->exec(), job->errorString().toUtf8().constData() )
 
+#define AKVERIFYTASK( task ) \
+    task.wait(); \
+    QVERIFY2(!task.hasError(), task.hasError() ? task.error().message().toUtf8().constData() : "")
+
 #endif

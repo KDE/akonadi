@@ -15,10 +15,10 @@ class EntityCacheTest : public QObject
 {
     Q_OBJECT
 private:
-    template <typename T, typename FetchJob, typename FetchScope>
+    template <typename T, typename FetchScope>
     void testCache()
     {
-        EntityCache<T, FetchJob, FetchScope> cache(2);
+        EntityCache<T, FetchScope> cache(2);
         QSignalSpy spy(&cache, SIGNAL(dataAvailable()));
         QVERIFY(spy.isValid());
 
@@ -104,9 +104,9 @@ private Q_SLOTS:
     {
         QFETCH(bool, collection);
         if (collection) {
-            testCache<Collection, CollectionFetchJob, CollectionFetchScope>();
+            testCache<Collection, CollectionFetchScope>();
         } else {
-            testCache<Item, ItemFetchJob, ItemFetchScope>();
+            testCache<Item, ItemFetchScope>();
         }
     }
 
@@ -139,7 +139,7 @@ private Q_SLOTS:
     {
         ItemFetchScope scope;
 
-        EntityListCache<Item, ItemFetchJob, ItemFetchScope> cache(3);
+        EntityListCache<Item, ItemFetchScope> cache(3);
         QSignalSpy spy(&cache, &EntityCacheBase::dataAvailable);
         QVERIFY(spy.isValid());
 

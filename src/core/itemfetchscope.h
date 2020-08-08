@@ -25,32 +25,10 @@ class TagFetchScope;
 /**
  * @short Specifies which parts of an item should be fetched from the Akonadi storage.
  *
- * When items are fetched from server either by using ItemFetchJob explicitly or
+ * When items are fetched from server either by using Akonadi::fetchItem() explicitly or
  * when it is being used internally by other classes, e.g. ItemModel, the scope
  * of the fetch operation can be tailored to the application's current needs.
- *
- * There are two supported ways of changing the currently active ItemFetchScope
- * of classes:
- * - in-place: modify the ItemFetchScope object the other class holds as a member
- * - replace: replace the other class' member with a new scope object
- *
- * Example: modifying an ItemFetchJob's scope @c in-place
- * @code
- * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
- * job->fetchScope().fetchFullPayload();
- * job->fetchScope().fetchAttribute<MyAttribute>();
- * @endcode
- *
- * Example: @c replacing an ItemFetchJob's scope
- * @code
- * Akonadi::ItemFetchScope scope;
- * scope.fetchFullPayload();
- * scope.fetchAttribute<MyAttribute>();
- *
- * Akonadi::ItemFetchJob *job = new Akonadi::ItemFetchJob( collection );
- * job->setFetchScope( scope );
- * @endcode
- *
+ 
  * This class is implicitly shared.
  *
  * @author Kevin Krammer <kevin.krammer@gmx.at>

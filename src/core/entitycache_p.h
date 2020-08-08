@@ -8,7 +8,6 @@
 #define AKONADI_ENTITYCACHE_P_H
 
 #include "item.h"
-#include "itemfetchjob.h"
 #include "itemfetchscope.h"
 #include "collection.h"
 #include "collectionfetchjob.h"
@@ -17,6 +16,7 @@
 #include "tagfetchjob.h"
 #include "tagfetchscope.h"
 #include "session.h"
+#include "interface.h"
 
 #include "akonaditests_export.h"
 
@@ -28,6 +28,8 @@
 class KJob;
 
 Q_DECLARE_METATYPE(QList<qint64>)
+
+template<typename T> class MyStruct;
 
 namespace Akonadi
 {
@@ -49,38 +51,31 @@ protected:
 
 Q_SIGNALS:
     void dataAvailable();
-
-private Q_SLOTS:
-    virtual void processResult(KJob *job) = 0;
 };
 
 template <typename T>
 struct EntityCacheNode {
-    EntityCacheNode()
-        : pending(false)
-        , invalid(false)
-    {
-    }
-    EntityCacheNode(typename T::Id id)
+    explicit EntityCacheNode() = default;
+    explicit EntityCacheNode(typename T::Id id)
         : entity(T(id))
         , pending(true)
-        , invalid(false)
-    {
-    }
+    {}
+
     T entity;
-    bool pending;
-    bool invalid;
+    bool pending = false;
+    bool invalid = false;
 };
 
 /**
  * @internal
  * A in-memory FIFO cache for a small amount of Item or Collection objects.
  */
-template<typename T, typename FetchJob, typename FetchScope_>
+template<typename T, typename FetchScope_>
 class EntityCache : public EntityCacheBase
 {
 public:
-    typedef FetchScope_ FetchScope;
+    using FetchScope = FetchScope_;
+
     explicit EntityCache(int maxCapacity, Session *session = nullptr, QObject *parent = nullptr)
         : EntityCacheBase(session, parent)
         , mCapacity(maxCapacity)
@@ -95,7 +90,7 @@ public:
     /** Object is available in the cache and can be retrieved. */
     bool isCached(typename T::Id id) const
     {
-        EntityCacheNode<T> *node = cacheNodeForId(id);
+        auto *node = cacheNodeForId(id);
         return node && !node->pending;
     }
 
@@ -108,7 +103,7 @@ public:
     /** Returns the cached object if available, an empty instance otherwise. */
     virtual T retrieve(typename T::Id id) const
     {
-        EntityCacheNode<T> *node = cacheNodeForId(id);
+        auto *node = cacheNodeForId(id);
         if (node && !node->pending && !node->invalid) {
             return node->entity;
         }
@@ -118,8 +113,7 @@ public:
     /** Marks the cache entry as invalid, use in case the object has been deleted on the server. */
     void invalidate(typename T::Id id)
     {
-        EntityCacheNode<T> *node = cacheNodeForId(id);
-        if (node) {
+        if (auto *node = cacheNodeForId(id)) {
             node->invalid = true;
         }
     }
@@ -127,8 +121,7 @@ public:
     /** Triggers a re-fetching of a cache entry, use if it has changed on the server. */
     void update(typename T::Id id, const FetchScope &scope)
     {
-        EntityCacheNode<T> *node = cacheNodeForId(id);
-        if (node) {
+        if (auto *node = cacheNodeForId(id)) {
             mCache.removeAll(node);
             if (node->pending) {
                 request(id, scope);
@@ -140,12 +133,12 @@ public:
     /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
     virtual bool ensureCached(typename T::Id id, const FetchScope &scope)
     {
-        EntityCacheNode<T> *node = cacheNodeForId(id);
-        if (!node) {
+        if (auto *node = cacheNodeForId(id); node) {
+            return !node->pending;
+        } else {
             request(id, scope);
             return false;
         }
-        return !node->pending;
     }
 
     /**
@@ -157,57 +150,56 @@ public:
     {
         Q_ASSERT(!isRequested(id));
         shrinkCache();
-        auto *node = new EntityCacheNode<T>(id);
-        FetchJob *job = createFetchJob(id, scope);
-        job->setProperty("EntityCacheNode", QVariant::fromValue<typename T::Id>(id));
-        connect(job, SIGNAL(result(KJob *)), SLOT(processResult(KJob *)));
-        mCache.enqueue(node);
+        fetch(id, scope).then(
+            [this, id](const auto &elem) {
+                processResult(id, elem);
+            },
+            [this, id](const Akonadi::Error &) {
+                //This can happen if we have stale notifications for items that have already been removed
+                processResult(id, {});
+            });
+        mCache.enqueue(new EntityCacheNode<T>(id));
     }
 
 private:
     EntityCacheNode<T> *cacheNodeForId(typename T::Id id) const
     {
-        for (typename QQueue<EntityCacheNode<T> *>::const_iterator it = mCache.constBegin(), endIt = mCache.constEnd();
-                it != endIt; ++it) {
-            if ((*it)->entity.id() == id) {
-                return *it;
-            }
-        }
-        return nullptr;
+        const auto it = std::find_if(mCache.cbegin(), mCache.cend(), [id](const auto *node) {
+                return node->entity.id() == id;
+        });
+        return it != mCache.cend() ? *it : nullptr;
     }
 
-    void processResult(KJob *job) override {
-        if (job->error())
-        {
-            //This can happen if we have stale notifications for items that have already been removed
-        }
-        auto id = job->property("EntityCacheNode").template value<typename T::Id>();
-        EntityCacheNode<T> *node = cacheNodeForId(id);
-        if (!node)
-        {
+    void processResult(typename T::Id id, const T &result)
+    {
+        auto *node = cacheNodeForId(id);
+        if (!node) {
             return; // got replaced in the meantime
         }
 
         node->pending = false;
-        extractResult(node, job);
+        node->entity = result;
         // make sure we find this node again if something went wrong here,
         // most likely the object got deleted from the server in the meantime
-        if (node->entity.id() != id)
-        {
+        if (node->entity.id() != id) {
             // TODO: Recursion guard? If this is called with non-existing ids, the if will never be true!
             node->entity.setId(id);
             node->invalid = true;
         }
-        Q_EMIT dataAvailable();
+        Q_EMIT this->dataAvailable();
     }
 
-    void extractResult(EntityCacheNode<T> *node, KJob *job) const;
-
-    inline FetchJob *createFetchJob(typename T::Id id, const FetchScope &scope)
+    auto fetch(typename T::Id id, const FetchScope &scope)
     {
-        auto *fetch = new FetchJob(T(id), session);
-        fetch->setFetchScope(scope);
-        return fetch;
+        if constexpr (std::is_same_v<T, Akonadi::Item>) {
+            return Akonadi::fetchItem(Item{id}, scope);
+        } else if constexpr (std::is_same_v<T, Akonadi::Collection>) {
+            return Akonadi::fetchCollection(Collection{id}, scope);
+        } else if constexpr (std::is_same_v<T, Akonadi::Tag>) {
+            return Akonadi::fetchTag(Tag{id}, scope);
+        } else {
+            assert(false); //EntityCache used with unsupported entity type
+        }
     }
 
     /** Tries to reduce the cache size until at least one more object fits in. */
@@ -223,74 +215,28 @@ private:
     int mCapacity;
 };
 
-template<> inline void EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResult(EntityCacheNode<Collection> *node, KJob *job) const
-{
-    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
-    Q_ASSERT(fetch);
-    if (fetch->collections().isEmpty()) {
-        node->entity = Collection();
-    } else {
-        node->entity = fetch->collections().at(0);
-    }
-}
-
-template<> inline void EntityCache<Item, ItemFetchJob, ItemFetchScope>::extractResult(EntityCacheNode<Item> *node, KJob *job) const
-{
-    auto *fetch = qobject_cast<ItemFetchJob *>(job);
-    Q_ASSERT(fetch);
-    if (fetch->items().isEmpty()) {
-        node->entity = Item();
-    } else {
-        node->entity = fetch->items().at(0);
-    }
-}
-
-template<> inline void EntityCache<Tag, TagFetchJob, TagFetchScope>::extractResult(EntityCacheNode<Tag> *node, KJob *job) const
-{
-    auto *fetch = qobject_cast<TagFetchJob *>(job);
-    Q_ASSERT(fetch);
-    if (fetch->tags().isEmpty()) {
-        node->entity = Tag();
-    } else {
-        node->entity = fetch->tags().at(0);
-    }
-}
-
-template<> inline CollectionFetchJob *EntityCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob(Collection::Id id, const CollectionFetchScope &scope)
-{
-    CollectionFetchJob *fetch = new CollectionFetchJob(Collection(id), CollectionFetchJob::Base, session);
-    fetch->setFetchScope(scope);
-    return fetch;
-}
-
-typedef EntityCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionCache;
-typedef EntityCache<Item, ItemFetchJob, ItemFetchScope> ItemCache;
-typedef EntityCache<Tag, TagFetchJob, TagFetchScope> TagCache;
+using CollectionCache = EntityCache<Collection, CollectionFetchScope>;
+using ItemCache = EntityCache<Item, ItemFetchScope>;
+using TagCache = EntityCache<Tag, TagFetchScope>;
 
 template <typename T>
 struct EntityListCacheNode {
-    EntityListCacheNode()
-        : pending(false)
-        , invalid(false)
-    {
-    }
-    EntityListCacheNode(typename T::Id id)
+    explicit EntityListCacheNode() = default;
+    explicit EntityListCacheNode(typename T::Id id)
         : entity(id)
         , pending(true)
-        , invalid(false)
-    {
-    }
+    {}
 
     T entity;
-    bool pending;
-    bool invalid;
+    bool pending = false;
+    bool invalid = false;
 };
 
-template<typename T, typename FetchJob, typename FetchScope_>
+template<typename T, typename FetchScope_>
 class EntityListCache : public EntityCacheBase
 {
 public:
-    typedef FetchScope_ FetchScope;
+    using FetchScope = FetchScope_;
 
     explicit EntityListCache(int maxCapacity, Session *session = nullptr, QObject *parent = nullptr)
         : EntityCacheBase(session, parent)
@@ -304,32 +250,34 @@ public:
     }
 
     /** Returns the cached object if available, an empty instance otherwise. */
-    typename T::List retrieve(const QList<typename T::Id> &ids) const
+    template<template<typename> class Container = QVector>
+    typename T::List retrieve(const Container<typename T::Id> &ids) const
     {
         typename T::List list;
 
-        for (typename T::Id id : ids) {
-            EntityListCacheNode<T> *node = mCache.value(id);
+        for (auto id : ids) {
+            auto *node = mCache.value(id);
             if (!node || node->pending || node->invalid) {
                 return typename T::List();
             }
 
-            list << node->entity;
+            list.push_back(node->entity);
         }
 
         return list;
     }
 
     /** Requests the object to be cached if it is not yet in the cache. @returns @c true if it was in the cache already. */
-    bool ensureCached(const QList<typename T::Id> &ids, const FetchScope &scope)
+    template<template<typename> class Container = QVector>
+    bool ensureCached(const Container<typename T::Id> &ids, const FetchScope &scope)
     {
-        QList<typename T::Id> toRequest;
+        QVector<typename T::Id> toRequest;
         bool result = true;
 
-        for (typename T::Id id : ids) {
-            EntityListCacheNode<T> *node = mCache.value(id);
+        for (auto id : ids) {
+            auto *node = mCache.value(id);
             if (!node) {
-                toRequest << id;
+                toRequest.push_back(id);
                 continue;
             }
 
@@ -347,27 +295,27 @@ public:
     }
 
     /** Marks the cache entry as invalid, use in case the object has been deleted on the server. */
-    void invalidate(const QList<typename T::Id> &ids)
+    template<template<typename> class Container = QVector>
+    void invalidate(const Container<typename T::Id> &ids)
     {
-        for (typename T::Id id : ids) {
-            EntityListCacheNode<T> *node = mCache.value(id);
-            if (node) {
+        for (auto id : ids) {
+            if (auto *node = mCache.value(id)) {
                 node->invalid = true;
             }
         }
     }
 
     /** Triggers a re-fetching of a cache entry, use if it has changed on the server. */
-    void update(const QList<typename T::Id> &ids, const FetchScope &scope)
+    template<template<typename> class Container = QVector>
+    void update(const Container<typename T::Id> &ids, const FetchScope &scope)
     {
-        QList<typename T::Id> toRequest;
+        QVector<typename T::Id> toRequest;
 
-        for (typename T::Id id : ids) {
-            EntityListCacheNode<T> *node = mCache.value(id);
-            if (node) {
+        for (auto id : ids) {
+            if (auto *node = mCache.value(id)) {
                 mCache.remove(id);
                 if (node->pending) {
-                    toRequest << id;
+                    toRequest.push_back(id);
                 }
                 delete node;
             }
@@ -383,48 +331,47 @@ public:
       a token to indicate which request has been finished in the
       dataAvailable() signal.
     */
-    void request(const QList<typename T::Id> &ids, const FetchScope &scope,
-                 const QList<typename T::Id> &preserveIds = QList<typename T::Id>())
+    template<template<typename> class Cont1 = QVector, template<typename> class Cont2 = QVector>
+    void request(const Cont1<typename T::Id> &ids, const FetchScope &scope,
+                 const Cont2<typename T::Id> &preserveIds = {})
     {
         Q_ASSERT(isNotRequested(ids));
         shrinkCache(preserveIds);
-        for (typename T::Id id : ids) {
-            auto *node = new EntityListCacheNode<T>(id);
-            mCache.insert(id, node);
+        for (auto id : ids) {
+            this->mCache.insert(id, new EntityListCacheNode<T>(id));
         }
-        FetchJob *job = createFetchJob(ids, scope);
-        job->setProperty("EntityListCacheIds", QVariant::fromValue<QList<typename T::Id>>(ids));
-        connect(job, SIGNAL(result(KJob *)), SLOT(processResult(KJob *)));
+
+        fetch(ids, scope).then(
+            [this, ids](const auto &results) {
+                this->processResult(ids, results);
+            },
+            [this, ids](const Akonadi::Error &/*error*/) {
+                this->processResult(ids, {});
+            });
     }
 
-    bool isNotRequested(const QList<typename T::Id> &ids) const
+    template<template<typename> class Container = QVector>
+    bool isNotRequested(const Container<typename T::Id> &ids) const
     {
-        for (typename T::Id id : ids) {
-            if (mCache.contains(id)) {
-                return false;
-            }
-        }
-
-        return true;
+        return std::none_of(ids.cbegin(), ids.cend(), [this](auto id) { return mCache.contains(id); });
     }
 
     /** Object is available in the cache and can be retrieved. */
-    bool isCached(const QList<typename T::Id> &ids) const
+    template<template<typename> class Container = QVector>
+    bool isCached(const Container<typename T::Id> &ids) const
     {
-        for (typename T::Id id : ids) {
-            EntityListCacheNode<T> *node = mCache.value(id);
-            if (!node || node->pending) {
-                return false;
-            }
-        }
-        return true;
+        return std::all_of(ids.cbegin(), ids.cend(), [this](auto id) {
+            const auto *node = mCache.value(id);
+            return node && !node->pending;
+        });
     }
 
 private:
     /** Tries to reduce the cache size until at least one more object fits in. */
-    void shrinkCache(const QList<typename T::Id> &preserveIds)
+    template<template<typename> class Container>
+    void shrinkCache(const Container<typename T::Id> &preserveIds)
     {
-        typename QHash<typename T::Id, EntityListCacheNode<T> *>::Iterator iter = mCache.begin();
+        auto iter = mCache.begin();
         while (iter != mCache.end() && mCache.size() >= mCapacity) {
             if (iter.value()->pending || preserveIds.contains(iter.key())) {
                 ++iter;
@@ -436,26 +383,33 @@ private:
         }
     }
 
-    inline FetchJob *createFetchJob(const QList<typename T::Id> &ids, const FetchScope &scope)
+    template<template<typename> class Container>
+    typename T::List idsToEntities(const Container<typename T::Id> &ids)
     {
-        auto *job = new FetchJob(ids, session);
-        job->setFetchScope(scope);
-        return job;
+        typename T::List entities;
+        entities.reserve(ids.size());
+        std::transform(ids.cbegin(), ids.cend(), std::back_inserter(entities), [](auto id) { return T{id}; });
+        return entities;
     }
 
-    void processResult(KJob *job) override {
-        if (job->error())
-        {
-            qWarning() << job->errorString();
+    template<template<typename> class Container>
+    auto fetch(const Container<typename T::Id> &ids, const FetchScope &scope)
+    {
+        if constexpr (std::is_same_v<T, Akonadi::Item>) {
+            return Akonadi::fetchItems(idsToEntities(ids), scope);
+        } else if constexpr (std::is_same_v<T, Akonadi::Collection>) {
+            return Akonadi::fetchCollections(idsToEntities(ids), scope);
+        } else if constexpr (std::is_same_v<T, Akonadi::Tag>) {
+            return Akonadi::fetchTags(idsToEntities(ids), scope);
+        } else {
+            assert(false); // EntityListCache used with unsupported entity type
         }
-        const QList<typename T::Id> ids = job->property("EntityListCacheIds").value<QList<typename T::Id>>();
+    }
 
-        typename T::List entities;
-        extractResults(job, entities);
-
-        for (typename T::Id id : ids)
-        {
-            EntityListCacheNode<T> *node = mCache.value(id);
+    template<template<typename> class Container>
+    void processResult(const Container<typename T::Id> &ids, const typename T::List &entities) {
+        for (auto id : ids) {
+            auto *node = mCache.value(id);
             if (!node) {
                 continue; // got replaced in the meantime
             }
@@ -463,13 +417,11 @@ private:
             node->pending = false;
 
             T result;
-            typename T::List::Iterator iter = entities.begin();
-            for (; iter != entities.end(); ++iter) {
-                if ((*iter).id() == id) {
-                    result = *iter;
-                    entities.erase(iter);
-                    break;
-                }
+            auto it = std::find_if(entities.begin(), entities.end(), [id](const auto &entity) {
+                return entity.id() == id;
+            });
+            if (it != entities.end()) {
+                result = *it;
             }
 
             // make sure we find this node again if something went wrong here,
@@ -485,46 +437,15 @@ private:
         Q_EMIT dataAvailable();
     }
 
-    void extractResults(KJob *job, typename T::List &entities) const;
-
 private:
     QHash<typename T::Id, EntityListCacheNode<T> *> mCache;
     int mCapacity;
 };
 
-template<> inline void EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::extractResults(KJob *job, Collection::List &collections) const
-{
-    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
-    Q_ASSERT(fetch);
-    collections = fetch->collections();
-}
+using CollectionListCache = EntityListCache<Collection, CollectionFetchScope>;
+using ItemListCache = EntityListCache<Item, ItemFetchScope>;
+using TagListCache = EntityListCache<Tag, TagFetchScope>;
 
-template<> inline void EntityListCache<Item, ItemFetchJob, ItemFetchScope>::extractResults(KJob *job, Item::List &items) const
-{
-    auto *fetch = qobject_cast<ItemFetchJob *>(job);
-    Q_ASSERT(fetch);
-    items = fetch->items();
-}
-
-template<> inline void EntityListCache<Tag, TagFetchJob, TagFetchScope>::extractResults(KJob *job, Tag::List &tags)  const
-{
-    auto *fetch = qobject_cast<TagFetchJob *>(job);
-    Q_ASSERT(fetch);
-    tags = fetch->tags();
-}
-
-template<>
-inline CollectionFetchJob *EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope>::createFetchJob(const QList<Collection::Id> &ids, const CollectionFetchScope &scope)
-{
-    auto *fetch = new CollectionFetchJob(ids, CollectionFetchJob::Base, session);
-    fetch->setFetchScope(scope);
-    return fetch;
-}
-
-typedef EntityListCache<Collection, CollectionFetchJob, CollectionFetchScope> CollectionListCache;
-typedef EntityListCache<Item, ItemFetchJob, ItemFetchScope> ItemListCache;
-typedef EntityListCache<Tag, TagFetchJob, TagFetchScope> TagListCache;
-
-}
+} // namespace Akonadi
 
 #endif

@@ -23,7 +23,7 @@ class Collection;
  * This attribute is attached to persistent search collections automatically when
  * creating a new persistent search with SearchCreateJob.
  * Later on the search query can be changed by modifying this attribute of the
- * persistent search collection with an CollectionModifyJob.
+ * persistent search collection with Akonadi::updateCollection()
  *
  * Example:
  *
@@ -50,8 +50,7 @@ class Collection;
  *     Akonadi::PersistentSearchAttribute *attribute = searchCollection.attribute<Akonadi::PersistentSearchAttribute>();
  *     attribute->setQueryString( "... another query string ..." );
  *
- *     Akonadi::CollectionModifyJob *modifyJob = new Akonadi::CollectionModifyJob( searchCollection );
- *     connect( modifyJob, SIGNAL(result(KJob*)), SLOT(modifyFinished(KJob*)) );
+ *     Akonadi::updateCollection(searchCollection);
  *   }
  *   ...
  * }

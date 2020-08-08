@@ -11,10 +11,9 @@
 
 #include "agentinstance.h"
 #include "agentmanager.h"
-#include "collectionmodifyjob.h"
-#include "collectionfetchjob.h"
 #include "monitor.h"
 #include "collectionfetchscope.h"
+#include "interface.h"
 
 #include <KCoreConfigSkeleton>
 
@@ -104,27 +103,15 @@ void SpecialCollectionsPrivate::collectionStatisticsChanged(Akonadi::Collection:
 {
     // need to get the name of the collection in order to be able to check if we are storing it,
     // but we have the id from the monitor, so fetch the name.
-    Akonadi::CollectionFetchJob *fetchJob = new Akonadi::CollectionFetchJob(Collection(collectionId), Akonadi::CollectionFetchJob::Base);
-    fetchJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::None);
-    fetchJob->setProperty("statistics", QVariant::fromValue(statistics));
-
-    q->connect(fetchJob, &CollectionFetchJob::result, q, [this](KJob *job) { collectionFetchJobFinished(job); });
-}
-
-void SpecialCollectionsPrivate::collectionFetchJobFinished(KJob *job)
-{
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Error fetching collection to get name from id for statistics updating in specialcollections!";
-        return;
-    }
-
-    const Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
-
-    Q_ASSERT(!fetchJob->collections().empty());
-    const Akonadi::Collection collection = fetchJob->collections().at(0);
-    const Akonadi::CollectionStatistics statistics = fetchJob->property("statistics").value<Akonadi::CollectionStatistics>();
-
-    mFoldersForResource[collection.resource()][collection.name().toUtf8()].setStatistics(statistics);
+    CollectionFetchOptions options;
+    options.fetchScope().setAncestorRetrieval(CollectionFetchScope::None);
+    Akonadi::fetchCollection(Collection{collectionId}, options).then(
+        [this, statistics](const Collection &collection) {
+            mFoldersForResource[collection.resource()][collection.name().toUtf8()].setStatistics(statistics);
+        },
+        [](const Error &error) {
+            qCWarning(AKONADICORE_LOG) << "Error fetching collection to get name from id for statistics updating in specialCollections:" << error;
+        });
 }
 
 void SpecialCollectionsPrivate::beginBatchRegister()
@@ -192,7 +179,7 @@ void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const 
         Collection attributeCollection(collection);
         auto *attribute = attributeCollection.attribute<SpecialCollectionAttribute>(Collection::AddIfMissing);
         attribute->setCollectionType(type);
-        new CollectionModifyJob(attributeCollection);
+        Akonadi::updateCollection(attributeCollection);
     }
 }
 
@@ -201,7 +188,7 @@ void SpecialCollections::unsetSpecialCollection(const Akonadi::Collection &colle
     if (collection.hasAttribute<SpecialCollectionAttribute>()) {
         Collection attributeCollection(collection);
         attributeCollection.removeAttribute<SpecialCollectionAttribute>();
-        new CollectionModifyJob(attributeCollection);
+        Akonadi::updateCollection(attributeCollection);
     }
 }
 

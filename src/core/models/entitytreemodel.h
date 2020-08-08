@@ -675,11 +675,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void startFirstListJob())
     Q_PRIVATE_SLOT(d_func(), void serverStarted())
 
-    Q_PRIVATE_SLOT(d_func(), void collectionFetchJobDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void rootFetchJobDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void pasteJobDone(KJob *job))
-    Q_PRIVATE_SLOT(d_func(), void updateJobDone(KJob *job))
-
     Q_PRIVATE_SLOT(d_func(), void itemsFetched(const Akonadi::Item::List &))
     Q_PRIVATE_SLOT(d_func(), void collectionsFetched(Akonadi::Collection::List))
     Q_PRIVATE_SLOT(d_func(), void topLevelCollectionsFetched(Akonadi::Collection::List))
@@ -707,7 +702,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void changeFetchState(const Akonadi::Collection &))
 
     Q_PRIVATE_SLOT(d_func(), void agentInstanceRemoved(Akonadi::AgentInstance))
-    Q_PRIVATE_SLOT(d_func(), void monitoredItemsRetrieved(KJob *job))
     //@endcond
 };
 

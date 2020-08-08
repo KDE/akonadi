@@ -11,26 +11,16 @@ class Item;
 #include "relationsync.h"
 #include "akonadicore_debug.h"
 #include "itemfetchscope.h"
-
-
-#include "jobs/itemfetchjob.h"
-#include "jobs/relationfetchjob.h"
-#include "jobs/relationcreatejob.h"
-#include "jobs/relationdeletejob.h"
-
+#include "interface.h"
 
 using namespace Akonadi;
 
 RelationSync::RelationSync(QObject *parent)
-    : Job(parent)
+    : KJob(parent)
 {
-
 }
 
-RelationSync::~RelationSync()
-{
-
-}
+RelationSync::~RelationSync() = default;
 
 void RelationSync::setRemoteRelations(const Akonadi::Relation::List &relations)
 {
@@ -39,18 +29,20 @@ void RelationSync::setRemoteRelations(const Akonadi::Relation::List &relations)
     diffRelations();
 }
 
-void RelationSync::doStart()
+void RelationSync::start()
 {
-    Akonadi::RelationFetchJob *fetch = new Akonadi::RelationFetchJob({ Akonadi::Relation::GENERIC }, this);
-    connect(fetch, &KJob::result, this, &RelationSync::onLocalFetchDone);
-}
-
-void RelationSync::onLocalFetchDone(KJob *job)
-{
-    auto *fetch = static_cast<Akonadi::RelationFetchJob *>(job);
-    mLocalRelations = fetch->relations();
-    mLocalRelationsFetched = true;
-    diffRelations();
+    Akonadi::fetchRelationsOfTypes({Akonadi::Relation::GENERIC}).then(
+        [this](const Relation::List &relations) {
+            --mTasks;
+            mLocalRelations = relations;
+            mLocalRelationsFetched = true;
+            diffRelations();
+        },
+        [this](const Akonadi::Error &error) {
+            qCWarning(AKONADICORE_LOG) << "Error during RelationSync:" << error;
+            --mTasks;
+            checkDone();
+        });
 }
 
 void RelationSync::diffRelations()
@@ -72,33 +64,40 @@ void RelationSync::diffRelations()
             relationByRid.remove(remoteRelation.remoteId());
         } else {
             //New relation or had its GID updated, so create one now
-            auto *createJob = new RelationCreateJob(remoteRelation, this);
-            connect(createJob, &KJob::result, this, &RelationSync::checkDone);
+            Akonadi::createRelation(remoteRelation).then(
+                [this](const Relation & /*relation*/) {
+                    --mTasks;
+                    checkDone();
+                },
+                [this](const Akonadi::Error &error) {
+                    qCWarning(AKONADICORE_LOG) << "Error during RelationSync:" << error;
+                    --mTasks;
+                    checkDone();
+                });
+            ++mTasks;
         }
     }
 
     for (const Akonadi::Relation &removedRelation : qAsConst(relationByRid)) {
         //Removed remotely, remove locally
-        auto *removeJob = new RelationDeleteJob(removedRelation, this);
-        connect(removeJob, &KJob::result, this, &RelationSync::checkDone);
+        Akonadi::deleteRelation(removedRelation).then(
+            [this]() {
+                --mTasks;
+                checkDone();
+            },
+            [this](const Akonadi::Error &error) {
+                qCWarning(AKONADICORE_LOG) << "Error during RelationSync:" << error;
+                --mTasks;
+                checkDone();
+            });
+        mTasks++;
     }
     checkDone();
 }
 
-void RelationSync::slotResult(KJob *job)
-{
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Error during CollectionSync: " << job->errorString() << job->metaObject()->className();
-        // pretend there were no errors
-        Akonadi::Job::removeSubjob(job);
-    } else {
-        Akonadi::Job::slotResult(job);
-    }
-}
-
 void RelationSync::checkDone()
 {
-    if (hasSubjobs()) {
+    if (mTasks > 0) {
         qCDebug(AKONADICORE_LOG) << "Still going";
         return;
     }

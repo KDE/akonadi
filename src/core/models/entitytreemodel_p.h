@@ -13,6 +13,7 @@
 #include "collectionfetchjob.h"
 #include "itemfetchscope.h"
 #include "mimetypechecker.h"
+#include "interface.h"
 
 #include "entitytreemodel.h"
 
@@ -152,7 +153,7 @@ public:
 
     void fetchCollections(const Collection &collection, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
     void fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type = CollectionFetchJob::FirstLevel);
-    void fetchCollections(Akonadi::CollectionFetchJob *job);
+    void fetchCollections(std::function<Task<Collection::List>(const CollectionFetchOptions &)> &&fetch);
     void fetchItems(const Collection &collection);
     void collectionsFetched(const Akonadi::Collection::List &collections);
     void itemsFetched(const Akonadi::Item::List &items);
@@ -219,7 +220,7 @@ public:
     QVector<Item::Id> m_pendingCutItems;
     QVector<Item::Id> m_pendingCutCollections;
     mutable QSet<Collection::Id> m_pendingCollectionRetrieveJobs;
-    mutable QSet<KJob *> m_pendingCollectionFetchJobs;
+    mutable int m_pendingCollectionFetchJobs = 0;
 
     // Icon cache to workaround QIcon::fromTheme being very slow (bug #346644)
     mutable QHash<QString, QIcon> m_iconCache;
@@ -254,12 +255,8 @@ public:
 
     void serverStarted();
 
-    void monitoredItemsRetrieved(KJob *job);
-    void rootFetchJobDone(KJob *job);
-    void collectionFetchJobDone(KJob *job);
-    void itemFetchJobDone(Collection::Id collectionId, KJob *job);
-    void updateJobDone(KJob *job);
-    void pasteJobDone(KJob *job);
+    void collectionFetchDone();
+    void collectionFetchError(const Error &error);
 
     /**
      * Returns the index of the node in @p list with the id @p id. Returns -1 if not found.

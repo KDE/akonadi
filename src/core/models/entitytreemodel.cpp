@@ -20,10 +20,8 @@
 
 #include "attributefactory.h"
 #include "monitor.h"
-#include "collectionmodifyjob.h"
 #include "entitydisplayattribute.h"
 #include "transactionsequence.h"
-#include "itemmodifyjob.h"
 #include "session.h"
 
 
@@ -519,7 +517,14 @@ bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action,
                 return false;
             }
 
-            connect(job, SIGNAL(result(KJob*)), SLOT(pasteJobDone(KJob*)));
+            connect(job, &KJob::result,
+                    this, [](KJob *job) {
+                        if (job->error()) {
+                            // FIXME: Don't do GUI operations in models: emit an error instead, let
+                            // users handle it their way.
+                            QMessageBox::critical(nullptr, i18nc("@title:window", "Error"), job->errorText());
+                        }
+                    });
 
             // Accept the event so that it doesn't propagate.
             return true;
@@ -778,8 +783,11 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
                 collection = value.value<Collection>();
             }
 
-            auto *job = new CollectionModifyJob(collection, d->m_session);
-            connect(job, SIGNAL(result(KJob*)), SLOT(updateJobDone(KJob*)));
+            Akonadi::updateCollection(collection, d->m_session).then(
+                    [](const Collection &/*col*/) {},
+                    [collection](const Error &error) {
+                        qCWarning(AKONADICORE_LOG) << "Failed to update collection" << collection.id() << ":" << error;
+                    });
 
             return false;
         } else if (Node::Item == node->type) {
@@ -806,8 +814,11 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
                 Q_ASSERT(item.id() == node->id);
             }
 
-            auto *itemModifyJob = new ItemModifyJob(item, d->m_session);
-            connect(itemModifyJob, SIGNAL(result(KJob*)), SLOT(updateJobDone(KJob*)));
+            Akonadi::updateItem(item, {}, d->m_session).then(
+                [](const Item & /*item*/){},
+                [item](const Akonadi::Error &error) {
+                    qCWarning(AKONADICORE_LOG) << "Error updating Item" << item.id() << ":" << error;
+                });
 
             return false;
         }

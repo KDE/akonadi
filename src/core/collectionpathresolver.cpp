@@ -5,8 +5,8 @@
 */
 
 #include "collectionpathresolver.h"
+#include "interface.h"
 
-#include "collectionfetchjob.h"
 #include "job_p.h"
 
 #include "akonadicore_debug.h"
@@ -19,19 +19,15 @@ using namespace Akonadi;
 
 //@cond PRIVATE
 
-class Akonadi::CollectionPathResolverPrivate : public JobPrivate
+class Akonadi::CollectionPathResolverPrivate
 {
 public:
     explicit CollectionPathResolverPrivate(CollectionPathResolver *parent)
-        : JobPrivate(parent)
-        , mColId(-1)
-    {
-    }
+        : q(parent)
+    {}
 
     void init(const QString &path, const Collection &rootCollection)
     {
-        Q_Q(CollectionPathResolver);
-
         mPathToId = true;
         mPath = path;
         if (mPath.startsWith(q->pathDelimiter())) {
@@ -45,7 +41,15 @@ public:
         mCurrentNode = rootCollection;
     }
 
-    void jobResult(KJob *job);
+    void collectionsRetrieved(const Collection::List &cols);
+
+    void collectionFetchError(const Error &error)
+    {
+        qCWarning(AKONADICORE_LOG) << "Failed to fetch Collections:" << error;
+        q->setError(error.code());
+        q->setErrorText(error.message());
+        q->emitResult();
+    }
 
     QStringList splitPath(const QString &path)
     {
@@ -73,29 +77,21 @@ public:
         return rv;
     }
 
-    Q_DECLARE_PUBLIC(CollectionPathResolver)
-
     Collection mCurrentNode;
     QStringList mPathParts;
     QString mPath;
-    Collection::Id mColId;
+    Collection::Id mColId = -1;
     bool mPathToId = false;
+
+private:
+    CollectionPathResolver * const q;
 };
 
-void CollectionPathResolverPrivate::jobResult(KJob *job)
+void CollectionPathResolverPrivate::collectionsRetrieved(const Collection::List &cols)
 {
-    if (job->error()) {
-        return;
-    }
-
-    Q_Q(CollectionPathResolver);
-
-    auto *list = static_cast<CollectionFetchJob *>(job);
-    CollectionFetchJob *nextJob = nullptr;
-    const Collection::List cols = list->collections();
     if (cols.isEmpty()) {
         mColId = -1;
-        q->setError(CollectionPathResolver::Unknown);
+        q->setError(KJob::UserDefinedError);
         q->setErrorText(i18n("No such collection."));
         q->emitResult();
         return;
@@ -114,7 +110,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
         if (!found) {
             qCWarning(AKONADICORE_LOG) <<  "No such collection" << currentPart << "with parent" << mCurrentNode.id();
             mColId = -1;
-            q->setError(CollectionPathResolver::Unknown);
+            q->setError(KJob::UserDefinedError);
             q->setErrorText(i18n("No such collection."));
             q->emitResult();
             return;
@@ -124,59 +120,64 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
             q->emitResult();
             return;
         }
-        nextJob = new CollectionFetchJob(mCurrentNode, CollectionFetchJob::FirstLevel, q);
+
+        Akonadi::fetchSubcollections(mCurrentNode).then(
+                [this](const Collection::List &cols) {
+                    collectionsRetrieved(cols);
+                },
+                [this](const Error &error) {
+                    collectionFetchError(error);
+                });
     } else {
-        Collection col = list->collections().at(0);
+        Collection col = cols.at(0);
         mCurrentNode = col.parentCollection();
         mPathParts.prepend(col.name());
         if (mCurrentNode == Collection::root()) {
             q->emitResult();
             return;
         }
-        nextJob = new CollectionFetchJob(mCurrentNode, CollectionFetchJob::Base, q);
+        Akonadi::fetchCollection(mCurrentNode).then(
+                [this](const Collection &col) {
+                    collectionsRetrieved({col});
+                },
+                [this](const Error &error) {
+                    collectionFetchError(error);
+                });
     }
-    q->connect(nextJob, &CollectionFetchJob::result, q, [this](KJob *job) { jobResult(job);});
 }
 
 CollectionPathResolver::CollectionPathResolver(const QString &path, QObject *parent)
-    : Job(new CollectionPathResolverPrivate(this), parent)
+    : KJob(parent)
+    , d(std::make_unique<CollectionPathResolverPrivate>(this))
 {
-    Q_D(CollectionPathResolver);
     d->init(path, Collection::root());
 }
 
 CollectionPathResolver::CollectionPathResolver(const QString &path, const Collection &parentCollection, QObject *parent)
-    : Job(new CollectionPathResolverPrivate(this), parent)
+    : KJob(parent)
+    , d(std::make_unique<CollectionPathResolverPrivate>(this))
 {
-    Q_D(CollectionPathResolver);
     d->init(path, parentCollection);
 }
 
 CollectionPathResolver::CollectionPathResolver(const Collection &collection, QObject *parent)
-    : Job(new CollectionPathResolverPrivate(this), parent)
+    : KJob(parent)
+    , d(std::make_unique<CollectionPathResolverPrivate>(this))
 {
-    Q_D(CollectionPathResolver);
-
     d->mPathToId = false;
     d->mColId = collection.id();
     d->mCurrentNode = collection;
 }
 
-CollectionPathResolver::~CollectionPathResolver()
-{
-}
+CollectionPathResolver::~CollectionPathResolver() = default;
 
 Collection::Id CollectionPathResolver::collection() const
 {
-    Q_D(const CollectionPathResolver);
-
     return d->mColId;
 }
 
 QString CollectionPathResolver::path() const
 {
-    Q_D(const CollectionPathResolver);
-
     if (d->mPathToId) {
         return d->mPath;
     }
@@ -188,27 +189,35 @@ QString CollectionPathResolver::pathDelimiter()
     return QStringLiteral("/");
 }
 
-void CollectionPathResolver::doStart()
+void CollectionPathResolver::start()
 {
-    Q_D(CollectionPathResolver);
-
-    CollectionFetchJob *job = nullptr;
     if (d->mPathToId) {
         if (d->mPath.isEmpty()) {
             d->mColId = Collection::root().id();
             emitResult();
             return;
         }
-        job = new CollectionFetchJob(d->mCurrentNode, CollectionFetchJob::FirstLevel, this);
+        Akonadi::fetchSubcollections(d->mCurrentNode).then(
+                [this](const Collection::List &collections) {
+                    d->collectionsRetrieved(collections);
+                },
+                [this](const Error &error) {
+                    d->collectionFetchError(error);
+                });
     } else {
         if (d->mColId == 0) {
             d->mColId = Collection::root().id();
             emitResult();
             return;
         }
-        job = new CollectionFetchJob(d->mCurrentNode, CollectionFetchJob::Base, this);
+        Akonadi::fetchCollection(d->mCurrentNode).then(
+                [this](const Collection &collection) {
+                    d->collectionsRetrieved({collection});
+                },
+                [this](const Error &error) {
+                    d->collectionFetchError(error);
+                });
     }
-    connect(job, &CollectionFetchJob::result, this, [d](KJob *job) { d->jobResult(job);});
 }
 
 //@endcond

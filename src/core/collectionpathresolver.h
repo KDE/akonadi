@@ -9,7 +9,8 @@
 
 #include "akonadicore_export.h"
 #include "collection.h"
-#include "job.h"
+
+#include <KJob>
 
 namespace Akonadi
 {
@@ -28,7 +29,7 @@ class CollectionPathResolverPrivate;
  *
  * @author Volker Krause <vkrause@kde.org>
  */
-class AKONADICORE_EXPORT CollectionPathResolver : public Job
+class AKONADICORE_EXPORT CollectionPathResolver : public KJob
 {
     Q_OBJECT
 
@@ -86,13 +87,16 @@ public:
      */
     Q_REQUIRED_RESULT static QString pathDelimiter();
 
-protected:
-    void doStart() override;
+    /**
+     * Start the job.
+     */
+    void start() override;
 
 private:
-    Q_DECLARE_PRIVATE(CollectionPathResolver)
+    std::unique_ptr<CollectionPathResolverPrivate> const d;
+    friend class CollectionPathResolverPrivate;
 };
 
-}
+} // namespace Akonadi
 
 #endif

@@ -22,8 +22,8 @@ namespace Akonadi
  * number of new and unread items, etc.
  *
  * This information might be expensive to obtain and is thus
- * not included when fetching collections with a CollectionFetchJob.
- * It can be retrieved separately using CollectionStatisticsJob.
+ * not included when fetching collections from Akonadi.
+ * It can be retrieved separately using Akonadi::fetchCollectionStatistics()
  *
  * Example:
  *
@@ -31,24 +31,13 @@ namespace Akonadi
  *
  * Akonadi::Collection collection = ...
  *
- * Akonadi::CollectionStatisticsJob *job = new Akonadi::CollectionStatisticsJob( collection );
- * connect( job, SIGNAL(result(KJob*)), SLOT(jobFinished(KJob*)) );
- *
- * ...
- *
- * MyClass::jobFinished( KJob *job )
- * {
- *   if ( job->error() ) {
- *     qDebug() << "Error occurred";
- *     return;
- *   }
- *
- *   CollectionStatisticsJob *statisticsJob = qobject_cast<CollectionStatisticsJob*>( job );
- *
- *   const Akonadi::CollectionStatistics statistics = statisticsJob->statistics();
- *   qDebug() << "Unread items:" << statistics.unreadCount();
- * }
- *
+ * Akonadi::fetchCollectionStatistics(collection).then(
+ *     [](const Akonadi::CollectionStatistics &statistics) {
+ *         qDebug() << "Unread items:" << statistics.unreadCount();
+ *     },
+ *     [](const Akonadi::Error &error) {
+ *          qDebug() << "Error fetching collection statistics:" << error;
+ *     });
  * @endcode
  *
  * This class is implicitly shared.

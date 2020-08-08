@@ -6,6 +6,7 @@
 
 #include "itemmonitor.h"
 #include "itemmonitor_p.h"
+#include "interface.h"
 
 #include "itemfetchscope.h"
 
@@ -40,10 +41,13 @@ void ItemMonitor::setItem(const Item &item)
     }
 
     // start initial fetch of the new item
-    auto *job = new ItemFetchJob(d->mItem);
-    job->setFetchScope(fetchScope());
-
-    d->connect(job, &ItemFetchJob::result, d, [this](KJob* job) {d->initialFetchDone(job); });
+    ItemFetchOptions options;
+    options.setItemFetchScope(fetchScope());
+    Akonadi::fetchItem(d->mItem, options)
+        .then([this](const Item &item) {
+            d->mItem = item;
+            Q_EMIT itemChanged(item);
+        });
 }
 
 Item ItemMonitor::item() const

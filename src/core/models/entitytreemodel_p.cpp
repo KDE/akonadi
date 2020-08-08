@@ -24,7 +24,6 @@
 #include "collectionstatisticsjob.h"
 #include "entityhiddenattribute.h"
 #include "itemcopyjob.h"
-#include "itemfetchjob.h"
 #include "itemmodifyjob.h"
 #include "itemmovejob.h"
 #include "linkjob.h"
@@ -43,6 +42,8 @@
 QHash<KJob *, QElapsedTimer> jobTimeTracker;
 
 Q_LOGGING_CATEGORY(DebugETM, "org.kde.pim.akonadi.ETM", QtInfoMsg)
+
+static const char s_fetchCollectionId[] = "_akonadi_ETM_fetchCollectionId";
 
 using namespace Akonadi;
 using namespace AkRanges;
@@ -63,7 +64,6 @@ static CollectionFetchJob::Type getFetchType(EntityTreeModel::CollectionFetchStr
 EntityTreeModelPrivate::EntityTreeModelPrivate(EntityTreeModel *parent)
     : q_ptr(parent)
 {
-    // using collection as a parameter of a queued call in runItemFetchJob()
     qRegisterMetaType<Collection>();
 
     Akonadi::AgentManager *agentManager = Akonadi::AgentManager::self();
@@ -198,21 +198,49 @@ void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &
     }
 }
 
-static const char s_fetchCollectionId[] = "FetchCollectionId";
-
 void EntityTreeModelPrivate::fetchItems(const Collection &parent)
 {
     Q_Q(const EntityTreeModel);
     Q_ASSERT(parent.isValid());
     Q_ASSERT(m_collections.contains(parent.id()));
     // TODO: Use a more specific fetch scope to get only the envelope for mails etc.
-    auto *itemFetchJob = new Akonadi::ItemFetchJob(parent, m_session);
-    itemFetchJob->setFetchScope(m_monitor->itemFetchScope());
-    itemFetchJob->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
-    itemFetchJob->fetchScope().setIgnoreRetrievalErrors(true);
-    itemFetchJob->setDeliveryOption(ItemFetchJob::EmitItemsInBatches);
+    Akonadi::ItemFetchScope scope = m_monitor->itemFetchScope();
+    scope.setAncestorRetrieval(ItemFetchScope::All);
+    scope.setIgnoreRetrievalErrors(true);
+    Akonadi::fetchItemsFromCollection(parent, scope, m_session).then(
+            [this, parentId = parent.id()](const Item::List &items) {
+                itemsFetched(parentId, items);
 
-    itemFetchJob->setProperty(s_fetchCollectionId, QVariant(parent.id()));
+                m_pendingCollectionRetrieveJobs.remove(parentId);
+
+                if (!m_collections.contains(parentId)) {
+                    qCWarning(AKONADICORE_LOG) << "Collection has been removed while fetching items";
+                    return;
+                }
+
+                if (items.empty()) {
+                    m_collectionsWithoutItems.insert(parentId);
+                } else {
+                    m_collectionsWithoutItems.remove(parentId);
+                }
+
+                m_populatedCols.insert(parentId);
+                Q_EMIT q_ptr->collectionPopulated(parentId);
+
+                // If collections are not in the model, there will be no valid index for them.
+                if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
+                    (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections) &&
+                    (m_showRootCollection || parentId != m_rootCollection.id())) {
+                    const QModelIndex index = indexForCollection(Collection(parentId));
+                    Q_ASSERT(index.isValid());
+                    //To notify about the changed fetch and population state
+                    dataChanged(index, index);
+                }
+            },
+            [this, parentId = parent.id()](const Error &error) {
+                m_pendingCollectionRetrieveJobs.remove(parentId);
+                qCWarning(AKONADICORE_LOG) << "Job error: " << error.message() << "for collection:" << parentId;
+            });
 
     if (m_showRootCollection || parent != m_rootCollection) {
         m_pendingCollectionRetrieveJobs.insert(parent.id());
@@ -229,60 +257,83 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
         }
     }
 
-    q->connect(itemFetchJob, &ItemFetchJob::itemsReceived,
-               q, [this, parentId = parent.id()](const Item::List &items) {
-                    itemsFetched(parentId, items);
-                });
-    q->connect(itemFetchJob, &ItemFetchJob::result,
-               q, [this, parentId = parent.id()](KJob *job) {
-                    itemFetchJobDone(parentId, job);
-               });
-    qCDebug(DebugETM) << "collection:" << parent.name(); jobTimeTracker[itemFetchJob].start();
+    qCDebug(DebugETM) << "collection:" << parent.name();
 }
 
-void EntityTreeModelPrivate::fetchCollections(Akonadi::CollectionFetchJob *job)
+void EntityTreeModelPrivate::fetchCollections(std::function<Task<Collection::List>(const CollectionFetchOptions &)> &&fetch)
 {
-    Q_Q(EntityTreeModel);
-
-    job->fetchScope().setListFilter(m_listFilter);
-    job->fetchScope().setContentMimeTypes(m_monitor->mimeTypesMonitored());
-    m_pendingCollectionFetchJobs.insert(static_cast<KJob *>(job));
+    CollectionFetchScope scope;
+    scope.setListFilter(m_listFilter);
+    scope.setContentMimeTypes(m_monitor->mimeTypesMonitored());
+    ++m_pendingCollectionFetchJobs;
 
     if (m_collectionFetchStrategy == EntityTreeModel::InvisibleCollectionFetch) {
         // This is invisible fetch, so no model signals are emitted
-        q->connect(job, &CollectionFetchJob::collectionsReceived,
-                   q, [this](const Collection::List &collections) {
-                        for (const auto &collection : collections) {
-                            if (isHidden(collection)) {
-                                continue;
-                            }
-                            m_collections.insert(collection.id(), collection);
-                            prependNode(new Node{Node::Collection, collection.id(), -1});
-                            fetchItems(collection);
-                        }
-                   });
-    } else {
-        job->fetchScope().setIncludeStatistics(m_includeStatistics);
-        job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
-        q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                   q, SLOT(collectionsFetched(Akonadi::Collection::List)));
-    }
-    q->connect(job, SIGNAL(result(KJob*)),
-               q, SLOT(collectionFetchJobDone(KJob*)));
+        fetch(CollectionFetchOptions{scope}).then(
+            [this](const Collection::List &collections) {
+                for (const auto &collection : collections) {
+                    if (isHidden(collection)) {
+                        continue;
+                    }
+                    m_collections.insert(collection.id(), collection);
+                    prependNode(new Node{Node::Collection, collection.id(), -1});
+                    fetchItems(collection);
+                }
 
-    jobTimeTracker[job].start();
+                --m_pendingCollectionFetchJobs;
+                collectionFetchDone();
+            },
+            [this](const Error &error) {
+                --m_pendingCollectionFetchJobs;
+                collectionFetchError(error);
+            });
+    } else {
+        scope.setIncludeStatistics(m_includeStatistics);
+        scope.setAncestorRetrieval(CollectionFetchScope::All);
+        fetch(CollectionFetchOptions{scope}).then(
+            [this](const Collection::List &collections) {
+                collectionsFetched(collections);
+                --m_pendingCollectionFetchJobs;
+                collectionFetchDone();
+            },
+            [this](const Error &error) {
+                --m_pendingCollectionFetchJobs;
+                collectionFetchError(error);
+            });
+    }
+}
+
+void EntityTreeModelPrivate::collectionFetchError(const Error &error)
+{
+    qCWarning(AKONADICORE_LOG) << "Fetching collections failed: " << error;
 }
 
 void EntityTreeModelPrivate::fetchCollections(const Collection::List &collections, CollectionFetchJob::Type type)
 {
-    fetchCollections(new CollectionFetchJob(collections, type, m_session));
+    switch (type) {
+    case CollectionFetchJob::Base:
+        fetchCollections(
+                [this, collections](const CollectionFetchOptions &options) {
+                    return Akonadi::fetchCollections(collections, options, m_session);
+                });
+        break;
+    case CollectionFetchJob::Recursive:
+        fetchCollections(
+                [this, collections](const CollectionFetchOptions &options) {
+                    return Akonadi::fetchCollectionsRecursive(collections, options, m_session);
+                });
+        break;
+    case CollectionFetchJob::NonOverlappingRoots:
+    case CollectionFetchJob::FirstLevel:
+        Q_ASSERT(false);
+        break;
+    }
 }
 
 void EntityTreeModelPrivate::fetchCollections(const Collection &collection, CollectionFetchJob::Type type)
 {
     Q_ASSERT(collection.isValid());
-    auto *job = new CollectionFetchJob(collection, type, m_session);
-    fetchCollections(job);
+    fetchCollections(Collection::List{collection}, type);
 }
 
 namespace Akonadi
@@ -623,27 +674,30 @@ bool EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
         return true;
     }
 
-    CollectionFetchJob *job = nullptr;
+    Task<Collection::List> fetch;
     // We were unable to reach the top of the tree due to an incomplete ancestor chain, we will have
     // to retrieve it from the server.
+    CollectionFetchOptions options;
+    options.fetchScope().setListFilter(m_listFilter);
+    options.fetchScope().setIncludeStatistics(m_includeStatistics);
+
+    const auto ok = [this](const Collection::List &collections) {
+        ancestorsFetched(collections);
+        collectionFetchDone();
+    };
+    const auto error = [this](const Error &error) {
+        collectionFetchError(error);
+    };
+
     if (!parentCollection.isValid()) {
         if (insertBaseCollection) {
-            job = new CollectionFetchJob(collection, CollectionFetchJob::Recursive, m_session);
+            Akonadi::fetchCollectionsRecursive(collection, options, m_session).then(ok, error);
         } else {
-            job = new CollectionFetchJob(collection.parentCollection(), CollectionFetchJob::Recursive, m_session);
+            Akonadi::fetchCollectionsRecursive(collection.parentCollection(), options, m_session).then(ok, error);
         }
     } else if (!ancestors.isEmpty()) {
         // Fetch the real ancestors
-        job = new CollectionFetchJob(ancestors, CollectionFetchJob::Base, m_session);
-    }
-
-    if (job) {
-        job->fetchScope().setListFilter(m_listFilter);
-        job->fetchScope().setIncludeStatistics(m_includeStatistics);
-        q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-                   q, SLOT(ancestorsFetched(Akonadi::Collection::List)));
-        q->connect(job, SIGNAL(result(KJob*)),
-                   q, SLOT(collectionFetchJobDone(KJob*)));
+        Akonadi::fetchCollections(ancestors, options, m_session).then(ok, error);
     }
 
     if (!parentCollection.isValid()) {
@@ -1292,44 +1346,8 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
     q->endRemoveRows();
 }
 
-void EntityTreeModelPrivate::collectionFetchJobDone(KJob *job)
+void EntityTreeModelPrivate::collectionFetchDone()
 {
-    m_pendingCollectionFetchJobs.remove(job);
-    auto *cJob = static_cast<CollectionFetchJob *>(job);
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << cJob->collections();
-        return;
-    }
-
-    if (!m_collectionTreeFetched && m_pendingCollectionFetchJobs.isEmpty()) {
-        m_collectionTreeFetched = true;
-        Q_EMIT q_ptr->collectionTreeFetched(m_collections | Views::values | Actions::toQVector);
-    }
-
-    qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
-    qCDebug(DebugETM) << "was collection fetch job: collections:" << cJob->collections().size();
-    if (!cJob->collections().isEmpty()) {
-        qCDebug(DebugETM) << "first fetched collection:" << cJob->collections().at(0).name();
-    }
-}
-
-void EntityTreeModelPrivate::itemFetchJobDone(Collection::Id collectionId, KJob *job)
-{
-    m_pendingCollectionRetrieveJobs.remove(collectionId);
-
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << "Job error: " << job->errorString() << "for collection:" << collectionId;
-        return;
-    }
-    if (!m_collections.contains(collectionId)) {
-        qCWarning(AKONADICORE_LOG) << "Collection has been removed while fetching items";
-        return;
-    }
-    auto *iJob = static_cast<ItemFetchJob *>(job);
-    qCDebug(DebugETM) << "Fetch job took " << jobTimeTracker.take(job).elapsed() << "msec";
-    qCDebug(DebugETM) << "was item fetch job: items:" << iJob->count();
-
-    if (iJob->count() == 0) {
         m_collectionsWithoutItems.insert(collectionId);
     } else {
         m_collectionsWithoutItems.remove(collectionId);
@@ -1388,6 +1406,10 @@ void EntityTreeModelPrivate::rootFetchJobDone(KJob *job)
     Q_ASSERT(list.size() == 1);
     m_rootCollection = list.first();
     startFirstListJob();
+    if (!m_collectionTreeFetched && m_pendingCollectionFetchJobs == 0) {
+        m_collectionTreeFetched = true;
+        Q_EMIT q_ptr->collectionTreeFetched(m_collections | Views::values | Actions::toQVector);
+    }
 }
 
 void EntityTreeModelPrivate::startFirstListJob()
@@ -1457,14 +1479,15 @@ void EntityTreeModelPrivate::startFirstListJob()
 
 void EntityTreeModelPrivate::fetchTopLevelCollections() const
 {
-    Q_Q(const EntityTreeModel);
-    CollectionFetchJob *job = new CollectionFetchJob(Collection::root(), CollectionFetchJob::FirstLevel, m_session);
-    q->connect(job, SIGNAL(collectionsReceived(Akonadi::Collection::List)),
-               q, SLOT(topLevelCollectionsFetched(Akonadi::Collection::List)));
-    q->connect(job, SIGNAL(result(KJob*)),
-               q, SLOT(collectionFetchJobDone(KJob*)));
+    Akonadi::fetchSubcollections(Collection::root(), {}, m_session).then(
+            [d = const_cast<EntityTreeModelPrivate *>(this)](const Collection::List &cols) {
+                d->topLevelCollectionsFetched(cols);
+                d->collectionFetchDone();
+            },
+            [d = const_cast<EntityTreeModelPrivate *>(this)](const Error &error) {
+                d->collectionFetchError(error);
+            });
     qCDebug(DebugETM) << "EntityTreeModelPrivate::fetchTopLevelCollections";
-    jobTimeTracker[job].start();
 }
 
 void EntityTreeModelPrivate::topLevelCollectionsFetched(const Akonadi::Collection::List &list)
@@ -1750,7 +1773,7 @@ void EntityTreeModelPrivate::endResetModel()
     m_collectionsWithoutItems.clear();
     m_populatedCols.clear();
     m_items.clear();
-    m_pendingCollectionFetchJobs.clear();
+    m_pendingCollectionFetchJobs = 0;
     m_pendingCollectionRetrieveJobs.clear();
     m_collectionTreeFetched = false;
 
@@ -1766,27 +1789,6 @@ void EntityTreeModelPrivate::endResetModel()
 
     q->endResetModel();
     fillModel();
-}
-
-void EntityTreeModelPrivate::monitoredItemsRetrieved(KJob *job)
-{
-    if (job->error()) {
-        qCWarning(AKONADICORE_LOG) << job->errorString();
-        return;
-    }
-
-    Q_Q(EntityTreeModel);
-
-    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
-    Q_ASSERT(fetchJob);
-    Item::List list = fetchJob->items();
-
-    q->beginResetModel();
-    for (const Item &item : list) {
-        m_childEntities[-1].append(new Node{Node::Item, item.id(), m_rootCollection.id()});
-        m_items.ref(item.id(), item);
-    }
-    q->endResetModel();
 }
 
 void EntityTreeModelPrivate::fillModel()
@@ -1806,10 +1808,21 @@ void EntityTreeModelPrivate::fillModel()
         Q_EMIT q_ptr->collectionTreeFetched(collections);     // there are no collections to fetch
 
         const auto items = m_monitor->itemsMonitoredEx() | Views::transform([](const auto id) { return Item{id}; }) | Actions::toQVector;
-        auto *itemFetch = new ItemFetchJob(items, m_session);
-        itemFetch->setFetchScope(m_monitor->itemFetchScope());
-        itemFetch->fetchScope().setIgnoreRetrievalErrors(true);
-        q->connect(itemFetch, SIGNAL(finished(KJob*)), q, SLOT(monitoredItemsRetrieved(KJob*)));
+        auto fetchScope = m_monitor->itemFetchScope();
+        fetchScope.setIgnoreRetrievalErrors(true);
+        Akonadi::fetchItems(items, fetchScope, m_session).then(
+                [this](const Item::List &items) {
+                    Q_Q(EntityTreeModel);
+                    q->beginResetModel();
+                    for (const auto &item : items) {
+                        m_childEntities[-1].append(new Node{Node::Item, item.id(), m_rootCollection.id()});
+                        m_items.ref(item.id(), item);
+                    }
+                    q->endResetModel();
+                },
+                [](const Error &error) {
+                    qCWarning(AKONADICORE_LOG) << error.message();
+                });
         return;
     }
     // In case there is only a single collection monitored, we can use this
@@ -1825,11 +1838,14 @@ void EntityTreeModelPrivate::fillModel()
         QTimer::singleShot(0, q, SLOT(startFirstListJob()));
     } else {
         Q_ASSERT(m_rootCollection.isValid());
-        auto *rootFetchJob = new CollectionFetchJob(m_rootCollection, CollectionFetchJob::Base, m_session);
-        q->connect(rootFetchJob, SIGNAL(result(KJob*)),
-                   SLOT(rootFetchJobDone(KJob*)));
-        qCDebug(DebugETM) << "";
-        jobTimeTracker[rootFetchJob].start();
+        Akonadi::fetchCollection(m_rootCollection, {}, m_session).then(
+                [this](const Collection &col) {
+                    m_rootCollection = col;
+                    startFirstListJob();
+                },
+                [](const Error &error) {
+                    qCWarning(AKONADICORE_LOG) << "Error fetching root collection:" << error;
+                });
     }
 }
 

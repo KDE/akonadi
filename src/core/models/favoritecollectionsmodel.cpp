@@ -20,7 +20,8 @@
 #include "mimetypechecker.h"
 #include "pastehelper_p.h"
 #include "favoritecollectionattribute.h"
-#include "collectionmodifyjob.h"
+#include "interface.h"
+#include "akranges.h"
 
 using namespace Akonadi;
 
@@ -57,7 +58,7 @@ public:
                 auto c = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
                 if (c.isValid() && !c.hasAttribute<FavoriteCollectionAttribute>()) {
                     c.addAttribute(new FavoriteCollectionAttribute());
-                    new CollectionModifyJob(c, q);
+                    Akonadi::updateCollection(c);
                 }
             }
         }
@@ -176,7 +177,7 @@ public:
             auto col = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
             if (col.isValid() && !col.hasAttribute<FavoriteCollectionAttribute>()) {
                 col.addAttribute(new FavoriteCollectionAttribute());
-                new CollectionModifyJob(col, q);
+                Akonadi::updateCollection(col);
             }
         }
     }
@@ -192,7 +193,7 @@ public:
             auto col = q->data(idx, EntityTreeModel::CollectionRole).value<Collection>();
             if (col.isValid() && col.hasAttribute<FavoriteCollectionAttribute>()) {
                 col.removeAttribute<FavoriteCollectionAttribute>();
-                new CollectionModifyJob(col, q);
+                Akonadi::updateCollection(col);
             }
         }
     }
@@ -215,12 +216,7 @@ public:
 
     void set(const Akonadi::Collection::List &collections)
     {
-        QList<Akonadi::Collection::Id> colIds;
-        colIds.reserve(collections.count());
-        for (const Akonadi::Collection &col : collections) {
-            colIds << col.id();
-        }
-        set(colIds);
+        set(collections | AkRanges::Views::transform(&Collection::id) | AkRanges::Actions::toQList);
     }
 
     void loadConfig()

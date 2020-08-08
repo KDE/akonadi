@@ -38,7 +38,6 @@ public:
     QString defaultResourceId() const;
     void emitChanged(const QString &resourceId);
     void collectionRemoved(const Collection &collection);   // slot
-    void collectionFetchJobFinished(KJob *job);  // slot
     void collectionStatisticsChanged(Akonadi::Collection::Id collectionId,
                                      const Akonadi::CollectionStatistics &statistics);  // slot
 

@@ -528,7 +528,6 @@ public:
         qCDebug(AKONADICORE_ASYNC_LOG, "Task<void> %p error set (code=%d)", static_cast<void *>(this->d.get()), error.code());
         this->d->setError(std::move(error));
     }
-
 };
 
 template<template<typename> class Collection, typename Entity, typename ForEach>

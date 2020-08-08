@@ -65,7 +65,7 @@ auto asyncJob(CreateFunc createFunc, ExtractFunc extractFunc, Session *session, 
     using Result = std::decay_t<std::invoke_result_t<ExtractFunc, Job *>>;
 
     Task<Result> task;
-    QObject::connect(createFunc(session, std::forward<Args>(args) ...), &Job::finished,
+    QObject::connect(createFunc(session, std::forward<Args>(args) ...), &Job::result,
                      [task, extractor = std::move(extractFunc)](KJob *job) mutable {
                         if (job->error()) {
                             task.setError(job->error(), job->errorText());
@@ -82,7 +82,7 @@ auto asyncJob(CreateFunc createFunc, Session *session, Args && ... args)
     using Job = std::decay_t<std::remove_pointer_t<decltype(createFunc(session, args ...))>>;
 
     Task<void> task;
-    QObject::connect(createFunc(session, std::forward<Args>(args) ...), &Job::finished,
+    QObject::connect(createFunc(session, std::forward<Args>(args) ...), &Job::result,
                      [task](KJob *job) mutable {
                         if (job->error()) {
                             task.setError(job->error(), job->errorText());

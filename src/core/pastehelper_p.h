@@ -37,15 +37,6 @@ namespace PasteHelper
 AKONADICORE_EXPORT bool canPaste(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action);
 
 /**
-  Paste/drop the given mime data into the given collection.
-  @param mimeData The pasted/dropped data.
-  @param collection The target collection.
-  @param action Indicate whether this is a copy, a move or link.
-  @returns The job performing the paste, 0 if there is nothing to paste.
-*/
-AKONADICORE_EXPORT KJob *paste(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action, Session *session = nullptr);
-
-/**
   URI list paste/drop.
   @param mimeData The pasted/dropped data.
   @param collection The target collection.

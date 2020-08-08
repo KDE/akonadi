@@ -8,8 +8,8 @@
 
 #include "entitytreemodel.h"
 #include "session.h"
-#include "itemfetchjob.h"
 #include "itemfetchscope.h"
+#include "interface.h"
 #include <KLocalizedString>
 
 Q_DECLARE_METATYPE(QSet<QByteArray>)
@@ -28,8 +28,6 @@ class PartFetcherPrivate
     {
     }
 
-    void fetchJobDone(KJob *job);
-
     void modelDataChanged(const QModelIndex &topLeft, const QModelIndex &bottomRight);
 
     QPersistentModelIndex m_persistentIndex;
@@ -41,51 +39,6 @@ class PartFetcherPrivate
 };
 
 } // namespace Akonadi
-
-void PartFetcherPrivate::fetchJobDone(KJob *job)
-{
-    Q_Q(PartFetcher);
-    if (job->error()) {
-        q->setError(KJob::UserDefinedError);
-        q->setErrorText(i18n("Unable to fetch item for index"));
-        q->emitResult();
-        return;
-    }
-
-    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
-
-    const Item::List list = fetchJob->items();
-
-    Q_ASSERT(list.size() == 1);
-
-    // If m_persistentIndex comes from a selection proxy model, it could become
-    // invalid if the user clicks around a lot.
-    if (!m_persistentIndex.isValid()) {
-        q->setError(KJob::UserDefinedError);
-        q->setErrorText(i18n("Index is no longer available"));
-        q->emitResult();
-        return;
-    }
-
-    const QSet<QByteArray> loadedParts = m_persistentIndex.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray> >();
-
-    Q_ASSERT(!loadedParts.contains(m_partName));
-
-    Item item = m_persistentIndex.data(EntityTreeModel::ItemRole).value<Item>();
-
-    item.apply(list.at(0));
-
-    auto *model = const_cast<QAbstractItemModel *>(m_persistentIndex.model());
-
-    Q_ASSERT(model);
-
-    QVariant itemVariant = QVariant::fromValue(item);
-    model->setData(m_persistentIndex, itemVariant, EntityTreeModel::ItemRole);
-
-    m_item = item;
-
-    q->emitResult();
-}
 
 PartFetcher::PartFetcher(const QModelIndex &index, const QByteArray &partName, QObject *parent)
     : KJob(parent)
@@ -138,11 +91,40 @@ void PartFetcher::start()
         return;
     }
 
-    ItemFetchScope scope;
-    scope.fetchPayloadPart(d->m_partName);
-    auto *itemFetchJob = new Akonadi::ItemFetchJob(item, session);
-    itemFetchJob->setFetchScope(scope);
-    connect(itemFetchJob, &KJob::result, this, [d](KJob *job) { d->fetchJobDone(job); });
+    ItemFetchOptions options;
+    options.itemFetchScope().fetchPayloadPart(d->m_partName);
+    Akonadi::fetchItem(item, options, session).then(
+        [this](const Item &item) {
+            Q_D(PartFetcher);
+            // If m_persistentIndex comes from a selection proxy model, it could become
+            // invalid if the user clicks around a lot.
+            if (!d->m_persistentIndex.isValid()) {
+                setError(KJob::UserDefinedError);
+                setErrorText(i18n("Index is no longer available"));
+                emitResult();
+                return;
+            }
+
+            const QSet<QByteArray> loadedParts = d->m_persistentIndex.data(EntityTreeModel::LoadedPartsRole).value<QSet<QByteArray> >();
+
+            Q_ASSERT(!loadedParts.contains(d->m_partName));
+
+            Item current = d->m_persistentIndex.data(EntityTreeModel::ItemRole).value<Item>();
+            current.apply(item);
+            QAbstractItemModel *model = const_cast<QAbstractItemModel *>(d->m_persistentIndex.model());
+            Q_ASSERT(model);
+            QVariant itemVariant = QVariant::fromValue(item);
+            model->setData(d->m_persistentIndex, itemVariant, EntityTreeModel::ItemRole);
+            d->m_item = item;
+
+            emitResult();
+        },
+        [this](const Error &/*error*/) {
+            setError(KJob::UserDefinedError);
+            setErrorText(i18n("Unable to fetch item for index"));
+            emitResult();
+        });
+
 }
 
 QModelIndex PartFetcher::index() const

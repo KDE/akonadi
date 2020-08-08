@@ -40,13 +40,10 @@ class ChangeNotificationDependenciesFactory;
  * using namespace Akonadi;
  *
  * Session *session = new Session( "mySession" );
- *
- * CollectionFetchJob *job = new CollectionFetchJob( Collection::root(),
- *                                                   CollectionFetchJob::Recursive,
- *                                                   session );
- *
- * connect( job, SIGNAL(result(KJob*)), this, SLOT(slotResult(KJob*)) );
- *
+ * Akonadi::fetchCollectionsRecursive(Collection::root(), {}, session).then(
+ *      [](const Collection::List &collections) {
+ *          ...
+ *      });
  * @endcode
  *
  * @author Volker Krause <vkrause@kde.org>

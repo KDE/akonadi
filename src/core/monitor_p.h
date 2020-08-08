@@ -10,7 +10,7 @@
 #include "akonadicore_export.h"
 #include "monitor.h"
 #include "collection.h"
-#include "collectionstatisticsjob.h"
+#include "collectionstatistics.h"
 #include "collectionfetchscope.h"
 #include "item.h"
 #include "itemfetchscope.h"
@@ -158,7 +158,6 @@ public:
     // private Q_SLOTS
     void dataAvailable();
     void slotSessionDestroyed(QObject *object);
-    void slotStatisticsChangedFinished(KJob *job);
     void slotFlushRecentlyChangedCollections();
 
     /**
@@ -357,8 +356,13 @@ private:
 
     void fetchStatistics(Collection::Id colId)
     {
-        CollectionStatisticsJob *job = new CollectionStatisticsJob(Collection(colId), session);
-        QObject::connect(job, &KJob::result, q_ptr, [this](KJob *job) { slotStatisticsChangedFinished(job); });
+        Akonadi::fetchCollectionStatistics(Collection{colId}, session).then(
+                [this, colId](const CollectionStatistics &statistics) {
+                    Q_EMIT q_ptr->collectionStatisticsChanged(colId, statistics);
+                },
+                [colId](const Error &error) {
+                    qCWarning(AKONADICORE_LOG) << "Error while fetching statistics for collection" << colId << ":" << error.message();
+                });
     }
 
     void notifyCollectionStatisticsWatchers(Collection::Id collection, const QByteArray &resource);

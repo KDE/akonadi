@@ -7,14 +7,14 @@
 #define RELATIONSYNC_H
 
 #include "akonadicore_export.h"
-
-#include "jobs/job.h"
 #include "relation.h"
+
+#include <KJob>
 
 namespace Akonadi
 {
 
-class AKONADICORE_EXPORT RelationSync : public Akonadi::Job
+class AKONADICORE_EXPORT RelationSync : public KJob
 {
     Q_OBJECT
 public:
@@ -24,11 +24,7 @@ public:
     void setRemoteRelations(const Akonadi::Relation::List &relations);
 
 protected:
-    void doStart() override;
-
-private Q_SLOTS:
-    void onLocalFetchDone(KJob *job);
-    void slotResult(KJob *job) override;
+    void start() override;
 
 private:
     void diffRelations();
@@ -39,8 +35,9 @@ private:
     Akonadi::Relation::List mLocalRelations;
     bool mRemoteRelationsSet = false;
     bool mLocalRelationsFetched = false;
+    int mTasks = 0;
 };
 
-}
+} // namespace Akonadi
 
 #endif

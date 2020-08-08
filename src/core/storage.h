@@ -20,6 +20,7 @@
 #ifndef AKONADI_STORAGE_H_
 #define AKONADI_STORAGE_H_
 
+#include "akonaditests_export.h"
 #include "storageinterface.h"
 
 namespace Akonadi
@@ -29,7 +30,7 @@ namespace Akonadi
 /**
  * Real implementation of the Akonadi storage interface.
  */
-class Storage : public StorageInterface
+class AKONADI_TESTS_EXPORT Storage : public StorageInterface
 {
 public:
     explicit Storage();

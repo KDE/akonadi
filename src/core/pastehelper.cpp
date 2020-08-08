@@ -6,7 +6,7 @@
 
 #include "pastehelper_p.h"
 
-
+#include "interface.h"
 #include "collectioncopyjob.h"
 #include "collectionmovejob.h"
 #include "collectionfetchjob.h"
@@ -43,13 +43,10 @@ public:
                             QObject *parent = nullptr);
     virtual ~PasteHelperJob();
 
-private Q_SLOTS:
-    void onDragSourceCollectionFetched(KJob *job);
-
 private:
-    void runActions();
-    void runItemsActions();
-    void runCollectionsActions();
+    Task<void> runActions(const Collection &sourceCollection);
+    Task<void> runItemsActions(const Collection &sourceCollection);
+    Task<void> runCollectionsActions();
 
 private:
     Akonadi::Item::List mItems;
@@ -85,119 +82,93 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         }
     }
 
+    Task<void> task;
     if (dragSourceCollection.isValid()) {
         // Disable autocommitting, because starting a Link/Unlink/Copy/Move job
         // after the transaction has ended leaves the job hanging
         setAutomaticCommittingEnabled(false);
 
-        auto *fetch = new CollectionFetchJob(dragSourceCollection,
-                CollectionFetchJob::Base,
-                this);
-        QObject::connect(fetch, &KJob::finished,
-                         this, &PasteHelperJob::onDragSourceCollectionFetched);
+        task = Akonadi::fetchCollection(dragSourceCollection).then(
+                [this](const Collection &sourceCollection) {
+                    return runActions(sourceCollection);
+                },
+                [this](const Akonadi::Error &error) {
+                    qCWarning(AKONADICORE_LOG) << error;
+                    rollback();
+                });
     } else {
-        runActions();
+        task = runActions({});
     }
-}
 
-PasteHelperJob::~PasteHelperJob()
-{
-}
 
-void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
-{
-    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
-    qCDebug(AKONADICORE_LOG) << fetch->error() << fetch->collections().count();
-    if (fetch->error() || fetch->collections().count() != 1) {
-        runActions();
+    task.then([this]() {
         commit();
-        return;
-    }
-
-    // If the source collection is virtual, treat copy and move actions differently
-    const Collection sourceCollection = fetch->collections().at(0);
-    qCDebug(AKONADICORE_LOG) << "FROM: " << sourceCollection.id() << sourceCollection.name() << sourceCollection.isVirtual();
-    qCDebug(AKONADICORE_LOG) << "DEST: " << mDestCollection.id() << mDestCollection.name() << mDestCollection.isVirtual();
-    qCDebug(AKONADICORE_LOG) << "ACTN:" << mAction;
-    if (sourceCollection.isVirtual()) {
-        switch (mAction) {
-        case Qt::CopyAction:
-            if (mDestCollection.isVirtual()) {
-                new LinkJob(mDestCollection, mItems, this);
-            } else {
-                new ItemCopyJob(mItems, mDestCollection, this);
-            }
-            break;
-        case Qt::MoveAction:
-            new UnlinkJob(sourceCollection, mItems, this);
-            if (mDestCollection.isVirtual()) {
-                new LinkJob(mDestCollection, mItems, this);
-            } else {
-                new ItemCopyJob(mItems, mDestCollection, this);
-            }
-            break;
-        case Qt::LinkAction:
-            new LinkJob(mDestCollection, mItems, this);
-            break;
-        default:
-            Q_ASSERT(false);
-        }
-        runCollectionsActions();
-        commit();
-    } else {
-        runActions();
-    }
-
-    commit();
+        emitResult();
+    }, [this](const Akonadi::Error &error) {
+        qCWarning(AKONADICORE_LOG) << error;
+        setError(error.code());
+        setErrorText(error.message());
+        rollback();
+    });
 }
 
-void PasteHelperJob::runActions()
+PasteHelperJob::~PasteHelperJob() = default;
+
+Task<void> PasteHelperJob::runActions(const Collection &sourceCollection)
 {
-    runItemsActions();
-    runCollectionsActions();
+    return runItemsActions(sourceCollection).then([this]() { return runCollectionsActions(); });
 }
 
-void PasteHelperJob::runItemsActions()
+Task<void> PasteHelperJob::runItemsActions(const Collection &sourceCollection)
 {
     if (mItems.isEmpty()) {
-        return;
+        return Akonadi::finishedTask();
     }
 
     switch (mAction) {
     case Qt::CopyAction:
-        new ItemCopyJob(mItems, mDestCollection, this);
-        break;
-    case Qt::MoveAction:
-        new ItemMoveJob(mItems, mDestCollection, this);
-        break;
+        if (mDestCollection.isVirtual()) {
+            return Akonadi::linkItems(mItems, mDestCollection);
+        } else {
+            return Akonadi::copyItems(mItems, mDestCollection);
+        }
+    case Qt::MoveAction: {
+        Task<void> task = mDestCollection.isVirtual()
+            ? Akonadi::linkItems(mItems, mDestCollection)
+            : Akonadi::moveItems(mItems, mDestCollection);
+        if (sourceCollection.isVirtual()) {
+            return task.then([this, sourceCollection]() { return Akonadi::unlinkItems(mItems, sourceCollection); });
+        }
+        return task;
+    }
     case Qt::LinkAction:
-        new LinkJob(mDestCollection, mItems, this);
-        break;
+        return Akonadi::linkItems(mItems, mDestCollection);
     default:
         Q_ASSERT(false); // WTF?!
     }
 }
 
-void PasteHelperJob::runCollectionsActions()
+Task<void> PasteHelperJob::runCollectionsActions()
 {
     if (mCollections.isEmpty()) {
-        return;
+        return Akonadi::finishedTask();
     }
 
     switch (mAction) {
     case Qt::CopyAction:
-        for (const Collection &col : qAsConst(mCollections)) {   // FIXME: remove once we have a batch job for collections as well
-            new CollectionCopyJob(col, mDestCollection, this);
-        }
-        break;
+        // FIXME: remove once we have a batch job for collections as well
+        return Akonadi::taskForEach(mCollections,
+            [dest = mDestCollection](const Collection &col) {
+                return Akonadi::copyCollection(col, dest);
+            });
     case Qt::MoveAction:
-        for (const Collection &col : qAsConst(mCollections)) {   // FIXME: remove once we have a batch job for collections as well
-            new CollectionMoveJob(col, mDestCollection, this);
-        }
-        break;
+        // FIXME: remove once we have a batch job for collections as well
+        return Akonadi::taskForEach(mCollections,
+            [dest = mDestCollection](const Collection &col) {
+                return Akonadi::moveCollection(col, dest);
+            });
     case Qt::LinkAction:
-        // Not supported for collections
-        break;
+        return Akonadi::finishedTask();
     default:
         Q_ASSERT(false); // WTF?!
     }
@@ -254,42 +225,6 @@ bool PasteHelper::canPaste(const QMimeData *mimeData, const Collection &collecti
     return false;
 }
 
-KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection, Qt::DropAction action, Session *session)
-{
-    if (!canPaste(mimeData, collection, action)) {
-        return nullptr;
-    }
-
-    // we try to drop data not coming with the akonadi:// url
-    // find a type the target collection supports
-    const QStringList lstFormats = mimeData->formats();
-    for (const QString &type : lstFormats) {
-        if (!collection.contentMimeTypes().contains(type)) {
-            continue;
-        }
-
-        QByteArray item = mimeData->data(type);
-        // HACK for some unknown reason the data is sometimes 0-terminated...
-        if (!item.isEmpty() && item.at(item.size() - 1) == 0) {
-            item.resize(item.size() - 1);
-        }
-
-        Item it;
-        it.setMimeType(type);
-        it.setPayloadFromData(item);
-
-        auto *job = new ItemCreateJob(it, collection);
-        return job;
-    }
-
-    if (!mimeData->hasUrls()) {
-        return nullptr;
-    }
-
-    // data contains an url list
-    return pasteUriList(mimeData, collection, action, session);
-}
-
 KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &destination, Qt::DropAction action, Session *session)
 {
     if (!mimeData->hasUrls()) {
@@ -297,6 +232,7 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
     }
 
     if (!canPaste(mimeData, destination, action)) {
+        qCDebug(AKONADICORE_LOG) << "Cannot paste uris" << mimeData->urls() << "to collection" << destination.id() << ", action=" << action;
         return nullptr;
     }
 
@@ -319,11 +255,7 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
         // TODO: handle non Akonadi URLs?
     }
 
-    auto *job = new PasteHelperJob(action, items,
-            collections, destination,
-            session);
-
-    return job;
+    return new PasteHelperJob(action, items, collections, destination, session);
 }
 
 #include "pastehelper.moc"

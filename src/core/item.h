@@ -288,7 +288,7 @@ public:
      *
      * @warning Do not modify the attributes returned from this method,
      * the change will not be reflected when updating the Item through
-     * ItemModifyJob.
+     * Akonadi::updateItem().
      */
     Attribute::List attributes() const;
 
@@ -429,7 +429,7 @@ public:
 
     /**
      * Marks that the payload shall be cleared from the cache when this
-     * item is passed to an ItemModifyJob the next time.
+     * item is passed to a Akonadi::updateItem() the next time.
      * This will trigger a refetch of the payload from the backend when the
      * item is accessed afterwards. Only resources should have a need for
      * this functionality.
@@ -455,7 +455,7 @@ public:
      * Returns the unique identifier of the collection this item is stored in. There is only
      * a single such collection, although the item can be linked into arbitrary many
      * virtual collections.
-     * Calling this method makes sense only after running an ItemFetchJob on the item.
+     * Calling this method makes sense only after running an Akonadi::fetchItem() on the item.
      * @returns the collection ID if it is known, -1 otherwise.
      * @since 4.3
      */
@@ -514,7 +514,7 @@ public:
      * Lists virtual collections that this item is linked to.
      *
      * @note This value is populated only when this item was retrieved by
-     * ItemFetchJob with fetchVirtualReferences set to true in ItemFetchScope,
+     * Akonadi::fetchItem() with fetchVirtualReferences set to true in ItemFetchScope,
      * otherwise this list is always empty.
      *
      * @since 4.14
@@ -653,8 +653,8 @@ public:
 
     /**
      * Returns the parts available for this item in the cache. The list might be a subset
-     * of the actual parts in cache, as it contains only the requested parts. See @see ItemFetchJob and
-     * @see ItemFetchScope
+     * of the actual parts in cache, as it contains only the requested parts. See @see
+     * Akonadi::fetchItem() and @see ItemFetchScope
      *
      * The returned set refers to parts available on the akonadi server.
      *
@@ -735,7 +735,8 @@ private:
     tryToCloneImpl(T *ret) const;
 
     /**
-     * Set the collection ID to where the item is stored in. Should be set only by the ItemFetchJob.
+     * Set the collection ID to where the item is stored in. Should be set internally by the
+     * Akonadi::fetchItem() call.
      * @param collectionId the unique identifier of the collection where this item is stored in.
      * @since 4.3
      */
