@@ -46,6 +46,7 @@
 #include <QPointer>
 #include <QInputDialog>
 #include <QRegularExpression>
+#include <QTimer>
 
 using namespace Akonadi;
 
@@ -271,6 +272,9 @@ public:
         setContextText(StandardActionManager::Paste, StandardActionManager::ErrorMessageTitle,
                        i18n("Paste failed"));
 
+        mDelayedUpdateTimer.setSingleShot(true);
+        connect(&mDelayedUpdateTimer, &QTimer::timeout, q, [this]() { updateActions(); });
+
         qRegisterMetaType<Akonadi::Item::List>("Akonadi::Item::List");
     }
 
@@ -460,6 +464,12 @@ public:
         return collectionList;
     }
 
+    void delayedUpdateActions()
+    {
+        // Compress changes (e.g. when deleting many rows, do this only once)
+        mDelayedUpdateTimer.start(0);
+    }
+
     void updateActions()
     {
         // favorite collections
@@ -497,6 +507,7 @@ public:
         if (favoritesModel) {
             enableAction(StandardActionManager::SynchronizeFavoriteCollections, (favoritesModel->rowCount() > 0));
         }
+        Q_EMIT q->selectionsChanged(selectedCollectionsList, selectedFavoriteCollectionsList, selectedItems);
         Q_EMIT q->actionStateUpdated();
     }
 
@@ -1556,6 +1567,7 @@ public:
     QVector<QAction *> actions;
     QHash<StandardActionManager::Type, KLocalizedString> pluralLabels;
     QHash<StandardActionManager::Type, KLocalizedString> pluralIconLabels;
+    QTimer mDelayedUpdateTimer;
 
     struct ContextTextEntry {
         QString text;
@@ -1604,7 +1616,7 @@ void StandardActionManager::setCollectionSelectionModel(QItemSelectionModel *sel
 void StandardActionManager::setItemSelectionModel(QItemSelectionModel *selectionModel)
 {
     d->itemSelectionModel = selectionModel;
-    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() { d->updateActions(); });
+    connect(selectionModel, &QItemSelectionModel::selectionChanged, this, [this]() { d->delayedUpdateActions(); });
 }
 
 void StandardActionManager::setFavoriteCollectionsModel(FavoriteCollectionsModel *favoritesModel)

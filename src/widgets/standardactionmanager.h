@@ -342,6 +342,17 @@ public:
     void createActionFolderMenu(QMenu *menu, Type type);
 
 Q_SIGNALS:
+
+    /**
+     * This signal is emitted whenever one of the selections has changed
+     * (selected collections, selected favorites collections, selected items)
+     * This allows other action managers to update their actions accordingly
+     * (see e.g. StandardMailActionManager)
+     */
+    void selectionsChanged(const Collection::List &selectedCollectionsList,
+                           const Collection::List &selectedFavoriteCollectionsList,
+                           const Item::List &selectedItems);
+
     /**
      * This signal is emitted whenever the action state has been updated.
      * In case you have special needs for changing the state of some actions,
