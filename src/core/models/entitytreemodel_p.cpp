@@ -200,6 +200,8 @@ void EntityTreeModelPrivate::agentInstanceRemoved(const Akonadi::AgentInstance &
     }
 }
 
+static const char s_fetchCollectionId[] = "FetchCollectionId";
+
 void EntityTreeModelPrivate::fetchItems(const Collection &parent)
 {
     Q_Q(const EntityTreeModel);
@@ -211,6 +213,8 @@ void EntityTreeModelPrivate::fetchItems(const Collection &parent)
     itemFetchJob->fetchScope().setAncestorRetrieval(ItemFetchScope::All);
     itemFetchJob->fetchScope().setIgnoreRetrievalErrors(true);
     itemFetchJob->setDeliveryOption(ItemFetchJob::EmitItemsInBatches);
+
+    itemFetchJob->setProperty(s_fetchCollectionId, QVariant(parent.id()));
 
     if (m_showRootCollection || parent != m_rootCollection) {
         m_pendingCollectionRetrieveJobs.insert(parent.id());
@@ -461,6 +465,14 @@ void EntityTreeModelPrivate::collectionsFetched(const Akonadi::Collection::List 
             }
         }
     }
+}
+
+// Used by entitytreemodeltest
+void EntityTreeModelPrivate::itemsFetched(const Akonadi::Item::List &items)
+{
+    Q_Q(EntityTreeModel);
+    const Collection::Id collectionId = q->sender()->property(s_fetchCollectionId).value<Collection::Id>();
+    itemsFetched(collectionId, items);
 }
 
 void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, const Akonadi::Item::List &items)
