@@ -19,6 +19,8 @@
 
 #include <QHash>
 
+#include <unordered_map>
+
 using namespace Akonadi;
 
 namespace Akonadi
