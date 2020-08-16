@@ -1,5 +1,5 @@
 /*
-    Copyright (c) 2006 - 2007 Volker Krause <vkrause@kde.org>
+    SPDX-FileCopyrightText: 2006-2007 Volker Krause <vkrause@kde.org>
     SPDX-FileCopyrightText: 2008 Stephen Kelly <steveire@gmail.com>
     SPDX-FileCopyrightText: 2009 Kevin Ottens <ervin@kde.org>
 

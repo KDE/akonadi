@@ -1,5 +1,5 @@
 /*
-    Copyright (C) 2018 - 2019  Daniel Vrátil <dvratil@kde.org>
+    SPDX-FileCopyrightText: 2018-2019 Daniel Vrátil <dvratil@kde.org>
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
