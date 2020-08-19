@@ -1,5 +1,5 @@
 /*
-    Copyright (c) Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
+    SPDX-FileCopyrightText: Igor Trindade Oliveira <igor_trindade@yahoo.com.br>
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
