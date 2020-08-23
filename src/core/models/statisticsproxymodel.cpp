@@ -7,7 +7,6 @@
 
 #include "statisticsproxymodel.h"
 #include "akonadicore_debug.h"
-#include "kitemmodels_version.h"
 
 #include "entitytreemodel.h"
 #include "collectionutils.h"
