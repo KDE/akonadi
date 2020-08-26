@@ -36,7 +36,7 @@ public:
 
     void doStart() override;
 
-    ResourceSynchronizationJob *q;
+    ResourceSynchronizationJob *const q;
     AgentInstance instance;
     std::unique_ptr<org::freedesktop::Akonadi::Resource> interface;
     QTimer safetyTimer;

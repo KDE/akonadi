@@ -37,7 +37,7 @@ public:
 
     void doStart() override;
 
-    CollectionAttributesSynchronizationJob *q;
+    CollectionAttributesSynchronizationJob *const q;
     AgentInstance instance;
     Collection collection;
     QDBusInterface *interface = nullptr;

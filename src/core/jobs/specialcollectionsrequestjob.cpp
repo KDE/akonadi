@@ -38,7 +38,7 @@ public:
     void createRequestedFolders(ResourceScanJob *job, QHash<QByteArray, bool> &requestedFolders);
     void collectionCreateResult(KJob *job);   // slot
 
-    SpecialCollectionsRequestJob *q;
+    SpecialCollectionsRequestJob *const q;
     SpecialCollections *mSpecialCollections = nullptr;
     int mPendingCreateJobs;
 

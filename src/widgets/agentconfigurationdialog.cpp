@@ -30,7 +30,7 @@ public:
 
     }
     void restoreDialogSize();
-    AgentConfigurationDialog *q;
+    AgentConfigurationDialog *const q;
     QPushButton *okButton = nullptr;
     QScopedPointer<AgentConfigurationWidget> widget;
 };

@@ -1556,7 +1556,7 @@ public:
         }
     }
 
-    StandardActionManager *q;
+    StandardActionManager *const q;
     KActionCollection *actionCollection;
     QWidget *parentWidget;
     QItemSelectionModel *collectionSelectionModel;

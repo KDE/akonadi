@@ -65,7 +65,7 @@ public:
 
     AgentInstance defaultResource() const;
 
-    SpecialCollections *q;
+    SpecialCollections *const q;
     KCoreConfigSkeleton *mSettings = nullptr;
     QHash<QString, QHash<QByteArray, Collection> > mFoldersForResource;
     bool mBatchMode;

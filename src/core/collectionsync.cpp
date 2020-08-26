@@ -727,7 +727,7 @@ public:
         createLocalCollections();
     }
 
-    CollectionSync *q;
+    CollectionSync *const q;
 
     QString resourceId;
 
