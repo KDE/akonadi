@@ -15,6 +15,7 @@
 #include <private/instance_p.h>
 
 #include <QProcess>
+#include <memory>
 
 using namespace Akonadi;
 using namespace Akonadi::Server;
