@@ -333,6 +333,7 @@ AgentBasePrivate::AgentBasePrivate(AgentBase *parent)
     , mNeedsNetwork(false)
     , mOnline(false)
     , mDesiredOnlineState(false)
+    , mPendingQuit(false)
     , mSettings(nullptr)
     , mChangeRecorder(nullptr)
     , mTracer(nullptr)
@@ -1006,6 +1007,11 @@ void AgentBase::setNeedsNetwork(bool needsNetwork)
 void AgentBase::setOnline(bool state)
 {
     Q_D(AgentBase);
+
+    if (d->mPendingQuit) {
+        return;
+    }
+
     d->mDesiredOnlineState = state;
     d->mSettings->setValue(QStringLiteral("Agent/DesiredOnlineState"), state);
     setOnlineInternal(state);
@@ -1126,6 +1132,8 @@ void AgentBase::quit()
 
 void AgentBase::aboutToQuit()
 {
+    Q_D(AgentBase);
+    d->mPendingQuit = true;
 }
 
 void AgentBase::cleanup()

@@ -88,6 +88,8 @@ public:
     bool mOnline;
     bool mDesiredOnlineState;
 
+    bool mPendingQuit;
+
     QSettings *mSettings = nullptr;
 
     ChangeRecorder *mChangeRecorder = nullptr;
