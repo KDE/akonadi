@@ -13,7 +13,6 @@
 #include "tag.h"
 #include "tagsync.h"
 #include "tagfetchscope.h"
-#include "resourceselectjob_p.h"
 #include "itemcreatejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
@@ -37,19 +36,19 @@ private Q_SLOTS:
         cleanTags();
     }
 
-    Tag::List getTags()
+    Tag::List getTags(Session *session = nullptr)
     {
-        auto *fetchJob = new TagFetchJob();
+        auto *fetchJob = new TagFetchJob(session);
         fetchJob->fetchScope().setFetchRemoteId(true);
         bool ret = fetchJob->exec();
         Q_ASSERT(ret);
         return fetchJob->tags();
     }
 
-    Tag::List getTagsWithRid()
+    Tag::List getTagsWithRid(Session *session = nullptr)
     {
         Tag::List tags;
-        Q_FOREACH (const Tag &t, getTags()) {
+        Q_FOREACH (const Tag &t, getTags(session)) {
             if (!t.remoteId().isEmpty()) {
                 tags << t;
                 qDebug() << t.remoteId();
@@ -58,10 +57,11 @@ private Q_SLOTS:
         return tags;
     }
 
-    void cleanTags()
+    void cleanTags(Session *session = nullptr)
     {
-        Q_FOREACH (const Tag &t, getTags()) {
-            auto *job = new TagDeleteJob(t);
+        const auto tags = getTags();
+        for (const auto &t : tags) {
+            auto *job = new TagDeleteJob(t, session);
             bool ret = job->exec();
             Q_ASSERT(ret);
         }
@@ -69,8 +69,7 @@ private Q_SLOTS:
 
     void newTag()
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
         Tag::List remoteTags;
 
@@ -78,22 +77,22 @@ private Q_SLOTS:
         tag1.setRemoteId("rid1");
         remoteTags << tag1;
 
-        auto *syncer = new TagSync(this);
+        auto *syncer = new TagSync(session.get());
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);
 
-        Tag::List resultTags = getTags();
+        Tag::List resultTags = getTags(session.get());
         QCOMPARE(resultTags.count(), remoteTags.count());
         QCOMPARE(resultTags, remoteTags);
-        cleanTags();
+        cleanTags(session.get());
     }
 
     void newTagWithItems()
     {
         const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
-        AKVERIFYEXEC(select);
+
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_2"));
 
         Tag::List remoteTags;
 
@@ -105,7 +104,7 @@ private Q_SLOTS:
         {
             item1.setMimeType(QStringLiteral("application/octet-stream"));
             item1.setRemoteId(QStringLiteral("item1"));
-            auto *append = new ItemCreateJob(item1, res3, this);
+            auto *append = new ItemCreateJob(item1, res3, session.get());
             AKVERIFYEXEC(append);
             item1 = append->item();
         }
@@ -113,64 +112,62 @@ private Q_SLOTS:
         QHash<QString, Item::List> tagMembers;
         tagMembers.insert(QString::fromLatin1(tag1.remoteId()), { item1 });
 
-        auto *syncer = new TagSync(this);
+        auto *syncer = new TagSync(session.get());
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(tagMembers);
         AKVERIFYEXEC(syncer);
 
-        Tag::List resultTags = getTags();
+        Tag::List resultTags = getTags(session.get());
         QCOMPARE(resultTags.count(), remoteTags.count());
         QCOMPARE(resultTags, remoteTags);
 
         //We need the id of the fetch
         tag1 = resultTags.first();
 
-        auto *fetchJob = new ItemFetchJob(tag1);
+        auto *fetchJob = new ItemFetchJob(tag1, session.get());
         fetchJob->fetchScope().setFetchTags(true);
         fetchJob->fetchScope().tagFetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->items().count(), tagMembers.value(QString::fromLatin1(tag1.remoteId())).count());
         QCOMPARE(fetchJob->items(), tagMembers.value(QString::fromLatin1(tag1.remoteId())));
 
-        cleanTags();
+        cleanTags(session.get());
     }
 
     void existingTag()
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
         Tag tag1(QStringLiteral("tag1"));
         tag1.setRemoteId("rid1");
 
-        auto *createJob = new TagCreateJob(tag1, this);
+        auto *createJob = new TagCreateJob(tag1, session.get());
         AKVERIFYEXEC(createJob);
 
         Tag::List remoteTags;
         remoteTags << tag1;
 
-        auto *syncer = new TagSync(this);
+        auto *syncer = new TagSync(session.get());
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);
 
-        Tag::List resultTags = getTags();
+        Tag::List resultTags = getTags(session.get());
         QCOMPARE(resultTags.count(), remoteTags.count());
         QCOMPARE(resultTags, remoteTags);
-        cleanTags();
+        cleanTags(session.get());
     }
 
     void existingTagWithItems()
     {
         const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
 
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
-        AKVERIFYEXEC(select);
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_2"));
 
         Tag tag1(QStringLiteral("tag1"));
         tag1.setRemoteId("rid1");
 
-        auto *createJob = new TagCreateJob(tag1, this);
+        auto *createJob = new TagCreateJob(tag1, session.get());
         AKVERIFYEXEC(createJob);
 
         Tag::List remoteTags;
@@ -180,7 +177,7 @@ private Q_SLOTS:
         {
             item1.setMimeType(QStringLiteral("application/octet-stream"));
             item1.setRemoteId(QStringLiteral("item1"));
-            auto *append = new ItemCreateJob(item1, res3, this);
+            auto *append = new ItemCreateJob(item1, res3, session.get());
             AKVERIFYEXEC(append);
             item1 = append->item();
         }
@@ -190,7 +187,7 @@ private Q_SLOTS:
             item2.setMimeType(QStringLiteral("application/octet-stream"));
             item2.setRemoteId(QStringLiteral("item2"));
             item2.setTag(tag1);
-            auto *append = new ItemCreateJob(item2, res3, this);
+            auto *append = new ItemCreateJob(item2, res3, session.get());
             AKVERIFYEXEC(append);
             item2 = append->item();
         }
@@ -198,52 +195,51 @@ private Q_SLOTS:
         QHash<QString, Item::List> tagMembers;
         tagMembers.insert(QString::fromLatin1(tag1.remoteId()), Item::List() << item1);
 
-        auto *syncer = new TagSync(this);
+        auto *syncer = new TagSync(session.get());
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(tagMembers);
         AKVERIFYEXEC(syncer);
 
-        Tag::List resultTags = getTags();
+        Tag::List resultTags = getTags(session.get());
         QCOMPARE(resultTags.count(), remoteTags.count());
         QCOMPARE(resultTags, remoteTags);
         {
-            auto *fetchJob = new ItemFetchJob(item1, this);
+            auto *fetchJob = new ItemFetchJob(item1, session.get());
             fetchJob->fetchScope().setFetchTags(true);
             AKVERIFYEXEC(fetchJob);
             QCOMPARE(fetchJob->items().first().tags().count(), 1);
         }
         {
-            auto *fetchJob = new ItemFetchJob(item2, this);
+            auto *fetchJob = new ItemFetchJob(item2, session.get());
             fetchJob->fetchScope().setFetchTags(true);
             AKVERIFYEXEC(fetchJob);
             QCOMPARE(fetchJob->items().first().tags().count(), 0);
         }
 
-        cleanTags();
+        cleanTags(session.get());
     }
 
     void removeTag()
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
         Tag tag1(QStringLiteral("tag1"));
         tag1.setRemoteId("rid1");
 
-        auto *createJob = new TagCreateJob(tag1, this);
+        auto *createJob = new TagCreateJob(tag1, session.get());
         AKVERIFYEXEC(createJob);
 
         Tag::List remoteTags;
 
-        auto *syncer = new TagSync(this);
+        auto *syncer = new TagSync(session.get());
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);
 
-        Tag::List resultTags = getTagsWithRid();
+        Tag::List resultTags = getTagsWithRid(session.get());
         QCOMPARE(resultTags.count(), remoteTags.count());
         QCOMPARE(resultTags, remoteTags);
-        cleanTags();
+        cleanTags(session.get());
     }
 };
 

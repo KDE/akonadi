@@ -112,9 +112,6 @@ public:
         ModifyRelation,
         RemoveRelations,
 
-        // Resources
-        SelectResource = 90,
-
         // Other
         StreamPayload = 100,
 
@@ -147,10 +144,14 @@ public:
     inline bool isValid() const { return type() != Invalid; }
     inline bool isResponse() const { return mType & _ResponseBit; }
 
+    inline QByteArray cookie() const { return mCookie; }
+    inline void setCookie(const QByteArray &cookie) { mCookie = cookie; }
+
     void toJson(QJsonObject &stream) const;
 protected:
     explicit Command(quint8 type);
 
+    QByteArray mCookie;
     quint8 mType = Invalid;
     // unused 7 bytes
 

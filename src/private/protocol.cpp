@@ -108,9 +108,6 @@ QDebug operator<<(QDebug _dbg, Command::Type type)
     case Command::RemoveRelations:
         return dbg << "RemoveRelations";
 
-    case Command::SelectResource:
-        return dbg << "SelectResource";
-
     case Command::StreamPayload:
         return dbg << "StreamPayload";
     case Command::ItemChangeNotification:
@@ -162,7 +159,7 @@ Command::Command(quint8 type)
 
 bool Command::operator==(const Command &other) const
 {
-    return mType == other.mType;
+    return mType == other.mType && mCookie == other.mCookie;
 }
 
 void Command::toJson(QJsonObject &json) const
@@ -212,8 +209,6 @@ void Command::toJson(QJsonObject &json) const
         case_label(ModifyRelation)
         case_label(RemoveRelations)
 
-        case_label(SelectResource)
-
         case_label(StreamPayload)
         case_label(CreateSubscription)
         case_label(ModifySubscription)
@@ -230,22 +225,23 @@ void Command::toJson(QJsonObject &json) const
 
 DataStream &operator<<(DataStream &stream, const Command &cmd)
 {
-    return stream << cmd.mType;
+    return stream << cmd.mType << cmd.mCookie;
 }
 
 DataStream &operator>>(DataStream &stream, Command &cmd)
 {
-    return stream >> cmd.mType;
+    return stream >> cmd.mType >> cmd.mCookie;
 }
 
 QDebug operator<<(QDebug dbg, const Command &cmd)
 {
     return dbg.noquote() << ((cmd.mType & Command::_ResponseBit) ? "Response:" : "Command:")
-                         << static_cast<Command::Type>(cmd.mType & ~Command::_ResponseBit) << "\n";
+                         << static_cast<Command::Type>(cmd.mType & ~Command::_ResponseBit) << ", cookie:" << cmd.mCookie;
 }
 
 void toJson(const Akonadi::Protocol::Command *command, QJsonObject &json)
 {
+    json[QStringLiteral("cookie")] = QString::fromUtf8(command->mCookie);
 #define case_notificationlabel(x, class)    case Command::x: { \
     static_cast<const Akonadi::Protocol::class *>(command)->toJson(json); \
     } break;
@@ -300,8 +296,6 @@ case Command::x | Command::_ResponseBit: { \
         case_commandlabel(FetchRelations, FetchRelationsCommand, FetchRelationsResponse)
         case_commandlabel(ModifyRelation, ModifyRelationCommand, ModifyRelationResponse)
         case_commandlabel(RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse)
-
-        case_commandlabel(SelectResource, SelectResourceCommand, SelectResourceResponse)
 
         case_commandlabel(StreamPayload, StreamPayloadCommand, StreamPayloadResponse)
         case_commandlabel(CreateSubscription, CreateSubscriptionCommand, CreateSubscriptionResponse)
@@ -425,9 +419,6 @@ public:
         registerType<Command::FetchRelations, FetchRelationsCommand, FetchRelationsResponse>();
         registerType<Command::ModifyRelation, ModifyRelationCommand, ModifyRelationResponse>();
         registerType<Command::RemoveRelations, RemoveRelationsCommand, RemoveRelationsResponse>();
-
-        // Resources
-        registerType<Command::SelectResource, SelectResourceCommand, SelectResourceResponse>();
 
         // Other...?
         registerType<Command::StreamPayload, StreamPayloadCommand, StreamPayloadResponse>();

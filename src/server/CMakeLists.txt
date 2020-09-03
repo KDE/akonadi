@@ -46,6 +46,7 @@ set(libakonadiserver_SRCS
     commandcontext.cpp
     connection.cpp
     collectionscheduler.cpp
+    cookiemanager.cpp
     handler.cpp
     handlerhelper.cpp
     intervalcheck.cpp
@@ -69,7 +70,6 @@ set(libakonadiserver_SRCS
     handler/relationfetchhandler.cpp
     handler/relationmodifyhandler.cpp
     handler/relationremovehandler.cpp
-    handler/resourceselecthandler.cpp
     handler/searchhandler.cpp
     handler/searchhelper.cpp
     handler/searchcreatehandler.cpp

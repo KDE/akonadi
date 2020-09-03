@@ -12,9 +12,7 @@
 #include "itemfetchscope.h"
 #include "collectionfetchscope.h"
 #include "monitor.h"
-#include "session.h"
 #include "qtest_akonadi.h"
-#include "resourceselectjob_p.h"
 
 #include <QObject>
 
@@ -61,8 +59,8 @@ private Q_SLOTS:
         QFETCH(Collection, destination);
         QFETCH(Collection, source);
 
-        Session monitorSession;
-        Monitor monitor(&monitorSession);
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
+        Monitor monitor(session.get());
         monitor.setObjectName(QStringLiteral("itemmovetest"));
         monitor.setCollectionMonitored(Collection::root());
         monitor.fetchCollection(true);
@@ -71,17 +69,14 @@ private Q_SLOTS:
         QSignalSpy moveSpy(&monitor, &Monitor::itemsMoved);
         AkonadiTest::akWaitForSignal(&monitor, &Monitor::monitorReady);
 
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);   // for rid based moves
-
-        auto *prefetchjob = new ItemFetchJob(destination, this);
+        auto *prefetchjob = new ItemFetchJob(destination, session.get());
         AKVERIFYEXEC(prefetchjob);
         int baseline = prefetchjob->items().size();
 
-        auto *move = new ItemMoveJob(items, source, destination, this);
+        auto *move = new ItemMoveJob(items, source, destination, session.get());
         AKVERIFYEXEC(move);
 
-        auto *fetch = new ItemFetchJob(destination, this);
+        auto *fetch = new ItemFetchJob(destination, session.get());
         fetch->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
         fetch->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(fetch);

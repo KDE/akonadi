@@ -561,8 +561,7 @@ private Q_SLOTS:
             outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
-        scenarios << FakeAkonadiServer::loginScenario()
-                  << FakeAkonadiServer::selectResourceScenario(QStringLiteral("akonadi_fake_resource_0"))
+        scenarios << FakeAkonadiServer::loginScenario("", QStringLiteral("akonadi_fake_resource_0"))
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
@@ -587,8 +586,7 @@ private Q_SLOTS:
             outScenario = TestScenario::create(5, TestScenario::ServerCmd, rsp);
         }
         scenarios.clear();
-        scenarios << FakeAkonadiServer::loginScenario()
-                  << FakeAkonadiServer::selectResourceScenario(QStringLiteral("akonadi_fake_resource_0"))
+        scenarios << FakeAkonadiServer::loginScenario("", QStringLiteral("akonadi_fake_resource_0"))
                   << inScenario
                   << outScenario
                   << TestScenario::create(5, TestScenario::ServerCmd, Protocol::CreateItemResponsePtr::create());
@@ -858,15 +856,14 @@ private Q_SLOTS:
                 }
             }
 
-            const auto actualParts = actualItem.parts() | AkRanges::Actions::toQList;
+            const auto actualParts = Part::retrieveFiltered(Part::pimItemIdColumn(), uidnext);
             QCOMPARE(actualParts.count(), parts.count());
             Q_FOREACH (const FakePart &part, parts) {
-                const QList<Part>::const_iterator actualPartIter =
+                const auto actualPartIter =
                     std::find_if(actualParts.constBegin(), actualParts.constEnd(),
                                  [part](Part const & actualPart) {
                                      return part.partType().ns() == actualPart.partType().ns() &&
                                             part.partType().name() == actualPart.partType().name(); });
-
                 QVERIFY(actualPartIter != actualParts.constEnd());
                 const Part actualPart = *actualPartIter;
                 QVERIFY(actualPart.isValid());

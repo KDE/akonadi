@@ -96,9 +96,12 @@
       <arg name="sessionId" />
     </ctor>
     <param name="sessionId" type="QByteArray" />
+    <param name="resourceId" type="QString" />
   </command>
 
-  <response name="Login" />
+  <response name="Login">
+    <param name="cookie" type="QByteArray" />
+  </response>
 
 
   <!-- Logout //-->
@@ -765,18 +768,6 @@
   </command>
 
   <response name="RemoveRelations" />
-
-
-  <!-- Select Resource //-->
-  <command name="SelectResource">
-    <ctor>
-      <arg name="resourceId" />
-    </ctor>
-
-    <param name="resourceId" type="QString" />
-  </command>
-
-  <response name="SelectResource" />
 
 
   <!-- Stream Payload //-->

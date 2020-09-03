@@ -129,8 +129,7 @@ private Q_SLOTS:
         }
         {
             TestScenario::List scenarios;
-            scenarios << mAkonadi.loginScenario()
-                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
+            scenarios << mAkonadi.loginScenario("", QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create());
@@ -139,8 +138,7 @@ private Q_SLOTS:
         }
         {
             TestScenario::List scenarios;
-            scenarios << mAkonadi.loginScenario()
-                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
+            scenarios << mAkonadi.loginScenario("", QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item2))
                       << TestScenario::create(5, TestScenario::ServerCmd, createResponse(item1))
@@ -181,8 +179,7 @@ private Q_SLOTS:
 
         {
             TestScenario::List scenarios;
-            scenarios << mAkonadi.loginScenario()
-                      << mAkonadi.selectResourceScenario(QStringLiteral("testresource"))
+            scenarios << mAkonadi.loginScenario("", QStringLiteral("testresource"))
                       << TestScenario::create(5, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Collection, col2.id())))
                       << TestScenario::create(5, TestScenario::ServerCmd, Protocol::FetchItemsResponsePtr::create())
                       << TestScenario::create(6, TestScenario::ClientCmd, createCommand(ImapSet::all(), Protocol::ScopeContext(Protocol::ScopeContext::Tag, tag.id())))

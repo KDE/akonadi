@@ -16,7 +16,6 @@
 #include "itemcreatejob.h"
 #include "qtest_akonadi.h"
 #include "monitor.h"
-#include "resourceselectjob_p.h"
 
 #include <KRandom>
 
@@ -34,10 +33,10 @@ class ItemsyncTest : public QObject
 {
     Q_OBJECT
 private:
-    Item::List fetchItems(const Collection &col)
+    Item::List fetchItems(const Collection &col, Session *session = nullptr)
     {
         qDebug() << "fetching items from collection" << col.remoteId() << col.name();
-        auto *fetch = new ItemFetchJob(col, this);
+        auto *fetch = new ItemFetchJob(col, session);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().fetchAllAttributes();
         fetch->fetchScope().setCacheOnly(true);   // resources are switched off anyway
@@ -76,9 +75,10 @@ private:
         return item;
     }
 
-    std::unique_ptr<Monitor> createCollectionMonitor(const Collection &col)
+    std::unique_ptr<Monitor> createCollectionMonitor(const Collection &col, Session *session = nullptr)
     {
         auto monitor = std::make_unique<Monitor>();
+        monitor->setSession(session);
         monitor->setCollectionMonitored(col);
         if (!AkonadiTest::akWaitForSignal(monitor.get(), &Monitor::monitorReady)) {
             QTest::qFail("Failed to wait for monitor", __FILE__, __LINE__);
@@ -208,23 +208,20 @@ private Q_SLOTS:
 
     void testIncrementalSync()
     {
-        {
-            ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-            AKVERIFYEXEC(select);
-        }
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
-        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
+        const Collection col = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo"), session.get()));
         QVERIFY(col.isValid());
         Item::List origItems = fetchItems(col);
         QCOMPARE(origItems.size(), 15);
 
-        auto monitor = createCollectionMonitor(col);
+        auto monitor = createCollectionMonitor(col, session.get());
         QSignalSpy deletedSpy(monitor.get(), &Monitor::itemRemoved);
         QSignalSpy addedSpy(monitor.get(), &Monitor::itemAdded);
         QSignalSpy changedSpy(monitor.get(), &Monitor::itemChanged);
 
         {
-            auto *syncer = new ItemSync(col);
+            auto *syncer = new ItemSync(col, session.get());
             QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
             QVERIFY(transactionSpy.isValid());
             syncer->setTransactionMode(ItemSync::SingleTransaction);
@@ -241,7 +238,7 @@ private Q_SLOTS:
         addedSpy.clear();
         changedSpy.clear();
 
-        Item::List resultItems = fetchItems(col);
+        Item::List resultItems = fetchItems(col, session.get());
         QCOMPARE(resultItems.count(), origItems.count());
 
         Item::List delItems;
@@ -258,7 +255,7 @@ private Q_SLOTS:
         delItems << itemWithRandomRemoteId;
 
         {
-            auto *syncer = new ItemSync(col);
+            auto *syncer = new ItemSync(col, session.get());
             syncer->setTransactionMode(ItemSync::SingleTransaction);
             QSignalSpy transactionSpy(syncer, &ItemSync::transactionCommitted);
             QVERIFY(transactionSpy.isValid());
@@ -267,18 +264,13 @@ private Q_SLOTS:
             QCOMPARE(transactionSpy.count(), 1);
         }
 
-        Item::List resultItems2 = fetchItems(col);
+        Item::List resultItems2 = fetchItems(col, session.get());
         QCOMPARE(resultItems2.count(), resultItems.count());
 
         QTest::qWait(100);
         QTRY_COMPARE(deletedSpy.count(), 2);
         QCOMPARE(addedSpy.count(), 0);
         QTRY_COMPARE(changedSpy.count(), 0);
-
-        {
-            ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
-            AKVERIFYEXEC(select);
-        }
     }
 
     void testIncrementalStreamingSync()

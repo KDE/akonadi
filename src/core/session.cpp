@@ -103,7 +103,12 @@ bool SessionPrivate::handleCommands()
             Internal::setServerProtocolVersion(protocolVersion);
             Internal::setGeneration(hello.generation());
 
-            sendCommand(nextTag(), Protocol::LoginCommandPtr::create(sessionId));
+            auto login = Protocol::LoginCommandPtr::create();
+            login->setSessionId(sessionId);
+            if (!resourceId.isEmpty()) {
+                login->setResourceId(resourceId);
+            }
+            sendCommand(nextTag(), std::move(login));
         } else if (cmd->type() == Protocol::Command::Login) {
             const auto &login = Protocol::cmdCast<Protocol::LoginResponse>(cmd);
             if (login.isError()) {
@@ -113,6 +118,7 @@ bool SessionPrivate::handleCommands()
                 return false;
             }
 
+            mCookie = login.cookie();
             connected = true;
             startNext();
         } else if (currentJob) {
@@ -256,6 +262,7 @@ qint64 SessionPrivate::nextTag()
 
 void SessionPrivate::sendCommand(qint64 tag, const Protocol::CommandPtr &command)
 {
+    command->setCookie(mCookie);
     connection->sendCommand(tag, command);
 }
 
@@ -404,6 +411,15 @@ Session *Session::defaultSession()
 void Session::clear()
 {
     d->clear(true);
+}
+
+void Session::setResourceIdentifier(const QString &identifier)
+{
+    Q_ASSERT(!d->connected);
+    if (d->connected) {
+        qCCritical(AKONADICORE_LOG) << "Attempting to change resource identifier on session that is already connected!";
+    }
+    d->resourceId = identifier;
 }
 
 void SessionPrivate::clear(bool forceReconnect)

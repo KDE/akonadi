@@ -4,6 +4,7 @@
  *   SPDX-License-Identifier: LGPL-2.0-or-later                            *
  ***************************************************************************/
 #include "handler.h"
+#include "akonadiserver_debug.h"
 
 #include <private/scope_p.h>
 
@@ -27,7 +28,6 @@
 #include "handler/relationfetchhandler.h"
 #include "handler/relationremovehandler.h"
 #include "handler/relationmodifyhandler.h"
-#include "handler/resourceselecthandler.h"
 #include "handler/searchcreatehandler.h"
 #include "handler/searchhandler.h"
 #include "handler/searchresulthandler.h"
@@ -135,9 +135,6 @@ std::unique_ptr<Handler> Handler::findHandlerForCommandAuthenticated(Protocol::C
     case Protocol::Command::RemoveRelations:
         return std::make_unique<RelationRemoveHandler>(akonadi);
 
-    case Protocol::Command::SelectResource:
-        return std::make_unique<ResourceSelectHandler>(akonadi);
-
     case Protocol::Command::StreamPayload:
         Q_ASSERT_X(cmd != Protocol::Command::StreamPayload, __FUNCTION__,
                    "StreamPayload command is not allowed in this context");
@@ -241,6 +238,7 @@ bool Handler::failureResponse(const QString &failureMessage)
     // error response
     if (!m_sentFailureResponse) {
         m_sentFailureResponse = true;
+        qCWarning(AKONADISERVER_LOG) << "Handler error:" << failureMessage;
         Protocol::ResponsePtr r = Protocol::Factory::response(m_command->type());
         // FIXME: Error enums?
         r->setError(1, failureMessage);

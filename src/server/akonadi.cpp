@@ -26,6 +26,7 @@
 #include "search/searchmanager.h"
 #include "search/searchtaskmanager.h"
 #include "aklocalserver.h"
+#include "cookiemanager.h"
 
 #include <private/standarddirs_p.h>
 #include <private/protocol_p.h>
@@ -122,6 +123,7 @@ bool AkonadiServer::init()
     mCacheCleaner = std::make_unique<CacheCleaner>();
     mItemRetrieval = std::make_unique<ItemRetrievalManager>();
     mAgentSearchManager = std::make_unique<SearchTaskManager>();
+    mCookieManager = std::make_unique<CookieManager>();
 
     mDebugInterface = std::make_unique<DebugInterface>(*mTracer);
     mResourceManager = std::make_unique<ResourceManager>(*mTracer);
@@ -185,6 +187,7 @@ bool AkonadiServer::quit()
     mResourceManager.reset();
     mDebugInterface.reset();
 
+    mCookieManager.reset();
     mAgentSearchManager.reset();
     mItemRetrieval.reset();
     mCacheCleaner.reset();
@@ -449,6 +452,11 @@ ItemRetrievalManager &AkonadiServer::itemRetrievalManager()
 Tracer &AkonadiServer::tracer()
 {
     return *mTracer;
+}
+
+CookieManager &AkonadiServer::cookieManager()
+{
+    return *mCookieManager;
 }
 
 QString AkonadiServer::serverPath() const

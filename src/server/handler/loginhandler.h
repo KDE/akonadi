@@ -7,6 +7,7 @@
 #define AKONADI_LOGINHANDLER_H_
 
 #include "handler.h"
+#include "cookiemanager.h"
 
 namespace Akonadi
 {
@@ -25,6 +26,9 @@ public:
     ~LoginHandler() override = default;
 
     bool parseStream() override;
+
+private:
+    Cookie getCookie(const Protocol::LoginCommand &cmd) const;
 };
 
 } // namespace Server

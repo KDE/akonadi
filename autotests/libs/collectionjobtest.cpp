@@ -25,7 +25,6 @@
 #include "collectionutils.h"
 #include "control.h"
 #include "item.h"
-#include "resourceselectjob_p.h"
 #include "collectionfetchscope.h"
 
 using namespace Akonadi;
@@ -439,9 +438,10 @@ void CollectionJobTest::testModify()
     QFETCH(qint64, uid);
     QFETCH(QString, rid);
 
+    Session session;
     if (!rid.isEmpty()) {
-        ResourceSelectJob *rjob = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(rjob);
+        session.setResourceIdentifier(QStringLiteral("akonadi_knut_resource_0"));
+        AkonadiTest::akWaitForSignal(&session, &Session::reconnected);
     }
 
     const QStringList reference = { QStringLiteral("text/calendar"), QStringLiteral("text/directory"), QStringLiteral("message/rfc822"),
@@ -452,10 +452,10 @@ void CollectionJobTest::testModify()
     RESET_COLLECTION_ID;
 
     // test noop modify
-    auto *mod = new CollectionModifyJob(col, this);
+    auto *mod = new CollectionModifyJob(col, &session);
     AKVERIFYEXEC(mod);
 
-    auto *ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    auto *ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, &session);
     AKVERIFYEXEC(ljob);
     QCOMPARE(ljob->collections().count(), 1);
     col = ljob->collections().first();
@@ -464,10 +464,10 @@ void CollectionJobTest::testModify()
     // test clearing content types
     RESET_COLLECTION_ID;
     col.setContentMimeTypes(QStringList());
-    mod = new CollectionModifyJob(col, this);
+    mod = new CollectionModifyJob(col, &session);
     AKVERIFYEXEC(mod);
 
-    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, &session);
     AKVERIFYEXEC(ljob);
     QCOMPARE(ljob->collections().count(), 1);
     col = ljob->collections().first();
@@ -476,10 +476,10 @@ void CollectionJobTest::testModify()
     // test setting contnet types
     RESET_COLLECTION_ID;
     col.setContentMimeTypes(reference);
-    mod = new CollectionModifyJob(col, this);
+    mod = new CollectionModifyJob(col, &session);
     AKVERIFYEXEC(mod);
 
-    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, &session);
     AKVERIFYEXEC(ljob);
     QCOMPARE(ljob->collections().count(), 1);
     col = ljob->collections().first();
@@ -488,10 +488,10 @@ void CollectionJobTest::testModify()
     // add attribute
     RESET_COLLECTION_ID;
     col.attribute<TestAttribute>(Collection::AddIfMissing)->data = "new";
-    mod = new CollectionModifyJob(col, this);
+    mod = new CollectionModifyJob(col, &session);
     AKVERIFYEXEC(mod);
 
-    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, &session);
     AKVERIFYEXEC(ljob);
     QVERIFY(ljob->collections().first().hasAttribute<TestAttribute>());
     QCOMPARE(ljob->collections().first().attribute<TestAttribute>()->data, QByteArray("new"));
@@ -499,10 +499,10 @@ void CollectionJobTest::testModify()
     // modify existing attribute
     RESET_COLLECTION_ID;
     col.attribute<TestAttribute>()->data = "modified";
-    mod = new CollectionModifyJob(col, this);
+    mod = new CollectionModifyJob(col, &session);
     AKVERIFYEXEC(mod);
 
-    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, &session);
     AKVERIFYEXEC(ljob);
     QVERIFY(ljob->collections().first().hasAttribute<TestAttribute>());
     QCOMPARE(ljob->collections().first().attribute<TestAttribute>()->data, QByteArray("modified"));
@@ -510,10 +510,10 @@ void CollectionJobTest::testModify()
     // renaming
     RESET_COLLECTION_ID;
     col.setName(QStringLiteral("foo (renamed)"));
-    mod = new CollectionModifyJob(col, this);
+    mod = new CollectionModifyJob(col, &session);
     AKVERIFYEXEC(mod);
 
-    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    ljob = new CollectionFetchJob(col, CollectionFetchJob::Base, &session);
     AKVERIFYEXEC(ljob);
     QCOMPARE(ljob->collections().count(), 1);
     col = ljob->collections().first();
@@ -521,7 +521,7 @@ void CollectionJobTest::testModify()
 
     RESET_COLLECTION_ID;
     col.setName(QStringLiteral("foo"));
-    mod = new CollectionModifyJob(col, this);
+    mod = new CollectionModifyJob(col, &session);
     AKVERIFYEXEC(mod);
 }
 
@@ -710,27 +710,26 @@ void CollectionJobTest::testRidCreateDelete()
     collection.parentCollection().setRemoteId(QStringLiteral("8"));
     collection.setRemoteId(remoteId);
 
-    ResourceSelectJob *resSel = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_2"));
-    AKVERIFYEXEC(resSel);
+    auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_2"));
 
-    auto *createJob = new CollectionCreateJob(collection, this);
+    auto *createJob = new CollectionCreateJob(collection, session.get());
     AKVERIFYEXEC(createJob);
 
     Collection createdCol = createJob->collection();
     QVERIFY(createdCol.isValid());
     QCOMPARE(createdCol.name(), collection.name());
 
-    CollectionFetchJob *listJob = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::FirstLevel, this);
+    CollectionFetchJob *listJob = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::FirstLevel, session.get());
     AKVERIFYEXEC(listJob);
     Collection listedCol = findCol(listJob->collections(), collection.name());
     QCOMPARE(listedCol, createdCol);
     QCOMPARE(listedCol.name(), collection.name());
 
     QVERIFY(!collection.isValid());
-    auto *delJob = new CollectionDeleteJob(collection, this);
+    auto *delJob = new CollectionDeleteJob(collection, session.get());
     AKVERIFYEXEC(delJob);
 
-    listJob = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::FirstLevel, this);
+    listJob = new CollectionFetchJob(Collection(res3ColId), CollectionFetchJob::FirstLevel, session.get());
     AKVERIFYEXEC(listJob);
     QVERIFY(!findCol(listJob->collections(), collection.name()).isValid());
 }
@@ -751,11 +750,11 @@ void CollectionJobTest::testAncestorRetrieval()
     QCOMPARE(col.parentCollection().remoteId(), QStringLiteral("6"));
     QCOMPARE(col.parentCollection().parentCollection(), Collection::root());
 
-    ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
-    AKVERIFYEXEC(select);
+    auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
+
     Collection col2(col);
     col2.setId(-1);   // make it invalid but keep the ancestor chain
-    job = new CollectionFetchJob(col2, CollectionFetchJob::Base, this);
+    job = new CollectionFetchJob(col2, CollectionFetchJob::Base, session.get());
     AKVERIFYEXEC(job);
     QCOMPARE(job->collections().count(), 1);
     col2 = job->collections().first();

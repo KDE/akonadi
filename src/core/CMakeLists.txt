@@ -203,7 +203,6 @@ set(akonadicore_jobs_SRCS
     jobs/kjobprivatebase.cpp
     jobs/linkjob.cpp
     jobs/recursiveitemfetchjob.cpp
-    jobs/resourceselectjob.cpp
     jobs/resourcesynchronizationjob.cpp
     jobs/relationfetchjob.cpp
     jobs/relationcreatejob.cpp

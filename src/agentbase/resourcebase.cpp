@@ -12,7 +12,7 @@
 #include "resourceadaptor.h"
 #include "collectiondeletejob.h"
 #include "collectionsync_p.h"
-#include <QDBusConnection>
+#include "itemsync.h"
 #include "akonadifull-version.h"
 #include "tagsync.h"
 #include "relationsync.h"
@@ -30,7 +30,6 @@
 #include "itemmodifyjob_p.h"
 #include "itemcreatejob.h"
 #include "session.h"
-#include "resourceselectjob_p.h"
 #include "monitor_p.h"
 #include "servermanager_p.h"
 #include "recursivemover_p.h"
@@ -50,6 +49,7 @@
 #include <QHash>
 #include <QTimer>
 #include <QApplication>
+#include <QDBusConnection>
 
 using namespace Akonadi;
 using namespace AkRanges;
@@ -162,13 +162,6 @@ public:
 
     void slotTagSyncDone(KJob *job);
     void slotRelationSyncDone(KJob *job);
-
-    void slotSessionReconnected()
-    {
-        Q_Q(ResourceBase);
-
-        new ResourceSelectJob(q->identifier());
-    }
 
     void createItemSyncInstanceIfMissing()
     {
@@ -491,9 +484,7 @@ ResourceBase::ResourceBase(const QString &id)
         d->scheduler->scheduleChangeReplay();
     }
 
-    new ResourceSelectJob(identifier());
-
-    connect(d->mChangeRecorder->session(), &Session::reconnected, d, &ResourceBasePrivate::slotSessionReconnected);
+    d->mChangeRecorder->session()->setResourceIdentifier(identifier());
 }
 
 ResourceBase::~ResourceBase() = default;

@@ -78,8 +78,6 @@ void ProtocolTest::testFactory_data()
     QTest::newRow("modifyRelation resp") << Command::ModifyRelation << true << true;
     QTest::newRow("removeRelations cmd") << Command::RemoveRelations << false << true;
     QTest::newRow("removeRelations resp") << Command::RemoveRelations << true << true;
-    QTest::newRow("selectResource cmd") << Command::SelectResource << false << true;
-    QTest::newRow("selectResource resp") << Command::SelectResource << true << true;
     QTest::newRow("streamPayload cmd") << Command::StreamPayload << false << true;
     QTest::newRow("streamPayload resp") << Command::StreamPayload << true << true;
     QTest::newRow("itemChangeNotification cmd") << Command::ItemChangeNotification << false << true;

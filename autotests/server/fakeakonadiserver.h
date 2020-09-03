@@ -78,9 +78,8 @@ public:
     static QString socketFile();
     static QString instanceName();
 
-    static TestScenario::List loginScenario(const QByteArray &sessionId = QByteArray());
+    static TestScenario::List loginScenario(const QByteArray &sessionId = QByteArray(), const QString &resourceId = {});
     static TestScenario::List selectCollectionScenario(const QString &name);
-    static TestScenario::List selectResourceScenario(const QString &name);
 
     void setScenarios(const TestScenario::List &scenarios);
 

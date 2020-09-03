@@ -13,7 +13,6 @@
 #include "transactionjobs.h"
 #include "tagcreatejob.h"
 #include "itemmodifyjob.h"
-#include "resourceselectjob_p.h"
 #include "monitor.h"
 
 #include <QObject>
@@ -103,23 +102,21 @@ private Q_SLOTS:
         auto monitor = AkonadiTest::getTestMonitor();
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
-        {
-            ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-            AKVERIFYEXEC(select);
-        }
-        const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
+
+        const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo"), session.get()));
         QVERIFY(col.isValid());
 
         Item i;
         i.setRemoteId(QStringLiteral("C"));
 
-        auto *fjob = new ItemFetchJob(i, this);
+        auto *fjob = new ItemFetchJob(i, session.get());
         fjob->setCollection(col);
         AKVERIFYEXEC(fjob);
         auto items = fjob->items();
         QCOMPARE(items.count(), 1);
 
-        auto *djob = new ItemDeleteJob(i, this);
+        auto *djob = new ItemDeleteJob(i, session.get());
         AKVERIFYEXEC(djob);
 
         QTRY_COMPARE(spy.count(), 1);
@@ -128,13 +125,9 @@ private Q_SLOTS:
         QCOMPARE(ntfItems.at(0).id(), items[0].id());
         QVERIFY(ntfItems.at(0).parentCollection().isValid());
 
-        fjob = new ItemFetchJob(i, this);
+        fjob = new ItemFetchJob(i, session.get());
         fjob->setCollection(col);
         QVERIFY(!fjob->exec());
-        {
-            ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
-            AKVERIFYEXEC(select);
-        }
     }
 
     void testTagDelete()

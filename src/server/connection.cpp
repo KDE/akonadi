@@ -16,7 +16,8 @@
 #include "storage/dbdeadlockcatcher.h"
 #include "handler.h"
 #include "notificationmanager.h"
-
+#include "cookiemanager.h"
+#include "tracer.h"
 
 #include <cassert>
 
@@ -240,6 +241,18 @@ void Connection::handleIncomingData()
                 m_akonadi.tracer().connectionInput(m_identifier, tag, cmd);
             }
 
+            if (!cmd->cookie().isEmpty()) {
+                const auto cookieData = m_akonadi.cookieManager().data(cmd->cookie());
+                if (cookieData.resourceId.has_value()) {
+                    const auto resource = Resource::retrieveByName(*cookieData.resourceId);
+                    if (!resource.isValid()) {
+                        m_currentHandler->failureResponse(QStringLiteral("Cookie %1 refers to invalid resource %2").arg(QString::fromUtf8(cmd->cookie()), *cookieData.resourceId));
+                        return;
+                    }
+                    m_context.setResource(resource);
+                }
+            }
+
             m_currentHandler = findHandlerForCommand(cmd->type());
             if (!m_currentHandler) {
                 qCWarning(AKONADISERVER_LOG) << "Invalid command: no such handler for" << cmd->type()
@@ -247,6 +260,7 @@ void Connection::handleIncomingData()
                 setState(Server::LoggingOut);
                 return;
             }
+
             if (m_reportTime) {
                 startTime();
             }
@@ -304,9 +318,11 @@ void Connection::handleIncomingData()
                     }
                 }
             }
+
             if (m_reportTime) {
                 stopTime(currentCommand);
             }
+
             m_currentHandler.reset();
 
             if (!m_socket || m_socket->state() != QLocalSocket::ConnectedState) {

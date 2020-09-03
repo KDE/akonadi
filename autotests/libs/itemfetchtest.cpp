@@ -12,7 +12,6 @@
 #include "itemdeletejob.h"
 #include "itemfetchjob.h"
 #include "itemfetchscope.h"
-#include "resourceselectjob_p.h"
 
 #include <qtest_akonadi.h>
 
@@ -232,10 +231,9 @@ void ItemFetchTest::testRidFetch()
     Collection col;
     col.setRemoteId(QStringLiteral("10"));
 
-    ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
-    AKVERIFYEXEC(select);
+    auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
-    auto *job = new ItemFetchJob(item, this);
+    auto *job = new ItemFetchJob(item, session.get());
     job->setCollection(col);
     AKVERIFYEXEC(job);
     QCOMPARE(job->items().count(), 1);

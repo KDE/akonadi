@@ -860,7 +860,6 @@ private:
     Q_PRIVATE_SLOT(d_func(), void slotPrepareItemsRetrieval(const QVector<Akonadi::Item> &items))
     Q_PRIVATE_SLOT(d_func(), void slotPrepareItemsRetrievalResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void changeCommittedResult(KJob *))
-    Q_PRIVATE_SLOT(d_func(), void slotSessionReconnected())
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplay(RecursiveMover *))
     Q_PRIVATE_SLOT(d_func(), void slotRecursiveMoveReplayResult(KJob *))
     Q_PRIVATE_SLOT(d_func(), void slotTagSyncDone(KJob *))

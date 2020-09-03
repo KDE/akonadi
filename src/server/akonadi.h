@@ -34,6 +34,7 @@ class CollectionStatistics;
 class PreprocessorManager;
 class Tracer;
 class DebugInterface;
+class CookieManager;
 
 class AkonadiServer : public QObject
 {
@@ -66,6 +67,8 @@ public:
     ItemRetrievalManager &itemRetrievalManager();
 
     Tracer &tracer();
+
+    CookieManager &cookieManager();
 
     /**
      * Instance-aware server .config directory
@@ -118,6 +121,7 @@ protected:
     std::unique_ptr<SearchTaskManager> mAgentSearchManager;
     std::unique_ptr<SearchManager> mSearchManager;
     std::unique_ptr<Tracer> mTracer;
+    std::unique_ptr<CookieManager> mCookieManager;
 
     std::vector<std::unique_ptr<Connection>> mConnections;
     bool mAlreadyShutdown = false;

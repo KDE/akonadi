@@ -13,7 +13,6 @@
 #include "tagattribute.h"
 #include "tagfetchscope.h"
 #include "tagmodifyjob.h"
-#include "resourceselectjob_p.h"
 #include "qtest_akonadi.h"
 #include "item.h"
 #include "itemcreatejob.h"
@@ -134,20 +133,18 @@ void TagTest::testCreateFetch()
 
 void TagTest::testRID()
 {
-    {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);
-    }
+    auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
+
     Tag tag;
     tag.setGid("gid");
     tag.setType("mytype");
     tag.setRemoteId("rid");
-    auto *createjob = new TagCreateJob(tag, this);
+    auto *createjob = new TagCreateJob(tag, session.get());
     AKVERIFYEXEC(createjob);
     QVERIFY(createjob->tag().isValid());
 
     {
-        auto *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(session.get());
         fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
@@ -155,34 +152,27 @@ void TagTest::testRID()
         QCOMPARE(fetchJob->tags().first().type(), QByteArray("mytype"));
         QCOMPARE(fetchJob->tags().first().remoteId(), QByteArray("rid"));
 
-        TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
+        TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), session.get());
         AKVERIFYEXEC(deleteJob);
-    }
-    {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
-        AKVERIFYEXEC(select);
     }
 }
 
 void TagTest::testRIDIsolation()
 {
-    {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);
-    }
-
     Tag tag;
     tag.setGid("gid");
     tag.setType("mytype");
     tag.setRemoteId("rid_0");
+    qint64 tagId = -1;
 
-    auto *createJob = new TagCreateJob(tag, this);
-    AKVERIFYEXEC(createJob);
-    QVERIFY(createJob->tag().isValid());
-
-    qint64 tagId;
     {
-        auto *fetchJob = new TagFetchJob(this);
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
+
+        auto *createJob = new TagCreateJob(tag, session.get());
+        AKVERIFYEXEC(createJob);
+        QVERIFY(createJob->tag().isValid());
+
+        auto *fetchJob = new TagFetchJob(session.get());
         fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().count(), 1);
@@ -193,18 +183,15 @@ void TagTest::testRIDIsolation()
     }
 
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_1"));
-        AKVERIFYEXEC(select);
-    }
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_1"));
 
-    tag.setRemoteId("rid_1");
-    createJob = new TagCreateJob(tag, this);
-    createJob->setMergeIfExisting(true);
-    AKVERIFYEXEC(createJob);
-    QVERIFY(createJob->tag().isValid());
+        tag.setRemoteId("rid_1");
+        auto *createJob = new TagCreateJob(tag, session.get());
+        createJob->setMergeIfExisting(true);
+        AKVERIFYEXEC(createJob);
+        QVERIFY(createJob->tag().isValid());
 
-    {
-        auto *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(session.get());
         fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().count(), 1);
@@ -214,14 +201,8 @@ void TagTest::testRIDIsolation()
 
         QCOMPARE(fetchJob->tags().first().id(), tagId);
 
-    }
-
-    TagDeleteJob *deleteJob = new TagDeleteJob(Tag(tagId), this);
-    AKVERIFYEXEC(deleteJob);
-
-    {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
-        AKVERIFYEXEC(select);
+        TagDeleteJob *deleteJob = new TagDeleteJob(Tag(tagId), session.get());
+        AKVERIFYEXEC(deleteJob);
     }
 }
 
@@ -275,30 +256,26 @@ void TagTest::testDeleteRIDIsolation()
     tag.setRemoteId("rid_0");
 
     {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);
+        auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
-        auto *createJob = new TagCreateJob(tag, this);
+        auto *createJob = new TagCreateJob(tag, session.get());
         AKVERIFYEXEC(createJob);
         QVERIFY(createJob->tag().isValid());
         tag.setId(createJob->tag().id());
     }
 
     tag.setRemoteId("rid_1");
-    {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_1"));
-        AKVERIFYEXEC(select);
+    auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_1"));
 
-        auto *createJob = new TagCreateJob(tag, this);
-        createJob->setMergeIfExisting(true);
-        AKVERIFYEXEC(createJob);
-        QVERIFY(createJob->tag().isValid());
-    }
+    auto *createJob = new TagCreateJob(tag, session.get());
+    createJob->setMergeIfExisting(true);
+    AKVERIFYEXEC(createJob);
+    QVERIFY(createJob->tag().isValid());
 
-    auto monitor = AkonadiTest::getTestMonitor();
+    auto monitor = AkonadiTest::getTestMonitor(session.get());
     QSignalSpy signalSpy(monitor.get(), &Monitor::tagRemoved);
 
-    auto *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, session.get());
     AKVERIFYEXEC(deleteJob);
 
     // Other tests notifications might interfere due to notification compression on server
@@ -315,11 +292,6 @@ void TagTest::testDeleteRIDIsolation()
 
     QVERIFY(removedTag.isValid());
     QVERIFY(removedTag.remoteId().isEmpty());
-
-    {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""), this);
-        AKVERIFYEXEC(select);
-    }
 }
 
 void TagTest::testModify()
@@ -381,14 +353,13 @@ void TagTest::testModify()
 
 void TagTest::testModifyFromResource()
 {
-    ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-    AKVERIFYEXEC(select);
+    auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
     Tag tag;
     {
         tag.setGid("gid");
         tag.setRemoteId("rid");
-        auto *createjob = new TagCreateJob(tag, this);
+        auto *createjob = new TagCreateJob(tag, session.get());
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         tag = createjob->tag();
@@ -396,12 +367,12 @@ void TagTest::testModifyFromResource()
 
     {
         tag.setRemoteId(QByteArray(""));
-        auto *modJob = new TagModifyJob(tag, this);
+        auto *modJob = new TagModifyJob(tag, session.get());
         AKVERIFYEXEC(modJob);
 
         // The tag is removed on the server, because we just removed the last
         // RemoteID
-        auto *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(session.get());
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 0);
     }
@@ -660,17 +631,14 @@ void TagTest::testModifyItemWithTagByGID()
 
 void TagTest::testModifyItemWithTagByRID()
 {
-    {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
-        AKVERIFYEXEC(select);
-    }
+    auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
-    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3")));
+    const Collection res3 = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res3"), session.get()));
     Tag tag3;
     {
         tag3.setGid("gid3");
         tag3.setRemoteId("rid3");
-        auto *createjob = new TagCreateJob(tag3, this);
+        auto *createjob = new TagCreateJob(tag3, session.get());
         AKVERIFYEXEC(createjob);
         tag3 = createjob->tag();
     }
@@ -678,7 +646,7 @@ void TagTest::testModifyItemWithTagByRID()
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        auto *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, session.get());
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
@@ -687,27 +655,22 @@ void TagTest::testModifyItemWithTagByRID()
     tag.setRemoteId("rid2");
     item1.setTag(tag);
 
-    auto *modJob = new ItemModifyJob(item1, this);
+    auto *modJob = new ItemModifyJob(item1, session.get());
     AKVERIFYEXEC(modJob);
 
-    auto *fetchJob = new ItemFetchJob(item1, this);
+    auto *fetchJob = new ItemFetchJob(item1, session.get());
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
 
     {
-        TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->items().first().tags().first(), this);
+        TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->items().first().tags().first(), session.get());
         AKVERIFYEXEC(deleteJob);
     }
 
     {
-        auto *deleteJob = new TagDeleteJob(tag3, this);
+        auto *deleteJob = new TagDeleteJob(tag3, session.get());
         AKVERIFYEXEC(deleteJob);
-    }
-
-    {
-        ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral(""));
-        AKVERIFYEXEC(select);
     }
 }
 

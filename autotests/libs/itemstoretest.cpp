@@ -19,7 +19,6 @@
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "itemmodifyjob_p.h"
-#include "resourceselectjob_p.h"
 #include "qtest_akonadi.h"
 
 using namespace Akonadi;
@@ -167,30 +166,32 @@ void ItemStoreTest::testRemoteId()
     QFETCH(QString, rid);
     QFETCH(QString, exprid);
 
-    // pretend to be a resource, we cannot change remote identifiers otherwise
-    ResourceSelectJob *rsel = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
-    AKVERIFYEXEC(rsel);
+    auto session = AkonadiTest::getResourceSession(QStringLiteral("akonadi_knut_resource_0"));
 
-    ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1));
+    ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1), session.get());
     AKVERIFYEXEC(prefetchjob);
     Item item = prefetchjob->items()[0];
 
     item.setRemoteId(rid);
+<<<<<<< HEAD
     auto *store = new ItemModifyJob(item, this);
+=======
+    ItemModifyJob *store = new ItemModifyJob(item, session.get());
+>>>>>>> d33d9c7b3 (Replace ResourceSelectJob with session cookies)
     store->disableRevisionCheck();
     store->setIgnorePayload(true);   // we only want to update the remote id
     AKVERIFYEXEC(store);
 
+<<<<<<< HEAD
     auto *fetch = new ItemFetchJob(item, this);
+=======
+    ItemFetchJob *fetch = new ItemFetchJob(item, session.get());
+>>>>>>> d33d9c7b3 (Replace ResourceSelectJob with session cookies)
     AKVERIFYEXEC(fetch);
     QCOMPARE(fetch->items().count(), 1);
     item = fetch->items().at(0);
     QEXPECT_FAIL("clear", "Clearing RID by clients is currently forbidden to avoid conflicts.", Continue);
     QCOMPARE(item.remoteId().toUtf8(), exprid.toUtf8());
-
-    // no longer pretend to be a resource
-    rsel = new ResourceSelectJob(QString(), this);
-    AKVERIFYEXEC(rsel);
 }
 
 void ItemStoreTest::testMultiPart()

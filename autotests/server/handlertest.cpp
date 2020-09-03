@@ -29,7 +29,6 @@
 #include "handler/itemcopyhandler.h"
 #include "handler/itemlinkhandler.h"
 #include "handler/itemmovehandler.h"
-#include "handler/resourceselecthandler.h"
 #include "handler/transactionhandler.h"
 #include "handler/loginhandler.h"
 #include "handler/logouthandler.h"
@@ -75,7 +74,6 @@ private:
         MAKE_CMD_ROW(Protocol::Command::CopyItems, ItemCopyHandler)
         MAKE_CMD_ROW(Protocol::Command::CopyCollection, CollectionCopyHandler)
         MAKE_CMD_ROW(Protocol::Command::LinkItems, ItemLinkHandler)
-        MAKE_CMD_ROW(Protocol::Command::SelectResource, ResourceSelectHandler)
         MAKE_CMD_ROW(Protocol::Command::DeleteItems, ItemDeleteHandler)
         MAKE_CMD_ROW(Protocol::Command::MoveItems, ItemMoveHandler)
         MAKE_CMD_ROW(Protocol::Command::MoveCollection, CollectionMoveHandler)

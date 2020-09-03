@@ -15,6 +15,7 @@
 #include "monitor.h"
 #include "collectionfetchscope.h"
 #include "itemfetchscope.h"
+#include "session.h"
 
 #include <QTest>
 #include <QSignalSpy>
@@ -108,9 +109,9 @@ bool akWaitForSignal(const QObject *sender, const char *member, int timeout = 10
     return ok;
 }
 
-qint64 collectionIdFromPath(const QString &path)
+qint64 collectionIdFromPath(const QString &path, Akonadi::Session *session = nullptr)
 {
-    auto *resolver = new Akonadi::CollectionPathResolver(path);
+    auto *resolver = new Akonadi::CollectionPathResolver(path, session);
     bool success = resolver->exec();
     if (!success) {
         qDebug() << "path resolution for " << path << " failed: " << resolver->errorText();
@@ -173,12 +174,15 @@ bool trackAkonadiProcess(bool track)
     }
 }
 
-std::unique_ptr<Akonadi::Monitor> getTestMonitor()
+std::unique_ptr<Akonadi::Monitor> getTestMonitor(Akonadi::Session *session = nullptr)
 {
     auto m = new Akonadi::Monitor();
     m->fetchCollection(true);
     m->setCollectionMonitored(Akonadi::Collection::root(), true);
     m->setAllMonitored(true);
+    if (session) {
+        m->setSession(session);
+    }
     auto &itemFS = m->itemFetchScope();
     itemFS.setAncestorRetrieval(Akonadi::ItemFetchScope::All);
     auto &colFS = m->collectionFetchScope();
@@ -188,6 +192,15 @@ std::unique_ptr<Akonadi::Monitor> getTestMonitor()
     readySpy.wait();
 
     return std::unique_ptr<Akonadi::Monitor>(m);
+}
+
+std::unique_ptr<Akonadi::Session> getResourceSession(const QString &resourceIdentifier)
+{
+    std::unique_ptr<Akonadi::Session> session{new Akonadi::Session};
+    session->setResourceIdentifier(resourceIdentifier);
+    akWaitForSignal(session.get(), &Akonadi::Session::reconnected);
+
+    return session;
 }
 
 

@@ -91,6 +91,11 @@ public:
      */
     void clear();
 
+    /**
+     * Identifies the current session as belonging to a given resource
+     */
+    void setResourceIdentifier(const QString &identifier);
+
 Q_SIGNALS:
     /**
      * This signal is emitted whenever the session has been reconnected

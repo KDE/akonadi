@@ -19,6 +19,7 @@
 #include "resourcemanager.h"
 #include "debuginterface.h"
 #include "search/searchtaskmanager.h"
+#include "cookiemanager.h"
 
 #include <QSettings>
 #include <QCoreApplication>
@@ -119,7 +120,7 @@ QString FakeAkonadiServer::instanceName()
     return QStringLiteral("akonadiserver-test-%1").arg(QCoreApplication::instance()->applicationPid());
 }
 
-TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
+TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId, const QString &resourceId)
 {
     SchemaVersion schema = SchemaVersion::retrieveAll().at(0);
 
@@ -129,23 +130,14 @@ TestScenario::List FakeAkonadiServer::loginScenario(const QByteArray &sessionId)
     hello->setProtocolVersion(Protocol::version());
     hello->setGeneration(schema.generation());
 
+    auto login = Protocol::LoginCommandPtr::create();
+    login->setSessionId(sessionId.isEmpty() ? instanceName().toUtf8() : sessionId);
+    login->setResourceId(resourceId);
+
     return {
         TestScenario::create(0, TestScenario::ServerCmd, hello),
-        TestScenario::create(1,TestScenario::ClientCmd,
-                             Protocol::LoginCommandPtr::create(sessionId.isEmpty() ? instanceName().toLatin1() : sessionId)),
-        TestScenario::create(1, TestScenario::ServerCmd,
-                             Protocol::LoginResponsePtr::create())
-    };
-}
-
-TestScenario::List FakeAkonadiServer::selectResourceScenario(const QString &name)
-{
-    const Resource resource = Resource::retrieveByName(name);
-    return {
-        TestScenario::create(3, TestScenario::ClientCmd,
-                             Protocol::SelectResourceCommandPtr::create(resource.name())),
-        TestScenario::create(3, TestScenario::ServerCmd,
-                             Protocol::SelectResourceResponsePtr::create())
+        TestScenario::create(1,TestScenario::ClientCmd, login),
+        TestScenario::create(1, TestScenario::ServerCmd, Protocol::LoginResponsePtr::create())
     };
 }
 
@@ -215,6 +207,7 @@ void FakeAkonadiServer::initFake()
     }
 
     mTracer = std::make_unique<Tracer>();
+    mCookieManager = std::make_unique<CookieManager>();
     mCollectionStats = std::make_unique<CollectionStatistics>();
     mCacheCleaner = std::make_unique<CacheCleaner>();
     if (!mDisableItemRetrievalManager) {
@@ -264,6 +257,7 @@ bool FakeAkonadiServer::quit()
     mCacheCleaner.reset();
     mCollectionStats.reset();
     mTracer.reset();
+    mCookieManager.reset();
 
     if (mDataStore) {
         mDataStore->close();

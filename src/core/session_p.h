@@ -123,6 +123,8 @@ public:
     bool connected;
     qint64 theNextTag;
     int protocolVersion;
+    QString resourceId;
+    QByteArray mCookie;
 
     CommandBuffer mCommandBuffer;
 
