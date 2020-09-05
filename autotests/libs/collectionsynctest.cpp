@@ -387,6 +387,24 @@ private Q_SLOTS:
         }
     }
 
+    void testCancelation()
+    {
+        const QString resource(QStringLiteral("akonadi_knut_resource_0"));
+        Collection col = fetchCollections(resource).first();
+
+        auto *syncer = new CollectionSync(resource, this);
+        syncer->setStreamingEnabled(true);
+        syncer->setRemoteCollections({col}, {});
+
+        QSignalSpy spy(syncer, &CollectionSync::result);
+        QVERIFY(spy.isValid());
+
+        syncer->rollback();
+
+        QTRY_VERIFY(!spy.empty());
+        QVERIFY(syncer->error());
+    }
+
 // Disabled by default, because they take ~15 minutes to complete
 #if 0
     void benchmarkInitialSync()

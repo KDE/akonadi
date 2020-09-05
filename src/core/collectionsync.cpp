@@ -831,6 +831,9 @@ void CollectionSync::rollback()
 {
     if (d->currentTransaction) {
         d->currentTransaction->rollback();
+    } else {
+        setError(UserCanceled);
+        emitResult();
     }
 }
 
