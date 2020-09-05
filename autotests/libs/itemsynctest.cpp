@@ -471,10 +471,6 @@ private Q_SLOTS:
 
         syncer->deliveryDone();
         QTRY_COMPARE(spy.count(), 1);
-
-        // cleanup
-        auto del = new ItemDeleteJob(dupe, this);
-        AKVERIFYEXEC(del);
     }
 
     void testFullSyncFailingDueToDuplicateItem()
