@@ -104,6 +104,14 @@ if (${AccountsQt5_FOUND} AND ${KAccounts_FOUND})
     set(WITH_ACCOUNTS TRUE)
 endif()
 
+set(LibLZMA_MINIMUM_VERSION "5.0.0")
+find_package(LibLZMA ${LibLZMA_MINIMUM_VERSION})
+set_package_properties(LibLZMA PROPERTIES
+    DESCRIPTION "LZMA compression library"
+    URL "https://tukaani.org/xz/"
+    TYPE REQUIRED
+)
+
 
 if(BUILD_TESTING)
     set(AKONADI_TESTS_EXPORT AKONADICORE_EXPORT)

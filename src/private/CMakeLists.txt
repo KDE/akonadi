@@ -19,6 +19,7 @@ set(akonadiprivate_SRCS
     imapparser.cpp
     imapset.cpp
     instance.cpp
+    compressionstream.cpp
     datastream_p.cpp
     externalpartstorage.cpp
     protocol.cpp
@@ -32,6 +33,8 @@ set(akonadiprivate_LIBS
 PUBLIC
     Qt5::Core
     Qt5::DBus
+PRIVATE
+    LibLZMA::LibLZMA
 )
 if (WIN32)
     set(akonadiprivate_LIBS
