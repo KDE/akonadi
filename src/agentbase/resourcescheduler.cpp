@@ -25,8 +25,6 @@ static QDBusAbstractInterface *s_resourcetracker = nullptr;
 
 ResourceScheduler::ResourceScheduler(QObject *parent)
     : QObject(parent)
-    , mCurrentTasksQueue(-1)
-    , mOnline(false)
 {
 }
 

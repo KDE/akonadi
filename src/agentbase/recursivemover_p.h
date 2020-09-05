@@ -51,7 +51,7 @@ private Q_SLOTS:
     void itemFetchResult(KJob *job);
 
 private:
-    AgentBasePrivate *m_agentBase = nullptr;
+    AgentBasePrivate *const m_agentBase;
     Collection m_movedCollection;
     /// sorted queue of collections still to be processed
     Collection::List m_pendingCollections;
@@ -68,8 +68,8 @@ private:
         AddItem
     } m_currentAction;
 
-    int m_runningJobs;
-    bool m_pendingReplay;
+    int m_runningJobs = 0;
+    bool m_pendingReplay = false;
 };
 
 }

@@ -37,8 +37,8 @@ public:
     QStringList capabilities;
     QString exec;
     QVariantMap custom;
-    uint instanceCounter;
-    LaunchMethod launchMethod;
+    uint instanceCounter = 0;
+    LaunchMethod launchMethod = Process;
 
     static const QLatin1String CapabilityUnique;
     static const QLatin1String CapabilityResource;

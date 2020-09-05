@@ -119,10 +119,10 @@ private:
     QProcess mProcess;
     QString mApplication;
     QStringList mArguments;
-    CrashPolicy mPolicy;
-    bool mFailedToStart;
-    int mCrashCount;
-    bool mRestartOnceOnExit;
+    CrashPolicy mPolicy = RestartOnCrash;
+    bool mFailedToStart = false;
+    int mCrashCount = 0;
+    bool mRestartOnceOnExit = false;
     std::chrono::milliseconds mShutdownTimeout;
 };
 

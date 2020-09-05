@@ -290,8 +290,8 @@ private:
     TaskList mTaskList[NQueueCount];
 
     Task mCurrentTask;
-    int mCurrentTasksQueue; // queue mCurrentTask came from
-    bool mOnline;
+    int mCurrentTasksQueue = -1; // queue mCurrentTask came from
+    bool mOnline = false;
 };
 
 QDebug operator<<(QDebug, const ResourceScheduler::Task &task);

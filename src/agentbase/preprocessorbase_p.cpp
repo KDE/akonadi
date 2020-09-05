@@ -18,8 +18,6 @@ using namespace Akonadi;
 
 PreprocessorBasePrivate::PreprocessorBasePrivate(PreprocessorBase *parent)
     : AgentBasePrivate(parent)
-    , mInDelayedProcessing(false)
-    , mDelayedProcessingItemId(0)
 {
     Q_Q(PreprocessorBase);
 

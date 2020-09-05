@@ -40,8 +40,8 @@ protected:
     void run() override;
 
 private:
-    QString m_identifier;
-    QObject *m_factory = nullptr;
+    const QString m_identifier;
+    QObject *const m_factory;
     QObject *m_instance = nullptr;
 };
 

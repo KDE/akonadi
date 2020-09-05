@@ -35,8 +35,8 @@ private Q_SLOTS:
     void itemFetched(KJob *job);
 
 public:
-    bool mInDelayedProcessing;
-    qlonglong mDelayedProcessingItemId;
+    bool mInDelayedProcessing = false;
+    qlonglong mDelayedProcessingItemId = 0;
     ItemFetchScope mFetchScope;
 
     Q_DECLARE_PUBLIC(PreprocessorBase)

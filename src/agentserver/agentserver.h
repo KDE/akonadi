@@ -43,8 +43,8 @@ private:
     QHash<QString, AgentThread *> m_agents;
     QQueue<ConfigureInfo> m_configureQueue;
     AgentPluginLoader m_agentLoader;
-    bool m_processingConfigureRequests;
-    bool m_quiting;
+    bool m_processingConfigureRequests = false;
+    bool m_quiting = false;
 };
 
 }

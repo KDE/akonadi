@@ -23,8 +23,6 @@ const QLatin1String AgentType::CapabilityPreprocessor = QLatin1String(AKONADI_AG
 const QLatin1String AgentType::CapabilitySearch = QLatin1String(AKONADI_AGENT_CAPABILITY_SEARCH);
 
 AgentType::AgentType()
-    : instanceCounter(0)
-    , launchMethod(Process)
 {
 }
 

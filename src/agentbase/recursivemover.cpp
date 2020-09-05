@@ -16,8 +16,6 @@ RecursiveMover::RecursiveMover(AgentBasePrivate *parent)
     : KCompositeJob(parent)
     , m_agentBase(parent)
     , m_currentAction(None)
-    , m_runningJobs(0)
-    , m_pendingReplay(false)
 {
 }
 

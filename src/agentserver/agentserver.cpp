@@ -19,8 +19,6 @@ using namespace Akonadi;
 
 AgentServer::AgentServer(QObject *parent)
     : QObject(parent)
-    , m_processingConfigureRequests(false)
-    , m_quiting(false)
 {
     QDBusConnection::sessionBus().registerObject(QStringLiteral(AKONADI_DBUS_AGENTSERVER_PATH),
             this, QDBusConnection::ExportScriptableSlots);
