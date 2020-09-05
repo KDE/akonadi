@@ -110,6 +110,8 @@ public:
 
         // Other
         StreamPayload = 100,
+        BeginItemSync,
+        EndItemSync,
 
         // Notifications
         ItemChangeNotification = 110,
