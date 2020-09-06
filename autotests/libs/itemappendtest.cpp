@@ -228,11 +228,11 @@ void ItemAppendTest::testItemSize_data()
     Item i(QStringLiteral("application/octet-stream"));
     i.setPayload(QByteArray("ABCD"));
 
-    QTest::newRow("auto size") << i << 4LL;
+    QTest::newRow("auto size") << i << 56LL;
     i.setSize(3);
-    QTest::newRow("too small") << i << 4LL;
-    i.setSize(10);
-    QTest::newRow("too large") << i << 10LL;
+    QTest::newRow("too small") << i << 56LL;
+    i.setSize(100);
+    QTest::newRow("too large") << i << 100LL;
 }
 
 void ItemAppendTest::testItemSize()
@@ -264,7 +264,7 @@ void ItemAppendTest::testItemMerge_data()
     {
         Item i1(QStringLiteral("application/octet-stream"));
         i1.setPayload(QByteArray("ABCD"));
-        i1.setSize(4);
+        i1.setSize(56); // take compression into account
         i1.setRemoteId(QStringLiteral("XYZ"));
         i1.setGid(QStringLiteral("XYZ"));
         i1.setFlag("TestFlag1");
@@ -272,7 +272,7 @@ void ItemAppendTest::testItemMerge_data()
 
         Item i2(QStringLiteral("application/octet-stream"));
         i2.setPayload(QByteArray("DEFGH"));
-        i2.setSize(5);
+        i2.setSize(60); // the compression into account
         i2.setRemoteId(QStringLiteral("XYZ"));
         i2.setGid(QStringLiteral("XYZ"));
         i2.setFlag("TestFlag2");
@@ -287,7 +287,7 @@ void ItemAppendTest::testItemMerge_data()
     {
         Item i1(QStringLiteral("application/octet-stream"));
         i1.setPayload(QByteArray("ABCD"));
-        i1.setSize(4);
+        i1.setSize(56); // take compression into account
         i1.setRemoteId(QStringLiteral("RID2"));
         i1.setGid(QStringLiteral("GID2"));
         i1.setFlag("TestFlag1");

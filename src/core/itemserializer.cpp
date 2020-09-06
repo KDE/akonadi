@@ -12,6 +12,7 @@
 #include "protocolhelper_p.h"
 
 #include "private/externalpartstorage_p.h"
+#include "private/compressionstream_p.h"
 
 #include "akonadicore_debug.h"
 
@@ -79,14 +80,13 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
         QBuffer buffer;
         buffer.setData(data);
         buffer.open(QIODevice::ReadOnly);
-        buffer.seek(0);
         deserialize(item, label, buffer, version);
         buffer.close();
     } else {
         QFile file;
         if (storage == External) {
             file.setFileName(ExternalPartStorage::resolveAbsolutePath(data));
-        } else {
+        } else if (storage == Foreign) {
             file.setFileName(QString::fromUtf8(data));
         }
 
@@ -104,10 +104,36 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, const QByt
 /*static*/
 void ItemSerializer::deserialize(Item &item, const QByteArray &label, QIODevice &data, int version)
 {
-    if (!TypePluginLoader::defaultPluginForMimeType(item.mimeType())->deserialize(item, label, data, version)) {
+    auto *plugin = TypePluginLoader::defaultPluginForMimeType(item.mimeType());
+
+    const auto handleError = [&](QIODevice &device, bool compressed) {
+        device.seek(0);
+        QByteArray data;
+        if (compressed) {
+            CompressionStream decompressor(&device);
+            decompressor.open(QIODevice::ReadOnly);
+            data = decompressor.readAll();
+        } else {
+            data = device.readAll();
+        }
+
         qCWarning(AKONADICORE_LOG) << "Unable to deserialize payload part:" << label << "in item" << item.id() << "collection" << item.parentCollection().id();
-        data.seek(0);
-        qCWarning(AKONADICORE_LOG) << "Payload data was: " << data.readAll();
+        qCWarning(AKONADICORE_LOG) << (compressed ? "Decompressed" : "") << "payload data was: " << data;
+    };
+
+    if (CompressionStream::isCompressed(&data)) {
+        CompressionStream decompressor(&data);
+        decompressor.open(QIODevice::ReadOnly);
+        if (!plugin->deserialize(item, label, decompressor, version)) {
+            handleError(decompressor, true);
+        }
+        if (decompressor.error()) {
+            qCWarning(AKONADICORE_LOG) << "Deserialization failed due to decompression error:" << QString::fromStdString(decompressor.error().message());
+        }
+    } else {
+        if (!plugin->deserialize(item, label, data, version)) {
+            handleError(data, false);
+        }
     }
 }
 
@@ -129,7 +155,10 @@ void ItemSerializer::serialize(const Item &item, const QByteArray &label, QIODev
         return;
     }
     ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
-    plugin->serialize(item, label, data, version);
+
+    CompressionStream compressor(&data);
+    compressor.open(QIODevice::WriteOnly);
+    plugin->serialize(item, label, compressor, version);
 }
 
 void ItemSerializer::apply(Item &item, const Item &other)

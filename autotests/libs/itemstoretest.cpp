@@ -102,25 +102,27 @@ void ItemStoreTest::testFlagChange()
 void ItemStoreTest::testDataChange_data()
 {
     QTest::addColumn<QByteArray>("data");
+    QTest::addColumn<qint64>("expectedSize");
 
-    QTest::newRow("simple") << QByteArray("testbody");
-    QTest::newRow("null") << QByteArray();
-    QTest::newRow("empty") << QByteArray("");
-    QTest::newRow("nullbyte") << QByteArray("\0", 1);
-    QTest::newRow("nullbyte2") << QByteArray("\0X", 2);
-    QTest::newRow("linebreaks") << QByteArray("line1\nline2\n\rline3\rline4\r\n");
-    QTest::newRow("linebreaks2") << QByteArray("line1\r\nline2\r\n\r\n");
-    QTest::newRow("linebreaks3") << QByteArray("line1\nline2");
+    QTest::newRow("simple") << QByteArray("testbody") << 60LL;
+    QTest::newRow("null") << QByteArray() << 0LL;
+    QTest::newRow("empty") << QByteArray("") << 0LL;
+    QTest::newRow("nullbyte") << QByteArray("\0", 1) << 56LL;
+    QTest::newRow("nullbyte2") << QByteArray("\0X", 2) << 56LL;
+    QTest::newRow("linebreaks") << QByteArray("line1\nline2\n\rline3\rline4\r\n") << 80LL;
+    QTest::newRow("linebreaks2") << QByteArray("line1\r\nline2\r\n\r\n") << 68LL;
+    QTest::newRow("linebreaks3") << QByteArray("line1\nline2") << 64LL;
     QByteArray b;
-    QTest::newRow("big") << b.fill('a', 1 << 20);
-    QTest::newRow("bignull") << b.fill('\0', 1 << 20);
-    QTest::newRow("bigcr") << b.fill('\r', 1 << 20);
-    QTest::newRow("biglf") << b.fill('\n', 1 << 20);
+    QTest::newRow("big") << b.fill('a', 1 << 20) << 280LL;
+    QTest::newRow("bignull") << b.fill('\0', 1 << 20) << 280LL;
+    QTest::newRow("bigcr") << b.fill('\r', 1 << 20) <<  280LL;
+    QTest::newRow("biglf") << b.fill('\n', 1 << 20) << 280LL;
 }
 
 void ItemStoreTest::testDataChange()
 {
     QFETCH(QByteArray, data);
+    QFETCH(qint64, expectedSize);
 
     Item item;
     ItemFetchJob *prefetchjob = new ItemFetchJob(Item(1));
@@ -144,7 +146,8 @@ void ItemStoreTest::testDataChange()
     QCOMPARE(item.payload<QByteArray>(), data);
     QEXPECT_FAIL("null", "STORE will not update item size on 0 sizes", Continue);
     QEXPECT_FAIL("empty", "STORE will not update item size on 0 sizes", Continue);
-    QCOMPARE(item.size(), static_cast<qint64>(data.size()));
+    // Cannot compare with data.size() due to payload compression
+    QCOMPARE(item.size(), expectedSize);
 }
 
 void ItemStoreTest::testRemoteId_data()
