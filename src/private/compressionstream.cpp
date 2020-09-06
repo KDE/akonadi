@@ -132,7 +132,7 @@ CompressionStream::CompressionStream(QIODevice *stream, QObject *parent)
 
 CompressionStream::~CompressionStream()
 {
-    close();
+    CompressionStream::close();
 }
 
 bool CompressionStream::open(OpenMode mode)
