@@ -2,7 +2,7 @@
 
 @{xdg_data_home}=@{HOME}/.local/share
 
-profile postgresql_akonadi {
+profile postgresql_akonadi flags=(attach_disconnected) {
   #include <abstractions/base>
   #include <abstractions/bash>
   #include <abstractions/consoles>
