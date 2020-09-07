@@ -187,12 +187,10 @@ public:
                 }
                 break;
             case Protocol::Command::EndItemSync:
-                if (!finalizeSync(cmd)) {
-                    return false;
-                }
-                return true;
+                qCDebug(AKONADISERVER_LOG) << "Finalizing item sync for collection" << mCollection.id();
+                return finalizeSync(cmd);
             default:
-                qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd->type() << "received during ItemSync";
+                qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd->type() << "received during incremental item sync of collection" << mCollection.id();
                 throw HandlerException("Invalid command during received by IncrementalItemSyncer");
             }
         }
@@ -254,12 +252,10 @@ public:
                 }
                 break;
             case Protocol::Command::EndItemSync:
-                if (!finalizeSync(cmd)) {
-                    return false;
-                }
-                return true;
+                qCDebug(AKONADISERVER_LOG) << "Finalizing item sync for collection" << mCollection.id();
+                return finalizeSync(cmd);
             default:
-                qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd->type() << "received during ItemSync";
+                qCWarning(AKONADISERVER_LOG) << "Invalid command" << cmd->type() << "received during full item sync of collection" << mCollection.id();
                 throw HandlerException("Invalid command received during ItemSync.");
             }
         }
