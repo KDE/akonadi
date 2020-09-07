@@ -18,6 +18,9 @@
 
   ptrace read peer=mysqld_akonadi,
 
+  signal send set=kill peer=postgresql_akonadi,
+  signal send set=term peer=postgresql_akonadi,
+
   dbus (send)
       bus=session
       interface=org.freedesktop.DBus,
@@ -50,7 +53,7 @@
   owner @{xdg_config_home}/akonadi* rw,
   owner @{xdg_config_home}/QtProject/qtlogging.ini r,
   owner @{xdg_config_home}/akonadi/ rw,
-  owner @{xdg_config_home}/akonadi/* rwl,
+  owner @{xdg_config_home}/akonadi/** rwl,
   owner @{xdg_config_home}/akonadi/akonadiconnectionrc wl,
   owner @{xdg_config_home}/akonadi/akonadiconnectionrc.lock rwk,
   owner @{xdg_config_home}/akonadi/akonadiserverrc.lock rwk,
