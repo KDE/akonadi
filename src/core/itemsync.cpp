@@ -132,7 +132,13 @@ public:
     {
     }
 
+    enum class Transaction {
+        Rollback,
+        Commit
+    };
+
     void beginItemSyncIfNeeded();
+    void finalizeItemSync(Transaction action);
     void createOrMerge(const Item &item);
     void checkDone();
     QString jobDebuggingString() const override;
@@ -214,22 +220,34 @@ void ItemSyncPrivate::checkDone()
 
     if (q->error() == Job::UserCanceled && !mFinished) {
         qCDebug(AKONADICORE_LOG) << "ItemSync of collection" << mSyncCollection.id() << "finished due to user cancelling";
+        finalizeItemSync(Transaction::Rollback);
         mFinished = true;
-
-        auto *job = new EndItemSyncJob(q);
-        job->rollback();
-        q->connect(job, &Job::result, q, [q]() { q->emitResult(); });
         return;
     }
 
     if (allProcessed() && !mFinished) {
         // prevent double result emission, can happen since checkDone() is called from all over the place
         qCDebug(AKONADICORE_LOG) << "ItemSync of collection" << mSyncCollection.id() << "finished";
+        finalizeItemSync(Transaction::Commit);
         mFinished = true;
 
-        auto *job = new EndItemSyncJob(q);
-        q->connect(job, &Job::result, q, [q]() { q->emitResult(); });
     }
+}
+
+void ItemSyncPrivate::finalizeItemSync(Transaction transaction)
+{
+    Q_Q(ItemSync);
+
+    if (mFinished || !mStarted) {
+        q->emitResult();
+        return;
+    }
+
+    auto *job = new EndItemSyncJob(q);
+    if (transaction == Transaction::Rollback) {
+        job->rollback();
+    }
+    q->connect(job, &Job::result, q, [q]() { q->emitResult(); });
 }
 
 ItemSync::ItemSync(const Collection &collection, const QDateTime &timestamp, QObject *parent)
