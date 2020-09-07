@@ -281,7 +281,9 @@ bool DbConfigPostgresql::runInitDb(const QString &newDbPath)
 
     // call 'initdb --pgdata=/home/user/.local/share/akonadi/data_db'
     return execute(mInitDbPath, { QStringLiteral("--pgdata=%1").arg(newDbPath),
-                                  QStringLiteral("--locale=en_US.UTF-8") /* TODO: check locale */ }) == 0;
+                                  QStringLiteral("--encoding=UTF8"),
+                                  QStringLiteral("--no-locale")
+                                }) == 0;
 }
 
 namespace {
@@ -468,7 +470,8 @@ bool DbConfigPostgresql::startInternalServer()
 #endif
         // call 'initdb --pgdata=/home/user/.local/share/akonadi/db_data'
         execute(mInitDbPath, { QStringLiteral("--pgdata=%1").arg(mPgData),
-                               QStringLiteral("--locale=en_US.UTF-8") // TODO: check locale
+                               QStringLiteral("--encoding=UTF8"),
+                               QStringLiteral("--no-locale")
                              });
     } else {
         const auto versions = checkPgVersion();
