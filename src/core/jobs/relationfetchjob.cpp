@@ -18,7 +18,6 @@ class Akonadi::RelationFetchJobPrivate : public JobPrivate
 public:
     explicit RelationFetchJobPrivate(RelationFetchJob *parent)
         : JobPrivate(parent)
-        , mEmitTimer(nullptr)
     {
         mEmitTimer.setSingleShot(true);
         mEmitTimer.setInterval(std::chrono::milliseconds{100});

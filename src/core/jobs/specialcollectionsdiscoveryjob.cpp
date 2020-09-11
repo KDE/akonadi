@@ -26,8 +26,8 @@ public:
     {
     }
 
-    SpecialCollections *mSpecialCollections = nullptr;
-    QStringList mMimeTypes;
+    SpecialCollections *const mSpecialCollections;
+    const QStringList mMimeTypes;
 };
 
 Akonadi::SpecialCollectionsDiscoveryJob::SpecialCollectionsDiscoveryJob(SpecialCollections *collections, const QStringList &mimeTypes, QObject *parent)

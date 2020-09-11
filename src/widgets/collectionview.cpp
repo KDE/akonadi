@@ -44,7 +44,7 @@ public:
     void itemCurrentChanged(const QModelIndex &index);
     bool hasParent(const QModelIndex &idx, Collection::Id parentId) const;
 
-    CollectionView *mParent = nullptr;
+    CollectionView *const mParent;
     QModelIndex dragOverIndex;
     QTimer dragExpandTimer;
 

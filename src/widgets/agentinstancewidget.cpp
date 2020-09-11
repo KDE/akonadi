@@ -74,9 +74,6 @@ class Q_DECL_HIDDEN AgentInstanceWidget::Private
 public:
     explicit Private(AgentInstanceWidget *parent)
         : mParent(parent)
-        , mView(nullptr)
-        , mModel(nullptr)
-        , proxy(nullptr)
     {
     }
 
@@ -84,7 +81,7 @@ public:
     void currentAgentInstanceDoubleClicked(const QModelIndex &currentIndex);
     void currentAgentInstanceClicked(const QModelIndex &currentIndex);
 
-    AgentInstanceWidget *mParent = nullptr;
+    AgentInstanceWidget *const mParent;
     QListView *mView = nullptr;
     AgentInstanceModel *mModel = nullptr;
     AgentFilterProxyModel *proxy = nullptr;

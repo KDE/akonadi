@@ -151,7 +151,7 @@ public:
         group.sync();
     }
 
-    CollectionDialog *mParent = nullptr;
+    CollectionDialog *const mParent;
 
     Monitor *mMonitor = nullptr;
     CollectionFilterProxyModel *mMimeTypeFilterModel = nullptr;

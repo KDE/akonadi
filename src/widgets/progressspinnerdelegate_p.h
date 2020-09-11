@@ -55,7 +55,7 @@ protected:
 private:
 
     QSet<Animation> m_animations;
-    QAbstractItemView *m_view = nullptr;
+    QAbstractItemView *const m_view;
     KPixmapSequence m_pixmapSequence;
     int m_timerId;
 };

@@ -97,7 +97,7 @@ private:
     void useOtherItem();
     void useBothItems();
 
-    ConflictType mConflictType;
+    const ConflictType mConflictType;
     Akonadi::Item mChangedItem;
     Akonadi::Item mConflictingItem;
 

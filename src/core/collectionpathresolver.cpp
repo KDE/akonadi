@@ -25,7 +25,6 @@ public:
     explicit CollectionPathResolverPrivate(CollectionPathResolver *parent)
         : JobPrivate(parent)
         , mColId(-1)
-        , mPathToId(false)
     {
     }
 

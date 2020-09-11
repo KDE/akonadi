@@ -26,10 +26,6 @@ using namespace Akonadi;
 
 ItemModifyJobPrivate::ItemModifyJobPrivate(ItemModifyJob *parent)
     : JobPrivate(parent)
-    , mRevCheck(true)
-    , mIgnorePayload(false)
-    , mAutomaticConflictHandlingEnabled(true)
-    , mSilent(false)
 {
 }
 

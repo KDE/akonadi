@@ -36,7 +36,6 @@ class Q_DECL_HIDDEN Control::Private
 public:
     explicit Private(Control *parent)
         : mParent(parent)
-        , mEventLoop(nullptr)
     {
     }
 

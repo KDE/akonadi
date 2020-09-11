@@ -77,7 +77,7 @@ public:
     void activated(int index);
     void activated(const QModelIndex &index);
 
-    CollectionComboBox *mParent = nullptr;
+    CollectionComboBox *const mParent;
 
     Monitor *mMonitor = nullptr;
     EntityTreeModel *mModel = nullptr;

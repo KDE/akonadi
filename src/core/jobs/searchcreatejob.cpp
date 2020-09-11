@@ -27,8 +27,8 @@ public:
     {
     }
 
-    QString mName;
-    SearchQuery mQuery;
+    const QString mName;
+    const SearchQuery mQuery;
     QStringList mMimeTypes;
     QVector<Collection> mCollections;
     bool mRecursive = false;

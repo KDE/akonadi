@@ -36,9 +36,6 @@ class TrashJob::TrashJobPrivate : public JobPrivate
 public:
     explicit TrashJobPrivate(TrashJob *parent)
         : JobPrivate(parent)
-        , mKeepTrashInCollection(false)
-        , mSetRestoreCollection(false)
-        , mDeleteIfInTrash(false)
     {
     }
 //4.
@@ -66,9 +63,9 @@ public:
     Collection mCollection;
     Collection mRestoreCollection;
     Collection mTrashCollection;
-    bool mKeepTrashInCollection;
-    bool mSetRestoreCollection; //only set restore collection when moved to trash collection (not in place)
-    bool mDeleteIfInTrash;
+    bool mKeepTrashInCollection = false;
+    bool mSetRestoreCollection = false; //only set restore collection when moved to trash collection (not in place)
+    bool mDeleteIfInTrash = false;
     QHash<Collection, Item::List> mCollectionItems; //list of trashed items sorted according to parent collection
     QHash<Item::Id, Collection> mParentCollections; //fetched parent collection of items (containing the resource name)
 

@@ -38,10 +38,7 @@ class AgentInstanceCreateJobPrivate : public KJobPrivateBase
 public:
     explicit AgentInstanceCreateJobPrivate(AgentInstanceCreateJob *parent)
         : q(parent)
-        , parentWidget(nullptr)
         , safetyTimer(new QTimer(parent))
-        , doConfig(false)
-        , tooLate(false)
     {
         connect(AgentManager::self(), &AgentManager::instanceAdded, this, &AgentInstanceCreateJobPrivate::agentInstanceAdded);
         connect(safetyTimer, &QTimer::timeout, this, &AgentInstanceCreateJobPrivate::timeout);
@@ -104,9 +101,9 @@ public:
     QString agentTypeId;
     AgentInstance agentInstance;
     QWidget *parentWidget = nullptr;
-    QTimer *safetyTimer = nullptr;
-    bool doConfig;
-    bool tooLate;
+    QTimer *const safetyTimer;
+    bool doConfig = false;
+    bool tooLate = false;
 };
 
 } // namespace Akonadi

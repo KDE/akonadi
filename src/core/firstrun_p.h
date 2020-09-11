@@ -68,7 +68,7 @@ private Q_SLOTS:
 
 private:
     QStringList mPendingDefaults;
-    KConfig *mConfig = nullptr;
+    KConfig *const mConfig;
     KConfig *mCurrentDefault = nullptr;
 };
 

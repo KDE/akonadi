@@ -39,7 +39,7 @@ public:
     KXMLGUIClient *xmlGuiClient = nullptr;
 
 private:
-    ItemView *mParent = nullptr;
+    ItemView *const mParent;
 };
 
 void ItemView::Private::init()

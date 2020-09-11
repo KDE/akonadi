@@ -20,9 +20,6 @@ public:
     CollectionFetchScopePrivate()
         : ancestorDepth(CollectionFetchScope::None)
         , listFilter(CollectionFetchScope::Enabled)
-        , statistics(false)
-        , fetchIdOnly(true)
-        , mIgnoreRetrievalErrors(false)
     {
     }
 
@@ -52,9 +49,9 @@ public:
     CollectionFetchScope::ListFilter listFilter;
     QSet<QByteArray> attributes;
     QScopedPointer<CollectionFetchScope> ancestorFetchScope;
-    bool statistics;
-    bool fetchIdOnly;
-    bool mIgnoreRetrievalErrors;
+    bool statistics = false;
+    bool fetchIdOnly = true;
+    bool mIgnoreRetrievalErrors = false;
 };
 
 CollectionFetchScope::CollectionFetchScope()

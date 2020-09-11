@@ -26,7 +26,7 @@ public:
     {
     }
 
-    AgentInstanceModel *mParent = nullptr;
+    AgentInstanceModel *const mParent;
     AgentInstance::List mInstances;
 
     void instanceAdded(const AgentInstance & /*instance*/);

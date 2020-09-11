@@ -50,7 +50,7 @@ public:
 
     void slotSelectionChanged(const QItemSelection &selected, const QItemSelection &deselected) const;
 
-    EntityTreeView *mParent = nullptr;
+    EntityTreeView *const mParent;
     QBasicTimer mDragExpandTimer;
     DragDropManager *mDragDropManager = nullptr;
     KXMLGUIClient *mXmlGuiClient = nullptr;

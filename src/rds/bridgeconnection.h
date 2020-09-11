@@ -31,7 +31,7 @@ private Q_SLOTS:
     void slotDataAvailable();
 
 private:
-    QTcpSocket *m_remoteSocket = nullptr;
+    QTcpSocket *const m_remoteSocket;
 };
 
 class AkonadiBridgeConnection : public BridgeConnection

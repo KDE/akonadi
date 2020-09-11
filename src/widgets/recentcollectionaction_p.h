@@ -52,7 +52,7 @@ private:
 
 private:
     QStringList mListRecentCollection;
-    QMenu *mMenu = nullptr;
+    QMenu *const mMenu;
     const QAbstractItemModel *mModel = nullptr;
     QAction *mRecentAction = nullptr;
     KSharedConfig::Ptr mAkonadiConfig;

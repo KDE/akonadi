@@ -44,7 +44,7 @@ public:
     void itemDoubleClicked(const QModelIndex &index) const;
     void itemCurrentChanged(const QModelIndex &index) const;
 
-    EntityListView *mParent = nullptr;
+    EntityListView *const mParent;
     DragDropManager *mDragDropManager = nullptr;
     KXMLGUIClient *mXmlGuiClient = nullptr;
 };

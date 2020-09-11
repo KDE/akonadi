@@ -54,13 +54,13 @@ public:
     QSet<int> mOperations;
     QByteArray mTag;
     Item::List mItems;
-    bool mRevCheck;
+    bool mRevCheck = true;
     QSet<QByteArray> mParts;
     QSet<QByteArray> mForeignParts;
     QByteArray mPendingData;
-    bool mIgnorePayload;
-    bool mAutomaticConflictHandlingEnabled;
-    bool mSilent;
+    bool mIgnorePayload = false;
+    bool mAutomaticConflictHandlingEnabled = true;
+    bool mSilent = false;
 };
 
 }

@@ -61,9 +61,9 @@ private:
     Collection currentDropTarget(QDropEvent *event) const;
 
     bool hasAncestor(const QModelIndex &index, Collection::Id parentId) const;
-    bool mShowDropActionMenu;
-    bool mIsManualSortingActive;
-    QAbstractItemView *m_view = nullptr;
+    bool mShowDropActionMenu = true;
+    bool mIsManualSortingActive = false;
+    QAbstractItemView *const m_view;
 };
 
 }

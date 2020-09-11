@@ -25,8 +25,8 @@ public:
     ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, ChangeRecorder *parent);
 
     Q_DECLARE_PUBLIC(ChangeRecorder)
-    QSettings *settings;
-    bool enableChangeRecording;
+    QSettings *settings = nullptr;
+    bool enableChangeRecording = true;
 
     int pipelineSize() const override;
     void notificationsEnqueued(int count) override;
@@ -46,9 +46,9 @@ private:
     void notificationsLoaded();
     void writeStartOffset() const;
 
-    int m_lastKnownNotificationsCount; // just for invariant checking
-    int m_startOffset; // number of saved notifications to skip
-    bool m_needFullSave;
+    int m_lastKnownNotificationsCount = 0; // just for invariant checking
+    int m_startOffset = 0; // number of saved notifications to skip
+    bool m_needFullSave = true;
 };
 
 } // namespace Akonadi

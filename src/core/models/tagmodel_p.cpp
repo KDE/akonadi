@@ -18,9 +18,7 @@
 using namespace Akonadi;
 
 TagModelPrivate::TagModelPrivate(TagModel *parent)
-    : mMonitor(nullptr)
-    , mSession(nullptr)
-    , q_ptr(parent)
+    : q_ptr(parent)
 {
     // Root tag
     mTags.insert(-1, Tag());

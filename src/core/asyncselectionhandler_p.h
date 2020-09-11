@@ -51,7 +51,7 @@ private Q_SLOTS:
 private:
     bool scanSubTree(const QModelIndex &index, bool searchForItem);
 
-    QAbstractItemModel *mModel = nullptr;
+    QAbstractItemModel *const mModel;
     Collection mCollection;
     Item mItem;
 };

@@ -23,7 +23,7 @@ public:
     Q_REQUIRED_RESULT QString newName() const;
 
 private:
-    QString m_defaultName;
+    const QString m_defaultName;
     Ui::RenameFavoriteDialog ui;
 };
 

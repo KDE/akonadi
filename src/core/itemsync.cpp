@@ -77,7 +77,7 @@ public:
     QSet<QString> mListedItems;
 
     ItemSync::TransactionMode mTransactionMode;
-    TransactionSequence *mCurrentTransaction;
+    TransactionSequence *mCurrentTransaction = nullptr;
     int mTransactionJobs;
 
     // fetch scope for initial item listing

@@ -24,9 +24,7 @@
 using namespace Akonadi;
 
 DragDropManager::DragDropManager(QAbstractItemView *view)
-    : mShowDropActionMenu(true)
-    , mIsManualSortingActive(false)
-    , m_view(view)
+    : m_view(view)
 {
 }
 

@@ -22,7 +22,6 @@ public:
         : mParent(parent)
         , mCollection(collection)
         , mMimeTypes(mimeTypes)
-        , mFetchCount(0)
     {
     }
 
@@ -71,13 +70,13 @@ public:
         }
     }
 
-    RecursiveItemFetchJob *mParent = nullptr;
-    Collection mCollection;
+    RecursiveItemFetchJob *const mParent;
+    const Collection mCollection;
     Item::List mItems;
     ItemFetchScope mFetchScope;
-    QStringList mMimeTypes;
+    const QStringList mMimeTypes;
 
-    int mFetchCount;
+    int mFetchCount = 0;
 };
 
 RecursiveItemFetchJob::RecursiveItemFetchJob(const Collection &collection, const QStringList &mimeTypes, QObject *parent)
