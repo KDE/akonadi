@@ -12,6 +12,9 @@ profile postgresql_akonadi {
   capability setgid,
   capability setuid,
 
+  signal receive set=kill peer=/usr/bin/akonadiserver,
+  signal receive set=term peer=/usr/bin/akonadiserver,
+
   /etc/passwd r,
   /{usr/,}bin/{b,d}ash mrix,
   /{usr/,}bin/locale mrix,
