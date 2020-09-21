@@ -290,7 +290,7 @@ include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     src
 )
-add_definitions(-DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x054A00)
+add_definitions(-DKF_DISABLE_DEPRECATED_BEFORE_AND_AT=0x054B00)
 #add_definitions(-DQT_DISABLE_DEPRECATED_BEFORE=0x050f00)
 add_definitions(-DQT_NO_EMIT)
 
