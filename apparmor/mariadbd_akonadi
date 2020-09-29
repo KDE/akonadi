@@ -1,0 +1,39 @@
+#include <tunables/global>
+
+@{xdg_data_home}=@{HOME}/.local/share
+
+profile mariadbd_akonadi {
+  #include <abstractions/base>
+  #include <abstractions/bash>
+  #include <abstractions/consoles>
+  #include <abstractions/nameservice>
+  #include <abstractions/openssl>
+  #include <abstractions/user-tmp>
+
+  capability setgid,
+  capability setuid,
+
+  signal receive set=kill peer=/usr/bin/akonadiserver,
+  signal receive set=term peer=/usr/bin/akonadiserver,
+
+  /etc/mysql/ r,
+  /etc/mysql/** r,
+  /etc/my.cnf{,.d/**} r,
+  @{sys}/devices/system/cpu/ r,
+  /{usr/,}bin/{b,d}ash mrix,
+  /{usr/,}bin/cat mrix,
+  /{usr/,}bin/chmod mrix,
+  /{usr/,}bin/dirname mrix,
+  /{usr/,}bin/hostname mrix,
+  /{usr/,}bin/mkdir mrix,
+  /{usr/,}bin/sed mrix,
+  /usr/bin/my_print_defaults mrix,
+  /usr/bin/mariadb-install-db mrix,
+  /usr/bin/mariadb-admin mrix,
+  /usr/bin/mariadb-check mrix,
+  /usr/{,s}bin/mariadbd mrix,
+  /usr/share/mysql/** r,
+  owner @{xdg_data_home}/akonadi/** rwk,
+  owner @{PROC}/@{pid}/loginuid r,
+  owner /{,var/}run/user/@{uid}/akonadi** rwk,
+}

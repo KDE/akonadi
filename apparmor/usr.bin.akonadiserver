@@ -15,8 +15,11 @@
 
   signal send set=kill peer=mysqld_akonadi,
   signal send set=term peer=mysqld_akonadi,
-
   ptrace read peer=mysqld_akonadi,
+
+  signal send set=kill peer=mariadbd_akonadi,
+  signal send set=term peer=mariadbd_akonadi,
+  ptrace read peer=mariadbd_akonadi,
 
   signal send set=kill peer=postgresql_akonadi,
   signal send set=term peer=postgresql_akonadi,
@@ -34,6 +37,10 @@
   /etc/xdg/** r,
   /usr/bin/akonadiserver mr,
   /usr/lib/x86_64-linux-gnu/libexec/drkonqi PUx,
+  /usr/bin/mariadb-admin PUx -> mariadbd_akonadi,
+  /usr/bin/mariadb-check PUx -> mariadbd_akonadi,
+  /usr/bin/mariadb-install-db PUx -> mariaddbd_akonadi,
+  /usr/{,s}bin/mariadbd PUx -> mariaddbd_akonadi,
   /usr/bin/mysql_install_db PUx -> mysqld_akonadi,
   /usr/bin/mysqladmin PUx -> mysqld_akonadi,
   /usr/bin/mysqlcheck PUx -> mysqld_akonadi,
