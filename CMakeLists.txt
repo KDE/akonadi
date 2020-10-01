@@ -131,7 +131,6 @@ check_symbol_exists(malloc_trim "malloc.h" HAVE_MALLOC_TRIM)
 ############### Build Options ###############
 option(AKONADI_BUILD_QSQLITE "Build the Sqlite backend." TRUE)
 option(BUILD_TOOLS "Build and install tools for development and testing purposes." TRUE)
-option(NO_REGENERATE_MIME "Don't regenerate mime file (developer-only option)" FALSE )
 option(INSTALL_APPARMOR "Install AppArmor profiles" TRUE)
 
 if(BUILD_TESTING)
@@ -319,9 +318,7 @@ endif()
 ############### install stuff ###############
 
 install(FILES akonadi-mime.xml DESTINATION ${XDG_MIME_INSTALL_DIR})
-if (NOT NO_REGENERATE_MIME)
-   update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
-endif()   
+update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
 
 ############### CMake Config Files ###############
 
