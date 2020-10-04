@@ -11,6 +11,8 @@
 
 #include <lzma.h>
 
+#include <array>
+
 using namespace Akonadi;
 
 namespace {
