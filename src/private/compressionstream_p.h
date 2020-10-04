@@ -12,6 +12,7 @@
 #include <QIODevice>
 
 #include <memory>
+#include <system_error>
 
 namespace Akonadi
 {
