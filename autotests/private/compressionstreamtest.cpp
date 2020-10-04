@@ -11,6 +11,8 @@
 #include <QBuffer>
 #include <QRandomGenerator>
 
+#include <array>
+
 using namespace Akonadi;
 
 class CompressionStreamTest : public QObject
