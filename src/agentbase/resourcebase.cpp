@@ -668,7 +668,8 @@ void ResourceBasePrivate::slotCollectionDeletionDone(KJob *job)
 void ResourceBasePrivate::slotInvalidateCache(const Akonadi::Collection &collection)
 {
     Q_Q(ResourceBase);
-    new InvalidateCacheJob(collection, q);
+    InvalidateCacheJob *job = new InvalidateCacheJob(collection, q);
+    connect(job, &KJob::result, scheduler, &ResourceScheduler::taskDone);
 }
 
 void ResourceBase::changeCommitted(const Item &item)
