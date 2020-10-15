@@ -484,7 +484,7 @@ void Connection::sendResponse(qint64 tag, const Protocol::CommandPtr &response)
 Protocol::CommandPtr Connection::readCommand()
 {
     while (m_socket->bytesAvailable() < static_cast<int>(sizeof(qint64))) {
-        Protocol::DataStream::waitForData(m_socket.get(), 10000); // 10 seconds, just in case client is busy
+        Protocol::DataStream::waitForData(m_socket.get(), 30000); // 30 seconds, just in case client is busy
     }
 
     Protocol::DataStream stream(m_socket.get());
