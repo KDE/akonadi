@@ -38,7 +38,6 @@ private:
     std::optional<QString> agentForAccount(const QString &agentType, Accounts::AccountId accountId) const;
     void createAgent(const QString &agentType, Accounts::AccountId accountId);
     void removeAgentInstance(const QString &identifier);
-    void loadSupportedServices();
 
     AgentManager &mAgentManager;
     Accounts::Manager mAccountsManager;

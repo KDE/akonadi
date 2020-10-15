@@ -124,7 +124,6 @@ protected:
     QMap<QString, QVariantList> mChanges;
 
 private:
-    bool populateDatabase();
     bool mPopulateDb;
 
 };

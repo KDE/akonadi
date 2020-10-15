@@ -56,8 +56,6 @@ protected:
     void removeSearch(const Akonadi::Collection &resultCollection) override;
 
 private:
-    QDomElement findElementByRid(const QString &rid) const;
-
     static QSet<qint64> parseQuery(const QString &queryString);
 
 private Q_SLOTS:

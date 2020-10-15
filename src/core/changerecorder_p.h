@@ -39,7 +39,6 @@ public:
 
     void loadNotifications();
     QString dumpNotificationListToString() const;
-    void addToStream(QDataStream &stream, const Protocol::ChangeNotificationPtr &msg);
     void saveNotifications();
 private:
     void dequeueNotification();

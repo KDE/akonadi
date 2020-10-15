@@ -45,9 +45,6 @@ public:
     static const QLatin1String CapabilityAutostart;
     static const QLatin1String CapabilityPreprocessor;
     static const QLatin1String CapabilitySearch;
-
-private:
-    QString readString(const QSettings &file, const QString &key);
 };
 
 #endif
