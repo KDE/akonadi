@@ -55,8 +55,6 @@ public:
 private:
     class Private;
     QScopedPointer<Private> const d;
-
-    void init(const QStringList &mimetypes);
 };
 
 }

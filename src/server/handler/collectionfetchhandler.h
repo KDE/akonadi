@@ -63,9 +63,6 @@ private:
     QStack<Collection> ancestorsForCollection(const Collection &col);
     void retrieveCollections(const Collection &topParent, int depth);
     bool checkFilterCondition(const Collection &col) const;
-    bool checkChildrenForMimeTypes(const QHash<qint64, Collection> &collectionsMap,
-                                   const QHash<qint64, qint64> &parentMap,
-                                   const Collection &col);
     CollectionAttribute::List getAttributes(const Collection &colId,
                                             const QSet<QByteArray> &filter = QSet<QByteArray>());
     void retrieveAttributes(const QVariantList &collectionIds);
