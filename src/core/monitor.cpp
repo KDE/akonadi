@@ -21,7 +21,7 @@ using namespace AkRanges;
 
 Monitor::Monitor(QObject *parent)
     : QObject(parent)
-    , d_ptr(new MonitorPrivate(nullptr, this))
+    , d_ptr(new MonitorPrivate(this))
 {
     d_ptr->init();
     d_ptr->connectToNotificationManager();

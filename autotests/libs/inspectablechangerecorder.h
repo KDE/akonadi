@@ -20,10 +20,7 @@ class InspectableChangeRecorder;
 class InspectableChangeRecorderPrivate : public Akonadi::ChangeRecorderPrivate
 {
 public:
-    InspectableChangeRecorderPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableChangeRecorder *parent);
-    ~InspectableChangeRecorderPrivate() override
-    {
-    }
+    using ChangeRecorderPrivate::ChangeRecorderPrivate;
 
     bool emitNotification(const Akonadi::Protocol::ChangeNotificationPtr &msg) override {
         // TODO: Check/Log
@@ -35,7 +32,7 @@ class AKONADITESTFAKE_EXPORT InspectableChangeRecorder : public Akonadi::ChangeR
 {
     Q_OBJECT
 public:
-    explicit InspectableChangeRecorder(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent = nullptr);
+    explicit InspectableChangeRecorder(QObject *parent = nullptr);
 
     FakeNotificationConnection *notificationConnection() const
     {

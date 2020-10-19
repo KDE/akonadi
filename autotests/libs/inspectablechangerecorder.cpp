@@ -7,14 +7,8 @@
 #include "inspectablechangerecorder.h"
 
 
-InspectableChangeRecorderPrivate::InspectableChangeRecorderPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableChangeRecorder *parent)
-    : ChangeRecorderPrivate(dependenciesFactory, parent)
-{
-
-}
-
-InspectableChangeRecorder::InspectableChangeRecorder(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent)
-    : ChangeRecorder(new Akonadi::ChangeRecorderPrivate(dependenciesFactory, this), parent)
+InspectableChangeRecorder::InspectableChangeRecorder(QObject *parent)
+    : ChangeRecorder(new Akonadi::ChangeRecorderPrivate(this), parent)
 {
     QTimer::singleShot(0, this, &InspectableChangeRecorder::doConnectToNotificationManager);
 }

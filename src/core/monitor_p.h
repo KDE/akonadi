@@ -18,7 +18,6 @@
 #include "job.h"
 #include "entitycache_p.h"
 #include "servermanager.h"
-#include "changenotificationdependenciesfactory_p.h"
 #include "connection_p.h"
 #include "commandbuffer_p.h"
 
@@ -73,13 +72,12 @@ public:
         RemoveListener
     };
 
-    MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent);
+    MonitorPrivate(Monitor *parent);
     virtual ~MonitorPrivate();
     void init();
 
     Monitor *q_ptr;
     Q_DECLARE_PUBLIC(Monitor)
-    ChangeNotificationDependenciesFactory *dependenciesFactory = nullptr;
     QPointer<Connection> ntfConnection;
     Collection::List collections;
     QSet<QByteArray> resources;
@@ -87,26 +85,26 @@ public:
     QSet<Tag::Id> tags;
     QSet<Monitor::Type> types;
     QSet<QString> mimetypes;
-    bool monitorAll;
-    bool exclusive;
+    bool monitorAll = false;
+    bool exclusive = false;
     QList<QByteArray> sessions;
     ItemFetchScope mItemFetchScope;
     TagFetchScope mTagFetchScope;
     CollectionFetchScope mCollectionFetchScope;
-    bool mFetchChangedOnly;
+    bool mFetchChangedOnly = false;
     Session *session = nullptr;
-    CollectionCache *collectionCache = nullptr;
-    ItemListCache *itemCache = nullptr;
-    TagListCache *tagCache = nullptr;
+    std::unique_ptr<CollectionCache> collectionCache;
+    std::unique_ptr<ItemListCache> itemCache;
+    std::unique_ptr<TagListCache> tagCache;
     QMimeDatabase mimeDatabase;
     QHash<SignalId, quint16> listeners;
 
     CommandBuffer mCommandBuffer;
 
-    Protocol::ModifySubscriptionCommand::ModifiedParts pendingModificationChanges;
+    Protocol::ModifySubscriptionCommand::ModifiedParts pendingModificationChanges = Protocol::ModifySubscriptionCommand::None;
     Protocol::ModifySubscriptionCommand pendingModification;
-    QTimer *pendingModificationTimer;
-    bool monitorReady;
+    QTimer *pendingModificationTimer = nullptr;
+    bool monitorReady = false;
 
     // The waiting list
     QQueue<Protocol::ChangeNotificationPtr> pendingNotifications;
@@ -118,9 +116,9 @@ public:
     // In a ChangeRecorder, the pipeline contains one item only, and not dequeued yet.
     // [] [A B C] -> [A] [A B C] -> [] [A B C] -> (changeProcessed) [] [B C] -> [B] [B C] etc...
 
-    bool fetchCollection;
-    bool fetchCollectionStatistics;
-    bool collectionMoveTranslationEnabled;
+    bool fetchCollection = false;
+    bool fetchCollectionStatistics = false;
+    bool collectionMoveTranslationEnabled = false;
 
     // Virtual methods for ChangeRecorder
     virtual void notificationsEnqueued(int)
@@ -277,7 +275,7 @@ public:
     } m_buffer;
 
     QHash<Collection::Id, int> refCountMap;
-    bool useRefCounting;
+    bool useRefCounting = false;
     void ref(Collection::Id id);
     Collection::Id deref(Collection::Id id);
 

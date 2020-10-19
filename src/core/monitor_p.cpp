@@ -8,7 +8,6 @@
 
 #include "monitor_p.h"
 
-#include "collectionfetchjob.h"
 #include "collectionstatistics.h"
 #include "itemfetchjob.h"
 #include "notificationmanagerinterface.h"
@@ -18,6 +17,7 @@
 #include "akonadicore_debug.h"
 #include "notificationsubscriber.h"
 #include "changenotification.h"
+#include "changenotificationdependenciesfactory_p.h"
 #include "protocolhelper_p.h"
 
 #include <shared/akranges.h>
@@ -31,49 +31,31 @@ class operation;
 
 static const int PipelineSize = 5;
 
-MonitorPrivate::MonitorPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_, Monitor *parent)
+MonitorPrivate::MonitorPrivate(Monitor *parent)
     : q_ptr(parent)
-    , dependenciesFactory(dependenciesFactory_ ? dependenciesFactory_ : new ChangeNotificationDependenciesFactory)
-    , ntfConnection(nullptr)
-    , monitorAll(false)
-    , exclusive(false)
-    , mFetchChangedOnly(false)
     , session(Session::defaultSession())
-    , collectionCache(nullptr)
-    , itemCache(nullptr)
-    , tagCache(nullptr)
     , mCommandBuffer(parent, "handleCommands")
-    , pendingModificationChanges(Protocol::ModifySubscriptionCommand::None)
-    , pendingModificationTimer(nullptr)
-    , monitorReady(false)
-    , fetchCollection(false)
-    , fetchCollectionStatistics(false)
-    , collectionMoveTranslationEnabled(true)
-    , useRefCounting(false)
 {
 }
 
 MonitorPrivate::~MonitorPrivate()
 {
     disconnectFromNotificationManager();
-    delete dependenciesFactory;
-    delete collectionCache;
-    delete itemCache;
-    delete tagCache;
 }
 
 void MonitorPrivate::init()
 {
+    auto &factory = Akonadi::changeNotificationDependenciesFactory();
     // needs to be at least 3x pipeline size for the collection move case
-    collectionCache = dependenciesFactory->createCollectionCache(3 * PipelineSize, session);
+    collectionCache.reset(factory.createCollectionCache(3 * PipelineSize, session));
     // needs to be at least 1x pipeline size
-    itemCache = dependenciesFactory->createItemListCache(PipelineSize, session);
+    itemCache.reset(factory.createItemListCache(PipelineSize, session));
     // 20 tags looks like a reasonable amount to keep around
-    tagCache = dependenciesFactory->createTagListCache(20, session);
+    tagCache.reset(factory.createTagListCache(20, session));
 
-    QObject::connect(collectionCache, &CollectionCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
-    QObject::connect(itemCache, &ItemCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
-    QObject::connect(tagCache, &TagCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
+    QObject::connect(collectionCache.get(), &CollectionCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
+    QObject::connect(itemCache.get(), &ItemCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
+    QObject::connect(tagCache.get(), &TagCache::dataAvailable, q_ptr, [this]() { dataAvailable(); });
     QObject::connect(ServerManager::self(), &ServerManager::stateChanged, q_ptr, [this](auto state) { serverStateChanged(state); });
 
     statisticsCompressionTimer.setSingleShot(true);
@@ -92,7 +74,7 @@ bool MonitorPrivate::connectToNotificationManager()
         return false;
     }
 
-    ntfConnection = dependenciesFactory->createNotificationConnection(session, &mCommandBuffer);
+    ntfConnection = Akonadi::changeNotificationDependenciesFactory().createNotificationConnection(session, &mCommandBuffer);
     if (!ntfConnection) {
         return false;
     }
@@ -108,7 +90,7 @@ void MonitorPrivate::disconnectFromNotificationManager()
 {
     if (ntfConnection) {
         ntfConnection->disconnect(q_ptr);
-        dependenciesFactory->destroyNotificationConnection(session, ntfConnection.data());
+        Akonadi::changeNotificationDependenciesFactory().destroyNotificationConnection(session, ntfConnection.data());
     }
 }
 

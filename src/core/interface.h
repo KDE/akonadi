@@ -38,6 +38,7 @@ class ItemFetchScope;
 class CollectionFetchScope;
 class TagFetchScope;
 class SearchQuery;
+class ChangeNotificationDependenciesFactory;
 
 /**
  * Replaces the default storage implementation (Akonadi::Storage) with @p
@@ -1012,6 +1013,18 @@ Task<void> rollbackTransaction(Session *session = nullptr);
  */
 AKONADICORE_EXPORT
 Task<void> selectResource(const QString &identifier, Session *session = nullptr);
+
+
+/**
+ * @internal
+ *
+ * Returns factory for Monitor internal dependencies.
+ *
+ * This is an internal method that should neber be used by clients. It
+ * is present purely for mocking those dependencies in tests.
+ */
+AKONADICORE_EXPORT
+ChangeNotificationDependenciesFactory &changeNotificationDependenciesFactory();
 
 } // namespace Akonadi
 

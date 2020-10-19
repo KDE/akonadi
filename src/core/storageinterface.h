@@ -33,6 +33,8 @@ class QByteArray;
 namespace Akonadi
 {
 
+class ChangeNotificationDependenciesFactory;
+
 /**
  * StorageInterface is an interface for access to the Akonadi storage.
  *
@@ -633,6 +635,16 @@ public:
      * @param session A parent Session to apply this task to.
      */
     virtual Task<void> selectResource(const QString &identifier, Session *session = nullptr) = 0;
+
+    /**
+     * @internal
+     *
+     * Returns factory for Monitor internal dependencies.
+     *
+     * This is an internal method that should neber be used by clients. It
+     * is present purely for mocking those dependencies in tests.
+     */
+    virtual ChangeNotificationDependenciesFactory &changeNotificationDependenciesFactory() = 0;
 };
 
 } // namespace

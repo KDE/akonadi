@@ -17,9 +17,8 @@
 
 using namespace Akonadi;
 
-ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeNotificationDependenciesFactory *dependenciesFactory_,
-        ChangeRecorder *parent)
-    : MonitorPrivate(dependenciesFactory_, parent)
+ChangeRecorderPrivate::ChangeRecorderPrivate(ChangeRecorder *parent)
+    : MonitorPrivate(parent)
 {
 }
 

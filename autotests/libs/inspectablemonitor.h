@@ -20,10 +20,7 @@ class InspectableMonitor;
 class InspectableMonitorPrivate : public Akonadi::MonitorPrivate
 {
 public:
-    InspectableMonitorPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableMonitor *parent);
-    ~InspectableMonitorPrivate() override
-    {
-    }
+    using MonitorPrivate::MonitorPrivate;
 
     bool emitNotification(const Akonadi::Protocol::ChangeNotificationPtr &msg) override {
         // TODO: Check/Log
@@ -35,7 +32,7 @@ class AKONADITESTFAKE_EXPORT InspectableMonitor : public Akonadi::Monitor
 {
     Q_OBJECT
 public:
-    explicit InspectableMonitor(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent = nullptr);
+    explicit InspectableMonitor(QObject *parent = nullptr);
 
     FakeNotificationConnection *notificationConnection() const
     {

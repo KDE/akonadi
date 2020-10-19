@@ -18,7 +18,7 @@ class FakeMonitorPrivate : public ChangeRecorderPrivate
     Q_DECLARE_PUBLIC(FakeMonitor)
 public:
     explicit FakeMonitorPrivate(FakeMonitor *monitor)
-        : ChangeRecorderPrivate(nullptr, monitor)
+        : ChangeRecorderPrivate(monitor)
     {
     }
 

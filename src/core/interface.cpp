@@ -555,5 +555,10 @@ Task<void> selectResource(const QString &identifier, Session *session)
     return storage()->selectResource(identifier, session);
 }
 
+ChangeNotificationDependenciesFactory &changeNotificationDependenciesFactory()
+{
+    return storage()->changeNotificationDependenciesFactory();
+}
+
 } // namespace Akonadi
 

@@ -13,6 +13,7 @@
 #include "itemfetchscope.h"
 #include "akonaditestfake_export.h"
 #include "private/protocol_p.h"
+#include "changenotificationdependenciesfactory_p.h"
 
 
 template<typename T, typename Cache>

@@ -22,6 +22,7 @@
 #include "session.h"
 #include "session_p.h"
 #include "collectionstatistics.h"
+#include "changenotificationdependenciesfactory_p.h"
 #include "jobs/itemfetchjob.h"
 #include "jobs/itemmodifyjob.h"
 #include "jobs/itemdeletejob.h"
@@ -465,4 +466,13 @@ Task<void> Storage::rollbackTransaction(Session *session)
 Task<void> Storage::selectResource(const QString &identifier, Session *session)
 {
     return asyncJob(createJob<ResourceSelectJob>(), session, identifier);
+}
+
+ChangeNotificationDependenciesFactory &Storage::changeNotificationDependenciesFactory()
+{
+    if (!m_changeNotificationDependenciesFactory) {
+        m_changeNotificationDependenciesFactory = std::make_unique<ChangeNotificationDependenciesFactory>();
+    }
+
+    return *m_changeNotificationDependenciesFactory;
 }

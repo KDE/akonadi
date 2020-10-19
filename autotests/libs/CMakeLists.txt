@@ -7,6 +7,7 @@ add_library(akonaditestfake SHARED
   ${akonaditestfake_srcs}
   fakeakonadiservercommand.cpp
   fakesession.cpp
+  fakestorage.cpp
   fakemonitor.cpp
   fakeserverdata.cpp
   modelspy.cpp

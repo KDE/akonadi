@@ -6,18 +6,13 @@
 
 #include "inspectablemonitor.h"
 
-InspectableMonitorPrivate::InspectableMonitorPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableMonitor *parent)
-    : Akonadi::MonitorPrivate(dependenciesFactory, parent)
-{
-}
-
 void InspectableMonitor::doConnectToNotificationManager()
 {
     d_ptr->connectToNotificationManager();
 }
 
-InspectableMonitor::InspectableMonitor(FakeMonitorDependenciesFactory *dependenciesFactory, QObject *parent)
-    : Monitor(new InspectableMonitorPrivate(dependenciesFactory, this), parent)
+InspectableMonitor::InspectableMonitor(QObject *parent)
+    : Monitor(new InspectableMonitorPrivate(this), parent)
 {
     // Make sure signals don't get optimized away.
     // TODO: Make this parametrizable in the test class.
