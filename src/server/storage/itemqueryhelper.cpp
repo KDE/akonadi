@@ -7,7 +7,6 @@
 #include "itemqueryhelper.h"
 
 #include "commandcontext.h"
-#include "entities.h"
 #include "storage/querybuilder.h"
 #include "handler.h"
 #include "storage/queryhelper.h"

@@ -16,7 +16,6 @@
 #include <QProcess>
 #include <QTimer>
 #include <QDBusConnection>
-#include <QDBusServiceWatcher>
 
 #include <iostream>
 

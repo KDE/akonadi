@@ -27,7 +27,6 @@
 #include <private/externalpartstorage_p.h>
 
 #include <QStringBuilder>
-#include <QDBusConnection>
 #include <QSqlQuery>
 #include <QSqlError>
 #include <QDir>

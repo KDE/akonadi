@@ -12,7 +12,6 @@
 #include "querybuilder.h"
 #include "akonadiserver_debug.h"
 
-#include <QStringList>
 #include <QSqlField>
 #include <QSqlRecord>
 #include <QSqlQuery>

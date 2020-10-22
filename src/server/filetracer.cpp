@@ -5,7 +5,6 @@
  ***************************************************************************/
 #include "filetracer.h"
 
-#include <QFile>
 #include <QTime>
 
 using namespace Akonadi::Server;

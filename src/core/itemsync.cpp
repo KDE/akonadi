@@ -10,7 +10,6 @@
 
 #include "job_p.h"
 #include "collection.h"
-#include "item.h"
 #include "item_p.h"
 #include "itemcreatejob.h"
 #include "itemdeletejob.h"

@@ -25,7 +25,6 @@
 #include "transactionsequence.h"
 #include "itemmodifyjob.h"
 #include "session.h"
-#include "collectionfetchscope.h"
 
 
 #include "collectionutils.h"

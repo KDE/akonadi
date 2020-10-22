@@ -6,9 +6,7 @@
 #include "handler.h"
 
 #include <private/scope_p.h>
-#include <private/protocol_p.h>
 
-#include "connection.h"
 
 #include "handler/collectioncopyhandler.h"
 #include "handler/collectioncreatehandler.h"

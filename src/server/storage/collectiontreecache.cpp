@@ -5,7 +5,6 @@
 */
 
 #include "collectiontreecache.h"
-#include "entities.h"
 #include "commandcontext.h"
 #include "selectquerybuilder.h"
 #include "akonadiserver_debug.h"

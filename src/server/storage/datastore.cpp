@@ -35,11 +35,9 @@
 #include <QString>
 #include <QStringList>
 #include <QThread>
-#include <QThreadStorage>
 #include <QTimer>
 #include <QUuid>
 #include <QVariant>
-#include <QSqlDatabase>
 #include <QSqlDriver>
 #include <QSqlQuery>
 #include <QFile>

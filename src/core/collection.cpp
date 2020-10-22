@@ -14,7 +14,6 @@
 #include "entitydisplayattribute.h"
 
 
-#include <QDebug>
 #include <QHash>
 #include <QString>
 #include <QStringList>

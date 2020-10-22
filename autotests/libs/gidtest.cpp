@@ -17,8 +17,6 @@
 #include "itemfetchscope.h"
 #include "itemmodifyjob.h"
 #include "qtest_akonadi.h"
-#include "itemserializer_p.h"
-#include "itemserializerplugin.h"
 
 using namespace Akonadi;
 

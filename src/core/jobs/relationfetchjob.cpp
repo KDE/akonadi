@@ -6,7 +6,6 @@
 
 #include "relationfetchjob.h"
 #include "job_p.h"
-#include "relation.h"
 #include "protocolhelper_p.h"
 #include "private/protocol_p.h"
 #include <QTimer>

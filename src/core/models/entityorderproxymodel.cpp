@@ -13,7 +13,6 @@
 #include <KConfigGroup>
 #include <QUrl>
 
-#include "collection.h"
 #include "item.h"
 #include "entitytreemodel.h"
 

@@ -6,7 +6,6 @@
  ***************************************************************************/
 
 #include "parthelper.h"
-#include "entities.h"
 #include "selectquerybuilder.h"
 #include "dbconfig.h"
 #include "parttypehelper.h"

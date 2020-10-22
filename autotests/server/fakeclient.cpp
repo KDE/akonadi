@@ -6,7 +6,6 @@
  */
 
 #include "fakeclient.h"
-#include "fakeakonadiserver.h"
 
 #include <private/protocol_exception_p.h>
 #include <private/protocol_p.h>

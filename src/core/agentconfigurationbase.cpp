@@ -10,7 +10,6 @@
 
 
 #include <KAboutData>
-#include <QDialogButtonBox>
 #include <QSize>
 
 namespace Akonadi {

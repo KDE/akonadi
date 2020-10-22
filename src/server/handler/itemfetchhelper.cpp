@@ -27,7 +27,6 @@
 #include "relationfetchhandler.h"
 #include "akonadiserver_debug.h"
 
-#include <private/scope_p.h>
 #include <private/dbus_p.h>
 
 #include <QStringList>

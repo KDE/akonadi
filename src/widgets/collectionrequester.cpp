@@ -5,7 +5,6 @@
 */
 
 #include "collectionrequester.h"
-#include "collectiondialog.h"
 #include "entitydisplayattribute.h"
 #include "collectionfetchjob.h"
 #include "collectionfetchscope.h"

@@ -7,13 +7,11 @@
 #include "collectionqueryhelper.h"
 
 #include "connection.h"
-#include "entities.h"
 #include "storage/querybuilder.h"
 #include "storage/selectquerybuilder.h"
 #include "handler.h"
 #include "queryhelper.h"
 
-#include <private/scope_p.h>
 #include <private/imapset_p.h>
 
 using namespace Akonadi;

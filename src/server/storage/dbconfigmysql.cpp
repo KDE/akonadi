@@ -12,7 +12,6 @@
 
 #include <QSqlError>
 #include <QDir>
-#include <QProcess>
 #include <QThread>
 #include <QRegularExpression>
 #include <QSqlDriver>

@@ -7,7 +7,6 @@
 #include "testsearchplugin.h"
 
 #include <QDebug>
-#include <QStringList>
 #include "searchquery.h"
 
 QSet<qint64> TestSearchPlugin::search(const QString &query, const QVector<qint64> &collections, const QStringList &mimeTypes)

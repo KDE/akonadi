@@ -11,7 +11,6 @@
 #include <private/instance_p.h>
 #include <akonadifull-version.h>
 
-#include <QDBusConnection>
 #include <QTimer>
 #include <QCoreApplication>
 

@@ -6,7 +6,6 @@
 
 #include "tagfetchjob.h"
 #include "job_p.h"
-#include "tag.h"
 #include "protocolhelper_p.h"
 #include "tagfetchscope.h"
 #include "attributefactory.h"

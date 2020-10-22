@@ -13,7 +13,6 @@
 #include "collectiondeletejob.h"
 #include "collectionsync_p.h"
 #include <QDBusConnection>
-#include "itemsync.h"
 #include "akonadifull-version.h"
 #include "tagsync.h"
 #include "relationsync.h"

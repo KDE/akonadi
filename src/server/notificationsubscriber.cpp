@@ -14,7 +14,6 @@
 #include <QPointer>
 
 #include <shared/akranges.h>
-#include <private/protocol_p.h>
 #include <private/datastream_p_p.h>
 #include <private/protocol_exception_p.h>
 

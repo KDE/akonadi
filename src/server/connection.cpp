@@ -17,7 +17,6 @@
 #include "handler.h"
 #include "notificationmanager.h"
 
-#include "tracer.h"
 
 #include <cassert>
 
@@ -26,8 +25,6 @@
 #endif
 
 
-#include <private/protocol_p.h>
-#include <private/datastream_p_p.h>
 #include <private/standarddirs_p.h>
 
 using namespace Akonadi;

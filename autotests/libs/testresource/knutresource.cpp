@@ -7,17 +7,13 @@
 
 #include "knutresource.h"
 #include "knutresource_debug.h"
-#include "settings.h"
 #include "settingsadaptor.h"
 #include "xmlwriter.h"
 #include "xmlreader.h"
-#include <searchquery.h>
 
 #include <agentfactory.h>
 #include <changerecorder.h>
-#include <collection.h>
 #include <QDBusConnection>
-#include <item.h>
 #include <itemfetchscope.h>
 #include <tagcreatejob.h>
 

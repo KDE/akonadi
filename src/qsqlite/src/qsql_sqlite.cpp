@@ -22,7 +22,6 @@
 #include <QVector>
 
 #include <QtSql/private/qsqldriver_p.h>
-#include <QtSql/private/qsqlcachedresult_p.h>
 
 #if defined Q_OS_WIN
 # include <qt_windows.h>

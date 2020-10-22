@@ -5,7 +5,6 @@
 */
 
 #include "itemretrievaljob.h"
-#include "itemretrievalrequest.h"
 #include "resourceinterface.h"
 #include "akonadiserver_debug.h"
 

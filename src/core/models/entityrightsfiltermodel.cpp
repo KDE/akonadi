@@ -6,7 +6,6 @@
 */
 
 #include "entityrightsfiltermodel.h"
-#include "entitytreemodel.h"
 
 using namespace Akonadi;
 

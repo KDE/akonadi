@@ -5,7 +5,6 @@
 */
 
 #include "preprocessorbase_p.h"
-#include "preprocessorbase.h"
 
 #include <QDBusConnection>
 #include "preprocessoradaptor.h"

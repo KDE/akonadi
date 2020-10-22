@@ -21,7 +21,6 @@
 
 #include <KSharedConfig>
 #include <KLocalizedString>
-#include <QDialogButtonBox>
 
 #include <memory>
 

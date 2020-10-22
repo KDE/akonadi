@@ -19,7 +19,6 @@
 #include <KCoreConfigSkeleton>
 
 #include <QHash>
-#include <QObject>
 
 using namespace Akonadi;
 

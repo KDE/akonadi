@@ -27,15 +27,12 @@
 #include "akonadiagentbase_debug.h"
 
 #include <KLocalizedString>
-#include <KSharedConfig>
 
 #include <Kdelibs4ConfigMigrator>
 #include <KAboutData>
 
 #include <QSettings>
 #include <QTimer>
-#include <QDBusConnection>
-#include <QApplication>
 #include <QCommandLineParser>
 #include <QNetworkConfiguration>
 #include <QNetworkConfigurationManager>

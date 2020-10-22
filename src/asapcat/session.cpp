@@ -12,7 +12,6 @@
 #include <QFile>
 #include <QSocketNotifier>
 #include <QSettings>
-#include <QLocalSocket>
 
 #include <iostream>
 #include <fcntl.h>

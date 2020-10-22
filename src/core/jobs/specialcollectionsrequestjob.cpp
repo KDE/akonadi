@@ -7,7 +7,6 @@
 #include "specialcollectionsrequestjob.h"
 
 #include "specialcollectionattribute.h"
-#include "specialcollections.h"
 #include "specialcollections_p.h"
 #include "specialcollectionshelperjobs_p.h"
 
@@ -18,7 +17,6 @@
 
 #include "akonadicore_debug.h"
 
-#include <QVariant>
 
 using namespace Akonadi;
 

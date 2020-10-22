@@ -25,7 +25,6 @@
 #include <unistd.h>
 #endif
 #include <chrono>
-#include <optional>
 
 using namespace std::chrono_literals;
 

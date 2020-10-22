@@ -8,7 +8,6 @@
 
 #include "akonadi.h"
 #include "connection.h"
-#include "handler/itemcopyhandler.h"
 #include "handlerhelper.h"
 #include "cachecleaner.h"
 #include "protocol_p.h"

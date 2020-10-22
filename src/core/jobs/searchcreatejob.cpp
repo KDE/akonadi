@@ -8,7 +8,6 @@
 
 #include "searchcreatejob.h"
 
-#include "collection.h"
 #include "protocolhelper_p.h"
 #include "job_p.h"
 #include "searchquery.h"

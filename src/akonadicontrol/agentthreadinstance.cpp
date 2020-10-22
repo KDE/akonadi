@@ -6,7 +6,6 @@
 #include "agentthreadinstance.h"
 
 #include "agentserverinterface.h"
-#include "agenttype.h"
 #include "akonadicontrol_debug.h"
 
 #include <private/dbus_p.h>

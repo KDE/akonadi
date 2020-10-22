@@ -8,7 +8,6 @@
 #include "storage/datastore.h"
 #include "akonadiserver_debug.h"
 
-#include <QThread>
 
 using namespace Akonadi::Server;
 

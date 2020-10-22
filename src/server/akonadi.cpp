@@ -27,7 +27,6 @@
 #include "search/searchtaskmanager.h"
 #include "aklocalserver.h"
 
-#include <memory>
 #include <private/standarddirs_p.h>
 #include <private/protocol_p.h>
 #include <private/dbus_p.h>

@@ -6,9 +6,7 @@
 
 #include "trashrestorejob.h"
 
-#include "collection.h"
 #include "entitydeletedattribute.h"
-#include "item.h"
 #include "job_p.h"
 
 #include "trashsettings.h"

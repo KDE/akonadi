@@ -5,7 +5,6 @@
 */
 
 #include "entitytreemodel_p.h"
-#include "entitytreemodel.h"
 
 #include "agentmanagerinterface.h"
 #include "monitor_p.h" // For friend ref/deref
@@ -19,7 +18,6 @@
 #include "monitor.h"
 #include "changerecorder.h"
 #include "collectioncopyjob.h"
-#include "collectionfetchjob.h"
 #include "collectionfetchscope.h"
 #include "collectionmovejob.h"
 #include "collectionstatistics.h"

@@ -6,7 +6,6 @@
 
 #include "inspectablechangerecorder.h"
 
-#include "changerecorder_p.h"
 
 InspectableChangeRecorderPrivate::InspectableChangeRecorderPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableChangeRecorder *parent)
     : ChangeRecorderPrivate(dependenciesFactory, parent)

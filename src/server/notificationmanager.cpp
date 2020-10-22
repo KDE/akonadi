@@ -20,7 +20,6 @@
 
 #include <QSettings>
 #include <QThreadPool>
-#include <QPointer>
 #include <QDateTime>
 
 using namespace Akonadi;

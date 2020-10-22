@@ -28,7 +28,6 @@
 #include <QStandardPaths>
 
 #include <ctime>
-#include <private/protocol_p.h>
 #include <private/scope_p.h>
 #include <private/standarddirs_p.h>
 #include <shared/akapplication.h>

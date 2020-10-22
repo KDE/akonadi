@@ -8,7 +8,6 @@
 #include "xmldocument.h"
 #include "xmlwriter.h"
 
-#include "collection.h"
 #include "collectionfetchjob.h"
 #include "item.h"
 #include "itemfetchjob.h"

@@ -5,7 +5,6 @@
 */
 
 #include "itemretrievalmanager.h"
-#include "itemretrievalrequest.h"
 #include "itemretrievaljob.h"
 #include "akonadiserver_debug.h"
 
@@ -13,9 +12,7 @@
 
 #include <private/dbus_p.h>
 
-#include <QReadWriteLock>
 #include <QScopedPointer>
-#include <QWaitCondition>
 #include <QDBusConnection>
 #include <QDBusConnectionInterface>
 

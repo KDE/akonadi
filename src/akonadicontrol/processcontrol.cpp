@@ -7,7 +7,6 @@
 #include "processcontrol.h"
 #include "akonadicontrol_debug.h"
 
-#include <chrono>
 #include <shared/akapplication.h>
 
 #include <private/instance_p.h>

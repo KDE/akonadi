@@ -6,7 +6,6 @@
 */
 
 #include "itemserializerplugin.h"
-#include "item.h"
 #include "itemserializer_p.h"
 
 #include <QBuffer>
