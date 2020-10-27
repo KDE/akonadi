@@ -329,7 +329,7 @@ set_target_properties(KF5AkonadiCore PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiCore
     LIB_NAME KF5AkonadiCore
-    DEPS "ItemModels CoreAddons" FILENAME_VAR PRI_FILENAME
+    DEPS "KItemModels KCoreAddons" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS

@@ -85,7 +85,7 @@ set_target_properties(KF5AkonadiAgentBase PROPERTIES
 
 ecm_generate_pri_file(BASE_NAME AkonadiAgentBase
     LIB_NAME KF5AkonadiAgentBase
-    DEPS "AkonadiCore AkonadiPrivate ConfigCore ConfigGui" FILENAME_VAR PRI_FILENAME
+    DEPS "AkonadiCore AkonadiPrivate KConfigCore KConfigGui" FILENAME_VAR PRI_FILENAME
 )
 
 install(TARGETS
