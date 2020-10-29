@@ -50,7 +50,7 @@ public:
     template <typename T> inline static void registerAttribute()
     {
         static_assert(std::is_default_constructible<T>::value, "An Attribute must be default-constructible.");
-        AttributeFactory::self()->registerAttribute(std::make_unique<T>());
+        AttributeFactory::self()->registerAttribute(std::unique_ptr<T>{new T{}});
     }
 
     /**
