@@ -78,7 +78,7 @@ std::optional<qint64> CommandContext::tagId() const
 
 Tag CommandContext::tag() const
 {
-    return mTagId.has_value() ? Tag::retrieveById(mTagId.value()) : Tag();
+    return mTagId.has_value() ? Tag::retrieveById(*mTagId) : Tag();
 }
 
 bool CommandContext::isEmpty() const

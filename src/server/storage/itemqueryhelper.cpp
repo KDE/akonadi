@@ -52,7 +52,7 @@ void ItemQueryHelper::itemSetToQuery(const ImapSet &set, const CommandContext &c
         }
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
-        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, tagId.value());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }
 
@@ -77,7 +77,7 @@ void ItemQueryHelper::remoteIdToQuery(const QStringList &rids, const CommandCont
     if (tagId.has_value()) {
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
-        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, tagId.value());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }
 
@@ -99,7 +99,7 @@ void ItemQueryHelper::gidToQuery(const QStringList &gids, const CommandContext &
         }
         qb.addJoin(QueryBuilder::InnerJoin, PimItemTagRelation::tableName(),
                    PimItem::idFullColumnName(), PimItemTagRelation::leftFullColumnName());
-        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, tagId.value());
+        qb.addValueCondition(PimItemTagRelation::rightFullColumnName(), Query::Equals, *tagId);
     }
 }
 

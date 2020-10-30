@@ -114,7 +114,7 @@ private Q_SLOTS:
         const auto identifier = DBus::parseInstanceIdentifier(serviceName);
         QCOMPARE(identifier.has_value(), hasInstance);
         if (hasInstance) {
-            QCOMPARE(identifier.value(), QStringLiteral("instance"));
+            QCOMPARE(*identifier, QStringLiteral("instance"));
         }
     }
 };
