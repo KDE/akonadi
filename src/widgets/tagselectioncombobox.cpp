@@ -191,10 +191,10 @@ TagSelectionComboBox::TagSelectionComboBox(QWidget *parent)
     d->tagModel = std::make_unique<TagModel>(monitor, this);
     connect(d->tagModel.get(), &TagModel::populated, this, [this]() {
             d->mModelReady = true;
-            if (std::holds_alternative<Tag::List>(d->mPendingSelection)) {
-                setSelection(std::get<Tag::List>(d->mPendingSelection));
-            } else if (std::holds_alternative<QStringList>(d->mPendingSelection)) {
-                setSelection(std::get<QStringList>(d->mPendingSelection));
+            if (auto *list = std::get_if<Tag::List>(&d->mPendingSelection)) {
+                setSelection(*list);
+            } else if (auto *slist = std::get_if<QStringList>(&d->mPendingSelection)) {
+                setSelection(*slist);
             }
             d->mPendingSelection = std::monostate{};
     });
