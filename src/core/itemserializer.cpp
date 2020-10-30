@@ -125,7 +125,7 @@ void ItemSerializer::deserialize(Item &item, const QByteArray &label, QIODevice 
         CompressionStream decompressor(&data);
         decompressor.open(QIODevice::ReadOnly);
         if (!plugin->deserialize(item, label, decompressor, version)) {
-            handleError(decompressor, true);
+            handleError(data, true);
         }
         if (decompressor.error()) {
             qCWarning(AKONADICORE_LOG) << "Deserialization failed due to decompression error:" << QString::fromStdString(decompressor.error().message());
