@@ -29,6 +29,8 @@ public:
     void close() override;
     bool atEnd() const override;
 
+    bool isSequential() const override;
+
     std::error_code error() const;
 
     static bool isCompressed(QIODevice *data);

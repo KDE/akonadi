@@ -137,6 +137,11 @@ CompressionStream::~CompressionStream()
     CompressionStream::close();
 }
 
+bool CompressionStream::isSequential() const
+{
+    return true;
+}
+
 bool CompressionStream::open(OpenMode mode)
 {
     if ((mode & QIODevice::ReadOnly) && (mode & QIODevice::WriteOnly)) {

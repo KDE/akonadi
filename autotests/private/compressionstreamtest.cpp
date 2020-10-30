@@ -145,6 +145,7 @@ private Q_SLOTS:
         QVERIFY(buffer.open(QIODevice::ReadOnly));
 
         QCOMPARE(CompressionStream::isCompressed(&buffer), isValid);
+        QCOMPARE(buffer.pos(), 0);
     }
 };
 
