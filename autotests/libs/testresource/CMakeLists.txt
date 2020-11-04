@@ -1,7 +1,3 @@
-include_directories(
-  ${Boost_INCLUDE_DIR}
-)
-
 include(${CMAKE_SOURCE_DIR}/KF5AkonadiMacros.cmake)
 
 kde_enable_exceptions()

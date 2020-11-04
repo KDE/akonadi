@@ -16,10 +16,6 @@ option(AKONADI_RUN_PGSQL_ISOLATED_TESTS "Run isolated tests with PostgreSQL as b
 
 kde_enable_exceptions()
 
-include_directories(
-  ${Boost_INCLUDE_DIR}
-)
-
 # convenience macro to add akonadi qtestlib unit-tests
 macro(add_akonadi_test _source)
   set(_test ${_source} ${CMAKE_BINARY_DIR}/src/core/akonadicore_debug.cpp)

@@ -55,7 +55,7 @@ generate_export_header(KF5AkonadiAgentBase BASE_NAME akonadiagentbase)
 
 add_library(KF5::AkonadiAgentBase ALIAS KF5AkonadiAgentBase)
 
-target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiAgentBase;${Boost_INCLUDE_DIR}>")
+target_include_directories(KF5AkonadiAgentBase INTERFACE "$<INSTALL_INTERFACE:${KDE_INSTALL_INCLUDEDIR_KF5}/AkonadiAgentBase>")
 
 target_link_libraries(KF5AkonadiAgentBase
 PUBLIC

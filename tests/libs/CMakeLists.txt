@@ -11,10 +11,6 @@ file(MAKE_DIRECTORY ${TEST_RESULT_OUTPUT_PATH})
 
 kde_enable_exceptions()
 
-include_directories(
-  ${Boost_INCLUDE_DIR}
-)
-
 # convenience macro to add akonadi demo application
 macro(add_akonadi_demo _source)
   set(_test ${_source})
