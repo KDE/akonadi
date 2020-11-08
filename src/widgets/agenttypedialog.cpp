@@ -31,6 +31,7 @@ public:
     }
     void readConfig(); 
     void writeConfig() const;
+    void slotSearchAgentType(const QString &str);
     AgentTypeWidget *Widget = nullptr;
     AgentType agentType;
     AgentTypeDialog * const q;
@@ -51,6 +52,11 @@ void AgentTypeDialog::Private::readConfig()
     }
 }
 
+void AgentTypeDialog::Private::slotSearchAgentType(const QString &str)
+{
+    Widget->agentFilterProxyModel()->setFilterRegularExpression(str);
+}
+
 AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     : QDialog(parent)
     , d(new Private(this))
@@ -63,7 +69,9 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     QLineEdit *searchLine = new QLineEdit(this);
     layout->addWidget(searchLine);
     searchLine->setClearButtonEnabled(true);
-    connect(searchLine, &QLineEdit::textChanged, d->Widget->agentFilterProxyModel(), &AgentFilterProxyModel::setFilterFixedString);
+    connect(searchLine, &QLineEdit::textChanged, this, [this](const QString &str) {
+        d->slotSearchAgentType(str);
+    });
 
     layout->addWidget(d->Widget);
 
