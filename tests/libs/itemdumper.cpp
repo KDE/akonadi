@@ -30,7 +30,7 @@ using namespace Akonadi;
 ItemDumper::ItemDumper(const QString &path, const QString &filename, const QString &mimetype, int count)
     : mJobCount(0)
 {
-    CollectionPathResolver *resolver = new CollectionPathResolver(path, this);
+    auto *resolver = new CollectionPathResolver(path, this);
     Q_ASSERT(resolver->exec());
     const Collection collection = Collection(resolver->collection());
 
@@ -43,17 +43,17 @@ ItemDumper::ItemDumper(const QString &path, const QString &filename, const QStri
     item.setPayloadFromData(data);
     mTime.start();
 #ifdef GLOBAL_TRANSACTION
-    TransactionBeginJob *begin = new TransactionBeginJob(this);
+    auto *begin = new TransactionBeginJob(this);
     connect(begin, &TransactionBeginJob::result, this, &ItemDumper::done);
     ++mJobCount;
 #endif
     for (int i = 0; i < count; ++i) {
         ++mJobCount;
-        ItemCreateJob *job = new ItemCreateJob(item, collection, this);
+        auto *job = new ItemCreateJob(item, collection, this);
         connect(job, &ItemCreateJob::result, this, &ItemDumper::done);
     }
 #ifdef GLOBAL_TRANSACTION
-    TransactionCommitJob *commit = new TransactionCommitJob(this);
+    auto *commit = new TransactionCommitJob(this);
     connect(commit, &TransactionCommitJob::result, this, &ItemDumper::done);
     ++mJobCount;
 #endif

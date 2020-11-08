@@ -190,7 +190,7 @@ void SpecialCollections::setSpecialCollectionType(const QByteArray &type, const 
 {
     if (!collection.hasAttribute<SpecialCollectionAttribute>() || collection.attribute<SpecialCollectionAttribute>()->collectionType() != type) {
         Collection attributeCollection(collection);
-        SpecialCollectionAttribute *attribute = attributeCollection.attribute<SpecialCollectionAttribute>(Collection::AddIfMissing);
+        auto *attribute = attributeCollection.attribute<SpecialCollectionAttribute>(Collection::AddIfMissing);
         attribute->setCollectionType(type);
         new CollectionModifyJob(attributeCollection);
     }

@@ -89,7 +89,7 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Collection::List &li
     QVectorIterator<Collection> i(list);
     while (i.hasNext()) {
         const Collection &col = i.next();
-        EntityDeletedAttribute *eda = new EntityDeletedAttribute();
+        auto *eda = new EntityDeletedAttribute();
         if (mSetRestoreCollection) {
             Q_ASSERT(mRestoreCollection.isValid());
             eda->setRestoreCollection(mRestoreCollection);
@@ -98,10 +98,10 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Collection::List &li
         Collection modCol(col.id());   //really only modify attribute (forget old remote ids, etc.), otherwise we have an error because of the move
         modCol.addAttribute(eda);
 
-        CollectionModifyJob *job = new CollectionModifyJob(modCol, q);
+        auto *job = new CollectionModifyJob(modCol, q);
         q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
 
-        ItemFetchJob *itemFetchJob = new ItemFetchJob(col, q);
+        auto *itemFetchJob = new ItemFetchJob(col, q);
         //TODO not sure if it is guaranteed that itemsReceived is always before result (otherwise the result is emitted before the attributes are set)
         q->connect(itemFetchJob, &ItemFetchJob::itemsReceived, q, [this](const auto &items) { setAttribute(items); });
         q->connect(itemFetchJob, &KJob::result, q, [this](KJob *job) { selectResult(job); });
@@ -115,7 +115,7 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
     QMutableVectorIterator<Item> i(items);
     while (i.hasNext()) {
         const Item &item = i.next();
-        EntityDeletedAttribute *eda = new EntityDeletedAttribute();
+        auto *eda = new EntityDeletedAttribute();
         if (mSetRestoreCollection) {
             //When deleting a collection, we want to restore the deleted collection's items restored to the deleted collection's parent, not the items parent
             if (mRestoreCollection.isValid()) {
@@ -128,7 +128,7 @@ void TrashJob::TrashJobPrivate::setAttribute(const Akonadi::Item::List &list)
 
         Item modItem(item.id());   //really only modify attribute (forget old remote ids, etc.)
         modItem.addAttribute(eda);
-        ItemModifyJob *job = new ItemModifyJob(modItem, q);
+        auto *job = new ItemModifyJob(modItem, q);
         job->setIgnorePayload(true);
         q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
     }
@@ -162,7 +162,7 @@ void TrashJob::TrashJobPrivate::setAttribute(KJob *job)
     Q_ASSERT(mCollection.isValid());
     setAttribute(Collection::List() << mCollection);
     //Set the attribute on all subcollections and items
-    CollectionFetchJob *colFetchJob = new CollectionFetchJob(mCollection, CollectionFetchJob::Recursive, q);
+    auto *colFetchJob = new CollectionFetchJob(mCollection, CollectionFetchJob::Recursive, q);
     q->connect(colFetchJob, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) { setAttribute(cols); });
     q->connect(colFetchJob, &KJob::result, q, [this](KJob *job) { selectResult(job); });
 }
@@ -219,12 +219,12 @@ void TrashJob::TrashJobPrivate::itemsReceived(const Akonadi::Item::List &items)
     }
 
     for (auto it = mCollectionItems.cbegin(), e = mCollectionItems.cend(); it != e; ++it) {
-        CollectionFetchJob *job = new CollectionFetchJob(it.key(), Akonadi::CollectionFetchJob::Base, q);
+        auto *job = new CollectionFetchJob(it.key(), Akonadi::CollectionFetchJob::Base, q);
         q->connect(job, &CollectionFetchJob::collectionsReceived, q, [this](const auto &cols) { parentCollectionReceived(cols); });
     }
 
     if (mDeleteIfInTrash && !toDelete.isEmpty()) {
-        ItemDeleteJob *job = new ItemDeleteJob(toDelete, q);
+        auto *job = new ItemDeleteJob(toDelete, q);
         q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
     } else if (mCollectionItems.isEmpty()) {   //No job started, so we abort the job
         qCWarning(AKONADICORE_LOG) << "Nothing to do";
@@ -247,7 +247,7 @@ void TrashJob::TrashJobPrivate::collectionsReceived(const Akonadi::Collection::L
 
     if (mCollection.hasAttribute<EntityDeletedAttribute>()) {  //marked as deleted
         if (mDeleteIfInTrash) {
-            CollectionDeleteJob *job = new CollectionDeleteJob(mCollection, q);
+            auto *job = new CollectionDeleteJob(mCollection, q);
             q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
         } else {
             qCWarning(AKONADICORE_LOG) << "Nothing to do";
@@ -268,7 +268,7 @@ void TrashJob::TrashJobPrivate::collectionsReceived(const Akonadi::Collection::L
     }
 
     if (trashCollection.isValid()) {
-        CollectionMoveJob *job = new CollectionMoveJob(mCollection, trashCollection, q);
+        auto *job = new CollectionMoveJob(mCollection, trashCollection, q);
         q->connect(job, &KJob::result, q, [this](KJob *job) { setAttribute(job); });
         q->connect(job, &KJob::result, q, [this](KJob *job) { selectResult(job); });
     } else {
@@ -332,14 +332,14 @@ void TrashJob::doStart()
 
     //Fetch items first to ensure that the EntityDeletedAttribute is available
     if (!d->mItems.isEmpty()) {
-        ItemFetchJob *job = new ItemFetchJob(d->mItems, this);
+        auto *job = new ItemFetchJob(d->mItems, this);
         job->fetchScope().setAncestorRetrieval(Akonadi::ItemFetchScope::Parent);   //so we have access to the resource
         //job->fetchScope().setCacheOnly(true);
         job->fetchScope().fetchAttribute<EntityDeletedAttribute>(true);
         connect(job, &ItemFetchJob::itemsReceived, this, [d](const auto &items) { d->itemsReceived(items); });
 
     } else if (d->mCollection.isValid()) {
-        CollectionFetchJob *job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Base, this);
+        auto *job = new CollectionFetchJob(d->mCollection, CollectionFetchJob::Base, this);
         job->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::Parent);
         connect(job, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) { d->collectionsReceived(cols); });
 

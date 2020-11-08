@@ -62,7 +62,7 @@ void CollectionTest::testBuildCollection()
     verifyCollection(colist, 2, QStringLiteral("c112"), QStringLiteral("Akonadi"), mimeType);
 
     QVERIFY(colist.at(0).hasAttribute<EntityDisplayAttribute>());
-    const EntityDisplayAttribute *attr = colist.at(0).attribute<EntityDisplayAttribute>();
+    const auto *attr = colist.at(0).attribute<EntityDisplayAttribute>();
     QCOMPARE(attr->displayName(), QStringLiteral("Posteingang"));
 }
 

@@ -264,7 +264,7 @@ std::optional<ItemRetriever::PreparedRequests> ItemRetriever::prepareRequests(QS
     QVector<qint64> readyItems;
     qint64 prevPimItemId = -1;
     QSet<QByteArray> availableParts;
-    decltype(requests)::iterator lastRequest = requests.end();
+    auto lastRequest = requests.end();
     while (query.isValid()) {
         const qint64 pimItemId = query.value(PimItemIdColumn).toLongLong();
         const qint64 collectionId = query.value(CollectionIdColumn).toLongLong();

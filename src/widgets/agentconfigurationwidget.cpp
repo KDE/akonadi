@@ -37,7 +37,7 @@ AgentConfigurationWidget::Private::~Private()
 
 void AgentConfigurationWidget::Private::setupErrorWidget(QWidget *parent, const QString &text)
 {
-    QVBoxLayout *layout = new QVBoxLayout(parent);
+    auto *layout = new QVBoxLayout(parent);
     layout->addStretch(2);
     auto *label = new QLabel(text, parent);
     label->setAlignment(Qt::AlignCenter);
@@ -80,7 +80,7 @@ AgentConfigurationWidget::AgentConfigurationWidget(const AgentInstance &instance
             QString configName = instance.identifier() + QStringLiteral("rc");
             configName = Akonadi::ServerManager::addNamespace(configName);
             KSharedConfigPtr config = KSharedConfig::openConfig(configName);
-            QVBoxLayout *layout = new QVBoxLayout(this);
+            auto *layout = new QVBoxLayout(this);
             layout->setContentsMargins(0, 0, 0, 0);
             d->plugin = d->factory->create(config, this, { instance.identifier() });
             connect(d->plugin.data(), &AgentConfigurationBase::enableOkButton, this, &AgentConfigurationWidget::enableOkButton);

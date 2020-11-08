@@ -32,7 +32,7 @@ void ConflictHandler::setConflictingItems(const Akonadi::Item &changedItem, cons
 void ConflictHandler::start()
 {
     if (mConflictType == LocalLocalConflict || mConflictType == LocalRemoteConflict) {
-        ItemFetchJob *job = new ItemFetchJob(mConflictingItem, mSession);
+        auto *job = new ItemFetchJob(mConflictingItem, mSession);
         job->fetchScope().fetchFullPayload();
         job->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
         connect(job, &ItemFetchJob::result, this, &ConflictHandler::slotOtherItemFetched);
@@ -48,7 +48,7 @@ void ConflictHandler::slotOtherItemFetched(KJob *job)
         return;
     }
 
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
     if (fetchJob->items().isEmpty()) {
         Q_EMIT error(i18n("Did not find other item for conflict handling"));
         return;
@@ -90,7 +90,7 @@ void ConflictHandler::useLocalItem()
     Item newItem(mChangedItem);
     newItem.setRevision(mConflictingItem.revision());
 
-    ItemModifyJob *job = new ItemModifyJob(newItem, mSession);
+    auto *job = new ItemModifyJob(newItem, mSession);
     connect(job, &ItemModifyJob::result, this, &ConflictHandler::slotUseLocalItemFinished);
 }
 
@@ -113,7 +113,7 @@ void ConflictHandler::useBothItems()
 {
     // We have to create a new item for the local item under the collection that has
     // been retrieved when we fetched the other item.
-    ItemCreateJob *job = new ItemCreateJob(mChangedItem, mConflictingItem.parentCollection(), mSession);
+    auto *job = new ItemCreateJob(mChangedItem, mConflictingItem.parentCollection(), mSession);
     connect(job, &ItemCreateJob::result, this, &ConflictHandler::slotUseBothItemsFinished);
 }
 

@@ -30,7 +30,7 @@ public:
 
     inline void sendCommand(Protocol::LinkItemsCommand::Action action)
     {
-        LinkJob *q = static_cast<LinkJob *>(q_func());  // Job would be enough already, but then we don't have access to the non-public stuff...
+        auto *q = static_cast<LinkJob *>(q_func());  // Job would be enough already, but then we don't have access to the non-public stuff...
         if (objectsToLink.isEmpty()) {
             q->emitResult();
             return;
@@ -56,7 +56,7 @@ public:
 
     inline bool handleResponse(qint64 tag, const Protocol::CommandPtr &response)
     {
-        LinkJob *q = static_cast<LinkJob *>(q_func());
+        auto *q = static_cast<LinkJob *>(q_func());
         if (!response->isResponse() || response->type() != Protocol::Command::LinkItems) {
             return q->Job::doHandleResponse(tag, response);
         }

@@ -55,7 +55,7 @@ QString ETMViewStateSaver::indexToConfigString(const QModelIndex &index) const
     if (c.isValid()) {
         return QStringLiteral("c%1").arg(c.id());
     }
-    Item::Id id = index.data(EntityTreeModel::ItemIdRole).value<Item::Id>();
+    auto id = index.data(EntityTreeModel::ItemIdRole).value<Item::Id>();
     if (id >= 0) {
         return QStringLiteral("i%1").arg(id);
     }

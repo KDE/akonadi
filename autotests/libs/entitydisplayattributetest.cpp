@@ -37,7 +37,7 @@ private Q_SLOTS:
         QFETCH(QString, activeIcon);
         QFETCH(QByteArray, output);
 
-        EntityDisplayAttribute *attr = new EntityDisplayAttribute();
+        auto *attr = new EntityDisplayAttribute();
         attr->deserialize(input);
         QCOMPARE(attr->displayName(), name);
         QCOMPARE(attr->iconName(), icon);

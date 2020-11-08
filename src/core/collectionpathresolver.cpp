@@ -90,7 +90,7 @@ void CollectionPathResolverPrivate::jobResult(KJob *job)
 
     Q_Q(CollectionPathResolver);
 
-    CollectionFetchJob *list = static_cast<CollectionFetchJob *>(job);
+    auto *list = static_cast<CollectionFetchJob *>(job);
     CollectionFetchJob *nextJob = nullptr;
     const Collection::List cols = list->collections();
     if (cols.isEmpty()) {

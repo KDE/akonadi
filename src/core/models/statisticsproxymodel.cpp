@@ -37,7 +37,7 @@ public:
 
     void getCountRecursive(const QModelIndex &index, qint64 &totalSize) const
     {
-        Collection collection = qvariant_cast<Collection>(index.data(EntityTreeModel::CollectionRole));
+        auto collection = qvariant_cast<Collection>(index.data(EntityTreeModel::CollectionRole));
         // Do not assert on invalid collections, since a collection may be deleted
         // in the meantime and deleted collections are invalid.
         if (collection.isValid()) {
@@ -89,7 +89,7 @@ public:
                    .arg(i18n("Unread Messages")).arg(collection.statistics().unreadCount());
 
         if (collection.hasAttribute<CollectionQuotaAttribute>()) {
-            const CollectionQuotaAttribute *quota = collection.attribute<CollectionQuotaAttribute>();
+            const auto *quota = collection.attribute<CollectionQuotaAttribute>();
             if (quota->currentValue() > -1 && quota->maximumValue() > 0) {
                 qreal percentage = (100.0 * quota->currentValue()) / quota->maximumValue();
 

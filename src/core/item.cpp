@@ -452,7 +452,7 @@ static QString format_types(const PayloadContainer &c)
 {
     QStringList result;
     result.reserve(c.size());
-    for (PayloadContainer::const_iterator it = c.begin(), end = c.end(); it != end; ++it) {
+    for (auto it = c.begin(), end = c.end(); it != end; ++it) {
         result.push_back(format_type(it->sharedPointerId, it->metaTypeId));
     }
     return result.join(QLatin1String(", "));

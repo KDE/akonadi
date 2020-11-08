@@ -54,7 +54,7 @@ void Akonadi::SpecialCollectionsDiscoveryJob::slotResult(KJob *job)
         qCWarning(AKONADICORE_LOG) << job->errorString();
         return;
     }
-    Akonadi::CollectionFetchJob *fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
+    auto *fetchJob = qobject_cast<Akonadi::CollectionFetchJob *>(job);
     const Akonadi::Collection::List lstCollections = fetchJob->collections();
     for (const Akonadi::Collection &collection : lstCollections) {
         if (collection.hasAttribute<SpecialCollectionAttribute>()) {

@@ -31,7 +31,7 @@ struct UnlockNotification {
 static void qSqlite3UnlockNotifyCb(void **apArg, int nArg)
 {
     for (int i = 0; i < nArg; ++i) {
-        UnlockNotification *ntf = static_cast<UnlockNotification *>(apArg[i]);
+        auto *ntf = static_cast<UnlockNotification *>(apArg[i]);
         ntf->mutex.lock();
         ntf->fired = true;
         ntf->cond.wakeOne();

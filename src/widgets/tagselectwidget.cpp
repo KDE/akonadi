@@ -27,7 +27,7 @@ TagSelectWidget::TagSelectWidget(QWidget *parent)
     : QWidget(parent),
       d(new Private())
 {
-    QHBoxLayout *mainLayout = new QHBoxLayout(this);
+    auto *mainLayout = new QHBoxLayout(this);
 
     auto *monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagSelectWidgetMonitor"));

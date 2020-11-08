@@ -61,8 +61,8 @@ void EntityListView::Private::init()
     mParent->connect(mParent, &QAbstractItemView::clicked, mParent, [this](const auto &index) { itemClicked(index); });
     mParent->connect(mParent, &QAbstractItemView::doubleClicked, mParent, [this](const auto &index) { itemDoubleClicked(index); });
 
-    DelegateAnimator *animator = new DelegateAnimator(mParent);
-    ProgressSpinnerDelegate *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
+    auto *animator = new DelegateAnimator(mParent);
+    auto *customDelegate = new ProgressSpinnerDelegate(animator, mParent);
     mParent->setItemDelegate(customDelegate);
 
     ControlGui::widgetNeedsAkonadi(mParent);

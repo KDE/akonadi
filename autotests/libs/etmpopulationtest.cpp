@@ -101,7 +101,7 @@ Akonadi::Collection createCollection(const QString &name, const Akonadi::Collect
     col.setEnabled(enabled);
     col.setContentMimeTypes(mimeTypes);
 
-    CollectionCreateJob *create = new CollectionCreateJob(col);
+    auto *create = new CollectionCreateJob(col);
     create->exec();
     if (create->error()) {
         qWarning() << create->errorString();
@@ -159,11 +159,11 @@ void EtmPopulationTest::initTestCase()
 
 void EtmPopulationTest::testMonitoringCollectionsPreset()
 {
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(col1, true);
     changeRecorder->setCollectionMonitored(col2, true);
     AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
@@ -182,9 +182,9 @@ void EtmPopulationTest::testMonitoringCollectionsPreset()
 
 void EtmPopulationTest::testMonitoringCollections()
 {
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
     Akonadi::Collection::List monitored;
@@ -206,11 +206,11 @@ void EtmPopulationTest::testMonitoringCollections()
 
 void EtmPopulationTest::testFullPopulation()
 {
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     // changeRecorder->setCollectionMonitored(Akonadi::Collection::root());
     changeRecorder->setAllMonitored(true);
     AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
@@ -229,11 +229,11 @@ void EtmPopulationTest::testFullPopulation()
 
 void EtmPopulationTest::testAddMonitoringCollections()
 {
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(col1, true);
     changeRecorder->setCollectionMonitored(col2, true);
     AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
@@ -258,11 +258,11 @@ void EtmPopulationTest::testAddMonitoringCollections()
 
 void EtmPopulationTest::testRemoveMonitoringCollections()
 {
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(col1, true);
     changeRecorder->setCollectionMonitored(col2, true);
     AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
@@ -289,8 +289,8 @@ void EtmPopulationTest::testDisplayFilter()
     Collection col5 = createCollection(QStringLiteral("col5"), monitorCol, false);
     QVERIFY(col5.isValid());
 
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *changeRecorder = new ChangeRecorder(this);
+    auto *model = new InspectableETM(changeRecorder, this);
     AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
@@ -304,7 +304,7 @@ void EtmPopulationTest::testDisplayFilter()
     QVERIFY(getIndex(QStringLiteral("col4"), model).isValid());
     QVERIFY(!getIndex(QStringLiteral("col5"), model).isValid());
 
-    Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
+    auto *deleteJob = new Akonadi::CollectionDeleteJob(col5);
     AKVERIFYEXEC(deleteJob);
 }
 
@@ -316,17 +316,17 @@ void EtmPopulationTest::testLoadingOfHiddenCollection()
     Collection col5 = createCollection(QStringLiteral("col5"), monitorCol, false, QStringList() << QStringLiteral("application/test"));
     QVERIFY(col5.isValid());
 
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setMimeTypeMonitored(QStringLiteral("application/test"), true);
     AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady);
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(EntityTreeModel::ImmediatePopulation);
     model->setCollectionFetchStrategy(EntityTreeModel::FetchCollectionsRecursive);
 
     QTRY_VERIFY(model->isCollectionTreeFetched());
     QVERIFY(getIndex(QStringLiteral("col5"), model).isValid());
 
-    Akonadi::CollectionDeleteJob *deleteJob = new Akonadi::CollectionDeleteJob(col5);
+    auto *deleteJob = new Akonadi::CollectionDeleteJob(col5);
     AKVERIFYEXEC(deleteJob);
 }
 

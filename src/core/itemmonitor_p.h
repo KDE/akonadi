@@ -65,7 +65,7 @@ public Q_SLOTS:
             return;
         }
 
-        ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+        auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
 
         if (!fetchJob->items().isEmpty()) {
             mItem = fetchJob->items().at(0);

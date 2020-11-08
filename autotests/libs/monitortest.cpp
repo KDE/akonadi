@@ -122,19 +122,19 @@ void MonitorTest::testMonitor()
     Collection monitorCol;
     monitorCol.setParentCollection(res3);
     monitorCol.setName(QStringLiteral("monitor"));
-    CollectionCreateJob *create = new CollectionCreateJob(monitorCol, this);
+    auto *create = new CollectionCreateJob(monitorCol, this);
     AKVERIFYEXEC(create);
     monitorCol = create->collection();
     QVERIFY(monitorCol.isValid());
 
     QTRY_COMPARE(caddspy.count(), 1);
     QList<QVariant> arg = caddspy.takeFirst();
-    Collection col = arg.at(0).value<Collection>();
+    auto col = arg.at(0).value<Collection>();
     QCOMPARE(col, monitorCol);
     if (fetchCol) {
         QCOMPARE(col.name(), QStringLiteral("monitor"));
     }
-    Collection parent = arg.at(1).value<Collection>();
+    auto parent = arg.at(1).value<Collection>();
     QCOMPARE(parent, res3);
 
     QVERIFY(cmodspy.isEmpty());
@@ -151,7 +151,7 @@ void MonitorTest::testMonitor()
     // add an item
     Item newItem;
     newItem.setMimeType(QStringLiteral("application/octet-stream"));
-    ItemCreateJob *append = new ItemCreateJob(newItem, monitorCol, this);
+    auto *append = new ItemCreateJob(newItem, monitorCol, this);
     AKVERIFYEXEC(append);
     Item monitorRef = append->item();
     QVERIFY(monitorRef.isValid());
@@ -165,7 +165,7 @@ void MonitorTest::testMonitor()
     Item item = arg.at(0).value<Item>();
     QCOMPARE(item, monitorRef);
     QCOMPARE(item.mimeType(), QString::fromLatin1("application/octet-stream"));
-    Collection collection = arg.at(1).value<Collection>();
+    auto collection = arg.at(1).value<Collection>();
     QCOMPARE(collection.id(), monitorCol.id());
 
     QVERIFY(caddspy.isEmpty());
@@ -180,7 +180,7 @@ void MonitorTest::testMonitor()
 
     // modify an item
     item.setPayload<QByteArray>("some new content");
-    ItemModifyJob *store = new ItemModifyJob(item, this);
+    auto *store = new ItemModifyJob(item, this);
     AKVERIFYEXEC(store);
 
     QTRY_COMPARE(cstatspy.count(), 1);
@@ -193,7 +193,7 @@ void MonitorTest::testMonitor()
     QCOMPARE(monitorRef, item);
     QVERIFY(item.hasPayload<QByteArray>());
     QCOMPARE(item.payload<QByteArray>(), QByteArray("some new content"));
-    QSet<QByteArray> parts = arg.at(1).value<QSet<QByteArray> >();
+    auto parts = arg.at(1).value<QSet<QByteArray> >();
     QCOMPARE(parts, QSet<QByteArray>() << "PLD:RFC822");
 
     QVERIFY(caddspy.isEmpty());
@@ -207,7 +207,7 @@ void MonitorTest::testMonitor()
     QVERIFY(irmspy.isEmpty());
 
     // move an item
-    ItemMoveJob *move = new ItemMoveJob(item, res3);
+    auto *move = new ItemMoveJob(item, res3);
     AKVERIFYEXEC(move);
     QTRY_COMPARE(cstatspy.count(), 2);
     // NOTE: We don't make any assumptions about the order of the collectionStatisticsChanged
@@ -238,7 +238,7 @@ void MonitorTest::testMonitor()
     QVERIFY(irmspy.isEmpty());
 
     // delete an item
-    ItemDeleteJob *del = new ItemDeleteJob(monitorRef, this);
+    auto *del = new ItemDeleteJob(monitorRef, this);
     AKVERIFYEXEC(del);
 
     QTRY_COMPARE(cstatspy.count(), 1);
@@ -268,7 +268,7 @@ void MonitorTest::testMonitor()
     subCollection.setName(QStringLiteral("foo2"));
     QVERIFY(subCollection.isValid());
 
-    SubscriptionJob *subscribeJob = new SubscriptionJob(this);
+    auto *subscribeJob = new SubscriptionJob(this);
     subscribeJob->unsubscribe(Collection::List() << subCollection);
     AKVERIFYEXEC(subscribeJob);
     // Wait for unsubscribed signal, it goes after changed, so we can check for both
@@ -314,7 +314,7 @@ void MonitorTest::testMonitor()
 
     // modify a collection
     monitorCol.setName(QStringLiteral("changed name"));
-    CollectionModifyJob *mod = new CollectionModifyJob(monitorCol, this);
+    auto *mod = new CollectionModifyJob(monitorCol, this);
     AKVERIFYEXEC(mod);
 
     QTRY_COMPARE(cmodspy.count(), 1);
@@ -338,7 +338,7 @@ void MonitorTest::testMonitor()
 
     // move a collection
     Collection dest = Collection(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
-    CollectionMoveJob *cmove = new CollectionMoveJob(monitorCol, dest, this);
+    auto *cmove = new CollectionMoveJob(monitorCol, dest, this);
     AKVERIFYEXEC(cmove);
 
     QTRY_COMPARE(cmvspy.count(), 1);
@@ -366,7 +366,7 @@ void MonitorTest::testMonitor()
     QVERIFY(irmspy.isEmpty());
 
     // delete a collection
-    CollectionDeleteJob *cdel = new CollectionDeleteJob(monitorCol, this);
+    auto *cdel = new CollectionDeleteJob(monitorCol, this);
     AKVERIFYEXEC(cdel);
 
     QTRY_COMPARE(crmspy.count(), 1);

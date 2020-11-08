@@ -79,7 +79,7 @@ void ManageAccountWidget::setDescriptionLabelText(const QString &text)
 bool ManageAccountWidget::eventFilter(QObject *obj, QEvent *event)
 {
     if (event->type() == QEvent::KeyPress && obj == d->ui.mFilterAccount) {
-        QKeyEvent *key = static_cast<QKeyEvent *>(event);
+        auto *key = static_cast<QKeyEvent *>(event);
         if ((key->key() == Qt::Key_Enter) || (key->key() == Qt::Key_Return)) {
             event->accept();
             return true;
@@ -117,7 +117,7 @@ void ManageAccountWidget::slotAddAccount()
 
         if (agentType.isValid()) {
 
-            Akonadi::AgentInstanceCreateJob *job = new Akonadi::AgentInstanceCreateJob(agentType, this);
+            auto *job = new Akonadi::AgentInstanceCreateJob(agentType, this);
             job->configure(this);
             job->start();
         }

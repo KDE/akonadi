@@ -39,7 +39,7 @@ private Q_SLOTS:
 
     Tag::List getTags()
     {
-        TagFetchJob *fetchJob = new TagFetchJob();
+        auto *fetchJob = new TagFetchJob();
         fetchJob->fetchScope().setFetchRemoteId(true);
         bool ret = fetchJob->exec();
         Q_ASSERT(ret);
@@ -61,7 +61,7 @@ private Q_SLOTS:
     void cleanTags()
     {
         Q_FOREACH (const Tag &t, getTags()) {
-            TagDeleteJob *job = new TagDeleteJob(t);
+            auto *job = new TagDeleteJob(t);
             bool ret = job->exec();
             Q_ASSERT(ret);
         }
@@ -78,7 +78,7 @@ private Q_SLOTS:
         tag1.setRemoteId("rid1");
         remoteTags << tag1;
 
-        TagSync *syncer = new TagSync(this);
+        auto *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);
@@ -105,7 +105,7 @@ private Q_SLOTS:
         {
             item1.setMimeType(QStringLiteral("application/octet-stream"));
             item1.setRemoteId(QStringLiteral("item1"));
-            ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+            auto *append = new ItemCreateJob(item1, res3, this);
             AKVERIFYEXEC(append);
             item1 = append->item();
         }
@@ -113,7 +113,7 @@ private Q_SLOTS:
         QHash<QString, Item::List> tagMembers;
         tagMembers.insert(QString::fromLatin1(tag1.remoteId()), { item1 });
 
-        TagSync *syncer = new TagSync(this);
+        auto *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(tagMembers);
         AKVERIFYEXEC(syncer);
@@ -125,7 +125,7 @@ private Q_SLOTS:
         //We need the id of the fetch
         tag1 = resultTags.first();
 
-        ItemFetchJob *fetchJob = new ItemFetchJob(tag1);
+        auto *fetchJob = new ItemFetchJob(tag1);
         fetchJob->fetchScope().setFetchTags(true);
         fetchJob->fetchScope().tagFetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
@@ -143,13 +143,13 @@ private Q_SLOTS:
         Tag tag1(QStringLiteral("tag1"));
         tag1.setRemoteId("rid1");
 
-        TagCreateJob *createJob = new TagCreateJob(tag1, this);
+        auto *createJob = new TagCreateJob(tag1, this);
         AKVERIFYEXEC(createJob);
 
         Tag::List remoteTags;
         remoteTags << tag1;
 
-        TagSync *syncer = new TagSync(this);
+        auto *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);
@@ -170,7 +170,7 @@ private Q_SLOTS:
         Tag tag1(QStringLiteral("tag1"));
         tag1.setRemoteId("rid1");
 
-        TagCreateJob *createJob = new TagCreateJob(tag1, this);
+        auto *createJob = new TagCreateJob(tag1, this);
         AKVERIFYEXEC(createJob);
 
         Tag::List remoteTags;
@@ -180,7 +180,7 @@ private Q_SLOTS:
         {
             item1.setMimeType(QStringLiteral("application/octet-stream"));
             item1.setRemoteId(QStringLiteral("item1"));
-            ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+            auto *append = new ItemCreateJob(item1, res3, this);
             AKVERIFYEXEC(append);
             item1 = append->item();
         }
@@ -190,7 +190,7 @@ private Q_SLOTS:
             item2.setMimeType(QStringLiteral("application/octet-stream"));
             item2.setRemoteId(QStringLiteral("item2"));
             item2.setTag(tag1);
-            ItemCreateJob *append = new ItemCreateJob(item2, res3, this);
+            auto *append = new ItemCreateJob(item2, res3, this);
             AKVERIFYEXEC(append);
             item2 = append->item();
         }
@@ -198,7 +198,7 @@ private Q_SLOTS:
         QHash<QString, Item::List> tagMembers;
         tagMembers.insert(QString::fromLatin1(tag1.remoteId()), Item::List() << item1);
 
-        TagSync *syncer = new TagSync(this);
+        auto *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(tagMembers);
         AKVERIFYEXEC(syncer);
@@ -207,13 +207,13 @@ private Q_SLOTS:
         QCOMPARE(resultTags.count(), remoteTags.count());
         QCOMPARE(resultTags, remoteTags);
         {
-            ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+            auto *fetchJob = new ItemFetchJob(item1, this);
             fetchJob->fetchScope().setFetchTags(true);
             AKVERIFYEXEC(fetchJob);
             QCOMPARE(fetchJob->items().first().tags().count(), 1);
         }
         {
-            ItemFetchJob *fetchJob = new ItemFetchJob(item2, this);
+            auto *fetchJob = new ItemFetchJob(item2, this);
             fetchJob->fetchScope().setFetchTags(true);
             AKVERIFYEXEC(fetchJob);
             QCOMPARE(fetchJob->items().first().tags().count(), 0);
@@ -230,12 +230,12 @@ private Q_SLOTS:
         Tag tag1(QStringLiteral("tag1"));
         tag1.setRemoteId("rid1");
 
-        TagCreateJob *createJob = new TagCreateJob(tag1, this);
+        auto *createJob = new TagCreateJob(tag1, this);
         AKVERIFYEXEC(createJob);
 
         Tag::List remoteTags;
 
-        TagSync *syncer = new TagSync(this);
+        auto *syncer = new TagSync(this);
         syncer->setFullTagList(remoteTags);
         syncer->setTagMembers(QHash<QString, Item::List>());
         AKVERIFYEXEC(syncer);

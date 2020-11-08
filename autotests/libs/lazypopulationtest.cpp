@@ -88,7 +88,7 @@ void LazyPopulationTest::initTestCase()
         Collection col;
         col.setParentCollection(res3);
         col.setName(QStringLiteral("col%1").arg(i));
-        CollectionCreateJob *create = new CollectionCreateJob(col, this);
+        auto *create = new CollectionCreateJob(col, this);
         AKVERIFYEXEC(create);
     }
 }
@@ -140,7 +140,7 @@ void LazyPopulationTest::testItemAdded()
     {
         monitorCol.setParentCollection(res3);
         monitorCol.setName(mainCollectionName);
-        CollectionCreateJob *create = new CollectionCreateJob(monitorCol, this);
+        auto *create = new CollectionCreateJob(monitorCol, this);
         AKVERIFYEXEC(create);
         monitorCol = create->collection();
     }
@@ -148,15 +148,15 @@ void LazyPopulationTest::testItemAdded()
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, monitorCol, this);
+        auto *append = new ItemCreateJob(item1, monitorCol, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
 
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(Collection::root());
     QVERIFY(AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady));
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     //Wait for initial listing to complete
@@ -200,7 +200,7 @@ void LazyPopulationTest::testItemAdded()
     Item item2;
     {
         item2.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item2, monitorCol, this);
+        auto *append = new ItemCreateJob(item2, monitorCol, this);
         AKVERIFYEXEC(append);
         item2 = append->item();
     }
@@ -234,15 +234,15 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
     {
         monitorCol.setParentCollection(res3);
         monitorCol.setName(mainCollectionName);
-        CollectionCreateJob *create = new CollectionCreateJob(monitorCol, this);
+        auto *create = new CollectionCreateJob(monitorCol, this);
         AKVERIFYEXEC(create);
         monitorCol = create->collection();
     }
 
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(Collection::root());
     QVERIFY(AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady));
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     //Wait for initial listing to complete
@@ -258,7 +258,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
     {
         Item item1;
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, monitorCol, this);
+        auto *append = new ItemCreateJob(item1, monitorCol, this);
         AKVERIFYEXEC(append);
     }
 
@@ -277,7 +277,7 @@ void LazyPopulationTest::testItemAddedBeforeFetch()
         QVERIFY(addedSpy.isValid());
         Item item2;
         item2.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item2, monitorCol, this);
+        auto *append = new ItemCreateJob(item2, monitorCol, this);
         AKVERIFYEXEC(append);
         QTRY_VERIFY(addedSpy.count() >= 1);
     }
@@ -296,19 +296,19 @@ void LazyPopulationTest::testPurgeEmptyCollection()
     {
         monitorCol.setParentCollection(res3);
         monitorCol.setName(mainCollectionName);
-        CollectionCreateJob *create = new CollectionCreateJob(monitorCol, this);
+        auto *create = new CollectionCreateJob(monitorCol, this);
         AKVERIFYEXEC(create);
         monitorCol = create->collection();
     }
     //Monitor without referencing so we get all signals
-    Monitor *monitor = new Monitor(this);
+    auto *monitor = new Monitor(this);
     monitor->setCollectionMonitored(Collection::root());
     QVERIFY(AkonadiTest::akWaitForSignal(monitor, &Monitor::monitorReady));
 
-    ChangeRecorder *changeRecorder = new ChangeRecorder(this);
+    auto *changeRecorder = new ChangeRecorder(this);
     changeRecorder->setCollectionMonitored(Collection::root());
     QVERIFY(AkonadiTest::akWaitForSignal(changeRecorder, &Monitor::monitorReady));
-    InspectableETM *model = new InspectableETM(changeRecorder, this);
+    auto *model = new InspectableETM(changeRecorder, this);
     model->setItemPopulationStrategy(Akonadi::EntityTreeModel::LazyPopulation);
 
     //Wait for initial listing to complete
@@ -337,7 +337,7 @@ void LazyPopulationTest::testPurgeEmptyCollection()
         QVERIFY(addedSpy.isValid());
         Item item1;
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, monitorCol, this);
+        auto *append = new ItemCreateJob(item1, monitorCol, this);
         AKVERIFYEXEC(append);
         QTRY_VERIFY(addedSpy.count() >= 1);
     }

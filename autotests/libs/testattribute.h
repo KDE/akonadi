@@ -31,7 +31,7 @@ public:
     }
     TestAttribute *clone() const override
     {
-        TestAttribute *a = new TestAttribute;
+        auto *a = new TestAttribute;
         a->data = data;
         return a;
     }

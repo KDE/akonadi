@@ -52,7 +52,7 @@ void PartFetcherPrivate::fetchJobDone(KJob *job)
         return;
     }
 
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
 
     const Item::List list = fetchJob->items();
 
@@ -75,7 +75,7 @@ void PartFetcherPrivate::fetchJobDone(KJob *job)
 
     item.apply(list.at(0));
 
-    QAbstractItemModel *model = const_cast<QAbstractItemModel *>(m_persistentIndex.model());
+    auto *model = const_cast<QAbstractItemModel *>(m_persistentIndex.model());
 
     Q_ASSERT(model);
 
@@ -120,7 +120,7 @@ void PartFetcher::start()
         return;
     }
 
-    Akonadi::Session *session = qobject_cast<Akonadi::Session *>(qvariant_cast<QObject *>(index.data(EntityTreeModel::SessionRole)));
+    auto *session = qobject_cast<Akonadi::Session *>(qvariant_cast<QObject *>(index.data(EntityTreeModel::SessionRole)));
 
     if (!session) {
         setError(UserDefinedError);
@@ -140,7 +140,7 @@ void PartFetcher::start()
 
     ItemFetchScope scope;
     scope.fetchPayloadPart(d->m_partName);
-    ItemFetchJob *itemFetchJob = new Akonadi::ItemFetchJob(item, session);
+    auto *itemFetchJob = new Akonadi::ItemFetchJob(item, session);
     itemFetchJob->setFetchScope(scope);
     connect(itemFetchJob, &KJob::result, this, [d](KJob *job) { d->fetchJobDone(job); });
 }

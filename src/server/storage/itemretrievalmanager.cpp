@@ -152,7 +152,7 @@ void ItemRetrievalManager::processRequest()
 
     // Start the jobs
     for (auto *job : newJobs) {
-        if (ItemRetrievalJob *j = qobject_cast<ItemRetrievalJob *>(job)) {
+        if (auto *j = qobject_cast<ItemRetrievalJob *>(job)) {
             j->setInterface(resourceInterface(j->request().resourceId));
         }
         job->start();

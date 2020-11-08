@@ -215,7 +215,7 @@ QString Collection::name() const
 
 QString Collection::displayName() const
 {
-    const EntityDisplayAttribute *const attr = attribute<EntityDisplayAttribute>();
+    const auto *const attr = attribute<EntityDisplayAttribute>();
     const QString displayName = attr ? attr->displayName() : QString();
     return !displayName.isEmpty() ? displayName : d_ptr->name;
 }

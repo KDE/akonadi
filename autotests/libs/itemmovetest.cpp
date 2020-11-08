@@ -74,14 +74,14 @@ private Q_SLOTS:
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);   // for rid based moves
 
-        ItemFetchJob *prefetchjob = new ItemFetchJob(destination, this);
+        auto *prefetchjob = new ItemFetchJob(destination, this);
         AKVERIFYEXEC(prefetchjob);
         int baseline = prefetchjob->items().size();
 
-        ItemMoveJob *move = new ItemMoveJob(items, source, destination, this);
+        auto *move = new ItemMoveJob(items, source, destination, this);
         AKVERIFYEXEC(move);
 
-        ItemFetchJob *fetch = new ItemFetchJob(destination, this);
+        auto *fetch = new ItemFetchJob(destination, this);
         fetch->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
         fetch->fetchScope().fetchFullPayload();
         AKVERIFYEXEC(fetch);

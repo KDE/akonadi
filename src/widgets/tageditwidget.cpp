@@ -43,7 +43,7 @@ public:
     {
         Q_ASSERT(m_checkableProxy);
 
-        QItemSelectionModel *selectionModel = new QItemSelectionModel(model, m_checkableProxy.get());
+        auto *selectionModel = new QItemSelectionModel(model, m_checkableProxy.get());
         m_checkableProxy->setSourceModel(model);
         m_checkableProxy->setSelectionModel(selectionModel);
     }

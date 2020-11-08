@@ -60,7 +60,7 @@ QByteArray Akonadi::EntityDeletedAttribute::type() const
 
 EntityDeletedAttribute *EntityDeletedAttribute::clone() const
 {
-    EntityDeletedAttribute *attr = new EntityDeletedAttribute();
+    auto *attr = new EntityDeletedAttribute();
     attr->d->restoreCollection = d->restoreCollection;
     attr->d->restoreResource = d->restoreResource;
     return attr;

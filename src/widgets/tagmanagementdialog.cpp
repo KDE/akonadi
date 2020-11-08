@@ -51,7 +51,7 @@ TagManagementDialog::TagManagementDialog(QWidget *parent)
     : QDialog(parent)
     , d(new Private(this))
 {
-    Monitor *monitor = new Monitor(this);
+    auto *monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagManagementDialogMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 

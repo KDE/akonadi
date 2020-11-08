@@ -221,7 +221,7 @@ QVariant EntityTreeModel::data(const QModelIndex &index, int role) const
     }
 
     // Ugly, but at least the API is clean.
-    const HeaderGroup headerGroup = static_cast<HeaderGroup>((role / static_cast<int>(TerminalUserRole)));
+    const auto headerGroup = static_cast<HeaderGroup>((role / static_cast<int>(TerminalUserRole)));
 
     role %= TerminalUserRole;
     if (!index.isValid()) {
@@ -676,7 +676,7 @@ QVariant EntityTreeModel::entityHeaderData(int section, Qt::Orientation orientat
 
 QVariant EntityTreeModel::headerData(int section, Qt::Orientation orientation, int role) const
 {
-    const HeaderGroup headerGroup = static_cast<HeaderGroup>((role / static_cast<int>(TerminalUserRole)));
+    const auto headerGroup = static_cast<HeaderGroup>((role / static_cast<int>(TerminalUserRole)));
 
     role %= TerminalUserRole;
     return entityHeaderData(section, orientation, role, headerGroup);
@@ -686,7 +686,7 @@ QMimeData *EntityTreeModel::mimeData(const QModelIndexList &indexes) const
 {
     Q_D(const EntityTreeModel);
 
-    QMimeData *data = new QMimeData();
+    auto *data = new QMimeData();
     QList<QUrl> urls;
     for (const QModelIndex &index : indexes) {
         if (index.column() != 0) {
@@ -763,22 +763,22 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
             if (Qt::EditRole == role) {
                 collection.setName(value.toString());
                 if (collection.hasAttribute<EntityDisplayAttribute>()) {
-                    EntityDisplayAttribute *displayAttribute = collection.attribute<EntityDisplayAttribute>();
+                    auto *displayAttribute = collection.attribute<EntityDisplayAttribute>();
                     displayAttribute->setDisplayName(value.toString());
                 }
             } else if (Qt::BackgroundRole == role) {
-                QColor color = value.value<QColor>();
+                auto color = value.value<QColor>();
                 if (!color.isValid()) {
                     return false;
                 }
 
-                EntityDisplayAttribute *eda = collection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
+                auto *eda = collection.attribute<EntityDisplayAttribute>(Collection::AddIfMissing);
                 eda->setBackgroundColor(color);
             } else if (CollectionRole == role) {
                 collection = value.value<Collection>();
             }
 
-            CollectionModifyJob *job = new CollectionModifyJob(collection, d->m_session);
+            auto *job = new CollectionModifyJob(collection, d->m_session);
             connect(job, SIGNAL(result(KJob*)), SLOT(updateJobDone(KJob*)));
 
             return false;
@@ -790,23 +790,23 @@ bool EntityTreeModel::setData(const QModelIndex &index, const QVariant &value, i
 
             if (Qt::EditRole == role) {
                 if (item.hasAttribute<EntityDisplayAttribute>()) {
-                    EntityDisplayAttribute *displayAttribute = item.attribute<EntityDisplayAttribute>(Item::AddIfMissing);
+                    auto *displayAttribute = item.attribute<EntityDisplayAttribute>(Item::AddIfMissing);
                     displayAttribute->setDisplayName(value.toString());
                 }
             } else if (Qt::BackgroundRole == role) {
-                QColor color = value.value<QColor>();
+                auto color = value.value<QColor>();
                 if (!color.isValid()) {
                     return false;
                 }
 
-                EntityDisplayAttribute *eda = item.attribute<EntityDisplayAttribute>(Item::AddIfMissing);
+                auto *eda = item.attribute<EntityDisplayAttribute>(Item::AddIfMissing);
                 eda->setBackgroundColor(color);
             } else if (ItemRole == role) {
                 item = value.value<Item>();
                 Q_ASSERT(item.id() == node->id);
             }
 
-            ItemModifyJob *itemModifyJob = new ItemModifyJob(item, d->m_session);
+            auto *itemModifyJob = new ItemModifyJob(item, d->m_session);
             connect(itemModifyJob, SIGNAL(result(KJob*)), SLOT(updateJobDone(KJob*)));
 
             return false;
@@ -1050,7 +1050,7 @@ EntityTreeModel::CollectionFetchStrategy EntityTreeModel::collectionFetchStrateg
 static QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> proxiesAndModel(const QAbstractItemModel *model)
 {
     QList<const QAbstractProxyModel *> proxyChain;
-    const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel *>(model);
+    const auto *proxy = qobject_cast<const QAbstractProxyModel *>(model);
     const QAbstractItemModel *_model = model;
     while (proxy) {
         proxyChain.prepend(proxy);
@@ -1058,7 +1058,7 @@ static QPair<QList<const QAbstractProxyModel *>, const EntityTreeModel *> proxie
         proxy = qobject_cast<const QAbstractProxyModel *>(_model);
     }
 
-    const EntityTreeModel *etm = qobject_cast<const EntityTreeModel *>(_model);
+    const auto *etm = qobject_cast<const EntityTreeModel *>(_model);
     return qMakePair(proxyChain, etm);
 }
 
@@ -1106,7 +1106,7 @@ QModelIndexList EntityTreeModel::modelIndexesForItem(const QAbstractItemModel *m
 Collection EntityTreeModel::updatedCollection(const QAbstractItemModel *model,
                                               qint64 collectionId)
 {
-    const QAbstractProxyModel *proxy = qobject_cast<const QAbstractProxyModel*>(model);
+    const auto *proxy = qobject_cast<const QAbstractProxyModel*>(model);
     const QAbstractItemModel *_model = model;
     while (proxy) {
         _model = proxy->sourceModel();

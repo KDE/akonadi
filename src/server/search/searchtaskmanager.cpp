@@ -268,7 +268,7 @@ void SearchTaskManager::searchLoop()
                 if (!mRunningTasks.contains(it->first)) {
                     const auto &[resource, colId] = *it;
                     qCDebug(AKONADISERVER_SEARCH_LOG) << "\t Sending query for collection" << colId << "to resource" << resource;
-                    ResourceTask *rTask = new ResourceTask;
+                    auto *rTask = new ResourceTask;
                     rTask->resourceId = resource;
                     rTask->collectionId = colId;
                     rTask->parentTask = task;

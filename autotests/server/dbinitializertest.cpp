@@ -129,7 +129,7 @@ void DbInitializerTest::testRun()
 
         StatementCollector collector;
         initializer->setTestInterface(&collector);
-        DbFakeIntrospector *introspector = new DbFakeIntrospector(db);
+        auto *introspector = new DbFakeIntrospector(db);
         introspector->m_hasTable = hasTable;
         introspector->m_hasIndex = hasTable;
         introspector->m_tableEmpty = !hasTable;

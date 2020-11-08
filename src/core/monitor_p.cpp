@@ -621,7 +621,7 @@ void MonitorPrivate::updatePendingStatistics(const Protocol::ChangeNotificationP
 
 void MonitorPrivate::slotSessionDestroyed(QObject *object)
 {
-    Session *objectSession = qobject_cast<Session *>(object);
+    auto *objectSession = qobject_cast<Session *>(object);
     if (objectSession) {
         sessions.removeAll(objectSession->sessionId());
         pendingModification.stopIgnoringSession(objectSession->sessionId());
@@ -634,7 +634,7 @@ void MonitorPrivate::slotStatisticsChangedFinished(KJob *job)
     if (job->error()) {
         qCWarning(AKONADICORE_LOG) << "Error on fetching collection statistics: " << job->errorText();
     } else {
-        CollectionStatisticsJob *statisticsJob = static_cast<CollectionStatisticsJob *>(job);
+        auto *statisticsJob = static_cast<CollectionStatisticsJob *>(job);
         Q_ASSERT(statisticsJob->collection().isValid());
         Q_EMIT q_ptr->collectionStatisticsChanged(statisticsJob->collection().id(),
                                                 statisticsJob->statistics());

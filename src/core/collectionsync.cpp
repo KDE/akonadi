@@ -434,7 +434,7 @@ public:
             // The parent already exists locally
             if (parentCollection == akonadiRootCollection || parentCollection.id() > 0) {
                 ++pendingJobs;
-                CollectionCreateJob *create = new CollectionCreateJob(col, currentTransaction);
+                auto *create = new CollectionCreateJob(col, currentTransaction);
                 QObject::connect(create, &KJob::result, q, [this](KJob *job) { createLocalCollectionResult(job); });
 
                 // Commit transaction after every 100 collections are created,
@@ -564,7 +564,7 @@ public:
             Collection c(upd);
             c.setParentCollection(local.parentCollection());
             ++pendingJobs;
-            CollectionModifyJob *mod = new CollectionModifyJob(c, currentTransaction);
+            auto *mod = new CollectionModifyJob(c, currentTransaction);
             QObject::connect(mod, &KJob::result, q, [this](KJob *job) { updateLocalCollectionResult(job); });
 
             // detecting moves is only possible with global RIDs
@@ -609,7 +609,7 @@ public:
 
             ++pendingJobs;
             Q_ASSERT(currentTransaction);
-            CollectionDeleteJob *job = new CollectionDeleteJob(col, currentTransaction);
+            auto *job = new CollectionDeleteJob(col, currentTransaction);
             connect(job, &KJob::result, q, [this](KJob *job) { deleteLocalCollectionsResult(job); });
 
             // It can happen that the groupware servers report us deleted collections
@@ -703,7 +703,7 @@ public:
 
         if (!localListDone && deliveryDone) {
             Job *parent = (currentTransaction ? static_cast<Job *>(currentTransaction) : static_cast<Job *>(q));
-            CollectionFetchJob *job = new CollectionFetchJob(akonadiRootCollection, CollectionFetchJob::Recursive, parent);
+            auto *job = new CollectionFetchJob(akonadiRootCollection, CollectionFetchJob::Recursive, parent);
             job->fetchScope().setResource(resourceId);
             job->fetchScope().setListFilter(CollectionFetchScope::NoFilter);
             job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);

@@ -164,14 +164,14 @@ QByteArray Tag::remoteId() const
 void Tag::setName(const QString &name)
 {
     if (!name.isEmpty()) {
-        TagAttribute *const attr = attribute<TagAttribute>(Tag::AddIfMissing);
+        auto *const attr = attribute<TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(name);
     }
 }
 
 QString Tag::name() const
 {
-    const TagAttribute *const attr = attribute<TagAttribute>();
+    const auto *const attr = attribute<TagAttribute>();
     const QString displayName = attr ? attr->displayName() : QString();
     return !displayName.isEmpty() ? displayName : QString::fromUtf8(d_ptr->gid);
 }

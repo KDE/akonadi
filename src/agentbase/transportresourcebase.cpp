@@ -41,7 +41,7 @@ void TransportResourceBasePrivate::fetchResult(KJob *job)
         return;
     }
 
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
     Q_ASSERT(fetchJob);
 
     const Item item = fetchJob->items().at(0);

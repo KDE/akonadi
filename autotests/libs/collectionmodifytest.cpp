@@ -32,7 +32,7 @@ private Q_SLOTS:
         col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QLatin1String("res1"))));
         col.setRights(Collection::AllRights);
 
-        CollectionCreateJob *cj = new CollectionCreateJob(col, this);
+        auto *cj = new CollectionCreateJob(col, this);
         AKVERIFYEXEC(cj);
         col = cj->collection();
         QVERIFY(col.isValid());
@@ -41,10 +41,10 @@ private Q_SLOTS:
         attr->setDisplayName(QStringLiteral("Test Collection"));
         col.setContentMimeTypes({ Collection::mimeType(), QLatin1String("application/octet-stream") });
 
-        CollectionModifyJob *mj = new CollectionModifyJob(col, this);
+        auto *mj = new CollectionModifyJob(col, this);
         AKVERIFYEXEC(mj);
 
-        CollectionFetchJob *fj = new CollectionFetchJob(col, CollectionFetchJob::Base);
+        auto *fj = new CollectionFetchJob(col, CollectionFetchJob::Base);
         AKVERIFYEXEC(fj);
         QCOMPARE(fj->collections().count(), 1);
         const Collection actual = fj->collections().at(0);
@@ -56,7 +56,7 @@ private Q_SLOTS:
         QCOMPARE(actual.parentCollection(), col.parentCollection());
         QCOMPARE(actual.rights(), col.rights());
 
-        CollectionDeleteJob *dj = new CollectionDeleteJob(col, this);
+        auto *dj = new CollectionDeleteJob(col, this);
         AKVERIFYEXEC(dj);
     }
 };

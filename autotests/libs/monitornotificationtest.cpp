@@ -67,14 +67,14 @@ void MonitorNotificationTest::testSingleMessage()
 {
     QFETCH(bool, useChangeRecorder);
 
-    FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
+    auto *collectionCache = new FakeCollectionCache(m_fakeSession);
     FakeItemCache itemCache(m_fakeSession);
-    FakeMonitorDependenciesFactory *depsFactory = new FakeMonitorDependenciesFactory(&itemCache, collectionCache);
+    auto *depsFactory = new FakeMonitorDependenciesFactory(&itemCache, collectionCache);
 
     if (!useChangeRecorder) {
         testSingleMessage_impl(new InspectableMonitor(depsFactory, this), collectionCache, &itemCache);
     } else {
-        InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
+        auto *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
         changeRecorder->setChangeRecordingEnabled(false);
         testSingleMessage_impl(changeRecorder, collectionCache, &itemCache);
     }
@@ -138,14 +138,14 @@ void MonitorNotificationTest::testFillPipeline()
 {
     QFETCH(bool, useChangeRecorder);
 
-    FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
+    auto *collectionCache = new FakeCollectionCache(m_fakeSession);
     FakeItemCache itemCache(m_fakeSession);
-    FakeMonitorDependenciesFactory *depsFactory = new FakeMonitorDependenciesFactory(&itemCache, collectionCache);
+    auto *depsFactory = new FakeMonitorDependenciesFactory(&itemCache, collectionCache);
 
     if (!useChangeRecorder) {
         testFillPipeline_impl(new InspectableMonitor(depsFactory, this), collectionCache, &itemCache);
     } else {
-        InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
+        auto *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
         changeRecorder->setChangeRecordingEnabled(false);
         testFillPipeline_impl(changeRecorder, collectionCache, &itemCache);
     }
@@ -208,14 +208,14 @@ void MonitorNotificationTest::testMonitor()
 {
     QFETCH(bool, useChangeRecorder);
 
-    FakeCollectionCache *collectionCache = new FakeCollectionCache(m_fakeSession);
+    auto *collectionCache = new FakeCollectionCache(m_fakeSession);
     FakeItemCache itemCache(m_fakeSession);
-    FakeMonitorDependenciesFactory *depsFactory = new FakeMonitorDependenciesFactory(&itemCache, collectionCache);
+    auto *depsFactory = new FakeMonitorDependenciesFactory(&itemCache, collectionCache);
 
     if (!useChangeRecorder) {
         testMonitor_impl(new InspectableMonitor(depsFactory, this), collectionCache, &itemCache);
     } else {
-        InspectableChangeRecorder *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
+        auto *changeRecorder = new InspectableChangeRecorder(depsFactory, this);
         changeRecorder->setChangeRecordingEnabled(false);
         testMonitor_impl(changeRecorder, collectionCache, &itemCache);
     }

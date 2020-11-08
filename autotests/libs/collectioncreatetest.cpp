@@ -34,7 +34,7 @@ private Q_SLOTS:
         col.setParentCollection(Collection(AkonadiTest::collectionIdFromPath(QLatin1String("res1"))));
         col.setRights(Collection::AllRights);
 
-        CollectionCreateJob *cj = new CollectionCreateJob(col, this);
+        auto *cj = new CollectionCreateJob(col, this);
         AKVERIFYEXEC(cj);
         col = cj->collection();
         QVERIFY(col.isValid());
@@ -43,7 +43,7 @@ private Q_SLOTS:
         auto ntfCol = spy.at(0).at(0).value<Collection>();
         QCOMPARE(col, ntfCol);
 
-        CollectionDeleteJob *dj = new CollectionDeleteJob(col, this);
+        auto *dj = new CollectionDeleteJob(col, this);
         AKVERIFYEXEC(dj);
     }
 };

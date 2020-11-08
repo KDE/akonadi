@@ -46,11 +46,11 @@ private Q_SLOTS:
         AKVERIFYEXEC(copy);
 
         Item source(1);
-        ItemFetchJob *sourceFetch = new ItemFetchJob(source);
+        auto *sourceFetch = new ItemFetchJob(source);
         AKVERIFYEXEC(sourceFetch);
         source = sourceFetch->items().first();
 
-        ItemFetchJob *fetch = new ItemFetchJob(target);
+        auto *fetch = new ItemFetchJob(target);
         fetch->fetchScope().fetchFullPayload();
         fetch->fetchScope().fetchAllAttributes();
         fetch->fetchScope().setCacheOnly(true);

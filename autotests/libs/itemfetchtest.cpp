@@ -52,7 +52,7 @@ void ItemFetchTest::testFetch()
 
     int count = 0;
     for (int i = 0; i < spy.count(); ++i) {
-        Item::List l = spy[i][0].value<Akonadi::Item::List>();
+        auto l = spy[i][0].value<Akonadi::Item::List>();
         for (int j = 0; j < l.count(); ++j) {
             QVERIFY(items.count() > count + j);
             QCOMPARE(items[count + j], l[j]);
@@ -99,7 +99,7 @@ void ItemFetchTest::testResourceRetrieval()
 {
     Item item(1);
 
-    ItemFetchJob *job = new ItemFetchJob(item, this);
+    auto *job = new ItemFetchJob(item, this);
     job->fetchScope().fetchFullPayload(true);
     job->fetchScope().fetchAllAttributes(true);
     job->fetchScope().setCacheOnly(true);
@@ -184,7 +184,7 @@ void ItemFetchTest::testMultipartFetch()
     AKVERIFYEXEC(job);
     Item ref = job->item();
 
-    ItemFetchJob *fjob = new ItemFetchJob(ref, this);
+    auto *fjob = new ItemFetchJob(ref, this);
     fjob->setCollection(Collection(colId));
     if (fetchFullPayload) {
         fjob->fetchScope().fetchFullPayload();
@@ -221,7 +221,7 @@ void ItemFetchTest::testMultipartFetch()
     }
 
     // cleanup
-    ItemDeleteJob *djob = new ItemDeleteJob(ref, this);
+    auto *djob = new ItemDeleteJob(ref, this);
     AKVERIFYEXEC(djob);
 }
 
@@ -235,7 +235,7 @@ void ItemFetchTest::testRidFetch()
     ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"), this);
     AKVERIFYEXEC(select);
 
-    ItemFetchJob *job = new ItemFetchJob(item, this);
+    auto *job = new ItemFetchJob(item, this);
     job->setCollection(col);
     AKVERIFYEXEC(job);
     QCOMPARE(job->items().count(), 1);

@@ -116,7 +116,7 @@ void Firstrun::setupNext()
         }
     }
 
-    AgentInstanceCreateJob *job = new AgentInstanceCreateJob(type);
+    auto *job = new AgentInstanceCreateJob(type);
     connect(job, &AgentInstanceCreateJob::result, this, &Firstrun::instanceCreated);
     job->start();
 }

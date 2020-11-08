@@ -26,24 +26,24 @@ void ConflictResolveDialogTest::shouldHaveDefaultValues()
 
     QVERIFY(!dlg.windowTitle().isEmpty());
 
-    QPushButton *takeLeftButton = dlg.findChild<QPushButton *>(QStringLiteral("takeLeftButton"));
+    auto *takeLeftButton = dlg.findChild<QPushButton *>(QStringLiteral("takeLeftButton"));
     QVERIFY(takeLeftButton);
     QVERIFY(!takeLeftButton->text().isEmpty());
 
-    QPushButton *takeRightButton = dlg.findChild<QPushButton *>(QStringLiteral("takeRightButton"));
+    auto *takeRightButton = dlg.findChild<QPushButton *>(QStringLiteral("takeRightButton"));
     QVERIFY(takeRightButton);
     QVERIFY(!takeRightButton->text().isEmpty());
 
-    QPushButton *keepBothButton = dlg.findChild<QPushButton *>(QStringLiteral("keepBothButton"));
+    auto *keepBothButton = dlg.findChild<QPushButton *>(QStringLiteral("keepBothButton"));
     QVERIFY(keepBothButton);
     QVERIFY(!keepBothButton->text().isEmpty());
     QVERIFY(keepBothButton->isDefault());
 
-    QTextBrowser *mView = dlg.findChild<QTextBrowser *>(QStringLiteral("view"));
+    auto *mView = dlg.findChild<QTextBrowser *>(QStringLiteral("view"));
     QVERIFY(mView);
     QVERIFY(mView->toPlainText().isEmpty());
 
-    QLabel *docuLabel = dlg.findChild<QLabel *>(QStringLiteral("doculabel"));
+    auto *docuLabel = dlg.findChild<QLabel *>(QStringLiteral("doculabel"));
     QVERIFY(docuLabel);
     QVERIFY(!docuLabel->text().isEmpty());
     QVERIFY(docuLabel->wordWrap());

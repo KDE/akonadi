@@ -52,7 +52,7 @@ TagSelectionDialog::TagSelectionDialog(QWidget *parent)
 {
     d->ui.setupUi(this);
 
-    Monitor *monitor = new Monitor(this);
+    auto *monitor = new Monitor(this);
     monitor->setObjectName(QStringLiteral("TagSelectionDialogMonitor"));
     monitor->setTypeMonitored(Monitor::Tags);
 

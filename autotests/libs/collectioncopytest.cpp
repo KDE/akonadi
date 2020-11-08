@@ -43,7 +43,7 @@ private Q_SLOTS:
         QVERIFY(source.isValid());
 
         // obtain reference listing
-        CollectionFetchJob *fetch = new CollectionFetchJob(source, CollectionFetchJob::Base);
+        auto *fetch = new CollectionFetchJob(source, CollectionFetchJob::Base);
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->collections().count(), 1);
         source = fetch->collections().first();
@@ -55,17 +55,17 @@ private Q_SLOTS:
         Collection::List cols = fetch->collections();
         cols << source;
         for (const Collection &c : qAsConst(cols)) {
-            ItemFetchJob *job = new ItemFetchJob(c, this);
+            auto *job = new ItemFetchJob(c, this);
             AKVERIFYEXEC(job);
             referenceData.insert(c, job->items());
         }
 
         // actually copy the collection
-        CollectionCopyJob *copy = new CollectionCopyJob(source, target);
+        auto *copy = new CollectionCopyJob(source, target);
         AKVERIFYEXEC(copy);
 
         // list destination and check if everything has arrived
-        CollectionFetchJob *list = new CollectionFetchJob(target, CollectionFetchJob::Recursive);
+        auto *list = new CollectionFetchJob(target, CollectionFetchJob::Recursive);
         AKVERIFYEXEC(list);
         cols = list->collections();
         QCOMPARE(cols.count(), referenceData.count());
@@ -81,7 +81,7 @@ private Q_SLOTS:
             QVERIFY(col.isValid());
             QCOMPARE(col.resource(), QStringLiteral("akonadi_knut_resource_2"));
             QVERIFY(col.remoteId().isEmpty());
-            ItemFetchJob *job = new ItemFetchJob(col, this);
+            auto *job = new ItemFetchJob(col, this);
             job->fetchScope().fetchFullPayload();
             job->fetchScope().setCacheOnly(true);
             AKVERIFYEXEC(job);

@@ -50,7 +50,7 @@ public:
 
     void getCountRecursive(const QModelIndex &index, qint64 &totalCount, qint64 &unreadCount, qint64 &totalSize) const
     {
-        Collection collection = qvariant_cast<Collection>(index.data(EntityTreeModel::CollectionRole));
+        auto collection = qvariant_cast<Collection>(index.data(EntityTreeModel::CollectionRole));
         // Do not assert on invalid collections, since a collection may be deleted
         // in the meantime and deleted collections are invalid.
         if (collection.isValid()) {
@@ -118,7 +118,7 @@ void CollectionStatisticsDelegate::setProgressAnimationEnabled(bool enable)
     }
     if (enable) {
         Q_ASSERT(!d->animator);
-        Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator(d->parent);
+        auto *animator = new Akonadi::DelegateAnimator(d->parent);
         d->animator = animator;
     } else {
         delete d->animator;
@@ -137,7 +137,7 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
 {
     Q_D(const CollectionStatisticsDelegate);
 
-    QStyleOptionViewItem *noTextOption =
+    auto *noTextOption =
         qstyleoption_cast<QStyleOptionViewItem *>(option);
     QStyledItemDelegate::initStyleOption(noTextOption, index);
     if (option->decorationPosition != QStyleOptionViewItem::Top) {
@@ -156,7 +156,7 @@ void CollectionStatisticsDelegate::initStyleOption(QStyleOptionViewItem *option,
 
         d->animator->push(index);
 
-        if (QStyleOptionViewItem *v4 = qstyleoption_cast<QStyleOptionViewItem *>(option)) {
+        if (auto *v4 = qstyleoption_cast<QStyleOptionViewItem *>(option)) {
             v4->icon = d->animator->sequenceFrame(index);
         }
     }
@@ -188,7 +188,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     Q_D(const CollectionStatisticsDelegate);
     PainterStateSaver stateSaver(painter);
 
-    const QColor textColor = index.data(Qt::ForegroundRole).value<QColor>();
+    const auto textColor = index.data(Qt::ForegroundRole).value<QColor>();
     // First, paint the basic, but without the text. We remove the text
     // in initStyleOption(), which gets called by QStyledItemDelegate::paint().
     QStyledItemDelegate::paint(painter, option, index);
@@ -207,7 +207,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
     // When checking if the item is expanded, we need to check that for the first
     // column, as Qt only recognizes the index as expanded for the first column
     const QModelIndex firstColumn = index.sibling(index.row(), 0);
-    QTreeView *treeView = qobject_cast<QTreeView *>(d->parent);
+    auto *treeView = qobject_cast<QTreeView *>(d->parent);
     bool expanded = treeView && treeView->isExpanded(firstColumn);
 
     if (index.data(EntityTreeModel::PendingCutRole).toBool()) {
@@ -218,7 +218,7 @@ void CollectionStatisticsDelegate::paint(QPainter *painter,
         painter->setPen(textColor.isValid() ? textColor : option.palette.text().color());
     }
 
-    Collection collection = firstColumn.data(EntityTreeModel::CollectionRole).value<Collection>();
+    auto collection = firstColumn.data(EntityTreeModel::CollectionRole).value<Collection>();
 
     if (!collection.isValid()) {
         qCCritical(AKONADIWIDGETS_LOG) << "Invalid collection at index" << firstColumn << firstColumn.data().toString() << "sibling of" << index << "rowCount=" << index.model()->rowCount(index.parent()) << "parent=" << index.parent().data().toString();

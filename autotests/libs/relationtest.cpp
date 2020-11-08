@@ -50,20 +50,20 @@ void RelationTest::testCreateFetch()
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
     Item item2;
     {
         item2.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item2, res3, this);
+        auto *append = new ItemCreateJob(item2, res3, this);
         AKVERIFYEXEC(append);
         item2 = append->item();
     }
 
     Relation rel(Relation::GENERIC, item1, item2);
-    RelationCreateJob *createjob = new RelationCreateJob(rel, this);
+    auto *createjob = new RelationCreateJob(rel, this);
     AKVERIFYEXEC(createjob);
 
     //Test fetch & create
@@ -76,14 +76,14 @@ void RelationTest::testCreateFetch()
 
     //Test item fetch
     {
-        ItemFetchJob *fetchJob = new ItemFetchJob(item1);
+        auto *fetchJob = new ItemFetchJob(item1);
         fetchJob->fetchScope().setFetchRelations(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->items().first().relations().size(), 1);
     }
 
     {
-        ItemFetchJob *fetchJob = new ItemFetchJob(item2);
+        auto *fetchJob = new ItemFetchJob(item2);
         fetchJob->fetchScope().setFetchRelations(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->items().first().relations().size(), 1);
@@ -91,7 +91,7 @@ void RelationTest::testCreateFetch()
 
     //Test delete
     {
-        RelationDeleteJob *deleteJob = new RelationDeleteJob(rel, this);
+        auto *deleteJob = new RelationDeleteJob(rel, this);
         AKVERIFYEXEC(deleteJob);
 
         RelationFetchJob *fetchJob = new RelationFetchJob(QVector<QByteArray>(), this);
@@ -110,14 +110,14 @@ void RelationTest::testMonitor()
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
     Item item2;
     {
         item2.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item2, res3, this);
+        auto *append = new ItemCreateJob(item2, res3, this);
         AKVERIFYEXEC(append);
         item2 = append->item();
     }
@@ -127,7 +127,7 @@ void RelationTest::testMonitor()
     {
         QSignalSpy addedSpy(&monitor, &Monitor::relationAdded);
 
-        RelationCreateJob *createjob = new RelationCreateJob(rel, this);
+        auto *createjob = new RelationCreateJob(rel, this);
         AKVERIFYEXEC(createjob);
 
         //We usually pick up signals from the previous tests as well (due to server-side notification caching)
@@ -138,7 +138,7 @@ void RelationTest::testMonitor()
     {
         QSignalSpy removedSpy(&monitor, &Monitor::relationRemoved);
         QVERIFY(removedSpy.isValid());
-        RelationDeleteJob *deleteJob = new RelationDeleteJob(rel, this);
+        auto *deleteJob = new RelationDeleteJob(rel, this);
         AKVERIFYEXEC(deleteJob);
         QTRY_VERIFY(removedSpy.count() >= 1);
         QTRY_COMPARE(removedSpy.last().first().value<Akonadi::Relation>(), rel);

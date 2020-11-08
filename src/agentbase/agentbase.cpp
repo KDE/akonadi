@@ -478,7 +478,7 @@ void AgentBasePrivate::itemChanged(const Akonadi::Item &item, const QSet<QByteAr
 
 void AgentBasePrivate::itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest)
 {
-    AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
+    auto *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (mObserver) {
         // inter-resource moves, requires we know which resources the source and destination are in though
         if (!source.resource().isEmpty() && !dest.resource().isEmpty()) {
@@ -522,7 +522,7 @@ void AgentBasePrivate::itemRemoved(const Akonadi::Item &item)
 
 void AgentBasePrivate::itemLinked(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
+    auto *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (observer2) {
         observer2->itemLinked(item, collection);
     } else {
@@ -532,7 +532,7 @@ void AgentBasePrivate::itemLinked(const Akonadi::Item &item, const Akonadi::Coll
 
 void AgentBasePrivate::itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
+    auto *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (observer2) {
         observer2->itemUnlinked(item, collection);
     } else {
@@ -542,7 +542,7 @@ void AgentBasePrivate::itemUnlinked(const Akonadi::Item &item, const Akonadi::Co
 
 void AgentBasePrivate::itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags)
 {
-    AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
+    auto *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
     if (observer3) {
         observer3->itemsFlagsChanged(items, addedFlags, removedFlags);
     } else {
@@ -552,7 +552,7 @@ void AgentBasePrivate::itemsFlagsChanged(const Akonadi::Item::List &items, const
 
 void AgentBasePrivate::itemsMoved(const Akonadi::Item::List &items, const Akonadi::Collection &source, const Akonadi::Collection &destination)
 {
-    AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
+    auto *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
     if (observer3) {
         observer3->itemsMoved(items, source, destination);
     } else {
@@ -562,7 +562,7 @@ void AgentBasePrivate::itemsMoved(const Akonadi::Item::List &items, const Akonad
 
 void AgentBasePrivate::itemsRemoved(const Akonadi::Item::List &items)
 {
-    AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
+    auto *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
     if (observer3) {
         observer3->itemsRemoved(items);
     } else {
@@ -577,7 +577,7 @@ void AgentBasePrivate::itemsLinked(const Akonadi::Item::List &items, const Akona
         return;
     }
 
-    AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
+    auto *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
     if (observer3) {
         observer3->itemsLinked(items, collection);
     } else {
@@ -592,7 +592,7 @@ void AgentBasePrivate::itemsUnlinked(const Akonadi::Item::List &items, const Ako
         return;
     }
 
-    AgentBase::ObserverV3 *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
+    auto *observer3 = dynamic_cast<AgentBase::ObserverV3 *>(mObserver);
     if (observer3) {
         observer3->itemsUnlinked(items, collection);
     } else {
@@ -602,7 +602,7 @@ void AgentBasePrivate::itemsUnlinked(const Akonadi::Item::List &items, const Ako
 
 void AgentBasePrivate::tagAdded(const Akonadi::Tag &tag)
 {
-    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    auto *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->tagAdded(tag);
     } else {
@@ -612,7 +612,7 @@ void AgentBasePrivate::tagAdded(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::tagChanged(const Akonadi::Tag &tag)
 {
-    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    auto *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->tagChanged(tag);
     } else {
@@ -622,7 +622,7 @@ void AgentBasePrivate::tagChanged(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::tagRemoved(const Akonadi::Tag &tag)
 {
-    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    auto *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->tagRemoved(tag);
     } else {
@@ -632,7 +632,7 @@ void AgentBasePrivate::tagRemoved(const Akonadi::Tag &tag)
 
 void AgentBasePrivate::itemsTagsChanged(const Akonadi::Item::List &items, const QSet<Akonadi::Tag> &addedTags, const QSet<Akonadi::Tag> &removedTags)
 {
-    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    auto *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->itemsTagsChanged(items, addedTags, removedTags);
     } else {
@@ -642,7 +642,7 @@ void AgentBasePrivate::itemsTagsChanged(const Akonadi::Item::List &items, const 
 
 void AgentBasePrivate::relationAdded(const Akonadi::Relation &relation)
 {
-    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    auto *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->relationAdded(relation);
     } else {
@@ -652,7 +652,7 @@ void AgentBasePrivate::relationAdded(const Akonadi::Relation &relation)
 
 void AgentBasePrivate::relationRemoved(const Akonadi::Relation &relation)
 {
-    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    auto *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->relationRemoved(relation);
     } else {
@@ -664,7 +664,7 @@ void AgentBasePrivate::itemsRelationsChanged(const Akonadi::Item::List &items,
         const Akonadi::Relation::List &addedRelations,
         const Akonadi::Relation::List &removedRelations)
 {
-    AgentBase::ObserverV4 *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
+    auto *observer4 = dynamic_cast<AgentBase::ObserverV4 *>(mObserver);
     if (observer4) {
         observer4->itemsRelationsChanged(items, addedRelations, removedRelations);
     } else {
@@ -683,7 +683,7 @@ void AgentBasePrivate::collectionAdded(const Akonadi::Collection &collection, co
 
 void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection)
 {
-    AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
+    auto *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (mObserver && observer2 == nullptr) {   // For ObserverV2 we use the variant with the part identifiers
         mObserver->collectionChanged(collection);
     } else if (!mObserver) {
@@ -693,7 +693,7 @@ void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection)
 
 void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes)
 {
-    AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
+    auto *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (observer2) {
         observer2->collectionChanged(collection, changedAttributes);
     } else {
@@ -703,7 +703,7 @@ void AgentBasePrivate::collectionChanged(const Akonadi::Collection &collection, 
 
 void AgentBasePrivate::collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest)
 {
-    AgentBase::ObserverV2 *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
+    auto *observer2 = dynamic_cast<AgentBase::ObserverV2 *>(mObserver);
     if (observer2) {
         observer2->collectionMoved(collection, source, dest);
     } else if (mObserver) {
@@ -929,7 +929,7 @@ QString AgentBase::parseArguments(int argc, char **argv)
     // strip off full path and possible .exe suffix
     const QString catalog = fi.baseName();
 
-    QTranslator *translator = new QTranslator();
+    auto *translator = new QTranslator();
     translator->load(catalog);
     QCoreApplication::installTranslator(translator);
 

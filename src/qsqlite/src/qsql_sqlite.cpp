@@ -438,7 +438,7 @@ bool QSQLiteResult::exec()
             } else {
                 switch (value.type()) {
                 case QVariant::ByteArray: {
-                    const QByteArray *ba = static_cast<const QByteArray *>(value.constData());
+                    const auto *ba = static_cast<const QByteArray *>(value.constData());
                     res = sqlite3_bind_blob(d->stmt, i + 1, ba->constData(),
                                             ba->size(), SQLITE_STATIC);
                     break;
@@ -470,7 +470,7 @@ bool QSQLiteResult::exec()
                 }
                 case QVariant::String: {
                     // lifetime of string == lifetime of its qvariant
-                    const QString *str = static_cast<const QString *>(value.constData());
+                    const auto *str = static_cast<const QString *>(value.constData());
                     res = sqlite3_bind_text16(d->stmt, i + 1, str->utf16(),
                                               (str->size()) * sizeof(QChar), SQLITE_STATIC);
                     break;

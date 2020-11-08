@@ -147,7 +147,7 @@ QVariant SubscriptionModel::data(const QModelIndex &index, int role) const
     }
     case Qt::FontRole: {
         const auto col = index.data(EntityTreeModel::CollectionIdRole).toLongLong();
-        QFont font = QIdentityProxyModel::data(index, role).value<QFont>();
+        auto font = QIdentityProxyModel::data(index, role).value<QFont>();
         font.setBold(d->subscriptions.contains(col));
         return font;
     }

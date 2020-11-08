@@ -61,12 +61,12 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
     : QDialog(parent)
     , d(new Private(this))
 {
-    QVBoxLayout *layout = new QVBoxLayout(this);
+    auto *layout = new QVBoxLayout(this);
 
     d->Widget = new Akonadi::AgentTypeWidget(this);
     connect(d->Widget, &AgentTypeWidget::activated, this, &AgentTypeDialog::accept);
 
-    QLineEdit *searchLine = new QLineEdit(this);
+    auto *searchLine = new QLineEdit(this);
     layout->addWidget(searchLine);
     searchLine->setClearButtonEnabled(true);
     connect(searchLine, &QLineEdit::textChanged, this, [this](const QString &str) {
@@ -75,7 +75,7 @@ AgentTypeDialog::AgentTypeDialog(QWidget *parent)
 
     layout->addWidget(d->Widget);
 
-    QDialogButtonBox *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
+    auto *buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel, this);
     connect(buttonBox, &QDialogButtonBox::accepted, this, &AgentTypeDialog::accept);
     connect(buttonBox, &QDialogButtonBox::rejected, this, &AgentTypeDialog::reject);
     QPushButton *okButton = buttonBox->button(QDialogButtonBox::Ok);

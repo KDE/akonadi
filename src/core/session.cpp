@@ -379,7 +379,7 @@ void SessionPrivate::createDefaultSession(const QByteArray &sessionId)
     Q_ASSERT_X(!instances()->hasLocalData(), "SessionPrivate::createDefaultSession",
                "You tried to create a default session twice!");
 
-    Session *session = new Session(sessionId);
+    auto *session = new Session(sessionId);
     setDefaultSession(session);
 }
 

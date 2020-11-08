@@ -40,7 +40,7 @@ void ItemMonitor::setItem(const Item &item)
     }
 
     // start initial fetch of the new item
-    ItemFetchJob *job = new ItemFetchJob(d->mItem);
+    auto *job = new ItemFetchJob(d->mItem);
     job->setFetchScope(fetchScope());
 
     d->connect(job, &ItemFetchJob::result, d, [this](KJob* job) {d->initialFetchDone(job); });

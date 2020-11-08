@@ -462,7 +462,7 @@ struct Payload<T *> : public PayloadBase {
 */
 template <typename T> inline Payload<T> *payload_cast(PayloadBase *payloadBase)
 {
-    Payload<T> *p = dynamic_cast<Payload<T> *>(payloadBase);
+    auto *p = dynamic_cast<Payload<T> *>(payloadBase);
     // try harder to cast, workaround for some gcc issue with template instances in multiple DSO's
     if (!p && payloadBase && strcmp(payloadBase->typeName(), typeid(p).name()) == 0) {
         p = static_cast<Payload<T>*>(payloadBase);

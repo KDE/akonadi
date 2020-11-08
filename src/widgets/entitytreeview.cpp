@@ -59,8 +59,8 @@ public:
 
 void EntityTreeView::Private::init()
 {
-    Akonadi::DelegateAnimator *animator = new Akonadi::DelegateAnimator(mParent);
-    Akonadi::ProgressSpinnerDelegate *customDelegate = new Akonadi::ProgressSpinnerDelegate(animator, mParent);
+    auto *animator = new Akonadi::DelegateAnimator(mParent);
+    auto *customDelegate = new Akonadi::ProgressSpinnerDelegate(animator, mParent);
     mParent->setItemDelegate(customDelegate);
 
     mParent->header()->setSectionsClickable(true);
@@ -258,7 +258,7 @@ void EntityTreeView::contextMenuEvent(QContextMenuEvent *event)
                      QStringLiteral("akonadi_collectionview_contextmenu"));
     }
 
-    QMenu *popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(popupName, d->mXmlGuiClient));
+    auto *popup = static_cast<QMenu *>(d->mXmlGuiClient->factory()->container(popupName, d->mXmlGuiClient));
     if (popup) {
         popup->exec(event->globalPos());
     }

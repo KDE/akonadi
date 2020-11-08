@@ -64,7 +64,7 @@ void TagTest::initTestCase()
     qRegisterMetaType<Akonadi::Item::List>();
 
     // Delete the default Knut tag - it's interfering with this test
-    TagFetchJob *fetchJob = new TagFetchJob(this);
+    auto *fetchJob = new TagFetchJob(this);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->tags().size(), 1);
     TagDeleteJob *deleteJob = new TagDeleteJob(fetchJob->tags().first(), this);
@@ -110,12 +110,12 @@ void TagTest::testCreateFetch()
     Tag tag;
     tag.setGid("gid");
     tag.setType("mytype");
-    TagCreateJob *createjob = new TagCreateJob(tag, this);
+    auto *createjob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createjob);
     QVERIFY(createjob->tag().isValid());
 
     {
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
         QCOMPARE(fetchJob->tags().first().gid(), QByteArray("gid"));
@@ -126,7 +126,7 @@ void TagTest::testCreateFetch()
     }
 
     {
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 0);
     }
@@ -142,12 +142,12 @@ void TagTest::testRID()
     tag.setGid("gid");
     tag.setType("mytype");
     tag.setRemoteId("rid");
-    TagCreateJob *createjob = new TagCreateJob(tag, this);
+    auto *createjob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createjob);
     QVERIFY(createjob->tag().isValid());
 
     {
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
@@ -176,13 +176,13 @@ void TagTest::testRIDIsolation()
     tag.setType("mytype");
     tag.setRemoteId("rid_0");
 
-    TagCreateJob *createJob = new TagCreateJob(tag, this);
+    auto *createJob = new TagCreateJob(tag, this);
     AKVERIFYEXEC(createJob);
     QVERIFY(createJob->tag().isValid());
 
     qint64 tagId;
     {
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().count(), 1);
@@ -204,7 +204,7 @@ void TagTest::testRIDIsolation()
     QVERIFY(createJob->tag().isValid());
 
     {
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         fetchJob->fetchScope().setFetchRemoteId(true);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().count(), 1);
@@ -234,7 +234,7 @@ void TagTest::testDelete()
     Tag tag1;
     {
         tag1.setGid("tag1");
-        TagCreateJob *createjob = new TagCreateJob(tag1, this);
+        auto *createjob = new TagCreateJob(tag1, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         tag1 = createjob->tag();
@@ -242,24 +242,24 @@ void TagTest::testDelete()
     Tag tag2;
     {
         tag2.setGid("tag2");
-        TagCreateJob *createjob = new TagCreateJob(tag2, this);
+        auto *createjob = new TagCreateJob(tag2, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         tag2 = createjob->tag();
     }
     {
-        TagDeleteJob *deleteJob = new TagDeleteJob(tag1, this);
+        auto *deleteJob = new TagDeleteJob(tag1, this);
         AKVERIFYEXEC(deleteJob);
     }
 
     {
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
         QCOMPARE(fetchJob->tags().first().gid(), tag2.gid());
     }
     {
-        TagDeleteJob *deleteJob = new TagDeleteJob(tag2, this);
+        auto *deleteJob = new TagDeleteJob(tag2, this);
         AKVERIFYEXEC(deleteJob);
     }
 
@@ -278,7 +278,7 @@ void TagTest::testDeleteRIDIsolation()
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_0"));
         AKVERIFYEXEC(select);
 
-        TagCreateJob *createJob = new TagCreateJob(tag, this);
+        auto *createJob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createJob);
         QVERIFY(createJob->tag().isValid());
         tag.setId(createJob->tag().id());
@@ -289,7 +289,7 @@ void TagTest::testDeleteRIDIsolation()
         ResourceSelectJob *select = new ResourceSelectJob(QStringLiteral("akonadi_knut_resource_1"));
         AKVERIFYEXEC(select);
 
-        TagCreateJob *createJob = new TagCreateJob(tag, this);
+        auto *createJob = new TagCreateJob(tag, this);
         createJob->setMergeIfExisting(true);
         AKVERIFYEXEC(createJob);
         QVERIFY(createJob->tag().isValid());
@@ -298,7 +298,7 @@ void TagTest::testDeleteRIDIsolation()
     auto monitor = AkonadiTest::getTestMonitor();
     QSignalSpy signalSpy(monitor.get(), &Monitor::tagRemoved);
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
 
     // Other tests notifications might interfere due to notification compression on server
@@ -327,7 +327,7 @@ void TagTest::testModify()
     Tag tag;
     {
         tag.setGid("gid");
-        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        auto *createjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         tag = createjob->tag();
@@ -335,14 +335,14 @@ void TagTest::testModify()
 
     //We can add an attribute
     {
-        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
+        auto *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("display name"));
         tag.setParent(Tag(0));
         tag.setType("mytype");
-        TagModifyJob *modJob = new TagModifyJob(tag, this);
+        auto *modJob = new TagModifyJob(tag, this);
         AKVERIFYEXEC(modJob);
 
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
@@ -350,12 +350,12 @@ void TagTest::testModify()
     }
     //We can update an attribute
     {
-        Akonadi::TagAttribute *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
+        auto *attr = tag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("display name2"));
-        TagModifyJob *modJob = new TagModifyJob(tag, this);
+        auto *modJob = new TagModifyJob(tag, this);
         AKVERIFYEXEC(modJob);
 
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
@@ -365,17 +365,17 @@ void TagTest::testModify()
     //We can clear an attribute
     {
         tag.removeAttribute<Akonadi::TagAttribute>();
-        TagModifyJob *modJob = new TagModifyJob(tag, this);
+        auto *modJob = new TagModifyJob(tag, this);
         AKVERIFYEXEC(modJob);
 
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         fetchJob->fetchScope().fetchAttribute<Akonadi::TagAttribute>();
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
         QVERIFY(!fetchJob->tags().first().hasAttribute<Akonadi::TagAttribute>());
     }
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
 }
 
@@ -388,7 +388,7 @@ void TagTest::testModifyFromResource()
     {
         tag.setGid("gid");
         tag.setRemoteId("rid");
-        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        auto *createjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         tag = createjob->tag();
@@ -396,12 +396,12 @@ void TagTest::testModifyFromResource()
 
     {
         tag.setRemoteId(QByteArray(""));
-        TagModifyJob *modJob = new TagModifyJob(tag, this);
+        auto *modJob = new TagModifyJob(tag, this);
         AKVERIFYEXEC(modJob);
 
         // The tag is removed on the server, because we just removed the last
         // RemoteID
-        TagFetchJob *fetchJob = new TagFetchJob(this);
+        auto *fetchJob = new TagFetchJob(this);
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 0);
     }
@@ -412,7 +412,7 @@ void TagTest::testCreateMerge()
     Tag tag;
     {
         tag.setGid("gid");
-        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        auto *createjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         tag = createjob->tag();
@@ -420,14 +420,14 @@ void TagTest::testCreateMerge()
     {
         Tag tag2;
         tag2.setGid("gid");
-        TagCreateJob *createjob = new TagCreateJob(tag2, this);
+        auto *createjob = new TagCreateJob(tag2, this);
         createjob->setMergeIfExisting(true);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         QCOMPARE(createjob->tag().id(), tag.id());
     }
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
 }
 
@@ -436,10 +436,10 @@ void TagTest::testAttributes()
     Tag tag;
     {
         tag.setGid("gid2");
-        TagAttribute *attr = tag.attribute<TagAttribute>(Tag::AddIfMissing);
+        auto *attr = tag.attribute<TagAttribute>(Tag::AddIfMissing);
         attr->setDisplayName(QStringLiteral("name"));
         attr->setInToolbar(true);
-        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        auto *createjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         tag = createjob->tag();
@@ -466,7 +466,7 @@ void TagTest::testAttributes()
         attr->setDisplayName(QStringLiteral("name2"));
         attr->setInToolbar(true);
         tag2.addAttribute(attr);
-        TagCreateJob *createjob = new TagCreateJob(tag2, this);
+        auto *createjob = new TagCreateJob(tag2, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         tag2 = createjob->tag();
@@ -503,7 +503,7 @@ void TagTest::testTagItem()
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
@@ -512,19 +512,19 @@ void TagTest::testTagItem()
 
     QSignalSpy tagsSpy(&monitor, &Monitor::itemsTagsChanged);
 
-    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    auto *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
 
     QTRY_VERIFY(tagsSpy.count() >= 1);
     QTRY_COMPARE(tagsSpy.last().first().value<Akonadi::Item::List>().first().id(), item1.id());
     QTRY_COMPARE(tagsSpy.last().at(1).value< QSet<Tag> >().size(), 1); //1 added tag
 
-    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    auto *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
 }
 
@@ -542,17 +542,17 @@ void TagTest::testCreateItem()
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
         item1.setTag(tag);
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
 
-    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    auto *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
 }
 
@@ -570,12 +570,12 @@ void TagTest::testFetchTagIdWithItem()
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
         item1.setTag(tag);
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
 
-    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    auto *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
     fetchJob->fetchScope().tagFetchScope().setFetchIdOnly(true);
     AKVERIFYEXEC(fetchJob);
@@ -584,7 +584,7 @@ void TagTest::testFetchTagIdWithItem()
     QCOMPARE(t.id(), tag.id());
     QVERIFY(t.gid().isEmpty());
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
 }
 
@@ -601,17 +601,17 @@ void TagTest::testFetchFullTagWithItem()
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
         //FIXME This should also be possible with create, but isn't
         item1.setTag(tag);
     }
 
-    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    auto *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
 
-    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    auto *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
     fetchJob->fetchScope().tagFetchScope().setFetchIdOnly(false);
     AKVERIFYEXEC(fetchJob);
@@ -620,7 +620,7 @@ void TagTest::testFetchFullTagWithItem()
     QCOMPARE(t, tag);
     QVERIFY(!t.gid().isEmpty());
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
 }
 
@@ -630,14 +630,14 @@ void TagTest::testModifyItemWithTagByGID()
     {
         Tag tag;
         tag.setGid("gid2");
-        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        auto *createjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createjob);
     }
 
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
@@ -646,10 +646,10 @@ void TagTest::testModifyItemWithTagByGID()
     tag.setGid("gid2");
     item1.setTag(tag);
 
-    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    auto *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
 
-    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    auto *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
@@ -670,7 +670,7 @@ void TagTest::testModifyItemWithTagByRID()
     {
         tag3.setGid("gid3");
         tag3.setRemoteId("rid3");
-        TagCreateJob *createjob = new TagCreateJob(tag3, this);
+        auto *createjob = new TagCreateJob(tag3, this);
         AKVERIFYEXEC(createjob);
         tag3 = createjob->tag();
     }
@@ -678,7 +678,7 @@ void TagTest::testModifyItemWithTagByRID()
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
     }
@@ -687,10 +687,10 @@ void TagTest::testModifyItemWithTagByRID()
     tag.setRemoteId("rid2");
     item1.setTag(tag);
 
-    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    auto *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
 
-    ItemFetchJob *fetchJob = new ItemFetchJob(item1, this);
+    auto *fetchJob = new ItemFetchJob(item1, this);
     fetchJob->fetchScope().setFetchTags(true);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().first().tags().size(), 1);
@@ -701,7 +701,7 @@ void TagTest::testModifyItemWithTagByRID()
     }
 
     {
-        TagDeleteJob *deleteJob = new TagDeleteJob(tag3, this);
+        auto *deleteJob = new TagDeleteJob(tag3, this);
         AKVERIFYEXEC(deleteJob);
     }
 
@@ -726,7 +726,7 @@ void TagTest::testMonitor()
         tag.setGid("gid2");
         tag.setName(QStringLiteral("name2"));
         tag.setType("type2");
-        TagCreateJob *createjob = new TagCreateJob(tag, this);
+        auto *createjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(createjob);
         createdTag = createjob->tag();
         QCOMPARE(createdTag.type(), tag.type());
@@ -747,7 +747,7 @@ void TagTest::testMonitor()
         QVERIFY(modifiedSpy.isValid());
         createdTag.setName(QStringLiteral("name3"));
 
-        TagModifyJob *modJob = new TagModifyJob(createdTag, this);
+        auto *modJob = new TagModifyJob(createdTag, this);
         AKVERIFYEXEC(modJob);
         //We usually pick up signals from the previous tests as well (due to server-side notification caching)
         QTRY_VERIFY(modifiedSpy.count() >= 1);
@@ -762,7 +762,7 @@ void TagTest::testMonitor()
     {
         QSignalSpy removedSpy(&monitor, &Monitor::tagRemoved);
         QVERIFY(removedSpy.isValid());
-        TagDeleteJob *deletejob = new TagDeleteJob(createdTag, this);
+        auto *deletejob = new TagDeleteJob(createdTag, this);
         AKVERIFYEXEC(deletejob);
         QTRY_VERIFY(removedSpy.count() >= 1);
         QTRY_COMPARE(removedSpy.last().first().value<Akonadi::Tag>().id(), createdTag.id());
@@ -781,7 +781,7 @@ void TagTest::testTagAttributeConfusionBug()
     {
         firstTag.setGid("gid");
         firstTag.setName(QStringLiteral("display name"));
-        TagCreateJob *createjob = new TagCreateJob(firstTag, this);
+        auto *createjob = new TagCreateJob(firstTag, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         firstTag = createjob->tag();
@@ -790,7 +790,7 @@ void TagTest::testTagAttributeConfusionBug()
     {
         secondTag.setGid("AnotherGID");
         secondTag.setName(QStringLiteral("another name"));
-        TagCreateJob *createjob = new TagCreateJob(secondTag, this);
+        auto *createjob = new TagCreateJob(secondTag, this);
         AKVERIFYEXEC(createjob);
         QVERIFY(createjob->tag().isValid());
         secondTag = createjob->tag();
@@ -808,10 +808,10 @@ void TagTest::testTagAttributeConfusionBug()
         QSignalSpy modifiedSpy(&monitor, &Akonadi::Monitor::tagChanged);
 
         firstTag.setName(QStringLiteral("renamed"));
-        TagModifyJob *modJob = new TagModifyJob(firstTag, this);
+        auto *modJob = new TagModifyJob(firstTag, this);
         AKVERIFYEXEC(modJob);
 
-        TagFetchJob *fetchJob = new TagFetchJob(firstTagIdList, this);
+        auto *fetchJob = new TagFetchJob(firstTagIdList, this);
         QVERIFY(fetchJob->fetchScope().fetchAllAttributes());
         AKVERIFYEXEC(fetchJob);
         QCOMPARE(fetchJob->tags().size(), 1);
@@ -824,9 +824,9 @@ void TagTest::testTagAttributeConfusionBug()
     }
 
     // Cleanup
-    TagDeleteJob *deleteJob = new TagDeleteJob(firstTag, this);
+    auto *deleteJob = new TagDeleteJob(firstTag, this);
     AKVERIFYEXEC(deleteJob);
-    TagDeleteJob *anotherDeleteJob = new TagDeleteJob(secondTag, this);
+    auto *anotherDeleteJob = new TagDeleteJob(secondTag, this);
     AKVERIFYEXEC(anotherDeleteJob);
 }
 
@@ -843,23 +843,23 @@ void TagTest::testFetchItemsByTag()
     Item item1;
     {
         item1.setMimeType(QStringLiteral("application/octet-stream"));
-        ItemCreateJob *append = new ItemCreateJob(item1, res3, this);
+        auto *append = new ItemCreateJob(item1, res3, this);
         AKVERIFYEXEC(append);
         item1 = append->item();
         //FIXME This should also be possible with create, but isn't
         item1.setTag(tag);
     }
 
-    ItemModifyJob *modJob = new ItemModifyJob(item1, this);
+    auto *modJob = new ItemModifyJob(item1, this);
     AKVERIFYEXEC(modJob);
 
-    ItemFetchJob *fetchJob = new ItemFetchJob(tag, this);
+    auto *fetchJob = new ItemFetchJob(tag, this);
     AKVERIFYEXEC(fetchJob);
     QCOMPARE(fetchJob->items().size(), 1);
     Item i = fetchJob->items().first();
     QCOMPARE(i, item1);
 
-    TagDeleteJob *deleteJob = new TagDeleteJob(tag, this);
+    auto *deleteJob = new TagDeleteJob(tag, this);
     AKVERIFYEXEC(deleteJob);
 }
 
@@ -878,9 +878,9 @@ void TagTest::tagModifyJobShouldOnlySendModifiedAttributes()
 
     // When one job modifies this attribute, and another one does an unrelated modify job
     Tag attrModTag(tag.id());
-    Akonadi::TagAttribute *modAttr = attrModTag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
+    auto *modAttr = attrModTag.attribute<Akonadi::TagAttribute>(Tag::AddIfMissing);
     modAttr->setDisplayName(QStringLiteral("modified"));
-    TagModifyJob *attrModJob = new TagModifyJob(attrModTag, this);
+    auto *attrModJob = new TagModifyJob(attrModTag, this);
     AKVERIFYEXEC(attrModJob);
 
     tag.setType(Tag::GENERIC);

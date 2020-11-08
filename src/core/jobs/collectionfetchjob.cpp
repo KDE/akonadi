@@ -192,12 +192,12 @@ void CollectionFetchJob::doStart()
             for (const Collection &col : qAsConst(d->mBaseList)) {
                 // No need to connect to the collectionsReceived signal here. This job is internal. The (aggregated)
                 // result needs to be filtered through filterDescendants before it is useful.
-                CollectionFetchJob *subJob = new CollectionFetchJob(col, Base, this);
+                auto *subJob = new CollectionFetchJob(col, Base, this);
                 subJob->fetchScope().setAncestorRetrieval(Akonadi::CollectionFetchScope::All);
             }
         } else {
             for (const Collection &col : qAsConst(d->mBaseList)) {
-                CollectionFetchJob *subJob = new CollectionFetchJob(col, d->mType, this);
+                auto *subJob = new CollectionFetchJob(col, d->mType, this);
                 connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) { d->subJobCollectionReceived(cols); });
                 subJob->setFetchScope(fetchScope());
             }
@@ -344,7 +344,7 @@ void CollectionFetchJob::slotResult(KJob *job)
 {
     Q_D(CollectionFetchJob);
 
-    CollectionFetchJob *list = qobject_cast<CollectionFetchJob *>(job);
+    auto *list = qobject_cast<CollectionFetchJob *>(job);
     Q_ASSERT(job);
 
     if (d->mType == NonOverlappingRoots) {
@@ -370,7 +370,7 @@ void CollectionFetchJob::slotResult(KJob *job)
         Q_ASSERT(!hasSubjobs());
         if (!job->error()) {
             for (const Collection &col : roots) {
-                CollectionFetchJob *subJob = new CollectionFetchJob(col, d->mType, this);
+                auto *subJob = new CollectionFetchJob(col, d->mType, this);
                 connect(subJob, &CollectionFetchJob::collectionsReceived, this, [d](const auto &cols) { d->subJobCollectionReceived(cols); });
                 subJob->setFetchScope(fetchScope());
             }

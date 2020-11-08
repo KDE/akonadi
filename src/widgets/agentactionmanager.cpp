@@ -155,7 +155,7 @@ public:
             const AgentType agentType = dlg->agentType();
 
             if (agentType.isValid()) {
-                AgentInstanceCreateJob *job = new AgentInstanceCreateJob(agentType, q);
+                auto *job = new AgentInstanceCreateJob(agentType, q);
                 q->connect(job, &KJob::result, q, [this](KJob *job) { slotAgentInstanceCreationResult(job); });
                 job->configure(mParentWidget);
                 job->start();
@@ -278,7 +278,7 @@ QAction *AgentActionManager::createAction(Type type)
         return act;
     }
 
-    QAction *action = new QAction(d->mParentWidget);
+    auto *action = new QAction(d->mParentWidget);
     action->setText(i18n(agentActionData[type].label));
 
     if (agentActionData[type].icon) {

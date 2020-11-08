@@ -31,7 +31,7 @@ DragDropManager::DragDropManager(QAbstractItemView *view)
 Akonadi::Collection DragDropManager::currentDropTarget(QDropEvent *event) const
 {
     const QModelIndex index = m_view->indexAt(event->pos());
-    Collection collection = m_view->model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
+    auto collection = m_view->model()->data(index, EntityTreeModel::CollectionRole).value<Collection>();
     if (!collection.isValid()) {
         const Item item = m_view->model()->data(index, EntityTreeModel::ItemRole).value<Item>();
         if (item.isValid()) {
@@ -255,7 +255,7 @@ void DragDropManager::startDrag(Qt::DropActions supportedActions)
         }
 
         if (sourceDeletable) {
-            Collection source = index.data(EntityTreeModel::CollectionRole).value<Collection>();
+            auto source = index.data(EntityTreeModel::CollectionRole).value<Collection>();
             if (!source.isValid()) {
                 // index points to an item
                 source = index.data(EntityTreeModel::ParentCollectionRole).value<Collection>();
@@ -277,7 +277,7 @@ void DragDropManager::startDrag(Qt::DropActions supportedActions)
         return;
     }
 
-    QDrag *drag = new QDrag(m_view);
+    auto *drag = new QDrag(m_view);
     drag->setMimeData(mimeData);
     if (indexes.size() > 1) {
         drag->setPixmap(QIcon::fromTheme(QStringLiteral("document-multiple")).pixmap(QSize(22, 22)));

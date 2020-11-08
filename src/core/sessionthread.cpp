@@ -24,7 +24,7 @@ SessionThread::SessionThread(QObject *parent)
     qRegisterMetaType<Connection *>();
     qRegisterMetaType<CommandBuffer *>();
 
-    QThread *thread = new QThread();
+    auto *thread = new QThread();
     thread->setObjectName(QStringLiteral("SessionThread"));
     moveToThread(thread);
     thread->start();

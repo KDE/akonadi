@@ -23,7 +23,7 @@ void RecursiveMover::start()
 {
     Q_ASSERT(receivers(SIGNAL(result(KJob*))));
 
-    CollectionFetchJob *job = new CollectionFetchJob(m_movedCollection, CollectionFetchJob::Recursive, this);
+    auto *job = new CollectionFetchJob(m_movedCollection, CollectionFetchJob::Recursive, this);
     connect(job, &CollectionFetchJob::finished, this, &RecursiveMover::collectionListResult);
     addSubjob(job);
     ++m_runningJobs;
@@ -47,7 +47,7 @@ void RecursiveMover::collectionListResult(KJob *job)
 
     // build a parent -> children map for the following topological sorting
     // while we are iterating anyway, also fill m_collections here
-    CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
+    auto *fetchJob = qobject_cast<CollectionFetchJob *>(job);
     QHash<Collection::Id, Collection::List> colTree;
     const Akonadi::Collection::List lstCol = fetchJob->collections();
     for (const Collection &col : lstCol) {
@@ -83,7 +83,7 @@ void RecursiveMover::collectionFetchResult(KJob *job)
         return; // error handling is in the base class
     }
 
-    CollectionFetchJob *fetchJob = qobject_cast<CollectionFetchJob *>(job);
+    auto *fetchJob = qobject_cast<CollectionFetchJob *>(job);
     if (fetchJob->collections().size() == 1) {
         m_currentCollection = fetchJob->collections().at(0);
         m_currentCollection.setParentCollection(m_collections.value(m_currentCollection.parentCollection().id()));
@@ -125,7 +125,7 @@ void RecursiveMover::itemFetchResult(KJob *job)
         return; // error handling is in the base class
     }
 
-    ItemFetchJob *fetchJob = qobject_cast<ItemFetchJob *>(job);
+    auto *fetchJob = qobject_cast<ItemFetchJob *>(job);
     if (fetchJob->items().size() == 1) {
         m_currentAction = AddItem;
         m_agentBase->itemAdded(fetchJob->items().at(0), m_currentCollection);
@@ -141,7 +141,7 @@ void RecursiveMover::replayNextCollection()
     if (!m_pendingCollections.isEmpty()) {
 
         m_currentCollection = m_pendingCollections.takeFirst();
-        ItemFetchJob *job = new ItemFetchJob(m_currentCollection, this);
+        auto *job = new ItemFetchJob(m_currentCollection, this);
         connect(job, &ItemFetchJob::result, this, &RecursiveMover::itemListResult);
         addSubjob(job);
         ++m_runningJobs;
@@ -171,7 +171,7 @@ void RecursiveMover::replayNextItem()
     } else {
         Q_ASSERT(m_currentAction == None);
         m_currentItem = m_pendingItems.takeFirst();
-        ItemFetchJob *job = new ItemFetchJob(m_currentItem, this);
+        auto *job = new ItemFetchJob(m_currentItem, this);
         job->fetchScope().fetchFullPayload();
         connect(job, &ItemFetchJob::result, this, &RecursiveMover::itemFetchResult);
         addSubjob(job);
@@ -185,7 +185,7 @@ void RecursiveMover::changeProcessed()
 
     if (m_currentAction == AddCollection) {
         Q_ASSERT(m_currentCollection.isValid());
-        CollectionFetchJob *job = new CollectionFetchJob(m_currentCollection, CollectionFetchJob::Base, this);
+        auto *job = new CollectionFetchJob(m_currentCollection, CollectionFetchJob::Base, this);
         job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
         connect(job, &CollectionFetchJob::result, this, &RecursiveMover::collectionFetchResult);
         addSubjob(job);

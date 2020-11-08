@@ -115,7 +115,7 @@ Collection::Rights CollectionRightsAttribute::rights() const
 
 CollectionRightsAttribute *CollectionRightsAttribute::clone() const
 {
-    CollectionRightsAttribute *attr = new CollectionRightsAttribute();
+    auto *attr = new CollectionRightsAttribute();
     attr->d->mData = d->mData;
 
     return attr;

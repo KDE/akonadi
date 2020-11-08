@@ -90,7 +90,7 @@ PasteHelperJob::PasteHelperJob(Qt::DropAction action, const Item::List &items,
         // after the transaction has ended leaves the job hanging
         setAutomaticCommittingEnabled(false);
 
-        CollectionFetchJob *fetch = new CollectionFetchJob(dragSourceCollection,
+        auto *fetch = new CollectionFetchJob(dragSourceCollection,
                 CollectionFetchJob::Base,
                 this);
         QObject::connect(fetch, &KJob::finished,
@@ -106,7 +106,7 @@ PasteHelperJob::~PasteHelperJob()
 
 void PasteHelperJob::onDragSourceCollectionFetched(KJob *job)
 {
-    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
+    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
     qCDebug(AKONADICORE_LOG) << fetch->error() << fetch->collections().count();
     if (fetch->error() || fetch->collections().count() != 1) {
         runActions();
@@ -278,7 +278,7 @@ KJob *PasteHelper::paste(const QMimeData *mimeData, const Collection &collection
         it.setMimeType(type);
         it.setPayloadFromData(item);
 
-        ItemCreateJob *job = new ItemCreateJob(it, collection);
+        auto *job = new ItemCreateJob(it, collection);
         return job;
     }
 
@@ -319,7 +319,7 @@ KJob *PasteHelper::pasteUriList(const QMimeData *mimeData, const Collection &des
         // TODO: handle non Akonadi URLs?
     }
 
-    PasteHelperJob *job = new PasteHelperJob(action, items,
+    auto *job = new PasteHelperJob(action, items,
             collections, destination,
             session);
 

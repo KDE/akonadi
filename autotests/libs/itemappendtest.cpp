@@ -58,12 +58,12 @@ void ItemAppendTest::testItemAppend()
     item.setMimeType(QStringLiteral("application/octet-stream"));
     item.setFlag("TestFlag");
     item.setSize(3456);
-    ItemCreateJob *job = new ItemCreateJob(item, testFolder1, this);
+    auto *job = new ItemCreateJob(item, testFolder1, this);
     AKVERIFYEXEC(job);
     ref = job->item();
     QCOMPARE(ref.parentCollection(), testFolder1);
 
-    ItemFetchJob *fjob = new ItemFetchJob(testFolder1, this);
+    auto *fjob = new ItemFetchJob(testFolder1, this);
     fjob->fetchScope().setAncestorRetrieval(ItemFetchScope::Parent);
     AKVERIFYEXEC(fjob);
     QCOMPARE(fjob->items().count(), 1);
@@ -75,7 +75,7 @@ void ItemAppendTest::testItemAppend()
     qint64 size = 3456;
     QCOMPARE(fjob->items()[0].size(), size);
 
-    ItemDeleteJob *djob = new ItemDeleteJob(ref, this);
+    auto *djob = new ItemDeleteJob(ref, this);
     AKVERIFYEXEC(djob);
 
     fjob = new ItemFetchJob(testFolder1, this);
@@ -114,11 +114,11 @@ void ItemAppendTest::testContent()
         item.setPayload(data);
     }
 
-    ItemCreateJob *job = new ItemCreateJob(item, testFolder1, this);
+    auto *job = new ItemCreateJob(item, testFolder1, this);
     AKVERIFYEXEC(job);
     Item ref = job->item();
 
-    ItemFetchJob *fjob = new ItemFetchJob(testFolder1, this);
+    auto *fjob = new ItemFetchJob(testFolder1, this);
     fjob->fetchScope().setCacheOnly(true);
     fjob->fetchScope().fetchFullPayload();
     AKVERIFYEXEC(fjob);
@@ -129,7 +129,7 @@ void ItemAppendTest::testContent()
         QCOMPARE(item2.payload<QByteArray>(), data);
     }
 
-    ItemDeleteJob *djob = new ItemDeleteJob(ref, this);
+    auto *djob = new ItemDeleteJob(ref, this);
     AKVERIFYEXEC(djob);
 }
 
@@ -140,13 +140,13 @@ void ItemAppendTest::testNewMimetype()
 
     Item item;
     item.setMimeType(QStringLiteral("application/new-type"));
-    ItemCreateJob *job = new ItemCreateJob(item, col, this);
+    auto *job = new ItemCreateJob(item, col, this);
     AKVERIFYEXEC(job);
 
     item = job->item();
     QVERIFY(item.isValid());
 
-    ItemFetchJob *fetch = new ItemFetchJob(item, this);
+    auto *fetch = new ItemFetchJob(item, this);
     AKVERIFYEXEC(fetch);
     QCOMPARE(fetch->items().count(), 1);
     QCOMPARE(fetch->items().first().mimeType(), item.mimeType());
@@ -182,11 +182,11 @@ void ItemAppendTest::testMultipartAppend()
     item.setPayload<QByteArray>("body data");
     item.attribute<TestAttribute>(Item::AddIfMissing)->data = "extra data";
     item.setFlag("TestFlag");
-    ItemCreateJob *job = new ItemCreateJob(item, testFolder1, this);
+    auto *job = new ItemCreateJob(item, testFolder1, this);
     AKVERIFYEXEC(job);
     Item ref = job->item();
 
-    ItemFetchJob *fjob = new ItemFetchJob(ref, this);
+    auto *fjob = new ItemFetchJob(ref, this);
     fjob->fetchScope().fetchFullPayload();
     fjob->fetchScope().fetchAttribute<TestAttribute>();
     AKVERIFYEXEC(fjob);
@@ -197,7 +197,7 @@ void ItemAppendTest::testMultipartAppend()
     QCOMPARE(item.attribute<TestAttribute>()->data, QByteArray("extra data"));
     QVERIFY(item.flags().contains("TestFlag"));
 
-    ItemDeleteJob *djob = new ItemDeleteJob(ref, this);
+    auto *djob = new ItemDeleteJob(ref, this);
     AKVERIFYEXEC(djob);
 }
 
@@ -243,11 +243,11 @@ void ItemAppendTest::testItemSize()
     const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(col.isValid());
 
-    ItemCreateJob *create = new ItemCreateJob(item, col, this);
+    auto *create = new ItemCreateJob(item, col, this);
     AKVERIFYEXEC(create);
     Item newItem = create->item();
 
-    ItemFetchJob *fetch = new ItemFetchJob(newItem, this);
+    auto *fetch = new ItemFetchJob(newItem, this);
     AKVERIFYEXEC(fetch);
     QCOMPARE(fetch->items().count(), 1);
 
@@ -318,11 +318,11 @@ void ItemAppendTest::testItemMerge()
     const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res2/space folder")));
     QVERIFY(col.isValid());
 
-    ItemCreateJob *create = new ItemCreateJob(item1, col, this);
+    auto *create = new ItemCreateJob(item1, col, this);
     AKVERIFYEXEC(create);
     const Item createdItem = create->item();
 
-    ItemCreateJob *merge = new ItemCreateJob(item2, col, this);
+    auto *merge = new ItemCreateJob(item2, col, this);
     ItemCreateJob::MergeOptions options = ItemCreateJob::GID | ItemCreateJob::RID;
     if (silent) {
         options |= ItemCreateJob::Silent;
@@ -345,7 +345,7 @@ void ItemAppendTest::testItemMerge()
         ItemDeleteJob *del = new ItemDeleteJob(merge->item(), this);
         AKVERIFYEXEC(del);
     }
-    ItemDeleteJob *del = new ItemDeleteJob(createdItem, this);
+    auto *del = new ItemDeleteJob(createdItem, this);
     AKVERIFYEXEC(del);
 }
 
@@ -365,12 +365,12 @@ void ItemAppendTest::testForeignPayload()
     item.setRemoteId(QStringLiteral("RID3"));
     item.setSize(9);
 
-    ItemCreateJob *create = new ItemCreateJob(item, col, this);
+    auto *create = new ItemCreateJob(item, col, this);
     AKVERIFYEXEC(create);
 
     auto ref = create->item();
 
-    ItemFetchJob *fetch = new ItemFetchJob(ref, this);
+    auto *fetch = new ItemFetchJob(ref, this);
     fetch->fetchScope().fetchFullPayload(true);
     AKVERIFYEXEC(fetch);
     const auto items = fetch->items();
@@ -380,7 +380,7 @@ void ItemAppendTest::testForeignPayload()
     QVERIFY(item.hasPayload<QByteArray>());
     QCOMPARE(item.payload<QByteArray>(), QByteArray("123456789"));
 
-    ItemDeleteJob *del = new ItemDeleteJob(item, this);
+    auto *del = new ItemDeleteJob(item, this);
     AKVERIFYEXEC(del);
 
     // Make sure Akonadi does not delete a foreign payload

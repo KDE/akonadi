@@ -185,13 +185,13 @@ void ItemHydra::testPointerPayload()
         QCOMPARE(p.use_count(), (long)2);
         {
             QVERIFY(i1.hasPayload< RudiPtr >());
-            RudiPtr p2 = i1.payload< RudiPtr >();
+            auto p2 = i1.payload< RudiPtr >();
             QCOMPARE(p.use_count(), (long)3);
         }
 
         {
             QVERIFY(i1.hasPayload< VolkerPtr >());
-            VolkerPtr p2 = i1.payload< VolkerPtr >();
+            auto p2 = i1.payload< VolkerPtr >();
             QCOMPARE(p.use_count(), (long)3);
         }
 
@@ -222,14 +222,14 @@ void ItemHydra::testPolymorphicPayloadWithTrait()
         }
 
         {
-            RudiPtr p2 = i1.payload< RudiPtr >();
+            auto p2 = i1.payload< RudiPtr >();
             QCOMPARE(p.use_count(), (long)3);
             QCOMPARE(p2->who, QStringLiteral("Rudi"));
         }
 
         bool caughtException = false;
         try {
-            GerdPtr p3 = i1.payload<GerdPtr>();
+            auto p3 = i1.payload<GerdPtr>();
         } catch (const Akonadi::PayloadException &e) {
             qDebug() << e.what();
             caughtException = true;
@@ -303,18 +303,18 @@ void ItemHydra::testQSharedPointerPayload()
     QVERIFY(!i.hasPayload<GerdQPtr>());
 
     {
-        VolkerQPtr p2 = i.payload< VolkerQPtr >();
+        auto p2 = i.payload< VolkerQPtr >();
         QCOMPARE(p2->who, QStringLiteral("Rudi"));
     }
 
     {
-        RudiQPtr p2 = i.payload< RudiQPtr >();
+        auto p2 = i.payload< RudiQPtr >();
         QCOMPARE(p2->who, QStringLiteral("Rudi"));
     }
 
     bool caughtException = false;
     try {
-        GerdQPtr p3 = i.payload<GerdQPtr>();
+        auto p3 = i.payload<GerdQPtr>();
     } catch (const Akonadi::PayloadException &e) {
         qDebug() << e.what();
         caughtException = true;

@@ -139,7 +139,7 @@ void JobPrivate::signalCreationToJobTracker()
                                              << jobDebuggingString();
         QDBusPendingCall call = s_jobtracker->asyncCallWithArgumentList(QStringLiteral("jobCreated"), argumentList);
 
-        QDBusPendingCallWatcher *watcher = new QDBusPendingCallWatcher(call, s_jobtracker);
+        auto *watcher = new QDBusPendingCallWatcher(call, s_jobtracker);
         QObject::connect(watcher, &QDBusPendingCallWatcher::finished, s_jobtracker, [](QDBusPendingCallWatcher *w) {
                 QDBusPendingReply<void> reply = *w;
                 if (reply.isError() && s_jobtracker) {
@@ -261,7 +261,7 @@ void JobPrivate::updateItemRevision(Akonadi::Item::Id itemId, int oldRevision, i
     Q_Q(Job);
     const auto &subjobs = q->subjobs();
     for (KJob *j : subjobs) {
-        Akonadi::Job *job = qobject_cast<Akonadi::Job *>(j);
+        auto *job = qobject_cast<Akonadi::Job *>(j);
         if (job) {
             job->d_ptr->updateItemRevision(itemId, oldRevision, newRevision);
         }

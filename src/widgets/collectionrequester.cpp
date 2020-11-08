@@ -50,7 +50,7 @@ public:
 
 void CollectionRequester::Private::fetchCollection(const Collection &collection)
 {
-    CollectionFetchJob *job = new CollectionFetchJob(collection, Akonadi::CollectionFetchJob::Base, q);
+    auto *job = new CollectionFetchJob(collection, Akonadi::CollectionFetchJob::Base, q);
     job->setProperty("OriginalCollectionId", collection.id());
     job->fetchScope().setAncestorRetrieval(CollectionFetchScope::All);
     connect(job, &CollectionFetchJob::finished, q, [this](KJob *job) {_k_collectionReceived(job);});
@@ -58,7 +58,7 @@ void CollectionRequester::Private::fetchCollection(const Collection &collection)
 
 void CollectionRequester::Private::_k_collectionReceived(KJob *job)
 {
-    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
+    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
     if (!fetch) {
         return;
     }
@@ -70,7 +70,7 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
             currentCollection = Collection(currentCollection.parentCollection());
         }
 
-        CollectionFetchJob *namesFetch = new CollectionFetchJob(chain, CollectionFetchJob::Base, q);
+        auto *namesFetch = new CollectionFetchJob(chain, CollectionFetchJob::Base, q);
         namesFetch->setProperty("OriginalCollectionId", job->property("OriginalCollectionId"));
         namesFetch->fetchScope().setAncestorRetrieval(CollectionFetchScope::Parent);
         connect(namesFetch, &CollectionFetchJob::finished, q, [this](KJob *job) {_k_collectionsNamesReceived(job);});
@@ -81,7 +81,7 @@ void CollectionRequester::Private::_k_collectionReceived(KJob *job)
 
 void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
 {
-    CollectionFetchJob *fetch = qobject_cast<CollectionFetchJob *>(job);
+    auto *fetch = qobject_cast<CollectionFetchJob *>(job);
     const qint64 originalId = fetch->property("OriginalCollectionId").toLongLong();
 
     QMap<qint64, Collection> names;
@@ -101,7 +101,7 @@ void CollectionRequester::Private::_k_collectionsNamesReceived(KJob *job)
 
 void CollectionRequester::Private::init()
 {
-    QHBoxLayout *hbox = new QHBoxLayout(q);
+    auto *hbox = new QHBoxLayout(q);
     hbox->setContentsMargins(0, 0, 0, 0);
 
     edit = new QLineEdit(q);
@@ -126,7 +126,7 @@ void CollectionRequester::Private::init()
 
     q->connect(button, &QPushButton::clicked, q, [this]() { _k_slotOpenDialog(); });
 
-    QAction *openAction = new QAction(q);
+    auto *openAction = new QAction(q);
     openAction->setShortcut(KStandardShortcut::Open);
     q->connect(openAction, &QAction::triggered, q, [this]() { _k_slotOpenDialog(); });
 

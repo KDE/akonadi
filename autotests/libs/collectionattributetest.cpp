@@ -94,20 +94,20 @@ void CollectionAttributeTest::testAttributes()
         explicit Cleanup(const Collection &col) : m_col(col) {}
         ~Cleanup() {
             // cleanup
-            CollectionDeleteJob *del = new CollectionDeleteJob(m_col);
+            auto *del = new CollectionDeleteJob(m_col);
             AKVERIFYEXEC(del);
         }
         Collection m_col;
     };
 
     // add a custom attribute
-    TestAttribute *attr = new TestAttribute();
+    auto *attr = new TestAttribute();
     attr->deserialize(attr1);
     Collection col;
     col.setName(QStringLiteral("attribute test"));
     col.setParentCollection(Collection(parentColId));
     col.addAttribute(attr);
-    CollectionCreateJob *create = new CollectionCreateJob(col, this);
+    auto *create = new CollectionCreateJob(col, this);
     AKVERIFYEXEC(create);
     col = create->collection();
     QVERIFY(col.isValid());
@@ -117,7 +117,7 @@ void CollectionAttributeTest::testAttributes()
     QVERIFY(attr != nullptr);
     QCOMPARE(attr->serialized(), QByteArray(attr1));
 
-    CollectionFetchJob *list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
+    auto *list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
     AKVERIFYEXEC(list);
     QCOMPARE(list->collections().count(), 1);
     col = list->collections().at(0);
@@ -127,7 +127,7 @@ void CollectionAttributeTest::testAttributes()
     QVERIFY(attr != nullptr);
     QCOMPARE(attr->serialized(), QByteArray(attr1));
 
-    TestAttribute *attrB = new TestAttribute();
+    auto *attrB = new TestAttribute();
     attrB->deserialize(attr2);
     col.addAttribute(attrB);
     attrB = col.attribute<TestAttribute>();
@@ -145,7 +145,7 @@ void CollectionAttributeTest::testAttributes()
 
     // modify a custom attribute
     col.attribute<TestAttribute>(Collection::AddIfMissing)->deserialize(attr2);
-    CollectionModifyJob *modify = new CollectionModifyJob(col, this);
+    auto *modify = new CollectionModifyJob(col, this);
     AKVERIFYEXEC(modify);
 
     list = new CollectionFetchJob(col, CollectionFetchJob::Base, this);
@@ -237,8 +237,8 @@ void CollectionAttributeTest::testDetach()
     Collection col2 = col; // and a copy, so that non-const access detaches
 
     // WHEN
-    TestAttribute *attr = col2.attribute<TestAttribute>(Akonadi::Collection::AddIfMissing);
-    TestAttribute *attr2 = col2.attribute<TestAttribute>();
+    auto *attr = col2.attribute<TestAttribute>(Akonadi::Collection::AddIfMissing);
+    auto *attr2 = col2.attribute<TestAttribute>();
 
     // THEN
     QCOMPARE(attr, attr2);

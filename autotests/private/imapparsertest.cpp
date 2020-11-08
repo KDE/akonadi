@@ -356,7 +356,7 @@ void ImapParserTest::testMessageParser()
     QFETCH(QList<int>, continuations);
     QList<int> cont = continuations;
 
-    ImapParser *parser = new ImapParser();
+    auto *parser = new ImapParser();
     QVERIFY(parser->tag().isEmpty());
     QVERIFY(parser->data().isEmpty());
 
@@ -503,7 +503,7 @@ void ImapParserTest::testBulkParser()
     QFETCH(QByteArray, input);
     QFETCH(QByteArray, data);
 
-    ImapParser *parser = new ImapParser();
+    auto *parser = new ImapParser();
     QBuffer buffer;
     buffer.setData(input);
     QVERIFY(buffer.open(QBuffer::ReadOnly));

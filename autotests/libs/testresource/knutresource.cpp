@@ -121,7 +121,7 @@ void KnutResource::retrieveCollections()
     collectionsRetrieved(collections);
     const Tag::List tags = mDocument.tags();
     Q_FOREACH (const Tag &tag, tags) {
-        TagCreateJob *createjob = new TagCreateJob(tag);
+        auto *createjob = new TagCreateJob(tag);
         createjob->setMergeIfExisting(true);
     }
 }

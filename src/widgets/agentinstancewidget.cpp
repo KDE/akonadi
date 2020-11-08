@@ -126,7 +126,7 @@ AgentInstanceWidget::AgentInstanceWidget(QWidget *parent)
     : QWidget(parent)
     , d(new Private(this))
 {
-    QHBoxLayout *layout = new QHBoxLayout(this);
+    auto *layout = new QHBoxLayout(this);
     layout->setContentsMargins(0, 0, 0, 0);
 
     d->mView = new QListView(this);
@@ -217,7 +217,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
     QStyle *style = QApplication::style();
     style->drawPrimitive(QStyle::PE_PanelItemViewItem, &option, painter, nullptr);
 
-    QIcon icon = index.data(Qt::DecorationRole).value<QIcon>();
+    auto icon = index.data(Qt::DecorationRole).value<QIcon>();
     const QString name = index.model()->data(index, Qt::DisplayRole).toString();
     int status = index.model()->data(index, AgentInstanceModel::StatusRole).toInt();
     uint progress = index.model()->data(index, AgentInstanceModel::ProgressRole).toUInt();

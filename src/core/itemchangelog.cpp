@@ -55,7 +55,7 @@ const AttributeStorage &ItemChangeLog::attributeStorage(const ItemPrivate *priv)
 
 void ItemChangeLog::removeItem(const ItemPrivate *priv)
 {
-    ItemPrivate *p = const_cast<ItemPrivate *>(priv);
+    auto *p = const_cast<ItemPrivate *>(priv);
     m_addedFlags.remove(p);
     m_deletedFlags.remove(p);
     m_addedTags.remove(p);
@@ -65,7 +65,7 @@ void ItemChangeLog::removeItem(const ItemPrivate *priv)
 
 void ItemChangeLog::clearItemChangelog(const ItemPrivate *priv)
 {
-    ItemPrivate *p = const_cast<ItemPrivate *>(priv);
+    auto *p = const_cast<ItemPrivate *>(priv);
     m_addedFlags.remove(p);
     m_deletedFlags.remove(p);
     m_addedTags.remove(p);

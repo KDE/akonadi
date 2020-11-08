@@ -37,7 +37,7 @@ private Q_SLOTS:
         QFETCH(QColor, color);
         QFETCH(QByteArray, output);
 
-        CollectionColorAttribute *attr = new CollectionColorAttribute();
+        auto *attr = new CollectionColorAttribute();
         attr->deserialize(input);
         QCOMPARE(attr->color(), color);
 

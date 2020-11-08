@@ -76,7 +76,7 @@ AgentConfigurationDialog::AgentConfigurationDialog(const AgentInstance &instance
 
     if (auto plugin = d->widget->d->plugin) {
         if (auto *aboutData = plugin->aboutData()) {
-            KHelpMenu *helpMenu = new KHelpMenu(this, *aboutData, true);
+            auto *helpMenu = new KHelpMenu(this, *aboutData, true);
             helpMenu->action(KHelpMenu::menuDonate);
             //Initialize menu
             QMenu *menu = helpMenu->menu();

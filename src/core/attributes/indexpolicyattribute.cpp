@@ -42,7 +42,7 @@ QByteArray IndexPolicyAttribute::type() const
 
 Attribute *IndexPolicyAttribute::clone() const
 {
-    IndexPolicyAttribute *attr = new IndexPolicyAttribute;
+    auto *attr = new IndexPolicyAttribute;
     attr->setIndexingEnabled(indexingEnabled());
     return attr;
 }

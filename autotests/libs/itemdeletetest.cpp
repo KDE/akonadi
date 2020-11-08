@@ -38,7 +38,7 @@ private Q_SLOTS:
         QVERIFY(!djob->exec());
 
         // make sure a failed delete doesn't leave a transaction open (the kpilot bug)
-        TransactionRollbackJob *tjob = new TransactionRollbackJob(this);
+        auto *tjob = new TransactionRollbackJob(this);
         QVERIFY(!tjob->exec());
     }
 
@@ -72,7 +72,7 @@ private Q_SLOTS:
         const QString path = QLatin1String("res1") +
                              CollectionPathResolver::pathDelimiter() +
                              QLatin1String("foo");
-        CollectionPathResolver *rjob = new CollectionPathResolver(path, this);
+        auto *rjob = new CollectionPathResolver(path, this);
         AKVERIFYEXEC(rjob);
 
         ItemFetchJob *fjob = new ItemFetchJob(Collection(rjob->collection()), this);
@@ -85,7 +85,7 @@ private Q_SLOTS:
         AKVERIFYEXEC(fjob);
         QCOMPARE(fjob->items().count(), 1);
 
-        ItemDeleteJob *djob = new ItemDeleteJob(items[ 0 ], this);
+        auto *djob = new ItemDeleteJob(items[ 0 ], this);
         AKVERIFYEXEC(djob);
 
         fjob = new ItemFetchJob(items[ 0 ], this);
@@ -113,13 +113,13 @@ private Q_SLOTS:
         Item i;
         i.setRemoteId(QStringLiteral("C"));
 
-        ItemFetchJob *fjob = new ItemFetchJob(i, this);
+        auto *fjob = new ItemFetchJob(i, this);
         fjob->setCollection(col);
         AKVERIFYEXEC(fjob);
         auto items = fjob->items();
         QCOMPARE(items.count(), 1);
 
-        ItemDeleteJob *djob = new ItemDeleteJob(i, this);
+        auto *djob = new ItemDeleteJob(i, this);
         AKVERIFYEXEC(djob);
 
         QTRY_COMPARE(spy.count(), 1);
@@ -146,7 +146,7 @@ private Q_SLOTS:
         Tag tag;
         tag.setName(QStringLiteral("Tag1"));
         tag.setGid("Tag1");
-        TagCreateJob *tjob = new TagCreateJob(tag, this);
+        auto *tjob = new TagCreateJob(tag, this);
         AKVERIFYEXEC(tjob);
         tag = tjob->tag();
 
@@ -156,18 +156,18 @@ private Q_SLOTS:
         Item i;
         i.setRemoteId(QStringLiteral("D"));
 
-        ItemFetchJob *fjob = new ItemFetchJob(i, this);
+        auto *fjob = new ItemFetchJob(i, this);
         fjob->setCollection(col);
         AKVERIFYEXEC(fjob);
         QCOMPARE(fjob->items().count(), 1);
 
         i = fjob->items().first();
         i.setTag(tag);
-        ItemModifyJob *mjob = new ItemModifyJob(i, this);
+        auto *mjob = new ItemModifyJob(i, this);
         AKVERIFYEXEC(mjob);
 
         // Delete the tagged item
-        ItemDeleteJob *djob = new ItemDeleteJob(tag, this);
+        auto *djob = new ItemDeleteJob(tag, this);
         AKVERIFYEXEC(djob);
 
         QTRY_COMPARE(spy.count(), 1);
@@ -187,13 +187,13 @@ private Q_SLOTS:
         QSignalSpy spy(monitor.get(), &Monitor::itemsRemoved);
 
         const Collection col(AkonadiTest::collectionIdFromPath(QStringLiteral("res1/foo")));
-        ItemFetchJob *fjob = new ItemFetchJob(col, this);
+        auto *fjob = new ItemFetchJob(col, this);
         AKVERIFYEXEC(fjob);
         auto items = fjob->items();
         QVERIFY(items.count() > 0);
 
         // delete from non-empty collection
-        ItemDeleteJob *djob = new ItemDeleteJob(col, this);
+        auto *djob = new ItemDeleteJob(col, this);
         AKVERIFYEXEC(djob);
 
         QTRY_COMPARE(spy.count(), 1);

@@ -272,7 +272,7 @@ void PreprocessorManager::dataStoreDestroyed()
 
     qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreDestroyed(): killing the wait queue";
 
-    const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
+    const auto *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
         qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreDestroyed(): got the signal from a non DataStore object";
         return;
@@ -287,7 +287,7 @@ void PreprocessorManager::dataStoreTransactionCommitted()
 
     qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): pushing items in wait queue to the preprocessing chain";
 
-    const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
+    const auto *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
         qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): got the signal from a non DataStore object";
         return;
@@ -319,7 +319,7 @@ void PreprocessorManager::dataStoreTransactionRolledBack()
 
     qCDebug(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionRolledBack(): killing the wait queue";
 
-    const DataStore *dataStore = dynamic_cast< const DataStore *>(sender());
+    const auto *dataStore = dynamic_cast< const DataStore *>(sender());
     if (!dataStore) {
         qCWarning(AKONADISERVER_LOG) << "PreprocessorManager::dataStoreTransactionCommitted(): got the signal from a non DataStore object";
         return;

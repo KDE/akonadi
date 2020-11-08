@@ -47,7 +47,7 @@ private Q_SLOTS:
         QVERIFY(source.isValid());
         QVERIFY(destination.isValid());
 
-        CollectionMoveJob *mod = new CollectionMoveJob(source, destination, this);
+        auto *mod = new CollectionMoveJob(source, destination, this);
         QVERIFY(!mod->exec());
     }
 
@@ -74,7 +74,7 @@ private Q_SLOTS:
         QVERIFY(source.isValid());
         QVERIFY(destination.isValid());
 
-        CollectionFetchJob *fetch = new CollectionFetchJob(source, CollectionFetchJob::Base, this);
+        auto *fetch = new CollectionFetchJob(source, CollectionFetchJob::Base, this);
         AKVERIFYEXEC(fetch);
         QCOMPARE(fetch->collections().count(), 1);
         source = fetch->collections().first();
@@ -84,17 +84,17 @@ private Q_SLOTS:
         AKVERIFYEXEC(fetch);
         QHash<Collection, Item::List> referenceData;
         foreach (const Collection &c, fetch->collections()) {
-            ItemFetchJob *job = new ItemFetchJob(c, this);
+            auto *job = new ItemFetchJob(c, this);
             AKVERIFYEXEC(job);
             referenceData.insert(c, job->items());
         }
 
         // move collection
-        CollectionMoveJob *mod = new CollectionMoveJob(source, destination, this);
+        auto *mod = new CollectionMoveJob(source, destination, this);
         AKVERIFYEXEC(mod);
 
         // check if source was modified correctly
-        CollectionFetchJob *ljob = new CollectionFetchJob(source, CollectionFetchJob::Base);
+        auto *ljob = new CollectionFetchJob(source, CollectionFetchJob::Base);
         AKVERIFYEXEC(ljob);
         Collection::List list = ljob->collections();
 
@@ -116,7 +116,7 @@ private Q_SLOTS:
             } else {
                 QCOMPARE(list[list.indexOf(it.key())].resource(), it.key().resource());
             }
-            ItemFetchJob *job = new ItemFetchJob(it.key(), this);
+            auto *job = new ItemFetchJob(it.key(), this);
             job->fetchScope().fetchFullPayload();
             AKVERIFYEXEC(job);
             QCOMPARE(job->items().count(), it.value().count());

@@ -296,7 +296,7 @@ bool ItemModifyJob::doHandleResponse(qint64 tag, const Protocol::CommandPtr &res
 
         if (resp.errorMessage().contains(QLatin1String("[LLCONFLICT]"))) {
             if (d->mAutomaticConflictHandlingEnabled) {
-                ConflictHandler *handler = new ConflictHandler(ConflictHandler::LocalLocalConflict, this);
+                auto *handler = new ConflictHandler(ConflictHandler::LocalLocalConflict, this);
                 handler->setConflictingItems(d->mItems.first(), d->mItems.first());
                 connect(handler, &ConflictHandler::conflictResolved, this, [d]() { d->conflictResolved(); });
                 connect(handler, &ConflictHandler::error, this, [d](const QString &str) { d->conflictResolveError(str); });

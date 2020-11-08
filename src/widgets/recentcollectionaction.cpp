@@ -54,7 +54,7 @@ void RecentCollectionAction::fillRecentCollection(Akonadi::StandardActionManager
         return;
     }
 
-    QMenu *popup = new QMenu;
+    auto *popup = new QMenu;
     mRecentAction->setMenu(popup);
     needToDeleteMenu = true;
 

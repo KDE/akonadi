@@ -415,8 +415,8 @@ void StorageJanitor::verifyExternalParts()
     }
     while (qb.query().next()) {
         const auto filename = qb.query().value(0).toByteArray();
-        const Entity::Id pimItemId = qb.query().value(1).value<Entity::Id>();
-        const Entity::Id partId = qb.query().value(2).value<Entity::Id>();
+        const auto pimItemId = qb.query().value(1).value<Entity::Id>();
+        const auto partId = qb.query().value(2).value<Entity::Id>();
         QString partPath;
         if (!filename.isEmpty()) {
             partPath = ExternalPartStorage::resolveAbsolutePath(filename);
@@ -510,7 +510,7 @@ void StorageJanitor::findRIDDuplicates()
     qb.exec();
 
     while (qb.query().next()) {
-        const Collection::Id colId = qb.query().value(0).value<Collection::Id>();
+        const auto colId = qb.query().value(0).value<Collection::Id>();
         const QString name = qb.query().value(1).toString();
         inform(QStringLiteral("Checking ") + name);
 

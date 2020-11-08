@@ -60,7 +60,7 @@ QByteArray Akonadi::EntityDisplayAttribute::type() const
 
 EntityDisplayAttribute *EntityDisplayAttribute::clone() const
 {
-    EntityDisplayAttribute *attr = new EntityDisplayAttribute();
+    auto *attr = new EntityDisplayAttribute();
     attr->d->name = d->name;
     attr->d->icon = d->icon;
     attr->d->activeIcon = d->activeIcon;
