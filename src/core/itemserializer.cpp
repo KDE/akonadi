@@ -10,6 +10,7 @@
 #include "itemserializerplugin.h"
 #include "typepluginloader_p.h"
 #include "protocolhelper_p.h"
+#include "config_p.h"
 
 #include "private/externalpartstorage_p.h"
 #include "private/compressionstream_p.h"
@@ -156,9 +157,13 @@ void ItemSerializer::serialize(const Item &item, const QByteArray &label, QIODev
     }
     ItemSerializerPlugin *plugin = TypePluginLoader::pluginForMimeTypeAndClass(item.mimeType(), item.availablePayloadMetaTypeIds());
 
-    CompressionStream compressor(&data);
-    compressor.open(QIODevice::WriteOnly);
-    plugin->serialize(item, label, compressor, version);
+    if (Config::get().payloadCompression.enabled) {
+        CompressionStream compressor(&data);
+        compressor.open(QIODevice::WriteOnly);
+        plugin->serialize(item, label, compressor, version);
+    } else {
+        plugin->serialize(item, label, data, version);
+    }
 }
 
 void ItemSerializer::apply(Item &item, const Item &other)

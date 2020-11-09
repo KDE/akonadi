@@ -18,6 +18,7 @@ set(akonadicore_base_SRCS
     changerecorder.cpp
     changerecorder_p.cpp
     changerecorderjournal.cpp
+    config.cpp
     connection.cpp
     collection.cpp
     collectionfetchscope.cpp
