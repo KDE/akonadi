@@ -62,6 +62,7 @@ private Q_SLOTS:
     void slotModifySelectedAccount();
 
 private:
+    void slotSearchAgentType(const QString &str);
     QScopedPointer<ManageAccountWidgetPrivate> const d;
 };
 }
