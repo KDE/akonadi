@@ -54,12 +54,19 @@ ManageAccountWidget::ManageAccountWidget(QWidget *parent)
 
     d->ui.mAccountList->view()->setSelectionMode(QAbstractItemView::SingleSelection);
 
-    connect(d->ui.mFilterAccount, &QLineEdit::textChanged, d->ui.mAccountList->agentFilterProxyModel(), &AgentFilterProxyModel::setFilterFixedString);
+    connect(d->ui.mFilterAccount, &QLineEdit::textChanged, this, &ManageAccountWidget::slotSearchAgentType);
+
     d->ui.mFilterAccount->installEventFilter(this);
     slotAccountSelected(d->ui.mAccountList->currentAgentInstance());
 }
 
 ManageAccountWidget::~ManageAccountWidget() = default;
+
+void ManageAccountWidget::slotSearchAgentType(const QString &str)
+{
+    d->ui.mAccountList->agentFilterProxyModel()->setFilterRegularExpression(str);
+}
+
 
 void ManageAccountWidget::disconnectAddAccountButton()
 {
