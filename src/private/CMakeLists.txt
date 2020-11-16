@@ -104,6 +104,7 @@ install(FILES
     capabilities_p.h
     scope_p.h
     tristate_p.h
+    compressionstream_p.h
     DESTINATION ${KF5_INCLUDE_INSTALL_DIR}/akonadi/private
 )
 
