@@ -24,6 +24,7 @@ include(ECMGeneratePriFile)
 
 include(ECMSetupVersion)
 include(FeatureSummary)
+include(CheckAtomic)
 include(CheckIncludeFiles)
 include(ECMQtDeclareLoggingCategory)
 include(CheckSymbolExists)
