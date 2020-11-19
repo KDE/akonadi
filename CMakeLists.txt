@@ -8,7 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 
 # ECM setup
-set(KF5_MIN_VERSION "5.76.0")
+set(KF5_MIN_VERSION "5.75.0")
 
 find_package(ECM ${KF5_MIN_VERSION} CONFIG REQUIRED)
 
@@ -24,6 +24,7 @@ include(ECMGeneratePriFile)
 
 include(ECMSetupVersion)
 include(FeatureSummary)
+include(CheckAtomic)
 include(CheckIncludeFiles)
 include(ECMQtDeclareLoggingCategory)
 include(CheckSymbolExists)
