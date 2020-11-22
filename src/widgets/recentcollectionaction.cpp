@@ -100,15 +100,23 @@ QString RecentCollectionAction::actionName(QModelIndex index)
 void RecentCollectionAction::addRecentCollection(Akonadi::StandardActionManager::Type type, Akonadi::Collection::Id id)
 {
     const QString newCollectionID = QString::number(id);
-    if (mListRecentCollection.isEmpty() ||
-            !mListRecentCollection.contains(newCollectionID)) {
-        if (mListRecentCollection.count() == s_maximumRecentCollection) {
-            mListRecentCollection.removeFirst();
+    if (mListRecentCollection.contains(newCollectionID)) {
+        // first() is safe to use if we get here
+        if (mListRecentCollection.first() == newCollectionID) {
+            // already most recently used, nothing to do
+            return;
         }
-        mListRecentCollection.append(newCollectionID);
-        writeConfig();
-        fillRecentCollection(type, Akonadi::Collection::List());
+
+        mListRecentCollection.removeAll(newCollectionID);
     }
+
+    mListRecentCollection.prepend(newCollectionID);
+    while (mListRecentCollection.count() > s_maximumRecentCollection) {
+            mListRecentCollection.removeLast();
+    }
+
+    writeConfig();
+    fillRecentCollection(type, Akonadi::Collection::List());
 }
 
 void RecentCollectionAction::writeConfig()
