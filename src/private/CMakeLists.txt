@@ -1,5 +1,7 @@
 add_subdirectory(protocolgen)
 
+include_directories(${LIBLZMA_INCLUDE_DIRS})
+
 if(NOT XMLLINT_EXECUTABLE)
   message(STATUS "xmllint not found, skipping protocol.xml validation")
 else()
@@ -34,7 +36,7 @@ PUBLIC
     Qt5::Core
     Qt5::DBus
 PRIVATE
-    LibLZMA::LibLZMA
+    ${LIBLZMA_LIBRARIES}
 )
 if (WIN32)
     set(akonadiprivate_LIBS
@@ -62,7 +64,6 @@ if (WIN32)
     set(akonadiprivate_buildsources ${akonadiprivate_SRCS})
 else()
     add_library(akonadiprivate_obj OBJECT ${akonadiprivate_SRCS})
-    target_link_libraries(akonadiprivate_obj ${akonadiprivate_LIBS})
     update_include_directories(akonadiprivate_obj)
     set_target_properties(akonadiprivate_obj PROPERTIES POSITION_INDEPENDENT_CODE 1)
     add_dependencies(akonadiprivate_obj generate_protocol)
