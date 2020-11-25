@@ -365,7 +365,7 @@ uint AgentManager::agentInstanceProgress(const QString &identifier) const
 
 QString AgentManager::agentInstanceProgressMessage(const QString &identifier) const
 {
-    Q_UNUSED(identifier);
+    Q_UNUSED(identifier)
 
     return QString();
 }
@@ -636,7 +636,7 @@ void AgentManager::save()
 
 void AgentManager::serviceOwnerChanged(const QString &name, const QString &oldOwner, const QString &newOwner)
 {
-    Q_UNUSED(oldOwner);
+    Q_UNUSED(oldOwner)
     // This is called by the D-Bus server when a service comes up, goes down or changes ownership for some reason
     // and this is where we "hook up" our different Agent interfaces.
 

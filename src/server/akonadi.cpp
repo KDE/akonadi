@@ -372,7 +372,7 @@ bool AkonadiServer::createServers(QSettings &settings, QSettings &connectionSett
     connectionSettings.setValue(QStringLiteral("Notifications/Method"), QStringLiteral("NamedPipe"));
     connectionSettings.setValue(QStringLiteral("Notifications/NamedPipe"), ntfPipe);
 #else
-    Q_UNUSED(settings);
+    Q_UNUSED(settings)
 
     const QString cmdSocketName = QStringLiteral("akonadiserver-cmd.socket");
     const QString ntfSocketName = QStringLiteral("akonadiserver-ntf.socket");

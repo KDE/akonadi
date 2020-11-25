@@ -657,7 +657,7 @@ bool DataStore::removeItemsTags(const PimItem::List &items, const Tag::List &tag
 bool DataStore::removeTags(const Tag::List &tags, bool silent)
 {
     // Currently the "silent" argument is only for API symmetry
-    Q_UNUSED(silent);
+    Q_UNUSED(silent)
 
     QVariantList removedTagsIds;
     QSet<qint64> removedTags;

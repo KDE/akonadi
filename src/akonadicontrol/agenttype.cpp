@@ -28,7 +28,7 @@ AgentType::AgentType()
 
 bool AgentType::load(const QString &fileName, AgentManager *manager)
 {
-    Q_UNUSED(manager);
+    Q_UNUSED(manager)
 
     if (!KDesktopFile::isDesktopFile(fileName)) {
         return false;

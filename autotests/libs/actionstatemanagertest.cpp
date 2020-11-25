@@ -101,8 +101,8 @@ public Q_SLOTS:
 
     void updatePluralLabel(int type, int count)
     {
-        Q_UNUSED(type);
-        Q_UNUSED(count);
+        Q_UNUSED(type)
+        Q_UNUSED(count)
     }
 
     bool isFavoriteCollection(const Akonadi::Collection &collection)
@@ -112,7 +112,7 @@ public Q_SLOTS:
 
     void updateAlternatingAction(int action)
     {
-        Q_UNUSED(action);
+        Q_UNUSED(action)
     }
 
 private Q_SLOTS:

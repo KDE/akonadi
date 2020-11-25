@@ -411,8 +411,8 @@ QStringList EntityTreeModel::mimeTypes() const
 
 bool EntityTreeModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
-    Q_UNUSED(row);
-    Q_UNUSED(column);
+    Q_UNUSED(row)
+    Q_UNUSED(column)
     Q_D(EntityTreeModel);
 
     // Can't drop onto Collection::root.
@@ -653,7 +653,7 @@ int EntityTreeModel::rowCount(const QModelIndex &parent) const
 int EntityTreeModel::entityColumnCount(HeaderGroup headerGroup) const
 {
     // Not needed in this model.
-    Q_UNUSED(headerGroup);
+    Q_UNUSED(headerGroup)
 
     return 1;
 }
@@ -662,7 +662,7 @@ QVariant EntityTreeModel::entityHeaderData(int section, Qt::Orientation orientat
 {
     Q_D(const EntityTreeModel);
     // Not needed in this model.
-    Q_UNUSED(headerGroup);
+    Q_UNUSED(headerGroup)
 
     if (section == 0 && orientation == Qt::Horizontal && role == Qt::DisplayRole) {
         if (d->m_rootCollection == Collection::root()) {

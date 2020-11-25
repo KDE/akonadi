@@ -12,10 +12,10 @@ using namespace Akonadi;
 
 bool SerializerPlugin%{APPNAME}::deserialize(Item &item, const QByteArray &label, QIODevice &data, int version)
 {
-    Q_UNUSED(item);
-    Q_UNUSED(label);
-    Q_UNUSED(data);
-    Q_UNUSED(version);
+    Q_UNUSED(item)
+    Q_UNUSED(label)
+    Q_UNUSED(data)
+    Q_UNUSED(version)
 
     // TODO Implement this
 
@@ -24,10 +24,10 @@ bool SerializerPlugin%{APPNAME}::deserialize(Item &item, const QByteArray &label
 
 void SerializerPlugin%{APPNAME}::serialize(const Item &item, const QByteArray &label, QIODevice &data, int &version)
 {
-    Q_UNUSED(item);
-    Q_UNUSED(label);
-    Q_UNUSED(data);
-    Q_UNUSED(version);
+    Q_UNUSED(item)
+    Q_UNUSED(label)
+    Q_UNUSED(data)
+    Q_UNUSED(version)
 
     // TODO Implement this
 }

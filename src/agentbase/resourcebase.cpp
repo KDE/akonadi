@@ -515,7 +515,7 @@ QString ResourceBase::name() const
 
 QString ResourceBase::parseArguments(int argc, char **argv)
 {
-    Q_UNUSED(argc);
+    Q_UNUSED(argc)
 
     QCommandLineOption identifierOption(QStringLiteral("identifier"),
                                         i18nc("@label command line option", "Resource identifier"),
@@ -1449,8 +1449,8 @@ void ResourceBase::retrieveRelations()
 
 bool ResourceBase::retrieveItem(const Akonadi::Item &item, const QSet<QByteArray> &parts)
 {
-    Q_UNUSED(item);
-    Q_UNUSED(parts);
+    Q_UNUSED(item)
+    Q_UNUSED(parts)
     // retrieveItem() can no longer be pure virtual, because then we could not mark
     // it as deprecated (i.e. implementations would still be forced to implement it),
     // so instead we assert here.

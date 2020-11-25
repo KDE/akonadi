@@ -116,10 +116,10 @@ void CollectionScheduler::inhibit(bool inhibit)
 {
     if (inhibit) {
         const bool success = QMetaObject::invokeMethod(mScheduler, &PauseableTimer::pause, Qt::QueuedConnection);
-        Q_ASSERT(success); Q_UNUSED(success);
+        Q_ASSERT(success); Q_UNUSED(success)
     } else {
         const bool success = QMetaObject::invokeMethod(mScheduler, &PauseableTimer::resume, Qt::QueuedConnection);
-        Q_ASSERT(success); Q_UNUSED(success);
+        Q_ASSERT(success); Q_UNUSED(success)
     }
 }
 

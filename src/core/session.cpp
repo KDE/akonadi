@@ -212,7 +212,7 @@ void SessionPrivate::jobDone(KJob *job)
 void SessionPrivate::jobWriteFinished(Akonadi::Job *job)
 {
     Q_ASSERT((job == currentJob && pipeline.isEmpty()) || (job = pipeline.last()));
-    Q_UNUSED(job);
+    Q_UNUSED(job)
 
     startNext();
 }

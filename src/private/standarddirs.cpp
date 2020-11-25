@@ -28,7 +28,7 @@ QString buildFullRelPath(const char *resource, const QString &relPath)
     // inside the "akonadi" folder whether it's data or config.
     fullRelPath += QLatin1Char('/') + QString::fromLocal8Bit(resource);
 #else
-    Q_UNUSED(resource);
+    Q_UNUSED(resource)
 #endif
 
     if (Akonadi::Instance::hasIdentifier()) {

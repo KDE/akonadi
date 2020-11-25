@@ -271,9 +271,9 @@ void JobPrivate::updateItemRevision(Akonadi::Item::Id itemId, int oldRevision, i
 
 void JobPrivate::doUpdateItemRevision(Akonadi::Item::Id itemId, int oldRevision, int newRevision)
 {
-    Q_UNUSED(itemId);
-    Q_UNUSED(oldRevision);
-    Q_UNUSED(newRevision);
+    Q_UNUSED(itemId)
+    Q_UNUSED(oldRevision)
+    Q_UNUSED(newRevision)
 }
 
 int JobPrivate::protocolVersion() const

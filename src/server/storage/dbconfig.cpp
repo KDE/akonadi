@@ -142,7 +142,7 @@ QString DbConfig::defaultDatabaseName()
 
 void DbConfig::initSession(const QSqlDatabase &database)
 {
-    Q_UNUSED(database);
+    Q_UNUSED(database)
 }
 
 int DbConfig::execute(const QString &cmd, const QStringList &args) const

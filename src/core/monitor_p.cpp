@@ -1120,7 +1120,7 @@ bool MonitorPrivate::emitCollectionNotification(const Protocol::CollectionChange
 
 bool MonitorPrivate::emitTagNotification(const Protocol::TagChangeNotification &msg, const Tag &tag)
 {
-    Q_UNUSED(msg);
+    Q_UNUSED(msg)
     switch (msg.operation()) {
     case Protocol::TagChangeNotification::Add:
         return emitToListeners(&Monitor::tagAdded, tag);
@@ -1174,7 +1174,7 @@ bool MonitorPrivate::emitSubscriptionChangeNotification(const Protocol::Subscrip
 bool MonitorPrivate::emitDebugChangeNotification(const Protocol::DebugChangeNotification &msg,
         const ChangeNotification &ntf)
 {
-    Q_UNUSED(msg);
+    Q_UNUSED(msg)
 
     if (!ntf.isValid()) {
         return false;

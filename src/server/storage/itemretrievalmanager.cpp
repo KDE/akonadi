@@ -61,7 +61,7 @@ void ItemRetrievalManager::init()
 // called within the retrieval thread
 void ItemRetrievalManager::serviceOwnerChanged(const QString &serviceName, const QString &oldOwner, const QString &newOwner)
 {
-    Q_UNUSED(newOwner);
+    Q_UNUSED(newOwner)
     if (oldOwner.isEmpty()) {
         return;
     }

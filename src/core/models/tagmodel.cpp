@@ -139,7 +139,7 @@ QModelIndex TagModel::parent(const QModelIndex &child) const
 
 Qt::ItemFlags TagModel::flags(const QModelIndex &index) const
 {
-    Q_UNUSED(index);
+    Q_UNUSED(index)
 
     return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsUserCheckable;
 }

@@ -128,7 +128,7 @@ private:
 public Q_SLOTS:
     void syncBenchmarkProgress(KJob *job, ulong percent)
     {
-        Q_UNUSED(job);
+        Q_UNUSED(job)
         qDebug() << "CollectionSync progress:" <<  percent << "%";
     }
 

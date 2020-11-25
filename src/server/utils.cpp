@@ -156,7 +156,7 @@ static bool createSocketDirectory(const QString &link)
 QString Utils::getDirectoryFileSystem(const QString &directory)
 {
 #ifndef Q_OS_LINUX
-    Q_UNUSED(directory);
+    Q_UNUSED(directory)
     return QString();
 #else
     QString bestMatchPath;
@@ -189,7 +189,7 @@ QString Utils::getDirectoryFileSystem(const QString &directory)
 void Utils::disableCoW(const QString &path)
 {
 #ifndef Q_OS_LINUX
-    Q_UNUSED(path);
+    Q_UNUSED(path)
 #else
     qCDebug(AKONADISERVER_LOG) << "Detected Btrfs, disabling copy-on-write on database files";
 

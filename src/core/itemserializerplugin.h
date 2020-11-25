@@ -51,7 +51,7 @@ namespace Akonadi
  *     bool deserialize( Akonadi::Item& item, const QByteArray& label, QIODevice& data, int version )
  *     {
  *       // we don't handle versions in this example
- *       Q_UNUSED( version );
+ *       Q_UNUSED(version)
  *
  *       // we work only on full payload
  *       if ( label != Akonadi::Item::FullPayload )
@@ -72,7 +72,7 @@ namespace Akonadi
  *     void serialize( const Akonadi::Item& item, const QByteArray& label, QIODevice& data, int &version )
  *     {
  *       // we don't handle versions in this example
- *       Q_UNUSED( version );
+ *       Q_UNUSED(version)
  *
  *       if ( label != Akonadi::Item::FullPayload || !item.hasPayload<PimNote>() )
  *         return;

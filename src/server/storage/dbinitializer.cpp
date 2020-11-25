@@ -262,7 +262,7 @@ void DbInitializer::execPendingQueries(const QStringList &queries)
 
 QString DbInitializer::sqlType(const ColumnDescription &col, int size) const
 {
-    Q_UNUSED(size);
+    Q_UNUSED(size)
     if (col.type == QLatin1String("int")) {
         return QStringLiteral("INTEGER");
     }
@@ -326,15 +326,15 @@ QString DbInitializer::buildCreateIndexStatement(const TableDescription &tableDe
 
 QStringList DbInitializer::buildAddForeignKeyConstraintStatements(const TableDescription &table, const ColumnDescription &column) const
 {
-    Q_UNUSED(table);
-    Q_UNUSED(column);
+    Q_UNUSED(table)
+    Q_UNUSED(column)
     return {};
 }
 
 QStringList DbInitializer::buildRemoveForeignKeyConstraintStatements(const DbIntrospector::ForeignKey &fk, const TableDescription &table) const
 {
-    Q_UNUSED(fk);
-    Q_UNUSED(table);
+    Q_UNUSED(fk)
+    Q_UNUSED(table)
     return {};
 }
 

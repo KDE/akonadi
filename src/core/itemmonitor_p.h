@@ -47,14 +47,14 @@ public:
 private Q_SLOTS:
     void slotItemChanged(const Akonadi::Item &item, const QSet<QByteArray> &aSet)
     {
-        Q_UNUSED(aSet);
+        Q_UNUSED(aSet)
         mItem.apply(item);
         mParent->itemChanged(item);
     }
 
     void slotItemRemoved(const Akonadi::Item &item)
     {
-        Q_UNUSED(item);
+        Q_UNUSED(item)
         mItem = Item();
         mParent->itemRemoved();
     }

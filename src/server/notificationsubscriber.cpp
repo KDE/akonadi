@@ -549,7 +549,7 @@ bool NotificationSubscriber::acceptsRelationNotification(const Protocol::Relatio
 {
     // Assumes mLock being locked by caller
 
-    Q_UNUSED(msg);
+    Q_UNUSED(msg)
 
     if (mAllMonitored) {
         return true;
@@ -562,7 +562,7 @@ bool NotificationSubscriber::acceptsSubscriptionNotification(const Protocol::Sub
 {
     // Assumes mLock being locked by caller
 
-    Q_UNUSED(msg);
+    Q_UNUSED(msg)
 
     // Unlike other types, subscription notifications must be explicitly enabled
     // by caller and are excluded from "monitor all" as well

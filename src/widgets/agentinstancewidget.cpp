@@ -276,7 +276,7 @@ void AgentInstanceWidgetDelegate::paint(QPainter *painter, const QStyleOptionVie
 
 QSize AgentInstanceWidgetDelegate::sizeHint(const QStyleOptionViewItem &option, const QModelIndex &index) const
 {
-    Q_UNUSED(index);
+    Q_UNUSED(index)
 
     const int iconHeight = QApplication::style()->pixelMetric(QStyle::PM_MessageBoxIconSize) + (s_delegatePaddingSize * 2);  //icon height + padding either side
     const int textHeight = option.fontMetrics.height() + qMax(option.fontMetrics.height(), 16) + (s_delegatePaddingSize * 2);   //height of text + icon/text + padding either side

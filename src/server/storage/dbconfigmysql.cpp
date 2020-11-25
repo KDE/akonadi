@@ -521,8 +521,8 @@ bool DbConfigMysql::startInternalServer()
 
 void DbConfigMysql::processFinished(int exitCode, QProcess::ExitStatus exitStatus)
 {
-    Q_UNUSED(exitCode);
-    Q_UNUSED(exitStatus);
+    Q_UNUSED(exitCode)
+    Q_UNUSED(exitStatus)
 
     qCCritical(AKONADISERVER_LOG) << "database server stopped unexpectedly";
 

@@ -104,7 +104,7 @@ public Q_SLOTS:
 
     void setSession(const QByteArray &session)
     {
-        Q_UNUSED(session);
+        Q_UNUSED(session)
     }
 };
 
@@ -150,7 +150,7 @@ public:
     }
 
     void destroyNotificationConnection(Akonadi::Session *parent, Akonadi::Connection *connection) override {
-        Q_UNUSED(parent);
+        Q_UNUSED(parent)
         delete connection;
     }
 

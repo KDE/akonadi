@@ -42,6 +42,6 @@ int FakeIntervalCheck::collectionScheduleInterval(const Collection &collection)
 
 void FakeIntervalCheck::collectionExpired(const Collection &collection)
 {
-    Q_UNUSED(collection);
+    Q_UNUSED(collection)
     // Nothing here. The granularity is in whole minutes, we don't have time to wait for that in a unittest.
 }

@@ -302,7 +302,7 @@ void AgentActionManager::createAllActions()
 {
     for (int type = 0; type < LastType; ++type) {
         auto *action = createAction(static_cast<Type>(type));
-        Q_UNUSED(action);
+        Q_UNUSED(action)
     }
 }
 

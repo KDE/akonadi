@@ -29,7 +29,7 @@ void PreprocessorBase::finishProcessing(ProcessingResult result)
 
     Q_ASSERT_X(result != ProcessingDelayed, "PreprocessorBase::terminateProcessing", "You should never pass ProcessingDelayed to this function");
     Q_ASSERT_X(d->mInDelayedProcessing, "PreprocessorBase::terminateProcessing", "terminateProcessing() called while not in delayed processing mode");
-    Q_UNUSED(result);
+    Q_UNUSED(result)
 
     d->mInDelayedProcessing = false;
     Q_EMIT d->itemProcessed(d->mDelayedProcessingItemId);

@@ -199,7 +199,7 @@ struct PayloadTrait {
     /// checks an object of this payload type for being @c null
     static inline bool isNull(const Type &p)
     {
-        Q_UNUSED(p);
+        Q_UNUSED(p)
         return true;
     }
     /// casts to Type from @c U

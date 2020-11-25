@@ -31,7 +31,7 @@ void NotificationSource::setAllMonitored(bool allMonitored)
     const bool ok = QMetaObject::invokeMethod(parent(), "setAllMonitored",
                     Q_ARG(bool, allMonitored));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setExclusive(bool exclusive)
@@ -39,7 +39,7 @@ void NotificationSource::setExclusive(bool exclusive)
     const bool ok = QMetaObject::invokeMethod(parent(), "setExclusive",
                     Q_ARG(bool, exclusive));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setMonitoredCollection(Collection::Id id, bool monitored)
@@ -48,7 +48,7 @@ void NotificationSource::setMonitoredCollection(Collection::Id id, bool monitore
                     Q_ARG(qlonglong, id),
                     Q_ARG(bool, monitored));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setMonitoredItem(Item::Id id, bool monitored)
@@ -57,7 +57,7 @@ void NotificationSource::setMonitoredItem(Item::Id id, bool monitored)
                     Q_ARG(qlonglong, id),
                     Q_ARG(bool, monitored));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setMonitoredResource(const QByteArray &resource, bool monitored)
@@ -66,7 +66,7 @@ void NotificationSource::setMonitoredResource(const QByteArray &resource, bool m
                     Q_ARG(QByteArray, resource),
                     Q_ARG(bool, monitored));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setMonitoredMimeType(const QString &mimeType, bool monitored)
@@ -75,7 +75,7 @@ void NotificationSource::setMonitoredMimeType(const QString &mimeType, bool moni
                     Q_ARG(QString, mimeType),
                     Q_ARG(bool, monitored));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setIgnoredSession(const QByteArray &session, bool ignored)
@@ -84,7 +84,7 @@ void NotificationSource::setIgnoredSession(const QByteArray &session, bool ignor
                     Q_ARG(QByteArray, session),
                     Q_ARG(bool, ignored));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setMonitoredTag(Tag::Id id, bool monitored)
@@ -93,7 +93,7 @@ void NotificationSource::setMonitoredTag(Tag::Id id, bool monitored)
                     Q_ARG(qlonglong, id),
                     Q_ARG(bool, monitored));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setMonitoredType(Protocol::ChangeNotification::Type type, bool monitored)
@@ -102,7 +102,7 @@ void NotificationSource::setMonitoredType(Protocol::ChangeNotification::Type typ
                     Q_ARG(Akonadi::Protocol::ChangeNotification::Type, type),
                     Q_ARG(bool, monitored));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 void NotificationSource::setSession(const QByteArray &session)
@@ -110,7 +110,7 @@ void NotificationSource::setSession(const QByteArray &session)
     const bool ok = QMetaObject::invokeMethod(parent(), "setSession",
                     Q_ARG(QByteArray, session));
     Q_ASSERT(ok);
-    Q_UNUSED(ok);
+    Q_UNUSED(ok)
 }
 
 QObject *NotificationSource::source() const

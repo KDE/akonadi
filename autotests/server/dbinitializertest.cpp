@@ -45,29 +45,29 @@ public:
 
     bool hasTable(const QString &tableName) override
     {
-        Q_UNUSED(tableName);
+        Q_UNUSED(tableName)
         return m_hasTable;
     }
     bool hasIndex(const QString &tableName, const QString &indexName) override
     {
-        Q_UNUSED(tableName);
-        Q_UNUSED(indexName);
+        Q_UNUSED(tableName)
+        Q_UNUSED(indexName)
         return m_hasIndex;
     }
     bool hasColumn(const QString &tableName, const QString &columnName) override
     {
-        Q_UNUSED(tableName);
-        Q_UNUSED(columnName);
+        Q_UNUSED(tableName)
+        Q_UNUSED(columnName)
         return false;
     }
     bool isTableEmpty(const QString &tableName) override
     {
-        Q_UNUSED(tableName);
+        Q_UNUSED(tableName)
         return m_tableEmpty;
     }
     QVector< ForeignKey > foreignKeyConstraints(const QString &tableName) override
     {
-        Q_UNUSED(tableName);
+        Q_UNUSED(tableName)
         return m_foreignKeys;
     }
 

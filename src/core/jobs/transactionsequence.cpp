@@ -51,7 +51,7 @@ public:
     {
         Q_Q(TransactionSequence);
 
-        Q_UNUSED(job);
+        Q_UNUSED(job)
         q->emitResult();
     }
 

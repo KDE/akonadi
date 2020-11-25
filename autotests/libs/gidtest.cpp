@@ -28,7 +28,7 @@ bool TestSerializer::deserialize(Akonadi::Item &item, const QByteArray &label, Q
     if (label != Akonadi::Item::FullPayload) {
         return false;
     }
-    Q_UNUSED(version);
+    Q_UNUSED(version)
 
     item.setPayload(data.readAll());
     return true;
@@ -38,8 +38,8 @@ void TestSerializer::serialize(const Akonadi::Item &item, const QByteArray &labe
 {
     qDebug();
     Q_ASSERT(label == Akonadi::Item::FullPayload);
-    Q_UNUSED(label);
-    Q_UNUSED(version);
+    Q_UNUSED(label)
+    Q_UNUSED(version)
     data.write(item.payload<QByteArray>());
 }
 

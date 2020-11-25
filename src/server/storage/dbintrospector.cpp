@@ -94,14 +94,14 @@ bool DbIntrospector::isTableEmpty(const QString &tableName)
 
 QVector<DbIntrospector::ForeignKey> DbIntrospector::foreignKeyConstraints(const QString &tableName)
 {
-    Q_UNUSED(tableName);
+    Q_UNUSED(tableName)
     return QVector<ForeignKey>();
 }
 
 QString DbIntrospector::hasIndexQuery(const QString &tableName, const QString &indexName)
 {
-    Q_UNUSED(tableName);
-    Q_UNUSED(indexName);
+    Q_UNUSED(tableName)
+    Q_UNUSED(indexName)
     qCCritical(AKONADISERVER_LOG) << "Implement index support for your database!";
     return QString();
 }

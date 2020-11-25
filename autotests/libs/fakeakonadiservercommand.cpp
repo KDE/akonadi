@@ -274,7 +274,7 @@ void FakeJobResponse::parseEntityString(QList<FakeJobResponse *> &collectionResp
         } else {
             type = entityString;
         }
-        Q_UNUSED(order);
+        Q_UNUSED(order)
 
         item.setMimeType(type);
         item.setId(fakeServerData->nextItemId());

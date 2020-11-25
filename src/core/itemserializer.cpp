@@ -46,7 +46,7 @@ void DefaultItemSerializerPlugin::serialize(const Item &item, const QByteArray &
 {
     Q_UNUSED(version)
     Q_ASSERT(label == Item::FullPayload);
-    Q_UNUSED(label);
+    Q_UNUSED(label)
     data.write(item.payload<QByteArray>());
 }
 
@@ -68,7 +68,7 @@ void StdStringItemSerializerPlugin::serialize(const Item &item, const QByteArray
 {
     Q_UNUSED(version)
     Q_ASSERT(label == Item::FullPayload);
-    Q_UNUSED(label);
+    Q_UNUSED(label)
     const std::string str = item.payload<std::string>();
     data.write(QByteArray::fromRawData(str.data(), str.size()));
 }

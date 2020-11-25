@@ -66,8 +66,8 @@ AgentBase::Observer::~Observer()
 
 void AgentBase::Observer::itemAdded(const Item &item, const Collection &collection)
 {
-    Q_UNUSED(item);
-    Q_UNUSED(collection);
+    Q_UNUSED(item)
+    Q_UNUSED(collection)
     if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
@@ -75,8 +75,8 @@ void AgentBase::Observer::itemAdded(const Item &item, const Collection &collecti
 
 void AgentBase::Observer::itemChanged(const Item &item, const QSet<QByteArray> &partIdentifiers)
 {
-    Q_UNUSED(item);
-    Q_UNUSED(partIdentifiers);
+    Q_UNUSED(item)
+    Q_UNUSED(partIdentifiers)
     if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
@@ -84,7 +84,7 @@ void AgentBase::Observer::itemChanged(const Item &item, const QSet<QByteArray> &
 
 void AgentBase::Observer::itemRemoved(const Item &item)
 {
-    Q_UNUSED(item);
+    Q_UNUSED(item)
     if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
@@ -92,8 +92,8 @@ void AgentBase::Observer::itemRemoved(const Item &item)
 
 void AgentBase::Observer::collectionAdded(const Akonadi::Collection &collection, const Akonadi::Collection &parent)
 {
-    Q_UNUSED(collection);
-    Q_UNUSED(parent);
+    Q_UNUSED(collection)
+    Q_UNUSED(parent)
     if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
@@ -101,7 +101,7 @@ void AgentBase::Observer::collectionAdded(const Akonadi::Collection &collection,
 
 void AgentBase::Observer::collectionChanged(const Collection &collection)
 {
-    Q_UNUSED(collection);
+    Q_UNUSED(collection)
     if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
@@ -109,7 +109,7 @@ void AgentBase::Observer::collectionChanged(const Collection &collection)
 
 void AgentBase::Observer::collectionRemoved(const Collection &collection)
 {
-    Q_UNUSED(collection);
+    Q_UNUSED(collection)
     if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
@@ -117,9 +117,9 @@ void AgentBase::Observer::collectionRemoved(const Collection &collection)
 
 void AgentBase::ObserverV2::itemMoved(const Akonadi::Item &item, const Akonadi::Collection &source, const Akonadi::Collection &dest)
 {
-    Q_UNUSED(item);
-    Q_UNUSED(source);
-    Q_UNUSED(dest);
+    Q_UNUSED(item)
+    Q_UNUSED(source)
+    Q_UNUSED(dest)
     if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
@@ -127,8 +127,8 @@ void AgentBase::ObserverV2::itemMoved(const Akonadi::Item &item, const Akonadi::
 
 void AgentBase::ObserverV2::itemLinked(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    Q_UNUSED(item);
-    Q_UNUSED(collection);
+    Q_UNUSED(item)
+    Q_UNUSED(collection)
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemLinked,
@@ -139,8 +139,8 @@ void AgentBase::ObserverV2::itemLinked(const Akonadi::Item &item, const Akonadi:
 
 void AgentBase::ObserverV2::itemUnlinked(const Akonadi::Item &item, const Akonadi::Collection &collection)
 {
-    Q_UNUSED(item);
-    Q_UNUSED(collection);
+    Q_UNUSED(item)
+    Q_UNUSED(collection)
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
         QObject::disconnect(sAgentBase->changeRecorder(), &Monitor::itemUnlinked,
@@ -151,9 +151,9 @@ void AgentBase::ObserverV2::itemUnlinked(const Akonadi::Item &item, const Akonad
 
 void AgentBase::ObserverV2::collectionMoved(const Akonadi::Collection &collection, const Akonadi::Collection &source, const Akonadi::Collection &dest)
 {
-    Q_UNUSED(collection);
-    Q_UNUSED(source);
-    Q_UNUSED(dest);
+    Q_UNUSED(collection)
+    Q_UNUSED(source)
+    Q_UNUSED(dest)
     if (sAgentBase) {
         sAgentBase->d_ptr->changeProcessed();
     }
@@ -161,15 +161,15 @@ void AgentBase::ObserverV2::collectionMoved(const Akonadi::Collection &collectio
 
 void AgentBase::ObserverV2::collectionChanged(const Akonadi::Collection &collection, const QSet<QByteArray> &changedAttributes)
 {
-    Q_UNUSED(changedAttributes);
+    Q_UNUSED(changedAttributes)
     collectionChanged(collection);
 }
 
 void AgentBase::ObserverV3::itemsFlagsChanged(const Akonadi::Item::List &items, const QSet<QByteArray> &addedFlags, const QSet<QByteArray> &removedFlags)
 {
-    Q_UNUSED(items);
-    Q_UNUSED(addedFlags);
-    Q_UNUSED(removedFlags);
+    Q_UNUSED(items)
+    Q_UNUSED(addedFlags)
+    Q_UNUSED(removedFlags)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
@@ -181,9 +181,9 @@ void AgentBase::ObserverV3::itemsFlagsChanged(const Akonadi::Item::List &items, 
 
 void AgentBase::ObserverV3::itemsMoved(const Akonadi::Item::List &items, const Collection &sourceCollection, const Collection &destinationCollection)
 {
-    Q_UNUSED(items);
-    Q_UNUSED(sourceCollection);
-    Q_UNUSED(destinationCollection);
+    Q_UNUSED(items)
+    Q_UNUSED(sourceCollection)
+    Q_UNUSED(destinationCollection)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
@@ -195,7 +195,7 @@ void AgentBase::ObserverV3::itemsMoved(const Akonadi::Item::List &items, const C
 
 void AgentBase::ObserverV3::itemsRemoved(const Akonadi::Item::List &items)
 {
-    Q_UNUSED(items);
+    Q_UNUSED(items)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
@@ -207,8 +207,8 @@ void AgentBase::ObserverV3::itemsRemoved(const Akonadi::Item::List &items)
 
 void AgentBase::ObserverV3::itemsLinked(const Akonadi::Item::List &items, const Collection &collection)
 {
-    Q_UNUSED(items);
-    Q_UNUSED(collection);
+    Q_UNUSED(items)
+    Q_UNUSED(collection)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimizations in Monitor
@@ -220,7 +220,7 @@ void AgentBase::ObserverV3::itemsLinked(const Akonadi::Item::List &items, const 
 
 void AgentBase::ObserverV3::itemsUnlinked(const Akonadi::Item::List &items, const Collection &collection)
 {
-    Q_UNUSED(items);
+    Q_UNUSED(items)
     Q_UNUSED(collection)
 
     if (sAgentBase) {
@@ -233,7 +233,7 @@ void AgentBase::ObserverV3::itemsUnlinked(const Akonadi::Item::List &items, cons
 
 void AgentBase::ObserverV4::tagAdded(const Tag &tag)
 {
-    Q_UNUSED(tag);
+    Q_UNUSED(tag)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
@@ -245,7 +245,7 @@ void AgentBase::ObserverV4::tagAdded(const Tag &tag)
 
 void AgentBase::ObserverV4::tagChanged(const Tag &tag)
 {
-    Q_UNUSED(tag);
+    Q_UNUSED(tag)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
@@ -257,7 +257,7 @@ void AgentBase::ObserverV4::tagChanged(const Tag &tag)
 
 void AgentBase::ObserverV4::tagRemoved(const Tag &tag)
 {
-    Q_UNUSED(tag);
+    Q_UNUSED(tag)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
@@ -269,9 +269,9 @@ void AgentBase::ObserverV4::tagRemoved(const Tag &tag)
 
 void AgentBase::ObserverV4::itemsTagsChanged(const Item::List &items, const QSet<Tag> &addedTags, const QSet<Tag> &removedTags)
 {
-    Q_UNUSED(items);
-    Q_UNUSED(addedTags);
-    Q_UNUSED(removedTags);
+    Q_UNUSED(items)
+    Q_UNUSED(addedTags)
+    Q_UNUSED(removedTags)
 
     if (sAgentBase) {
         // not implementation, let's disconnect the signal to enable optimization in Monitor
@@ -727,14 +727,14 @@ void AgentBasePrivate::collectionRemoved(const Akonadi::Collection &collection)
 
 void AgentBasePrivate::collectionSubscribed(const Akonadi::Collection &collection, const Akonadi::Collection &parent)
 {
-    Q_UNUSED(collection);
-    Q_UNUSED(parent);
+    Q_UNUSED(collection)
+    Q_UNUSED(parent)
     changeProcessed();
 }
 
 void AgentBasePrivate::collectionUnsubscribed(const Akonadi::Collection &collection)
 {
-    Q_UNUSED(collection);
+    Q_UNUSED(collection)
     changeProcessed();
 }
 
@@ -803,7 +803,7 @@ void AgentBasePrivate::slotError(const QString &message)
 
 void AgentBasePrivate::slotNetworkStatusChange(bool isOnline)
 {
-    Q_UNUSED(isOnline);
+    Q_UNUSED(isOnline)
     Q_Q(AgentBase);
     q->setOnlineInternal(mDesiredOnlineState);
 }
@@ -883,7 +883,7 @@ AgentBase::~AgentBase()
 
 void AgentBase::debugAgent(int argc, char **argv)
 {
-    Q_UNUSED(argc);
+    Q_UNUSED(argc)
 #ifdef Q_OS_WIN
     if (qEnvironmentVariableIsSet("AKONADI_DEBUG_WAIT")) {
         if (QByteArray(argv[0]).endsWith(qgetenv("AKONADI_DEBUG_WAIT") + ".exe")) {
@@ -894,13 +894,13 @@ void AgentBase::debugAgent(int argc, char **argv)
         }
     }
 #else
-    Q_UNUSED(argv);
+    Q_UNUSED(argv)
 #endif
 }
 
 QString AgentBase::parseArguments(int argc, char **argv)
 {
-    Q_UNUSED(argc);
+    Q_UNUSED(argc)
 
     QCommandLineOption identifierOption(QStringLiteral("identifier"), i18n("Agent identifier"),
                                         QStringLiteral("argument"));
@@ -1060,7 +1060,7 @@ void AgentBase::setOnlineInternal(bool state)
 
 void AgentBase::doSetOnline(bool online)
 {
-    Q_UNUSED(online);
+    Q_UNUSED(online)
 }
 
 KAboutData AgentBase::aboutData() const
@@ -1070,7 +1070,7 @@ KAboutData AgentBase::aboutData() const
 
 void AgentBase::configure(WId windowId)
 {
-    Q_UNUSED(windowId);
+    Q_UNUSED(windowId)
 
     // Fallback if the agent implements the new plugin-based configuration,
     // but someone calls the deprecated configure() method

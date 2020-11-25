@@ -140,7 +140,7 @@ void SpecialCollectionsRequestJobPrivate::nextResource()
         for (const RegisterPair &pair : qAsConst(mToRegister)) {
             const bool ok = mSpecialCollections->registerCollection(pair.second, pair.first);
             Q_ASSERT(ok);
-            Q_UNUSED(ok);
+            Q_UNUSED(ok)
         }
 
         mSpecialCollections->d->endBatchRegister();

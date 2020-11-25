@@ -89,7 +89,7 @@ void DBusBridgeConnection::connectLocal()
             /*sizeof(dbus_socket_addr) gives me a too large value for some reason, although that's what QLocalSocket uses*/
             const int result = ::connect(fd, reinterpret_cast<struct sockaddr *>(&dbus_socket_addr), sizeof(dbus_socket_addr.sun_family) + dbusPath.size() + 1 /* for the leading \0 */);
             Q_ASSERT(result != -1);
-            Q_UNUSED(result);   // in release mode
+            Q_UNUSED(result)   // in release mode
             (static_cast<QLocalSocket *>(m_localSocket))->setSocketDescriptor(fd, QLocalSocket::ConnectedState, QLocalSocket::ReadWrite);
         } else {
             (static_cast<QLocalSocket *>(m_localSocket))->connectToServer(dbusPath);

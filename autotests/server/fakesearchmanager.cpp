@@ -22,22 +22,22 @@ FakeSearchManager::~FakeSearchManager()
 
 void FakeSearchManager::registerInstance(const QString &id)
 {
-    Q_UNUSED(id);
+    Q_UNUSED(id)
 }
 
 void FakeSearchManager::unregisterInstance(const QString &id)
 {
-    Q_UNUSED(id);
+    Q_UNUSED(id)
 }
 
 void FakeSearchManager::updateSearch(const Collection &collection)
 {
-    Q_UNUSED(collection);
+    Q_UNUSED(collection)
 }
 
 void FakeSearchManager::updateSearchAsync(const Collection &collection)
 {
-    Q_UNUSED(collection);
+    Q_UNUSED(collection)
 }
 
 QVector<Akonadi::AbstractSearchPlugin *> FakeSearchManager::searchPlugins() const

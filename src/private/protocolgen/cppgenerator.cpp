@@ -581,7 +581,7 @@ void CppGenerator::writeImplClass(ClassNode const *node)
     if (!parentClass.isEmpty()) {
         mImpl << "    static_cast<const " << parentClass << " *>(this)->toJson(json);\n";
     } else if (serializeProperties.isEmpty()) {
-        mImpl << "    Q_UNUSED(json);\n";
+        mImpl << "    Q_UNUSED(json)\n";
     }
     for (const auto *prop : qAsConst(serializeProperties)) {
         if (prop->isPointer()) {

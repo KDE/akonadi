@@ -42,7 +42,7 @@ public:
         mCommands.enqueue({ tag, command });
         if (mNotify) {
             const bool ok = QMetaObject::invokeMethod(mParent, mNotifySlot.constData(), Qt::QueuedConnection);
-            Q_ASSERT(ok); Q_UNUSED(ok);
+            Q_ASSERT(ok); Q_UNUSED(ok)
         }
     }
 

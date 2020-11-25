@@ -410,9 +410,9 @@ QVariant FavoriteCollectionsModel::headerData(int section, Qt::Orientation orien
 
 bool FavoriteCollectionsModel::dropMimeData(const QMimeData *data, Qt::DropAction action, int row, int column, const QModelIndex &parent)
 {
-    Q_UNUSED(action);
-    Q_UNUSED(row);
-    Q_UNUSED(column);
+    Q_UNUSED(action)
+    Q_UNUSED(row)
+    Q_UNUSED(column)
     if (data->hasFormat(QStringLiteral("text/uri-list"))) {
         const QList<QUrl> urls = data->urls();
 

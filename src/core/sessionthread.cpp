@@ -47,7 +47,7 @@ void SessionThread::addConnection(Connection *connection)
     const bool invoke = QMetaObject::invokeMethod(this, "doAddConnection",
                                                   Qt::BlockingQueuedConnection,
                                                   Q_ARG(Akonadi::Connection*, connection));
-    Q_ASSERT(invoke); Q_UNUSED(invoke);
+    Q_ASSERT(invoke); Q_UNUSED(invoke)
 }
 
 void SessionThread::doAddConnection(Connection *connection)
@@ -71,7 +71,7 @@ void SessionThread::destroyConnection(Connection *connection)
     const bool invoke = QMetaObject::invokeMethod(this, "doDestroyConnection",
                                                   Qt::BlockingQueuedConnection,
                                                   Q_ARG(Akonadi::Connection*, connection));
-    Q_ASSERT(invoke); Q_UNUSED(invoke);
+    Q_ASSERT(invoke); Q_UNUSED(invoke)
 }
 
 void SessionThread::doDestroyConnection(Connection *connection)

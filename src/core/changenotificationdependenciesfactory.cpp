@@ -40,7 +40,7 @@ void ChangeNotificationDependenciesFactory::destroyNotificationConnection(Sessio
 
 QObject *ChangeNotificationDependenciesFactory::createChangeMediator(QObject *parent)
 {
-    Q_UNUSED(parent);
+    Q_UNUSED(parent)
     return ChangeMediator::instance();
 }
 

@@ -28,7 +28,7 @@ Resource DbInitializer::createResource(const char *name)
     res.setName(QLatin1String(name));
     const bool ret = res.insert(&id);
     Q_ASSERT(ret);
-    Q_UNUSED(ret);
+    Q_UNUSED(ret)
     mResource = res;
     return res;
 }
@@ -44,7 +44,7 @@ Collection DbInitializer::createCollection(const char *name, const Collection &p
     col.setResource(mResource);
     const bool ret = col.insert();
     Q_ASSERT(ret);
-    Q_UNUSED(ret);
+    Q_UNUSED(ret)
     return col;
 }
 
@@ -63,7 +63,7 @@ PimItem DbInitializer::createItem(const char *name, const Collection &parent)
     item.setRemoteId(QLatin1String(name));
     const bool ret = item.insert() ;
     Q_ASSERT(ret);
-    Q_UNUSED(ret);
+    Q_UNUSED(ret)
     return item;
 }
 
@@ -79,7 +79,7 @@ Part DbInitializer::createPart(qint64 pimItem, const QByteArray &partName, const
     part.setDatasize(partData.size());
     const bool ret = part.insert();
     Q_ASSERT(ret);
-    Q_UNUSED(ret);
+    Q_UNUSED(ret)
     return part;
 }
 

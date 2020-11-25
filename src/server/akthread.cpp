@@ -39,7 +39,7 @@ void AkThread::startThread()
     Q_ASSERT(m_startMode != NoThread);
     const bool init = QMetaObject::invokeMethod(this, &AkThread::init, Qt::QueuedConnection);
     Q_ASSERT(init);
-    Q_UNUSED(init);
+    Q_UNUSED(init)
 }
 
 void AkThread::quitThread()
@@ -51,7 +51,7 @@ void AkThread::quitThread()
     const bool invoke = QMetaObject::invokeMethod(this, &AkThread::quit, Qt::QueuedConnection);
 
     Q_ASSERT(invoke);
-    Q_UNUSED(invoke);
+    Q_UNUSED(invoke)
     if (!thread()->wait(10 * 1000)) {
         thread()->terminate();
         thread()->wait();
