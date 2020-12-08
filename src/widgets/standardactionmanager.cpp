@@ -75,7 +75,7 @@ static const struct { // NOLINT(clang-analyzer-optin.performance.Padding) FIXME
     { "akonadi_collection_sync", I18N_NOOP("&Synchronize Folder"), I18N_NOOP("Synchronize"), "view-refresh", Qt::Key_F5, SLOT(slotSynchronizeCollection()), NormalAction },
     { "akonadi_collection_properties", I18N_NOOP("Folder &Properties"), I18N_NOOP("Properties"), "configure", 0, SLOT(slotCollectionProperties()), NormalAction },
     { "akonadi_item_copy", nullptr, nullptr, "edit-copy", 0, SLOT(slotCopyItems()), NormalAction },
-    { "akonadi_paste", I18N_NOOP("&Paste"), I18N_NOOP("Paste"), "edit-paste", Qt::CTRL + Qt::Key_V, SLOT(slotPaste()), NormalAction },
+    { "akonadi_paste", I18N_NOOP("&Paste"), I18N_NOOP("Paste"), "edit-paste", Qt::CTRL | Qt::Key_V, SLOT(slotPaste()), NormalAction },
     { "akonadi_item_delete", nullptr, nullptr, "edit-delete", 0, SLOT(slotDeleteItems()), NormalAction },
     { "akonadi_manage_local_subscriptions", I18N_NOOP("Manage Local &Subscriptions..."), I18N_NOOP("Manage Local Subscriptions"), "folder-bookmarks", 0, SLOT(slotLocalSubscription()), NormalAction },
     { "akonadi_collection_add_to_favorites", I18N_NOOP("Add to Favorite Folders"), I18N_NOOP("Add to Favorite"), "bookmark-new", 0, SLOT(slotAddToFavorites()), NormalAction },
@@ -85,8 +85,8 @@ static const struct { // NOLINT(clang-analyzer-optin.performance.Padding) FIXME
     { "akonadi_item_copy_to_menu", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", 0, SLOT(slotCopyItemTo(QAction*)), MenuAction },
     { "akonadi_item_move_to_menu", I18N_NOOP("Move Item To..."), I18N_NOOP("Move To"), "go-jump", 0, SLOT(slotMoveItemTo(QAction*)), MenuAction },
     { "akonadi_collection_move_to_menu", I18N_NOOP("Move Folder To..."), I18N_NOOP("Move To"), "go-jump", 0, SLOT(slotMoveCollectionTo(QAction*)), MenuAction },
-    { "akonadi_item_cut", I18N_NOOP("&Cut Item"), I18N_NOOP("Cut"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutItems()), NormalAction },
-    { "akonadi_collection_cut", I18N_NOOP("&Cut Folder"), I18N_NOOP("Cut"), "edit-cut", Qt::CTRL + Qt::Key_X, SLOT(slotCutCollections()), NormalAction },
+    { "akonadi_item_cut", I18N_NOOP("&Cut Item"), I18N_NOOP("Cut"), "edit-cut", Qt::CTRL | Qt::Key_X, SLOT(slotCutItems()), NormalAction },
+    { "akonadi_collection_cut", I18N_NOOP("&Cut Folder"), I18N_NOOP("Cut"), "edit-cut", Qt::CTRL | Qt::Key_X, SLOT(slotCutCollections()), NormalAction },
     { "akonadi_resource_create", I18N_NOOP("Create Resource"), nullptr, "folder-new", 0, SLOT(slotCreateResource()), NormalAction },
     { "akonadi_resource_delete", I18N_NOOP("Delete Resource"), nullptr, "edit-delete", 0, SLOT(slotDeleteResource()), NormalAction },
     { "akonadi_resource_properties", I18N_NOOP("&Resource Properties"), I18N_NOOP("Properties"), "configure", 0, SLOT(slotResourceProperties()), NormalAction },
@@ -96,7 +96,7 @@ static const struct { // NOLINT(clang-analyzer-optin.performance.Padding) FIXME
     { "akonadi_collection_move_to_dialog", I18N_NOOP("Move Folder To..."), I18N_NOOP("Move To"), "go-jump", 0, SLOT(slotMoveCollectionTo()), NormalAction },
     { "akonadi_item_copy_to_dialog", I18N_NOOP("Copy Item To..."), I18N_NOOP("Copy To"), "edit-copy", 0, SLOT(slotCopyItemTo()), NormalAction },
     { "akonadi_item_move_to_dialog", I18N_NOOP("Move Item To..."), I18N_NOOP("Move To"), "go-jump", 0, SLOT(slotMoveItemTo()), NormalAction },
-    { "akonadi_collection_sync_recursive", I18N_NOOP("&Synchronize Folder Recursively"), I18N_NOOP("Synchronize Recursively"), "view-refresh", Qt::CTRL + Qt::Key_F5, SLOT(slotSynchronizeCollectionRecursive()), NormalAction },
+    { "akonadi_collection_sync_recursive", I18N_NOOP("&Synchronize Folder Recursively"), I18N_NOOP("Synchronize Recursively"), "view-refresh", Qt::CTRL | Qt::Key_F5, SLOT(slotSynchronizeCollectionRecursive()), NormalAction },
     { "akonadi_move_collection_to_trash", I18N_NOOP("&Move Folder To Trash"), I18N_NOOP("Move Folder To Trash"), "edit-delete", 0, SLOT(slotMoveCollectionToTrash()), NormalAction },
     { "akonadi_move_item_to_trash", I18N_NOOP("&Move Item To Trash"), I18N_NOOP("Move Item To Trash"), "edit-delete", 0, SLOT(slotMoveItemToTrash()), NormalAction },
     { "akonadi_restore_collection_from_trash", I18N_NOOP("&Restore Folder From Trash"), I18N_NOOP("Restore Folder From Trash"), "view-refresh", 0, SLOT(slotRestoreCollectionFromTrash()), NormalAction },
@@ -105,7 +105,7 @@ static const struct { // NOLINT(clang-analyzer-optin.performance.Padding) FIXME
     { nullptr, I18N_NOOP("&Restore Collection From Trash"), I18N_NOOP("Restore Collection From Trash"), "view-refresh", 0, nullptr, ActionAlternative },
     { "akonadi_item_trash_restore", I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "edit-delete", 0, SLOT(slotTrashRestoreItem()), ActionWithAlternative },
     { nullptr, I18N_NOOP("&Restore Item From Trash"), I18N_NOOP("Restore Item From Trash"), "view-refresh", 0, nullptr, ActionAlternative },
-    { "akonadi_collection_sync_favorite_folders", I18N_NOOP("&Synchronize Favorite Folders"), I18N_NOOP("Synchronize Favorite Folders"), "view-refresh", Qt::CTRL + Qt::SHIFT + Qt::Key_L, SLOT(slotSynchronizeFavoriteCollections()), NormalAction },
+    { "akonadi_collection_sync_favorite_folders", I18N_NOOP("&Synchronize Favorite Folders"), I18N_NOOP("Synchronize Favorite Folders"), "view-refresh", Qt::CTRL | Qt::SHIFT + Qt::Key_L, SLOT(slotSynchronizeFavoriteCollections()), NormalAction },
     { "akonadi_resource_synchronize_collectiontree", I18N_NOOP("Synchronize Folder Tree"), I18N_NOOP("Synchronize"), "view-refresh", 0, SLOT(slotSynchronizeCollectionTree()), NormalAction }
 
 };

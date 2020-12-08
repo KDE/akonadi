@@ -222,7 +222,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     }
 
     if (linkAllowed) {
-        sequence = QKeySequence(Qt::ControlModifier + Qt::ShiftModifier).toString();
+        sequence = QKeySequence(Qt::ControlModifier | Qt::ShiftModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
         linkAction = popup.addAction(QIcon::fromTheme(QStringLiteral("edit-link")), i18n("&Link Here") + QLatin1Char('\t') + sequence);
     }
