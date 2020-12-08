@@ -111,7 +111,7 @@ public:
     /**
      * Destroys the DefaultResourceJob.
      */
-    ~DefaultResourceJob();
+    ~DefaultResourceJob() override;
 
     /**
      * Sets the @p type of the resource that shall be created if the requested
@@ -184,7 +184,7 @@ public:
     /**
       Destroys the GetLockJob.
     */
-    ~GetLockJob();
+    ~GetLockJob() override;
 
     /* reimpl */
     void start() override;

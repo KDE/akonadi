@@ -28,7 +28,7 @@ class AKONADICORE_EXPORT TagAttribute : public Attribute
 public:
     explicit TagAttribute();
 
-    ~TagAttribute();
+    ~TagAttribute() override;
 
     /**
      * Sets the @p name that should be used for display.

@@ -40,7 +40,7 @@ public:
     Exception(const Exception &) = delete;
     Exception &operator=(const Exception &) = delete;
 
-    virtual ~Exception() throw() = default;
+    ~Exception() throw() override = default;
 
     const char *what() const throw() override {
         return mWhat.constData();

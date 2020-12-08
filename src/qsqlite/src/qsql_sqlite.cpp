@@ -93,7 +93,7 @@ class QSQLiteResult : public QSqlCachedResult
     friend class QSQLiteResultPrivate;
 public:
     explicit QSQLiteResult(const QSQLiteDriver *db);
-    ~QSQLiteResult();
+    ~QSQLiteResult() override;
     QVariant handle() const override;
 
 protected:

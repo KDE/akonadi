@@ -21,7 +21,7 @@ class InspectableMonitorPrivate : public Akonadi::MonitorPrivate
 {
 public:
     InspectableMonitorPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableMonitor *parent);
-    ~InspectableMonitorPrivate()
+    ~InspectableMonitorPrivate() override
     {
     }
 

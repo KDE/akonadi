@@ -21,7 +21,7 @@ class InspectableChangeRecorderPrivate : public Akonadi::ChangeRecorderPrivate
 {
 public:
     InspectableChangeRecorderPrivate(FakeMonitorDependenciesFactory *dependenciesFactory, InspectableChangeRecorder *parent);
-    ~InspectableChangeRecorderPrivate()
+    ~InspectableChangeRecorderPrivate() override
     {
     }
 

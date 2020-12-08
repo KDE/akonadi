@@ -32,7 +32,7 @@ struct Rudi: public Volker {
     {
         who = QStringLiteral("Rudi");
     }
-    virtual ~Rudi() { }
+    ~Rudi() override { }
     Rudi *clone() const override
     {
         return new Rudi(*this);

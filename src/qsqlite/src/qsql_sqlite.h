@@ -32,7 +32,7 @@ class QSQLiteDriver : public QSqlDriver
 public:
     explicit QSQLiteDriver(QObject *parent = nullptr);
     explicit QSQLiteDriver(sqlite3 *connection, QObject *parent = nullptr);
-    ~QSQLiteDriver();
+    ~QSQLiteDriver() override;
     bool hasFeature(DriverFeature f) const override;
     bool open(const QString &db,
               const QString &user,

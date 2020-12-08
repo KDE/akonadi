@@ -142,7 +142,7 @@ public:
     {
     }
 
-    ~NotifyRunnable() = default;
+    ~NotifyRunnable() override = default;
 
     void run() override {
         for (const auto &ntf : qAsConst(mNotifications))

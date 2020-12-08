@@ -23,7 +23,7 @@ public:
         : CollectionStatistics(prefetch)
         , mCalculationsCount(0)
     {}
-    ~IntrospectableCollectionStatistics()
+    ~IntrospectableCollectionStatistics() override
     {}
 
     int calculationsCount() const
