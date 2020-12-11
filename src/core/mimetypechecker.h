@@ -12,7 +12,7 @@
 #include <QSharedDataPointer>
 
 class QString;
-class QStringList;
+#include <QStringList>
 
 namespace Akonadi
 {

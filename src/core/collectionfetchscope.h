@@ -13,7 +13,7 @@
 #include <QSharedDataPointer>
 #include <QSet>
 
-class QStringList;
+#include <QStringList>
 
 namespace Akonadi
 {

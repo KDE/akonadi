@@ -14,7 +14,7 @@
 
 class QIcon;
 class QString;
-class QStringList;
+#include <QStringList>
 class QVariant;
 typedef QMap<QString, QVariant> QVariantMap;
 

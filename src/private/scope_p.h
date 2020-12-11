@@ -16,7 +16,7 @@
 
 #include <QString>
 class QJsonObject;
-class QStringList;
+#include <QStringList>
 
 namespace Akonadi
 {
