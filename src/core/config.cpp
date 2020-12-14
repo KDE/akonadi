@@ -11,7 +11,7 @@
 
 using namespace Akonadi;
 
-Config Config::sConfig{};
+Q_GLOBAL_STATIC(Config, sConfig) // NOLINT(readability-redundant-member-init)
 
 namespace {
 
@@ -46,5 +46,10 @@ Config::Config()
 
 void Config::setConfig(const Config &config)
 {
-    sConfig = config;
+    *sConfig = config;
+}
+
+const Config &Config::get()
+{
+    return *sConfig;
 }
