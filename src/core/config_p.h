@@ -14,12 +14,10 @@ namespace Akonadi
 class Config
 {
 public:
+    explicit Config();
     ~Config() = default;
 
-    static const Config &get()
-    {
-        return sConfig;
-    }
+    static const Config &get();
 
     struct PayloadCompression {
         /**
@@ -39,12 +37,7 @@ public:
 
 
 protected:
-    explicit Config();
-
     static void setConfig(const Config &config);
-
-private:
-    static Config sConfig;
 };
 
 } // namespace Akonadi
