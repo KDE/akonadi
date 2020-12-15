@@ -71,6 +71,10 @@ else()
 endif()
 
 add_library(KF5AkonadiPrivate SHARED ${akonadiprivate_buildsources})
+if (COMPILE_WITH_CMAKE_SUPPORT)
+    set_target_properties(KF5AkonadiPrivate PROPERTIES UNITY_BUILD ON)
+endif()
+
 add_library(KF5::AkonadiPrivate ALIAS KF5AkonadiPrivate)
 if (WIN32)
     add_dependencies(KF5AkonadiPrivate generate_protocol)

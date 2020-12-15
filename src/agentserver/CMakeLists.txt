@@ -14,6 +14,10 @@ ecm_qt_declare_logging_category(akonadi_agent_server_srcs HEADER akonadiagentser
 
 
 add_executable(akonadi_agent_server ${akonadi_agent_server_srcs})
+if (COMPILE_WITH_CMAKE_SUPPORT)
+    set_target_properties(akonadi_agent_server PROPERTIES UNITY_BUILD ON)
+endif()
+
 set_target_properties(akonadi_agent_server PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_agent_server
@@ -32,6 +36,10 @@ set(akonadi_agent_launcher_SRCS
 )
 
 add_executable(akonadi_agent_launcher ${akonadi_agent_launcher_SRCS})
+if (COMPILE_WITH_CMAKE_SUPPORT)
+    set_target_properties(akonadi_agent_launcher PROPERTIES UNITY_BUILD ON)
+endif()
+
 set_target_properties(akonadi_agent_launcher PROPERTIES MACOSX_BUNDLE FALSE)
 
 target_link_libraries(akonadi_agent_launcher
