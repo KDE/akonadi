@@ -167,7 +167,7 @@ qt5_add_dbus_interface(libakonadiserver_SRCS ${Akonadi_SOURCE_DIR}/src/interface
 qt5_add_resources(libakonadiserver_SRCS storage/akonadidb.qrc)
 
 add_library(libakonadiserver STATIC ${libakonadiserver_SRCS})
-if (COMPILE_WITH_CMAKE_SUPPORT)
+if (COMPILE_WITH_UNITY_CMAKE_SUPPORT)
     set_target_properties(libakonadiserver PROPERTIES UNITY_BUILD ON)
 endif()
 
