@@ -512,7 +512,7 @@ void EntityTreeModelPrivate::itemsFetched(const Collection::Id collectionId, con
                 const Akonadi::Collection::List parents = getParentCollections(item);
                 for (const Akonadi::Collection &parent : parents) {
                     if (parent.id() == collectionId) {
-                        qCWarning(AKONADICORE_LOG) << "Fetched an item which is already in the model";
+                        qCWarning(AKONADICORE_LOG) << "Fetched an item which is already in the model, id=" << item.id() << "collection id=" << collectionId;
                         // Update it in case the revision changed;
                         itemIt->value.apply(item);
                         isNewItem = false;
