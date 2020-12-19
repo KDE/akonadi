@@ -34,10 +34,6 @@ public:
      * Configures behavior of the payload compression feature.
      */
     PayloadCompression payloadCompression = {};
-
-
-protected:
-    static void setConfig(const Config &config);
 };
 
 } // namespace Akonadi
