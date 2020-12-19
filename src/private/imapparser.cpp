@@ -312,11 +312,7 @@ QByteArray ImapParser::join(const QList<QByteArray> &list, const QByteArray &sep
 
 QByteArray ImapParser::join(const QSet<QByteArray> &set, const QByteArray &separator)
 {
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    const QList<QByteArray> list = QList<QByteArray>::fromSet(set);
-#else
     const QList<QByteArray> list(set.begin(), set.end());
-#endif
 
     return ImapParser::join(list, separator);
 }

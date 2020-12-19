@@ -1366,11 +1366,7 @@ public:
 
                 // The mimetypes that the selected collection can possibly contain
                 const auto mimeTypesResult = AgentManager::self()->instance(collection.resource()).type().mimeTypes();
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-                mimeTypes = mimeTypesResult.toSet();
-#else
                 mimeTypes = QSet<QString>(mimeTypesResult.begin(), mimeTypesResult.end());
-#endif
             }
         }
 

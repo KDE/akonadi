@@ -84,11 +84,7 @@ void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilter(cons
 void RecursiveCollectionFilterProxyModel::addContentMimeTypeInclusionFilters(const QStringList &mimeTypes)
 {
     Q_D(RecursiveCollectionFilterProxyModel);
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    d->includedMimeTypes.unite(mimeTypes.toSet());
-#else
     d->includedMimeTypes.unite(QSet<QString>(mimeTypes.begin(), mimeTypes.end()));
-#endif
     d->checker.setWantedMimeTypes(d->includedMimeTypes.values());
     invalidateFilter();
 }
@@ -104,11 +100,7 @@ void RecursiveCollectionFilterProxyModel::clearFilters()
 void RecursiveCollectionFilterProxyModel::setContentMimeTypeInclusionFilters(const QStringList &mimeTypes)
 {
     Q_D(RecursiveCollectionFilterProxyModel);
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-    d->includedMimeTypes = mimeTypes.toSet();
-#else
     d->includedMimeTypes = QSet<QString>(mimeTypes.begin(), mimeTypes.end());
-#endif
     d->checker.setWantedMimeTypes(d->includedMimeTypes.values());
     invalidateFilter();
 }

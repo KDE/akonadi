@@ -85,21 +85,13 @@ private Q_SLOTS:
             QVector<int> in = { 1, 2, 3, 4, 5 };
             QCOMPARE(in | Actions::toQList, in.toList());
             QCOMPARE(in | Actions::toQList | Actions::toQVector, in);
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-            QCOMPARE(in | Actions::toQSet, in.toList().toSet()); // clazy:exclude=container-anti-pattern
-#else
             QCOMPARE(in | Actions::toQSet, QSet<int>(in.begin(), in.end()));
-#endif
         }
         {
             QList<int> in = { 1, 2, 3, 4, 5 };
             QCOMPARE(in | Actions::toQVector, in.toVector());
             QCOMPARE(in | Actions::toQVector | Actions::toQList, in);
-#if QT_VERSION < QT_VERSION_CHECK(5, 14, 0)
-            QCOMPARE(in | Actions::toQSet, in.toSet());
-#else
             QCOMPARE(in | Actions::toQSet, QSet<int>(in.begin(), in.end()));
-#endif
         }
     }
 
