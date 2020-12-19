@@ -44,11 +44,6 @@ Config::Config()
     }
 }
 
-void Config::setConfig(const Config &config)
-{
-    *sConfig = config;
-}
-
 const Config &Config::get()
 {
     return *sConfig;
