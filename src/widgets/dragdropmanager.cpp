@@ -212,7 +212,10 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     if (moveAllowed) {
         sequence = QKeySequence(Qt::ShiftModifier).toString();
         sequence.chop(1);   // chop superfluous '+'
-        moveDropAction = popup.addAction(QIcon::fromTheme(QStringLiteral("go-jump")), i18n("&Move Here") + QLatin1Char('\t') + sequence);
+        moveDropAction = popup.addAction(
+            QIcon::fromTheme(QStringLiteral("edit-move"), QIcon::fromTheme(QStringLiteral("go-jump"))),
+            i18n("&Move Here") + QLatin1Char('\t') + sequence
+        );
     }
 
     if (copyAllowed) {
