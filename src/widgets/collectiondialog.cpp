@@ -1,6 +1,6 @@
 /*
     SPDX-FileCopyrightText: 2008 Ingo Klöcker <kloecker@kde.org>
-    SPDX-FileCopyrightText: 2010-2020 Laurent Montel <montel@kde.org>
+    SPDX-FileCopyrightText: 2010-2021 Laurent Montel <montel@kde.org>
 
     SPDX-License-Identifier: LGPL-2.0-or-later
 */
