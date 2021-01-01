@@ -284,13 +284,13 @@ descProxy->setDisplayAncestorData(true, QLatin1String(" / "));
 view->setModel(descProxy);
 ~~~~~~~~~~~~~
 
-![A DescendantEntitiesProxyModel with ancestor names.](/docs/images/descendantentitiesproxymodel-withansecnames.png "A DescendantEntitiesProxyModel with ancestor names.")
+![A KDescendantsProxyModel with ancestor names.](/docs/images/descendantentitiesproxymodel-withansecnames.png "A KDescendantsProxyModel with ancestor names.")
 
 This proxy can be combined with a filter to for example remove collections.
 
 ~~~~~~~~~~~~~{.cpp}
 // ... Create an entityTreeModel
-DescendantEntitiesProxyModel *descProxy = new DescendantEntitiesProxyModel(this);
+KDescendantsProxyModel *descProxy = new KDescendantsProxyModel(this);
 descProxy->setSourceModel(entityTree);
 
 // #### This is new.
@@ -301,7 +301,7 @@ filterModel->setExclusionFilter({ Akonadi::Collection::mimeType() });
 view->setModel(filterModel);
 ~~~~~~~~~~~~~
 
-![An EntityMimeTypeFilterModel wrapping a DescendantEntitiesProxyModel wrapping an EntityTreeModel](/docs/images/descendantentitiesproxymodel-colfilter.png "An EntityMimeTypeFilterModel wrapping a DescendantEntitiesProxyModel wrapping an EntityTreeModel")
+![An EntityMimeTypeFilterModel wrapping a KDescendantsProxyModel wrapping an EntityTreeModel](/docs/images/descendantentitiesproxymodel-colfilter.png "An EntityMimeTypeFilterModel wrapping a KDescendantsProxyModel wrapping an EntityTreeModel")
 
 It is also possible to show the root item as part of the selectable model:
 
@@ -353,7 +353,7 @@ collectionTree->addMimeTypeInclusionFilter(Akonadi::Collection::mimeType());
 
 treeview->setModel(collectionTree);
 
-descendedList = new DescendantEntitiesProxyModel(this);
+descendedList = new KDescendantsProxyModel(this);
 descendedList->setSourceModel(entityTree);
 
 itemList = new Akonadi::EntityMimeTypeFilterModel(this);
@@ -405,7 +405,7 @@ If an index and one or more of its descendants are selected, only the top-most s
 
 SelectionProxyModel allows configuration using the methods setStartWithChildTrees, setOmitDescendants, setIncludeAllSelected. See testapp/proxymodeltestapp to try out the 5 valid configurations.
 
-Obviously, the SelectionProxyModel may be used in a view, or further processed with other proxy models. See the example_contacts application for example which uses a further DescendantEntitiesProxyModel and EntityMimeTypeFilterModel on top of a SelectionProxyModel.
+Obviously, the SelectionProxyModel may be used in a view, or further processed with other proxy models. See the example_contacts application for example which uses a further KDescendantsProxyModel and EntityMimeTypeFilterModel on top of a SelectionProxyModel.
 
 The SelectionProxyModel orders its items in the same top-to-bottom order as they appear in the source model. Note that this order may be different to the order in the selection model if there is a QSortFilterProxyModel between the selection and the source model.
 

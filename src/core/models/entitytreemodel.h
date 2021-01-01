@@ -223,7 +223,7 @@ class EntityTreeModelPrivate;
  * SelectionProxyModel *selProxy = new SelectionProxyModel( treeview->selectionModel(), this );
  * selProxy->setSourceModel( entityTreeModel );
  *
- * descendedList = new DescendantEntitiesProxyModel( this );
+ * descendedList = new KDescendantsProxyModel( this );
  * descendedList->setSourceModel( selProxy );
  *
  * itemList = new EntityMimeTypeFilterModel( this );
@@ -238,7 +238,7 @@ class EntityTreeModelPrivate;
  * @endcode
  *
  *
- * Note that it is important in this case to use the DescendantEntitesProxyModel before the EntityMimeTypeFilterModel.
+ * Note that it is important in this case to use the KDescendantsProxyModel before the EntityMimeTypeFilterModel.
  * Otherwise, by filtering out the collections first, you would also be filtering out their child items.
  *
  * This pattern is used in KAddressBook.
