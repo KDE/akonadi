@@ -37,7 +37,7 @@ using namespace Akonadi::Server;
 
 FakeClient::FakeClient(QObject *parent)
     : QThread(parent)
-    , mMutex(QMutex::Recursive)
+    , mMutex()
 {
     moveToThread(this);
 }

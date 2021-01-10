@@ -9,7 +9,7 @@
 #define AKONADI_SERVER_FAKECLIENT_H
 
 #include <QThread>
-#include <QMutex>
+#include <QRecursiveMutex>
 #include "datastream_p_p.h"
 
 #include "fakeakonadiserver.h"
@@ -41,7 +41,7 @@ private Q_SLOTS:
     void connectionLost();
 
 private:
-    mutable QMutex mMutex;
+    mutable QRecursiveMutex mMutex;
 
     TestScenario::List mScenarios;
     QLocalSocket *mSocket = nullptr;

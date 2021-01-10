@@ -7,7 +7,7 @@
 #include "aggregatedfetchscope.h"
 #include <shared/akranges.h>
 
-#include <QMutex>
+#include <QRecursiveMutex>
 #include <QMutexLocker>
 
 #define LOCKED_D(name) \
@@ -22,7 +22,7 @@ class AggregatedFetchScopePrivate
 {
 public:
     AggregatedFetchScopePrivate()
-        : lock(QMutex::Recursive) // recursive so that we can call our own getters/setters
+        : lock() // recursive so that we can call our own getters/setters
     {}
 
     inline void addToSet(const QByteArray &value, QSet<QByteArray> &set, QHash<QByteArray, int> &count)
@@ -67,7 +67,7 @@ public:
     }
 
 public:
-    mutable QMutex lock;
+    mutable QRecursiveMutex lock;
 };
 
 class AggregatedCollectionFetchScopePrivate : public AggregatedFetchScopePrivate
