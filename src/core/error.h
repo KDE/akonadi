@@ -36,6 +36,14 @@ public:
 
     explicit operator bool() const { return mCode != 0; }
 
+    bool operator==(const Error &other) const {
+        return std::tie(mCode, mMessage) == std::tie(other.mCode, other.mMessage);
+    }
+
+    bool operator!=(const Error &other) const {
+        return !(*this == other);
+    }
+
     int code() const { return mCode; }
     QString message() const { return mMessage; }
 

@@ -1,3 +1,4 @@
+add_subdirectory(3rdparty)
 add_subdirectory(agentserver)
 add_subdirectory(akonadicontrol)
 add_subdirectory(akonadictl)
