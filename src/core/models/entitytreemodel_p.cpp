@@ -281,7 +281,7 @@ void EntityTreeModelPrivate::fetchCollections(std::function<Task<Collection::Lis
                 }
 
                 --m_pendingCollectionFetchJobs;
-                collectionFetchDone();
+                collectionFetchDone(collections);
             },
             [this](const Error &error) {
                 --m_pendingCollectionFetchJobs;
@@ -294,7 +294,7 @@ void EntityTreeModelPrivate::fetchCollections(std::function<Task<Collection::Lis
             [this](const Collection::List &collections) {
                 collectionsFetched(collections);
                 --m_pendingCollectionFetchJobs;
-                collectionFetchDone();
+                collectionFetchDone(collections);
             },
             [this](const Error &error) {
                 --m_pendingCollectionFetchJobs;
@@ -683,7 +683,7 @@ bool EntityTreeModelPrivate::retrieveAncestors(const Akonadi::Collection &collec
 
     const auto ok = [this](const Collection::List &collections) {
         ancestorsFetched(collections);
-        collectionFetchDone();
+        collectionFetchDone(collections);
     };
     const auto error = [this](const Error &error) {
         collectionFetchError(error);
@@ -1346,54 +1346,25 @@ void EntityTreeModelPrivate::monitoredItemUnlinked(const Akonadi::Item &item, co
     q->endRemoveRows();
 }
 
-void EntityTreeModelPrivate::collectionFetchDone()
+void EntityTreeModelPrivate::collectionFetchDone(const Collection::List &collections)
 {
-        m_collectionsWithoutItems.insert(collectionId);
-    } else {
-        m_collectionsWithoutItems.remove(collectionId);
-    }
+    for (const auto &col : collections) {
+        m_populatedCols.insert(col.id());
+        Q_EMIT q_ptr->collectionPopulated(col.id());
 
-    m_populatedCols.insert(collectionId);
-    Q_EMIT q_ptr->collectionPopulated(collectionId);
-
-    // If collections are not in the model, there will be no valid index for them.
-    if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
-            (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections) &&
-            (m_showRootCollection || collectionId != m_rootCollection.id())) {
-        const QModelIndex index = indexForCollection(Collection(collectionId));
-        Q_ASSERT(index.isValid());
-        //To notify about the changed fetch and population state
-        dataChanged(index, index);
-    }
-}
-
-void EntityTreeModelPrivate::pasteJobDone(KJob *job)
-{
-    if (job->error()) {
-        QString errorMsg;
-        if (qobject_cast<ItemCopyJob *>(job)) {
-            errorMsg = i18nc("@info", "Could not copy item: <message>%1</message>", job->errorString());
-        } else if (qobject_cast<CollectionCopyJob *>(job)) {
-            errorMsg = i18nc("@info", "Could not copy collection: <message>%1</message>", job->errorString());
-        } else if (qobject_cast<ItemMoveJob *>(job)) {
-            errorMsg = i18nc("@info", "Could not move item: <message>%1</message>", job->errorString());
-        } else if (qobject_cast<CollectionMoveJob *>(job)) {
-            errorMsg = i18nc("@info", "Could not move collection: <message>%1</message>", job->errorString());
-        } else if (qobject_cast<LinkJob *>(job)) {
-            errorMsg = i18nc("@info", "Could not link entity: <message>%1</message>", job->errorString());
+        // If collections are not in the model, there will be no valid index for them.
+        if ((m_collectionFetchStrategy != EntityTreeModel::InvisibleCollectionFetch) &&
+                (m_collectionFetchStrategy != EntityTreeModel::FetchNoCollections) &&
+                (m_showRootCollection || col.id() != m_rootCollection.id())) {
+            const QModelIndex index = indexForCollection(col);
+            Q_ASSERT(index.isValid());
+            //To notify about the changed fetch and population state
+            dataChanged(index, index);
         }
-        QMessageBox::critical(nullptr, i18nc("@title:window", "Error"), errorMsg);
     }
 }
 
-void EntityTreeModelPrivate::updateJobDone(KJob *job)
-{
-    if (job->error()) {
-        // TODO: handle job errors
-        qCWarning(AKONADICORE_LOG) << "Job error:" << job->errorString();
-    }
-}
-
+#if 0
 void EntityTreeModelPrivate::rootFetchJobDone(KJob *job)
 {
     if (job->error()) {
@@ -1411,6 +1382,7 @@ void EntityTreeModelPrivate::rootFetchJobDone(KJob *job)
         Q_EMIT q_ptr->collectionTreeFetched(m_collections | Views::values | Actions::toQVector);
     }
 }
+#endif
 
 void EntityTreeModelPrivate::startFirstListJob()
 {
@@ -1482,7 +1454,7 @@ void EntityTreeModelPrivate::fetchTopLevelCollections() const
     Akonadi::fetchSubcollections(Collection::root(), {}, m_session).then(
             [d = const_cast<EntityTreeModelPrivate *>(this)](const Collection::List &cols) {
                 d->topLevelCollectionsFetched(cols);
-                d->collectionFetchDone();
+                d->collectionFetchDone(cols);
             },
             [d = const_cast<EntityTreeModelPrivate *>(this)](const Error &error) {
                 d->collectionFetchError(error);

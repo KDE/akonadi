@@ -255,7 +255,7 @@ public:
 
     void serverStarted();
 
-    void collectionFetchDone();
+    void collectionFetchDone(const Collection::List &collections);
     void collectionFetchError(const Error &error);
 
     /**
