@@ -32,6 +32,7 @@ set(akonadicore_base_SRCS
     conflicthandler.cpp
     control.cpp
     entitycache.cpp
+    error.cpp
     exception.cpp
     firstrun.cpp
     gidextractor.cpp
@@ -94,6 +95,7 @@ set(akonadicore_base_SRCS
     conflicthandler_p.h
     control.h
     entitycache_p.h
+    error.h
     firstrun_p.h
     gidextractor_p.h
     item.h
@@ -153,6 +155,7 @@ ecm_generate_headers(AkonadiCore_base_CC_HEADERS
     CollectionUtils
     Control
     DifferencesAlgorithmInterface
+    Error
     ExceptionBase
     GidExtractorInterface
     Interface
@@ -426,6 +429,7 @@ generate_export_header(KPim6AkonadiCore BASE_NAME akonadicore)
 
 add_library(KPim6::AkonadiCore ALIAS KPim6AkonadiCore)
 target_include_directories(KPim6AkonadiCore INTERFACE "$<INSTALL_INTERFACE:${AkonadiCore_INSTALL_INCLUDEDIR}>")
+target_include_directories(KPim6AkonadiCore INTERFACE "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/3rdparty>")
 target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_SOURCE_DIR}/src/core;${Akonadi_BINARY_DIR}/src/core;${Akonadi_BINARY_DIR}/src/private>")
 target_include_directories(KPim6AkonadiCore PUBLIC "$<BUILD_INTERFACE:${Akonadi_BINARY_DIR};${Akonadi_SOURCE_DIR}/src/core/jobs;${Akonadi_SOURCE_DIR}/src/core/models;${Akonadi_SOURCE_DIR}/src/core/attributes>")
 
