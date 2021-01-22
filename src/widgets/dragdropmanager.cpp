@@ -233,7 +233,7 @@ bool DragDropManager::processDropEvent(QDropEvent *event, bool &menuCanceled, bo
     popup.addSeparator();
     popup.addAction(QIcon::fromTheme(QStringLiteral("process-stop")), i18n("C&ancel") + QLatin1Char('\t') + QKeySequence(Qt::Key_Escape).toString());
 
-    QAction *activatedAction = popup.exec(QCursor::pos());
+    QAction *activatedAction = popup.exec(m_view->mapToGlobal(event->pos()));
     if (activatedAction == moveDropAction) {
         event->setDropAction(Qt::MoveAction);
     } else if (activatedAction == copyDropAction) {
